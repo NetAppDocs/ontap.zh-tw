@@ -1,0 +1,308 @@
+---
+permalink: fabricpool/requirements-concept.html 
+sidebar: sidebar 
+keywords: considerations, requirements, using, fabricpool 
+summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。 
+---
+= 使用方面的考量與要求FabricPool
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
+
+
+
+== 一般考量與要求
+
+* 您必須至少執行ONTAP 才能使用FabricPool 的是才能使用的景點。
+* 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
++
+** 「自動」分層原則
++
+link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
+
+** 指定分層的最低冷卻週期
+** 非作用中資料報告
+** 使用Microsoft Azure Blob Storage for the Cloud做為FabricPool 適用於NetApp的雲端層
+** 搭配使用FabricPool ONTAP Select
+
+
+* 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
++
+** 指定分層完整度臨界值
+** 使用IBM Cloud Object Storage做為FabricPool 雲端層以利實現效益
+** 雲端層的NetApp Volume Encryption（NVE）、預設為啟用。
+
+
+* 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
++
+** 這是「全」分層政策
+** 在HDD Aggregate上手動啟用非使用中資料報告
+** 當您升級ONTAP 至32位9.6時、會自動啟用SSD集合體的非作用中資料報告功能、並在建立集合體時、除非是低階系統的CPU少於4、RAM少於6 GB、或是WAFL緩衝快取大小低於3 GB。
++
+支援支援支援監控系統負載、如果負載持續高達4分鐘、則會停用印尼盾、而且不會自動啟用。ONTAP您可以手動重新啟用印尼盾、但手動啟用的印尼盾並不會自動停用。
+
+** 使用Alibaba Cloud Object Storage做為FabricPool 雲端層
+** 使用Google Cloud Platform做FabricPool 為雲端層以利實現效能不打造
+** 不需雲端層資料複本即可移動Volume
+
+
+* 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
++
+** 不透明的HTTP和HTTPS Proxy、僅提供對白名單存取點的存取、並提供稽核和報告功能。
+** 可同時將冷資料分層至兩個物件存放區的鏡射FabricPool
+** 可鏡射到各種組態FabricPool MetroCluster
+** NDMP傾印與還原功能預設為FabricPool 在連接的支援區上啟用。
++
+[NOTE]
+====
+如果備份應用程式使用NDMP以外的傳輸協定（例如NFS或SMB）、則在效能層中備份的所有資料都會變得很熱、而且可能會影響將該資料分層至雲端層。非NDMP讀取可能導致資料從雲端層移轉回效能層。
+
+====
++
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NDMP_Backup_and_Restore_supported_for_FabricPool%3F["NDMP備份與還原支援FabricPool 、適用於支援功能"]
+
+
+
+* 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
++
+** 雲端移轉控制功能、可讓您覆寫預設的分層原則
+** 將資料提升至效能層級
+** 以解決此問題FabricPool SnapLock
+** 最短冷卻期最長183天
+** 使用使用者建立的自訂標記進行物件標記
+** 硬碟平台和集合體上的FabricPools
++
+HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、BSA和mSATA磁碟、包括下列機型：
+
++
+*** FAS9000
+*** FAS8700
+*** FAS8300
+*** FAS8200
+*** FAS8080
+*** FAS8060
+*** FAS8040
+*** FAS2750
+*** FAS2720
+*** FAS2650
+*** FAS2620
++
+檢查 https://hwu.netapp.com/Home/Index["Hardware Universe"] 適用於支援的最新機型。
+
+
+
+
+
+* 除了下列項目、所有能夠執行支援支援的平台均支援此功能：FabricPool ONTAP
++
+** FAS8020
+** FAS2554
+** FAS2552
+** FAS2520
+
+
+* 支援下列Aggregate類型：FabricPool
++
+** 在支援的系統上、您只能使用All Flash（All SSD）Aggregate來執行支援。AFF FabricPool
++
+您無法使用Flash Pool Aggregate（同時包含SSD和HDD）。
+
+** 在支援的系統上、您可以使用All Flash（All SSD）或HDD Aggregate來支援FAS FabricPool
+** 在本產品的不只是部分、您也可以使用SSD或HDD Aggregate來執行功能。Cloud Volumes ONTAP ONTAP Select FabricPool
++
+不過、建議使用SSD Aggregate。
+
+
+
+* 支援使用下列物件存放區做為雲端層：FabricPool
++
+** NetApp StorageGRID 產品介紹10.3或更新版本
+** NetApp ONTAP SS3（ONTAP 適用於9.8及更新版本）
+** Alibaba雲端物件儲存設備
+** Amazon Web Services Simple Storage Service（AWS S3）
+** Google Cloud Storage
+** IBM Cloud 物件儲存設備
+** 適用於雲端的Microsoft Azure Blob儲存設備
+
+
+* 您打算使用的物件存放區「'Bucke'」（容器）必須已設定完成、至少必須有10 GB的儲存空間、且不得重新命名。
+* 使用FabricPool 物件儲存區的HA配對需要叢集間的LIF才能與物件儲存區通訊。
+* 附加物件儲存庫後、您無法將其從FabricPool 物件儲存庫組態中分離出來。
+* 如果您使用處理量層（QoS下限）、則必須先將磁碟區上的分層原則設定為「無」、才能將Aggregate附加至FabricPool Suse。
++
+其他分層原則則可防止將Aggregate附加FabricPool 到無法使用的物件上。
+
+* 您應該遵循最佳實務準則FabricPool 、在特定情境中使用「介紹」功能。
++
+http://www.netapp.com/us/media/tr-4598.pdf["NetApp技術報告4598：FabricPool 《關於ONTAP 最佳實務的資訊》9"]
+
+
+
+
+
+== 使用Cloud Volumes ONTAP 方面的其他考量
+
+無論您使用的物件存放區供應商為何、均不需要使用「不含任何資訊」授權。Cloud Volumes ONTAP FabricPool
+
+
+
+== 搭配使用時的StorageGRID 其他考FabricPool 量事項
+
+* 除非您明確停用憑證檢查、否則您必須安裝CA認證StorageGRID 以供使用。
+* 您不得在 StorageGRID 物件存放區上啟用物件版本管理功能。
+* 不需要使用此功能。FabricPool
+* 如果StorageGRID 將某個節點部署在虛AFF 擬機器上、且該虛擬機器的儲存設備已從NetApp支援系統指派、請確認該磁碟區FabricPool 並未啟用「分層原則」。
++
+停用FabricPool 與物件節點搭配使用的磁碟區的分層StorageGRID 功能、可簡化疑難排解和儲存作業。
+
++
+[NOTE]
+====
+切勿使用FabricPool 無法將StorageGRID 任何與還原StorageGRID 本身相關的資料分層。將StorageGRID 資料分層還原StorageGRID 至物件、可增加疑難排解和作業複雜度。
+
+====
+
+
+
+
+== 搭配FabricPool 使用Alibaba Cloud Object Storage的其他考量事項
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個系統、如果您在非AFF系統上使用Alibaba Cloud Object Storage、或是從現有的叢集升級、則需要FabricPool 使用一套不中斷的授權。
+
+* 在支援下列Alibaba物件儲存服務課程的支援對象系統和功能區上：AFF FAS ONTAP Select FabricPool
++
+** Alibaba物件儲存服務標準
+** Alibaba物件儲存服務不常存取
++
+https://www.alibabacloud.com/help/doc-detail/51374.htm["Alibaba Cloud：儲存課程簡介"]
+
+
+
+
+
+請聯絡您的NetApp銷售代表、以取得未列出的儲存類別相關資訊。
+
+
+
+== 搭配FabricPool 使用AWS S3搭配使用的其他考量
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+** 新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。
++
+如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用AWS S3、或是從現有叢集升級、則需要FabricPool 一份「不支援」授權。
+
++
+如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
+
+
+
+* 用來連接AWS S3物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+* 在支援下列Amazon S3儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
++
+** Amazon S3 Standard
+** Amazon S3 Standard -非常用存取（標準- IA）
+** Amazon S3 One Zone -不常用存取（單一區域- IA）
+** Amazon S3智慧分層
+** Amazon商業雲端服務
++
+https://aws.amazon.com/s3/storage-classes/["Amazon Web Services（AWS）文件：Amazon S3儲存類別"]
+
+
+
++
+如需未列出的儲存類別資訊、請聯絡您的銷售代表。
+
+* 在支援的基礎上、支援從通用SSD（gp2）和Amazon Elastic Block Store（EBS）的Througs Optimized HDD（ST1）Volume進行分層。Cloud Volumes ONTAP FabricPool
+
+
+
+
+== 搭配FabricPool 使用Google Cloud Storage的其他考量事項
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用Google Cloud Storage、或是從現有叢集升級、則需要FabricPool 使用支援功能。
+
+* 用來連線Google Cloud Storage物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+* 在支援下列Google Cloud Object儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
++
+** Google Cloud Multi-Regional
+** Google Cloud區域
+** Google Cloud Nearline
+** Google Cloud Coldline
++
+https://cloud.google.com/storage/docs/storage-classes["Google Cloud：儲存類別"]
+
+
+
+
+
+
+
+== 搭配FabricPool 使用IBM Cloud Object Storage搭配使用的其他考量事項
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用IBM Cloud Object Storage、或是從現有叢集升級、則需要FabricPool 一個不含任何功能的授權。
+
++
+如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
+
+* 用來連接IBM Cloud物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+
+
+
+
+== 搭配FabricPool 使用Microsoft Azure Blob Storage搭配使用的其他考量事項
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個系統、如果您在非AFF系統上使用Azure Blob Storage、或是從現有的叢集升級、則需要FabricPool 一份不含任何功能的授權。
+
++
+如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
+
+* 如果您搭配使用Azure Blob Storage搭配使用、則不需要取得此功能的證書。FabricPool Cloud Volumes ONTAP
+* 用來連接Azure Blob儲存物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+* 目前不支援Azure Stack（內部部署Azure服務）FabricPool 。
+* 在Microsoft Azure Blob Storage的帳戶層級、FabricPool 不支援熱儲存層和冷儲存層。
++
+不支援Blob層級分層。FabricPool也不支援分層至Azure的歸檔儲存層。
+
+
+
+
+
+== SAN傳輸協定存取的分層資料的其他考量事項
+
+在分層SAN傳輸協定存取的資料時、NetApp建議使用私有雲端、例如StorageGRID 由於連線考量、所以使用像是「物件」的私有雲端。
+
+
+
+== 功能或功能不受FabricPool 支援
+
+* 物件存放區已啟用WORM且已啟用物件版本管理。
+* 套用至物件存放區的資訊生命週期管理（ILM）原則
++
+ILM通常包含各種移動和刪除原則。這些原則可能會破壞FabricPool 雲端層的資料。使用物件存放區上設定的ILM原則時、可能會導致資料遺失。FabricPool
+
+* 7-Mode資料轉換、使用ONTAP VMware CLI命令或7-Mode轉換工具
+* 虛擬化FlexArray
+* RAID SyncMirror 功能、MetroCluster 不包括在一個不支援的組態中
+* 使用更新版本時的資料來源SnapLock ONTAP
+* 使用SMTape備份啟用FabricPool的Aggregate
+* 自動平衡功能
+* 使用「無」以外空間保證的磁碟區
++
+不支援使用「無」以外的空間保證、將雲端層附加至包含磁碟區的集合體。FabricPool例如、使用「Volume」（磁碟區）空間保證的磁碟區（「空間保證」「Volume」）不受支援。
+
+* 具有DP_最佳化授權的叢集
+* Flash Pool Aggregate
+

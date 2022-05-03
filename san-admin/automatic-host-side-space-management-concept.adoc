@@ -1,0 +1,28 @@
+---
+permalink: san-admin/automatic-host-side-space-management-concept.html 
+sidebar: sidebar 
+keywords: automatic, host-side, space, management, scsi, thinly, provisioned, luns 
+summary: 如果您的主機支援SCSI精簡配置、ONTAP 您可以啟用資訊分享功能中的空間分配選項、以開啟自動主機端空間管理功能。 
+---
+= 透過SCSI精簡配置的LUN、自動進行主機端空間管理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的主機支援SCSI精簡配置、您可以啟用ONTAP 支援功能的「速度分配」選項、以開啟自動主機端空間管理功能。
+
+啟用SCSI精簡配置可讓您執行下列作業。
+
+* 自動主機端空間管理
++
+在支援SCSI精簡配置的主機上刪除資料時、主機端空間管理會識別主機檔案系統上刪除的資料區塊、並自動發出一或多個「csi unmap」命令、釋放儲存系統上的對應區塊。
+
+* 當LUN空間不足時通知主機、同時讓LUN保持連線
++
+在不支援SCSI精簡配置的主機上、當包含LUN的磁碟區空間不足且無法自動擴充時ONTAP 、無法將LUN離線。但是ONTAP 、在支援SCSI精簡配置的主機上、當LUN空間不足時、不讓它離線。LUN會以唯讀模式保持線上狀態、並通知主機LUN不再接受寫入作業。
+
+
+
+https://docs.netapp.com/us-en/ontap-sanhost/index.html["SAN主機組態ONTAP"]

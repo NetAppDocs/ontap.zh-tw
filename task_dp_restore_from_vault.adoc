@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: task_dp_restore_from_vault.html 
+keywords: netapp, ontap, single file, snap restore, sfsr, restore file, point-in-time, vault, roll back, rollback, snapvault, snapshot copy, data protection, data recovery, disaster recovery, DR, lost data, corrupted data 
+summary: 當磁碟區中的資料遺失或毀損時、您可以從先前的Snapshot複本還原資料、以復原資料。 
+---
+= 從先前的Snapshot複本還原磁碟區
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+當磁碟區中的資料遺失或毀損時、您可以從先前的Snapshot複本還原資料、以復原資料。
+
+此程序會以舊版Snapshot複本的資料取代來源磁碟區上的目前資料。您應該在目的地叢集上執行此工作。
+
+.步驟
+. 按一下「*保護>關係*」、然後按一下來源Volume名稱。
+. 按一下 image:icon_kabob.gif["Alt=功能表選項"] 然後選取*還原*。
+. 在*來源*下、預設會選取來源Volume。如果您要選擇來源以外的磁碟區、請按一下*其他Volume *。
+. 在*目的地*下、選擇您要還原的Snapshot複本。
+. 如果來源與目的地位於不同的叢集上、請在遠端叢集上按一下*保護>關係*、以監控還原進度。
+
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/volume-restore-snapvault/index.html["使用SnapVault 功能概述進行Volume還原"^] 
+
+
+| 指令行介面ONTAP | link:./data-protection/restore-volume-snapvault-backup-task.html["從SnapMirror目的地還原磁碟區內容"^] 
+|===

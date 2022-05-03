@@ -1,0 +1,60 @@
+---
+permalink: smb-admin/security-descriptors-apply-file-folder-security-concept.html 
+sidebar: sidebar 
+keywords: security, descriptor, contain, access, control, list, file, folder, audit, user, how security descriptors are used to apply file and folder security 
+summary: 安全性描述元包含存取控制清單、可決定使用者可對檔案和資料夾執行的動作、以及使用者存取檔案和資料夾時所稽核的項目。 
+---
+= 如何使用安全性描述元來套用檔案和資料夾安全性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全性描述元包含存取控制清單、可決定使用者可對檔案和資料夾執行的動作、以及使用者存取檔案和資料夾時所稽核的項目。
+
+* *權限*
++
+物件擁有者允許或拒絕權限、並決定物件（使用者、群組或電腦物件）可對指定的檔案或資料夾執行哪些動作。
+
+* *安全性描述元*
++
+安全性描述元是包含安全性資訊的資料結構、可定義與檔案或資料夾相關的權限。
+
+* *存取控制清單（ACL）*
++
+存取控制清單是安全性描述元中所包含的清單、其中包含使用者、群組或電腦物件可在套用安全性描述元的檔案或資料夾上執行哪些動作的相關資訊。安全性描述元可包含下列兩種ACL：
+
++
+** 判別存取控制清單（DACL）
+** 系統存取控制清單（SACL）
+
+
+* *任意存取控制清單（DACL）*
++
+DACL包含使用者、群組和電腦物件的「小島嶼」清單、這些使用者、群組和電腦物件均可存取或拒絕存取檔案或資料夾上的動作。DACL包含零個以上的存取控制項目（ACE）。
+
+* *系統存取控制清單（SACL）*
++
+SACL包含已記錄成功或失敗稽核事件之使用者、群組及電腦物件的「小島嶼」清單。SACL包含零個以上的存取控制項目（ACE）。
+
+* *存取控制項目（ACE）*
++
+ACE是DACL或SACL中的個別項目：
+
++
+** DACL存取控制項目會指定特定使用者、群組或電腦物件所允許或拒絕的存取權限。
+** SACL存取控制項目會指定在稽核特定使用者、群組或電腦物件執行的指定動作時、要記錄的成功或失敗事件。
+
+
+* *權限繼承*
++
+權限繼承說明如何將安全性描述元中定義的權限、從父物件傳播到物件。子物件只會繼承可繼承的權限。設定父物件的權限時、您可以決定資料夾、子資料夾和檔案是否可以繼承「Apply to 'dit-folder'、'shub資料夾'和'filers'」。
+
+
+
+xref:../nas-audit/create-ntfs-security-descriptor-file-task.adoc[使用CLI在NTFS檔案和資料夾上設定及套用檔案安全性]
+
+link:../nas-audit/index.html["SMB與NFS稽核與安全性追蹤"]
+
+xref:configure-apply-audit-policies-ntfs-files-folders-task.adoc[使用CLI設定及套用稽核原則至NTFS檔案和資料夾]

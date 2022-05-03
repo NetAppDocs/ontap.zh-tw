@@ -1,0 +1,37 @@
+---
+permalink: nas-audit/create-fpolicy-event-task.html 
+sidebar: sidebar 
+keywords: creating, fpolicy event 
+summary: 在建立FPolicy原則組態時、您需要建立FPolicy事件。您可以在建立事件時、將其與FPolicy原則建立關聯。事件會定義要監控的傳輸協定、以及要監控和篩選的檔案存取事件。 
+---
+= 建立FPolicy事件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立FPolicy原則組態時、您需要建立FPolicy事件。您可以在建立事件時、將其與FPolicy原則建立關聯。事件會定義要監控的傳輸協定、以及要監控和篩選的檔案存取事件。
+
+您應該填寫FPolicy活動工作表。
+
+.步驟
+. 使用「vserver fpolicy policy事件create」命令建立FPolicy事件。
++
+「vserver fpolicy原則事件create -vserver-name vs1.example.com -EVENT1 -protocol CIFS -file-operations open, close、read, write」
+
+. 使用「vserver fpolicy policy EVENT show」命令來驗證FPolicy事件組態。
++
+「vserver fpolicy policy事件show -vserver vs1.example.com」
+
++
+[listing]
+----
+
+                  Event               File                    Is Volume
+Vserver           Name      Protocols Operations    Filters   Operation
+---------------   --------- --------- ------------- --------- ------------
+vs1.example.com   event1    cifs      open, close,  -         false
+                                      read, write
+----
+

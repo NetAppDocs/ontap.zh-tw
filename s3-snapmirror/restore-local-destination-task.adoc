@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/restore-local-destination-task.html 
+keywords: restore a bucket from the destination storage VM remote cluster 
+summary: 當來源儲存區中的資料遺失或毀損時、您可以從目的地儲存區還原資料、以重新填入資料。 
+---
+= 從目的地儲存VM（遠端叢集）還原儲存區
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+當來源儲存區中的資料遺失或毀損時、您可以從目的地儲存區還原資料、以重新填入資料。
+
+您可以將目的地庫位還原至現有的庫位或新的庫位。還原作業的目標儲存區必須大於目的地儲存區的邏輯已用空間。
+
+如果您使用現有的儲存區、則在開始還原作業時必須是空的。還原不會「回溯」儲存區的時間、而是將先前的內容填入一個空的儲存區。
+
+還原作業必須從遠端叢集啟動。
+
+
+
+== System Manager程序
+
+還原備份資料：
+
+. 按一下*保護>關係*、然後選取儲存庫。
+. 按一下 image:icon_kabob.gif["更多圖示"] 然後選取*還原*。
+. 在*來源*下、選取*現有的Bucket*（預設值）或*新的Bucket*。
++
+** 若要還原至*現有的Bucket *（預設值）、請完成下列動作：
++
+*** 選取叢集和儲存VM以搜尋現有的儲存區。
+*** 選取現有的庫位。
+
+
+
+
+. 複製並貼上目的地S3伺服器CA憑證的內容。
++
+** 若要還原成*新的Bucket *、請輸入下列值：
++
+*** 用於託管新儲存區的叢集與儲存VM。
+*** 新的儲存庫名稱、容量和效能服務層級。請參閱 link:../s3-config/storage-service-definitions-reference.html["儲存服務層級"] 以取得更多資訊。
+*** 目的地S3伺服器CA憑證的內容。
+
+
+
+
+. 在「*目的地*」下、複製並貼上來源S3伺服器CA憑證的內容。
+. 按一下「*保護*>關係」以監控還原進度。
+
+
+
+
+== CLI程序
+
+. 如果您要還原至新的儲存庫、請建立新的儲存庫。如需詳細資訊、請參閱 link:create-cloud-backup-new-bucket-task.html["建立新儲存庫（雲端目標）的備份關係"]。
+. 針對目的地儲存區初始化還原作業：「napmirror restore -source-path _svm_name_：/bucke/_bucket_name_-destination-path _svm_name_：/bucket/_bucket_name_」
+
+
+.範例
+[listing]
+----
+clusterA::> snapmirror restore -source-path vs0:/bucket/test-bucket -destination-path vs1:/bucket/test-bucket-mirror
+----

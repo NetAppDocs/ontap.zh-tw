@@ -1,0 +1,20 @@
+---
+permalink: volumes/delete-qtree-affects-tree-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, deleting, qtree, affects, tree quotas 
+summary: 刪除qtree時、ONTAP 所有適用於該qtree的配額（無論是明確的或衍生的配額）都不再由停止套用。 
+---
+= 刪除qtree如何影響樹狀結構配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+刪除qtree時、ONTAP 所有適用於該qtree的配額（無論是明確的或衍生的配額）都不再由停止套用。
+
+配額規則是否持續、取決於您刪除qtree的位置：
+
+* 如果您使用ONTAP 還原刪除qtree、則會自動刪除該qtree的配額規則、包括樹狀結構配額規則、以及為該qtree設定的任何使用者和群組配額規則。
+* 如果您使用CIFS或NFS用戶端刪除qtree、則必須刪除該qtree的任何配額規則、以免在重新初始化配額時發生錯誤。如果您建立的新qtree名稱與刪除的qtree名稱相同、則在重新初始化配額之前、現有的配額規則不會套用至新的qtree。
+

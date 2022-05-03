@@ -1,0 +1,43 @@
+---
+permalink: volumes/delete-flexvol-task.html 
+sidebar: sidebar 
+keywords: delete, flexvol volume 
+summary: 您可以刪除FlexVol 不再需要或含有毀損資料的功能。 
+---
+= 刪除FlexVol 一個流通量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以刪除FlexVol 不再需要或含有毀損資料的功能。
+
+任何應用程式都不得存取您要刪除之磁碟區中的資料。
+
+[NOTE]
+====
+如果您不小心刪除了磁碟區、請聯絡技術支援部門以取得協助。
+
+====
+.步驟
+. 如果磁碟區已掛載、請將其卸載：
++
+"Volume unmount -vserver vserver_name -volume volume volume Volume name"
+
+. 如果磁碟區是SnapMirror關係的一部分、請使用「napmirror DELETE」命令刪除關係。
+. 如果磁碟區已上線、請將磁碟區離線：
++
+"Volume offline -vserver vserver_name volume名稱"
+
+. 刪除Volume：
++
+"Volume DELETE -vserver vserver_name volume名稱"
+
+
+
+
+
+== 結果
+
+磁碟區會連同任何相關的配額原則和qtree一起刪除。

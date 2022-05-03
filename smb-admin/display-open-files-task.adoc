@@ -1,0 +1,169 @@
+---
+permalink: smb-admin/display-open-files-task.html 
+sidebar: sidebar 
+keywords: display, information, smb, file, connection, session, if, list, volume, share, name, contiuous, available, protection, level, helpful, nondisruptive, operation, display information about open smb files 
+summary: 您可以顯示開啟SMB檔案的相關資訊、包括SMB連線和工作階段ID、託管磁碟區、共用名稱和共用路徑。您可以顯示檔案持續可用保護層級的相關資訊，這有助於判斷開啟的檔案是否處於支援不中斷營運的狀態。 
+---
+= 顯示開啟SMB檔案的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示開啟SMB檔案的相關資訊、包括SMB連線和工作階段ID、託管磁碟區、共用名稱和共用路徑。您可以顯示檔案持續可用保護層級的相關資訊、這有助於判斷開啟的檔案是否處於支援不中斷營運的狀態。
+
+您可以在已建立的SMB工作階段中顯示開啟檔案的相關資訊。當您需要判斷SMB工作階段中特定檔案的SMB工作階段資訊時、所顯示的資訊非常有用。
+
+例如、如果您有SMB工作階段、其中有些開啟的檔案會以持續可用的保護開啟、有些則無法以持續可用的保護開啟（「vserver CIFS工作階段show」命令輸出中「持續可用」欄位的值為「部分」）、 您可以使用此命令來判斷哪些檔案無法持續使用。
+
+您可以使用「vserver CIFS工作階段檔案show」命令、在儲存虛擬機器（SVM）上的已建立SMB工作階段中、以摘要形式顯示所有開啟檔案的資訊、而不需任何選用參數。
+
+不過、在許多情況下、傳回的輸出量很大。您可以指定選用參數、自訂輸出中顯示的資訊。如果您只想檢視開啟檔案的一小部分資訊、這項功能就很有幫助。
+
+* 您可以使用選用的「-Fields」參數、在您選擇的欄位上顯示輸出。
++
+您可以單獨使用此參數、也可以搭配其他選用參數一起使用。
+
+* 您可以使用「-instance」參數來顯示有關開啟SMB檔案的詳細資訊。
++
+您可以單獨使用此參數、也可以搭配其他選用參數一起使用。
+
+
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您要顯示開啟的SMB檔案... | 輸入下列命令... 
+
+
+ a| 
+在SVM上以摘要形式顯示
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name」
+
+
+
+ a| 
+在指定的節點上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -nodes {node_name|local}」
+
+
+
+ a| 
+在指定的檔案ID上
+ a| 
+「vserver CIFS工作階段檔案show -vserver vserver_name -file-id integer'
+
+
+
+ a| 
+在指定的SMB連線ID上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -connection-id integer'
+
+
+
+ a| 
+在指定的SMB工作階段ID上
+ a| 
+「vserver CIFS工作階段檔案show -vserver vserver_name -session-id integer'
+
+
+
+ a| 
+在指定的託管Aggregate上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -hosting-Aggregate aggregate _name」
+
+
+
+ a| 
+在指定的磁碟區上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -hosting-volume volume volume volume名稱」
+
+
+
+ a| 
+在指定的SMB共用區上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -share_name」
+
+
+
+ a| 
+在指定的SMB路徑上
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -path path'
+
+
+
+ a| 
+提供指定等級的持續可用保護
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -持續可用｛否|是｝」
+
+[NOTE]
+====
+如果持續可用狀態為「否」、表示這些開啟的檔案無法在不中斷營運的情況下從接管和恢復中恢復。在高可用度關係中、他們也無法從合作夥伴之間的一般Aggregate重新配置中恢復。
+
+====
+
+
+ a| 
+指定的重新連線狀態
+ a| 
+「Vserver CIFS工作階段檔案show -vserver vserver_name -resned｛No | Yes｝」
+
+[NOTE]
+====
+如果重新連線狀態為「否」、則在中斷連線事件後、開啟的檔案不會重新連線。這可能表示檔案從未中斷連線、或是檔案已中斷連線且未成功重新連線。如果重新連線狀態為「是」、表示中斷連線事件後、開啟的檔案會成功重新連線。
+
+====
+|===
++
+您可以使用其他選用參數來精簡輸出結果。如需詳細資訊、請參閱手冊頁。
+
+
+
+下列範例顯示SVM VS1上開啟檔案的相關資訊：
+
+[listing]
+----
+cluster1::> vserver cifs session file show -vserver vs1
+Node:       node1
+Vserver:    vs1
+Connection: 3151274158
+Session:    1
+File    File      Open Hosting               Continuously
+ID      Type      Mode Volume    Share       Available
+------- --------- ---- --------- ----------- ------------
+41      Regular   r    data      data        Yes
+Path: \mytest.rtf
+----
+下列範例顯示SVM VS1上開啟檔案ID為82的SMB檔案的詳細資訊：
+
+[listing]
+----
+cluster1::> vserver cifs session file show -vserver vs1 -file-id 82 -instance
+
+                  Node: node1
+               Vserver: vs1
+               File ID: 82
+         Connection ID: 104617
+            Session ID: 1
+             File Type: Regular
+             Open Mode: rw
+Aggregate Hosting File: aggr1
+   Volume Hosting File: data1
+            CIFS Share: data1
+  Path from CIFS Share: windows\win8\test\test.txt
+            Share Mode: rw
+           Range Locks: 1
+Continuously Available: Yes
+           Reconnected: No
+----
+xref:display-session-task.adoc[顯示SMB工作階段資訊]

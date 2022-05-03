@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_failover_groups_and_policies_for_lifs_overview.html 
+keywords: lif, failover, fail, over, target, automatic, automatically, port, link, failure, group, broadcast, domain, lif failover is the automatic migration of a lif to a different network port in response to a link failure, configure failover groups and policies for lifs overview, network interface show -failover 
+summary: LIF容錯移轉是將LIF自動移轉至不同的網路連接埠、以因應連結故障 
+---
+= 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+LIF容錯移轉是指自動將LIF移轉至不同的網路連接埠、以因應LIF目前連接埠上的連結故障。這是提供高可用度以連線至SVM的關鍵元件。設定LIF容錯移轉包括建立容錯移轉群組、修改LIF以使用容錯移轉群組、以及指定容錯移轉原則。
+
+容錯移轉群組包含一組來自叢集中一或多個節點的網路連接埠（實體連接埠、VLAN和介面群組）。容錯移轉群組中的網路連接埠可定義LIF可用的容錯移轉目標。容錯移轉群組可以指派叢集管理、節點管理、叢集間及NAS資料生命期給它。
+
+
+IMPORTANT: 如果LIF設定為沒有有效的容錯移轉目標、則LIF嘗試容錯移轉時會發生中斷。您可以使用「network interface show -fover」命令來驗證容錯移轉組態。
+
+建立廣播網域時、系統會自動建立同名的容錯移轉群組、其中包含相同的網路連接埠。此容錯移轉群組是由系統自動管理、也就是說、當連接埠從廣播網域新增或移除時、它們會自動從這個容錯移轉群組中新增或移除。對於不想管理自己的容錯移轉群組的系統管理員而言、這是一種效率。

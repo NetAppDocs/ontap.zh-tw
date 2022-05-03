@@ -1,0 +1,45 @@
+---
+permalink: nfs-config/create-kerberos-realm-config-task.html 
+sidebar: sidebar 
+keywords: create, nfs, kerberos, realm, configuration 
+summary: 如果您想ONTAP 要讓靜態存取環境中的外部Kerberos伺服器、必須先設定SVM使用現有的Kerberos領域。若要這麼做、您需要收集Kerberos Kdc伺服器的組態值、然後使用vserver NFS Kerberos領域create命令、在SVM上建立Kerberos領域組態。 
+---
+= 建立NFS Kerberos領域組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想ONTAP 要讓靜態存取環境中的外部Kerberos伺服器、必須先設定SVM使用現有的Kerberos領域。若要這麼做、您需要收集Kerberos Kdc伺服器的組態值、然後使用「vserver NFS Kerberos領域create」命令、在SVM上建立Kerberos領域組態。
+
+叢集管理員應已在儲存系統、用戶端和Kdc伺服器上設定NTP、以避免驗證問題。用戶端與伺服器之間的時間差異（時鐘偏移）是驗證失敗的常見原因。
+
+.步驟
+. 請諮詢您的Kerberos管理員、以判斷要提供「vserver NFS Kerberos領域create」命令的適當組態值。
+. 在SVM上建立Kerberos領域組態：
++
+「Vserver NFS Kerberos領域create -vserver _vserver_name_-領域_領域 名稱__｛AD_KD_server_values | AD_KD_server_values｝_-comment "_text_"
+
+. 確認已成功建立Kerberos領域組態：
++
+「vserver NFS Kerberos領域顯示」
+
+
+
+下列命令會為SVM VS1建立NFS Kerberos領域組態、該組態使用Microsoft Active Directory伺服器做為Kdc伺服器。Kerberos領域是AUTH.EXAMPLE.COM。Active Directory伺服器的名稱為ad-1、其IP位址為10.10.8.14。允許的時鐘偏移為300秒（預設值）。Kdc伺服器的IP位址為10.10.8.14、其連接埠號碼為88（預設）。「Microsoft Kerberos組態」是註解。
+
+[listing]
+----
+vs1::> vserver nfs kerberos realm create -vserver vs1 -realm AUTH.EXAMPLE.COM -adserver-name ad-1
+-adserver-ip 10.10.8.14 -clock-skew 300 -kdc-ip 10.10.8.14 -kdc-port 88 -kdc-vendor Microsoft
+-comment "Microsoft Kerberos config"
+----
+下列命令會為使用MIT Kdc的SVM VS1建立NFS Kerberos領域組態。Kerberos領域是SECURITY.EXAMPLE.COM。允許的時鐘偏移為300秒。Kdc伺服器的IP位址為10.10.9.1、其連接埠號碼為88。其他的Kdc廠商則表示UNIX廠商。管理伺服器的IP位址為10.10.9.1、其連接埠號碼為749（預設）。密碼伺服器的IP位址為10.10.9.1、其連接埠號碼為464（預設）。「UNIX Kerberos組態」是註解。
+
+[listing]
+----
+vs1::> vserver nfs kerberos realm create -vserver vs1 -realm SECURITY.EXAMPLE.COM. -clock-skew 300
+-kdc-ip 10.10.9.1 -kdc-port 88 -kdc-vendor Other -adminserver-ip 10.10.9.1 -adminserver-port 749
+-passwordserver-ip 10.10.9.1 -passwordserver-port 464 -comment "UNIX Kerberos config"
+----

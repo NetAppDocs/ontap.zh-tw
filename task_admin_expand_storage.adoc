@@ -1,0 +1,93 @@
+---
+sidebar: sidebar 
+permalink: task_admin_expand_storage.html 
+keywords: system manager, expand, expanding, add, adding, add LUN to existing volume, storage, increase storage, increase size of LUN, increase size of volume, more capacity, storage capacity 
+summary: 您可以增加磁碟區或LUN的大小、讓主機有更多可用空間。從功能介紹9.8開始ONTAP 、您可以使用System Manager將LUN新增至現有磁碟區。 
+---
+= 擴充儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+使用System Manager、您可以增加磁碟區或LUN的大小、以便讓主機有更多可用空間。LUN的大小不得超過所含磁碟區的大小。
+
+* <<Increase the size of a volume>>
+* <<Increase the size of a LUN>>
+
+
+此外、您也可以將LUN新增至現有磁碟區。使用ONTAP 搭載NetApp技術的System Manager時、程序會有所不同
+
+* <<Add a LUN to an existing volume (ONTAP 9.7)>>
+* <<Add a LUN to an existing volume (ONTAP 9.8)>>
+
+
+此外、從ONTAP 功能介紹9.8開始、您可以使用System Manager將LUN新增至現有磁碟區。
+
+
+
+== 增加磁碟區的大小
+
+.步驟
+. 按一下「*儲存設備>磁碟區*」。
+. 將游標移到您要增加大小的磁碟區名稱上。
+. 按一下 image:icon_kabob.gif["kabob圖示"]。
+. 選擇*編輯*。
+. 提高容量價值。
+
+
+
+
+== 增加LUN的大小
+
+.步驟
+. 單擊* Storage（儲存設備）> LUN*。
+. 將游標移到您要增加大小的LUN名稱上。
+. 按一下 image:icon_kabob.gif["kabob圖示"]。
+. 選擇*編輯*。
+. 提高容量價值。
+
+
+
+
+== 新增LUN至現有磁碟區（ONTAP NetApp 9.7）
+
+若要將System Manager搭配ONTAP 使用以更新版本的版本9.7、將LUN新增至現有的磁碟區、您應該先切換至「經典檢視」。
+
+.步驟
+. 登入ONTAP System Manager（更新）。
+. 按一下*經典檢視*。
+. 選擇* Storage（儲存設備）> LUN > Create*（建立*）
+. 指定要建立LUN的詳細資料。
+. 指定LUN應新增至哪個現有磁碟區或qtree。
+
+
+
+
+== 新增LUN至現有磁碟區（ONTAP 《》）
+
+從功能介紹9.8開始ONTAP 、您可以使用System Manager將LUN新增至現有的磁碟區、該磁碟區至少有一個LUN。
+
+.步驟
+. 單擊* Storage（儲存設備）> LUN*。
+. 按一下*「Add+*」。
+. 填寫* Add LUN*（添加LUN*）窗口中的字段。
+. 選擇*更多選項*。
+. 選中標有* Group with related LUN*的複選框。
+. 在下拉式欄位中、選取要新增其他LUN的磁碟區上存在的LUN。
+. 填寫其餘欄位。對於*主機對應*、請按一下其中一個選項按鈕：
++
+** *現有的啟動器群組*可讓您從清單中選取現有的群組。
+** *新的啟動器群組*可讓您在欄位中輸入新的群組。
+
+
+

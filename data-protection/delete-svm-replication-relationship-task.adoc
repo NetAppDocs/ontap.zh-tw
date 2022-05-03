@@ -1,0 +1,75 @@
+---
+permalink: data-protection/delete-svm-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: delete, svm, replication, relationship 
+summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除SVM複寫關係。然後您可以手動刪除不需要的目的地Volume。 
+---
+= 刪除SVM複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「napmirror DELETE」和「napmirror釋放」命令來刪除SVM複寫關係。然後您可以手動刪除不需要的目的地Volume。
+
+命令"shnapmirror版本"會從來源刪除任何SnapMirror建立的Snapshot複本。您可以使用「僅關係資訊」選項來保留Snapshot複本。
+
+如需命令的完整命令語法、請參閱手冊頁。
+
+.步驟
+. 從目的地SVM或目的地叢集執行下列命令、以中斷複寫關係：
++
+「napmirror中斷-source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+以下範例打破了來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
+----
+. 從目的地SVM或目的地叢集執行下列命令、以刪除複寫關係：
++
+「napmirror DELETE -source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+以下範例刪除來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror delete -source-path svm1: -destination-path svm_backup:
+----
+. 從來源叢集或來源SVM執行下列命令、以從來源SVM釋出複寫關係資訊：
++
+「napmirror release -source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+下列範例會從來源SVM「svm1」發佈指定複寫關係的資訊：
+
++
+[listing]
+----
+cluster_src::> snapmirror release -source-path svm1: -destination-path svm_backup:
+----
+

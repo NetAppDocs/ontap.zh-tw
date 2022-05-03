@@ -1,0 +1,27 @@
+---
+permalink: volumes/quotas-applied-concept.html 
+sidebar: sidebar 
+keywords: how quotas are applied, configure, quotas 
+summary: 瞭解配額的套用方式、可讓您設定配額並設定預期的限制。 
+---
+= 配額的套用方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+瞭解配額的套用方式、可讓您設定配額並設定預期的限制。
+
+每當試圖在FlexVol 啟用配額的情況下建立檔案或將資料寫入到位於支援配額的文件中時、就會在作業開始之前檢查配額限制。如果作業超過磁碟限制或檔案限制、則會禁止此作業。
+
+配額限制會依下列順序核取：
+
+. 該qtree的樹狀結構配額（如果檔案正在建立或寫入qtree0、則此檢查不相關）。
+. 擁有磁碟區上檔案之使用者的使用者配額
+. 擁有磁碟區上檔案之群組的群組配額
+. 在qtree上擁有檔案的使用者配額（如果檔案正在建立或寫入qtree0、則此檢查不相關）。
+. 在qtree上擁有檔案的群組配額（如果檔案正在建立或寫入qtree0、則此檢查不相關）。
+
+
+上限最小的配額可能不是先超過的配額。例如、如果Volume vol1的使用者配額為100 GB、 Volume vol1中qtree Q2的使用者配額為20 GB、如果該使用者已在Volume vol1中寫入超過80 GB的資料（但在qtree Q2之外）、則磁碟區上限會先達到。

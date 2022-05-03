@@ -1,0 +1,29 @@
+---
+permalink: disks-aggregates/modify-caching-policies-flash-pool-aggregates-task.html 
+sidebar: sidebar 
+keywords: modify, cache, policy, flash pool aggregates 
+summary: 只有在預期不同的快取原則能提供更好的效能時、才應該修改磁碟區的快取原則。您可以修改Flash Pool Aggregate上磁碟區的快取原則。 
+---
+= 修改Flash Pool Aggregate的快取原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+只有在預期不同的快取原則能提供更好的效能時、才應該修改磁碟區的快取原則。您可以修改Flash Pool Aggregate上磁碟區的快取原則。
+
+您必須判斷是否要修改快取原則。
+
+在大多數情況下、預設的「自動」快取原則是您可以使用的最佳快取原則。只有在不同的原則為您的工作負載提供更好的效能時、才應該變更快取原則。設定錯誤的快取原則可能會嚴重降低磁碟區效能、效能降級可能會隨著時間逐漸增加。修改快取原則時、請務必謹慎。如果您遇到磁碟區的效能問題、而快取原則已經變更、您應該將快取原則傳回「自動」。
+
+.步驟
+. 修改磁碟區的快取原則：
++
+「Volume modify -volume _volume名稱_-bapping_policy _policy_name_」
+
+
+
+下列範例將名為「vol2」的磁碟區快取原則修改為「nONE」原則：
+
+「Volume modify -volume vol2 -快 取原則nONE」

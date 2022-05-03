@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html 
+keywords: SM-BC, SMBC, volume, consistency group, remove volume, add volume 
+summary: 如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。 
+---
+= 新增及移除一致性群組中的磁碟區
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
+
+
+NOTE: 此工作流程適用於ONTAP FAS9.8和9.9.1。從功能性的9.10.1開始ONTAP 、建議您自行管理 link:../consistency-groups/index.html["一致性群組"] 透過System Manager或ONTAP 透過靜止API。
+
+.關於這項工作
+* 當一致性群組處於「不同步」狀態時、不允許變更成分。
+* 目的地Volume應為DP類型。
+
+
+
+NOTE: 您新增以擴充一致性群組的新磁碟區必須在來源與目的地磁碟區之間有一對通用的Snapshot複本。
+
+此程序假設有兩個磁碟區對應：Vol_src1 <-> vol_dst1和vol_src2 <-> vol_dst2、在端點VS1_src：/cg/cs_src和VS1_dst../cg/c_dst之間的一致性群組關係中。
+
+. 驗證來源與目的地叢集上的來源與目的地磁碟區之間是否存在通用的Snapshot複本：
++
+「來源：>Snapshot show -vserver VS1_src -volume vol_src3 -snapshot SnapMirror®」
+
++
+「目的地：：：> Snapshot show -vserver VS1_dst -volume vol_dst3 -snapshot SnapMirror*」
+
+. 如果沒有常見的Snapshot複本、請建立FlexVol 並初始化一個SnapMirror關係：
++
+「目的地：：：>SnapMirror初始化-source-path VS1_src：vol_src3 -dite-path VS1_dst:vol_dst3」
+
+. 刪除零RTO一致性群組關係：
++
+「目的地：」：>SnapMirror刪除-dite-path VS1_dst:vol_dst3
+
+. 釋放來源SnapMirror關係、並保留常見的Snapshot複本：
++
+「來源：：>SnapMirror版本-僅關係資訊true -dest-path VS1_dst:vol_dst3」
+
+. 取消對應LUN並刪除現有的一致性群組關係：
++
+「目的地：：>LUN對應刪除-vserver VS1_dst -path <LUN_path>-igroup <igroup_name>'
+
++
+
+NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主機I/O提供服務
+
++
+「目的地：」：>SnapMirror刪除-dite-path VS1_dst../cg / Cg _dst
+
++
+「來源：：>SnapMirror版本-dite-path VS1_dst../cc/CG_dst -nation-info-only true」
+
+. 以新的組成方式建立新的一致性群組：
++
+「目的地：：：>SnapMirror create -source-path VS1_SRS:/cgc/cm_src -dite-path VS1_dst:/cg/cg_dst -cc-item對應vol_rc1：@vol_dst1、vol_src2：@vol_dst2、vol_src3：@vol_dst3。
+
+. 重新同步零RTO一致性群組關係、以確保其同步：
++
+「目的地：：：>SnapMirror重新同步-dest-path VS1_dst：/Cg / Cg _dst」
+
+. 重新對應您在步驟5中未對應的LUN：
++
+「目的地：：> LUN對應-vserver VS1_dst -path <LUN_path>-igroup <igroup_name>'
+
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+

@@ -1,0 +1,70 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_converting_existing_relationships_to_smbc.html 
+keywords: SM-BC, SMBC, convert, Synchronous SnapMirror, zero RPO, zero recovery time objective, zero RTO, existing 
+summary: 您可以將現有的零恢復點保護（零RPO）同步SnapMirror關係、轉換成SMBC零RTO同步SnapMirror一致性群組關係。 
+---
+= 將現有關係轉換成SMBC關係
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將現有的零恢復點保護（零RPO）同步SnapMirror關係、轉換成SMBC零RTO同步SnapMirror一致性群組關係。
+
+.開始之前
+* 一線和二線之間存在零RPO同步SnapMirror關係。
+* 在建立零RTO SnapMirror關係之前、會先取消對應目的地磁碟區上的所有LUN。
+* SMBC僅支援SAN傳輸協定（非NFS/CIFS）。確保沒有為NAS存取安裝一致性群組的任何成員。
+
+
+.關於這項工作
+* 您必須是來源和目的地的叢集和SVM管理員。
+* 您無法變更SnapMirror原則、將零RPO轉換為零RTO同步。
+* 如果已對應次要磁碟區上的現有LUN、則使用AutomatedFailover原則建立的「napmirror create」會觸發錯誤。在發出「napmirror creation」命令之前、您必須先確定LUN已取消對應。
+
+
+.步驟
+. 針對現有關係執行SnapMirror更新作業：
++
+「目的地：」：>SnapMirror更新-dite-path VS1_dst:vol1
+
+. 驗證SnapMirror更新是否成功完成：
++
+「目的地：：>SnapMirror show」
+
+. 靜止每個零RPO同步關係：
++
+「目的地：：：>SnapMirror靜止-dite-path VS1_dst:vol1」
+
++
+「目的地：：：>SnapMirror靜止-dite-path VS1_dst:vol2」
+
+. 刪除零RPO同步關係：
++
+「目的地：」：>SnapMirror刪除-dite-path VS1_dst:vol1
+
++
+「目的地：」：>SnapMirror刪除-dite-path VS1_dst:vol2
+
+. 釋放來源SnapMirror關係、但保留常見的Snapshot複本：
++
+「來源：：>SnapMirror版本-僅關係資訊true -dite-path VS1_dst:vol1'
+
++
+「來源：：>SnapMirror版本-僅關係資訊true -dite-path VS1_dst:vol2」
+
+. 建立群組零RTO同步SnapMirror關係：
++
+「目的地：」：> SnapMirror create -source-path VS1_SRS:/ccc/cm_src -dite-path VS1_dst:/cc/cc_dst -cc-item對應vol1：@vol1、vol2：@vol2 - policy AutomatedFailover
+
+. 重新同步零RTO一致性群組：
++
+「目的地：」：> SnapMirror重新同步-dest-path VS1_dst../cg / Cg _dst
+
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+

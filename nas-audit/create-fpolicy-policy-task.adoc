@@ -1,0 +1,73 @@
+---
+permalink: nas-audit/create-fpolicy-policy-task.html 
+sidebar: sidebar 
+keywords: create, fpolicy, policy 
+summary: 當您建立FPolicy原則時、會將外部引擎和一或多個事件與原則建立關聯。此原則也會指定是否需要強制篩選、FPolicy伺服器是否具有存取儲存虛擬機器（SVM）上資料的權限、以及是否啟用離線檔案的傳遞讀取。 
+---
+= 建立FPolicy原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您建立FPolicy原則時、會將外部引擎和一或多個事件與原則建立關聯。此原則也會指定是否需要強制篩選、FPolicy伺服器是否具有存取儲存虛擬機器（SVM）上資料的權限、以及是否啟用離線檔案的傳遞讀取。
+
+.您需要的是 #8217 ；需要的是什麼
+* FPolicy原則工作表應完成。
+* 如果您打算設定原則使用FPolicy伺服器、則外部引擎必須存在。
+* 您計畫與FPolicy原則建立關聯的FPolicy事件必須至少存在一個。
+* 如果您要設定特殊權限資料存取、SVM上必須有SMB伺服器。
+
+
+.步驟
+. 建立FPolicy原則：
++
+「vserver fpolicy原則create -vserver_name vserver_name -police-name policy_name -engine engine_name -events EVOND_NAME、... [-is-muted｛true|假｝][-allow-特權 存取｛yes | no｝][-特權 使用者名稱網域\使用者名稱][-is-passthrough讀取啟用｛true|假｝]
+
++
+** 您可以將一或多個事件新增至FPolicy原則。
+** 預設會啟用強制篩選。
+** 如果您想要將「允許權限存取」參數設為「是」、以允許存取權限、您也必須設定授權使用者名稱以進行權限存取。
+** 如果您要設定passthrough讀取、將「as-pass-pass-read-enabling」參數設為「true」、您也必須設定特殊權限資料存取。
++
+下列命令會建立名為「policy1'」的原則、其事件名稱為「EVENT1」、外部引擎名稱為「engine 1'」。此原則會使用原則組態中的預設值：「vserver fpolicy create -vserver vs1.example.com -police-name policy1 -evenges EVENT1 -engine 1」
+
++
+下列命令會建立名為「policy2」的原則、其事件名稱為「'Event2」、外部引擎名稱為「engine 2」。此原則設定為使用指定的使用者名稱來使用權限存取。Passthsthread-read已啟用：
+
++
+「vserver fpolicy原則create -vserver vs1.example.com -policy-name policy2 -events事件事件事件2 -engine engine 2 -enerive-特權 存取yes（權限使用者名稱範例）\archive_acct-as-passrough-read-enabledtrue（vserver fpolicy原則建立-vserver -policy2 -事件事件
+
++
+下列命令會建立名為「native1」的原則、並將事件命名為「事件3」。此原則使用原生引擎、並在原則組態中使用預設值：
+
++
+「vserver fpolicy原則create -vserver vs1.example.com -police-name native1 -events event3 -engine native'
+
+
+
+. 使用「vserver fpolicy policy show」命令來驗證FPolicy原則組態。
++
+下列命令會顯示有關三個已設定的FPolicy原則的資訊、包括下列資訊：
+
++
+** 與原則相關聯的SVM
+** 與原則相關聯的外部引擎
+** 與原則相關的事件
+** 是否需要強制篩選
+** 是否需要特殊權限存取「vserver fpolicy policy show」
+
+
++
+[listing]
+----
+
+   Vserver       Policy     Events    Engine    Is Mandatory  Privileged
+                 Name                                         Access
+--------------   ---------  --------- --------- ------------  -----------
+vs1.example.com  policy1    event1    engine1   true          no
+vs1.example.com  policy2    event2    engine2   true          yes
+vs1.example.com  native1    event3    native    true          no
+----
+

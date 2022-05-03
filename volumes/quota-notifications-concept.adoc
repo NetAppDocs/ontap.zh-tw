@@ -1,0 +1,115 @@
+---
+permalink: volumes/quota-notifications-concept.html 
+sidebar: sidebar 
+keywords: understanding, quota, notifications 
+summary: 配額通知是傳送至事件管理系統（EMS）、也設定為SNMP設陷的訊息。 
+---
+= 關於配額通知
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配額通知是傳送至事件管理系統（EMS）、也設定為SNMP設陷的訊息。
+
+系統會針對下列事件傳送通知：
+
+* 達到硬配額、也就是說、試圖超過配額
+* 已超過軟配額
+* 不再超過軟配額
+
+
+臨界值與其他軟性配額稍有不同。臨界值只會在超出時觸發通知、而不會在不再超過通知時觸發通知。
+
+硬配額通知可透過Volume配額修改命令加以設定。您可以完全關閉它們、也可以變更它們的頻率、例如、以防止傳送多餘的訊息。
+
+軟配額通知無法設定、因為它們不太可能產生重複的訊息、而且唯一的目的是通知。
+
+下表列出配額傳送至EMS系統的事件：
+
+[cols="2*"]
+|===
+| 發生這種情況時... | 此事件會傳送至EMS ... 
+
+
+ a| 
+樹狀結構配額已達到硬限制
+ a| 
+WAFP.配額.qtree已超過
+
+
+
+ a| 
+磁碟區上的使用者配額已達到硬限制
+ a| 
+wafl.quota.user.exceeded`（適用於UNIX使用者）「wafl.quota.user.exceeded.win`（適用於Windows使用者）」
+
+
+
+ a| 
+qtree上的使用者配額已達到硬限制
+ a| 
+wafl.quota.userQtree.exceeded`（適用於UNIX使用者）「wafl.quota.userQtree.exceeded.win`（適用於Windows使用者）」
+
+
+
+ a| 
+磁碟區上的群組配額已達到硬限制
+ a| 
+wafl.quota.group.exceeded`
+
+
+
+ a| 
+qtree上的群組配額已達到硬限制
+ a| 
+wafl.quota.groupQtree.exceeded`
+
+
+
+ a| 
+超過軟限制、包括臨界值
+ a| 
+配額：softlimit.超越」
+
+
+
+ a| 
+不再超過軟限制
+ a| 
+quota.softlimit.normal`
+
+|===
+下表列出配額產生的SNMP設陷：
+
+[cols="2*"]
+|===
+| 發生這種情況時... | 此SNMP設陷已傳送... 
+
+
+ a| 
+已達到硬限制
+ a| 
+quotaExceed
+
+
+
+ a| 
+超過軟限制、包括臨界值
+ a| 
+QuotaoExceededed.和softQuotaExceed
+
+
+
+ a| 
+不再超過軟限制
+ a| 
+QuotaNormal和softQuotaNormal
+
+|===
+[NOTE]
+====
+通知包含qtree ID編號、而非qtree名稱。您可以使用「volume qtree show -id」命令、將qtree名稱與ID編號建立關聯。
+
+====

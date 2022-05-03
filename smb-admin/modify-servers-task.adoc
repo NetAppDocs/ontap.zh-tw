@@ -1,0 +1,83 @@
+---
+permalink: smb-admin/modify-servers-task.html 
+sidebar: sidebar 
+keywords: move, smb, server, workgroup, active, directory, domain, vserver, cifs, modify, command, modify smb servers 
+summary: 您可以使用vserver CIFS modify命令、將SMB伺服器從工作群組移至Active Directory網域、從工作群組移至其他工作群組、或從Active Directory網域移至工作群組。 
+---
+= 修改SMB伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver CIFS modify」命令、將SMB伺服器從工作群組移至Active Directory網域、從工作群組移至其他工作群組、或從Active Directory網域移至工作群組。
+
+您也可以修改SMB伺服器的其他屬性、例如SMB伺服器名稱和管理狀態。如需詳細資料、請參閱手冊頁。
+
+.選擇
+* 將SMB伺服器從工作群組移至Active Directory網域：
++
+.. 將SMB伺服器的管理狀態設定為「自己」。
++
+[listing]
+----
+Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
+----
+.. 將SMB伺服器從工作群組移至Active Directory網域：「vsserver CIFS modify -vserver _vserver_name_-domain_name_」
++
+[listing]
+----
+Cluster1::>vserver cifs modify -vserver vs1 -domain example.com
+----
++
+若要建立SMB伺服器的Active Directory機器帳戶、您必須提供Windows帳戶的名稱和密碼、並具有足夠的權限、以便將電腦新增至「_example _」網域內的「ou=_example _ ou」容器。
+
++
+從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到URI時、請在「-keytab-uri」參數中加入「vserver CIFS」命令。
+
+
+
+* 將SMB伺服器從工作群組移至其他工作群組：
++
+.. 將SMB伺服器的管理狀態設定為「自己」。
++
+[listing]
+----
+Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
+----
+.. 修改SMB伺服器的工作群組：「vserver CIFS modify -vserver _vserver_name_-workgroup _new_workgroup name_」
++
+[listing]
+----
+Cluster1::>vserver cifs modify -vserver vs1 -workgroup workgroup2
+----
+
+
+* 將SMB伺服器從Active Directory網域移至工作群組：
++
+.. 將SMB伺服器的管理狀態設定為「自己」。
++
+[listing]
+----
+Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
+----
+.. 將SMB伺服器從Active Directory網域移至工作群組：「vserver CIFS modify -vserver _vserver_name_-workgroup _workgroup name_」
++
+[listing]
+----
+cluster1::> vserver cifs modify -vserver vs1 -workgroup workgroup1
+----
++
+[NOTE]
+====
+若要進入工作群組模式、系統必須停用所有網域型功能、並自動移除其組態、包括持續可用的共用、陰影複製及AES。不過、網域設定的共用ACL（例如「EXAMPLE.COM\userName"」）無法正常運作、ONTAP 但無法由支援部門移除。命令完成後、請使用外部工具儘快移除這些共用ACL。如果啟用AES、系統可能會要求您提供具有足夠權限的Windows帳戶名稱和密碼、以便在「example.com」網域中停用該帳戶。
+
+====
++
+*** 使用「vserver CIFS modify」命令的適當參數來修改其他屬性。
+
+
+
+
+

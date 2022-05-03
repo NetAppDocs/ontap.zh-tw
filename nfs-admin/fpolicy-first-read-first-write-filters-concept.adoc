@@ -1,0 +1,44 @@
+---
+permalink: nfs-admin/fpolicy-first-read-first-write-filters-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, first, read, write, filter, work, nfs 
+summary: 當使用外部FPolicy伺服器啟用FPolicy、並將讀寫作業設為監控事件時、NFS用戶端在讀寫要求的高流量期間會經歷較長的回應時間。對於NFS用戶端、在FPolicy中使用第一讀取和第一寫入篩選器可減少FPolicy通知的數量、並改善效能。 
+---
+= FPolicy首次讀取和首次寫入篩選器如何搭配NFS運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當使用外部FPolicy伺服器啟用FPolicy、並將讀寫作業設為監控事件時、NFS用戶端在讀寫要求的高流量期間會經歷較長的回應時間。對於NFS用戶端、在FPolicy中使用第一讀取和第一寫入篩選器可減少FPolicy通知的數量、並改善效能。
+
+在NFS中、用戶端會擷取檔案的控制代碼來執行I/O作業。在重新啟動伺服器和用戶端之後、此處理程序可能仍有效。因此、用戶端可自由快取處理代碼並傳送要求、而無需再次擷取處理代碼。在一般工作階段中、會將許多讀取/寫入要求傳送至檔案伺服器。如果針對所有這些要求產生通知、可能會導致下列問題：
+
+* 由於額外的通知處理和更高的回應時間、所以負載較大。
+* 即使伺服器不受所有通知影響、仍有大量通知會傳送至FPolicy伺服器。
+
+
+從用戶端收到特定檔案的第一次讀取/寫入要求後、就會建立快取項目、而且讀取/寫入計數也會遞增。此要求會標示為第一次讀取/寫入作業、並產生FPolicy事件。在規劃及建立NFS用戶端的FPolicy篩選器之前、您應該先瞭解FPolicy篩選器的基本運作方式。
+
+* 第一讀取：篩選用戶端的第一讀取要求。
++
+當此篩選器用於NFS事件時、「-file-session-io-sgroup-count'和「-file-session-io-sgroup-duration」設定會決定處理FPolicy的第一次讀取要求。
+
+* 第一寫入：篩選用戶端的第一寫入要求。
++
+當此篩選器用於NFS事件時、「-file-session-io-sgroup-count'和「-file-session-io-sgroup-duration」設定會決定FPolicy處理的第一個寫入要求。
+
+
+
+NFS伺服器資料庫中會新增下列選項。
+
+[listing]
+----
+
+
+file-session-io-grouping-count: Number of I/O Ops on a File to Be Clubbed and Considered as One Session
+for Event Generation
+file-session-io-grouping-duration: Duration for Which I/O Ops on a File to Be Clubbed and Considered as
+One Session for Event Generation
+----

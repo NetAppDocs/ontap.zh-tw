@@ -1,0 +1,134 @@
+---
+sidebar: sidebar 
+permalink: task_admin_add_luns.html 
+keywords: volume, storage, add, increase storage, create, add lun, create lun, lun format, group related luns, add to storage VM, manual placement, Ansible Playbook, initiator, initiator group, protection, QoS policy, performance service level policy, 
+summary: 您可以建立LUN、並將其新增至已設定SAN傳輸協定的現有儲存VM。 
+---
+= 新增LUN
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以建立LUN、並將其新增至已設定SAN傳輸協定的現有儲存VM。
+
+image:workflow_admin_add_LUNs.gif["新增LUN工作的工作流程圖"]
+
+叢集中應該存在設定為SAN服務的儲存VM。
+
+.步驟
+. 轉至* Storage > LUN*。
+. 按一下 image:icon_add.gif["新增圖示"]。
+. 指定在每個LUN名稱開頭使用的前置詞。（如果您只要建立一個LUN、請輸入LUN名稱。）
+. 從下拉式清單中選取儲存VM。
++
+僅列出針對SAN傳輸協定所設定的儲存VM。如果只有一個設定為SAN傳輸協定的儲存VM可供使用、則不會顯示「*儲存VM*」欄位。
+
+. 指出您要建立多少LUN、以及每個LUN的大小。
+. 從下拉式清單中選取主機作業系統和LUN格式。
+. 輸入主機啟動器、並以逗號分隔。
+. 執行下列其中一項動作：
++
+[cols="30,70"]
+|===
+
+
+| 按一下此按鈕... | 若要執行此動作... 
+
+
+| *儲存* | LUN是以您輸入的規格建立。系統預設值用於其他規格。不需要執行其他步驟。 
+
+
+| *更多選項* | 請前往 <<step9>> 定義LUN的其他規格。 
+|===
+. [[step9、Step 9]如果您先前輸入LUN字首、則LUN字首已顯示、但您可以加以修改。否則、請輸入前置詞。
+. 從下拉式清單中選取儲存VM。
++
+僅列出針對SAN傳輸協定所設定的儲存VM。如果只有一個設定為SAN傳輸協定的儲存VM可供使用、則不會顯示「*儲存VM*」欄位。
+
+. 確定LUN的分組方式：
++
+[cols="40,60"]
+|===
+
+
+| 當您做出此選擇時... | 發生這種情況... 
+
+
+| *使用相關LUN*進行分組 | LUN將與儲存VM上現有磁碟區上的相關LUN一起分組。 
+
+
+| 無選擇 | LUN將會在稱為「Container」的磁碟區上分組。 
+|===
+. 在*儲存與最佳化*區段中、指定下列值：
++
+.. 如果您先前輸入LUN、則LUN的數量和容量已經顯示、但您可以加以修改。否則、請輸入值。
+.. 在*效能服務層級*欄位中、選取服務層級：
++
+[cols="55,45"]
+|===
+
+
+| 當您選取此服務層級... | 發生這種情況... 
+
+
+ a| 
+現有的服務層級、例如「極致」、「效能」或「價值」。
+
+只會顯示適用於系統平台AFF （例如、NetApp FAS 或其他平台）的服務層級。
+| 系統會自動選擇本機層級。請前往 <<step13>>。 
+
+
+| 自訂 | 請前往 <<step12c>> 定義新的服務層級。 
+|===
+.. [[step12c、Step 12c]從ONTAP 更新到更新版9.9.1開始、您可以使用System Manager手動選取您要放置所建立LUN的本機層（如果您已選取「Custom」（自訂）服務層級）。
++
+[cols="55,45"]
+|===
+
+
+| 當您做出此選擇時... | 您執行這些步驟... 
+
+
+| *手動放置* | 手動放置已啟用。請前往 <<step12d>> 以完成程序。 
+
+
+| 無選擇 | 未啟用手動選擇。系統會自動選取本機層。請前往 <<step13>>。 
+|===
+.. [[step12d、Step 12D]從下拉式功能表中選取本機層級。
+.. 選取QoS原則。
++
+選取「現有」以從現有原則清單中選擇、或選取「新增」以輸入新原則的規格。
+
+
+
+. [[step13、Step 13]在「*主機資訊*」區段中、主機作業系統和LUN格式已顯示、但您可以加以修改。
+. 在*主機對應*下、選取LUN的啟動器類型：
++
+** *現有的啟動器群組*：選取所顯示清單的啟動器群組。
+** *使用現有的啟動器群組*新增啟動器群組：指定新群組的名稱、然後選取您要用來建立新群組的群組。
+** *主機啟動器*：指定新啟動器群組的名稱、然後按一下「*+新增啟動器*」將啟動器新增至群組。
+
+
+. 在* Protection（保護）*區段中、指定LUN的保護。
++
+如果您選取*啟用SnapMirror（本機或遠端）*、請從下拉式清單中指定目的地叢集的保護原則和設定。
+
+. 按一下「 * 儲存 * 」。
++
+LUN會建立並新增至叢集和儲存VM。
+
++
+
+NOTE: 您也可以將這些LUN的規格儲存至可執行的教戰手冊。如需詳細資料、請前往 link:https://docs.netapp.com/us-en/ontap/task_use_ansible_playbooks_add_edit_volumes_luns.html["使用「可執行教戰手冊」來新增或編輯磁碟區或LUN"]。
+
+

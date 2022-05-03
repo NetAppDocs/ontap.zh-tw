@@ -1,0 +1,97 @@
+---
+permalink: smb-admin/precompute-branchcache-hashes-specified-paths-task.html 
+sidebar: sidebar 
+keywords: configure, branchcache, service, pre-compute, hash, file, directory, structure, compute, branchcache-enabled share non-peak hours, pre-compute branchcache hashes on specified paths 
+summary: 您可以將BranchCache服務設定為預先計算單一檔案、目錄或目錄結構中所有檔案的雜湊。如果您想要在關閉非尖峰時段內、針對啟用了BranchCache的共用區中的資料運算雜湊、這項功能就很有幫助。 
+---
+= 在指定路徑上預先計算的BranchCache雜湊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將BranchCache服務設定為預先計算單一檔案、目錄或目錄結構中所有檔案的雜湊。如果您想要在關閉非尖峰時段內、針對啟用了BranchCache的共用區中的資料運算雜湊、這項功能就很有幫助。
+
+如果您想在顯示雜湊統計資料之前先收集資料樣本、則必須使用「統計資料開始」和選用的「統計資料停止」命令。
+
+* 您必須指定要預先計算雜湊的儲存虛擬機器（SVM）和路徑。
+* 您也必須指定是否要以循環方式計算雜湊。
+* 如果您想要以遞迴方式計算雜湊、則BranchCache服務會在指定路徑下遍歷整個目錄樹狀結構、並針對每個符合條件的物件來計算雜湊。
+
+
+.步驟
+. 視需要預先運算雜湊：
++
+|===
+| 如果您想要預先計算雜湊... | 輸入命令... 
+
+
+ a| 
+單一檔案或目錄
+ a| 
+「Vserver CIFS BranchCache hash-create -vserver vserver_name -path path -recurse假」
+
+
+
+ a| 
+以循環方式處理目錄結構中的所有檔案
+ a| 
+「Vserver CIFS BranchCache hash-create -vserver vserver_name -path falure_path -recurse true」
+
+|===
+. 使用「統計資料」命令來驗證雜湊是否正在計算：
++
+.. 顯示所需SVM執行個體上「hashd」物件的統計資料：「統計資料show -object hashd -instance vserver_name」
+.. 重複執行命令、確認所建立的雜湊數量增加。
+
+
+
+
+以下範例會在路徑「/data」上建立雜湊、並在SVM VS1上的所有內含檔案和子目錄上建立雜湊：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache hash-create -vserver vs1 -path /data -recurse true
+
+cluster1::> statistics show -object hashd -instance vs1
+Object: hashd
+Instance: vs1
+Start-time: 9/6/2012 19:09:54
+End-time: 9/6/2012 19:11:15
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_hash_created                                       85
+    branchcache_hash_files_replaced                                 0
+    branchcache_hash_rejected                                       0
+    branchcache_hash_store_bytes                                    0
+    branchcache_hash_store_size                                     0
+    instance_name                                                vs1
+    node_name                                                  node1
+    node_uuid
+                                11111111-1111-1111-1111-111111111111
+    process_name                                                   -
+
+cluster1::> statistics show -object hashd -instance vs1
+Object: hashd
+Instance: vs1
+Start-time: 9/6/2012 19:09:54
+End-time: 9/6/2012 19:11:15
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_hash_created                                       92
+    branchcache_hash_files_replaced                                 0
+    branchcache_hash_rejected                                       0
+    branchcache_hash_store_bytes                                    0
+    branchcache_hash_store_size                                     0
+    instance_name                                                vs1
+    node_name                                                  node1
+    node_uuid
+                                11111111-1111-1111-1111-111111111111
+    process_name                                                   -
+----
+link:../performance-config/index.html["效能監控設定"]

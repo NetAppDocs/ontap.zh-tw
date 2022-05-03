@@ -1,0 +1,32 @@
+---
+permalink: flexgroup/snapvault-backup-concept.html 
+sidebar: sidebar 
+keywords: consider, create, snapvault, backup, relation, unified, data, protection, flexgroup, volume 
+summary: 您必須瞭解建立SnapVault 一套適用於FlexGroup 整個過程的還原功能備份關係和統一化資料保護關係的考量事項。 
+---
+= 建立SnapVault 不支援的備份關係和FlexGroup 統一資料保護關係的考量事項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須瞭解建立SnapVault 一套適用於FlexGroup 整個過程的還原功能備份關係和統一化資料保護關係的考量事項。
+
+* 您可以SnapVault 使用「-preserve」選項、重新同步支援的功能是將Snapshot備份關係與統一化資料保護關係、此選項可讓您將Snapshot複本保留在比最新通用Snapshot複本新的目的地Volume上。
+* 不支援FlexGroup 使用不支援的長期保留。
++
+長期保留功能可直接在目的地磁碟區上建立Snapshot複本、而不需要將Snapshot複本儲存在來源磁碟區上。
+
+* 不支援FlexGroup 使用「shnapshot」命令「fite-time」選項來執行動作。
+* 儲存效率無法在目的地FlexGroup 的仰賴資料保護SnapVault 關係的不一致之處進行設定。
+* 您無法重新命名SnapVault 適用於FlexGroup 此功能的Snapshot複本、以建立一套適用於此功能的不一致備份關係和統一資料保護關係。
+* 一個支援區只能是一個備份關係或還原關係的來源磁碟區。FlexGroup
++
+無法從兩個方面建立起穩固的關係、兩個還原關係、或是一個還原關係和還原關係。FlexGroup SnapVault SnapVault
+
+* 如果您刪除來源FlexGroup S還原 磁碟區上的Snapshot複本、並重新建立名稱相同的Snapshot複本、FlexGroup 則如果目的地磁碟區具有名稱相同的Snapshot複本、則下次更新傳輸至目的地Sfile Volume時會失敗。
++
+這是因為Snapshot複本無法重新命名FlexGroup 為適用於實體磁碟區的複本。
+
+

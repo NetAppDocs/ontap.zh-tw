@@ -1,0 +1,42 @@
+---
+permalink: ndmp/enable-tape-reservations-task.html 
+sidebar: sidebar 
+keywords: enable, tape, reservation 
+summary: 您必須確保磁帶機保留供備份應用程式用於NDMP備份作業。 
+---
+= 啟用磁帶保留
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須確保磁帶機保留供備份應用程式用於NDMP備份作業。
+
+保留設定在不同的備份應用程式中會有所不同、而且這些設定必須符合備份應用程式、以及使用相同磁碟機的節點或伺服器。如需正確的保留設定、請參閱備份應用程式的廠商文件。
+
+.步驟
+. 使用「options -option-name tape」命令來啟用保留。
++
+下列命令可啟用「持續」值的保留：
+
++
+[listing]
+----
+cluster1::> options -option-name tape.reservations -option-value persistent
+2 entries were modified.
+----
+. 使用「options tape．Reservations」命令驗證所有節點上是否已啟用保留、然後檢閱輸出。
++
+[listing]
+----
+cluster1::> options tape.reservations
+
+cluster1-1
+    tape.reservations                 persistent
+
+cluster1-2
+    tape.reservations                 persistent
+2 entries were displayed.
+----
+

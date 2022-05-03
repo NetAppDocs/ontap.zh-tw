@@ -1,0 +1,90 @@
+---
+sidebar: sidebar 
+permalink: networking/display_lifs_in_a_load_balancing_zone.html 
+keywords: display, view, show, lif, logical, interface, load, balancing, zone, balance, performance, display lifs in a load balancing zone, verify whether a load balancing zone is configured correctly by displaying all of the lifs that belong to it, examples of displaying load balancing zones for lifs 
+summary: 顯示屬於負載平衡區域的所有生命區、以確認是否正確設定負載平衡區域 
+---
+= 在負載平衡區域中顯示LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以顯示屬於負載平衡區域的所有生命期、以驗證負載平衡區域是否設定正確。您也可以檢視特定LIF的負載平衡區域、或檢視所有LIF的負載平衡區域。
+
+使用下列其中一項命令、顯示所需的生命量與負載平衡詳細資料
+
+[cols="30,70"]
+|===
+
+
+| 若要顯示... | 輸入... 
+
+
+ a| 
+特定負載平衡區域中的LIF
+ a| 
+「網路介面show -DNS"區域名稱」
+
+「區域名稱」指定負載平衡區域的名稱。
+
+
+
+ a| 
+特定LIF的負載平衡區域
+ a| 
+「網路介面show -lIF lif_name -功能 變數dns區域」
+
+
+
+ a| 
+所有生命區的負載平衡區域
+ a| 
+「網路介面show -功能 變數DNS區域」
+
+|===
+
+
+== 顯示lifs負載平衡區域的範例
+
+下列命令會顯示SVM vs0之負載平衡區域storage.company.com中所有LIF的詳細資料：
+
+....
+net int show -vserver vs0 -dns-zone storage.company.com
+
+         Logical    Status     Network           Current   Current Is
+Vserver  Interface  Admin/Oper Address/Mask      Node      Port    Home
+-------- ---------- ---------- ----------------- --------- ------- ----
+vs0
+         lif3         up/up    10.98.226.225/20  ndeux-11  e0c     true
+         lif4         up/up    10.98.224.23/20   ndeux-21  e0c     true
+         lif5         up/up    10.98.239.65/20   ndeux-11  e0c     true
+         lif6         up/up    10.98.239.66/20   ndeux-11  e0c     true
+         lif7         up/up    10.98.239.63/20   ndeux-21  e0c     true
+         lif8         up/up    10.98.239.64/20   ndeux-21  e0c     true
+....
+下列命令會顯示LIF資料3的DNS區域詳細資料：
+
+....
+network interface show -lif data3 -fields dns-zone
+Vserver  lif    dns-zone
+-------  -----  --------
+vs0      data3  storage.company.com
+....
+下列命令會顯示叢集中所有LIF及其對應DNS區域的清單：
+
+....
+network interface show -fields dns-zone
+Vserver   lif          dns-zone
+-------   ------------ --------
+cluster   cluster_mgmt none
+ndeux-21  clus1        none
+ndeux-21  clus2        none
+ndeux-21  mgmt1        none
+vs0       data1        storage.company.com
+vs0       data2        storage.company.com
+....

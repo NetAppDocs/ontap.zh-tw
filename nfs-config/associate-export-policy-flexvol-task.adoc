@@ -1,0 +1,39 @@
+---
+permalink: nfs-config/associate-export-policy-flexvol-task.html 
+sidebar: sidebar 
+keywords: assign, export, policy, volume 
+summary: SVM中包含的每個磁碟區都必須與包含匯出規則的匯出原則相關聯、以便用戶端存取磁碟區中的資料。 
+---
+= 將匯出原則指派給磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SVM中包含的每個磁碟區都必須與包含匯出規則的匯出原則相關聯、以便用戶端存取磁碟區中的資料。
+
+您可以在建立磁碟區時或建立磁碟區後的任何時間、將匯出原則與磁碟區建立關聯。您可以將一個匯出原則與磁碟區建立關聯、不過一個原則可以與許多磁碟區建立關聯。
+
+.步驟
+. 如果在建立磁碟區時未指定匯出原則、請將匯出原則指派給磁碟區：
++
+"Volume modify -vserver _vserver_name_-volume _volume _name_-policy _policy_name_"
+
+. 確認原則已指派給磁碟區：
++
+「Volume show -volume _volume name_-Fields policy」
+
+
+
+下列命令會將匯出原則nfs_policy指派給SVM VS1上的Volume vol1、並驗證指派：
+
+[listing]
+----
+cluster::> volume modify -v1server vs1 -volume vol1 -policy nfs_policy
+
+cluster::>volume show -volume vol -fields policy
+vserver volume       policy
+------- ------------ ----------------
+vs1     vol1         nfs_policy
+----

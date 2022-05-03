@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_subnets_@cluster_administrators_only@_overview.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, subnet, overview, introduction, introducing, network interface create, configure subnets overview, introducing subnets 
+summary: 子網路簡介 
+---
+= 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+子網路可讓您分配特定區塊或集區IP位址、以供ONTAP 您進行支援所需的網路組態。這可讓您在使用「網路介面create」命令時、更輕鬆地建立lifs、方法是指定子網路名稱、而非指定IP位址和網路遮罩值。
+
+子網路是在廣播網域內建立、其中包含屬於同一第3層子網路的IP位址集區。子網路中的IP位址會在建立LIF時分配給廣播網域中的連接埠。移除LIF時、IP位址會傳回子網路集區、可供未來的LIF使用。
+
+建議您使用子網路、因為子網路可讓IP位址的管理更輕鬆、而且能簡化生命週期的建立程序。此外、如果您在定義子網路時指定閘道、則當使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。

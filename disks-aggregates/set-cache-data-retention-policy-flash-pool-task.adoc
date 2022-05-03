@@ -1,0 +1,57 @@
+---
+permalink: disks-aggregates/set-cache-data-retention-policy-flash-pool-task.html 
+sidebar: sidebar 
+keywords: set, cache-retention policy, flash pool 
+summary: 您可以將快取保留原則指派給Flash Pool Aggregate中的磁碟區。具有高快取保留原則的磁碟區中的資料會保留在快取中的時間更長、而具有低快取保留原則的磁碟區中的資料會更快移除。如此可讓高優先順序的資訊以更快的速度存取更長的時間、進而提升關鍵工作負載的效能。 
+---
+= 設定Flash Pool Aggregate的快取保留原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將快取保留原則指派給Flash Pool Aggregate中的磁碟區。具有高快取保留原則的磁碟區中的資料會保留在快取中的時間更長、而具有低快取保留原則的磁碟區中的資料會更快移除。如此可讓高優先順序的資訊以更快的速度存取更長的時間、進而提升關鍵工作負載的效能。
+
+您應該知道您的系統是否有任何可能妨礙快取保留原則影響資料保留在快取中的時間長度的情況。
+
+工作必須以進階權限模式完成。
+
+.步驟
+. 將權限設定變更為進階：
++
+"進階權限"
+
+. 驗證磁碟區的快取保留原則：
++
+根據預設、快取保留原則為「正常」。
+
+. 設定快取保留原則：
++
+|===
+
+
+| 版本ONTAP | 命令 
+
+
+ a| 
+版本9.0、ONTAP 9.1
+ a| 
+「priority hemye-cache set volume名稱read-cache = read_cache值write快取=寫入快取值快取-保留-優先順序=快取_retent_policy」
+
+將您想要保留在快取中較長時間的資料、設定為「cache _retent_policy」（快取保留原則）。對於您想要更快從快取中移除的資料、請將「cache_retent_policy」設為「low」（低）。
+
+
+
+ a| 
+0 ： 2 或更新版本 ONTAP
+ a| 
+「Volume modify -volume volume volume名稱-vserver vserver_name -bapping_policy policy_name.」
+
+|===
+. 確認磁碟區的快取保留原則已變更為您選取的選項。
+. 將權限設定傳回給admin：
++
+「et -priv. admin」
+
+

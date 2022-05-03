@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_link_between_site_b_and_mediator_down.html 
+keywords: SM-BC, SMBC, troubleshooting, link down, Mediator 
+summary: 站台B的中介連線顯示無法連線。 
+---
+= 站台B與訊號員之間的連結、以及站台A停機
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+要檢查協調器的連接情況、請使用「napmirror中介器show」命令。如果連線狀態無法連線、且站台B無法連線至站台B、您將會有類似下列的輸出。請依照解決方案中的步驟還原連線
+
+....
+cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+10.237.86.17     C1_cluster       unreachable       true
+SnapMirror consistency group relationship status is out of sync.
+
+C2_cluster::*> snapmirror show -expand
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs0:/cg/src_cg_1 XDP vs1:/cg/dst_cg_1 Snapmirrored OutOfSync - false   -
+vs0:zrto_cg_655724_188a_RW1 XDP vs1:zrto_cg_655755_188c_DP1 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655733_188a_RW2 XDP vs1:zrto_cg_655762_188c_DP2 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655739_188b_RW1 XDP vs1:zrto_cg_655768_188d_DP1 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655748_188b_RW2 XDP vs1:zrto_cg_655776_188d_DP2 Snapmirrored OutOfSync - false -
+5 entries were displayed.
+
+Site B cluster is unable to reach Site A.
+C2_cluster::*> cluster peer show
+Peer Cluster Name         Cluster Serial Number Availability   Authentication
+------------------------- --------------------- -------------- --------------
+C1_cluster 			  1-80-000011           Unavailable    ok
+....
+強制容錯移轉以啟用站台B的I/O、然後建立從站台B到站台A的零RTO關係
+
+請完成下列步驟、在站台B上執行強制容錯移轉
+
+. 從站台B取消對應屬於一致性群組的所有LUN
+. 使用force選項刪除SnapMirror一致性群組關係。
+. 在一致性群組組成磁碟區上輸入SnapMirror中斷命令、將磁碟區從DP轉換為RW、以啟用站台B的I/O
+. 啟動站台A節點、以建立從站台B到站台A的零RTO關係
+. 在站台A上釋放僅含關係資訊的一致性群組、以保留通用的Snapshot複本、並取消對應屬於一致性群組的LUN。
+. 使用同步原則或非同步原則設定磁碟區層級關係、將站台A上的磁碟區從RW轉換為DP。
+. 發出SnapMirror重新同步以同步關係。
+. 刪除站台A上的SnapMirror與同步原則的關係
+. 在站台B上使用僅限關係資訊的true、以Sync原則釋放SnapMirror關係
+. 建立站台B與站台A之間的一致性群組關係
+. 從站台A重新同步一致性群組、然後驗證一致性群組是否同步。
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+

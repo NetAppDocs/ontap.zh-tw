@@ -1,0 +1,38 @@
+---
+permalink: revert/task_reverting_the_physical_block_sharing_in_split_flexclone_volumes.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, reverse, reversing, physical, block sharing, split, flexclone, volumes 
+summary: 如果您已將FlexClone Volume從其父Volume分割開、則必須先復原實體區塊在實體複本與其父Volume之間的共享、再從ONTAP 還原為ONTAP 舊版的更新版本。 
+---
+= 在分離式FlexClone磁碟區中反轉實體區塊共用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已將FlexClone Volume從其父Volume分割開、則必須先復原實體區塊在實體複本與其父Volume之間的共享、再從ONTAP 還原為ONTAP 舊版的更新版本。
+
+此工作僅適用於AFF 在任何FlexClone磁碟區上執行分割時的不必要系統。
+
+. 登入進階權限層級：「et -priv榮幸advanced」（設定-權限進階）
+. 使用共享實體區塊識別分割的FlexClone磁碟區：「Volume Clone share-by -split show」
++
+[listing]
+----
+cluster1::> volume clone sharing-by-split show
+Node            Vserver   Volume        Aggregate
+--------------- --------- ------------- -------------
+node1           vs1       vol_clone1    aggr1
+node2           vs2       vol_clone2    aggr2
+2 entries were displayed.
+----
+. 復原叢集內所有分割FlexClone磁碟區的實體區塊共用：「Volume Clone share-by split undo start-all」
+. 驗證是否沒有使用共享實體區塊的分離式FlexClone磁碟區：「Volume Clone share-by split show」
++
+[listing]
+----
+cluster1::> volume clone sharing-by-split show
+This table is currently empty.
+----
+

@@ -1,0 +1,25 @@
+---
+permalink: nas-audit/configure-auditing-unix-security-files-directories-task.html 
+sidebar: sidebar 
+keywords: configure, audit, unix security style files, directories 
+summary: 您可以將稽核ACE新增至NFSv4.x ACL、以設定UNIX安全樣式檔案和目錄的稽核。這可讓您監控特定NFS檔案和目錄存取事件、以確保安全。 
+---
+= 設定UNIX安全樣式檔案和目錄的稽核
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將稽核ACE新增至NFSv4.x ACL、以設定UNIX安全樣式檔案和目錄的稽核。這可讓您監控特定NFS檔案和目錄存取事件、以確保安全。
+
+對於NFSv4.x、可自由判斷的ACE和系統的ACE都儲存在相同的ACL中。它們不會儲存在個別的DACL和SACL中。因此、在將稽核ACE新增至現有ACL時、您必須謹慎小心、以免覆寫及遺失現有ACL。將稽核ACE新增至現有ACL的順序並不重要。
+
+.步驟
+. 使用「nfs4_getfacl」或等效命令擷取檔案或目錄的現有ACL。
++
+如需處理ACL的詳細資訊、請參閱NFS用戶端的手冊頁。
+
+. 附加所需的稽核ACE。
+. 使用「nfs4_setfacl」或等效命令、將更新的ACL套用至檔案或目錄。
+

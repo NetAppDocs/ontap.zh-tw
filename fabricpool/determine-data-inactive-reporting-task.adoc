@@ -1,0 +1,84 @@
+---
+permalink: fabricpool/determine-data-inactive-reporting-task.html 
+sidebar: sidebar 
+keywords: determining, how, much, data, volume, inactive, using, data reporting, fabricpool 
+summary: 查看磁碟區中有多少資料處於非使用中狀態、可讓您充分運用儲存層。非作用中資料報告中的資訊可協助您決定FabricPool 哪些Aggregate可用於哪些用途、是將Volume移入FabricPool 或移出、或是修改Volume的分層原則。 
+---
+= 使用非作用中的資料報告來判斷Volume中有多少資料處於非作用中狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+查看磁碟區中有多少資料處於非使用中狀態、可讓您充分運用儲存層。非作用中資料報告中的資訊可協助您決定FabricPool 哪些Aggregate可用於哪些用途、是將Volume移入FabricPool 或移出、或是修改Volume的分層原則。
+
+您必須執行ONTAP 更新版本的版本、才能使用非作用中的資料報告功能。
+
+.關於這項工作
+* 某些Aggregate不支援非作用中資料報告。
++
+無法啟用Inactive data報告功能時、您無法啟用FabricPool 此功能、包括下列情況：
+
++
+** 根Aggregate
+** 執行9.7之前版本之非功能的MetroCluster ONTAP
+** Flash Pool（混合式Aggregate或SnapLock
+
+
+* 根據預設ONTAP 、在所有SSD Aggregate上啟用非作用中資料報告功能、只要執行動作即可。
+* 根據預設FabricPool 、非作用中的資料報告功能會在ONTAP 支援的情況下、於支援的情況下、於支援的情況下、於支援的情況下、ONTAP
+* 您可以使用ONTAP 包含HDD Aggregate在內的NetApp資源中心、從ONTAP 使用支援功能的支援功能到非FabricPool Aggregate、啟用非使用中資料報告功能、從功能性的9.6開始。
+
+
+.步驟
+. 如果FabricPool 您想查看非作用中資料報告的Aggregate未用於支援的資訊、請使用「sorage aggregate modify」命令搭配「is - inactive - data report-enabl用量 報告」的「true」參數、為Aggregate啟用非作用中資料報告功能。
++
+[listing]
+----
+cluster1::> storage aggregate modify -aggregate aggr1 -is-inactive-data-reporting-enabled true
+----
++
+您必須在非FabricPool 用於支援的Aggregate上明確啟用非作用中資料報告功能。
+
++
+您無法也不需要在啟用FabricPool的Aggregate上啟用非作用中資料報告、因為Aggregate已隨附非作用中資料報告。啟用「is - inactive - data - report-enabl用途」的參數無法在啟用FabricPool的Aggregate上運作。
+
++
+「儲存Aggregate show」命令的「Fields is -inactive、data -report-enabl用」參數會顯示是否在集合體上啟用非作用中資料報告。
+
+. 若要顯示磁碟區中有多少資料處於非作用中狀態、請使用「volume show」命令搭配「-Fields Performance層級非作用中使用者資料」、「Performance層級非作用中使用者資料百分比」參數。
++
+[listing]
+----
+cluster1::> volume show -fields performance-tier-inactive-user-data,performance-tier-inactive-user-data-percent
+
+vserver volume performance-tier-inactive-user-data performance-tier-inactive-user-data-percent
+------- ------ ----------------------------------- -------------------------------------------
+vsim1   vol0   0B                                  0%
+vs1     vs1rv1 0B                                  0%
+vs1     vv1    10.34MB                             0%
+vs1     vv2    10.38MB                             0%
+4 entries were displayed.
+----
++
+** 「效能層-非使用中-使用者資料」欄位會顯示集合體中儲存的使用者資料量處於非使用中狀態。
+** 「效能層-非使用中-使用者-資料百分比」欄位會顯示作用中檔案系統和Snapshot複本中有多少資料處於非使用中狀態。
+** 對於未用於FabricPool 支援功能的Aggregate、啟用不活動的資料報告功能後、需要31天ONTAP 才能顯示整個Volume的非作用中資料、無論是已設定分層原則或分層原則為何。
++
+直到達到週期為止、輸出會顯示非作用中資料量的「」、而非數值。
+
+** 在屬於某個部分的磁碟區上FabricPool 、不活動的功能取決於在某個磁碟區上設定的分層原則。ONTAP
++
+*** 對於「自動」分層原則、ONTAP 在「Volume create」或「Volume modify」命令的進階權限層級中、由「分層最低冷卻天數」參數指定的期間內、完整Volume的非使用中量會予以回報。
++
+如果「分層-最低-冷卻天數」沒有設定值、ONTAP 則使用預設值（31天）。
+
+*** 針對「僅限快照」分層原則ONTAP 、本公司會報告使用中檔案系統的停用時間至少31天。
+*** 針對「無」分層原則ONTAP 、本公司會報告所有未啟用至少31天的磁碟區數量。您不能將「分層-最低-冷卻天數」參數與「無」分層原則搭配使用。
+*** 對於「ALL」分層原則、不支援非作用中的資料報告。
+
+
+
+
+

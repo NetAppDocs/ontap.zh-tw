@@ -1,0 +1,58 @@
+---
+permalink: upgrade/task_verifying_that_deduplicated_volumes_and_aggregates_contain_sufficient_free_space.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verify, verifying, deduplication, deduplicated, volumes, aggregates, sufficient, enough, free, space 
+summary: 在升級ONTAP 支援功能之前、您必須確認任何已刪除重複資料的磁碟區和包含這些磁碟區的集合體、都有足夠的可用空間可用於重複資料刪除中繼資料。如果可用空間不足、ONTAP 則在完成升級時、重複資料刪除功能將會停用。 
+---
+= 驗證已刪除重複資料的磁碟區和集合體是否含有足夠的可用空間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級ONTAP 支援功能之前、您必須確認任何已刪除重複資料的磁碟區和包含這些磁碟區的集合體、都有足夠的可用空間可用於重複資料刪除中繼資料。如果可用空間不足、ONTAP 則在完成升級時、重複資料刪除功能將會停用。
+
+每個已刪除重複資料的磁碟區必須至少包含4%的可用空間。每個包含重複資料刪除磁碟區的Aggregate都必須包含至少3%的可用空間。
+
+. 確定哪些磁碟區進行重複資料刪除：「Volume Eff效率 顯示」
+. 確定您所識別的每個磁碟區上可用的空間：「volv show -vserver vserver_name -volume volVolume _name -功能 變數Volume、大小、已使用、可用、已使用百分比、 交會路徑
++
+每個已刪除重複資料的Volume不得包含超過96%的已用容量。如有必要、您可以增加任何超過此容量的磁碟區大小。
+
++
+link:../volumes/index.html["邏輯儲存管理"]
+
++
+在此範例中、「使用百分比」欄位會顯示重複資料刪除磁碟區上已使用空間的百分比：
+
++
+[listing]
+----
+vserver    volume size    junction-path available used   percent-used
+----------- ------ ------- -------------
+cluster1-01 vol0   22.99GB -             14.11GB      7.73GB 35%
+cluster1-02 vol0   22.99GB -             12.97GB      8.87GB    40%
+2 entries were displayed.
+----
+. 識別每個包含重複資料刪除磁碟區的Aggr show -Aggregate Aggregate名稱-Fields Aggregate、大小、usedsize、可用空間、已使用百分比
++
+每個Aggregate不得包含超過97%的已用容量。如有必要、您可以增加任何超過此容量的集合體大小。
+
++
+link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
+
++
+在此範例中、「使用百分比」欄位會顯示內含重複資料刪除磁碟區（agger_2）之集合體上已使用空間的百分比：
+
++
+[listing]
+----
+aggr show -aggregate aggregate_name -fields aggregate,size,usedsize,availsize,percent-used
+aggregate         availsize percent-used size    usedsize
+----------------- --------- ------------    ------- --------
+aggr0_cluster1_01    1.11GB    95%          24.30GB 23.19GB
+aggr0_cluster1_02 1022MB    96%          24.30GB    23.30GB
+2 entries were displayed.
+----
+

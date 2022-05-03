@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/improve-client-response-node-referrals-concept.html 
+sidebar: sidebar 
+keywords: auto, location, smb, automatic, node, referral, increase, client, performance, storage, virtual, machine, svm, request, host, response, improve, improve client response time by providing smb automatic node referrals with auto location 
+summary: 「自動定位」使用SMB自動節點參照來提升儲存虛擬機器（SVM）上的SMB用戶端效能。自動節點參照會自動將要求的用戶端重新導向至裝載資料所在磁碟區之節點SVM上的LIF、進而改善用戶端回應時間。 
+---
+= 透過自動定位總覽提供SMB自動節點參照、縮短用戶端回應時間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+「自動定位」使用SMB自動節點參照來提升儲存虛擬機器（SVM）上的SMB用戶端效能。自動節點參照會自動將要求的用戶端重新導向至裝載資料所在磁碟區之節點SVM上的LIF、進而改善用戶端回應時間。
+
+當SMB用戶端連線至裝載於SVM上的SMB共用時、它可能會使用不擁有所要求資料的節點上的LIF進行連線。用戶端所連接的節點會使用叢集網路存取其他節點所擁有的資料。如果SMB連線使用位於包含所要求資料之節點上的LIF、用戶端就能獲得更快的回應時間：
+
+* 提供此功能的方法是使用Microsoft Dfs轉介來通知SMB用戶端命名空間中所要求的檔案或資料夾位於其他位置。ONTAP
++
+當節點判斷包含資料的節點上是否有任一SVM LIF時、就會進行參照。
+
+* 支援自動節點參照、可用於IPV4和IPv6 LIF IP位址。
+* 參照是根據用戶端所連線之共用區根的位置而進行。
+* 參照發生在SMB交涉期間。
++
+參照會在建立連線之前進行。將SMB用戶端指向目標節點之後ONTAP 、就會建立連線、然後用戶端從該點透過參照的LIF路徑存取資料。這可讓用戶端更快存取資料、避免額外的叢集通訊。
+
++
+[NOTE]
+====
+如果共享區跨越多個交會點、而部分交會則是包含在其他節點上的磁碟區、則共用區內的資料會分散在多個節點上。由於支援從本機介面轉介至共享區根目錄、因此、必須使用叢集網路來擷取這些非本機磁碟區內的資料。ONTAP ONTAP有了這種命名空間架構、自動節點參照可能無法提供顯著的效能效益。
+
+====
+
+
+如果託管資料的節點沒有可用的LIF、ONTAP 則使用用戶端選擇的LIF來建立連線。在SMB用戶端開啟檔案之後、它會繼續透過相同的參照連線來存取檔案。
+
+如果CIFS伺服器因故無法進行轉介、則不會中斷SMB服務。建立SMB連線時、會如同未啟用自動節點參照。
+
+xref:improve-microsoft-remote-copy-performance-concept.adoc[提升Microsoft遠端複製效能]

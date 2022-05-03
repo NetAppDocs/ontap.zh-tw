@@ -1,0 +1,52 @@
+---
+permalink: flexgroup/configure-automatic-grow-shrink-task.html 
+sidebar: sidebar 
+keywords: configure, flexgroup, volume, automatic, grow, shrink, size 
+summary: 從ONTAP 功能介紹9.3開始、您可以根據FlexGroup 目前所需的空間、將功能區設定為自動擴充和縮小。 
+---
+= 設定FlexGroup 使用者可自動擴充及縮小其大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能介紹9.3開始、您可以根據FlexGroup 目前所需的空間、將功能區設定為自動擴充和縮小。
+
+此版本必須在線上。FlexGroup
+
+您可以FlexGroup 在兩種模式中自動調整尺寸：
+
+* 自動增加磁碟區大小（「成長」模式）
++
+如果FlexGroup Aggregate能夠提供更多空間、自動擴充功能有助於防止使用完這個功能。您可以設定磁碟區的最大大小。根據寫入磁碟區的資料量、相對於目前已用空間量和任何臨界值集、會自動觸發增加。
+
++
+根據預設、磁碟區可成長為啟用自動擴充的大小的120%。如果您需要確保磁碟區的大小可以大於該磁碟區、則必須據此設定磁碟區的最大大小。
+
+* 自動縮小磁碟區大小（「擴充縮小」模式）
++
+自動壓縮可防止磁碟區大於所需的容量、釋放集合體中的空間供其他磁碟區使用。
+
++
+自動壓縮只能搭配自動擴充一起使用、以滿足不斷變化的空間需求、而且無法單獨使用。啟用自動壓縮功能時ONTAP 、支援使用者可自動管理磁碟區的縮減行為、以避免自動擴充和自動縮小動作的循環。
+
+
+
+隨著磁碟區的成長、可以包含的檔案數量上限可能會自動增加。當磁碟區縮小時、其可包含的檔案數量上限將維持不變、而且磁碟區無法自動縮減至與其目前最大檔案數相對應的大小。因此、可能無法自動將磁碟區縮小至原始大小。
+
+.步驟
+. 設定磁碟區以自動擴充及縮小其大小：「Volume autossize -vserver vserver_name -volume vol_name -mode [g成長| gde_shrin]」
++
+您也可以指定用於擴充或縮減磁碟區的最大大小、最小大小和臨界值。
+
++
+下列命令可自動變更名為fg1的磁碟區大小。當磁碟區已滿70%時、該磁碟區的最大容量可擴充至5 TB。
+
++
+[listing]
+----
+cluster1::> volume autosize -volume fg1 -mode grow -maximum-size 5TB -grow-threshold-percent 70
+vol autosize: volume "vs_src:fg1" autosize settings UPDATED.
+----
+

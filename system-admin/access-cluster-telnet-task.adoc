@@ -1,0 +1,66 @@
+---
+permalink: system-admin/access-cluster-telnet-task.html 
+sidebar: sidebar 
+keywords: access, cluster, telnet, administrative, tasks, disbale, default 
+summary: 您可以向叢集發出遠端登入要求、以執行管理工作。預設會停用Telnet。 
+---
+= 使用Telnet存取叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以向叢集發出遠端登入要求、以執行管理工作。預設會停用Telnet。
+
+在使用Telnet存取叢集之前、必須符合下列條件：
+
+* 您必須擁有一個叢集本機使用者帳戶、並設定為使用遠端登入作為存取方法。
++
+「安全登入」命令的「-application」參數會指定使用者帳戶的存取方法。如需詳細資訊、請參閱「安全登入」手冊頁。
+
+* 叢集或節點管理生命里所使用的管理防火牆原則中、必須已啟用遠端登入、以便透過防火牆來處理遠端登入要求。
++
+預設會停用Telnet。系統服務防火牆原則show命令加上「-service elnet'」參數、可顯示防火牆原則中是否已啟用了Telnet.如需詳細資訊、請參閱「系統服務防火牆原則」手冊頁。
+
+* 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
++
+「network options IPv6 show」命令會顯示是否啟用IPv6。「系統服務防火牆原則show」命令會顯示防火牆原則。
+
+
+
+.關於這項工作
+* 遠端登入並非安全傳輸協定。
++
+您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
+
+* 支援每個節點最多50個並行的遠端登入工作階段。ONTAP
++
+如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
+
++
+如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
+
+* 如果您想ONTAP 要從Windows主機存取此功能、可以使用第三方公用程式、例如Putty。
+
+
+.步驟
+. 從管理主機輸入下列命令：
++
+"*Telnet_hostname_or_ip_*
+
++
+「主機名稱」或「IP」是叢集管理LIF或節點管理LIF的主機名稱或IP位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+
+
+
+下列範例顯示使用者名稱為「'joe'」（透過遠端登入存取設定）的使用者如何發出遠端登入要求、以存取叢集管理LIF為10.72.137.28的叢集：
+
+[listing]
+----
+admin_host$ telnet 10.72.137.28
+Data ONTAP
+login: joe
+Password:
+cluster1::>
+----

@@ -1,0 +1,170 @@
+---
+permalink: system-admin/setup-autosupport-task.html 
+sidebar: sidebar 
+keywords: set, up, autosupport, technical, support, organization, internal, configuration, test 
+summary: 您可以控制AutoSupport 是否及如何將資訊傳送至技術支援部門和內部支援組織、然後測試組態是否正確。 
+---
+= 設定AutoSupport 功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以控制AutoSupport 是否及如何將資訊傳送至技術支援部門和內部支援組織、然後測試組態是否正確。
+
+在發行版的更新版本中、您可以同時在叢集的所有節點上啟用及修改其組態。ONTAP AutoSupport當新節點加入叢集時、節點AutoSupport 會自動繼承叢集組態。您不需要個別更新每個節點上的組態。
+
+[NOTE]
+====
+從使用Sf2 9.5開始ONTAP 、「系統節點AutoSupport fulmodify」命令的範圍是整個叢集範圍。即使指定了「-node-」選項、叢集中的所有節點上也會修改此組態。AutoSupport此選項會被忽略、但會保留此選項、以供CLI向後相容。
+
+在版本9.4和更早版本中、「系統節點修改」命令的範圍是節點專屬的。ONTAP AutoSupport應該在叢集中的每個節點上修改此組態。AutoSupport
+
+====
+根據預設、AutoSupport 每個節點上都會啟用支援功能、以便使用HTTPS傳輸傳輸傳輸協定將訊息傳送給技術支援。
+
+.步驟
+. 確保AutoSupport 啟用了功能：
++
+[listing]
+----
+system node autosupport modify -state enable
+----
+. 如果您想要技術支援部門接收AutoSupport 到資訊不全、請使用下列命令：
++
+[listing]
+----
+system node autosupport modify -support enable
+----
++
+如果您想要啟用AutoSupport 支援以搭配AutoSupport 使用的功能、或是想要將核心傾印和效能歸檔檔案等大型檔案上傳至技術支援或指定的URL、則必須啟用此選項。
+
+. 如果技術支援已啟用接收AutoSupport 功能不全的訊息、請指定訊息所使用的傳輸傳輸傳輸協定。
++
+您可以從下列選項中選擇：
+
++
+|===
+
+
+| 如果您想要... | 然後設定「系統節點AutoSupport 的fitmodify」命令的下列參數... 
+
+
+ a| 
+使用預設的HTTPS傳輸協定
+ a| 
+.. 將「-transport」設為「https」。
+.. 如果您使用Proxy、請將「-proxy-URL」設為您Proxy的URL。此組態可支援AutoSupport 透過不必要的功能進行通訊、以及上傳大型檔案。
+
+
+
+
+ a| 
+使用優先於SMTP的HTTP
+ a| 
+.. 將「transport」設為「http」。
+.. 如果您使用Proxy、請將「-proxy-URL」設為您Proxy的URL。此組態可支援上傳大型檔案、但AutoSupport 不支援不支援使用
+
+
+
+
+ a| 
+使用SMTP
+ a| 
+將「transport」設為「中期計劃」。
+
+此組態不支援AutoSupport 以「根據需求」或上傳大型檔案。
+
+|===
+. 如果您想要內部支援組織或支援合作夥AutoSupport 伴接收到各種消息、請執行下列動作：
++
+.. 設定「System Node AutoSupport of the fitmodify」命令的下列參數、以識別組織中的收件者：
++
+|===
+
+
+| 設定此參數... | 對此... 
+
+
+ a| 
+「-目標」
+ a| 
+內部支援組織最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、可接收關鍵AutoSupport 的消息
+
+
+
+ a| 
+「- noto To」
+ a| 
+內部支援組織最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、將會收到AutoSupport 專為行動電話和其他行動裝置所設計的關鍵字版資訊
+
+
+
+ a| 
+合作夥伴地址
+ a| 
+支援合作夥伴組織中最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、將會接收所有AutoSupport 的消息
+
+|===
+.. 使用「系統節點AutoSupport 景點show」命令列出目的地、檢查位址是否設定正確。
+
+
+. 如果您要將訊息傳送給內部支援組織、或是選擇將訊息傳送給技術支援部門的SMTP傳輸、請設定「系統節點AutoSupport 更新」命令的下列參數來設定SMTP：
++
+** 將「-mail-hosts"（郵件主機）設為一或多個郵件主機、並以逗號分隔。
++
+您最多可以設定五個。
+
++
+您可以設定每個郵件主機的連接埠值、方法是在郵件主機名稱後面指定一個分號和連接埠號碼：例如、「mymailhost.example.com:5678`」、其中5678是郵件主機的連接埠。
+
+** 將「來源」設為傳送AutoSupport 該消息的電子郵件地址。
+
+
+. 設定DNS。
+. （選用）若要變更特定設定、請新增命令選項：
++
+|===
+
+
+| 如果您想要執行此動作... | 然後設定「系統節點AutoSupport 的fitmodify」命令的下列參數... 
+
+
+ a| 
+移除、遮罩或編碼訊息中的敏感資料、以隱藏私有資料
+ a| 
+將「移除私有資料」設為「真」。如果您從「假」變更為「真」、AutoSupport 則會刪除所有的還原歷史記錄和所有相關檔案。
+
+
+
+ a| 
+停止以週期AutoSupport 性的資訊訊息傳送效能資料
+ a| 
+將「-perf」設為「假」。
+
+|===
+. 使用AutoSupport 帶有「-node"參數的「系統節點show」命令來檢查整體組態。
+. 使用AutoSupport 「系統節點AutoSupport 的不二檢查show」命令來驗證此功能是否正常運作。
++
+如果報告有任何問題、請使用「系統節點AutoSupport 不完整地檢查show details」命令來檢視更多資訊。
+
+. 測試AutoSupport 正在傳送和接收的不實訊息：
++
+.. 使用「系統節點AutoSupport 的fite-invoke」命令、將「類型」參數設為「test」。
++
+[listing]
+----
+cluster1::> system node autosupport invoke -type test -node node1
+----
+.. 確認NetApp正在接收AutoSupport 您的資訊：
++
+系統節點AutoSupport 的不正常歷程顯示節點為本機節點
+
++
+所有AutoSupport 適當的傳輸協定目的地、最新傳出的不完整資訊狀態最終應變更為「不成功」。
+
+.. （選用）AutoSupport 查看您為「系統節點AutoSupport 修改」命令的「收件者」、「附註To」或「合作夥伴地址」參數設定的任何地址、確認該資訊已傳送至您的內部支援組織或支援合作夥伴。
+
+
+

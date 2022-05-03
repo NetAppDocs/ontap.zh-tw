@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: networking/display_ipspaces.html 
+keywords: display, view, show, ipspace, display ipspaces, list the ipspaces and view ipspace information for the cluster 
+summary: 列出IP空間並檢視叢集的IPspace資訊 
+---
+= 顯示IPspaces
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以顯示叢集中存在的IPspaces清單、也可以檢視指派給每個IPspace的儲存虛擬機器（SVM）、廣播網域和連接埠。
+
+顯示叢集中的IPspaces和SVM：
+
+....
+network ipspace show [-ipspace ipspace_name]
+....
+下列命令會顯示叢集中的所有IPspaces、SVM和廣播網域：
+
+....
+network ipspace show
+IPspace        Vserver List             Broadcast Domains
+-------------  -----------------------  -------------------
+Cluster
+               Cluster                  Cluster
+Default
+               vs1, cluster-1            Default
+ipspace1
+               vs3, vs4, ipspace1       bcast1
+....
+下列命令會顯示屬於IPspace ipspace1的節點和連接埠：
+
+....
+network ipspace show -ipspace ipspace1
+IPspace name: ipspace1
+Ports: cluster-1-01:e0c, cluster-1-01:e0d, cluster-1-01:e0e, cluster-1-02:e0c, cluster-1-02:e0d, cluster-1-02:e0e
+Broadcast Domains: Default-1
+Vservers: vs3, vs4, ipspace1
+....

@@ -1,0 +1,127 @@
+---
+sidebar: sidebar 
+permalink: task_admin_add_a_volume.html 
+keywords: system manager, volume, storage, add, increase storage, NFS volume, create, add a volume, create a volume, add to storage VM, Ansible Playbook, manual placement, distribute volume data across cluster, add FlexGroup volume, add FlexVol volume, access permissions, SnapMirror, protection, QoS policy, cache for remote volume, performance service level policy, 
+summary: 您可以建立NFS磁碟區、並將其新增至已設定為NFS或SMB服務的現有儲存VM。 
+---
+= 新增Volume
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以建立NFS磁碟區、並將其新增至已設定為NFS或SMB服務的現有儲存VM。
+
+image:workflow_admin_add_a_volume.gif["新增Volume工作的工作流程圖"]
+
+為NFS或SMB服務設定的儲存VM應存在於叢集中。
+
+.步驟
+. 請前往*儲存> Volumes *。
+. 按一下 image:icon_add.gif["新增圖示"]。
+. 指定磁碟區的名稱和大小。
+. 請執行下列其中一個步驟：
++
+[cols="35,65"]
+|===
+
+
+| 按一下此按鈕... | 若要執行此動作... 
+
+
+| *儲存* | 磁碟區是使用系統預設值建立和新增的。不需要執行其他步驟。 
+
+
+| *更多選項* | 請前往 <<step5>> 定義Volume的規格。 
+|===
+. [[step5、Step 5]如果您先前已指定磁碟區名稱和大小、則會顯示這些名稱和大小。否則、請輸入名稱和大小。
+. 從下拉式清單中選取儲存VM。
++
+只會列出使用NFS傳輸協定設定的儲存VM。如果只有一個使用NFS傳輸協定設定的儲存VM可供使用、則不會顯示「*儲存VM*」欄位。
+
+. 若要新增遠端磁碟區的快取、請選取*新增遠端磁碟區的快取*、然後指定下列值：
++
+** 選取叢集。
+** 選取儲存VM。
+** 選取您要做為快取磁碟區的磁碟區。
+
+
+. 在*儲存與最佳化*區段中、指定下列值：
++
+.. Volume的容量已顯示、但您可以加以修改。
+.. 在*效能服務層級*欄位中、選取服務層級：
++
+[cols="60,40"]
+|===
+
+
+| 當您選取此服務層級... | 發生這種情況... 
+
+
+ a| 
+現有的服務層級、例如「極致」、「效能」或「價值」。
+
+只會顯示適用於系統平台AFF （例如、NetApp FAS 或其他平台）的服務層級。
+| 系統會自動選擇本機層級或階層。請前往 <<step9>>。 
+
+
+| 自訂 | 請前往 <<step8c>> 定義新的服務層級。 
+|===
+.. [[step8c、Step 8c]從ONTAP 更新至更新版9.9.1開始、您可以使用System Manager手動選取要放置所建立Volume的本機層（如果您已選取「Custom」（自訂）服務層級）。
++
+
+NOTE: 如果您選取*新增為遠端Volume的快取*或*跨叢集散佈Volume資料*（請參閱下文）、則無法使用此選項。
+
++
+|===
+
+
+| 當您做出此選擇時... | 您執行這些步驟... 
+
+
+| *手動放置* | 手動放置已啟用。停用「跨叢集*分散磁碟區資料」選項（請參閱下文）。請前往 <<step8d>> 以完成程序。 
+
+
+| 無選擇 | 未啟用手動放置。系統會自動選取本機層。請前往 <<step9>>。 
+|===
+.. [[step8d、Step 8d]從下拉式功能表中選取本機層級。
+.. 選取QoS原則。
++
+選取「現有」以從現有原則清單中選擇、或選取「新增」以輸入新原則的規格。
+
+
+
+. [[step9、Step 9]在*最佳化選項*區段中、判斷您是否要在叢集之間分散磁碟區資料：
++
+[cols="40,60"]
+|===
+
+
+| 當您做出此選擇時... | 發生這種情況... 
+
+
+| *跨叢集散佈Volume資料* | 您要新增的Volume會變成FlexGroup 一個不全的Volume。如果您先前選擇*手動放置*、則無法使用此選項。 
+
+
+| 無選擇 | 根據FlexVol 預設、您要新增的Volume會變成一個不全的Volume。 
+|===
+. 在「*存取權限*」區段中、指定已設定磁碟區之傳輸協定的存取權限。
+. 在* Protection（保護）*區段中、指定磁碟區的保護。如果您選取*啟用SnapMirror（本機或遠端）*、請從下拉式清單中指定目的地叢集的保護原則和設定。
+. 按一下「 * 儲存 * 」。
++
+磁碟區即會建立並新增至叢集和儲存VM。
+
++
+
+NOTE: 您也可以將本冊的規格儲存至可執行的教戰手冊。如需詳細資料、請前往 link:https://docs.netapp.com/us-en/ontap/task_use_ansible_playbooks_add_edit_volumes_luns.html["使用「可執行教戰手冊」來新增或編輯磁碟區或LUN"^]。
+
+

@@ -1,0 +1,105 @@
+---
+permalink: data-protection/snapmirror-disaster-recovery-concept.html 
+sidebar: sidebar 
+keywords: asynchronous, snapmirror, disaster, recovery basics 
+summary: SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本或鏡射、以便在主站台發生災難時、繼續提供資料。 
+---
+= 非同步SnapMirror災難恢復基礎
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本（或鏡射）、以便在主站台發生災難時、繼續提供資料。
+
+如果主要站台仍可用於提供資料、您只需將任何需要的資料傳回該站台、而不需要從鏡像為用戶端提供服務。如同容錯移轉使用案例所暗示、次要系統上的控制器應與主要系統上的控制器相當或幾乎等同、以有效率地從鏡射儲存設備提供資料。
+
+
+
+== 資料保護關係
+
+資料會在磁碟區層級鏡射。一線儲存設備的來源磁碟區與二線儲存設備的目的地磁碟區之間的關係稱為「資料保護」關係。_磁碟區所在的叢集與從磁碟區提供資料的SVM必須經過_處理。_對等關係可讓叢集與SVM交換資料 資料安全無虞。
+
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+下圖說明SnapMirror資料保護關係。
+
+image::../media/snapmirror-for-dp-pg.gif[SnapMirror for DP pg]
+
+
+
+== 資料保護關係的範圍
+
+您可以直接在磁碟區之間或在擁有磁碟區的SVM之間建立資料保護關係。在_SVM資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM所擁有的磁碟區資料。
+
+您也可以將SnapMirror用於兩種特殊的資料保護應用程式：
+
+* SVM根磁碟區的_負載共用mirror _複本可確保在節點中斷或容錯移轉時、資料仍可存取。
+* 「_SURFVolumes SnapLock 」之間的資料保護關係可讓您將WORM檔案複寫到二線儲存設備。
++
+link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
+
+
+
+
+
+== SnapMirror資料保護關係如何初始化
+
+第一次叫用SnapMirror時、它會執行從來源磁碟區到目的地磁碟區的_基準傳輸_。關聯的_SnapMirror原則_定義了基準的內容和任何更新。
+
+預設SnapMirror原則「鏡像AllSnapshots」下的基礎傳輸包含下列步驟：
+
+* 製作來源Volume的Snapshot複本。
+* 將Snapshot複本及其參照的所有資料區塊傳輸到目的地Volume。
+* 將來源磁碟區上其餘較不新的Snapshot複本傳輸到目的地磁碟區、以便在「'active'」鏡像毀損時使用。
+
+
+
+
+== SnapMirror資料保護關係如何更新
+
+更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的Snapshot原則。
+
+在「鏡射AllSnapshots」原則下的每次更新中、SnapMirror都會建立來源磁碟區的Snapshot複本、並傳輸自上次更新以來所製作的Snapshot複本和任何Snapshot複本。在「鏡射原則show」命令的「鏡射AllSnapshots」原則輸出中、請注意下列事項：
+
+* 「Create Snapshot」（建立Snapshot）是「true」、表示SnapMirror更新關係時、「鏡像AllSnapshots」會建立Snapshot複本。
+* 「鏡射AllSnapshots」的規則為「shm_已 建立」和「all來源快照」、表示SnapMirror建立的Snapshot複本和上次更新後建立的任何Snapshot複本、都會在SnapMirror更新關係時傳輸。
+
+
+[listing]
+----
+cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
+
+                     Vserver: vs0
+      SnapMirror Policy Name: MirrorAllSnapshots
+      SnapMirror Policy Type: async-mirror
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: true
+                     Comment: Asynchronous SnapMirror policy for mirroring all snapshots
+                              and the latest active file system.
+       Total Number of Rules: 2
+                  Total Keep: 2
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+                              all_source_snapshots    1  false       0 -        -
+----
+
+
+== MirrorLatest原則
+
+預先設定的「鏡像Latest」原則的運作方式與「鏡像AllSnapshots」完全相同、只是在初始化與更新時才傳輸SnapMirror建立的Snapshot複本。
+
+[listing]
+----
+
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+----

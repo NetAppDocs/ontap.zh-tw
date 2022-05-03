@@ -1,0 +1,55 @@
+---
+permalink: nfs-rdma/configure-nics-task.html 
+sidebar: sidebar 
+keywords: networking, NICs, NFS over RDMA, NVIDIA, NFS 
+summary: 本文說明用戶端系統和儲存平台組態程序、以及NIC在ONTAP 使用NFS over RDMA的過程中、如何在整個過程中使用NFS。 
+---
+= 透過RDMA設定NFS的NIC
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
+
+
+
+== 儲存平台組態
+
+需要在伺服器上安裝X1148 RDMA介面卡。如果您使用HA組態、則必須在容錯移轉合作夥伴上有對應的X1148介面卡、以便在容錯移轉期間繼續RDMA服務。NIC必須具備ROCE功能。
+
+從ONTAP 版本號《支援資料》（RDMA）9.10.1開始、您可以使用以下命令檢視RDMA卸載傳輸協定清單：「network port show -RDMA -protocols roce」（網路連接埠show -RDMA傳輸協定資源）
+
+
+
+== 用戶端系統組態
+
+用戶端必須使用支援Mellanox RDMA的NIC卡（例如 X1148）和Mellanox OFED網路軟體。如需支援的機型和版本、請參閱Mellanox文件。雖然用戶端和伺服器可以直接連線、但由於交換器的容錯移轉效能改善、因此建議使用交換器。
+
+用戶端、伺服器和任何交換器、以及交換器上的所有連接埠、都必須使用巨型框架進行設定。同時確保優先順序流程控制在任何交換器上都有效。
+
+一旦確認此組態、您就可以掛載NFS。
+
+.步驟
+. 使用下列命令檢查NFS伺服器上是否已啟用RDMA存取：
++
+「vserver NFS show-vserver _vserver_name_」
+
++
+根據預設、應該啟用「-RDMA」。如果不是、請在NFS伺服器上啟用RDMA存取：
+
++
+「vserver NFS modify -vserver _vserver_name_-RDMA enabled.
+
+. 透過NFSv4.0透過RDMA掛載用戶端：
++
+.. proto參數的輸入取決於伺服器IP傳輸協定版本。如果是v4、請使用「proto=RDMA」。如果是v6、請使用「proto=rdma6」。
+.. 將NFS目標連接埠指定為「port=20049」、而非標準連接埠2049：
++
+「安裝-o ves=4、minorversion=0、proto=RDMA、port=20049 _Server_ip_address_//_volume路徑__mount_point_」
+
+
+
+. *選用*：如果您需要卸載用戶端、請執行命令「unmount _mount_path_」
+

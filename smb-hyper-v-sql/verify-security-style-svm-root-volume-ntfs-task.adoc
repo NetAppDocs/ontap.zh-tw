@@ -1,0 +1,51 @@
+---
+permalink: smb-hyper-v-sql/verify-security-style-svm-root-volume-ntfs-task.html 
+sidebar: sidebar 
+keywords: verify, security, style, svm, root, volume, ntfs, storage, virtual, machine 
+summary: 為了確保Hyper-V和SQL Server在SMB上的不中斷營運成功、磁碟區必須以NTFS安全型態建立。由於根磁碟區的安全性樣式預設會套用至儲存虛擬機器（SVM）上建立的磁碟區、因此根磁碟區的安全性樣式應設定為NTFS。 
+---
+= 確認SVM根磁碟區的安全樣式已設定為NTFS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了確保Hyper-V和SQL Server在SMB上的不中斷營運成功、磁碟區必須以NTFS安全型態建立。由於根磁碟區的安全性樣式預設會套用至儲存虛擬機器（SVM）上建立的磁碟區、因此根磁碟區的安全性樣式應設定為NTFS。
+
+.關於這項工作
+* 您可以在建立SVM時指定根磁碟區的安全樣式。
+* 如果SVM不是以設為NTFS安全性樣式的根磁碟區建立、您可以稍後使用「volume modify」命令來變更安全性樣式。
+
+
+.步驟
+. 判斷SVM根磁碟區目前的安全樣式：
++
+‘* volume show -vserver _vserver_name_-Fields vserver、volume、安全風格*
+
+. 如果根磁碟區不是NTFS安全型磁碟區、請將安全樣式變更為NTFS：
++
+hy* volume modify -vserver _vserver_name_-volume root_volume名稱-SECURITY樣式ntfs*
+
+. 確認SVM根磁碟區已設定為NTFS安全樣式：
++
+‘* volume show -vserver _vserver_name_-Fields vserver、volume、安全風格*
+
+
+
+下列命令可驗證SVM VS1上的根磁碟區安全樣式是否為NTFS：
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -fields vserver,volume,security-style
+vserver  volume     security-style
+-------- ---------- --------------
+vs1      vs1_root   unix
+
+cluster1::> volume modify -vserver vs1 -volume vs1_root -security-style ntfs
+
+cluster1::> volume show -vserver vs1 -fields vserver,volume,security-style
+vserver  volume     security-style
+-------- ---------- --------------
+vs1      vs1_root   ntfs
+----

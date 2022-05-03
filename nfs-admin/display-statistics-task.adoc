@@ -1,0 +1,53 @@
+---
+permalink: nfs-admin/display-statistics-task.html 
+sidebar: sidebar 
+keywords: display, nfs, statistics 
+summary: 您可以在儲存系統上顯示儲存虛擬機器（SVM）的NFS統計資料、以監控效能並診斷問題。 
+---
+= 顯示NFS統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存系統上顯示儲存虛擬機器（SVM）的NFS統計資料、以監控效能並診斷問題。
+
+.步驟
+. 使用「統計資料目錄物件show」命令來識別可從中檢視資料的NFS物件。
++
+「統計資料目錄物件show -object NFS*」
+
+. 使用「統計資料開始」和選用的「統計資料停止」命令、從一或多個物件收集資料樣本。
+. 使用「統計資料顯示」命令來檢視範例資料。
+
+
+下列範例顯示NFSv3傳輸協定的效能資料。
+
+下列命令會啟動新範例的資料收集：
+
+[listing]
+----
+vs1::> statistics start -object nfsv3 -sample-id nfs_sample
+----
+下列命令會指定計數器來顯示範例中的資料、這些計數器會顯示成功讀取和寫入要求的數目、以及讀取和寫入要求的總數：
+
+[listing]
+----
+
+vs1::> statistics show -sample-id nfs_sample -counter read_total|write_total|read_success|write_success
+
+Object: nfsv3
+Instance: vs1
+Start-time: 2/11/2013 15:38:29
+End-time: 2/11/2013 15:38:41
+Cluster: cluster1
+
+    Counter                                           Value
+    --------------------------- ---------------------------
+    read_success                                      40042
+    read_total                                        40042
+    write_success                                   1492052
+    write_total                                     1492052
+----
+link:../performance-config/index.html["效能監控設定"]

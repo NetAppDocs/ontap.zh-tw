@@ -1,0 +1,18 @@
+---
+permalink: smb-admin/branchcache-cache-share-content-branch-office-concept.html 
+sidebar: sidebar 
+keywords: branchcache, develop, microsoft, enable, caching, cache, content, computer, local, request, client, ontap, implementation, reduce, wide-area, network, wan, utilization, response, svm, smb, use branchcache to cache smb share content at a branch office 
+summary: Microsoft開發了BranchCache、以便在要求用戶端的本機電腦上快取內容。實施BranchCache可降低廣域網路（WAN）的使用率、並在分公司使用者使用SMB存取儲存在儲存虛擬機器（SVM）上的內容時、提供更佳的存取回應時間。ONTAP 
+---
+= 使用BranchCache快取分公司總覽的SMB共用內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Microsoft開發了BranchCache、以便在要求用戶端的本機電腦上快取內容。實施BranchCache可降低廣域網路（WAN）的使用率、並在分公司使用者使用SMB存取儲存在儲存虛擬機器（SVM）上的內容時、提供更佳的存取回應時間。ONTAP
+
+如果您設定了BranchCache、Windows BranchCache用戶端會先從SVM擷取內容、然後快取分公司電腦上的內容。如果分公司中另一個啟用了BranchCache的用戶端要求相同的內容、SVM會先驗證並授權要求的使用者。然後SVM會判斷快取內容是否仍為最新狀態、如果是、則會傳送有關快取內容的用戶端中繼資料。然後用戶端會使用中繼資料、直接從本機快取擷取內容。
+
+xref:offline-files-allow-caching-concept.adoc[使用離線檔案來允許快取檔案以供離線使用]

@@ -1,0 +1,36 @@
+---
+permalink: data-protection/example-snapshot-copies-exceed-reserve-concept.html 
+sidebar: sidebar 
+keywords: delete, protected, files, less file space 
+summary: Snapshot複本會指向區塊、即使刪除使用該區塊的檔案也一樣。這說明為何耗盡Snapshot複本保留空間可能導致反直覺的結果、導致刪除整個檔案系統時、可用空間比檔案系統佔用的空間更小。 
+---
+= 刪除受保護檔案的方式、會導致檔案空間比預期要小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Snapshot複本會指向區塊、即使刪除使用該區塊的檔案也一樣。這說明為何耗盡Snapshot複本保留空間可能導致反直覺的結果、導致刪除整個檔案系統時、可用空間比檔案系統佔用的空間更小。
+
+請考慮下列範例。刪除任何檔案之前、「df」命令輸出如下：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 3000000 0       100%
+/vol/vol0/.snapshot 1000000 500000  500000   50%
+----
+刪除整個檔案系統並製作磁碟區的Snapshot複本之後、「df」命令會產生下列輸出：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 2500000 500000   83%
+/vol/vol0/.snapshot 1000000 3500000 0       350%
+----
+如輸出所示、目前Snapshot複本除了在刪除前使用0.5 GB之外、還在使用作用中檔案系統先前使用的整個3 GB。
+
+由於Snapshot複本所使用的磁碟空間現在已超過Snapshot複本保留空間、因此在保留給作用中檔案的空間中、會有2.5 GB的「壓縮空間」溢位、讓您有0.5 GB的可用空間供檔案使用、而在合理的情況下、您可能需要3 GB的可用空間。

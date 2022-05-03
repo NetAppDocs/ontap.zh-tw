@@ -1,0 +1,73 @@
+---
+permalink: san-config/fc-nvme-config-concept.html 
+sidebar: sidebar 
+keywords: considerations, fc-nvme, configurations 
+summary: 非ONTAP 揮發性記憶體Express（NVMe）傳輸協定從支援的版本號為2、9.4開始、適用於SAN環境。FC-NVMe可讓您在現有的FC網路上執行NVMe AFF 、並搭配使用。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。 
+---
+= FC-NVMe組態考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+非ONTAP 揮發性記憶體Express（NVMe）傳輸協定從支援的版本號為2、9.4開始、適用於SAN環境。FC-NVMe可讓您在現有的FC網路上執行NVMe AFF 、並搭配使用。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。
+
+支援的組態：
+
+* NVMe可在AFF 32 G FC連接埠的支援平台上執行。
+* 您可以使用單一Fabric或Mertifabric、使用單一節點或HA配對來設定FC-NVMe組態。
+* NVMe支援4節點或更小的叢集。
+* NVMe可以是儲存虛擬機器（SVM）上唯一的資料傳輸協定。
+* 每個叢集最多支援8個NVMe SVM。
+* FC-NVMe是資料生命中唯一的資料傳輸協定。
+* LUN和命名空間無法在同一個磁碟區上混合使用。
+* 您應該為每個支援SAN的SVM設定一個管理LIF。
+* 不支援使用異質FC交換器架構、但內嵌刀鋒交換器除外。
++
+上會列出特定例外狀況 link:https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]。
+
+* 串聯、部分網狀、全網狀、核心邊緣和導向架構都是將FC交換器連接至光纖的業界標準方法、而且都受到支援。
++
+一個網路可由一或多個交換器組成、而且儲存控制器可連接至多個交換器。
+
+
+
+功能增強：
+
+|===
+
+
+| 支援此功能... | 開始於... 
+
+
+| Volume隨對應命名空間一起移動 | 部分9.6 ONTAP 
+
+
+| 命名空間支援512位元組區塊和4096位元組區塊。+ 4096為預設值。只有當主機作業系統不支援4096位元組區塊時、才應使用512。 | 部分9.6 ONTAP 
+
+
+| 多重路徑HA配對容錯移轉/恢復 | 版本9.5 ONTAP 
+|===
+下列項目僅適用於執行ONTAP 下列功能的節點：
+
+* NVMe LIF和命名空間必須裝載在同一個節點上。
+* NVMe服務必須在建立NVMe LIF之前建立。
+
+
+NVMe組態不支援下列ONTAP 功能：
+
+* NVMe命名空間搬移
+* NVMe命名空間（隨需複製）
+* 在從Data ONTAP 以7-mode運作的功能中、從功能性的功能轉變為功能性的磁碟區上建立命名空間。
+* 同步
+* 虛擬儲存主控台
+
+
+請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得NVMe限制的完整清單。
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/How_to_configure_and_Connect_SUSE_Enterprise_Linux_to_ONTAP_NVMe%2F%2FFC_namespaces["如何設定及連接SUSE Enterprise Linux至ONTAP Suse NVMe/FC命名空間"]
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Licensing_information_for_NVMe_protocol_on_ONTAP["NVMe傳輸協定的授權資訊ONTAP"]
+
+http://www.netapp.com/us/media/tr-4684.pdf["NetApp技術報告4684：實作及設定採用NVMe / FC的現代化SAN"]

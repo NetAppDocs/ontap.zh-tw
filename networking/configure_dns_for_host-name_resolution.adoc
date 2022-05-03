@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dns_for_host-name_resolution.html 
+keywords: configure, configuring, configuration, setup, set, setting, dns, local, remote, host, name, host-name, resolution, configure dns for host-name resolution, nsswitch.conf, configure an svm and data lifs for host-name resolution using an external dns server, vserver services name-service dns, vserver services name-service dns create, network interface modify -lif lifname -dns-zone, network interface create -lif lifname -dns-zone, vserver services name-service dns check, configure the name service switch table for host-name resolution 
+summary: 使用DNS存取本機或遠端來源以取得主機資訊 
+---
+= 設定DNS進行主機名稱解析
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以使用DNS存取本機或遠端來源以取得主機資訊。您必須設定DNS、才能存取其中一個或兩個來源。
+
+必須能夠查詢主機資訊、才能正確存取用戶端。ONTAP您必須設定名稱服務、才能啟用ONTAP 支援功能、以存取本機或外部DNS服務來取得主機資訊。
+
+將名稱服務組態資訊儲存在表格中、表格相當於UNIX系統上的「/etc/nsswitch.conf」檔案。ONTAP
+
+
+
+== 使用外部DNS伺服器設定SVM和資料LIF以進行主機名稱解析
+
+您可以使用「vserver services name-service DNS」命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。
+
+站台範圍的DNS伺服器必須可供主機名稱查詢。
+
+您應該設定多個DNS伺服器、以避免單點故障。如果您只輸入一個DNS伺服器名稱、「vserver services name-service DNS create」命令會發出警告。
+
+《網路管理指南》包含在SVM上設定動態DNS的相關資訊。
+
+.步驟
+. 在SVM上啟用DNS：
++
+....
+vserver services name-service dns create -vserver vserver_name -domains domain_name - name-servers ip_addresses -state enabled
+....
++
+下列命令可啟用SVM VS1上的外部DNS伺服器：
+
++
+....
+vserver services name-service dns create -vserver <vs1.example.com> -domains <example.com> -name-servers <192.0.2.201,192.0.2.202> -state <enabled>
+....
++
+
+NOTE: vserver services name-service DNS create命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時回報錯誤訊息。
+
+. 在SVM擁有的LIF上啟用DNS：
++
+|===
+
+
+| 如果您是 | 使用此命令： 
+
+
+ a| 
+修改現有的LIF區域名稱
+ a| 
+「網路介面修改-liflifname -dns區域」
+
+
+
+ a| 
+建立新的LIF區域名稱
+ a| 
+「網路介面create -liflifname -dns區域」
+
+|===
++
+....
+vserver services name-service dns create -vserver <vs1> -domains <example.com> -name-servers <192.0.2.201, 192.0.2.202> -state <enabled> network interface modify -lif <datalif1> -dns-zone <zonename.whatever.com>
+....
+. 使用「vserver services name-service DNS check」命令來驗證名稱伺服器的狀態。
++
+....
+vserver services name-service dns check -vserver vs1.example.com
+VserverName       Server     Status    Status Details
+----------------  ---------- -------   --------------------------
+vs1.example.com   10.0.0.50  up        Response time (msec): 2
+vs1.example.com   10.0.0.51  up        Response time (msec): 2
+....
+
+
+
+
+== 設定名稱服務交換器表以進行主機名稱解析
+
+您必須正確設定名稱服務交換器表、才能啟用ONTAP 支援功能、以參考本機或外部名稱服務來擷取主機資訊。
+
+您必須決定要在環境中使用哪種名稱服務來進行主機對應。
+
+.步驟
+. 將必要的項目新增至名稱服務交換器表：
++
+....
+vserver services name-service <ns-switch> create -vserver <vserver_name> -database <database_name> -source <source_names>
+....
+. 驗證名稱服務交換器表格是否包含所需順序的預期項目：
++
+....
+vserver services name-service <ns-switch> show -vserver <vserver_name>
+....
+
+
+下列範例會在名稱服務交換器表中建立一個項目、讓SVM VS1先使用本機hosts檔案、然後再使用外部DNS伺服器來解析主機名稱：
+
+....
+vserver services name-service ns-switch create -vserver vs1 -database hosts -sources files dns
+....

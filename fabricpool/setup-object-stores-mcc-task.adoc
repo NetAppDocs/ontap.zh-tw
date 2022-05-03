@@ -1,0 +1,71 @@
+---
+permalink: fabricpool/setup-object-stores-mcc-task.html 
+sidebar: sidebar 
+keywords: setting up, object, stores, fabricpool, metrocluster, configuration 
+summary: 如果您執行ONTAP 的是更新版本的版本、您可以在FabricPool 一個靜態組態上設定鏡射版的功能、MetroCluster 將冷資料分層處理至兩個不同故障區的物件儲存區。 
+---
+= 設定FabricPool 物件存放區、以MetroCluster 供以物件區為區的組態進行擴充
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行ONTAP 的是更新版本的版本、您可以在FabricPool 一個靜態組態上設定鏡射版的功能、MetroCluster 將冷資料分層處理至兩個不同故障區的物件儲存區。
+
+.您需要的是 #8217 ；需要的是什麼
+* 此功能已設定完成、並已正確設定。MetroCluster
+* 在適當MetroCluster 的實體網站上設置兩個物件儲存區。
+* 每個物件存放區都會設定容器。
+* IP空間是在兩MetroCluster 個「知識區」組態上建立或識別、其名稱相符。
+
+
+.關於這項工作
+* 在不需要基礎鏡射Aggregate和相關物件存放區組態的情況下、必須由相同的組態擁有。FabricPool MetroCluster MetroCluster
+* 您無法將Aggregate附加至遠端MetroCluster 站台所建立的物件存放區。
+* 您必須在MetroCluster 擁有Aggregate的物件儲存組態上建立物件儲存組態。
+
+
+.步驟
+. 使用「儲存物件儲存組態建立」命令、在MetroCluster 每個站台上指定物件儲存組態資訊。
++
+在此範例中FabricPool 、MetroCluster 只有一個叢集需要使用此功能。為該叢集建立兩個物件存放區組態、每個物件存放區一個組態。
+
++
+[listing]
+----
+storage aggregate
+    object-store config create -object-store-name mcc1-ostore-config-s1 -provider-type SGWS -server
+    <SGWS-server-1> -container-name <SGWS-bucket-1> -access-key <key> -secret-password <password> -encrypt
+    <true|false> -provider <provider-type> -is-ssl-enabled <true|false> ipspace
+    <IPSpace>
+----
++
+[listing]
+----
+storage aggregate object-store config create -object-store-name mcc1-ostore-config-s2
+    -provider-type SGWS -server <SGWS-server-2> -container-name <SGWS-bucket-2> -access-key <key> -secret-password <password> -encrypt <true|false> -provider <provider-type>
+    -is-ssl-enabled <true|false> ipspace <IPSpace>
+----
++
+此範例可在FabricPool 採用列舉功能的第二個叢集上設定功能。MetroCluster
+
++
+[listing]
+----
+storage aggregate
+    object-store config create -object-store-name mcc2-ostore-config-s1 -provider-type SGWS -server
+    <SGWS-server-1> -container-name <SGWS-bucket-3> -access-key <key> -secret-password <password> -encrypt
+    <true|false> -provider <provider-type> -is-ssl-enabled <true|false> ipspace
+    <IPSpace>
+----
++
+[listing]
+----
+storage aggregate
+    object-store config create -object-store-name mcc2-ostore-config-s2 -provider-type SGWS -server
+    <SGWS-server-2> -container-name <SGWS-bucket-4> -access-key <key> -secret-password <password> -encrypt
+    <true|false> -provider <provider-type> -is-ssl-enabled <true|false> ipspace
+    <IPSpace>
+----
+

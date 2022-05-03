@@ -1,0 +1,43 @@
+---
+permalink: volumes/determine-space-usage-volume-aggregate-concept.html 
+sidebar: sidebar 
+keywords: determine, space usage, volume, aggregate 
+summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是超出預期的空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP 
+---
+= 判斷磁碟區或Aggregate中的空間使用量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟用ONTAP 功能時、可能會佔用您不知道的空間、或是超出預期的空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP
+
+由於磁碟區空間使用量或磁碟區、Aggregate或兩者的組合空間不足、因此磁碟區可能會耗盡空間。透過從不同角度查看以功能為導向的空間使用量明細、您可以評估您可能想要調整或關閉哪些功能、或採取其他行動（例如增加集合體或磁碟區的大小）。
+
+您可以從下列任一角度檢視空間使用詳細資料：
+
+* 磁碟區的空間使用量
++
+此觀點提供磁碟區內空間使用量的詳細資料、包括Snapshot複本的使用量。
+
++
+您可以使用「volume show-space"命令來查看磁碟區的空間使用量。
+
+* 集合體內的磁碟區佔用空間
++
+此觀點提供每個磁碟區在包含Aggregate中使用的空間量詳細資料、包括磁碟區的中繼資料。
+
++
+您可以使用「volume show-f印 跡」命令、查看磁碟區的實體佔用空間與Aggregate。
+
+* Aggregate的空間使用量
++
+此觀點包括集合體中所有磁碟區的磁碟區佔用空間總計、保留給Aggregate Snapshot複本的空間、以及其他Aggregate中繼資料。
+
++
+您可以使用「sorage Aggregate show-space"命令來查看Aggregate的空間使用量。
+
+
+
+某些功能（例如磁帶備份和重複資料刪除）會使用磁碟區的中繼資料空間、以及直接從集合體取得的中繼資料空間。這些功能顯示了不同的磁碟區與磁碟區佔用空間使用情況。

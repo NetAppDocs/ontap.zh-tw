@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/disable-reenable-branchcache-server-concept.html 
+sidebar: sidebar 
+keywords: previous, configure, branchcache, branch, office, client, cache, content, disable, what happens when you disable or reenable branchcache on the cifs server 
+summary: 如果您先前已設定了BranchCache、但不想讓分公司用戶端使用快取內容、可以停用CIFS伺服器上的快取功能。您必須知道停用BranchCache時會發生什麼情況。 
+---
+= 停用或重新啟用CIFS伺服器上的BranchCache時會發生什麼情況
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您先前已設定了BranchCache、但不想讓分公司用戶端使用快取內容、可以停用CIFS伺服器上的快取功能。您必須知道停用BranchCache時會發生什麼情況。
+
+停用BranchCache時ONTAP 、無法再計算雜湊或將中繼資料傳送至要求的用戶端。不過、檔案存取不會中斷。其後、啟用BranchCache的用戶端要求中繼資料資訊以供其存取內容時ONTAP 、會以Microsoft定義的錯誤回應、導致用戶端傳送第二個要求、要求提供實際內容。為了回應內容要求、CIFS伺服器會傳送儲存在儲存虛擬機器（SVM）上的實際內容。
+
+在CIFS伺服器上停用了BranchCache之後、SMB共用區不會通告BranchCache功能。若要存取新SMB連線上的資料、用戶端會進行一般讀取SMB要求。
+
+您可以隨時在CIFS伺服器上重新啟用BranchCache。
+
+* 由於停用BranchCache時並未刪除雜湊存放區、ONTAP 所以只要所要求的雜湊仍然有效、即可在重新啟用BranchCache後、在回覆雜湊要求時使用儲存的雜湊。
+* 在停用BranchCache期間，任何已建立SMB連線至啟用了BranchCache的共用區的用戶端，如果隨後重新啟用了BranchCache，則不會取得BranchCache支援。
++
+這是因為ONTAP 在設定SMB工作階段時、會針對共用區通告BranchCache支援。在停用了BranchCache的情況下、建立已啟用BranchCache之共用區工作階段的用戶端、必須中斷連線並重新連線、才能使用此共用區的快取內容。
+
+
+
+[NOTE]
+====
+如果您不想在CIFS伺服器上停用BranchCache之後儲存雜湊存放區、可以手動刪除它。如果重新啟用了BranchCache、您必須確定雜湊存放區目錄存在。重新啟用BranchCache之後、啟用BranchCache的共用區會通告BranchCache功能。支援BranchCache的用戶端在提出新要求時、會建立新的雜湊。ONTAP
+
+====

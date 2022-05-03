@@ -1,0 +1,30 @@
+---
+permalink: upgrade/task_configuring_ldap_clients_to_use_tls_for_highest_security.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, configuring, configure, ldap, clients, servers, tls, security 
+summary: 在升級至目標ONTAP 版本之前、您必須使用SSLv3設定LDAP用戶端、以便與LDAP伺服器進行安全通訊、以使用TLS。升級後將無法使用SSL。 
+---
+= 設定LDAP用戶端使用TLS以達到最高的安全性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級至目標ONTAP 版本之前、您必須使用SSLv3設定LDAP用戶端、以便與LDAP伺服器進行安全通訊、以使用TLS。升級後將無法使用SSL。
+
+根據預設、用戶端與伺服器應用程式之間的LDAP通訊不會加密。您必須禁止使用SSL並強制使用TLS。
+
+. 確認環境中的LDAP伺服器支援TLS。
++
+如果沒有、請勿繼續。您應該將LDAP伺服器升級至支援TLS的版本。
+
+. 請檢查哪些ONTAP 支援LDAP over SSL/TLS的驗證LDAP用戶端組態：「vserver services name-service LDAP用戶端show」
++
+如果沒有、您可以跳過其餘步驟。不過、您應該考慮使用LDAP over TLS來提高安全性。
+
+. 對於每個LDAP用戶端組態、不允許SSL強制使用TLS：「vserver services name-service LDAP用戶端modify -vserver vserver_name -client-config LDAP_client_config_name -allow-SSL假」
+. 確認任何LDAP用戶端都不再允許使用SSL：「vserver services name-service LDAP用戶端show」
+
+
+link:../nfs-admin/index.html["NFS管理"]

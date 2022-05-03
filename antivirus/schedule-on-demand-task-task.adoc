@@ -1,0 +1,68 @@
+---
+permalink: antivirus/schedule-on-demand-task-task.html 
+sidebar: sidebar 
+keywords: schedule, on-demand, task 
+summary: 如果您在未指派排程的情況下建立隨需工作、或是想要指派不同的排程給工作、您可以使用vserver vscan隨需工作排程命令來指派工作排程。 
+---
+= 排程隨需工作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在未指派排程的情況下建立隨需工作、或是想為工作指派不同的排程、您可以使用「vserver vscan隨需工作排程」命令來指派工作排程。
+
+使用「vserver vscan隨需工作排程」命令指派的排程會覆寫已指派「vserver vscan隨需工作建立」命令的排程。
+
+.步驟
+. 排程隨需工作：
++
+「vserver vscan隨需工作排程-vserver data_SVM -task-name task_name -schedule cron排程」
+
++
+下列命令會在'VS2'SVM上排程名為「task2」的存取中工作：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task schedule -vserver vs2 -task-name Task2 -schedule daily
+[Job 142]: Vscan On-Demand job is queued. Use the "job show -id 142" command to view the status.
+----
++
+[NOTE]
+====
+您可以使用「jobshow」命令來檢視工作狀態。您可以使用「工作暫停」和「工作恢復」命令來暫停和重新啟動工作、或使用「工作停止」命令來結束工作。
+
+====
+. 確認已排程隨需工作：「vserver vscan隨需工作show -instance data_SVM -task-name task_name」
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示「工作2」工作的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task show -instance vs2 -task-name Task2
+
+                           Vserver: vs2
+                         Task Name: Task2
+                List of Scan Paths: /vol1/, /vol2/cifs/
+             Report Directory Path: /report
+                      Job Schedule: daily
+Max File Size Allowed for Scanning: 5GB
+            File Paths Not to Scan: /vol1/cold-files/
+       File Extensions Not to Scan: mp3, mp4
+           File Extensions to Scan: vmdk, mp*
+      Scan Files with No Extension: false
+           Request Service Timeout: 5m
+                    Cross Junction: true
+               Directory Recursion: true
+                     Scan Priority: low
+                  Report Log Level: info
+----
+
+
+您必須先在SVM上啟用掃描、工作才會排程執行。

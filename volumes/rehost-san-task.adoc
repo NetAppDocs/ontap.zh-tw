@@ -1,0 +1,67 @@
+---
+permalink: volumes/rehost-san-task.html 
+sidebar: sidebar 
+keywords: rehost, san volumes 
+summary: 您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中重新建立啟動器群組（igroup）之後、Volume rehost可以自動重新對應同一個SVM上的磁碟區。 
+---
+= 重新裝載SAN磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中重新建立啟動器群組（igroup）之後、Volume rehost可以自動重新對應同一個SVM上的磁碟區。
+
+.您需要的是 #8217 ；需要的是什麼
+* Volume必須處於線上狀態。
+* Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
+* 磁碟區或LUN上不得有作用中的I/O。
+* 您必須確認目的地SVM沒有名稱相同但啟動器不同的igroup。
++
+如果igroup的名稱相同、則您必須在任一SVM（來源或目的地）中重新命名igroup。
+
+* 您必須啟用「force-unmap-LUNs」選項。
++
+** 「force-unmap-LUNs」選項的預設值為「假」。
+** 當您將「force-unmap-LUNs」選項設定為「true」時、不會顯示任何警告或確認訊息。
+
+
+
+
+.關於這項工作
+* 重新託管是一項顛覆性的作業。
+* 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
+* 重新裝載作業之後、下列Volume原則、原則規則和組態會從來源Volume遺失、必須在重新裝載的Volume上手動重新設定：
++
+** 防毒原則
+** Volume效率原則
+** 服務品質（QoS）原則
+** Snapshot原則
+** NS-SWITCH與名稱服務組態匯出原則與規則
+** 使用者和群組ID
+
+
+
+
+.步驟
+. 記錄目標Volume上的LUN對應資訊：
++
+「LUN對應顯示要重新裝載的Volume：vserver來源vserver」
+
++
+這是一個預防步驟、可避免在磁碟區重組失敗時遺失LUN對應的相關資訊。
+
+. 刪除與目標Volume相關的igroup。
+. 將目標磁碟區重新裝載至目的地SVM：
++
+「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+
+. 將目標磁碟區上的LUN對應至適當的igroup。
++
+** Volume rehost會保留目標磁碟區上的LUN；不過、LUN仍保持未對應狀態。
+** 在對應LUN時使用目的地SVM連接埠集。
+** 如果將「自動重新對應LUN」選項設定為「true」、LUN會在重新裝載後自動對應。
+
+
+

@@ -1,0 +1,38 @@
+---
+permalink: smb-admin/display-discovered-servers-task.html 
+sidebar: sidebar 
+keywords: display, information, relate, discover, ldap, server, domain, controller, cifs, server, display information about discover servers 
+summary: 您可以顯示CIFS伺服器上探索到的LDAP伺服器和網域控制器相關資訊。 
+---
+= 顯示探索到的伺服器相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示CIFS伺服器上探索到的LDAP伺服器和網域控制器相關資訊。
+
+.步驟
+. 若要顯示與探索到的伺服器相關的資訊、請輸入下列命令：「vserver CIFS網域探索到的伺服器show」
+
+
+下列範例顯示SVM VS1探索到的伺服器：
+
+[listing]
+----
+cluster1::> vserver cifs domain discovered-servers show
+
+Node: node1
+Vserver: vs1
+
+Domain Name     Type     Preference DC-Name     DC-Address    Status
+--------------- -------- ---------- ----------- ------------- -------
+example.com     MS-LDAP  adequate   DC-1        1.1.3.4       OK
+example.com     MS-LDAP  adequate   DC-2        1.1.3.5       OK
+example.com     MS-DC    adequate   DC-1        1.1.3.4       OK
+example.com     MS-DC    adequate   DC-2        1.1.3.5       OK
+----
+xref:reset-rediscovering-servers-task.adoc[重新設定及重新探索伺服器]
+
+xref:stop-start-server-task.adoc[停止或啟動CIFS伺服器]

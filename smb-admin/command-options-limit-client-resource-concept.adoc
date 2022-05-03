@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/command-options-limit-client-resource-concept.html 
+sidebar: sidebar 
+keywords: option, vserver, cifs, modify, command, enable, control, resource, consumption, windows, client, bound, notify, request, command options to limit excessive windows client resource consumption 
+summary: vserver CIFS選項修改命令的選項可讓您控制Windows用戶端的資源使用量。如果有任何用戶端超出資源使用量的正常範圍、例如開啟的檔案數量異常多、開啟的工作階段或變更通知要求、則這項功能會很有幫助。 
+---
+= 命令選項可限制過多的Windows用戶端資源使用量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+「vserver CIFS options modify」命令的選項可讓您控制Windows用戶端的資源使用量。如果有任何用戶端超出資源使用量的正常範圍、例如開啟的檔案數量異常多、開啟的工作階段或變更通知要求、則這項功能會很有幫助。
+
+已新增下列「vserver CIFS options modify」命令選項、以控制Windows用戶端資源使用量。如果超過這些選項的最大值、則會拒絕要求、並傳送EMS訊息。當達到這些選項設定上限的80%時、也會傳送EMS警告訊息。
+
+* 最大值：每個樹狀結構相同的檔案大小
++
+每個CIFS樹狀結構在同一個檔案上開啟的最大數目
+
+* 「最大相同使用者工作階段/每個連線」
++
+每個連線的相同使用者所開啟的工作階段數目上限
+
+* 最大相同樹狀結構的每個工作階段連線
++
+每個工作階段在相同共用區上連線的樹狀結構數目上限
+
+* 最大值為每個樹狀結構設定值
++
+每個樹狀結構建立的監視數目上限（也稱為「變更通知」）
+
+
+
+如需預設限制、請參閱手冊頁、並顯示目前的組態。
+
+從ONTAP Sf9.4開始、執行SMB第2版或更新版本的伺服器可以限制用戶端在SMB連線上傳送至伺服器的未處理要求數（_SMB點數_）。SMB信用管理是由用戶端啟動、由伺服器控制。
+
+SMB連線上可授與的未處理要求數目上限、由「-max-b信用 額度」選項控制。此選項的預設值為128。

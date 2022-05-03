@@ -1,0 +1,58 @@
+---
+permalink: upgrade/task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, requesting, notification, issues, encountered, ndu, andu, nondisruptive, upgrades 
+summary: 如果您不打算監控升級程序的進度、最好是要求EMS通知可能需要手動介入的錯誤。或者、您也可以設定AutoSupport 要傳送給內部支援組織的消息。 
+---
+= 要求通知在不中斷營運的升級中遇到的問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不打算監控升級程序的進度、最好是要求EMS通知可能需要手動介入的錯誤。或者、您也可以設定AutoSupport 要傳送給內部支援組織的消息。
+
+您必須是叢集管理員才能執行此工作。
+
+設定通知以便在升級過程中發生問題時傳送通知、是很有用的做法。尤其是，呼叫Home.andu.pausederr訊息包含有用的疑難排解資訊。
+
+如果AutoSupport 使用電子郵件地址設定了「功能表」參數、則當升級ONTAP 至「功能表9」或「9.1」時、這些電子郵件地址會自動複製到EMS通知目的地。也會建立新的EMS通知、將重要事件篩選器對應至這些位址。因此、您將開始收到每個「呼叫首頁」事件的兩封電子郵件通知、直到您將電子郵件地址從AutoSupport 「此資訊」參數中移除為止。您也會開始收到電子郵件通知、通知您原本設定的其他重要事件。
+
+
+NOTE: 如果您的叢集未設定為傳送AutoSupport 功能性訊息、則會在本機儲存通知複本。
+
+. 要求通知在不中斷營運的升級中遇到的問題。
++
+link:../error-messages/index.html["EMS組態"]
+
+. 在開始不中斷升級之前、如果AutoSupport 在此叢集上啟用了「支援功能」、則可藉由叫用AutoSupport 「支援功能」訊息來抑制自動建立個案。如果AutoSupport 此叢集上未啟用「支援功能」、請忽略此步驟：「系統節點AutoSupport 支援功能叫用節點*-輸入ALL -Message MAn=xh」
++
+x是維護時段的持續時間（以小時為單位）。
+
++
+
+NOTE: 此訊息會通知技術支援人員此維護工作、以便在維護期間禁止自動建立案例。
+
++
+此命令會禁止自動建立案例兩小時：
+
++
+[listing]
+----
+cluster::*> system node autosupport invoke -node * -type all -message MAINT=2h
+----
+. 在不中斷的升級之後、請叫用AutoSupport 下列訊息重新啟用自動建立案例：「System Node AutoSupport 現象叫用節點*-type all -most MAn=end」
++
+命令可重新啟用自動建立案例：
+
++
+[listing]
+----
+cluster::*> system node autosupport invoke -node * -type all -message MAINT=END
+----
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]
+
+link:../error-messages/index.html["EMS組態"]

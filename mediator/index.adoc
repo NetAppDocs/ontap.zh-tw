@@ -1,0 +1,475 @@
+---
+permalink: mediator/index.html 
+sidebar: sidebar 
+keywords: ontap mediator service, install requirements, mediator requirements 
+summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所有先決條件、取得安裝套件、並在主機上執行安裝程式。 
+---
+= 安裝或升級ONTAP 《不知道如何使用》服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要安裝ONTAP 《支援程式》服務、您必須確保符合所有先決條件、取得安裝套件、並在主機上執行安裝程式。此程序用於安裝或升級現有安裝。
+
+您必須符合下列先決條件。
+
+[cols="30,70"]
+|===
+
+
+| 中介版本 | 支援的Linux版本 
+
+
+ a| 
+1.3
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1、8.2、8.3
+* CentOS：7.6、7.7、7.8、7.9
+
+
+
+
+ a| 
+1.2
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.0、8.1
+* CentOS：7.6、7.7、7.8%
+
+
+|===
+
+NOTE: 核心版本必須符合作業系統版本。
+
+* 64位元實體安裝或虛擬機器
+* 8 GB RAM
+* 使用者：root存取權
+
+
+
+
+== 升級主機作業系統、然後升級「媒體資訊器」
+
+下表提供升級準則、適用於從RHEL/CentOS 7.6升級至較新版本的RHEL/CentOS版本、以及升級Medator版本。
+
+[cols="20,20,60"]
+|===
+
+
+| 目標Linux版本 | 目標媒體器版本 | 升級附註 
+
+
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.0、8.1
+* CentOS：7.6、7.7、7.8%
+
+ a| 
+1.2
+ a| 
+* 升級必須依照下列順序執行：
++
+.. 從RHEL/CentOS版本升級作業系統。
+.. 重新啟動主機以套用核心模組變更。
+.. 將媒體器從先前的版本升級至目前的版本。
+
+
+* 適用於下列項目：MetroCluster
++
+.. 儲存設備iscsi啟動器show命令會報告、在升級期間、與媒體服務的連線中斷。
+.. 此作業系統將產生下列EMS事件：ONTAP
++
+... 升級期間的cf.mccip.med.auso.stDisabled
+... 當自動非計畫性切換重新啟用時、請參閱cf.mccip.med.auso.stEnabled
+
+
+
+
+
+
+
+
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1、8.2、8.3
+* CentOS：7.6、7.7、7.8、7.9
+
+ a| 
+1.3
+ a| 
+. 從RHEL/CentOS版本升級作業系統。
+. 重新啟動主機以套用核心模組變更。
+. 將媒體器從先前的版本升級至目前的版本。
+
+
+|===
+以下列出安裝Red Hat Enterprise Linux或CentOS以及系統上相關儲存庫的最佳實務做法。安裝或設定不同的系統可能需要額外的步驟。
+
+* 您必須根據Red Hat最佳實務做法來安裝Red Hat Enterprise Linux或CentOS。由於CentOS 8.x版本的生命週期終止支援、建議您不要使用RHEL或CentOS 7.x的相容版本
+* 在ONTAP Red Hat Enterprise Linux或CentOS上安裝支援程式服務時、系統必須能夠存取適當的儲存庫、以便安裝程式存取及安裝所有必要的軟體相依性。
+* 為了讓yum安裝程式在Red Hat Enterprise Linux儲存庫中找到相依軟體、您必須在Red Hat Enterprise Linux安裝期間或之後使用有效的Red Hat訂閱來註冊系統。
++
+如需Red Hat訂購管理程式的相關資訊、請參閱Red Hat說明文件。
+
+* 下列連接埠必須未使用、且可用於資訊管理器：
++
+** 31784年
+** 3260
+
+
+* 如果使用協力廠商防火牆：請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["防火牆需求ONTAP"^]
+* 如果Linux主機位於無法存取網際網路的位置、您可以手動安裝套件、或是必須確保所需套件可在本機儲存庫中使用。
++
+您可以使用下列連結取得設定儲存庫的相關資訊。
+
++
+如果您在Linux環境中使用連結集合控制傳輸協定（LACP）、則必須正確設定核心、並確定「seyscll net.ipv4.conf.all.arp_ignore」設為「2」。
+
++
+下列套件是ONTAP 由《不知道的》服務所要求的：
+
++
+[cols="25,35,40"]
+|===
+
+
+| 所有RHEL/CentOS版本 | RHEL / CentOS 7.x的其他套件 | RHEL 8.x的其他套件 
+
+
+ a| 
+** OpenSSL
+** OpenSSL
+** kernel-devel
+** 海灣合作委員會
+** libselinux-utils
+** 製造
+** RedHat-lsb核心
+** 修補程式
+** bzip2.
+** 熱36
+** python36- devel
+** Perl-Data-Dumper
+** Perl-ExtUtils-MakeMaker..
+** python3-pip
+
+ a| 
+** policycoreutils-python
+** python36- pip
+
+ a| 
+** elfutils-libelf-devel
+** policycoreutils-python公用程式
+
+
+|===
+* 如果已設定簽名驗證、則必須停用該驗證。您可以透過下列兩種方式之一來完成此作業：
++
+** 如果已設定UEFI SecureBoot機制、請將其停用。
+** 更新並重新產生grub.cfg檔案、以停用簽章驗證機制：
++
+... 開啟/etc/default/grub檔案。
+... 將字串module.SIG_enable=0新增至Grub _CMDLINK_Linux陳述式結尾。
+... 重新產生grub.cfg檔案以實作變更：
++
+「update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub．cfg」
+
+... 重新啟動主機。
+
+
+
+
+
+
+該媒體夾安裝套件是一個自我解壓縮的tar檔案、其中包括：
+
+* 一種RPM檔案、內含無法從支援版本儲存庫取得的所有相依性。
+* 安裝指令碼。
+
+
+建議使用有效的SSL認證、如本程序所述。
+
+
+
+== 啟用儲存庫存取
+
+|===
+
+
+| 如果您的作業系統是... | 您必須提供這些儲存庫的存取權限... 
+
+
+ a| 
+RHEL 7.x
+ a| 
+RHEL-7-server選用-rpms
+
+
+
+ a| 
+CentOS 7.x
+ a| 
+C7.6.1810 -基礎儲存庫
+
+
+
+ a| 
+RHEL 8.x
+ a| 
+* RHEL-8-for-x86_64：basos-rpms
+* RHEL-8-for-x86_64：AppStream：rpms
+
+
+|===
+啟用對上述儲存庫的存取、以便媒體資訊員在安裝程序期間存取所需的套件。請針對您的作業系統使用下列程序。
+
+* 的程序 <<rhel7x,RHEL 7.x>> 作業系統：
+* 的程序 <<rhel8x,RHEL 8.x>> 作業系統：
+* 的程序 <<centos7x,CentOS 7.x>> 作業系統：
+
+
+
+
+=== RHEL 7.x作業系統的程序
+
+如果您的作業系統是* RHEL 7.x*：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+「Subscape-manager reposs -啟用RHEL-7-server選用-rpms」
+
++
+下列範例顯示此命令的執行：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
+Repository 'rhel-7-server-optional-rpms' is enabled for this system.
+----
+. 執行「yum repolist」命令。
++
+下列範例顯示此命令的執行。清單中應會顯示「RHEL-7-server選擇性-rpms」儲存庫。
+
++
+[listing]
+----
+[root@localhost ~]# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+rhel-7-server-optional-rpms | 3.2 kB  00:00:00
+rhel-7-server-rpms | 3.5 kB  00:00:00
+(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group                                               |  26 kB  00:00:00
+(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo                                          | 2.5 MB  00:00:00
+(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db                                          | 8.3 MB  00:00:01
+repo id                                      repo name                                             status
+rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
+rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
+repolist: 46,205
+[root@localhost ~]#
+----
+
+
+
+
+=== RHEL 8.x作業系統的程序
+
+如果您的作業系統是* RHEL 8.x *：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+「Substime-manager reposs -啟用RHEL-8-for-x86_64、basos-rpms」
+
++
+「Substime-manager reposs -啟用RHEL-8-for-x86_64：AppStream：rpms」
+
++
+下列範例顯示此命令的執行：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
+Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
+----
+. 執行「yum repolist」命令。
++
+新訂閱的儲存庫應會出現在清單中。
+
+
+
+
+
+=== CentOS 7.x作業系統的程序
+
+如果您的作業系統是* CentOS 7.x*：
+
+.步驟
+. 新增C7.6.1810 -基礎儲存庫。C7.6.1810 - Base Vault儲存庫包含ONTAP 資訊中心所需的kernel-devel套件。
+. 將下列行新增至/etc/yum、repos.d/CentOS、Vault.repo。
++
+[listing]
+----
+[C7.6.1810-base]
+name=CentOS-7.6.1810 - Base
+baseurl=http://vault.centos.org/7.6.1810/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+----
+. 執行「yum repolist」命令。
++
+下列範例顯示此命令的執行。Centos-7.6.1810 -基礎儲存庫應出現在清單中。
+
++
+[listing]
+----
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: distro.ibiblio.org
+ * extras: distro.ibiblio.org
+ * updates: ewr.edge.kernel.org
+C7.6.1810-base                                                   | 3.6 kB  00:00:00
+(1/2): C7.6.1810-base/x86_64/group_gz                            | 166 kB  00:00:00
+(2/2): C7.6.1810-base/x86_64/primary_db                          | 6.0 MB  00:00:04
+repo id                                           repo name                                                                                                    status
+C7.6.1810-base/x86_64                             CentOS-7.6.1810 - Base                                                                                       10,019
+base/7/x86_64                                     CentOS-7 - Base                                                                                              10,097
+extras/7/x86_64                                   CentOS-7 - Extras                                                                                               307
+updates/7/x86_64                                  CentOS-7 - Updates                                                                                            1,010
+repolist: 21,433
+[root@localhost ~]#
+----
+
+
+
+
+== 下載「內化器」安裝套件
+
+.步驟
+. 請從ONTAP 「畫面資訊」頁面下載「媒體資訊器」安裝套件。
++
+https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-tab["《資訊媒體》下載頁面ONTAP"^]
+
+. 確認「媒體資訊器」安裝套件位於目標目錄：
++
+《ls》
+
++
+[listing]
+----
+[root@mediator-host ~]#ls
+./ontap-mediator_1.3
+----
++
+如果您所在的位置無法存取網際網路、則必須確保安裝程式能夠存取所需的套件。
+
+. 如有必要、請將「內化器」安裝套件從下載目錄移至Linux媒體器主機上的安裝目錄。
+
+
+
+
+== 安裝ONTAP 《不知道如何安裝》套件
+
+.步驟
+. 安裝媒體器安裝套件、並視需要回應提示：
++
+「/ONTAP-PROIDER_1.3」
+
++
+安裝程序會繼續建立所需的帳戶、並安裝所需的套件。如果主機上已安裝舊版的「媒體資訊器」、系統會提示您確認是否要升級。
+
+
+
+link:../media/console_output_mediator_installation.txt["安裝示例（主控台輸出）ONTAP"^]
+
+
+
+== 驗證安裝
+
+.步驟
+. 執行下列命令以檢視ONTAP 「畫面資訊中心」服務的狀態：
++
+《stystemctl》
+
++
+[listing]
+----
+ [root@scspr1915530002 ~]# systemctl status ontap_mediator mediator-scst
+
+        ∙ ontap_mediator.service - ONTAP Mediator
+            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/ontap_mediator.service; enabled; vendor preset: disabled)
+
+            Active: active (running) since Thu 2020-06-18 09:55:02 EDT; 3 days ago
+
+         Main PID: 3559 (uwsgi)
+
+            Status: "uWSGI is ready"
+
+            CGroup: /system.slice/ontap_mediator.service
+
+                    \u251c\u25003559 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+                    \u251c\u25004510 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+                    \u2514\u25004512 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+
+
+         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting ONTAP Mediator...
+
+         Jun 18 09:54:45 scspr1915530002 ontap_mediator[3559]: [uWSGI] getting INI configuration from /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+         Jun 18 09:55:02 scspr1915530002 systemd[1]: Started ONTAP Mediator.
+
+
+
+         ∙ mediator-scst.service
+            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/mediator-scst.service; enabled; vendor preset: disabled)
+
+            Active: active (running) since Thu 2020-06-18 09:54:51 EDT; 3 days ago
+
+           Process: 3564 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
+
+         Main PID: 4202 (iscsi-scstd)
+
+            CGroup: /system.slice/mediator-scst.service
+
+                    \u2514\u25004202 /usr/local/sbin/iscsi-scstd
+
+
+
+         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting mediator-scst.service...
+
+         Jun 18 09:54:48 scspr1915530002 iscsi-scstd[4200]: max_data_seg_len 1048576, max_queued_cmds 2048
+
+         Jun 18 09:54:51 scspr1915530002 scst[3564]: Loading and configuring SCST[  OK  ]
+
+         Jun 18 09:54:51 scspr1915530002 systemd[1]: Started mediator-scst.service.
+
+         [root@scspr1915530002 ~]#
+----
+. 確認ONTAP 使用的連接埠：Netstat
++
+[listing]
+----
+         [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
+
+         tcp   0   0 0.0.0.0:31784   0.0.0.0:*      LISTEN
+
+         tcp   0   0 0.0.0.0:3260    0.0.0.0:*      LISTEN
+
+         tcp6  0   0 :::3260         :::*           LISTEN
+----
+
+
+
+
+== 結果
+
+現在已安裝並執行此功能。ONTAP必須在ONTAP 不完整的儲存系統中執行進一步的組態、才能使用「內化器」功能：
+
+* 若要在ONTAP 不實的IP組態中使用此功能、MetroCluster 請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["從ONTAP 一套不實的IP組態設定「不實不作」MetroCluster 服務"^]
+* 若要使用SnapMirror營運不中斷、請參閱 xref:../smbc/smbc_install_confirm_ontap_cluster.html[安裝ONTAP 「支援中心服務」並確認ONTAP 「支援中心」組態]
+

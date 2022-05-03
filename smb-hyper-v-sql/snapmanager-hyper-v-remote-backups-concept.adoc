@@ -1,0 +1,60 @@
+---
+permalink: smb-hyper-v-sql/snapmanager-hyper-v-remote-backups-concept.html 
+sidebar: sidebar 
+keywords: snapmanager, hyper, v, remote, manage, vss, backup, smb 
+summary: 您可以使用SnapManager 支援Hyper-V的支援功能來管理遠端VSS型備份服務。使用支援Hyper-V的託管備份服務來建立空間效率極高的備份集、有許多好處SnapManager 。 
+---
+= 適用於Hyper-V的解決方案SnapManager 如何透過SMB管理Hyper-V的遠端VSS型備份
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用SnapManager 支援Hyper-V的支援功能來管理遠端VSS型備份服務。使用支援Hyper-V的託管備份服務來建立空間效率極高的備份集、有許多好處SnapManager 。
+
+針對Hyper-V託管備份進行的最佳化包括：SnapManager
+
+* 支援VMware的整合功能可在探索SMB共用位置時提供效能最佳化。SnapDrive ONTAP
++
+提供含有共享區所在Volume名稱的功能。ONTAP SnapDrive
+
+* 針對Hyper-V、指定陰影複製服務需要複製的SMB共用中虛擬機器檔案清單。SnapManager
++
+藉由提供目標式虛擬機器檔案清單、陰影複製服務不需要建立共用中所有檔案的陰影複製。
+
+* 儲存虛擬機器（SVM）會保留Snapshot複本以SnapManager 供Hyper-V使用、以供還原。
++
+沒有備份階段。備份是節省空間的Snapshot複本。
+
+
+
+適用於Hyper-V的支援透過SMB為HyperV提供備份與還原功能、程序如下：SnapManager
+
+. 準備陰影複製作業
++
+適用於Hyper-V應用程式的VSS用戶端會設定陰影複製集。SnapManagerVSS用戶端會收集陰影複製集中要包含哪些共享的資訊、並將此資訊提供ONTAP 給效益管理系統。一組可能包含一或多個陰影複製、而一個陰影複製對應一個共用區。
+
+. 建立陰影複製集（如果使用自動還原）
++
+針對陰影複製集中的每個共用區ONTAP 、它會建立陰影複製、並使陰影複製可寫入。
+
+. 揭露陰影複製集
++
+在建立陰影複製之後ONTAP 、它們會暴露SnapManager 於適用於Hyper-V的功能、讓應用程式的VSS寫入器能夠執行自動還原。
+
+. 自動恢復陰影複製集
++
+在建立陰影複製集期間、備份集內的檔案會有一段時間發生作用中變更。應用程式的VSS寫入器必須更新陰影複本、以確保在備份前處於完全一致的狀態。
+
++
+[NOTE]
+====
+自動還原的執行方式取決於應用程式。遠端VSS不涉及此階段。
+
+====
+. 完成並清除陰影複製集
++
+VSS用戶端會在ONTAP 完成自動還原之後通知功能不全。陰影複製集會設為唯讀、然後準備好備份。使用SnapManager 支援Hyper-V的功能進行備份時、Snapshot複本中的檔案會成為備份、因此在備份階段、會針對備份集中包含共用的每個磁碟區建立Snapshot複本。備份完成後、陰影複製集會從CIFS伺服器移除。
+
+

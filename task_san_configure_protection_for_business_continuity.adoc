@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: task_san_configure_protection_for_business_continuity.html 
+keywords: netapp, ontap, System Manager, LUNs, source cluster, protect, protection, storage VM, volume, volumes, source, destination, cluster, IOPS activity 
+summary: 設定業務持續性保護包括在ONTAP 來源叢集上選取LUN、然後將其新增至一致性群組。從來源叢集上的瀏覽器開啟System Manager、開始設定保護以確保營運不中斷。 
+---
+= 設定保護以確保營運不中斷
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+設定業務持續性保護包括在ONTAP 來源叢集上選取LUN、然後將其新增至一致性群組。從來源叢集上的瀏覽器開啟System Manager、開始設定保護以確保營運不中斷。
+
+此工作流程設計用於ONTAP 執行效能不整的9.8和9.9。從ONTAP VMware版9.10.1開始、建議您先建立一致性群組、然後使用SMBC作為遠端保護。
+
+
+
+== 關於這項工作
+
+* LUN必須位於相同的儲存VM上。
+* LUN可位於不同的磁碟區。
+* 來源與目的地叢集不能相同。
+* SM-BC需要預設IPspace才能建立叢集對等關係。不支援自訂IPspace。
+
+
+.步驟
+. 選擇您要保護的LUN、並將其新增至保護群組：*保護>總覽>保護營運不中斷>保護LUN*。
+. 在來源叢集上選取一或多個要保護的LUN。
+. 選取目的地叢集和SVM。
+. *依預設會選取「初始化關係」*。按一下「*儲存*」開始保護。
+. 請前往*儀表板>效能*以驗證LUN的IOPS活動。
+. 在目的地叢集上、使用System Manager驗證是否已同步保護營運不中斷關係：*保護>關係*。
+

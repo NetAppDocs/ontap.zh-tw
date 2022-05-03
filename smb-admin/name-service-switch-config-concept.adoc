@@ -1,0 +1,164 @@
+---
+permalink: smb-admin/name-service-switch-config-concept.html 
+sidebar: sidebar 
+keywords: ontap, store, name, service, configuration, information, table, equivalent, unix, system, appropriate, environment, how ontap name service switch configuration works 
+summary: 將名稱服務組態資訊儲存在表格中、表格相當於UNIX系統上的/etc/nsswitch.conf檔案。ONTAP您必須瞭解表格的功能及ONTAP 其使用方式、以便根據環境適當設定。 
+---
+= 如何使用名稱服務交換器組態ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將名稱服務組態資訊儲存在表格中、表格相當於UNIX系統上的「/etc/nsswitch.conf」檔案。ONTAP您必須瞭解表格的功能及ONTAP 其使用方式、以便根據環境適當設定。
+
+這個名稱服務交換器表決定哪些名稱服務來源可以查詢、以便擷取特定類型名稱服務資訊的資訊。ONTAP ONTAP針對每個SVM維護個別的名稱服務交換器表。ONTAP
+
+
+
+== 資料庫類型
+
+此表格會針對下列每一種資料庫類型儲存個別的名稱服務清單：
+
+|===
+| 資料庫類型 | 定義名稱服務來源： | 有效來源為... 
+
+
+ a| 
+主機
+ a| 
+將主機名稱轉換為IP位址
+ a| 
+檔案、DNS
+
+
+
+ a| 
+群組
+ a| 
+查詢使用者群組資訊
+ a| 
+檔案、NIS、LDAP
+
+
+
+ a| 
+密碼
+ a| 
+查詢使用者資訊
+ a| 
+檔案、NIS、LDAP
+
+
+
+ a| 
+網路群組
+ a| 
+查詢netgroup資訊
+ a| 
+檔案、NIS、LDAP
+
+
+
+ a| 
+名稱
+ a| 
+對應使用者名稱
+ a| 
+檔案、LDAP
+
+|===
+
+
+== 來源類型
+
+這些來源會指定要用於擷取適當資訊的名稱服務來源。
+
+|===
+| 指定來源類型... | 若要查詢資訊... | 由命令系列管理... 
+
+
+ a| 
+檔案
+ a| 
+本機來源檔案
+ a| 
+「vserver服務名稱服務UNIX使用者」「vserver服務名稱服務UNIX群組」
+
+「Vserver服務名稱服務netgroup」
+
+「Vserver服務名稱服務DNS主機」
+
+
+
+ a| 
+NIS
+ a| 
+在SVM的NIS網域組態中指定的外部NIS伺服器
+ a| 
+「Vserver服務名稱服務NIS網域」
+
+
+
+ a| 
+LDAP
+ a| 
+在SVM的LDAP用戶端組態中指定的外部LDAP伺服器
+ a| 
+「Vserver服務名稱服務LDAP」
+
+
+
+ a| 
+DNS
+ a| 
+在SVM的DNS組態中指定的外部DNS伺服器
+ a| 
+「Vserver服務名稱服務DNS」
+
+|===
+即使您打算使用NIS或LDAP進行資料存取和SVM管理驗證、仍應納入「檔案」、並在NIS或LDAP驗證失敗時將本機使用者設定為後援。
+
+
+
+== 用於存取外部來源的傳輸協定
+
+若要存取伺服器的外部來源、ONTAP 可使用下列通訊協定：
+
+|===
+| 外部名稱服務來源 | 用於存取的傳輸協定 
+
+
+| NIS | UDP 
+
+
+| DNS | UDP 
+
+
+| LDAP | TCP 
+|===
+
+
+== 範例
+
+以下範例顯示SVM「svm_1」的名稱服務交換器組態：
+
+[listing]
+----
+cluster1::*> vserver services name-service ns-switch show -vserver svm_1
+                               Source
+Vserver         Database       Order
+--------------- ------------   ---------
+svm_1           hosts          files,
+                               dns
+svm_1           group          files
+svm_1           passwd         files
+svm_1           netgroup       nis,
+                               files
+----
+若要查詢使用者或群組資訊、ONTAP 僅查詢本機來源檔案。如果查詢未傳回任何結果、則查詢會失敗。
+
+若要查詢netgroup資訊、ONTAP 請先諮詢外部NIS伺服器。如果查詢未傳回任何結果、則會勾選本機netgroup檔案。
+
+SVM SVM_1的表格中沒有名稱對應的名稱服務項目。因此ONTAP 、根據預設、僅查詢本機來源檔案。

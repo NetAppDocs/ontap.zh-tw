@@ -1,0 +1,143 @@
+---
+permalink: system-admin/manage-node-boot-menu-task.html 
+sidebar: sidebar 
+keywords: system, manager, manage, node, boot, menu, configuration, problems, password, reset, initialize, disks, restore, device 
+summary: 您可以使用開機功能表來修正節點上的組態問題、重設管理密碼、初始化磁碟、重設節點組態、以及將節點組態資訊還原回開機裝置。 
+---
+= 使用開機功能表管理節點
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用開機功能表來修正節點上的組態問題、重設管理密碼、初始化磁碟、重設節點組態、以及將節點組態資訊還原回開機裝置。
+
+
+NOTE: 如果HA配對正在使用 xref:../encryption-at-rest/support-storage-encryption-concept.html[加密SAS或NVMe磁碟機（SED、NSE、FIPS）]、您必須遵循主題中的指示 xref:../encryption-at-rest/return-seds-unprotected-mode-task.html[將FIPS磁碟機或SED恢復為無保護模式] 在初始化系統之前、HA配對內的所有磁碟機（開機選項4或9）。如果未這麼做、可能會在磁碟機重新調整用途時、導致未來的資料遺失。
+
+.步驟
+. 在系統提示字元下使用「系統節點重新開機」命令、重新啟動節點以存取開機功能表。
++
+節點會開始重新開機程序。
+
+. 在重新開機程序期間、當系統提示時、按Ctrl-C可顯示開機功能表。
++
+節點會顯示開機功能表的下列選項：
+
++
+[listing]
+----
+(1) Normal Boot.
+(2) Boot without /etc/rc.
+(3) Change password.
+(4) Clean configuration and initialize all disks.
+(5) Maintenance mode boot.
+(6) Update flash from backup config.
+(7) Install new software first.
+(8) Reboot node.
+(9) Configure Advanced Drive Partitioning
+Selection (1-9)?
+----
++
+[NOTE]
+====
+開機功能表選項（2）不使用/etc/rc開機已過時、對系統不會有任何影響。
+
+====
+. 輸入對應的號碼、選取下列其中一個選項：
++
+[cols="35,65"]
+|===
+| 至... | 選取... 
+
+
+ a| 
+繼續以正常模式開機節點
+ a| 
+1）正常開機
+
+
+
+ a| 
+變更節點的密碼、也就是「admin」帳戶密碼
+ a| 
+3）變更密碼
+
+
+
+ a| 
+初始化節點的磁碟、並為節點建立根磁碟區
+ a| 
+4）清除組態並初始化所有磁碟
+
+[NOTE]
+====
+此功能表選項會清除節點磁碟上的所有資料、並將節點組態重設為原廠預設值。
+
+====
+只有在節點從叢集移除（未加入）且未加入其他叢集之後、才選取此功能表項目。
+
+對於具有內部或外部磁碟櫃的節點、會初始化內部磁碟上的根磁碟區。如果沒有內部磁碟櫃、則會初始化外部磁碟上的根磁碟區。
+
+若系統使用FlexArray 內部或外部磁碟櫃執行「虛擬化」、則陣列LUN不會初始化。內部或外部磁碟櫃上的任何原生磁碟都會初始化。
+
+若系統只執行FlexArray 陣列LUN、而沒有內部或外部磁碟櫃、則會初始化儲存陣列LUN上的根磁碟區、請參閱 link:https://docs.netapp.com/us-en/ontap-flexarray/pdfs/sidebar/Installing_FlexArray.pdf["安裝FlexArray"]。
+
+如果您要初始化的節點有磁碟已分割以進行根資料分割、則磁碟必須先取消分割、才能初始化節點、請參閱* 9）設定進階磁碟分割*和 link:../disks-aggregates/index.html["磁碟與集合體管理"]。
+
+
+
+ a| 
+執行Aggregate和磁碟維護作業、並取得詳細的Aggregate和磁碟資訊。
+ a| 
+5）維護模式開機
+
+您可以使用「halt」命令結束維護模式。
+
+
+
+ a| 
+將組態資訊從節點的根磁碟區還原至開機裝置、例如PC compactflash卡
+ a| 
+6）從備份組態更新Flash
+
+將部分節點組態資訊儲存在開機裝置上。ONTAP當節點重新開機時、開機裝置上的資訊會自動備份到節點的根磁碟區。如果開機裝置毀損或需要更換、您必須使用此功能表選項、將組態資訊從節點的根磁碟區還原回開機裝置。
+
+
+
+ a| 
+在節點上安裝新軟體
+ a| 
+7）先安裝新軟體
+
+如果ONTAP 開機裝置上的支援不支援您要用於根磁碟區的儲存陣列、您可以使用此功能表選項來取得支援儲存陣列的軟體版本、並將其安裝在節點上。
+
+此功能表選項僅適用於在ONTAP 未安裝根Volume的節點上安裝更新版本的點菜軟體。請勿使用此功能表選項來升級ONTAP 功能表。
+
+
+
+ a| 
+重新啟動節點
+ a| 
+8）重新開機節點
+
+
+
+ a| 
+取消分割所有磁碟、移除其擁有權資訊、或清除組態、然後以整個或分割磁碟初始化系統
+ a| 
+9）設定進階磁碟分割
+
+從ONTAP 支援支援支援支援支援核心資料或根資料資料分割的磁碟開始、Advanced Drive Partitioning（進階磁碟分割）選項提供額外的管理功能。以下選項可從Boot Option 9取得：
+
+[listing]
+----
+(9a) Unpartition all disks and remove their ownership information.
+(9b) Clean configuration and initialize system with partitioned disks.
+(9c) Clean configuration and initialize system with whole disks.
+(9d) Reboot the node.
+(9e) Return to main boot menu.
+----
+|===
+

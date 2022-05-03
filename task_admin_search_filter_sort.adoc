@@ -1,0 +1,115 @@
+---
+sidebar: sidebar 
+permalink: task_admin_search_filter_sort.html 
+keywords: system manager, netapp, ontap, administration, search, filter, sort, objects, operations, search syntax, global search, narrow results, filter syntax, search string, sort order 
+summary: System Manager可讓您搜尋各種元件、然後進行排序和篩選。 
+---
+= 在System Manager中搜尋、篩選及排序資訊
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以在System Manager中搜尋各種動作和物件。您也可以在表格資料中搜尋特定項目。
+
+System Manager提供兩種搜尋類型：
+
+* <<Global searching>>
++
+當您在每個頁面頂端的欄位中輸入搜尋引數時、System Manager會搜尋整個介面以尋找相符項目。然後您可以排序及篩選結果。
+
+* <<Table-grid searching>>
++
+從ONTAP 功能表9.8開始、當您在表格網格頂端的欄位中輸入搜尋引數時、System Manager只會搜尋該表格的欄和列、以尋找相符項目。
+
+
+
+
+
+== 全域搜尋
+
+在System Manager的每個頁面頂端、您可以使用全域搜尋欄位來搜尋介面中的各種物件和動作。例如、您可以依名稱搜尋不同的物件、瀏覽器欄位（左側）中可用的頁面、各種行動項目（例如「Add Volume」（新增Volume）或「Add License」（新增授權）、以及外部說明主題的連結。您也可以篩選及排序結果。
+
+
+NOTE: 若要獲得更好的結果、請在登入一分鐘後執行搜尋、篩選及排序、並在建立、修改或刪除物件五分鐘後執行。
+
+
+
+=== 取得搜尋結果
+
+搜尋不區分大小寫。您可以輸入各種文字字串、以尋找所需的頁面、動作或主題。最多列出20個結果。如果找到更多結果、您可以按一下*顯示更多*來檢視所有結果。下列範例說明典型搜尋：
+
+|===
+
+
+| 搜尋類型 | 範例搜尋字串 | 搜尋結果範例 
+
+
+| 依物件名稱 | Vol_ | 儲存VM上的VOL_LUN_DEST: svm0（Volume）/vol/vol.儲存VM上的est1/LUN：svm0（LUN）svm0：vol_LUN_dest1角色：目的地（關係） 
+
+
+| 依介面中的位置 | Volume | 新增磁碟區（行動）保護：總覽（頁面）恢復刪除的磁碟區（說明） 
+
+
+| 行動 | 新增 | 新增Volume（Action）網路–總覽（Page）擴充磁碟區和LUN（Help） 
+
+
+| 透過說明內容 | SAN | 儲存設備–總覽（頁面）SAN總覽（說明）為資料庫配置SAN儲存設備（說明） 
+|===
+
+
+=== 篩選搜尋結果
+
+您可以使用篩選器來縮小結果範圍、如下列範例所示：
+
+|===
+
+
+| 篩選器 | 語法 | 範例搜尋字串 
+
+
+| 依物件類型 | 類型： | Volume：vol_2 
+
+
+| 依物件大小 | 鍵入<<size-symbol ><數字><單位> | LUN<500mb. 
+
+
+| 以中斷的磁碟為依據 | 「磁碟毀損」或「磁碟故障」 | 不正常的磁碟 
+
+
+| 透過網路介面 | <IP位址> | 172.22.108.21 
+|===
+
+
+=== 排序搜尋結果
+
+當您檢視所有搜尋結果時、這些結果會依字母順序排序。您可以按一下來排序結果 image:icon_filter.gif["篩選功能表"] 並選擇您要如何排序結果。
+
+
+
+== 表格網格搜尋
+
+從ONTAP 功能表9.8開始、每當系統管理員以表格網格格式顯示資訊時、表格頂端會出現搜尋按鈕。
+
+當您按一下*搜尋*時、會出現一個文字欄位、您可以在其中輸入搜尋引數。System Manager會搜尋整個表格、並只顯示含有符合搜尋引數的文字的列。
+
+您可以使用星號（*）做為「萬用字元」字元來取代字元。例如、搜尋「vol*」可能會提供包含下列項目的列：
+
+* Vol_122_D9
+* VOL_LUN_dest1
+* 第2866卷
+* volspec1
+* volim_dest_765
+* Volume
+* Volume新4
+* Volume 9987
+

@@ -1,0 +1,38 @@
+---
+permalink: san-admin/define-authentication-method-initiator-task.html 
+sidebar: sidebar 
+keywords: define, security, policy, method, initiator 
+summary: 您可以定義啟動器及其驗證方法的清單。您也可以修改適用於未使用者定義驗證方法之啟動器的預設驗證方法。 
+---
+= 定義啟動器的安全性原則方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以定義啟動器及其驗證方法的清單。您也可以修改適用於未使用者定義驗證方法之啟動器的預設驗證方法。
+
+您可以使用產品中的安全原則演算法來產生獨特的密碼、也可以手動指定您要使用的密碼。
+
+[NOTE]
+====
+並非所有的啟動器都支援十六進位CHAP密碼。
+
+====
+.步驟
+. 使用「vserver iSCSI安全性create」命令來建立啟動器的安全性原則方法。
++
+「vserver iSCSI安全性create -vserver VS2 -initiator iqn.1991-05.com.microsoft:host1 -auth-type CHAP -user-name bob1 -bodrait-user-name bob2」
+
+. 依照螢幕命令新增密碼。
++
+為啟動器iqn.1991-05.com.microsoft:host1建立安全性原則方法、其中包含傳入和傳出的CHAP使用者名稱和密碼。
+
+
+
+.相關資訊
+* xref:iscsi-authentication-concept.adoc[iSCSI驗證的運作方式]
+* xref:using-chap-authentication-concept.adoc[使用CHAP驗證的準則]
+* xref:chap-authentication-concept.adoc[什麼是CHAP驗證]
+

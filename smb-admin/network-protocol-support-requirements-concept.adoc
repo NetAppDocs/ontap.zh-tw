@@ -1,0 +1,28 @@
+---
+permalink: smb-admin/network-protocol-support-requirements-concept.html 
+sidebar: sidebar 
+keywords: network, protocol, requirement, implement, ontap, branchcache, support, network protocol support requirement 
+summary: 您必須瞭解實作ONTAP 《Sing Sof BranchCache》（英文）的網路傳輸協定需求。 
+---
+= 網路傳輸協定支援需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須瞭解實作ONTAP 《Sing Sof BranchCache》（英文）的網路傳輸協定需求。
+
+您可以ONTAP 使用SMB 2.1或更新版本、在使用SMB 2.1或更新版本的IPv4和IPv6網路上實作「S21：快取」功能。
+
+參與BranchCache實作的所有CIFS伺服器和分公司機器、都必須啟用SMB 2.1或更新的傳輸協定。SMB 2.1具有允許用戶端參與BranchCache環境的傳輸協定延伸功能。這是支援BranchCache的最低SMB傳輸協定版本。SMB 2.1支援版本BranchCache第1版。
+
+如果您要使用BranchCache第2版、SMB 3.0是支援的最低版本。參與BranchCache 2實作的所有CIFS伺服器和分公司機器、都必須啟用SMB 3.0或更新版本。
+
+如果您的遠端辦公室中有部分用戶端僅支援SMB 2.1、而部分用戶端支援SMB 3.0、您可以在CIFS伺服器上實作一項BranchCache組態、以同時在BranchCache 1和BranchCache 2上提供快取支援。
+
+[NOTE]
+====
+雖然Microsoft BranchCache功能同時支援使用HTTP / HTTPS和SMB傳輸協定做為檔案存取傳輸協定、ONTAP 但支援使用SMB。
+
+====

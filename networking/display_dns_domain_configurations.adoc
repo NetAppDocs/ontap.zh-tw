@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: networking/display_dns_domain_configurations.html 
+keywords: display, view, show, dns, domain, configuration, verify, display dns domain configurations, verify dns domain configuration for one or more svms, vserver services name-service dns show 
+summary: 驗證一或多個SVM的DNS網域組態 
+---
+= 顯示DNS網域組態
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在叢集中顯示一或多個儲存虛擬機器（SVM）的DNS網域組態、以驗證其設定是否正確。
+
+使用「vserver services name-service DNS show」命令來檢視DNS網域組態。
+
+下列命令會顯示叢集中所有SVM的DNS組態：
+
+....
+vserver services name-service dns show
+                                                  Name
+Vserver        State     Domains                  Servers
+-------------- --------- ------------------------ -------------
+cluster-1       enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs1            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs2            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs3            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+....
+下列命令會顯示SVM VS1的詳細DNS組態資訊：
+
+....
+vserver services name-service dns show -vserver vs1
+               Vserver: vs1
+               Domains: xyz.company.com
+          Name Servers: 192.56.0.129, 192.56.0.130
+    Enable/Disable DNS: enabled
+        Timeout (secs): 2
+      Maximum Attempts: 1
+....

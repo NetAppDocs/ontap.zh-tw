@@ -1,0 +1,38 @@
+---
+permalink: antivirus/run-on-demand-task-immediately-task.html 
+sidebar: sidebar 
+keywords: run, on-demand, task, immediately 
+summary: 無論您是否已指派排程、您都可以立即執行隨需工作。 
+---
+= 立即執行隨需工作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+無論您是否已指派排程、您都可以立即執行隨需工作。
+
+您必須已在SVM上啟用掃描。
+
+.步驟
+. 立即執行隨需工作：
++
+「vserver vscan隨需執行工作-vserver data_SVM -task-name task_name」
+
++
+下列命令會在「vs1's1'sVM」上執行名為「task1」的存取中工作：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task run -vserver vs1 -task-name Task1
+[Job 161]: Vscan On-Demand job is queued. Use the "job show -id 161" command to view the status.
+----
++
+[NOTE]
+====
+您可以使用「jobshow」命令來檢視工作狀態。您可以使用「工作暫停」和「工作恢復」命令來暫停和重新啟動工作、或使用「工作停止」命令來結束工作。
+
+====
+

@@ -1,0 +1,59 @@
+---
+permalink: nfs-admin/control-root-user-access-ntfs-security-data-task.html 
+sidebar: sidebar 
+keywords: control, root, user, access, ntfs, security, style, data 
+summary: 您可以設定ONTAP 讓NFS用戶端存取NTFS安全型資料和NTFS用戶端、以存取NFS安全型資料。在NFS資料儲存區上使用NTFS安全樣式時、您必須決定如何處理root使用者的存取、並據此設定儲存虛擬機器（SVM）。 
+---
+= 控制root使用者對NTFS安全型資料的存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定ONTAP 讓NFS用戶端存取NTFS安全型資料和NTFS用戶端、以存取NFS安全型資料。在NFS資料儲存區上使用NTFS安全樣式時、您必須決定如何處理root使用者的存取、並據此設定儲存虛擬機器（SVM）。
+
+當root使用者存取NTFS安全型資料時、您有兩種選擇：
+
+* 將root使用者對應至Windows使用者、就像任何其他NFS使用者一樣、並根據NTFS ACL來管理存取。
+* 忽略NTFS ACL並提供root的完整存取權。
+
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行所需的動作：
++
+[cols="35,65"]
+|===
+
+
+| 如果您希望root使用者... | 輸入命令... 
+
+
+ a| 
+對應至Windows使用者
+ a| 
+「vserver NFS modify -vserver vserver_name -ignore、nt-acl-for-root disabled'
+
+
+
+ a| 
+略過NT ACL檢查
+ a| 
+「vserver NFS modify -vserver vserver_name -ignore、nt-acl for root enabl用」
+
+|===
++
+預設會停用此參數。
+
++
+如果啟用此參數、但root使用者沒有名稱對應、ONTAP 則使用預設的SMB系統管理員認證來進行稽核。
+
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

@@ -1,0 +1,56 @@
+---
+permalink: disks-aggregates/assign-aggregates-svms-task.html 
+sidebar: sidebar 
+keywords: assign, aggregates, svms 
+summary: 如果您將一或多個集合體指派給儲存虛擬機器（SVM、先前稱為Vserver）、則只能使用這些集合體來包含該SVM的磁碟區。在多租戶環境中、指派集合體給SVM尤其重要。 
+---
+= 將集合體指派給SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您將一或多個集合體指派給儲存虛擬機器（SVM、先前稱為Vserver）、則只能使用這些集合體來包含該SVM的磁碟區。在多租戶環境中、指派集合體給SVM尤其重要。
+
+您要指派給該SVM的SVM和集合體必須已經存在。
+
+將集合體指派給SVM有助於將SVM彼此隔離、這在多租戶環境中尤其重要。
+
+.步驟
+. 檢查已指派給SVM的集合體清單：
++
+「vserver show -功能 變數aggr-list」
+
++
+此時會顯示目前指派給SVM的集合體。如果未指派任何Aggregate、則會顯示「-」。
+
+. 根據您的需求新增或移除指派的Aggregate：
++
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+指派其他Aggregate
+ a| 
+「vserver add-aggregate」
+
+
+
+ a| 
+取消指派Aggregate
+ a| 
+「vserver移除集合體」
+
+|===
++
+列出的集合體會指派給SVM或從SVM移除。如果SVM已有使用未指派給SVM之集合體的磁碟區、則會顯示警告訊息、但命令會成功完成。任何已指派給SVM且未在命令中命名的集合體均不受影響。
+
+
+
+在下列範例中、Agggr1和aggr2會指派給SVM svm1：
+
+「vserver add-aggregate -vserver svm1 -aggregate aggr1、aggr2」

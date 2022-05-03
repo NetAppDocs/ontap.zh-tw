@@ -1,0 +1,78 @@
+---
+permalink: data-protection/create-smb-server-task.html 
+sidebar: sidebar 
+keywords: cifs, create, server 
+summary: 如果來源SVM有SMB組態、而您選擇將idente-preserve設為假、則必須為目的地SVM建立SMB伺服器。某些SMB組態需要SMB伺服器、例如SnapMirror關係初始化期間的共用。 
+---
+= 僅限SMB：建立SMB伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果來源SVM有SMB組態、而您選擇將「idente-preserve」設為「假」、則必須為目的地SVM建立SMB伺服器。某些SMB組態需要SMB伺服器、例如SnapMirror關係初始化期間的共用。
+
+.步驟
+. 使用「vserver start」命令啟動目的地SVM。
++
+[listing]
+----
+destination_cluster::> vserver start -vserver dvs1
+[Job 30] Job succeeded: DONE
+----
+. 使用「vserver show」命令、確認目的地SVM處於「執行中」狀態、子類型為「dp-destination」。
++
+[listing]
+----
+destination_cluster::> vserver show
+                                   Admin      Operational Root
+Vserver  Type    Subtype           State      State       Volume     Aggregate
+-------- ------- ----------       ---------- ----------- ---------- ----------
+dvs1     data    dp-destination    running    running       -         -
+----
+. 使用「network interface create」命令建立LIF。
++
+[listing]
+----
+destination_cluster::>network interface create -vserver dvs1 -lif NAS1 -role data -data-protocol cifs -home-node destination_cluster-01 -home-port a0a-101  -address 192.0.2.128 -netmask 255.255.255.128
+----
+. 使用「network route create」命令建立路由。
++
+[listing]
+----
+destination_cluster::>network route create -vserver dvs1 -destination 0.0.0.0/0
+-gateway 192.0.2.1
+----
++
+link:../networking/index.html["網路管理"]
+
+. 使用「vserver services DNS cred'」命令來設定DNS。
++
+[listing]
+----
+destination_cluster::>vserver services dns create -domains mydomain.example.com -vserver
+dvs1 -name-servers 192.0.2.128 -state enabled
+----
+. 使用「vserver CIFS網域prefere-DC add」命令新增慣用的網域控制器。
++
+[listing]
+----
+destination_cluster::>vserver cifs domain preferred-dc add -vserver dvs1 -preferred-dc
+192.0.2.128 -domain mydomain.example.com
+----
+. 使用「vserver CIFS create」命令建立SMB伺服器。
++
+[listing]
+----
+destination_cluster::>vserver cifs create -vserver dvs1 -domain mydomain.example.com
+-cifs-server CIFS1
+----
+. 使用「vserver stop」命令停止目的地SVM。
++
+[listing]
+----
+destination_cluster::> vserver stop -vserver dvs1
+[Job 46] Job succeeded: DONE
+----
+

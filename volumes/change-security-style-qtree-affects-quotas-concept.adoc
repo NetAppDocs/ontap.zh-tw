@@ -1,0 +1,29 @@
+---
+permalink: volumes/change-security-style-qtree-affects-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, changing, security, style of a qtree, affects, user quotas 
+summary: 您可以使用NTFS或混合式安全性樣式、在qtree上套用存取控制清單（ACL）、但不能使用UNIX安全性樣式。因此、變更qtree的安全性樣式可能會影響配額的計算方式。變更qtree的安全性樣式之後、您應該一律重新初始化配額。 
+---
+= 變更qtree的安全性樣式如何影響使用者配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用NTFS或混合式安全性樣式、在qtree上套用存取控制清單（ACL）、但不能使用UNIX安全性樣式。因此、變更qtree的安全性樣式可能會影響配額的計算方式。變更qtree的安全性樣式之後、您應該一律重新初始化配額。
+
+如果將qtree的安全樣式從NTFS或混合變更為UNIX、則會忽略該qtree中檔案的任何ACL、並根據UNIX使用者ID來收取檔案使用量。
+
+如果您將qtree的安全樣式從UNIX變更為混合式或NTFS、則先前隱藏的ACL會變成可見的。此外、任何被忽略的ACL都會再次生效、NFS使用者資訊也會被忽略。如果以前沒有ACL、則NFS資訊會繼續用於配額計算。
+
+[NOTE]
+====
+若要確保在變更qtree的安全性樣式之後、適當計算UNIX和Windows使用者的配額使用量、您必須重新初始化包含qtree的磁碟區配額。
+
+====
+下列範例顯示qtree安全性樣式的變更如何導致不同的使用者因使用特定qtree中的檔案而被收費。
+
+假設NTFS安全性對qtree A有效、而ACL則賦予Windows使用者corp\Joe 5 MB檔案的擁有權。使用者公司（Joe）的qtree A磁碟空間使用量為5 MB
+
+現在您可以將qtree A的安全樣式從NTFS變更為UNIX。重新初始化配額之後、Windows使用者corp\Joe不再為此檔案收費、而是會針對檔案的UID收取對應的UNIX使用者費用。此UID可以是對應至corp\Joe或root使用者的UNIX使用者。

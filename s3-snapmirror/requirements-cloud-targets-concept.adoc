@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/requirements-cloud-targets-concept.html 
+keywords: requirements for cloud target relationships 
+summary: 確保您的來源和目標環境符合S3 SnapMirror備份保護至雲端目標的要求。 
+---
+= 雲端目標關係的需求
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+確保您的來源和目標環境符合S3 SnapMirror備份保護至雲端目標的要求。
+
+您必須向物件存放區供應商取得有效的帳戶認證、才能存取資料儲存區。
+
+叢集間的網路介面和IPspace應先在叢集上設定、叢集才能連線至雲端物件存放區。您應該在每個節點上建立輸入叢集網路介面、以便將資料從本機儲存設備無縫傳輸至雲端物件存放區。
+
+如需StorageGRID 瞭解下列資訊、請參閱下列資訊：
+
+* 伺服器名稱、以完整網域名稱（FQDN）或IP位址表示
+* 庫位名稱；庫位必須已經存在
+* 存取金鑰
+* 秘密金鑰
+
+
+此外、用來簽署StorageGRID 該驗證伺服器憑證的CA憑證、必須ONTAP 使用「安全憑證安裝命令」安裝在S3叢集的管理儲存VM上。如需詳細資訊、請參閱 link:../fabricpool/install-ca-certificate-storagegrid-task.html["安裝CA憑證"] 如果您使用StorageGRID 的是
+
+對於AWS S3目標、您需要知道下列資訊：
+
+* 伺服器名稱、以完整網域名稱（FQDN）或IP位址表示
+* 庫位名稱；庫位必須已經存在
+* 存取金鑰
+* 秘密金鑰
+
+
+用於叢集管理儲存VM的DNS伺服器ONTAP 必須能夠將FQDN（如果使用）解析為IP位址。

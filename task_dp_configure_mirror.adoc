@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: task_dp_configure_mirror.html 
+keywords: netapp, ontap, snapmirror, snapvault, point-in-time copy, mirror, vault, configure, disaster recovery, DR, archive data, roll back, rollback, remote cluster, data protection 
+summary: 建立磁碟區的鏡射與保存庫、以進行災難恢復 
+---
+= 設定鏡射與資料保險箱
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+建立磁碟區的鏡射與保存庫、以便在發生災難時保護資料、並將多個歸檔版本的資料復原。僅支援組合的鏡射與保存原則。您無法指定個別的鏡射及資料保險箱原則。
+
+此程序會在遠端叢集上建立鏡射與保存原則。來源叢集和目的地叢集使用叢集間網路介面來交換資料。此程序假設為 link:task_dp_prepare_mirror.html["系統會建立叢集間網路介面、並執行包含磁碟區的叢集"] （配對）。您也可以對等儲存VM來保護資料；不過、如果儲存VM未執行對等處理、但已啟用權限、則儲存VM會在建立保護關係時自動執行對等處理。
+
+image:workflow_configure_mirrors_and_vaults.gif["設定鏡射與資料保險箱的工作流程圖"]
+
+.步驟
+. 選取要保護的磁碟區或LUN：按一下「*儲存設備>磁碟區*」或「*儲存設備> LUN*」、然後按一下所需的磁碟區或LUN名稱。
+. 按一下 image:icon_protect.gif["Alt=保護按鈕"]。
+. 選取目的地叢集和儲存VM。
+. 預設會選取非同步原則。若要選取同步原則、請按一下*更多選項*。
+. 按一下*保護*。
+. 按一下所選磁碟區或LUN的* SnapMirror（本機或遠端）*索引標籤、確認保護設定正確。
+
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/volume-backup-snapvault/index.html["Volume備份：SnapVault 使用功能概述"^] 
+
+
+| 指令行介面ONTAP | link:./data-protection/create-replication-relationship-task.html["建立複寫關係"^] 
+|===

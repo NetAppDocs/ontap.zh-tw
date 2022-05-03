@@ -1,0 +1,22 @@
+---
+permalink: tape-backup/ndmp-backup-policy-affected-adb-concept.html 
+sidebar: sidebar 
+keywords: ndmp, backup, policy, adb, aggregate, balancer, analysis, user, statistics, usage, percentage 
+summary: 啟用自動資料平衡器（ADD）時、平衡器會分析Aggregate的使用統計資料、以識別已超過設定的高臨界值使用率百分比的集合體。 
+---
+= NDMP備份原則在非銀期間的影響
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟用自動資料平衡器（ADD）時、平衡器會分析Aggregate的使用統計資料、以識別已超過設定的高臨界值使用率百分比的集合體。
+
+在識別出超過臨界值的集合體之後、平衡器會識別出一個磁碟區、該磁碟區可移至位於叢集中其他節點的集合體、並嘗試移動該磁碟區。這種情況會影響為此磁碟區所設定的備份原則、因為如果資料管理應用程式（DMA）無法偵測到、使用者就必須重新設定備份原則、然後執行基礎備份作業。
+
+[NOTE]
+====
+如果DMA可偵測到CAb、而且備份原則已使用特定介面設定、則不會影響ADb。
+
+====

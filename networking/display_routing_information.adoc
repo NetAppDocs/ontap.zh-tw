@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: networking/display_routing_information.html 
+keywords: display, view, show, route, svm, storage, virtual, machine, display routing information, view information about the routing configuration for each svm on your cluster, network route show, network route show-lifs, network route active-entry show 
+summary: 檢視叢集上每個SVM的路由組態資訊 
+---
+= 顯示路由資訊
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以顯示叢集上每個SVM的路由組態資訊。這有助於診斷與用戶端應用程式或服務之間的連線問題有關的路由問題、以及叢集中某個節點上的LIF。
+
+.步驟
+. 使用「network routes show」命令來顯示一或多個SVM內的路由。下列範例顯示在vs0 SVM中設定的路由：
++
+....
+network route show
+  (network route show)
+Vserver             Destination     Gateway         Metric
+------------------- --------------- --------------- ------
+vs0
+                    0.0.0.0/0       172.17.178.1    20
+....
+. 使用「network route show-lifs」命令、顯示一或多個SVM中路由和lifs的關聯。
++
+以下範例顯示vs0 SVM擁有路由的lifs：
+
++
+....
+network route show-lifs
+  (network route show-lifs)
+
+Vserver: vs0
+Destination             Gateway                 Logical Interfaces
+----------------------  --------------          --------------------
+0.0.0.0/0               172.17.178.1            cluster_mgmt,
+                                                LIF-b-01_mgmt1,
+                                                LIF-b-02_mgmt1
+....
+. 使用「network route active-entry show」命令、可在一個或多個節點、SVM、子網路或具有指定目的地的路由上顯示已安裝的路由。
++
+下列範例顯示特定SVM上所有已安裝的路由：
+
++
+....
+network route active-entry show -vserver Data0
+
+Vserver: Data0
+Node: node-1
+Subnet Group: 0.0.0.0/0
+Destination             Gateway              Interface   Metric  Flags
+----------------------  -------------------  ---------   ------  -----
+127.0.0.1               127.0.0.1            lo              10  UHS
+127.0.10.1              127.0.20.1           losk            10  UHS
+127.0.20.1              127.0.20.1           losk            10  UHS
+
+Vserver: Data0
+Node: node-1
+Subnet Group: fd20:8b1e:b255:814e::/64
+Destination             Gateway              Interface   Metric  Flags
+----------------------  -------------------  ---------   ------  -----
+default                 fd20:8b1e:b255:814e::1
+                                             e0d             20  UGS
+fd20:8b1e:b255:814e::/64
+                        link#4               e0d              0  UC
+
+Vserver: Data0
+Node: node-2
+Subnet Group: 0.0.0.0/0
+Destination             Gateway              Interface   Metric  Flags
+----------------------  -------------------  ---------   ------  -----
+127.0.0.1               127.0.0.1            lo              10  UHS
+
+Vserver: Data0
+Node: node-2
+Subnet Group: 0.0.0.0/0
+Destination             Gateway              Interface   Metric  Flags
+----------------------  -------------------  ---------   ------  -----
+127.0.10.1              127.0.20.1           losk            10  UHS
+127.0.20.1              127.0.20.1           losk            10  UHS
+
+Vserver: Data0
+Node: node-2
+Subnet Group: fd20:8b1e:b255:814e::/64
+Destination             Gateway              Interface   Metric  Flags
+----------------------  -------------------  ---------   ------  -----
+default                 fd20:8b1e:b255:814e::1
+                                             e0d             20  UGS
+fd20:8b1e:b255:814e::/64
+                        link#4               e0d              0  UC
+fd20:8b1e:b255:814e::1  link#4               e0d              0  UHL
+11 entries were displayed.
+....
+

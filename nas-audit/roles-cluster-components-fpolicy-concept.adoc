@@ -1,0 +1,31 @@
+---
+permalink: nas-audit/roles-cluster-components-fpolicy-concept.html 
+sidebar: sidebar 
+keywords: roles, cluster components, play, fpolicy implementation 
+summary: 叢集、內含的儲存虛擬機器（SVM）和資料生命量、都在FPolicy實作中扮演著重要角色。 
+---
+= 叢集元件在FPolicy實作中扮演的角色
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+叢集、內含的儲存虛擬機器（SVM）和資料生命量、都在FPolicy實作中扮演著重要角色。
+
+* *叢集*
++
+叢集包含FPolicy管理架構、並維護及管理叢集中所有FPolicy組態的相關資訊。
+
+* * SVM*
++
+FPolicy組態是在SVM層級定義。組態的範圍是SVM、它只能在SVM資源上運作。某個SVM組態無法監控及傳送針對位於另一個SVM上的資料所提出的檔案存取要求通知。
+
++
+可在管理SVM上定義FPolicy組態。在管理SVM上定義組態之後、即可在所有SVM中看到及使用這些組態。
+
+* *資料生命量*
++
+連接至FPolicy伺服器的方式是透過屬於SVM的資料LIF與FPolicy組態。這些連線所使用的資料生命量、可能會像一般用戶端存取所使用的資料生命量一樣進行容錯移轉。
+
+

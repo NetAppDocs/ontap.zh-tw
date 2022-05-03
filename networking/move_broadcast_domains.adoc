@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: networking/move_broadcast_domains.html 
+keywords: move, moving, broadcast, domain, ipspace, move broadcast domains into ipspaces, move the system created broadcast domains into the ipspaces you created 
+summary: 將系統建立的廣播網域移至您建立的IPspace 
+---
+= 將廣播網域移至IPspaces
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+將系統根據第2層可到達性所建立的廣播網域移至您建立的IPspace。
+
+在移動廣播網域之前、您必須確認廣播網域中連接埠的可連線性。
+
+自動掃描連接埠可判斷哪些連接埠可以彼此連線、並將它們放在同一個廣播網域中、但此掃描無法判斷適當的IPspace。如果廣播網域屬於非預設IPspace、則您必須使用本節中的步驟手動移動它。
+
+廣播網域會自動設定為叢集建立和加入作業的一部分。此「預設」廣播網域定義為連接第2層連接至叢集第一個節點上管理介面的主連接埠的連接埠集。ONTAP如有必要、會建立其他廣播網域、並命名為*預設值-1*、*預設值-2*等。
+
+當節點加入現有叢集時、其網路連接埠會根據其第2層可到達性自動加入現有的廣播網域。如果連接埠無法連線至現有的廣播網域、則連接埠會放置在一個或多個新的廣播網域中。
+
+.關於這項工作
+* 具有叢集生命的連接埠會自動置入「叢集」IPspace。
+* 可連線至節點管理LIF主連接埠的連接埠、會置於「預設」廣播網域中。
+* 其他廣播網域則由ONTAP 不受限制的功能自動建立、作為叢集建立或加入作業的一部分。
+* 當您新增VLAN和介面群組時、這些VLAN和介面群組會在建立後約一分鐘自動放入適當的廣播網域。
+
+
+.步驟
+. 驗證廣播網域中連接埠的可連線性。自動監控第2層連線能力。ONTAP使用下列命令來驗證每個連接埠是否已新增至廣播網域、且具有「OK」連線能力。
++
+「網路連接埠連線能力顯示-詳細資料」
+
+. 如有必要、請將廣播網域移至其他IPspaces：
++
+「網路連接埠廣播網域搬移」
+
++
+例如、如果您要將廣播網域從「預設」移至「ips1」：
+
++
+「網路連接埠廣播網域移動-IPSpace預設-broadcast網域預設-to IPSpace ips1」
+
+

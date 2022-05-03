@@ -1,0 +1,51 @@
+---
+permalink: san-config/change-fc-adapter-speed-task.html 
+sidebar: sidebar 
+keywords: change, fc adapter, speed 
+summary: 您應該設定介面卡目標連接埠速度、使其符合所連接裝置的速度、而非使用自動協商。設定為自動協商的連接埠、在接管/恢復或其他中斷之後、重新連線可能需要較長的時間。 
+---
+= 變更FC介面卡速度
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該設定介面卡目標連接埠速度、使其符合所連接裝置的速度、而非使用自動協商。設定為自動協商的連接埠、在接管/恢復或其他中斷之後、重新連線可能需要較長的時間。
+
+使用此介面卡做為其主連接埠的所有LIF都必須離線。
+
+由於這項工作包含叢集中的所有儲存虛擬機器（SVM）和所有LIF、因此您必須使用「主連接埠」和「主連接埠」參數來限制此作業的範圍。如果不使用這些參數、則此作業會套用至叢集中的所有l生命、這可能是不理想的。
+
+.步驟
+. 將此介面卡上的所有生命段離線：
++
+「網路介面修改-vserver *-lif*｛-home-Node node1 -home-port 0c｝-STATUS-admin down」
+
+. 使介面卡離線：
++
+「網路FCP介面卡修改節點節點1 -介面卡0c -state down」
+
++
+如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
+
+. 判斷連接埠介面卡的最大速度：
++
+「FCP介面卡顯示-instance」
+
++
+您無法修改介面卡速度超過最大速度。
+
+. 變更介面卡速度：
++
+「網路FCP介面卡修改節點節點1 -介面卡0c -speed 16」
+
+. 將介面卡上線：
++
+網路FCP介面卡修改節點節點1 -介面卡0c -state up
+
+. 將介面卡上的所有生命項目上線：
++
+「網路介面修改-vserver *-lif*｛-home-node1 -home-port 0c｝-STATUS-admin up」
+
+

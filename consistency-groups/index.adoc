@@ -1,0 +1,83 @@
+---
+permalink: consistency-groups/index.html 
+sidebar: sidebar 
+keywords: consistency groups, consistency group protection, application protection 
+summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括階層式和單一一致性群組、保護原則和升級考量。 
+---
+= 一致性群組總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一致性群組是一組磁碟區、可為橫跨多個磁碟區的應用程式工作負載提供寫入順序一致性保證。
+
+一致性群組可協助管理應用程式工作負載、輕鬆管理本機和遠端保護原則、並在一段時間內為一組磁碟區提供一致的當機或應用程式一致的Snapshot複本。一致性群組中的快照可還原整個應用程式工作負載。
+
+一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的任何SESE Volume、並可透過ONTAP 「靜態API」或「系統管理程式」的「*儲存>一致性群組*」功能表項目進行管理。
+
+一致性群組可以獨立存在、也可以是階層關係。個別一致性群組是一個磁碟區集合。除了從一致性群組繼承的Snapshot原則之外、磁碟區也可以擁有個別的本機Snapshot原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
+
+image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
+
+較大的應用程式工作負載可能需要多個一致性群組。在這些情況下、可以將多個一致性群組置於階層關係中。在此組態中、單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端的SM至BC保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
+
+image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其環境磁碟區的圖表"]
+
+
+
+== 保護
+
+一致性群組透過SnapMirror營運持續性（SMBC）提供遠端保護、並透過Snapshot原則提供本機保護。若要使用遠端保護、您必須符合的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror營運不中斷部署]。根據預設、一致性群組不會設定保護原則、除非選取原則、否則將無法保護您的資料。請參閱 link:protect-task.html["「保護一致性群組」"] 以取得更多資訊。
+
+
+NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
+
+
+
+== 升級考量
+
+在更新至S還原9.10.1時、以SM-BC在ONTAP 更新至S21時、將會自動升級並在System Manager或ONTAP S還原API中的* Storage > Consistency Group*下進行管理ONTAP 。如需升級的詳細資訊、請參閱 link:../smbc/smbc_admin_upgrade_and_revert_considerations.html["SM至BC升級與還原考量"]。
+
+使用ONTAP REST API建立的一致性群組快照可透過System Manager的一致性群組介面及一致性群組API端點來管理。
+
+使用ONTAPI命令「Cg－start」和「Cg－commit」建立的快照將無法識別為一致性群組快照、因此無法透過System Manager的一致性群組介面或ONTAP 透過NetApp API中的一致性群組端點進行管理。
+
+
+
+== 一致性群組物件限制
+
+|===
+
+
+| 一致性群組 | 範圍 | 最低 | 最大值 
+
+
+| 一致性群組數 | 叢集 | 0 | 與叢集中的最大Volume數相同 
+
+
+| 父一致性群組數 | 叢集 | 0 | 與叢集中的最大Volume數相同 
+
+
+| 個別與父一致性群組的數量 | 叢集 | 0 | 與叢集中的最大Volume數相同 
+
+
+| 一致性群組 | 與叢集中的最大Volume數相同 | 1. | 80 
+
+
+| 父一致性群組子系中的磁碟區數目 | 父一致性群組 | 1. | 80 
+
+
+| 子一致性群組中的磁碟區數目 | 子一致性群組 | 1. | 80 
+
+
+| 父一致性群組中的子一致性群組數 | 父一致性群組 | 1. | 5. 
+|===
+如果您使用的是SM - BC、請參閱 link:../smbc/smbc_plan_additional_restrictions_and_limitations.html#volumes["SM - BC限制與限制"]。
+
+
+
+== 深入瞭解一致性群組
+
+video::j0jfXDcdyzE[youtube, width=848,height=480]

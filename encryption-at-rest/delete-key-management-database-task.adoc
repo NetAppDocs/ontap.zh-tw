@@ -1,0 +1,52 @@
+---
+permalink: encryption-at-rest/delete-key-management-database-task.html 
+sidebar: sidebar 
+keywords: transitioning, onboard key management, external key management 
+summary: 若要從外部金鑰管理切換至內建金鑰管理、您必須先刪除外部金鑰管理組態、才能啟用內建金鑰管理。 
+---
+= 從外部金鑰管理移轉至內建金鑰管理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要從外部金鑰管理切換至內建金鑰管理、您必須先刪除外部金鑰管理組態、才能啟用內建金鑰管理。
+
+.開始之前
+* 對於硬體型加密、您必須將所有FIPS磁碟機或SED的資料金鑰重設為預設值。
++
+link:return-seds-unprotected-mode-task.html["將FIPS磁碟機或SED恢復為無保護模式"]
+
+* 您必須刪除所有外部金鑰管理程式連線。
++
+link:remove-external-key-server-93-later-task.html["刪除外部金鑰管理程式連線"]
+
+* 您必須是叢集管理員才能執行此工作。
+
+
+
+
+== 程序
+
+[role="tabbed-block"]
+====
+.更新版本ONTAP
+--
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 使用命令：
++
+「安全金鑰管理程式外部停用-vserver _admin_SVM_」
+
+
+
+--
+.不含更新版本ONTAP
+--
+使用命令：「ecurity key-manager delete-kmip-config」
+
+--
+====

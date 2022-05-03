@@ -1,0 +1,93 @@
+---
+permalink: smb-admin/modify-server-kerberos-security-settings-task.html 
+sidebar: sidebar 
+keywords: modify, cifs, server, kerberos, security, setting, clock, skew, time, ticket, lifetime, renewal, modify the cifs server kerberos security ticket settings 
+summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允許的Kerberos時鐘偏移時間上限、Kerberos票證壽命、以及票證續約天數上限。 
+---
+= 修改CIFS伺服器Kerberos安全性設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改某些CIFS伺服器Kerberos安全性設定、包括允許的Kerberos時鐘偏移時間上限、Kerberos票證壽命、以及票證續約天數上限。
+
+使用「vserver CIFS安全性修改」命令修改CIFS伺服器Kerberos設定、只會修改您使用「-vserver」參數指定的單一儲存虛擬機器（SVM）上的設定。您可以使用Active Directory群組原則物件（GPO）、集中管理屬於同一個Active Directory網域之叢集上所有SVM的Kerberos安全性設定。
+
+.步驟
+. 執行下列一或多項動作：
++
+|===
+
+
+| 如果您想要... | 輸入... 
+
+
+ a| 
+指定允許的Kerberos時鐘偏移時間上限（以分鐘為單位）。
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos時鐘偏移_integer_in_Minuts_」
+
+預設設定為5分鐘。
+
+
+
+ a| 
+以小時為單位指定Kerberos票證壽命。
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos票證-存留整合時間」
+
+預設設定為10小時。
+
+
+
+ a| 
+指定通知單續約天數上限。
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos更新年齡_integer_days _」
+
+預設設定為7天。
+
+
+
+ a| 
+指定KDC上的通訊端逾時、之後所有KDC都會標示為無法連線。
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos - kdc -逾時_integer_in_seconds_」
+
+預設設定為3秒。
+
+|===
+. 驗證Kerberos安全性設定：
++
+「Vserver CIFS安全性顯示-vserver _vserver_name_`
+
+
+
+下列範例對Kerberos安全性進行下列變更：「Kerberos時鐘偏移」設為3分鐘、而SVM VS1的「Kerberos票證時間」設為8小時：
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -kerberos-clock-skew 3 -kerberos-ticket-age 8
+
+cluster1::> vserver cifs security show -vserver vs1
+
+Vserver: vs1
+
+                    Kerberos Clock Skew:                   3 minutes
+                    Kerberos Ticket Age:                   8 hours
+                   Kerberos Renewal Age:                   7 days
+                   Kerberos KDC Timeout:                   3 seconds
+                    Is Signing Required:               false
+        Is Password Complexity Required:                true
+   Use start_tls For AD LDAP connection:               false
+              Is AES Encryption Enabled:               false
+                 LM Compatibility Level:  lm-ntlm-ntlmv2-krb
+             Is SMB Encryption Required:               false
+----
+link:display-server-security-settings-task.html["顯示有關CIFS伺服器安全性設定的資訊"]
+
+link:supported-gpos-concept.html["支援的GPO"]
+
+link:applying-group-policy-objects-concept.html["將群組原則物件套用至CIFS伺服器"]

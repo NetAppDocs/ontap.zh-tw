@@ -1,0 +1,40 @@
+---
+permalink: san-admin/map-nvme-namespace-subsystem-task.html 
+sidebar: sidebar 
+keywords: map, nvme, namespace, subsystem 
+summary: 使用NVMe時、您必須將命名空間對應至子系統。 
+---
+= 將NVMe命名空間對應至子系統
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用NVMe時、您必須將命名空間對應至子系統。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須為NVMe設定SVM。
+* 您必須已建立NVMe命名空間和子系統。
+
+
+命名空間只能對應至單一子系統。
+
+.步驟
+. 從主機取得NQN。
+. 將主機NQN新增至子系統：
++
+「Vserver NVMe子系統主機add -vserver _Svm_name_-subsystem _subsystem_name_-host-nqn _Host_NQN_：subsystem._subsystem_name_」
+
+. 將命名空間對應至子系統：
++
+「Vserver NVMe子系統對應add -vserver _svm_name_-subsystem _subsystem_name_-path _path_」
+
+. 確認命名空間已對應至子系統：
++
+「Vserver NVMe命名空間show -vserver _svm_name_-instance」
+
++
+子系統應列為「附加子系統」。
+
+

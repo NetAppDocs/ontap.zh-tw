@@ -1,0 +1,69 @@
+---
+permalink: s3-config/create-s3-object-store-server-task.html 
+sidebar: sidebar 
+keywords: create, s3 object, store, server 
+summary: 與由NAS和SAN伺服器提供的檔案或區塊儲存設備相比、物件儲存伺服ONTAP 器可將資料管理為S3物件ONTAP 。 
+---
+= 建立S3物件存放區伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+與由NAS和SAN伺服器提供的檔案或區塊儲存設備相比、物件儲存伺服ONTAP 器可將資料管理為S3物件ONTAP 。
+
+您應該擁有自我簽署的CA憑證（在先前步驟中建立）或由外部CA廠商簽署的憑證。本機分層使用案例不需要CA憑證、因為IP流量只會流經叢集生命體。
+
+建立物件存放區伺服器時、會建立一個具有UID 0的root使用者。不會為此root使用者產生存取金鑰或秘密金鑰。這個管理員必須執行「object-store-server user-flex-keys」命令、為這個使用者設定存取金鑰和秘密金鑰。ONTAP
+
+[NOTE]
+====
+NetApp最佳實務做法是、請勿使用此root使用者。任何使用root使用者存取金鑰或秘密金鑰的用戶端應用程式、都能完整存取物件存放區中的所有儲存區和物件。
+
+====
+請參閱「vserver object-store-server」手冊頁、以取得其他組態和顯示選項。
+
+.步驟
+. 建立S3伺服器：
++
+「vserver object-store-server create -vserver Svm_name -object-store-server s3_server_name -credention-name ca_cert名稱-comment text [addent_options]」
+
++
+您可以在建立S3伺服器時或稍後隨時指定其他選項。
+
++
+** SVM名稱可以是資料SVM、也可以是「叢集」（系統SVM名稱）、如果您正在設定本機分層。
+** 預設會在連接埠443上啟用HTTPS。您可以使用「-secener-listener-port」選項來變更連接埠號碼。
++
+啟用HTTPS時、需要CA憑證才能與SSL/TLS適當整合。
+
+** HTTP預設為停用；啟用時、伺服器會偵聽連接埠80。您可以使用「-is -http啟用」選項來啟用、或使用「-listener-port'」選項來變更連接埠編號。
++
+啟用HTTP時、所有的要求和回應都會以純文字透過網路傳送。
+
+
+
+. 驗證S3是否已根據需要進行設定：
++
+「vserver object-store-server show」
+
+
+
+下列命令可驗證所有物件儲存伺服器的組態值：
+
+[listing]
+----
+cluster1::> vserver object-store-server show
+
+            Vserver: vs1
+
+                      Object Store Server Name: s3.example.com
+                          Administrative State: up
+                        Listener Port For HTTP: 80
+                Secure Listener Port For HTTPS: 443
+                                  HTTP Enabled: false
+                                 HTTPS Enabled: true
+             Certificate for HTTPS Connections: svm1_ca
+                                       Comment: Server comment
+----

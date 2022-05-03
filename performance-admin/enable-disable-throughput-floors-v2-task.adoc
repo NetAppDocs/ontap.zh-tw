@@ -1,0 +1,55 @@
+---
+permalink: performance-admin/enable-disable-throughput-floors-v2-task.html 
+sidebar: sidebar 
+keywords: enable, disable, throughput, floors v2 
+summary: 您可以啟用AFF 或停用支援速度的v2。預設為啟用。啟用第v2層時、如果控制器使用頻繁、而其他工作負載的延遲較高、則可滿足處理量層級的需求。第v2層同時適用於QoS和調適性QoS。 
+---
+= 啟用或停用處理量樓層v2
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用AFF 或停用支援速度的v2。預設為啟用。啟用第v2層時、如果控制器使用頻繁、而其他工作負載的延遲較高、則可滿足處理量層級的需求。第v2層同時適用於QoS和調適性QoS。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 輸入下列其中一個命令：
++
+|===
+| 如果您想要... | 使用此命令： 
+
+
+ a| 
+停用樓層v2
+ a| 
+「QoS設定傳輸量-樓層-v2 -啟用錯誤」
+
+
+
+ a| 
+啟用樓層v2
+ a| 
+「QoS設定傳輸量-樓層-v2 -啟用true」
+
+|===
++
+[NOTE]
+====
+若要在MetroCluster 一個不穩定叢集中停用處理量層v2、您必須執行
+
+「QoS設定傳輸量-樓層-v2 -啟用錯誤」
+
+在來源叢集和目的地叢集上執行命令。
+
+====
++
+[listing]
+----
+cluster1::*> qos settings throughput-floors-v2 -enable false
+----
+

@@ -1,0 +1,71 @@
+---
+permalink: smb-config/create-svms-data-access-task.html 
+sidebar: sidebar 
+keywords: svm, cluster, data, access, smb, client, create, create an svm 
+summary: 如果叢集中沒有至少一個SVM來提供SMB用戶端的資料存取、則必須建立一個SVM。 
+---
+= 建立SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果叢集中沒有至少一個SVM來提供SMB用戶端的資料存取、則必須建立一個SVM。
+
+.步驟
+. 建立SVM：「vserver create -vserver vserver_name -rootvolume root_volume名稱-Aggregate Aggregate名稱-rootvolume安全型NTFS -語言C。utf-8 -IPSpace IPspace_name'
++
+** 將NTFS設定用於「-rootvolume安全樣式」選項。
+** 使用預設的C.utf-8「-Language」選項。
+** 「IPSpace」設定為選用設定。
+
+
+. 驗證新建立的SVM的組態和狀態：「vserver show -vserver vserver_name」
++
+「允許的傳輸協定」欄位必須包含CIFS。您可以稍後再編輯此清單。
+
++
+「Vserver運作狀態」欄位必須顯示「執行中」狀態。如果顯示「初始化」狀態、表示根磁碟區建立等中介作業失敗、您必須刪除SVM並重新建立它。
+
+
+
+下列命令會在IPspace ipspaceA中建立SVM以供資料存取：
+
+[listing]
+----
+cluster1::> vserver create -vserver vs1.example.com -rootvolume root_vs1 -aggregate aggr1
+-rootvolume-security-style ntfs -language C.UTF-8 -ipspace ipspaceA
+
+[Job 2059] Job succeeded:
+Vserver creation completed
+----
+下列命令顯示SVM是以1 GB的根磁碟區建立、而且會自動啟動、並處於「執行中」狀態。根磁碟區具有預設的匯出原則、不含任何規則、因此根磁碟區在建立時不會匯出。
+
+[listing]
+----
+cluster1::> vserver show -vserver vs1.example.com
+                                    Vserver: vs1.example.com
+                               Vserver Type: data
+                            Vserver Subtype: default
+                               Vserver UUID: b8375669-19b0-11e5-b9d1-00a0983d9736
+                                Root Volume: root_vs1
+                                  Aggregate: aggr1
+                                 NIS Domain: -
+                 Root Volume Security Style: ntfs
+                                LDAP Client: -
+               Default Volume Language Code: C.UTF-8
+                            Snapshot Policy: default
+                                    Comment:
+                               Quota Policy: default
+                List of Aggregates Assigned: -
+ Limit on Maximum Number of Volumes allowed: unlimited
+                        Vserver Admin State: running
+                  Vserver Operational State: running
+   Vserver Operational State Stopped Reason: -
+                          Allowed Protocols: nfs, cifs, fcp, iscsi, ndmp
+                       Disallowed Protocols: -
+                           QoS Policy Group: -
+                                Config Lock: false
+                               IPspace Name: ipspaceA
+----

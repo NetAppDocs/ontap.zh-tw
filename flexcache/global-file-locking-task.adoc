@@ -1,0 +1,66 @@
+---
+permalink: flexcache/global-file-locking-task.html 
+sidebar: sidebar 
+keywords: global file locking, flexcache, relationship 
+summary: 如果您想要在可用度上享有一致性、可以在FlexCache 支援範圍內啟用整個檔案鎖定功能。 
+---
+= 啟用全域檔案鎖定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能完整的1.10.1開始、您可以套用全域檔案鎖定功能、以防止讀取所有相關的快取檔案。
+
+根據預設、FlexCache 由於可用度高於一致性、所以使用不穩定的功能。如果沒有全域檔案鎖定、對來源的任何修改都會散佈到FlexCache 各處、但可能不會同時更新。全域檔案鎖定功能可在磁碟區之間維持一致性、而不影響可用度啟用全域檔案鎖定後、對來源的修改將會暫停、直到所有FlexCache 的功能都上線為止。
+
+
+NOTE: 只有當FlexCache 您控制快取與來源之間的連線可靠性時、才應啟用全域檔案鎖定、因為當停用時、可能會有修改逾時、而且當停用完時。
+
+全域檔案鎖定功能要求包含來源和所有相關快取的叢集執行ONTAP 版本為《更新版本的指南：可在新FlexCache 的或現有的支援區啟用全域檔案鎖定。此命令可在單一磁碟區上執行、並套用至所有相關的磁碟區。
+
+您必須處於進階權限層級、才能啟用全域檔案鎖定。
+
+啟用全域檔案鎖定的程序取決於來源是否有現有的快取。
+
+* <<enable-gfl-new>>
+* <<enable-gfl-existing>>
+
+
+
+
+== 在新FlexCache 的支援區啟用全域檔案鎖定
+
+.步驟
+. 建立FlexCache 將「-is全域檔案鎖定」設為true的現象：
++
+「Volume FlexCache 支援功能可鎖定全域檔案、Volume _volume名稱_-is。
+
++
+預設值「-is全域檔案鎖定」為「假」。在FlexCache Volume上執行任何後續的「Volume示例」命令時、必須將「is全域檔案鎖定」設定為「true」、才能傳遞這些命令。
+
+
+
+
+
+== 在現有FlexCache 的支援區上啟用全域檔案鎖定
+
+.步驟
+. 必須從來源磁碟區設定全域檔案鎖定。
+. 來源不能有任何其他現有關係（例如SnapMirror）。任何現有的關係都必須取消關聯。執行命令時、必須連接所有快取和磁碟區。若要檢查連線狀態、請執行：
++
+Volume FlexCache 不中斷連線狀態顯示
+
++
+所有列出的磁碟區的狀態應顯示為「Connected（已連線）」。 如需詳細資訊、請參閱 link:view-connection-status-origin-task.html["檢視FlexCache 彼此之間的關係狀態"] 或 link:synchronize-properties-origin-volume-task.html["從FlexCache 來源同步處理一個不同步的資料區的屬性"]。
+
+. 在快取上啟用全域檔案鎖定：
++
+「Volume FlexCache SUR原 點組態顯示/修改-volume _volume _name_-is - global-file-ligure-enabled_true」
+
+
+
+如果還原ONTAP 至9.9.1之前的版本、則必須先在來源和相關快取上停用全域檔案鎖定。這可透過執行下列項目來管理：
+
+Volume FlexCache 不穩定準備降級-disable-feature-set 9.10.0

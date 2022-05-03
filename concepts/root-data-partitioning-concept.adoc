@@ -1,0 +1,28 @@
+---
+permalink: concepts/root-data-partitioning-concept.html 
+sidebar: sidebar 
+keywords: root-data partition 
+summary: 每個節點都必須具有儲存系統組態檔案的根Aggregate。根Aggregate具有資料Aggregate的RAID類型。 
+---
+= 根資料分割
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每個節點都必須具有儲存系統組態檔案的根Aggregate。根Aggregate具有資料Aggregate的RAID類型。
+
+System Manager不支援根資料或根資料資料分割。
+
+RAID-DP類型的根Aggregate通常由一個資料磁碟和兩個同位元檢查磁碟組成。當系統已為集合體中的每個RAID群組保留兩個磁碟做為同位元磁碟時、這是支付儲存系統檔案的重大「同位元檢查稅金」。
+
+_root-data partition_可在磁碟分割之間分配根Aggregate、將每個磁碟上的一個小分割區保留為根分割區、並將一個大分割區保留給資料、藉此降低同位元檢查的稅金。
+
+image::../media/root-data.gif[根資料]
+
+如圖所示、用於儲存根Aggregate的磁碟越多、根分割區就越小。這也是一種稱為_root-data-data partition_的根資料分割形式、它會建立一個小分割區做為根分割區、以及兩個較大、大小相同的資料分割區。
+
+image::../media/root-data-data.gif[根資料資料]
+
+這兩種類型的根資料分割都是ONTAP 《SUR_Advanced Drive Partitioning（ADP）》功能的一部分。這兩種資料都是在原廠設定的：適用於入門級FAS2xxx、FAS9000、FAS8200、FAS80xx和AFF 整套系統的根資料分割、僅適用於AFF 各種系統的根資料分割。

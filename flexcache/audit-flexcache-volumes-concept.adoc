@@ -1,0 +1,33 @@
+---
+permalink: flexcache/audit-flexcache-volumes-concept.html 
+sidebar: sidebar 
+keywords: considerations, auditing, flexcache, volumes 
+summary: 從ONTAP 使用Sf9.7開始、您可以使用FlexCache 原生ONTAP 的功能、以FPolicy稽核及檔案原則管理、來稽核彼此之間關係中的NFS檔案存取事件。SMB不支援FPolicy FlexCache 用於包含SMB的資料區。原生稽核與FPolicy的設定與管理方式與FlexVol 使用相同的CLI命令進行、這些命令可用於解決各種問題。不過FlexCache 、使用現象不一樣。 
+---
+= 稽核FlexCache 功能的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 使用Sf9.7開始、您可以使用FlexCache 原生ONTAP 的功能、以FPolicy稽核及檔案原則管理、來稽核彼此之間關係中的NFS檔案存取事件。SMB不支援FPolicy FlexCache 用於包含SMB的資料區。原生稽核與FPolicy的設定與管理方式與FlexVol 使用相同的CLI命令進行、這些命令可用於解決各種問題。不過FlexCache 、使用現象不一樣。
+
+* *原生稽核*
++
+** 您無法使用FlexCache 一個不完整的Volume做為稽核記錄的目的地。
+** 如果您想要稽核FlexCache 在Sforsvolume上的讀取和寫入、則必須在快取SVM和來源SVM上設定稽核。
++
+這是因為檔案系統作業會在處理時進行稽核。也就是在快取SVM上稽核讀取、然後在來源SVM上稽核寫入。
+
+** 若要追蹤寫入作業的來源、稽核記錄中會附加SVM UUID和MSID、以識別FlexCache 產生寫入的來源來源於哪個SVM Volume。
+** 雖然系統存取控制清單（SACL）可以使用NFSv4或SMB通訊協定在檔案上設定、FlexCache 但無法使用非NFSv3。因此、SACL只能在來源磁碟區上設定。
+
+
+* * FPolicy*
++
+** 雖然寫入FlexCache 到某個卷的作業是在來源捲上進行、但是FPolicy組態會監控快取磁碟區上的寫入作業。這與原生稽核不同、原生稽核會在原始磁碟區上稽核寫入內容。
+** 雖然在快取和來源SVM上不需要相同的FPolicy組態、但建議您部署兩個類似的組態。ONTAP您可以為快取建立新的FPolicy原則、設定方式與來源SVM相同、但新原則的範圍僅限於快取SVM。
+
+
+

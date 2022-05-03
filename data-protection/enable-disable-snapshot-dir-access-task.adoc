@@ -1,0 +1,46 @@
+---
+permalink: data-protection/enable-disable-snapshot-dir-access-task.html 
+sidebar: sidebar 
+keywords: enable, disable, access, snapshot copy 
+summary: 若要判斷NFS和SMB用戶端是否可以看到Snapshot複本目錄、以便從Snapshot複本還原檔案或LUN、您可以使用「volume modify」命令的「-snapdir-access」選項來啟用和停用對Snapshot複本目錄的存取。 
+---
+= 啟用及停用NFS和SMB用戶端對Snapshot複本目錄的存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要判斷NFS和SMB用戶端是否可以看到Snapshot複本目錄、以便從Snapshot複本還原檔案或LUN、您可以使用「volume modify」命令的「-snapdir-access」選項來啟用和停用對Snapshot複本目錄的存取。
+
+.步驟
+. 檢查Snapshot目錄存取狀態：
++
+ `volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
++
+範例：
+
++
+[listing]
+----
+
+clus1::> volume show -vserver vs0 -volume vol1 -fields snapdir-access
+vserver volume snapdir-access
+------- ------ --------------
+vs0     vol1   false
+----
+. 啟用或停用Snapshot複本目錄存取：
++
+「Volume modify -volume _vol_name_-snapdir-access true|fals'
+
++
+下列範例可在vol1上啟用Snapshot複本目錄存取：
+
++
+[listing]
+----
+
+clus1::> volume modify -volume vol1 -snapdir-access true
+Volume modify successful on volume vol1 of Vserver vs0.
+----
+

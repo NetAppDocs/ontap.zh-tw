@@ -1,0 +1,82 @@
+---
+permalink: s3-config/create-svm-s3-task.html 
+sidebar: sidebar 
+keywords: create, svm, s3 
+summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建立新的SVM來隔離命名空間和工作負載。 
+---
+= 為S3建立SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建立新的SVM來隔離命名空間和工作負載。
+
+如果您只是從此SVM提供S3物件儲存設備、則S3伺服器不需要任何DNS組態。不過、如果使用其他通訊協定、您可能會想要在SVM上設定DNS。
+
+.步驟
+. 確認叢集上的S3已獲得授權：
++
+「系統授權顯示-套件S3」
+
++
+如果沒有、請聯絡您的銷售代表。
+
+. 建立SVM：
++
+「vserver create -vserver Svm_name -rootvolume root_volume名稱-Aggregate Aggregate名稱-rootvolume安全型UNIX語言C。utf-8 -IPSpace IPspace_name'
+
++
+** 將UNIX設定用於「-rootvolume安全樣式」選項。
+** 使用預設的C.utf-8「-Language」選項。
+** 「IPSpace」設定為選用設定。
+
+
+. 驗證新建立的SVM的組態和狀態：
++
+「vserver show -vserver Svm_name」
+
++
+「Vserver運作狀態」欄位必須顯示「執行中」狀態。如果顯示「初始化」狀態、表示根磁碟區建立等中介作業失敗、您必須刪除SVM並重新建立它。
+
+
+
+下列命令會在IPspace ipspaceA中建立SVM以供資料存取：
+
+[listing]
+----
+cluster-1::> vserver create -vserver svm1.example.com -rootvolume root_svm1 -aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -ipspace ipspaceA
+
+[Job 2059] Job succeeded:
+Vserver creation completed
+----
+下列命令顯示SVM是以1 GB的根磁碟區建立、而且會自動啟動、並處於「執行中」狀態。根磁碟區具有預設的匯出原則、不含任何規則、因此根磁碟區在建立時不會匯出。根據預設、vsadmin使用者帳戶會建立、並處於「鎖定」狀態。vsadmin角色會指派給預設的vsadmin使用者帳戶。
+
+[listing]
+----
+cluster-1::> vserver show -vserver svm1.example.com
+                                    Vserver: svm1.example.com
+                               Vserver Type: data
+                            Vserver Subtype: default
+                               Vserver UUID: b8375669-19b0-11e5-b9d1-00a0983d9736
+                                Root Volume: root_svm1
+                                  Aggregate: aggr1
+                                 NIS Domain: -
+                 Root Volume Security Style: unix
+                                LDAP Client: -
+               Default Volume Language Code: C.UTF-8
+                            Snapshot Policy: default
+                                    Comment:
+                               Quota Policy: default
+                List of Aggregates Assigned: -
+ Limit on Maximum Number of Volumes allowed: unlimited
+                        Vserver Admin State: running
+                  Vserver Operational State: running
+   Vserver Operational State Stopped Reason: -
+                          Allowed Protocols: nfs, cifs
+                       Disallowed Protocols: -
+                           QoS Policy Group: -
+                                Config Lock: false
+                               IPspace Name: ipspaceA
+----

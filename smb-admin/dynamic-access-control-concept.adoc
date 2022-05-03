@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/dynamic-access-control-concept.html 
+sidebar: sidebar 
+keywords: consideration, dynamic, access, control, dac, central, policies, policy, secure, file, folder, cifs, server, consideration when using dynamic access control and central access policies with cifs servers 
+summary: 使用動態存取控制（DAC）和集中存取原則來保護CIFS伺服器上的檔案和資料夾安全時、必須謹記某些考量事項。 
+---
+= 搭配CIFS伺服器使用動態存取控制和集中存取原則時的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用動態存取控制（DAC）和集中存取原則來保護CIFS伺服器上的檔案和資料夾安全時、必須謹記某些考量事項。
+
+
+
+== 如果原則規則套用至網域\系統管理員使用者、則NFS存取權限可能會被拒絕
+
+在某些情況下、如果將集中存取原則安全性套用至root使用者嘗試存取的資料、則可能會拒絕NFS存取root。當集中存取原則包含套用至網域\系統管理員的規則、且根帳戶對應至網域\系統管理員帳戶時、就會發生此問題。
+
+您應該將規則套用至具有管理權限的群組、例如網域\系統管理員群組、而非套用規則至網域\系統管理員使用者。如此一來、您就可以將root對應到網域\系統管理員帳戶、而不受root影響。
+
+
+
+== 當Active Directory中找不到套用的集中存取原則時、CIFS伺服器的BUILTIN\Administrator群組可存取資源
+
+CIFS伺服器中包含的資源可能會套用集中存取原則、但如果CIFS伺服器使用集中存取原則的SID嘗試從Active Directory擷取資訊、則該SID與Active Directory中任何現有的集中存取原則SID都不相符。在此情況下、CIFS伺服器會套用該資源的本機預設還原原則。
+
+本機預設還原原則可讓CIFS伺服器的BUILTIN\Administrator群組存取該資源。

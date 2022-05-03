@@ -1,0 +1,84 @@
+---
+permalink: system-admin/positional-parameters-concept.html 
+sidebar: sidebar 
+keywords: understand, positional, parameters, cli, command, input, query 
+summary: 您可以利用ONTAP 資訊中心的位置參數功能來提高命令輸入的效率。您可以查詢命令以識別命令的位置參數。 
+---
+= 關於位置參數
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以利用ONTAP 資訊中心的位置參數功能來提高命令輸入的效率。您可以查詢命令以識別命令的位置參數。
+
+
+
+== 什麼是位置參數
+
+* 位置參數是一個參數、在指定參數值之前、不需要指定參數名稱。
+* 位置參數可以與命令輸入中的非位置參數進行互連、只要其相對順序與同一個命令中的其他位置參數相同、如'*_command_name ?_*輸出所示。
+* 位置參數可以是命令的必要或選用參數。
+* 參數可以是一個命令的位置、但不能是另一個命令的位置。
+
+
+[NOTE]
+====
+不建議在指令碼中使用位置參數功能、尤其是當指令的位置參數為選用、或是在指令碼之前列出選用參數時。
+
+====
+
+
+== 識別位置參數
+
+您可以在'*_command_name ?_*'命令輸出中識別位置參數。位置參數的參數名稱前後有方括弧、格式如下：
+
+* [`_-parameter_name_`]`_parameter_value_'顯示所需的位置參數。
+* [[`_-parameter_name_`]`_parameter_value_`]顯示的是可選參數的位置。
+
+
+例如，當在'*_command_name ?_*輸出中顯示如下內容時，該參數是其所顯示命令的位置：
+
+* [-lif]<lif-name>'
+* [`[-lif]<lif-name>].'
+
+
+但是、當顯示為下列項目時、參數會與顯示於中的命令非位置：
+
+* h-lif <lif-name>'
+* [`-lif<lif-name>].'
+
+
+
+
+== 使用位置參數的範例
+
+在以下範例中、「* Volume create？*」輸出顯示命令的位置有三個參數：「-volume」、「-Aggregate」和「-size」。
+
+[listing]
+----
+cluster1::> volume create ?
+   -vserver <vserver name>                Vserver Name
+   [-volume] <volume name>                Volume Name
+   [-aggregate] <aggregate name>          Aggregate Name
+  [[-size] {<integer>[KB|MB|GB|TB|PB]}]   Volume Size
+  [ -state {online|restricted|offline|force-online|force-offline|mixed} ]
+                                          Volume State (default: online)
+  [ -type {RW|DP|DC} ]                    Volume Type (default: RW)
+  [ -policy <text> ]                      Export Policy
+  [ -user <user name> ]                   User ID
+  ...
+  [ -space-guarantee|-s {none|volume} ]   Space Guarantee Style (default: volume)
+  [ -percent-snapshot-space <percent> ]   Space Reserved for Snapshot Copies
+  ...
+----
+在以下範例中、指定「volume create」命令時不會使用位置參數功能：
+
+「cluster1：：> Volume create -vserver svm1 -volume vol1 -aggregate * aggr1 -size 1g*-百分 點-snapshot space 0」
+
+下列範例使用位置參數功能來提高命令輸入的效率。位置參數會與「volume create」命令中的非位置參數互連、而位置參數值則會指定而不使用參數名稱。位置參數的指定順序與'* volume create？*（磁碟區建立？*）輸出相同。也就是將「-volume」的值指定在「-Aggregate」之前、而「-volume」的值則指定在「-size」之前。
+
+「cluster1：：> Volume create * vol2** aggr1** 1g*-vserver svm1 -百分 點-snapshot space 0」
+
+「cluster1：：> Volume create -vserver svm1 * vol3*-snapshot原則預設* aggr1*-nvail off * 1g*-space-assurenone'

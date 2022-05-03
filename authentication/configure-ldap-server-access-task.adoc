@@ -1,0 +1,96 @@
+---
+permalink: authentication/configure-ldap-server-access-task.html 
+sidebar: sidebar 
+keywords: configure, ldap, server access 
+summary: 您必須先設定LDAP伺服器存取SVM、LDAP帳戶才能存取SVM。您可以使用vserver服務名稱服務LDAP用戶端create命令、在SVM上建立LDAP用戶端組態。然後、您可以使用vserver services name-service LDAP create命令、將LDAP用戶端組態與SVM建立關聯。 
+---
+= 設定LDAP伺服器存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先設定LDAP伺服器存取SVM、LDAP帳戶才能存取SVM。您可以使用「vserver services name-service LDAP用戶端cred'」命令、在SVM上建立LDAP用戶端組態。然後您可以使用「vserver services name-service LDAP create」命令、將LDAP用戶端組態與SVM建立關聯。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須安裝 link:install-ca-signed-server-digital-certificate-task.html["CA簽署的伺服器數位憑證"] 在SVM上。
+* 您必須是叢集或SVM管理員、才能執行此工作。
+
+
+大多數LDAP伺服器都可以使用ONTAP 由下列功能提供的預設架構：
+
+* ms-AD-BIS（大多數Windows 2012及更新版本AD伺服器的偏好架構）
+* AD-IDMU（Windows 2008、Windows 2012及更新版本的AD伺服器）
+* AD-SFU（Windows 2003和舊版AD伺服器）
+* RFC-2307（UNIX LDAP伺服器）
+
+
+除非有其他需求、否則最好使用預設架構。如果是、您可以複製預設架構並修改複本、以建立自己的架構。如需詳細資訊、請參閱下列文件。
+
+* link:../nfs-config/index.html["NFS組態"]
+* https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp技術報告4835：如何在ONTAP 功能方面設定LDAP"]
+
+
+.步驟
+. 在SVM上建立LDAP用戶端組態：「vserver services name-service LDAP用戶端create -vserver Svm_name -client-config client_configuration -servers LDAP_server_ips -schemap schema-use-start-tls true|fals'
++
+[NOTE]
+====
+只有資料SVM存取才支援Start TLS。不支援存取管理SVM。
+
+====
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+下列命令會在SVM 'engData'上建立名為「corp」的LDAP用戶端組態。用戶端使用IP位址「172.160.100」和「172.16.0.101」、匿名連結至LDAP伺服器。用戶端使用「RFC-2307」架構進行LDAP查詢。用戶端與伺服器之間的通訊會使用Start TLS加密。
+
++
+[listing]
+----
+cluster1::>vserver services name-service ldap client create
+-vserver engData -client-config corp -servers 172.16.0.100,172.16.0.101 -schema RFC-2307 -use-start-tls true
+----
++
+[NOTE]
+====
+從ONTAP 功能變數《LDAP伺服器》開始、功能變數《LDAP伺服器》將取代功能變數《伺服器》。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
+
+====
+. 將LDAP用戶端組態與SVM建立關聯：「vserver services name-service LDAP create -vserver Svm_name -client-config client_configuration -client-enabled true|假」
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+下列命令可將LDAP用戶端組態「corp」與SVM「engData」建立關聯、並在SVM上啟用LDAP用戶端。
+
++
+[listing]
+----
+cluster1::>vserver services name-service ldap create -vserver engData -client-config corp -client-enabled true
+----
++
+[NOTE]
+====
+從ONTAP 功能組態9.2開始、「vserver services name-service LDAP creation」命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時報告錯誤訊息。
+
+====
+. 使用vserver services name-service LDAP檢查命令來驗證名稱伺服器的狀態。
++
+下列命令會驗證SVM vs0上的LDAP伺服器。
+
++
+[listing]
+----
+cluster1::> vserver services name-service ldap check -vserver vs0
+
+| Vserver: vs0                                                |
+| Client Configuration Name: c1                               |
+| LDAP Status: up                                             |
+| LDAP Status Details: Successfully connected to LDAP server "10.11.12.13".                                              |
+----
++
+名稱服務檢查命令可從ONTAP 版本號不含資訊的9.2開始使用。
+
+

@@ -1,0 +1,120 @@
+---
+permalink: nfs-config/verify-permissions-kerberos-config-task.html 
+sidebar: sidebar 
+keywords: verify, permissions, kerberos, configuration 
+summary: Kerberos需要為SVM根磁碟區及本機使用者和群組設定特定的UNIX權限。 
+---
+= 驗證Kerberos組態的權限
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kerberos需要為SVM根磁碟區及本機使用者和群組設定特定的UNIX權限。
+
+.步驟
+. 顯示SVM根磁碟區的相關權限：
++
+「Volume show -volume _root_vol_name_-Fields user,group、unix-permissions」
+
++
+SVM的根Volume必須具有下列組態：
+
++
+|===
+| 名稱... | 正在設定... 
+
+
+ a| 
+UID
+ a| 
+root或ID 0
+
+
+
+ a| 
+Gid
+ a| 
+root或ID 0
+
+
+
+ a| 
+UNIX權限
+ a| 
+755
+
+|===
++
+如果未顯示這些值、請使用「volume modify」命令來更新這些值。
+
+. 顯示本機UNIX使用者：
++
+「Vserver服務名稱服務UNIX使用者show -vserver _vserver_name_」
+
++
+SVM必須設定下列UNIX使用者：
+
++
+|===
+| 使用者名稱 | 使用者ID | 主要群組ID | 留言 
+
+
+ a| 
+NFS
+ a| 
+500
+ a| 
+0
+ a| 
+GSS初始化階段所需的項目。
+
+NFS用戶端使用者的第一個使用者是使用者。
+
+如果NFS用戶端使用者的SPN-UNIX名稱對應存在、則不需要NFS使用者。
+
+
+
+ a| 
+根
+ a| 
+0
+ a| 
+0
+ a| 
+安裝所需。
+
+|===
++
+如果未顯示這些值、您可以使用「vserver services name-service unix-usermodify」命令來更新這些值。
+
+. 顯示本機UNIX群組：
++
+「Vserver服務名稱服務UNIX群組show -vserver _vserver__name」
+
++
+SVM必須設定下列UNIX群組：
+
++
+|===
+| 群組名稱 | 群組ID 
+
+
+ a| 
+精靈
+ a| 
+1.
+
+
+
+ a| 
+根
+ a| 
+0
+
+|===
++
+如果未顯示這些值、您可以使用「vserver services name-service unix-group modify」命令來更新這些值。
+
+

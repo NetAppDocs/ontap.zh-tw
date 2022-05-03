@@ -1,0 +1,37 @@
+---
+permalink: flexgroup/shrink-flexgroup-volume-task.html 
+sidebar: sidebar 
+keywords: reduce, size, flexgroup, volume, flex group, resize, shrink, shrinking, autosize 
+summary: 從ONTAP 功能性的9.6開始、FlexGroup 您可以將一個不符合目前大小的值重新調整成低於目前大小的值、以便從磁碟區中釋出未使用的空間。當您縮小FlexGroup 一個等量資料量時ONTAP 、系統會自動重新調整FlexGroup 所有的候數資料。 
+---
+= 縮小FlexGroup 一個不全的體積
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能性的9.6開始、FlexGroup 您可以將一個不符合目前大小的值重新調整成低於目前大小的值、以便從磁碟區中釋出未使用的空間。當您縮小FlexGroup 一個等量資料量時ONTAP 、系統會自動重新調整FlexGroup 所有的候數資料。
+
+.步驟
+. 縮小FlexGroup 不完整的資料區大小：「Volume size -vserver vserver_name -volume fa_name -size new_size」
++
+「new_size」是FlexGroup 指不只是一個大小的現象。您可以指定低於目前大小的值、也可以指定一個負值FlexGroup 來減少目前的縮放。
+
++
+[NOTE]
+====
+如果已啟用Volume的自動壓縮（「volume autossize'命令）、則最小自動調整大小會設為新的Volume大小。
+
+====
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX -size 10TB
+----
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX -size -5TB
+----
+

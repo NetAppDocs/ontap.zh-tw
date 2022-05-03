@@ -1,0 +1,89 @@
+---
+permalink: error-messages/ems-routing-notifications-models-concept.html 
+sidebar: sidebar 
+keywords: configure, map, important, ems, events, notifications, filters 
+summary: 在版本不含故障碼的9.0之前ONTAP 、EMS事件只能根據事件名稱模式的相符結果對應至事件目的地。與該模型相關的指令功能仍可繼續使用、但從推出版的版本僅供使用。9.0版開始已不再使用。ONTAP ONTAP 
+---
+= EMS事件對應模型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在版本不含故障碼的9.0之前ONTAP 、EMS事件只能根據事件名稱模式的相符結果對應至事件目的地。使用此模型的ONTAP 指令集（「EVENT destination'、「EVENT route'」）仍可在ONTAP 最新版的版的更新版中使用、但ONTAP 從使用率為0的版本開始、這些指令集已被淘汰。
+
+從功能區支援的9.0開始ONTAP 、ONTAP 最佳實務做法是使用「事件篩選器」、「事件通知」和「事件通知目的地」命令集、在多個欄位上執行模式比對、以更具擴充性的事件篩選器模式進行。
+
+如果您使用過時的命令來設定EMS對應、您應該更新對應、以使用「事件篩選器」、「事件通知」和「事件通知目的地」命令集。
+
+事件目的地有兩種類型：
+
+. *系統產生的目的地*：有五個系統產生的事件目的地（預設為建立）
++
+** 《allevents》
+** "阿蘇"
+** 《批評》
+** 《尋呼機》
+** 《traphost》
++
+某些系統產生的目的地是為了特殊目的而設計。例如、asup目的地會將CallHome.*事件路由到AutoSupport 位在畫面上的這個動作模組ONTAP 、以產生AutoSupport 各種訊息。
+
+
+
+. *使用者建立的目的地*：這些是使用「事件目的地建立」命令手動建立的。
++
+[listing]
+----
+cluster-1::event*> destination show
+                                                                 Hide
+Name             Mail Dest.        SNMP Dest.         Syslog Dest.       Params
+---------------- ----------------- ------------------ ------------------ ------
+allevents        -                 -                  -                  false
+asup             -                 -                  -                  false
+criticals        -                 -                  -                  false
+pager            -                 -                  -                  false
+traphost         -                 -                  -                  false
+5 entries were displayed.
++
+cluster-1::event*> destination create -name test -mail test@xyz.com
+This command is deprecated. Use the "event filter", "event notification destination" and "event notification" commands, instead.
++
+cluster-1::event*> destination show
++                                                                     Hide
+Name             Mail Dest.        SNMP Dest.         Syslog Dest.       Params
+---------------- ----------------- ------------------ ------------------ ------
+allevents        -                 -                  -                  false
+asup             -                 -                  -                  false
+criticals        -                 -                  -                  false
+pager            -                 -                  -                  false
+test             test@xyz.com      -                  -                  false
+traphost         -                 -                  -                  false
+6 entries were displayed.
+----
+
+
+在已過時的模型中、EMS事件會使用「事件路由附加目的地」命令個別對應至目的地。
+
+[listing]
+----
+cluster-1::event*> route add-destinations -message-name raid.aggr.* -destinations test
+This command is deprecated. Use the "event filter", "event notification destination" and "event notification" commands, instead.
+4 entries were acted on.
+
+cluster-1::event*> route show -message-name raid.aggr.*
+                                                               Freq    Time
+Message                          Severity       Destinations   Threshd Threshd
+-------------------------------- -------------- -------------- ------- -------
+raid.aggr.autoGrow.abort         NOTICE         test           0       0
+raid.aggr.autoGrow.success       NOTICE         test           0       0
+raid.aggr.lock.conflict          INFORMATIONAL  test           0       0
+raid.aggr.log.CP.count           DEBUG          test           0       0
+4 entries were displayed.
+----
+全新且可擴充的EMS事件通知機制、是以事件篩選器和事件通知目的地為基礎。如需新事件通知機制的詳細資訊、請參閱下列知識庫文章：
+
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Overview_of_Event_Management_System_for_ONTAP_9["事件管理系統概述ONTAP （適用於）。9."^]
+
+
+image:../media/ems-event-diag.jpg["事件模型圖表"]

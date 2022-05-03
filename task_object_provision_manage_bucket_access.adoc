@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_manage_bucket_access.html 
+keywords: netapp, ontap, manage, manage user access, user, users, access, object, objects, bucket, buckets, bucketname, bucket capacity, permissions, QoS, principal, effect, actions, resources, conditions, object tagging, AWS client 
+summary: 編輯儲存庫以修改具有儲存庫存取權的清單使用者、並指定其權限。 
+---
+= 管理使用者對儲存區的存取權
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+編輯儲存庫以修改具有儲存庫存取權的清單使用者、並指定其權限。
+
+使用者和群組權限可在建立儲存區時或稍後視需要授予。您也可以修改儲存區容量和QoS原則群組指派。
+
+在授予權限之前、您必須先建立使用者或群組。
+
+在發行版S19.9.1及更新版本中、如果您打算支援AWS用戶端物件標記功能搭配使用S3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。ONTAP ONTAP
+
+.步驟
+. 編輯儲存桶：按一下「*儲存設備>儲存桶*」、按一下所需的儲存桶、然後按一下「*編輯*」。新增或修改權限時、您可以指定下列參數：
++
+** 主體：授予存取權的使用者或群組。
+** 效果：允許或拒絕存取使用者或群組。
+** 行動：特定使用者或群組在儲存庫中的允許行動。
+** 資源：儲存區內已授予或拒絕存取的物件路徑和名稱。
++
+預設值*_bucketname*和*_bucketname/*會授予儲存區中所有物件的存取權。您也可以授與單一物件的存取權、例如*_Bucketname/_* readme.txt*。
+
+** 條件（選用）：嘗試存取時會評估的運算式。例如、您可以指定允許或拒絕存取的IP位址清單。
+
+
+

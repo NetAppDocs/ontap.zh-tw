@@ -1,0 +1,45 @@
+---
+permalink: system-admin/baseboard-management-controller-concept.html 
+sidebar: sidebar 
+keywords: baseboard, management, controller, bmc, cli, command, hardware, software, command, line, interface 
+summary: 從推出支援功能的支援功能起、ONTAP 在某些硬體平台上、軟體是自訂的、可支援稱為「基礎板管理控制器」（BMC）的新內建控制器。BMC具有命令列介面（CLI）命令、可用於遠端管理裝置。 
+---
+= 基礎板管理控制器的功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從推出支援功能的支援功能起、ONTAP 在某些硬體平台上、軟體是自訂的、可支援稱為「基礎板管理控制器」（BMC）的新內建控制器。BMC具有命令列介面（CLI）命令、可用於遠端管理裝置。
+
+BMC的運作方式與服務處理器（SP）類似、並使用許多相同的命令。BMC可讓您執行下列動作：
+
+* 設定BMC網路設定。
+* 從遠端存取節點、並執行節點管理工作、例如診斷、關機、關機後再開機或重新開機。
+
+
+SP與BMC之間有一些差異：
+
+* BMC完全控制電源供應器元件、冷卻元件、溫度感測器、電壓感測器和電流感測器的環境監控。BMC會透過ONTAP IPMI將感測器資訊回報給各個方面。
+* 有些高可用度（HA）和儲存命令不同。
+* BMC不會傳送AutoSupport 一些不知道的訊息。
+
+
+執行ONTAP 下列需求的更新版本時、也可以自動更新韌體：
+
+* 必須安裝BMC韌體版本1.15或更新版本。
++
+[NOTE]
+====
+需要手動更新、才能將BMC韌體從1.12升級至1.15或更新版本。
+
+====
+* BMC會在韌體更新完成後自動重新開機。
++
+[NOTE]
+====
+在BMC重新開機期間、節點作業不會受到影響。
+
+====
+

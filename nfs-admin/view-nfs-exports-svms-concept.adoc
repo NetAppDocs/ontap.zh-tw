@@ -1,0 +1,37 @@
+---
+permalink: nfs-admin/view-nfs-exports-svms-concept.html 
+sidebar: sidebar 
+keywords: enable, display, nfs, export, client 
+summary: NFS用戶端可以使用showmount -e命令查看ONTAP 可從Sof NFS伺服器匯出的清單。這有助於使用者識別要掛載的檔案系統。 
+---
+= 在NFS用戶端上啟用NFS匯出的顯示
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS用戶端可以使用「show mount -e」命令、查看ONTAP 可從某個NFS伺服器匯出的清單。這有助於使用者識別要掛載的檔案系統。
+
+從功能更新9.2開始ONTAP 、ONTAP 依預設、支援NFS用戶端檢視匯出清單。在早期版本中、必須明確啟用「vserver NFS modify」命令的「show mount」選項。若要檢視匯出清單、應在SVM上啟用NFSv3。
+
+下列命令顯示名為VS1的SVM上的showmount功能：
+
+[listing]
+----
+clusterl : : > vserver nfs show -vserver vs1 -fields showmount
+vserver showmount
+------- ---------
+vs1    enabled
+----
+在NFS用戶端上執行的下列命令會顯示NFS伺服器上IP位址為10.63.21.9的匯出清單：
+
+[listing]
+----
+showmount -e 10.63.21.9
+Export list for 10.63.21.9:
+/unix        (everyone)
+/unix/unixl  (everyone)
+/unix/unix2  (everyone)
+/            (everyone)
+----

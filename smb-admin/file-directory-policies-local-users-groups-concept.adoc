@@ -1,0 +1,100 @@
+---
+permalink: smb-admin/file-directory-policies-local-users-groups-concept.html 
+sidebar: sidebar 
+keywords: guideline, mind, apply, file-directory, policies, policy, storage, virtual, machine, svm, disaster, recovery, destination, id, discard, configuration, local, user, dacl, sacl, entries, entry, guidelines for applying file-directory policies that use local users of groups on the svm disaster recovery destination 
+summary: 如果您的檔案目錄原則組態在安全性描述元、DACL或SACL項目中使用本機使用者或群組、則在ID捨棄組態中的儲存虛擬機器（SVM）災難恢復目的地上套用檔案目錄原則之前、必須謹記一些準則。 
+---
+= 套用在SVM災難恢復目的地上使用本機使用者或群組的檔案目錄原則準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的檔案目錄原則組態在安全性描述元、DACL或SACL項目中使用本機使用者或群組、則在ID捨棄組態中的儲存虛擬機器（SVM）災難恢復目的地上套用檔案目錄原則之前、必須謹記一些準則。
+
+您可以為SVM設定災難恢復組態、讓來源叢集上的來源SVM將資料和組態從來源SVM複寫到目的地叢集上的目的地SVM。
+
+您可以設定兩種SVM災難恢復類型之一：
+
+* 身分識別保留
++
+有了這項組態、SVM和CIFS伺服器的身分識別就會保留下來。
+
+* 身分識別已捨棄
++
+使用此組態時、SVM和CIFS伺服器的身分識別將不會保留。在此案例中、目的地SVM上的SVM和CIFS伺服器名稱與來源SVM上的SVM和CIFS伺服器名稱不同。
+
+
+
+
+
+== 身分識別捨棄組態的準則
+
+在身分識別捨棄組態中、對於包含本機使用者、群組和權限組態的SVM來源、必須變更本機網域名稱（本機CIFS伺服器名稱）、以符合SVM目的地上的CIFS伺服器名稱。例如、如果來源SVM名稱為「'VS1'」、CIFS伺服器名稱為「'CIFS1'」、目的地SVM名稱為「'VS1_DST'」、CIFS伺服器名稱為「'CIFS1_DST'」、則本機使用者的本機網域名稱會自動變更為「CIFS1\user1'上的Cdst_Dst：」
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1_dst
+
+Vserver      User Name                Full Name      Description
+------------ ------------------------ -------------- -------------
+vs1          CIFS1\Administrator                     Built-in administrator account
+vs1          CIFS1\user1              -              -
+
+cluster1dst::> vserver cifs users-and-groups local-user show -vserver vs1_dst
+
+Vserver      User Name                Full Name      Description
+------------ ------------------------ -------------- -------------
+vs1_dst      CIFS1_DST\Administrator                 Built-in administrator account
+vs1_dst      CIFS1_DST\user1          -              -
+----
+雖然本機使用者和群組資料庫中的本機使用者和群組名稱會自動變更、但不會在檔案目錄原則組態中自動變更本機使用者或群組名稱（在CLI上使用「vserver安全檔案目錄」命令系列設定的原則）。
+
+例如、對於「VS1」、如果您已設定DACL項目、其中「-Account」參數設為「'CIFS1\user1'」、則目的地SVM上的設定不會自動變更、以反映目的地的CIFS伺服器名稱。
+
+[listing]
+----
+cluster1::> vserver security file-directory ntfs dacl show -vserver vs1
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access             Apply To
+                     Type     Rights
+    --------------   -------  -------            -----------
+    CIFS1\user1      allow    full-control      this-folder
+
+cluster1::> vserver security file-directory ntfs dacl show -vserver vs1_dst
+
+Vserver: vs1_dst
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access             Apply To
+                     Type     Rights
+    --------------   -------  -------            -----------
+    **CIFS1**\user1          allow    full-control      this-folder
+----
+您必須使用「vserver安全性檔案目錄修改」命令、手動將CIFS伺服器名稱變更為目的地CIFS伺服器名稱。
+
+
+
+== 包含帳戶參數的檔案目錄原則組態元件
+
+有三個檔案目錄原則組態元件可以使用參數設定、這些設定可以包含本機使用者或群組：
+
+* 安全性描述元
++
+您可以選擇性地指定安全性描述元的擁有者和安全性描述元擁有者的主要群組。如果安全性描述元使用本機使用者或群組做為擁有者和主要群組項目、則必須修改安全性描述元、才能在帳戶名稱中使用目的地SVM。您可以使用「vserver安全性檔案目錄NTFS modify」命令、對帳戶名稱進行必要的變更。
+
+* DACL項目
++
+每個DACL項目都必須與一個帳戶相關聯。您必須修改任何使用本機使用者或群組帳戶的DACL、才能使用目的地SVM名稱。由於您無法修改現有DACL項目的帳戶名稱、因此您必須從安全性描述元中移除任何具有本機使用者或群組的DACL項目、以修正的目的地帳戶名稱建立新的DACL項目、並將這些新的DACL項目與適當的安全性描述元建立關聯。
+
+* SACL項目
++
+每個SACL項目都必須與帳戶建立關聯。您必須修改任何使用本機使用者或群組帳戶的SACL、才能使用目的地SVM名稱。由於您無法修改現有SACL項目的帳戶名稱、因此您必須從安全性描述元中移除具有本機使用者或群組的任何SACL項目、以修正的目的地帳戶名稱建立新的SACL項目、並將這些新的SACL項目與適當的安全性描述元建立關聯。
+
+
+
+套用原則之前、您必須對檔案目錄原則組態中使用的本機使用者或群組進行任何必要的變更、否則套用工作會失敗。

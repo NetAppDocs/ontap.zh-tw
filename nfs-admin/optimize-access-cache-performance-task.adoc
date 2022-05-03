@@ -1,0 +1,68 @@
+---
+permalink: nfs-admin/optimize-access-cache-performance-task.html 
+sidebar: sidebar 
+keywords: optimize, access, cache, performance 
+summary: 您可以設定數個參數來最佳化存取快取、並在效能與儲存在存取快取中的資訊目前狀態之間找到適當的平衡點。 
+---
+= 最佳化存取快取效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定數個參數來最佳化存取快取、並在效能與儲存在存取快取中的資訊目前狀態之間找到適當的平衡點。
+
+當您設定存取快取重新整理期間時、請謹記下列事項：
+
+* 較高的值表示項目在存取快取中的時間較長。
++
+優勢在於效能更佳、ONTAP 因為用較少資源來重新整理存取快取項目。缺點是、如果匯出原則規則發生變更、而存取快取項目因而變得過時、則更新這些規則所需的時間會較長。因此、應該存取的用戶端可能會遭到拒絕、而應該遭到拒絕的用戶端可能會取得存取權。
+
+* 較低的值代表ONTAP 更常更新存取快取項目。
++
+優點是項目較新、用戶端較可能被正確授予或拒絕存取。缺點是效能降低、因為ONTAP 用更多資源重新整理存取快取項目。
+
+
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行所需的動作：
++
+[cols="2*"]
+|===
+| 若要修改... | 輸入... 
+
+
+ a| 
+正項目的重新整理期間
+ a| 
+「vserver outle-policy access-cache config modify-all-vservers -refresh-p適用於 正向timeout_Value」
+
+
+
+ a| 
+否定項目的重新整理期間
+ a| 
+「vserver outle-policy access-cache config modify-all-vservers -refresh-per-negative timeout_Value」
+
+
+
+ a| 
+舊項目的逾時期間
+ a| 
+「Vserver outle-policy access-cache config modify_all-vservers -fHarvest timeout timeout_Value」
+
+|===
+. 驗證新的參數設定：
++
+「Vserver out-policy access-cache config show-all-vservers」
+
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

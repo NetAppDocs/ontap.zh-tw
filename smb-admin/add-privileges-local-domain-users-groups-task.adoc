@@ -1,0 +1,45 @@
+---
+permalink: smb-admin/add-privileges-local-domain-users-groups-task.html 
+sidebar: sidebar 
+keywords: manage, right, user, local, domain, add, privilege, override, default, object, enhance, customize, user, group, add privileges to local or domain users or groups 
+summary: 您可以新增權限來管理本機或網域使用者或群組的使用者權限。新增的權限會覆寫指派給任何這些物件的預設權限。這可讓您自訂使用者或群組擁有的權限、進而增強安全性。 
+---
+= 新增權限給本機或網域使用者或群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以新增權限來管理本機或網域使用者或群組的使用者權限。新增的權限會覆寫指派給任何這些物件的預設權限。這可讓您自訂使用者或群組擁有的權限、進而增強安全性。
+
+要新增權限的本機或網域使用者或群組必須已經存在。
+
+新增權限至物件會覆寫該使用者或群組的預設權限。新增權限並不會移除先前新增的權限。
+
+新增權限給本機或網域使用者或群組時、必須謹記下列事項：
+
+* 您可以新增一或多個權限。
+* 將權限新增至網域使用者或群組時ONTAP 、可能會聯絡網域控制器來驗證網域使用者或群組。
++
+如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
+
+
+
+.步驟
+. 將一或多個權限新增至本機或網域使用者或群組：「+vserver CIFS user-and Groups」權限新增權限-vserver _vserver_name_-user-or group name -priv家entity_private_[,...]+]
+. 確認所需的權限已套用至物件：「vserver CIFS user-and -Groups priv榮幸show -vserver _vserver_name_（vserver CIFS使用者與群組權限）」
+
+
+以下範例將「'eTcbprivre'」和「'eTakeOwnershipprivatef'」權限新增至儲存虛擬機器（SVM、先前稱為Vserver）VS1上的使用者「'CIFs_Server\sue'」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege add-privilege -vserver vs1 -user-or-group-name CIFS_SERVER\sue -privileges SeTcbPrivilege,SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- ---------------
+vs1       CIFS_SERVER\sue       SeTcbPrivilege
+                                SeTakeOwnershipPrivilege
+----

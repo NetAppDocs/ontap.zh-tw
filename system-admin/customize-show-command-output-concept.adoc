@@ -1,0 +1,55 @@
+---
+permalink: system-admin/customize-show-command-output-concept.html 
+sidebar: sidebar 
+keywords: method, customizing, show, command, output, fields 
+summary: 當您使用–instance參數搭配show命令來顯示詳細資料時、輸出可能會很冗長、而且會包含比您需要更多的資訊。show命令的–Fields參數可讓您只顯示指定的資訊。 
+---
+= 使用欄位自訂show命令輸出的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您使用帶有「show」命令的「-instance」參數來顯示詳細資料時、輸出可能會很冗長、而且會包含比您需要更多的資訊。「show」命令的「-Fields」參數可讓您只顯示指定的資訊。
+
+例如、執行「Volume show -instance」可能會產生數個畫面的資訊。您可以使用「Volume show–fields'、fieldname[、fieldname...]_」自訂輸出、使其僅包含指定的欄位（除了一律顯示的預設欄位之外）。 您可以使用「–功能變數？」 顯示有效的「show」命令欄位。
+
+以下範例顯示「-instance」參數與「-Fields」參數之間的輸出差異：
+
+[listing]
+----
+cluster1::> volume show -instance
+
+                                   Vserver Name: cluster1-1
+                                    Volume Name: vol0
+                                 Aggregate Name: aggr0
+                                    Volume Size: 348.3GB
+                             Volume Data Set ID: -
+                      Volume Master Data Set ID: -
+                                   Volume State: online
+                                    Volume Type: RW
+                                   Volume Style: flex
+                                         ...
+                          Space Guarantee Style: volume
+                      Space Guarantee in Effect: true
+                                         ...
+Press <space> to page down, <return> for next line, or 'q' to quit...
+...
+cluster1::>
+
+cluster1::> volume show -fields space-guarantee,space-guarantee-enabled
+
+vserver  volume space-guarantee space-guarantee-enabled
+-------- ------ --------------- -----------------------
+cluster1-1 vol0   volume          true
+cluster1-2 vol0   volume          true
+vs1      root_vol
+                  volume          true
+vs2      new_vol
+                  volume          true
+vs2      root_vol
+                  volume          true
+...
+cluster1::>
+----

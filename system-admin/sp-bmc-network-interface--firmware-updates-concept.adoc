@@ -1,0 +1,36 @@
+---
+permalink: system-admin/sp-bmc-network-interface--firmware-updates-concept.html 
+sidebar: sidebar 
+keywords: sp, bmc, network, interface, firmware, update 
+summary: 在ONTAP 執行1.5、2.5、3.1或更新版本的SP上、從支援使用IP型檔案傳輸機制的支援下、從支援使用支援服務的SP韌體更新。 
+---
+= 當SP/BMC使用網路介面進行韌體更新時
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在ONTAP 執行1.5、2.5、3.1或更新版本的SP上、從支援使用IP型檔案傳輸機制的支援下、從支援使用支援服務的SP韌體更新。
+
+[NOTE]
+====
+本主題同時適用於SP和BMC。
+
+====
+透過網路介面進行SP韌體更新的速度比透過序列介面進行更新的速度快。如此可縮短更新SP韌體的維護時間、也不會中斷ONTAP 運作。支援此功能的SP版本隨ONTAP 附於支援此功能的更新版本。也可在NetApp支援網站上取得、並可安裝在執行相容版本ONTAP 之更新的控制器上。
+
+執行SP 1.5、2.5、3.1或更新版本時、適用下列韌體升級行為：
+
+* 由現象自動觸發的SP韌體更新ONTAP 預設為使用網路介面進行更新；不過、如果發生下列其中一種情況、SP自動更新會切換為使用序列介面進行韌體更新：
++
+** SP網路介面未設定或無法使用。
+** IP型檔案傳輸失敗。
+** SP API服務已停用。
+
+
+
+
+無論您執行的SP版本為何、從SP CLI觸發的SP韌體更新都會使用SP網路介面進行更新。
+
+https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["NetApp下載：系統韌體與診斷"]

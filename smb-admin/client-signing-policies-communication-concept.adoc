@@ -1,0 +1,172 @@
+---
+permalink: smb-admin/client-signing-policies-communication-concept.html 
+sidebar: sidebar 
+keywords: addition, cifs, server, smb, sign, security, windows, client, control, digital, communication, business, requirement, how smb signing policies affect communication with a cifs server 
+summary: 除了CIFS伺服器SMB簽署安全性設定之外、Windows用戶端上的兩個SMB簽署原則也會控制用戶端與CIFS伺服器之間的通訊數位簽署。您可以設定符合業務需求的設定。 
+---
+= SMB簽署原則如何影響與CIFS伺服器的通訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了CIFS伺服器SMB簽署安全性設定之外、Windows用戶端上的兩個SMB簽署原則也會控制用戶端與CIFS伺服器之間的通訊數位簽署。您可以設定符合業務需求的設定。
+
+用戶端SMB原則是透過Windows本機安全性原則設定來控制、這些設定是使用Microsoft管理主控台（MMC）或Active Directory GPO來設定。如需用戶端SMB簽署與安全性問題的詳細資訊、請參閱Microsoft Windows文件。
+
+以下是Microsoft用戶端上兩種SMB簽署原則的說明：
+
+* 「Microsoft網路用戶端：數位簽署通訊（如果伺服器同意）」
++
+此設定可控制是否啟用用戶端的SMB簽署功能。預設為啟用。當用戶端停用此設定時、與CIFS伺服器的用戶端通訊取決於CIFS伺服器上的SMB簽署設定。
+
+* 「Microsoft網路用戶端：數位簽署通訊（永遠）」
++
+此設定可控制用戶端是否需要SMB簽署才能與伺服器通訊。預設為停用。當用戶端停用此設定時、SMB簽署行為會根據「Microsoft網路用戶端：數位簽署通訊（如果伺服器同意）」的原則設定、以及CIFS伺服器上的設定。
+
++
+[NOTE]
+====
+如果您的環境包含設定為需要SMB簽署的Windows用戶端、則必須在CIFS伺服器上啟用SMB簽署。如果您沒有、CIFS伺服器就無法將資料提供給這些系統。
+
+====
+
+
+用戶端和CIFS伺服器SMB簽署設定的有效結果取決於SMB工作階段是使用SMB 1.0或SMB 2.x或更新版本。
+
+下表摘要說明當工作階段使用SMB 1.0時的有效SMB簽署行為：
+
+|===
+| 用戶端 | ONTAP -不需要簽署 | ONTAP -需要簽署 
+
+
+ a| 
+簽署已停用且不需要
+ a| 
+未簽署
+ a| 
+已簽署
+
+
+
+ a| 
+簽署已啟用且不需要
+ a| 
+未簽署
+ a| 
+已簽署
+
+
+
+ a| 
+簽署已停用且必要
+ a| 
+已簽署
+ a| 
+已簽署
+
+
+
+ a| 
+簽署已啟用且必要
+ a| 
+已簽署
+ a| 
+已簽署
+
+|===
+[NOTE]
+====
+舊版Windows SMB 1用戶端和部分非Windows SMB 1用戶端若在用戶端上停用簽署、但CIFS伺服器上需要簽署、則可能無法連線。
+
+====
+下表摘要說明當工作階段使用SMB 2.x或SMB 3.0時的有效SMB簽署行為：
+
+[NOTE]
+====
+對於SMB 2.x和SMB 3.0用戶端、一律會啟用SMB簽署。無法停用。
+
+====
+|===
+| 用戶端 | ONTAP -不需要簽署 | ONTAP -需要簽署 
+
+
+ a| 
+不需要簽署
+ a| 
+未簽署
+ a| 
+已簽署
+
+
+
+ a| 
+需要簽署
+ a| 
+已簽署
+ a| 
+已簽署
+
+|===
+下表摘要說明預設的Microsoft用戶端和伺服器SMB簽署行為：
+
+|===
+| 傳輸協定 | 雜湊演算法 | 可啟用/停用 | 可能需要/不需要 | 用戶端預設值 | 伺服器預設值 | DC預設值 
+
+
+ a| 
+SMB 1.0
+ a| 
+md5
+ a| 
+是的
+ a| 
+是的
+ a| 
+已啟用（非必要）
+ a| 
+已停用（非必要）
+ a| 
+必要
+
+
+
+ a| 
+SMB 2.x
+ a| 
+HMAC SHA-256
+ a| 
+否
+ a| 
+是的
+ a| 
+不需要
+ a| 
+不需要
+ a| 
+必要
+
+
+
+ a| 
+SMB 3.0
+ a| 
+AES-CMAC：
+ a| 
+否
+ a| 
+是的
+ a| 
+不需要
+ a| 
+不需要
+ a| 
+必要
+
+|===
+[NOTE]
+====
+Microsoft不再建議使用「簽署通訊（若用戶端同意）」或「簽署通訊（若伺服器同意）」群組原則設定。Microsoft也不再建議使用「啟用安全性簽章」登錄設定。這些選項只會影響SMB 1的行為、可改為「簽名通訊（永遠）」群組原則設定或「RequireSecuritySignatures」登錄設定。您也可以從Microsoft部落格取得更多資訊。http://blogs.technet.com/b/josebda/archive/2010/12/01/the-basics-of-smb-signing-covering-both-smb1-and-smb2.aspx[The SMB簽章基礎知識（涵蓋SMB1和SMB2）]
+
+====

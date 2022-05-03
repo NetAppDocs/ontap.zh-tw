@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: upgrade/task_upgrade_disruptive_automated_cli.html 
+keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本。 
+---
+= 使用CLI自動中斷營運（僅限單節點叢集）
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從功能更新9.2開始ONTAP 、您可以自動更新單節點叢集。由於單節點叢集缺乏備援功能、因此更新作業一律會中斷營運。
+
+* 您必須滿足升級準備需求。
++
+.. 刪除先前ONTAP 的更新軟體套件：「叢集映像套件刪除-version pre_package_version」
+.. 下載目標ONTAP 版的更新軟體套件：「叢集映像套件Get -URL location」
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.7/image.tgz
+
+Package download completed.
+Package processing completed.
+----
+.. 驗證叢集套件儲存庫中是否有可用的軟體套件：「叢集映像套件show-repository」
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.7              M/DD/YYYY 10:32:15
+----
+.. 確認叢集已準備好升級：「叢集映像驗證-version套件版本編號」
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.7
+
+WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
+----
+.. 監控驗證進度：「叢集映像顯示更新進度」
+.. 完成驗證所識別的所有必要行動。
+.. 或者、您也可以產生軟體升級預估：「叢集映像更新-version套件_version編號-estim-only」
++
+軟體升級預估會顯示每個要更新元件的詳細資料、以及預估的升級期間。
+
+.. 執行軟體升級：「叢集映像更新-version套件版本編號」
++
+
+NOTE: 如果遇到問題、更新會暫停、並提示您採取修正行動。您可以使用叢集映像show-update-progress命令來檢視任何問題和更新進度的詳細資料。修正問題之後、您可以使用叢集映像resume-update命令繼續更新。
+
+.. 顯示叢集更新進度：「叢集映像show-update-progress」
++
+節點會在更新過程中重新開機、重新開機時無法存取。
+
+.. 觸發通知：「AutoSupport 不支援叫用節點*-輸入all -messing_Upgrade」
++
+如果叢集未設定為傳送訊息、則通知複本會儲存在本機。
+
+
+
+

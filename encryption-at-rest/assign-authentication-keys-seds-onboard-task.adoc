@@ -1,0 +1,60 @@
+---
+permalink: encryption-at-rest/assign-authentication-keys-seds-onboard-task.html 
+sidebar: sidebar 
+keywords: assign, data, authentication, key, fips, drive, sed, onboard, key, management 
+summary: 您可以使用儲存加密磁碟修改命令、將資料驗證金鑰指派給FIPS磁碟機或SED。叢集節點使用此金鑰來存取磁碟機上的資料。 
+---
+= 指派資料驗證金鑰給FIPS磁碟機或SED（內建金鑰管理）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「儲存加密磁碟修改」命令、將資料驗證金鑰指派給FIPS磁碟機或SED。叢集節點使用此金鑰來存取磁碟機上的資料。
+
+您必須是叢集管理員才能執行此工作。
+
+自我加密磁碟機只有在驗證金鑰ID設定為非預設值時、才會受到保護、不受未獲授權的存取。製造商安全ID（MSID）具有金鑰ID 0x0、是SAS磁碟機的標準預設值。對於NVMe磁碟機、標準預設值為null金鑰、表示為空白金鑰ID。當您將金鑰ID指派給自我加密磁碟機時、系統會將其驗證金鑰ID變更為非預設值。
+
+.步驟
+. 指派資料驗證金鑰給FIPS磁碟機或SED：
++
+「torage加密磁碟修改-disk _disk_ID_-data-key-id _key_ID_」
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+[NOTE]
+====
+您可以使用「安全金鑰管理程式查詢-金鑰類型NSE-AK」命令來檢視金鑰ID。
+
+====
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 0.10.* -data-key-id 0000000000000000020000000000010019215b9738bc7b43d4698c80246db1f4
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
+. 確認已指派驗證金鑰：
++
+「torage加密磁碟顯示」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data 0000000000000000020000000000010019215b9738bc7b43d4698c80246db1f4
+0.0.1   data 0000000000000000020000000000010059851742AF2703FC91369B7DB47C4722
+[...]
+----
+

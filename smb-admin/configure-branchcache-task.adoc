@@ -1,0 +1,172 @@
+---
+permalink: smb-admin/configure-branchcache-task.html 
+sidebar: sidebar 
+keywords: configure, branchcache, service, per-share, basis, smb, share, configure branchcache on the cifs server 
+summary: 您可以設定在每個共用區基礎上提供BranchCache服務。或者、您也可以設定在所有SMB共用區上自動啟用快取。 
+---
+= 在SMB伺服器上設定BranchCache
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定在每個共用區基礎上提供BranchCache服務。或者、您也可以設定在所有SMB共用區上自動啟用快取。
+
+您可以在SVM上設定BranchCache。
+
+* 如果您想要針對CIFS伺服器上所有SMB共用區內的所有內容提供快取服務、可以建立All共享區的BranchCache組態。
+* 如果您想要針對CIFS伺服器上所選SMB共用區內的內容提供快取服務、可以建立每個共用區的BranchCache組態。
+
+
+在設定BranchCache時、您必須指定下列參數：
+
+|===
+| 必要參數 | 說明 
+
+
+ a| 
+_SVM名稱_
+ a| 
+以每個SVM為基礎來設定BranchCache。您必須指定要在哪些CIFS型SVM上設定BranchCache服務。
+
+
+
+ a| 
+_散列存放區路徑_
+ a| 
+BranchCache雜湊儲存在SVM磁碟區的一般檔案中。您必須指定ONTAP 要將雜湊資料儲存在其中的現有目錄路徑。您必須將BranchCache雜湊路徑設定為可讀寫。不允許唯讀路徑、例如Snapshot目錄。您可以將雜湊資料儲存在包含其他資料的磁碟區中、也可以建立獨立的磁碟區來儲存雜湊資料。
+
+如果SVM是SVM災難恢復來源、則雜湊路徑無法位於根磁碟區上。這是因為根磁碟區並未複寫到災難恢復目的地。
+
+雜湊路徑可以包含空白和任何有效的檔案名稱字元。
+
+|===
+您可以選擇性地指定下列參數：
+
+|===
+| 選用參數 | 說明 
+
+
+ a| 
+_支援的版本_
+ a| 
+支援BranchCache 1和2。ONTAP您可以啟用版本1、版本2或兩者。預設為啟用這兩個版本。
+
+
+
+ a| 
+雜湊存放區的最大大小_
+ a| 
+您可以指定雜湊資料存放區的大小。如果雜湊資料超過此值、ONTAP 則用更新的雜湊來刪除舊的雜湊。雜湊存放區的預設大小為1 GB。如果未以過度積極的方式捨棄雜湊、則會使BranchCache的效能更有效率。如果您判斷雜湊存放區已滿而經常捨棄雜湊、可以修改BranchCache組態來增加雜湊存放區大小。
+
+
+
+ a| 
+_伺服器金鑰_
+ a| 
+您可以指定一個伺服器機碼，讓BranchCache服務用來防止用戶端模擬BranchCache伺服器。如果未指定伺服器金鑰、則會在建立BranchCache組態時隨機產生一個金鑰。您可以將伺服器金鑰設定為特定值、以便在多個伺服器為相同檔案提供BranchCache資料時、用戶端可以使用相同伺服器金鑰來自任何伺服器的雜湊。如果伺服器金鑰包含任何空格、則必須以引號括住伺服器金鑰。
+
+
+
+ a| 
+_操作模式_
+ a| 
+預設是以每個共用為基礎來啟用BranchCache。
+
+* 若要建立一個以每個共用區為基礎啟用BranchCache的BranchCache組態、您可以不指定此選用參數、也可以指定「每個共用區」。
+* 若要在所有共用區上自動啟用BranchCache、您必須將作業模式設定為「All共享區」。
+
+
+|===
+.步驟
+. 視需要啟用SMB 2.1和3.0：
++
+.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+.. 檢查已設定的SVM SMB設定、以判斷是否已啟用所有必要的SMB版本：「vserver CIFS選項顯示-vserver _vserver_name_」
+.. 如有必要、請啟用SMB 2.1：「vserver CIFS選項修改-vserver _vserver_name_-smb2-enabled_true」
++
+命令可同時啟用SMB 2.0和SMB 2.1。
+
+.. 如有必要、請啟用SMB 3.0：「vserver CIFS選項修改-vserver _vserver_name_-smb3-enabled_true」
+.. 返回管理員權限等級：「et -priv. admin」
+
+
+. 設定BranchCache：「vserver CIFS BranchCache create -vserver _vserver_name_-hash-store-path path [-hash-store-max-size｛integer[kb| MB| GB| TB|PB]｝][-versions {v1-enable | v2-enable | enable -all][-server-key text]-operation-mode {per共享| all-}
++
+指定的雜湊儲存路徑必須存在、而且必須位於SVM管理的磁碟區上。路徑也必須位於可讀寫磁碟區上。如果路徑為唯讀或不存在、則命令會失敗。
+
++
+如果您想在其他SVM BranchCache組態中使用相同的伺服器機碼、請記錄您輸入的伺服器機碼值。當您顯示有關BranchCache組態的資訊時、不會顯示伺服器機碼。
+
+. 驗證BranchCache組態是否正確：「Vserver CIFS BranchCache show -vserver _vserver_name_」
+
+
+下列命令可驗證是否同時啟用SMB 2.1和3.0、並設定BranchCache在SVM VS1的所有SMB共用區上自動啟用快取：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields smb2-enabled,smb3-enabled
+vserver smb2-enabled smb3-enabled
+------- ------------ ------------
+vs1     true         true
+
+
+cluster1::*> set -privilege admin
+
+cluster1::> vserver cifs branchcache create -vserver vs1 -hash-store-path /hash_data -hash-store-max-size 20GB -versions enable-all -server-key "my server key" -operating-mode all-shares
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: all_shares
+----
+下列命令可驗證是否同時啟用SMB 2.1和3.0、設定在SVM VS1上啟用每個共用區的快取、並驗證BranchCache組態：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields smb2-enabled,smb3-enabled
+vserver smb2-enabled smb3-enabled
+------- ------------ ------------
+vs1     true         true
+
+cluster1::*> set -privilege admin
+
+cluster1::> vserver cifs branchcache create -vserver vs1 -hash-store-path /hash_data -hash-store-max-size 20GB -versions enable-all -server-key "my server key"
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: per_share
+----
+xref:branchcache-version-support-concept.html[需求與準則：支援BranchCache版本]
+
+xref:configure-branchcache-remote-office-concept.adoc[何處可以找到有關在遠端辦公室設定BranchCache的資訊]
+
+xref:create-branchcache-enabled-share-task.adoc[建立啟用BranchCache的SMB共用區]
+
+xref:enable-branchcache-existing-share-task.adoc[在現有的SMB共用區上啟用BranchCache]
+
+xref:manage-monitor-branchcache-config-concept.adoc[修改BranchCache組態]
+
+xref:disable-branchcache-shares-concept.html[在SMB共用區上停用BranchCache總覽]
+
+xref:delete-branchcache-config-task.html[刪除SVM上的BranchCache組態]

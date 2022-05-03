@@ -1,0 +1,51 @@
+---
+permalink: system-admin/access-cluster-system-manager-browser-task.html 
+sidebar: sidebar 
+keywords: access, cluster, ontap, system, manager, graphic, interface, browser, cli 
+summary: 如果您偏好使用圖形介面、而非命令列介面（CLI）來存取及管理叢集、您可以使用ONTAP 預設啟用的、以供使用的System Manager（隨附於以Web服務形式提供的系統管理程式）來執行此作業、並可透過瀏覽器存取。 
+---
+= 使用System Manager存取叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您偏好使用圖形介面、而非命令列介面（CLI）來存取及管理叢集、您可以使用ONTAP 預設啟用的、以供使用的System Manager（隨附於以Web服務形式提供的系統管理程式）來執行此作業、並可透過瀏覽器存取。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須擁有一個叢集使用者帳戶、該帳戶必須設定為「admin」角色、以及「http」和「Console」應用程式類型。
+* 您必須在瀏覽器中啟用Cookie和網站資料。
+
+
+您可以使用叢集管理LIF或節點管理LIF來存取System Manager。若要不中斷地存取System Manager、您應該使用叢集管理LIF。
+
+.步驟
+. 將網頁瀏覽器指向叢集管理LIF的IP位址：
++
+** 如果您使用的是IPV4：`* https://__cluster-mgmt-LIF__*`
+** 如果您使用IPv6：`* https://[_cluster-mgmt-LIF_]*`
++
+
+NOTE: 只有HTTPS支援系統管理員的瀏覽器存取。
+
+
+
++
+如果叢集使用自我簽署的數位憑證、瀏覽器可能會顯示警告、指出該憑證不受信任。您可以確認繼續存取的風險、或是在叢集上安裝憑證授權單位（CA）簽署的數位憑證、以進行伺服器驗證。
+
+. *選用：*如果您使用CLI設定了存取橫幅、請閱讀*警告*對話方塊中顯示的訊息、然後選擇所需的選項繼續。
++
+啟用安全性聲明標記語言（SAML）驗證的系統不支援此選項。
+
++
+** 如果您不想繼續、請按一下*「取消」*、然後關閉瀏覽器。
+** 如果您要繼續、請按一下「*確定*」瀏覽至「系統管理員」登入頁面。
+
+
+. 使用叢集管理員認證登入System Manager。
+
+
+link:manage-access-web-services-concept.html["管理Web服務存取"]
+
+link:accessg-node-log-core-dump-mib-files-task.html["使用網頁瀏覽器存取節點的記錄檔、核心傾印檔和mib檔案"]

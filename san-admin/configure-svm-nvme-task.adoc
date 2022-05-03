@@ -1,0 +1,125 @@
+---
+permalink: san-admin/configure-svm-nvme-task.html 
+sidebar: sidebar 
+keywords: configure, svm, nvme 
+summary: 如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專門設定SVM。 
+---
+= 設定NVMe的SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專門設定SVM。
+
+您的FC或乙太網路介面卡必須支援NVMe。支援的介面卡列於 https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+.步驟
+. 如果您不想使用現有的SVM、請建立一個：
++
+「vserver create -vserver _svm_name_'
+
++
+.. 驗證是否已建立SVM：
++
+「Vserver show」
+
+
+
+. 請確認叢集中已安裝支援NVMe或TCP的介面卡：
++
+適用於NVMe：「網路FCP介面卡顯示資料傳輸協定支援的fc-NVMe」
+
++
+TCP：「網路連接埠show」
+
+. 如果您執行ONTAP 的是SVM 9.7或更早版本、請移除SVM的所有傳輸協定：
++
+「Vserver移除傳輸協定-vserver _svm_name_-傳輸協定iSCSI、FCP、NFS、CIFS、NDMP」
+
++
+從ONTAP 功能支援的9.8開始、新增NVMe時不需要移除其他傳輸協定。
+
+. 將NVMe傳輸協定新增至SVM：
++
+「Vserver附加傳輸協定-vserver _Svm_name_-protocols NVMe」
+
+. 如果您執行ONTAP 的是SVM上的支援版本、請確認NVMe是SVM上唯一允許的傳輸協定：
++
+「vserver show -vserver _svm_name_-Fields allowed-protocols」
+
++
+NVMe應該是「允許的傳輸協定」欄下唯一顯示的傳輸協定。
+
+. 建立NVMe服務：
++
+「vserver NVMe create -vserver _Svm_name_」
+
+. 驗證NVMe服務是否已建立：
++
+「vserver NVMe show -vserver _svm_name_'
+
++
+SVM的「系統管理狀態」應列為「UP」。
+
+. 建立NVMe / FC LIF：
++
+[cols="3*"]
+|===
+| 版本ONTAP | 適用的傳輸協定 | 命令 
+
+
+ a| 
+不含更新版本ONTAP
+ a| 
+FC
+ a| 
+「網路介面create -vserver Svm_name -lIF lif_name -role data -data傳輸協定fc-nvm-home-nodes home_node-home-port home_port」
+
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+FC或TCP
+ a| 
+「網路介面create -vserver Svm_name -lif_name -service-policy｛default-data-nvm-tcp | default-data-nvm-fc｝-home-Node home-port home-port home_port -STATUS admin up -fault-policy disabled-firewall-policy data -aut-f還原 假容錯移轉群組容錯移轉群組-is -dnas-dnak-f-fnas-fas-fnas-fals-false-
+
+|===
+. 在HA合作夥伴節點上建立NVMe / FC LIF：
++
+[cols="3*"]
+|===
+| 版本ONTAP | 適用的傳輸協定 | 命令 
+
+
+ a| 
+不含更新版本ONTAP
+ a| 
+FC
+ a| 
+「網路介面create -vserver _Svm_name_-lif_lif_name_-role data -data傳輸協定fc-nvm-home-node_home_node_-home-port _home_port_」
+
+
+
+ a| 
+更新版本ONTAP
+ a| 
+FC或TCP
+ a| 
+「網路介面create -vserver Svm_name -lif_name -service-policy｛default-data-nvm-tcp | default-data-nvm-fc｝-home-Node home-port home-port home_port -STATUS admin up -fault-policy disabled-firewall-policy data -aut-f還原 假容錯移轉群組容錯移轉群組-is -dnas-dnak-f-fnas-fas-fnas-fals-false-
+
+|===
+. 確認已建立NVMe / FC LIF：
++
+「網路介面show -vserver _svm_name_'
+
+. 在LIF所在的同一個節點上建立Volume：
++
+「vol create -vserver _Svm_name_-volume _vol_name_-Aggregate _Aggregate name_-size _volVolume _Size_」
+
++
+如果顯示有關自動效率原則的警告訊息、則可以安全地忽略該訊息。
+
+

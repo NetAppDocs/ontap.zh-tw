@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: networking/networking_components_of_a_cluster_overview.html 
+keywords: routing, DNS zones, physical ports, logical ports, IPspaces, broadcast domains, subnets, logical interfaces, familiarize yourself with the networking components of a cluster before setting up the cluster, networking components of a cluster overview, network components of a cluster, four-node cluster diagram, 4 node cluster diagram, four node cluster diagram 
+summary: 在設定叢集之前、請先熟悉叢集的網路元件 
+---
+= 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在設定叢集之前、您應該先熟悉叢集的網路元件。將叢集的實體網路元件組態為邏輯元件、可在ONTAP 畫面上提供靈活度和多租戶功能。
+
+叢集中的各種網路元件如下：
+
+* 實體連接埠
++
+網路介面卡（NIC）和主機匯流排介面卡（HBA）可提供實體（乙太網路和光纖通道）連線、從每個節點連至實體網路（管理和資料網路）。
+
++
+如需站台需求、交換器資訊、連接埠纜線資訊、以及控制器內建連接埠纜線、請參閱Hardware Universe 上的《》（英文） https://hwu.netapp.com/["hwu.netapp.com"^]。
+
+* 邏輯連接埠
++
+虛擬區域網路（VLAN）和介面群組構成邏輯連接埠。介面群組將多個實體連接埠視為單一連接埠、而VLAN則將實體連接埠細分為多個獨立連接埠。
+
+* IPspaces
++
+您可以使用IPspace為叢集中的每個SVM建立不同的IP位址空間。這樣做可讓管理性分隔網路網域中的用戶端存取叢集資料、同時使用相同IP位址子網路範圍中重疊的IP位址。
+
+* 廣播網域
++
+廣播網域位於IPspace中、包含一組網路連接埠、這些連接埠可能來自叢集中的許多節點、屬於同一個第2層網路。群組中的連接埠用於SVM中的資料流量。
+
+* 子網路
++
+子網路是在廣播網域內建立、其中包含屬於同一第3層子網路的IP位址集區。此IP位址集區可簡化LIF建立期間的IP位址配置。
+
+* 邏輯介面
++
+邏輯介面（LIF）是與連接埠相關聯的IP位址或全球連接埠名稱（WWPN）。它與容錯移轉群組、容錯移轉規則及防火牆規則等屬性相關聯。LIF會透過目前繫結的連接埠（實體或邏輯）透過網路進行通訊。
+
++
+叢集中的不同類型生命體包括資料生命量、叢集範圍內的管理生命體、節點範圍內的管理生命體、叢集間生命體及叢集生命體。生命生命的所有權取決於LIF所在的SVM。資料生命體歸資料SVM所有、節點範圍內的管理生命體、叢集範圍內的管理、以及叢集間生命體歸管理SVM所有、叢集生命體歸叢集SVM所有。
+
+* DNS區域
++
+DNS區域可在LIF建立期間指定、提供透過叢集DNS伺服器匯出LIF的名稱。多個LIF可以共用相同的名稱、讓DNS負載平衡功能根據負載來分配名稱的IP位址。
+
++
+SVM可以有多個DNS區域。
+
+* 路由
++
+每個SVM在網路方面都是自給自足的。SVM擁有可連線至每個已設定外部伺服器的生命和路由。
+
++
+下圖說明不同的網路元件在四節點叢集中的關聯方式：
+
+
+
+image:ontap_nm_image2.jpeg["四節點叢集圖表"]

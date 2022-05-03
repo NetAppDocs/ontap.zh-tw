@@ -1,0 +1,164 @@
+---
+permalink: tape-backup/format-tape-config-file-concept.html 
+sidebar: sidebar 
+keywords: format, tape, configuration, file, vendor, id, product, compression, type, drive 
+summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類型詳細資料等欄位。此檔案也包含選用欄位、可用於啟用磁帶機的自動載入功能、以及變更磁帶機的命令逾時值。 
+---
+= 磁帶組態檔的格式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類型詳細資料等欄位。此檔案也包含選用欄位、可用於啟用磁帶機的自動載入功能、以及變更磁帶機的命令逾時值。
+
+下表顯示磁帶組態檔的格式：
+
+|===
+| 項目 | 尺寸 | 說明 
+
+
+ a| 
+"_vndor_id"（字串）
+ a| 
+最多8個位元組
+ a| 
+廠商ID、如「csi Inquiry」命令所報告。
+
+
+
+ a| 
+"product_id"（字串）
+ a| 
+最多16個位元組
+ a| 
+產品ID、如「SCSI查詢」命令所報告。
+
+
+
+ a| 
+"id_match_size"（數字）
+ a| 
+ a| 
+用於偵測要識別之磁帶機的產品ID位元組數、從查詢資料中產品ID的第一個字元開始算起。
+
+
+
+ a| 
+「_vndor_fal」（字串）
+ a| 
+最多16個位元組
+ a| 
+如果此參數存在、則會由命令「儲存磁帶show -device-names」所顯示的字串指定、否則會顯示INQ_VENDO_ID。
+
+
+
+ a| 
+"product_fappet"（字串）
+ a| 
+最多16個位元組
+ a| 
+如果此參數存在、則會由命令「儲存磁帶show -device-names」所顯示的字串指定、否則會顯示INQ_product_ID。
+
+|===
+[NOTE]
+====
+「版本」和「product_napp」欄位為選用欄位、但如果其中一個欄位有值、則另一個欄位也必須有值。
+
+====
+下表說明各種壓縮類型的說明、密度代碼和壓縮演算法、例如「l」、「m」、「h」和「a」：
+
+|===
+| 項目 | 尺寸 | 說明 
+
+
+ a| 
+「｛l | m | h | a｝_description=（字串）」
+ a| 
+最多24個位元組
+ a| 
+用於nodesl解除 命令的列印字串「show -t」、說明特定密度設定的特性。
+
+
+
+ a| 
+「｛l | m | h | a｝密度=（六角代碼）」
+ a| 
+ a| 
+要在SCSI模式頁區塊描述元中設定的密度程式碼、對應於所需的l、m、h或a密度程式碼
+
+
+
+ a| 
+「｛l | m | h | a｝演算法=（hex codes）」
+ a| 
+ a| 
+要在SCSI壓縮模式頁面中設定的壓縮演算法、對應於密度代碼和所需的密度特性。
+
+|===
+下表說明磁帶組態檔中可用的選用欄位：
+
+|===
+| 欄位 | 說明 
+
+
+ a| 
+「autolload=（布林型是/否）」
+ a| 
+如果磁帶機具有自動載入功能、則此欄位會設為「yes」（是）；也就是在插入磁帶匣之後、磁帶機就會準備就緒、而不需要執行「SCSI load」（開始/停止裝置）命令。此欄位的預設值為「否」。
+
+
+
+ a| 
+"cmd：timeout_0X"
+ a| 
+個別逾時值。只有當您想要指定與磁帶驅動程式預設值不同的逾時值時、才必須使用此欄位。範例檔案會列出磁帶機使用的預設SCSI命令逾時值。逾時值可以以分鐘（m）、秒（s）或毫秒（ms）表示。
+
+[NOTE]
+====
+您只能在技術支援的指引下變更此欄位。
+
+====
+|===
+您可以從NetApp支援網站下載及檢視磁帶組態檔案。
+
+HP LTO5 Ultrium磁帶機的磁帶組態檔案格式如下：
+
+"vmndor_id"="HP"
+
+"product_id"=「ultrium5-scse"
+
+"id_match_size"=9.
+
+"vmndor_fals"="HP與Packard "
+
+「product_nappe」=「lto 5」
+
+「l_description」=「lto 3（ro）/ 4 4/800GB」
+
+l_diminity=x00
+
+l_rim演算 法=x00
+
+「M_description」=「LTO-3（ro）/ 4 8/1600GB CMP」
+
+"M_密度"=0x00
+
+"m_form"=0x01
+
+「h_description」=「lto 5 1600GB」
+
+h_diminity=x58
+
+h演算法=x00
+
+「a_description」=「LTO-5 3200GB CMP」
+
+「a_diminity=0658」
+
+「a_forerim演算 法」= 0x01
+
+「autolload」=「yes」
+
+https://mysupport.netapp.com/site/tools/tool-eula/5f4d322319c1ab1cf34fd063["NetApp工具：磁帶設備組態檔案"]

@@ -1,0 +1,31 @@
+---
+permalink: smb-admin/write-cache-data-loss-oplocks-concept.html 
+sidebar: sidebar 
+keywords: circumstance, process, exclusive, oplock, file, flush, cache, data, write, lock, relinquish, network, failure, write cache data-loss considerations when using oplocks 
+summary: 在某些情況下、如果某個處理程序在檔案上有獨家oplock、而第二個處理程序嘗試開啟該檔案、則第一個處理程序必須使快取的資料失效、並清除寫入和鎖定。然後用戶端必須放棄oplock並存取檔案。如果在此排清期間發生網路故障、快取的寫入資料可能會遺失。 
+---
+= 使用oplocks時、請將快取資料遺失的考量寫入
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在某些情況下、如果某個處理程序在檔案上有獨家oplock、而第二個處理程序嘗試開啟該檔案、則第一個處理程序必須使快取的資料失效、並清除寫入和鎖定。然後用戶端必須放棄oplock並存取檔案。如果在此排清期間發生網路故障、快取的寫入資料可能會遺失。
+
+* 資料遺失的可能性
++
+任何具有寫入快取資料的應用程式、都可能在下列情況下遺失該資料：
+
++
+** 連線是使用SMB 1.0進行。
+** 檔案上有獨家oplock。
+** 系統會要求中斷oplock或關閉檔案。
+** 在清空寫入快取的過程中、網路或目標系統會產生錯誤。
+
+
+* 錯誤處理和寫入完成
++
+快取本身沒有任何錯誤處理、應用程式也有。當應用程式寫入快取時、寫入作業一律會完成。如果快取反過來又透過網路寫入目標系統、則必須假設寫入作業已完成、因為如果寫入作業未完成、資料就會遺失。
+
+

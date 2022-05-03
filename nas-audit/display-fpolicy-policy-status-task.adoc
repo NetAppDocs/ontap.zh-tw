@@ -1,0 +1,89 @@
+---
+permalink: nas-audit/display-fpolicy-policy-status-task.html 
+sidebar: sidebar 
+keywords: display, information, fpolicy, policy status 
+summary: 您可以顯示FPolicy原則狀態的相關資訊、以判斷原則是否已啟用、原則要使用的外部引擎、原則的順序編號、以及FPolicy原則與哪個儲存虛擬機器（SVM）相關聯。 
+---
+= 顯示FPolicy原則狀態的相關資訊
+:allow-uri-read: 
+
+
+[role="lead"]
+您可以顯示FPolicy原則狀態的相關資訊、以判斷原則是否已啟用、原則要使用的外部引擎、原則的順序編號、以及FPolicy原則與哪個儲存虛擬機器（SVM）相關聯。
+
+如果未指定任何參數、命令會顯示下列資訊：
+
+* SVM名稱
+* 原則名稱
+* 原則順序編號
+* 原則狀態
+
+
+除了顯示叢集或特定SVM上所設定之FPolicy原則的原則狀態資訊、您也可以使用命令參數、依其他條件篩選命令的輸出。
+
+您可以指定「-instance」參數、以顯示所列原則的詳細資訊。或者、您也可以使用「-Fields」參數、只顯示命令輸出或「-Fields」中所指示的欄位 以判斷您可以使用哪些欄位。
+
+.步驟
+. 使用適當的命令顯示FPolicy原則狀態的篩選資訊：
++
+[cols="35,65"]
+|===
+
+
+| 如果您要顯示原則的狀態資訊... | 輸入命令... 
+
+
+ a| 
+在叢集上
+ a| 
+「vserver fpolicy show」
+
+
+
+ a| 
+具有指定狀態的
+ a| 
+「vserver fpolicy show -STATUS｛on|off｝」
+
+
+
+ a| 
+在指定的SVM上
+ a| 
+「vserver fpolicy show -vserver vserver_name」
+
+
+
+ a| 
+使用指定的原則名稱
+ a| 
+「vserver fpolicy show -police-name policy_name」
+
+
+
+ a| 
+使用指定的外部引擎
+ a| 
+「vserver fpolicy show -engine engine_name'
+
+|===
+
+
+下列範例顯示叢集上FPolicy原則的相關資訊：
+
+[listing]
+----
+
+cluster1::> vserver fpolicy show
+                                        Sequence
+Vserver             Policy Name           Number  Status      Engine
+------------------- ------------------- --------  ---------   ---------
+FPolicy             cserver_policy      -         off         eng1
+vs1.example.com     v1p1                -         off         eng2
+vs1.example.com     v1p2                -         off         native
+vs1.example.com     v1p3                -         off         native
+vs1.example.com     cserver_policy      -         off         eng1
+vs2.example.com     v1p1                3         on          native
+vs2.example.com     v1p2                1         on          eng3
+vs2.example.com     cserver_policy      2         on          eng1
+----

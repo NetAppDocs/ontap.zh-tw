@@ -1,0 +1,149 @@
+---
+permalink: fabricpool/monitor-space-utilization-task.html 
+sidebar: sidebar 
+keywords: monitoring, space, utilization, fabricpool 
+summary: 您需要知道資料儲存在效能和雲端層FabricPool 中的資料量、才能供VMware使用。這些資訊可協助您判斷是否需要變更磁碟區的分層原則、增加FabricPool 未獲授權的使用量限制、或是增加雲端層的儲存空間。 
+---
+= 監控FabricPool 空間使用率以供運用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您需要知道資料儲存在效能和雲端層FabricPool 中的資料量、才能供VMware使用。這些資訊可協助您判斷是否需要變更磁碟區的分層原則、增加FabricPool 未獲授權的使用量限制、或是增加雲端層的儲存空間。
+
+.步驟
+. 使用下列其中一個命令來顯示資訊、以監控啟用FabricPool的Aggregate的空間使用率：
++
+|===
+
+
+| 如果您要顯示... | 然後使用下列命令： 
+
+
+ a| 
+集合體中雲端層的已用大小
+ a| 
+使用「-instance」參數顯示「torage aggregate show」
+
+
+
+ a| 
+集合體內空間使用率的詳細資料、包括物件存放區的參考容量
+ a| 
+使用「-instance」參數的「torage Aggregate show-space-」
+
+
+
+ a| 
+附加到集合體的物件存放區空間使用率、包括使用多少授權空間
+ a| 
+「torage Aggregate object-store show-space-space」
+
+
+
+ a| 
+集合體中的磁碟區清單、以及其資料和中繼資料的佔用空間
+ a| 
+「Volume show-佔 地面積」
+
+|===
++
+除了使用CLI命令之外、您也可以使用Active IQ Unified Manager 支援OnCommand 於更新版本叢集的支援功能的支援功能、以及使用支援的功能區（前身為「支援區塊整合管理程式FabricPool 」）、ONTAP 或是System Manager來監控空間使用率。
+
++
+以下範例顯示FabricPool 如何顯示空間使用率及相關資訊以供參考：
+
++
+[listing]
+----
+cluster1::> storage aggregate show-space -instance
+
+                          Aggregate: MyFabricPool
+                                                                   ...
+                                               Aggregate Display Name: MyFabricPool
+                                                                   ...
+                          Total Object Store Logical Referenced Capacity: -
+                          Object Store Logical Referenced Capacity Percentage: -
+                                                                   ...
+                                                       Object Store Size: -
+                          Object Store Space Saved by Storage Efficiency: -
+                          Object Store Space Saved by Storage Efficiency Percentage: -
+                                                 Total Logical Used Size: -
+                                                 Logical Used Percentage: -
+                                           Logical Unreferenced Capacity: -
+                                         Logical Unreferenced Percentage: -
+
+----
++
+[listing]
+----
+cluster1::> storage aggregate show -instance
+
+                           Aggregate: MyFabricPool
+                           ...
+                           Composite: true
+                           Capacity Tier Used Size:
+                           ...
+----
++
+[listing]
+----
+cluster1::> volume show-footprint
+
+Vserver : vs1
+Volume : rootvol
+
+Feature                          Used       Used%
+-------------------------------- ---------- -----
+Volume Footprint                 KB          %
+Volume Guarantee                 MB          %
+Flexible Volume Metadata         KB          %
+Delayed Frees                    KB          %
+Total Footprint                  MB          %
+
+Vserver : vs1
+Volume : vol
+
+Feature                          Used       Used%
+-------------------------------- ---------- -----
+Volume Footprint                 KB          %
+Footprint in Performance Tier    KB          %
+Footprint in Amazon01            KB          %
+Flexible Volume Metadata         MB          %
+Delayed Frees                    KB          %
+Total Footprint                  MB          %
+...
+----
+. 視需要採取下列其中一項行動：
++
+|===
+
+
+| 如果您想要... | 然後... 
+
+
+ a| 
+變更磁碟區的分層原則
+ a| 
+請遵循中的程序 link:modify-tiering-policy-cooling-period-task.html["透過修改磁碟區的分層原則或分層最短冷卻時間來管理儲存分層"]。
+
+
+
+ a| 
+增加FabricPool 《不經認證的使用限制
+ a| 
+請聯絡您的NetApp或合作夥伴銷售代表。
+
+https://mysupport.netapp.com/site/global/dashboard["NetApp支援"]
+
+
+
+ a| 
+增加雲端層的儲存空間
+ a| 
+請聯絡您用於雲端層的物件存放區供應商。
+
+|===
+

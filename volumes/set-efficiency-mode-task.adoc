@@ -1,0 +1,60 @@
+---
+permalink: volumes/set-efficiency-mode-task.html 
+sidebar: sidebar 
+keywords: enable, temperature, sensitive, storage, efficiency, mode, performance mode, efficient mode, set, System Manager, higher efficiency 
+summary: 從ONTAP 功能更新到功能更新AFF 到功能更新到功能更新到功能更新到功能更新到功能更新的功能更新到功能更新到功能更新的功能、您可以設定儲存效率模式。使用參數「-storage效率模式」、您可以指定磁碟區使用的是有效率模式或預設效能模式。非AFF磁碟區或資料保護磁碟區不支援「-storage效率模式」參數。 
+---
+= 在磁碟區建立期間設定儲存效率模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能更新到功能更新AFF 到功能更新到功能更新到功能更新到功能更新到功能更新的功能更新到功能更新到功能更新的功能、您可以設定儲存效率模式。使用參數「-storage效率模式」、您可以指定磁碟區使用的是有效率模式或預設效能模式。非AFF磁碟區或資料保護磁碟區不支援「-storage效率模式」參數。
+
+
+
+== 使用高效模式建立新的Volume
+
+若要設定效率模式以實現儲存效率、您可以使用「高效」值來設定「儲存效率模式」參數。
+
+.步驟
+. 建立啟用效率模式的新Volume：
++
+「Volume create -vserver <vserver name>-volume <volume name>-Aggregate <gregate name>-size <volume size>-storage效率模式Efferive-mode Effiveriver'
+
++
+[listing]
+----
+volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode efficient -size 10g
+----
+
+
+
+
+== 使用效能模式建立新的Volume
+
+當您以AFF 對溫度敏感的儲存效率建立新的功能時、預設會設定效能模式。您也可以選擇使用「預設」值搭配「儲存效率模式」參數。
+
+.步驟
+. 建立啟用效率模式的新Volume：
++
+「Volume create -vserver <vserver name>-volume <volume name>-Aggregate <gregate name>-size <volume Size>-storage效率模式預設值」
+
++
+「Volume create -vserver VS1 -volume aff vol1 -aggregate aff _aggr1 -storage效率模式預設值-size 10g」
+
+
+
+
+
+== System Manager程序
+
+從《支援範圍》9.10.1開始ONTAP 、您可以使用System Manager、利用對溫度敏感的儲存效率功能來提升儲存效率。效能型儲存效率預設為啟用。
+
+. 按一下「*儲存設備>磁碟區*」。
+. 找出您要啟用或停用儲存效率的磁碟區、然後按一下 image:icon_kabob.gif["功能表選項圖示"]。
+. 按一下*編輯*、然後捲動至*儲存效率*。
+. 選取*「啟用更高的儲存效率」*。
+

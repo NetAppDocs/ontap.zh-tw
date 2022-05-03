@@ -1,0 +1,41 @@
+---
+permalink: s3-config/create-modify-groups-task.html 
+sidebar: sidebar 
+keywords: create, modify s3 groups 
+summary: 您可以建立具有適當存取授權的使用者群組、以簡化儲存庫存取。 
+---
+= 建立或修改S3群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立具有適當存取授權的使用者群組、以簡化儲存庫存取。
+
+啟用S3的SVM中的S3使用者必須已經存在。
+
+S3群組中的使用者可以被授予SVM中任何儲存區的存取權、但不能在多個SVM中存取。群組存取權限可透過兩種方式進行設定：
+
+* 在鏟斗層級
++
+建立S3使用者群組之後、您可以在Bucket原則聲明中指定群組權限、這些權限只會套用至該儲存區。
+
+* 在SVM層級
++
+建立S3使用者群組之後、您可以在群組定義中指定物件伺服器原則名稱。這些原則會決定群組成員的儲存區和存取權。
+
+
+
+.步驟
+. 建立S3群組：
++
+「vserver object-store-server group create -vserver Svm_name -name group名稱-usersusers_name\（s）[-policies policy_names][-comment text\]」
+
++
+在物件存放區中只有一個儲存區的組態中、可以省略「原則」選項；群組名稱可以新增至儲存區原則。
+
++
+在建立物件儲存伺服器原則之後、稍後可以使用「vserver object-store-server group modify」命令來新增「-policies」選項。
+
+

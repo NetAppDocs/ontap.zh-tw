@@ -1,0 +1,63 @@
+---
+permalink: nfs-admin/enable-disable-nfsv4-referrals-task.html 
+sidebar: sidebar 
+keywords:  
+summary: 您可以啟用選項-v4-fsid-change和-v4.0-參照或-v4.1-參照、在儲存虛擬機器上啟用NFSv4參照。啟用NFSv4參照可讓支援此功能的NFSv4用戶端更快存取資料。 
+---
+= 啟用或停用NFSv4參照
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上啟用「-v4-fsid-changing」（v4-fsid-change）和「-vv4.0轉介」（或「-v4.1轉介」）選項、以啟用NFSv4轉介。啟用NFSv4參照可讓支援此功能的NFSv4用戶端更快存取資料。
+
+如果您想要啟用NFS參照、必須先停用平行NFS。您無法同時啟用兩者。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行下列其中一項動作：
++
+[cols="35,65"]
+|===
+
+
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+啟用NFSv4參照
+ a| 
+「vserver NFS modify -vserver vserver_name -vd-fsid-change enabled_vserver nfs modify -vserver vserver_name -vv4.0參照enabl用」
+
+
+
+ a| 
+停用NFSv4參照
+ a| 
+「vserver NFS modify -vserver vserver_name -vv4.0參照已停用」
+
+
+
+ a| 
+啟用NFSv4.1參照
+ a| 
+「vserver NFS modify -vserver vserver_name -vvd-fsid-change enabled_vserver nfs modify -vserver vserver_name -v4.1-ovRefirisionsenabl用」
+
+
+
+ a| 
+停用NFSv4.1參照
+ a| 
+「vserver NFS modify -vserver vserver_name -v4.1-參照 已停用」
+
+|===
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

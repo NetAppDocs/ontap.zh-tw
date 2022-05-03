@@ -1,0 +1,101 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_upgrade_and_revert_considerations.html 
+keywords: SM-BC, SMBC, upgrade, revert, ONTAP 
+summary: 您應該瞭解升級及還原SM至BC組態的需求。 
+---
+= SM至BC升級與還原考量
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解升級及還原SM至BC組態的需求。
+
+
+
+=== 升級
+
+您必須先將來源叢集和目的地叢集上的所有節點升級ONTAP 為「版本9.8」或更新版本、才能設定及使用SMBC。link:link:../upgrade/index.html["在ONTAP 叢集上升級軟體"]
+
+
+NOTE: SMBC不支援混合ONTAP 式的仰賴於混合式的NetApp 9.7 ONTAP 和更新的支援。
+
+將叢集從9.8或9.9.1升級至9.10.1、可在來源和目的地上建立新的一致性群組、以利建立SM至BC關係。
+
+
+
+=== 從ONTAP 還原9.10.1還原至版本資訊ONTAP
+
+若要將關係從9.10.1還原為9.9.1、則必須刪除SMBC關係、接著刪除9.10.1一致性群組執行個體。無法刪除具有作用中SMBC關係的一致性群組。任何先前在9.9.1或更早版本中與另一個Smart Container或Enterprise App相關聯的更新至9.10.1的版次、將不再與還原相關聯。FlexVol刪除一致性群組不會刪除組成磁碟區或磁碟區精細快照。請參閱 link:../consistency-groups/delete-task.html["刪除一致性群組"] 以取得此工作的詳細資訊。
+
+
+
+=== 從ONTAP 還原至物件9.7 ONTAP
+
+當您從ONTAP 還原到ONTAP 更新9.7時、您必須注意下列事項：
+
+* 如果叢集裝載的是SM至BC目的地、則在ONTAP 關係中斷並刪除之前、不允許還原至VMware 9.7。
+* 如果叢集裝載的是SM - BC來源、則在ONTAP 關係釋出之前、不允許還原至VMware 9.7。
+* 所有使用者建立的自訂SMBC SnapMirror原則、都必須先刪除、才能還原ONTAP 至還原為版本9.7。
+
+
+.步驟
+. 從SMBC關係中的其中一個叢集執行還原檢查：
++
+「叢集：*>系統節點還原至9.7版-僅檢查」
+
++
+範例：
+
++
+....
+cluster::*> system node revert-to -version 9.7 -check-only
+Error: command failed: The revert check phase failed. The following issues must be resolved before revert can be completed. Bring the data LIFs down on running vservers. Command to list the running vservers: vserver show -admin-state running Command to list the data LIFs that are up: network interface show -role data -status-admin up Command to bring all data LIFs down: network interface modify {-role data} -status-admin down
+Disable snapshot policies.
+    Command to list snapshot policies: "snapshot policy show".
+    Command to disable snapshot policies: "snapshot policy modify -vserver
+   * -enabled false"
+
+   Break off the initialized online data-protection (DP) volumes and delete
+   Uninitialized online data-protection (DP) volumes present on the local
+   node.
+    Command to list all online data-protection volumes on the local node:
+   volume show -type DP -state online -node <local-node-name>
+    Before breaking off the initialized online data-protection volumes,
+   quiesce and abort transfers on associated SnapMirror relationships and
+   wait for the Relationship Status to be Quiesced.
+    Command to quiesce a SnapMirror relationship: snapmirror quiesce
+    Command to abort transfers on a SnapMirror relationship: snapmirror
+   abort
+    Command to see if the Relationship Status of a SnapMirror relationship
+   is Quiesced: snapmirror show
+    Command to break off a data-protection volume: snapmirror break
+    Command to break off a data-protection volume which is the destination
+   of a SnapMirror relationship with a policy of type "vault": snapmirror
+   break -delete-snapshots
+    Uninitialized data-protection volumes are reported by the "snapmirror
+   break" command when applied on a DP volume.
+    Command to delete volume: volume delete
+
+   Delete current version snapshots in advanced privilege level.
+    Command to list snapshots: "snapshot show -fs-version 9.8"
+    Command to delete snapshots: "snapshot prepare-for-revert -node
+   <nodename>"
+
+   Delete all user-created policies of the type active-strict-sync-mirror
+   and active-sync-mirror.
+   The command to see all active-strict-sync-mirror and active-sync-mirror
+   type policies is:
+    snapmirror policy show -type
+   active-strict-sync-mirror,active-sync-mirror
+   The command to delete a policy is :
+    snapmirror policy delete -vserver <vserver-name> -policy <policy-name>
+....
+
+
+如需還原叢集的相關資訊、請參閱 link:../revert/index.html["還原ONTAP"]。

@@ -1,0 +1,18 @@
+---
+permalink: tape-backup/ndmp-server-secure-control-svm-scoped-mode-concept.html 
+sidebar: sidebar 
+keywords: ndmp, server, supports, secure, control, connections, svm, scoped, mode, ssl, connection, dma, data, management, application 
+summary: '您可以使用安全通訊端（SSL/TLS）作為通訊機制、在資料管理應用程式（DMA）和NDMP伺服器之間建立安全的控制連線。此SSL通訊是以伺服器憑證為基礎。NDMP伺服器會接聽連接埠30000（由IANA指派「ndmps"服務）。' 
+---
+= NDMP伺服器支援SVM範圍模式中的安全控制連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用安全通訊端（SSL/TLS）作為通訊機制、在資料管理應用程式（DMA）和NDMP伺服器之間建立安全的控制連線。此SSL通訊是以伺服器憑證為基礎。NDMP伺服器會接聽連接埠30000（由IANA指派「ndmps'」服務）。
+
+在這個連接埠上建立用戶端連線之後、伺服器將憑證提交給用戶端的標準SSL交握便會在此發出。當用戶端接受憑證時、SSL交握即告完成。完成此程序之後、用戶端與伺服器之間的所有通訊都會加密。NDMP傳輸協定工作流程維持不變。安全NDMP連線僅需要伺服器端的憑證驗證。DMA可選擇連線至安全NDMP服務或標準NDMP服務來建立連線。
+
+根據預設、儲存虛擬機器（SVM）的安全NDMP服務會停用。您可以使用「vserver services NDMP modify -vserver vserver -is-secure-control-connection-enabled [true|假]」命令、在指定的SVM上啟用或停用安全NDMP服務。

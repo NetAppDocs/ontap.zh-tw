@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/display-members-local-groups-task.html 
+sidebar: sidebar 
+keywords: display, list, member, local, group, configure, cluster, storage, virtual, machine, svm, information, troubleshoot, file-access, issue, user-rights, privilege, display information about members of local groups 
+summary: 您可以顯示叢集或指定儲存虛擬機器（SVM）上所設定之本機群組的所有成員清單。在疑難排解檔案存取問題或使用者權限（權限）問題時、此資訊很有用。 
+---
+= 顯示本機群組成員的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示叢集或指定儲存虛擬機器（SVM）上所設定之本機群組的所有成員清單。在疑難排解檔案存取問題或使用者權限（權限）問題時、此資訊很有用。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要顯示有關...的資訊 | 輸入命令... 
+
+
+ a| 
+叢集上所有本機群組的成員
+ a| 
+「Vserver CIFS使用者與群組本機群組秀成員」
+
+
+
+ a| 
+SVM上所有本機群組的成員
+ a| 
+「Vserver CIFS使用者與群組本機群組show成員-vserver _vserver_name_」
+
+|===
+
+
+下列範例顯示SVM VS1上所有本機群組成員的相關資訊：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show-members -vserver vs1
+Vserver   Group Name                   Members
+--------- ---------------------------- ------------------------
+vs1       BUILTIN\Administrators       CIFS_SERVER\Administrator
+                                       AD_DOMAIN\Domain Admins
+                                       AD_DOMAIN\dom_grp1
+          BUILTIN\Users                AD_DOMAIN\Domain Users
+                                       AD_DOMAIN\dom_usr1
+          CIFS_SERVER\engineering      CIFS_SERVER\james
+----

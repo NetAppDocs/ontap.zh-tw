@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_static_route.html 
+keywords: create, creation, creating, add, adding, static, route, svm, traffic, network, create a static route, network route create 
+summary: 在SVM內建立靜態路由、以控制LIF如何使用網路來處理傳出流量 
+---
+= 建立靜態路由
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）內建立靜態路由、以控制LIF如何將網路用於傳出流量。
+
+當您建立與SVM相關聯的路由項目時、該路由會被指定SVM擁有且與閘道位於同一子網路的所有LIF使用。
+
+使用「network route create」命令建立路由。
+
+....
+network route create -vserver vs0 -destination 0.0.0.0/0 -gateway 10.61.208.1
+....

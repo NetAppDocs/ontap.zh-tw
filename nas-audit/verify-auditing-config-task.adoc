@@ -1,0 +1,45 @@
+---
+permalink: nas-audit/verify-auditing-config-task.html 
+sidebar: sidebar 
+keywords: verify, audit, configuration 
+summary: 完成稽核組態之後、您應該確認稽核設定正確且已啟用。 
+---
+= 驗證稽核組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+完成稽核組態之後、您應該確認稽核設定正確且已啟用。
+
+.步驟
+. 驗證稽核組態：
++
+「vserver稽核show -instance -vserver vserver_name」
+
++
+下列命令會以清單形式顯示儲存虛擬機器（SVM）VS1的所有稽核組態資訊：
+
++
+「vserver稽核show -instance -vserver VS1」
+
++
+[listing]
+----
+
+                             Vserver: vs1
+                      Auditing state: true
+                Log Destination Path: /audit_log
+       Categories of Events to Audit: file-ops
+                          Log Format: evtx
+                 Log File Size Limit: 200MB
+        Log Rotation Schedule: Month: -
+  Log Rotation Schedule: Day of Week: -
+          Log Rotation Schedule: Day: -
+         Log Rotation Schedule: Hour: -
+       Log Rotation Schedule: Minute: -
+                  Rotation Schedules: -
+            Log Files Rotation Limit: 0
+----
+

@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/optimize-user-access-force-group-share-concept.html 
+sidebar: sidebar 
+keywords: create, share, ontap, command, line, data, unix, effective, security, smb, user, group, force-group, predefined, database, force-group, access, how to optimize smb user access with the force-group share setting 
+summary: 當您以ONTAP UNIX有效安全性從Sfellity命令列建立共用區至資料時、可以指定該共用區中SMB使用者所建立的所有檔案都屬於同一個群組、稱為「強制群組」、該群組必須是UNIX群組資料庫中預先定義的群組。使用強制群組可讓屬於不同群組的SMB使用者更容易存取檔案。 
+---
+= 使用強制群組共用設定來最佳化SMB使用者存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您以ONTAP UNIX有效的安全性從Sflexity命令列建立共用區到資料時、可以指定該共用區中SMB使用者所建立的所有檔案都屬於同一個群組（稱為_force-group）、該群組必須是UNIX群組資料庫中預先定義的群組。使用強制群組可讓屬於不同群組的SMB使用者更容易存取檔案。
+
+只有當共用位於UNIX或混合qtree中時、才需要指定強制群組。不需要為NTFS磁碟區或qtree中的共用設定強制群組、因為這些共用中的檔案存取權是由Windows權限而非UNIX GID決定。
+
+如果已為共用區指定強制群組、則下列項目將成為該共用區的真實情況：
+
+* 存取此共用區的強制群組中的SMB使用者會暫時變更為強制群組的GID。
++
+此項GID可讓他們存取此共用區中的檔案、這些檔案無法以主要的GID或UID正常存取。
+
+* 無論檔案擁有者的主要Gid為何、SMB使用者在此共用區中建立的所有檔案都屬於同一個強制群組。
+
+
+當SMB使用者嘗試存取NFS所建立的檔案時、SMB使用者的主要GID會決定存取權限。
+
+強制群組不會影響NFS使用者存取此共用區中檔案的方式。NFS所建立的檔案會從檔案擁有者處取得Gid。存取權限的判斷取決於嘗試存取檔案的NFS使用者的UID和主要GID。
+
+使用強制群組可讓屬於不同群組的SMB使用者更容易存取檔案。例如、如果您想要建立共用區來儲存公司的網頁、並將寫入權限授予工程與行銷部門的使用者、您可以建立共用區、並授予名為「webGroup1」的群組寫入權限。由於使用強制群組、因此此共用區中SMB使用者所建立的所有檔案均歸「webgroup 1」群組所有。此外、使用者在存取共用時、也會自動指派「webgroup 1」群組的GID。因此、所有使用者都可以寫入此共用區、而不需要管理工程與行銷部門使用者的存取權限。
+
+xref:create-share-force-group-setting-task.adoc[使用強制群組共用設定建立SMB共用區]

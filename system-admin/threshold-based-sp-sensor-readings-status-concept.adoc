@@ -1,0 +1,85 @@
+---
+permalink: system-admin/threshold-based-sp-sensor-readings-status-concept.html 
+sidebar: sidebar 
+keywords: understand, threshold, sp, sensor, readings, status, value, command, output, periodic, operating, conditions 
+summary: 臨界值型感應器會定期讀取各種系統元件的讀數。SP會將臨界值型感應器的讀取值與預設臨界值限制進行比較、以定義元件的可接受作業條件。 
+---
+= 關於臨界值型SP感測器的讀取值、以及系統感測器命令輸出的狀態值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+臨界值型感應器會定期讀取各種系統元件的讀數。SP會將臨界值型感應器的讀取值與預設臨界值限制進行比較、以定義元件的可接受作業條件。
+
+根據感測器的讀取值、SP會顯示感測器狀態、以協助您監控元件的狀況。
+
+臨界值型感測器的範例包括系統溫度、電壓、電流和風扇速度的感測器。臨界值型感應器的特定清單取決於平台。
+
+臨界值型感測器具有下列臨界值、顯示於SP「系統感測器」命令的輸出中：
+
+* 臨界下限（LCR）
+* 非臨界下限（LNC）
+* 上非關鍵（UNc）
+* 臨界上限（UCR）
+
+
+LNC和LCR之間或在UNC和UCR之間的感測器讀取表示元件出現問題的徵兆、因此可能會發生系統故障。因此、您應該儘快規劃元件服務。
+
+低於LCR或高於UCR的感測器讀取值表示元件故障、系統即將發生故障。因此、元件需要立即注意。
+
+下圖說明臨界值所指定的嚴重性範圍：
+
+image::../media/sp-sensor-thresholds.png[此圖形由其周邊文字說明。]
+
+您可以在「系統感測器」命令輸出的「目前」欄下找到臨界值型感測器的讀取。「系統感測器」命令會顯示指定感測器的其他詳細資料。當臨界值型感應器的讀取值超過非臨界臨界臨界臨界臨界臨界臨界臨界臨界臨界臨界值範圍時、感應器會報告嚴重性增加的問題。當讀取值超過臨界值上限時、「系統感測器」命令輸出中的感測器狀態會根據超出的臨界值、從「確定」變更為「NC」（非臨界）或「CR」（嚴重）、並在事件記錄中記錄事件訊息。
+
+某些臨界值型感應器並未全部達到四個臨界值層級。對於這些感測器、遺失的臨界值會在「系統感測器」命令輸出中顯示「na」為其限制、表示特定感測器對於特定臨界值沒有任何限制或嚴重性考量、SP也不會監控感測器是否達到該臨界值。
+
+以下範例顯示SP CLI中「系統感測器」命令所顯示的部分資訊：
+
+[listing]
+----
+SP node1> system sensors
+
+Sensor Name      | Current    | Unit       | Status| LCR       | LNC       | UNC       | UCR
+-----------------+------------+------------+-------+-----------+-----------+-----------+-----------
+CPU0_Temp_Margin | -55.000    | degrees C  | ok    | na        | na        | -5.000    | 0.000
+CPU1_Temp_Margin | -56.000    | degrees C  | ok    | na        | na        | -5.000    | 0.000
+In_Flow_Temp     | 32.000     | degrees C  | ok    | 0.000     | 10.000    | 42.000    | 52.000
+Out_Flow_Temp    | 38.000     | degrees C  | ok    | 0.000     | 10.000    | 59.000    | 68.000
+CPU1_Error       | 0x0        | discrete   | 0x0180| na        | na        | na        | na
+CPU1_Therm_Trip  | 0x0        | discrete   | 0x0180| na        | na        | na        | na
+CPU1_Hot         | 0x0        | discrete   | 0x0180| na        | na        | na        | na
+IO_Mid1_Temp     | 30.000     | degrees C  | ok    | 0.000     | 10.000    | 55.000    | 64.000
+IO_Mid2_Temp     | 30.000     | degrees C  | ok    | 0.000     | 10.000    | 55.000    | 64.000
+CPU_VTT          | 1.106      | Volts      | ok    | 1.028     | 1.048     | 1.154     | 1.174
+CPU0_VCC         | 1.154      | Volts      | ok    | 0.834     | 0.844     | 1.348     | 1.368
+3.3V             | 3.323      | Volts      | ok    | 3.053     | 3.116     | 3.466     | 3.546
+5V               | 5.002      | Volts      | ok    | 4.368     | 4.465     | 5.490     | 5.636
+STBY_1.8V        | 1.794      | Volts      | ok    | 1.678     | 1.707     | 1.892     | 1.911
+…
+----
+以下範例顯示在SP CLI中針對臨界值型感應器5v輸入「系統感應器Get'「ensor名稱」的結果：
+
+[listing]
+----
+SP node1> system sensors get 5V
+
+Locating sensor record...
+Sensor ID              : 5V (0x13)
+ Entity ID             : 7.97
+ Sensor Type (Analog)  : Voltage
+ Sensor Reading        : 5.002 (+/- 0) Volts
+ Status                : ok
+ Lower Non-Recoverable : na
+ Lower Critical        : 4.246
+ Lower Non-Critical    : 4.490
+ Upper Non-Critical    : 5.490
+ Upper Critical        : 5.758
+ Upper Non-Recoverable : na
+ Assertion Events      :
+ Assertions Enabled    : lnc- lcr- ucr+
+ Deassertions Enabled  : lnc- lcr- ucr+
+----

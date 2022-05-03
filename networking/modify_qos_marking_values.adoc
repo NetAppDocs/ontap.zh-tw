@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_qos_marking_values.html 
+keywords: change, changing, modify, modifying, qos, quality, service, marking, performance, modify qos marking values, change the qos marking values for different protocols, network qos-marking modify 
+summary: 變更不同傳輸協定的QoS標記值 
+---
+= 修改QoS標記值
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以針對每個IPspace修改不同傳輸協定的服務品質（QoS）標記值。
+
+叢集中的所有節點都必須執行相同版本ONTAP 的Sof the Sof。
+
+使用「network QoS標記modify」命令修改QoS標記值。
+
+* "-IPspace"參數指定要修改QoS標記項目的IPspace。
+* 「–傳輸協定」參數指定要修改QoS標記項目的傳輸協定。"network QoS標記modify"（網路QoS標記修改）手冊頁說明了傳輸協定的可能值。
+* 「–dscp」參數指定差異化服務程式碼點（dscp）值。可能的值範圍從0到63。
+* 啟用「-is」參數是用來啟用或停用「-IPSpace」參數所提供之IPspace中指定傳輸協定的QoS標記。
+
+
+下列命令會在預設IPspace中啟用NFS傳輸協定的QoS標記：
+
+....
+network qos-marking modify -ipspace Default -protocol NFS -is-enabled true
+....
+下列命令會將預設IPspace中NFS傳輸協定的Dscp值設為20：
+
+....
+network qos-marking modify -ipspace Default -protocol NFS -dscp 20
+....

@@ -1,0 +1,18 @@
+---
+permalink: tape-backup/dump-snapmirror-single-file-lun-restore-concept.html 
+sidebar: sidebar 
+keywords: dump, works, snapmirror, single, file, lun, restore, operation 
+summary: 在使用SnapMirror技術還原單一檔案或LUN的磁碟區上執行傾印備份或還原作業之前、您必須先瞭解傾印作業如何與單一檔案或LUN還原作業搭配運作。 
+---
+= dump如何搭配SnapMirror單一檔案或LUN還原運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用SnapMirror技術還原單一檔案或LUN的磁碟區上執行傾印備份或還原作業之前、您必須先瞭解傾印作業如何與單一檔案或LUN還原作業搭配運作。
+
+在SnapMirror單一檔案或LUN還原作業期間、用戶端I/O會受限於要還原的檔案或LUN。當單一檔案或LUN還原作業完成時、會移除檔案或LUN的I/O限制。如果在還原單一檔案或LUN的磁碟區上執行傾印備份、則傾印備份中不會包含具有用戶端I/O限制的檔案或LUN。在後續的備份作業中、此檔案或LUN會在移除I/O限制之後備份至磁帶。
+
+您無法在同一個磁碟區上同時執行傾印還原和SnapMirror單一檔案或LUN還原作業。

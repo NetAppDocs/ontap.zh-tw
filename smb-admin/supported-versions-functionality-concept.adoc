@@ -1,0 +1,379 @@
+---
+permalink: smb-admin/supported-versions-functionality-concept.html 
+sidebar: sidebar 
+keywords: server, message, block, smb, remote, file-sharing, protocol, microsoft, windows, client, server, ontap, functionality, environment, supported smb versions and functionality 
+summary: 伺服器訊息區（SMB）是Microsoft Windows用戶端和伺服器所使用的遠端檔案共用傳輸協定。在支援的版本包括所有SMB；不過、預設的SMB 1.0支援則取決於您的版本。ONTAP ONTAP您應該確認ONTAP 支援您環境中所需的用戶端和功能的功能。 
+---
+= 支援的SMB版本與功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+伺服器訊息區（SMB）是Microsoft Windows用戶端和伺服器所使用的遠端檔案共用傳輸協定。在支援的版本包括所有SMB；不過、預設的SMB 1.0支援則取決於您的版本。ONTAP ONTAP您應該確認ONTAP 支援您環境中所需的用戶端和功能的功能。
+
+有關哪些SMB用戶端和網域控制器ONTAP 支援的最新資訊、請參閱「互通性對照表工具」。
+
+根據預設ONTAP 、SMB 2.0和更新版本可用於支援功能不只支援功能、還可視需要啟用或停用功能。下表顯示SMB 1.0支援與預設組態。
+
+|===
+| SMB 1.0功能： 4+| 在這些版本中：ONTAP 
+
+
+ a| 
+ a| 
+9.0
+ a| 
+9.1
+ a| 
+9.2
+ a| 
+9.3及更新版本
+
+
+
+ a| 
+預設為啟用
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+可以啟用或停用
+ a| 
+否
+ a| 
+需要Yes* 9.1 P8或更新版本。
+ a| 
+是的
+ a| 
+是的
+
+|===
+[NOTE]
+====
+SMB 1.0和2.0連線至網域控制器的預設設定也取決於ONTAP 版本。如需詳細資訊、請參閱「vserver CIFS安全性修改」手冊頁。對於現有CIFS伺服器執行SMB 1.0的環境、您應該盡快移轉至較新的SMB版本、以準備增強安全性與法規遵循。如需詳細資訊、請聯絡您的NetApp代表。
+
+====
+下表顯示每個SMB版本支援哪些SMB功能。部分SMB功能預設為啟用、有些則需要額外的組態。
+
+|===
+| *此功能：* | *需要啟用：* 5+| *支援上述SMB版本*的支援功能ONTAP 
+
+
+ a| 
+ a| 
+ a| 
+1.0
+ a| 
+2.0
+ a| 
+2.1
+ a| 
+3.0
+ a| 
+3.1.1
+
+
+
+ a| 
+舊版SMB 1.0功能
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+耐用的握把
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+複雜作業
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+非同步作業
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+增加讀寫緩衝區大小
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+提升擴充性
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+SMB簽署
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+替代資料串流（ADS）檔案格式
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+大型MTU（預設為ONTAP 以支援功能更新為開頭）
+ a| 
+x
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+租賃oplocks
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+持續可用的共用
+ a| 
+x
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+持續處理
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+見證人
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+SMB加密：AES-128與CCM
+ a| 
+x
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+橫向擴充（CA共用區要求）
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+透明的容錯移轉
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+SMB多通道（從ONTAP NetApp 9.4開始）
+ a| 
+x
+ a| 
+ a| 
+ a| 
+ a| 
+x
+ a| 
+x
+
+
+
+ a| 
+預先驗證完整性
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+
+
+
+ a| 
+叢集用戶端容錯移轉v.2（CCFv2）
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+
+
+
+ a| 
+SMB加密：AES-128/GCM（從ONTAP 版本9.1開始）
+ a| 
+x
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+x
+
+|===
+xref:signing-enhance-network-security-concept.adoc[使用SMB簽署來強化網路安全性]
+
+xref:set-server-minimum-authentication-security-level-task.adoc[設定SMB伺服器的最低驗證安全性層級]
+
+xref:configure-required-encryption-concept.adoc[在SMB伺服器上設定必要的SMB加密、以便透過SMB傳輸資料]
+
+http://www.netapp.com/us/media/tr-4543.pdf["NetApp技術報告4543：SMB傳輸協定最佳實務做法"]
+
+https://mysupport.netapp.com/NOW/products/interoperability["NetApp互通性"]

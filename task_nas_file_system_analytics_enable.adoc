@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: task_nas_file_system_analytics_enable.html 
+keywords: capacity analytics, data visualization, File System Analytics, System Manager, storage, explorer 
+summary: 若要收集及顯示容量分析等使用資料、您必須啟用檔案系統分析。 
+---
+= 啟用檔案系統分析
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+若要收集及顯示容量分析等使用資料、您必須啟用檔案系統分析。
+
+當您建立新的Volume或將系統的Volume升級至ONTAP 版本9.8或更新版本時、可以啟用檔案系統分析。升級後、請先確認所有升級程序都已完成、再啟用分析功能。
+
+
+
+== 程序
+
+視磁碟區的大小和內容而定、啟用分析可能需要一些時間、ONTAP 而無法在磁碟區中處理現有資料。系統管理程式會顯示進度、並在完成時顯示分析資料。如果您需要更精確的初始化進度資訊、可以使用ONTAP 「Volume Analytics show」這個指令。
+
+您可以使用ONTAP 支援「檔案系統分析」的功能、包括「支援系統管理程式」、ONTAP 「支援系統分析」、「支援系統分析」或ONTAP 「支援系統分析API」。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+|===
+| 在209.8和9.9.1中ONTAP | 從ONTAP 功能部分9.10.1開始 
+
+
+| 1.選擇*儲存>磁碟區*。2.選取所需的Volume、然後選取* Explorer's *。3.選取*啟用分析*或*停用分析*。 | 1.選擇*儲存>磁碟區*。2.選取所需的Volume。從個別Volume功能表中、選取*檔案系統>檔案總管*。3.選取*啟用分析*或*停用分析*。 
+|===
+--
+.CLI
+--
+.若要使用CLI啟用檔案系統分析：
+. 執行下列命令：「Volume Analytics on -vserver _Svm_name_-volume _volume _name_（在-vserver _Svm_name_上執行Volume分析）、預設會在前景執行命令；ONTAP 完成後、會顯示進度並顯示分析資料。如果您需要更精確的資訊、可以使用「前景假」選項在背景執行命令、然後使用「Volume Analytics show」命令在CLI中顯示初始化進度。
+. 成功啟用檔案系統分析之後、請使用ONTAP 「支援系統分析」或ONTAP 「支援系統分析」API來顯示分析資料。
+
+
+--
+====

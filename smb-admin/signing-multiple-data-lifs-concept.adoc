@@ -1,0 +1,31 @@
+---
+permalink: smb-admin/signing-multiple-data-lifs-concept.html 
+sidebar: sidebar 
+keywords: enable, disable, require, smb, sign, server, guideline, lifs, configuration, svm, guidelines for smb signing when multiple data lifs are configured 
+summary: 如果您在SMB伺服器上啟用或停用必要的SMB簽署、您應該瞭解SVM多重資料生命量組態的準則。 
+---
+= 設定多個資料生命量時的SMB簽署準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在SMB伺服器上啟用或停用必要的SMB簽署、您應該瞭解SVM多重資料生命量組態的準則。
+
+設定SMB伺服器時、可能會設定多個資料生命量。如果是、DNS伺服器會包含CIFS伺服器的多個「A」記錄項目、所有項目都使用相同的SMB伺服器主機名稱、但每個項目都有唯一的IP位址。例如、已設定兩個資料生命期的SMB伺服器可能具有下列DNS「A」記錄項目：
+
+[listing]
+----
+10.1.1.128 A VS1.IEPUB.LOCAL VS1
+10.1.1.129 A VS1.IEPUB.LOCAL VS1
+----
+正常情況是、變更必要的SMB簽署設定後、只有來自用戶端的新連線會受到SMB簽署設定的變更影響。不過、這種行為有例外。在某種情況下、用戶端與共用有現有的連線、而用戶端會在變更設定之後、建立新的連線至同一個共用區、同時維持原始連線。在這種情況下、新的和現有的SMB連線都會採用新的SMB簽署要求。
+
+請考慮下列範例：
+
+. Client1使用路徑「O：\」連線至共用區、而不需要SMB簽署。
+. 儲存管理員會修改SMB伺服器組態、以要求SMB簽署。
+. Client1會使用路徑「s：\」連線到相同的共用區、並使用路徑「O：\」來進行必要的SMB簽署（同時使用路徑「O：\」來維護連線）。
+. 結果是在「O：\」和「s：\」磁碟機上存取資料時、會使用SMB簽署。
+

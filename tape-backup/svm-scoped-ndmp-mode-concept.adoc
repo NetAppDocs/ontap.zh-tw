@@ -1,0 +1,22 @@
+---
+permalink: tape-backup/svm-scoped-ndmp-mode-concept.html 
+sidebar: sidebar 
+keywords: svm, scoped, ndmp, node, tape, backup, storage, cirtual, machine, svm, restore, cab, extension 
+summary: 如果在SVM上啟用NDMP服務、您可以在儲存虛擬機器（SVM）層級成功執行磁帶備份與還原作業。如果備份應用程式支援駕駛室內擴充、您可以備份及還原叢集SVM不同節點上託管的所有Volume。 
+---
+= SVM範圍的NDMP模式是什麼
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在SVM上啟用NDMP服務、您可以在儲存虛擬機器（SVM）層級成功執行磁帶備份與還原作業。如果備份應用程式支援駕駛室內擴充、您可以備份及還原叢集SVM不同節點上託管的所有Volume。
+
+您可以在不同的LIF類型上建立NDMP控制連線。在SVM範圍的NDMP模式中、這些LIF屬於資料SVM或管理SVM。只有在擁有此LIF的SVM上啟用NDMP服務時、才能在LIF上建立連線。
+
+資料LIF屬於資料SVM、而叢集間LIF、節點管理LIF及叢集管理LIF則屬於管理SVM。
+
+在SVM範圍的NDMP模式中、磁碟區和磁帶設備的備份與還原作業可用度取決於建立NDMP控制連線的LIF類型、以及電纜擴充的狀態。如果您的備份應用程式支援CAB擴充功能、而且磁碟區和磁帶設備共用相同的關聯性、則備份應用程式可以執行本機備份或還原作業、而非三向備份或還原作業。
+
+xref:manage-svm-scoped-ndmp-mode-concept.adoc[管理SVM範圍的FlexVol NDMP模式、以利實現不受限的功能]

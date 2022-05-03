@@ -1,0 +1,38 @@
+---
+permalink: san-admin/configure-svm-iscsi-task.html 
+sidebar: sidebar 
+keywords: configure, svm, iscsi 
+summary: 若要設定iSCSI的儲存虛擬機器（SVM）、您必須為SVM建立生命期、並將iSCSI傳輸協定指派給這些生命期。 
+---
+= 設定SVM for iSCSI
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要設定iSCSI的儲存虛擬機器（SVM）、您必須為SVM建立生命期、並將iSCSI傳輸協定指派給這些生命期。
+
+每個使用iSCSI傳輸協定處理資料的SVM、每個節點至少需要一個iSCSI LIF。為了提供備援、您應該在每個節點上建立至少兩個生命期。
+
+.步驟
+. 讓SVM聆聽iSCSI流量：
++
+「vserver iSCSI create -vserver _vserver_name_-target別名_vserver_name_」
+
+. 在每個節點上建立要用於iSCSI的SVM LIF：
++
+「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定iSCSI -home-node_node_name_-home-port _port_name_-address_ip_address_-netask_kap
+
+. 請確認您已正確設定lifs：
++
+「網路介面show -vserver _vserver_name_」
+
+. 確認iSCSI已啟動並正在執行、以及該SVM的目標IQN：
++
+「vserver iSCSI show–vserver _vserver_name_」
+
+. 從您的主機建立iSCSI工作階段至您的生命期。
+
+
+https://www.netapp.com/media/10680-tr4080.pdf["NetApp技術報告4080：現代SAN的最佳實務做法"]

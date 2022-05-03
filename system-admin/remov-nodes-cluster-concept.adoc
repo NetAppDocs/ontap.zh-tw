@@ -1,0 +1,125 @@
+---
+permalink: system-admin/remov-nodes-cluster-concept.html 
+sidebar: sidebar 
+keywords: remove, node, cluster, failover, partner, erase, inaccessible 
+summary: 您可以從叢集移除不需要的節點、一次移除一個節點。移除節點之後、您也必須移除其容錯移轉合作夥伴。如果您要移除節點、則其資料將無法存取或遭到清除。 
+---
+= 從叢集移除節點
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從叢集移除不需要的節點、一次移除一個節點。移除節點之後、您也必須移除其容錯移轉合作夥伴。如果您要移除節點、則其資料將無法存取或遭到清除。
+
+從叢集移除節點之前、必須滿足下列條件：
+
+* 叢集中有一半以上的節點必須健全。
+* 您要移除之節點上的所有資料都必須已清空。
++
+** 這可能包括 link:../encryption-at-rest/secure-purge-data-encrypted-volume-concept.html["從加密磁碟區清除資料"]。
+
+
+* 所有磁碟區都是 link:../volumes/move-volume-task.html["已移動"] 或 link:../volumes/delete-flexvol-task.html["已刪除"] 來自節點擁有的Aggregate。
+* 所有的Aggregate都是 link:../disks-aggregates/commands-manage-aggregates-reference.html["已刪除"] 從節點。
+* 如果節點擁有聯邦資訊處理標準（FIPS）磁碟或自我加密磁碟（SED）、 link:../encryption-at-rest/return-seds-unprotected-mode-task.html["磁碟加密已移除"] 將磁碟恢復為無保護模式。
++
+** 您可能也想要 link:../encryption-at-rest/sanitize-fips-drive-sed-task.html["清除FIPS磁碟機或SED"]。
+
+
+* 資料生命之年 link:../networking/delete_a_lif.html["已刪除"] 或 link:../networking/migrate_a_lif.html["重新定位"] 從節點。
+* 叢集管理生命 link:../networking/migrate_a_lif.html["重新定位"] 從節點和主連接埠變更。
+* 所有的叢集間生命體都是 link:../networking/delete_a_lif.html["已移除"]。
++
+** 當您移除叢集間的lifs時、會顯示可忽略的警告。
+
+
+* 儲存設備容錯移轉 link:../high-availability/ha_commands_for_enabling_and_disabling_storage_failover.html["已停用"] 用於節點。
+* 所有LIF容錯移轉規則都已達到 link:../networking/commands_for_managing_failover_groups_and_policies.html["已修改"] 移除節點上的連接埠。
+* 節點上的所有VLAN都是如此 link:../networking/configure_vlans_over_physical_ports.html#delete-a-vlan["已刪除"]。
+
+
+建議您發出AutoSupport 一份資訊消息、通知NetApp技術支援部門正在移除節點。
+
+*附註：*當自動ONTAP 執行更新時、您不得執行「叢集移除節點」、「叢集取消加入」和「節點重新命名」等作業。
+
+如果您執行的是混合版本叢集、您可以使用ONTAP 以《更新版本》9.3開頭的進階權限命令之一、移除最後一個低版本節點：
+
+* 《叢集取消連結-跳過-最後-低版本-節點檢查》（cluster unjoin -skip -last - low version - node-check）ONTAP
+* 更新版本：「叢集移除節點-跳過最後版本-低版本-節點檢查」ONTAP
+
+
+*附註：*您必須先將連線至節點的磁碟中的所有系統和使用者資料、讓使用者無法存取、才能從叢集移除節點。從叢集移除節點之後、如果您需要將節點重新加入同一個叢集、請聯絡技術支援部門以取得還原資料的相關協助。
+
+.步驟
+. 將權限層級變更為進階：
++
+「*設定-權限進階*」
+
+. 如果您要移除的節點是目前的主節點、請將主節點的叢集資格變更為「假」、以啟用叢集中的另一個節點作為主節點：
++
+「*叢集修改–資格錯誤*」
+
++
+主節點是一個節點、負責保存「mGMT」、「'VLDB」、「vifmgr'」、「'bcomd'」及「'crs」等程序。「cluster環狀show」進階命令會顯示目前的主節點。
+
++
+[listing]
+----
+cluster::*> cluster modify -node node1 -eligibility false
+----
+. 從叢集移除節點：
++
+|===
+| 此版本... ONTAP | 使用此命令... 
+
+
+ a| 
+部分9.3 ONTAP
+ a| 
+‘*叢集unjo*’
+
+
+
+ a| 
+更新版本ONTAP
+ a| 
+‘*叢集移除節點*’
+
+|===
++
+如果您有混合版本的叢集、而您要移除上一個較低版本的節點、請使用這些命令搭配「-skip、last、low、version、node-check」參數。
+
++
+系統會通知您下列事項：
+
++
+** 您也必須從叢集移除節點的容錯移轉合作夥伴。
+** 移除節點之後、在重新加入叢集之前、您必須使用開機功能表選項（4）乾淨組態、並初始化所有磁碟或選項（9）設定進階磁碟分割、以清除節點的組態並初始化所有磁碟。
++
+如果您在移除節點之前必須處理的條件、就會產生故障訊息。例如、此訊息可能表示節點具有必須移除的共用資源、或節點位於叢集HA組態或必須停用的儲存容錯移轉組態中。
+
++
+如果節點是仲裁主機、叢集將會短暫遺失、然後返回仲裁。此仲裁損失是暫時性的、不會影響任何資料作業。
+
+
+
+. 如果故障訊息指出錯誤情況、請解決這些問題、然後重新執行「cluster remove-node"（叢集移除節點）」或「cluster unjoin（叢集取消加入）」命令。
++
+節點成功從叢集移除後、會自動重新開機。
+
+. 如果您要重新規劃節點的用途、請清除節點組態並初始化所有磁碟：
++
+.. 在開機程序期間、當系統提示時、按Ctrl-C可顯示開機功能表。
+.. 選取開機功能表選項*（4）Clean組態、然後初始化所有磁碟*。
+
+
+. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+. 重複上述步驟、從叢集移除容錯移轉合作夥伴。
+
+
+如果您移除節點以擁有單節點叢集、則應修改叢集連接埠以提供資料流量、方法是將叢集連接埠修改為資料連接埠、然後在資料連接埠上建立資料傳輸。

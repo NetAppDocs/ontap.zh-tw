@@ -1,0 +1,84 @@
+---
+permalink: san-admin/san-provisioning-fc-concept.html 
+sidebar: sidebar 
+keywords:  
+summary: 您應該瞭解ONTAP 瞭解如何實作FC SAN所需的重要概念。 
+---
+= 使用FC進行SAN資源配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解ONTAP 瞭解如何實作FC SAN所需的重要概念。
+
+
+
+== FC目標節點如何連線至網路
+
+儲存系統和主機都有介面卡、以便使用纜線連接至FC交換器。
+
+當節點連線至FC SAN時、每個SVM會向交換器光纖名稱服務註冊其LIF的全球連接埠名稱（WWPN）。SVM的WWNN和每個LIF的WWPN會自動由ONTAP SSI.指派。
+
+[NOTE]
+====
+不支援從具有FC的主機直接連線至節點、需要使用NPIV、這需要使用交換器。在iSCSI工作階段中、通訊可用於網路路由或直接連線的連線。不過ONTAP 、這兩種方法都支援使用支援。
+
+====
+
+
+== 如何識別FC節點
+
+使用FC設定的每個SVM都會以全球節點名稱（WWNN）來識別。
+
+
+
+== 如何使用WWPN
+
+WWPN可識別SVM中設定為支援FC的每個LIF。這些LIF會使用叢集中每個節點的實體FC連接埠、這些連接埠可以是FC目標卡、UTA或UTA2、在節點中設定為FC或FCoE。
+
+* 建立啟動器群組
++
+主機HBA的WWPN用於建立啟動器群組（igroup）。igroup用於控制主機對特定LUN的存取。您可以指定FC網路中啟動器的WWPN集合、以建立igroup。當您將儲存系統上的LUN對應至igroup時、可以將該群組中的所有啟動器授予該LUN的存取權。如果主機的WWPN不在對應至LUN的igroup中、則該主機無法存取LUN。這表示LUN不會在該主機上顯示為磁碟。
+
++
+您也可以建立連接埠集、使LUN僅在特定目標連接埠上可見。連接埠集由一組FC目標連接埠組成。您可以將igroup繫結至連接埠集。igroup中的任何主機只能透過連接埠集內的目標連接埠來存取LUN。
+
+* 獨特識別FC生命里數
++
+WWPN可唯一識別每個FC邏輯介面。主機作業系統使用WWNN和WWPN的組合來識別SVM和FC LIF。有些作業系統需要持續連結、以確保LUN在主機上顯示為相同的目標ID。
+
+
+
+
+
+== 全球名稱指派的運作方式
+
+全球名稱會依ONTAP 序建立於此。不過ONTAP 、由於選擇此類產品的方式、因此可能會以非循序的順序指派。
+
+每個介面卡都有預先設定的WWPN和WWNN、但ONTAP 不使用這些預先設定的值。而是ONTAP 根據內建乙太網路連接埠的MAC位址、指派自己的WWPN或WWNN。
+
+指派全球名稱時、可能會因為下列原因而顯示為非連續名稱：
+
+* 在叢集中的所有節點和儲存虛擬機器（SVM）之間指派全球名稱。
+* 已釋出的全球名稱將會回收並新增回可用名稱集區。
+
+
+
+
+== 如何識別FC交換器
+
+Fibre Channel交換器的裝置本身具有一個全球節點名稱（WWNN）、其每個連接埠都有一個全球連接埠名稱（WWPN）。
+
+例如、下圖顯示如何將WWPN指派給16埠Brocade交換器上的每個連接埠。如需特定交換器的連接埠編號方式詳細資訊、請參閱該交換器廠商提供的文件。
+
+image::../media/drw-fcswitch-scrn-en-noscale.gif[DRW fcswitchscrn en nosscale]
+
+連接埠* 0*、WWPN 20：* 00：00：00：60：69：51：6：b4
+
+連接埠* 1 *、WWPN 20：* 01：00：60：69：51：6：b4
+
+連接埠* 14*、WWPN 20：* 0e**：00：60：69：51：06：b4
+
+連接埠* 15*、WWPN 20：* 0f*：00：60：69：51：06：b4

@@ -1,0 +1,36 @@
+---
+permalink: san-config/configure-fc-nvme-san-hosts-single-nodes-reference.html 
+sidebar: sidebar 
+keywords: ways, configure, fc, fc-nvme, san hosts, with single nodes 
+summary: 您可以透過一個或多個架構、使用單一節點來設定FC和FC-NVMe SAN主機。需要N連接埠ID虛擬化（NPIV）、而且必須在網路中的所有FC交換器上啟用。如果不使用FC交換器、則無法將FC或FC-NVE SAN主機直接連接至單一節點。 
+---
+= 使用單一節點設定FC和FC-NVMe SAN主機的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以透過一個或多個架構、使用單一節點來設定FC和FC-NVMe SAN主機。需要N連接埠ID虛擬化（NPIV）、而且必須在網路中的所有FC交換器上啟用。如果不使用FC交換器、則無法將FC或FC-NVE SAN主機直接連接至單一節點。
+
+您可以透過單一架構或多重架構、設定具有單一節點的FC或FC-NVMe SAN主機。圖示中的FC目標連接埠（0A、0c、0b、0d）為範例。實際的連接埠編號會因儲存節點的機型和是否使用擴充介面卡而有所不同。
+
+
+
+== 單一架構單節點組態
+
+在單一架構單節點組態中、有一部交換器可將單一節點連接至一或多部主機。由於只有一台交換器、因此此組態並未完全備援。所有支援FC和FC-NVMe的硬體平台都支援單一架構單節點組態。不過、FAS2240平台需要X1150A-R6擴充介面卡、才能支援單一架構單節點組態。
+
+下圖顯示FAS2240單一架構單節點組態。它會並排顯示儲存控制器、這是它們在FAS2240 -2中的安裝方式。對於FAS2240-4、控制器會安裝在彼此之上。這兩種機型的SAN組態沒有任何差異。
+
+image::../media/scrn_en_drw_fc-2240-single.png[單一交換器架構圖]
+
+
+
+== 多種單節點組態
+
+在Mertifabric單節點組態中、有兩個或多個交換器可將單一節點連接至一或多個主機。為了簡化操作、下圖顯示只有兩個Fabric的Mertifabric單節點組態、但您可以在任何Mertifabric組態中使用兩個或多個Fabric。在本圖中、儲存控制器安裝在上機箱中、底部機箱可以是空的、也可以是IOMX模組、如同本範例所示。
+
+image::../media/scrn_en_drw_fc-62xx-multi-singlecontroller.png[Mertifabric單節點組態的圖表]
+
+http://www.netapp.com/us/media/tr-4684.pdf["NetApp技術報告4684：實作及設定採用NVMe / FC的現代化SAN"]

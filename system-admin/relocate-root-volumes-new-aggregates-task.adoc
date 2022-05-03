@@ -1,0 +1,55 @@
+---
+permalink: system-admin/relocate-root-volumes-new-aggregates-task.html 
+sidebar: sidebar 
+keywords: relocate, root, volume, new, aggregates, disks, disruption, replacement 
+summary: 根置換程序會將目前的根Aggregate移轉到另一組磁碟、而不會造成中斷。 
+---
+= 將根磁碟區重新部署到新的Aggregate
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根置換程序會將目前的根Aggregate移轉到另一組磁碟、而不會造成中斷。
+
+必須啟用儲存容錯移轉、才能重新部署根磁碟區。您可以使用「儲存容錯移轉修改節點_nodename_-enable true」命令來啟用容錯移轉。
+
+您可以在下列案例中、將根磁碟區的位置變更為新的Aggregate：
+
+* 當根集合體不在您偏好的磁碟上時
+* 當您想要重新排列連接至節點的磁碟時
+* 當您執行更換EOS磁碟櫃的磁碟櫃時
+
+
+.步驟
+. 將權限層級設為進階：
++
+「*設定進階權限*」
+
+. 重新部署根Aggregate：
++
+系統節點mild-root -nodeame_-disklist _disklist_-RAID-type _RAID-type_*
+
++
+** *節點*
++
+指定擁有您要移轉之根Aggregate的節點。
+
+** *磁碟清單*
++
+指定要在其中建立新根Aggregate的磁碟清單。所有磁碟都必須是備援磁碟、且必須由同一個節點擁有。所需的磁碟數目下限取決於RAID類型。
+
+** * RAID類型*
++
+指定根Aggregate的RAID類型。預設值為「RAID-DP」。
+
+
+
+. 監控工作進度：
++
+「*」工作顯示-id _jobid_-instance*
+
+
+
+如果所有的預先檢查都成功、命令會啟動根磁碟區置換工作並結束。期望節點重新啟動。

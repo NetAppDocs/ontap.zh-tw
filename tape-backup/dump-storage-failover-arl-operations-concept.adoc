@@ -1,0 +1,37 @@
+---
+permalink: tape-backup/dump-storage-failover-arl-operations-concept.html 
+sidebar: sidebar 
+keywords: dump, workd, storage, failover, arl, operations, override, aggregate, relocation, takeover, giveback, cab, extension 
+summary: 在執行傾印備份或還原作業之前、您應該先瞭解這些作業如何搭配儲存容錯移轉（接管和恢復）或集合重新配置（ARL）作業。-overre-etoes選項可決定儲存容錯移轉或ARL作業期間的傾印引擎行為。 
+---
+= 傾印如何與儲存容錯移轉和ARL作業搭配運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在執行傾印備份或還原作業之前、您應該先瞭解這些作業如何搭配儲存容錯移轉（接管和恢復）或集合重新配置（ARL）作業。「-overre-etoes」選項可決定儲存容錯移轉或ARL作業期間的傾印引擎行為。
+
+當傾印備份或還原作業正在執行、且「-overrover-etoes」選項設定為「假」時、使用者啟動的儲存容錯移轉或ARL作業會停止。不過、如果「置換」選項設為「true」、則儲存容錯移轉或ARL作業會繼續、而且傾印備份或還原作業會中止。當儲存系統自動啟動儲存容錯移轉或ARL作業時、作用中的傾印備份或還原作業一律會中止。即使在儲存容錯移轉或ARL作業完成之後、也無法重新啟動傾印備份與還原作業。
+
+
+
+== 支援駕駛擴充時的傾印作業
+
+如果備份應用程式支援CAK擴充、您可以在儲存容錯移轉或ARL作業之後、繼續執行遞增傾印備份與還原作業、而不需重新設定備份原則。
+
+
+
+== 不支援駕駛擴充時的傾印作業
+
+如果備份應用程式不支援CAF擴充、則如果您將備份原則中設定的LIF移轉到裝載目的地Aggregate的節點、就可以繼續執行遞增傾印備份與還原作業。否則、在儲存容錯移轉和ARL作業之後、您必須先執行基礎備份、才能執行遞增備份作業。
+
+[NOTE]
+====
+對於儲存容錯移轉作業、必須將備份原則中設定的LIF移轉至合作夥伴節點。
+
+====
+link:../concepts/index.html["概念ONTAP"]
+
+https://docs.netapp.com/us-en/ontap/high-availability/index.html["高可用度"]

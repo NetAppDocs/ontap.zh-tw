@@ -1,0 +1,98 @@
+---
+permalink: smb-admin/requirements-automatic-node-referrals-concept.html 
+sidebar: sidebar 
+keywords: smb, automatic, node, referral, autolocation, aware, requirement, version, ontap, feature, support, guideline, requirement, requirements and guidelines for using automatic node referrals 
+summary: 在使用SMB自動節點參照（也稱為自動定位）之前、您必須先瞭解特定需求、包括ONTAP 哪些版本的支援功能。您也必須瞭解支援的SMB傳輸協定版本及其他特定準則。 
+---
+= 使用自動節點參照的需求與準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在您使用SMB自動節點參照（也稱為_autosocure_）之前、您必須先瞭解某些需求、包括ONTAP 哪些版本的支援功能。您也必須瞭解支援的SMB傳輸協定版本及其他特定準則。
+
+
+
+== 版本與授權要求ONTAP
+
+* 叢集中的所有節點都必須執行ONTAP 支援自動節點參照的版本的支援功能。
+* 必須在SMB共用區上啟用Widgelinks、才能使用自動定位功能。
+* CIFS必須獲得授權、且SVM上必須有SMB伺服器。
+
+
+
+
+== SMB傳輸協定版本需求
+
+* 對於SVM、ONTAP 此功能支援在所有SMB版本上自動轉介節點。
+
+
+
+
+== SMB用戶端需求
+
+支援的所有Microsoft用戶端ONTAP 均支援SMB自動節點轉介。
+
+互通性對照表包含Windows用戶ONTAP 端所支援的最新資訊。
+
+http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
+
+
+
+== 資料LIF需求
+
+如果您想要使用資料LIF做為SMB用戶端的潛在參照、則必須同時啟用NFS和CIFS來建立資料生命期。
+
+如果目標節點包含僅針對NFS傳輸協定啟用或僅針對SMB傳輸協定啟用的資料LIF、則自動節點參照可能無法運作。
+
+如果不符合此要求、資料存取將不受影響。SMB用戶端會使用用戶端用來連線至SVM的原始LIF來對應共用區。
+
+
+
+== 建立參照SMB連線時的NTLM驗證需求
+
+必須允許在包含CIFS伺服器的網域和包含要使用自動節點參照之用戶端的網域上進行NTLM驗證。
+
+進行轉介時、SMB伺服器會將IP位址指向Windows用戶端。由於使用IP位址進行連線時會使用NTLM驗證、因此不會針對參照的連線執行Kerberos驗證。
+
+這是因為Windows用戶端無法建立Kerberos所使用的服務主體名稱（格式為「服務/NetBios名稱」和「服務/FQDN」）、這表示用戶端無法向服務要求Kerberos票證。
+
+
+
+== 使用主目錄功能自動節點參照的準則
+
+當共用區設定為啟用主目錄共用屬性時、可以針對主目錄組態設定一或多個主目錄搜尋路徑。搜尋路徑可指向包含SVM磁碟區的每個節點上所包含的磁碟區。用戶端會接收參照、如果有作用中的本機資料LIF可用、則會透過主使用者主目錄的本機參照LIF連線。
+
+當SMB 1.0用戶端存取啟用自動節點參照的動態主目錄時、有一些準則。這是因為SMB 1.0用戶端需要在驗證之前自動進行節點參照、SMB伺服器才有使用者名稱。不過、如果下列陳述屬實、SMB主目錄存取功能可在SMB 1.0用戶端正常運作：
+
+* SMB主目錄設定為使用簡單名稱、例如「`%w'（Windows使用者名稱）」或「`%u」（對應的UNIX使用者名稱）、而非網域名稱樣式名稱、例如「`%d\%w」（網域名稱\使用者名稱）。
+* 建立主目錄共用時、CIFS主目錄共用名稱會設定變數（「'%w'」或「'%u'」）、而非靜態名稱、例如「'home'」。
+
+
+對於SMB 2.x和SMB 3.0用戶端、使用自動節點參照來存取主目錄時、沒有特別的準則。
+
+
+
+== 在CIFS伺服器上停用自動節點參照的準則（含現有參照連線）
+
+如果您在啟用此選項之後停用自動節點參照、則目前連線至參照LIF的用戶端會保留參照的連線。由於支援使用DFS轉介做為SMB自動節點轉介的機制、因此在停用此選項之後、用戶端甚至可以重新連線到參照的LIF、直到用戶端的快取DFS參照 逾時為止。ONTAP即使還原ONTAP 至不支援自動節點參照的版本、也一樣。用戶端會繼續使用參照、直到來自用戶端快取的Dfs參照逾時為止。
+
+Autolocation會使用SMB自動節點參照、將用戶端轉介至擁有SVM資料磁碟區的節點上的LIF、藉此提高SMB用戶端效能。當SMB用戶端連線至裝載於SVM上的SMB共用時、它可能會使用不擁有所要求資料的節點上的LIF來連線、並使用叢集互連網路來擷取資料。如果SMB連線使用位於包含所要求資料之節點上的LIF、用戶端就能獲得更快的回應時間。
+
+提供此功能的方法是使用Microsoft分散式檔案系統（Dfs）轉介來通知SMB用戶端命名空間中所要求的檔案或資料夾位於其他位置。ONTAP當節點判斷包含資料的節點上有SVM LIF時、就會進行參照。參照是根據用戶端所連線之共用區根的位置而進行。
+
+參照發生在SMB交涉期間。參照會在建立連線之前進行。將SMB用戶端指向目標節點之後ONTAP 、就會建立連線、然後用戶端從該點透過參照的LIF路徑存取資料。這可讓用戶端更快存取資料、避免額外的叢集通訊。
+
+
+
+== 在Mac OS用戶端上使用自動節點參照的準則
+
+Mac OS X用戶端不支援SMB自動節點轉介、即使Mac OS支援Microsoft的分散式檔案系統（DFs）。Windows用戶端在連線至SMB共用區之前、會先提出一個Dfs參照要求。提供資料LIF的參照、可在裝載所要求資料的同一個節點上找到、進而改善用戶端回應時間。ONTAP雖然Mac OS支援DFS,Mac OS用戶端在此領域的行為與Windows用戶端並不完全相同。
+
+xref:manage-home-directories-concept.adoc[管理主目錄]
+
+link:../networking/index.html["網路管理"]
+
+https://mysupport.netapp.com/NOW/products/interoperability["NetApp互通性"]

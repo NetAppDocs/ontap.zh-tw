@@ -1,0 +1,124 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/index.html 
+keywords: s3 snapmirror overview, snapmirror, s3 snapmirror, s3 snapmirror mirroring and backup, s3 snapmirror requirments, s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror new buckets, s3 snapmirror buckets with data protection, s3 snapmirror data protection bundle, s3 snapmirror data protection bundle and hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, s3 SnapMirror considerations and restrictions, Fan-in deployments, data protection relationships, s3 snapmirror policy, peering 
+summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體 
+---
+= S3 SnapMirror總覽
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體。此外、與標準SnapMirror不同的是、S3 SnapMirror可能具有非NetApp目的地。
+
+S3 SnapMirror支援從ONTAP Sirs3儲存庫到下列目的地的主動鏡像和備份層：
+
+[cols="50,25,25"]
+|===
+| 目標 | 支援作用中鏡像和接管？ | 支援備份與還原？ 
+
+
+ a| 
+SS3 ONTAP
+
+* 相同SVM中的儲存區
+* 位於同一個叢集上不同SVM中的儲存區
+* 不同叢集上的SVM儲存區
+
+| image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+
+
+| StorageGRID |  | image:status-enabled-perf-config.gif["核取符號"] 
+
+
+| AWS S3 |  | image:status-enabled-perf-config.gif["核取符號"] 
+|===
+您可以保護ONTAP 現有的SS3伺服器庫位、也可以立即啟用資料保護功能、建立新的庫位。
+
+S3 SnapMirror支援連出和串聯關係。如需概觀、請參閱 link:..data-protection/supported-deployment-config-concept.html["橫向和串聯資料保護部署"]。
+
+
+
+== S3 SnapMirror需求
+
+* 無法執行更新版本的來源叢集和目的地叢集。ONTAP ONTAP
+* 下列授權套裝組合必須在ONTAP 來源系統和目的地系統上取得授權：
++
+** 核心產品組合、適用於ONTAP SS3傳輸協定與儲存設備。
+** 適用於S3 SnapMirror的資料保護套裝組合、可鎖定其他NetApp物件儲存目標（ONTAP 例如、S3 StorageGRID 、支援、及Cloud Volumes ONTAP 支援）。
+** 適用於S3 SnapMirror的資料保護套裝組合與混合式雲端套裝組合、可將其鎖定在協力廠商物件儲存區（AWS S3）。
+
+
+* SS3 ONTAP
++
+** SS3伺服器必須執行來源和目的地SVM。ONTAP
+** 建議但不需要在裝載S3伺服器的系統上安裝TLS存取的CA憑證。
++
+*** 用於簽署S3伺服器憑證的CA憑證必須安裝在主機S3伺服器叢集的管理儲存VM上。
+*** 您可以使用自我簽署的CA憑證或外部CA廠商所簽署的憑證。
+*** 如果來源或目的地儲存VM未使用HTTPS接聽、則不需要安裝CA憑證。
+
+
+
+
+* 對等（ONTAP 適用於S3目標）
++
+** 必須設定叢集間的LIF（以供遠端ONTAP 使用）。
+** 來源和目的地叢集會被處理（用於遠端ONTAP 的不確定目標）。
+** 來源和目的地儲存VM都會被處理（適用於所有ONTAP 的物件）。
+
+
+* SnapMirror原則
++
+** 所有S3 SnapMirror關係都需要S3專屬的SnapMirror原則、但您可以針對多個關係使用相同的原則。
+** 您可以建立自己的原則或接受預設的*連續*原則、其中包含下列值：
++
+*** 節流（處理量/頻寬上限）-無限。
+*** 恢復點目標時間：1小時（3、600秒）。
+
+
+
+
+* S3 SnapMirror關係需要root使用者金鑰Storage VM root使用者存取金鑰；ONTAP 根據預設、不需要使用這些金鑰。第一次建立S3 SnapMirror關係時、您必須確認來源與目的地儲存VM上是否存在金鑰、如果沒有、則重新產生金鑰。如果您需要重新產生這些金鑰、您必須確保使用存取和秘密金鑰配對的所有用戶端和SnapMirror物件儲存組態、都會以新的金鑰更新。
+
+
+如需S3伺服器組態的相關資訊、請參閱下列主題：
+
+* link:../task_object_provision_enable_s3_server.html["在儲存VM上啟用S3伺服器"]
+* link:../s3-config/index.html["關於S3組態程序（CLI）"]
+
+
+如需叢集與儲存VM對等關係的相關資訊、請參閱下列主題：
+
+* link:../task_dp_prepare_mirror.html["準備鏡射與保存（System Manager、步驟1至6）"]
+* link:../peering/index.html["叢集與SVM對等（CLI）"]
+
+
+
+
+== S3 SnapMirror考量與限制
+
+建立新的儲存庫時、您可以建立使用者和群組來控制存取。如需詳細資訊、請參閱下列主題：
+
+* link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組（系統管理員）"]
+* link:../s3-config/create-s3-user-task.html["建立S3使用者（CLI）"]
+* link:../s3-config/create-modify-groups-task.html["建立或修改S3群組（CLI）"]
+
+
+目前S3 SnapMirror版本不支援下列標準SnapMirror功能：
+
+* 連入部署（多個來源儲存區與單一目的地儲存區之間的資料保護關係）
++
+S3 SnapMirror可支援從多個叢集到單一次要叢集的多個儲存區鏡像、但每個來源儲存區都必須在次要叢集上擁有自己的目的地儲存區。
+
+

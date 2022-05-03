@@ -1,0 +1,117 @@
+---
+permalink: mediator/manage-task.html 
+sidebar: sidebar 
+keywords: mediator, username, password, change, uninstall 
+summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使用者名稱或密碼。您也可以解除安裝ONTAP 《支援中心服務》。 
+---
+= 管理ONTAP 「協調器」服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安裝ONTAP 完「Ischimator」服務之後、您可以變更使用者名稱或密碼。您也可以解除安裝ONTAP 《支援中心服務》。
+
+
+
+== 變更使用者名稱
+
+這些工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+
+如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
+
+指usr/local/bin/snider_username'
+
+選擇下列其中一個選項來變更使用者名稱：
+
+* 執行命令中介er_change_user、並回應下列範例所示的提示：
++
+....
+ [root@mediator-host ~]# mediator_change_user
+ Modify the Mediator API username by entering the following values:
+     Mediator API User Name: mediatoradmin
+                   Password:
+ New Mediator API User Name: mediator
+ The account username has been modified successfully.
+ [root@mediator-host ~]#
+....
+* 執行下列命令：
++
+"MEDIATOR_USERNAME=中介 中介者密碼=中介者2中介者2中介者新使用者名稱=中介者管理中介者管理中介者變更使用者"
+
++
+....
+ [root@mediator-host ~]# MEDIATOR_USERNAME= mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME= mediatoradmin mediator_change_user
+ The account username has been modified successfully.
+ [root@mediator-host ~]#
+....
+
+
+
+
+== 變更密碼
+
+這項工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+
+如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
+
+usr/local/bin/cider_change_password
+
+選擇下列其中一個選項來變更密碼：
+
+* 執行「medider_change_password」命令、並回應下列範例所示的提示：
++
+....
+ [root@mediator-host ~]# mediator_change_password
+ Change the Mediator API password by entering the following values:
+    Mediator API User Name: mediatoradmin
+              Old Password:
+              New Password:
+          Confirm Password:
+ The password has been updated successfully.
+ [root@mediator-host ~]#
+....
+* 執行下列命令：
++
+「MEDIATOR_USERNAME = mediaatoradmin controller_password=mediaator1 media_new_password=mediaator2 media_change_password」
+
++
+範例顯示密碼已從「media1」變更為「mediaator2」。
+
++
+....
+ [root@mediator-host ~]# MEDIATOR_USERNAME=mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password
+ The password has been updated successfully.
+ [root@mediator-host ~]#
+....
+
+
+
+
+== 解除安裝ONTAP 「BMC Service」
+
+如有必要、您可以移除ONTAP 「資訊調解器」服務。在ONTAP 您移除「內化器」服務之前、必須先中斷「內化器」與「內化器」的連線。
+
+這項工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+
+如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
+
+usr/local/bin/uninstall_ontap_中介 程序
+
+.步驟
+. 解除安裝ONTAP 《BMC Service：
++
+解除安裝ONTAP中介程式
+
++
+....
+ [root@mediator-host ~]# uninstall_ontap_mediator
+
+ ONTAP Mediator: Self Extracting Uninstaller
+
+ + Removing ONTAP Mediator. (Log: /tmp/ontap_mediator.GmRGdA/uninstall_ontap_mediator/remove.log)
+ + Remove successful.
+ [root@mediator-host ~]#
+....
+

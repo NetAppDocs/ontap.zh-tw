@@ -1,0 +1,115 @@
+---
+permalink: system-admin/add-nodes-cluster-concept.html 
+sidebar: sidebar 
+keywords: add, node, cluster, create, expand 
+summary: 建立叢集之後、您可以新增節點來擴充叢集。您一次只能新增一個節點。 
+---
+= 將節點新增至叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立叢集之後、您可以新增節點來擴充叢集。您一次只能新增一個節點。
+
+.您需要的是 #8217 ；需要的是什麼
+* 如果您要將節點新增至多節點叢集、叢集中現有節點的一半以上必須健全（以「cluster show」表示）。
+* 如果您要將節點新增至雙節點無交換器叢集、則必須先安裝並設定叢集管理和互連交換器、才能新增其他節點。
++
+無交換器式叢集功能僅在雙節點叢集上受支援。
+
++
+當叢集包含或擴充至兩個以上的節點時、就不需要叢集HA、而且會自動停用叢集HA。
+
+* 如果您要將第二個節點新增至單一節點叢集、則必須已安裝第二個節點、而且必須已設定叢集網路。
+* 如果叢集已啟用SP自動組態、則指定要使用SP的子網路必須具有用於連接節點的可用資源。
++
+加入叢集的節點會使用指定的子網路來執行SP的自動組態。
+
+* 您必須已收集下列資訊、以供新節點的節點管理LIF使用：
++
+** 連接埠
+** IP 位址
+** 網路遮罩
+** 預設閘道
+
+
+
+
+節點必須為偶數、才能形成HA配對。開始將節點新增至叢集之後、您必須完成此程序。節點必須是叢集的一部分、才能開始新增其他節點。
+
+.步驟
+. 開啟您要新增至叢集的節點。
++
+節點會開機、然後在主控台上啟動「節點設定精靈」。
+
++
+[listing]
+----
+Welcome to node setup.
+
+You can enter the following commands at any time:
+  "help" or "?" - if you want to have a question clarified,
+  "back" - if you want to change previously answered questions, and
+  "exit" or "quit" - if you want to quit the setup wizard.
+     Any changes you made before quitting will be saved.
+
+To accept a default or omit a question, do not enter a value.
+
+Enter the node management interface port [e0c]:
+----
+. 結束「Node Setup（節點設定）」精靈：「Exit（結束）」
++
+「節點設定」精靈會結束、並出現登入提示、警告您尚未完成設定工作。
+
+. 使用「admin」使用者名稱登入管理帳戶。
+. 啟動叢集設定精靈：
++
+‘*叢集設定*’
+
++
+[listing]
+----
+::> cluster setup
+
+Welcome to the cluster setup wizard.
+
+You can enter the following commands at any time:
+ "help" or "?" - if you want to have a question clarified,
+ "back" - if you want to change previously answered questions, and
+ "exit" or "quit" - if you want to quit the cluster setup wizard.
+ Any changes you made before quitting will be saved.
+
+You can return to cluster setup at any time by typing "cluster setup".
+To accept a default or omit a question, do not enter a value....
+
+Use your web browser to complete cluster setup by accessing
+https://10.63.11.29
+
+Otherwise, press Enter to complete cluster setup using the
+command line interface:
+----
++
+[NOTE]
+====
+如需使用設定GUI設定叢集的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/task_admin_add_nodes_to_cluster.html["系統管理員"] 線上說明：
+
+====
+. 按Enter鍵以使用CLI完成此工作。當系統提示您建立新的叢集或加入現有的叢集時、請輸入「* joe*」。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+join
+----
+. 依照提示設定節點並將其加入叢集：
++
+** 若要接受提示的預設值、請按Enter。
+** 若要在提示字元中輸入您自己的值、請輸入值、然後按Enter。
+
+
+. 針對您要新增的每個額外節點、重複上述步驟。
+
+
+將節點新增至叢集後、您應該為每個HA配對啟用儲存容錯移轉。

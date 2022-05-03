@@ -1,0 +1,32 @@
+---
+permalink: data-protection/vol-placement-criteria-svm-dest-reference.html 
+sidebar: sidebar 
+keywords: snapmirror, svm, replication, disaster recovery, aggregate, volume 
+summary: 將磁碟區從來源SVM複寫到目的地SVM時、請務必瞭解選取Aggregate的條件。 
+---
+= 將磁碟區放置在目的地SVM上的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將磁碟區從來源SVM複寫到目的地SVM時、請務必瞭解選取Aggregate的條件。
+
+根據下列條件選取Aggregate：
+
+* 磁碟區一律放在非根Aggregate上。
+* 非根Aggregate是根據可用的可用空間和已裝載於Aggregate上的磁碟區數量來選取。
++
+具有更多可用空間和較少磁碟區的集合體會被優先分配。選取具有最高優先順序的Aggregate。
+
+* 來源磁碟區FabricPool 位於目的地FabricPool 的Sichaggregate上、具有相同的分層原則。
+* 如果來源SVM上的磁碟區位於Flash Pool Aggregate上、則該磁碟區會放置在目的地SVM上的Flash Pool Aggregate上、如果有此類Aggregate存在且有足夠的可用空間。
+* 如果複製的Volume的「空間保證」選項設為「Volume」、則僅會考慮使用大於Volume大小的可用空間集合體。
+* 根據來源Volume大小、在複寫期間、目的地SVM上的Volume大小會自動增加。
++
+如果您要預先保留目的地SVM的大小、則必須調整磁碟區大小。磁碟區大小不會根據來源SVM在目的地SVM上自動縮小。
+
+
+
+如果您想要將磁碟區從一個Aggregate移至另一個Aggregate、可以在目的地SVM上使用「Volume Move」命令。

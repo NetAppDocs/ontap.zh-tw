@@ -1,0 +1,46 @@
+---
+permalink: smb-admin/enable-disable-multidomain-name-mapping-searches-task.html 
+sidebar: sidebar 
+keywords: multidomain, name, mapping, search, wild, card, domain, portion, windows, configure, configuring, unix, user, bidirectional, enable, disable, enable or disable multidomain name mapping searches 
+summary: 透過多網域名稱對應搜尋、您可以在設定UNIX使用者對Windows使用者名稱對應時、在Windows名稱的網域部分使用萬用字元（*）。在名稱的網域部分使用萬用字元（*）、ONTAP 可讓Sylsin搜尋所有與包含CIFS伺服器電腦帳戶之網域具有雙向信任的網域。 
+---
+= 啟用或停用多網域名稱對應搜尋
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+透過多網域名稱對應搜尋、您可以在設定UNIX使用者至Windows使用者名稱對應時、在Windows名稱的網域部分使用萬用字元（\*）。在名稱的網域部分使用萬用字元（*）、ONTAP 可讓Sylsin搜尋所有與包含CIFS伺服器電腦帳戶之網域具有雙向信任的網域。
+
+除了搜尋雙向信任的所有網域之外、您也可以設定偏好的信任網域清單。設定偏好的信任網域清單時ONTAP 、將使用偏好的信任網域清單、而非雙向探索的信任網域、來執行多網域名稱對應搜尋。
+
+* 預設會啟用多網域名稱對應搜尋。
+* 此選項適用於進階權限層級。
+
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要多網域名稱對應搜尋... | 輸入命令... 
+
+
+ a| 
+已啟用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is信任的網域-enum搜尋啟用true」
+
+
+
+ a| 
+已停用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is信任的網域-enum搜尋功能為假」
+
+|===
+. 返回管理員權限等級：「et -priv. admin」
+
+
+xref:server-options-reference.adoc[可用的SMB伺服器選項]

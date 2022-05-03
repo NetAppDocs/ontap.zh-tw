@@ -1,0 +1,20 @@
+---
+permalink: revert/identify-user-sha2-hash-user-accounts.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, password, hash, function, supported, encryption, type 
+summary: 如果還原ONTAP 至任何版本的更新版本、則SHA-2帳戶使用者的密碼將無法再驗證。 
+---
+= 識別使用SHA-2雜湊功能的使用者帳戶
+:allow-uri-read: 
+
+
+[role="lead"]
+如果您要從ONTAP 還原為從版本9.1或ONTAP 版本9.0到ONTAP 版本8.3.x、則SHA-2帳戶使用者的密碼將無法驗證。還原之前、您應該先識別使用SHA-2雜湊功能的使用者帳戶、以便在還原之後、讓使用者將密碼重設為使用您要回復的版本所支援的加密類型（MD5）。
+
+. 將權限設定變更為進階：「設定-權限進階」
+. 識別使用SHA-2的使用者帳戶具有以下功能：「安全登入show -vserver *-username*-application*-authentication-method密碼-hash-Function！md5」
+. 保留命令輸出以供還原後使用。
+
+
+
+NOTE: 在還原期間、系統會提示您執行進階命令「安全登入密碼準備降級」、以重設您自己的密碼以使用MD5雜湊功能。如果您的密碼未使用MD5加密、命令會提示您輸入新密碼、並使用MD5加密密碼、以便在還原後驗證您的認證資料。

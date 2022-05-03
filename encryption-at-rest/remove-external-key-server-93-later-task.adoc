@@ -1,0 +1,59 @@
+---
+permalink: encryption-at-rest/remove-external-key-server-93-later-task.html 
+sidebar: sidebar 
+keywords: deleting, external key manager, connection 
+summary: 當不再需要服務器時、您可以從節點中斷KMIP伺服器的連線。例如、當您轉換至Volume加密時、可能會中斷KMIP伺服器的連線。 
+---
+= 移除外部金鑰管理程式連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當不再需要服務器時、您可以從節點中斷KMIP伺服器的連線。例如、當您轉換至Volume加密時、可能會中斷KMIP伺服器的連線。
+
+您必須是叢集或SVM管理員、才能執行此工作。
+
+當您中斷KMIP伺服器與HA配對中某個節點的連線時、系統會自動中斷伺服器與所有叢集節點的連線。
+
+[NOTE]
+====
+如果您打算在中斷KMIP伺服器連線後繼續使用外部金鑰管理、請確定另一部KMIP伺服器可用於提供驗證金鑰。
+
+====
+.步驟
+. 中斷KMIP伺服器與目前節點的連線：
++
+[cols="35,65"]
+|===
+
+
+| 此版本... ONTAP | 使用此命令... 
+
+
+ a| 
+更新版本ONTAP
+ a| 
+「安全金鑰管理程式外部移除伺服器-vserver SVM -key-servers host_name | ip_address:port,...」
+
+
+
+ a| 
+不含更新版本ONTAP
+ a| 
+「安全金鑰管理程式刪除-address key_manager_server_ipaddress'
+
+|===
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列ONTAP S9.6命令會停用兩部外部金鑰管理伺服器的連線、以「cluster1」（第一部名為「KS1」）接聽預設連接埠5696、第二部為IP位址10.0.20、接聽連接埠24482：
+
++
+[listing]
+----
+clusterl::> security key-manager external remove-servers -vserver cluster-1 -key-servers ks1,10.0.0.20:24482
+----
+

@@ -1,0 +1,56 @@
+---
+permalink: san-admin/create-nvme-namespace-subsystem-task.html 
+sidebar: sidebar 
+keywords: create, nvme, namespace, subsystem 
+summary: 對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe命名空間和子系統。然後、每個命名空間都可以對應至NVMe子系統、以便從主機系統存取資料。 
+---
+= 建立NVMe命名空間和子系統
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe命名空間和子系統。然後、每個命名空間都可以對應至NVMe子系統、以便從主機系統存取資料。
+
+SVM必須已針對NVMe進行設定。
+
+.步驟
+. 確認SVM已設定為NVMe：
++
+「vserver show -vserver _svm_name_-Fields allowed-protocols」
+
++
+「NVMe」應顯示在「允許的傳輸協定」欄下。
+
+. 建立NVMe命名空間：
++
+「Vserver NVMe命名空間create -vserver _Svm_name_-path _path_-size _size__of_namest_-ostype_os_type_」
+
+. 建立NVMe子系統：
++
+「Vserver NVMe子系統會建立-vserver _svm_name_-subsystem _name_of_subsystem_-osttype _os_type_」
+
+. 驗證子系統是否已建立：
++
+「Vserver NVMe子系統顯示-vserver _Svm_name_」
+
++
+「NVMe」子系統應顯示在「Subsystem」（子系統）欄下。
+
+
+
+
+
+== 關於NVMe子系統
+
+NVMe子系統包含一個或多個控制器、一個或多個命名空間、一個或多個非揮發性記憶體（NVM）子系統連接埠（FC-NVMe或RDMA傳輸連接埠）、NVM儲存媒體、以及控制器與NVM儲存媒體之間的介面。對於控制器對應和管理、NVM子系統會對應ONTAP 至位於整個過程的Vserver。
+
+NVMe over Fabric（NVMeoF）子系統是位於FreeBSD核心中的獨立核心物件。NVMeoF子系統與下列元件介面：
+
+* SAN元件、例如BCOMKA、FCT和VDOM
+* WAFL
+* RAS元件、例如CM、ASUP和EMS
+
+
+所有與NVMeoF子系統的介面均符合ONTAP 目前在介紹中所找到的定義和模式。

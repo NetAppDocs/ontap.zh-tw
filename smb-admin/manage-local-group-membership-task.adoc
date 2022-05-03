@@ -1,0 +1,70 @@
+---
+permalink: smb-admin/manage-local-group-membership-task.html 
+sidebar: sidebar 
+keywords: manage, local, group, membership, add, removing, remove, local, domain, user, domain, group, control, access, place, privilege, associate, manage local group membership 
+summary: 您可以新增及移除本機或網域使用者、或新增及移除網域群組、來管理本機群組成員資格。如果您想要根據群組中的存取控制來控制資料存取、或是想要使用者擁有與該群組相關的權限、這很有用。 
+---
+= 管理本機群組成員資格
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以新增及移除本機或網域使用者、或新增及移除網域群組、來管理本機群組成員資格。如果您想要根據群組中的存取控制來控制資料存取、或是想要使用者擁有與該群組相關的權限、這很有用。
+
+新增成員至本機群組的準則：
+
+* 您無法將使用者新增至特殊的_Everyon__群組。
+* 您必須先存在本機群組、才能將使用者新增至該群組。
+* 使用者必須存在、才能將使用者新增至本機群組。
+* 您無法將本機群組新增至其他本機群組。
+* 若要將網域使用者或群組新增至本機群組、Data ONTAP 則必須能夠將名稱解析為SID。
+
+
+從本機群組移除成員的準則：
+
+* 您無法從特殊的_Everyon__群組中移除成員。
+* 您要從中移除成員的群組必須存在。
+* 必須能夠將您要從群組移除的成員名稱解析為對應的SID。ONTAP
+
+
+.步驟
+. 新增或移除群組中的成員。
++
+|===
+| 如果您想要... | 然後使用命令... 
+
+
+ a| 
+新增成員至群組
+ a| 
++vserver CIFS使用者與群組本機群組新增成員-vserver _vserver_name_-group名稱_group名稱_-member-names name[,...]+'您可以指定要新增至指定本機群組的本機使用者、網域使用者或網域群組的以逗號分隔的清單。
+
+
+
+ a| 
+從群組中移除成員
+ a| 
++vserver CIFS使用者與群組本機群組移除成員-vserver _vserver_name_-group名稱_group名稱_-member-names name[,...]+'您可以指定要從指定本機群組移除的本機使用者、網域使用者或網域群組的以逗號分隔的清單。
+
+|===
++
+以下範例將本機使用者「'Smb_server\sue」和網域群組「'AD_DOM\DOM_DOM_eng'」新增至SVM VS1上的本機群組「'Smb_server\engin'」：
+
++
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group add-members -vserver vs1 -group-name SMB_SERVER\engineering -member-names SMB_SERVER\sue,AD_DOMAIN\dom_eng
+----
++
+以下範例將SVM VS1上本機群組「'Smb_server\sue」和「'smb_server\james'」中的本機使用者移除：
+
++
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group remove-members -vserver vs1 -group-name SMB_SERVER\engineering -member-names SMB_SERVER\sue,SMB_SERVER\james
+----
+
+
+xref:display-members-local-groups-task.adoc[顯示本機群組成員的相關資訊]

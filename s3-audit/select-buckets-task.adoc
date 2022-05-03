@@ -1,0 +1,34 @@
+---
+permalink: s3-audit/select-buckets-task.html 
+sidebar: sidebar 
+keywords: s3 audit, select, buckets 
+summary: 您必須在啟用稽核的SVM中指定要稽核的儲存區。 
+---
+= 選取「S3稽核桶」
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須在啟用稽核的SVM中指定要稽核的儲存區。
+
+.您需要的是 #8217 ；需要的是什麼
+* 啟用S3稽核的SVM。
+
+
+S3稽核組態是以每個SVM為基礎來啟用、但您必須在SVMS中選取已啟用稽核的儲存區。如果您將儲存區新增至SVM、而且想要稽核新的儲存區、則必須使用此程序來選取這些儲存區。您也可以在SVM中啟用未稽核的儲存區以進行S3稽核。
+
+在使用「vserver object-store-server audit object-Select DELETE」命令移除之前、會持續對儲存區進行稽核組態。
+
+選取S3稽核的儲存庫：
+
+「vserver object-store-server稽核事件選取器create -vserver _svm_name_-bucket _bucket_name_[-access]｛read-only | write only | all｝][-可用 權限]｛只允許|拒絕-只允許| all｝]」
+
+* 「-access'（存取）」-指定要稽核的事件存取類型：「僅讀取」、「僅寫入」或「ALL」（全部）（預設為「ALL」）。
+* 「-'權限」-指定要稽核的事件權限類型：「僅允許」、「僅允許」或「全部」（預設為「全部」）。
+
+
+下列範例會建立只記錄允許唯讀存取的事件的庫區稽核組態：
+
+「cluster1：：> vserver object-store-server稽核事件選取器create -vserver VS1 -Bucket test-Bucket -access read-only -permission only」

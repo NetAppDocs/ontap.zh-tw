@@ -1,0 +1,48 @@
+---
+permalink: smb-hyper-v-sql/licensing-requirements-concept.html 
+sidebar: sidebar 
+keywords: ontap, license, requirement, nondisruptive, hyper, v, smb, sql, server 
+summary: 在建立SQL Server或Hyper-V over SMB解決方案以在SVM上執行不中斷營運時、您必須瞭解ONTAP 特定的功能與授權需求。 
+---
+= 不需提供授權與授權ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立SQL Server或Hyper-V over SMB解決方案以在SVM上執行不中斷營運時、您必須瞭解ONTAP 特定的功能與授權需求。
+
+
+
+== 版本需求ONTAP
+
+* Hyper-V over SMB
++
+支援在SMB共用區上執行不中斷營運、以在Windows 2012或更新版本上執行Hyper-V。ONTAP
+
+* SQL Server over SMB
++
+支援在SMB共用區上執行不中斷營運、適用於在Windows 2012或更新版本上執行的SQL Server 2012或更新版本。ONTAP
+
+
+
+如需ONTAP 有關支援版本的支援、如需在SMB共用區上執行不中斷營運的更新資訊、請參閱互通性對照表（Interoperability Matrix）。
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+
+
+== 授權要求
+
+需要下列授權：
+
+* CIFS
+* FlexClone（僅適用於SMB上的Hyper-V）
++
+如果使用遠端VSS進行備份、則需要此授權。陰影複製服務使用FlexClone來建立檔案的時間點複本、以便在建立備份時使用。
+
++
+如果您使用不使用遠端VSS的備份方法、則FlexClone授權為選用項目。
+
+

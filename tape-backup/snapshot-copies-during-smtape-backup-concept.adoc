@@ -1,0 +1,55 @@
+---
+permalink: tape-backup/snapshot-copies-during-smtape-backup-concept.html 
+sidebar: sidebar 
+keywords: snapshot, copy, smtape, backup, baseline, incremental, snapmirror 
+summary: 您應該瞭解在SM磁帶 基礎備份和遞增備份期間、如何使用Snapshot複本。在使用SMTape執行備份時、也必須謹記注意事項。 
+---
+= 在SMTape備份期間使用Snapshot複本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解在SM磁帶 基礎備份和遞增備份期間、如何使用Snapshot複本。在使用SMTape執行備份時、也必須謹記注意事項。
+
+
+
+== 基礎備份
+
+執行基準備份時、您可以指定要備份到磁帶的Snapshot複本名稱。如果未指定Snapshot複本、則根據磁碟區的存取類型（讀取/寫入或唯讀）、會自動建立Snapshot複本、或是使用現有的Snapshot複本。當您指定備份的Snapshot複本時、比指定Snapshot複本舊的所有Snapshot複本也會備份到磁帶。
+
+如果您未指定備份的Snapshot複本、則會發生下列情況：
+
+* 對於讀寫磁碟區、會自動建立Snapshot複本。
++
+新建立的Snapshot複本和所有舊的Snapshot複本都會備份到磁帶。
+
+* 對於唯讀磁碟區、所有Snapshot複本（包括最新的Snapshot複本）都會備份到磁帶。
++
+在備份啟動後建立的任何新Snapshot複本都不會備份。
+
+
+
+
+
+== 遞增備份
+
+對於SMTape遞增或差異備份作業、NDMP相容的備份應用程式會建立及管理Snapshot複本。
+
+執行遞增備份作業時、您必須一律指定Snapshot複本。若要成功進行遞增備份作業、在先前備份作業期間備份的Snapshot複本（基準或遞增）必須位於執行備份的磁碟區上。若要確保使用此備份Snapshot複本、您必須在設定備份原則時、考慮在此磁碟區上指派的Snapshot原則。
+
+
+
+== SnapMirror目的地上的SMTape備份考量
+
+* 資料保護鏡射關係會在目的地磁碟區上建立暫用Snapshot複本以供複寫。
++
+您不應使用這些Snapshot複本進行SM磁帶 備份。
+
+* 如果在同一個磁碟區上執行SMTape備份作業時、目的地磁碟區上發生資料保護鏡射關係的SnapMirror更新、則不得在來源磁碟區上刪除由SMTape備份的Snapshot複本。
++
+在備份作業期間、SMTape會鎖定目的地磁碟區上的Snapshot複本、如果來源磁碟區上刪除對應的Snapshot複本、則後續的SnapMirror更新作業將會失敗。
+
+* 您不應在遞增備份期間使用這些Snapshot複本。
+

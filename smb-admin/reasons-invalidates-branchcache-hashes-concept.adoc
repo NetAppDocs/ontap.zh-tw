@@ -1,0 +1,31 @@
+---
+permalink: smb-admin/reasons-invalidates-branchcache-hashes-concept.html 
+sidebar: sidebar 
+keywords: understand, ontap, invalidate, hash, branchcache, configuration, share, reasons ontap invalidates branchcache hashes 
+summary: 規劃ONTAP 您的BranchCache組態時、瞭解為什麼不驗證雜湊會有幫助。它可協助您決定應該設定哪種操作模式、並協助您選擇要啟用的共用區。 
+---
+= 理由ONTAP 不驗證BranchCache雜湊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+規劃ONTAP 您的BranchCache組態時、瞭解為什麼不驗證雜湊會有幫助。它可協助您決定應該設定哪種操作模式、並協助您選擇要啟用的共用區。
+
+必須管理BranchCache雜湊、才能確保雜湊有效。ONTAP如果雜湊無效、ONTAP 則在下次要求內容時、如果仍然啟用了BranchCache、則無法驗證雜湊並計算新雜湊。
+
+由於下列原因、導致雜湊失效：ONTAP
+
+* 伺服器金鑰已修改。
++
+如果伺服器金鑰已修改、ONTAP 則無法驗證雜湊存放區中的所有雜湊。
+
+* 由於已達到BranchCache雜湊存放區的最大大小、因此會從快取中清除雜湊。
++
+這是可調整的參數、可加以修改以符合您的業務需求。
+
+* 檔案會透過SMB或NFS存取進行修改。
+* 使用「午睡還原」命令還原有計算雜湊的檔案。
+* 包含啟用了BranchCache的SMB共用區的磁碟區會使用「午睡還原」命令還原。
+

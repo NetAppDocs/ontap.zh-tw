@@ -1,0 +1,77 @@
+---
+permalink: smb-admin/list-supported-privileges-reference.html 
+sidebar: sidebar 
+keywords: ontap, predefined, support, privilege, local, group, add, user, exist, domain, list of supported privileges 
+summary: 支援的權限已預先定義。ONTAP某些預先定義的本機群組預設會新增其中一些權限。您也可以從預先定義的群組新增或移除權限、或建立新的本機使用者或群組、並新增權限至您所建立的群組、或新增至現有的網域使用者和群組。 
+---
+= 支援的權限清單
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援的權限已預先定義。ONTAP某些預先定義的本機群組預設會新增其中一些權限。您也可以從預先定義的群組新增或移除權限、或建立新的本機使用者或群組、並新增權限至您所建立的群組、或新增至現有的網域使用者和群組。
+
+下表列出儲存虛擬機器（SVM）上支援的權限、並提供具有指派權限的BUILTIN群組清單：
+
+|===
+| 權限名稱 | 預設安全性設定 | 說明 
+
+
+ a| 
+「eTcbPrivilege」
+ a| 
+無
+ a| 
+做為作業系統的一部分
+
+
+
+ a| 
+「備份權限」
+ a| 
+「BUILTIN\Administrators」、「BUILTIN\Backup Operators」
+ a| 
+備份檔案和目錄、覆寫任何ACL
+
+
+
+ a| 
+「eRestorePrivilege」
+ a| 
+「BUILTIN\Administrators」、「BUILTIN\Backup Operators」
+ a| 
+還原檔案和目錄、覆寫任何ACL、將任何有效的使用者或群組SID設為檔案擁有者
+
+
+
+ a| 
+《擁有者船權》
+ a| 
+「BUILTIN\Administrators」
+ a| 
+取得檔案或其他物件的擁有權
+
+
+
+ a| 
+「安全性權限」
+ a| 
+「BUILTIN\Administrators」
+ a| 
+管理稽核這包括檢視、傾出及清除安全性記錄。
+
+
+
+ a| 
+「eChangeleNotifyPrivilege」
+ a| 
+《BUILTIN\Administrators》、《BUILTIN\Backup Operators》、《BUILTIN\Power Users》、《BUILTIN\Users》、《Everyone"
+ a| 
+略過周遊檢查具有此權限的使用者不需要擁有周遊（x）權限、即可遍歷資料夾、symlinks或交會。
+
+|===
+xref:manage-local-privileges-concept.adoc[管理本機權限]
+
+xref:configure-bypass-traverse-checking-concept.adoc[設定略過周遊檢查]

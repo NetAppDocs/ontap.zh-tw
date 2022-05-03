@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: task_cloud_tier_data.html 
+keywords: netapp, ontap, FabricPool, tier, tiers, cloud data, tiering, aggregate, local tier, primary, cloud tier, storing data in tiers, storage efficiency, FabricPool, Fabric Pool, FabricPool license, volume tiering policy 
+summary: 將資料儲存在階層中、可提升儲存系統的效率。 
+---
+= 將資料分層至雲端
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+將資料儲存在階層中、可提升儲存系統的效率。您可以根據FabricPool 資料的存取頻率、使用功能以將資料儲存在階層中、藉此管理儲存層。
+
+此程序會將物件存放區設定為FabricPool 適用於整個過程的雲端層。請記住、一旦您附加至本機層（aggr）、就無法取消附加雲端層。
+
+自2021年8月21日起、我們針對使用雲端分層服務的Cloud Manager所支援的分層組態、推出全新的雲端分層BYOL授權方案。 link:cloud-install-fabricpool-task.html["深入瞭解安裝FabricPool 不含更新授權的資訊"]。
+
+如果您要分層到ONTAP SS3、還有其他需求：
+
+* DNS ONTAP 伺服器中必須有一個遠端不中斷S3伺服器主機名稱的項目、該伺服器必須針對管理儲存VM進行設定、包括S3伺服器的FQDN名稱及其網路介面上的IP位址。
+* link:task_dp_prepare_mirror.html["叢集間網路介面"] 必須同時在本機和遠端叢集上設定、但不需要叢集對等。
+
+
+您也可以在System Manager中建立磁碟區分層原則。
+
+.步驟
+. 按一下「*儲存設備>層級>新增雲端層*」、然後選取您要使用的物件儲存區供應商。
+. 如果您想要建立雲端鏡射、請按一下*「Add as FabricPool Swirror *（*新增為鏡射*）」。
+
+
+利用這個鏡射技術、您可以順暢地更換資料儲存區、並確保在發生災難時能夠取得您的資料。FabricPool
+
+
+
+== 分層資料並降低成本影片
+
+video::92-cSP7M_5I[youtube, width=848,height=480]

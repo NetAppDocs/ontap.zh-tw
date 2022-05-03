@@ -1,0 +1,51 @@
+---
+permalink: encryption-at-rest/install-ssl-certificates-task.html 
+sidebar: sidebar 
+keywords: install, ssl, certificates, cluster 
+summary: 叢集與KMIP伺服器使用KMIP SSL憑證來驗證彼此的身分、並建立SSL連線。在使用KMIP伺服器設定SSL連線之前、您必須先安裝叢集的KMIP用戶端SSL憑證、以及KMIP伺服器根憑證授權單位（CA）的SSL公開憑證。 
+---
+= 在叢集上安裝SSL憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+叢集與KMIP伺服器使用KMIP SSL憑證來驗證彼此的身分、並建立SSL連線。在使用KMIP伺服器設定SSL連線之前、您必須先安裝叢集的KMIP用戶端SSL憑證、以及KMIP伺服器根憑證授權單位（CA）的SSL公開憑證。
+
+.您需要的是 #8217 ；需要的是什麼
+* 建立憑證、KMIP伺服器和叢集的伺服器上、必須同步時間。
+* 您必須已取得叢集的公用SSL KMIP用戶端憑證。
+* 您必須取得與叢集SSL KMIP用戶端憑證相關的私密金鑰。
++
+SSL KMIP用戶端憑證不得受密碼保護。
+
+* 您必須已取得KMIP伺服器根憑證授權單位（CA）的SSL公開憑證。
+
+
+[NOTE]
+====
+您可以在叢集上安裝憑證之前或之後、在KMIP伺服器上安裝用戶端和伺服器憑證。
+
+====
+在HA配對中、兩個節點必須使用相同的公有和私有KMIP SSL憑證。如果您將多個HA配對連線至相同的KMIP伺服器、HA配對中的所有節點都必須使用相同的公有和私有KMIP SSL憑證。
+
+.步驟
+. 安裝叢集的SSL KMIP用戶端憑證：
++
+「安全憑證安裝-vserver admin_Svm_name -type client'
+
++
+系統會提示您輸入SSL KMIP公開和私有憑證。
+
++
+「cluster1：：>安全性憑證安裝-vserver cluster1 -type client'
+
+. 安裝KMIP伺服器根憑證授權單位（CA）的SSL公開憑證：
++
+「安全憑證安裝-vserver admin_Svm_name -type server_ca」
+
++
+「cluster1：：>安全性認證安裝-vserver cluster1 -ttype server -ca」
+
+

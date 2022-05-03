@@ -1,0 +1,127 @@
+---
+permalink: nas-audit/display-connections-external-fpolicy-servers-task.html 
+sidebar: sidebar 
+keywords: display, information, connections, external fpolicy servers 
+summary: 您可以顯示叢集或特定儲存虛擬機器（SVM）與外部FPolicy伺服器（FPolicy伺服器）連線的狀態資訊。此資訊可協助您判斷哪些FPolicy伺服器已連線。 
+---
+= 顯示與外部FPolicy伺服器連線的相關資訊
+:allow-uri-read: 
+
+
+[role="lead"]
+您可以顯示叢集或特定儲存虛擬機器（SVM）與外部FPolicy伺服器（FPolicy伺服器）連線的狀態資訊。此資訊可協助您判斷哪些FPolicy伺服器已連線。
+
+如果未指定任何參數、命令會顯示下列資訊：
+
+* SVM名稱
+* 節點名稱
+* FPolicy原則名稱
+* FPolicy伺服器IP位址
+* FPolicy伺服器狀態
+* FPolicy伺服器類型
+
+
+除了顯示叢集或特定SVM上FPolicy連線的相關資訊、您也可以使用命令參數、根據其他條件篩選命令的輸出。
+
+您可以指定「-instance」參數、以顯示所列原則的詳細資訊。或者、您也可以使用「-Fields」參數、在命令輸出中僅顯示指定的欄位。您可以輸入「？」 在「-Fields」參數之後、找出您可以使用的欄位。
+
+.步驟
+. 使用適當的命令、顯示節點與FPolicy伺服器之間連線狀態的篩選資訊：
++
+[cols="35,65"]
+|===
+
+
+| 如果您要顯示FPolicy伺服器的連線狀態資訊... | 輸入... 
+
+
+ a| 
+您指定的
+ a| 
+「vserver fpolicy show-engine -server ip_address'」
+
+
+
+ a| 
+適用於指定的SVM
+ a| 
+「vserver fpolicy show-engine -vserver vserver_name」
+
+
+
+ a| 
+隨附於指定原則的
+ a| 
+「vserver fpolicy show-engine -police-name policy_name」
+
+
+
+ a| 
+使用您指定的伺服器狀態
+ a| 
+「vserver fpolicy show-engine -server-Status」
+
+伺服器狀態可以是下列其中一項：
+
+** 已連線
+** "已連線"
+** "連線"
+** '中斷連線'
+
+
+
+
+ a| 
+使用指定類型
+ a| 
+「vserver fpolicy show-engine -server-type」
+
+FPolicy伺服器類型可以是下列其中一種：
+
+** "一線"
+** 《第二年》
+
+
+
+
+ a| 
+已中斷連線的原因
+ a| 
+「vserver fpolicy show-engine -disconnect-reef原因 文字」
+
+中斷連線可能有多種原因。以下是中斷連線的常見原因：
+
+** 從CLI接收到的"Disconnect命令"
+** 「剖析FPolicy伺服器的通知回應時發生錯誤。
+** 《FPolicy握手失敗》
+** “SL交握失敗
+** 「TCP連線至FPolicy伺服器失敗。
+** 「從FPolicy伺服器收到的螢幕回應訊息無效。
+
+
+|===
+
+
+此範例顯示SVM vs1.example.com上的FPolicy伺服器外部引擎連線相關資訊：
+
+[listing]
+----
+cluster1::> vserver fpolicy show-engine -vserver vs1.example.com
+FPolicy                                              Server-       Server-
+Vserver         Policy    Node         Server        status        type
+--------------- --------- ------------ ------------- ------------- ---------
+vs1.example.com policy1   node1        10.1.1.2      connected     primary
+vs1.example.com policy1   node1        10.1.1.3      disconnected  primary
+vs1.example.com policy1   node2        10.1.1.2      connected     primary
+vs1.example.com policy1   node2        10.1.1.3      disconnected  primary
+----
+此範例僅顯示連線的FPolicy伺服器相關資訊：
+
+[listing]
+----
+cluster1::> vserver fpolicy show-engine -fields server -server-status connected
+node       vserver         policy-name server
+---------- --------------- ----------- -------
+node1      vs1.example.com policy1     10.1.1.2
+node2      vs1.example.com policy1     10.1.1.2
+----

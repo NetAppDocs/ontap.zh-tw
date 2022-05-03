@@ -1,0 +1,54 @@
+---
+permalink: flexgroup/reactivate-original-source-after-disaster-task.html 
+sidebar: sidebar 
+keywords: reactivate, original, source, flexgroup, volume, disaster 
+summary: 當來源FlexGroup 供應時、您可以重新同步原始來源FlexGroup 和原始目的地的資料。目的地FlexGroup 的任何新資料都會遺失。 
+---
+= 災難發生後重新啟動原始來源FlexGroup 的s功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當來源FlexGroup 供應時、您可以重新同步原始來源FlexGroup 和原始目的地的資料。目的地FlexGroup 的任何新資料都會遺失。
+
+目的地磁碟區上的任何作用中配額規則都會停用、而且配額規則會在執行重新同步之前刪除。
+
+您可以使用「Volume配額原則規則create」和「volume quota modify」命令、在重新同步作業完成後建立和重新啟動配額規則。
+
+.步驟
+. 從目的地叢集、重新同步FlexGroup 處理Sfestvolume SnapMirror關係：「napmirror resSync -dest-path dst_svm:dest_flexgroup」
+. 檢視SnapMirror關係的狀態：「napmirror show -expand」
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vss:s       XDP  vsd:dst        Snapmirrored
+                                      Idle           -         true    -
+vss:s__0001 XDP  vsd:dst__0001  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0002 XDP  vsd:dst__0002  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0003 XDP  vsd:dst__0003  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0004 XDP  vsd:dst__0004  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0005 XDP  vsd:dst__0005  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0006 XDP  vsd:dst__0006  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0007 XDP  vsd:dst__0007  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0008 XDP  vsd:dst__0008  Snapmirrored
+                                      Idle           -         true    -
+...
+----
++
+每個組織的SnapMirror關係狀態都是「napMirror鏡 射」。
+
+

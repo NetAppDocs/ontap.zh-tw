@@ -1,0 +1,290 @@
+---
+sidebar: sidebar 
+permalink: task_admin_update_firmware.html 
+keywords: system manager, netapp, ontap, upgrade, nondisruptive, nondisruptively, firmware, update, disks, disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc, fix firmware, update firmware, automatic, update, firmware, software patch, upgrade, recommendation, recommended, storage firmware, storage devices, disks, shelves, service processors, modules 
+summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如磁碟、磁碟櫃、磁碟認證套件（DQP）、服務處理器（SP）或基礎板管理控制器（BMC）。 
+---
+= 更新韌體
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+有了System Manager、您可以將韌體更新套用至叢集中的支援裝置、例如磁碟、磁碟櫃、磁碟限制套件（DQP）、服務處理器（SP）或基礎板管理控制器（BMC）。
+
+您可以手動或自動套用韌體更新。選擇任一程序：
+
+* <<update-firmware-manually>>
+* <<update-firmware-automatically>>
+
+
+
+
+== 手動更新韌體
+
+從更新版本的支援升級到更新版本的更新版本、從更新版本開始、您就能收到來自於叢集的警示、通知您叢集上的韌體更新何時仍在進行中。ONTAP Active IQ然後、您可以下載韌體映像、並使用System Manager上傳。
+
+image:workflow_admin_update_firmware.gif["更新韌體工作的工作流程圖"]
+
+
+
+=== 檢視Active IQ 來自於此的韌體更新警示
+
+從更新版本的支援升級到ONTAP 更新版本的更新版本、您可以在系統管理程式中收到Active IQ Unified Manager 來自下列項目的警示：叢集上的韌體更新擱置中時、會通知您。
+
+
+NOTE: 使用ONTAP 支援更新版的時、若要接收韌體更新的警示、您必須向Active IQ Unified Manager 下列項目登錄：請參閱 link:https://netapp.com/support-and-training/documentation/active-iq-unified-manager["支援的文件資源Active IQ Unified Manager"^]。
+
+.步驟
+. 轉至*儀表板*。
++
+在「*健全狀況*」區段中、如果叢集有任何建議的韌體更新、就會顯示一則訊息。
+
+. 按一下警示訊息。
++
+「*韌體更新*」標籤會顯示在「*更新*」頁面中。
+
+
+
+
+
+=== 下載叢集韌體
+
+
+NOTE: 若為《支援》9.8、ONTAP 您必須瀏覽至NetApp支援網站、下載更新的韌體映像套件。
+
+從ONTAP 更新版9.9.1開始、您可以在檢視韌體警示時、使用System Manager從*更新版*頁面下載韌體更新（請參閱 <<View firmware update alerts from Active IQ>>）。
+
+執行適用於ONTAP 叢集上安裝之版本的更新程序。
+
+|===
+
+
+| 若為ONTAP NetApp 9.8與ONTAP FAS9.9.1、若您尚未登錄Active IQ 到任何功能、請執行下列步驟... | 從ONTAP 0：9.9.1開始、如果您已登錄Active IQ 到NetApp、請執行下列步驟... 
+
+
+ a| 
+. 瀏覽至NetApp支援網站。
+. 登入NetApp支援網站。
+. 選取您要用來更新叢集韌體的韌體套件。
+. 將檔案複製到網路上的HTTP或FTP伺服器、或複製到本機資料夾。
+
+ a| 
+. 在*更新*頁面上、如需您要執行的韌體更新、請按一下「從NetApp支援網站下載」連結。
++
+隨即顯示NetApp支援網站。
+
+. 登入NetApp支援網站。
+. 下載您要更新的韌體映像套件。
+. 將檔案複製到網路上的HTTP或FTP伺服器、或複製到本機資料夾。
+
+
+|===
+
+
+=== 更新叢集韌體
+
+下載韌體套件檔案之後、您可以更新叢集韌體。
+
+.步驟
+. 在System Manager中、按一下*叢集>總覽*。
+. 在「*總覽*」窗格的右角、按一下「*更多*」 image:icon_kabob.gif["功能表圖示"] 並選擇* ONTAP 《Update》*。
+. 按一下*韌體更新*索引標籤、然後根據ONTAP 您使用的版本執行下列其中一個程序：
+
+
+[cols="25,75"]
+|===
+
+
+| 版本ONTAP | 程序 
+
+
+ a| 
+包含以上版本的更新版本ONTAP
+ a| 
+. 選擇*從伺服器*或*本機用戶端*
+. 提供伺服器URL或檔案位置。
+
+
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+*附註：*若要排程自動執行修正與更新、並接收有關更新的建議、請參閱 <<update-firmware-automatically>>。
+
+. 在建議的更新清單中、選取「*動作*」按鈕以執行下列工作：
++
+--
+** *更新*：安裝更新程式。
+** *排程*：設定安裝更新的排程。
+** *解除*：移除清單中的建議通知。
+
+
+--
++
+如果更新已排程、則「*動作*」按鈕的選項為：
+
++
+--
+** *更新*：立即安裝更新程式。
+** *編輯排程*：變更更新的排程日期。
+** *取消排程*：取消更新的排程日期。
+
+
+--
+. 如果您要手動更新、請選取*更新韌體*按鈕。
+
+
+|===
+
+NOTE: 您可以在*韌體更新摘要*下監控或驗證更新。
+
+
+
+== 自動更新韌體
+
+從功能更新9.10.1開始ONTAP 、您可以使用System Manager來啟用「自動更新」功能、ONTAP 讓Update能夠自動下載並安裝NetApp提供的建議韌體修補程式、升級和更新（預設行為）。
+
+
+IMPORTANT: 目前、自動韌體更新功能無法完全正常運作。您可以啟用此功能、但不會收到任何有關自動韌體更新的通知。
+
+自動更新功能需要AutoSupport 透過HTTPS進行不中斷連線。若要疑難排解連線問題、請參閱 link:../system-admin/troubleshoot-autosupport-http-https-task.html["疑難排解AutoSupport 透過HTTP或HTTPS傳送的資訊"]。
+
+更新內容包括下列類別的韌體修補程式、升級和更新：
+
+* *儲存韌體*：儲存設備、磁碟和磁碟櫃
+* * SP/BMC韌體*：服務處理器與BMC模組
+
+
+在System Manager中、您可以變更每個類別的預設行為、以便收到更新韌體的建議、讓您決定要安裝的項目、並設定要安裝的排程。您也可以關閉此功能。
+
+若要排程自動進行更新並接收更新建議、您可以執行下列工作流程工作：
+
+image:../media/sm-firmware-auto-update.gif["自動更新工作流程"]
+
+* <<Ensure the Automatic Update feature is enabled>>
+* <<Specify default actions for update recommendations>>
+* <<Manage automatic update recommendations>>
+
+
+
+
+=== 確認已啟用「自動更新」功能
+
+在System Manager中、若要啟用「自動更新」功能、您必須接受NetApp指定的條款與條件。
+
+「自動更新」功能需要AutoSupport 啟用此功能、並使用HTTPS傳輸協定。
+
+.步驟
+. 在System Manager中、按一下*事件*。
+. 在「*總覽*」區段的「*建議動作*」下、按一下「*啟用自動更新*」旁的「*動作*」。
+. 按一下「*啟用*」。
++
+系統會顯示自動更新功能的相關資訊。它會說明預設行為（自動下載及安裝更新）、並通知您可以修改預設行為。此資訊也包含您必須同意才能使用此功能的條款與條件。
+
+. 若要接受條款與條件、並啟用此功能、請按一下核取方塊、然後按一下「*儲存*」。
+
+
+
+
+=== 指定更新建議的預設動作
+
+您可以設定儲存韌體更新和SP/BMC韌體更新所需執行的預設動作。
+
+.步驟
+. 在System Manager中、按一下*叢集>設定*。
+. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"] 可查看操作列表。
+. 按一下*編輯自動更新設定*。
+. 選取兩種更新類別的預設動作。
+
+
+
+
+=== 管理自動更新建議
+
+在System Manager中、您可以一次檢視建議清單、並對每個建議或所有建議項目執行行動。
+
+.步驟
+. 使用任一種方法檢視建議清單：
++
+--
+|===
+
+
+| 從「總覽」頁面檢視 | 從「設定」頁面檢視 
+
+
+ a| 
+.. 按一下*叢集>總覽*。
+.. 在「*總覽*」區段中、按一下「*更多*」 image:../media/icon_kabob.gif["烤串圖示"]、然後按一下* ONTAP 《更新*》。
+.. 選取*韌體更新*索引標籤。
+.. 在*韌體更新*索引標籤上、按一下*更多* image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看所有自動更新*。
+
+ a| 
+.. 按一下*叢集>設定*。
+.. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看所有自動更新*。
+
+
+|===
+--
++
+「自動更新記錄」會顯示各項建議與詳細資料、包括說明、類別、排程安裝時間、狀態及任何錯誤。
+
+. 按一下 image:../media/icon_kabob.gif["烤串圖示"] 在說明旁、檢視您可以根據建議執行的行動清單。
++
+視建議狀態而定、您可以執行下列其中一項動作：
+
++
+[cols="35,65"]
+|===
+
+
+| 如果更新處於此狀態... | 您可以執行... 
+
+
+ a| 
+尚未排程
+ a| 
+*更新*：開始更新程序。
+
+*排程*：可讓您設定開始更新程序的日期。
+
+*解除*：從清單中移除建議。
+
+
+
+ a| 
+已排程
+ a| 
+*更新*：開始更新程序。
+
+*編輯排程*：可讓您修改開始更新程序的排程日期。
+
+*取消排程*：取消排程日期。
+
+
+
+ a| 
+已遭解僱
+ a| 
+*解除關閉*：將建議傳回清單。
+
+
+
+ a| 
+正在套用或正在下載
+ a| 
+*取消*：取消更新。
+
+|===
+

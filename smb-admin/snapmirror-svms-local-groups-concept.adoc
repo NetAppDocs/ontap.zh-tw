@@ -1,0 +1,16 @@
+---
+permalink: smb-admin/snapmirror-svms-local-groups-concept.html 
+sidebar: sidebar 
+keywords: aware, guideline, configure, snapmirror, volume, svm, contain, local, group, guidelines for using snapmirror on svms that contain local groups 
+summary: 在包含本機群組的SVM所擁有的磁碟區上設定SnapMirror時、您應該瞭解相關準則。 
+---
+= 在包含本機群組的SVM上使用SnapMirror的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在包含本機群組的SVM所擁有的磁碟區上設定SnapMirror時、您應該瞭解相關準則。
+
+您無法使用應用到SnapMirror複寫到另一個SVM之檔案、目錄或共用的ACE中的本機群組。如果您使用SnapMirror功能在另一個SVM上建立磁碟區的DR鏡像、而該磁碟區有一個用於本機群組的ACE、則該ACE在鏡射上無效。如果將資料複寫到不同的SVM、資料就會有效地跨入不同的本機網域。授予本機使用者和群組的權限僅在最初建立的SVM範圍內有效。

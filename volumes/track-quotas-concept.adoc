@@ -1,0 +1,41 @@
+---
+permalink: volumes/track-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, you, use, tracking, quotas 
+summary: 追蹤配額會產生磁碟和檔案使用量的報告、不會限制資源使用量。使用追蹤配額時、修改配額值會減少中斷營運、因為您可以調整配額大小、而非關閉和重新開啟配額。 
+---
+= 如何使用追蹤配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+追蹤配額會產生磁碟和檔案使用量的報告、不會限制資源使用量。使用追蹤配額時、修改配額值會減少中斷營運、因為您可以調整配額大小、而非關閉和重新開啟配額。
+
+若要建立追蹤配額、請略過「磁碟限制」和「檔案限制」參數。這表示ONTAP 、不需設定任何限制、即可監控該目標（Volume或qtree）的磁碟和檔案使用量。追蹤配額會顯示在「show」命令的輸出中、配額報告中會顯示破折號（「-」）表示所有限制。
+
+您也可以指定_預設追蹤配額_、以套用至目標的所有執行個體。預設追蹤配額可讓您追蹤配額類型的所有執行個體（例如、所有qtree或所有使用者）的使用量。此外、當您想要使配額變更生效時、這些功能可讓您使用調整大小、而非重新初始化。
+
+下列配額檔案顯示特定使用者、群組及qtree的追蹤配額：
+
+[listing]
+----
+
+#Quota target   type           disk files thold sdisk sfile
+#-----------    ----           ---- ----- ----- ----- -----
+kjones          user@/vol/vol1    -  -
+eng1            group@/vol/vol1   -  -
+proj1           tree@/vol/vol1    -  -
+----
+下列配額檔案包含三種可能的預設追蹤配額（使用者、群組和qtree）：
+
+[listing]
+----
+
+#Quota target   type           disk  files thold sdisk sfile
+#-----------    ----           ----  ----- ----- ----- -----
+*               user@/vol/vol1    -   -
+*               group@/vol/vol1   -   -
+*               tree@/vol/vol1    -   -
+----

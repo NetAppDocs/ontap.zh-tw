@@ -1,0 +1,68 @@
+---
+permalink: smb-admin/use-cases-odx-concept.html 
+sidebar: sidebar 
+keywords: use, case, odx, svm, determine, circumstance, odx, performance, benefit, use cases for odx 
+summary: 您應該瞭解在SVM上使用ODX的使用案例、以便判斷ODX在何種情況下可為您提供效能優勢。 
+---
+= ODX的使用案例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解在SVM上使用ODX的使用案例、以便判斷ODX在何種情況下可為您提供效能優勢。
+
+支援ODX的Windows伺服器和用戶端使用複本卸載做為在遠端伺服器上複製資料的預設方法。如果Windows伺服器或用戶端不支援ODX、或ODX複本卸載在任何時間點都失敗、則複本或移動作業會回溯到複本或移動作業的傳統讀取和寫入。
+
+下列使用案例支援使用ODX複本和移動：
+
+* Volume內
++
+來源與目的地檔案或LUN位於同一個磁碟區內。
+
+* 磁碟區間、相同節點、相同SVM
++
+來源與目的地檔案或LUN位於同一個節點上的不同磁碟區。資料歸同一個SVM所有。
+
+* 磁碟區間、不同節點、相同SVM
++
+來源與目的地檔案或LUN位於不同節點上的不同磁碟區。資料歸同一個SVM所有。
+
+* SVM之間、相同節點
++
+來源與目的地檔案或LUN位於同一個節點上的不同磁碟區。資料由不同的SVM擁有。
+
+* SVM之間、不同節點
++
+來源與目的地檔案或LUN位於不同節點上的不同磁碟區。資料由不同的SVM擁有。
+
+* 叢集間
++
+來源和目的地LUN位於不同的磁碟區、位於不同的叢集節點上。這僅適用於SAN、不適用於CIFS。
+
+
+
+還有一些特殊使用案例：
+
+* 藉由ONTAP 採用流通不整的ODX技術、您可以使用ODX在SMB共享區與FC或iSCSI附加虛擬磁碟機之間複製檔案。
++
+您可以使用Windows檔案總管、Windows CLI或PowerShell、Hyper-V或其他支援ODX的應用程式、使用ODX複製卸載功能在SMB共用區和連線LUN之間順暢地複製或移動檔案、前提是SMB共用區和LUN位於同一個叢集上。
+
+* Hyper-V針對ODX複製卸載提供了一些額外的使用案例：
++
+** 您可以使用ODX複本卸載傳遞搭配Hyper-V、在虛擬硬碟（VHD）檔案內或之間複製資料、或在同一個叢集內的對應SMB共用區和連接的iSCSI LUN之間複製資料。
++
+如此一來、從客體作業系統的複本就能傳遞到基礎儲存設備。
+
+** 建立固定大小的VHD時、ODX會使用已知的零權杖、以零初始化磁碟。
+** 如果來源與目的地儲存設備位於同一個叢集、則ODX複本卸載可用於虛擬機器儲存移轉。
+
+
++
+[NOTE]
+====
+若要利用ODX複本卸載傳遞與Hyper-V的使用案例、來賓作業系統必須支援ODX、而來賓作業系統的磁碟必須是支援ODX的儲存設備（SMB或SAN）所支援的SCSI磁碟。客體作業系統上的IDE磁碟不支援ODX傳遞。
+
+====
+

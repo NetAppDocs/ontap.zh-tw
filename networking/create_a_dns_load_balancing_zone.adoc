@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_dns_load_balancing_zone.html 
+keywords: create, creation, creating, add, adding, dns, naming, name, service, load, balancing, balance, zone, lif, create a dns load balancing zone, improve lif performance 
+summary: 建立DNS負載平衡區域以改善LIF效能 
+---
+= 建立DNS負載平衡區域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以建立DNS負載平衡區域、以便根據負載（即LIF上掛載的用戶端數目）、動態選擇LIF。您可以在建立資料LIF時建立負載平衡區域。
+
+站台範圍DNS伺服器上的DNS轉寄站必須設定為將負載平衡區域的所有要求轉送到設定的LIF。
+
+知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_set_up_DNS_load_balancing_in_clustered_Data_ONTAP["如何在叢集模式中設定DNS負載平衡"^] 在NetApp支援網站上、包含使用條件式轉送設定DNS負載平衡的詳細資訊。
+
+.關於這項工作
+* 任何資料LIF都能回應DNS查詢、以取得DNS負載平衡區域名稱。
+* DNS負載平衡區域在叢集中必須有唯一的名稱、而且區域名稱必須符合下列需求：
++
+** 不得超過256個字元。
+** 其中應至少包含一段期間。
+** 第一個和最後一個字元不應為句點或任何其他特殊字元。
+** 字元之間不得包含任何空格。
+** DNS名稱中的每個標籤不得超過63個字元。
++
+標籤是指在期間之前或之後出現的文字。例如、名稱為storage.company.com的DNS區域有三個標籤。
+
+
+
+
+
+使用帶有'dns區域'選項的'network interface cred'命令來建立DNS負載平衡區域。
+
+如果負載平衡區域已存在、則會將LIF新增至該區域。如需命令的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]。
+
+下列範例示範如何在建立LIF「lif1」時、建立名為storage.company.com的DNS負載平衡區域：
+
+....
+network interface create -vserver vs0 -lif lif1 -home-node node1
+-home-port e0c -address 192.0.2.129 -netmask 255.255.255.128 -dns-zone
+....

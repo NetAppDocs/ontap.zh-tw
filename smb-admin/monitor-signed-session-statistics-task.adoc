@@ -1,0 +1,145 @@
+---
+permalink: smb-admin/monitor-signed-session-statistics-task.html 
+sidebar: sidebar 
+keywords: monitor, smb, session, statistic, establish, sign, monitor smb signed session statistics 
+summary: 您可以監控SMB工作階段統計資料、並判斷哪些已建立的工作階段已簽署、哪些尚未簽署。 
+---
+= 監控SMB簽署的工作階段統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以監控SMB工作階段統計資料、並判斷哪些已建立的工作階段已簽署、哪些尚未簽署。
+
+進階權限層級的「統計資料」命令會提供「Designed _sessions」計數器、可用來監控已簽署的SMB工作階段數量。「Designed_Sessions」計數器可與下列統計資料物件一起使用：
+
+* CIFS可讓您監控所有SMB工作階段的SMB簽署。
+* 您可利用《mb1》監控SMB簽署SMB 1.0工作階段。
+* 您可以使用"MB2"監控SMB簽署SMB 2.x和SMB 3.0工作階段。
++
+[NOTE]
+====
+SMB 3.0統計資料會包含在「shMB2」物件的輸出中。
+
+====
+
+
+如果您想要比較已簽署工作階段的數量與工作階段總數、可以比較「Designed _sessions'（已設定工作階段）」計數器的輸出與「END_Sessions（已建立工作階段）」計數器的輸出。
+
+您必須先開始收集統計資料樣本、才能檢視結果資料。如果不停止資料收集、您可以檢視範例中的資料。停止資料收集可提供固定的範例。不停止資料收集可讓您取得更新的資料、以便與先前的查詢進行比較。這項比較可協助您識別趨勢。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 開始資料收集：「統計資料開始物件｛CIFS | SMB1| smb2｝-instance instance -same-id _same_ID_（節點節點節點名稱_）」
++
+如果未指定"-same-id"參數、命令會為您產生範例識別碼、並將此範例定義為CLI工作階段的預設範例。「-sample-id」的值是一個字串。如果您在相同的CLI工作階段中執行此命令、但未指定「-same-id」參數、則命令會覆寫先前的預設範例。
+
++
+您可以選擇性地指定要收集統計資料的節點。如果您未指定節點、範例會收集叢集中所有節點的統計資料。
+
+. 使用「統計資料停止」命令停止收集範例的資料。
+. 檢視SMB簽署統計資料：
++
+|===
+| 如果您要檢視下列項目的資訊... | 輸入... 
+
+
+ a| 
+已簽署的工作階段
+ a| 
+「How -same-id same_ID -counter signed_sessions」（如何樣例識別碼-counter signed_sessions）|_nnode_name_（-node_node_name_]）
+
+
+
+ a| 
+已簽署的工作階段和已建立的工作階段
+ a| 
+「How -same-id _sample _id_-counter signed_sessions」（如何樣例識別碼_same_id_計數器簽署的工作階段）|「isited_sessions」（建立的工作階段）|節點名稱_（-node_name]）
+
+|===
++
+如果您只想顯示單一節點的資訊、請指定選用的「節點」參數。
+
+. 返回管理員權限等級：「et -priv. admin」
+
+
+以下範例說明如何監控儲存虛擬機器（SVM）VS1上的SMB 2.x和SMB 3.0簽署統計資料。
+
+下列命令會移至進階權限層級：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+----
+下列命令會啟動新範例的資料收集：
+
+[listing]
+----
+cluster1::*> statistics start -object smb2 -sample-id smbsigning_sample -vserver vs1
+Statistics collection is being started for Sample-id: smbsigning_sample
+----
+下列命令會停止範例的資料收集：
+
+[listing]
+----
+cluster1::*> statistics stop -sample-id smbsigning_sample
+Statistics collection is being stopped for Sample-id: smbsigning_sample
+----
+下列命令會顯示已簽署的SMB工作階段、以及範例中各節點所建立的SMB工作階段：
+
+[listing]
+----
+cluster1::*> statistics show -sample-id smbsigning_sample -counter signed_sessions|established_sessions|node_name
+
+Object: smb2
+Instance: vs1
+Start-time: 2/6/2013 01:00:00
+End-time: 2/6/2013 01:03:04
+Cluster: cluster1
+
+    Counter                                              Value
+    -------------------------------- -------------------------
+    established_sessions                                     0
+    node_name                                           node1
+    signed_sessions                                          0
+    established_sessions                                     1
+    node_name                                           node2
+    signed_sessions                                          1
+    established_sessions                                     0
+    node_name                                           node3
+    signed_sessions                                          0
+    established_sessions                                     0
+    node_name                                           node4
+    signed_sessions                                          0
+----
+以下命令顯示節點2的簽署SMB工作階段：
+
+[listing]
+----
+cluster1::*> statistics show -sample-id smbsigning_sample -counter signed_sessions|node_name -node node2
+
+Object: smb2
+Instance: vs1
+Start-time: 2/6/2013 01:00:00
+End-time: 2/6/2013 01:22:43
+Cluster: cluster1
+
+    Counter                                              Value
+    -------------------------------- -------------------------
+    node_name                                            node2
+    signed_sessions                                          1
+----
+下列命令會移回管理權限層級：
+
+[listing]
+----
+cluster1::*> set -privilege admin
+----
+xref:determine-sessions-signed-task.adoc[判斷SMB工作階段是否已簽署]
+
+link:../performance-config/index.html["效能監控快速設定"]

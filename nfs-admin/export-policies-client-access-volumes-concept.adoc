@@ -1,0 +1,24 @@
+---
+permalink: nfs-admin/export-policies-client-access-volumes-concept.html 
+sidebar: sidebar 
+keywords: export, policies, control, client, access, volume, qtrees 
+summary: 匯出原則包含一或多個匯出規則、可處理每個用戶端存取要求。此程序的結果決定了用戶端是被拒絕還是被授予存取權限、以及存取層級。儲存虛擬機器（SVM）上必須存在具有匯出規則的匯出原則、用戶端才能存取資料。 
+---
+= 匯出原則如何控制用戶端對磁碟區或qtree的存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+匯出原則包含一或多個用以處理每個用戶端存取要求的_EXPORT規則_。此程序的結果決定了用戶端是被拒絕還是被授予存取權限、以及存取層級。儲存虛擬機器（SVM）上必須存在具有匯出規則的匯出原則、用戶端才能存取資料。
+
+您只需將一個匯出原則與每個Volume或qtree建立關聯、即可設定用戶端對Volume或qtree的存取。SVM可包含多個匯出原則。這可讓您針對具有多個磁碟區或qtree的SVM執行下列作業：
+
+* 為SVM的每個Volume或qtree指派不同的匯出原則、以便個別用戶端存取控制到SVM中的每個Volume或qtree。
+* 將相同的匯出原則指派給SVM的多個磁碟區或qtree、以獲得相同的用戶端存取控制、而不需要為每個磁碟區或qtree建立新的匯出原則。
+
+
+如果用戶端提出的存取要求不受適用的匯出原則允許、則要求會以拒絕權限的訊息失敗。如果用戶端不符合匯出原則中的任何規則、則會拒絕存取。如果匯出原則是空的、則所有存取都會隱含拒絕。
+
+您可以在執行ONTAP 不正常運作的系統上動態修改匯出原則。

@@ -1,0 +1,52 @@
+---
+permalink: smb-hyper-v-sql/remote-vss-concepts-concept.html 
+sidebar: sidebar 
+keywords: remove, vss, concepts, volume, shadow, copy, service, hyper, v, smb, configuration 
+summary: 您應該瞭解一些必要概念、瞭解如何透過SMB組態搭配Hyper-V來使用遠端VSS（Volume陰影複製服務）。 
+---
+= 遠端VSS概念
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解一些必要概念、瞭解如何透過SMB組態搭配Hyper-V來使用遠端VSS（Volume陰影複製服務）。
+
+* * VSS（Volume陰影複製服務）*
++
+一種Microsoft技術、用於在特定時間點、在特定磁碟區上製作資料的備份複本或快照。VSS可協調資料伺服器、備份應用程式和儲存管理軟體、以支援建立及管理一致的備份。
+
+* *遠端VSS（遠端Volume陰影複製服務）*
++
+一種Microsoft技術、用於在透過SMB 3.0共用存取資料的特定時間點、取得資料一致狀態的共用型資料備份複本。也稱為_ Volume陰影複製服務_。
+
+* *陰影複製*
++
+共享區中包含的一組重複資料、可在明確定義的即時時間內完成。陰影複製可用來建立一致的資料時間點備份、讓系統或應用程式能夠繼續更新原始磁碟區上的資料。
+
+* *陰影複製集*
++
+一或多個陰影複本的集合、每個陰影複本對應一個共用。陰影複製集中的陰影複製代表必須在相同作業中備份的所有共用。啟用VSS的應用程式上的VSS用戶端會識別要包含在集合中的陰影複本。
+
+* *陰影複製集自動恢復*
++
+備份程序的一部分、用於啟用VSS的遠端備份應用程式、其中包含陰影複製的複本目錄會使時間點保持一致。在備份開始時、應用程式上的VSS用戶端會觸發應用程式對排定要備份的資料（Hyper-V的虛擬機器檔案）執行軟體檢查點。然後VSS用戶端可讓應用程式繼續執行。建立陰影複製集之後、遠端VSS會將陰影複製集設為可寫入、並將可寫入的複本公開給應用程式。應用程式會使用先前取得的軟體檢查點執行自動還原、以準備陰影複製集以供備份。自動還原功能可復原自建立檢查點以來對檔案和目錄所做的變更、使陰影複製達到一致的狀態。自動還原是啟用VSS備份的選用步驟。
+
+* *陰影複製ID*
++
+唯一識別陰影複製的GUID。
+
+* *陰影複製集ID*
++
+唯一識別陰影複製識別碼集合到同一部伺服器的GUID。
+
+* *適用於Hyper-V * SnapManager
++
+此軟體可自動化及簡化Microsoft Windows Server 2012 Hyper-V的備份與還原作業適用於Hyper-V的支援使用遠端VSS搭配自動還原功能、可透過SMB共用區來備份Hyper-V檔案。SnapManager
+
+
+
+xref:nondisruptive-operations-glossary-concept.adoc[關於Hyper-V和SQL Server在SMB上不中斷營運的重要概念]
+
+xref:share-based-backups-remote-vss-concept.adoc[使用遠端VSS進行共用型備份]

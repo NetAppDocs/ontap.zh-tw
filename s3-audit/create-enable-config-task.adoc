@@ -1,0 +1,60 @@
+---
+permalink: s3-audit/create-enable-config-task.html 
+sidebar: sidebar 
+keywords: consistency groups, consistency group, application protection, parent, child, configure 
+summary: 若要實作S3稽核、您必須先在啟用S3的SVM上建立持續性物件存放區稽核組態、然後啟用該組態。 
+---
+= 建立並啟用S3稽核組態
+:allow-uri-read: 
+
+
+[role="lead"]
+若要實作S3稽核、您必須先在啟用S3的SVM上建立持續性物件存放區稽核組態、然後啟用該組態。
+
+.您需要的是 #8217 ；需要的是什麼
+* 啟用S3的SVM。
+* 有足夠空間可用於集合體中的暫存磁碟區。
+
+
+每個包含您要稽核之S3儲存區的SVM都需要稽核組態。您可以在新的或現有的S3伺服器上啟用S3稽核。稽核組態會保留在S3環境中、直到* vserver object-store-server稽核DELETE *命令移除為止。
+
+S3稽核組態會套用至您選取進行稽核的SVM中的所有儲存區。啟用稽核的SVM可包含稽核和未稽核的儲存區。
+
+建議您設定S3稽核以自動進行記錄輪調、視記錄大小或排程而定。如果您未設定自動記錄檔循環、則所有記錄檔都會依預設保留。您也可以使用* vserver object-store-server稽核rote-log*命令手動旋轉S3記錄檔。
+
+如果SVM是SVM災難恢復來源、則目的地路徑無法位於根磁碟區上。
+
+.程序
+. 建立稽核組態、根據記錄大小或排程來旋轉稽核記錄。
++
+[cols="2,4"]
+|===
+| 如果您想要以下列方式來旋轉稽核記錄... | 輸入... 
+
+
+| 記錄檔大小 | 「Vserver object-store-server稽核create -vserver _Svm_name_-dit目的地 路徑_[-events ]｛data｛vbar｝management｝、...」 ｛[-rote-limit _integer_]｛vbar｝[-retite-duration [_integer_d][_integer_h][_integer_m][_integers_]｝[-rote-size｛_integer__[KB｛vbar｝MB｛vbar｝GB｛vbar｝TB｛vbar｝PB｝] 
+
+
+| 排程  a| 
+「Vserver object-store-server稽核create -vserver _Svm_name_-destination path [-events ]｛data｛vbar｝management｝、...」 ｛[-rotation-limit _integer_]｛vbar｝[-retent-duration [_intergerd_][_intergerh_][_intergerm_][_intergerim_]｝[-rotation-schedule-dayofWeek _chron、day_][-chron、day-tay_schedule_minutychon_minuty'
+
+如果您要設定時間型稽核記錄輪調、則必須使用「-rote-schedule-minute-minute」參數。
+
+|===
+. 啟用S3稽核：
++
+「vserver object-store-server稽核啟用-vserver _Svm_name_'
+
+
+
+下列範例會建立稽核組態、使用大小型旋轉功能來稽核所有S3事件（預設值）。記錄儲存在/Audit記錄目錄中。記錄檔大小上限為200 MB。當記錄大小達到200 MB時、就會進行旋轉。
+
+「cluster1：：> vserver稽核建立-vserver VS1 -ditate /nap_log -volate-size 200MB」
+
+下列範例會建立稽核組態、使用大小型旋轉功能來稽核所有S3事件（預設值）。記錄檔大小上限為100 MB（預設值）、而且記錄會保留5天、之後才會刪除。
+
+「cluster1：：> vserver稽核可建立-vserver VS1 -dite-diture_log -retitation-duration 5d0h0m」
+
+下列範例會建立稽核組態、以稽核S3管理事件、以及使用時間型輪調的集中存取原則暫存事件。稽核記錄會每月於下午12：30循環一次一週中的所有天。記錄旋轉限制為5。
+
+「cluster1：：> vserver稽核create -vserver VS1 -ditate /nap_log -events management -volate-schedule-month all -volate-schedule-dayofWeek all -volate-schedule-hour 12 - volate-schedule-minute 30 - volate-limit 5」

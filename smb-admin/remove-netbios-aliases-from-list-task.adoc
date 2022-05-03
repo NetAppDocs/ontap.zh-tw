@@ -1,0 +1,53 @@
+---
+permalink: smb-admin/remove-netbios-aliases-from-list-task.html 
+sidebar: sidebar 
+keywords: netbios, alias, cifs, server, remove, list, remove netbios aliases from the netbios alias list 
+summary: 如果您不需要CIFS伺服器的特定NetBios別名、可以從清單中移除這些NetBios別名。您也可以從清單中移除所有的NetBios別名。 
+---
+= 從NetBios別名清單中移除NetBios別名
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不需要CIFS伺服器的特定NetBios別名、可以從清單中移除這些NetBios別名。您也可以從清單中移除所有的NetBios別名。
+
+您可以使用以逗號分隔的清單來移除多個NetBios別名。您可以將「-」指定為「-netbios-aliases」參數的值、以移除CIFS伺服器上的所有netbiosalias。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您要移除... | 輸入... 
+
+
+ a| 
+清單中的特定NetBios別名
+ a| 
+Check Alignment of PHs>+vserver CIFS去除netbios-alias -vserver _vserver_name_-netbios-alias _netbios_alias、...+
+
+
+
+ a| 
+清單中的所有NetBios別名
+ a| 
+「Vserver CIFS remove-netbios-alias -vserver _vserver_name_-netbios-alias」
+
+|===
++
+「Vserver CIFS remove-netbios-alias -vserver VS1 -netbios-alias alias_1」
+
+. 確認已移除指定的NetBios別名：「vserver CIFS show -vserver _vserver_name_-show-netbios-aliases」
++
+「Vserver CIFS show -vserver VS1 -show-netbios-aliases」
+
++
+[listing]
+----
+Vserver: vs1
+
+         Server Name: CIFS_SERVER
+         NetBIOS Aliases: ALIAS_2, ALIAS_3
+----
+

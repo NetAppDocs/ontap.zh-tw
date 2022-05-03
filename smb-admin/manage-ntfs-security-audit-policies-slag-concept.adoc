@@ -1,0 +1,63 @@
+---
+permalink: smb-admin/manage-ntfs-security-audit-policies-slag-concept.html 
+sidebar: sidebar 
+keywords: manage, ntfs, file, security, ntfs, audit, policies, policy, storage-level, access, guard, storage, virtual, machine, svm, cli, manage ntfs file security, ntfs audit policies, and storage-level access guard on svms using the cli 
+summary: 您可以使用CLI管理儲存虛擬機器（SVM）上的NTFS檔案安全性、NTFS稽核原則及儲存層級存取保護。 
+---
+= 使用CLI總覽管理SVM上的NTFS檔案安全性、NTFS稽核原則及儲存層級存取保護
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用CLI管理儲存虛擬機器（SVM）上的NTFS檔案安全性、NTFS稽核原則及儲存層級存取保護。
+
+您可以從SMB用戶端或使用CLI來管理NTFS檔案安全性和稽核原則。不過、使用CLI來設定檔案安全性和稽核原則、就不需要使用遠端用戶端來管理檔案安全性。使用CLI可大幅縮短使用單一命令在許多檔案和資料夾上套用安全性所需的時間。
+
+您可以設定儲存層級的存取防護、ONTAP 這是由SVM Volume套用的另一層安全防護。儲存層級存取保護適用於從所有NAS傳輸協定存取至套用儲存層級存取保護的儲存物件。
+
+儲存層級的存取保護只能從ONTAP 整套CLI進行設定和管理。您無法從SMB用戶端管理儲存層級的存取保護設定。此外、如果您從NFS或SMB用戶端檢視檔案或目錄上的安全性設定、就不會看到儲存層級的存取保護安全性。即使是系統（Windows或UNIX）管理員、也無法從用戶端撤銷儲存層級的存取保護安全性。因此、儲存層級的存取保護功能可為資料存取提供額外的安全層級、並由儲存管理員獨立設定及管理。
+
+[NOTE]
+====
+即使儲存層級存取保護僅支援NTFS存取權限、ONTAP 但如果UNIX使用者對應至擁有該磁碟區的SVM上的Windows使用者、則可在套用Storage層級存取保護的磁碟區上執行安全性檢查、以透過NFS存取資料。
+
+====
+
+
+== NTFS安全型磁碟區
+
+NTFS安全型磁碟區和qtree中包含的所有檔案和資料夾都具有NTFS有效安全性。您可以使用「vserver安全性file-directory'命令系列、在NTFS安全型磁碟區上實作下列類型的安全性：
+
+* 磁碟區中所含檔案和資料夾的檔案權限和稽核原則
+* 磁碟區上的儲存層級存取保護安全性
+
+
+
+
+== 混合式安全型磁碟區
+
+混合式安全型磁碟區和qtree可包含一些具有UNIX有效安全性的檔案和資料夾、並使用UNIX檔案權限、包括模式位元或NFSv4.x ACL和NFSv4.x稽核原則、以及某些具有NTFS有效安全性、並使用NTFS檔案權限和稽核原則的檔案和資料夾。您可以使用「vserver安全性file-directory'命令系列、將下列類型的安全性套用至混合式安全型資料：
+
+* 在混合磁碟區或qtree中、使用NTFS有效安全型態的檔案和資料夾的檔案權限和稽核原則
+* 儲存層級的存取保護功能、可用於NTFS和UNIX有效的安全型態磁碟區
+
+
+
+
+== UNIX安全型磁碟區
+
+UNIX安全型磁碟區和qtree包含具有UNIX有效安全性的檔案和資料夾（模式位元或NFSv4.x ACL）。如果您想要使用「vserver安全檔案目錄」命令系列來實作UNIX安全型磁碟區的安全性、請務必記住下列事項：
+
+* 「vserver安全性檔案目錄」命令系列無法用於管理UNIX安全性型磁碟區和qtree上的UNIX檔案安全性和稽核原則。
+* 您可以使用「vserver安全檔案目錄」命令系列、在UNIX安全型磁碟區上設定「儲存層級存取保護」、前提是SVM搭配目標磁碟區包含CIFS伺服器。
+
+
+xref:display-file-security-audit-policies-concept.adoc[顯示檔案安全性和稽核原則的相關資訊]
+
+xref:../nas-audit/create-ntfs-security-descriptor-file-task.adoc[使用CLI在NTFS檔案和資料夾上設定及套用檔案安全性]
+
+xref:configure-apply-audit-policies-ntfs-files-folders-task.adoc[使用CLI設定及套用稽核原則至NTFS檔案和資料夾]
+
+xref:secure-file-access-storage-level-access-guard-concept.adoc[使用儲存層級存取保護來保護檔案存取安全]

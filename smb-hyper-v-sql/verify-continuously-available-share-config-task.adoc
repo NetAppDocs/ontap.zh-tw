@@ -1,0 +1,77 @@
+---
+permalink: smb-hyper-v-sql/verify-continuously-available-share-config-task.html 
+sidebar: sidebar 
+keywords: verify, continuously, available, smb, share, configuration, hyper, v, sql, server, nondisruptive, application 
+summary: 為了支援不中斷營運、Hyper-V和SQL Server SMB共用必須設定為持續可用的共用。此外、您還必須檢查其他某些共用設定。您應該確認共用已正確設定、以便在發生計畫性或非計畫性的中斷事件時、為應用程式伺服器提供無縫且不中斷營運的作業。 
+---
+= 驗證持續可用的SMB共用組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了支援不中斷營運、Hyper-V和SQL Server SMB共用必須設定為持續可用的共用。此外、您還必須檢查其他某些共用設定。您應該確認共用已正確設定、以便在發生計畫性或非計畫性的中斷事件時、為應用程式伺服器提供無縫且不中斷營運的作業。
+
+您必須確認下列兩個共用參數設定正確：
+
+* 離線檔案參數設為「手動」（預設）或「無」。
+* 必須停用symlink。
+
+
+若要正常執行不中斷營運、必須設定下列共用內容：
+
+* 「持續可用」
+* 《oplocks》
+
+
+不得設定下列共用內容：
+
+* 「HomeDirectory」
+* 《屬性》
+* 《BranchCache》
+* 「存取型列舉」
+
+
+.步驟
+. 確認離線檔案已設定為「手動」或「停用」、且symlink已停用：
++
+h.*vserver CIFS共享區顯示-vserver _vserver_name_*
+
+. 確認SMB共用區已設定為持續可用度：
++
+h.*vserver CIFS共享屬性show -vserver _vserver_name_*
+
+
+
+下列範例顯示儲存虛擬機器（SVM、先前稱為Vserver）VS1上名稱為「shafre1」的共用區設定。離線檔案設為「手動」、符號連結會停用（在「symlink Properties」（名稱連結內容）欄位輸出中以連字號指定）：
+
+[listing]
+----
+cluster1::> vserver cifs share show -vserver vs1 -share-name share1
+                      Vserver: vs1
+                        Share: share1
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data/share1
+             Share Properties: oplocks
+                               continuously-available
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----
+下列範例顯示SVM VS1上名為「shafre1」之共用區的共用內容：
+
+[listing]
+----
+cluster1::> vserver cifs share properties show -vserver vs1 -share-name share1
+Vserver    Share   Properties
+---------  ------  ----------
+vs1        share1  oplocks
+                   continuously-available
+----

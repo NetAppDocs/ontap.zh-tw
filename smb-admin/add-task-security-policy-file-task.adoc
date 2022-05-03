@@ -1,0 +1,87 @@
+---
+permalink: smb-admin/add-task-security-policy-file-task.html 
+sidebar: sidebar 
+keywords: creating, create, add, policy, task, security, policy, configuring, configure, apply, acl, associate, task, entries, add a task to the security policy 
+summary: 建立原則工作並將其新增至安全性原則、是設定及套用ACL至SVM中的檔案或資料夾的第四個步驟。當您建立原則工作時、會將工作與安全性原則建立關聯。您可以將一或多個工作項目新增至安全性原則。 
+---
+= 新增工作至安全性原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立原則工作並將其新增至安全性原則、是設定及套用ACL至SVM中的檔案或資料夾的第四個步驟。當您建立原則工作時、會將工作與安全性原則建立關聯。您可以將一或多個工作項目新增至安全性原則。
+
+安全性原則是工作的容器。工作指的是單一作業、可透過安全性原則對具有NTFS或混合式安全性的檔案或資料夾（或是在設定儲存層級存取保護時、對磁碟區物件執行）。
+
+工作有兩種類型：
+
+* 檔案與目錄工作
++
+用於指定將安全性描述元套用至指定檔案和資料夾的工作。透過檔案和目錄工作所套用的ACL、可透過SMB用戶端或ONTAP CLI進行管理。
+
+* 儲存層級的存取保護工作
++
+用於指定將儲存層級存取保護安全性描述元套用至指定磁碟區的工作。透過儲存層級存取保護工作套用的ACL只能透過ONTAP CLI進行管理。
+
+
+
+工作包含檔案（或資料夾）或一組檔案（或資料夾）的安全性組態定義。原則中的每項工作都會以路徑唯一識別。在單一原則中、每個路徑只能有一項工作。原則不能有重複的工作項目。
+
+新增工作至原則的準則：
+
+* 每個原則最多可有10、000個工作項目。
+* 原則可以包含一或多個工作。
++
+即使原則可以包含多項工作、您也無法將原則設定為同時包含檔案目錄和儲存層級的存取保護工作。原則必須包含所有儲存層級的存取保護工作或所有檔案目錄工作。
+
+* 儲存層級的存取保護用於限制權限。
++
+它永遠不會提供額外的存取權限。
+
+
+
+將工作新增至安全性原則時、您必須指定下列四個必要參數：
+
+* SVM名稱
+* 原則名稱
+* 路徑
+* 與路徑相關聯的安全性描述元
+
+
+您可以使用下列選用參數來自訂安全性描述元組態：
+
+* 安全類型
+* 傳播模式
+* 索引位置
+* 存取控制類型
+
+
+儲存層級存取保護會忽略任何選用參數的值。如需詳細資訊、請參閱手冊頁。
+
+.步驟
+. 將具有相關安全性描述元的工作新增至安全性原則：「vserver安全性檔案目錄原則工作add -vserver vserver_name -police-name policy_name -path path -ntfs-SD sd_nameOptional _parameters'
++
+"file-directory"是"-access-control"參數的預設值。設定檔案和目錄存取工作時、可選擇指定存取控制類型。
+
++
+「Vserver安全性檔案目錄原則工作add -vserver VS1 -policy-name policy1 -path /home/dir1 -security-type NTFS -ntfs-mode exp -ntfs-SD SD2 -index-num 1 -access-controlfile目錄」
+
+. 驗證原則工作組態：「vserver安全性檔案目錄原則工作show -vserver vserver_name -police-name policy_name -path path'
++
+「Vserver安全檔案目錄原則工作說明」
+
++
+[listing]
+----
+
+Vserver: vs1
+Policy: policy1
+
+Index    File/Folder    Access           Security   NTFS       NTFS Security
+         Path           Control          Type       Mode       Descriptor Name
+-----    --------       -----------      --------   ------     ----------------
+1        /home/dir1     file-directory   ntfs       propagate  sd2
+----
+

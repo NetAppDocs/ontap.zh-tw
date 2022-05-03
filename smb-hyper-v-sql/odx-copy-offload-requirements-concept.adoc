@@ -1,0 +1,29 @@
+---
+permalink: smb-hyper-v-sql/odx-copy-offload-requirements-concept.html 
+sidebar: sidebar 
+keywords: odx, copy, offload, requirements, sql, server, hyper, v, smb, virtual 
+summary: 如果您想要移轉虛擬機器檔案、或直接從來源匯出及匯入資料庫檔案至目的地儲存位置、而不想透過應用程式伺服器傳送資料、則必須啟用ODX複本卸載。您必須瞭解使用ODX複製卸載搭配SQL Server和Hyper-V over SMB解決方案的特定需求。 
+---
+= SQL Server和Hyper-V在SMB上的ODX複製卸載需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要移轉虛擬機器檔案、或直接從來源匯出及匯入資料庫檔案至目的地儲存位置、而不想透過應用程式伺服器傳送資料、則必須啟用ODX複本卸載。您必須瞭解使用ODX複製卸載搭配SQL Server和Hyper-V over SMB解決方案的特定需求。
+
+使用ODX複本卸載可提供顯著的效能效益。此CIFS伺服器選項預設為啟用。
+
+* 必須啟用SMB 3.0才能使用ODX複本卸載。
+* 來源磁碟區至少必須為1.25 GB。
+* 必須在使用複本卸載的磁碟區上啟用重複資料刪除功能。
+* 如果您使用壓縮磁碟區、壓縮類型必須是可調適的、而且只支援8K大小的壓縮群組。
++
+不支援次要壓縮類型
+
+* 若要使用ODX複本卸載來移轉磁碟內和磁碟之間的Hyper-V來賓、必須將Hyper-V伺服器設定為使用SCSI磁碟。
++
+預設是設定IDE磁碟、但如果使用IDE磁碟建立磁碟、則移轉來賓時ODX複製卸載無法運作。
+
+

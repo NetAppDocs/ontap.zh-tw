@@ -1,0 +1,23 @@
+---
+permalink: tape-backup/tape-reservations-concept.html 
+sidebar: sidebar 
+keywords: tape, reservation, drive, medium, changer, bridge, libraries, scsi, persistent, reserve, release 
+summary: 多個儲存系統可共用對磁帶機、媒體更換器、橋接器或磁帶庫的存取權。磁帶保留功能可針對所有磁帶機、媒體交換器、橋接器和磁帶庫、啟用SCSI保留/釋放機制或SCSI持續保留、確保在任何特定時間只有一個儲存系統存取裝置。 
+---
+= 磁帶保留內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+多個儲存系統可共用對磁帶機、媒體更換器、橋接器或磁帶庫的存取權。磁帶保留功能可針對所有磁帶機、媒體交換器、橋接器和磁帶庫、啟用SCSI保留/釋放機制或SCSI持續保留、確保在任何特定時間只有一個儲存系統存取裝置。
+
+[NOTE]
+====
+無論是否涉及交換器、共享程式庫中裝置的所有系統都必須使用相同的保留方法。
+
+====
+保留設備的SCSI保留/釋放機制在正常情況下運作良好。不過、在介面錯誤恢復程序期間、保留可能會遺失。如果發生這種情況、除了保留擁有者之外的啟動器也可以存取該裝置。
+
+使用SCSI持續保留所做的保留不受錯誤恢復機制（例如迴圈重設或目標重設）的影響、但是並非所有的裝置都能正確實作SCSI持續保留。

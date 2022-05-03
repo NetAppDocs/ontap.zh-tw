@@ -1,0 +1,59 @@
+---
+permalink: flexgroup/convert-flexvol-concept.html 
+sidebar: sidebar 
+keywords: consider, convert, flexvol, volume, flexgroup, autobalance, give back, giveback, revert, split, space limit, limit 
+summary: 在決定將FlexVol 「還原」磁碟區轉換為FlexGroup 「還原」磁碟區之前、您應該先瞭解支援的功能和作業。 
+---
+= 將FlexVol 功能區轉換為FlexGroup 功能區總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要將FlexVol 一個不超過空間限制的範圍擴大到一個範FlexVol 圍、可以將該範圍內的整個過程轉換成FlexGroup 一個地方。從ONTAP NetApp 9.7開始、您可以將FlexVol SnapMirror關係中的獨立式SnapMirror Volume或FlexVol SnapMirror Volume、轉換成FlexGroup SnapMirror Volume。
+
+
+
+== 將FlexVol 功能區轉換FlexGroup 為功能區的考量事項
+
+在決定將FlexVol 「還原」磁碟區轉換為FlexGroup 「還原」磁碟區之前、您應該先瞭解支援的功能和作業。
+
+
+
+== 轉換期間不支援作業
+
+進行Volume轉換時、不允許執行下列作業：
+
+* Volume搬移
+* Aggregate自動平衡
+* Aggregate重新配置
+* 在高可用度組態中進行計畫性接管與恢復
+* 以高可用度組態手動和自動還原
+* 叢集升級與還原
+* FlexClone Volume分割
+* Volume重新裝載
+* Volume修改與自動調整大小
+* Volume重新命名
+* 將物件存放區附加至Aggregate
+* 協調MetroCluster 以進行交換、以進行不協調的組態設定
+* SnapMirror作業
+* 從Snapshot複本還原
+* 配額作業
+* 儲存效率作業
+
+
+您可以FlexGroup 在成功轉換後、在整個流程中執行這些作業。
+
+
+
+== 不支援FlexGroup 的組態
+
+* 離線或受限Volume
+* SVM根Volume
+* 資料量SnapLock
+* SAN
+* SMB 1.0
+* NVMe命名空間
+* 遠端Volume陰影複製服務（VSS）
+

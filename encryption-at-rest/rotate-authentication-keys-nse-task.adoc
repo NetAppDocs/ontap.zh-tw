@@ -1,0 +1,29 @@
+---
+permalink: encryption-at-rest/rotate-authentication-keys-nse-task.html 
+sidebar: sidebar 
+keywords: rotating, authentication, keys, netapp, storage, encryption 
+summary: 使用NetApp儲存加密（NSE）時、您可以旋轉驗證金鑰。 
+---
+= 旋轉驗證金鑰以進行NetApp儲存加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用NetApp儲存加密（NSE）時、您可以旋轉驗證金鑰。
+
+如果您使用外部金鑰管理程式（KMIP）、則可支援NSE環境中的旋轉驗證金鑰。
+
+[NOTE]
+====
+Onboard Key Manager（OKM）不支援NSE環境中的旋轉驗證金鑰。
+
+====
+.步驟
+. 使用「安全金鑰管理程式cree-key」命令來產生新的驗證金鑰。
++
+您必須先產生新的驗證金鑰、才能變更驗證金鑰。
+
+. 使用「儲存加密磁碟modify -disk *-data-key-id」命令來變更驗證金鑰。
+

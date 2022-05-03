@@ -1,0 +1,18 @@
+---
+permalink: volumes/space-display-quota-report-unix-client-concept.html 
+sidebar: sidebar 
+keywords: difference, space usage, displayed, quota report, unix client 
+summary: 顯示於FlexVol 某個範本或qtree配額報告中的已用磁碟空間值、可能與UNIX用戶端針對同一個磁碟區或qtree所顯示的值不同。使用值的差異在於配額報告後面的方法差異、以及計算磁碟區或qtree中資料區塊的UNIX命令。 
+---
+= 配額報告和UNIX用戶端總覽所顯示的空間使用量差異
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+顯示於FlexVol 某個範本或qtree配額報告中的已用磁碟空間值、可能與UNIX用戶端針對同一個磁碟區或qtree所顯示的值不同。使用值的差異在於配額報告後面的方法差異、以及計算磁碟區或qtree中資料區塊的UNIX命令。
+
+例如、如果磁碟區包含含有空白資料區塊（未寫入資料）的檔案、則磁碟區的配額報告不會在報告空間使用量時計算空白資料區塊。但是、當磁碟區掛載到UNIX用戶端、檔案顯示為「ls」命令的輸出時、空間使用量也會包含空白資料區塊。因此、與配額報告所顯示的空間使用量相比、「ls」命令會顯示較大的檔案大小。
+
+同樣地、配額報告中顯示的空間使用值也可能與UNIX命令（例如「df」和「du」）所顯示的值不同。

@@ -1,0 +1,29 @@
+---
+permalink: san-admin/flexclone-luns-protect-your-data-concept.html 
+sidebar: sidebar 
+keywords: use, flexclone, luns, protect, your, data 
+summary: FlexClone LUN是作用中磁碟區或Snapshot複本中另一個LUN的時間點、可寫入複本。可獨立修改實體複本及其父複本、而不會影響彼此。 
+---
+= 使用FlexClone LUN來保護您的資料總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FlexClone LUN是作用中磁碟區或Snapshot複本中另一個LUN的時間點、可寫入複本。可獨立修改實體複本及其父複本、而不會影響彼此。
+
+FlexClone LUN最初與其父LUN共享空間。根據預設、FlexClone LUN會繼承父LUN的空間保留屬性。例如、如果父LUN為非保留空間、則FlexClone LUN預設也不會保留空間。不過、您可以從父LUN（空間保留LUN）建立非空間保留的FlexClone LUN。
+
+當您複製LUN時、區塊共用會發生在背景中、而且在區塊共用完成之前、您無法建立Volume Snapshot複本。
+
+您必須使用「Volume Snapshot autod刪除modify」命令來設定磁碟區、以啟用FlexClone LUN自動刪除功能。否則、如果您想要自動刪除FlexClone LUN、但未將該磁碟區設定為FlexClone自動刪除、則不會刪除任何FlexClone LUN。
+
+當您建立FlexClone LUN時、FlexClone LUN自動刪除功能預設為停用。您必須在每個FlexClone LUN上手動啟用、才能自動刪除FlexClone LUN。如果您使用半厚磁碟區資源配置、且想要此選項提供「最佳努力」寫入保證、則必須讓_all_ FlexClone LUN可供自動刪除。
+
+[NOTE]
+====
+當您從Snapshot複本建立FlexClone LUN時、LUN會使用節省空間的背景程序、自動從Snapshot複本分割出來、因此LUN不會繼續依賴Snapshot複本或佔用任何額外空間。如果此背景分割尚未完成、且此Snapshot複本會自動刪除、則即使您已停用該FlexClone LUN的FlexClone自動刪除功能、該FlexClone LUN仍會刪除。完成背景分割之後、即使刪除Snapshot複本、FlexClone LUN也不會刪除。
+
+====
+link:../volumes/index.html["邏輯儲存管理"]

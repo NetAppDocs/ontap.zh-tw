@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_broadcast_domain97.html 
+keywords: create, creation, creating, add, adding, broadcast, domain, create a broadcast domain, broadcast domains group network ports in the cluster that belong to the same layer 2 network 
+summary: 廣播網域會將叢集中屬於同一個第2層網路的網路連接埠分組 
+---
+= 建立廣播網域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在更新的版本中、您可以建立廣播網域、將屬於同一層網路的叢集中網路連接埠分組。ONTAP然後、SVM便可使用這些連接埠。
+
+從ONTAP 功能更新到功能更新到功能更新、從功能更新到功能更新到功能更新到功能更新到功能更新到功能更新。如果您執行ONTAP 的是更新版本的版本、則不需要執行這些步驟。
+
+在更新版本的版本中、您計畫新增至廣播網域的連接埠不得屬於其他廣播網域。ONTAP
+
+.關於這項工作
+* 所有廣播網域名稱在IPspace內必須是唯一的。
+* 新增至廣播網域的連接埠可以是實體網路連接埠、VLAN或介面群組（ifgrps）。
+* 如果您要使用的連接埠屬於另一個廣播網域、但未使用、請使用「network port broadcast網域remove-port]命令、從現有的廣播網域移除連接埠。
+* 新增至廣播網域之連接埠的MTU會更新為廣播網域中設定的MTU值。
+* MTU值必須符合連接至該層2網路的所有裝置、但e0M連接埠處理管理流量除外。
+* 如果您未指定IPspace名稱、則會在「預設」IPspace中建立廣播網域。
+
+
+為了簡化系統組態、系統會自動建立同名的容錯移轉群組、其中包含相同的連接埠。
+
+.步驟
+. 檢視目前未指派給廣播網域的連接埠：
++
+「網路連接埠展示」
+
++
+如果顯示器很大、請使用「network port show -broadcast-domain'」命令、僅檢視未指派的連接埠。
+
+. 建立廣播網域：
++
+「網路連接埠廣播網域create -broadcast網域廣播網域名稱-MTU MTU MTU值[-IPSpace IPspace_name][-ports_list]」
+
++
+** 「_broadcast網域名稱」是您要建立的廣播網域名稱。
+** 「MTU值」是IP封包的MTU大小、1500和9000是典型值。
++
+此值會套用至新增至此廣播網域的所有連接埠。
+
+** 「_IPspace_name_」是要新增此廣播網域的IPspace名稱。
++
+除非您指定此參數的值、否則會使用「預設」IPspace。
+
+** 「連接埠清單」是要新增至廣播網域的連接埠清單。
++
+這些連接埠的新增格式為「_node_name:port_number_」、例如「node1:e0c」。
+
+
+
+. 驗證是否根據需要創建了廣播域："network port show -instance -dis廣播 域_new_ddomain_"
+
+
+下列命令會在預設IPspace中建立廣播網域bcast1、將MTU設為1500、並新增四個連接埠：
+
+「網路連接埠廣播網域create -broadcast網域_bcast1_-MTU _151500 -連接埠_cluster1-01:e0e、cluster1-01:e0f、cluster1-02：e0e、cluster1-02：e0f_」
+
+您可以透過建立子網路來定義廣播網域中可用的IP位址集區、或是現在可以將SVM和介面指派給IPspace。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]。
+
+如果您需要變更現有廣播網域的名稱、請使用「network port廣播網域重新命名」命令。

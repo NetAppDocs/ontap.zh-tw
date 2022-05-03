@@ -1,0 +1,36 @@
+---
+permalink: volumes/resume-efficiency-operation-checkpoint-task.html 
+sidebar: sidebar 
+keywords: resume, halted, efficiency, operation 
+summary: 如果效率作業因為系統當機、系統中斷或重新開機而停止、您可以使用Volume Eff效率start命令搭配檢查點選項、從同一點恢復效率作業。這有助於節省時間和資源、不需從頭開始重新啟動效率作業。 
+---
+= 恢復暫停的效率作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果效率作業因為系統停止、系統中斷或重新開機而停止、您可以使用「Volume Eff效率 啟動」命令搭配檢查點選項、從同一點恢復效率作業。這有助於節省時間和資源、不需從頭開始重新啟動效率作業。
+
+如果您只在磁碟區上啟用重複資料刪除、則重複資料刪除功能會在資料上執行。如果您在磁碟區上同時啟用重複資料刪除和資料壓縮、則資料壓縮會先執行、然後再執行重複資料刪除。
+
+您可以使用「Volume Eff效率show」命令來檢視磁碟區檢查點的詳細資料。
+
+根據預設、效率作業會從檢查點恢復。但是如果與先前的效率作業（執行「Volume Eff高效 啟動」、「掃描舊資料」命令的階段）相對應的檢查點超過24小時、則效率作業不會自動從先前的檢查點恢復。在這種情況下、效率作業從一開始就開始。不過、如果您知道自上次掃描以來、磁碟區中並未發生重大變更、您可以使用「-use檢查點」選項、強制從先前的檢查點繼續。
+
+.步驟
+. 使用「Volume Eff效率 入門」命令搭配「使用檢查點」選項、即可恢復效率作業。
++
+下列命令可讓您恢復Volume Vola上新資料的效率作業：
+
++
+「Volume Effiv更 有效率、請從vserver VS1 -volume Vola -use檢查點true」開始
+
++
+下列命令可讓您恢復Volume Vola上現有資料的效率作業：
+
++
+「Volume Effiv更 有效率的入門-vserver VS1 -volume Vola -scan老舊資料true -use檢查點true」
+
+

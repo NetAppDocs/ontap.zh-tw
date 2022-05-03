@@ -1,0 +1,107 @@
+---
+permalink: smb-hyper-v-sql/verify-domain-accounts-map-default-unix-user-task.html 
+sidebar: sidebar 
+keywords: verfiy, domain, account, default, unix, server, smb, share, user 
+summary: Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用的共用區。若要成功建立連線、電腦帳戶必須成功對應至UNIX使用者。完成此作業最方便的方法是將電腦帳戶對應至預設UNIX使用者。 
+---
+= 確認網域帳戶對應至預設UNIX使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用的共用區。若要成功建立連線、電腦帳戶必須成功對應至UNIX使用者。完成此作業最方便的方法是將電腦帳戶對應至預設UNIX使用者。
+
+Hyper-V和SQL Server使用網域電腦帳戶建立SMB連線。此外、SQL Server也會使用網域使用者帳戶做為進行SMB連線的服務帳戶。
+
+建立儲存虛擬機器（SVM）時ONTAP 、會自動建立名為「'pcuser'」（UID為「65534」）的預設使用者、以及名為「'pcuser'（gid為「65534」）的群組、並將預設使用者新增至「'pcuser'」群組。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
+
+.步驟
+. 判斷是否有預設的UNIX使用者：
++
+「* vserver CIFS」選項顯示-vserver _vserver_name_*
+
+. 如果未設定預設使用者選項、請判斷是否有UNIX使用者可以指定為預設UNIX使用者：
++
+「* vserver服務UNIX使用者show -vserver _vserver_name_*」
+
+. 如果未設定預設使用者選項、而且沒有UNIX使用者可指定為預設UNIX使用者、請建立預設UNIX使用者和預設群組、然後將預設使用者新增至群組。
++
+一般而言、預設使用者的使用者名稱為「'pcuser'」、必須指派「65534」的UID。預設群組通常會指定群組名稱「'pcuser'」。指派給群組的GID必須為「65534」。
+
++
+.. 建立預設群組：+`* vserver services unix-group create -vserver _vserver_name_-name pcluser-id 65534*
+.. 建立預設使用者並將預設使用者新增至預設群組：+ hy*vserver服務unix-usercreate -vserver _vserver_name_-userpcluser-id 65534 -prime-gid 65534*
+.. 驗證是否正確配置了默認用戶和默認組：+`* vserver services unix-user show -vserver _vserver_name_*+`* vserver services unix-group show -vserver _vserver_name_-ems*
+
+
+. 如果未設定CIFS伺服器的預設使用者、請執行下列步驟：
++
+.. 設定預設使用者：
++
+hy*vserver CIFS選項可修改-vserver * vserver_name*-default-unix-user-pcuser*
+
+.. 確認預設UNIX使用者已正確設定：
++
+「* vserver CIFS」選項顯示-vserver _vserver_name_*
+
+
+
+. 若要驗證應用程式伺服器的電腦帳戶是否正確對應至預設使用者、請使用「vserver CIFS工作階段show」命令、將磁碟機對應至駐留在SVM上的共用區、並確認Windows使用者與UNIX使用者之間的對應關係。
++
+如需使用此命令的詳細資訊、請參閱手冊頁。
+
+
+
+下列命令會判斷CIFS伺服器的預設使用者尚未設定、但會判斷「'pcuser'」使用者和「'pcuser'」群組是否存在。在SVM VS1上、「'pcuser'」使用者會被指派為CIFS伺服器的預設使用者。
+
+[listing]
+----
+cluster1::> vserver cifs options show
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : -
+  Guest Unix User        : -
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+
+
+
+cluster1::> vserver services unix-user show
+          User            User   Group  Full
+Vserver   Name            ID     ID     Name
+--------- --------------- ------ ------ ----------------
+vs1       nobody          65535  65535  -
+vs1       pcuser          65534  65534  -
+vs1       root            0      1      -
+
+cluster1::> vserver services unix-group show -members
+Vserver        Name                ID
+vs1            daemon              1
+       Users: -
+vs1            nobody              65535
+       Users: -
+vs1            pcuser              65534
+       Users: -
+vs1            root                0
+       Users: -
+
+cluster1::> vserver cifs options modify -vserver vs1 -default-unix-user pcuser
+
+cluster1::> vserver cifs options show
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : pcuser
+  Guest Unix User        : -
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+----

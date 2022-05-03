@@ -1,0 +1,53 @@
+---
+permalink: upgrade/task_resuming_snapmirror_operations.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, resuming, resume, snapmirror 
+summary: 完成不中斷升級之後、您必須恢復任何已暫停的SnapMirror關係。 
+---
+= 恢復SnapMirror作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+完成不中斷升級之後、您必須恢復任何已暫停的SnapMirror關係。
+
+必須使用SnapMirror quiesce命令暫停現有的SnapMirror關係、而且叢集必須在不中斷營運的情況下進行升級。
+
+. 恢復先前靜止的每個SnapMirror關係傳輸：「napmirror resume *」
++
+此命令會恢復所有靜止SnapMirror關係的傳輸。
+
+. 驗證SnapMirror作業是否已恢復：「napmirror show」
++
+[listing]
+----
+cluster1::> snapmirror show
+
+Source            Destination  Mirror  Relationship  Total             Last
+Path        Type  Path         State   Status        Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+cluster1-vs1:dp_src1
+            DP   cluster1-vs2:dp_dst1
+                              Snapmirrored
+                                      Idle           -         true    -
+cluster1-vs1:xdp_src1
+            XDP  cluster1-vs2:xdp_dst1
+                              Snapmirrored
+                                      Idle           -         true    -
+cluster1://cluster1-vs1/ls_src1
+            LS   cluster1://cluster1-vs1/ls_mr1
+                              Snapmirrored
+                                      Idle           -         true    -
+                 cluster1://cluster1-vs1/ls_mr2
+                              Snapmirrored
+                                      Idle           -         true    -
+4 entries were displayed.
+----
++
+對於每個SnapMirror關係、請確認關係狀態為*閒置*。如果狀態是*正在傳輸*、請等待SnapMirror傳輸完成、然後重新輸入命令、確認狀態已變更為*閒置*。
+
+
+
+對於每個設定為排程執行的SnapMirror關係、您應該確認第一個排程的SnapMirror傳輸是否成功完成。

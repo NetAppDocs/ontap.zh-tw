@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_failover_group.html 
+keywords: create, creation, creating, add, adding, failover, fail, over, group, create a failover group, failover group of network ports automatically migrate a lif to a different port when a link failure occurs, failover-groups create, ifgrps 
+summary: 建立網路連接埠容錯移轉群組、在發生連結故障時、自動將LIF移轉至不同的連接埠 
+---
+= 建立容錯移轉群組
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以建立網路連接埠的容錯移轉群組、以便LIF在LIF的目前連接埠發生連結故障時、自動移轉至不同的連接埠。這可讓系統將網路流量重新路由至叢集中的其他可用連接埠。
+
+您可以使用「network interface容錯移轉群組create」命令來建立群組、並將連接埠新增至群組。
+
+* 新增至容錯移轉群組的連接埠可以是網路連接埠、VLAN或介面群組（ifgrps）。
+* 新增至容錯移轉群組的所有連接埠都必須屬於同一個廣播網域。
+* 單一連接埠可位於多個容錯移轉群組中。
+* 如果您在不同的VLAN或廣播網域中有LIF、則必須為每個VLAN或廣播網域設定容錯移轉群組。
+* 容錯移轉群組不適用於SAN iSCSI或FC環境。
+
+
+建立容錯移轉群組：
+
+「網路介面容錯移轉群組可建立-vserver _vserver_name_-容 錯移轉群組_容 錯移轉群組_group_name_-targets _list_」
+
+* 「_vserver_name_」是可使用容錯移轉群組的SVM名稱。
+* 「容錯移轉群組名稱」是您要建立的容錯移轉群組名稱。
+* 「連接埠清單」是要新增至容錯移轉群組的連接埠清單。連接埠的新增格式為_node_name>:<port_number>_、例如node1:e0c。
+
+
+下列命令會針對SVM VS3建立容錯移轉群組fg3、並新增兩個連接埠：
+
+....
+network interface failover-groups create -vserver vs3 -failover-group fg3 -targets cluster1-01:e0e,cluster1-02:e0e
+....
+.完成後
+* 在建立容錯移轉群組之後、您應該將容錯移轉群組套用至LIF。
+* 套用不為LIF提供有效容錯移轉目標的容錯移轉群組、會產生警告訊息。
++
+如果沒有有效容錯移轉目標的LIF嘗試進行容錯移轉、可能會發生中斷。
+
+

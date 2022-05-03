@@ -1,0 +1,22 @@
+---
+permalink: tape-backup/smtape-volume-move-concept.html 
+sidebar: sidebar 
+keywords: smtape, backup, operation, volume, move, cutover, phase 
+summary: SM磁帶 備份作業和Volume Move作業可平行執行、直到儲存系統嘗試最後轉換階段為止。在此階段之後、新的SM磁帶 備份作業無法在要移動的磁碟區上執行。不過、目前的作業會持續執行、直到完成為止。 
+---
+= SMTape如何搭配Volume Move運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SM磁帶 備份作業和Volume Move作業可平行執行、直到儲存系統嘗試最後轉換階段為止。在此階段之後、新的SM磁帶 備份作業無法在要移動的磁碟區上執行。不過、目前的作業會持續執行、直到完成為止。
+
+在開始磁碟區的轉換階段之前、磁碟區移動作業會檢查同一個磁碟區上的有效SMTape備份作業。如果有作用中的SMTape備份作業、則Volume Move作業會移至轉換延後狀態、並允許完成SMTape備份作業。完成這些備份作業之後、您必須手動重新啟動Volume Move作業。
+
+如果備份應用程式支援CAB/EXTENSION、您可以在讀取/寫入和唯讀磁碟區上繼續執行遞增磁帶備份和還原作業、而無需重新設定備份原則。
+
+無法同時執行基礎還原和磁碟區移動作業；不過、遞增還原可與磁碟區移動作業並行執行、其行為類似於磁碟區移動作業期間的SMTape備份作業。
+
+link:../concepts/index.html["概念ONTAP"]

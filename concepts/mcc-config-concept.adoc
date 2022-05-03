@@ -1,0 +1,41 @@
+---
+permalink: concepts/mcc-config-concept.html 
+sidebar: sidebar 
+keywords: metrocluster continuous availability 
+summary: 透過實作兩個實體獨立的鏡射叢集、可利用各種組態來保護資料。MetroCluster每個叢集都會同步複寫另一個叢集的資料和SVM組態。萬一某站台發生災難、系統管理員可以啟動鏡射SVM、並從存續站台開始提供資料。 
+---
+= 持續可用度MetroCluster
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+透過實作兩個實體獨立的鏡射叢集、可利用各種組態來保護資料。MetroCluster每個叢集都會同步複寫另一個叢集的資料和SVM組態。萬一某站台發生災難、系統管理員可以啟動鏡射SVM、並從存續站台開始提供資料。
+
+* _架構附加MetroCluster 的SUR__組態可支援整個都會區的叢集。
+* _Stretch MetroCluster S__組態可支援園區內的叢集。
+
+
+無論是哪種情況、都必須執行叢集處理。
+
+使用稱為「_Estres_」的功能、在另一個叢集的儲存設備中、以複本或_plexes_同步鏡射每個叢集的集合體資料。MetroCluster ONTAP SyncMirror如果發生切換、則存續叢集上的遠端叢集會上線、而次要SVM會開始提供資料。
+
+image::../media/metrocluster.gif[MetroCluster]
+
+|===
+
+
+ a| 
+*在SyncMirror 非MetroCluster實作中使用支援*您可以選擇性地在SyncMirror 非MetroCluster實作中使用支援、以防止資料遺失、如果有更多磁碟故障、而RAID類型無法保護、或是無法連線至RAID群組磁碟。此功能僅適用於HA配對。
+
+Aggregate資料會鏡射到儲存在不同磁碟櫃上的叢中。如果其中一個磁碟櫃無法使用、則未受影響的叢會在您修復故障原因時繼續提供資料。
+
+請記住、使用SyncMirror 仰賴不鏡射的Aggregate鏡射需要兩倍的儲存容量。每個叢需要的磁碟數量、與鏡射的叢磁碟數量相同。例如、您需要2、880 GB的磁碟空間來鏡射1、440 GB的集合體、每個叢體需要1、440 GB的空間。
+
+[NOTE]
+====
+此外、還提供適用於「虛擬化實作」的解決方案。SyncMirror FlexArray
+
+====
+|===

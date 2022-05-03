@@ -1,0 +1,34 @@
+---
+permalink: s3-config/create-s3-user-task.html 
+sidebar: sidebar 
+keywords: create, s3, user 
+summary: 所有ONTAP 的物件儲存區都需要使用者授權、才能限制連線至授權用戶端。 
+---
+= 建立S3使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+所有ONTAP 的物件儲存區都需要使用者授權、才能限制連線至授權用戶端。
+
+啟用S3的SVM必須已經存在。
+
+S3使用者可以存取SVM中的任何儲存區、但不能存取多個SVM。
+
+建立S3使用者時、會產生存取金鑰和秘密金鑰。必須與使用者共用、以及物件存放區的FQDN和儲存區名稱。S3使用者的金鑰可以使用「vserver object-store-server使用者show」命令來顯示。
+
+您可以在儲存區原則或物件伺服器原則中、將特定的存取權限授予S3使用者。
+
+[NOTE]
+====
+建立物件存放區伺服器時、會建立root使用者（UID 0）、這是具有存取所有儲存區權限的使用者。與其以ONTAP root使用者身分管理S3、最佳做法是建立具有特定權限的管理員使用者角色。
+
+====
+.步驟
+. 建立S3使用者：
++
+「vserver object-store-server使用者create -vserver Svm_name -user_name [-comment text]」
+
+

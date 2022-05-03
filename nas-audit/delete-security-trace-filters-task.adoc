@@ -1,0 +1,61 @@
+---
+permalink: nas-audit/delete-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: delete, security trace filters 
+summary: 當您不再需要安全性追蹤篩選器項目時、可以將其刪除。由於每個儲存虛擬機器（SVM）最多可有10個安全追蹤篩選器、因此刪除不需要的篩選器後、您就能在達到上限時建立新的篩選器。 
+---
+= 刪除安全追蹤篩選器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您不再需要安全性追蹤篩選器項目時、可以將其刪除。由於每個儲存虛擬機器（SVM）最多可有10個安全追蹤篩選器、因此刪除不需要的篩選器後、您就能在達到上限時建立新的篩選器。
+
+若要唯一識別您要刪除的安全性追蹤篩選器、您必須指定下列項目：
+
+* 套用追蹤篩選器的SVM名稱
+* 追蹤篩選器的篩選索引編號
+
+
+.步驟
+. 識別您要刪除之安全性追蹤篩選器項目的篩選器索引編號：
++
+「Vserver安全性追蹤篩選器show -vserver vserver_name」
+
++
+「Vserver安全性追蹤篩選器show -vserver VS1」
+
++
+[listing]
+----
+
+Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
+-------- -----  -----------  ----------------------   -----------  -------------
+vs1        1    -            /dir1/dir2/file.txt          yes      -
+vs1        2    -            /dir3/dir4/                  no       mydomain\joe
+----
+. 使用上一個步驟的篩選索引編號資訊、刪除篩選項目：
++
+"Vserver安全性追蹤篩選器DELETE -vserver vserver_name -index index_number"
+
++
+"Vserver安全追蹤篩選器DELETE -vserver VS1 -index 1"
+
+. 確認安全性追蹤篩選器項目已刪除：
++
+「Vserver安全性追蹤篩選器show -vserver vserver_name」
+
++
+「Vserver安全性追蹤篩選器show -vserver VS1」
+
++
+[listing]
+----
+
+Vserver  Index   Client-IP            Path            Trace-Allow   Windows-Name
+-------- -----  -----------  ----------------------   -----------   -------------
+vs1        2    -            /dir3/dir4/                  no        mydomain\joe
+----
+

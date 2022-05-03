@@ -1,0 +1,81 @@
+---
+permalink: san-admin/move-luns-task.html 
+sidebar: sidebar 
+keywords: system manager, ontap 9.2, move, lun 
+summary: 您可以在儲存虛擬機器（SVM）內的磁碟區之間移動LUN、但無法跨SVM移動LUN。在SVM內跨磁碟區移動的LUN會立即移動、而且不會中斷連線。 
+---
+= 移動LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）內的磁碟區之間移動LUN、但無法跨SVM移動LUN。在SVM內跨磁碟區移動的LUN會立即移動、而且不會中斷連線。
+
+如果您的LUN使用選擇性LUN對應（SLM）、則必須修改SLM-報告節點、以納入目的地節點及其HA合作夥伴。
+
+在LUN搬移期間、不會保留重複資料刪除、壓縮及壓縮等儲存效率功能。必須在LUN移動完成後重新套用。
+
+透過Snapshot複本進行資料保護、是在磁碟區層級進行。因此、當您搬移LUN時、LUN屬於目的地Volume的資料保護配置。如果您沒有為目的地磁碟區建立Snapshot複本、則不會建立LUN的Snapshot複本。此外、LUN的所有Snapshot複本都會保留在原始磁碟區中、直到刪除這些Snapshot複本為止。
+
+您無法將LUN移至下列磁碟區：
+
+* SnapMirror目的地Volume
+* SVM根磁碟區
+
+
+您無法移動下列類型的LUN：
+
+* 已從檔案建立的LUN
+* 處於NVFail狀態的LUN
+* 處於負載共享關係中的LUN
+* 傳輸協定端點類別LUN
+
+
+[NOTE]
+====
+對於1 TB或更大的Solaris OS類型LUN、主機在LUN移動期間可能會發生逾時。對於此類型的LUN、您應該先卸載LUN、然後再開始移動。
+
+====
+
+
+== System Manager程序
+
+從ONTAP 《事物》9.10.1開始、您可以在移動單一LUN時、使用System Manager建立新的Volume。在《支援資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表：更新資料表。ONTAP
+
+步驟
+
+. 在System Manager中、按一下* Storage（儲存設備）>LUN*。
+. 在您要移動的LUN上按一下滑鼠右鍵、然後按一下 image:icon_kabob.gif["kabob圖示"] 並選擇* Move LUN*。
++
+在《S209.10.1》中、選取以將LUN移至*現有Volume *或*新Volume *。ONTAP
+
++
+如果您選擇建立新的Volume、請提供Volume規格。
+
+. 按一下*移動*。
+
+
+
+
+== CLI程序
+
+.步驟
+. 移動LUN：
++
+"LUN Move start"（LUN移轉開始）。
+
++
+在極短的期間內、LUN會顯示在來源和目的地磁碟區上。這是預期的做法、並在行動完成後予以解決。
+
+. 追蹤移動狀態並確認成功完成：
++
+「LUN搬移展示」。
+
+
+
+.相關資訊
+* link:selective-lun-map-concept.html["選擇性LUN對應"]
+* link:modify-slm-reporting-nodes-task.html["修改「SLM-報告節點」清單"]
+

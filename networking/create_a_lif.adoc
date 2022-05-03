@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_lif.html 
+keywords: example LIFs, add LIFs, configure LIFs, create, creation, creating, add, adding, logical, interface, service, policies, policy, create a lif, network interface capacity show, lif examples 
+summary: 建立LIF、此為與實體或邏輯連接埠相關聯的IP位址。 
+---
+= 建立LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障、LIF可能會容錯移轉至不同的實體連接埠、或移轉至不同的實體連接埠、進而繼續與網路通訊。
+
+.開始之前
+* 基礎實體或邏輯網路連接埠必須設定為管理UP狀態。
+* 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。
++
+子網路包含屬於同一第3層子網路的IP位址集區。它們是使用「network subnet create」命令建立的。
+
+* 指定LIF處理之流量類型的機制已變更。對於僅適用於更新版本的版本、LIF會使用角色來指定其處理的流量類型。ONTAP從ONTAP Sf6開始、l生命 就會使用服務原則來指定處理的流量類型。
+
+
+.關於這項工作
+* 您無法將NAS和SAN傳輸協定指派給相同的LIF。
++
+支援的傳輸協定包括SMB、NFS、FlexCache 支援功能、iSCSI和FC； iSCSI和FC無法與其他傳輸協定結合使用。不過、NAS和乙太網路型SAN傳輸協定可以存在於同一個實體連接埠上。
+
+* 您可以在同一個網路連接埠上同時建立IPV4和IPv6 LIF。
+* SVM使用的所有名稱對應和主機名稱解析服務、例如DNS、NIS、LDAP和Active Directory、 必須至少有一個LIF處理SVM的資料流量。
+* 處理節點之間叢集內流量的LIF、不應與處理管理流量的LIF或處理資料流量的LIF位於相同的子網路上。
+* 建立沒有有效容錯移轉目標的LIF會產生警告訊息。
+* 如果叢集內有大量的生命量、您可以使用「network interface cape流量show」命令來驗證叢集上支援的LIF容量、並使用「network interface cape流量 詳細資料show」命令來驗證每個節點上支援的LIF容量 （進階權限層級）。
+* 從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP
++
+從ONTAP 支援FFC-NVMe的支援功能到支援的功能表9.4開始。如果您要建立FC-NVMe LIF、應該注意下列事項：
+
++
+** NVMe傳輸協定必須受到建立LIF的FC介面卡支援。
+** FC-NVMe是資料生命中唯一的資料傳輸協定。
+
+
+* 必須為每個支援SAN的儲存虛擬機器（SVM）設定一個LIF處理管理流量。
+* NVMe LIF和命名空間必須裝載在同一個節點上。
+* 每個SVM只能設定一個處理資料流量的NVMe LIF。
+
+
+.步驟
+. 建立LIF：
++
+....
+network interface create -vserver vserver_name -lif lif_name -service-policy service_policy_name -home-node node_name -home-port port_name {-address IP_address - netmask Netmask_value | -subnet-name subnet_name} -firewall- policy policy -auto-revert {true|false}
+....
++
+** 當LIF上執行「網路介面回復」命令時、LIF會傳回的節點為「主節點」。
++
+您也可以使用-autom-revert選項、指定LIF是否應自動還原為主節點和主連接埠。
+
+** 首頁連接埠是LIF在LIF上執行「網路介面回復」命令時、LIF傳回的實體或邏輯連接埠。
+** 您可以使用"-address"和"-netask"選項來指定IP位址、也可以使用"-subnet_name"選項從子網路進行分配。
+** 使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。
+** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。"network rout" creation"手冊頁包含有關在SVM中建立靜態路由的資訊。
+** 「自動還原」可讓您指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、是否將資料LIF自動還原至其主節點。預設設定為「假」、但您可以根據環境中的網路管理原則、將其設定為「真」。
+** 從功能介紹9.5開始、您ONTAP 可以使用「服務原則」選項來指派LIF的服務原則。當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
+** 「資料傳輸協定」可讓您建立支援光纖通道傳輸協定（FCP）或NVMe / FC傳輸協定的LIF。建立IP LIF時不需要此選項。
+
+
+. *選用*：如果您要在-address選項中指派IPv6位址：
++
+.. 使用network NDP prefix show命令查看在各種介面上學習到的RA前置詞清單。
++
+「network NDP prefix show」命令可在進階權限層級使用。
+
+.. 使用「prefix::id」格式手動建構IPv6位址。
++
+「prefix」是在各種介面上學習的前置詞。
+
++
+若要導出「id」、請選擇隨機的64位元十六進位數字。
+
+
+
+. 使用「network interface show」命令確認LIF已成功建立。
+. 確認已設定的IP位址可連線：
+
+
+|===
+
+
+| 若要驗證... | 使用... 
+
+
+| IPV4位址 | 網路ping 
+
+
+| IPv6位址 | 網路ping6. 
+|===
+
+
+== 範例
+
+下列命令會建立LIF、並使用「-address'（位址）」和「-netmask'（網路遮罩）」參數來指定IP位址和網路遮罩值：
+
+....
+network interface create -vserver vs1.example.com -lif datalif1 -service-policy default-data-files -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
+....
+下列命令會建立LIF、並從指定的子網路（名為client1_sub）指派IP位址和網路遮罩值：
+
+....
+network interface create -vserver vs3.example.com -lif datalif3 -service-policy default-data-files -home-node node-3 -home-port e1c -subnet-name client1_sub - auto-revert true
+....
+下列命令會建立一個NVMe / FC LIF、並指定「NVMe -光纖通道」資料傳輸協定：
+
+....
+network interface create -vserver vs1.example.com -lif datalif1 -data-protocol nvme-fc -home-node node-4 -home-port 1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
+....

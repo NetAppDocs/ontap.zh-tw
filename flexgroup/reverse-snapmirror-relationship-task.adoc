@@ -1,0 +1,80 @@
+---
+permalink: flexgroup/reverse-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: reverse, snapmirror, relation, flexgroup, volume, disaster, recovery 
+summary: 當災難停用FlexGroup SnapMirror關係的來源等量資料時、您可以在FlexGroup 修復或更換來源FlexGroup 的等量資料時、使用目的地的等量資料。在來源FlexGroup 供應資料的來源供應上線後、您可以將原始來源FlexGroup 供應資料的來源供應區變成唯讀目的地、並反轉SnapMirror關係。 
+---
+= 在FlexGroup 災難恢復期間、反轉SnapMirror在各個方面的關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當災難停用FlexGroup SnapMirror關係的來源等量資料時、您可以在FlexGroup 修復或更換來源FlexGroup 的等量資料時、使用目的地的等量資料。在來源FlexGroup 供應資料的來源供應上線後、您可以將原始來源FlexGroup 供應資料的來源供應區變成唯讀目的地、並反轉SnapMirror關係。
+
+目的地磁碟區上的任何作用中配額規則都會停用、而且配額規則會在執行重新同步之前刪除。
+
+您可以使用「Volume配額原則規則create」和「volume quota modify」命令、在重新同步作業完成後建立和重新啟動配額規則。
+
+.步驟
+. 在原始目的地FlexGroup 的Sfetsvolume上、移除來源FlexGroup 供應區與目的地FlexGroup 供應區之間的資料保護鏡像關係：「napmirror DELETE -destination-path Svm_name：volume名稱」
++
+[listing]
+----
+cluster2::> snapmirror delete -destination-path vsd:dst
+----
+. 在原始來源FlexGroup 的Sfidvolume上、從來源FlexGroup 的Sfidvolume移除關係資訊：「napmirror release -destination-path Svm_name：volume名稱-bidation-info-only」
++
+刪除SnapMirror關係之後、您必須先從來源FlexGroup 的SnapMirror Volume移除關係資訊、然後再嘗試重新同步作業。
+
++
+[listing]
+----
+cluster1::> snapmirror release -destination-path vsd:dst -relationship-info-only true
+----
+. 在新的目的地FlexGroup Sfidvolume上、建立鏡射關係：「napmirror create -source-path sr_svm_name：volume名稱-dite-path dst_svm_name：volume名稱-type XDP -policy MirrorAllSnapshots」
++
+[listing]
+----
+cluster1::> snapmirror create -source-path vsd:dst -destination-path vss:src -type XDP -policy MirrorAllSnapshots
+----
+. 在新的目的地FlexGroup Sesfvolume上、重新同步來源FlexGroup Sesf:「napmirror resSync -source-path Svm_name：volume名稱」
++
+[listing]
+----
+cluster1::> snapmirror resync -source-path vsd:dst
+----
+. 監控SnapMirror傳輸：「napmirror show -expand」
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vsd:dst       XDP  vss:src        Snapmirrored
+                                      Idle           -         true    -
+vss:dst__0001 XDP  vss:src__0001  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0002 XDP  vss:src__0002  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0003 XDP  vss:src__0003  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0004 XDP  vss:src__0004  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0005 XDP  vss:src__0005  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0006 XDP  vss:src__0006  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0007 XDP  vss:src__0007  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0008 XDP  vss:src__0008  Snapmirrored
+                                      Idle           -         true    -
+...
+----
++
+每個組織的SnapMirror關係狀態顯示為「napMirroring」、表示重新同步已成功。
+
+

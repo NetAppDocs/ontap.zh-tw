@@ -1,0 +1,41 @@
+---
+permalink: smb-admin/local-user-authentication-concept.html 
+sidebar: sidebar 
+keywords: local, user, access, data, cifs, server, create, authenticate, session, how local user authentication works 
+summary: 本機使用者必須先建立已驗證的工作階段、才能存取CIFS伺服器上的資料。 
+---
+= 本機使用者驗證的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+本機使用者必須先建立已驗證的工作階段、才能存取CIFS伺服器上的資料。
+
+由於SMB是以工作階段為基礎、因此在第一次設定工作階段時、只要確定一次使用者身分即可。CIFS伺服器在驗證本機使用者時、會使用以NTLM為基礎的驗證。支援「位在位在位在位在位」的「位在位
+
+在三種使用案例下使用本機驗證。ONTAP每個使用案例取決於使用者名稱的網域部分（使用網域\使用者格式）是否符合CIFS伺服器的本機網域名稱（CIFS伺服器名稱）：
+
+* 網域部分相符
++
+在要求存取資料時提供本機使用者認證的使用者、會在CIFS伺服器本機驗證。
+
+* 網域部分不符
++
+嘗試在CIFS伺服器所屬網域中的網域控制器上使用NTLM驗證。ONTAP如果驗證成功、登入即告完成。如果驗證失敗、接下來的情況取決於驗證失敗的原因。
+
++
+例如、如果使用者存在於Active Directory中、但密碼無效或過期、ONTAP 則無法嘗試在CIFS伺服器上使用對應的本機使用者帳戶。而是驗證失敗。有些情況ONTAP 下、即使有CIFS伺服器上的對應本機帳戶存在、也會使用該帳戶進行驗證、即使這些NetBios網域名稱不相符。例如、如果存在相符的網域帳戶、但該帳戶已停用、ONTAP 則會使用CIFS伺服器上對應的本機帳戶進行驗證。
+
+* 未指定網域部分
++
+以本機使用者身分先嘗試驗證。ONTAP如果本機使用者驗證失敗、ONTAP 則由CIFS伺服器所屬網域中的網域控制器來驗證使用者。
+
+
+
+成功完成本機或網域使用者驗證後ONTAP 、將會建構完整的使用者存取權杖、並將本機群組成員資格和權限納入考量。
+
+如需本機使用者的NTLM驗證詳細資訊、請參閱Microsoft Windows文件。
+
+xref:enable-disable-local-user-authentication-task.adoc[啟用或停用本機使用者驗證]

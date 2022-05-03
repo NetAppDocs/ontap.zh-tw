@@ -1,0 +1,170 @@
+---
+permalink: upgrade/task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, two-node, metrocluster, mcc, 9.2, earlier 
+summary: 您可以ONTAP 在不中斷營運的情況下升級支援雙節點MetroCluster 的功能。此方法有幾個步驟：啟動協調式切換、在「故障」站台更新叢集、啟動切換、然後在另一個站台的叢集上重複此程序。 
+---
+= 在MetroCluster 使用CLI的ONTAP 過程中、在不中斷營運的情況下、手動升級支援2節點的不中斷功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以ONTAP 在不中斷營運的情況下升級支援雙節點MetroCluster 的功能。此方法有幾個步驟：啟動協調式切換、在「失敗」站台更新叢集、啟動切換、然後在另一個站台的叢集上重複此程序。
+
+本程序僅適用於MetroCluster 執行ONTAP 版本為2個節點的不含更新版本的不含更新版本的不含更新版本的組態。
+
++如果您有四節點MetroCluster 的版本、請勿使用此程序。
+
++如果您的雙節點MetroCluster 版的「不全功能」組態執行ONTAP 的是「不全功能」9.3或更新版本、請執行 xref:task_upgrade_andu_sm.html[使用System Manager自動進行不中斷升級]。
+
+. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
++
+出現進階提示（「*>」）。
+
+. 在要升級的叢集上、安裝新ONTAP 的更新版的Imagessoftware映像作為預設值：「ystem節點映像更新-package_place -setDefault true -ree-packagetrue」（系統節點映像更新套件套件位置-setDefault true -取代套件true）
++
+[listing]
+----
+cluster_B::*> system node image update -package http://www.example.com/NewImage.tgz -setdefault true -replace-package true
+----
+. 驗證目標軟體映像是否設為預設映像：「System Node image show」（系統節點映像顯示）
++
+以下範例顯示「NewImage」已設定為預設影像：
+
++
+[listing]
+----
+cluster_B::*> system node image show
+                    Is      Is                           Install
+Node     Image      Default Current Version              Date
+-------- -------    ------- ------- -------------------- -------------------
+node_B_1
+         OldImage  false   true    X.X.X                MM/DD/YYYY TIME
+         NewImage  true    false   Y.Y.Y                MM/DD/YYYY TIME
+2 entries were displayed.
+----
+. 如果目標軟體映像未設定為預設映像、請將其變更為：「系統映像修改｛-node*-iscurrent fuls｝-IsDefault true」
+. 確認所有叢集SVM都處於健全狀況狀態：MetroCluster 「Sivserver show」
+. 在未更新的叢集上、啟動協商式切換：MetroCluster 「無法切換」
++
+此作業可能需要數分鐘的時間。您可以使用MetroCluster flexoperationshow命令來驗證切換是否已完成。
+
++
+在下列範例中、會在遠端叢集（「叢集_a`」）上執行協調式切換。這會導致本機叢集（「叢集B」）停止、以便更新。
+
++
+[listing]
+----
+cluster_A::> metrocluster switchover
+
+Warning: negotiated switchover is about to start. It will stop all the data
+         Vservers on cluster "cluster_B" and
+         automatically re-start them on cluster
+         "cluster_A". It will finally gracefully shutdown
+         cluster "cluster_B".
+Do you want to continue? {y|n}: y
+----
+. 確認所有叢集SVM都處於健全狀況狀態：MetroCluster 「Sivserver show」
+. 重新同步「'shurviving」叢集上的資料集合體：「MetroCluster 恢復階段集合體」
++
+將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5或更新版本之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。
+
++
+[listing]
+----
+cluster_A::> metrocluster heal -phase aggregates
+[Job 130] Job succeeded: Heal Aggregates is successful.
+----
+. 驗證修復作業是否成功完成：MetroCluster 「還原作業展示」
++
+[listing]
+----
+cluster_A::> metrocluster operation show
+Operation: heal-aggregates
+State: successful
+Start Time: MM/DD/YYYY TIME
+End Time: MM/DD/YYYY TIME
+Errors: -
+----
+. 重新同步「'shurviving」叢集上的根集合體：「MetroCluster 恢復階段根集合體」
++
+[listing]
+----
+cluster_A::> metrocluster heal -phase root-aggregates
+[Job 131] Job succeeded: Heal Root Aggregates is successful.
+----
+. 驗證修復作業是否成功完成：MetroCluster 「還原作業展示」
++
+[listing]
+----
+cluster_A::> metrocluster operation show
+Operation: heal-root-aggregates
+State: successful
+Start Time: MM/DD/YYYY TIME
+End Time: MM/DD/YYYY TIME
+Errors: -
+----
+. 在暫停的叢集上、從載入程式提示字元「boot_ONTAP」開機節點
+. 等待開機程序完成、然後確認所有叢集SVM都處於健全狀況狀態MetroCluster ：「Sivserver show」
+. 從「'shurviving」叢集執行切換：MetroCluster 「還原」
+. 驗證是否已成功完成切換：MetroCluster 「還原作業展示」
++
+[listing]
+----
+cluster_A::> metrocluster operation show
+Operation: switchback
+State: successful
+Start Time: MM/DD/YYYY TIME
+End Time: MM/DD/YYYY TIME
+Errors: -
+----
+. 確認所有叢集SVM都處於健全狀況狀態：MetroCluster 「Sivserver show」
+. 在其他叢集上重複上述所有步驟。
+. 驗證MetroCluster 此功能是否正常：
++
+.. 檢查組態：MetroCluster 「不執行檢查」
++
+[listing]
+----
+cluster_A::> metrocluster check run
+Last Checked On: MM/DD/YYYY TIME
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+4 entries were displayed.
+
+Command completed. Use the "metrocluster check show -instance"
+command or sub-commands in "metrocluster check" directory for
+detailed results.
+To check if the nodes are ready to do a switchover or switchback
+operation, run "metrocluster switchover -simulate" or "metrocluster
+switchback -simulate", respectively.
+----
+.. 如果您想查看更詳細的結果、請使用MetroCluster 「show」執行指令：「MetroCluster wetcheck aggregate show：「metrocluster check config-copy show'metrocluster check lIF show 'metrocluster check節點show'」
+.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+.. 模擬切換作業：MetroCluster 「不穩定切換-模擬」
+.. 檢閱切換模擬的結果：MetroCluster 「不再是動作展示」
++
+[listing]
+----
+cluster_A::*> metrocluster operation show
+    Operation: switchover
+        State: successful
+   Start time: MM/DD/YYYY TIME
+     End time: MM/DD/YYYY TIME
+       Errors: -
+----
+.. 返回管理員權限等級：「et -priv. admin」
+.. 在其他叢集上重複這些子步驟。
+
+
+
+
+您應該執行任何升級後工作。
+
+link:https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/concept_dr_workflow.html["災難恢復MetroCluster"]

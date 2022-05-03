@@ -1,0 +1,52 @@
+---
+permalink: ndmp/enable-svm-scoped-ndmp-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, svm, scope, ndmp, cluster 
+summary: 您可以在叢集上啟用SVM範圍的NDMP模式和NDMP服務（管理SVM）、在叢集上設定SVM範圍的NDMP。 
+---
+= 在叢集上啟用SVM範圍的NDMP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在叢集上啟用SVM範圍的NDMP模式和NDMP服務（管理SVM）、在叢集上設定SVM範圍的NDMP。
+
+關閉節點範圍的NDMP模式可在叢集上啟用SVM範圍的NDMP模式。
+
+.步驟
+. 使用帶有「node-sceme-mode」參數的「系統服務NDMP」命令來啟用SVM範圍的NDMP模式。
++
+[listing]
+----
+cluster1::> system services ndmp node-scope-mode off
+NDMP node-scope-mode is disabled.
+----
+. 使用「vserver services NDMP on」命令、在管理SVM上啟用NDMP服務。
++
+[listing]
+----
+cluster1::> vserver services ndmp on -vserver cluster1
+----
++
+驗證類型預設設定為「挑戰」、並停用純文字驗證。
+
++
+[NOTE]
+====
+為了安全通訊、您應該停用純文字驗證。
+
+====
+. 使用「vserver services NDMP show」命令來驗證NDMP服務是否已啟用。
++
+[listing]
+----
+cluster1::> vserver services ndmp show
+
+Vserver       Enabled   Authentication type
+------------- --------- -------------------
+cluster1      true      challenge
+vs1           false     challenge
+----
+

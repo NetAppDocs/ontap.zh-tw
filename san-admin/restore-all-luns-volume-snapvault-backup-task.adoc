@@ -1,0 +1,116 @@
+---
+permalink: san-admin/restore-all-luns-volume-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, restore, luns, in a volume, snapvault, backup 
+summary: 如果一個磁碟區中的一個或多個LUN需要從SnapVault 還原備份、您可以還原整個磁碟區。還原磁碟區會影響磁碟區中的所有LUN。 
+---
+= 從SnapVault 一份不完整的備份還原磁碟區中的所有LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果一個磁碟區中的一個或多個LUN需要從SnapVault 還原備份、您可以還原整個磁碟區。還原磁碟區會影響磁碟區中的所有LUN。
+
+必須初始化此資訊關係、且無法還原的次要磁碟區必須包含適當的Snapshot複本。SnapVault SnapVault
+
+還原整個磁碟區會將磁碟區恢復到Snapshot複本建立時的狀態。如果在Snapshot複本之後將LUN新增至磁碟區、則該LUN會在還原程序期間移除。
+
+還原磁碟區之後、LUN會保留對應至還原前所對應的igroup。LUN對應可能與Snapshot複本時的對應有所不同。保留來自主機叢集之LUN的持續保留。
+
+.步驟
+. 停止磁碟區中所有LUN的I/O。
+. 執行「shnapmirror show」命令、驗證包含SnapVault 次磁碟區的次磁碟區。
++
+[listing]
+----
+cluster::> snapmirror show
+
+Source         Dest     Mirror  Relation  Total             Last
+Path     Type  Path     State   Status    Progress  Healthy Updated
+-------- ---- --------- ------- --------- --------- ------- -------
+vserverA:srcvolA
+         XDP  vserverB:dstvolB
+                        Snapmirrored
+                                Idle       -         true    -
+----
+. 執行「volume snapshot show」命令來識別要還原的Snapshot複本。
++
+[listing]
+----
+cluster::> volume snapshot show
+
+Vserver  Volume  Snapshot               State Size   Total% Used%
+-------- ------- ---------------------- ----- ------ ------ -----
+vserverB
+         dstvolB
+                 snap2.2013-02-10_0010  valid  124KB     0%    0%
+                 snap1.2013-02-10_0015 valid  112KB     0%    0%
+                 snap2.2013-02-11_0010  valid  164KB     0%    0%
+----
+. 執行「快照鏡像還原」命令、並指定「-source-snapshot」選項、以指定要使用的Snapshot複本。
++
+您指定的還原目的地是您要還原的原始Volume。
+
++
+[listing]
+----
+cluster::> snapmirror restore -destination-path vserverA:srcvolA
+  -source-path vserverB:dstvolB -source-snapshot daily.2013-02-10_0010
+
+Warning: All data newer than Snapshot copy hourly.2013-02-11_1205 on
+volume vserverA:src_volA will be deleted.
+Do you want to continue? {y|n}: y
+[Job 98] Job is queued: snapmirror restore from source
+"vserverB:dstvolB" for the snapshot daily.2013-02-10_0010.
+----
+. 如果您要在主機叢集之間共用LUN、請從受影響的主機還原LUN上的持續保留。
+
+
+
+
+== 從SnapVault 無法還原的備份還原磁碟區
+
+在下列範例中、在建立Snapshot複本之後、將LUN LUN_D新增至磁碟區。從Snapshot複本還原整個磁碟區之後、將不再顯示LUN_D。
+
+在「LUN show」命令輸出中、您可以看到主Volume srcvolA中的LUN、SnapVault 以及這些LUN的唯讀複本、這些複本均位於不穩定的dstvolB次要Volume中。在不支援支援的情況下、沒有LUN_D的複本SnapVault 。
+
+[listing]
+----
+cluster::> lun show
+Vserver   Path                State   Mapped   Type          Size
+--------- ------------------  ------- -------- --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_D  online  mapped   windows  250.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+7 entries were displayed.
+
+cluster::>snapmirror restore -destination-path vserverA:srcvolA
+  -source-path vserverB:dstvolB
+  -source-snapshot daily.2013-02-10_0010
+
+Warning: All data newer than Snapshot copy hourly.2013-02-11_1205
+on volume vserverA:src_volA will be deleted.
+Do you want to continue? {y|n}: y
+[Job 98] Job is queued: snapmirror restore from source
+"vserverB:dstvolB" for the snapshot daily.2013-02-10_0010.
+
+cluster::> lun show
+Vserver   Path                State   Mapped   Type          Size
+--------- ------------------  ------- -------- --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+6 entries were displayed.
+----
+從SnapVault 還原次要Volume還原磁碟區之後、來源Volume不再包含LUN_D還原之後、您不需要重新對應來源磁碟區中的LUN、因為它們仍會對應。

@@ -1,0 +1,104 @@
+---
+permalink: encryption-at-rest/enable-aggregate-level-encryption-nve-license-task.html 
+sidebar: sidebar 
+keywords: enabling, aggregate-level, encryption, nve, ve license, license 
+summary: 從更新至更新版本的過程開始ONTAP 、新建立的集合體和磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。從ONTAP 功能區9.6開始、您可以使用Aggregate層級加密、將金鑰指派給內含的Aggregate、以便加密磁碟區。您在Aggregate中建立的磁碟區預設會加密。加密磁碟區時、您可以覆寫預設值。 
+---
+= 使用VE授權啟用Aggregate層級加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從更新至更新版本的過程開始ONTAP 、新建立的集合體和磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。從ONTAP 功能區9.6開始、您可以使用Aggregate層級加密、將金鑰指派給內含的Aggregate、以便加密磁碟區。您在Aggregate中建立的磁碟區預設會加密。加密磁碟區時、您可以覆寫預設值。
+
+您必須是叢集管理員才能執行此工作。
+
+如果您打算執行即時或背景Aggregate層級的重複資料刪除、則必須使用Aggregate層級的加密。NVE不支援Aggregate層級的重複資料刪除。
+
+啟用Aggregate層級加密的Aggregate稱為_NAE Aggregate（適用於NetApp Aggregate Encryption）。NAE Aggregate不支援純文字磁碟區。
+
+.步驟
+. 啟用或停用Aggregate層級加密：
++
+[cols="40,60"]
+|===
+
+
+| 至... | 使用此命令... 
+
+
+ a| 
+使用ONTAP NetApp 9.7或更新版本建立NAE Aggregate
+ a| 
+名稱Aggregate create -Aggregate Aggregate名稱-node_name'
+
+
+
+ a| 
+使用ONTAP NetApp 9.6建立NAE Aggregate
+ a| 
+「torage Aggregate create -Aggregate aggregate名稱-node_name -加密-with agger-key true」
+
+
+
+ a| 
+將非NAE Aggregate轉換為NAE Aggregate
+ a| 
+「torage Aggregate modify -Aggregate gregate名稱-node_name -加密-with agger-key true」
+
+
+
+ a| 
+將NAE Aggregate轉換為非NAE Aggregate
+ a| 
+「torage Aggregate modify -Aggregate gregate名稱-node_name -加密-with agger-key fals'」
+
+|===
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列命令可在「aggr1」上啟用Aggregate層級加密：
+
++
+** 更新版本：ONTAP
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1
+----
+** 更新版本：ONTAP
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1 -encrypt-with-aggr-key true
+----
+
+
+. 確認已啟用Aggregate進行加密：
++
+「torage Aggregate show -Fields加密-使用agg-key」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列命令可驗證是否已啟用「aggr1」進行加密：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -fields encrypt-with-aggr-key
+aggregate            encrypt-aggr-key
+-------------------- ----------------
+aggr0_vsim4          false
+aggr1                true
+2 entries were displayed.
+----
+
+
+執行「volume create」命令來建立加密的磁碟區。
+
+如果您使用KMIP伺服器來儲存節點的加密金鑰、ONTAP 則當您加密磁碟區時、會自動將加密金鑰「推送」至伺服器。

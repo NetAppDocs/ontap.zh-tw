@@ -1,0 +1,219 @@
+---
+permalink: data-protection/create-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: create, replication, relationship 
+summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的地Volume之間的關係稱為資料保護關係。您可以使用SnapMirror create命令來建立SnapMirror DR、SnapVault 解決方案或統一化複寫資料保護關係。 
+---
+= 建立複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一線儲存設備中的來源磁碟區與二線儲存設備中的目的地磁碟區之間的關係稱為_DATA保護關係。_您可以使用「napmirror create」命令來建立SnapMirror DR、SnapVault ESAN或統一化複寫資料保護關係。
+
+.您需要的是 #8217 ；需要的是什麼
+* 來源與目的地叢集和SVM必須進行對等關係。
++
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+* 目的地Volume上的語言必須與來源Volume上的語言相同。
+
+
+直到使用SnapMirror 9.3之前ONTAP 、在DP模式中叫用SnapMirror、而在XDP模式中叫用SnapMirror、使用不同的複寫引擎、並採用不同的版本相依方法：
+
+* 在DP模式中叫用的SnapMirror使用_版本相依_複寫引擎、ONTAP 而在其中、必須在主要和次要儲存設備上使用相同的版本：
++
+[listing]
+----
+cluster_dst::>  snapmirror create -type DP -source-path ... -destination-path ...
+----
+* 在XDP模式中叫用的SnapMirror使用_版本彈性_複寫引擎、可在ONTAP 一線和二線儲存設備上支援不同的版本：
++
+[listing]
+----
+cluster_dst::>  snapmirror create -type XDP -source-path ... -destination-path ...
+----
+
+
+隨著效能提升、版本靈活的SnapMirror的顯著效益、超過了以版本相依模式取得的複寫處理量的小優勢。因此、從ONTAP 功能更新9.3開始、XDP模式已成為新的預設值、而在命令列或新的或現有指令碼中、DP模式的任何調用、都會自動轉換為XDP模式。
+
+現有的關係不受影響。如果某個關係已經是DP類型、則會繼續是DP類型。下表顯示您可以預期的行為。
+
+[cols="25,25,50"]
+|===
+
+
+| 如果您指定... | 類型為... | 預設原則（如果您未指定原則）是... 
+
+
+ a| 
+DP
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots（SnapMirror DR）
+
+
+
+ a| 
+什麼都沒有
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots（SnapMirror DR）
+
+
+
+ a| 
+XDP
+ a| 
+XDP
+ a| 
+XDPDefault（SnapVault 晚餐）
+
+|===
+另請參閱下列程序中的範例。
+
+轉換的唯一例外情況如下：
+
+* SVM資料保護關係仍預設為DP模式。
++
+明確指定XDP以使用預設的「鏡像AllSnapshots」原則來取得XDP模式。
+
+* 負載共用資料保護關係仍預設為DP模式。
+* 將資料保護關係預設為DP模式。SnapLock
+* 如果您設定下列全叢集選項、DP的明確調用仍會繼續預設為DP模式：
++
+[listing]
+----
+options replication.create_data_protection_rels.enable on
+----
++
+如果您未明確叫用DP、則會忽略此選項。
+
+
+
+在不含更新版本的版本中、目的地Volume最多可包含251個Snapshot複本。ONTAP在0、9.4及更新版本中、目的地Volume最多可包含1019個Snapshot複本。ONTAP
+
+從ONTAP 支援SnapMirror 9.5開始、即支援SnapMirror同步關係。
+
+.步驟
+. 從目的地叢集建立複寫關係：
++
+"napmirror create -source-path _svm:volume（napmirror create -source-path _svm:volume）_cluster（叢集）：//SVM/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... 鍵入dp | xDP -schedule _schedule_-policy _`
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+建立SnapMirror同步關係時、「排程」參數不適用。
+
+====
++
+以下範例使用預設的「鏡像Latest（鏡像最新）原則建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorLatest
+----
++
+以下範例SnapVault 使用預設的「XDPDefault」原則建立一個「不全」關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy XDPDefault
+----
++
+以下範例使用預設的「鏡像AndVault（鏡像AndVault）原則建立統一化複寫關係：
+
++
+[listing]
+----
+cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault
+----
++
+以下範例使用自訂的「my_Unified」原則建立統一化複寫關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy my_unified
+----
++
+以下範例使用預設的「同步的（Sync）原則建立SnapMirror同步關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy Sync
+----
++
+以下範例使用預設的「trictSync」原則建立SnapMirror同步關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy StrictSync
+----
++
+以下範例建立SnapMirror DR關係。在DP類型自動轉換為XDP且未指定任何原則的情況下、原則預設為「鏡射AllSnapshots」原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type DP -schedule my_daily
+----
++
+以下範例建立SnapMirror DR關係。在未指定類型或原則的情況下、原則預設為「鏡像AllSnapshots」原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -schedule my_daily
+----
++
+以下範例建立SnapMirror DR關係。若未指定原則、原則預設為「XDPDefault」原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily
+----
++
+以下範例建立SnapMirror同步關係、並使用預先定義的原則「napCenterSync」：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy SnapCenterSync
+----
++
+[NOTE]
+====
+預先定義的原則「napCenterSync」為「Sync」類型。此原則會複寫任何以「app_nistent」的「napmirror標籤」建立的Snapshot複本。
+
+====
+
+
+使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_configure_mirror.html["設定鏡射與資料保險箱"^] 
+
+
+| System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/volume-backup-snapvault/index.html["Volume備份：SnapVault 使用功能概述"^] 
+|===

@@ -1,0 +1,58 @@
+---
+permalink: san-admin/register-svm-isns-server-task.html 
+sidebar: sidebar 
+keywords: register, svm, isns, server 
+summary: 您可以使用vserver iSCSI iSNS命令來設定儲存虛擬機器（SVM）、以便向iSNS伺服器註冊。 
+---
+= 向ISSVM伺服器登錄SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver iSCSI SNS'」命令來設定儲存虛擬機器（SVM）、以便向iSNS伺服器註冊。
+
+「vserver iSCSI SNS cre創作」命令會將SVM設定為向iSNS伺服器註冊。SVM不提供可讓您設定或管理iSNS伺服器的命令。若要管理iSNS伺服器、您可以使用伺服器管理工具、或是廠商為iSNS伺服器提供的介面。
+
+.步驟
+. 在您的iSNS伺服器上、確定您的iSNS服務已啟動且可供服務使用。
+. 在資料連接埠上建立SVM管理LIF：
++
+「網路介面create -vserver _svm_name_-lif_lif_name_-role data -data傳輸協定nONE -home-node_node_node_name_-home-port _home_port_-address_ip_address_-netmask_mask_`
+
+. 在SVM上建立iSCSI服務（如果尚未存在）：
++
+「vserver iSCSI create -vserver _Svm_name_」
+
+. 確認iSCSI服務已成功建立：
++
+「iSCSI show -vserver _svm_name_'
+
+. 驗證SVM是否存在預設路由：
++
+「網路路由show -vserver _svm_name_'
+
+. 如果SVM不存在預設路由、請建立預設路由：
++
+「網路路由會建立-vserver _Svm_name_-destination_-gateway_gateway_」
+
+. 設定SVM以註冊至iSNS服務：
++
+「vserver iSCSI SNS create -vserver _svm_name_-address_ip_address_」
+
++
+同時支援IPv4和IPv6位址系列。iSNS伺服器的位址系列必須與SVM管理LIF的位址系列相同。
+
++
+例如、您無法將具有IPV4位址的ANSVM管理LIF連線至具有IPv6位址的iSNS伺服器。
+
+. 驗證iSNS服務是否正在執行：
++
+「vserver iSCSI SNSs show -vserver _svm_name_'
+
+. 如果未執行iSNS服務、請啟動它：
++
+「vserver iSCSI sins start -vserver _svm_name_'
+
+

@@ -1,0 +1,74 @@
+---
+permalink: smb-admin/create-ntfs-security-descriptor-file-task.html 
+sidebar: sidebar 
+keywords: create, creating, ntfs, security, descriptor, file, policy, configuring, configure, apply, access, control, acl, file, folder, residing, reside, storage, virtual, machine, svm, associate, task 
+summary: 建立NTFS安全性描述元（檔案安全性原則）是設定NTFS存取控制清單（ACL）並套用至儲存虛擬機器（SVM）內的檔案和資料夾的第一步。您可以將安全性描述元與原則工作中的檔案或資料夾路徑建立關聯。 
+---
+= 建立NTFS安全性描述元
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立NTFS安全性描述元（檔案安全性原則）是設定NTFS存取控制清單（ACL）並套用至儲存虛擬機器（SVM）內的檔案和資料夾的第一步。您可以將安全性描述元與原則工作中的檔案或資料夾路徑建立關聯。
+
+您可以針對位於NTFS安全型磁碟區內的檔案和資料夾、或是位於混合式安全型磁碟區上的檔案和資料夾、建立NTFS安全性描述元。
+
+根據預設、建立安全性描述元時、會將四個判別存取控制清單（DACL）存取控制項目（ACE）新增至該安全性描述元。四個預設的ACE如下所示：
+
+|===
+| 物件 | 存取類型 | 存取權限 | 權限的套用位置 
+
+
+ a| 
+內建\系統管理員
+ a| 
+允許
+ a| 
+完全控制
+ a| 
+此資料夾、子資料夾、檔案
+
+
+
+ a| 
+內建\使用者
+ a| 
+允許
+ a| 
+完全控制
+ a| 
+此資料夾、子資料夾、檔案
+
+
+
+ a| 
+建立者擁有者
+ a| 
+允許
+ a| 
+完全控制
+ a| 
+此資料夾、子資料夾、檔案
+
+
+
+ a| 
+NT AUTHORITY\系統
+ a| 
+允許
+ a| 
+完全控制
+ a| 
+此資料夾、子資料夾、檔案
+
+|===
+您可以使用下列選用參數來自訂安全性描述元組態：
+
+* 安全性描述元的擁有者
+* 擁有者的主要群組
+* 原始控制旗標
+
+
+儲存層級存取保護會忽略任何選用參數的值。如需詳細資訊、請參閱手冊頁。

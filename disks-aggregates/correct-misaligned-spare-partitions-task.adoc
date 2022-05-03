@@ -1,0 +1,102 @@
+---
+permalink: disks-aggregates/correct-misaligned-spare-partitions-task.html 
+sidebar: sidebar 
+keywords: correct, misaligned, partition 
+summary: 當您將分割磁碟新增至Aggregate時、必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。 
+---
+= 修正未對齊的備用分割區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您將分割磁碟新增至Aggregate時、必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。
+
+您必須在同一節點擁有的相同磁碟類型上、同時擁有備用資料分割區和備用根分割區。
+
+.步驟
+. 顯示節點的備用磁碟分割：
++
+「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
+
++
+請注意哪一個磁碟有備用資料分割區（備用資料分割區）、哪一個磁碟有備用根分割區（備用根分割區）。備用磁碟分割會在「本機資料可用」或「本機根可用」欄下顯示非零值。
+
+. 使用備用根分割區的磁碟、以備用資料分割區取代磁碟：
++
+「torage disk replace -disk _spare資料_-replacement _spare根_-action start」（磁碟更換磁碟、磁碟備援資料）
+
++
+您可以從任一方向複製資料、不過複製根分割區所需的時間較短。
+
+. 監控磁碟更換進度：
++
+「torage Aggregate show-STATUS -Aggregate _aggreg_name_」
+
+. 更換作業完成後、再次顯示備用磁碟以確認您擁有完整的備用磁碟：
++
+「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
+
++
+您應該在「本機資料可用」和「本機根可用」下、看到可用空間的備用磁碟。
+
+
+
+您可以顯示節點C1-01的備用磁碟分割、並查看您的備用磁碟分割未對齊：
+
+[listing]
+----
+c1::> storage aggregate show-spare-disks -original-owner c1-01
+
+Original Owner: c1-01
+ Pool0
+  Shared HDD Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.1                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB
+----
+您可以開始磁碟更換工作：
+
+[listing]
+----
+c1::> storage disk replace -disk 1.0.1 -replacement 1.0.10 -action start
+----
+在等待更換作業完成時、您會顯示作業進度：
+
+[listing]
+----
+c1::> storage aggregate show-status -aggregate aggr0_1
+
+Owner Node: c1-01
+ Aggregate: aggr0_1 (online, raid_dp) (block checksums)
+  Plex: /aggr0_1/plex0 (online, normal, active, pool0)
+   RAID Group /aggr0_1/plex0/rg0 (normal, block checksums)
+                                                              Usable Physical
+     Position Disk                        Pool Type     RPM     Size     Size Status
+     -------- --------------------------- ---- ----- ------ -------- -------- ----------
+     shared   1.0.1                        0   BSAS    7200  73.89GB  828.0GB (replacing, copy in progress)
+     shared   1.0.10                       0   BSAS    7200  73.89GB  828.0GB (copy 63% completed)
+     shared   1.0.0                        0   BSAS    7200  73.89GB  828.0GB (normal)
+     shared   1.0.11                       0   BSAS    7200  73.89GB  828.0GB (normal)
+     shared   1.0.6                        0   BSAS    7200  73.89GB  828.0GB (normal)
+     shared   1.0.5                        0   BSAS    7200  73.89GB  828.0GB (normal)
+----
+更換作業完成後、您將確認您擁有完整的備援磁碟：
+
+[listing]
+----
+ie2220::> storage aggregate show-spare-disks -original-owner c1-01
+
+Original Owner: c1-01
+ Pool0
+  Shared HDD Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+----

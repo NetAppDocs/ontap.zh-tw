@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/enable-disable-required-signing-incoming-traffic-task.html 
+sidebar: sidebar 
+keywords: enforce, requirement, client, smb, message, enabling, enable, require, sign, disable, enable or disable require smb signing for incoming smb traffic 
+summary: 您可以啟用必要的SMB簽署、強制要求用戶端簽署SMB訊息。如果啟用ONTAP 、僅當SMB訊息具有有效的簽名時、才會接受該訊息。如果您想要允許SMB簽署、但不需要SMB簽署、可以停用必要的SMB簽署。 
+---
+= 啟用或停用傳入SMB流量所需的SMB簽署
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用必要的SMB簽署、強制要求用戶端簽署SMB訊息。如果啟用ONTAP 、僅當SMB訊息具有有效的簽名時、才會接受該訊息。如果您想要允許SMB簽署、但不需要SMB簽署、可以停用必要的SMB簽署。
+
+預設會停用必要的SMB簽署。您可以隨時啟用或停用所需的SMB簽署。
+
+[NOTE]
+====
+在下列情況下、預設不會停用SMB簽署：
+
+. 啟用必要的SMB簽署、叢集將還原為ONTAP 不支援SMB簽署的版本。
+. 叢集隨後會升級至ONTAP 支援SMB簽署的版本的支援。
++
+在這種情況下、原本設定在支援版本ONTAP 的支援版本上的SMB簽署組態會透過還原及後續升級來保留。
+
+
+
+====
+當您設定儲存虛擬機器（SVM）災難恢復關係時、針對「snapmirror create」命令的「idente-preserve」（身分識別保留）選項所選取的值、會決定在目的地SVM中複寫的組態詳細資料。
+
+如果您將「-identity-preserve」選項設定為「true」（ID-preserve）、則SMB簽署安全性設定會複寫到目的地。
+
+如果您將「-identity-preserve」（身分識別保留）選項設為「假」（非ID保留）、則不會將SMB簽署安全性設定複寫到目的地。在此情況下、目的地上的CIFS伺服器安全性設定會設為預設值。如果您已在來源SVM上啟用必要的SMB簽署、則必須在目的地SVM上手動啟用必要的SMB簽署。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要SMB簽署... | 輸入命令... 
+
+
+ a| 
+已啟用
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-is簽署必要true」
+
+
+
+ a| 
+已停用
+ a| 
+「Vserver CIFS安全性修改-vserver _vserver_name_-is簽署-必要的假」
+
+|===
+. 確定下列命令輸出的「is Signing required」（需要簽署）欄位中的值是否設為所需值、以驗證是否已啟用或停用所需的SMB簽署：「vserver CIFS安全性show -vserver _vserver_name_-fields is -Sign-required」（需要簽署）
+
+
+下列範例可為SVM VS1啟用必要的SMB簽署：
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -is-signing-required true
+
+cluster1::> vserver cifs security show -vserver vs1 -fields is-signing-required
+vserver  is-signing-required
+-------- -------------------
+vs1      true
+----

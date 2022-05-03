@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: file-system-analytics/considerations-concept.html 
+keywords: file system analytics, performance, 7-mode 
+summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區可見度。其使用受到限制和限制。 
+---
+= 檔案系統分析考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解與實作檔案系統分析相關的特定使用限制和潛在效能影響。
+
+
+
+== 支援的Volume類型
+
+檔案系統分析的設計旨在提供使用中NAS資料的磁碟區可見度、FlexCache 但不包括SnapMirror快取和SnapMirror目的地磁碟區。
+
+
+
+== 效能考量
+
+啟用檔案系統分析可能會在初始中繼資料收集期間產生效能影響。請勿在使用率最大的系統上啟用分析功能。
+
+支援的系統管理程式ONTAP xref:../concept_cluster_performance_overview.adoc[效能監控工具] 管理叢集健全狀況和指標。
+
+* SVM保護關係*
+
+如果您已在包含SVM的磁碟區上啟用檔案系統分析功能、則分析資料不會複寫到目的地SVM。如果來源SVM必須在還原作業中重新同步、則您必須在還原後手動重新啟用所需磁碟區的分析功能。
+
+
+
+== RBAC
+
+如果您是System Manager或ONTAP Rusrest API的使用者 xref:../concepts/administrator-authentication-rbac-concept.html[RBAC] 在您的《支援需求》設定中ONTAP 、您需要建立專屬角色、以便在檔案系統分析中適度存取「活動追蹤」。
+
+高層級1：建立可存取All的角色、接受「volume file show-disk-usage」命令目錄2。為新角色建立網路存取3.建立具有新角色的使用者4.登入System Manager或使用新使用者撥打REST電話
+
+.控制活動追蹤的存取權
+. 建立預設角色以存取所有功能。在建立限制角色之前、必須先完成這項作業、以確保「活動追蹤」上的角色僅受到限制：
++
+「安全登入角色create -cmd目錄名稱預設-access all -role storageAdmin」
+
+. 建立限制角色：
++
+「安全性登入角色create -cmd目錄名稱"volume file show-disk-usage"-access nONE -role storageadmin"
+
+. 授權角色存取SVM的Web服務：
++
+** 用於REST API呼叫的"REst"
+** 密碼保護的安全性
+** 「ysmgr"」存取系統管理程式
++
+====
+Vserver服務網路存取create -vserver _svm-name_-name rest -role storageAdmin + vserver服務網路存取create -vserver _svm-name_-name安全性-role storageAdmin + vserver服務網路存取create -vserver _svm-name_-name sysmgr -role storageAdmin
+
+====
+
+
+. 建立使用者。您必須針對要套用至使用者的每個應用程式、發出不同的create命令。在同一位使用者上多次呼叫建立、只會將所有應用程式套用至該位使用者、而不會每次都建立新的使用者。應用程式類型的「http」參數適用於ONTAP 「靜態API」和「系統管理程式」。
++
+「安全登入create -user-or group名稱storageUser -authentation-method password -applicationhttp -role storageAdmin」
+
+

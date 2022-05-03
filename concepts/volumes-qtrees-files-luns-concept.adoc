@@ -1,0 +1,45 @@
+---
+permalink: concepts/volumes-qtrees-files-luns-concept.html 
+sidebar: sidebar 
+keywords: volumes, qtrees, files, LUNs 
+summary: 可從稱為「餐廳」的邏輯容器、將資料提供給用戶端和主機。ONTAP FlexVol由於這些磁碟區只與包含Aggregate的磁碟區鬆散結合、因此在管理資料方面的彈性比傳統磁碟區更高。 
+---
+= 磁碟區、qtree、檔案和LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從邏輯容器（稱為_SURO Volumes）將資料提供給用戶端和主機。由於這些磁碟區只與包含Aggregate的磁碟區鬆散結合、因此在管理資料方面比傳統磁碟區更具彈性。ONTAP FlexVol
+
+您可以將多FlexVol 個支援區指派給一個集合體、每個集合區都是專屬於不同的應用程式或服務。您可以擴充及收縮FlexVol 一個邊區、移動FlexVol 一個邊區、並製作FlexVol 一份有效的邊區複本。您可以使用_qtree _將FlexVol 一個流通磁碟區分割成更易於管理的單元、並使用_quotality_來限制磁碟區資源使用量。
+
+磁碟區包含NAS環境中的檔案系統、以及SAN環境中的LUN。LUN（邏輯單元編號）是SAN傳輸協定所定址的_邏輯單元_裝置識別碼。
+
+LUN是SAN組態中的基本儲存單元。Windows主機將儲存系統上的LUN視為虛擬磁碟。您可以視需要、不中斷營運地將LUN移至不同的磁碟區。
+
+除了資料磁碟區之外、還有幾個您需要知道的特殊磁碟區：
+
+* 節點根磁碟區_（通常為「vol0」）包含節點組態資訊和記錄。
+* _SVM根磁碟區_是SVM所提供命名空間的入口點、其中包含命名空間目錄資訊。
+* _系統磁碟區_包含特殊的中繼資料、例如服務稽核記錄。
+
+
+您無法使用這些磁碟區來儲存資料。
+
+image::../media/volumes.gif[磁碟區]
+
+|===
+
+
+ a| 
+* FlexGroup 《*》*
+
+在某些企業中、單一命名空間可能需要數PB的儲存容量、甚至遠遠超過FlexVol 了一個不支援的功能。
+
+a _支援多達4000億個檔案、擁有200個組成成員磁碟區、可協同作業、在所有成員之間動態平衡負載與空間分配。FlexGroup
+
+不需要使用FlexGroup 任何功能來維護或管理負荷。您只需建立FlexGroup 一個這個解決方案、然後與NAS用戶端分享。剩下的是、ONTAP
+
+|===

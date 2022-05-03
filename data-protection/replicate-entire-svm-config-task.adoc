@@ -1,0 +1,128 @@
+---
+permalink: data-protection/replicate-entire-svm-config-task.html 
+sidebar: sidebar 
+keywords: replicate, entire, svm, configuration, snapmirror, snap mirror, replication, mirror vault policy, snapshot 
+summary: 您可以使用SnapMirror create命令的-idente-preserve true選項來複寫整個SVM組態。 
+---
+= 複寫整個SVM組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「snapmirror create」命令的「idente-preserve true」選項來複寫整個SVM組態。
+
+來源與目的地叢集和SVM必須進行對等關係。如需詳細資訊、請參閱 link:../peering/create-cluster-relationship-93-later-task.html["建立叢集對等關係"] 和 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立SVM叢集間對等關係"]。
+
+如需完整的命令語法、請參閱手冊頁。
+
+此工作流程假設您已使用預設原則或自訂複寫原則。
+
+從ONTAP 使用鏡射資料庫原則的S9.9開始、您可以在來源和目的地SVM上建立不同的Snapshot原則、而目的地上的Snapshot複本不會被來源上的Snapshot複本覆寫。如需詳細資訊、請參閱 link:snapmirror-svm-replication-concept.html["瞭解SnapMirror SVM複寫"]。
+
+.步驟
+. 建立目的地SVM：
++
+「vserver create -vserver _Svm_name_-subtype dP-destination'
+
++
+SVM名稱在來源叢集和目的地叢集之間必須是唯一的。
+
++
+以下範例建立名為「shvm_backup」的目的地SVM：
+
++
+[listing]
+----
+cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
+----
+. 從目的地叢集、使用「vserver對等點create」命令建立SVM對等關係。
++
+如需詳細資訊、請參閱 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立SVM叢集間對等關係"]。
+
+. 建立複寫工作排程：
++
+作業排程cron create -name _job_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+
++
+如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+
++
+以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+
++
+[listing]
+----
+cluster_dst::> job schedule cron create -name my_weekly -dayofweek saturday -hour 3 -minute 0
+----
+. 從目的地SVM或目的地叢集建立複寫關係：
++
+「napmirror create -source-path _svm_name_：-dite-path _svm_name_：-type dp | xDP -schedule_-policy _-identity-preserve true」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。
+
+====
++
+以下範例使用預設的「鏡像AllSnapshots（即時資料））原則建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAllSnapshots -identity-preserve true
+----
++
+以下範例使用預設的「鏡像AndVault（鏡像AndVault）原則建立統一化複寫關係：
+
++
+[listing]
+----
+cluster_dst:> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAndVault -identity-preserve true
+----
++
+假設您已建立原則類型為「非同步鏡射」的自訂原則、下列範例會建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_mirrored -identity-preserve true
+----
++
+假設您已建立原則類型為「mirror-Vault」的自訂原則、則下列範例會建立統一化的複寫關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_unified -identity-preserve true
+----
+. 停止目的地SVM：
++
+"Vserver stop（Vserver停止）"
+
++
+「SVM名稱_」
+
++
+下列範例會停止名為DV1的目的地SVM：
+
++
+[listing]
+----
+cluster_dst::> vserver stop -vserver dvs1
+----
+. 從目的地SVM或目的地叢集、初始化SVM複寫關係：+
++
+「napmirror initialize -source-path _svm_name_：-destination-path _svm_name_:」
+
++
+以下範例可初始化來源SVM、「svm1」和目的地SVM、「shvm_backup」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
+----
+

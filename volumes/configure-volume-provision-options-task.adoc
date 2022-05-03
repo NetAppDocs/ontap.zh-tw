@@ -1,0 +1,61 @@
+---
+permalink: volumes/configure-volume-provision-options-task.html 
+sidebar: sidebar 
+keywords: configure, volume, provisioning, options 
+summary: 您可以設定磁碟區以進行精簡配置、完整配置或半密集配置。 
+---
+= 設定Volume資源配置選項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定磁碟區以進行精簡配置、完整配置或半密集配置。
+
+將「-space-慢」選項設為「thick」可確保下列項目：
+
+* 整個磁碟區會預先配置在Aggregate中。您無法使用「volume create」或「volume modify」命令來設定磁碟區的「space－保證」選項。
+* 保留覆寫所需的空間100%。您無法使用「volume modify」命令來設定Volume的「-分數 保留」選項
+
+
+將「-space-慢」選項設為「shEMI-thick」、可確保下列項目：
+
+* 整個磁碟區會預先配置在Aggregate中。您無法使用「volume create」或「volume modify」命令來設定磁碟區的「space－保證」選項。
+* 不會保留空間進行覆寫。您可以使用「volume modify」命令來設定Volume的「-分數 保留」選項。
+* 已啟用自動刪除Snapshot複本。
+
+
+.步驟
+. 設定Volume資源配置選項：
++
+「Volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-space-l慢 動作nONE | thick |半厚-space-muturenone| volume」
+
++
+對於不支援AFF AFF DP的系統和非AFF DP磁碟區、「空間保證」選項預設為「無」。否則、它會預設為「Volume」（磁碟區）。對於現有FlexVol 的靜態磁碟區、請使用「volume modify」命令來設定資源配置選項。
+
++
+下列命令可在SVM VS1上設定vol1以進行精簡配置：
+
++
+[listing]
+----
+cluster1::> volume create –vserver vs1 -volume vol1 -space-guarantee none
+----
++
+下列命令可在SVM VS1上設定vol1以進行完整資源配置：
+
++
+[listing]
+----
+cluster1::> volume create –vserver vs1 -volume vol1 -space-slo thick
+----
++
+下列命令可在SVM VS1上設定vol1以進行半厚資源配置：
+
++
+[listing]
+----
+cluster1::> volume create –vserver vs1 -volume vol1 -space-slo semi-thick
+----
+

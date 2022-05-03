@@ -1,0 +1,42 @@
+---
+permalink: nas-audit/manage-security-group-event-concept.html 
+sidebar: sidebar 
+keywords: manage, security-group, event 
+summary: 當儲存虛擬機器（SVM）的安全性群組事件設定為啟用稽核時、就會產生稽核事件。 
+---
+= 管理安全性群組事件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當儲存虛擬機器（SVM）的安全性群組事件設定為啟用稽核時、就會產生稽核事件。
+
+從系統建立或刪除本機SMB或NFS群組、並從群組新增或移除本機使用者時、會產生事件ID為4731、4732、4733、4734和4735的安全性群組事件。當使用者帳戶使用「vserver CIFS user-and -Groups（vserver CIFS使用者與群組）」和「vserver services name-service（vserver服務名稱服務）_（UNIX群組）_」命令進行修改時、就會產生安全性群組事件。
+
+下列範例顯示建立本機UNIX安全性群組時、產生ID 4731的安全性群組事件：
+
+[listing]
+----
+netapp-clus1::*> vserver services name-service unix-group create -name testunixgroup -id 20
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4731
+   EventName Local Unix Security Group Created
+   ...
+   ...
+  SubjectUserName admin
+  SubjectUserSid 65533-1001
+  SubjectDomainName ~
+  SubjectIP console
+  SubjectPort
+  TargetUserName testunixgroup
+  TargetDomainName
+  TargetGid 20
+  TargetType NFS
+  PrivilegeList ~
+  GidHistory ~
+----

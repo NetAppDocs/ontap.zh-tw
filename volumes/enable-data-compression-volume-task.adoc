@@ -1,0 +1,99 @@
+---
+permalink: volumes/enable-data-compression-volume-task.html 
+sidebar: sidebar 
+keywords: enable, data, compression, on a volume 
+summary: 您可以使用Volume Eff效率modify命令、在磁碟區上啟用資料壓縮、以節省空間。您可以使用FlexVol Volume Eff效率 修改命令、在一個支援資料的地方壓縮資料、以節省空間。如果您不想使用預設的壓縮類型、也可以指派壓縮類型給Volume。 
+---
+= 在磁碟區上啟用資料壓縮
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「Volume Eff效率modify」命令、在磁碟區上啟用資料壓縮、以節省空間。您可以使用FlexVol 「Volume Eff效率 修改」命令、在一個支援資料的現象區塊上進行資料壓縮、以節省空間。如果您不想使用預設的壓縮類型、也可以指派壓縮類型給Volume。
+
+您必須在磁碟區上啟用重複資料刪除功能。
+
+[NOTE]
+====
+* 重複資料刪除只需啟用、不需要在磁碟區上執行。
+* 壓縮掃瞄器必須用於壓縮AFF 位於各種不同平台上的磁碟區上的現有資料。
+
+
+====
+link:enable-deduplication-volume-task.html["在磁碟區上啟用重複資料刪除"]
+
+.關於這項工作
+* 在HDD Aggregate和Flash Pool Aggregate中、您可以同時啟用即時和後處理壓縮、也可以只在磁碟區上啟用後處理壓縮。
++
+如果您同時啟用這兩項功能、則必須先在磁碟區上啟用後處理壓縮、才能啟用內嵌壓縮。
+
+* 在支援的支援平台中、僅支援即時壓縮。AFF
++
+在啟用即時壓縮之前、您必須在磁碟區上啟用後處理壓縮。不過AFF 、由於不支援在流程後壓縮的功能、因此這些磁碟區不會發生後處理壓縮、而且會產生一則EMS訊息、通知您已跳過後處理壓縮。
+
+* 對溫度敏感的儲存效率已在ONTAP 介紹過程中介紹。有了這項功能、儲存效率會根據資料是熱的還是冷的而有所不同。對於冷資料而言、較大的資料區塊會被壓縮、而熱資料會被覆寫的頻率較高、較小的資料區塊會被壓縮、使程序更有效率。對溫度敏感的儲存效率會在新建立的精簡配置AFF 的功能區上自動啟用。
+* 壓縮類型會根據Aggregate平台自動指派：
++
+[cols="2*"]
+|===
+| 平台/集合體 | 壓縮類型 
+
+
+ a| 
+AFF
+ a| 
+自適應壓縮
+
+
+
+ a| 
+Flash Pool Aggregate
+ a| 
+自適應壓縮
+
+
+
+ a| 
+HDD集合體
+ a| 
+二線壓縮
+
+|===
+
+
+.選擇
+* 使用「Volume Eff效率modify」命令、以預設的壓縮類型啟用資料壓縮。
++
+下列命令可在SVM VS1的Volume Vola上啟用後處理壓縮：
+
++
+「Volume Effiv更 有效率修改-vserver VS1 -volume Vola -壓縮true」
+
++
+下列命令可在SVM VS1的Volume Vola上啟用後處理和即時壓縮：
+
++
+「Volume Effiv更 有效率修改-vserver VS1 -volume Vola -壓縮true -intrine-壓縮true」
+
+* 在進階權限層級使用「Volume Eff效率modify」命令、以特定壓縮類型啟用資料壓縮。
++
+.. 使用「set-priv特權 進階」命令將權限層級變更為進階。
+.. 使用「Volume Effi下面 的修改」命令、將壓縮類型指派給磁碟區。
++
+下列命令可啟用後處理壓縮、並將調適性壓縮類型指派給SVM VS1的Volume Vola：
+
++
+「Volume Effivitive modify -vserver VS1 -volume Vola -壓縮true -壓縮 類型Adaptive」
+
++
+下列命令可啟用後處理和內嵌壓縮、並將調適性壓縮類型指派給SVM VS1的Volume Vola：
+
++
+「Volume Effivitive modify -vserver VS1 -volume Vola -壓縮true -壓縮 類型Adaptive -intrine-壓縮true」
+
+.. 使用「show -priv榮幸admin」命令將權限層級變更為admin。
+
+
+

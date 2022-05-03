@@ -1,0 +1,230 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_snmpv3_users_in_a_cluster.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, snmp, snmpv3, users, user, cluster, security, secure, configure an snmpv3 user to run the snmp utilities from the snmp manager, security login create command, configure snmpv3 users in a cluster, snmpv3 security parameters, examples for different security levels, security level authpriv, fips mode, snmpwalk test, security level authnopriv 
+summary: 設定v3使用者從SNMP管理程式執行SNMP公用程式 
+---
+= 在叢集中設定v3使用者
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+相較於SNMPv1和SNMPv2c、v3是一種安全的傳輸協定。若要使用v3、您必須設定一個v3使用者、以便從SNMP管理程式執行SNMP公用程式。
+
+使用「安全性登入create命令」來建立v3使用者。
+
+系統會提示您提供下列資訊：
+
+* 引擎ID：預設值和建議值為本機引擎ID
+* 驗證傳輸協定
+* 驗證密碼
+* 隱私權傳輸協定
+* 隱私權傳輸協定密碼
+
+
+v3使用者可以使用使用者名稱和密碼、從SNMP管理程式登入、然後執行SNMP公用程式命令。
+
+
+
+== v3安全參數
+
+v3包含驗證功能、選取時會要求使用者在叫用命令時輸入名稱、驗證傳輸協定、驗證金鑰及其所需的安全層級。
+
+下表列出了v3安全參數：
+
+[cols="25,25,50"]
+|===
+
+
+| 參數 | 命令列選項 | 說明 
+
+
+ a| 
+工程師ID
+ a| 
+-e引擎ID
+ a| 
+SNMP代理程式的引擎ID。預設值為本機引擎ID（建議使用）。
+
+
+
+ a| 
+安全性名稱
+ a| 
+-u名稱
+ a| 
+使用者名稱不得超過32個字元。
+
+
+
+ a| 
+驗證傳輸協定
+ a| 
+-A｛NONE | md5 | SHA | SHA-256｝
+ a| 
+驗證類型可以是「無」、「MD5」、「SHa」或「SHA-256」。
+
+
+
+ a| 
+驗證金鑰
+ a| 
+-A通關密碼
+ a| 
+至少八個字元的通關密碼。
+
+
+
+ a| 
+安全性層級
+ a| 
+l｛authNoPrimv | authPrimv | noauthNoPrimiv｝
+ a| 
+安全層級可以是驗證、無隱私權、驗證、隱私權或無驗證、 無隱私。
+
+
+
+ a| 
+私有傳輸協定
+ a| 
+-x｛nONE | DE | AES128｝
+ a| 
+隱私權傳輸協定可以是無、DE或AES128
+
+
+
+ a| 
+私有密碼
+ a| 
+-X密碼
+ a| 
+密碼至少8個字元。
+
+|===
+
+
+== 不同安全層級的範例
+
+本範例說明以不同安全層級建立的v3使用者、如何使用SNMP用戶端命令（例如「smpdwing」）來查詢叢集物件。
+
+若要獲得更好的效能、您應該擷取資料表中的所有物件、而非從資料表擷取單一物件或數個物件。
+
+
+NOTE: 驗證傳輸協定為SHa時、您必須使用「mpdwalk」5.3.1或更新版本。
+
+
+
+=== 安全性層級：authPrim
+
+下列輸出顯示使用驗證權限安全性層級建立的v3使用者。
+
+....
+security login create -username snmpv3user -application snmp -authmethod usm
+Enter the authoritative entity's EngineID [local EngineID]:
+Which authentication protocol do you want to choose  (none, md5, sha) [none]:sha
+....
+
+
+==== FIPS模式
+
+....
+Which authentication protocol do you want to choose (sha, sha2-256) [sha]
+
+Enter authentication protocol password (minimum 8 characters long):
+Enter authentication protocol password again:
+Which privacy protocol do you want to choose  (none, des) [none]: des
+Enter privacy protocol password (minimum 8 characters long):
+Enter privacy protocol password again:
+....
+
+
+==== snmpwalk.測試
+
+下列輸出顯示執行snmpwalk命令 的v3使用者：
+
+若要獲得更好的效能、您應該擷取資料表中的所有物件、而非從資料表擷取單一物件或數個物件。
+
+....
+$ snmpwalk -v 3 -u snmpv3user -a SHA -A password1! -x DES -X password1! -l authPriv 192.0.2.62 .1.3.6.1.4.1.789.1.5.8.1.2
+Enterprises.789.1.5.8.1.2.1028 = "vol0"
+Enterprises.789.1.5.8.1.2.1032 = "vol0"
+Enterprises.789.1.5.8.1.2.1038 = "root_vs0"
+Enterprises.789.1.5.8.1.2.1042 = "root_vstrap"
+Enterprises.789.1.5.8.1.2.1064 = "vol1"
+....
+
+
+=== 安全性層級：authNoPrim
+
+下列輸出顯示使用驗證NoPrimiv安全性層級建立的v3使用者。
+
+....
+security login create -username snmpv3user1 -application snmp -authmethod usm -role admin
+Enter the authoritative entity's EngineID [local EngineID]:
+Which authentication protocol do you want to choose (none, md5, sha) [none]: md5
+....
+
+
+==== FIPS模式
+
+....
+Which privacy protocol do you want to choose (aes128) [aes128]
+
+Enter authentication protocol password (minimum 8 characters long):
+Enter authentication protocol password again:
+Which privacy protocol do you want to choose (none, des) [none]: none
+....
+
+
+==== snmpwalk.測試
+
+下列輸出顯示執行snmpwalk命令 的v3使用者：
+
+若要獲得更好的效能、您應該擷取資料表中的所有物件、而非從資料表擷取單一物件或數個物件。
+
+....
+$ snmpwalk -v 3 -u snmpv3user1 -a MD5 -A password1!  -l authNoPriv 192.0.2.62 .1.3.6.1.4.1.789.1.5.8.1.2
+Enterprises.789.1.5.8.1.2.1028 = "vol0"
+Enterprises.789.1.5.8.1.2.1032 = "vol0"
+Enterprises.789.1.5.8.1.2.1038 = "root_vs0"
+Enterprises.789.1.5.8.1.2.1042 = "root_vstrap"
+Enterprises.789.1.5.8.1.2.1064 = "vol1"
+....
+
+
+=== 安全性層級：noAuthNoPrimiv
+
+下列輸出顯示使用noAuthNoPrimiv安全性層級建立的v3使用者。
+
+....
+security login create -username snmpv3user2 -application snmp -authmethod usm -role admin
+Enter the authoritative entity's EngineID [local EngineID]:
+Which authentication protocol do you want to choose (none, md5, sha) [none]: none
+....
+
+
+==== FIPS模式
+
+FIPS不允許您選擇「無」
+
+
+
+==== snmpwalk.測試
+
+下列輸出顯示執行snmpwalk命令 的v3使用者：
+
+若要獲得更好的效能、您應該擷取資料表中的所有物件、而非從資料表擷取單一物件或數個物件。
+
+....
+$ snmpwalk -v 3 -u snmpv3user2 -l noAuthNoPriv 192.0.2.62 .1.3.6.1.4.1.789.1.5.8.1.2
+Enterprises.789.1.5.8.1.2.1028 = "vol0"
+Enterprises.789.1.5.8.1.2.1032 = "vol0"
+Enterprises.789.1.5.8.1.2.1038 = "root_vs0"
+Enterprises.789.1.5.8.1.2.1042 = "root_vstrap"
+Enterprises.789.1.5.8.1.2.1064 = "vol1"
+....

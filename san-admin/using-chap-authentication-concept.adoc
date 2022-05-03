@@ -1,0 +1,30 @@
+---
+permalink: san-admin/using-chap-authentication-concept.html 
+sidebar: sidebar 
+keywords: guidelines, use, chap, authentication 
+summary: 使用CHAP驗證時、您應該遵循特定準則。 
+---
+= 使用CHAP驗證的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用CHAP驗證時、您應該遵循特定準則。
+
+* 如果您在儲存系統上定義傳入使用者名稱和密碼、則必須在啟動器上使用相同的使用者名稱和密碼進行傳出CHAP設定。如果您也在儲存系統上定義傳出使用者名稱和密碼以啟用雙向驗證、則必須在啟動器上使用相同的使用者名稱和密碼來進行傳入CHAP設定。
+* 儲存系統上的傳入和傳出設定不能使用相同的使用者名稱和密碼。
+* CHAP使用者名稱可以是1到128位元組。
++
+不允許使用null使用者名稱。
+
+* CHAP密碼（機密）可為1至512位元組。
++
+密碼可以是十六進位值或字串。對於十六進位值、您應該輸入前置詞為「'0X'」或「'0X'」的值。不允許使用null密碼。
+
+* 如需其他限制、請參閱啟動器的說明文件。
++
+例如、如果未使用IPsec加密、Microsoft iSCSI軟體啟動器會要求啟動器和目標CHAP密碼至少為12個位元組。無論是否使用IPsec、密碼長度上限為16位元組。
+
+

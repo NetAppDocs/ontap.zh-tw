@@ -1,0 +1,85 @@
+---
+permalink: nfs-admin/using-ldap-concept.html 
+sidebar: sidebar 
+keywords: use, ldap 
+summary: LDAP（輕量型目錄存取傳輸協定）伺服器可讓您集中維護使用者資訊。如果您將使用者資料庫儲存在環境中的LDAP伺服器上、您可以設定儲存系統、以便在現有的LDAP資料庫中查詢使用者資訊。 
+---
+= LDAP總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+LDAP（輕量型目錄存取傳輸協定）伺服器可讓您集中維護使用者資訊。如果您將使用者資料庫儲存在環境中的LDAP伺服器上、您可以設定儲存系統、以便在現有的LDAP資料庫中查詢使用者資訊。
+
+* 在設定LDAP ONTAP 以供使用之前、您應確認您的站台部署符合LDAP伺服器和用戶端組態的最佳實務做法。尤其必須符合下列條件：
++
+** LDAP伺服器的網域名稱必須符合LDAP用戶端上的項目。
+** LDAP伺服器支援的LDAP使用者密碼雜湊類型必須包含ONTAP 下列項目：
++
+*** 加密（所有類型）和SHA-1（SHa、SSHA）。
+*** 從ONTAP 《Sf9.8》、《SHA-2雜湊》（SHA-256、SSH-384、SHA-512、SSHA-256、 也支援SSHA-384和SSHA-512）。
+
+
+** 如果LDAP伺服器需要工作階段安全性措施、您必須在LDAP用戶端中進行設定。
++
+下列工作階段安全性選項可供使用：
+
++
+*** LDAP簽署（提供資料完整性檢查）及LDAP簽署與密封（提供資料完整性檢查與加密）
+*** 啟動TLS
+*** LDAPS（LDAP over TLS或SSL）
+
+
+** 若要啟用已簽署和密封的LDAP查詢、必須設定下列服務：
++
+*** LDAP伺服器必須支援GSPI（Kerberos）SASL機制。
+*** LDAP伺服器必須在DNS伺服器上設定DNS A/AAAA記錄和PTr記錄。
+*** Kerberos伺服器必須在DNS伺服器上存在SRV.記錄。
+
+
+** 若要啟用Start TLS或LDAPS、應考慮下列事項。
++
+*** 使用Start TLS而非LDAPS是NetApp最佳實務做法。
+*** 如果使用LDAPS、則LDAP伺服器必須在ONTAP 支援TLS或支援SSL的情況下、於支援更新版本的支援更新版本中啟用。不支援SSL。ONTAP
+*** 必須已在網域中設定憑證伺服器。
+
+
+** 若要啟用LDAP參照追蹤（ONTAP 在更新版本的版本中）、必須滿足下列條件：
++
+*** 這兩個網域都應設定下列其中一個信任關係：
++
+**** 雙向
+**** 單向、主要信任參照網域
+**** 父-子
+
+
+*** DNS必須設定為解析所有參照的伺服器名稱。
+*** 當「-bind-as CIFS伺服器」設定為true時、網域密碼應相同、以進行驗證。
+
+
+
+
++
+[NOTE]
+====
+LDAP參照追蹤不支援下列組態。
+
+** 所有ONTAP 版本：
+** 管理SVM上的LDAP用戶端
+** 適用於更新版本的支援功能（9.9.1及更新版本均支援）ONTAP ：
+** LDAP簽署與密封（「工作階段安全性」選項）
+** 加密TLS連線（「-use－start-TLS」選項）
+** 透過LDAPS連接埠636進行通訊（「使用- LDAPS-for -ad-LDAP」選項）
+
+
+====
+* 在SVM上設定LDAP用戶端時、您必須輸入LDAP架構。
++
+在大多數情況下、預設ONTAP 的架構之一將是適當的。不過、如果您環境中的LDAP架構與這些架構不同、則必須先建立新的LDAP用戶端架構ONTAP 以供使用、才能建立LDAP用戶端。請洽詢您的LDAP管理員、瞭解您環境的需求。
+
+* 不支援使用LDAP進行主機名稱解析。
+
+
+如需其他資訊、請參閱 https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp技術報告4835：如何在ONTAP 功能方面設定LDAP"]。

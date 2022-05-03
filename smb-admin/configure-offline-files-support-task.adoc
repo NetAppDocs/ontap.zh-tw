@@ -1,0 +1,128 @@
+---
+permalink: smb-admin/configure-offline-files-support-task.html 
+sidebar: sidebar 
+keywords: configure, offline, file, support, ontap, cli, smb, modify, exist, smb, share, manual, default, setting, configure offline files support on smb shares using the cli 
+summary: 您可以在ONTAP 建立SMB共用時、或隨時修改現有的SMB共用時、指定四個離線檔案設定之一、使用支援的還原CLI來設定離線檔案。手動離線檔案支援為預設設定。 
+---
+= 使用CLI在SMB共用區上設定離線檔案支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在ONTAP 建立SMB共用時、或隨時修改現有的SMB共用時、指定四個離線檔案設定之一、使用支援的還原CLI來設定離線檔案。手動離線檔案支援為預設設定。
+
+設定離線檔案支援時、您可以選擇下列四種離線檔案設定之一：
+
+|===
+| 設定 | 說明 
+
+
+ a| 
+無
+ a| 
+不允許Windows用戶端快取此共用區上的任何檔案。
+
+
+
+ a| 
+《永久》
+ a| 
+可讓Windows用戶端上的使用者手動選取要快取的檔案。
+
+
+
+ a| 
+《文件》
+ a| 
+允許Windows用戶端快取使用者用於離線存取的使用者文件。
+
+
+
+ a| 
+《節目》
+ a| 
+允許Windows用戶端快取使用者用於離線存取的程式。即使共用可用、用戶端仍可在離線模式下使用快取的程式檔案。
+
+|===
+您只能選擇一個離線檔案設定。如果您修改現有SMB共用區上的離線檔案設定、新的離線檔案設定會取代原始設定。其他現有的SMB共用組態設定和共用內容不會移除或取代。它們會一直有效、直到明確移除或變更為止。
+
+.步驟
+. 執行適當的行動：
++
+|===
+| 如果您要設定離線檔案於... | 輸入命令... 
+
+
+ a| 
+新的SMB共用區
+ a| 
+「Vserver CIFS共用區create -vserver vserver_name -share-name share_name -path path -offline檔案｛none| manual | documents|programs｝」
+
+
+
+ a| 
+現有的SMB共用區
+ a| 
+「vserver CIFS共用修改-vserver vserver_name -share-name share_name -offline檔案｛none| manual | documents|programs｝」
+
+|===
+. 確認SMB共用組態正確：「vserver CIFS共用區show -vserver vserver_name -share-name share_name -instance」
+
+
+下列命令會建立名為「data1」的SMB共用區、並將離線檔案設為「documents」（文件）：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name data1 -path /data1 -comment "Offline files" -offline-files documents
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: -
+     Directory Mode Creation Mask: -
+                    Share Comment: Offline files
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: documents
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+下列命令會將離線檔案設定變更為「手動」、並新增檔案和目錄模式建立遮罩的值、藉此修改名為「data1」的現有SMB共用：
+
+[listing]
+----
+cluster1::> vserver cifs share modify -vserver vs1 -share-name data1 -offline-files manual -file-umask 644 -dir-umask 777
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: 644
+     Directory Mode Creation Mask: 777
+                    Share Comment: Offline files
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: manual
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+xref:add-remove-share-properties-eexisting-share-task.adoc[新增或移除現有SMB共用區上的共用內容]

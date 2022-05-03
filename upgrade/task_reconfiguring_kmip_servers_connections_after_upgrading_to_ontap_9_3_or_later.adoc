@@ -1,0 +1,34 @@
+---
+permalink: upgrade/task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, reconfigure, reconfiguring, kmip, server, connections, 9.3, later 
+summary: 在升級ONTAP 至更新版本的版本之前、您必須重新設定外部金鑰管理（KMIP）伺服器連線。 
+---
+= 升級ONTAP 至更新版本的更新版本後、重新設定KMIP伺服器連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級ONTAP 至更新版本的版本之前、您必須重新設定外部金鑰管理（KMIP）伺服器連線。
+
+. 設定金鑰管理程式連線：「安全性金鑰管理程式設定」
+. 新增KMIP伺服器：「安全金鑰管理程式add -address key_manager_server_ip_address'
+. 驗證KMIP伺服器是否已連線：「安全金鑰管理程式顯示狀態」
+. 查詢關鍵伺服器：「安全金鑰管理程式查詢」
+. 建立新的驗證金鑰和密碼：「安全金鑰管理程式的cree-key -prompe-for key true」
++
+通關密碼必須至少包含32個字元。
+
+. 查詢新的驗證金鑰：「安全金鑰管理程式查詢」
+. 將新的驗證金鑰指派給自我加密磁碟（SED）：「torage加密磁碟修改-disk disk_ID -data-key-id key_ID」
++
+
+NOTE: 請確定您使用的是查詢中的新驗證金鑰。
+
+. 如有需要、請將FIPS金鑰指派給SED：「torage加密磁碟modify -disk disk_id -fIPS-key-id fip_imization_key_id」
++
+如果您的安全性設定要求您使用不同的金鑰進行資料驗證和FIPS 140-2驗證、您應該為每個金鑰建立個別的金鑰。如果情況並非如此、您可以使用與資料存取相同的FIPS法規遵循驗證金鑰。
+
+

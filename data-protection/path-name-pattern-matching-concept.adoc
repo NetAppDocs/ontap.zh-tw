@@ -1,0 +1,63 @@
+---
+permalink: data-protection/path-name-pattern-matching-concept.html 
+sidebar: sidebar 
+keywords: path, pattern, matching 
+summary: 您可以使用模式比對、在SnapMirror命令中指定來源和目的地路徑。 
+---
+= 使用路徑名稱模式比對
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用模式比對、在「napmirror」命令中指定來源和目的地路徑。
+
+「napmirror」命令使用下列格式的完整路徑名稱：「vserver:volume」。您可以透過不輸入SVM名稱來縮寫路徑名稱。如果您這麼做、則「napmirror」命令會假設使用者的本機SVM內容。
+
+假設SVM稱為「vserver1」、而磁碟區稱為「vol1」、則完整路徑名稱為「vserver1：vol1」。
+
+您可以在路徑中使用星號（*）做為萬用字元、以選取符合條件的完整路徑名稱。下表提供使用萬用字元選取一系列磁碟區的範例。
+
+[cols="2*"]
+|===
+
+
+ a| 
+’*
+ a| 
+符合所有路徑。
+
+
+
+ a| 
+《Vvs *》
+ a| 
+將所有SVM和Volume與以「Vs」開頭的SVM名稱進行比對。
+
+
+
+ a| 
+"*：* SRS*
+ a| 
+將所有SVM與含有「shrc」文字的Volume名稱配對。
+
+
+
+ a| 
+《*：vol*》
+ a| 
+將所有SVM與以「vol.」開頭的Volume名稱進行比對。
+
+|===
+[listing]
+----
+vs1::> snapmirror show -destination-path *:*dest*
+                                                                                Progress
+Source              Destination  Mirror        Relationship  Total              Last
+Path          Type  Path         State         Status        Progress   Healthy Updated
+------------- ---- ------------ ------------- -------------- ---------- ------- --------
+vs1:sm_src2
+              DP   vs2:sm_dest1
+                                Snapmirrored  Idle           -          true    -
+----

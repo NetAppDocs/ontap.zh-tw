@@ -1,0 +1,83 @@
+---
+permalink: volumes/rehost-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: rehost, volumes, snapmirror, relationship 
+summary: 您可以在SnapMirror關係中重新裝載磁碟區。 
+---
+= 以SnapMirror關係重新裝載磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在SnapMirror關係中重新裝載磁碟區。
+
+.您需要的是 #8217 ；需要的是什麼
+* Volume必須處於線上狀態。
+* Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
+* 必須停止對正在重新託管的磁碟區的資料存取。
+* 目標SVM的ns交換器和名稱服務組態必須設定為支援重新託管Volume的資料存取。
+* 磁碟區的使用者ID和群組ID必須在目標SVM中可用、或在託管Volume上變更。
+
+
+.關於這項工作
+* 重新託管是一項顛覆性的作業。
+* 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
+* 重新裝載作業之後、下列Volume原則、原則規則和組態會從來源Volume遺失、必須在重新裝載的Volume上手動重新設定：
++
+** Volume與qtree匯出原則
+** 防毒原則
+** Volume效率原則
+** 服務品質（QoS）原則
+** Snapshot原則
+** 配額規則
+** NS-SWITCH與名稱服務組態匯出原則與規則
+** 使用者和群組ID
+
+
+
+
+.步驟
+. 記錄SnapMirror關係類型：
++
+「napmirror show」
+
++
+這是預防步驟、可避免在磁碟區重組失敗時遺失SnapMirror關係類型的相關資訊。
+
+. 從目的地叢集刪除SnapMirror關係：
++
+'刪除napmirror '
+
++
+您不得中斷SnapMirror關係；否則、目的地Volume的資料保護功能將會遺失、而且在重新託管作業之後、將無法重新建立關係。
+
+. 從來源叢集移除SnapMirror關係資訊：
++
+「napmirror版本的關係、僅供參考」
+
++
+將「僅供參考」參數設定為「true」、會移除來源關係資訊、而不會刪除Snapshot複本。
+
+. 切換至進階權限層級：
++
+"進階權限"
+
+. 在目的地SVM上重新裝載磁碟區：
++
+「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+
+. 如果SVM對等關係不存在、請在來源SVM和目的地SVM之間建立SVM對等關係：
++
+vserver對等點的建立
+
+. 在來源Volume與目的地Volume之間建立SnapMirror關係：
++
+'建立napmirror '
+
++
+您必須從主控DP Volume的SVM執行「建立快照鏡像」命令。重新託管的Volume可以是SnapMirror關係的來源或目的地。
+
+. 重新同步SnapMirror關係。
+

@@ -1,0 +1,83 @@
+---
+permalink: nas-audit/troubleshoot-auditing-staging-volume-concept.html 
+sidebar: sidebar 
+keywords: troubleshoot, audit, stage, volume space, issues 
+summary: 當暫存磁碟區或包含稽核事件記錄的磁碟區空間不足時、可能會發生問題。如果空間不足、就無法建立新的稽核記錄、這會使用戶端無法存取資料、而且存取要求也會失敗。您應該知道如何疑難排解及解決這些磁碟區空間問題。 
+---
+= 疑難排解稽核和暫存磁碟區空間問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當暫存磁碟區或包含稽核事件記錄的磁碟區空間不足時、可能會發生問題。如果空間不足、就無法建立新的稽核記錄、這會使用戶端無法存取資料、而且存取要求也會失敗。您應該知道如何疑難排解及解決這些磁碟區空間問題。
+
+
+
+== 疑難排解與事件記錄磁碟區相關的空間問題
+
+如果包含事件記錄檔的磁碟區空間不足、稽核將無法將記錄轉換成記錄檔。這會導致用戶端存取失敗。您必須知道如何疑難排解與事件記錄磁碟區相關的空間問題。
+
+* 儲存虛擬機器（SVM）與叢集管理員可顯示有關Volume與Aggregate使用量與組態的資訊、以判斷是否有不足的磁碟區空間。
+* 如果包含事件記錄的磁碟區空間不足、SVM和叢集管理員可以移除部分事件記錄檔、或是增加磁碟區的大小、來解決空間問題。
++
+[NOTE]
+====
+如果包含事件記錄磁碟區的Aggregate已滿、則必須先增加Aggregate的大小、才能增加磁碟區的大小。只有叢集管理員可以增加集合體的大小。
+
+====
+* 事件記錄檔的目的地路徑可透過修改稽核組態、變更為另一個磁碟區上的目錄。
++
+[NOTE]
+====
+在下列情況下、資料存取遭拒：
+
+** 如果目的地目錄已刪除。
+** 如果主控目的地目錄之磁碟區的檔案限制達到其最大層級。
+
+
+====
+
+
+如需有關如何檢視磁碟區資訊及增加磁碟區大小的詳細資訊、請參閱 link:../volumes/index.html["邏輯儲存管理"]
+
+如需如何檢視有關集合體與管理集合體的資訊、請參閱 link:../disks-aggregates/index.html["磁碟與集合體管理"]。
+
+
+
+== 疑難排解與接移磁碟區相關的空間問題
+
+如果任何包含儲存虛擬機器（SVM）暫存檔案的磁碟區空間不足、稽核將無法將記錄寫入暫存檔案。這會導致用戶端存取失敗。若要疑難排解此問題、您必須顯示磁碟區使用量的相關資訊、以判斷SVM中使用的任何暫存磁碟區是否已滿。
+
+如果包含合併事件記錄檔的磁碟區有足夠空間、但由於空間不足、仍有用戶端存取失敗、則暫存磁碟區可能空間不足。SVM管理員必須聯絡您、以判斷內含SVM暫存檔案的暫存磁碟區是否空間不足。如果因暫存磁碟區空間不足而無法產生稽核事件、則稽核子系統會產生EMS事件。畫面會顯示下列訊息：「裝置上沒有剩餘空間」。只有您可以檢視暫存磁碟區的相關資訊、SVM管理員無法檢視。
+
+所有暫存Volume名稱的開頭都是「_DV_aud _」、後面接著包含該暫存Volume之Aggregate的UUID。以下範例顯示管理SVM上的四個系統磁碟區、這些磁碟區是在為叢集中的資料SVM建立檔案服務稽核組態時自動建立的：
+
+[listing]
+----
+cluster1::> volume show -vserver cluster1
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+cluster1  MDV_aud_1d0131843d4811e296fc123478563412
+                       aggr0        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_8be27f813d7311e296fc123478563412
+                       root_vs0     online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_9dc4ad503d7311e296fc123478563412
+                       aggr1        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_a4b887ac3d7311e296fc123478563412
+                       aggr2        online     RW          2GB     1.90GB    5%
+4 entries were displayed.
+----
+如果暫存磁碟區空間不足、您可以增加磁碟區的大小來解決空間問題。
+
+[NOTE]
+====
+如果包含暫存磁碟區的Aggregate已滿、則必須先增加Aggregate的大小、才能增加磁碟區的大小。只有您可以增加Aggregate的大小、SVM管理員才能增加。
+
+====
+如果一個或多個集合體的可用空間小於2 GB、則SVM稽核建立將會失敗。當SVM稽核建立失敗時、所建立的暫存磁碟區會被刪除。
+
+link:../concepts/index.html["概念ONTAP"]
+link:../volumes/index.html["邏輯儲存管理"]
+link:../disks-aggregates/index.html["磁碟與集合體管理"]

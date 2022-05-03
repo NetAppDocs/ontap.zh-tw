@@ -1,0 +1,95 @@
+---
+permalink: smb-admin/update-domain-user-group-names-local-databases-task.html 
+sidebar: sidebar 
+keywords: add, domain, users, groups, cifs, server, local, register, database, manual, update, update domain user and group names in local databases 
+summary: 您可以將網域使用者和群組新增至CIFS伺服器的本機群組。這些網域物件會在叢集的本機資料庫中登錄。如果重新命名網域物件、則必須手動更新本機資料庫。 
+---
+= 更新本機資料庫中的網域使用者和群組名稱
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將網域使用者和群組新增至CIFS伺服器的本機群組。這些網域物件會在叢集的本機資料庫中登錄。如果重新命名網域物件、則必須手動更新本機資料庫。
+
+您必須指定要更新網域名稱的儲存虛擬機器（SVM）名稱。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 執行適當的行動：
++
+|===
+| 如果您想要更新網域使用者和群組、以及... | 使用此命令... 
+
+
+ a| 
+顯示已成功更新且無法更新的網域使用者和群組
+ a| 
+「Vserver CIFS使用者與群組更新名稱-vserver _vserver_name_」
+
+
+
+ a| 
+顯示成功更新的網域使用者和群組
+ a| 
+「vserver CIFS使用者與群組更新名稱-vserver _vserver_name_-display-fion-only fals'
+
+
+
+ a| 
+僅顯示無法更新的網域使用者和群組
+ a| 
+「Vserver CIFS使用者與群組更新名稱-vserver _vserver_name_-display-fion-only true」
+
+
+
+ a| 
+隱藏更新的所有狀態資訊
+ a| 
+「Vserver CIFS user-and -Groups update-names -vserver _vserver_name_-suppress-all-out-outputtrue」
+
+|===
+. 返回管理員權限等級：「et -priv. admin」
+
+
+下列範例會更新與儲存虛擬機器（SVM、先前稱為Vserver）VS1相關聯的網域使用者和群組名稱。對於上一次更新、需要更新的是一條相依的名稱鏈：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs users-and-groups update-names -vserver vs1
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654321-12345
+   Domain:            EXAMPLE1
+   Out-of-date Name:  dom_user1
+   Updated Name:      dom_user2
+   Status:            Successfully updated
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654322-23456
+   Domain:            EXAMPLE2
+   Out-of-date Name:  dom_user1
+   Updated Name:      dom_user2
+   Status:            Successfully updated
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654321-123456
+   Domain:            EXAMPLE1
+   Out-of-date Name:  dom_user3
+   Updated Name:      dom_user4
+   Status:            Successfully updated; also updated SID "S-1-5-21-123456789-234565432-987654321-123457"
+                      to name "dom_user5"; also updated SID "S-1-5-21-123456789-234565432-987654321-123458"
+                      to name "dom_user6"; also updated SID "S-1-5-21-123456789-234565432-987654321-123459"
+                      to name "dom_user7"; also updated SID "S-1-5-21-123456789-234565432-987654321-123460"
+                      to name "dom_user8"
+
+The command completed successfully. 7 Active Directory objects have been updated.
+
+cluster1::*> set -privilege admin
+----

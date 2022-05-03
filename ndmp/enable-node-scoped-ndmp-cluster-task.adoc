@@ -1,0 +1,63 @@
+---
+permalink: ndmp/enable-node-scoped-ndmp-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, node, scope, ndmp, cluster 
+summary: 您可以在叢集上啟用節點範圍的NDMP、並在叢集的所有節點上啟用NDMP服務、來設定節點範圍的NDMP。啟用NDMP服務時、您也必須設定NDMP的root使用者。 
+---
+= 在叢集上啟用節點範圍的NDMP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用節點範圍的NDMP、設定root使用者的密碼、以及設定LIF以進行資料和控制連線、來備份節點上裝載的Volume。
+
+您可以在叢集上啟用節點範圍的NDMP、並在叢集的所有節點上啟用NDMP服務、來設定節點範圍的NDMP。啟用NDMP服務時、您也必須設定NDMP的「root」使用者。
+
+.步驟
+. 使用帶有「node-sceme-mode」參數的「系統服務NDMP」命令來啟用節點範圍的NDMP模式。
++
+[listing]
+----
+cluster1::> system services ndmp node-scope-mode on
+NDMP node-scope-mode is enabled.
+----
+. 使用「系統服務NDMP on」命令、在叢集中的所有節點上啟用NDMP服務。
++
+使用萬用字元「*」可同時在所有節點上啟用NDMP服務。
+
++
+您必須指定密碼、以便備份應用程式驗證NDMP連線。
+
++
+[listing]
+----
+cluster1::> system services ndmp on -node *
+
+Please enter password:
+Confirm password:
+2 entries were modified.
+----
+. 使用「系統服務NDMP modify」命令、停用「明文」選項以安全地通訊NDMP密碼。
++
+使用萬用字元「`*」可同時停用所有節點上的「-Clear-text」選項。
+
++
+[listing]
+----
+cluster1::> system services ndmp modify -node * -clear-text false
+2 entries were modified.
+----
+. 使用「系統服務NDMP show」命令、確認已啟用NDMP服務、且停用「-Clear-text」選項。
++
+[listing]
+----
+cluster1::> system services ndmp show
+Node                  Enabled   Clear text  User Id
+--------------------- --------- ----------- ---------
+cluster1-1            true      false        root
+cluster1-2            true      false        root
+2 entries were displayed.
+----
+

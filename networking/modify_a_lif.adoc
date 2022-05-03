@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_a_lif.html 
+keywords: lif attributes, fc lifs, ip lifs, change lifs, change, changing, logical, interface, lif, modify a lif, modify a lif by changing its attributes 
+summary: 變更LIF屬性以修改LIF 
+---
+= 修改LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以變更主節點或目前節點、管理狀態、IP位址、網路遮罩、容錯移轉原則、 防火牆原則和服務原則。您也可以將LIF的位址系列從IPV4變更為IPV6。
+
+.關於這項工作
+* 將LIF的管理狀態修改為「關機」時、任何未完成的NFSv4鎖定都會保留、直到LIF的管理狀態恢復為「開機」為止。
++
+為了避免其他生命週期嘗試存取鎖定檔案時發生鎖定衝突、您必須先將NFSv4用戶端移至不同的LIF、再將管理狀態設為向下。
+
+* 您無法修改FC LIF所使用的資料傳輸協定。不過、您可以修改指派給服務原則的服務、或變更指派給IP LIF的服務原則。
++
+若要修改FC LIF所使用的資料傳輸協定、您必須刪除並重新建立LIF。若要變更IP LIF的服務原則、更新期間會短暫中斷。
+
+* 您無法修改主節點或節點範圍管理LIF的目前節點。
+* 使用子網路變更LIF的IP位址和網路遮罩值時、會從指定的子網路分配IP位址；如果LIF的先前IP位址來自不同的子網路、則IP位址會傳回該子網路。
+* 若要將LIF的位址系列從IPV4修改為IPV6、您必須使用IPv6位址的分號符號、並為「-netmask-length」參數新增一個值。
+* 您無法修改自動設定的連結本機IPv6位址。
+* 修改LIF會導致LIF沒有有效的容錯移轉目標、因此會產生警告訊息。
++
+如果沒有有效容錯移轉目標的LIF嘗試進行容錯移轉、可能會發生中斷。
+
+* 從功能介紹9.5開始ONTAP 、您可以修改與LIF相關的服務原則。
++
+在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
+
+
+
+.步驟
+. 使用「network interface modify」命令修改LIF的屬性。
++
+下列範例說明如何使用IP位址和子網路client1_sub的網路遮罩值來修改LIF datalif2的IP位址和網路遮罩：
+
++
+....
+network interface modify -vserver vs1 -lif datalif2 -subnet-name client1_sub
+....
++
+下列範例說明如何修改LIF的服務原則。
+
++
+....
+network interface modify -vserver siteA -lif node1_inter1 -service-policy example
+....
+. 驗證IP位址是否可連線。
++
+|===
+
+
+| 如果您使用... | 然後使用... 
+
+
+ a| 
+IPV4位址
+ a| 
+網路ping
+
+
+
+ a| 
+IPv6位址
+ a| 
+《網路ping6》
+
+|===
+

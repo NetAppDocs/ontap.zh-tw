@@ -1,0 +1,22 @@
+---
+permalink: smb-admin/client-performance-traditional-lease-oplocks-concept.html 
+sidebar: sidebar 
+keywords: traditional, oplocks, opportunistic, locks, lease, smb, client, client-side, read-ahead, file-sharing, write-behind, information, access, reducing, reduce, network, traffic, improve client performance with traditional and lease oplocks 
+summary: 傳統oplocks（投機鎖定）和租用oplock可在某些檔案共用案例中、讓SMB用戶端執行預先讀取、回寫及鎖定資訊的用戶端快取。然後用戶端可以讀取或寫入檔案、而不會定期提醒伺服器需要存取相關檔案。如此可減少網路流量、進而提升效能。 
+---
+= 利用傳統和租賃oplock總覽來改善用戶端效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+傳統oplocks（投機鎖定）和租用oplock可在某些檔案共用案例中、讓SMB用戶端執行預先讀取、回寫及鎖定資訊的用戶端快取。然後用戶端可以讀取或寫入檔案、而不會定期提醒伺服器需要存取相關檔案。如此可減少網路流量、進而提升效能。
+
+租賃oplock是SMB 2.1傳輸協定及更新版本所提供的一種強化型oplock形式。租賃oplock可讓用戶端在自有的多個SMB之間取得及保留用戶端快取狀態。
+
+oplocks有兩種控制方式：
+
+* 在共享區建立時使用「vserver CIFS共用create」命令、或在建立後使用「vserver共用內容」命令。
+* 使用qtree屬性、在建立qtree時使用「volume qtree create」命令、或在建立後使用「volume qtree oplock」命令。
+

@@ -1,0 +1,40 @@
+---
+permalink: flexgroup/restore-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: restore, flexgroup, volume, snapvault, backup 
+summary: 您可以FlexGroup 從SnapVault 位於還原次要Volume的Snapshot複本執行完整Volume還原作業。您可以將FlexGroup 還原成原始來源Volume或新FlexGroup 的還原成新的版本。 
+---
+= 從FlexGroup 還原功能的支援中還原一個支援功能SnapVault
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以FlexGroup 從SnapVault 位於還原次要Volume的Snapshot複本執行完整Volume還原作業。您可以將FlexGroup 還原成原始來源Volume或新FlexGroup 的還原成新的版本。
+
+當您從SnapVault 還原為FlexGroup 還原為還原為資料的功能時、必須注意某些考量事項。
+
+* 只有SnapVault 從某個版本的不完整Snapshot複本支援基礎還原。在拍攝Snapshot複本時、目的地Volume中的成員數量必須與來源Volume中的成員數量相符。
+* 如果還原作業失敗、則在還原作業完成之前、不允許執行其他作業。您可以重試還原作業、或使用「清理」參數執行還原作業。
+* 一個支援區只能是一個備份關係或還原關係的來源磁碟區。FlexGroup不能將一個資料區做為兩個相依關係的來源、兩個還原關係、或是一個相依關係與還原關係。FlexGroup SnapVault SnapVault
+* 無法並行執行還原與備份作業。SnapVault當正在執行基準還原作業或遞增還原作業時、您應該停止備份作業。
+* 您必須從目的地FlexGroup 的穩定區中止部分Snapshot複本的還原作業。您無法從來源磁碟區中止部分Snapshot複本的還原作業。
+* 如果您中止還原作業、則必須以先前還原作業所使用的相同Snapshot複本重新啟動還原作業。
+
+
+在執行FlexGroup 還原之前、會停用目的地聲音區上的任何作用中配額規則。
+
+還原作業完成後、您可以使用「Volume quota modify」命令重新啟動配額規則。
+
+.步驟
+. 還原FlexGroup 此功能：「napmirror restore-source-path _svm:sr_flexgroup_-dite-path _dest_svm:dest_flexgroup_-snapshot _name_」「sfapshot_name」是要從來源Volume還原至目的地Volume的Snapshot複本。如果未指定Snapshot複本、則會從最新的Snapshot複本還原目的地Volume。
++
+[listing]
+----
+vserverA::> snapmirror restore -source-path vserverB:dstFG -destination-path vserverA:newFG -snapshot daily.2016-07-15_0010
+Warning: This is a disruptive operation and the volume vserverA:newFG will be read-only until the operation completes
+Do you want to continue? {y|n}: y
+----
+

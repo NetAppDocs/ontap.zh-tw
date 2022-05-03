@@ -1,0 +1,60 @@
+---
+permalink: upgrade/task_verifying_storage_health_verifying_that_the_cluster_is_ready.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, upgrading, verify, verifying, storage, health 
+summary: 在升級叢集之前和之後、您應該確認磁碟、集合體和磁碟區的狀態。 
+---
+= 驗證儲存設備健全狀況
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級叢集之前和之後、您應該確認磁碟、集合體和磁碟區的狀態。
+
+. 驗證磁碟狀態：
++
+[cols="2*"]
+|===
+| 若要檢查... | 執行此動作... 
+
+
+ a| 
+中斷的磁碟
+ a| 
+.. 顯示任何中斷的磁碟：「磁碟顯示狀態中斷」
+.. 移除或更換任何損壞的磁碟。
+
+
+
+
+ a| 
+正在進行維護或重建的磁碟
+ a| 
+.. 顯示任何處於維護、擱置或重建狀態的磁碟：「torage disk show -st態maintenance |待發| remutage'
+.. 請等待維護或重建作業完成後再繼續。
+
+
+|===
+. 顯示狀態：「torage Aggregate show -state！online」、確認所有的Aggregate都在線上。此命令會顯示_not _ online的Aggregate。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
+
+
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+There are no entries matching your query.
+----
+. 顯示任何非連線的磁碟區：「Volume show -st現 況！online」、確認所有磁碟區都在線上、執行重大升級或還原之前及之後、所有磁碟區都必須在線上。
+
+
+[listing]
+----
+cluster1::> volume show -state !online
+There are no entries matching your query.
+----
+. 請確認沒有不一致的磁碟區：「Volume show -is不一致true」。如果傳回任何不一致的磁碟區、您必須在升級之前聯絡NetApp支援部門。
+
+
+link:../volumes/index.html["邏輯儲存管理"]

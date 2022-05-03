@@ -1,0 +1,140 @@
+---
+permalink: smb-admin/display-branchcache-statistics-task.html 
+sidebar: sidebar 
+keywords: display, branchcache, statistics, identify, caching, cache, perform, configuration, content, client, hash, file, delete, room, data, display branchcache statistics 
+summary: 您可以顯示BranchCache統計資料、以識別快取效能的表現、判斷您的組態是否提供快取內容給用戶端、並判斷是否刪除雜湊檔案、以留出空間來儲存較新的雜湊資料。 
+---
+= 顯示BranchCache統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示BranchCache統計資料、以識別快取效能的表現、判斷您的組態是否提供快取內容給用戶端、並判斷是否刪除雜湊檔案、以留出空間來儲存較新的雜湊資料。
+
+「hashd」統計物件包含提供有關BranchCache雜湊統計資訊的計數器。「CIFS」統計物件包含提供有關BranchCache相關活動統計資訊的計數器。您可以在進階權限層級收集及顯示這些物件的相關資訊。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
++
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+----
+. 使用「統計資料目錄計數器show」命令來顯示與BranchCache相關的計數器。
++
+如需統計資料計數器的詳細資訊、請參閱此命令的手冊頁。
+
++
+[listing]
+----
+cluster1::*> statistics catalog counter show -object hashd
+
+Object: hashd
+    Counter                     Description
+    --------------------------- ----------------------------------------------
+    branchcache_hash_created    Number of times a request to generate
+                                BranchCache hash for a file succeeded.
+    branchcache_hash_files_replaced
+                                Number of times a BranchCache hash file was
+                                deleted to make room for more recent hash
+                                data. This happens if the hash store size is
+                                exceeded.
+    branchcache_hash_rejected   Number of times a request to generate
+                                BranchCache hash data failed.
+    branchcache_hash_store_bytes
+                                Total number of bytes used to store hash data.
+    branchcache_hash_store_size Total space used to store BranchCache hash
+                                data for the Vserver.
+    instance_name               Instance Name
+    instance_uuid               Instance UUID
+    node_name                   System node name
+    node_uuid                   System node id
+9 entries were displayed.
+
+cluster1::*> statistics catalog counter show -object cifs
+
+Object: cifs
+    Counter                     Description
+    --------------------------- ----------------------------------------------
+    active_searches             Number of active searches over SMB and SMB2
+    auth_reject_too_many        Authentication refused after too many
+                                requests were made in rapid succession
+    avg_directory_depth         Average number of directories crossed by SMB
+                                and SMB2 path-based commands
+    avg_junction_depth          Average number of junctions crossed by SMB
+                                and SMB2 path-based commands
+    branchcache_hash_fetch_fail Total number of times a request to fetch hash
+                                data failed. These are failures when
+                                attempting to read existing hash data. It
+                                does not include attempts to fetch hash data
+                                that has not yet been generated.
+    branchcache_hash_fetch_ok   Total number of times a request to fetch hash
+                                data succeeded.
+    branchcache_hash_sent_bytes Total number of bytes sent to clients
+                                requesting hashes.
+    branchcache_missing_hash_bytes
+                                Total number of bytes of data that had to be
+                                read by the client because the hash for that
+                                content was not available on the server.
+   ....Output truncated....
+----
+. 使用「統計資料開始」和「統計資料停止」命令來收集與BranchCache相關的統計資料。
++
+[listing]
+----
+cluster1::*> statistics start -object cifs -vserver vs1 -sample-id 11
+Statistics collection is being started for Sample-id: 11
+
+cluster1::*> statistics stop -sample-id 11
+Statistics collection is being stopped for Sample-id: 11
+----
+. 使用「統計資料顯示」命令顯示所收集的BranchCache統計資料。
++
+[listing]
+----
+cluster1::*> statistics show -object cifs -counter  branchcache_hash_sent_bytes -sample-id 11
+
+Object: cifs
+Instance: vs1
+Start-time: 12/26/2012 19:50:24
+End-time: 12/26/2012 19:51:01
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_hash_sent_bytes                                     0
+    branchcache_hash_sent_bytes                                     0
+    branchcache_hash_sent_bytes                                     0
+    branchcache_hash_sent_bytes                                     0
+
+cluster1::*> statistics show -object cifs -counter  branchcache_missing_hash_bytes -sample-id 11
+
+Object: cifs
+Instance: vs1
+Start-time: 12/26/2012 19:50:24
+End-time: 12/26/2012 19:51:01
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_missing_hash_bytes                                  0
+    branchcache_missing_hash_bytes                                  0
+    branchcache_missing_hash_bytes                                  0
+    branchcache_missing_hash_bytes                                  0
+----
+. 返回管理員權限等級：「et -priv. admin」
++
+[listing]
+----
+cluster1::*> set -privilege admin
+----
+
+
+xref:display-statistics-task.adoc[顯示統計資料]
+
+link:../performance-config/index.html["效能監控設定"]

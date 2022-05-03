@@ -1,0 +1,36 @@
+---
+permalink: nas-audit/manage-audit-policy-change-event-concept.html 
+sidebar: sidebar 
+keywords: manage, audit-policy-change, event 
+summary: 當為儲存虛擬機器（SVM）設定稽核原則變更事件並啟用稽核時、就會產生稽核事件。稽核原則變更事件是在使用vserver稽核相關命令修改稽核原則時產生。 
+---
+= 管理稽核原則變更事件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當為儲存虛擬機器（SVM）設定稽核原則變更事件並啟用稽核時、就會產生稽核事件。稽核原則變更事件會在使用「vserver稽核」相關命令修改稽核原則時產生。
+
+每當停用、啟用或修改稽核原則時、就會產生事件ID 4719的稽核原則變更事件、並有助於識別使用者嘗試停用稽核以涵蓋追蹤的時間。此設定預設為設定、需要診斷權限才能停用。
+
+下列範例顯示稽核原則變更事件、並在停用稽核時產生ID 4719：
+
+[listing]
+----
+netapp-clus1::*> vserver audit disable -vserver vserver_1
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4719
+   EventName Audit Disabled
+   ...
+   ...
+  SubjectUserName admin
+  SubjectUserSid 65533-1001
+  SubjectDomainName ~
+  SubjectIP console
+  SubjectPort
+----

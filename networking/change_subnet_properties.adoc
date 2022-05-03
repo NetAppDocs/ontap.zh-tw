@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: networking/change_subnet_properties.html 
+keywords: change, changing, modify, modifying, gateway, ip, address, internet, protocol, mask, value, subnet, address, range, property, properties, change subnet properties, network subnet modify, subnet-name, -ipspace, -subnet, -gateway, -ip-ranges, -force-update-lif-associations 
+summary: 變更子網路位址、遮罩值、閘道位址或IP位址範圍 
+---
+= 變更子網路內容
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以變更現有子網路中的子網路位址和遮罩值、閘道位址或IP位址範圍。
+
+.關於這項工作
+* 修改IP位址時、您必須確保網路中沒有重疊的IP位址、以免不同的子網路或主機嘗試使用相同的IP位址。
+* 如果您新增或變更閘道IP位址、當使用子網路在新的SVM中建立LIF時、修改的閘道會套用至新的SVM。如果路由尚未存在、則會為SVM建立通往閘道的預設路由。變更閘道IP位址時、您可能需要手動新增新路由至SVM。
+
+
+修改子網路內容：
+
+....
+network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-subnet <subnet_address>] [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
+....
+* 「ubnet_name」是您要修改的子網路名稱。
+* 「IPSpace」是子網路所在的IPspace名稱。
+* 「Subnet」是子網路的新位址和遮罩（如果適用）、例如192.0/24。
+* 「閘道」是子網路的新閘道（若適用）、例如192.0.2。輸入*「*」*會移除閘道項目。
+* 「ip_ranges」是新的IP位址清單或範圍、如果適用的話、將會分配給子網路。IP位址可以是個別位址、範圍或IP位址、或是以逗號分隔的清單組合。此處指定的範圍會取代現有的IP位址。
+* 變更IP位址範圍時、必須使用「force-update-lif-關聯」。修改IP位址範圍時、您可以將此選項的值設為* true*。如果任何服務處理器或網路介面使用指定範圍內的IP位址、則此命令會失敗。將此值設為* true*可將任何手動定址的介面與目前的子網路建立關聯、並允許命令成功執行。
+
+
+下列命令會修改子網路子網路3的閘道IP位址：
+
+....
+network subnet modify -subnet-name <sub3> -gateway <192.0.3.1>
+....

@@ -1,0 +1,89 @@
+---
+permalink: fabricpool/create-volume-task.html 
+sidebar: sidebar 
+keywords: creating, volume, fabricpool, tiering, policy, policies, create, snap shot, snapshot, aggregate, flexgroup, cloud retrieval 
+summary: 當您建立FabricPool 一個供使用的Volume時、您可以選擇指定分層原則。如果未指定分層原則、則建立的磁碟區會使用預設的純快照分層原則。對於具有純快照或自動分層原則的磁碟區、您也可以指定分層的最小冷卻週期。 
+---
+= 建立FabricPool 一套可供使用的Volume
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以FabricPool 直接在啟用FabricPool的Aggregate中建立新磁碟區、或是將現有磁碟區從另一個Aggregate移至啟用FabricPool的Aggregate、藉此將磁碟區新增至支援功能。
+
+當您建立FabricPool 一個供使用的Volume時、您可以選擇指定分層原則。如果未指定分層原則、則建立的磁碟區會使用預設的「僅快照」分層原則。對於使用「僅快照」或「自動」分層原則的磁碟區、您也可以指定分層的最低冷卻時間。
+
+.您需要的是 #8217 ；需要的是什麼
+* 若要設定磁碟區使用「自動」分層原則、或指定分層最低冷卻週期、則需要ONTAP 使用版本9.4或更新版本。
+* 使用本解決方法需要使用更新版本的版本。FlexGroup ONTAP
+* 若要設定磁碟區使用「ALL」分層原則、需要ONTAP 使用版本9.6或更新版本。
+* 若要設定Volume使用「雲端擷取原則」參數、則需要ONTAP 使用更新版本的功能。
+
+
+.步驟
+. 使用FabricPool 「Volume cre創作」命令建立一個新的供您使用的Volume。
++
+** 使用「分層原則」選用參數、您可以指定磁碟區的分層原則。
++
+您可以指定下列分層原則之一：
+
++
+*** 「napshot-only（僅限快照）」（預設）
+*** 「自動」
+*** 全部
+*** 「備份」（已過時）
+*** 無
++
+link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
+
+
+
+** 「雲端擷取原則」選用參數可讓具有進階權限層級的叢集管理員、覆寫由分層原則控制的預設雲端移轉或擷取行為。
++
+您可以指定下列其中一個雲端擷取原則：
+
++
+*** 「預設」
++
+分層原則會決定哪些資料會被提取、因此不會以「預設」的雲端擷取原則來變更雲端資料擷取。這表示這種行為與ONTAP 9.8之前版本相同：
+
++
+**** 如果分層原則是「無」或「僅限快照」、則「預設」表示任何用戶端導向的資料讀取都會從雲端層提取到效能層。
+**** 如果分層原則為「自動」、則會擷取任何用戶端導向的隨機讀取、但不會擷取連續讀取。
+**** 如果分層原則是「All」（全部）、則不會從雲端層提取用戶端導向的資料。
+
+
+*** 「讀取時」
++
+所有用戶端導向的資料讀取都會從雲端層提取到效能層。
+
+*** 《永不》
++
+不會將用戶端導向的資料從雲端層提取到效能層
+
+*** 《促銷》
++
+**** 對於分層原則「無」、所有雲端資料都會從雲端層提取到效能層
+**** 對於分層原則「僅限快照」、所有作用中檔案系統資料都會從雲端層提取到效能層。
+
+
+
+
+** 進階權限層級的「分層最低冷卻天數」選用參數可讓您指定使用「僅快照」或「自動」分層原則之磁碟區的分層最低冷卻時間。
++
+從功能表9.8開始ONTAP 、您可以指定2到183之間的值、以供分層的最低冷卻天數使用。如果您使用ONTAP 的是9.8之前的版本、則可在分層的最低冷卻天數中指定介於2到63之間的值。
+
+
+
+
+
+以下範例在啟用FabricPool的「myFabricPool」Aggregate中建立一個名為「myvol1」的Volume。分層原則設為「自動」、分層最低冷卻時間設為45天：
+
+[listing]
+----
+cluster1::*> volume create -vserver myVS -aggregate myFabricPool
+-volume myvol1 -tiering-policy auto -tiering-minimum-cooling-days 45
+----
+link:../flexgroup/index.html["資料區管理FlexGroup"]

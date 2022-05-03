@@ -1,0 +1,115 @@
+---
+permalink: smb-admin/display-storage-level-access-guard-task.html 
+sidebar: sidebar 
+keywords: storage-level, access, guard, third, layer, security, applied, apply, qtree, view, windows, properties, window, troubleshoot, configuration, display information about storage-level access guard 
+summary: 儲存層級的存取保護是套用在磁碟區或qtree上的第三層安全保護。無法使用Windows內容視窗檢視儲存層級的存取保護設定。您必須使用ONTAP VMware CLI來檢視儲存層級存取保護安全性的相關資訊、以便用來驗證組態或疑難排解檔案存取問題。 
+---
+= 顯示儲存層級存取保護的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+儲存層級的存取保護是套用在磁碟區或qtree上的第三層安全保護。無法使用Windows內容視窗檢視儲存層級的存取保護設定。您必須使用ONTAP VMware CLI來檢視儲存層級存取保護安全性的相關資訊、以便用來驗證組態或疑難排解檔案存取問題。
+
+您必須提供儲存虛擬機器（SVM）的名稱、以及要顯示其儲存層級存取保護安全性資訊的磁碟區或qtree路徑。您可以以摘要形式或詳細清單來顯示輸出。
+
+.步驟
+. 顯示儲存層級的存取保護安全設定、並提供所需的詳細資料：
++
+|===
+| 如果您想要顯示資訊... | 輸入下列命令... 
+
+
+ a| 
+以摘要形式提供
+ a| 
+「vserver安全性檔案目錄show -vserver _vserver_name_-path _path_`
+
+
+
+ a| 
+更詳細的資料
+ a| 
+「vserver安全性檔案目錄show -vserver _vserver_name_-path _path_-expansion遮罩true」
+
+|===
+
+
+以下範例顯示NTFS安全型磁碟區的儲存層級存取保護安全資訊、其中SVM VS1的路徑為「/datavol1」：
+
+[listing]
+----
+cluster::> vserver security file-directory show -vserver vs1 -path /datavol1
+
+                Vserver: vs1
+              File Path: /datavol1
+      File Inode Number: 77
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0x8004
+                         Owner:BUILTIN\Administrators
+                         Group:BUILTIN\Administrators
+                         DACL - ACEs
+                           ALLOW-Everyone-0x1f01ff
+                           ALLOW-Everyone-0x10000000-OI|CI|IO
+
+
+                         Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+----
+以下範例顯示SVM VS1路徑「/datavol5」中混合式安全型磁碟區的儲存層級存取保護資訊。此磁碟區的最上層具有UNIX有效的安全性。Volume具有儲存層級的存取保護安全性。
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /datavol5
+                Vserver: vs1
+              File Path: /datavol5
+      File Inode Number: 3374
+         Security Style: mixed
+        Effective Style: unix
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 755
+ Unix Mode Bits in Text: rwxr-xr-x
+                   ACLs: Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+----

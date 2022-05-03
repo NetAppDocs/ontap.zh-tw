@@ -1,0 +1,54 @@
+---
+permalink: san-config/configure-fcoe-reference.html 
+sidebar: sidebar 
+keywords: ways to, configure, fcoe 
+summary: FCoE可透過各種方式使用FCoE交換器進行設定。FCoE不支援直接附加組態。 
+---
+= 設定FCoE總覽的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FCoE可透過各種方式使用FCoE交換器進行設定。FCoE不支援直接附加組態。
+
+所有FCoE組態都是雙網路、完全備援、而且需要主機端的多重路徑軟體。在所有FCoE組態中、您可以在啟動器和目標之間的路徑中有多個FCoE和FC交換器、最高可達跳數上限。若要將交換器彼此連線、交換器必須執行支援乙太網路ISL的韌體版本。任何FCoE組態中的每個主機都可以設定不同的作業系統。
+
+FCoE組態需要明確支援FCoE功能的乙太網路交換器。FCoE組態是透過與FC交換器相同的互通性與品質保證程序來驗證。支援的組態列於互通性對照表中。這些支援組態中包含的部分參數包括交換器機型、可部署在單一架構中的交換器數量、以及支援的交換器韌體版本。
+
+圖示中的FC目標擴充介面卡連接埠編號為範例。實際的連接埠編號可能有所不同、視安裝FCoE目標擴充介面卡的擴充插槽而定。
+
+
+
+== FCoE啟動器至FC目標
+
+使用FCoE啟動器（CNA）、您可以透過FCoE交換器、將主機連線至HA配對中的兩個控制器、並連接至FC目標連接埠。FCoE交換器也必須具有FC連接埠。主機FCoE啟動器一律會連線至FCoE交換器。FCoE交換器可直接連線至FC目標、或透過FC交換器連線至FC目標。
+
+下圖顯示連接至FCoE交換器的主機CNA、以及連接至HA配對之前連接至FC交換器的主機CNA：
+
+image::../media/scrn-en-drw-fcoe-dual-2p-targ.gif[Scrn en drw FCoE dual 2p Tag]
+
+
+
+== FCoE啟動器至FCoE目標
+
+使用主機FCoE啟動器（CNA）、您可以透過FCoE交換器、將主機連接至HA配對中的兩個控制器、並連接至FCoE目標連接埠（也稱為UTA或UTA2）。
+
+image::../media/scrn_en_drw_fcoe-end-to-end.png[Scrn en drw FCoE端點對端點]
+
+
+
+== FCoE啟動器至FCoE和FC目標
+
+使用主機FCoE啟動器（CNA）、您可以透過FCoE交換器、將主機連接至HA配對中的兩個控制器、以及FC目標連接埠（也稱為UTA或UTA2）。
+
+image::../media/scrn_en_drw_fcoe-mixed.png[混合式Scrn en drw FCoE]
+
+
+
+== FCoE與IP儲存傳輸協定混合使用
+
+使用主機FCoE啟動器（CNA）、您可以透過FCoE交換器、將主機連接至HA配對中的兩個控制器、並連接至FCoE目標連接埠（也稱為UTA或UTA2）。FCoE連接埠無法使用傳統連結集合到單一交換器。Cisco交換器支援一種特殊類型的連結集合（虛擬連接埠通道）、可支援FCoE。虛擬連接埠通道會將個別連結集合到兩個交換器。您也可以將虛擬連接埠通道用於其他乙太網路流量。用於FCoE以外流量的連接埠（包括NFS、SMB、iSCSI及其他乙太網路流量）可使用FCoE交換器上的一般乙太網路連接埠。
+
+image::../media/scrn_en_drw_fcoe-mixed-ethernet.png[Scrn en drw FCoE混合式乙太網路]

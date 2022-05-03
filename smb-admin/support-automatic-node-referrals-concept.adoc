@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/support-automatic-node-referrals-concept.html 
+sidebar: sidebar 
+keywords: enable, smb, automatic, node, referral, aware, ontap, functionality, support, support for smb automatic node referrals 
+summary: 在啟用SMB自動節點參照之前、您應該注意某些ONTAP 功能不支援參照。 
+---
+= 支援SMB自動節點參照
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在啟用SMB自動節點參照之前、您應該注意某些ONTAP 功能不支援參照。
+
+* 下列類型的磁碟區不支援SMB自動節點參照：
++
+** 負載共用鏡像的唯讀成員
+** 資料保護鏡射的目的地Volume
+
+
+* 節點參照不會隨著LIF移動而移動。
++
+如果用戶端使用SMB 2.x或SMB 3.0連線上的參照連線、而資料LIF在不中斷營運的情況下移動、即使LIF不再是資料的本機連線、用戶端仍會繼續使用相同的參照連線。
+
+* 節點參照不會隨著磁碟區移動而移動。
++
+如果用戶端透過任何SMB連線使用參照連線、而發生磁碟區移動、則即使磁碟區不再與資料LIF位於同一個節點、用戶端仍會繼續使用相同的參照連線。
+
+

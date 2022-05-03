@@ -1,0 +1,53 @@
+---
+permalink: ndmp/verify-tape-device-connections-task.html 
+sidebar: sidebar 
+keywords: verify, tape, device, connection 
+summary: 您必須確保ONTAP 所有的磁碟機和媒體更換器都能在「視覺化」裝置中看到。 
+---
+= 驗證磁帶設備連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須確保ONTAP 所有的磁碟機和媒體更換器都能在「視覺化」裝置中看到。
+
+.步驟
+. 使用「shorage tape show」命令檢視所有磁碟機和媒體更換器的相關資訊。
++
+[listing]
+----
+cluster1::> storage tape show
+
+Node: cluster1-01
+Device ID               Device Type     Description                     Status
+----------------------  --------------  ------------------------------  --------
+sw4:10.11               tape drive      HP LTO-3                        normal
+0b.125L1                media changer   HP MSL G3 Series                normal
+0d.4                    tape drive      IBM LTO 5 ULT3580               normal
+0d.4L1                  media changer   IBM 3573-TL                     normal
+...
+----
+. 如果未顯示磁帶機、請疑難排解問題。
+. 如果未顯示媒體轉換器、請使用「儲存磁帶show media-changer」命令來檢視媒體轉換器的相關資訊、然後疑難排解問題。
++
+[listing]
+----
+cluster1::> storage tape show-media-changer
+
+Media Changer: sw4:10.11L1
+  Description: PX70-TL
+         WWNN: 2:00a:000e11:10b919
+         WWPN: 2:00b:000e11:10b919
+Serial Number: 00FRU7800000_LL1
+
+       Errors: -
+
+Paths:
+Node                      Initiator  Alias    Device State              Status
+------------------------  ---------  -------  ------------------------  --------
+cluster1-01               2b         mc0      in-use                    normal
+...
+----
+

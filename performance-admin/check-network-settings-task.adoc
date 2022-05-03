@@ -1,0 +1,40 @@
+---
+permalink: performance-admin/check-network-settings-task.html 
+sidebar: sidebar 
+keywords: check, mtu, network, setting, storage, system 
+summary: 如果儲存系統上的網路設定與用戶端或其他網路端點不同、您可以變更這些設定。雖然管理網路MTU設定設為1500、但資料網路MTU大小應為9000。 
+---
+= 檢查儲存系統上的MTU網路設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果儲存系統上的網路設定與用戶端或其他網路端點不同、您可以變更這些設定。雖然管理網路MTU設定設為1500、但資料網路MTU大小應為9000。
+
+
+
+== 關於這項工作
+
+廣播網域內的所有連接埠都有相同的MTU大小、但e0M連接埠處理管理流量除外。如果連接埠是廣播網域的一部分、請使用「broadcast網域修改」命令來變更修改的廣播網域內所有連接埠的MTU。
+
+請注意、NIC和資料交換器等中繼網路裝置的MTU大小可以設定為比網路端點更高的MTU大小。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/performance-admin/check-network-settings-data-switches-task.html["檢查資料交換器上的網路設定"]。
+
+.步驟
+. 檢查儲存系統上的MTU連接埠設定：
++
+「網路連接埠show -instance」
+
+. 將MTU連接埠設定變更為9000：
++
+"network port modify -node"節點_nodename_-port _port_-MTU 9000"（網路連接埠修改-nodename_-port _port_-MTU 9000）
+
+
+
+以下範例將「e0a」的MTU連接埠設定變更為9000：
+
+[listing]
+----
+cluster1::*> network port modify -node node0 -port e0a -mtu 9000
+----

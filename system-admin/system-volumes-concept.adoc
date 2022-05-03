@@ -1,0 +1,36 @@
+---
+permalink: system-admin/system-volumes-concept.html 
+sidebar: sidebar 
+keywords: system, volume, flexvol, metadata, file, services, audit, logs, account, storage, cluster 
+summary: 系統磁碟區FlexVol 是包含特殊中繼資料的功能區、例如檔案服務稽核記錄的中繼資料。這些磁碟區可在叢集中看到、因此您可以充分考慮叢集中的儲存設備使用量。 
+---
+= 什麼是系統磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+系統磁碟區FlexVol 是包含特殊中繼資料的功能區、例如檔案服務稽核記錄的中繼資料。這些磁碟區可在叢集中看到、因此您可以充分考慮叢集中的儲存設備使用量。
+
+系統磁碟區由叢集管理伺服器（也稱為管理SVM）擁有、當檔案服務稽核啟用時、系統就會自動建立這些磁碟區。
+
+您可以使用「volume show」命令來檢視系統磁碟區、但其他大部分的磁碟區作業則不允許。例如、您無法使用「volume modify」命令來修改系統磁碟區。
+
+此範例顯示管理SVM上的四個系統磁碟區、當叢集中的資料SVM啟用檔案服務稽核時、系統會自動建立這些磁碟區：
+
+[listing]
+----
+cluster1::> volume show -vserver cluster1
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+cluster1  MDV_aud_1d0131843d4811e296fc123478563412
+                       aggr0        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_8be27f813d7311e296fc123478563412
+                       root_vs0     online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_9dc4ad503d7311e296fc123478563412
+                       aggr1        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_a4b887ac3d7311e296fc123478563412
+                       aggr2        online     RW          2GB     1.90GB    5%
+4 entries were displayed.
+----

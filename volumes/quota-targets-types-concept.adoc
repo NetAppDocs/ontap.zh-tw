@@ -1,0 +1,82 @@
+---
+permalink: volumes/quota-targets-types-concept.html 
+sidebar: sidebar 
+keywords: quota, targets, types 
+summary: 配額有一種類型：可以是使用者、群組或樹狀結構。配額目標會指定套用配額限制的使用者、群組或qtree。 
+---
+= 配額目標和類型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配額有一種類型：可以是使用者、群組或樹狀結構。配額目標會指定套用配額限制的使用者、群組或qtree。
+
+下表列出配額目標的類型、每個配額目標關聯的配額類型、以及每個配額目標的呈現方式：
+
+[cols="15,15,35,35"]
+|===
+| 配額目標 | 配額類型 | 目標的呈現方式 | 附註 
+
+
+ a| 
+使用者
+ a| 
+使用者配額
+ a| 
+UNIX使用者名稱UNIX UID
+
+其UID與使用者相符的檔案或目錄
+
+Windows 2000之前版本的Windows使用者名稱
+
+Windows SID
+
+具有使用者SID所擁有之ACL的檔案或目錄
+ a| 
+使用者配額可套用至特定磁碟區或qtree。
+
+
+
+ a| 
+群組
+ a| 
+群組配額
+ a| 
+UNIX群組名稱UNIX Gid
+
+一個檔案或目錄、其中的gid與群組相符
+ a| 
+群組配額可套用至特定磁碟區或qtree。
+
+[NOTE]
+====
+不適用以Windows ID為基礎的群組配額。ONTAP
+
+====
+
+
+ a| 
+qtree
+ a| 
+樹狀結構配額
+ a| 
+qtree名稱
+ a| 
+樹狀結構配額會套用至特定的磁碟區、不會影響其他磁碟區中的qtree。
+
+
+
+ a| 
+"
+ a| 
+使用者配額
+
+樹狀結構配額
+ a| 
+雙引號（""）
+ a| 
+配額目標為「」表示預設配額_。對於預設配額、配額類型取決於類型欄位的值。
+
+|===

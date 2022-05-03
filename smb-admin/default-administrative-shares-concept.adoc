@@ -1,0 +1,61 @@
+---
+permalink: smb-admin/default-administrative-shares-concept.html 
+sidebar: sidebar 
+keywords: create, cifs, server, storage, virtual, machine, svm, default, administrative, share, automatic, what the default administrative shares are 
+summary: 當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立三個預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。 
+---
+= 預設的管理共用是什麼
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立三個預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。
+
+建立CIFS伺服器時、會建立下列預設管理共用：ONTAP
+
+* IPC$
+* 管理$
+* C$
+
+
+因為以$字元結尾的共用是隱藏共用、所以「我的電腦」不會顯示預設的管理共用、但您可以使用「共用資料夾」來檢視這些共用。
+
+
+
+== 如何使用IPC$和admin$預設共用
+
+IPC$和admin$共用是ONTAP 由Windows管理員使用、無法用來存取位於SVM上的資料。
+
+* IPC$共用
++
+IPC$共用資源可共用具名管道、這些管道對於程式之間的通訊非常重要。IPC$共用區用於遠端管理電腦、以及檢視電腦的共用資源。您無法變更IPC$共用區的共用設定、共用內容或ACL。您也無法重新命名或刪除IPC$共用區。
+
+* 管理$共用區
++
+admin$共用區是在遠端管理SVM期間使用。此資源的路徑永遠是SVM根目錄的路徑。您無法變更admin$共用區的共用設定、共用內容或ACL。您也無法重新命名或刪除admin$共用區。
+
+
+
+
+
+== 使用c$預設共用的方式
+
+c$共用區是叢集或SVM管理員可用來存取及管理SVM根磁碟區的管理共用區。
+
+以下是c$共用區的特性：
+
+* 此共用區的路徑永遠是SVM根磁碟區的路徑、無法修改。
+* c$共用區的預設ACL為「管理員/完全控制」。
++
+此使用者為BUILTIN\Administrator。根據預設、BUILTIN\Administrator可以對應至共用區、並在對應的根目錄中檢視、建立、修改或刪除檔案和資料夾。管理此目錄中的檔案和資料夾時、請務必謹慎。
+
+* 您可以變更c$共用區的ACL。
+* 您可以變更c$共用設定及共用內容。
+* 您無法刪除c$共用區。
+* SVM系統管理員可以跨越命名空間連接點、從對應的c$共用區存取SVM命名空間的其餘部分。
+* 您可以使用Microsoft管理主控台存取c$共用區。
+
+
+xref:configure-ntfs-windows-security-tab-task.adoc[使用Windows安全性索引標籤設定進階NTFS檔案權限]

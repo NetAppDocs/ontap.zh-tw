@@ -1,0 +1,45 @@
+---
+permalink: san-admin/address-issues-when-luns-go-offline-concept.html 
+sidebar: sidebar 
+keywords: ways, address, issues, when, luns, go, offline 
+summary: 當沒有空間可供寫入時、LUN會離線以保留資料完整性。LUN空間不足、可能會因為各種原因而離線、您可以透過多種方法來解決此問題。 
+---
+= 解決LUN離線問題的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當沒有空間可供寫入時、LUN會離線以保留資料完整性。LUN空間不足、可能會因為各種原因而離線、您可以透過多種方法來解決此問題。
+
+[cols="2*"]
+|===
+| 如果... | 您可以... 
+
+
+ a| 
+Aggregate已滿
+ a| 
+* 新增更多磁碟。
+* 使用「volume modify」命令來縮小具有可用空間的磁碟區。
+* 如果您有空間保證磁碟區具有可用空間、請使用「volume modify」命令將磁碟區空間保證變更為「none"（無）。
+
+
+
+
+ a| 
+Volume已滿、但包含的Aggregate中有可用空間
+ a| 
+* 對於空間保證磁碟區、請使用「volume modify」命令來增加磁碟區的大小。
+* 對於資源配置較精簡的磁碟區、請使用「Volume modify」命令來增加磁碟區的最大大小。
++
+如果未啟用Volume自動擴充、請使用「volume modify -autode-mode」來啟用。
+
+* 使用「volume snapshot delete」命令手動刪除Snapshot複本、或使用「volume snapshot autodete modify」命令自動刪除Snapshot複本。
+
+
+|===
+link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
+
+link:../volumes/index.html["邏輯儲存管理"]

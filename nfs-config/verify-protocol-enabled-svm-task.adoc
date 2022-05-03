@@ -1,0 +1,59 @@
+---
+permalink: nfs-config/verify-protocol-enabled-svm-task.html 
+sidebar: sidebar 
+keywords: verify, nfs, protocol, enabled, svm 
+summary: 在SVM上設定及使用NFS之前、您必須先確認已啟用該傳輸協定。 
+---
+= 確認SVM上已啟用NFS傳輸協定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SVM上設定及使用NFS之前、您必須先確認已啟用該傳輸協定。
+
+這通常是在SVM設定期間完成、但如果您在設定期間未啟用該傳輸協定、則可以稍後使用「vserver add-protocols」命令加以啟用。
+
+[NOTE]
+====
+一旦建立LIF、您就無法從其新增或移除通訊協定。
+
+====
+您也可以使用「vserver remove-protocols」命令來停用SVM上的傳輸協定。
+
+.步驟
+. 檢查SVM目前啟用和停用的傳輸協定：
++
+「vserver show -vserver _vserver_name_-protocols」
+
++
+您也可以使用「vserver show-protocols」命令來檢視叢集中所有SVM上目前啟用的傳輸協定。
+
+. 如有必要、請啟用或停用傳輸協定：
++
+** 若要啟用NFS傳輸協定：+「vserver add傳輸協定-vserver _vserver_name_-傳輸協定nfs」
+** 若要停用傳輸協定：+「vserver disable-protocols -vserver _vserver_name_-PROUNTIAT傳輸 協定_name_[,_PROUNT_name_,...]
+
+
+. 確認已啟用和停用的傳輸協定已正確更新：
++
+「vserver show -vserver _vserver_name_-protocols」
+
+
+
+下列命令顯示名為VS1的SVM上目前啟用和停用（允許和不允許）的傳輸協定：
+
+[listing]
+----
+vs1::> vserver show -vserver vs1.example.com -protocols
+Vserver           Allowed Protocols         Disallowed Protocols
+-----------       ----------------------    -----------------------
+vs1.example.com   nfs                       cifs, fcp, iscsi, ndmp
+----
+下列命令可將「NFS」新增至名為VS1的SVM上已啟用的傳輸協定清單、以允許透過NFS存取：
+
+[listing]
+----
+vs1::> vserver add-protocols -vserver vs1.example.com -protocols nfs
+----

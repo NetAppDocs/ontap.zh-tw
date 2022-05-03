@@ -1,0 +1,42 @@
+---
+permalink: fabricpool/setup-azure-blob-storage-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, azure blob storage, cloud, cloud tier 
+summary: 如果您執行ONTAP 的是S得9.4或更新版本、您可以設定Azure Blob Storage for the Cloud做FabricPool 為供使用的雲端層。 
+---
+= 設定Azure Blob Storage做為雲端層
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行ONTAP 的是S得9.4或更新版本、您可以設定Azure Blob Storage for the Cloud做FabricPool 為供使用的雲端層。
+
+目前不支援Azure Stack（內部部署Azure服務）FabricPool 。
+
+.步驟
+. 使用「sorage Aggregate object-store config create」命令搭配「供應商類型」「Azure _Cloud」參數、指定Azure Blob儲存組態資訊。
++
+** 如果無法使用提供的資訊存取Azure Blob Storage、則「儲存Aggregate object-store config create」命令會失敗ONTAP 。
+** 您可以使用「-azure-account」參數來指定Azure Blob Storage帳戶。
+** 您可以使用「-azure-Private金鑰」參數來指定存取金鑰、以驗證Azure Blob Storage的要求。
+** 如果Azure Blob儲存設備密碼已變更、您應ONTAP 立即更新儲存在BIOS中的對應密碼。
++
+如此一來、即可讓支援中心在不中斷的情況下存取Azure Blob Storage中的資料。ONTAP
+
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name MyAzure -provider-type Azure_Cloud
+-server blob.core.windows.net -container-name myAzureContainer
+-azure-account myAzureAcct -azure-private-key myAzureKey
+----
+. 使用「儲存Aggregate object-store config show」命令來顯示及驗證Azure Blob儲存設備組態資訊。
++
+「儲存Aggregate object-store config modify」命令可讓您修改Azure Blob儲存設備組態資訊FabricPool 、以供參考。
+
+

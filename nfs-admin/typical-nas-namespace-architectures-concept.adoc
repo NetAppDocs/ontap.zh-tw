@@ -1,0 +1,99 @@
+---
+permalink: nfs-admin/typical-nas-namespace-architectures-concept.html 
+sidebar: sidebar 
+keywords: what, typical, nas, namespace, architecture 
+summary: 您可以在建立SVM名稱空間時、使用幾種典型的NAS命名空間架構。您可以選擇符合業務和工作流程需求的命名空間架構。 
+---
+= 典型的NAS命名空間架構是什麼
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在建立SVM名稱空間時、使用幾種典型的NAS命名空間架構。您可以選擇符合業務和工作流程需求的命名空間架構。
+
+命名空間的頂端永遠是根磁碟區、以斜槓（/）表示。根目錄下的命名空間架構可分為三個基本類別：
+
+* 單一分支樹狀結構、只有一個連接點可連接至命名空間的根
+* 多個分支樹狀結構、並有多個交會點指向命名空間的根目錄
+* 多個獨立磁碟區、每個磁碟區都有一個指向名稱空間根的獨立交會點
+
+
+
+
+== 具有單一分支樹狀結構的命名空間
+
+具有單一分支樹狀結構的架構具有單一插入點、可插入SVM命名空間的根目錄。單一插入點可以是輔助磁碟區、也可以是根目錄下的目錄。所有其他磁碟區都會安裝在單一插入點下方的交會點（可以是磁碟區或目錄）。
+
+image::../media/namespace-architecture-with-single-branched-tree.gif[具有單一分支樹狀結構的命名空間架構]
+
+例如、具有上述命名空間架構的典型Volume交會組態可能類似下列組態、其中所有磁碟區都會連結到單一插入點下方、亦即名為「data'」的目錄：
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     corp1        true     /data/dir1/corp1      RW_volume
+vs1     corp2        true     /data/dir1/corp2      RW_volume
+vs1     data1        true     /data/data1           RW_volume
+vs1     eng1         true     /data/data1/eng1      RW_volume
+vs1     eng2         true     /data/data1/eng2      RW_volume
+vs1     sales        true     /data/data1/sales     RW_volume
+vs1     vol1         true     /data/vol1            RW_volume
+vs1     vol2         true     /data/vol2            RW_volume
+vs1     vol3         true     /data/vol3            RW_volume
+vs1     vs1_root     -        /                     -
+----
+
+
+== 具有多個分支樹狀結構的命名空間
+
+具有多個分支樹狀結構的架構具有多個插入點、可插入到SVM命名空間的根目錄。插入點可以是輔助磁碟區、也可以是根目錄下的目錄。所有其他磁碟區都會安裝在插入點下方的交會點（可以是磁碟區或目錄）。
+
+image::../media/namespace-architecture-with-multiple-branched-trees.png[具有多個分支樹狀結構的命名空間架構]
+
+例如、具有上述命名空間架構的典型Volume交會組態可能類似下列組態、其中有三個插入點可插入SVM的根Volume。兩個插入點是名為「dATA」和「專案」的目錄。其中一個插入點是名為「稽核」的輔助磁碟區：
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     audit        true     /audit                RW_volume
+vs1     audit_logs1  true     /audit/logs1          RW_volume
+vs1     audit_logs2  true     /audit/logs2          RW_volume
+vs1     audit_logs3  true     /audit/logs3          RW_volume
+vs1     eng          true     /data/eng             RW_volume
+vs1     mktg1        true     /data/mktg1           RW_volume
+vs1     mktg2        true     /data/mktg2           RW_volume
+vs1     project1     true     /projects/project1    RW_volume
+vs1     project2     true     /projects/project2    RW_volume
+vs1     vs1_root     -        /                     -
+----
+
+
+== 具有多個獨立磁碟區的命名空間
+
+在具有獨立磁碟區的架構中、每個磁碟區都有一個插入點、指向SVM命名空間的根目錄、但是該磁碟區並未與另一個磁碟區連結。每個磁碟區都有一個獨特的路徑、可以直接連接到根目錄下方、也可以連接到根目錄下方的目錄下。
+
+image::../media/namespace-architecture-with-multiple-standalone-volumes.gif[具有多個獨立磁碟區的命名空間架構]
+
+例如、具有上述命名空間架構的典型Volume交會組態可能類似下列組態、其中有五個插入點指向SVM的根Volume、每個插入點代表一個Volume的路徑。
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     eng          true     /eng                  RW_volume
+vs1     mktg         true     /vol/mktg             RW_volume
+vs1     project1     true     /project1             RW_volume
+vs1     project2     true     /project2             RW_volume
+vs1     sales        true     /sales                RW_volume
+vs1     vs1_root     -        /                     -
+----

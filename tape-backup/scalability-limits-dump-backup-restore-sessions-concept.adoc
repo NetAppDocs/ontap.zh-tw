@@ -1,0 +1,49 @@
+---
+permalink: tape-backup/scalability-limits-dump-backup-restore-sessions-concept.html 
+sidebar: sidebar 
+keywords: scalability, limites, dump, backup, restore, sessions, maximum, memory, capacities, storage, system 
+summary: 您必須知道可在不同系統記憶體容量的儲存系統上同時執行的傾印備份與還原工作階段數目上限。此最大值取決於儲存系統的系統記憶體。 
+---
+= 傾印備份與還原工作階段的擴充性限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須知道可在不同系統記憶體容量的儲存系統上同時執行的傾印備份與還原工作階段數目上限。此最大值取決於儲存系統的系統記憶體。
+
+下表所述限制適用於傾印或還原引擎。NDMP工作階段的擴充性限制中提到的限制是針對NDMP伺服器、高於引擎限制。
+
+|===
+| 儲存系統的系統記憶體 | 傾印備份與還原工作階段總數 
+
+
+ a| 
+少於16 GB
+ a| 
+4.
+
+
+
+ a| 
+大於或等於16 GB但小於24 GB
+ a| 
+16
+
+
+
+ a| 
+大於或等於24 GB
+ a| 
+32
+
+|===
+[NOTE]
+====
+如果您使用「ndmpcopy」命令來複製儲存系統內的資料、就會建立兩個NDMP工作階段、一個用於傾印備份、另一個用於傾印還原。
+
+====
+您可以使用「sysconfig -A'」命令（可透過nodesdro解除）來取得儲存系統的系統記憶體。如需使用此命令的詳細資訊、請參閱手冊頁。
+
+xref:scalability-limits-ndmp-sessions-reference.adoc[NDMP工作階段的擴充性限制]

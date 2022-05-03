@@ -1,0 +1,46 @@
+---
+permalink: tape-backup/delete-restartable-contexts-task.html 
+sidebar: sidebar 
+keywords: delete, restartable, contents, backup, context 
+summary: 如果您想要開始備份而非重新啟動內容、可以刪除內容。 
+---
+= 刪除可重新啓動的上下文
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要開始備份而非重新啟動內容、可以刪除內容。
+
+您可以使用「vserver services NDMP可重新啟動的備份刪除」命令刪除可重新啟動的內容、方法是提供SVM名稱和內容ID。
+
+.步驟
+. 刪除可重新啓動的上下文：
++
+hy*vserver服務NDMP可重新啓動備份刪除-vserver _vserver_name_-context-id _context_identifier_*。
+
++
+[listing]
+----
+cluster::> vserver services ndmpd restartable-backup show
+Vserver     Context Identifier                   Is Cleanup Pending?
+----------- ------------------------------------ -------------------
+vserver1    330e6739-0179-11e6-a299-005056bb4bc9 false
+vserver1    481025c1-0179-11e6-a299-005056bb4bc9 false
+vserver2    5cf10132-0179-11e6-a299-005056bb4bc9 false
+3 entries were displayed.
+
+cluster::>
+cluster::> vserver services ndmp restartable-backup delete -vserver vserver1 -context-id 481025c1-0179-11e6-a299-005056bb4bc9
+
+cluster::> vserver services ndmpd restartable-backup show
+Vserver     Context Identifier                   Is Cleanup Pending?
+----------- ------------------------------------ -------------------
+vserver1    330e6739-0179-11e6-a299-005056bb4bc9 false
+vserver2    5cf10132-0179-11e6-a299-005056bb4bc9 false
+3 entries were displayed.
+
+cluster::>"
+----
+

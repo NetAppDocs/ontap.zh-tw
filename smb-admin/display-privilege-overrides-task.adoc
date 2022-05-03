@@ -1,0 +1,52 @@
+---
+permalink: smb-admin/display-privilege-overrides-task.html 
+sidebar: sidebar 
+keywords: display, information, custom, privilege, assign, domain, local, user, account, group, desire, right, applied, apply, display information about privilege overrides 
+summary: 您可以顯示指派給網域或本機使用者帳戶或群組的自訂權限相關資訊。此資訊可協助您判斷是否套用所需的使用者權限。 
+---
+= 顯示權限置換的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示指派給網域或本機使用者帳戶或群組的自訂權限相關資訊。此資訊可協助您判斷是否套用所需的使用者權限。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要顯示有關...的資訊 | 輸入此命令... 
+
+
+ a| 
+儲存虛擬機器（SVM）上所有網域和本機使用者和群組的自訂權限
+ a| 
+「Vserver CIFS使用者與群組」權限顯示-vserver _vserver_name_
+
+
+
+ a| 
+自訂SVM上特定網域或本機使用者和群組的權限
+ a| 
+「Vserver CIFS使用者與群組」權限顯示-vserver _vserver_name_-user-or群組名稱_name_
+
+|===
++
+您可以在執行此命令時選擇其他選用參數。如需詳細資訊、請參閱手冊頁。
+
+
+
+下列命令會顯示明確與SVM VS1的本機或網域使用者和群組相關聯的所有權限：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver    User or Group Name     Privileges
+--------- ---------------------   ---------------
+vs1       BUILTIN\Administrators  SeTakeOwnershipPrivilege
+                                  SeRestorePrivilege
+vs1       CIFS_SERVER\sue         SeTcbPrivilege
+                                  SeTakeOwnershipPrivilege
+----

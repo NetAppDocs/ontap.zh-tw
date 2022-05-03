@@ -1,0 +1,62 @@
+---
+permalink: nfs-config/open-export-policy-svm-root-volume-task.html 
+sidebar: sidebar 
+keywords: open, export, policy, svm, root, volume 
+summary: SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過NFS開啟存取的規則。如果沒有這樣的規則、所有NFS用戶端都會被拒絕存取SVM及其磁碟區。 
+---
+= 開啟SVM根磁碟區的匯出原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過NFS開啟存取的規則。如果沒有這樣的規則、所有NFS用戶端都會被拒絕存取SVM及其磁碟區。
+
+建立新的SVM時、會自動為SVM的根Volume建立預設匯出原則（稱為預設）。您必須先為預設匯出原則建立一或多個規則、用戶端才能存取SVM上的資料。
+
+您應該確認預設匯出原則中的所有NFS用戶端都已開啟存取權、之後再建立個別磁碟區或qtree的自訂匯出原則、以限制個別磁碟區的存取權。
+
+.步驟
+. 如果您使用現有的SVM、請檢查預設的根Volume匯出原則：
++
+「Vserver匯出原則規則顯示」
+
++
+命令輸出應類似下列內容：
+
++
+[listing]
+----
+
+cluster::> vserver export-policy rule show -vserver vs1.example.com -policyname default -instance
+
+                                    Vserver: vs1.example.com
+                                Policy Name: default
+                                 Rule Index: 1
+                            Access Protocol:  nfs
+Client Match Hostname, IP Address, Netgroup, or Domain: 0.0.0.0/0
+                             RO Access Rule: any
+                             RW Access Rule: any
+User ID To Which Anonymous Users Are Mapped: 65534
+                   Superuser Security Types: any
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----
++
+如果存在允許開啟存取的規則、則此工作即告完成。如果沒有、請繼續下一步。
+
+. 建立SVM根磁碟區的匯出規則：
++
+「vserver匯出原則規則create -vserver _vserver_name_-policyname預設-rueindex 1 -傳輸協定NFS -clientmMATCH 0.00.0.0/-rorrule any -rwrwrRule any -rooter'」
+
++
+如果SVM只包含Kerberos保護的磁碟區、您可以將根磁碟區的匯出規則選項「-rorule」、「-rwrRule」及「超級使用者」設為「krb5」或「krb5i」。例如：
+
++
+Check Alignment of PHs>-`rorrule krb5i -rwrwrRule krb5i -超級 用戶krb5i
+
+. 使用「vserver匯出原則規則show」命令來驗證規則建立。
+
+
+任何NFS用戶端現在都可以存取在SVM上建立的任何Volume或qtree。

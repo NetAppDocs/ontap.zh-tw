@@ -1,0 +1,32 @@
+---
+permalink: flexgroup/expand-source-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: expand, source, flexgroup, volume, snapmirror, relationship, snap mirror, flex group, snapshot, snap shot 
+summary: 從功能更新9.3開始ONTAP 、您可以FlexGroup 在來源Volume中加入新的成分、以擴充SnapMirror關係的來源功能。您可以使用擴充一般FlexGroup 的邊量（讀寫磁碟區）的相同方式來擴充來源磁碟區。 
+---
+= 擴充FlexGroup SnapMirror關係的來源區段
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能更新9.3開始ONTAP 、您可以FlexGroup 在來源Volume中加入新的成分、以擴充SnapMirror關係的來源功能。您可以使用擴充一般FlexGroup 的邊量（讀寫磁碟區）的相同方式來擴充來源磁碟區。
+
+.步驟
+. 展開來源FlexGroup 供應區：`+volume expand -vserver vserver_name -volume fg_src -aggr-list Aggregate name、... [-agger-list-plier bizents_per _agggr]+'
++
+[listing]
+----
+cluster1::> volume expand -volume src_fg -aggr-list aggr1 -aggr-list-multiplier 2 -vserver vs_src
+
+Warning: The following number of constituents of size 50GB will be added to FlexGroup "src_fg": 2.
+Expanding the FlexGroup will cause the state of all Snapshot copies to be set to "partial".
+Partial Snapshot copies cannot be restored.
+Do you want to continue? {y|n}: Y
+[Job 146] Job succeeded: Successful
+----
++
+將磁碟區擴充為部分之前所取得的所有Snapshot複本狀態。
+
+

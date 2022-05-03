@@ -1,0 +1,75 @@
+---
+permalink: volumes/reinitialize-quotas-after-changes-task.html 
+sidebar: sidebar 
+keywords: reinitialize, quotas, after making, extensive, changes 
+summary: 當您對現有配額進行廣泛變更時（例如、新增或刪除沒有強制配額的目標配額）、您必須在所有受影響的磁碟區上進行變更並重新初始化配額。 
+---
+= 進行廣泛變更後、重新初始化配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您對現有配額進行廣泛變更時（例如、新增或刪除沒有強制配額的目標配額）、您必須在所有受影響的磁碟區上進行變更並重新初始化配額。
+
+您擁有具有強制配額的儲存虛擬機器（SVM）、而且想要進行需要重新初始化配額的變更。
+
+.步驟
+. 使用帶有"-instance"參數的"vserver show"命令來決定目前指派給SVM的原則名稱。
+. 執行下列任一動作來修改配額規則：
++
+[cols="2*"]
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+建立新的配額規則
+ a| 
+使用「volume quota policy rRule create」命令
+
+
+
+ a| 
+修改現有配額規則的設定
+ a| 
+使用「volume quota policy rRule modify」命令
+
+
+
+ a| 
+刪除現有的配額規則
+ a| 
+使用「volume quota policy rRule DELETE」命令
+
+|===
+. 使用「volume quota policy rRule show」命令檢查配額規則的設定是否正確。
+. 在每個變更配額的磁碟區上重新初始化配額、方法是關閉配額、然後開啟這些磁碟區的配額。
++
+.. 在每個受影響的磁碟區上使用「Volume quota Off」命令、停用該磁碟區上的配額。
+.. 在每個受影響的磁碟區上使用「Volume quota on」命令、以啟動該磁碟區上的配額。
++
+[NOTE]
+====
+您必須確保在每個受影響的磁碟區上重新啟動配額之前等待約五分鐘、因為在執行「Volume quota Off」命令之後、幾乎立即嘗試啟動配額可能會導致錯誤。
+
+或者、您也可以執行命令、從包含特定磁碟區的節點重新初始化磁碟區的配額。
+
+====
++
+您可以使用下列任一方法來監控初始化程序：
+
++
+*** 使用「Volume quota on」命令時、您可以新增「-foreground」參數、在前景的工作上執行配額。（依預設、工作會在背景執行。）
++
+當工作在背景中執行時、您可以使用「jobshow」命令來監控其進度。
+
+*** 您可以使用「volume quota show」命令來監控配額初始化的狀態。
+
+
+
+
+. 使用「volume quota show -instance」命令來檢查初始化錯誤、例如無法初始化的配額規則。
+. 使用「Volume quota report」命令顯示配額報告、確保強制執行的配額符合您的期望。
+

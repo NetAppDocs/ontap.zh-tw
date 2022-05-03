@@ -1,0 +1,91 @@
+---
+permalink: system-admin/troubleshoot-autosupport-http-https-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, autosupport, message, delivery, http, https, check, settings, resolve, problem 
+summary: 如果系統未傳送預期AutoSupport 的資訊、而您使用HTTP或HTTPS、您可以檢查許多設定來解決問題。 
+---
+= 疑難排解AutoSupport 透過HTTP或HTTPS傳送的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果系統未傳送預期AutoSupport 的更新訊息、而您使用HTTP或HTTPS、或自動更新功能無法運作、您可以檢查許多設定來解決問題。
+
+您應該已經確認基本的網路連線和DNS查詢：
+
+* 您的節點管理LIF必須處於作業和管理狀態。
+* 您必須能夠從叢集管理LIF ping同一子網路上正常運作的主機（而非任何節點上的LIF）。
+* 您必須能夠從叢集管理LIF ping子網路外正常運作的主機。
+* 您必須能夠使用主機名稱（而非IP位址）、從叢集管理LIF ping子網路外的正常運作主機。
+
+
+這些步驟適用於您已判斷AutoSupport 出無法透過HTTP或HTTPS傳送訊息的情況。
+
+如果您遇到錯誤或無法完成此程序中的步驟、請先判斷並解決此問題、然後再繼續下一步。
+
+.步驟
+. 顯示AutoSupport 資訊子系統的詳細狀態：
++
+「系統節點AutoSupport 不完整檢查顯示詳細資料」
+
++
+這包括透過AutoSupport 傳送測試訊息來驗證與景點的連線能力、並提供AutoSupport 一份清單、列出您的列舉設定中可能發生的錯誤。
+
+. 驗證節點管理LIF的狀態：
++
+「網路介面show -home-node-local -role node-mgmt -功能 變數vserver、lif,STATUS-oper,STATUS-admin,address,role」
+
++
+「狀態選項」和「狀態管理」欄位應會傳回「up」。
+
+. 記下SVM名稱、LIF名稱及LIF IP位址以供日後使用。
+. 確認DNS已啟用且設定正確：
++
+「Vserver服務名稱服務DNS節目」
+
+. 解決AutoSupport 由該消息傳回的任何錯誤：
++
+「系統節點AutoSupport 的不整歷程記錄顯示-Node *-Fields節點、sq-num、destination,last更新、狀態、錯誤」
+
++
+如果錯誤是指數位憑證發生問題、請聯絡技術支援部門。
+
+. 確認叢集可以成功存取所需的伺服器和網際網路：
++
+.. 「network traceroute -lIF node-management _LIF -destination DNS server」
+.. 「network traceroute -lIF node_management _LIF -destination support.netapp.com`」
++
+[NOTE]
+====
+地址「upport.netapp.com`本身並不會回應ping / traceroute、但每個躍點的資訊非常寶貴。
+
+====
+.. 「系統節點AutoSupport 不顯示欄位proxy-URL」
+.. 「network traceroute -Node node_management _LIF -destination proxy_URL」
+
+
++
+如果其中任何一條路由無法運作、請使用大多數協力廠商網路用戶端上的「'traceroute」或「`TRACERT」公用程式、嘗試從與叢集位於同一子網路上的正常運作主機發出相同的路由。這有助於判斷問題是發生在您的網路組態或叢集組態中。
+
+. 如果AutoSupport 您使用HTTPS作為您的傳輸傳輸協定、請確定HTTPS流量可以離開您的網路：
++
+.. 在與叢集管理LIF相同的子網路上設定Web用戶端。
++
+確保所有組態參數的值與AutoSupport 使用相同的組態設定值相同、包括使用相同的Proxy伺服器、使用者名稱、密碼和連接埠。
+
+.. 使用Web用戶端存取「+https://support.netapp.com+`」。
++
+存取應該會成功。如果不是、請確定所有防火牆均已正確設定、以允許HTTPS和DNS流量、而且Proxy伺服器的設定正確。如需設定support.netapp.com靜態名稱解析的詳細資訊、請參閱文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何將主機項目新增至ONTAP support.netapp.com?的功能表"]。
+
+
+
+. 從ONTAP 《支援物件9.10.1》開始、如果您啟用「自動更新」功能、請確定您已將HTTPS連線至下列其他URL：
++
+** \https://support-sg-emea.netapp.com
+** \https://support-sg-naeast.netapp.com
+** \https://support-sg-nawest.netapp.com
+
+
+

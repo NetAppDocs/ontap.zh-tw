@@ -1,0 +1,67 @@
+---
+permalink: san-admin/access-read-only-lun-copy-backup-vault-task.html 
+sidebar: sidebar 
+keywords: access, read-only, lun, copy, snapvault, backup 
+summary: 您可以從SnapVault 最新的Snapshot複本中存取LUN的唯讀複本、以供進行支援。LUN ID、路徑和序號與來源LUN不同、必須先對應。持續保留、LUN對應和igroup不會複寫到SnapVault 位元二的Volume。 
+---
+= 從SnapVault 一個不完整的備份中存取唯讀LUN複本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從SnapVault 最新的Snapshot複本中存取LUN的唯讀複本、以供進行支援。LUN ID、路徑和序號與來源LUN不同、必須先對應。持續保留、LUN對應和igroup不會複寫到SnapVault 位元二的Volume。
+
+.您需要的是 #8217 ；需要的是什麼
+* 必須初始化此項關係、且在更新的Snapshot複本必須包含所需的LUN。SnapVault SnapVault
+* 包含SnapVault 此功能的儲存虛擬機器（SVM）必須具有一個或多個LIF、並可從用於存取LUN複本的主機存取所需的SAN傳輸協定。
+* 如果您打算直接從SnapVault 「不二重複資料」磁碟區存取LUN複本、則必須SnapVault 事先在「不二重複資料」上建立群組。
++
+您無需SnapVault 先還原或複製包含LUN的磁碟區、即可直接從「還原次要磁碟區」存取LUN。
+
+
+
+如果SnapVault 在從先前Snapshot複本對應LUN的同時、將新的Snapshot複本新增至二線實體磁碟區、則對應LUN的內容會變更。LUN仍會以相同的識別碼對應、但資料會從新的Snapshot複本取得。如果LUN大小變更、部分主機會自動偵測大小變更；Windows主機需要重新掃描磁碟、才能接收任何大小變更。
+
+.步驟
+. 執行「LUN show」命令、列出SnapVault 位於列舉次要磁碟區中的可用LUN。
++
+在此範例中、您可以同時查看主要Volume srcvolA中的原始LUN、SnapVault 以及《支援還原的次要Volume dstvolB：
+
++
+[listing]
+----
+cluster::> lun show
+
+Vserver   Path                State   Mapped   Type          Size
+--------  ------------------  ------  -------  --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+6 entries were displayed.
+----
+. 如果所需主機的igroup尚未存在於包含SnapVault 該等二線磁碟區的SVM上、請執行「igroup create」命令來建立igroup。
++
+此命令會為使用iSCSI傳輸協定的Windows主機建立igroup：
+
++
+[listing]
+----
+cluster::> igroup create -vserver vserverB -igroup temp_igroup
+  -protocol iscsi -ostype windows
+  -initiator iqn.1991-05.com.microsoft:hostA
+----
+. 執行「LUN對應建立」命令、將所需的LUN複本對應至igroup。
++
+[listing]
+----
+cluster::> lun mapping create -vserver vserverB -path /vol/dstvolB/lun_A
+  -igroup temp_igroup
+----
+. 將主機連接至LUN、並視需要存取LUN的內容。
+

@@ -1,0 +1,139 @@
+---
+permalink: smb-hyper-v-sql/determine-statistics-objects-counters-task.html 
+sidebar: sidebar 
+keywords: determine, statistics, objects, counters, cifs, smb, audit, branchcache, hash, monitor, performance 
+summary: 在取得CIFS、SMB、稽核和BranchCache雜湊統計資料的相關資訊及監控效能之前、您必須先知道哪些物件和計數器可供您取得資料。 
+---
+= 判斷可用的統計資料物件和計數器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在取得CIFS、SMB、稽核和BranchCache雜湊統計資料的相關資訊及監控效能之前、您必須先知道哪些物件和計數器可供您取得資料。
+
+.步驟
+. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要判斷... | 輸入... 
+
+
+ a| 
+可用的物件
+ a| 
+’*統計目錄物件show*
+
+
+
+ a| 
+可用的特定物件
+ a| 
+‘*統計資料目錄物件顯示物件_object_name_*
+
+
+
+ a| 
+可用的計數器
+ a| 
+‘*統計目錄計數器顯示對象_object_name_*
+
+|===
++
+請參閱手冊頁、以取得可用物件和計數器的詳細資訊。
+
+. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+
+
+下列命令會顯示與叢集中CIFS和SMB存取相關之所選統計物件的說明、如進階權限層級所示：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+
+cluster1::*> statistics catalog object show -object audit
+    audit_ng                    CM object for exporting audit_ng performance counters
+
+cluster1::*> statistics catalog object show -object cifs
+    cifs                        The CIFS object reports activity of the
+                                Common Internet File System protocol
+                                ...
+
+cluster1::*> statistics catalog object show -object nblade_cifs
+    nblade_cifs                 The Common Internet File System (CIFS)
+                                protocol is an implementation of the Server
+                                ...
+
+cluster1::*> statistics catalog object show -object smb1
+    smb1                        These counters report activity from the SMB
+                                revision of the protocol. For information
+                                ...
+
+cluster1::*> statistics catalog object show -object smb2
+    smb2                        These counters report activity from the
+                                SMB2/SMB3 revision of the protocol. For
+                                ...
+
+cluster1::*> statistics catalog object show -object hashd
+    hashd                       The hashd object provides counters to measure
+                                the performance of the BranchCache hash daemon.
+cluster1::*> set -privilege admin
+----
+下列命令會顯示進階權限層級中「CIFS」物件的部分計數器相關資訊：
+
+[NOTE]
+====
+此範例不會顯示「CIFS」物件的所有可用計數器、輸出會被刪減。
+
+====
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+
+cluster1::*> statistics catalog counter show -object cifs
+
+Object: cifs
+    Counter                     Description
+    --------------------------- ----------------------------------------------
+    active_searches             Number of active searches over SMB and SMB2
+    auth_reject_too_many        Authentication refused after too many
+                                requests were made in rapid succession
+    avg_directory_depth         Average number of directories crossed by SMB
+                                and SMB2 path-based commands
+    ...                         ...
+
+cluster2::> statistics start -object client -sample-id
+Object: client
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    cifs_ops                                                        0
+    cifs_read_ops                                                   0
+    cifs_read_recv_ops                                              0
+    cifs_read_recv_size                                            0B
+    cifs_read_size                                                 0B
+    cifs_write_ops                                                  0
+    cifs_write_recv_ops                                             0
+    cifs_write_recv_size                                           0B
+    cifs_write_size                                                0B
+    instance_name                             vserver_1:10.72.205.179
+    instance_uuid                                     2:10.72.205.179
+    local_ops                                                       0
+    mount_ops                                                       0
+
+
+[...]
+----

@@ -1,0 +1,71 @@
+---
+permalink: encryption-at-rest/enable-cluster-fips-compliant-mode-task.html 
+sidebar: sidebar 
+keywords: enabling, cluster-wide, fips-compliant mode, kmip, server, connections 
+summary: 您可以使用安全性組態修改命令搭配啟用-is FIPS的選項、為傳輸中的資料啟用全叢集FIPS相容模式。如此會強制叢集在連接KMIP伺服器時、以FIPS模式使用OpenSSL。 
+---
+= 為KMIP伺服器連線啟用全叢集FIPS相容模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全性組態修改」命令搭配「啟用FIPS的」選項、為傳輸中的資料啟用全叢集FIPS相容模式。如此會強制叢集在連接KMIP伺服器時、以FIPS模式使用OpenSSL。
+
+.您需要的是 #8217 ；需要的是什麼
+* 儲存控制器必須設定為FIPS相容模式。
+* 所有KMIP伺服器都必須支援TLSv1.2。啟用叢集範圍FIPS相容模式時、系統需要TLSv1.2才能完成KMIP伺服器的連線。
+
+
+當您啟用全叢集FIPS相容模式時、叢集將只自動使用TLS1.2和FIPS驗證的密碼套件。預設會停用全叢集FIPS相容模式。
+
+您必須在修改整個叢集的安全性組態之後、手動重新開機叢集節點。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 驗證是否支援TLSv1.2：
++
+「安全性組態顯示支援的傳輸協定」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> security config show
+          Cluster                                              Cluster Security
+Interface FIPS Mode  Supported Protocols     Supported Ciphers Config Ready
+--------- ---------- ----------------------- ----------------- ----------------
+SSL       false      TLSv1.2, TLSv1.1, TLSv1 ALL:!LOW:         yes
+                                             !aNULL:!EXP:
+                                             !eNULL
+----
+. 啟用全叢集FIPS相容模式：
++
+「安全性組態修改-is：啟用FIPS的真介面SSL」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
+. 手動重新啟動叢集節點。
+. 確認已啟用全叢集FIPS相容模式：
++
+「安全組態顯示」
+
++
+[listing]
+----
+cluster1::> security config show
+          Cluster                                              Cluster Security
+Interface FIPS Mode  Supported Protocols     Supported Ciphers Config Ready
+--------- ---------- ----------------------- ----------------- ----------------
+SSL       true       TLSv1.2, TLSv1.1        ALL:!LOW:         yes
+                                             !aNULL:!EXP:
+                                             !eNULL:!RC4
+----
+

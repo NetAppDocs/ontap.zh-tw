@@ -1,0 +1,45 @@
+---
+permalink: volumes/configure-automatic-provide-space-when-full-task.html 
+sidebar: sidebar 
+keywords: configure, volumes, automatically, provide, more, space, when, full 
+summary: 當整個過程完成時、利用各種方法來嘗試自動為Volume提供更多可用空間。FlexVol ONTAP您可以根據ONTAP 應用程式和儲存架構的要求、選擇哪些方法可以使用、以及順序。 
+---
+= 設定磁碟區、以便在磁碟區已滿時自動提供更多空間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當整個過程完成時、利用各種方法來嘗試自動為Volume提供更多可用空間。FlexVol ONTAP您可以根據ONTAP 應用程式和儲存架構的要求、選擇哪些方法可以使用、以及順序。
+
+使用下列一種或兩種方法、即可自動為整個Volume提供更多可用空間：ONTAP
+
+* 增加磁碟區的大小（稱為_autodg_）。
++
+如果包含Aggregate的磁碟區有足夠的空間來支援較大的磁碟區、則此方法非常實用。您可以設定ONTAP 使用者介面來設定Volume的最大大小。根據寫入磁碟區的資料量、相對於目前已用空間量和任何臨界值集、會自動觸發增加。
+
++
+不會觸發自動擴充以支援建立Snapshot複本。如果您嘗試建立Snapshot複本、但空間不足、即使啟用自動擴充、Snapshot複本建立也會失敗。
+
+* 刪除Snapshot複本、FlexClone檔案或FlexClone LUN。
++
+例如、您可以設定ONTAP 成自動刪除未連結至複製磁碟區或LUN中Snapshot複本的Snapshot複本、或是定義要ONTAP 用作首先刪除的Snapshot複本（即最舊或最新的Snapshot複本）。您也可以判斷ONTAP 何時應開始刪除Snapshot複本、例如當磁碟區即將滿、或磁碟區的Snapshot保留快照即將滿時。
+
+
+
+如果啟用這兩種方法、您可以指定ONTAP 當磁碟區幾乎已滿時、首先使用哪種方法來嘗試。如果第一種方法無法為Volume提供足夠的額外空間、ONTAP 接下來將嘗試其他方法。
+
+根據預設ONTAP 、功能區會先嘗試增加磁碟區的大小。在大多數情況下、最好使用預設組態、因為刪除Snapshot複本時、就無法還原。不過、如果您需要盡量避免增加磁碟區的大小、您可以設定ONTAP 「僅刪除Snapshot複本」、然後再增加磁碟區的大小。
+
+.步驟
+. 如果您想ONTAP 要在磁碟區滿時嘗試增加其大小、請使用「volume autossize」命令搭配「g增長」模式、為磁碟區啟用自動擴充功能。
++
+請記住、當磁碟區成長時、會從其關聯的Aggregate消耗更多可用空間。如果您是根據磁碟區在需要時擴充的能力而定、則必須監控相關聯集合體中的可用空間、並視需要新增更多空間。
+
+. 如果您想ONTAP 要在磁碟區滿時刪除Snapshot複本、FlexClone檔案或FlexClone LUN、請針對這些物件類型啟用自動刪除功能。
+. 如果您同時啟用Volume自動擴充功能和一或多個自動刪除功能、請使用ONTAP 「volume modify」命令搭配「-space-mgmt-ter-first」選項、選擇第一種方法、以便將可用空間提供給Volume。
++
+若要指定先增加磁碟區大小（預設值）、請使用「Volume _GROW」。若要指定先刪除Snapshot複本、請使用「午睡刪除」。
+
+

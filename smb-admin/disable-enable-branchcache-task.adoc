@@ -1,0 +1,60 @@
+---
+permalink: smb-admin/disable-enable-branchcache-task.html 
+sidebar: sidebar 
+keywords: disable, branchcache, storage, virtual, machine, svm, changing, change, operating, mode, disable, operate, per-share, automatic, disable or enable branchcache 
+summary: 您可以將BranchCache作業模式變更為停用、以停用儲存虛擬機器（SVM）上的BranchCache。您可以隨時啟用BranchCache、只要將作業模式變更為每個共用區提供BranchCache服務、或自動為所有共用區提供。 
+---
+= 停用或啟用BranchCache
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上停用BranchCache操作模式、將其變更為「停用」。您可以隨時啟用BranchCache、只要將作業模式變更為每個共用區提供BranchCache服務、或自動為所有共用區提供。
+
+.步驟
+. 執行適當的命令：
++
+|===
+| 如果您想要... | 然後輸入下列內容... 
+
+
+ a| 
+停用BranchCache
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -opere-mode disable'」
+
+
+
+ a| 
+啟用每個共用區的BranchCache
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -oper操作 模式per share'」
+
+
+
+ a| 
+啟用所有共用區的BranchCache
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -opere-mode all-happe'」
+
+|===
+. 驗證是否已使用所需的設定值「vserver CIFS BranchCache show -vserver vserver_name」來設定「BranchCache」操作模式
+
+
+下列範例停用SVM VS1上的BranchCache：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache modify -vserver vs1 -operating-mode disable
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: disable
+----

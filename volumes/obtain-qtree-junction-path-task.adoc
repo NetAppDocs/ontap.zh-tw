@@ -1,0 +1,35 @@
+---
+permalink: volumes/obtain-qtree-junction-path-task.html 
+sidebar: sidebar 
+keywords: obtain, qtree, junction, path 
+summary: 您可以取得qtree的交會路徑或命名空間路徑來掛載個別qtree。CLI命令「qtree show -instance」所顯示的qtree路徑格式為「/vol/< Volume名稱>/」。不過、此路徑並未參照qtree的交會路徑或命名空間路徑。 
+---
+= 取得qtree交會路徑
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以取得qtree的交會路徑或命名空間路徑來掛載個別qtree。CLI命令「qtree show -instance」所顯示的qtree路徑格式為「/vol/<vole_name>/」。不過、此路徑並未參照qtree的交會路徑或命名空間路徑。
+
+您需要知道磁碟區的交會路徑、才能取得qtree的交會路徑或命名空間路徑。
+
+.步驟
+. 使用「vserver volume jover-path」命令取得磁碟區的交會路徑。
++
+下列範例顯示位於名為vs0的儲存虛擬機器（SVM）上、名為vol1的磁碟區交會路徑：
+
++
+[listing]
+----
+cluster1::> volume show -volume vol1 -vserver vs0 -fields junction-path
+
+------- ------ -------------
+
+vs0 vol1 /vol1
+----
++
+從上述輸出中、Volume的交會路徑為「/vol1」。由於qtree永遠根植於磁碟區、qtree的交會路徑或命名空間路徑將為「/vol1/qtree1」。
+
+

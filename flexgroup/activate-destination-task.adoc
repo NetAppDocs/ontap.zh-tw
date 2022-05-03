@@ -1,0 +1,76 @@
+---
+permalink: flexgroup/activate-destination-task.html 
+sidebar: sidebar 
+keywords: activate, destination, flexgroup, volume 
+summary: 當來源FlexGroup 供應資料時、由於資料毀損、意外刪除或離線狀態等事件而無法提供資料時、您必須啟動目的地FlexGroup 的穩定區才能存取資料、直到您在來源FlexGroup 的穩定區上恢復資料為止。啟動作業包括停止未來的SnapMirror資料傳輸、以及打破SnapMirror關係。 
+---
+= 啟動目的地FlexGroup 的目的地功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當來源FlexGroup 供應資料時、由於資料毀損、意外刪除或離線狀態等事件而無法提供資料時、您必須啟動目的地FlexGroup 的穩定區才能存取資料、直到您在來源FlexGroup 的穩定區上恢復資料為止。啟動作業包括停止未來的SnapMirror資料傳輸、以及打破SnapMirror關係。
+
+您必須從目的地叢集執行此工作。
+
+.步驟
+. 停用FlexGroup 針對Sesfvolume SnapMirror關係的未來傳輸：「napmirror quiesce dest_Svm:dest_flexgroup」（napmirror靜止dest_Svm:dest_flexgroup）
++
+[listing]
+----
+cluster2::> snapmirror quiesce -destination-path vsd:dst
+----
+. 打破FlexGroup 「SnapMirror磁碟區」關係：「napmirror Break dest_svm:dest_flexgroup」
++
+[listing]
+----
+cluster2::> snapmirror break -destination-path vsd:dst
+----
+. 檢視SnapMirror關係的狀態：「napmirror show -expand」
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vss:s       XDP  vsd:dst        Broken-off
+                                      Idle           -         true    -
+vss:s__0001 XDP  vsd:dst__0001  Broken-off
+                                      Idle           -         true    -
+vss:s__0002 XDP  vsd:dst__0002  Broken-off
+                                      Idle           -         true    -
+vss:s__0003 XDP  vsd:dst__0003  Broken-off
+                                      Idle           -         true    -
+vss:s__0004 XDP  vsd:dst__0004  Broken-off
+                                      Idle           -         true    -
+vss:s__0005 XDP  vsd:dst__0005  Broken-off
+                                      Idle           -         true    -
+vss:s__0006 XDP  vsd:dst__0006  Broken-off
+                                      Idle           -         true    -
+vss:s__0007 XDP  vsd:dst__0007  Broken-off
+                                      Idle           -         true    -
+vss:s__0008 XDP  vsd:dst__0008  Broken-off
+                                      Idle           -         true    -
+...
+----
++
+每個組織的SnapMirror關係狀態都是「中斷」。
+
+. 確認目的地FlexGroup 的Svm_name為讀取/寫入：「volume show -vserver Svm_name」
++
+[listing]
+----
+cluster2::> volume show -vserver vsd
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vsd       dst          -            online     **RW**          2GB     1.54GB   22%
+vsd       d2           -            online     DP          2GB     1.55GB   22%
+vsd       root_vs0     aggr1        online     RW        100MB    94.02MB    5%
+3 entries were displayed.
+----
+. 將用戶端重新導向至目的地FlexGroup 的不確定磁碟區。
+

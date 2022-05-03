@@ -1,0 +1,87 @@
+---
+permalink: s3-config/ontap-s3-supported-actions-reference.html 
+sidebar: sidebar 
+keywords: ontap s3, supported, actions 
+summary: 支援的動作。ONTAP 
+---
+= 支援的動作ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+
+
+== 鏟斗作業
+
+以星號標示的動作會受到ONTAP 支援、而非S3 REST API
+
+* 刪除Bucket*
+* 刪除BucketPolicy*
+* GetBucketAcl
+* 標題庫
+* 列表桶
+* 推桿*
+
+
+
+
+== 物件作業
+
+從支援物件中繼資料和標記的ONTAP 支援範圍起、ONTAP 從S9.9開始。
+
+* PuttObject和Creitpart上 傳現在包含使用「x-amz-meta-<key>.」的金鑰值配對
++
+例如：「x-amz-meta-project：ONTAP_S3」。
+
+* GetObject：而HeadObject現在會傳回使用者定義的中繼資料。
+* 不同於中繼資料、標記可以使用下列方式獨立讀取物件：
++
+** PuttObjectTagging
+** GetObjectTagging
+** 刪除ObjectTagging
+
+
+
+
+支援的物件動作：
+
+* PuttObject
+* PuttObjectTagging(從ONTAP f19.9.1開始)
+* GetObject
+* GetObjectAcl
+* GetObjectTaggingTM（以ONTAP e.9.9.1開頭）
+* 刪除物件
+* 刪除ObjectTagging(從ONTAP 0型9.9.1開始)
+* 標題物件
+* 清單物件
+* 清單對象V2.
+* 清單零件
+* 上傳零件
+* AbortMultiPart上 傳
+* 完成多個部分上傳
+* 建立多個部分上傳
+* 清單多個部分上傳
+
+
+
+
+== 群組原則
+
+這些作業並非S3專屬作業、通常與身分識別與管理（IAM）程序相關。支援這些命令、但不使用IAM REST API。ONTAP
+
+* 建立原則
+* Attach群組原則
+
+
+
+
+== 使用者管理
+
+這些作業並非S3專屬作業、通常與IAM程序相關。
+
+* 建立使用者
+* 刪除使用者
+* 建立群組
+* 刪除群組
+

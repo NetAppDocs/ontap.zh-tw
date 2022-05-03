@@ -1,0 +1,28 @@
+---
+permalink: volumes/flexvol-reclaim-free-space-autodelete-concept.html 
+sidebar: sidebar 
+keywords: how, flexvol, volume, reclaim, free, space, autodelete, setting 
+summary: 您可以啟用FlexVol 「自動刪除」功能設定、自動刪除FlexClone檔案和FlexClone LUN。啟用自動刪除功能、即可在磁碟區即將滿時回收磁碟區中的目標可用空間量。 
+---
+= 如何利用自動刪除設定總覽來回收可用空間FlexVol
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用FlexVol 「自動刪除」功能設定、自動刪除FlexClone檔案和FlexClone LUN。啟用自動刪除功能、即可在磁碟區即將滿時回收磁碟區中的目標可用空間量。
+
+您可以將磁碟區設定為在磁碟區的可用空間減少到特定臨界值以下時、自動開始刪除FlexClone檔案和FlexClone LUN、並在回收磁碟區中的目標可用空間量時、自動停止刪除複本。雖然您無法指定開始自動刪除複本的臨界值、但您可以指定複本是否符合刪除資格、也可以指定磁碟區的目標可用空間量。
+
+當磁碟區中的可用空間降至低於特定臨界值、且符合_兩者_的下列需求時、磁碟區會自動刪除FlexClone檔案和FlexClone LUN：
+
+* 自動刪除功能會針對包含FlexClone檔案和FlexClone LUN的磁碟區啟用。
++
+您FlexVol 可以使用「volume snapshot autod刪除modify」命令來啟用對現象區的自動刪除功能。您必須將「-觸發器」參數設定為「Volume」或「nap_Reserve」、磁碟區才能自動刪除FlexClone檔案和FlexClone LUN。
+
+* FlexClone檔案和FlexClone LUN的自動刪除功能已啟用。
++
+您可以使用「file clone cre創作」命令搭配「-autodete」參數、為FlexClone檔案或FlexClone LUN啟用自動刪除功能。因此、您可以停用複本的自動刪除功能、並確保其他Volume設定不會覆寫複本設定、以保留特定的FlexClone檔案和FlexClone LUN。
+
+

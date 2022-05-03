@@ -1,0 +1,36 @@
+---
+permalink: snaplock/create-snaplock-security-administrator-account-task.html 
+sidebar: sidebar 
+keywords: create, snaplock, security, administrator, support, volume, move, user, cluster, role 
+summary: 您必須擁有SnapLock 執行SnapLock 「不穩定」Volume搬移的「不安全」管理員權限。此權限授予SnapLock 您「不一樣角色」、於ONTAP 《不一樣角色」中介紹。如果您尚未被指派該角色、您可以要求叢集管理員建立SnapLock 一個具備SnapLock 此功能的可靠安全使用者。 
+---
+= 建立SnapLock 一個不穩定的系統管理員帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須擁有SnapLock 執行SnapLock 「不穩定」Volume搬移的「不安全」管理員權限。這項權限是以「_SURE_ SnapLock 」角色授予您、此角色於ONTAP 《SURE9.8（介紹於本文件）」中介紹。如果您尚未被指派該角色、您可以要求叢集管理員建立SnapLock 一個具備SnapLock 此功能的可靠安全使用者。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 您必須登入安全連線（SSH、主控台或ZAPI）。
+
+
+與與管理SVM相關的vsadmin-SnapLock角色不同、這個角色與資料SVM相關聯。SnapLock
+
+.步驟
+. 建立SnapLock 具備管理員角色的SVM系統管理員帳戶：
++
+hy*安全性登入可建立-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _imization_method_-role _role_-comment _comment _*
+
++
+下列命令可讓SVM系統管理員帳戶「napLockAdmin」使用預先定義的「SnapLock Sfor」角色、使用密碼存取管理SVM「cluster1」：
+
++
+[listing]
+----
+cluster1::> security login create -vserver cluster1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock
+----
+

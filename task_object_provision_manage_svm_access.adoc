@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_manage_svm_access.html 
+keywords: manage, manage user access, user, users, group, group policy, access, VM, storage VM, object, objects, bucket, buckets, bucketname, bucket capacity, permissions, policy, policies, effect, actions, resources, conditions, object tagging, AWS client 
+summary: 編輯儲存VM、以新增控制多個儲存區之使用者和群組存取權限的原則。 
+---
+= 管理使用者對啟用S3的儲存VM的存取權
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+編輯儲存VM、以新增控制多個儲存區之使用者和群組存取權限的原則。
+
+您可以新增群組原則來管理對S3型儲存VM中一或多個儲存區的存取、而非管理個別儲存區的存取權限。如此可在新增儲存區或變更存取需求時、簡化管理。
+
+在授予原則權限之前、您必須先建立使用者和至少一個群組。
+
+在發行版S19.9.1及更新版本中、如果您打算支援AWS用戶端物件標記功能搭配使用S3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。ONTAP ONTAP
+
+.步驟
+. 編輯儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下儲存虛擬機器、按一下*設定*、然後按一下 image:icon_pencil.gif["鉛筆圖示"] 在S3下。
+. 新增使用者：按一下*原則*、然後按一下*新增*。
++
+.. 輸入原則名稱、然後從群組清單中選取。
+.. 選取現有的預設原則或新增原則。
++
+新增或修改群組原則時、您可以指定下列參數：
+
++
+*** 群組：授予存取權的群組。
+*** 效果：允許或拒絕存取一或多個群組。
+*** 行動：特定群組的一個或多個儲存桶中允許的行動。
+*** 資源：一或多個儲存區內的物件路徑和名稱、這些儲存區已授予或拒絕存取權限。例如：
++
+**** ***授予對儲存VM中所有儲存區的存取權。
+**** * Bucketname*與* Bucketname/*可授予特定儲存區中所有物件的存取權。
+**** * Bucketname/readme.txt*可讓您存取特定儲存區中的物件。
+
+
+
+
+.. 如有需要、請在現有原則中新增陳述式。
+
+
+

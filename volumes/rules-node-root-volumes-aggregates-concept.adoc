@@ -1,0 +1,37 @@
+---
+permalink: volumes/rules-node-root-volumes-aggregates-concept.html 
+sidebar: sidebar 
+keywords: rules, governing, node root volumes, root aggregates 
+summary: 節點的根Volume包含該節點的特殊目錄和檔案。根Aggregate包含根磁碟區。節點的根磁碟區和根Aggregate有幾項規則。 
+---
+= 管理節點根磁碟區和根集合體的規則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+節點的根磁碟區包含該節點的特殊目錄和檔案。根Aggregate包含根磁碟區。節點的根磁碟區和根Aggregate有幾項規則。
+
+節點的根Volume FlexVol 是指由原廠安裝或安裝軟體安裝的一個現象。它保留給系統檔案、記錄檔和核心檔案。目錄名稱為「/mroot」、只有透過技術支援才能透過systemShell存取。節點根磁碟區的最小大小取決於平台模型。
+
+* 下列規則管理節點的根Volume：
++
+** 除非技術支援人員指示您這麼做、否則請勿修改根磁碟區的組態或內容。
+** 請勿將使用者資料儲存在根Volume中。
++
+將使用者資料儲存在根磁碟區中、會增加HA配對中節點之間的儲存恢復時間。
+
+** 您可以將根磁碟區移至其他Aggregate。
++
+link:relocate-root-volumes-new-aggregates-task.html["將根磁碟區重新部署到新的Aggregate"]
+
+
+
+* 根Aggregate僅專供節點的根Volume使用。
++
+無法在根Aggregate中建立其他磁碟區。ONTAP
+
+
+
+https://hwu.netapp.com["NetApp Hardware Universe"^]

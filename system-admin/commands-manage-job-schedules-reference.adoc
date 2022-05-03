@@ -1,0 +1,104 @@
+---
+permalink: system-admin/commands-manage-job-schedules-reference.html 
+sidebar: sidebar 
+keywords: command, manage, job, schedule, volume, snapshot, copy, cron, interval 
+summary: 許多工作（例如Volume Snapshot複本）可設定為在指定的排程上執行。在特定時間執行的排程稱為cron排程（類似於UNIX cron排程）。以時間間隔執行的排程稱為時間間隔排程。您可以使用工作排程命令來管理工作排程。 
+---
+= 管理工作排程的命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+許多工作（例如Volume Snapshot複本）可設定在指定的排程上執行。在特定時間執行的排程稱為_cron排程（類似於UNIX「cron」排程）。每隔一段時間執行的排程稱為「_interval_排程」。您可以使用「工作排程」命令來管理工作排程。
+
+工作排程不會調整為手動變更叢集日期和時間。這些工作會根據目前建立工作的叢集時間或最近執行工作的時間來排程執行。因此、如果您手動變更叢集日期或時間、您應該使用「jobshow」和「jobhistory show」命令來驗證所有排程的工作是否已根據您的需求排入佇列並完成。
+
+如果叢集是MetroCluster 支援功能的一部分、則兩個叢集上的工作排程必須相同。因此、如果您建立、修改或刪除工作排程、則必須在遠端叢集上執行相同的作業。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+顯示所有排程的相關資訊
+ a| 
+「工作排程顯示」
+
+
+
+ a| 
+依排程顯示工作清單
+ a| 
+「工作排程展示工作」
+
+
+
+ a| 
+顯示有關cron排程的資訊
+ a| 
+「工作排程cron show」
+
+
+
+ a| 
+顯示有關時間間隔排程的資訊
+ a| 
+「工作排程時間間隔顯示」
+
+
+
+ a| 
+建立cron排程1^
+ a| 
+作業排程cron create
+
+
+
+ a| 
+建立時間間隔排程
+ a| 
+建立工作排程時間間隔
+
+您必須至少指定下列其中一個參數：「-天」、「-小時」、「-分鐘」或「-秒」。
+
+
+
+ a| 
+修改cron排程
+ a| 
+作業排程cron修改
+
+
+
+ a| 
+修改時間間隔排程
+ a| 
+修改工作排程時間間隔
+
+
+
+ a| 
+刪除排程
+ a| 
+刪除工作排程
+
+
+
+ a| 
+刪除cron排程
+ a| 
+作業排程cron刪除
+
+
+
+ a| 
+刪除時間間隔排程
+ a| 
+作業排程時間間隔刪除
+
+|===
+從ONTAP 使用「jobschedule cron create」命令建立工作排程開始、您可以在工作排程中加入Vserver。
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

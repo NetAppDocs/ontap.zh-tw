@@ -1,0 +1,78 @@
+---
+permalink: smb-admin/examples-export-policy-rules-reference.html 
+sidebar: sidebar 
+keywords: create, export, policy, rule, restrict, allow, access, smb, svm, enable, examples of export policy rules that restrict or allow access over smb 
+summary: 這些範例說明如何在啟用SMB存取匯出原則的SVM上、建立限制或允許存取SMB的匯出原則規則。 
+---
+= 限制或允許透過SMB存取的匯出原則規則範例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+這些範例說明如何在啟用SMB存取匯出原則的SVM上、建立限制或允許存取SMB的匯出原則規則。
+
+SMB存取的匯出原則預設為停用。只有在啟用SMB存取的匯出原則時、才需要設定限制或允許透過SMB存取的匯出原則規則。
+
+
+
+== 僅適用於SMB存取的匯出規則
+
+下列命令會在名為「'VS1'」的SVM上建立具有下列組態的匯出規則：
+
+* 原則名稱：if1
+* 索引編號：1.
+* 用戶端比對：僅比對網路192.168.1.0/24上的用戶端
+* 傳輸協定：僅啟用SMB存取
+* 唯讀存取：使用NTLM或Kerberos驗證的用戶端
+* 讀寫存取：使用Kerberos驗證的用戶端
+
+
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑ruleindex 1 -protocol cifs -clientmatch 192.168.1.0/255.255.255.0 -rorule krb5,ntlm -rwrule krb5
+----
+
+
+== SMB與NFS存取的匯出規則
+
+下列命令會在SVM上建立具有下列組態的「」VS1「匯出規則：
+
+* 原則名稱：ifsnfs1
+* 索引編號：2.
+* 用戶端配對：符合所有用戶端
+* 傳輸協定：SMB與NFS存取
+* 唯讀存取：存取所有用戶端
+* 讀寫存取：使用Kerberos（NFS和SMB）或NTLM驗證（SMB）的用戶端
+* UNIX使用者ID 0對應（零）：對應至使用者ID 65534（通常對應至使用者名稱nobnobody）
+* SUID和SGID存取：允許
+
+
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 0.0.0.0/0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
+----
+
+
+== 僅使用NTLM匯出SMB存取規則
+
+下列命令會在名為「'VS1'」的SVM上建立具有下列組態的匯出規則：
+
+* 原則名稱：ntlm1
+* 索引編號：1.
+* 用戶端配對：符合所有用戶端
+* 傳輸協定：僅啟用SMB存取
+* 唯讀存取：僅限使用NTLM的用戶端
+* 讀寫存取：僅限使用NTLM的用戶端
+
+
+[NOTE]
+====
+如果您將唯讀選項或讀寫選項設定為僅限NTL-存取、則必須在用戶端比對選項中使用IP位址型項目。否則、您會收到「拒絕存取」錯誤。這是因為ONTAP 使用主機名稱檢查用戶端存取權限時、使用Kerberos服務主要名稱（SPN-）。NTLM驗證不支援SPN-Name。
+
+====
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule ntlm -rwrule ntlm
+----

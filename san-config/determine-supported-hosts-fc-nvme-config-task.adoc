@@ -1,0 +1,36 @@
+---
+permalink: san-config/determine-supported-hosts-fc-nvme-config-task.html 
+sidebar: sidebar 
+keywords: determine, number, supported hosts, per cluster, fc, fc-nvme, configurations 
+summary: 可連線至叢集的SAN主機數量上限、會因多個叢集屬性的特定組合而大不相同、例如連接至每個叢集節點的主機數量、每個主機的啟動器、每個主機的工作階段、以及叢集中的節點。 
+---
+= 在FC和FC-NVMe組態中、判斷每個叢集所支援的主機數量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+可連線至叢集的SAN主機數量上限、會因多個叢集屬性的特定組合而大不相同、例如連接至每個叢集節點的主機數量、每個主機的啟動器、每個主機的工作階段、以及叢集中的節點。
+
+對於FC和FC-NVMe組態、您應該使用系統中啟動器目標節點（ITN）的數量、來判斷是否可以將更多主機新增至叢集。
+
+ITN代表從主機啟動器到儲存系統目標的一條路徑。FC和FC-NVMe組態中每個節點的ITN數目上限為2、048。只要您的ITN數量低於上限、就能繼續將主機新增至叢集。
+
+若要判斷叢集中使用的ITN數量、請針對叢集中的每個節點執行下列步驟。
+
+.步驟
+. 識別指定節點上的所有生命體。
+. 針對節點上的每個LIF執行下列命令：
++
+「FCP啟動器顯示欄位WWPN、LIF」
+
++
+命令輸出底部顯示的項目數代表該LIF的ITN數目。
+
+. 記錄每個LIF顯示的ITN數目。
+. 在叢集中的每個節點上新增每個LIF的ITN數目。
++
+此總計代表叢集內的ITN數目。
+
+

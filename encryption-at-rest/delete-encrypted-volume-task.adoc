@@ -1,0 +1,55 @@
+---
+permalink: encryption-at-rest/delete-encrypted-volume-task.html 
+sidebar: sidebar 
+keywords: deleting, encrypted, volume 
+summary: 您可以使用Volume DELETE命令刪除加密的Volume。 
+---
+= 刪除加密的磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「Volume DELETE」命令刪除加密的Volume。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作、或是叢集管理員已委派權限的SVM管理員。
++
+link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執行Volume Move命令"]
+
+* Volume必須離線。
+
+
+.步驟
+. 刪除加密磁碟區：
++
+「Volume DELETE -vserver Svm_name -volume volume volume Volume name」
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令會刪除名為「vol1」的加密磁碟區：
+
++
+[listing]
+----
+cluster1::> volume delete -vserver vs1 -volume vol1
+----
++
+當系統提示您確認刪除時、請輸入「yes（是）」。
+
++
+系統會在24小時後刪除磁碟區的加密金鑰。
+
++
+使用「volume delete」搭配「force true」選項、即可刪除磁碟區、並立即銷毀對應的加密金鑰。此命令需要進階權限。如需詳細資訊、請參閱手冊頁。
+
+
+
+您可以使用「Volume recovery佇列」命令、在保留期間內、於發出「Volume DELETE」命令後恢復刪除的磁碟區：
+
+「Volume recovery佇列Svm_name -volume volume volume Volume name」
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_use_the_Volume_Recovery_Queue["如何使用Volume Recovery功能"]

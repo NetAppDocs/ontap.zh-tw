@@ -1,0 +1,481 @@
+---
+sidebar: sidebar 
+permalink: networking/network_features_by_release.html 
+keywords: auto-port placement, auto port placement, IPsec, VIP expansion, switch CLI simplification, IPv6 variable length, portmap, cache search, CUBIC, NTPv3, SSH alerts, LIF service policies, multipath routing, SSH MFA, SAML authentication, certifications, fastpath, SNMPv3 traphosts, IPv6, LIF management, LLDP, UC with DSCP, SHA-2, FIPS 140-2, network features by release, new features, analyze the impact of network features available with each ontap 9 release, cluster resiliency, vip lif enhancements, ipsec certificate authentication, automatic detection and recommendations for wiring issues 
+summary: 分析ONTAP 每個版本的更新版本所帶來的網路功能影響 
+---
+= 網路功能
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+分析ONTAP 每個版本的更新版本所帶來的網路功能影響。
+
+[cols="15,25,60"]
+|===
+
+
+| 可用的開始 | 功能 | 說明 
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+自動偵測及修復網路線路問題建議
+ a| 
+根據廣播網域成員（乙太網路連接埠）的第2層連通性、可自動偵測並建議修正網路配線問題。ONTAP
+
+偵測到連接埠連線性問題時、System Manager會建議您執行修復作業來解決問題。
+
+link:auto-detect-wiring-issues-task.html["自動偵測及修復網路線路問題建議"]
+
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+網際網路傳輸協定安全性（IPsec）憑證驗證
+ a| 
+IPsec原則現在支援預先共用金鑰（PSK）和憑證進行驗證。
+
+* 使用PSK設定的原則需要在原則中的所有用戶端之間共用金鑰。
+* 使用憑證設定的原則不需要在用戶端之間共用金鑰、因為每個用戶端都可以擁有自己專屬的驗證憑證。
+
+
+link:configure_ip_security_@ipsec@_over_wire_encryption.html["透過有線加密設定IP安全性（IPsec）"]
+
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+LIF服務
+ a| 
+防火牆原則已過時、並完全由LIF服務原則取代。
+
+新的NTP LIF服務可讓您更有效地控制哪些LIF用於傳出NTP要求。
+
+link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ONTAP"]
+
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+NFS over RDMA
+ a| 
+支援NFS over RDMA、為採用NVIDIA GDX生態系統的客戶提供更高效能的NFSv4.0。ONTAP利用RDMA介面卡、可將記憶體直接從儲存設備複製到GPU、以規避CPU負荷。
+
+link:../nfs-rdma/index.html["NFS over RDMA"]
+
+
+
+ a| 
+部分9.9.1 ONTAP
+ a| 
+叢集恢復能力
+ a| 
+下列叢集恢復能力與診斷功能改善、可改善客戶體驗：
+
+* 連接埠監控與避免：
++
+** 在雙節點無交換式叢集組態中、系統可避免發生封包遺失（連線中斷）的連接埠。此功能先前僅適用於交換式組態。
+
+
+* 自動節點容錯移轉：
++
+** 如果節點無法在其叢集網路上提供資料、則該節點不應擁有任何磁碟。反之、如果合作夥伴的健康狀況良好、則HA合作夥伴應該接管。
+
+
+* 分析連線問題的命令：
++
+** 使用下列命令顯示哪些叢集路徑發生封包遺失：「網路介面檢查叢集連線能力show」
+
+
+
+
+
+
+ a| 
+部分9.9.1 ONTAP
+ a| 
+VIP LIF增強功能
+ a| 
+新增下列欄位以擴充虛擬IP（VIP）邊界閘道傳輸協定（BGP）功能：
+
+* -ASN或-Peer-ASN（4位元組值）屬性本身並不是新的、但現在它使用4位元組的整數。
+* 中型
+* -use對等即下一跳
+
+
+「ASon_integer'參數指定自治系統編號（ASN）或對等ASN。
+
+* 從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是16位元數（0 - 64511可用值）。
+* 從ONTAP 支援BGP的ASN 9.9.1開始、支援4位元組的非負整數（65536 - 4294967295）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
+
+
+您可以利用多重出口鑑別器（MED-）支援、針對路徑優先順序進行進階路由選擇。BGP更新訊息中的選用屬性Medion、可讓路由器為流量選取最佳路由。MEDA是無符號32位元整數（0 - 4294967295）、偏好較低的值。
+
+VIP BGP使用BGP對等群組來提供預設路由自動化、以簡化組態。當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請將「-use對等端點即下一跳」屬性設為「true」。依預設、此屬性為「假」。
+
+link:configure_virtual_ip_@vip@_lifs.html["設定虛擬IP（VIP）LIF"]
+
+
+
+ a| 
+部分9.8 ONTAP
+ a| 
+自動連接埠放置
+ a| 
+根據可到達性和網路拓撲偵測、可自動設定廣播網域、選取連接埠、並協助設定網路介面（LIF）、虛擬LAN（VLAN）和連結集合群組（LAG）ONTAP 。
+
+當您第一次建立叢集時ONTAP 、NetApp會自動探索連線至連接埠的網路、並根據第2層可到達性來設定所需的廣播網域。您不再需要手動設定廣播網域。
+
+將繼續使用兩個IPspace建立新叢集：
+
+*叢集IPspace*：包含一個用於叢集互連的廣播網域。切勿觸摸此組態。
+
+*預設IPspace*：包含剩餘連接埠的一或多個廣播網域。根據您的網路拓撲、ONTAP 根據需要設定其他廣播網域：預設1、預設-2等。您可以視需要重新命名這些廣播網域、但請勿修改在這些廣播網域中設定的連接埠。
+
+當您設定網路介面時、主連接埠選項為選用項目。如果您未手動選取主連接埠、ONTAP 則在同一個廣播網域中、將嘗試指派適當的主連接埠給同一個子網路中的其他網路介面。
+
+建立VLAN或將第一個連接埠新增至新建立的LAG時ONTAP 、功能變數會根據第2層連通性、嘗試自動將VLAN或LAG指派給適當的廣播網域。
+
+透過自動設定廣播網域和連接埠、ONTAP 可確保用戶端在容錯移轉至叢集中的另一個連接埠或節點時、仍能繼續存取其資料。
+
+最後ONTAP 、當系統偵測到連接埠連線能力不正確時、會傳送EMS訊息、並提供「網路連接埠連線能力修復」命令、以自動修復常見的組態錯誤。
+
+
+
+ a| 
+部分9.8 ONTAP
+ a| 
+透過有線加密的網際網路傳輸協定安全性（IPsec）
+ a| 
+為了確保資料持續安全且加密、ONTAP 即使在傳輸過程中、也能在傳輸模式下使用IPsec傳輸協定。IPsec為所有IP流量提供資料加密、包括NFS、iSCSI和SMB傳輸協定。IPsec為iSCSI流量提供唯一的傳輸加密選項。
+
+設定好IPsec之後、用戶端與ONTAP 支援中心之間的網路流量會受到預防措施的保護、以對抗重播和攔截式（MITM）攻擊。
+
+link:configure_ip_security_@ipsec@_over_wire_encryption.html["透過有線加密設定IP安全性（IPsec）"]
+
+
+
+ a| 
+部分9.8 ONTAP
+ a| 
+虛擬IP（VIP）擴充
+ a| 
+新欄位已新增至「network BGP對等群組」命令。此擴充可讓您為虛擬IP（VIP）設定兩個額外的邊界閘道傳輸協定（BGP）屬性。
+
+*路徑前加*：其他因素相同、BGP偏好選擇具有最短AS（自治系統）路徑的路由。您可以使用選用的as path prepend屬性來重複自動系統編號（ASN）、以增加as path屬性的長度。接收器會選取最短AS路徑的路由更新。
+
+* BGP community *：BGP community屬性是32位元標記、可指派給路由更新。每個路由更新都可以有一個或多個BGP社群標記。接收前置碼的鄰近區域可以檢查社群價值、並採取篩選或套用特定路由原則以進行重新分配等行動。
+
+
+
+ a| 
+部分9.8 ONTAP
+ a| 
+交換器CLI簡化
+ a| 
+為了簡化交換器命令、叢集與儲存交換器CLI已整合。整合式交換器CLI包括乙太網路交換器、FC交換器和Atto傳輸協定橋接器。
+
+您現在不用使用個別的「系統叢集交換器」和「系統儲存交換器」命令、而是使用「系統交換器」。對於Atto傳輸協定橋接器、請使用「系統橋接器」、而非使用「儲存橋接器」。
+
+交換器健全狀況監控功能也同樣擴充、以監控儲存交換器和叢集互連交換器。您可以在「client_device」表格的「叢集網路」下檢視叢集互連的健全狀況資訊。您可以在「client_device」表格的「storage網路」下檢視儲存交換器的健全狀況資訊。
+
+
+
+ a| 
+部分9.8 ONTAP
+ a| 
+IPv6可變長度
+ a| 
+支援的IPv6變數首碼長度範圍已從64位元增加至1位元、直到127位元。位元128的值仍保留給虛擬IP（VIP）。
+
+升級時、非VIP LIF長度（64位元以外）會被封鎖、直到最後一個節點更新為止。
+
+還原升級時、還原會檢查任何非VIP LIF是否有64位元以外的任何字首。如果找到、檢查會封鎖回復、直到您刪除或修改違規的LIF為止。不會檢查VIP生命段。
+
+
+
+ a| 
+更新ONTAP
+ a| 
+自動portmap服務
+ a| 
+portmap服務會將RPC服務對應至其接聽的連接埠。
+
+Portmap服務可在ONTAP 不含更新版本的版本中存取、ONTAP 可從版本9.4到ONTAP 版本9.6進行設定、並可從ONTAP 版本9.7開始自動管理。
+
+*在《S仰賴 內建的不只是第三方防火牆的網路組態》中、ONTAP 連接埠111可隨時存取portmap服務（rpcbind）ONTAP 。
+
+*從ONTAP S得9.4到ONTAP S得9.6 *：您可以修改防火牆原則、以控制portmap服務是否可在特定的生命期中存取。
+
+*從ONTAP S397*開始：不再提供portmap防火牆服務。而是會自動為所有支援NFS服務的LIF開啟portmap連接埠。
+
+link:configure_firewall_policies_for_lifs.html#Portmap-Service-Configuration["portmap服務組態"]
+
+
+
+ a| 
+更新ONTAP
+ a| 
+快取搜尋
+ a| 
+您可以使用「vserver services name-service netse-domain netgroup -databases」命令快取NIS「netgroup .byhost」項目。
+
+
+
+ a| 
+部分9.6 ONTAP
+ a| 
+立方
+ a| 
+立方是ONTAP 預設的TCP壅塞控制演算法、適用於不完整的硬體。立方取代ONTAP 了原先預設的TCP壅塞控制演算法NewReno。
+
+立方可解決長型網路（LFC）的問題、包括高往返時間（RTT）。立方可偵測並避免壅塞。立方可改善大多數環境的效能。
+
+
+
+ a| 
+部分9.6 ONTAP
+ a| 
+LIF服務原則取代LIF角色
+ a| 
+您可以將服務原則（而非LIF角色）指派給生命期、以決定生命期所支援的流量類型。服務原則定義LIF支援的網路服務集合。提供一組可與LIF相關聯的內建服務原則。ONTAP
+
+支援以支援從S25 9.5開始的服務原則、不過服務原則只能用來設定有限數量的服務。ONTAP ONTAP從ONTAP 推出支援SJS9.6開始、LIF角色已過時、所有類型的服務均支援服務原則。
+
+link:https://docs.netapp.com/us-en/ontap/networking/lifs_and_service_policies96.html["生命與服務原則"]
+
+
+
+ a| 
+版本9.5 ONTAP
+ a| 
+NTPv3支援
+ a| 
+網路時間傳輸協定（NTP）第3版包含使用SHA-1金鑰的對稱驗證、可提高網路安全性。
+
+
+
+ a| 
+版本9.5 ONTAP
+ a| 
+SSH登入安全警示
+ a| 
+以安全Shell（SSH）管理員使用者身分登入時、您可以檢視上次成功登入後的先前登入、登入失敗嘗試、以及角色和權限變更等資訊。
+
+
+
+ a| 
+版本9.5 ONTAP
+ a| 
+LIF服務原則
+ a| 
+您可以建立新的服務原則或使用內建原則。您可以將服務原則指派給一或多個LIF、讓LIF能夠傳輸單一服務或服務清單的流量。
+
+link:https://docs.netapp.com/us-en/ontap/networking/lifs_and_service_policies96.html["生命與服務原則"]
+
+
+
+ a| 
+版本9.5 ONTAP
+ a| 
+VIP生命與BGP支援
+ a| 
+VIP資料LIF並非任何子網路的一部分、可從裝載邊界閘道傳輸協定（BGP）LIF的所有連接埠、在相同的IPspace中存取。VIP資料LIF可消除主機對個別網路介面的相依性。
+
+link:configure_virtual_ip_@vip@_lifs.html#Create-a-virtual-IP-(VIP)-data-LIF["建立虛擬IP（VIP）資料LIF"]
+
+
+
+ a| 
+版本9.5 ONTAP
+ a| 
+多重路徑路由
+ a| 
+多重路徑路由會利用所有可用的路由來達成目的地負載平衡。
+
+link:enable_multipath_routing.html["啟用多重路徑路由"]
+
+
+
+ a| 
+部分9.4 ONTAP
+ a| 
+portmap服務
+ a| 
+portmap服務會將遠端程序呼叫（RPC）服務對應至其接聽的連接埠。
+
+Portmap服務永遠可在ONTAP 更新版本的版本中使用。從功能表9.4開始ONTAP 、便可設定portmap服務。
+
+您可以修改防火牆原則、以控制portmap服務是否可在特定的l生命 期上存取。
+
+link:configure_firewall_policies_for_lifs.html#Portmap-Service-Configuration["portmap服務組態"]
+
+
+
+ a| 
+部分9.4 ONTAP
+ a| 
+適用於LDAP或NIS的SSH MFA
+ a| 
+適用於LDAP或NIS的SSH多因素驗證（MFA）使用公開金鑰和nsswitch來驗證遠端使用者。
+
+
+
+ a| 
+部分9.3 ONTAP
+ a| 
+SSH MFA
+ a| 
+本地系統管理員帳戶的SSH MFA使用公開金鑰和密碼來驗證本機使用者。
+
+
+
+ a| 
+部分9.3 ONTAP
+ a| 
+SAML驗證
+ a| 
+您可以使用安全聲明標記語言（SAML）驗證來設定MFA的網路服務、例如服務處理器基礎架構（SPI）、ONTAP 版次API和OnCommand 版次系統管理程式。
+
+
+
+ a| 
+部分9.2 ONTAP
+ a| 
+SSH登入嘗試
+ a| 
+您可以設定SSH登入嘗試失敗次數上限、以防止暴力攻擊。
+
+
+
+ a| 
+部分9.2 ONTAP
+ a| 
+數位安全證書
+ a| 
+利用線上憑證狀態傳輸協定（OCSP）和預先安裝的預設安全性憑證、支援數位憑證安全性。ONTAP
+
+
+
+ a| 
+部分9.2 ONTAP
+ a| 
+FastPath
+ a| 
+在更新網路堆疊以改善效能和恢復能力的過程中、ONTAP 由於難以識別不正確路由表的問題、因此在版本更新的版本中、不再支援使用快速路徑路由。因此、您不再可以在nodesdro解除 中設定下列選項、而在升級ONTAP 至版本化為版本化9.2或更新版本時、會停用現有的快速路徑組態：
+
+「ip.fastpath.enable」
+
+link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Network_traffic_not_sent_or_sent_out_of_an_unexpected_interface_after_upgrade_to_9.2_due_to_elimination_of_IP_Fastpath["升級至9.2後、由於IP Fastpath不存在、因此未從非預期介面傳送或傳送網路流量"^]
+
+
+
+ a| 
+部分9.1 ONTAP
+ a| 
+使用v3 traphosts的安全性
+ a| 
+您可以使用使用者型安全模式（USM）安全性來設定v3 traphosts。有了這項增強功能、您可以使用預先定義的USM使用者驗證和隱私權認證來產生v3設陷。
+
+link:configure_traphosts_to_receive_snmp_notifications.html["設定traphosts以接收SNMP通知"]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+IPv6
+ a| 
+動態DNS（DDNS）名稱服務可在IPv6 LIF上使用。
+
+link:create_a_lif.html["建立LIF"]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+每個節點的生命量
+ a| 
+某些系統的每個節點支援的生命量已增加。如Hardware Universe 需每個平台支援的特定ONTAP 版本的數目、請參閱《支援的數量》。
+
+link:create_a_lif.html["建立LIF"]
+
+link:https://hwu.netapp.com/["NetApp Hardware Universe"^]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+LIF管理
+ a| 
+系統管理程式可自動偵測並隔離網路連接埠故障。ONTAPLIF會自動從降級的連接埠移轉至正常的連接埠。
+
+link:monitor_the_health_of_network_ports.html["監控網路連接埠的健全狀況"]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+LLDP
+ a| 
+Link Layer Discovery Protocol（LLDP）提供廠商中立的介面、可用來驗證ONTAP 及疑難排解作業系統與交換器或路由器之間的纜線。這是Cisco探索傳輸協定（CDP）的替代方案、Cisco Systems開發的專屬連結層傳輸協定。
+
+link:display_network_connectivity_with_neighbor_discovery_protocols.html#use-cdp-to-detect-network-connectivity["啟用或停用LLDP"]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+UC符合Dscp標記
+ a| 
+統一化功能（UC）符合差異化服務程式碼點（Dscp）標記。
+
+差異化服務程式碼點（Dscp）標記是分類及管理網路流量的機制、也是統一化功能（UC）法規遵循的一項要素。您可以使用預設或使用者提供的Dscp程式碼、為特定傳輸協定的傳出（出口）IP封包流量啟用Dscp標記。
+
+如果您在啟用指定傳輸協定的dscp標記時未提供dscp值、則會使用預設值：
+
+* 0X0A（10）*：資料傳輸協定/流量的預設值。
+
+* 0x30（48）*：控制傳輸協定/流量的預設值。
+
+link:dscp_marking_for_uc_compliance.html["針對美國法規遵循的Dscp標記"]
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+SHA-2密碼雜湊功能
+ a| 
+為了增強密碼安全性、ONTAP 支援SHA-2密碼雜湊功能、並預設使用SHA-512來雜湊新建立或變更的密碼。
+
+現有密碼未變更的使用者帳戶在升級ONTAP 至版本更新至版本更新後、仍會繼續使用md5雜湊功能、使用者可以繼續存取帳戶。不過、強烈建議您讓使用者變更密碼、將MD5帳戶移轉至SHA-512。
+
+
+
+ a| 
+部分9.0 ONTAP
+ a| 
+FIPS 140-2支援
+ a| 
+您可以針對整個叢集的控制面板Web服務介面、啟用聯邦資訊處理標準（FIPS）140-2相容模式。
+
+預設會停用FIPS 140-2唯一模式。
+
+link:configure_network_security_using_federal_information_processing_standards_@fips@.html["使用聯邦資訊處理標準（FIPS）設定網路安全性"]
+
+|===

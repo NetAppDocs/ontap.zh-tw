@@ -1,0 +1,124 @@
+---
+permalink: smb-config/create-server-active-directory-domain-task.html 
+sidebar: sidebar 
+keywords: vserver, cifs, create, command, smb, server, svm, specify, active, directory, ad, domain, create an smb server in an active directory domain 
+summary: 您可以使用vserver CIFS create命令在SVM上建立SMB伺服器、並指定其所屬的Active Directory（AD）網域。 
+---
+= 在Active Directory網域中建立SMB伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver CIFS create」命令在SVM上建立SMB伺服器、並指定其所屬的Active Directory（AD）網域。
+
+您用來提供資料的SVM和LIF必須設定為允許SMB傳輸協定。生命期必須能夠連線到SVM上設定的DNS伺服器、以及要加入SMB伺服器之網域的AD網域控制器。
+
+任何有權在您要加入SMB伺服器的AD網域中建立機器帳戶的使用者、都可以在SVM上建立SMB伺服器。這可能包括來自其他網域的使用者。
+
+從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到URI時、請在「-keytab-uri」參數中加入「vserver CIFS」命令。
+
+在活動目錄網域中建立SMB伺服器時：
+
+* 指定網域時、您必須使用完整網域名稱（FQDN）。
+* 預設設定是將SMB伺服器機器帳戶新增至Active Directory CN=電腦物件。
+* 您可以選擇使用「-ou」選項、將SMB伺服器新增至不同的組織單位（OU）。
+* 您可以選擇性地為SMB伺服器新增一個或多個NetBios別名（最多200個）的以逗號分隔的清單。
++
+當您將其他檔案伺服器的資料整合到SMB伺服器、並希望SMB伺服器回應原始伺服器的名稱時、設定SMB伺服器的NetBios別名很有用。
+
+
+
+「vserver CIFS」手冊頁包含額外的選用參數和命名需求。
+
+[NOTE]
+====
+從ONTAP 推出支援支援功能的支援功能升級至支援功能的SMB 2.0版、即可連線至網域控制器（DC）。如果您已在網域控制器上停用SMB 1.0、就必須這麼做。從0：9.2開始ONTAP 、預設會啟用SMB 2.0。
+
+====
+從ONTAP 功能表9.8開始、您可以指定要加密網域控制器的連線。當「-encryption -required for DC-connection」選項設為「true」時、系統需要加密網域控制器通訊、預設值為「假」ONTAP 。設定此選項時、只有SMb3傳輸協定會用於ONTAP-DC連線、因為只有SMb3才支援加密。。
+
+link:../smb-admin/index.html["中小企業管理"] 包含SMB伺服器組態選項的詳細資訊。
+
+.步驟
+. 確認叢集上的SMB已獲得授權：「System license show -package CIFS（系統授權顯示-套件CIFS）」
++
+如果沒有、請聯絡您的銷售代表。
+
++
+如果SMB伺服器僅用於驗證、則不需要CIFS授權。
+
+. 在AD網域中建立SMB伺服器：`+vserver CIFS create -vserver vserver_name -CIFS-伺服器smb_server_name -網域FQDN [-ou Organization_unit][-netbios-alias netbios_name、...[-keytake-uri｛（ftp| http）：//hostname|ip_address}]）[-comment text]+`
++
+加入網域時、此命令可能需要幾分鐘的時間才能完成。
+
++
+下列命令會在網域「example.com`":」中建立SMB伺服器「'shMB_server01」
+
++
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs1.example.com -cifs-server smb_server01 -domain example.com
+----
++
+下列命令會在「mydomain.com`"」網域中建立SMB伺服器「'shMB_server02」、並使用ONTAP Keytab檔案驗證該管理員：
+
++
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs1.mydomain.com -cifs-server smb_server02 -domain mydomain.com -keytab-uri http://admin.mydomain.com/ontap1.keytab
+----
+. 使用「vserver CIFS show」命令來驗證SMB伺服器組態。
++
+在此範例中、命令輸出顯示在SVM vs1.example.com上建立名為「smb_server01」的SMB伺服器、並加入「example.com`"網域」。
+
++
+[listing]
+----
+cluster1::> vserver cifs show -vserver vs1
+
+                                          Vserver: vs1.example.com
+                         CIFS Server NetBIOS Name: SMB_SERVER01
+                    NetBIOS Domain/Workgroup Name: EXAMPLE
+                      Fully Qualified Domain Name: EXAMPLE.COM
+Default Site Used by LIFs Without Site Membership:
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+                          CIFS Server Description: -
+                          List of NetBIOS Aliases: -
+----
+. 如有需要、請啟用與網域控制器的加密通訊ONTAP （更新版本：《Vserver CIFS安全性修改-vserver Svm_name -Encryption-required for DC-connection true》）
+
+
+下列命令會在「example.com`"網域」的SVM vs2.example.com上建立名為「shmb_server02」的SMB伺服器。機器帳戶是在「'ou=eng,ou=corp,d=exam,dc=exam,d=com'」容器中建立。SMB伺服器會被指派一個NetBios別名。
+
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs2.example.com –cifs-server smb_server02 -domain example.com –ou OU=eng,OU=corp -netbios-aliases old_cifs_server01
+
+cluster1::> vserver cifs show -vserver vs1
+                                          Vserver: vs2.example.com
+                         CIFS Server NetBIOS Name: SMB_SERVER02
+                    NetBIOS Domain/Workgroup Name: EXAMPLE
+                      Fully Qualified Domain Name: EXAMPLE.COM
+Default Site Used by LIFs Without Site Membership:
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+                          CIFS Server Description: -
+                          List of NetBIOS Aliases: OLD_CIFS_SERVER01
+----
+下列命令可讓來自不同網域的使用者（在此情況下為信任網域的系統管理員）在SVM vs3.example.com上建立名為「sMB _server03」的SMB伺服器。'-domain'選項指定要在其中建立SMB伺服器的主網域名稱（在DNS組態中指定）。"username"選項指定信任網域的系統管理員。
+
+* 主網域：example.com
+* 信任的網域：trust.lab.com
+* 信任網域的使用者名稱：Administrator 1
+
+
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs3.example.com -cifs-server smb_server03 -domain example.com
+
+Username: Administrator1@trust.lab.com
+Password: . . .
+----

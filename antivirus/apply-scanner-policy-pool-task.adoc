@@ -1,0 +1,75 @@
+---
+permalink: antivirus/apply-scanner-policy-pool-task.html 
+sidebar: sidebar 
+keywords: apply, scanner policy, single, cluster 
+summary: 掃描器原則會決定掃描器集區是否處於作用中狀態。您必須先啟用掃描器資源池、掃描器資源池中定義的VScan伺服器才能連線至SVM。 
+---
+= 在單一叢集上套用掃描器原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+掃描器原則會決定掃描器集區是否處於作用中狀態。您必須先啟用掃描器資源池、掃描器資源池中定義的VScan伺服器才能連線至SVM。
+
+.關於這項工作
+* 您只能將一個掃描器原則套用至掃描器集區。
+* 如果您為叢集中的所有SVM建立了掃描程式集區、則必須分別在每個SVM上套用掃描程式原則。
+* 若要進行災難恢復和MetroCluster 還原組態、您必須將掃描器原則套用至本機叢集和合作夥伴叢集的掃描器集區。
++
+在為本機叢集建立的原則中、您必須在「cluster」參數中指定本機叢集。在您為合作夥伴叢集建立的原則中、您必須在「cluster」參數中指定合作夥伴叢集。然後、合作夥伴叢集便可在發生災難時接管掃毒作業。
+
+
+
+.步驟
+. 套用掃描器原則：
++
+「vserver vscan ScANer-Pool apple-policy -vserver data_SVM -ScANer-Pool ScANer-Pool -ScANer-policy primary| secondary | ide-idle叢集叢集到套用原則開啟」
+
++
+掃描器原則可以具有下列其中一個值：
+
++
+** 「主要」指定掃描器集區為作用中狀態。
+** 「次要」指定只有在主要掃描器集區中沒有任何VScan伺服器連線時、才會啟用掃描器集區。
+** 「閒置」表示掃描器資源池處於非使用中狀態。
+
+
++
+以下範例顯示「VS1」SVM上名為「P」的掃描器資源池為作用中狀態：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool apply-policy -vserver vs1 -scanner-pool SP  -scanner-policy primary
+----
+. 確認掃描器集區處於作用中狀態：
++
+「vserver vscan ScANer-Pool show -vserver data_SVM |叢集管理SVM -ScANer-Pool ScAN_Pool」
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示「P」掃描器資源池的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool show -vserver vs1 -scanner-pool SP
+
+                                    Vserver: vs1
+                               Scanner Pool: SP
+                             Applied Policy: primary
+                             Current Status: on
+         Cluster on Which Policy Is Applied: cluster1
+                  Scanner Pool Config Owner: vserver
+       List of IPs of Allowed Vscan Servers: 1.1.1.1, 10.72.204.27
+List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
+                   List of Privileged Users: cifs\u1, cifs\u2
+----
++
+您可以使用「vserver vscan ScANer-Pool show-active」命令來檢視SVM上的作用中掃描器集區。如需完整的命令語法、請參閱命令的手冊頁。
+
+

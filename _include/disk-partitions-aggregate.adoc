@@ -1,0 +1,34 @@
+= 
+:allow-uri-read: 
+
+
+[role="lead"]
+您必須在Aggregate中擁有足夠的磁碟或磁碟分割、才能符合系統和業務需求。您也應該擁有建議的熱備援磁碟或熱備援磁碟分割數目、以將資料遺失的可能性降至最低。
+
+根資料分割預設會在特定組態上啟用。啟用根資料分割的系統會使用磁碟分割來建立Aggregate。未啟用根資料分割的系統會使用未分割的磁碟。
+
+您必須擁有足夠的磁碟或磁碟分割區、以符合RAID原則所需的最低數量、並足以滿足最低容量需求。
+
+[NOTE]
+====
+在物件中ONTAP 、磁碟機的可用空間小於磁碟機的實體容量。您可以在_E__中找到特定磁碟機的可用空間、以及每個RAID原則所需的磁碟或磁碟分割數目下限Hardware Universe 。您也可以使用「儲存Aggregate show-spare磁碟」命令來尋找特定磁碟的可用空間。
+
+====
+除了建立RAID群組並滿足容量需求所需的磁碟或磁碟分割數目、您還應該擁有建議用於集合體的最小熱備援磁碟或熱備援磁碟分割數目：
+
+* 對於所有Flash Aggregate、您至少應該有一個熱備援磁碟或磁碟分割區。
++
+[NOTE]
+====
+不使用備援磁碟機的功能預設為不使用。AFF完全支援此例外狀況。
+
+====
+* 對於非Flash同質Aggregate、您至少應有兩個熱備援磁碟或磁碟分割。
+* 對於SSD儲存資源池、每個HA配對至少應有一個熱備援磁碟。
+* 對於Flash Pool Aggregate、每個HA配對至少應有兩個備用磁碟。如需更多資訊、請參閱中的Flash Pool Aggregate支援的RAID原則 https://hwu.netapp.com["Hardware Universe"]。
+* 若要支援使用維護中心、並避免多個並行磁碟故障所造成的問題、您在多個磁碟載體中至少應有四個熱備援磁碟。
+
+
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+http://www.netapp.com/us/media/tr-3838.pdf["NetApp技術報告3838：儲存子系統組態指南"]

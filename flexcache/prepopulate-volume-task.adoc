@@ -1,0 +1,55 @@
+---
+permalink: flexcache/prepopulate-volume-task.html 
+sidebar: sidebar 
+keywords: prepopulating, flexcache, volume 
+summary: 您可以預先填入FlexCache 一個現象區、以縮短存取快取資料所需的時間。 
+---
+= 預先填入FlexCache 一個資料流通量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以預先填入FlexCache 一個現象區、以縮短存取快取資料所需的時間。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是進階權限層級的叢集管理員
+* 預先填入的路徑必須有效、否則預先填入作業將失敗。
+
+
+.關於這項工作
+* 預先填入只讀取檔案、並在目錄中搜尋
+* 「是遞迴」旗標會套用至傳遞給預先填入的整個目錄清單
+
+
+.步驟
+. 預先填入FlexCache 一個資料流通量：
++
+「Volume FlexCache 回填預先填入-cache-vserver vserver_name -cache磁碟區-path-list path_list -is-recursion true|假」
+
++
+此範例包含預先填入的單一目錄路徑：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1
+  (volume flexcache prepopulate start)
+[JobId 207]: FlexCache prepopulate job queued.
+----
++
+此範例包含預先填入的數個路徑清單：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1,/dir2,/dir3,/dir4
+  (volume flexcache prepopulate start)
+[JobId 208]: FlexCache prepopulate job queued.
+----
+. 顯示讀取的檔案數：
++
+「jobshow -id job_ID -ins」
+
+

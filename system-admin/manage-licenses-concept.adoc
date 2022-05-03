@@ -1,0 +1,64 @@
+---
+permalink: system-admin/manage-licenses-concept.html 
+sidebar: sidebar 
+keywords: manage, license, enable, add, record, software, entitlement, keys, codes, risk, usage, cluster, administrator, nlf 
+summary: 授權是一或多個軟體授權的記錄。在從功能升級到功能升級到版本9.9.1的過程中、授權會以28個字元的字串形式提供、每個功能只有一個金鑰。ONTAP ONTAP ONTAP在介紹全新的授權格式時ONTAP 、將NetApp授權檔案（NLF）稱為NetApp授權檔案（NLF）、僅供叢集範圍內的功能使用、例如FabricPool ： 
+---
+= 管理授權總覽（僅限叢集管理員）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+授權是一或多個軟體授權的記錄。在從功能更新到功能更新到版本9.9.1的過程中、授權金鑰會以28個字元的字串形式提供、每個功能有一個金鑰。ONTAP ONTAP ONTAP更新授權金鑰格式的NetApp授權檔案（NLF）已於ONTAP 《》中推出、僅供叢集範圍內的功能使用、例如FabricPool ：
+
+從功能完整的支援升級到功能完整的升級版、所有授權均以NLF形式提供。ONTAP根據ONTAP 您的購買情況、LIF授權可啟用一或多項功能。您可以搜尋系統（控制器）序號、從NetApp支援網站擷取NLF授權。
+
+您可以在NetApp支援網站的* My Support*>* Software Licenses*（需要登入）下、找到初始或附加軟體訂單的授權。如果您無法從「軟體授權」頁面找到授權金鑰、請聯絡您的銷售或支援代表。
+
+利用支援功能的支援、您可以透過下列方式管理功能授權：ONTAP
+
+* 顯示已安裝授權的相關資訊（「系統授權顯示」）
+* 在叢集上顯示需要授權的套件及其目前授權狀態（「系統授權狀態顯示」）
+* 從叢集或您指定序號的節點刪除授權（「系統授權刪除」）
+* 顯示或移除過期或未使用的授權（「系統授權清理」）
+
+
+利用此功能、您可以透過下列方式監控功能使用量和授權風險：ONTAP
+
+* 以每個節點為基礎、顯示叢集中的功能使用量摘要（「系統功能使用量顯示摘要」）
++
+摘要包含計數器資訊、例如功能使用的週數、以及上次使用功能的日期和時間。
+
+* 在叢集中以每個節點和每週為單位顯示功能使用狀態（「系統功能使用量顯示歷史記錄」）
++
+功能使用狀態可以是「未使用」、「已設定」或「使用中」。如果使用資訊無法使用、狀態會顯示「Not -Available」（無法使用）。
+
+* 顯示每個授權套件的授權授權風險狀態（「系統授權權利風險顯示」）
++
+風險狀態可以是「低」、「中」、「高」、「無牌」或「未知」。風險狀態也包含在AutoSupport 資訊資訊中。授權權利風險不適用於基礎授權套件。
+
++
+授權權利風險的評估是使用多種因素、其中可能包括但不限於下列因素：
+
++
+** 每個套件的授權狀態
+** 每個授權的類型、到期狀態、以及整個叢集的授權一致性
+** 使用授權套件相關功能如果評估程序判定叢集有授權權利風險、則命令輸出也會建議修正行動。
+
+
+
+
+[NOTE]
+====
+附註：ONTAP 使用System Manager或CLI時、支援28個字元的授權金鑰。不過、如果某項功能安裝了NLF授權、您就無法在NLF授權上安裝28個字元的授權金鑰、以取得相同的功能。如需使用System Manager安裝NLF或授權金鑰的相關資訊、請參閱「啟用新功能」。
+
+====
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_Data_ONTAP_8.2_and_8.3_licensing_overview_and_references%3F["什麼是Data ONTAP 「版本8.2」和「版本8.3」授權總覽和參考資料？"]
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_verify_Data_ONTAP_Software_Entitlements_and_related_License_Keys_using_the_Support_Site["如何使用Data ONTAP Support網站驗證支援功能和相關授權金鑰"]
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Licensing_updates_in_Data_ONTAP_9.2["常見問題集：Data ONTAP 更新版本資訊（英文）"]
+
+http://mysupport.netapp.com/licensing/ontapentitlementriskstatus["NetApp：Data ONTAP 不確定權利風險狀態"]

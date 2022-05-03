@@ -1,0 +1,102 @@
+---
+permalink: smb-admin/display-file-security-unix-style-volumes-task.html 
+sidebar: sidebar 
+keywords: display, information, file, directory, security, unix, security-style, volume, style, effective, permission, applied, apply, owner, group, result, validate, configuration, troubleshoot, access, issues, display information about file security on unix security-style volumes 
+summary: 您可以顯示UNIX安全型磁碟區上的檔案與目錄安全性相關資訊、包括安全性樣式與有效的安全性樣式、套用的權限、以及UNIX擁有者與群組的相關資訊。您可以使用結果來驗證安全性組態、或疑難排解檔案存取問題。 
+---
+= 顯示UNIX安全型磁碟區上的檔案安全資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示UNIX安全型磁碟區上的檔案與目錄安全性相關資訊、包括安全性樣式與有效的安全性樣式、套用的權限、以及UNIX擁有者與群組的相關資訊。您可以使用結果來驗證安全性組態、或疑難排解檔案存取問題。
+
+您必須提供儲存虛擬機器（SVM）的名稱、以及您要顯示其檔案或目錄安全性資訊的資料路徑。您可以以摘要形式或詳細清單來顯示輸出。
+
+* UNIX安全型磁碟區和qtree在決定檔案存取權限時、只會使用UNIX檔案權限（模式位元或NFSv4 ACL）。
+* ACL輸出只會針對具有NFSv4安全性的檔案和資料夾顯示。
++
+對於使用UNIX安全性的檔案和目錄、如果只套用模式位元權限（無NFSv4 ACL）、則此欄位為空白。
+
+* 如果使用NFSv4安全性描述元、則不會套用ACL輸出中的擁有者和群組輸出欄位。
++
+它們只對NTFS安全描述元有意義。
+
+* 由於UNIX Volume或qtree上支援儲存層級的存取保護安全性（如果SVM上已設定CIFS伺服器）、因此輸出可能包含套用至「-path」參數中指定之Volume或qtree的儲存層級存取保護安全性相關資訊。
+
+
+.步驟
+. 以所需的詳細資料層級顯示檔案和目錄安全性設定：
++
+|===
+| 如果您想要顯示資訊... | 輸入下列命令... 
+
+
+ a| 
+以摘要形式提供
+ a| 
+「vserver安全性檔案目錄show -vserver _vserver_name_-path _path_`
+
+
+
+ a| 
+更詳細的資料
+ a| 
+「vserver安全性檔案目錄show -vserver _vserver_name_-path _path_-expansion遮罩true」
+
+|===
+
+
+以下範例顯示SVM VS1中路徑「/home"」的安全資訊：
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /home
+
+                                  Vserver: vs1
+                                File Path: /home
+                        File Inode Number: 9590
+                           Security Style: unix
+                          Effective Style: unix
+                           DOS Attributes: 10
+                   DOS Attributes in Text: ----D---
+                  Expanded Dos Attributes: -
+                             Unix User Id: 0
+                            Unix Group Id: 1
+                           Unix Mode Bits: 700
+                   Unix Mode Bits in Text: rwx------
+                                     ACLs: -
+----
+以下範例以擴充遮罩形式顯示SVM VS1中路徑「/home"的安全資訊：
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /home -expand-mask true
+
+                                 Vserver: vs1
+                               File Path: /home
+                       File Inode Number: 9590
+                          Security Style: unix
+                         Effective Style: unix
+                          DOS Attributes: 10
+                  DOS Attributes in Text: ----D---
+                 Expanded Dos Attributes: 0x10
+                      ...0 .... .... .... = Offline
+                      .... ..0. .... .... = Sparse
+                      .... .... 0... .... = Normal
+                      .... .... ..0. .... = Archive
+                      .... .... ...1 .... = Directory
+                      .... .... .... .0.. = System
+                      .... .... .... ..0. = Hidden
+                      .... .... .... ...0 = Read Only
+                            Unix User Id: 0
+                           Unix Group Id: 1
+                          Unix Mode Bits: 700
+                  Unix Mode Bits in Text: rwx------
+                                    ACLs: -
+----
+xref:display-file-security-ntfs-style-volumes-task.adoc[在NTFS安全型磁碟區上顯示檔案安全性的相關資訊]
+
+xref:display-file-security-mixed-style-volumes-task.adoc[在混合式安全型磁碟區上顯示檔案安全性的相關資訊]

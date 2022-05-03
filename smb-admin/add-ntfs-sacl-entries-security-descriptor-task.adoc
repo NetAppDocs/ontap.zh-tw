@@ -1,0 +1,55 @@
+---
+permalink: smb-admin/add-ntfs-sacl-entries-security-descriptor-task.html 
+sidebar: sidebar 
+keywords: add, sacl, system, access, control, list, entires, aces, ntfs, audit, policies, policy, file, folder, svm, add ntfs sacl access control entries to the ntfs security descriptor 
+summary: 將SACL（系統存取控制清單）存取控制項目（ACE）新增至NTFS安全性描述元、是在SVM中為檔案或資料夾建立NTFS稽核原則的第二步驟。每個項目都會識別您要稽核的使用者或群組。SACL項目會定義您要稽核成功或失敗的存取嘗試。 
+---
+= 將NTFS SACL存取控制項目新增至NTFS安全性描述元
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將SACL（系統存取控制清單）存取控制項目（ACE）新增至NTFS安全性描述元、是在SVM中為檔案或資料夾建立NTFS稽核原則的第二步驟。每個項目都會識別您要稽核的使用者或群組。SACL項目會定義您要稽核成功或失敗的存取嘗試。
+
+您可以將一個或多個ACE新增至安全性描述元的SACL。
+
+如果安全性描述元包含具有現有ACE的SACL、則命令會將新的ACE新增至SACL。如果安全性描述元未包含SACL、則命令會建立SACL並將新的ACE新增至其中。
+
+您可以設定SACL項目、方法是針對在「-Account（帳戶）」參數中指定的帳戶、指定要稽核的成功或失敗事件權限。有三種互不相容的方法可以指定權限：
+
+* 權利
+* 進階權限
+* 原始權限（進階權限）
+
+
+[NOTE]
+====
+如果您未指定SACL項目的權限、預設設定為「完全控制」。
+
+====
+您可以選擇自訂SACL項目、方法是指定如何使用「套用至」參數套用繼承。如果您未指定此參數、預設值為將此SACL項目套用至此資料夾、子資料夾及檔案。
+
+.步驟
+. 將SACL項目新增至安全性描述元：「vserver安全性檔案目錄NTFS SACL add -vserver vserver_name -ntfs-SD sd_name -access-type｛funes|s成功率｝-Account name_or_SIDOptional _parameters'
++
+「Vserver安全性檔案目錄NTFS SACL add -ntfs-SD SD1 -access-type故障-Account domain\Joe -rights full Control -apple-to this資料夾-vserver VS1」
+
+. 確認SACL項目正確：「vserver安全性檔案目錄NTFS SACL show -vserver vserver_name -ntfs-SD SD_name -access-type｛funes|s字 詞｝-Account name_or_sid'
++
+「Vserver安全性檔案目錄NTFS SACL show -vserver VS1 -ntfs-SD SD1 -access-ttype deny -account domain\joe'
+
++
+[listing]
+----
+                                  Vserver: vs1
+                        Security Descriptor Name: sd1
+         Access type for Specified Access Rights: failure
+                             Account Name or SID: DOMAIN\joe
+                                   Access Rights: full-control
+                          Advanced Access Rights: -
+                                        Apply To: this-folder
+                                   Access Rights: full-control
+----
+

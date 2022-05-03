@@ -1,0 +1,85 @@
+---
+permalink: nfs-admin/modify-nfsv41-server-implementation-id-task.html 
+sidebar: sidebar 
+keywords: modify, nfsv4.1, server, implementation 
+summary: NFSv4.1傳輸協定包含一個伺服器實作ID、其中記錄伺服器網域、名稱和日期。您可以修改伺服器實作ID預設值。變更預設值很有用、例如收集使用量統計資料或疑難排解互通性問題時。如需詳細資訊、請參閱RFC 5661。 
+---
+= 修改NFSv4.1伺服器實作ID
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFSv4.1傳輸協定包含一個伺服器實作ID、其中記錄伺服器網域、名稱和日期。您可以修改伺服器實作ID預設值。變更預設值很有用、例如收集使用量統計資料或疑難排解互通性問題時。如需詳細資訊、請參閱RFC 5661。
+
+這三個選項的預設值如下：
+
+[cols="3*"]
+|===
+| 選項 | 選項名稱 | 預設值 
+
+
+ a| 
+NFSv4.1實作ID網域
+ a| 
+-v4.1-建 置網域
+ a| 
+netapp.com
+
+
+
+ a| 
+NFSv4.1實作ID名稱
+ a| 
+《-v4.1-實施 名稱》
+ a| 
+叢集版本名稱
+
+
+
+ a| 
+NFSv4.1實作ID日期
+ a| 
+《-v4.1-實施 日期》
+ a| 
+叢集版本日期
+
+|===
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要修改NFSv4.1實作識別碼... | 輸入命令... 
+
+
+ a| 
+網域
+ a| 
+「vserver NFS modify -v4.1-建 置網域」
+
+
+
+ a| 
+名稱
+ a| 
+「vserver NFS modify -v4.1-建 置名稱」
+
+
+
+ a| 
+日期
+ a| 
+「vserver NFS modify -v4.1-建 置日期」
+
+|===
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

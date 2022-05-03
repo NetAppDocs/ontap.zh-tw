@@ -1,0 +1,133 @@
+---
+permalink: performance-admin/set-throughput-floor-qos-task.html 
+sidebar: sidebar 
+keywords: setting, throughput, floor, qos 
+summary: 您可以使用原則群組的最小處理量欄位來定義儲存物件工作負載的處理量層級（QoS下限）。您可以在建立或修改儲存物件時套用原則群組。從ONTAP 功能性的問題9.8開始、您可以指定處理量層（以IOPS或Mbps為單位）、或是IOPS和Mbps。 
+---
+= 使用QoS設定處理量層
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用原則群組的「管理處理量」欄位來定義儲存物件工作負載的處理量層級（QoS下限）。您可以在建立或修改儲存物件時套用原則群組。從ONTAP 功能性的問題9.8開始、您可以指定處理量層（以IOPS或Mbps為單位）、或是IOPS和Mbps。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須執行ONTAP 的是版本不含更新版本的版本。從ONTAP NetApp 9.2開始提供處理量層。
+* 您必須是叢集管理員、才能建立原則群組。
+
+
+.關於這項工作
+* 從ONTAP S得9.4開始、您可以使用非共享的QoS原則群組來指定要個別套用定義的處理量層級至每個成員工作負載。這是處理量層的原則群組可套用至多個工作負載的唯一條件。
++
+將"QoS policy-group cree"命令的"-is shared=fals"設定為指定非共用原則群組。
+
+* 如果節點或Aggregate上的效能容量（保留空間）不足、則工作負載的處理量可能會低於指定樓層。
+* 受QoS限制的儲存物件必須由原則群組所屬的SVM所包含。多個原則群組可以屬於同一個SVM。
+* 將原則群組套用至相同類型的儲存物件、是QoS最佳實務做法。
+* 定義處理量層的原則群組無法套用至SVM。
+
+
+.步驟
+. 檢查節點或Aggregate上是否有足夠的效能容量、如Permalink：identity-Remaine-perity-capity-task.html[識別剩餘的效能容量]所述。
+. 建立原則群組：
++
+「QoS原則群組create -policy group _policy_group _-vserver _Svm_-min-transmity _qos_target _-is-shared true|假」
+
++
+如需完整的命令語法、請參閱ONTAP 您的版本資訊手冊頁。您可以使用「QoS原則群組修改」命令來調整處理量層級。
+
++
+下列命令會建立共用原則群組「pg-Vs2（pg-Vs2）、處理量最低為1、000 IOPS：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy group pg-vs2 -vserver vs2 -min-throughput 1000iops -is-shared true
+----
++
+下列命令會建立非共用原則群組「pg-VS4（pg-VS4））、而不會限制處理量：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared false
+----
+. 將原則群組套用至磁碟區或LUN：
++
+h_Storage_object_ create -vserver _Svm_-qos-police-group _policy_group _（創建-vserver _svm_-qos-police-group _policy_group）
+
++
+如需完整的命令語法、請參閱手冊頁。您可以使用「_Storage_object_modify」命令、將不同的原則群組套用至儲存物件。
+
++
+下列命令會將原則群組「pg-app2」套用至Volume「app2」：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy-group pg-app2
+----
+. 監控原則群組效能：
++
+「QoS統計效能表現」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+監控叢集的效能。請勿使用主機上的工具來監控效能。
+
+====
++
+下列命令顯示原則群組效能：
+
++
+[listing]
+----
+cluster1::> qos statistics performance show
+Policy Group           IOPS      Throughput   Latency
+-------------------- -------- --------------- ----------
+-total-                 12316       47.76MB/s  1264.00us
+pg_app2                  7216       28.19MB/s   420.00us
+_System-Best-Effort        62       13.36KB/s     4.13ms
+_System-Background         30           0KB/s        0ms
+----
+. 監控工作負載效能：
++
+「QoS統計資料工作負載效能表現」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+監控叢集的效能。請勿使用主機上的工具來監控效能。
+
+====
++
+下列命令顯示工作負載效能：
+
++
+[listing]
+----
+cluster1::> qos statistics workload performance show
+Workload          ID     IOPS      Throughput    Latency
+--------------- ------ -------- ---------------- ----------
+-total-              -    12320        47.84MB/s  1215.00us
+app2-wid7967      7967     7219        28.20MB/s   319.00us
+vs1-wid12279     12279     5026        19.63MB/s     2.52ms
+_USERSPACE_APPS     14       55        10.92KB/s   236.00us
+_Scan_Backgro..   5688       20            0KB/s        0ms
+----
++
+[NOTE]
+====
+您可以使用「QoS統計資料工作負載延遲show」命令來檢視QoS工作負載的詳細延遲統計資料。
+
+====
+

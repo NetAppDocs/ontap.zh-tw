@@ -1,0 +1,76 @@
+---
+permalink: san-admin/delete-all-existing-snapshot-copies-volume-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, delete, one, more, existing, snapshot, copies, from, volume 
+summary: 您可以從磁碟區手動刪除一或多個現有的Snapshot複本。如果您的磁碟區需要更多空間、您可能會想要這麼做。 
+---
+= 從磁碟區刪除一或多個現有的Snapshot複本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從磁碟區手動刪除一或多個現有的Snapshot複本。如果您的磁碟區需要更多空間、您可能會想要這麼做。
+
+.步驟
+. 使用「volume snapshot show」命令來驗證您要刪除的Snapshot複本。
++
+[listing]
+----
+cluster::> volume snapshot show -vserver vs3 -volume vol3
+
+                                                ---Blocks---
+Vserver  Volume  Snapshot                Size   Total% Used%
+-------- ------- ----------------------- -----  ------ -----
+vs3      vol3
+                 snap1.2013-05-01_0015   100KB   0%    38%
+                 snap1.2013-05-08_0015   76KB   0%    32%
+                 snap2.2013-05-09_0010   76KB   0%    32%
+                 snap2.2013-05-10_0010   76KB   0%    32%
+                 snap3.2013-05-10_1005   72KB   0%    31%
+                 snap3.2013-05-10_1105   72KB   0%    31%
+                 snap3.2013-05-10_1205   72KB   0%    31%
+                 snap3.2013-05-10_1305   72KB   0%    31%
+                 snap3.2013-05-10_1405   72KB   0%    31%
+                 snap3.2013-05-10_1505   72KB   0%    31%
+10 entries were displayed.
+----
+. 使用「Volume Snapshot DELETE」命令刪除Snapshot複本。
++
+[cols="2*"]
+|===
+| 如果您想要... | 輸入此命令... 
+
+
+ a| 
+刪除單一Snapshot複本
+ a| 
+「Volume snapshot delete -vserver _Svm_name_-volume _vol_name_-snapshot _snapshot name_」
+
+
+
+ a| 
+刪除多個Snapshot複本
+ a| 
+「Volume snapshot delete -vserver _Svm_name_-volume _vol_name_-snapshot _snapshot name1_[,_snapshot name2_,...]」
+
+
+
+ a| 
+刪除所有Snapshot複本
+ a| 
+「Volume Snapshot刪除-vserver _Svm_name_-volume _vol_name_-snapshot *」
+
+|===
++
+以下範例會刪除Volume vol3上的所有Snapshot複本。
+
+
+
+[listing]
+----
+cluster::> volume snapshot delete -vserver vs3 -volume vol3 *
+
+10 entries were acted on.
+----

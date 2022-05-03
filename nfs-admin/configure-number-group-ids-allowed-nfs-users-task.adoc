@@ -1,0 +1,128 @@
+---
+permalink: nfs-admin/configure-number-group-ids-allowed-nfs-users-task.html 
+sidebar: sidebar 
+keywords:  
+summary: 根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使用者認證時、支援最多32個群組ID。使用AUTH_SYS驗證時、預設的群組ID最大數量為16、如RFC 5531所定義。如果您的使用者成員超過預設群組數、則最多可增加1,024個。 
+---
+= 設定NFS使用者所允許的群組ID數目
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使用者認證時、支援最多32個群組ID。使用AUTH_SYS驗證時、預設的群組ID最大數量為16、如RFC 5531所定義。如果您的使用者成員超過預設群組數、則最多可增加1,024個。
+
+如果使用者的認證中有超過預設的群組ID數目、則其餘的群組ID會被刪減、而且使用者在嘗試從儲存系統存取檔案時可能會收到錯誤訊息。您應該將每個SVM的最大群組數設定為代表環境中最大群組數的數字。
+
+下表顯示「vserver NFS modify」命令的兩個參數、可決定三個範例組態中的群組ID數目上限：
+
+[cols="40,30,30"]
+|===
+
+
+| 參數 | 設定 | 產生的群組ID限制 
+
+
+ a| 
+「延伸群組限制」
+
+-`-auth-sys-extended - Groups（驗證系統擴充群組）
+ a| 
+《32》
+
+"禁用"
+
+這些是預設設定。
+ a| 
+RPCSEC_GSS：32
+
+AUTH_SYS：16
+
+
+
+ a| 
+「延伸群組限制」
+
+-`-auth-sys-extended - Groups（驗證系統擴充群組）
+ a| 
+"256"
+
+"禁用"
+ a| 
+RPCSEC_GSS：256
+
+AUTH_SYS：16
+
+
+
+ a| 
+「延伸群組限制」
+
+-`-auth-sys-extended - Groups（驗證系統擴充群組）
+ a| 
+"512"
+
+「已啟用」
+ a| 
+RPCSEC_GSS：512
+
+AUTH_SYS：512
+
+|===
+[NOTE]
+====
+某些舊版NFS用戶端可能與AUTH_SYS延伸群組不相容。
+
+====
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行所需的動作：
++
+|===
+
+
+| 如果您要設定允許的輔助群組數目上限... | 輸入命令... 
+
+
+ a| 
+僅適用於RPCSEC_GSS、並將AUTH_SYS設為預設值16
+ a| 
+Check Alignment of PHs>+vserver NFS modify -vserver vserver_name -extended Groups-limit {32-101010}-auth-sys-extended - Groups disabled+'
+
+
+
+ a| 
+適用於RPCSEC_GSS和AUTH_SYS
+ a| 
++vserver NFS modify -vserver vserver_name -extended Groups-limit {32-1010}-auth-sys-extended - Groups enabled_+
+
+|===
+. 驗證「extended - Groups-limit」值、並驗證auth_SYS是否使用延伸群組：「vserver NFS show -vserver vserver_name -Fields auth-sys-extended - Groups、extended - Groups-limit」
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+
+
+下列範例可啟用AUTH_SYS驗證的延伸群組、並將AUTH_SYS和RPCSEC_GSS驗證的延伸群組數目上限設為512。這些變更僅適用於存取名為VS1的SVM的用戶端：
+
+[listing]
+----
+vs1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use
+         them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+
+vs1::*> vserver nfs modify -vserver vs1 -auth-sys-extended-groups enabled -extended-groups-limit 512
+
+vs1::*> vserver nfs show -vserver vs1 -fields auth-sys-extended-groups,extended-groups-limit
+vserver auth-sys-extended-groups extended-groups-limit
+------- ------------------------ ---------------------
+vs1     enabled                  512
+
+vs1::*> set -privilege admin
+----

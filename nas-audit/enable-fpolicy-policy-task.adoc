@@ -1,0 +1,43 @@
+---
+permalink: nas-audit/enable-fpolicy-policy-task.html 
+sidebar: sidebar 
+keywords: enable, fpolicy policy 
+summary: 完成FPolicy原則組態設定之後、您就可以啟用FPolicy原則。啟用原則會設定其優先順序、並開始監控原則的檔案存取。 
+---
+= 啟用FPolicy原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+完成FPolicy原則組態設定之後、您就可以啟用FPolicy原則。啟用原則會設定其優先順序、並開始監控原則的檔案存取。
+
+FPolicy原則必須與關聯的外部引擎一起存在（如果原則設定為使用外部FPolicy伺服器）、且必須至少有一個關聯的FPolicy事件。FPolicy原則範圍必須存在、而且必須指派給FPolicy原則。
+
+當在儲存虛擬機器（SVM）上啟用多個原則、且有多個原則已訂閱相同的檔案存取事件時、就會使用優先順序。使用原生引擎組態的原則優先順序高於任何其他引擎的原則、無論啟用原則時指派給它們的順序編號為何。
+
+[NOTE]
+====
+無法在管理SVM上啟用原則。
+
+====
+.步驟
+. 使用「vserver fpolicy enable」命令來啟用FPolicy原則。
++
+「vserver fpolicy enable -vserver-name vs1.example.com -policy-name policy1 -seque-number 1」
+
+. 使用「vserver fpolicy show」命令確認FPolicy原則已啟用。
++
+「vserver fpolicy show -vserver vs1.example.com」
+
++
+[listing]
+----
+
+                                   Sequence
+Vserver          Policy Name         Number  Status   Engine
+---------------  ----------------- --------  -------- ---------
+vs1.example.com  policy1                  1  on       engine1
+----
+

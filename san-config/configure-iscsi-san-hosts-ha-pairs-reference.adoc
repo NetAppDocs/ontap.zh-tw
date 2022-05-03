@@ -1,0 +1,42 @@
+---
+permalink: san-config/configure-iscsi-san-hosts-ha-pairs-reference.html 
+sidebar: sidebar 
+keywords: ways, configure, iscsi, san hosts, ha pairs 
+summary: 您可以使用一或多個IP交換器、將iSCSI SAN主機設定為連線至雙節點或多節點組態。您應該決定是要使用非完全備援的單一交換器組態、還是要使用完全備援的多重交換器組態。 
+---
+= 使用HA配對設定iSCSI SAN主機的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用一或多個IP交換器、將iSCSI SAN主機設定為連線至雙節點或多節點組態。您應該決定是要使用非完全備援的單一交換器組態、還是要使用完全備援的多重交換器組態。
+
+您可以在直接附加、單一網路或多重網路環境中、使用單一控制器和HA配對來設定iSCSI SAN主機。HA配對可與每個交換器建立多個iSCSI連線、但每個主機都需要支援ALUA的多重路徑軟體。如果有多個主機、您可以檢查NetAppInteroperability Matrix Tool、以不同的作業系統來設定每個主機。
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+
+
+== 直接附加
+
+在直接附加的組態中、一或多個主機會直接連線至控制器。
+
+image::../media/dual-host-dual-controller.gif[雙主機雙控制器]
+
+
+
+== 單一網路HA配對
+
+在單一網路HA配對組組態中、一台交換器會將HA配對連接至一或多個主機。由於只有一台交換器、因此此組態並未完全備援。
+
+image::../media/scrn-en-drw-iscsi-single.gif[Scrn en drw iSCSI單一]
+
+
+
+== 多網路HA配對
+
+在多網路HA配對組組態中、兩個或多個交換器會將HA配對連接至一或多個主機。由於有多個交換器、因此此組態完全備援。
+
+image::../media/scrn-en-drw-iscsi-dual.gif[scrn en drw iSCSI dual]

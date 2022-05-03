@@ -1,0 +1,20 @@
+---
+permalink: data-protection/workloads-strictsync-sync-policies-concept.html 
+sidebar: sidebar 
+keywords: understand, workloads, support, strictsync, policy, strict sync, policies, snapmirror, snap mirror, cifs, vmware, eda, synchronous, fc, iscsi, nvme, nfsv3, nfsv4 
+summary: StrictSync與Sync原則支援所有使用FC、iSCSI和FC-NVMe傳輸協定的LUN型應用程式、以及適用於資料庫、VMware、配額、SMB等企業應用程式的NFSv3與NFSv3傳輸協定。SnapMirror Synchronous從ONTAP 支援支援支援支援支援支援的功能中開始、可用於企業檔案服務、例如電子設計自動化（EDA）、主目錄和軟體建置工作負載。 
+---
+= 關於StrictSync與Sync原則所支援的工作負載
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StrictSync與Sync原則支援所有使用FC、iSCSI和FC-NVMe傳輸協定的LUN型應用程式、以及適用於資料庫、VMware、配額、SMB等企業應用程式的NFSv3與NFSv3傳輸協定。SnapMirror Synchronous從ONTAP 支援支援支援支援支援支援的功能中開始、可用於企業檔案服務、例如電子設計自動化（EDA）、主目錄和軟體建置工作負載。
+
+在《S49.5同步政策》中ONTAP 、您需要考量幾個重要方面、同時選擇NFSv3或NFSv3工作負載。工作負載的資料讀取或寫入作業量並非考量因素、因為同步原則可處理高讀取或寫入IO工作負載。在Sets9.5中ONTAP 、檔案建立、目錄建立、檔案權限變更或目錄權限變更過多的工作負載可能不適用（這些工作負載稱為高中繼資料工作負載）。高中繼資料工作負載的典型範例是DevOps工作負載、您可以在其中建立多個測試檔案、執行自動化、以及刪除檔案。另一個範例是在編譯期間產生多個暫存檔的平行建置工作負載。高速寫入中繼資料活動的影響在於、這可能會導致鏡像之間的同步暫時中斷、進而中斷用戶端的讀取和寫入IOS。
+
+從功能支援的支援範圍ONTAP 起、我們將移除這些限制、SnapMirror Synchronous可用於包含多使用者環境的企業檔案服務工作負載、例如主目錄和軟體建置工作負載。
+
+http://www.netapp.com/us/media/tr-4733.pdf["SnapMirror同步組態與最佳實務做法"]

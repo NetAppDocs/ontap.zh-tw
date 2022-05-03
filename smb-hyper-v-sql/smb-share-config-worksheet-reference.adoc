@@ -1,0 +1,138 @@
+---
+permalink: smb-hyper-v-sql/smb-share-config-worksheet-reference.html 
+sidebar: sidebar 
+keywords: complete, smb, share, configuration, worksheet, information, settings 
+summary: 使用這份工作表單來記錄在建立SQL Server和Hyper-V over SMB組態的持續可用SMB共用時所需的值。 
+---
+= 完成SMB共用組態工作表
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用這份工作表單來記錄在建立SQL Server和Hyper-V over SMB組態的持續可用SMB共用時所需的值。
+
+
+
+== SMB的相關資訊會共用內容和組態設定
+
+對於每個共用區、您必須指定下列資訊：
+
+* 儲存虛擬機器（SVM）名稱
++
+SVM名稱與所有共用相同
+
+* 共用名稱
+* 路徑
+* 共用內容
++
+您必須設定下列兩個共用內容：
+
++
+** 《oplocks》
+** 「持續可用」
+
+
+
+
+不得設定下列共用內容：
+
+* 「HomeDirectory屬性」
+* 《BranchCache》
+* 「存取型列舉」
++
+[NOTE]
+====
+停用變更通知時、Windows 2012 Server不會重新整理檔案總管視窗、導致目錄內容檢視不一致。
+
+====
++
+** 必須停用symlink（symlink屬性參數的值必須為null ["]）。
+
+
+
+
+
+
+== 共享路徑的相關資訊
+
+如果您使用遠端VSS來備份Hyper-V檔案、則在從Hyper-V伺服器建立SMB連線至儲存虛擬機器檔案的儲存位置時、選擇要使用的共用路徑非常重要。雖然可以在命名空間的任何點建立共用、但Hyper-V伺服器使用的共用路徑不應包含輔助磁碟區。陰影複製作業無法在包含交會點的共用路徑上執行。
+
+建立資料庫目錄結構時、SQL Server無法跨交會。您不應該為包含交會點的SQL Server建立共用路徑。
+
+例如、如果您想要將虛擬機器檔案或資料庫檔案儲存在磁碟區「vol1」、「vol2」、「vol3」和「vol4」、則應在下列路徑建立應用程式伺服器的共用：「/data1/vol1」、「/data1/2」、「/data2/vol2」、「/data2」、「/vol2」。
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     data1         true     /data1               RW_volume
+vs1     vol1          true     /data1/vol1          RW_volume
+vs1     vol2          true     /data1/vol2          RW_volume
+vs1     data2         true     /data2               RW_volume
+vs1     vol3          true     /data2/vol3          RW_volume
+vs1     vol4          true     /data2/vol4          RW_volume
+----
+[NOTE]
+====
+雖然您可以在「/data1」和「/data2」路徑上建立共用區以進行管理、但您不得將應用程式伺服器設定為使用這些共用區來儲存資料。
+
+====
+
+
+== 規劃工作表
+
+|===
+| 資訊類型 | 價值 
+
+
+ a| 
+_Volume 1：SMB共用名稱和路徑_
+ a| 
+
+
+
+ a| 
+_Volume 2：SMB共用名稱和路徑_
+ a| 
+
+
+
+ a| 
+_Volume 3：SMB共用名稱和路徑
+ a| 
+
+
+
+ a| 
+_Volume 4：SMB共用名稱與路徑_
+ a| 
+
+
+
+ a| 
+_Volume 5：SMB共用名稱和路徑_
+ a| 
+
+
+
+ a| 
+_Volume 6：SMB共用名稱和路徑
+ a| 
+
+
+
+ a| 
+_Volume 7：SMB共用名稱與路徑_
+ a| 
+
+
+
+ a| 
+_其他磁碟區：SMB共用名稱和路徑_
+ a| 
+
+|===

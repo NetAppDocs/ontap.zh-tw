@@ -1,0 +1,43 @@
+---
+permalink: fabricpool/setup-storagegrid-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, storagegrid, cloud tier 
+summary: 如果您執行ONTAP 的是版本2、9.2或更新版本、您可以設定StorageGRID 用作FabricPool 供選擇的雲端層。 
+---
+= 指定StorageGRID 不正確的組態資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行ONTAP 的是版本2、9.2或更新版本、您可以設定StorageGRID 用作FabricPool 供選擇的雲端層。在分層SAN傳輸協定存取的資料時、NetApp建議使用私有雲端、例如StorageGRID 由於連線考量、所以使用像是「物件」的私有雲端。
+
+負載平衡功能可在StorageGRID VMware 9.8及更新版本中實現。ONTAP當伺服器的主機名稱解析為多個IP位址時ONTAP 、即可建立用戶端連線、並傳回所有IP位址（最多16個IP位址）。建立連線時、會以循環配置資源的方式來取用IP位址。
+
+.步驟
+. 使用StorageGRID 「儲存集合體物件儲存組態建立」命令搭配「供應商類型」「「GWS」參數、來指定物件組態資訊。
++
+** 如果無法使用提供的資訊來存取故障、則「儲存Aggregate object-store config create」命令會失敗ONTAP 。StorageGRID
+** 您可以使用「-access-key」參數來指定存取金鑰、以授權要求存取StorageGRID 到物件存放區。
+** 您可以使用「-secret密碼」參數來指定密碼（秘密存取金鑰）、以驗證對StorageGRID 物件存放區的要求。
+** 如果變更了該密碼、您應該立即更新儲存在BIOS中的對應密碼。StorageGRID ONTAP
++
+這樣做可ONTAP 讓支援不StorageGRID 中斷地存取資料的不間斷資料。
+
+** 將「-is - Certificate -validation -enabled.」參數設為「假」、會停用StorageGRID 驗證功能來檢查資訊。
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name mySGWS -provider-type SGWS -server mySGWSserver
+-container-name mySGWScontainer -access-key mySGWSkey
+-secret-password mySGWSpass
+----
+. 使用StorageGRID 「儲存Aggregate object-store config show」命令來顯示及驗證資訊。
++
+使用「shorage Aggregate object-store config modify」命令、您可以修改StorageGRID 用於FabricPool 支援的物件組態資訊。
+
+

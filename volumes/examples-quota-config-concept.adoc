@@ -1,0 +1,251 @@
+---
+permalink: volumes/examples-quota-config-concept.html 
+sidebar: sidebar 
+keywords: examples, quota, configuration 
+summary: 這些範例可協助您瞭解如何設定配額和讀取配額報告。 
+---
+= 配額組態範例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+這些範例可協助您瞭解如何設定配額和讀取配額報告。
+
+如需下列範例、請假設您的儲存系統包含SVM、VS1、其中一個磁碟區為vol1。若要開始設定配額、請使用下列命令為SVM建立新的配額原則：
+
+[listing]
+----
+cluster1::>volume quota policy create -vserver vs1 -policy-name quota_policy_vs1_1
+----
+由於配額原則是新的、因此您可以將它指派給SVM：
+
+[listing]
+----
+cluster1::>vserver modify -vserver vs1 -quota-policy quota_policy_vs1_1
+----
+您決定在vol1中對每個使用者設定50 MB的硬限制：
+
+[listing]
+----
+cluster1::>volume quota policy rule create -vserver vs1 -policy-name quota_policy_vs1_1 -volume vol1 -type user -target "" -disk-limit 50MB -qtree ""
+----
+若要啟動新規則、請在磁碟區上初始化配額：
+
+[listing]
+----
+cluster1::>volume quota on -vserver vs1 -volume vol1 -foreground
+----
+若要檢視配額報告、請輸入下列命令：
+
+[listing]
+----
+cluster1::>volume quota report
+----
+產生的配額報告類似於下列報告：
+
+[listing]
+----
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1               user    *           0B   50MB       0       -   *
+vol1               user    jsmith    49MB   50MB      37       -   *
+vol1               user    root        0B      -       1       -
+----
+第一行顯示您建立的預設使用者配額、包括磁碟限制。如同所有預設配額、此預設使用者配額不會顯示磁碟或檔案使用量的相關資訊。除了建立的配額之外、還會出現另外兩個配額、每個目前擁有vol1檔案的使用者都會有一個配額。這些額外配額是自動衍生自預設使用者配額的使用者配額。使用者jsmith的衍生使用者配額與預設使用者配額具有相同的50 MB磁碟限制。根使用者的衍生使用者配額為追蹤配額（無限制）。
+
+如果系統上的任何使用者（root使用者除外）嘗試執行在vol1中使用超過50 MB的動作（例如從編輯器寫入檔案）、則動作會失敗。
+
+如果您需要在Volume vol1中為使用者jsmith提供更多空間、請輸入下列命令：
+
+[listing]
+----
+cluster1::>volume quota policy rule create -vserver vs1 -policy-name quota_policy_vs1_1 -volume vol1 -type user -target jsmith -disk-limit 80MB -qtree ""
+----
+這是明確的使用者配額、因為使用者明確列為配額規則的目標。
+
+這是對現有配額限制的變更、因為它會變更磁碟區上使用者jsmith的衍生使用者配額磁碟限制。因此、您不需要重新初始化磁碟區上的配額、即可啟動變更。
+
+若要調整配額大小：
+
+[listing]
+----
+cluster1::>volume quota resize -vserver vs1 -volume vol1 -foreground
+----
+配額會在您調整大小時維持有效、而調整大小的程序也很短。
+
+產生的配額報告類似於下列報告：
+
+[listing]
+----
+cluster1::> volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1               user    *           0B   50MB       0       -   *
+vol1               user    jsmith    50MB   80MB      37       -   jsmith
+vol1               user    root        0B      -       1       -
+3 entries were displayed.
+----
+第二行顯示磁碟限制為80 MB、以及jsmith的配額說明符號。
+
+因此、即使所有其他使用者仍限制為50 MB、jsmith仍可在vol1上使用高達80 MB的空間。
+
+假設您想要在使用者達到其磁碟限制的5 MB以內時收到通知。若要為所有使用者建立45 MB的臨界值、以及為jsmith建立75 MB的臨界值、請變更現有的配額規則：
+
+[listing]
+----
+cluster1::>volume quota policy rule modify -vserver vs1 -policy quota_policy_vs1_1 -volume vol1 -type user -target "" -qtree "" -threshold 45MB
+cluster1::>volume quota policy rule modify -vserver vs1 -policy quota_policy_vs1_1 -volume vol1 -type user -target jsmith -qtree "" -threshold 75MB
+----
+由於現有規則的大小已變更、您可以調整磁碟區上的配額大小、以啟動變更。您需要等待調整大小程序完成。
+
+若要查看具有臨界值的配額報告、請將「臨界值」參數新增至「Volume quota report」命令：
+
+[listing]
+----
+cluster1::>volume quota report -thresholds
+Vserver: vs1
+                                    ----Disk----  ----Files-----
+Volume   Tree      Type    ID        Used  Limit   Used    Limit  Quota
+                                          (Thold)                 Specifier
+-------  --------  ------  -------  -----  -----  ------  ------  ---------
+vol1               user    *           0B   50MB       0       -  *
+                                           (45MB)
+vol1               user    jsmith    59MB   80MB      55       -  jsmith
+                                           (75MB)
+vol1               user    root        0B      -       1       -
+                                           ( -)
+3 entries were displayed.
+----
+臨界值會顯示在「磁碟限制」欄的括弧中。
+
+假設您需要分割兩個專案的空間。您可以建立兩個名為proj1和proj2的qtree、以容納vol1中的專案。
+
+目前、使用者可以在qtree中使用與分配給整個Volume相同的空間（前提是使用root或其他qtree中的空間不會超過Volume的限制）。此外、每個qtree都可以擴充以使用整個Volume。如果您想要確保兩個qtree的成長都超過20 GB、您可以在磁碟區上建立預設的樹狀結構配額：
+
+[listing]
+----
+cluster1:>>volume quota policy rule create -vserver vs1 -policy-name quota_policy_vs1_1 -volume vol1 -type tree -target "" -disk-limit 20GB
+----
+請注意、正確的類型是_tree、而非qtree。
+
+由於這是新的配額、因此您無法透過調整大小來啟動配額。您可以重新初始化磁碟區上的配額：
+
+[listing]
+----
+cluster1:>>volume quota off -vserver vs1 -volume vol1
+cluster1:>>volume quota on -vserver vs1 -volume vol1 -foreground
+----
+[NOTE]
+====
+您必須確保在每個受影響的磁碟區上重新啟動配額之前等待約五分鐘、因為在執行「Volume quota Off」命令之後、幾乎立即嘗試啟動配額可能會導致錯誤。或者、您也可以執行命令、從包含特定磁碟區的節點重新初始化磁碟區的配額。
+
+====
+在重新初始化程序期間不會強制執行配額、這比調整大小程序所需的時間更長。
+
+當您顯示配額報告時、它有幾行新行：有些行用於樹狀結構配額、有些行用於衍生使用者配額。
+
+以下是樹狀結構配額的新行：
+
+[listing]
+----
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+...
+vol1               tree    *           0B   20GB       0       -   *
+vol1     proj1     tree    1           0B   20GB       1       -   proj1
+vol1     proj2     tree    2           0B   20GB       1       -   proj2
+...
+----
+您所建立的預設樹狀結構配額會出現在第一行的「ID」欄位中、其中有星號（*）。為了回應磁碟區上的預設樹狀結構配額、ONTAP 所以針對磁碟區中的每個qtree自動建立衍生的樹狀結構配額。這些項目會顯示在「樹狀結構」欄中出現proj1和proj2的行中。
+
+下列新行適用於衍生的使用者配額：
+
+[listing]
+----
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+...
+vol1     proj1     user    *           0B   50MB       0       -
+vol1     proj1     user    root        0B      -       1       -
+vol1     proj2     user    *           0B   50MB       0       -
+vol1     proj2     user    root        0B      -       1       -
+...
+----
+如果為qtree啟用配額、則會自動為該磁碟區所包含的所有qtree繼承磁碟區上的預設使用者配額。當您新增第一個qtree配額時、會在qtree上啟用配額。因此、會為每個qtree建立衍生的預設使用者配額。這些欄位會顯示在ID為星號（*）的行中。
+
+由於root使用者是檔案的擁有者、因此在為每個qtree建立預設使用者配額時、也會針對每個qtree上的root使用者建立特殊的追蹤配額。這些資訊會顯示在ID為root的行中。
+
+您決定將使用者限制在proj1 qtree中的空間、比整個Volume中的空間要小。您想要避免在proj1 qtree中使用超過10 MB的資源。因此、您可以為qtree建立預設的使用者配額：
+
+[listing]
+----
+cluster1::>volume quota policy rule create -vserver vs1 -policy-name quota_policy_vs1_1 -volume vol1 -type user -target "" -disk-limit 10MB -qtree proj1
+----
+這是對現有配額的變更、因為它會變更從磁碟區上預設使用者配額衍生的proj1 qtree預設使用者配額。因此、您可以調整配額大小來啟動變更。調整大小程序完成後、您可以檢視配額報告。
+
+配額報告中會出現下列新行、顯示qtree的新明確使用者配額：
+
+[listing]
+----
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     proj1     user    *           0B   10MB       0       -   *
+----
+但是、由於您建立的配額會覆寫預設使用者配額（以提供更多空間）、因此使用者jsmith無法將更多資料寫入proj1 qtree。當您在proj1 qtree上新增預設使用者配額時、該配額將會套用、並限制該qtree中的所有使用者空間、包括jsmith。若要為使用者jsmith提供更多空間、您可以針對qtree新增一個明確的使用者配額規則、其中具有80 MB磁碟限制、以覆寫qtree的預設使用者配額規則：
+
+[listing]
+----
+cluster1::>volume quota policy rule create -vserver vs1 -policy-name quota_policy_vs1_1 -volume vol1 -type user -target jsmith -disk-limit 80MB -qtree proj1
+----
+由於這是已存在預設配額的明確配額、因此您可以調整配額大小來啟動變更。當調整大小程序完成時、您會顯示配額報告。
+
+配額報告中會出現下列新行：
+
+[listing]
+----
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     proj1     user    jsmith    61MB   80MB      57       -   jsmith
+----
+最後一份配額報告類似於下列報告：
+
+[listing]
+----
+cluster1::>volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1               tree    *           0B   20GB       0       -   *
+vol1               user    *           0B   50MB       0       -   *
+vol1               user    jsmith    70MB   80MB      65       -   jsmith
+vol1     proj1     tree    1           0B   20GB       1       -   proj1
+vol1     proj1     user    *           0B   10MB       0       -   *
+vol1     proj1     user    root        0B      -       1       -
+vol1     proj2     tree    2           0B   20GB       1       -   proj2
+vol1     proj2     user    *           0B   50MB       0       -
+vol1     proj2     user    root        0B      -       1       -
+vol1               user    root        0B      -       3       -
+vol1     proj1     user    jsmith    61MB   80MB      57       -   jsmith
+11 entries were displayed.
+----
+使用者jsmith必須符合下列配額限制、才能寫入proj1中的檔案：
+
+. proj1 qtree的樹狀結構配額。
+. proj1 qtree上的使用者配額。
+. 磁碟區上的使用者配額。
+

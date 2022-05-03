@@ -1,0 +1,45 @@
+---
+permalink: antivirus/view-vscan-event-log-task.html 
+sidebar: sidebar 
+keywords: view, vscan, event log, information 
+summary: 您可以使用vserver vscan show-events命令來檢視受感染檔案、VScan伺服器更新等相關事件記錄資訊。您可以檢視叢集或特定節點、SVM或VScan伺服器的事件資訊。 
+---
+= 檢視VScan事件記錄資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver vscan show-events」命令來檢視受感染檔案、VScan伺服器更新等事件記錄資訊。您可以檢視叢集或特定節點、SVM或VScan伺服器的事件資訊。
+
+此工作需要進階權限。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 檢視VScan事件記錄資訊：
++
+「vserver vscan show-events」
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+以下命令顯示叢集「cluster1」的事件記錄資訊：
+
++
+[listing]
+----
+cluster1::*> vserver vscan show-events
+
+Vserver     Node            Server          Event Type        Event Time
+----------- --------------- --------------- ----------------- -----------------
+vs1         Cluster-01      192.168.1.1     file-infected     9/5/2014 11:37:38
+vs1         Cluster-01      192.168.1.1     scanner-updated   9/5/2014 11:37:08
+vs1         Cluster-01      192.168.1.1     scanner-connected 9/5/2014 11:34:55
+3 entries were displayed.
+----
+

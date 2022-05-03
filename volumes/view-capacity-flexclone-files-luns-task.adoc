@@ -1,0 +1,36 @@
+---
+permalink: volumes/view-capacity-flexclone-files-luns-task.html 
+sidebar: sidebar 
+keywords: view, node, capacity, creating, deleting, flexclone, files, flexclone luns 
+summary: 您可以檢視節點的分割負載、查看節點是否有接收建立和刪除FlexClone檔案和FlexClone LUN的新要求的容量。如果達到最大的分割負載、則在分割負載低於最大值之前、不會接受任何新的要求。 
+---
+= 檢視建立及刪除FlexClone檔案與FlexClone LUN的節點容量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視節點的分割負載、查看節點是否有接收建立和刪除FlexClone檔案和FlexClone LUN的新要求的容量。如果達到最大的分割負載、則在分割負載低於最大值之前、不會接受任何新的要求。
+
+當節點達到最大分割負載時、系統會發出「EBUSY」錯誤訊息、以回應建立和刪除要求。當節點的分割負載低於最大值時、節點會再次接受建立及刪除FlexClone檔案和FlexClone LUN的要求。
+
+當「允許的分割負載」欄位顯示容量、且建立要求符合可用容量時、節點可以接受新的要求。
+
+.步驟
+. 使用「volume file clone clone clete load show」命令、檢視節點建立和刪除FlexClone檔案和FlexClone LUN所需的容量。
++
+在下列範例中、會針對叢集1中的所有節點顯示分割負載。叢集中的所有節點都有能力建立及刪除FlexClone檔案和FlexClone LUN、如「允許的分割負載」欄位所示：
+
++
+[listing]
+----
+cluster1::> volume file clone split load show
+Node       Max        Current    Token         Allowable
+           Split Load Split Load Reserved Load Split Load
+---------- ---------- ---------- ------------- ----------
+node1         15.97TB         0B         100MB    15.97TB
+node2         15.97TB         0B         100MB    15.97TB
+2 entries were displayed.
+----
+

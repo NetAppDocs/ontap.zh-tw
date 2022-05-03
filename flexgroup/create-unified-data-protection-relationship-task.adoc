@@ -1,0 +1,106 @@
+---
+permalink: flexgroup/create-unified-data-protection-relationship-task.html 
+sidebar: sidebar 
+keywords: create, unified, data, protection, relationship, flexgroup, volume, snap shot, snapshot, policy, policies, mirrorandvault, mirror-vault, mirrorallsnapshot, back up, backup, snapvault, snap vault 
+summary: 從ONTAP 使用支援功能支援功能9.3開始、您可以建立及設定SnapMirror統一化資料保護關係、以便在同一個目的地磁碟區上設定災難恢復與歸檔。 
+---
+= 建立FlexGroup 統一化的資料保護關係、以利實現功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 使用支援功能支援功能9.3開始、您可以建立及設定SnapMirror統一化資料保護關係、以便在同一個目的地磁碟區上設定災難恢復與歸檔。
+
+您必須瞭解建立FlexGroup 統一化資料保護關係以利建立有關本區的考量。
+
+link:snapvault-backup-concept.html["建立SnapVault 不支援的備份關係和FlexGroup 統一資料保護關係的考量事項"]
+
+.步驟
+. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
++
+.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
++
+[listing]
+----
+cluster1::> volume show  -volume srcFG* -is-constituent true
+Vserver   Volume         Aggregate    State      Type       Size  Available  Used%
+--------- ------------   ------------ ---------- ---- ----------  ---------- -----
+vss       srcFG          -            online     RW         400TB   172.86GB  56%
+vss       srcFG__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vss       srcFG__0002    aggr1        online     RW         25TB    10.86TB   56%
+vss       srcFG__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vss       srcFG__0004    aggr1        online     RW         25TB    10.73TB   57%
+vss       srcFG__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57%
+vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
++
+[listing]
+----
+cluster2::> volume create -vserver vsd -aggr-list aggr1,aggr2 -aggr-list-multiplier 8 -size 400TB -type DP dstFG
+
+Warning: The FlexGroup volume "dstFG" will be created with the following number of constituents of size 25TB: 16.
+Do you want to continue? {y|n}: y
+[Job 766] Job succeeded: Successful
+----
+.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
++
+[listing]
+----
+cluster2::> volume show  -volume dstFG* -is-constituent true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vsd       dstFG          -            online     RW         400TB   172.86GB  56%
+vsd       dstFG__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vsd       dstFG__0002    aggr1        online     RW         25TB    10.86TB   56%
+vsd       dstFG__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vsd       dstFG__0004    aggr1        online     RW         25TB    10.73TB   57%
+vsd       dstFG__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vsd       dstFG__0006    aggr1        online     RW         25TB    10.64TB   57%
+vsd       dstFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+
+
+. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
++
+在「月」、「星期」及「小時」選項中、您可以分別指定「所有」來執行每月、每週的每一天和每小時的工作。
+
++
+以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 建立類型為「鏡射-保存庫」的自訂原則、然後定義鏡射與保存原則的規則：
++
+.. 針對統一化資料保護關係、建立類型為「mirror-vVault」的自訂原則：「napmirror policy create -vserver svm_name -policy原則名稱-type mirror vVault」
+.. 定義鏡射與資料保存原則的規則、以決定在初始化與更新作業期間要傳輸哪些Snapshot複本：「napmirror policy add-rule -vserver svm_name -policy policy_for_rRule - SnapMirror標籤SnapMirror標籤-reture_count-schedule schedule」
+
+
++
+如果您未指定自訂原則、則「鏡像AndVault」原則會用於統一化資料保護關係。
+
+. 建立統一化的資料保護關係：「napmirror create -source-path src-svm:srs_flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -schedule_name -policy MirrorAndVault」
++
+在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+
++
+[listing]
+----
+cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy MirrorAndVault
+----
+. 從目的地叢集、執行基準傳輸來初始化統一化資料保護關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」
++
+[listing]
+----
+cluster2::> snapmirror initialize -destination-path vsd:dstFG
+Operation is queued: snapmirror initialize of destination "vsd:dstFG".
+----
+

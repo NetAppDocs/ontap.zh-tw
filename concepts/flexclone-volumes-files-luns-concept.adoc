@@ -1,0 +1,20 @@
+---
+permalink: concepts/flexclone-volumes-files-luns-concept.html 
+sidebar: sidebar 
+keywords: flexclone volumes, files, LUNs 
+summary: FlexClone技術會參考Snapshot中繼資料、以建立磁碟區的可寫入時間點複本。複本會與其父實體共用資料區塊、除非中繼資料需要的儲存空間、否則在複本中寫入變更之前、這些複本都不會佔用任何儲存空間。FlexClone檔案與FlexClone LUN使用相同的技術、但不需要備份Snapshot複本。 
+---
+= FlexClone磁碟區、檔案和LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_FlexClone技術參考Snapshot中繼資料、以建立磁碟區的可寫入時間點複本。複本會與其父實體共用資料區塊、除非中繼資料需要的儲存空間、否則在複本中寫入變更之前、這些複本都不會佔用任何儲存空間。FlexClone檔案與FlexClone LUN使用相同的技術、但不需要備份Snapshot複本。
+
+在傳統複本需要數分鐘甚至數小時才能建立的地方、FlexClone軟體可讓您幾乎即時複製最大的資料集。這使得它非常適合您需要多個相同資料集複本（例如虛擬桌面部署）或資料集暫存複本（針對正式作業資料集測試應用程式）的情況。
+
+您可以複製現有的FlexClone磁碟區、複製包含LUN複製的磁碟區、或是複製鏡射與資料庫資料。您可以從其父磁碟區分割FlexClone磁碟區、在這種情況下、會將複本分配給自己的儲存設備。
+
+image::../media/flexclone-copy.gif[FlexClone複本]

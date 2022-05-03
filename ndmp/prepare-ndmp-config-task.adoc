@@ -1,0 +1,102 @@
+---
+permalink: ndmp/prepare-ndmp-config-task.html 
+sidebar: sidebar 
+keywords: prepare, ndmp, configuration 
+summary: 在透過網路資料管理傳輸協定（NDMP）設定磁帶備份存取之前、您必須先確認是否支援所規劃的組態、確認每個節點上的磁帶機均列為合格的磁碟機、確認所有節點都具有叢集間的LIF、 並識別備份應用程式是否支援叢集感知備份（Cab）擴充功能。 
+---
+= 準備NDMP組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在透過網路資料管理傳輸協定（NDMP）設定磁帶備份存取之前、您必須先確認是否支援所規劃的組態、確認每個節點上的磁帶機均列為合格的磁碟機、確認所有節點都具有叢集間的LIF、 並識別備份應用程式是否支援叢集感知備份（Cab）擴充功能。
+
+.步驟
+. 使用互通性對照表IMT （Interoperability Matrix、簡稱「互通性對照表」）來驗證是否支援規劃的組態。
++
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
++
+您應該確認下列元件是否相容：
+
++
+** 叢集上執行的版本。ONTAP
+** 備份應用程式廠商與應用程式版本：例如Symantec NetBackup 7.6或CommVault Simpana 10 SP8。
+** 磁帶設備的詳細資料、例如磁帶機的製造商、機型和介面：例如IBM ultrium-TD4 FC或HP ultrium-5 SAS。
+** 叢集中節點的平台：例如FAS3260或FAS6280。
+
+
+. 驗證您的磁帶機是否在每個節點的內建磁帶組態檔中列為合格的磁碟機：
++
+.. 在命令列介面上、使用「儲存磁帶顯示支援狀態」命令來檢視內建的磁帶組態檔。
++
+[listing]
+----
+cluster1::> storage tape show-supported-status
+
+Node: cluster1-1
+                                Is
+Tape Drives                     Supported  Support Status
+------------------------------  ---------  -------------------------------
+Certance Ultrium 2              true       Dynamically Qualified
+Certance Ultrium 3              true       Dynamically Qualified
+Digital DLT2000                 true       Qualified
+....
+----
+.. 將磁帶機與輸出中的合格磁碟機清單進行比較。
++
+[NOTE]
+====
+輸出中的磁帶設備名稱可能與裝置標籤或互通性對照表中的名稱略有不同。例如、數位DLT2000也稱為「DLT2k」。您可以忽略這些次要的命名差異。
+
+====
+.. 如果某個設備未在輸出中列為合格設備、即使該設備符合互通性對照表的資格、請依照NetApp支援網站上的指示、下載並安裝該設備的更新組態檔案。
++
+http://mysupport.netapp.com/NOW/download/tools/tape_config["NetApp下載：磁帶設備組態檔案"]
+
++
+如果磁帶設備在出貨後符合資格、則內建磁帶組態檔中可能不會列出合格的裝置。
+
+
+
+. 驗證叢集中的每個節點都有叢集間LIF：
++
+.. 使用「network interface show -role intercluster」命令檢視節點上的叢集間LIF。
++
+[listing]
+----
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+----
+.. 如果叢集間LIF不存在於任何節點上、請使用「network interface create」命令建立叢集間LIF。
++
+[listing]
+----
+cluster1::> network interface create -vserver cluster1 -lif IC2 -role intercluster
+-home-node cluster1-2 -home-port e0b -address 192.0.2.68 -netmask 255.255.255.0
+-status-admin up -failover-policy local-only -firewall-policy intercluster
+
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
+----
++
+link:../networking/index.html["網路管理"]
+
+
+
+. 使用備份應用程式隨附的文件、識別備份應用程式是否支援叢集感知備份（Cab）。
++
+在判斷您可以執行的備份類型時、駕駛室內的支援是關鍵因素。
+
+

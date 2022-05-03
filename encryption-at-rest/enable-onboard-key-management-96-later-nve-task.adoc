@@ -1,0 +1,148 @@
+---
+permalink: encryption-at-rest/enable-onboard-key-management-96-later-nve-task.html 
+sidebar: sidebar 
+keywords: enabling, onboard key management, ontap 9.6, later, nve 
+summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。 
+---
+= 啟用ONTAP 更新版本（NVE）的內建金鑰管理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 在設定外部金鑰管理程式之前、您必須先設定MetroCluster 此解決方案。
+
+
+每次將節點新增至叢集時、您都必須執行「安全金鑰管理程式內建同步」命令。
+
+如果您有MetroCluster 一個支援功能、則必須先在本機叢集上執行「安全金鑰管理程式內建啟用」、然後在遠端叢集上執行「安全金鑰管理程式內建同步」、並在每個叢集上使用相同的密碼。
+
+根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。您可以使用「cc-mode-enable=yes」選項、要求使用者在重新開機後輸入通關密碼。
+
+對於NVE、如果您設定「cc-mode-enabled=yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。對於「Volume create」、您不需要指定「-加密true」。對於「Volume Move start」（磁碟區移動開始）、您不需要指定「-加密-目的地true」。
+
+設定ONTAP 靜止資料加密時、若要符合商業分類解決方案（CSfC）的要求、您必須搭配NVE使用NSE、並確保在「一般條件」模式中啟用「內建金鑰管理程式」。請參閱 link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSfC解決方案簡介"] 如需CSfC的詳細資訊、
+
+[NOTE]
+====
+在「Common Criteria（一般條件）」模式中啟用「Onboard Key Manager（機載金鑰管理程式）」（「cc-mode enabled=yes（啟用cc-mode-enable=yes）」）時、系統行為會以下列方式變更：
+
+* 系統會監控在「一般準則」模式下運作時、連續嘗試失敗的叢集密碼。
++
+如果您在開機時未輸入正確的叢集密碼、則不會掛載加密的磁碟區。若要修正此問題、您必須重新啟動節點、然後輸入正確的叢集密碼。一旦開機、系統最多可連續5次嘗試在24小時內、針對任何需要叢集密碼作為參數的命令、正確輸入叢集密碼。如果達到限制（例如、您連續5次未正確輸入叢集密碼）、則必須等待24小時逾時期間、或是重新啟動節點、才能重設限制。
+
+* 系統映像更新會使用NetApp RSA-3072程式碼簽署憑證搭配SHA-384程式碼簽署摘要、來檢查映像完整性、而非一般的NetApp RSA-2048程式碼簽署憑證和SHA-256程式碼簽署摘要。
++
+升級命令會檢查各種數位簽章、以確認映像內容未遭竄改或毀損。如果驗證成功、映像更新程序會繼續下一步；否則映像更新會失敗。請參閱「叢集映像」手冊頁、以取得系統更新的相關資訊。
+
+
+
+====
+[NOTE]
+====
+Onboard Key Manager可將金鑰儲存在揮發性記憶體中。當系統重新開機或停止時、揮發性記憶體內容會被清除。在正常操作條件下、系統停止時、揮發性記憶體內容將在30秒內清除。
+
+====
+.步驟
+. 啟動金鑰管理程式設定：
++
+「安全金鑰管理程式已內建啟用-cc-mode啟用yes | no」
+
++
+[NOTE]
+====
+設定「cc-mode-enable=yes」、要求使用者在重新開機後輸入金鑰管理程式密碼。對於NVE、如果您設定「cc-mode-enabled=yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。支援cc-mode-enabled的選項MetroCluster 不支援在各種組態中。「安全金鑰管理程式內建啟用」命令取代了「安全金鑰管理程式設定」命令。
+
+====
++
+下列範例會在叢集1上啟動金鑰管理程式設定命令、而不要求在每次重新開機後輸入通關密碼：
+
++
+[listing]
+----
+cluster1::> security key-manager onboard enable
+
+Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
+Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
+----
+. 在通關密碼提示字元中、輸入32到256個字元之間的通關密碼、或輸入「'cc-mode'」（64到256個字元之間的通關密碼）。
++
+[NOTE]
+====
+如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管理程式設定作業再次顯示通關密碼提示之前、會有五秒鐘的延遲。
+
+====
+. 在通關密碼確認提示下、重新輸入通關密碼。
+. 確認已建立驗證金鑰：
++
+「安全金鑰管理程式金鑰查詢-金鑰類型NSE-AK」
+
++
+[NOTE]
+====
+「安全金鑰管理程式金鑰查詢」命令會取代「安全金鑰管理程式查詢金鑰」命令。如需完整的命令語法、請參閱手冊頁。
+
+====
++
+下列範例可驗證是否已為「cluster1（叢集1）”建立驗證金鑰：
+
++
+[listing]
+----
+cluster1::> security key-manager key query -key-type NSE-AK
+       Vserver: cluster1
+   Key Manager: onboard
+          Node: node1
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+
+       Vserver: svm1
+   Key Manager: onboard
+          Node: node1
+    Key Server: keyserver.svm1.com:5965
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+eb9f8311-e8d8-487e-9663-7642d7788a75  VEK       yes
+    Key ID: 0000000000000000020000000000004001cb18336f7c8223743d3e75c6a7726e0000000000000000
+9d09cbbf-0da9-4696-87a1-8e083d8261bb  VEK       yes
+    Key ID: 0000000000000000020000000000004064f2e1533356a470385274a9c3ffb9770000000000000000
+
+       Vserver: cluster1
+   Key Manager: onboard
+          Node: node2
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+
+       Vserver: svm1
+   Key Manager: onboard
+          Node: node2
+    Key Server: keyserver.svm1.com:5965
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+eb9f8311-e8d8-487e-9663-7642d7788a75  VEK       yes
+    Key ID: 0000000000000000020000000000004001cb18336f7c8223743d3e75c6a7726e0000000000000000
+9d09cbbf-0da9-4696-87a1-8e083d8261bb  VEK       yes
+    Key ID: 0000000000000000020000000000004064f2e1533356a470385274a9c3ffb9770000000000000000
+----
+
+
+將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
+
+所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。您也應該手動備份資訊、以便在發生災難時使用。

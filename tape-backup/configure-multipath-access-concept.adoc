@@ -1,0 +1,41 @@
+---
+permalink: tape-backup/configure-multipath-access-concept.html 
+sidebar: sidebar 
+keywords: considerations, configuring, multipath, tape, access 
+summary: 您可以從儲存系統設定兩條路徑、以存取磁帶庫中的磁帶機。如果其中一條路徑故障、儲存系統可以使用其他路徑存取磁帶機、而不需要立即修復故障路徑。這可確保磁帶作業可以重新啟動。 
+---
+= 設定多重路徑磁帶存取時的考量事項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從儲存系統設定兩條路徑、以存取磁帶庫中的磁帶機。如果其中一條路徑故障、儲存系統可以使用其他路徑存取磁帶機、而不需要立即修復故障路徑。這可確保磁帶作業可以重新啟動。
+
+從儲存系統設定多重路徑磁帶存取時、您必須考量下列事項：
+
+* 在支援LUN對應的磁帶庫中、若要以多重路徑存取LUN群組、LUN對應必須在每個路徑上對稱。
++
+磁帶機和媒體交換器會指派給磁帶庫中的LUN群組（一組共用相同啟動器路徑集的LUN）。LUN群組中的所有磁帶機都必須可供所有多個路徑上的備份與還原作業使用。
+
+* 從儲存系統最多可設定兩個路徑、以存取磁帶庫中的磁帶機。
+* 多重路徑磁帶存取支援負載平衡。預設會停用負載平衡。
+
+
+在下列範例中、儲存系統會透過兩個啟動器路徑存取LUN群組0：0B和0d。在這兩個路徑中、LUN群組具有相同的LUN編號、0和LUN數、5。儲存系統只能透過一個啟動器路徑3D存取LUN群組1。
+
+[listing]
+----
+
+STSW-3070-2_cluster::> storage tape library config show
+
+Node                    LUN Group   LUN Count  Library Name  Library Target Port  Initiator
+----------------------- ----------- ---------- ------------- -------------------- -----
+STSW-3070-2_cluster-01        0      5         IBM 3573-TL_1  510a09800000412d     0b
+                                                                                  	0d
+                              1      2         IBM 3573-TL_2  50050763124b4d6f     3d
+
+3 entries were displayed
+----
+如需詳細資訊、請參閱手冊頁。

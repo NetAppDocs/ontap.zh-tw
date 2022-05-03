@@ -1,0 +1,74 @@
+---
+permalink: volumes/non-space-reserved-luns-thin-provisioned-concept.html 
+sidebar: sidebar 
+keywords: configuration, settings, non-space-reserved, files, luns, thin-provisioned, volumes 
+summary: 此一實體磁碟區與檔案或LUN組態組合需要最少的儲存容量預先配置、但需要主動式可用空間管理、以避免空間不足造成錯誤。FlexVol 
+---
+= 非空間保留檔案或使用精簡配置磁碟區的LUN組態設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+此一實體磁碟區與檔案或LUN組態組合需要最少的儲存容量預先配置、但需要主動式可用空間管理、以避免空間不足造成錯誤。FlexVol
+
+若要在精簡配置的Volume中設定非空間保留的檔案或LUN、必須執行下列設定：
+
+[cols="2*"]
+|===
+| Volume設定 | 價值 
+
+
+ a| 
+保證
+ a| 
+無
+
+
+
+ a| 
+部分保留
+ a| 
+0
+
+
+
+ a| 
+Snapshot保留
+ a| 
+任何
+
+
+
+ a| 
+Snapshot自動刪除
+ a| 
+選用
+
+
+
+ a| 
+自動擴充
+ a| 
+選用
+
+|===
+[cols="2*"]
+|===
+| 檔案或LUN設定 | 價值 
+
+
+ a| 
+保留空間
+ a| 
+已停用
+
+|===
+
+
+== 其他考量
+
+當磁碟區或Aggregate空間不足時、寫入檔案或LUN的作業可能會失敗。
+
+如果您不想主動監控磁碟區和Aggregate的可用空間、則應針對磁碟區啟用「自動擴充」、並將磁碟區的最大大小設為集合體的大小。在此組態中、您必須主動監控Aggregate可用空間、但不需要監控磁碟區中的可用空間。

@@ -1,0 +1,20 @@
+---
+permalink: san-admin/igroups-concept.html 
+sidebar: sidebar 
+keywords: understand, igroups 
+summary: 啟動器群組（igroup）是FC傳輸協定主機WWPN或iSCSI主機節點名稱的表格。您可以定義igroup並將其對應至LUN、以控制哪些啟動器可以存取LUN。 
+---
+= 關於igroup
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟動器群組（igroup）是FC傳輸協定主機WWPN或iSCSI主機節點名稱的表格。您可以定義igroup並將其對應至LUN、以控制哪些啟動器可以存取LUN。
+
+一般而言、您希望主機的所有啟動器連接埠或軟體啟動器都能存取LUN。如果您使用多重路徑軟體或擁有叢集式主機、則每個叢集主機的每個啟動器連接埠或軟體啟動器都需要通往相同LUN的備援路徑。
+
+您可以建立igroup來指定在建立LUN之前或之後、哪些啟動器可以存取LUN、但必須先建立igroup、才能將LUN對應至igroup。
+
+啟動器群組可以有多個啟動器、而且多個igroup可以有相同的啟動器。不過、您無法將LUN對應到具有相同啟動器的多個igroup。啟動器不能是不同ostypes的igroup成員。

@@ -1,0 +1,111 @@
+---
+permalink: svm-migrate/index.html 
+sidebar: sidebar 
+keywords: svm, migrate, workflow, relocate, prerequisites, data mobility 
+summary: 叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。此功能僅支援AFF 使用於支援於《支援》的《ONTAP 支援》（僅限）的《支援》（僅限）不支援iSCSI工作負載。 
+---
+= SVM資料移動性總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。此功能僅支援AFF 使用於支援於《支援》的《ONTAP 支援》（僅限）的《支援》（僅限）不支援iSCSI工作負載。
+
+SVM的名稱和UUID在移轉之後會維持不變、以及資料LIF名稱、IP位址和物件名稱（例如Volume名稱）。SVM中物件的UUID會有所不同。
+
+
+
+== SVM移轉工作流程
+
+此圖說明SVM移轉的典型工作流程。您可以從目的地叢集開始SVM移轉。您可以監控從來源或目的地的移轉作業。您可以執行手動轉換或自動轉換。預設會執行自動轉換。
+
+image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
+
+
+
+== 支援的組態
+
+支援下列組態：
+
+* 僅限部分陣列AFF
+* 來源和目的地上只有兩個節點叢集
+* 在資料中心內移轉、網路延遲最長為2毫秒
+
+
+
+
+== 先決條件
+
+* 您是叢集管理員
+* 來源叢集與目的地叢集彼此連接
+* 來源與目的地叢集已安裝資料保護套裝組合授權
+* 來源叢集中的所有節點都必須執行ONTAP 不含更新版本的功能
+* 來源叢集中的所有節點都必須執行相同ONTAP 的版本
+* 目的地叢集與來源叢集的有效叢集版本（ECV）相同或更新
+* 來源叢集和目的地叢集位於同一個L2網路中、且必須位於同一個VLAN中
+* 來源SVM所包含的資料磁碟區數量少於發行版本所支援的資料磁碟區數量上限。
++
+在支援的數據磁碟區數量上限為100。ONTAP
+
+* 目的地上有足夠的磁碟區放置空間
+* 如果來源SVM有加密磁碟區、則必須在目的地上設定「內建金鑰管理程式」
+
+
+
+
+== 衝突的作業
+
+您應該檢查是否有可能與SVM移轉發生衝突的作業：
+
+* 目前並未進行容錯移轉作業
+* WAFLIRON無法執行
+* 指紋未在進行中
+* SM磁帶 未在進行中
+* Vol Move、rehost、Clone、create、convert或分析功能均未執行
+
+
+
+
+== 支援的功能
+
+下列功能受ONTAP 支援：
+
+* NFS v3、NFS v4.1及NFS v4.2傳輸協定
+* NetApp Volume Encryption
+
+
+
+
+== 不支援的功能
+
+SVM移轉不支援下列功能：
+
+* iSCSI工作負載
+* IPv6生命里數
+* 當來源叢集的Onboard Key Manager（OKM）啟用Common Criteria（CC）模式時、SVM移轉
+* SVM對等、SnapMirror、資料保護磁碟區
+* SAN、NVMe over Fibre、CIFS、VScan、NFS v4.0、vStorage、S3複寫
+* 稽核
+* NDMP
+* VIP/BGP LIF
+* IPsec原則
+* 反勒索軟體
+* qtree、配額
+* SVM-DR
+* 目的地叢集的外部金鑰管理程式
+* SnapMirror
+* SnapLock
+* FlexGroups
+* FlexCache
+* FabricPools
+* Flash Pool Aggregate
+* MetroCluster
+* 系統管理員
+* 適用於VMware vSphere的虛擬儲存主控台（VSC是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從VSC 7.0開始。）
+* Volume複製
+* 個陣列FAS
+* 負載共享鏡像
+* Cloud Volumes ONTAP
+

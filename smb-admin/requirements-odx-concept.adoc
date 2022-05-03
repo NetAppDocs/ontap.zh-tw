@@ -1,0 +1,55 @@
+---
+permalink: smb-admin/requirements-odx-concept.html 
+sidebar: sidebar 
+keywords: odx, copy, offload, storage, virtual, machine, svm, requirement, requirements for using odx, odx 
+summary: 在您使用ODX卸載儲存虛擬機器（SVM）的複本之前、您必須先瞭解某些需求。 
+---
+= 使用ODX的需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在您使用ODX卸載儲存虛擬機器（SVM）的複本之前、您必須先瞭解某些需求。
+
+
+
+== 版本需求ONTAP
+
+發行版支援ODX進行複本卸載。ONTAP
+
+
+
+== SMB版本需求
+
+* 支援ODX搭配SMB 3.0及更新版本。ONTAP
+* 必須在CIFS伺服器上啟用SMB 3.0、才能啟用ODX：
++
+** 如果尚未啟用ODX、啟用ODX也會啟用SMB 3.0。
+** 停用SMB 3.0也會停用ODX。
+
+
+
+
+
+
+== Windows伺服器與用戶端需求
+
+在使用ODX卸載複本之前、Windows用戶端必須支援此功能。從Windows 2012 Server和Windows 8開始支援ODX。
+
+互通性對照表包含有關支援的Windows用戶端的最新資訊。
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+
+
+== Volume需求
+
+* 來源磁碟區至少必須為1.25 GB。
+* 必須在使用複本卸載的磁碟區上啟用重複資料刪除功能。
+* 如果您使用壓縮磁碟區、壓縮類型必須是可調適的、而且只支援8K大小的壓縮群組。
++
+不支援次要壓縮類型。
+
+

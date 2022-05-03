@@ -1,0 +1,55 @@
+---
+permalink: system-admin/configure-access-web-services-task.html 
+sidebar: sidebar 
+keywords: configure, access, web, services, http, https, svm 
+summary: 設定Web服務存取權可讓授權使用者使用HTTP或HTTPS存取叢集或儲存虛擬機器（SVM）上的服務內容。 
+---
+= 設定Web服務存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+設定Web服務存取權可讓授權使用者使用HTTP或HTTPS存取叢集或儲存虛擬機器（SVM）上的服務內容。
+
+.步驟
+. 如果已啟用防火牆、請確定將用於Web服務的LIF防火牆原則中已設定HTTP或HTTPS存取：
++
+[NOTE]
+====
+您可以使用「系統服務防火牆show」命令來檢查是否啟用防火牆。
+
+====
++
+.. 若要驗證防火牆原則中是否已設定HTTP或HTTPS、請使用「系統服務防火牆原則show」命令。
++
+您將「系統服務防火牆原則create」命令的「-service」參數設為「http」或「https」、以啟用原則來支援網路存取。
+
+.. 若要驗證支援HTTP或HTTPS的防火牆原則是否與提供Web服務的LIF相關聯、請使用「network interface show」命令搭配「-firewall-policy」參數。
++
+您可以使用帶有「-firewall-policy」參數的「network interface modify」命令、讓LIF的防火牆原則生效。
+
+
+
+. 若要設定叢集層級的Web傳輸協定引擎、並讓Web服務內容可供存取、請使用「系統服務Web modify」命令。
+. 如果您打算使用安全的Web服務（HTTPS）、請啟用SSL、並使用「安全SSL修改」命令、為叢集或SVM提供數位憑證資訊。
+. 若要為叢集或SVM啟用Web服務、請使用「vserver services web modify」命令。
++
+您必須針對要為叢集或SVM啟用的每個服務重複此步驟。
+
+. 若要授權角色存取叢集或SVM上的Web服務、請使用「vserver services web access create」命令。
++
+您授予存取權的角色必須已經存在。您可以使用「安全登入角色show」命令來顯示現有角色、或使用「安全登入角色create」命令來建立新角色。
+
+. 對於已獲授權存取Web服務的角色、請檢查「安全登入show」命令的輸出、確認其使用者也設定了正確的存取方法。
++
+若要存取ONTAP 此功能、使用者必須設定「ontapi」存取方法、才能存取此功能。若要存取所有其他Web服務、使用者必須設定「http」存取方法。
+
++
+[NOTE]
+====
+您可以使用「安全登入create」命令來新增使用者的存取方法。
+
+====
+

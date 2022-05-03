@@ -1,0 +1,80 @@
+---
+permalink: upgrade/task_verifying_the_lif_failover_configuration.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verifying, verify, lif, failover, configuration 
+summary: 在執行升級之前、您必須確認容錯移轉原則和容錯移轉群組的設定是否正確。 
+---
+= 驗證LIF容錯移轉組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在執行升級之前、您必須確認容錯移轉原則和容錯移轉群組的設定是否正確。
+
+
+NOTE: 在升級過程中、會根據升級方法來移轉LIF。視升級方法而定、可能會使用或不使用LIF容錯移轉原則。
+
+如果叢集中有8個以上的節點、則會使用批次方法執行自動升級。批次升級方法包括將叢集分成多個升級批次、在第一個批次中升級節點集、升級其高可用度（HA）合作夥伴、然後針對其餘批次重複此程序。在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP在更新的版本中、如果使用批次方法、則會將lifs移轉至其他批次群組。ONTAP
+
+如果叢集中的節點少於8個、則會使用循環方法執行自動升級。循環升級方法包括在HA配對中的每個節點上啟動容錯移轉作業、更新「故障」節點、啟動還原、然後針對叢集中的每個HA配對重複此程序。如果使用循環方法、則會將l生命 移轉至LIF容錯移轉原則所定義的容錯移轉目標節點。
+
+. 顯示每個資料LIF的容錯移轉原則：
++
+[cols="2*"]
+|===
+| 如果ONTAP 您的版本是... | 使用此命令 
+
+
+| 9.6或更新版本  a| 
+「網路介面show -service-policy data -容 錯移轉」
+
+
+
+| 9.5或更早版本  a| 
+「網路介面show -role data -容 錯移轉」
+
+|===
++
+此範例顯示具有兩個資料生命期的雙節點叢集的預設容錯移轉組態：
+
++
+[listing]
+----
+cluster1::> network interface show -role data -failover
+         Logical         Home                  Failover        Failover
+Vserver  Interface       Node:Port             Policy          Group
+-------- --------------- --------------------- --------------- ---------------
+vs0
+         lif0            node0:e0b             nextavail       system-defined
+                         Failover Targets: node0:e0b, node0:e0c,
+                                           node0:e0d, node0:e0e,
+                                           node0:e0f, node1:e0b,
+                                           node1:e0c, node1:e0d,
+                                           node1:e0e, node1:e0f
+vs1
+         lif1            node1:e0b             nextavail       system-defined
+                         Failover Targets: node1:e0b, node1:e0c,
+                                           node1:e0d, node1:e0e,
+                                           node1:e0f, node0:e0b,
+                                           node0:e0c, node0:e0d,
+                                           node0:e0e, node0:e0f
+----
++
+「*容錯移轉目標*」欄位會顯示每個LIF的容錯移轉目標優先順序清單。例如、如果LIF從主連接埠（節點0上的e0b）容錯移轉、則會先嘗試容錯移轉至節點0上的連接埠e0c。如果lif0無法容錯移轉至e0c、則會再次嘗試容錯移轉至節點0上的連接埠e0d、依此類推。
+
+. 如果任何生命期（SAN生命期以外）的容錯移轉原則設定為停用、請使用網路介面modify命令來啟用容錯移轉。
+. 對於每個LIF、請確認「*容錯移轉目標*」欄位包含來自不同節點的資料連接埠、這些連接埠在LIF主節點升級時仍會保持正常運作。
++
+您可以使用「network interface容錯移轉群組modify」命令、將容錯移轉目標新增至容錯移轉群組。
+
++
+.範例
+[listing]
+----
+network interface failover-groups modify -vserver vs0 -failover-group fg1 -targets sti8-vsim-ucs572q:e0d,sti8-vsim-ucs572r:e0d
+----
+
+
+link:../networking/networking_reference.html["網路與LIF管理"]

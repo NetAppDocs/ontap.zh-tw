@@ -1,0 +1,74 @@
+---
+permalink: smb-admin/add-remove-replace-trusted-domains-preferred-lists-task.html 
+sidebar: sidebar 
+keywords: add, remove, trust, domain, prefer, cifs, server, modify, list, configure, bidirectional, multidomain, name, mapping, search, add remove or replace trusted domains in preferred trusted domain list, replace 
+summary: 您可以從CIFS伺服器的慣用信任網域清單中新增或移除信任的網域、也可以修改目前清單。如果您設定慣用的信任網域清單、則執行多網域名稱對應搜尋時、會使用此清單而非探索到的雙向信任網域。 
+---
+= 在慣用的信任網域清單中新增、移除或取代信任的網域
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從SMB伺服器的慣用信任網域清單中新增或移除信任的網域、也可以修改目前的清單。如果您設定慣用的信任網域清單、則執行多網域名稱對應搜尋時、會使用此清單而非探索到的雙向信任網域。
+
+.關於這項工作
+* 如果您要將信任的網域新增至現有清單、新清單會與現有清單合併、新項目會放在最後系統會依照信任網域清單中顯示的順序來搜尋信任的網域。
+* 如果您要從現有清單中移除信任的網域、但未指定清單、則會移除指定儲存虛擬機器（SVM）的整個信任網域清單。
+* 如果您修改現有的信任網域清單、新清單會覆寫現有清單。
+
+
+[NOTE]
+====
+您應該只在慣用的信任網域清單中輸入雙向信任的網域。即使您可以將傳出或傳入的信任網域輸入偏好的網域清單、但在執行多網域名稱對應搜尋時仍不會使用這些網域。跳過單向網域的項目、然後移至清單中的下一個雙向信任網域。ONTAP
+
+====
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您要使用偏好的信任網域清單執行下列動作... | 使用命令... 
+
+
+ a| 
+將信任的網域新增至清單
+ a| 
++vserver CIFS網域名稱-對應-搜尋add -vserver _vserver_name_-Trusted網域FQDN、...+
+
+
+
+ a| 
+從清單中移除信任的網域
+ a| 
++vserver CIFS網域名稱-對應-搜尋移除-vserver _vserver_name_[信任的網域FQDN、...]+'
+
+
+
+ a| 
+修改現有清單
+ a| 
++vserver CIFS網域名稱-對應-搜尋修改-vserver _vserver_name_-信任的網域FQDN、...+
+
+|===
+
+
+下列命令會將兩個信任的網域（cifs1.example.com和cifs2.example.com）新增至SVM VS1所使用的慣用信任網域清單：
+
+[listing]
+----
+cluster1::> vserver cifs domain name-mapping-search add -vserver vs1 -trusted-domains cifs1.example.com, cifs2.example.com
+----
+下列命令會從SVM VS1使用的清單中移除兩個信任的網域：
+
+[listing]
+----
+cluster1::> vserver cifs domain name-mapping-search remove -vserver vs1 -trusted-domains cifs1.example.com, cifs2.example.com
+----
+下列命令會修改SVM VS1所使用的信任網域清單。新清單會取代原始清單：
+
+[listing]
+----
+cluster1::> vserver cifs domain name-mapping-search modify -vserver vs1 -trusted-domains cifs3.example.com
+----
+xref:display-preferred-trusted-domain-list-task.adoc[顯示偏好信任網域清單的相關資訊]

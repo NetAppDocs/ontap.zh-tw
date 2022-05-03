@@ -1,0 +1,86 @@
+---
+permalink: nas-audit/requirements-best-practices-fpolicy-concept.html 
+sidebar: sidebar 
+keywords: requirements, considerations, best practices, configure, fpolicy 
+summary: 在儲存虛擬機器（SVM）上建立及設定FPolicy組態之前、您必須瞭解設定FPolicy的特定需求、考量事項及最佳實務做法。 
+---
+= 設定FPolicy的需求、考量及最佳實務做法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存虛擬機器（SVM）上建立及設定FPolicy組態之前、您必須瞭解設定FPolicy的特定需求、考量事項及最佳實務做法。
+
+
+
+== 設定FPolicy的方法
+
+FPolicy功能可透過命令列介面（CLI）或API進行設定。本指南使用CLI建立、管理及監控叢集上的FPolicy組態。
+
+
+
+== 設定FPolicy的需求
+
+在儲存虛擬機器（SVM）上設定及啟用FPolicy之前、您必須先瞭解特定需求。
+
+* 叢集中的所有節點都必須執行ONTAP 支援FPolicy的版本的功能。
+* 如果您不使用ONTAP 本機的FPolicy引擎、則必須安裝外部FPolicy伺服器（FPolicy伺服器）。
+* FPolicy伺服器必須安裝在可從啟用FPolicy原則的SVM資料生命區存取的伺服器上。
+* FPolicy伺服器的IP位址必須在FPolicy原則外部引擎組態中設定為主要或次要伺服器。
+* 如果FPolicy伺服器透過特殊權限的資料通道存取資料、則必須滿足下列額外需求：
++
+** SMB必須在叢集上獲得授權。
++
+特殊權限資料存取是使用SMB連線來完成。
+
+** 必須設定使用者認證、才能透過權限資料通道存取檔案。
+** FPolicy伺服器必須在FPolicy組態中設定的認證下執行。
+** 所有用於與FPolicy伺服器通訊的資料生命期、都必須設定為將「CIFS」設為允許的其中一個傳輸協定。
++
+這包括用於傳遞讀取連線的lifs。
+
+
+
+
+
+
+
+== 設定FPolicy時的最佳實務做法與建議
+
+在儲存虛擬機器（SVM）上設定FPolicy時、您必須熟悉組態最佳實務做法和建議、以確保FPolicy組態提供健全的監控效能和結果、以符合您的需求。
+
+* 外部FPolicy伺服器（FPolicy伺服器）應置於靠近叢集的位置、並具備高頻寬連線能力、以提供最短的延遲和高頻寬連線能力。
+* FPolicy外部引擎應設定多個FPolicy伺服器、以提供FPolicy伺服器通知處理的恢復能力和高可用度、尤其是當原則設定為同步篩選時。
+* 建議您在進行任何組態變更之前、先停用FPolicy原則。
++
+例如、如果您想要在針對啟用的原則設定的FPolicy外部引擎中新增或修改IP位址、您應該先停用該原則。
+
+* 叢集節點對FPolicy伺服器比率應最佳化、以確保FPolicy伺服器不會過載、這可能會在SVM回應用戶端要求時產生延遲。
++
+最佳比率取決於使用FPolicy伺服器的應用程式。
+
+
+
+
+
+== Passthsther-read升級與還原考量
+
+在升級ONTAP 至支援Passthrough-read的版本之前、或在回復至不支援passe-read的版本之前、您必須瞭解某些升級與還原考量事項。
+
+
+
+=== 升級
+
+將所有節點升級至ONTAP 支援FPolicy Passthrough-read的版本後、叢集就能使用Passthrough-read功能；不過、在現有的FPolicy組態上、依預設會停用pass-read。若要在現有的FPolicy組態上使用passThrough讀取、您必須停用FPolicy原則並修改組態、然後重新啟用組態。
+
+
+
+=== 還原
+
+在還原ONTAP 至不支援FPolicy Passthrough-read的版本之前、必須符合下列條件：
+
+* 必須停用所有使用Passthrough-read的原則、然後修改受影響的組態、使其不使用passThrough讀取。
+* 必須停用叢集上的每個FPolicy原則、以停用叢集上的FPolicy功能。
+

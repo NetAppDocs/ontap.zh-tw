@@ -1,0 +1,46 @@
+---
+permalink: system-admin/rules-specifying-values-concept.html 
+sidebar: sidebar 
+keywords: rules, specifying, values, cli, parameters, required, optional 
+summary: 大多數命令都包含一個或多個必要或選用的參數。許多參數都需要您為其指定一個值。在CLI中指定值的規則有幾種。 
+---
+= 在CLI中指定值的規則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+大多數命令都包含一個或多個必要或選用的參數。許多參數都需要您為其指定一個值。在CLI中指定值的規則有幾種。
+
+* 值可以是數字、布林指定符號、預先定義值列舉清單中的選取項目、或是文字字串。
++
+有些參數可以接受以逗號分隔的兩個或多個值清單。以逗號分隔的值清單不需要在引號中（""）。每當您指定文字、空格或查詢字元（若不是以小於或大於符號開頭的查詢或文字）時、必須以引號括住實體。
+
+* CLI會解譯問號（「？」） 做為顯示特定命令說明資訊的命令。
+* 您在CLI中輸入的某些文字（例如命令名稱、參數和某些值）不區分大小寫。
++
+例如、當您輸入「Vserver CIFS」命令的參數值時、會忽略大寫。不過、大多數的參數值（例如節點名稱、儲存虛擬機器（SVM）、集合體、磁碟區和邏輯介面）都會區分大小寫。
+
+* 如果您想要清除某個參數的值、而該參數取用字串或清單、請指定一組空白的引號（""）或破折號（""-""）。
+* 雜湊符號（「#」）也稱為井號、表示命令列輸入的註解；如果使用、則應顯示在命令列的最後一個參數之後。
++
+CLI會忽略行尾與行尾之間的文字。
+
+
+
+在下列範例中、會以文字註解建立SVM。然後修改SVM以刪除註解：
+
+[listing]
+----
+cluster1::> vserver create -vserver vs0 -subtype default -rootvolume root_vs0
+-aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -is-repository false -ipspace ipspaceA -comment "My SVM"
+cluster1::> vserver modify -vserver vs0 -comment ""
+----
+在下列範例中、使用「##」符號的命令列註解會指出命令的作用。
+
+[listing]
+----
+cluster1::> security login create -vserver vs0 -user-or-group-name new-admin
+-application ssh -authmethod password #This command creates a new user account
+----

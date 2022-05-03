@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_ipspaces_@cluster_administrators_only@_overview.html 
+keywords: ipspace, ipspaces, introduction, introducing, overview, ipv4, ipv6, routing, route, domain, configure ipspaces overview 
+summary: IPspace可定義儲存虛擬機器（SVM）所在的獨特IP位址空間 
+---
+= 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+IPspaces可讓您設定單ONTAP 一的支援叢集、讓用戶端從多個管理性獨立的網路網域存取、即使這些用戶端使用相同的IP位址子網路範圍也一樣。如此可將用戶端流量區隔、以確保隱私與安全。
+
+IPspace可定義儲存虛擬機器（SVM）所在的獨特IP位址空間。為IPspace定義的連接埠和IP位址僅適用於該IPspace。IPspace內的每個SVM都會有一個不同的路由表、因此不會發生跨SVM或跨IPspace流量路由傳送。
+
+
+NOTE: IPspace可在其路由網域上同時支援IPv6位址。
+
+如果您要管理單一組織的儲存設備、則不需要設定IPspaces。如果您要在單ONTAP 一的一套叢集上管理多家公司的儲存設備、而且您確定您的客戶都沒有衝突的網路組態、那麼您也不需要使用IPspaces。在許多情況下、使用儲存虛擬機器（SVM）及其各自獨特的IP路由表、可用來分隔獨特的網路組態、而非使用IPspace。

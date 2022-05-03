@@ -1,0 +1,50 @@
+---
+permalink: san-admin/prevent-flexclone-file-lun-deleted-task.html 
+sidebar: sidebar 
+keywords: prevent, specific, flexclone file, flexclone lun, automatically, deleted 
+summary: 如果您將FlexVol 某個實體磁碟區設定為自動刪除FlexClone檔案和FlexClone LUN、則任何符合您指定條件的實體複本都可能會被刪除。如果您有想保留的特定FlexClone檔案或FlexClone LUN、您可以將其排除在自動FlexClone刪除程序之外。 
+---
+= 避免自動刪除特定的FlexClone檔案或FlexClone LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您將FlexVol 某個實體磁碟區設定為自動刪除FlexClone檔案和FlexClone LUN、則任何符合您指定條件的實體複本都可能會被刪除。如果您有想保留的特定FlexClone檔案或FlexClone LUN、您可以將其排除在自動FlexClone刪除程序之外。
+
+必須安裝FlexClone授權。
+
+當您建立FlexClone檔案或FlexClone LUN時、預設會停用該實體複本的自動刪除設定。當您設定FlexVol 一個自動刪除磁碟區來自動刪除複本、以回收磁碟區上的空間時、會保留已停用自動刪除的FlexClone檔案和FlexClone LUN。
+
+[NOTE]
+====
+如果您將磁碟區上的「承諾」層級設為「try」或「中斷」、您可以停用這些複本的自動刪除功能、個別保留特定的FlexClone檔案或FlexClone LUN。但是、如果您將磁碟區上的「承諾」層級設為「恢復」、而且銷毀清單中包含「LUN_clone、file_clone」、則磁碟區設定會覆寫複製設定、而且無論實體複本的自動刪除設定為何、都可以刪除所有FlexClone檔案和FlexClone LUN。
+
+====
+.步驟
+. 使用「Volume file clone autodete」命令、防止自動刪除特定的FlexClone檔案或FlexClone LUN。
++
+以下範例說明如何停用vol1中所含的FlexClone LUN lun1_clone自動刪除：
+
++
+[listing]
+----
+cluster1::> volume file clone autodelete -vserver vs1 -volume vol1 -clone-path lun1_clone -enable false
+----
++
+無法自動刪除已停用自動刪除的FlexClone檔案或FlexClone LUN、以回收磁碟區上的空間。
+
+. 使用「volume file clone show-autod刪除」命令、確認FlexClone檔案或FlexClone LUN已停用自動刪除功能。
++
+以下範例顯示FlexClone LUN lun1_clone的自動刪除為假：
+
++
+[listing]
+----
+cluster1::> volume file clone show-autodelete -vserver vs1 -clone-path vol/vol1/lun1_clone
+															Vserver Name: vs1
+															Clone Path: vol/vol1/lun1_clone
+															Autodelete Enabled: false
+----
+

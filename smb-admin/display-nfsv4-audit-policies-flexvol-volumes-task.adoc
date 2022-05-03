@@ -1,0 +1,80 @@
+---
+permalink: smb-admin/display-nfsv4-audit-policies-flexvol-volumes-task.html 
+sidebar: sidebar 
+keywords: display, information, nfsv4, audit, policies, policy, flexvol, volume, ontap, cli, security, style, permission, applied, apply, system, access, control, lists, sacl, result, validate, security, display information about nfsv4 audit policies on flexvol volumes using cli 
+summary: 您可以FlexVol 使用ONTAP CLI在S什麼 磁碟區上顯示NFSv4稽核原則的相關資訊、包括安全樣式和有效的安全樣式、套用的權限、以及系統存取控制清單（SACL）的相關資訊。您可以使用結果來驗證安全性組態或疑難排解稽核問題。 
+---
+= 使用FlexVol CLI顯示有關NFSv4稽核原則的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以FlexVol 使用ONTAP CLI在S什麼 磁碟區上顯示NFSv4稽核原則的相關資訊、包括安全樣式和有效的安全樣式、套用的權限、以及系統存取控制清單（SACL）的相關資訊。您可以使用結果來驗證安全性組態或疑難排解稽核問題。
+
+您必須提供儲存虛擬機器（SVM）的名稱、以及要顯示其稽核資訊的檔案或目錄路徑。您可以以摘要形式或詳細清單來顯示輸出。
+
+* UNIX安全型磁碟區和qtree僅使用NFSv4 SACL來執行稽核原則。
+* 混合式安全型磁碟區中的檔案和目錄、若為UNIX安全型態、則可套用NFSv4稽核原則。
++
+混合式安全型磁碟區和qtree可包含使用UNIX檔案權限的部分檔案和目錄、包括模式位元或NFSv4 ACL、以及使用NTFS檔案權限的部分檔案和目錄。
+
+* 混合式安全型磁碟區的最上層可能具有UNIX或NTFS的有效安全性、而且可能包含或不包含NFSv4 SACL。
+* ACL輸出只會針對具有NTFS或NFSv4安全性的檔案和資料夾顯示。
++
+對於使用UNIX安全性的檔案和資料夾而言、此欄位為空白、只套用模式位元權限（無NFSv4 ACL）。
+
+* ACL輸出中的擁有者和群組輸出欄位僅適用於NTFS安全性描述元。
+* 因為即使Volume root或qtree的有效安全樣式為UNIX、也可以在混合式安全型Volume或qtree上設定儲存層級的存取保護安全性、 已設定儲存層級存取保護的Volume或qtree路徑輸出、可能會同時顯示一般NFSv4檔案和目錄SACL、以及儲存層級存取保護NTFS SACL。
+* 由於UNIX Volume或qtree上支援儲存層級的存取保護安全性（如果SVM上已設定CIFS伺服器）、因此輸出可能包含套用至「-path」參數中指定之Volume或qtree的儲存層級存取保護安全性相關資訊。
+
+
+.步驟
+. 以所需的詳細資料層級顯示檔案和目錄安全性設定：
++
+|===
+| 如果您想要顯示資訊... | 輸入下列命令... 
+
+
+ a| 
+以摘要形式提供
+ a| 
+「vserver安全性檔案目錄show -vserver vserver_name -path path'
+
+
+
+ a| 
+更詳細的資料
+ a| 
+「vserver安全性檔案目錄show -vserver vserver_name -path path -expand mask true」
+
+|===
+
+
+以下範例顯示SVM VS1中路徑「/lab」的安全資訊。此UNIX安全型路徑具有NFSv4 SACL。
+
+[listing]
+----
+cluster::> vserver security file-directory show -vserver vs1 -path /lab
+
+                Vserver: vs1
+              File Path: /lab
+      File Inode Number: 288
+         Security Style: unix
+        Effective Style: unix
+         DOS Attributes: 11
+ DOS Attributes in Text: ----D--R
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 0
+ Unix Mode Bits in Text: ---------
+                   ACLs: NFSV4 Security Descriptor
+                         Control:0x8014
+                         SACL - ACEs
+                           SUCCESSFUL-S-1-520-0-0xf01ff-SA
+                           FAILED-S-1-520-0-0xf01ff-FA
+                         DACL - ACEs
+                           ALLOW-S-1-520-1-0xf01ff
+----

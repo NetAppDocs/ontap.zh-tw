@@ -1,0 +1,47 @@
+---
+permalink: concepts/snapmirror-disaster-recovery-data-transfer-concept.html 
+sidebar: sidebar 
+keywords: snapmirror disaster recovery, data transfer 
+summary: SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本或鏡射、以便在主站台發生災難時、繼續提供資料。 
+---
+= SnapMirror災難恢復和資料傳輸
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本（或鏡射）、以便在主站台發生災難時、繼續提供資料。
+
+資料會在磁碟區層級鏡射。一線儲存設備的來源磁碟區與二線儲存設備的目的地磁碟區之間的關係稱為「資料保護」關係。_磁碟區所在的叢集與從磁碟區提供資料的SVM必須經過_處理。_對等關係可讓叢集與SVM交換資料 資料安全無虞。
+
+[TIP]
+====
+您也可以在SVM之間建立資料保護關係。在這種關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM所擁有的磁碟區中的資料。
+
+====
+從ONTAP S59.10.1開始、您可以使用S3 SnapMirror在S3儲存區之間建立資料保護關係。目的地庫位可位於本機ONTAP 或遠端的不支援系統、或StorageGRID 是位於非ONTAP系統上、例如：
+
+第一次叫用SnapMirror時、它會執行從來源磁碟區到目的地磁碟區的_基準傳輸_。基礎傳輸通常涉及下列步驟：
+
+* 製作來源Volume的Snapshot複本。
+* 將Snapshot複本及其參照的所有資料區塊傳輸到目的地Volume。
+* 將來源磁碟區上其餘較不新的Snapshot複本傳輸到目的地磁碟區、以便在「'active'」鏡像毀損時使用。
+
+
+一旦完成基礎傳輸、SnapMirror只會將新的Snapshot複本傳輸到鏡像。更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的Snapshot原則。當主要站台發生災難時、您可以在最少中斷的情況下啟動目的地Volume、並在還原服務時重新啟動來源Volume。
+
+由於SnapMirror只會在建立基礎之後傳輸Snapshot複本、因此複寫作業既快速又不中斷營運。如同容錯移轉使用案例所暗示、次要系統上的控制器應與主要系統上的控制器相當或幾乎等同、以有效率地從鏡射儲存設備提供資料。
+
+image::../media/snapmirror.gif[SnapMirror]
+
+|===
+
+
+ a| 
+*使用SnapMirror進行資料傳輸*
+
+您也可以使用SnapMirror在NetApp資料架構的端點之間複寫資料。建立SnapMirror原則時、您可以選擇一次性複寫或重複複複寫。
+
+|===
+2021年12月16日、Jira IE-412

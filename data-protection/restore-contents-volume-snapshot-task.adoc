@@ -1,0 +1,62 @@
+---
+permalink: data-protection/restore-contents-volume-snapshot-task.html 
+sidebar: sidebar 
+keywords: restore, contents, volume, snapshot copy 
+summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原磁碟區的內容。 
+---
+= 從Snapshot複本還原磁碟區內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「Volume Snapshot還原」命令、從Snapshot複本還原磁碟區的內容。
+
+如果磁碟區具有SnapMirror關係、請在從Snapshot複本還原之後、立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
+
+.步驟
+. 列出Volume中的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume _volume _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例顯示「vol1」中的Snapshot複本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 從Snapshot複本還原磁碟區內容：
++
+「Volume Snapshot還原-vserver _svm_-volume _volume _-snapshot _snapshot _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例還原「vol1（vol1）”的內容：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
+----
+

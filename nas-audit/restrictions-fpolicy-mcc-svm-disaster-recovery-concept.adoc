@@ -1,0 +1,40 @@
+---
+permalink: nas-audit/restrictions-fpolicy-mcc-svm-disaster-recovery-concept.html 
+sidebar: sidebar 
+keywords: restrictions, cluster-scoped, fpolicy, external engines, metrocluster, svm disaster recovery configurations 
+summary: 您可以將叢集儲存虛擬機器（SVM）指派給外部引擎、藉此建立叢集範圍內的FPolicy外部引擎。然而、在MetroCluster 使用叢集或SVM災難恢復組態建立以叢集為範圍的外部引擎時、選擇SVM用於與FPolicy伺服器進行外部通訊的驗證方法時、會有某些限制。 
+---
+= 叢集範圍內的FPolicy外部引擎、搭配MetroCluster 使用功能性和SVM災難恢復組態的限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將叢集儲存虛擬機器（SVM）指派給外部引擎、藉此建立叢集範圍內的FPolicy外部引擎。然而、在MetroCluster 使用叢集或SVM災難恢復組態建立以叢集為範圍的外部引擎時、選擇SVM用於與FPolicy伺服器進行外部通訊的驗證方法時、會有某些限制。
+
+建立外部FPolicy伺服器時、您可以選擇三種驗證選項：無驗證、SSL伺服器驗證和SSL相互驗證。雖然在選擇驗證選項時沒有任何限制、但如果將外部FPolicy伺服器指派給資料SVM、則在建立叢集範圍的FPolicy外部引擎時仍有限制：
+
+[cols="75,25"]
+|===
+
+
+| 組態 | 是否允許？ 
+
+
+ a| 
+不含驗證的SVM災難恢復和叢集範圍的FPolicy外部引擎（未設定SSL）MetroCluster
+ a| 
+是的
+
+
+
+ a| 
+包含SSL伺服器或SSL相互驗證的SVM災難恢復、以及叢集範圍的FPolicy外部引擎MetroCluster
+ a| 
+否
+
+|===
+* 如果存在具有SSL驗證的叢集範圍FPolicy外部引擎、而您想要建立MetroCluster 一套支援還原或SVM災難恢復的組態、您必須先修改此外部引擎、使其不使用驗證、或是移除外部引擎、才能建立MetroCluster 還原或SVM災難恢復組態。
+* 如果MetroCluster 已存在支援功能的不支援功能或SVM災難恢復組態、ONTAP 則無法使用SSL驗證來建立叢集範圍的FPolicy外部引擎。
+

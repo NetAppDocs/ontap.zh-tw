@@ -1,0 +1,39 @@
+---
+permalink: smb-admin/revert-dynamic-access-control-concept.html 
+sidebar: sidebar 
+keywords: aware, revert, version, ontap, support, dynamic, access, control, dac, revert considerations for dynamic access control 
+summary: 您應該瞭解還原ONTAP 至不支援動態存取控制（DAC）的版本時會發生什麼事、以及還原之前和之後必須執行的動作。 
+---
+= 還原動態存取控制的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解還原ONTAP 至不支援動態存取控制（DAC）的版本時會發生什麼事、以及還原之前和之後必須執行的動作。
+
+如果您想要將叢集還原成ONTAP 不支援動態存取控制的版本、且已在一或多個儲存虛擬機器（SVM）上啟用動態存取控制、則必須先執行下列動作、才能還原：
+
+* 您必須停用叢集上所有已啟用動態存取控制的SVM。
+* 您必須修改叢集上任何包含「cap接移」事件類型的稽核組態、才能只使用「file-op'」事件類型。
+
+
+您必須瞭解動態存取控制ACE的檔案和資料夾、並採取行動：
+
+* 如果叢集還原、則不會移除現有的動態存取控制ACE；不過、檔案存取檢查會忽略這些ACE。
+* 由於還原後會忽略動態存取控制ACE、因此使用動態存取控制ACE的檔案存取權會有所變更。
++
+這可能會允許使用者存取先前無法存取的檔案、或無法存取先前可能存取的檔案。
+
+* 您應該將非動態存取控制ACE套用至受影響的檔案、以還原其先前的安全層級。
++
+這可以在還原之前或還原完成後立即完成。
+
+
+
+[NOTE]
+====
+由於還原後會忽略動態存取控制ACE、因此在將非動態存取控制ACE套用至受影響的檔案時、不需要將其移除。不過、如果需要、您可以手動移除。
+
+====

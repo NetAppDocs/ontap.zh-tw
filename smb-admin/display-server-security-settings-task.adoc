@@ -1,0 +1,81 @@
+---
+permalink: smb-admin/display-server-security-settings-task.html 
+sidebar: sidebar 
+keywords: display, information, smb, cifs, server, security, settings, storage, virtual, machine, svm, verify, setting, 
+summary: 您可以在儲存虛擬機器（SVM）上顯示SMB伺服器安全性設定的相關資訊。您可以使用此資訊來驗證安全性設定是否正確。 
+---
+= 顯示SMB伺服器安全性設定的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上顯示SMB伺服器安全性設定的相關資訊。您可以使用此資訊來驗證安全性設定是否正確。
+
+顯示的安全性設定可以是該物件的預設值、也可以是透過ONTAP 使用列舉CLI或使用Active Directory群組原則物件（GPO）設定的非預設值。
+
+在工作群組模式中、請勿使用「vserver CIFS安全show」命令來執行SMB伺服器、因為部分選項無效。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要顯示有關...的資訊 | 輸入命令... 
+
+
+ a| 
+指定SVM上的所有安全性設定
+ a| 
+「Vserver CIFS安全性顯示-vserver _vserver_name_`
+
+
+
+ a| 
+SVM上的特定安全性設定或設定
+ a| 
+'+vserver CIFS安全性顯示-vserver _vserver_name_-功能變數[fieldname,...]+'您可以輸入「-fields？」 以判斷您可以使用哪些欄位。
+
+|===
+
+
+下列範例顯示SVM VS1的所有安全性設定：
+
+[listing]
+----
+cluster1::> vserver cifs security show -vserver vs1
+
+Vserver: vs1
+
+                          Kerberos Clock Skew:        5 minutes
+                          Kerberos Ticket Age:        10 hours
+                         Kerberos Renewal Age:        7 days
+                         Kerberos KDC Timeout:        3 seconds
+                          Is Signing Required:        false
+              Is Password Complexity Required:        true
+         Use start_tls For AD LDAP connection:        false
+                    Is AES Encryption Enabled:        false
+                       LM Compatibility Level:        lm-ntlm-ntlmv2-krb
+                   Is SMB Encryption Required:        false
+                      Client Session Security:        none
+              SMB1 Enabled for DC Connections:        false
+              SMB2 Enabled for DC Connections:        system-default
+LDAP Referral Enabled For AD LDAP connections:        false
+             Use LDAPS for AD LDAP connection:        false
+    Encryption is required for DC Connections:        false
+ AES session key enabled for NetLogon channel:        false
+  Try Channel Binding For AD LDAP Connections:        false
+----
+請注意、顯示的設定取決於執行ONTAP 中的版本。
+
+以下範例顯示SVM VS1的Kerberos時鐘偏移：
+
+[listing]
+----
+cluster1::> vserver cifs security show -vserver vs1 -fields kerberos-clock-skew
+
+            vserver kerberos-clock-skew
+            ------- -------------------
+            vs1     5
+----
+xref:display-gpo-config-task.adoc[顯示有關GPO組態的資訊]

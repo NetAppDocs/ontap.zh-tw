@@ -1,0 +1,53 @@
+---
+permalink: antivirus/enable-virus-scan-svm-task.html 
+sidebar: sidebar 
+keywords: enable, virus scan, svm 
+summary: 您必須在SVM上啟用掃毒、才能執行隨需存取或隨需掃描。VScan組態必須存在。 
+---
+= 在SVM上啟用掃毒
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須在SVM上啟用掃毒、才能執行隨需存取或隨需掃描。VScan組態必須存在。
+
+.步驟
+. 在SVM上啟用掃毒：
++
+「vserver vscan啟用-vserver data_SVM」
+
++
+[NOTE]
+====
+如有必要、您可以使用「vserver vscan disable]命令來停用掃毒。
+
+====
++
+以下命令可在'VS1'SVM上進行病毒掃描：
+
++
+[listing]
+----
+cluster1::> vserver vscan enable -vserver vs1
+----
+. 確認SVM上已啟用掃毒：
++
+「vserver vscan show -vserver data_SVM」
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+以下命令顯示"VS1'SVM的VScan狀態：
+
++
+[listing]
+----
+cluster1::> vserver vscan show -vserver vs1
+
+                           Vserver: vs1
+                      Vscan Status: on
+----
+

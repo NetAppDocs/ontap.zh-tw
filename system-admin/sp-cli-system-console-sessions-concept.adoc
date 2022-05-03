@@ -1,0 +1,36 @@
+---
+permalink: system-admin/sp-cli-system-console-sessions-concept.html 
+sidebar: sidebar 
+keywords: relationship, sp, cli, console, system, sessions, shell, environment, login, authentication 
+summary: 您可以開啟SP CLI工作階段、從遠端管理節點、並開啟個別的SP主控台工作階段、以存取節點的主控台。SP主控台工作階段會鏡射並行系統主控台工作階段中顯示的輸出。SP和系統主控台具有獨立的Shell環境、並具有獨立的登入驗證。 
+---
+= SP CLI、SP主控台和系統主控台工作階段之間的關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以開啟SP CLI工作階段、從遠端管理節點、並開啟個別的SP主控台工作階段、以存取節點的主控台。SP主控台工作階段會鏡射並行系統主控台工作階段中顯示的輸出。SP和系統主控台具有獨立的Shell環境、並具有獨立的登入驗證。
+
+瞭解SP CLI、SP主控台及系統主控台工作階段的相關資訊、可協助您從遠端管理節點。以下說明工作階段之間的關係：
+
+* 一次只能有一位管理員登入SP CLI工作階段、不過SP可讓您同時開啟SP CLI工作階段和另一個SP主控台工作階段。
++
+SP CLI會以SP提示字元（「P>」）表示。在SP CLI工作階段中、您可以使用SP「系統主控台」命令來啟動SP主控台工作階段。同時、您也可以透過SSH啟動個別的SP CLI工作階段。如果按Ctrl-D退出SP主控台工作階段、則會自動返回SP CLI工作階段。如果SP CLI工作階段已經存在、會出現訊息詢問您是否要終止現有的SP CLI工作階段。如果輸入「y」、現有的SP CLI工作階段將會終止、讓您從SP主控台返回SP CLI。此動作會記錄在SP事件記錄中。
+
++
+在透過SSH連線的SflexCLI工作階段中ONTAP 、您可以從ONTAP 另一個節點執行「系統節點執行主控台」命令、以切換至節點的系統主控台。
+
+* 基於安全考量、SP CLI工作階段和系統主控台工作階段具有獨立的登入驗證。
++
+當您從SP CLI啟動SP主控台工作階段（使用SP「System Console」（系統主控台）命令）時、系統會提示您輸入系統主控台認證資料。從系統主控台工作階段（按Ctrl-G）存取SP CLI時、系統會提示您輸入SP CLI認證。
+
+* SP主控台工作階段和系統主控台工作階段具有獨立的Shell環境。
++
+SP主控台工作階段會鏡射並行系統主控台工作階段中顯示的輸出。但是、並行系統主控台工作階段不會鏡射SP主控台工作階段。
+
++
+SP主控台工作階段不會鏡射並行SSH工作階段的輸出。
+
+

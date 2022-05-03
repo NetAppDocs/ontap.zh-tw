@@ -1,0 +1,40 @@
+---
+permalink: encryption-at-rest/enable-onboard-key-management-new-nodes-concept.html 
+sidebar: sidebar 
+keywords: onboard key management, onboard new nodes, okm, encrypt 
+summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。 
+---
+= 在新增的節點中啟用內建金鑰管理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。
+
+[NOTE]
+====
+對於支援更新版本的版本、每次將節點新增至叢集時、都必須執行「安全性金鑰管理程式設定」命令。ONTAP
+
+對於僅適用於支援支援支援支援的版本、您必須在每次新增節點至叢集時、執行「安全金鑰管理程式同步」命令。ONTAP
+
+如果將節點新增至已設定內建金鑰管理的叢集、您將會執行此命令來重新整理遺失的金鑰。
+
+====
+如果您使用MetroCluster 的是「不確定」組態、請參閱下列準則：
+
+* 從ONTAP 功能表9.6開始、您必須先在本機叢集上執行「安全金鑰管理程式內建啟用」、然後在遠端叢集上執行「安全金鑰管理程式內建同步」、並在每個叢集上使用相同的密碼。
+* 在支援功能9.5中ONTAP 、您必須在本機叢集上執行「安全金鑰管理程式設定」、在遠端叢集上執行「安全金鑰管理程式設定-同步- MetroCluster組態設定是」、並在每個叢集上使用相同的密碼。
+* 在發行版發行版發行版之前、您必須在本機叢集上執行「安全金鑰管理程式設定」、等待約20秒、然後在遠端叢集上執行「安全金鑰管理程式設定」、並在每個叢集上使用相同的密碼。ONTAP
+
+
+根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。從ONTAP 使用支援功能9.4開始、您可以使用「-enable cc-mode yes」（啟用cc-mode yes）選項、要求使用者在重新開機後輸入通關密碼。
+
+對於NVE、如果您設定為「啟用cc-mode yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。對於「Volume create」、您不需要指定「-加密true」。對於「Volume Move start」（磁碟區移動開始）、您不需要指定「-加密-目的地true」。
+
+[NOTE]
+====
+密碼嘗試失敗後、您必須重新啟動節點。
+
+====

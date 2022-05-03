@@ -1,0 +1,109 @@
+---
+permalink: upgrade/concept_upgrade_methods.html 
+sidebar: sidebar 
+keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive 
+summary: 您用來升級的方法取決於您的組態。如果有、最好使用System Manager進行自動化不中斷升級（andu）。 
+---
+= 我應該使用哪種升級方法？
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您用來升級的方法（不中斷營運或中斷營運、自動化或手動）取決於您的組態。如果有、最好使用System Manager進行自動化不中斷升級（andu）。
+
+*不中斷升級*+不中斷升級利用ONTAP的高可用度（HA）容錯移轉技術、確保叢集在升級期間繼續提供資料。有兩種類型的不中斷升級程序。
+
+* _Batch更新+在批次更新中、叢集分成多個批次、每個批次都包含多個HA配對。在第一批中、有一半的節點會升級、之後是HA合作夥伴。接著會依序重複其餘批次的程序。
+* _Rolling更新+在循環更新中、節點會離線並升級、而合作夥伴則會接管其儲存設備。當節點升級完成時、合作夥伴節點會將控制權交回原始擁有節點、而此程序會在合作夥伴節點上重複執行。每個額外的HA配對都會依序升級、直到所有HA配對都執行目標版本為止。+*附註：*軟體產業經常使用術語「循環升級」來進行軟體升級、而不會造成服務中斷、因此通常是「不中斷升級」的同義詞。在更新版S19中、_循環更新_是可用於不中斷營運升級的程序之一。ONTAP
+
+
+不中斷升級可使用_automal__或_manual方法執行。
+
+* *自動不中斷升級（andu）*
++
+** 當系統管理員啟動andu時ONTAP 、Image1會自動在ONTAP 每個節點上安裝目標的支援影像、驗證叢集元件、確保叢集能夠在不中斷營運的情況下升級、然後在背景執行批次或循環更新。
++
+*** 批次更新是8個節點以上叢集的預設值。
+*** 對於節點少於8個的叢集、復原更新是預設值。您也可以針對具有8個節點以上的叢集、明確選取循環更新。
+
+
+** 您可以使用System Manager或ONTAP 使用無法執行的指令行介面（CLI）來執行andu。如果您的組態適用、建議使用System Manager進行andu升級。
+
+
+* *手動不中斷升級*
++
+** 系統管理員必須手動確認每個節點上叢集元件的升級就緒性、然後在前景手動執行循環更新程序步驟。
+** 手動且不中斷營運的升級是使用ONTAP 支援的CLI執行。
+** 如果您的組態不支援andu、則只能使用手動方法。
+
+
+
+
+*中斷升級*+在中斷升級的情況下、每個HA配對都會停用儲存容錯移轉、然後每個節點一次重新開機一個。中斷升級的執行速度比不中斷營運的升級更快、而且需要較少的步驟才能完成。不過、除非您可以在升級期間讓叢集離線、否則不應執行中斷升級。如果您是在SAN環境中運作、則應準備好在執行中斷升級之前、先關閉或暫停所有SAN用戶端。使用ONTAP 不中斷的CLI執行升級。
+
+
+
+== 非MetroCluster組態的方法
+
+具有2個以上節點的叢集可以使用下列任何升級方法、這些方法會依照建議使用的順序列出。
+
+* xref:task_upgrade_andu_sm.html[使用System Manager自動不中斷營運]
+* xref:task_upgrade_andu_cli.html[使用CLI自動不中斷營運]
+* xref:task_upgrade_nondisruptive_manual_cli.html[使用CLI進行不中斷的手動操作]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+單一節點叢集必須使用中斷方法之一、但建議使用自動化方法。
+
+* xref:task_upgrade_disruptive_automated_cli.html[使用CLI自動中斷營運]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+
+
+== 組態的方法MetroCluster
+
+每個組態可用的升級方法會依建議使用的順序列出。
+
+[cols="3*"]
+|===
+| 版本ONTAP | 節點數 | 升級方法 
+
+
+| 9.3或更新版本 | 2、4.  a| 
+* xref:task_upgrade_andu_sm.html[使用System Manager自動不中斷營運]
+* xref:task_upgrade_andu_cli.html[使用CLI自動不中斷營運]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+
+
+| 9.3或更新版本 | 8.  a| 
+* xref:task_upgrade_andu_cli.html[使用CLI自動不中斷營運]
+* xref:task_updating_a_four_or_eight_node_mcc.html[使用CLI進行不中斷的手動操作]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+
+
+| 9.2或更早版本 | 2.  a| 
+* xref:task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html[使用CLI手動不中斷（適用於雙節點叢集）]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+
+
+| 9.2或更早版本 | 4、8.  a| 
+* xref:task_updating_a_four_or_eight_node_mcc.html[使用CLI進行不中斷的手動操作]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用CLI手動中斷營運]
+
+
+
+
+| 9.0或更新版本 | 4、8（僅限修補程式） | xref:task_upgrade_andu_sm.html[使用System Manager自動不中斷營運] 
+
+
+| 9.2或更早版本 | 2、4、8（僅限修補程式） | xref:task_upgrade_andu_sm.html[使用System Manager自動不中斷營運] 
+|===

@@ -1,0 +1,54 @@
+---
+permalink: nfs-admin/create-name-mapping-task.html 
+sidebar: sidebar 
+keywords: create, name, mapping 
+summary: 您可以使用vserver name-mapping create命令來建立名稱對應。您可以使用名稱對應來讓Windows使用者存取UNIX安全樣式的磁碟區和相反的磁碟區。 
+---
+= 建立名稱對應
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver name-mappping create」命令來建立名稱對應。您可以使用名稱對應來讓Windows使用者存取UNIX安全樣式的磁碟區和相反的磁碟區。
+
+針對每個SVM、ONTAP 支援最多12、500個各個方向的名稱對應。
+
+.步驟
+. 建立名稱對應：
++
+「vserver name-mapping create -vserver vserver_name -direction｛krb-unix | win-unix | unix-win｝-posion integerity -Pattern text -replacement text」
+
++
+[NOTE]
+====
+也可以將「-Pattern'（模式）」和「-replacement（取代）」陳述式做為規則運算式。您也可以使用「-replacement」陳述式、使用null置換字串「」（空格字元）明確拒絕對使用者的對應。有關詳細信息，請參見"vserver name-mapping creman"（vserver名稱映射創建）手冊頁。
+
+====
++
+建立Windows對UNIX的對應時、ONTAP 在建立新對應時、任何與該系統有開放連線的SMB用戶端、都必須登出並重新登入、才能看到新的對應。
+
+
+
+下列命令會在名為VS1的SVM上建立名稱對應。對應是從UNIX到Windows的對應、位於優先順序清單中的位置1。對應會將UNIX使用者johnd對應至Windows使用者ENH\JohnDoe。
+
+[listing]
+----
+vs1::> vserver name-mapping create -vserver vs1 -direction unix-win -position 1 -pattern johnd
+-replacement "ENG\\JohnDoe"
+----
+下列命令會在名為VS1的SVM上建立另一個名稱對應。對應是從Windows到UNIX的對應、位於優先順序清單中的位置1。這裏的模式和替換包括正則表達式。對應會將網域中的每個CIFS使用者對應到與SVM相關聯的LDAP網域中的使用者。
+
+[listing]
+----
+vs1::> vserver name-mapping create -vserver vs1 -direction win-unix -position 1 -pattern "ENG\\(.+)"
+-replacement "\1"
+----
+下列命令會在名為VS1的SVM上建立另一個名稱對應。在此模式中、Windows使用者名稱中的「$」元素必須轉義、對應會將Windows使用者ENH\ John$ops對應至UNIX使用者john_ops。
+
+[listing]
+----
+vs1::> vserver name-mapping create -direction win-unix -position 1 -pattern ENG\\john\$ops
+-replacement john_ops
+----

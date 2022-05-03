@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: networking/delete_a_lif.html 
+keywords: 'remove a lif, destroy a lif, delete, deleting, remove, removing, logical, interface, lif, delete a lif, delete a network interface (lif) that is no longer required, network interface delete' 
+summary: 刪除不再需要的網路介面（LIF） 
+---
+= 刪除LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以刪除不再需要的網路介面（LIF）。
+
+要刪除的生命期不得在使用中。
+
+.步驟
+. 使用以下命令將要刪除的生命期標記爲管理性關閉：
++
+....
+network interface modify -vserver vserver_name -lif lif_name -status-admin down
+....
+. 使用「網路介面刪除」命令來刪除一個或所有LIF：
++
+[cols="30,70"]
+|===
+
+
+| 如果您要刪除... | 輸入命令... 
+
+
+ a| 
+特定LIF
+ a| 
+網路介面刪除-vserver vserver_name -liflif_name
+
+
+
+ a| 
+所有生命
+ a| 
+「網路介面刪除-vserver vserver_name -lIF *」
+
+|===
++
+下列命令會刪除LIF mgmtlif2：
+
++
+....
+network interface delete -vserver vs1 -lif mgmtlif2
+....
+. 使用「network interface show」命令確認LIF已刪除。
+

@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: high-availability/halt-reboot-node-wo-takeover-task.html 
+keywords: high availability pair, hair, inhibit-takeover, reboot, epsilon, HA 
+summary: 如果-禁止 接管參數設為「true」、則HA叢集中的兩個節點將停止提供資料、除非您變更特定組態設定。 
+---
+= 停止或重新開機節點、而不在雙節點叢集中啟動接管
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在雙節點叢集中、叢集高可用度（HA）可確保一個節點的故障不會停用叢集。如果您在雙節點叢集中停止或重新開機節點、但未使用設為「true」的「禁止接管」參數、則除非您變更特定組態設定、否則兩個節點都會停止提供資料。
+
+在使用「禁止接管true」參數重新開機或停止叢集HA中的節點之前、您必須先停用叢集HA、然後將epsilon指派給要保持連線的節點。
+
+.停止或重新開機節點
+. 停用叢集HA：「叢集HA modify -configured假」請注意、此作業不會停用儲存容錯移轉。
+. 由於停用叢集HA會自動將epsilon指派給兩個節點之一、因此您必須決定要保留它的節點、並在必要時將其重新指派給您要保持連線的節點。
++
+.. 將權限層級設為進階：當系統提示您繼續進入進階模式時、請設定權限進階確認。出現進階模式提示（*>）。
+.. 使用下列命令判斷哪個節點保留epsilon：叢集show在下列範例中、Node1保留epsilon：
++
+[listing]
+----
+cluster::*> cluster show
+Node         Health  Eligibility   Epsilon
+------------ ------- ------------  ------------
+Node1        true    true          true
+Node2        true    true          false
+----
++
+如果您想要停止或重新開機的節點不保留epsilon、請繼續執行步驟3。
+
+.. 如果您想要停止或重新開機的節點保留epsilon、您必須從節點移除：「叢集修改節點節點節點1 -epsilon假」、此時兩個節點都不保留epsilon。
+.. 將epsilon指派給您想要保持線上狀態的節點（在此範例中為Node2）：「cluster modify -Node Node2 -epsilon true」
+
+
+. 停止或重新開機、並禁止接管不保留epsilon的節點（在此範例中為Node2）、請視需要使用下列任一命令：「System Node halt -Node Node2 -itulite-takeover true」（系統節點重新開機-節點節點節點2 -itule-takeover true）
+. 當暫停或重新開機的節點重新連線後、您必須使用下列命令來啟用叢集HA：「cluster ha modify -configured true」（叢集HA修改設定為true）、啟用叢集HA會自動從兩個節點移除epsilon。
+. 返回管理員權限等級：「et -priv. admin」
+
+
+.相關資訊
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_halt_a_single_node_without_takeover_in_a_two-node__ONTAP_cluster["如何在雙節點ONTAP 的叢集中停止單一節點而不接管"^]
+

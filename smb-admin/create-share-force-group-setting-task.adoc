@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/create-share-force-group-setting-task.html 
+sidebar: sidebar 
+keywords: create, smb, share, force-group, setting, user, access, data, volume, qtree, unix, file, security, regard, ontap, belong, group, create an smb share with the force-group share setting 
+summary: 如果您想讓SMB使用者存取具有UNIX檔案安全性的磁碟區或qtree上的資料、ONTAP 將其視為屬於同一個UNIX群組、您可以使用強制群組共用設定來建立SMB共用區。 
+---
+= 使用強制群組共用設定建立SMB共用區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想讓SMB使用者存取具有UNIX檔案安全性的磁碟區或qtree上的資料、ONTAP 將其視為屬於同一個UNIX群組、您可以使用強制群組共用設定來建立SMB共用區。
+
+.步驟
+. 建立SMB共用區：「vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path path -force-group for create _unix_group名稱_」
++
+如果共享區的UNC路徑（如「\伺服器名稱\共享名稱\檔案路徑」）包含超過256個字元（不包括在UNC路徑中的初始「`」\「」）、則「Windows內容」方塊中的「*安全性*」索引標籤將無法使用。這是Windows用戶端問題、而非ONTAP 功能不均的問題。為避免此問題、請勿使用超過256個字元的UNC路徑建立共用。
+
++
+如果您想要在建立共用之後移除強制群組、可以隨時修改共用、並指定一個空白字串（""）做為「-force-group for created」參數的值。如果您透過修改共用區來移除強制群組、則此共用區的所有現有連線仍會將先前設定的強制群組設為主要的Gid。
+
+
+
+下列命令會在「/corp / companyinfo」目錄中建立「webpets」共用區、以便在網路上存取該共用區、SMB使用者建立的所有檔案都會指派給網路群組1群組：
+
+「Vserver CIFS共用區create -vserver VS1 -share-name pWebpet -path /corp/companyinfo -force-Group-for create webgroup 1」
+
+xref:optimize-user-access-force-group-share-concept.adoc[使用強制群組共用設定來最佳化SMB使用者存取]

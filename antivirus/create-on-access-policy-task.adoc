@@ -1,0 +1,68 @@
+---
+permalink: antivirus/create-on-access-policy-task.html 
+sidebar: sidebar 
+keywords: create, on-access, policy 
+summary: 存取時原則定義存取時掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名、以及要從掃描中排除的檔案副檔名和路徑。您可以為個別SVM或叢集中的所有SVM建立存取原則。 
+---
+= 建立存取時原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+存取時原則定義存取時掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名、以及要從掃描中排除的檔案副檔名和路徑。您可以為個別SVM或叢集中的所有SVM建立存取原則。
+
+根據預設、ONTAP 程式碼會建立名為「Default _CIFS」的存取原則、並針對叢集中的所有SVM啟用該原則。
+
+您可以將「強制掃描」選項設為「關」、以指定在沒有VScan伺服器可供掃毒時、允許存取檔案。請記住、即使將「強制掃描」選項設為「開啟」、也不會考慮掃描任何符合掃描排除條件的檔案、這些檔案都是以「路徑至排除」、「檔案至排除」或「最大檔案大小」參數為基礎。
+
+[NOTE]
+====
+如需與「強制」選項有關的潛在問題、請參閱 xref:vscan-server-connection-concept.adoc[可能涉及掃描強制選項的連線問題]。
+
+====
+依預設、只會掃描讀寫磁碟區。您可以指定篩選條件、以允許掃描唯讀磁碟區、或限制掃描以執行存取開啟的檔案。
+
+.步驟
+. 建立存取時原則：
++
+「vserver vscan on-access-policy create -vserver _data_svm|叢集管理_svm_-policy_name _policy_name_-免 於傳輸協定CIFS -max-file-size _main_file_of_to_scan _–篩選器[scan -ro-volume、][scan執行-access]-file-ext-th_off_ext_files的掃描副檔名不包括_ext_ext_ext_ext_ext_files_
+
++
+** 為個別SVM定義的原則指定資料SVM、為叢集中所有SVM定義的原則指定叢集管理SVM。
+** 「-file-ext-to-exclude」設定會覆寫「-file-ext-to-including」設定。
+** 將「掃描檔案、無副檔名」設為「真」、即可掃描無副檔名的檔案。下列命令會在「VS1」「SVM」上建立名為「Policy1」的存取原則：
+
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
+----
+. 請確認已建立存取原則：「vserver vscan on存取原則show -instance _data_Svm|叢集管理_svm_-police-name policy_name'
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示「Policy1」原則的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy show -instance vs1 -policy-name Policy1
+
+                           Vserver: vs1
+                            Policy: Policy1
+                     Policy Status: off
+               Policy Config Owner: vserver
+              File-Access Protocol: CIFS
+                           Filters: scan-ro-volume
+                    Mandatory Scan: on
+Max File Size Allowed for Scanning: 3GB
+            File Paths Not to Scan: \vol\a b\, \vol\a,b\
+       File Extensions Not to Scan: mp3, txt
+           File Extensions to Scan: mp*, tx*
+      Scan Files with No Extension: false
+----
+

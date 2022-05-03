@@ -1,0 +1,107 @@
+---
+permalink: smb-hyper-v-sql/configure-smb-multichannel-performance-task.html 
+sidebar: sidebar 
+keywords: configure, smb, multichannel, performance, redundancy, session, fault, tolerance, hyper, v, sql 
+summary: 從支援支援支援的9.4開始ONTAP 、您可以設定SMB多通道、ONTAP 在單一SMB工作階段中、在支援的情況下提供多個連接功能。這樣做可改善Hyper-V和SQL Server在SMB組態上的處理量和容錯能力。 
+---
+= 設定SMB多通道以獲得效能與備援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從支援支援支援的9.4開始ONTAP 、您可以設定SMB多通道、ONTAP 在單一SMB工作階段中、在支援的情況下提供多個連接功能。這樣做可改善Hyper-V和SQL Server在SMB組態上的處理量和容錯能力。
+
+只有當用戶端在SMB 3.0或更新版本上進行交涉時、才能使用SMB多通道功能。根據預設、SMB 3.0及更新版本會在ONTAP 支援SMB的伺服器上啟用。
+
+如果ONTAP 在故障叢集上識別出適當的組態、SMB用戶端會自動偵測並使用多個網路連線。
+
+SMB工作階段中的同時連線數目取決於您已部署的NIC：
+
+* *用戶端和ONTAP 叢集上的1G NIC *
++
+用戶端每個NIC建立一個連線、並將工作階段連結至所有連線。
+
+* *用戶端與ONTAP 支援叢集*上的10G與更大容量NIC
++
+用戶端每個NIC最多可建立四個連線、並將工作階段連結至所有連線。用戶端可在多個10G和更大容量的NIC上建立連線。
+
+
+
+您也可以修改下列參數（進階權限）：
+
+* *（最大連線數）-每個工作階段*
++
+每個多通道工作階段允許的最大連線數。預設為32個連線。
+
++
+如果您想要啟用比預設值更多的連線、則必須對用戶端組態進行類似的調整、也就是預設的32個連線。
+
+* *最大生命量每個工作階段*
++
+每個多通道工作階段所通告的網路介面數量上限。預設為256個網路介面。
+
+
+
+.步驟
+. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+. 在SMB伺服器上啟用SMB多通道：
++
+「* vserver CIFS選項修改-vserver _vserver_name_-is多通道的true*」
+
+. 驗證ONTAP 此功能是否回報SMB多通道工作階段：
++
+「* vserver CIFS工作階段」會顯示選項*
+
+. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+
+
+下列範例顯示所有SMB工作階段的相關資訊、顯示單一工作階段的多個連線：
+
+[listing]
+----
+cluster1::> vserver cifs session show
+Node:    node1
+Vserver: vs1
+Connection Session                                        Open            Idle
+IDs        ID      Workstation      Windows User         Files            Time
+---------- ------- ---------------- ---------------- --------- ---------------
+138683,
+138684,
+138685     1       10.1.1.1         DOMAIN\                   0              4s
+                                    Administrator
+----
+下列範例顯示使用工作階段ID 1之SMB工作階段的詳細資訊：
+
+[listing]
+----
+cluster1::> vserver cifs session show -session-id 1 -instance
+
+Vserver: vs1
+                           Node: node1
+                     Session ID: 1
+                 Connection IDs: 138683,138684,138685
+               Connection Count: 3
+   Incoming Data LIF IP Address: 192.1.1.1
+         Workstation IP Address: 10.1.1.1
+       Authentication Mechanism: NTLMv1
+          User Authenticated as: domain-user
+                   Windows User: DOMAIN\administrator
+                      UNIX User: root
+                    Open Shares: 2
+                     Open Files: 5
+                     Open Other: 0
+                 Connected Time: 5s
+                      Idle Time: 5s
+               Protocol Version: SMB3
+         Continuously Available: No
+              Is Session Signed: false
+                   NetBIOS Name: -
+----

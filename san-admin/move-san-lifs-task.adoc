@@ -1,0 +1,41 @@
+---
+permalink: san-admin/move-san-lifs-task.html 
+sidebar: sidebar 
+keywords: move, san, lifs 
+summary: 如果節點需要離線、您可以移動SAN LIF來保留其組態資訊（例如WWPN）、並避免重新分區交換器架構。由於SAN LIF必須在移動之前離線、因此主機流量必須仰賴主機多重路徑軟體、才能提供不中斷營運的LUN存取。您可以將SAN LIF移至叢集中的任何節點、但無法在儲存虛擬機器（SVM）之間移動SAN LIF。 
+---
+= 移動SAN LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果節點需要離線、您可以移動SAN LIF來保留其組態資訊（例如WWPN）、並避免重新分區交換器架構。由於SAN LIF必須在移動之前離線、因此主機流量必須仰賴主機多重路徑軟體、才能提供不中斷營運的LUN存取。您可以將SAN LIF移至叢集中的任何節點、但無法在儲存虛擬機器（SVM）之間移動SAN LIF。
+
+如果LIF是連接埠集的成員、則LIF必須已從連接埠集移除、才能將LIF移至其他節點。
+
+您要移動之LIF的目的地節點和實體連接埠必須位於相同的FC架構或乙太網路上。如果您將LIF移至尚未適當分區的其他Fabric、或將LIF移至iSCSI啟動器與目標之間沒有連線的乙太網路網路、則當您將LUN重新連線時、LUN將無法存取。
+
+.步驟
+. 檢視LIF的管理和作業狀態：
++
+「網路介面show -vserver _vserver_name_」
+
+. 將LIF的狀態變更為「down」（離線）：
++
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-stue-admin down」
+
+. 為LIF指派新的節點和連接埠：
++
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-home-node_node_name_-home-port _port_name_」
+
+. 將LIF的狀態變更為「up」（上線）：
++
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-stue-admin up」
+
+. 驗證您的變更：
++
+「網路介面show -vserver _vserver_name_」
+
+

@@ -1,0 +1,31 @@
+---
+permalink: volumes/user-group-quotas-qtrees-concept.html 
+sidebar: sidebar 
+keywords: how, user and group quotas, work, with, qtrees 
+summary: 樹狀結構配額會限制qtree的整體大小。若要防止個別使用者或群組佔用整個qtree、請為該qtree指定使用者或群組配額。 
+---
+= 使用者與群組配額如何搭配qtree使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+樹狀結構配額會限制qtree的整體大小。若要防止個別使用者或群組佔用整個qtree、請為該qtree指定使用者或群組配額。
+
+假設您有下列配額檔案：
+
+[listing]
+----
+
+#Quota target type            disk files thold sdisk sfile
+#-----------  ----            ---- ----- ----- ----- -----
+*             user@/vol/vol1  50M   -     45M
+jsmith        user@/vol/vol1  80M   -     75M
+----
+請注意、特定使用者kjones佔用的關鍵qtree qt1空間太多、而qt1位於vol2。您可以將下列行新增至配額檔案、以限制此使用者的空間：
+
+[listing]
+----
+kjones        user@/vol/vol2/qt1  20M  -   15M
+----

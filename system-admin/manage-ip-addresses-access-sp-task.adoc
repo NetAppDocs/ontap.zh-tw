@@ -1,0 +1,63 @@
+---
+permalink: system-admin/manage-ip-addresses-access-sp-task.html 
+sidebar: sidebar 
+keywords: manage, ip, addresses, access, sp, ssh, connection, node, cluster 
+summary: 依預設、SP會接受來自任何IP位址管理主機的SSH連線要求。您可以將SP設定為僅接受來自您指定IP位址之管理主機的SSH連線要求。您所做的變更會套用至叢集中任何節點的SP存取SSH。 
+---
+= 管理可存取SP的IP位址
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+依預設、SP會接受來自任何IP位址管理主機的SSH連線要求。您可以將SP設定為僅接受來自您指定IP位址之管理主機的SSH連線要求。您所做的變更會套用至叢集中任何節點的SP存取SSH。
+
+.步驟
+. 使用帶有「-allowed -addresses」參數的「系統服務處理器ssh add-allowed -addresses」命令、僅將SP存取權授予您指定的IP位址。
++
+** 必須以「address/'netmask'」格式指定「允許位址」參數的值、且多個「位址」/「網路遮罩」配對必須以逗號分隔、例如「10.98.150.10/24、FD20:8b1e:b255:c09b:/64'。
++
+將「允許的位址」參數設定為「0.00.0.0/0」、即：/0」可讓所有IP位址存取SP（預設）。
+
+** 當您將SP存取限制為僅指定的IP位址來變更預設值時ONTAP 、會提示您確認是否要指定的IP位址取代「允許所有」預設設定（「0.00.0.0/0、：/0」）。
+** 「系統服務處理器ssh show」命令會顯示可存取SP的IP位址。
+
+
+. 如果您要封鎖指定的IP位址、使其無法存取SP、請使用「系統服務處理器ssh移除允許的位址」命令搭配「允許的位址」參數。
++
+如果您封鎖所有IP位址、使其無法從任何管理主機存取SP。
+
+
+
+下列範例顯示SSH存取SP的預設設定、將SP存取限制為僅指定IP位址、從存取清單中移除指定的IP位址、然後還原所有IP位址的SP存取：
+
+[listing]
+----
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 0.0.0.0/0, ::/0
+
+cluster1::> system service-processor ssh add-allowed-addresses -allowed-addresses 192.168.1.202/24, 192.168.10.201/24
+
+Warning: The default "allow all" setting (0.0.0.0/0, ::/0) will be replaced
+         with your changes. Do you want to continue? {y|n}: y
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 192.168.1.202/24, 192.168.10.201/24
+
+cluster1::> system service-processor ssh remove-allowed-addresses -allowed-addresses 192.168.1.202/24, 192.168.10.201/24
+
+Warning: If all IP addresses are removed from the allowed address list, all IP
+         addresses will be denied access. To restore the "allow all" default,
+         use the "system service-processor ssh add-allowed-addresses
+         -allowed-addresses 0.0.0.0/0, ::/0" command. Do you want to continue?
+          {y|n}: y
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: -
+
+cluster1::> system service-processor ssh add-allowed-addresses -allowed-addresses 0.0.0.0/0, ::/0
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 0.0.0.0/0, ::/0
+----

@@ -1,0 +1,65 @@
+---
+permalink: smb-config/verify-enabled-versions-task.html 
+sidebar: sidebar 
+keywords: ontap, release, smb, version, enable, default, connection, client, domain, controller, controller, verify, support, functionality, environment, verify enabled smb versions 
+summary: 您的版本支援的版本取決於預設啟用哪些SMB版本、以便與用戶端和網域控制器連線。ONTAP您應該確認SMB伺服器是否支援您環境中所需的用戶端和功能。 
+---
+= 驗證啟用的SMB版本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您的版本支援的版本取決於預設啟用哪些SMB版本、以便與用戶端和網域控制器連線。ONTAP您應該確認SMB伺服器是否支援您環境中所需的用戶端和功能。
+
+若要與用戶端和網域控制器連線、您應該盡可能啟用SMB 2.0和更新版本。基於安全考量、您應該避免使用SMB 1.0、如果您已確認環境中不需要SMB 1.0、則應該停用SMB 1.0。
+
+在支援支援功能的支援中、預設會針對用戶端連線啟用SMB 2.0版及更新版本、但預設啟用的SMB 1.0版本則取決於您的版本。ONTAP ONTAP
+
+* 從ONTAP SVM開始、即可停用SVM上的SMB 1.0。
++
+vserver CIFS options modify'命令的「-SMB1-enabled」選項可啟用或停用SMB 1.0。
+
+* 從功能更新9.3開始ONTAP 、它在新的SVM上預設為停用。
+
+
+如果您的SMB伺服器位於Active Directory（AD）網域中、您可以啟用SMB 2.0來連線至以ONTAP 支援功能9.1開頭的網域控制器（DC）。如果您已在DC上停用SMB 1.0、就必須這麼做。從ONTAP 0：9.2開始、預設會啟用SMB 2.0以進行DC連線。
+
+[NOTE]
+====
+如果將「-SMB1-enabled for DC-connections」設為「假」、而「-SMB1-enabled」設為「真」、ONTAP 則不允許SMB 1.0連線做為用戶端、但仍接受傳入SMB 1.0連線做為伺服器。
+
+====
+link:../smb-admin/index.html["中小企業管理"] 包含支援的SMB版本和功能的詳細資料。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 驗證啟用的SMB版本：「顯示Vserver CIFS選項」
++
+您可以向下捲動清單、檢視啟用用戶端連線的SMB版本、如果您要在AD網域中設定SMB伺服器、以進行AD網域連線。
+
+. 視需要啟用或停用用戶端連線的SMB傳輸協定：
++
+** 若要啟用SMB版本：「vserver CIFS選項修改-vserver vserver_namesmb_version true」
+** 若要停用SMB版本：「vserver CIFS選項修改-vserver vserver_namesmb_version假」、「shmb_version假」的可能值：
+** 「SMB1-enabled」（啟用SMB1-）
+** 「smb2-enabl」
+** 「smb3-enabl」
+** 啟用smb31的命令可在SVM vs1.example.com上啟用SMB 3.1：
+
+
++
+[listing]
+----
+
+cluster1::*> vserver cifs options modify -vserver vs1.example.com -smb31-enabled true
+----
+. 如果SMB伺服器位於Active Directory網域中、請視需要啟用或停用SMB傳輸協定以進行DC連線：
++
+** 若要啟用SMB版本：「vserver CIFS安全性修改-vserver vserver_name -smb2-enabled_for-DC-connections true」
+** 若要停用SMB版本：「vserver CIFS安全性修改-vserver vserver_name -smb2-enabled_for-DC-connections fals'
+
+
+. 返回管理員權限等級：「et -priv. admin」
+

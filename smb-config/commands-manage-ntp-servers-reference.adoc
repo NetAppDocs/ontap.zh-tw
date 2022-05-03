@@ -1,0 +1,77 @@
+---
+permalink: smb-config/commands-manage-ntp-servers-reference.html 
+sidebar: sidebar 
+keywords: ontap, network, time, protocol, ntp, version, support, ntpv3, symmetric, authentication, sha, security, commands for managing symmetric authentication on ntp servers 
+summary: 從推出支援的版本號為《支援網路時間傳輸協定》（NTP）第3版。ONTAPNTPv3包含使用SHA-1金鑰的對稱驗證、可提高網路安全性。 
+---
+= 用於管理NTP伺服器上對稱驗證的命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從推出支援的版本號為《支援網路時間傳輸協定》（NTP）第3版。ONTAPNTPv3包含使用SHA-1金鑰的對稱驗證、可提高網路安全性。
+
+|===
+| 若要這麼做... | 使用此命令... 
+
+
+ a| 
+設定NTP伺服器而不進行對稱驗證
+ a| 
+「叢集時間服務NTP伺服器」會建立「伺服器」「伺服器名稱」
+
+
+
+ a| 
+設定採用對稱驗證的NTP伺服器
+ a| 
+「叢集時間服務NTP伺服器」會建立「-server」、「伺服器IP位址」、「-key-id」、「key_id」
+
+
+
+ a| 
+啟用現有NTP伺服器的對稱驗證您可以修改現有NTP伺服器、藉由新增所需的金鑰ID來啟用驗證。
+ a| 
+「叢集時間服務NTP伺服器修改」、「伺服器」、「伺服器名稱」、「金鑰ID」、「key_id」
+
+
+
+ a| 
+設定共用的NTP金鑰
+ a| 
+「叢集時間服務NTP金鑰建立」、「-id」、「共享金鑰ID」、「類型」、「共享金鑰類型」、「-Value」、「共享金鑰值」
+
+[NOTE]
+====
+共用金鑰是由ID所指。節點和NTP伺服器上的ID、其類型和值必須相同
+
+====
+
+
+ a| 
+使用未知的金鑰ID設定NTP伺服器
+ a| 
+「叢集時間服務NTP伺服器」會建立「-server」、「伺服器名稱」、「-key-id」、「key_id」
+
+
+
+ a| 
+在NTP伺服器上設定未設定金鑰ID的伺服器。
+ a| 
+「叢集時間服務NTP伺服器」會建立「-server」、「伺服器名稱」、「-key-id」、「key_id」
+
+[NOTE]
+====
+金鑰ID、類型和值必須與NTP伺服器上設定的金鑰ID、類型和值相同。
+
+====
+
+
+ a| 
+停用對稱驗證
+ a| 
+「叢集時間服務NTP伺服器修改」、「伺服器」、「伺服器名稱」、「停用驗證」
+
+|===

@@ -1,0 +1,58 @@
+---
+permalink: flexgroup/enable-storage-efficiency-task.html 
+sidebar: sidebar 
+keywords: enable, storage, efficiency, flexgroup, volume 
+summary: 您可以一起執行重複資料刪除和資料壓縮、或是獨立在FlexGroup 某個支援區上執行、以達到最佳的空間節約效益。 
+---
+= 在FlexGroup 一個不只一個的資料區上實現儲存效率
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以一起執行重複資料刪除和資料壓縮、或是獨立在FlexGroup 某個支援區上執行、以達到最佳的空間節約效益。
+
+此版本必須在線上。FlexGroup
+
+.步驟
+. 在FlexGroup Sfetsvolume上實現儲存效率：「Volume Effim兼 具-vserver Svm_name -volume volume volume _name」
++
+儲存效率作業可在FlexGroup 所有的功能上啟用。
+
++
+如果FlexGroup 在磁碟區上啟用儲存效率之後、擴充了一個支援功能、則新的成員會自動啟用儲存效率。
+
+. 使用「Volume Eff效率 修改」命令、在FlexGroup 支援的情況下、可在支援資料區上執行所需的儲存效率作業。
++
+您可以在FlexGroup 支援即時重複資料刪除技術、後置重複資料刪除技術、即時資料壓縮、以及在支援後置處理的情況下、在支援內嵌資料刪除技術的情況下您也可以設定壓縮類型（次要或調適）、並為FlexGroup 該磁碟區指定排程或效率原則。
+
+. 如果您不使用排程或效率原則來執行儲存效率作業、請開始執行效率作業：「Volume Effiiv仍 啟動- vserver Svm_name -volume volume volume _name」
++
+如果在磁碟區上啟用重複資料刪除和資料壓縮、則資料壓縮會先執行、然後再執行重複資料刪除。如果FlexGroup 任何效率作業已在該磁碟區上啟用、則此命令會失敗。
+
+. 驗證FlexGroup 在支援的運作效率：「Volume Effimeiveness-vserver Svm_name -volume volume volume _name」
++
+[listing]
+----
+cluster1::> volume efficiency show -vserver vs1 -volume fg1
+             Vserver Name: vs1
+              Volume Name: fg1
+              Volume Path: /vol/fg1
+                    State: Enabled
+                   Status: Idle
+                 Progress: Idle for 17:07:25
+                     Type: Regular
+                 Schedule: sun-sat@0
+
+...
+
+             Compression: true
+      Inline Compression: true
+Incompressible Data Detection: false
+      Constituent Volume: false
+Compression Quick Check File Size: 524288000
+           Inline Dedupe: true
+         Data Compaction: false
+----
+

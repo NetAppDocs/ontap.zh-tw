@@ -1,0 +1,75 @@
+---
+permalink: smb-admin/configure-bypass-traverse-checking-concept.html 
+sidebar: sidebar 
+keywords: bypass, traverse, user, privilege, permission, directory, allow, check, configure, storage, virtual, machine, svm, configure bypass traverse checking 
+summary: 略過周遊檢查是一項使用者權限（也稱為權限）、可決定使用者是否可以周遊檔案路徑中的所有目錄、即使使用者對周遊目錄沒有權限。您應該瞭解允許或禁止略過周遊檢查時會發生什麼情況、以及如何為儲存虛擬機器（SVM）上的使用者設定略過周遊檢查。 
+---
+= 設定略過周遊檢查總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+「略過周遊檢查」是一項使用者權限（也稱為_priv榮幸_）、可決定使用者是否可以周遊檔案路徑中的所有目錄、即使使用者對周遊目錄沒有權限。您應該瞭解允許或禁止略過周遊檢查時會發生什麼情況、以及如何為儲存虛擬機器（SVM）上的使用者設定略過周遊檢查。
+
+
+
+== 允許或禁止略過周遊檢查時會發生什麼事
+
+* 如果允許、當使用者嘗試存取檔案時ONTAP 、當決定是否授予或拒絕存取檔案時、不會檢查中繼目錄的周遊權限。
+* 如果不允許、ONTAP 則此功能會檢查檔案路徑中所有目錄的周遊（執行）權限。
++
+如果任何中繼目錄沒有「'X'」（周遊權限）、ONTAP 則無法存取檔案。
+
+
+
+
+
+== 設定略過周遊檢查
+
+您可以使用ONTAP CLI或使用此使用者權限設定Active Directory群組原則、來設定略過周遊檢查。
+
+「eChangeleNotifyPrivilege」權限可控制是否允許使用者略過周遊檢查。
+
+* 將它新增至SVM上的本機SMB使用者或群組、或新增至網域使用者或群組、可進行略過周遊檢查。
+* 從SVM上的本機SMB使用者或群組或網域使用者或群組中移除此功能、將不允許略過周遊檢查。
+
+
+根據預設、SVM上的下列BUILTIN群組有權略過周遊檢查：
+
+* 「BUILTIN\Administrators」
+* 「BUILTIN\Power使用者」
+* 「BUILTIN\Backup Operators」
+* 「BUILTIN\Users」
+* 「每個人」
+
+
+如果您不想讓其中一個群組的成員略過周遊檢查、則必須從群組中移除此權限。
+
+使用CLI在SVM上設定本機SMB使用者和群組的略過周遊檢查時、必須謹記下列事項：
+
+* 如果您想要允許自訂本機或網域群組的成員略過周遊檢查、您必須將「eChangeleNotifyPrivilege」權限新增至該群組。
+* 如果您想要允許個別本機或網域使用者略過周遊檢查、而且該使用者不是具有該權限的群組成員、您可以將「eChangelNotifyPrivilege」權限新增至該使用者帳戶。
+* 您可以隨時移除「eChangeleNotifyPrivilege」權限、以停用本機或網域使用者或群組的略過周遊檢查。
++
+[NOTE]
+====
+若要針對指定的本機或網域使用者或群組停用略過網路保護程式檢查、您也必須從「任何人」群組中移除「eChangeChangelNotifyPrivilege」權限。
+
+====
+
+
+xref:allow-users-groups-bypass-directory-traverse-task.adoc[允許使用者或群組略過目錄周遊檢查]
+
+xref:disallow-users-groups-bypass-directory-traverse-task.adoc[禁止使用者或群組繞過目錄周遊檢查]
+
+xref:configure-character-mappings-file-name-translation-task.adoc[設定磁碟區上SMB檔案名稱轉譯的字元對應]
+
+xref:secure-file-access-share-acls-concept.adoc[使用SMB共用ACL來保護檔案存取安全]
+
+xref:secure-file-access-file-permissions-concept.adoc[使用檔案權限來保護檔案存取安全]
+
+xref:list-supported-privileges-reference.adoc[支援的權限清單]
+
+xref:manage-local-privileges-concept.adoc[管理本機權限]

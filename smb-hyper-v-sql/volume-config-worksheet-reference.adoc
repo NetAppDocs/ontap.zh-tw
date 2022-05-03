@@ -1,0 +1,108 @@
+---
+permalink: smb-hyper-v-sql/volume-config-worksheet-reference.html 
+sidebar: sidebar 
+keywords: complete, volume, configuration, worksheet, sql, server, hyper, v, smb, configuration 
+summary: 這份工作表提供一種簡單的方法、可記錄在建立SQL Server磁碟區和SMB上Hyper-V組態時所需的值。 
+---
+= 完成Volume組態工作表
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+這份工作表提供一種簡單的方法、可記錄在建立SQL Server磁碟區和SMB上Hyper-V組態時所需的值。
+
+對於每個Volume、您必須指定下列資訊：
+
+* 儲存虛擬機器（SVM）名稱
++
+所有磁碟區的SVM名稱都相同。
+
+* Volume名稱
+* Aggregate名稱
++
+您可以在叢集中任何節點上的集合體上建立磁碟區。
+
+* 尺寸
+* 交會路徑
+
+
+建立用於儲存應用程式伺服器資料的磁碟區時、請謹記下列事項：
+
+* 如果根磁碟區沒有NTFS安全樣式、則在建立磁碟區時、必須將安全樣式指定為NTFS。
++
+根據預設、磁碟區會繼承SVM根磁碟區的安全樣式。
+
+* 磁碟區應設定預設磁碟區空間保證。
+* 您可以選擇性地設定自動調整空間大小的管理設定。
+* 您應該將確定Snapshot複本空間保留的選項設為「0」。
+* 必須停用套用至磁碟區的Snapshot原則。
++
+如果停用SVM Snapshot原則、則不需要為磁碟區指定Snapshot原則。這些磁碟區會繼承SVM的Snapshot原則。如果SVM的Snapshot原則未停用、且設定為建立Snapshot複本、則您必須在磁碟區層級指定Snapshot原則、而且必須停用該原則。啟用陰影複製服務的備份與SQL Server備份、可管理Snapshot複本的建立與刪除作業。
+
+* 您無法為磁碟區設定負載共用鏡像。
+
+
+您應選擇要在其中建立應用程式伺服器所使用之共用區的交會路徑、以便共用入口點下方不會有結定的磁碟區。
+
+例如、如果您想要將虛擬機器檔案儲存在四個名為「vol1」、「vol2」、「vol3」和「vol4」的磁碟區、您可以建立範例中所示的命名空間。然後您可以在下列路徑建立應用程式伺服器的共用：「/data1/vol1」、「/data1/vol2」、「/data2/vol3」和「/data2/vol4」。
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     data1         true     /data1               RW_volume
+vs1     vol1          true     /data1/vol1          RW_volume
+vs1     vol2          true     /data1/vol2          RW_volume
+vs1     data2         true     /data2               RW_volume
+vs1     vol3          true     /data2/vol3          RW_volume
+vs1     vol4          true     /data2/vol4          RW_volume
+----
+|===
+| 資訊類型 | 價值 
+
+
+ a| 
+_Volume 1：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_Volume 2：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_Volume 3：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_Volume 4：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_Volume 5：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_Volume 6：Volume名稱、Aggregate、大小、交會路徑_
+ a| 
+
+
+
+ a| 
+_其他磁碟區：磁碟區名稱、Aggregate、大小、交會路徑_
+ a| 
+
+|===

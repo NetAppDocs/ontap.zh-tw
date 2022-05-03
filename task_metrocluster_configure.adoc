@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: task_metrocluster_configure.html 
+keywords: metrocluster, configuration, config, mcc, HA, cluster 
+summary: 從功能上說ONTAP 起、您可以使用MetroCluster System Manager來管理整個作業系統的IP組態。在設定兩個叢集並對等處理之後、您可以設定每個叢集。 
+---
+= 設定IP MetroCluster 站台
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從功能上說ONTAP 起、您可以使用MetroCluster System Manager來管理整個作業系統的IP組態。在設定兩個叢集並對等處理之後、您可以設定每個叢集。
+
+您應該已經完成下列程序：
+
+* link:task_metrocluster_setup.html["設定IP MetroCluster 站台"]
+* link:task_metrocluster_peering.html["設定IP MetroCluster 速度"]
+
+
+
+
+== 設定叢集之間的連線
+
+.步驟
+. 登入其中一個站台的System Manager、然後選取* Dashboard *。
++
+在* MetroCluster 《*》（*《*》）區段中、圖形顯示您為MetroCluster 這些景點所設定及處理的兩個叢集。您正在使用的叢集（本機叢集）會顯示在左側。
+
+. 按一下*「Configure MetroCluster Section*」。在此視窗中、您可以執行下列工作：
++
+.. 畫面會顯示各個叢集MetroCluster 的節點、以利執行各項組態。使用下拉式清單、選取本機叢集中的哪些節點將成為遠端叢集中的災難恢復合作夥伴。
+.. 如果您想要設定ONTAP 一個「功能不實」服務、請按一下此核取方塊。請參閱 <<Configure the ONTAP Mediator service>>。
+.. 如果兩個叢集都有啟用加密的授權、則會顯示* Encryption*區段。
++
+若要啟用加密、請輸入通關密碼。
+
+.. 如果您要設定MetroCluster 共享第3層網路的功能、請按一下核取方塊。
++
+
+NOTE: 連線至節點的HA合作夥伴節點和網路交換器必須具有相符的組態。
+
+
+
+. 按一下*「Save（儲存）」*以設定MetroCluster 「Sof the Sof the S
++
+在*儀表板*的* MetroCluster 《*》（*《*》）區段中、圖形會在兩個叢集之間的連結上顯示核取符號、表示連線正常。
+
+
+
+
+
+== 設定ONTAP 「BMC」服務
+
+此功能通常安裝在不同於叢集任一位置的地理位置。ONTAP叢集會定期與服務進行通訊、以表示它們已啟動並正在執行。如果MetroCluster 在該組態中的其中一個叢集偵測到與其合作夥伴叢集的通訊中斷、它會與ONTAP 該協調員一起檢查、以判斷合作夥伴叢集本身是否已關閉。
+
+這兩個叢集都MetroCluster 應該在不受限制的情況下運作。
+
+.步驟
+. 在《系統管理ONTAP 程式》（System Manager in Sors9.8）中、選取*叢集>設定*。
+. 在*媒體參考器*區段中、按一下 image:icon_gear.gif["設定檔位圖示"]。
+. 在* Configure Mediator*（配置媒體器）窗口中，單擊* Add+*（添加+）。
+. 輸入ONTAP 「資訊中心」的組態詳細資料。
+

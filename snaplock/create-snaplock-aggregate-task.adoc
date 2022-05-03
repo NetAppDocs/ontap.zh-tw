@@ -1,0 +1,55 @@
+---
+permalink: snaplock/create-snaplock-aggregate-task.html 
+sidebar: sidebar 
+keywords: create, snaplock, aggregate, compliance, enterprise, mode, volumes 
+summary: 您可以使用Volume「-SnapLock類型」選項來指定「Compliance」（符合性）或「Enterprise SnapLock 」（企業）等Volume類型。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。 
+---
+= 建立SnapLock 一個不只一個的集合體
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用Volume「-SnapLock類型」選項來指定「Compliance」（符合性）或「Enterprise SnapLock 」（企業）等Volume類型。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 必須在節點上安裝此功能的不必要授權。SnapLock
+* 必須初始化節點上的「完成時鐘」。
+* 如果您已將磁碟分割為「root」、「data1」和「dat2」、則必須確保備援磁碟可用。
+
+
+升級ONTAP 至版本的過程中、現有SnapLock 的不含SnapLock和不含SnapLock的支援集合體會升級、以支援SnapLock 同時存在的不含支援功能的功能、但現有SnapLock 的不含更新功能的不含更新功能。例如、資料壓縮、跨磁碟區重複資料刪除、以及跨磁碟區背景重複資料刪除等欄位都維持不變。在現有Aggregate上建立的新SnapLock 增功能區、預設值與非SnapLock Volume相同、新磁碟區和Aggregate的預設值則取決於平台。
+
+如果您需要還原ONTAP 至版本低於9.10.1的版本、則必須將所有SnapLock 的「還原法規遵循」、SnapLock 「還原企業」和SnapLock 「還原功能」移至自己SnapLock 的「還原集合體」。
+
+.關於這項工作
+* 您無法建立FlexArray 適用於整個過程的Compliance Aggregate、但SnapLock 支援FlexArray 使用支援各種功能的不一致集合體。
+* 您無法使用SyncMirror 「指令集」選項來建立「法規遵循」集合體。
+* 只有當使用Aggregate來裝載資訊稽核記錄磁碟區時、您MetroCluster 才能在整個資訊區組態中建立鏡射的法規遵循集合體SnapLock 。
++
+[NOTE]
+====
+在不鏡射和無鏡射的Aggregate上、支援使用支援功能的支援。MetroCluster SnapLock僅在無鏡射的集合體上支援「符合性」SnapLock 。
+
+====
+
+
+.步驟
+. 建立SnapLock 一個不只一個的集合體：
++
+hy*儲存Aggregate create -Aggregate _gregate name_-node_node_name_-diskcount_number_of_disks_-SnapLock類型法規遵循|企業*
+
++
+命令的手冊頁包含完整的選項清單。
+
++
+下列命令會建立SnapLock 一個名為「aggr1」的「Compliance」（符合性）集合體、其中三個磁碟位於「node1」上：
+
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1 -node node1 -diskcount 3 -snaplock-type compliance
+----
+

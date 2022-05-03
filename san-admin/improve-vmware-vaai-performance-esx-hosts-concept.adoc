@@ -1,0 +1,90 @@
+---
+permalink: san-admin/improve-vmware-vaai-performance-esx-hosts-concept.html 
+sidebar: sidebar 
+keywords: improve, vmware, vaai, performance, esx, hosts 
+summary: 當ESX主機執行ESX 4.1或更新版本時、支援特定的VMware vStorage API for Array Integration（VAAI）功能。ONTAP這些功能有助於將作業從ESX主機卸載到儲存系統、並提高網路處理量。ESX主機會在正確的環境中自動啟用這些功能。 
+---
+= 改善VMware VAAI的ESX主機效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當ESX主機執行ESX 4.1或更新版本時、支援特定的VMware vStorage API for Array Integration（VAAI）功能。ONTAP這些功能有助於將作業從ESX主機卸載到儲存系統、並提高網路處理量。ESX主機會在正確的環境中自動啟用這些功能。
+
+VAAI功能支援下列SCSI命令：
+
+* 「extended複製」
++
+此功能可讓主機在LUN或LUN之間開始傳輸資料、而無需讓主機參與資料傳輸。如此可節省ESX CPU週期並提高網路處理量。延伸複本功能也稱為「複本卸載」、適用於複製虛擬機器等情況。當ESX主機叫用時、複本卸載功能會複製儲存系統內的資料、而非透過主機網路。複本卸載會以下列方式傳輸資料：
+
++
+** 在LUN內
+** 在磁碟區內的LUN之間
+** 儲存虛擬機器（SVM）內不同磁碟區上的LUN之間
+** 在叢集內不同SVM上的LUN之間如果無法叫用此功能、ESX主機會自動使用標準的讀取和寫入命令來執行複製作業。
+
+
+* "WRITE相同"
++
+此功能可卸載將重複模式（如全部零）寫入儲存陣列的工作。ESX主機在零填檔案等作業中使用此功能。
+
+* 比較與寫入
++
+這項功能會略過某些檔案存取並行限制、以加速啟動虛擬機器等作業。
+
+
+
+
+
+== 使用VAAI環境的需求
+
+VAAI功能是ESX作業系統的一部分、當您設定正確的環境時、ESX主機會自動啟動該功能。
+
+環境需求如下：
+
+* ESX主機必須執行ESX 4.1或更新版本。
+* 託管VMware資料存放區的NetApp儲存系統必須執行ONTAP VMware。
+* （僅限複本卸載）VMware複本作業的來源和目的地必須裝載在同一個叢集內的相同儲存系統上。
++
+[NOTE]
+====
+複本卸載功能目前不支援在不同儲存系統上裝載的VMware資料存放區之間複製資料。
+
+====
+
+
+
+
+== 判斷ESX是否支援VAAI功能
+
+若要確認ESX作業系統是否支援VAAI功能、您可以檢查vSphere Client或使用任何其他方法來存取主機。根據預設、支援SCSI命令。ONTAP
+
+您可以檢查ESX主機的進階設定、以判斷是否已啟用VAAI功能。下表指出哪些SCSI命令與ESX控制名稱相對應。
+
+[cols="2*"]
+|===
+| SCSI命令 | ESX控制名稱（VAAI功能） 
+
+
+ a| 
+extended複製
+ a| 
+《HardwareAcceleratedMove》
+
+
+
+ a| 
+寫入相同
+ a| 
+《HardwareAcceleratedInit》
+
+
+
+ a| 
+比較與寫入
+ a| 
+《HardwareAcceleratedLocking》
+
+|===

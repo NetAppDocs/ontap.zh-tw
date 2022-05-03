@@ -1,0 +1,210 @@
+---
+permalink: smb-hyper-v-sql/display-session-task.html 
+sidebar: sidebar 
+keywords: display, smb, session, information, nondisruptive, is, ip, address, protocol, operation 
+summary: 您可以顯示已建立SMB工作階段的相關資訊、包括SMB連線和工作階段ID、以及使用工作階段之工作站的IP位址。您可以顯示工作階段SMB傳輸協定版本的相關資訊以及持續可用的保護層級、協助您識別工作階段是否支援不中斷營運。 
+---
+= 顯示SMB工作階段資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示已建立SMB工作階段的相關資訊、包括SMB連線和工作階段ID、以及使用工作階段之工作站的IP位址。您可以顯示工作階段SMB傳輸協定版本的相關資訊、以及持續可用的保護層級、協助您識別工作階段是否支援不中斷營運。
+
+您可以在SVM上以摘要形式顯示所有工作階段的資訊。不過、在許多情況下、傳回的輸出量很大。您可以指定選用參數、自訂輸出中顯示的資訊：
+
+* 您可以使用選用的「-Fields」參數來顯示所選欄位的輸出。
++
+您可以輸入「-Fields？」 以判斷您可以使用哪些欄位。
+
+* 您可以使用「-instance」參數來顯示已建立SMB工作階段的詳細資訊。
+* 您可以單獨使用「-Fields」參數或「-instance」參數、也可以搭配其他選用參數使用。
+
+
+.步驟
+. 執行下列其中一項動作：
++
+[cols="1,3"]
+|===
+| 如果您要顯示SMB工作階段資訊... | 輸入下列命令... 
+
+
+ a| 
+以摘要形式顯示SVM上的所有工作階段
+ a| 
+hy*vserver CIFS工作階段show -vserver _vserver_name_*
+
+
+
+ a| 
+在指定的連線ID上
+ a| 
+hy*vserver CIFS工作階段顯示-vserver _vserver_name_-connection-id integer*
+
+
+
+ a| 
+從指定的工作站IP位址
+ a| 
+hy*vserver CIFS工作階段show -vserver _vserver_name_-address_workstation_ip_address_*
+
+
+
+ a| 
+在指定的LIF IP位址上
+ a| 
+hy*vserver CIFS工作階段show -vserver _vserver_name_-lif-address_lif_ip_address_*
+
+
+
+ a| 
+在指定的節點上
+ a| 
+hy*vserver CIFS工作階段顯示-vserver _vserver_name_-node{node_name|local}*
+
+
+
+ a| 
+從指定的Windows使用者
+ a| 
+hy*vserver CIFS工作階段顯示-vserver _vserver_name_-windows-user_user_name_*
+
+「user_name」的格式為「[domain]\user'」。
+
+
+
+ a| 
+使用指定的驗證機制
+ a| 
+hy*vserver CIFS工作階段show -vserver _vserver_name_-auth-機械 裝置驗證機制*
+
+「驗證機制的值可以是下列其中一項：
+
+** 「道爾」
+** 《NTLMv2》
+** "Kerberos（Kerberos）"
+** 「匿名」
+
+
+
+
+ a| 
+使用指定的傳輸協定版本
+ a| 
+hy*vserver CIFS工作階段顯示-vserver _vserver_name_-PRONTA-VERSION PROVATUNT_VERY*
+
+「-protocol-version（-protocol-version）的值可以是下列其中一項：
+
+** 《MB1》
+** 《MB2》
+** 《MB2_1》
+** 《MB3》
+** 《MB3_1》
++
+[NOTE]
+====
+持續可用的保護功能和SMB多通道功能僅適用於SMB 3.0及更新版本的工作階段。若要在所有合格的工作階段中檢視其狀態、您應該指定此參數、並將其值設為「MB3」或更新版本。
+
+====
+
+
+
+
+ a| 
+提供特定等級的持續可用保護
+ a| 
+hy*vserver CIFS工作階段顯示-vserver _vserver_name_-持續可用的_suouse_可用 的_protection保護層級_*
+
+持續可用的值可以是下列其中一項：
+
+** 「不」
+** 「是的」
+** 「部分」
+
+
+[NOTE]
+====
+如果持續可用狀態為「部分」、表示工作階段包含至少一個開啟的持續可用檔案、但工作階段中有些檔案未以持續可用的保護開啟。您可以使用「vserver CIFS工作階段檔案show」命令、判斷已建立工作階段中的哪些檔案未以持續可用的保護開啟。
+
+====
+
+
+ a| 
+具有指定的SMB簽署工作階段狀態
+ a| 
+「* vserver CIFS工作階段」顯示-vserver _vserver_name_-is工作階段簽署的｛true{vbbar｝假｝*
+
+|===
+
+
+下列命令會顯示SVM VS1上從IP位址為10.1.1的工作站所建立之工作階段的工作階段資訊：
+
+[listing]
+----
+cluster1::> vserver cifs session show -address 10.1.1.1
+Node:    node1
+Vserver: vs1
+Connection Session                                    Open         Idle
+ID          ID      Workstation      Windows User    Files         Time
+----------  ------- ---------------- ------------- ------- ------------
+3151272279,
+3151272280,
+3151272281  1       10.1.1.1         DOMAIN\joe          2          23s
+----
+下列命令會顯示SVM VS1具有持續可用保護之工作階段的詳細工作階段資訊。連線是使用網域帳戶建立的。
+
+[listing]
+----
+cluster1::> vserver cifs session show -instance -continuously-available Yes
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 3151274158
+Incoming Data LIF IP Address: 10.2.1.1
+      Workstation IP address: 10.1.1.2
+    Authentication Mechanism: Kerberos
+                Windows User: DOMAIN\SERVER1$
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 1
+                  Open Other: 0
+              Connected Time: 10m 43s
+                   Idle Time: 1m 19s
+            Protocol Version: SMB3
+      Continuously Available: Yes
+           Is Session Signed: false
+       User Authenticated as: domain-user
+                NetBIOS Name: -
+       SMB Encryption Status: Unencrypted
+----
+下列命令會顯示SVM VS1上使用SMB 3.0和SMB多通道之工作階段的工作階段資訊。在此範例中、使用者使用LIF IP位址從具有SMB 3.0功能的用戶端連線到此共用區、因此驗證機制預設為NTLMv2。連線必須使用Kerberos驗證、才能以持續可用的保護進行連線。
+
+[listing]
+----
+cluster1::> vserver cifs session show -instance -protocol-version SMB3
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+              **Connection IDs: 3151272607,31512726078,3151272609
+            Connection Count: 3**
+Incoming Data LIF IP Address: 10.2.1.2
+      Workstation IP address: 10.1.1.3
+    Authentication Mechanism: NTLMv2
+                Windows User: DOMAIN\administrator
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 0
+                  Open Other: 0
+              Connected Time: 6m 22s
+                   Idle Time: 5m 42s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: false
+       User Authenticated as: domain-user
+                NetBIOS Name: -
+       SMB Encryption Status: Unencrypted
+----

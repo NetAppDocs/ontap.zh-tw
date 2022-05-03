@@ -1,0 +1,26 @@
+---
+permalink: smb-admin/how-ontap-creates-file-directory-names-concept.html 
+sidebar: sidebar 
+keywords: ontap, create, maintain, name, file, directories, directory, access, smb, format, how ontap creates file and directory names 
+summary: 在任何可從SMB用戶端存取的目錄中、利用此程式建立並維護兩個檔案或目錄名稱：原始的長名稱和8.3格式的名稱。ONTAP 
+---
+= 如何使用此功能建立檔案和目錄名稱ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在任何可從SMB用戶端存取的目錄中、利用此程式建立並維護兩個檔案或目錄名稱：原始的長名稱和8.3格式的名稱。ONTAP
+
+若檔案或目錄名稱超過八個字元名稱或三個字元副檔名限制（檔案）、ONTAP 則會產生8.3格式的名稱、如下所示：
+
+* 如果名稱超過六個字元、則會將原始檔案或目錄名稱刪減為六個字元。
+* 它會在檔案或目錄名稱中附加一個或多個數字（從一到五）、這些名稱在被截短後不再是唯一的。
++
+如果因為有五個以上的相似名稱而導致號碼不足、就會建立一個與原始名稱無關的唯一名稱。
+
+* 如果是檔案、則會將副檔名縮短為三個字元。
+
+
+例如、如果NFS用戶端建立名為「species.html」的檔案、ONTAP 則由效能分析所建立的8.3格式檔案名稱就是「specif~1.html」。如果此名稱已經存在、ONTAP 則在檔案名稱結尾處使用不同的編號。例如、如果NFS用戶端接著建立另一個名為「規格_new.html」的檔案、則8.3格式的「規格_new.html」為「規格~2.html」。

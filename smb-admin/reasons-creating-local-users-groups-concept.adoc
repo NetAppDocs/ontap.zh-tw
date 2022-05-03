@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/reasons-creating-local-users-groups-concept.html 
+sidebar: sidebar 
+keywords: creating, create, local, user, group, storage, virtual, machine, svm, access, smb, domain, controllers, dc, assign, privilege, workgroup, server, reasons for creating local users and local groups 
+summary: 在您的儲存虛擬機器（SVM）上建立本機使用者和本機群組的理由有好幾種。例如、如果網域控制器（DC）無法使用、您可能想要使用本機群組來指派權限、或SMB伺服器位於工作群組中、您可以使用本機使用者帳戶來存取SMB伺服器。 
+---
+= 建立本機使用者和本機群組的理由
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在您的儲存虛擬機器（SVM）上建立本機使用者和本機群組的理由有好幾種。例如、如果網域控制器（DC）無法使用、您可能想要使用本機群組來指派權限、或SMB伺服器位於工作群組中、您可以使用本機使用者帳戶來存取SMB伺服器。
+
+您可以基於下列理由建立一或多個本機使用者帳戶：
+
+* 您的SMB伺服器位於工作群組中、網域使用者無法使用。
++
+工作群組組組態需要本機使用者。
+
+* 如果網域控制器無法使用、您希望能夠驗證並登入SMB伺服器。
++
+本機使用者可以在網域控制器當機或網路問題使SMB伺服器無法連絡網域控制器時、使用NTLM驗證來驗證SMB伺服器。
+
+* 您想要指派_使用者權限管理_權限給本機使用者。
++
+_使用者權限管理_是SMB伺服器管理員控制使用者和群組在SVM上擁有哪些權限的能力。您可以將權限指派給使用者帳戶、或是將使用者設為具有這些權限的本機群組成員、藉此指派權限給使用者。
+
+
+
+您可以基於下列理由建立一或多個本機群組：
+
+* 您的SMB伺服器位於工作群組中、而且網域群組無法使用。
++
+工作群組組組態不需要本機群組、但這些群組對於管理本機工作群組使用者的存取權限非常有用。
+
+* 您想要使用本機群組來控制檔案和資料夾資源的存取、以進行共用和檔案存取控制。
+* 您想要使用自訂的_使用者權限管理_權限來建立本機群組。
++
+某些內建使用者群組具有預先定義的權限。若要指派一組自訂的權限、您可以建立本機群組、並將必要的權限指派給該群組。然後您可以將本機使用者、網域使用者和網域群組新增至本機群組。
+
+
+
+xref:local-user-authentication-concept.adoc[本機使用者驗證的運作方式]
+
+xref:local-privileges-concept.adoc[什麼是本機權限]

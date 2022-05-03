@@ -1,0 +1,66 @@
+---
+permalink: smb-admin/grant-null-users-access-file-system-shares-task.html 
+sidebar: sidebar 
+keywords: access, storage, system, resource, null, session, client, assign, group, ip, adress, null, session, grant, grant null users access to file system shares 
+summary: 您可以指派一個群組供null工作階段用戶端使用、並記錄null工作階段用戶端的IP位址、以便新增至儲存系統允許使用null工作階段存取資料的用戶端清單、藉此允許null工作階段用戶端存取儲存系統資源。 
+---
+= 授予null使用者檔案系統共用的存取權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以指派一個群組供null工作階段用戶端使用、並記錄null工作階段用戶端的IP位址、以便新增至儲存系統允許使用null工作階段存取資料的用戶端清單、藉此允許null工作階段用戶端存取儲存系統資源。
+
+.步驟
+. 使用「vserver name-mappping create」命令、將null使用者對應至任何具有IP辨識符號的有效Windows使用者。
++
+下列命令會將null使用者對應至具有有效主機名稱google.com的user1：
+
++
+[listing]
+----
+vserver name-mapping create –direction win-unix  -position 1 –pattern “ANONYMOUS LOGON” –replacement user1 – hostname google.com
+----
++
+下列命令會將null使用者對應至具有有效IP位址10.238.2.54/32的user1：
+
++
+[listing]
+----
+vserver name-mapping create –direction win-unix  -position 2 –pattern “ANONYMOUS LOGON” –replacement user1 –address 10.238.2.54/32
+----
+. 使用「vserver name-mapping show」命令確認名稱對應。
++
+[listing]
+----
+vserver name-mapping show
+
+Vserver:   vs1
+Direction: win-unix
+Position Hostname         IP Address/Mask
+-------- --------         ----------------
+1       -                 10.72.40.83/32      Pattern: anonymous logon
+                                          Replacement: user1
+----
+. 使用「vserver CIFS選項modify–win-name-for -null使用者」命令、將Windows成員資格指派給null使用者。
++
+此選項僅適用於具有null使用者有效名稱對應的情況。
+
++
+[listing]
+----
+vserver cifs options modify -win-name-for-null-user user1
+----
+. 使用「vserver CIFS options show」命令確認null使用者與Windows使用者或群組之間的對應關係。
++
+[listing]
+----
+vserver cifs options show
+
+Vserver :vs1
+
+Map Null User to Windows User of Group: user1
+----
+

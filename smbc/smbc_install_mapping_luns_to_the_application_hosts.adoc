@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_install_mapping_luns_to_the_application_hosts.html 
+keywords: SM-BC, SMBC, igroup, LUN, initiator, application host, cluster configure 
+summary: 您必須在每個叢集上建立igroup、以便將LUN對應至應用程式主機上的啟動器。 
+---
+= 將LUN對應至應用程式主機
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須在每個叢集上建立igroup、以便將LUN對應至應用程式主機上的啟動器。
+
+您應該在來源叢集和目的地叢集上執行此組態。
+
+.步驟
+. 在每個叢集上建立igroup：
++
+"LUN igroup create -igroup name -protocol fcp|iSCSI -ostyped OS -initiator initiator name"
+
++
+* 範例 *
+
++
+....
+lun igroup create -igroup ig1 -protocol iscsi -ostype linux -initiator -initiator iqn.2001-04.com.example:abc123
+....
+. 將LUN對應至igroup：
++
+"LUN map -path path_name -igroup igroup_name"
+
++
+*範例：*
+
++
+....
+lun map -path /vol/src1/11 -group ig1
+....
+. 驗證LUN是否已對應：
++
+「LUN show」
+
+. 在應用程式主機上、探索新的LUN。
+

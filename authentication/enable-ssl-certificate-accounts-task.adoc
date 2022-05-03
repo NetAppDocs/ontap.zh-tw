@@ -1,0 +1,57 @@
+---
+permalink: authentication/enable-ssl-certificate-accounts-task.html 
+sidebar: sidebar 
+keywords: enable, ssl certificate, accounts 
+summary: 您可以使用安全性登入create命令、讓系統管理員帳戶使用SSL憑證來存取管理或資料SVM。 
+---
+= 啟用SSL憑證帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全登入create」命令、讓系統管理員帳戶使用SSL憑證來存取管理或資料SVM。
+
+您必須是叢集管理員才能執行此工作。
+
+.關於這項工作
+* 您必須先安裝CA簽署的伺服器數位憑證、帳戶才能存取SVM。
++
+xref:install-server-certificate-cluster-svm-ssl-server-task.adoc[產生及安裝CA簽署的伺服器憑證]
+
++
+您可以在啟用帳戶存取之前或之後執行此工作。
+
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以稍後使用「安全登入修改」命令新增該角色。
++
+xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員的角色]
+
+
+
+[NOTE]
+====
+對於叢集管理員帳戶、憑證驗證僅支援「http」和「ontapi」應用程式。對於SVM系統管理員帳戶、憑證驗證僅支援使用「ontapi」應用程式。
+
+====
+.步驟
+. 啟用本機系統管理員帳戶、以使用SSL憑證存取SVM：
++
+「安全性登入建立-vserver Svm_name -user-or group名稱user_or group名稱-applicationer -authmethod驗證方法-role role -comment comment」
+
++
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["發佈的手冊頁ONTAP"]。
+
++
+下列命令可讓SVM系統管理員帳戶「svmadmin2」使用預設的「vsadmin」角色、使用SSL數位憑證來存取SVM的「engData2」。
+
++
+[listing]
+----
+cluster1::>security login create -vserver engData2 -user-or-group-name svmadmin2 -application ontapi -authmethod cert
+----
+
+
+如果您尚未安裝CA簽署的伺服器數位憑證、則必須先安裝該憑證、帳戶才能存取SVM。
+
+xref:install-server-certificate-cluster-svm-ssl-server-task.adoc[產生及安裝CA簽署的伺服器憑證]

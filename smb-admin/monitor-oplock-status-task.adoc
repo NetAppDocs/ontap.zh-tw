@@ -1,0 +1,92 @@
+---
+permalink: smb-admin/monitor-oplock-status-task.html 
+sidebar: sidebar 
+keywords: monitor, display, information, oplock, status, file, state, leasing, lease, determine, manual, monitor oplock status 
+summary: 您可以監控及顯示oplock狀態的相關資訊。您可以使用此資訊來判斷哪些檔案有oplock、oplock層級和oplock狀態層級、以及是否使用oplock租賃。您也可以決定手動中斷鎖定的相關資訊。 
+---
+= 監控oplock狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以監控及顯示oplock狀態的相關資訊。您可以使用此資訊來判斷哪些檔案有oplock、oplock層級和oplock狀態層級、以及是否使用oplock租賃。您也可以決定手動中斷鎖定的相關資訊。
+
+您可以在摘要表單或詳細清單表單中顯示所有oplock的相關資訊。您也可以使用選用參數來顯示現有鎖定的較小子集相關資訊。例如、您可以指定輸出只傳回指定用戶端IP位址或指定路徑的鎖定。
+
+您可以顯示下列關於傳統和租賃oplock的資訊：
+
+* 建立oplock的SVM、節點、Volume和LIF
+* 鎖定UUID
+* 使用oplock的用戶端IP位址
+* 建立oplock的路徑
+* 鎖定傳輸協定（SMB）和類型（oplock）
+* 鎖定狀態
+* oplock層級
+* 連線狀態和SMB到期時間
+* 開放群組ID（如果已授予租賃oplock）
+
+
+有關每個參數的詳細說明，請參閱《vserver oplocks show》（vserver oplocks show）手冊頁。
+
+.步驟
+. 使用「vserver Locks show」命令顯示oplock狀態。
+
+
+下列命令會顯示所有鎖定的預設資訊。顯示檔案上的oplock會以「資源批次」oplock層級授予：
+
+[listing]
+----
+cluster1::> vserver locks show
+
+Vserver: vs0
+Volume   Object Path        LIF         Protocol  Lock Type   Client
+-------- ------------------ ----------- --------- ----------- ----------
+vol1     /vol1/notes.txt    node1_data1
+                                        cifs      share-level 192.168.1.5
+         Sharelock Mode: read_write-deny_delete
+                                                  op-lock     192.168.1.5
+         Oplock Level: read-batch
+----
+下列範例顯示路徑為「/data2/data2_2/intro.ptx」之檔案上鎖定的詳細資訊。在檔案上以批次的oplock層級授予IP位址為「10.3.1.3」的用戶端租賃oplock：
+
+[NOTE]
+====
+顯示詳細資訊時、命令會針對oplock和共享鎖定資訊提供個別輸出。此範例僅顯示oplock區段的輸出。
+
+====
+[listing]
+----
+cluster1::> vserver lock show -instance -path /data2/data2_2/intro.pptx
+
+                   Vserver: vs1
+                    Volume: data2_2
+         Logical Interface: lif2
+               Object Path: /data2/data2_2/intro.pptx
+                 Lock UUID: ff1cbf29-bfef-4d91-ae06-062bf69212c3
+             Lock Protocol: cifs
+                 Lock Type: op-lock
+   Node Holding Lock State: node3
+                Lock State: granted
+  Bytelock Starting Offset: -
+    Number of Bytes Locked: -
+     Bytelock is Mandatory: -
+     Bytelock is Exclusive: -
+     Bytelock is Superlock: -
+          Bytelock is Soft: -
+              Oplock Level: batch
+   Shared Lock Access Mode: -
+       Shared Lock is Soft: -
+           Delegation Type: -
+            Client Address: 10.3.1.3
+             SMB Open Type: -
+         SMB Connect State: connected
+SMB Expiration Time (Secs): -
+         SMB Open Group ID: 78a90c59d45ae211998100059a3c7a00a007f70da0f8ffffcd445b0300000000
+----
+xref:enable-disable-oplocks-when-creating-shares-task.adoc[建立SMB共用時啟用或停用oplocks]
+
+xref:enable-disable-oplocks-existing-shares-task.adoc[啟用或停用現有SMB共用區上的oplocks]
+
+xref:commands-oplocks-volumes-qtrees-reference.adoc[在磁碟區和qtree上啟用或停用oplock的命令]

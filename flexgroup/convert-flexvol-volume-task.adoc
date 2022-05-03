@@ -1,0 +1,79 @@
+---
+permalink: flexgroup/convert-flexvol-volume-task.html 
+sidebar: sidebar 
+keywords: convert, flexvol, volume, flexgroup, conversion, flex vol, flex group, transitioned, 
+summary: 從功能升級至功能區9.7開始ONTAP 、FlexVol 您可以在不FlexGroup 需要資料複本或額外磁碟空間的情況下、就地將一個功能區轉換成一個功能區。 
+---
+= 將FlexVol 一個「還原」Volume轉換成FlexGroup 「還原」Volume
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能升級至功能區9.7開始ONTAP 、FlexVol 您可以在不FlexGroup 需要資料複本或額外磁碟空間的情況下、就地將一個功能區轉換成一個功能區。
+
+.您需要的是 #8217 ；需要的是什麼
+* 轉換後的Volume可轉換為FlexGroup 等量磁碟區。
++
+若要將轉換的Volume轉換成FlexGroup 「不支援」Volume、必須使用「診斷」模式、而且只能在NetApp支援監督下執行。強烈建議您先聯絡NetApp支援部門、再繼續進行轉換程序。
+
+* 正在轉換的這個版本必須在線上。FlexVol
+* 在這個過程中、執行的操作和設定FlexVol 必須與轉換程序相容。
++
+如果FlexVol 現象不一致、而且中止了Volume轉換、就會產生錯誤訊息。您可以採取修正行動、然後重試轉換。
+
+
+
+.步驟
+. 驗證FlexVol 此現象是否在線上：「Volume show vol_name -vol-形式extended、state」（Volume show vol_name -volume樣式擴充、狀態）
++
+[listing]
+----
+cluster-1::> volume show my_volume -fields volume-style-extended,state
+vserver volume    state  volume-style-extended
+------- --------- ------ ---------------------
+vs0     my_volume online flexvol
+----
+. 驗證FlexVol 是否可在不發生問題的情況下轉換此功能：
++
+.. 登入進階權限模式：「et -priv榮幸 進階」
+.. 驗證轉換程序：「Volume Conversion start -vserver VS1 -volume FlexVol se-contrate-only true」
++
+在轉換磁碟區之前、您必須先修正所有錯誤。
+
++
+[NOTE]
+====
+您無法將FlexGroup 某個不全的功能區轉換回FlexVol 一個不全的功能區。如果您想要這麼做、請聯絡支援部門。
+
+====
+
+
+. 開始轉換：「Volume conversion start -vserver Svm_name -volume vol_name」
++
+[listing]
+----
+cluster-1::*> volume conversion start -vserver vs0 -volume my_volume
+
+Warning: Converting flexible volume "my_volume" in Vserver "vs0" to a FlexGroup
+         will cause the state of all Snapshot copies from the volume to be set
+         to "pre-conversion". Pre-conversion Snapshot copies cannot be
+         restored.
+Do you want to continue? {y|n}: y
+[Job 57] Job succeeded: success
+----
+. 確認轉換成功：「Volume show vol_name -功能 變數-vol-形式 擴充、state」
++
+[listing]
+----
+cluster-1::*> volume show my_volume -fields volume-style-extended,state
+vserver volume    state  volume-style-extended
+------- --------- ------ ---------------------
+vs0     my_volume online flexgroup
+----
+
+
+將此功能轉換成單一成員的《不完整的不完整影像：FlexVol FlexGroup
+
+您可以視需要擴充FlexGroup 「功能區」。

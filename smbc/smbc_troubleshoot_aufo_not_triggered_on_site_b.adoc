@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_aufo_not_triggered_on_site_b.html 
+keywords: SM-BC, SMBC, troubleshooting, automatic unplanned failover, aufo, failover, Mediator, quorum 
+summary: 站台A故障不會觸發站台B上的非計畫性容錯移轉 
+---
+= 站台B未觸發自動非計畫性容錯移轉
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+站台A故障不會觸發站台B上的非計畫性容錯移轉
+
+未設定中介器。要確定這是否是原因、請在站台B叢集上發出「napmirror中介show」命令。
+
+....
+Cluster2::*> snapmirror mediator show
+This table is currently empty.
+....
+此範例指出、「資訊管理器」並未在站台B上設定
+
+請確定已在兩個叢集上設定「訊務員」、狀態為「已連線」、仲裁設定為「真」。
+
+SnapMirror一致性群組不同步。若要判斷原因是否為此、請檢視事件記錄、以檢視一致性群組在站台發生故障期間是否同步。
+
+....
+cluster::*> event log show -event *out.of.sync*
+
+Time                Node             Severity      Event
+------------------- ---------------- ------------- ---------------------------
+10/1/2020 23:26:12  sti42-vsim-ucs511w ERROR       sms.status.out.of.sync: Source volume "vs0:zrto_cg_556844_511u_RW1" and destination volume "vs1:zrto_cg_556881_511w_DP1" with relationship UUID "55ab7942-03e5-11eb-ba5a-005056a7dc14" is in "out-of-sync" status due to the following reason: "Transfer failed."
+....
+請完成下列步驟、在站台B上執行強制容錯移轉
+
+. 從站台B取消對應屬於一致性群組的所有LUN
+. 使用「force」選項刪除SnapMirror一致性群組關係。
+. 在一致性群組組成磁碟區上輸入「快照鏡射中斷」命令、將磁碟區從DP轉換成R/W、以啟用站台B的I/O
+. 啟動站台A節點、以建立從站台B到站台A的零RTO關係
+. 使用站台A上的「僅供參考」釋放一致性群組、以保留通用的Snapshot複本、並取消對應屬於一致性群組的LUN。
+. 使用同步原則或非同步原則設定磁碟區層級關係、將站台A上的磁碟區從右/右轉換為DP。
+. 發出「napmirror resSync」來同步關係。
+. 刪除與站台A上同步原則的SnapMirror關係
+. 在站點B上使用「僅供參考的真實情況」來發佈SnapMirror與Sync原則的關係
+. 建立站台B與站台A之間的一致性群組關係
+. 從站台A重新同步一致性群組、然後驗證一致性群組是否同步。
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+

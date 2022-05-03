@@ -1,0 +1,224 @@
+---
+permalink: nfs-config/examples-export-policies-concept.html 
+sidebar: sidebar 
+keywords: examples, ontap, export, policies, implementation, 7-mode 
+summary: 您可以檢閱範例匯出原則、進一步瞭解匯出原則在ONTAP 功能方面的運作方式。 
+---
+= 示例：不實匯出原則ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢閱範例匯出原則、進一步瞭解匯出原則在ONTAP 功能方面的運作方式。
+
+
+
+== 7-Mode匯出的實作範例ONTAP
+
+以下範例顯示7-Mode匯出、如同其出現在「/etc/export」檔案中：
+
+[listing]
+----
+/vol/vol1 -sec=sys,ro=@readonly_netgroup,rw=@readwrite_netgroup1:
+@readwrite_netgroup2:@rootaccess_netgroup,root=@rootaccess_netgroup
+----
+若要將此匯出重新產生為叢集匯出原則、您必須建立具有三個匯出規則的匯出原則、然後將匯出原則指派給Volume vol1。
+
+|===
+| 規則 | 元素 | 價值 
+
+
+ a| 
+規則1.
+ a| 
+-`-clientMATCH（用戶端規格）
+ a| 
+hy@readme_netgroup
+
+
+
+ a| 
+「-rueindex」（匯出規則在規則清單中的位置）
+ a| 
+第1名
+
+
+
+ a| 
+「-'傳輸協定」
+ a| 
+NFS
+
+
+
+ a| 
+「-rorrule」（允許唯讀存取）
+ a| 
+「ys」（用戶端已透過AUTH_SYS驗證）
+
+
+
+ a| 
+-rwrRule（允許讀寫存取）
+ a| 
+《永不》
+
+
+
+ a| 
+超級使用者（允許超級使用者存取）
+ a| 
+「無」（root _squash）
+
+
+
+ a| 
+第2條
+ a| 
+「-'用戶端比對'
+ a| 
+h@rootaccess_netgroup
+
+
+
+ a| 
+’-rueindex'
+ a| 
+2）
+
+
+
+ a| 
+「-'傳輸協定」
+ a| 
+NFS
+
+
+
+ a| 
+「-rorule」
+ a| 
+《時代》
+
+
+
+ a| 
+「-rwrRule」
+ a| 
+《時代》
+
+
+
+ a| 
+超級用戶
+ a| 
+《時代》
+
+
+
+ a| 
+規則3.
+ a| 
+「-'用戶端比對'
+ a| 
+「@readwrite網路群組1、@readwrite網路群組2」
+
+
+
+ a| 
+’-rueindex'
+ a| 
+3）
+
+
+
+ a| 
+「-'傳輸協定」
+ a| 
+NFS
+
+
+
+ a| 
+「-rorule」
+ a| 
+《時代》
+
+
+
+ a| 
+「-rwrRule」
+ a| 
+《時代》
+
+
+
+ a| 
+超級用戶
+ a| 
+無
+
+|===
+. 建立名為exp_vol1的匯出原則：
++
+「vserver exp/policy create -vserver NewSVM -policyname exp_vol1」
+
+. 在base命令中建立三個具有下列參數的規則：
++
+** base命令：+「vserver exp/policy規則create -vserver NewSVM -policyname exp_vol1」
+** 規則參數：+、-clientmMATCH @readkit_netgroup -rueindex 1 -protocol nfs -rorule sys -rwrwrRule Never -ex超級 用戶none'+、-clientmMATCH @rootaccess_netgroup -rrrindex 2 -protocol nfs -rorrwrwrRule sys -rwrups'+
+
+
+. 將原則指派給Volume vol1：
++
+「Volume modify -vserver NewSVM -volume vol1 -policy exp_vol1」
+
+
+
+
+
+== 7-Mode匯出的整合範例
+
+以下範例顯示7-Mode的「/etc/export」檔案、每10個qtree包含一行：
+
+[listing]
+----
+
+/vol/vol1/q_1472 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1471 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1473 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1570 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1571 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_2237 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2238 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2239 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2240 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2241 -sec=sys,rw=host2057s,root=host2057s
+----
+在本例中、每個qtree需要兩種原則之一：一種是「-clientMATCH host1519s」規則、另一種是「-clientMATCH host2057s」規則。ONTAP
+
+. 建立兩個匯出原則、稱為exp_vol1q1和exp_vol1q2：
++
+** 「vserver exp/policy create -vserver NewSVM -policyname exp_vol1q1」
+** 「vserver exp/policy create -vserver NewSVM -policyname exp_vol1q2」
+
+
+. 為每個原則建立規則：
++
+** 「vserver exp/policy規則create -vserver NewSVM -policyname exp vol1q1 -clientMATCH host1519s -rwrRule sys -ex超級 用戶sys」
+** 「vserver exp/policy規則create -vserver NewSVM -policyname exp vol1q2 -clientMATCH host1519s -rwrRule sys -oversys」
+
+
+. 將原則套用至qtree：
++
+** 「Volume qtree modify -vserver NewSVM -qtree路徑/vol/vol1/q_1472 -export/policy exp_vol1q1」
+** [接下來的4個qtree ...]
+** 「Volume qtree modify -vserver NewSVM -qtree路徑/vol/vol1/q_2237 -export/policy exp_vol1q2」
+** [接下來的4個qtree ...]
+
+
+
+
+如果您稍後需要為這些主機新增其他qtree、則會使用相同的匯出原則。

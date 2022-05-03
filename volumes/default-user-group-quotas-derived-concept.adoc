@@ -1,0 +1,53 @@
+---
+permalink: volumes/default-user-group-quotas-derived-concept.html 
+sidebar: sidebar 
+keywords: how, default, user, group quotas, create, derived, quotas 
+summary: 當您建立預設使用者或群組配額時、系統會針對擁有相同層級檔案的每個使用者或群組、自動建立對應的衍生使用者或群組配額。 
+---
+= 預設使用者和群組配額如何建立衍生配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您建立預設使用者或群組配額時、系統會針對擁有相同層級檔案的每個使用者或群組、自動建立對應的衍生使用者或群組配額。
+
+衍生的使用者和群組配額會以下列方式建立：
+
+* 在一個使用者配額FlexVol 的情況下、使用者配額會為在磁碟區任何位置擁有檔案的每個使用者建立衍生的使用者配額。
+* qtree上的預設使用者配額會針對擁有qtree中檔案的每個使用者、建立衍生的使用者配額。
+* 在一個預設的群組配額FlexVol 中、會針對在磁碟區任何位置擁有檔案的每個群組、建立衍生的群組配額。
+* qtree上的預設群組配額會為qtree中擁有檔案的每個群組建立衍生的群組配額。
+
+
+如果使用者或群組未擁有預設使用者或群組配額層級的檔案、則不會為使用者或群組建立衍生配額。例如、如果為qtree proj1建立預設使用者配額、而使用者jsmith擁有不同qtree上的檔案、則不會為jsmith建立任何衍生的使用者配額。
+
+衍生配額的設定與預設配額相同、包括限制和使用者對應。例如、如果預設的使用者配額具有50 MB磁碟限制、且已開啟使用者對應、則任何產生的衍生配額也會有50 MB磁碟限制、且使用者對應已開啟。
+
+不過、三個特殊使用者和群組的衍生配額並不存在任何限制。如果下列使用者和群組擁有預設使用者或群組配額層級的檔案、則會以與預設使用者或群組配額相同的使用者對應設定來建立衍生配額、但只是追蹤配額（無限制）：
+
+* UNIX root使用者（UID 0）
+* UNIX根群組（Gid 0）
+* Windows BUILTIN\Administrator群組
++
+由於Windows群組的配額會追蹤為使用者配額、因此此群組的衍生配額是從預設使用者配額衍生而來的使用者配額、而非預設群組配額。
+
+
+
+如果您有三個使用者（root、jsmith和bob）擁有的檔案所在的磁碟區、而且您在磁碟區上建立預設的使用者配額、ONTAP 則會自動建立三個衍生的使用者配額。因此、重新初始化磁碟區上的配額之後、配額報告中會出現四個新配額：
+
+[listing]
+----
+cluster1::> volume quota report
+  Vserver: vs1
+                                     ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1               user    *           0B   50MB       0       -   *
+vol1               user    root        5B      -       1       -
+vol1               user    jsmith     30B   50MB      10       -   *
+vol1               user    bob        40B   50MB      15       -   *
+4 entries were displayed.
+----
+第一個新行是您建立的預設使用者配額、以星號（*）識別為ID。其他新行是衍生的使用者配額。jsmith和bob的衍生配額與預設配額具有相同的50 MB磁碟限制。根使用者的衍生配額是不受限制的追蹤配額。

@@ -1,0 +1,32 @@
+---
+permalink: volumes/full-quota-reinitialization-required-concept.html 
+sidebar: sidebar 
+keywords: when, full, quota, reinitialization, required 
+summary: 雖然調整配額大小的速度較快、但如果您對配額做出一些小或大幅的變更、則必須執行完整的配額重新初始化。 
+---
+= 需要完整的配額重新初始化時
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+雖然調整配額大小的速度較快、但如果您對配額做出一些小或大幅的變更、則必須執行完整的配額重新初始化。
+
+在下列情況下、必須重新初始化完整配額：
+
+* 您可以為先前沒有配額的目標建立配額。
+* 您可以在「usermap.cfg/」檔案中變更使用者對應、並在配額檔案中使用quote_per_user_mapping項目。
+* 您可以將qtree的安全樣式從UNIX變更為混合式或NTFS。
+* 您可以將qtree的安全樣式從混合式或NTFS變更為UNIX。
+* 您可以從具有多個使用者的配額目標中移除使用者、或將使用者新增至已有多個使用者的目標。
+* 您可以對配額進行廣泛變更。
+
+
+假設您的磁碟區包含三個qtree、而且磁碟區中唯一的配額是三個樹狀結構配額。您決定進行下列變更：
+
+* 新增qtree並為其建立新的樹狀結構配額。
+* 新增磁碟區的預設使用者配額。
+
+
+這兩項變更都需要完整的配額初始化。調整大小並不會使配額生效。

@@ -1,0 +1,68 @@
+---
+permalink: volumes/manage-aggregate-level-deduplication-aff-task.html 
+sidebar: sidebar 
+keywords: manage, aggregate-level, inline, deduplication, aff systems 
+summary: Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各磁碟區之間消除重複區從功能完善的9.2開始ONTAP 、您可以在AFF 下列系統上即時執行集合體層級的重複資料刪除功能：此功能預設會針對所有新建立的磁碟區和所有已升級的磁碟區啟用、並開啟Volume即時重複資料刪除功能。 
+---
+= 在AFF 不完善的系統上管理集合體層級的即時重複資料刪除技術
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各磁碟區之間消除重複區從功能完善的9.2開始ONTAP 、您可以在AFF 下列系統上即時執行集合體層級的重複資料刪除功能：此功能預設會針對所有新建立的磁碟區和所有已升級的磁碟區啟用、並開啟Volume即時重複資料刪除功能。
+
+重複資料刪除作業可在資料寫入磁碟之前、先消除重複的區塊。只有將「最快保證」設為「無」的磁碟區、才能參與集合體層級的即時重複資料刪除。這是AFF 在整個系統上的預設設定。
+
+[NOTE]
+====
+Aggregate層級的即時重複資料刪除技術有時稱為跨磁碟區即時重複資料刪除技術。
+
+====
+.步驟
+. 在AFF 下列情況下、管理位於下列系統上的集合體層級即時重複資料刪除：
++
+[cols="2*"]
+|===
+| 如果您想要... | 使用此命令 
+
+
+ a| 
+啟用Aggregate層級的即時重複資料刪除技術
+ a| 
+「Volume Effiveive-modify -vserver vserver_name -volume vol_name -Cross-volvole-ine-dewide-dupe true」
+
+
+
+ a| 
+停用Aggregate層級的即時重複資料刪除
+ a| 
+「Volume Effiveive-modify -vserver vserver_name -volume vol_name -Cross-volvolvole-ine-dedupe fals'
+
+
+
+ a| 
+顯示Aggregate層級的即時重複資料刪除狀態
+ a| 
+Volume Effim兼 具組態- Volume vol_name
+
+|===
+
+
+下列命令會顯示Aggregate層級的即時重複資料刪除狀態：
+
+[listing]
+----
+
+wfit-8020-03-04::> volume efficiency config -volume choke0_wfit_8020_03_0
+Vserver:                                      vs0
+Volume:                                       choke0_wfit_8020_03_0
+Schedule:                                     -
+Policy:                                       choke_VE_policy
+Compression:                                  true
+Inline Compression:                           true
+Inline Dedupe:                                true
+Data Compaction:                              true
+Cross Volume Inline Deduplication:            false
+----

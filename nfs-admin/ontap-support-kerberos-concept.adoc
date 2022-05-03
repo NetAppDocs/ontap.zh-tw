@@ -1,0 +1,34 @@
+---
+permalink: nfs-admin/ontap-support-kerberos-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, kerberos 
+summary: Kerberos為用戶端/伺服器應用程式提供強大的安全驗證功能。驗證可驗證伺服器的使用者和處理程序身分。在支援VMware的環境中ONTAP 、Kerberos可在儲存虛擬機器（SVM）和NFS用戶端之間提供驗證。 
+---
+= 支援Kerberos ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kerberos為用戶端/伺服器應用程式提供強大的安全驗證功能。驗證可驗證伺服器的使用者和處理程序身分。在支援VMware的環境中ONTAP 、Kerberos可在儲存虛擬機器（SVM）和NFS用戶端之間提供驗證。
+
+在發揮作用的過程中、支援下列Kerberos功能：ONTAP
+
+* Kerberos 5驗證搭配完整性檢查（krb5i）
++
+Krb5i使用Checksum來驗證用戶端與伺服器之間傳輸的每個NFS訊息完整性。這項功能在安全性方面非常實用（例如、確保資料未遭竄改）、也有助於確保資料完整性（例如、在不可靠的網路上使用NFS時、可防止資料毀損）。
+
+* Kerberos 5驗證搭配隱私權檢查（krb5p）
++
+Krb5p使用Checksum加密用戶端與伺服器之間的所有流量。這更安全、也會產生更多負載。
+
+* 128位元和256位元AES加密
++
+進階加密標準（AES）是一種加密演算法、用於保護電子資料安全。目前支援AES（128位元金鑰（AES-128）和AES（256位元金鑰（AES-256）加密）、以增強Kerberos的安全性。ONTAP
+
+* SVM層級Kerberos領域組態
++
+SVM系統管理員現在可以在SVM層級建立Kerberos領域組態。這表示SVM管理員不再需要仰賴叢集管理員來進行Kerberos領域組態、也能在多租戶環境中建立個別的Kerberos領域組態。
+
+

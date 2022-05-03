@@ -1,0 +1,49 @@
+---
+permalink: fabricpool/setup-aws-s3-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, aws, s3, cloud tier 
+summary: 如果您執行ONTAP 的是版本2、9.2或更新版本、您可以將AWS S3設定為FabricPool 適用的雲端層。如果您執行ONTAP 的是更新版本的版本、則可以設定AWS商業雲端服務（C2S）FabricPool 以供使用。 
+---
+= 將AWS S3設定為雲端層
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行ONTAP 的是版本2、9.2或更新版本、您可以將AWS S3設定為FabricPool 適用的雲端層。如果您執行ONTAP 的是更新版本的版本、則可以設定AWS商業雲端服務（C2S）FabricPool 以供使用。
+
+.步驟
+. 使用「sorage Aggregate object-store config create」命令搭配「-provider-type」「AWs_S3」參數、指定AWS S3組態資訊。
++
+** 您可以使用「-auth-type」「cap」參數來取得用於C2S存取的認證資料。
++
+當您使用「-auth-type」「cap」參數時、必須使用「-cap」參數來指定完整的URL、以要求C2S存取的暫用認證資料。
+
+** 如果無法使用提供的資訊存取AWS S3、則「儲存Aggregate object-store config create」命令會失敗ONTAP 。
+** 您可以使用「-access-key」參數來指定存取金鑰、以授權要求存取AWS S3物件存放區。
+** 您可以使用「-secret密碼」參數來指定密碼（秘密存取金鑰）、以驗證AWS S3物件存放區的要求。
+** 如果AWS S3密碼已變更、您應該ONTAP 立即更新儲存在BIOS中的對應密碼。
++
+如此一來、即可讓支援中心不中斷地存取AWS S3中的資料。ONTAP
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name my_aws_store -provider-type AWS_S3
+-server s3.amazonaws.com -container-name my-aws-bucket
+-access-key DXJRXHPXHYXA9X31X3JX
+----
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create -object-store-name my_c2s_store -provider-type AWS_S3 -auth-type CAP -cap-url https://123.45.67.89/api/v1/credentials?agency=XYZ&mission=TESTACCT&role=S3FULLACCESS -server my-c2s-s3server-fqdn -container my-c2s-s3-bucket
+----
+
+
+. 使用「儲存Aggregate object-store config show」命令來顯示及驗證AWS S3組態資訊。
++
+使用「儲存Aggregate object-store config modify」命令、您可以修改AWS S3組態資訊FabricPool 以供使用。
+
+

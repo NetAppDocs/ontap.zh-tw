@@ -1,0 +1,30 @@
+---
+permalink: revert/concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, considerations, snapmirror, synchronous, relationships 
+summary: 在從ONTAP SnapMirror 9.6回復ONTAP 到S景 點9.5之前、您必須瞭解SnapMirror同步關係的考量事項。 
+---
+= 使用SnapMirror同步關係還原系統的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在從ONTAP SnapMirror 9.6回復ONTAP 到S景 點9.5之前、您必須瞭解SnapMirror同步關係的考量事項。
+
+在還原之前、如果您有SnapMirror同步關係、則必須採取下列步驟：
+
+* 您必須刪除來源磁碟區使用NFSv4或SMB來處理資料的任何SnapMirror同步關係。
++
+不支援NFSv4和SMB。ONTAP
+
+* 您必須刪除鏡射鏡射串聯部署中的任何SnapMirror同步關係。
++
+SnapMirror同步關係ONTAP 不支援鏡射鏡射串聯部署（鏡射鏡射串聯部署）。
+
+* 如果ONTAP 還原期間無法使用通用的Snapshot 9.5複本、您必須在還原後初始化SnapMirror同步關係。
++
+在2小時升級ONTAP 至S還原9.6之後、ONTAP 來自於還原9.5的常見Snapshot複本會自動取代ONTAP 成使用於還原9.6的常見Snapshot複本。因此、如果ONTAP 無法使用來自E9.5的常見Snapshot複本、則在還原後、您無法重新同步SnapMirror同步關係。
+
+

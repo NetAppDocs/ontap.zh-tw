@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_enable_s3_server.html 
+keywords: netapp, ontap, System Manager, S3, S3 server, storage VM, storage VMs, S3 client, client, clients, server, certificate, network, protocol, protocol servers, configure protocols, Fully Qualified Domain Name, FQDN, client, client access, network, network interface, network interfaces, DNS 
+summary: 新增內含S3伺服器的儲存VM、以便將內容提供給S3用戶端。 
+---
+= 在儲存設備上啟用S3伺服器
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+將S3伺服器新增至新的或現有的儲存VM、以便將內容提供給S3用戶端。
+
+S3伺服器可與其他傳輸協定伺服器共存於儲存VM中、也可建立新的儲存VM來隔離命名空間和工作負載。
+
+您應準備好輸入S3伺服器名稱（FQDN）和IP位址、以供介面角色資料使用。
+
+如果您使用的是外部CA簽署的憑證、系統會在此程序期間提示您輸入；您也可以選擇使用系統產生的憑證。
+
+.步驟
+. 在儲存VM上啟用S3。
++
+.. 新增儲存VM：按一下「*儲存設備>儲存VM*」、然後按一下「*新增*」。
++
+如果這是沒有現有儲存VM的新系統：請按一下*儀表板>設定傳輸協定*。
+
++
+如果您要將S3伺服器新增至現有的儲存VM：請按一下「*儲存設備>儲存VM*」、選取儲存VM、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 低於* S3 *。
+
+.. 按一下「*啟用S2*」、然後輸入「S3伺服器名稱」。
++
+這是用戶端將使用的完整網域名稱（FQDN）。
+
+.. 選取憑證類型。
++
+無論您是選擇系統產生的憑證、或是自己的憑證、用戶端存取都必須使用此憑證。
+
+.. 輸入網路介面。
+
+
+. 如果您選取系統產生的憑證、則在確認建立新的儲存VM時、會看到憑證資訊。按一下「*下載*」並儲存以供用戶端存取。
++
+** 不會再顯示秘密金鑰。
+** 如果您再次需要憑證資訊：按一下*儲存設備>儲存設備VM*、選取儲存設備VM、然後按一下*設定*。
+
+
+

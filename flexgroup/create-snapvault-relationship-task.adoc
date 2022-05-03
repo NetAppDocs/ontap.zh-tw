@@ -1,0 +1,104 @@
+---
+permalink: flexgroup/create-snapvault-relationship-task.html 
+sidebar: sidebar 
+keywords: create, snapvault, relationship, flexgroup, volumes 
+summary: 您可以設定SnapVault 一個靜態關係、並為SnapVault 該關係指派一個不支援的原則、以建立SnapVault 一個不支援的備份。 
+---
+= 建立SnapVault 適用於所有資料的不一樣關係FlexGroup
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定SnapVault 一個靜態關係、並為SnapVault 該關係指派一個不支援的原則、以建立SnapVault 一個不支援的備份。
+
+您必須瞭解建立SnapVault 有關本區的不景點關係的考量FlexGroup 事項。
+
+.步驟
+. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
++
+.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
++
+[listing]
+----
+cluster1::> volume show  -volume src* -is-constituent true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vss       src          -            online     RW         400TB   172.86GB  56%
+vss       src__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vss       src__0002    aggr1        online     RW         25TB    10.86TB   56%
+vss       src__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vss       src__0004    aggr1        online     RW         25TB    10.73TB   57%
+vss       src__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vss       src__0006    aggr1        online     RW         25TB    10.64TB   57%
+vss       src__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
++
+[listing]
+----
+cluster2::> volume create -vserver vsd -aggr-list aggr1,aggr2 -aggr-list-multiplier 8 -size 400TB -type DP dst
+
+Warning: The FlexGroup volume "dst" will be created with the following number of constituents of size 25TB: 16.
+Do you want to continue? {y|n}: y
+[Job 766] Job succeeded: Successful
+----
+.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
++
+[listing]
+----
+cluster2::> volume show  -volume dst* -is-constituent true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vsd       dst          -            online     RW         400TB   172.86GB  56%
+vsd       dst__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vsd       dst__0002    aggr1        online     RW         25TB    10.86TB   56%
+vsd       dst__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vsd       dst__0004    aggr1        online     RW         25TB    10.73TB   57%
+vsd       dst__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vsd       dst__0006    aggr1        online     RW         25TB    10.64TB   57%
+vsd       dst__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+
+
+. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
++
+如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+
++
+以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 建立SnapVault 一套不規則的原則、然後定義SnapVault 一套適用於該決策的規則：
++
+.. 建立類型為「vVault」的自訂原則SnapVault 、以利實現上述關係：「napmirror policy create -vserver svm_name -policy policy_name -type vVault」
+.. 定義SnapVault 確定在初始化和更新作業期間傳輸哪些Snapshot複本的SIRSTE原則：「napmirror policy add-rule -vserver Svm_name -policy policy_for_rRule - SnapMirror標籤SnapMirror標籤-reteure_count-schedule schedule」
+
+
++
+如果您不建立自訂原則、則應指定「XDPDefault」原則來SnapVault 建立人際關係。
+
+. 建立SnapVault 一個不一致的關係：「napmirror create -source-path src-svm:src-flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -schedule_name -policy Xdpdefault」
++
+在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+
++
+[listing]
+----
+cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy XDPDefault
+----
+. 從目的地叢集中SnapVault 、執行基礎傳輸來初始化此等資訊關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」（napmirror初始化-dest-path dest_svm:dest_flexgroup）
++
+[listing]
+----
+cluster2::> snapmirror initialize -destination-path vsd:dst
+Operation is queued: snapmirror initialize of destination "vsd:dst".
+----
+

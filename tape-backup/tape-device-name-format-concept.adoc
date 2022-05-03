@@ -1,0 +1,103 @@
+---
+permalink: tape-backup/tape-device-name-format-concept.html 
+sidebar: sidebar 
+keywords: tape, device, name, format, rewind, type, alias, compression 
+summary: 每個磁帶設備都有一個以定義格式顯示的關聯名稱。此格式包含有關裝置類型、快退類型、別名和壓縮類型的資訊。 
+---
+= 磁帶設備名稱格式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每個磁帶設備都有一個以定義格式顯示的關聯名稱。此格式包含有關裝置類型、快退類型、別名和壓縮類型的資訊。
+
+磁帶設備名稱的格式如下：
+
+"RE風 類型"的"sit""alias _number""壓縮 類型"
+
+「快退類型」是指快退類型。
+
+下列清單說明各種快退類型值：
+
+* * r*
++
+在磁帶完成寫入磁帶檔案後、將其倒帶。ONTAP
+
+* * nr*
++
+在磁帶完成寫入磁帶檔案後、不能將其倒帶。ONTAP當您想要在同一個磁帶上寫入多個磁帶檔案時、必須使用此快退類型。
+
+* *您*
++
+這是卸載/重新載入快退類型。使用此回捲類型時、磁帶庫會在磁帶到達磁帶檔案結尾時卸載磁帶、然後載入下一個磁帶（如果有）。
+
++
+您只能在下列情況下使用此快退類型：
+
++
+** 與此裝置相關聯的磁帶機位於磁帶庫中、或是處於磁帶庫模式的媒體交換器中。
+** 與此裝置相關的磁帶機連接至儲存系統。
+** 此磁帶機定義的磁帶庫磁帶順序中、有足夠的磁帶可供您執行作業。
+
+
+
+
+[NOTE]
+====
+如果您使用無快退裝置錄製磁帶、則必須在讀取之前將磁帶倒帶。
+
+====
+「t」是磁帶機的標準名稱。
+
+「alias編號」是ONTAP 指用作支援磁帶機的別名。當檢測到新的磁帶機時、支援將別名指派給磁帶機。ONTAP ONTAP
+
+「壓縮類型」是磁帶上資料密度和壓縮類型的磁碟機專屬程式碼。
+
+下列清單說明「壓縮類型」的各種值：
+
+* * a *
++
+最高壓縮率
+
+* * h*
++
+高壓縮
+
+* *米*
++
+中度壓縮
+
+* * l*
++
+低壓縮
+
+
+
+nrst0a（nrst0a）指定磁帶機0上使用最高壓縮的無回退設備。
+
+以下範例顯示與HP Ultrium 2-SCSI相關的磁帶設備：
+
+[listing]
+----
+
+           Tape drive (fc202_6:2.126L1)  HP      Ultrium 2-SCSI
+    rst0l  -  rewind device,        format is: HP (200GB)
+    nrst0l -  no rewind device,     format is: HP (200GB)
+    urst0l -  unload/reload device, format is: HP (200GB)
+    rst0m  -  rewind device,        format is: HP (200GB)
+    nrst0m -  no rewind device,     format is: HP (200GB)
+    urst0m -  unload/reload device, format is: HP (200GB)
+    rst0h  -  rewind device,        format is: HP (200GB)
+    nrst0h -  no rewind device,     format is: HP (200GB)
+    urst0h -  unload/reload device, format is: HP (200GB)
+    rst0a  -  rewind device,        format is: HP (400GB w/comp)
+    nrst0a -  no rewind device,     format is: HP (400GB w/comp)
+    urst0a -  unload/reload device, format is: HP (400GB w/comp)
+----
+下列清單說明上述範例中的縮寫：
+
+* GB - GB；這是磁帶的容量。
+* 搭配壓縮功能；這會顯示壓縮後的磁帶容量。
+

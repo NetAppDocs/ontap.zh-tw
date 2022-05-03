@@ -1,0 +1,40 @@
+---
+permalink: volumes/configure-automatic-grow-shrink-size-task.html 
+sidebar: sidebar 
+keywords: configure, volumes, automatically, grow, shrink, size 
+summary: 您可以根據FlexVol 目前所需的空間、設定自動擴充和縮減的功能。如果Aggregate能夠提供更多空間、自動擴充有助於防止磁碟區空間不足。自動壓縮可防止磁碟區大於所需的容量、釋放集合體中的空間供其他磁碟區使用。 
+---
+= 設定磁碟區以自動擴充及縮小其大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以根據FlexVol 目前所需的空間、設定自動擴充和縮減的功能。如果Aggregate能夠提供更多空間、自動擴充有助於防止磁碟區空間不足。自動壓縮可防止磁碟區大於所需的容量、釋放集合體中的空間供其他磁碟區使用。
+
+此版本必須在線上。FlexVol
+
+自動壓縮只能搭配自動擴充一起使用、以滿足不斷變化的空間需求、而且無法單獨使用。啟用自動壓縮功能時ONTAP 、支援使用者可自動管理磁碟區的縮減行為、以避免自動擴充和自動縮小動作的循環。
+
+隨著磁碟區的成長、可以包含的檔案數量上限可能會自動增加。當磁碟區縮小時、其可包含的檔案數量上限將維持不變、而且磁碟區無法自動縮減至與其目前最大檔案數相對應的大小。因此、可能無法自動將磁碟區縮小至原始大小。
+
+根據預設、磁碟區可成長為啟用自動擴充的大小的120%。如果您需要確保磁碟區的大小可以大於該磁碟區、則必須據此設定磁碟區的最大大小。
+
+.步驟
+. 設定磁碟區以自動擴充及縮小其大小：
++
+磁碟區自動調整大小-vserver vserver_namevol_name -mode gam_drink
+
++
+下列命令可針對名為test2的磁碟區自動變更大小。磁碟區已設定為在滿60%時開始縮減。預設值用於開始增加的時間及其最大大小。
+
++
+[listing]
+----
+cluster1::> volume autosize -vserver vs2 test2 -shrink-threshold-percent 60
+vol autosize: Flexible volume "vs2:test2" autosize settings UPDATED.
+
+Volume modify successful on volume: test2
+----
+

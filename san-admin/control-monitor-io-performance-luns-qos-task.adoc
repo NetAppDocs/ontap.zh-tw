@@ -1,0 +1,36 @@
+---
+permalink: san-admin/control-monitor-io-performance-luns-qos-task.html 
+sidebar: sidebar 
+keywords: control, monitor, i/o, performance, luns, using, storage qos 
+summary: 您可以將LUN指派給Storage QoS原則群組、藉此控制LUN的輸入/輸出（I/O）效能。您可以控制I/O效能、確保工作負載達到特定的效能目標、或是調節對其他工作負載造成負面影響的工作負載。 
+---
+= 使用Storage QoS控制及監控LUN的I/O效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將LUN指派給Storage QoS原則群組、藉此控制LUN的輸入/輸出（I/O）效能。您可以控制I/O效能、確保工作負載達到特定的效能目標、或是調節對其他工作負載造成負面影響的工作負載。
+
+原則群組會強制執行最大處理量限制（例如100 MB/s）。您可以建立原則群組而不指定最大處理量、以便在控制工作負載之前監控效能。
+
+您也可以將FlexVol 含有VMware磁碟區和LUN的儲存虛擬機器（SVM）指派給原則群組。
+
+請注意下列有關將LUN指派給原則群組的需求：
+
+* LUN必須由原則群組所屬的SVM所包含。
++
+您可以在建立原則群組時指定SVM。
+
+* 如果您將LUN指派給原則群組、則無法將包含Volume或SVM的LUN指派給原則群組。
+
+
+如需如何使用Storage QoS的詳細資訊、請參閱 link:../system-admin/index.html["系統管理參考資料"]。
+
+.步驟
+. 使用「QoS原則群組create」命令來建立原則群組。
+. 使用「LUN create」命令或「LUN modify」命令搭配「-qos-police-group」參數、將LUN指派給原則群組。
+. 使用「QoS統計資料」命令來檢視效能資料。
+. 如有必要、請使用「QoS原則群組修改」命令來調整原則群組的最大處理量限制。
+

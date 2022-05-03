@@ -1,0 +1,596 @@
+---
+permalink: smb-config/worksheet-reference.html 
+sidebar: sidebar 
+keywords: smb, configuration, worksheet, enable, collect, require, information, access, client, worksheet, gather, cifs, worksheet for gathering SMB configuration information 
+summary: SMB組態工作表可讓您收集必要資訊、以便為用戶端設定SMB存取。 
+---
+= 用於收集SMB組態資訊的工作表
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB組態工作表可讓您收集必要資訊、以便為用戶端設定SMB存取。
+
+您應該完成工作表的一或兩個區段、視您對儲存資源配置的決策而定：
+
+* 如果您要設定SMB存取SVM、請完成這兩個部分。
++
+xref:configure-access-svm-task.adoc[設定SMB存取SVM]
+
++
+xref:configure-client-access-shared-storage-concept.adoc[設定SMB用戶端存取共享儲存設備]
+
+* 如果您要將儲存容量新增至啟用SMB的SVM、則只需完成第二部分。
++
+xref:configure-client-access-shared-storage-concept.adoc[設定SMB用戶端存取共享儲存設備]
+
+
+
+命令手冊頁包含有關參數的詳細資料。
+
+
+
+== 設定SMB存取SVM
+
+*用於建立SVM*的參數
+
+如果您要建立新的SVM、請使用「vserver create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+您為新SVM提供的名稱、可以是完整網域名稱（FQDN）、也可以遵循另一種在叢集內強制執行唯一SVM名稱的慣例。
+ a| 
+
+
+
+ a| 
+「Aggregate」
+ a| 
+叢集中有足夠空間容納新SMB儲存容量的集合體名稱。
+ a| 
+
+
+
+ a| 
+-`rootvolume
+ a| 
+您為SVM根磁碟區提供的唯一名稱。
+ a| 
+
+
+
+ a| 
+「rootvolume安全型」
+ a| 
+使用SVM的NTFS安全樣式。
+ a| 
+NTFS
+
+
+
+ a| 
+「-語言」
+ a| 
+使用此工作流程中的預設語言設定。
+ a| 
+《C．utf-8》
+
+
+
+ a| 
+《IPSpace》
+ a| 
+選用：IPspaces是SVM所在的不同IP位址空間。
+ a| 
+
+|===
+*用於建立LIF*的參數
+
+您可以在建立lifs時、使用「network interface create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+「-lif'」
+ a| 
+您為新LIF提供的名稱。
+ a| 
+
+
+
+ a| 
+「角色」
+ a| 
+在此工作流程中使用資料LIF角色。
+ a| 
+"DAAT"
+
+
+
+ a| 
+資料傳輸協定
+ a| 
+在此工作流程中僅使用SMB傳輸協定。
+ a| 
+《CIFS》
+
+
+
+ a| 
+首頁節點
+ a| 
+當LIF上執行「網路介面回復」命令時、LIF會傳回的節點。
+ a| 
+
+
+
+ a| 
+首頁連接埠
+ a| 
+在LIF上執行「網路介面回復」命令時、LIF傳回的連接埠或介面群組。
+ a| 
+
+
+
+ a| 
+地址
+ a| 
+叢集上的IPV4或IPv6位址、用於新LIF的資料存取。
+ a| 
+
+
+
+ a| 
+網路遮罩
+ a| 
+LIF的網路遮罩和閘道。
+ a| 
+
+
+
+ a| 
+子網路
+ a| 
+IP位址集區。自動指定位址和網路遮罩、而非使用「-address'（位址）」和「-netmask（網路遮罩）」。
+ a| 
+
+
+
+ a| 
+防火牆原則
+ a| 
+在此工作流程中使用預設的資料防火牆原則。
+ a| 
+"DAAT"
+
+
+
+ a| 
+「自動回復」
+ a| 
+選用：指定資料LIF在啟動時或其他情況下是否自動還原至主節點。預設設定為「假」。
+ a| 
+
+|===
+* DNS主機名稱解析參數*
+
+在設定DNS時、您可以使用「vserver services name-service DNS creation」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+「網域」
+ a| 
+最多五個DNS網域名稱。
+ a| 
+
+
+
+ a| 
+名稱伺服器
+ a| 
+每個DNS名稱伺服器最多三個IP位址。
+ a| 
+
+|===
+
+
+== 在Active Directory網域中設定SMB伺服器
+
+*時間服務組態的參數*
+
+在設定時間服務時、您可以使用「叢集時間服務NTP伺服器create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+伺服器
+ a| 
+Active Directory網域的NTP伺服器主機名稱或IP位址。
+ a| 
+
+|===
+*在Active Directory網域中建立SMB伺服器的參數*
+
+當您建立新的SMB伺服器並指定網域資訊時、可以使用「vserver CIFS create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立SMB伺服器的SVM名稱。
+ a| 
+
+
+
+ a| 
+「CIFS伺服器」
+ a| 
+SMB伺服器名稱（最多15個字元）。
+ a| 
+
+
+
+ a| 
+「網域」
+ a| 
+要與SMB伺服器建立關聯的Active Directory網域完整網域名稱（FQDN）。
+ a| 
+
+
+
+ a| 
+「-ou'」
+ a| 
+選用：Active Directory網域中與SMB伺服器相關聯的組織單位。依預設、此參數設為「CN=電腦」。
+ a| 
+
+
+
+ a| 
+netbios-aliases
+ a| 
+選用：NetBios別名清單、是SMB伺服器名稱的替代名稱。
+ a| 
+
+
+
+ a| 
+留言
+ a| 
+選用：伺服器的文字註解。瀏覽網路上的伺服器時、Windows用戶端可以看到此SMB伺服器說明。
+ a| 
+
+|===
+
+
+== 在工作群組中設定SMB伺服器
+
+*在工作群組中建立SMB伺服器的參數*
+
+當您建立新的SMB伺服器並指定支援的SMB版本時、可以使用「vserver CIFS create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立SMB伺服器的SVM名稱。
+ a| 
+
+
+
+ a| 
+「CIFS伺服器」
+ a| 
+SMB伺服器名稱（最多15個字元）。
+ a| 
+
+
+
+ a| 
+工作群組
+ a| 
+工作群組名稱（最多15個字元）。
+ a| 
+
+
+
+ a| 
+留言
+ a| 
+選用：伺服器的文字註解。瀏覽網路上的伺服器時、Windows用戶端可以看到此SMB伺服器說明。
+ a| 
+
+|===
+*建立本機使用者的參數*
+
+當您使用「vserver CIFS user-and -Groups local-user-create」命令建立本機使用者時、請提供這些值。工作群組中的SMB伺服器和AD網域中的選用伺服器都需要這些伺服器。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立本機使用者的SVM名稱。
+ a| 
+
+
+
+ a| 
+「使用者名稱」
+ a| 
+本機使用者名稱（最多20個字元）。
+ a| 
+
+
+
+ a| 
+「全名」
+ a| 
+選用：使用者的全名。如果全名包含空格、請將全名括在雙引號內。
+ a| 
+
+
+
+ a| 
+「-`-description'」
+ a| 
+選用：本機使用者的說明。如果說明包含空格、請將參數括在引號中。
+ a| 
+
+
+
+ a| 
+停用「IS帳戶」
+ a| 
+選用：指定使用者帳戶是啟用還是停用。如果未指定此參數、則預設為啟用使用者帳戶。
+ a| 
+
+|===
+*建立本機群組的參數*
+
+您可以使用「vserver CIFS user-and -Groups local-group cre創作」命令、在建立本機群組時提供這些值。對於AD網域和工作群組中的SMB伺服器而言、它們是選用的。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立本機群組的SVM名稱。
+ a| 
+
+
+
+ a| 
+組名
+ a| 
+本機群組名稱（最多256個字元）。
+ a| 
+
+
+
+ a| 
+「-`-description'」
+ a| 
+選用：本機群組的說明。如果說明包含空格、請將參數括在引號中。
+ a| 
+
+|===
+
+
+== 將儲存容量新增至啟用SMB的SVM
+
+*建立Volume的參數*
+
+如果您要建立磁碟區而非qtree、請使用「volume create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+將裝載新磁碟區的新SVM或現有SVM名稱。
+ a| 
+
+
+
+ a| 
+「Volume」
+ a| 
+您為新磁碟區提供的唯一描述性名稱。
+ a| 
+
+
+
+ a| 
+「Aggregate」
+ a| 
+叢集中有足夠空間可容納新SMB Volume的集合體名稱。
+ a| 
+
+
+
+ a| 
+規模
+ a| 
+您為新磁碟區大小所提供的整數。
+ a| 
+
+
+
+ a| 
+「安全風格」
+ a| 
+此工作流程使用NTFS安全樣式。
+ a| 
+NTFS
+
+
+
+ a| 
+「交會路徑」
+ a| 
+要掛載新磁碟區的根目錄（/）下的位置。
+ a| 
+
+|===
+*用於建立qtree的參數*
+
+如果您要建立qtree而非Volume、請使用「volume qtree create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+包含qtree之磁碟區所在的SVM名稱。
+ a| 
+
+
+
+ a| 
+「Volume」
+ a| 
+將包含新qtree的磁碟區名稱。
+ a| 
+
+
+
+ a| 
+qtree
+ a| 
+您為新qtree提供的唯一描述性名稱、64個字元或更少。
+ a| 
+
+
+
+ a| 
+qtree路徑
+ a| 
+可以指定格式為「/vol/volume_name/qtree名稱」的qtree路徑引數、而非將Volume和qtree指定為個別引數。
+ a| 
+
+|===
+*建立SMB共用的參數*
+
+您可以使用「vserver CIFS共用create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立SMB共用區的SVM名稱。
+ a| 
+
+
+
+ a| 
+共享名稱
+ a| 
+您要建立的SMB共用區名稱（最多256個字元）。
+ a| 
+
+
+
+ a| 
+路徑
+ a| 
+SMB共用區路徑名稱（最多256個字元）。此路徑必須存在於磁碟區中、才能建立共用區。
+ a| 
+
+
+
+ a| 
+共享屬性
+ a| 
+選用：共用內容清單。預設設定為「oplocks」、「可瀏覽的」、「changenotefit」和「show pre-versions」。
+ a| 
+
+
+
+ a| 
+留言
+ a| 
+選用：伺服器的文字註解（最多256個字元）。在網路上瀏覽時、Windows用戶端可以看到此SMB共用說明。
+ a| 
+
+|===
+*建立SMB共用存取控制清單（ACL）的參數*
+
+您可以使用「vserver CIFS共用存取控制create」命令來提供這些值。
+
+|===
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+vserver
+ a| 
+要在其中建立SMB ACL的SVM名稱。
+ a| 
+
+
+
+ a| 
+共享
+ a| 
+要在其中建立的SMB共用區名稱。
+ a| 
+
+
+
+ a| 
+「使用者群組類型」
+ a| 
+要新增至共用ACL的使用者或群組類型。預設類型為「windows」
+ a| 
+《車窗》
+
+
+
+ a| 
+「使用者或群組」
+ a| 
+要新增至共用ACL的使用者或群組。如果您指定使用者名稱、則必須使用「domain\userName」格式來包含使用者的網域。
+ a| 
+
+
+
+ a| 
+許可
+ a| 
+指定使用者或群組的權限。
+ a| 
+[無存取權限|讀取|變更|完整控制]
+
+|===

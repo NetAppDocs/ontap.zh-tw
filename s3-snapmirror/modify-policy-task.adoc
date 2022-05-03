@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/modify-policy-task.html 
+keywords: modify a mirror policy, s3 snapmirror, s3 snapmirror policy, modify s3 snapmirror policy, change snapmirror policy, edit snapmirror policy, 
+summary: 您可能想要修改S3鏡射原則、例如、如果您想要調整RPO和節流值。 
+---
+= 修改鏡射原則
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+您可能想要修改S3鏡射原則、例如、如果您想要調整RPO和節流值。
+
+
+
+== System Manager程序
+
+如果您想要調整這些值、可以編輯現有的保護原則。
+
+. 按一下*保護>關係*、然後針對您要修改的關係選取保護原則。
+. 按一下 image:icon_kabob.gif["更多圖示"] 在原則名稱旁、然後按一下*編輯*。
+
+
+
+
+== CLI程序
+
+修改S3 SnapMirror原則：「napmirror policy modify -vserver Svm_name -policy policy_name [-RPO _integer_][-節 流_節 流類型_][-comment _text_]」
+
+參數：
+
+* 「-RPO」–指定恢復點目標的時間（以秒為單位）。
+* 「節流」–指定處理量/頻寬的上限（以千位元組/秒為單位）。
+
+
+....
+clusterA::> snapmirror policy modify -vserver vs0 -policy test-policy -rpo 60
+....

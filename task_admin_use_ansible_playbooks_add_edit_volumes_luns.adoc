@@ -1,0 +1,139 @@
+---
+sidebar: sidebar 
+permalink: task_admin_use_ansible_playbooks_add_edit_volumes_luns.html 
+keywords: system manager, administration, ansible, playbook, add, edit, volume, lun 
+summary: 從《支援》9.9.1開始ONTAP 、您可以在想要新增或編輯Volume或LUN時、搭配System Manager使用「可執行教戰手冊」。 
+---
+= 使用「可執行教戰手冊」來新增或編輯磁碟區或LUN
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從《支援》9.9.1開始ONTAP 、您可以在想要新增或編輯Volume或LUN時、搭配System Manager使用「可執行教戰手冊」。
+
+此功能可讓您多次使用相同的組態、或是在新增或編輯磁碟區或LUN時、以稍微變更的方式使用相同組態。
+
+
+
+== 啟用或停用可執行的教戰手冊
+
+您可以啟用或停用使用System Manager的Ansible教戰手冊。
+
+.步驟
+. 在System Manager中、前往叢集設定頁面中的UI設定：
++
+*叢集>設定*
+
+. 在「* UI設定*」下、將滑桿開關變更為「已啟用」或「已停用」。
+
+
+
+
+== 將Volume組態儲存至可執行的教戰手冊
+
+建立或修改Volume組態時、您可以將組態儲存為可執行教戰手冊檔案。
+
+.步驟
+. 新增或編輯磁碟區：
++
+* Volume > Add*（或* Volume > Edit *）
+
+. 指定或編輯Volume的組態值。
+. 選擇*儲存至可執行教戰手冊*、將組態儲存至可執行教戰手冊檔案。
++
+下載的壓縮檔包含下列檔案：
+
++
+** '* variable.yaml*：您輸入或修改以新增或編輯Volume的值。
+** '*volumeAdd.yaml*（或'*volumeEdit.yaml*）：從「variable.yaml」檔案讀取輸入時、建立或修改值所需的測試案例。
+
+
+
+
+
+
+== 將LUN組態儲存至可執行教戰手冊
+
+當您建立或修改LUN的組態時、可以將組態儲存為「可執行教戰文檔」。
+
+.步驟
+. 新增或編輯LUN：
++
+* LUN > Add*（或* LUN > Edit *）
+
+. 指定或編輯LUN的組態值。
+. 選擇*儲存至可執行教戰手冊*、將組態儲存至可執行教戰手冊檔案：
++
+下載的壓縮檔包含下列檔案：
+
++
+** '* variable.yaml*：您輸入或修改以新增或編輯LUN的值。
+** '* lunAdd.yaml*（或'* lunEdit.yaml*）：從「variable.yaml」檔案讀取輸入時、建立或修改值所需的測試案例。
+
+
+
+
+
+
+== 從全球搜尋結果下載Ansible Playbook檔案
+
+進行全域搜尋時、您可以下載Ansible Playbook檔案。
+
+.步驟
+. 在搜尋欄位中、輸入「volume」（磁碟區）或「LUN」（LUN）或「Playbook」（教戰手冊）。
+. 尋找搜尋結果：「Volume Management（Ansible Playbook）」（Volume Management（Ansible Playbook））或「LUN Management（Ansible Playbook）」（LUN管理（Ansible Playbook））。
+. 按一下 image:icon_download.gif["下載圖示"] 下載Ansible Playbook檔案。
+
+
+
+
+== 使用Ansible教戰手冊檔案
+
+可修改及執行Ansible教戰手冊檔案、以指定磁碟區和LUN的組態。
+
+您可以使用兩個檔案來執行作業（「新增」或「編輯」）：
+
+[cols="20,40,40"]
+|===
+
+
+| 如果您想要... | 使用此變數檔案... | 並使用此執行檔案... 
+
+
+| 新增Volume | 「volumeAdd-variable.yaml」 | 《Valueadd.yaml》 
+
+
+| 編輯Volume | 「volumeEdit-variable.yaml」 | 「volumeEdit.yaml」 
+
+
+| 新增LUN | 「lunAdd-variable.yaml」 | 《lunAdd.yaml》 
+
+
+| 編輯LUN | 「lunEdit變數.yaml」 | 「lunEdit、yaml」 
+|===
+.步驟
+. 修改變數檔案。
++
+該檔案包含您用來設定磁碟區或LUN的各種值。
+
++
+** 如果您未變更值、請留下註解。
+** 如果您修改這些值、請移除註解。
+
+
+. 執行相關的執行檔案。
++
+執行檔包含從變數檔案讀取輸入時、建立或修改值所需的測試案例。
+
+. 輸入您的使用者登入認證資料。
+

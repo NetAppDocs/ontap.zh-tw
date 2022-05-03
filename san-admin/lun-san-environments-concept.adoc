@@ -1,0 +1,31 @@
+---
+permalink: san-admin/lun-san-environments-concept.html 
+sidebar: sidebar 
+keywords: lun, guidelines 
+summary: 在叢集上開始設定LUN之前、您必須先檢閱LUN準則。 
+---
+= LUN準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FC傳輸協定和iSCSI傳輸協定都是透過使用LUN來配置儲存設備。設定LUN之後、您可以執行各種管理工作、例如增加或減少LUN的大小。設定磁碟區並設定適當的作業系統類型之後、您必須完成設定LUN所需的步驟。
+
+
+
+== 指派LUN ID的準則
+
+通常、預設LUN ID以0開頭、並以1為增量指派給每個額外的對應LUN。主機會將LUN ID與LUN的位置和路徑名稱建立關聯。有效LUN ID編號的範圍取決於主機。如需詳細資訊、請參閱主機公用程式隨附的文件。
+
+
+
+== 將LUN對應至igroup的準則
+
+* 您只能將LUN對應至一個igroup。
+* 您只能透過igroup將LUN對應至一個特定的啟動器。
+* 您可以將單一啟動器新增至多個igroup、但啟動器只能對應至一個LUN。
+* 您無法對對應至相同igroup的兩個LUN使用相同的LUN ID。
+* igroup和連接埠集應該使用相同的傳輸協定類型。
+

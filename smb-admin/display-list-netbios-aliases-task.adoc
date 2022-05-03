@@ -1,0 +1,77 @@
+---
+permalink: smb-admin/display-list-netbios-aliases-task.html 
+sidebar: sidebar 
+keywords: display, list, netbios, alias, useful, determine, name, smb, client, connection, cifs, server, display the list of netbios aliases on cifs servers 
+summary: 您可以顯示NetBios別名清單。當您想要判斷SMB用戶端可連線至CIFS伺服器的名稱清單時、這項功能很實用。 
+---
+= 顯示CIFS伺服器上的NetBios別名清單
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示NetBios別名清單。當您想要判斷SMB用戶端可連線至CIFS伺服器的名稱清單時、這項功能很實用。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要顯示有關...的資訊 | 輸入... 
+
+
+ a| 
+CIFS伺服器的NetBios別名
+ a| 
+「Vserver CIFS show -show-netbios-alias」
+
+
+
+ a| 
+詳細CIFS伺服器資訊的一部分是NetBios別名清單
+ a| 
+「vserver CIFS show -instance」
+
+|===
++
+下列範例顯示CIFS伺服器的NetBios別名相關資訊：
+
++
+「Vserver CIFS show -show-netbios-alias」
+
++
+[listing]
+----
+Vserver: vs1
+
+         Server Name: CIFS_SERVER
+         NetBIOS Aliases: ALIAS_1, ALIAS_2, ALIAS_3
+----
++
+下列範例顯示詳細CIFS伺服器資訊的一部分是NetBios別名清單：
+
++
+「vserver CIFS show -instance」
+
++
+[listing]
+----
+
+                                          Vserver: vs1
+                         CIFS Server NetBIOS Name: CIFS_SERVER
+                    NetBIOS Domain/Workgroup Name: EXAMPLE
+                      Fully Qualified Domain Name: EXAMPLE.COM
+Default Site Used by LIFs Without Site Membership:
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+                          CIFS Server Description:
+                          List of NetBIOS Aliases: ALIAS_1, ALIAS_2, ALIAS_3
+----
++
+如需命令的詳細資訊、請參閱手冊頁。
+
+
+
+xref:add-list-netbios-aliases-server-task.adoc[新增一組NetBios別名至CIFS伺服器]
+
+xref:commands-manage-servers-reference.adoc[管理CIFS伺服器的命令]

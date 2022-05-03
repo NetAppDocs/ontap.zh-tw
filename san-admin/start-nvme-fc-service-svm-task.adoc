@@ -1,0 +1,49 @@
+---
+permalink: san-admin/start-nvme-fc-service-svm-task.html 
+sidebar: sidebar 
+keywords: start, nvme, service, svm, supported, protocols 
+summary: 在儲存虛擬機器（SVM）上使用NVMe傳輸協定之前、您必須先在SVM上啟動NVMe服務。 
+---
+= 啟動SVM的NVMe服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存虛擬機器（SVM）上使用NVMe傳輸協定之前、您必須先在SVM上啟動NVMe服務。
+
+您的系統必須允許NVMe做為傳輸協定。
+
+支援下列NVMe傳輸協定：
+
+[cols="3*"]
+|===
+
+
+| 傳輸協定 | 開始於... | 允許者... 
+
+
+| TCP | 零點9.10.1 ONTAP | 預設 
+
+
+| FCP | 部分9.4 ONTAP | 預設 
+|===
+.步驟
+. 將權限設定變更為進階：
++
+"進階權限"
+
+. 驗證NVMe是否可做為傳輸協定：
++
+「Vserver NVMe show」
+
+. 建立NVMe傳輸協定服務：
++
+《Vserver NVMe create》
+
+. 在SVM上啟動NVMe傳輸協定服務：
++
+「vserver NVMe modify -STATUS -admin up」
+
+

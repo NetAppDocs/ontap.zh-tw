@@ -1,0 +1,23 @@
+---
+permalink: data-protection/configure-custom-snapshot-policies-concept.html 
+sidebar: sidebar 
+keywords: configure, custom, snapshot, policy 
+summary: Snapshot原則定義系統如何建立Snapshot複本。原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能每天在上午12：10建立一個Snapshot複本、保留兩個最近的複本、並將複本命名為「每日時間戳記」。 
+---
+= 設定自訂Snapshot原則總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Snapshot原則_定義系統如何建立Snapshot複本。原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能會每天在上午12：10建立一個Snapshot複本、保留兩個最新的複本、並將複本命名為「daily.`_timestamp_'」。
+
+Volume的預設原則會依照下列排程自動建立Snapshot複本、並刪除最舊的Snapshot複本、以便為較新的複本保留空間：
+
+* 一小時內最多可複製六個每小時Snapshot複本、每小時複本需時五分鐘。
+* 每週一至週六最多兩份每日Snapshot複本、午夜後10分鐘內完成。
+* 每週最多兩份Snapshot複本、每週最多可在午夜後15分鐘拍攝。
+
+
+除非您在建立磁碟區時指定Snapshot原則、否則磁碟區會繼承與其內含儲存虛擬機器（SVM）相關聯的Snapshot原則。

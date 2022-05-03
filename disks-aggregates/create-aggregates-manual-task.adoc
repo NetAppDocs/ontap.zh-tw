@@ -1,0 +1,52 @@
+---
+permalink: disks-aggregates/create-aggregates-manual-task.html 
+sidebar: sidebar 
+keywords: ontap 9, create, aggregates, manually 
+summary: 在手動建立Aggregate之前、您應該先檢閱磁碟組態選項並模擬建立。然後、您可以發出儲存Aggregate來建立並驗證結果。 
+---
+= 手動建立Aggregate
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在手動建立Aggregate之前、您應該先檢閱磁碟組態選項並模擬建立。然後您可以發佈「集合建立」並驗證結果。
+
+您必須確定在集合體中所需的磁碟數目和熱備援磁碟數目。
+
+如果已啟用根資料資料分割、而且組態中有24個或更少的固態磁碟機（SSD）、建議您將資料分割區指派給不同的節點。
+
+在啟用根資料分割和根資料分割的系統上建立集合體的程序、與在使用未分割磁碟的系統上建立集合體的程序相同。如果您的系統已啟用根資料分割、您應該使用「-diskcount'」選項的磁碟分割數目。對於根資料資料分割、「-diskcount'」選項會指定要使用的磁碟數。
+
+[NOTE]
+====
+建立多個Aggregate以搭配FlexGroups使用時、Aggregate的大小應盡量接近。
+
+====
+"shorage aggregate creation"手冊頁包含有關集合建立選項和需求的詳細資訊。
+
+.步驟
+. 檢視備用磁碟分割清單、確認您有足夠的空間來建立Aggregate：
++
+「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
+
++
+資料分割區會顯示在「本機資料可用」下方。根分割區無法作為備援磁碟區使用。
+
+. 模擬建立Aggregate：
++
+「torage Aggregate create -Aggregate _Aggregate名稱_-node_node_name_-raidtype RAID_dp -diskcount_number_of_disks_or_dpartitions _-Simulate true」
+
+. 如果模擬命令顯示任何警告、請調整命令並重複模擬。
+. 建立Aggregate：
++
+「torage Aggregate create -Aggregate _aggr_name_-node_node_name_-raidtype RAID_dp -diskcount_number_of_disks_or_parts_」
+
+. 顯示Aggregate以驗證是否已建立：
++
+「torage Aggregate show-STATUS Aggregate名稱」
+
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

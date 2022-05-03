@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/enable-disable-export-policies-task.html 
+sidebar: sidebar 
+keywords: enable, disable, export, policies, policy, smb, access, storage, virtual, machine, svm, control, resource, enable or disable export policies for smb access 
+summary: 您可以在儲存虛擬機器（SVM）上啟用或停用SMB存取的匯出原則。您可以選擇使用匯出原則來控制SMB對資源的存取。 
+---
+= 啟用或停用SMB存取的匯出原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上啟用或停用SMB存取的匯出原則。您可以選擇使用匯出原則來控制SMB對資源的存取。
+
+以下是啟用SMB匯出原則的需求：
+
+* 用戶端在DNS中必須有「'PTTR'」記錄、才能建立該用戶端的匯出規則。
+* 如果SVM提供對NFS用戶端的存取、且您要用於NFS存取的主機名稱與CIFS伺服器名稱不同、則需要額外一組「a」和「'PTTR'」的主機名稱。
+
+
+在SVM上設定新的CIFS伺服器時、預設會停用SMB存取的匯出原則。如果您想要根據驗證傳輸協定或用戶端IP位址或主機名稱來控制存取、可以啟用SMB存取的匯出原則。您可以隨時啟用或停用SMB存取的匯出原則。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 啟用或停用匯出原則：
++
+** 啟用匯出原則：「vserver CIFS選項修改-vserver _vserver_name_-is匯出原則啟用的true」
+** 停用匯出原則：「vserver CIFS選項修改-vserver _vserver_name_-is匯出原則啟用的假」
+
+
+. 返回管理員權限等級：「et -priv. admin」
+
+
+下列範例可讓您使用匯出原則來控制SMB用戶端對SVM VS1上資源的存取：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-exportpolicy-enabled true
+
+cluster1::*> set -privilege admin
+----

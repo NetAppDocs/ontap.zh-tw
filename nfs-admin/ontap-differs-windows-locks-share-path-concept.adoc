@@ -1,0 +1,18 @@
+---
+permalink: nfs-admin/ontap-differs-windows-locks-share-path-concept.html 
+sidebar: sidebar 
+keywords: ontap, windows, handle, locks, share, path, component 
+summary: 不像Windows、ONTAP 在檔案開啟時、不會鎖定開啟檔案路徑的每個元件。此行為也會影響SMB共用路徑。 
+---
+= 在處理共用路徑元件上的鎖定時、此功能與Windows有何ONTAP 不同
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+不像Windows、ONTAP 在檔案開啟時、不會鎖定開啟檔案路徑的每個元件。此行為也會影響SMB共用路徑。
+
+由於無法鎖定路徑的每個元件、因此可以重新命名開啟檔案或共用區上方的路徑元件、這可能會對某些應用程式造成問題、也可能導致SMB組態中的共用路徑無效。ONTAP這可能導致無法存取共用區。
+
+為了避免重新命名路徑元件所造成的問題、您可以套用安全性設定、防止使用者或應用程式重新命名重要目錄。

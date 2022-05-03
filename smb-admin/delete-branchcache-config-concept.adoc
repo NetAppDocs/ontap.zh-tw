@@ -1,0 +1,20 @@
+---
+permalink: smb-admin/delete-branchcache-config-concept.html 
+sidebar: sidebar 
+keywords: previous, configure, branchcache, storage, virtual, machine, svm, cache, content, configuration, server, what happens when you delete the branccache configuration 
+summary: 如果您先前已設定了BranchCache、但不想讓儲存虛擬機器（SVM）繼續提供快取內容、可以刪除CIFS伺服器上的BranchCache組態。您必須知道刪除組態時會發生什麼事。 
+---
+= 刪除BranchCache組態時會發生什麼事
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您先前已設定了BranchCache、但不想讓儲存虛擬機器（SVM）繼續提供快取內容、可以刪除CIFS伺服器上的BranchCache組態。您必須知道刪除組態時會發生什麼事。
+
+當您刪除組態時、ONTAP S什麼 會從叢集移除該SVM的組態資訊、然後停止BranchCache服務。您可以選擇ONTAP 是否應刪除SVM上的雜湊存放區。
+
+刪除BranchCache組態不會中斷啟用BranchCache的用戶端存取。其後、啟用BranchCache的用戶端要求現有SMB連線上已快取內容的中繼資料資訊時ONTAP 、由於Microsoft定義的錯誤、導致用戶端傳送第二個要求、要求提供實際內容。為了回應內容要求、CIFS伺服器會傳送儲存在SVM上的實際內容
+
+在刪除BranchCache組態之後、SMB共用區不會通告BranchCache功能。若要存取先前未使用新SMB連線快取的內容、用戶端會進行一般讀取SMB要求。

@@ -1,0 +1,98 @@
+---
+permalink: volumes/inline-storage-efficiency-enablement-aff-concept.html 
+sidebar: sidebar 
+keywords: inline, storage, efficiency, enabled, default, aff systems 
+summary: 目前AFF 、所有新建立的磁碟區均預設啟用儲存效率功能。從功能部件支援功能支援功能支援功能部件、從ONTAP 功能支援功能支援功能部件9.2開始、所有AFF 系統上的所有現有和新建立的磁碟區均預設啟用。 
+---
+= 根據預設AFF 、可在不支援的系統上實現即時儲存效率
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+目前AFF 、所有新建立的磁碟區均預設啟用儲存效率功能。從功能部件支援功能支援功能支援功能部件、從ONTAP 功能支援功能支援功能部件9.2開始、所有AFF 系統上的所有現有和新建立的磁碟區均預設啟用。
+
+儲存效率功能包括即時重複資料刪除、即時跨磁碟區重複資料刪除和即時壓縮、而且預設會在AFF 如表所示的各種系統上啟用。
+
+[NOTE]
+====
+在不變的情況下、由於預設已啟用、所以在功能不變的情況下、資料在AFF 功能不變ONTAP 。
+
+====
+[cols="4*"]
+|===
+| Volume條件 3+| 儲存效率功能預設可在ONTAP 支援功能方面使用 
+
+
+ a| 
+ a| 
+即時重複資料刪除技術
+ a| 
+即時跨Volume重複資料刪除技術
+ a| 
+即時壓縮
+
+
+
+ a| 
+叢集升級至9.2
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+將7-Mode移轉至叢集式VMware ONTAP ONTAP
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+Volume搬移
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+完整配置的Volume
+ a| 
+是的
+ a| 
+否
+ a| 
+是的
+
+
+
+ a| 
+加密磁碟區
+ a| 
+是的
+ a| 
+否
+ a| 
+是的
+
+|===
+下列例外情況適用於一或多項內嵌儲存效率功能：
+
+* 只有讀寫磁碟區才能支援預設的內嵌儲存效率功能。
+* 在啟用即時壓縮時、會忽略壓縮節約的Volume。
+* 啟用即時資料壓縮時、會忽略已開啟後置處理重複資料刪除功能的磁碟區。
+* 在已關閉Volume效率的磁碟區上、系統會覆寫現有的Volume效率原則設定、並將其設定為啟用純內嵌原則。
+

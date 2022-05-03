@@ -1,0 +1,50 @@
+---
+permalink: revert/concept_pre_revert_checks.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, revision, plan, planning, pre-checks 
+summary: 視您的環境而定、在開始還原之前、您必須考量某些因素。 
+---
+= 還原前檢查
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+視您的環境而定、您需要考量特定因素才能回復。請先檢閱下表、瞭解您需要考量哪些特殊考量。
+
+[cols="2*"]
+|===
+| 請自問... | 如果您的答案是*是*、請執行此動作... 
+
+
+| 我的叢集是否執行SnapMirror？  a| 
+* xref:concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html[檢閱使用SnapMirror同步關係還原系統的考量事項]
+* xref:concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html[檢閱SnapMirror和SnapVault 彼此之間的還原要求]
+
+
+
+
+| 我的叢集是否執行SnapLock 不正常？ | xref:task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html[設定自動提交期間] 
+
+
+| 我是否有分離FlexClone磁碟區？ | xref:task_reverting_the_physical_block_sharing_in_split_flexclone_volumes.html[反轉實體區塊共用] 
+
+
+| 我有FlexGroup 什麼用的呢？ | xref:task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html[停用qtree功能] 
+
+
+| 我的CIFS伺服器是否處於工作群組模式？ | xref:task_identifying_and_moving_cifs_servers_in_workgroup_mode.html[以工作群組模式移動或刪除CIFS伺服器] 
+
+
+| 我是否已刪除重複資料刪除的磁碟區？ | xref:task_reverting_systems_with_deduplicated_volumes.html[驗證Volume是否包含足夠的可用空間] 
+
+
+| 我有2或4節點MetroCluster 的不全功能組態嗎？ | xref:task_disable_asuo.html[停用自動非計畫性切換] 
+
+
+| 我有Snapshot複本嗎？ | xref:task_preparing_snapshot_copies_before_reverting.html[準備SnapShop複本] 
+
+
+| 我是否要回復ONTAP 到版本8.3.x？ | xref:identify-user-sha2-hash-user-accounts.html[識別使用SHA-2雜湊功能的使用者帳戶] 
+|===

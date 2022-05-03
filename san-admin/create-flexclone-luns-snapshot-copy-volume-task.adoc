@@ -1,0 +1,49 @@
+---
+permalink: san-admin/create-flexclone-luns-snapshot-copy-volume-task.html 
+sidebar: sidebar 
+keywords: create, flexclone, luns, snapshot, copy, volume 
+summary: 您可以在磁碟區中使用Snapshot複本來建立LUN的FlexClone複本。LUN的FlexClone複本可讀取且可寫入。 
+---
+= 從磁碟區的Snapshot複本建立FlexClone LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在磁碟區中使用Snapshot複本來建立LUN的FlexClone複本。LUN的FlexClone複本可讀取且可寫入。
+
+必須安裝FlexClone授權。
+
+FlexClone LUN繼承父LUN的空間保留屬性。空間保留的FlexClone LUN所需空間與空間保留的父LUN相同。如果FlexClone LUN未保留空間、則磁碟區必須有足夠的空間來容納對實體複本所做的變更。
+
+.步驟
+. 確認LUN未對應或寫入。
+. 建立包含LUN的磁碟區Snapshot複本：
++
+磁碟區快照建立-vserver _vserver_name_-volume _volume _name_-snapshot _snapshot name_`
+
++
+您必須為要複製的LUN建立Snapshot複本（備份Snapshot複本）。
+
+. 從Snapshot複本建立FlexClone LUN：
++
+「檔案複製」會建立-vserver _vserver_name_-volume _volume _name_-source-path _source_path_-snapshot名稱_snapshot name_-destination-path _destination_path_
+
++
+如果您需要FlexClone LUN可供自動刪除、請加入「-autodete true」。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+
+. 驗證FlexClone LUN是否正確：
++
+「LUN show -vserver _vserver_name_」
+
++
+[listing]
+----
+
+Vserver Path                      State    Mapped    Type     Size
+------- ----------------------    -------- --------- -------- -------
+vs1     /vol/vol1/lun1_clone      online   unmapped windows   47.07MB
+vs1     /vol/vol1/lun1_snap_clone online   unmapped windows   47.07MB
+----
+

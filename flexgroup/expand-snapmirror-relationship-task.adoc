@@ -1,0 +1,29 @@
+---
+permalink: flexgroup/expand-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: expand, flexgroup, volume, snapmirror, relationship, snap mirror, flex group, manual, automatic, automatically, disaster 
+summary: 從ONTAP 功能介紹9.3開始、您可以FlexGroup 在磁碟區中加入新的成分、以擴充FlexGroup SnapMirror關係中的來源供應區和目的地供應區。您可以手動或自動擴充目的地磁碟區。 
+---
+= 在FlexGroup SnapMirror關係中擴充功能區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能介紹9.3開始、您可以FlexGroup 在磁碟區中加入新的成分、以擴充FlexGroup SnapMirror關係中的來源供應區和目的地供應區。您可以手動或自動擴充目的地磁碟區。
+
+.關於這項工作
+* 擴充之後FlexGroup 、SnapMirror關係的來源等量磁碟區和目的地FlexGroup 的等量資料必須相符。
++
+如果磁碟區中的成員數量不相符、SnapMirror傳輸就會失敗。
+
+* 擴充程序進行中時、您不應執行任何SnapMirror作業。
+* 如果在擴充程序完成之前發生災難、您必須中斷SnapMirror關係、並等待作業成功。
++
+[NOTE]
+====
+當擴充程序只在發生災難時才進行時、您應該中斷SnapMirror關係。發生災難時、中斷作業可能需要一些時間才能完成。執行重新同步作業之前、您應等待中斷作業順利完成。如果中斷作業失敗、您必須重試中斷作業。如果中斷作業失敗、FlexGroup 在中斷作業之後、部分新的成分可能仍留在目的地的景點。最好先手動刪除這些成分、然後再繼續。
+
+====
+

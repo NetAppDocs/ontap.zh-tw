@@ -1,0 +1,60 @@
+---
+permalink: flexgroup/monitor-space-usage-task.html 
+sidebar: sidebar 
+keywords: monitor, space, flexgroup, volume, flex group, size, sizing, shrink 
+summary: 您可以檢視FlexGroup 一個「不景區」及其構成部分、並監控FlexGroup 由「不景區」使用的空間。 
+---
+= 監控FlexGroup 使用空間的情形
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視FlexGroup 一個「不景區」及其構成部分、並監控FlexGroup 由「不景區」使用的空間。
+
+從支援的不只是功能性的9.6、ONTAP 還能靈活調整規模。如果某個現象正在耗盡空間、則會自動擴充一個包含在該問題上的資料、將該問題的任何其他部分壓縮成同等數量的可用空間。ONTAP FlexGroup FlexGroup彈性調整規模可避免因空間FlexGroup 不足而產生的空間不足錯誤。
+
+[NOTE]
+====
+從供應到支援的版本號為0.9.9.1、ONTAP 我們也提供邏輯空間報告與執行FlexGroup 功能、適用於各種版本的資料。如需詳細資訊、請參閱 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/GUID-65C34C6C-29A0-4DB7-A2EE-019BA8EB8A83.html["磁碟區的邏輯空間報告與強制"]。
+
+====
+.步驟
+. 查看FlexGroup 由本產品所使用的空間及其構成部分：「Volume show -vserver vserver_name -volume樣式擴充的「FlexGroup flexgroup組成」
++
+[listing]
+----
+cluster-2::> volume show -vserver vs1 -volume-style-extended flexgroup
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vs1       fg1          -            online     RW        500GB    207.5GB   56%
+----
++
+[listing]
+----
+ccluster-2::> volume show -vserver vs1 -volume-style-extended flexgroup-constituent
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vs1       fg1__0001    aggr3        online     RW      31.25GB    12.97GB   56%
+vs1       fg1__0002    aggr1        online     RW      31.25GB    12.98GB   56%
+vs1       fg1__0003    aggr1        online     RW      31.25GB    13.00GB   56%
+vs1       fg1__0004    aggr3        online     RW      31.25GB    12.88GB   56%
+vs1       fg1__0005    aggr1        online     RW      31.25GB    13.00GB   56%
+vs1       fg1__0006    aggr3        online     RW      31.25GB    12.97GB   56%
+vs1       fg1__0007    aggr1        online     RW      31.25GB    13.01GB   56%
+vs1       fg1__0008    aggr1        online     RW      31.25GB    13.01GB   56%
+vs1       fg1__0009    aggr3        online     RW      31.25GB    12.88GB   56%
+vs1       fg1__0010    aggr1        online     RW      31.25GB    13.01GB   56%
+vs1       fg1__0011    aggr3        online     RW      31.25GB    12.97GB   56%
+vs1       fg1__0012    aggr1        online     RW      31.25GB    13.01GB   56%
+vs1       fg1__0013    aggr3        online     RW      31.25GB    12.95GB   56%
+vs1       fg1__0014    aggr3        online     RW      31.25GB    12.97GB   56%
+vs1       fg1__0015    aggr3        online     RW      31.25GB    12.88GB   56%
+vs1       fg1__0016    aggr1        online     RW      31.25GB    13.01GB   56%
+16 entries were displayed.
+----
++
+您可以使用可用的空間和百分比空間來監控FlexGroup 使用的空間。
+
+

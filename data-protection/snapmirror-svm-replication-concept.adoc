@@ -1,0 +1,826 @@
+---
+permalink: data-protection/snapmirror-svm-replication-concept.html 
+sidebar: sidebar 
+keywords: understand, snapmirror, svm, replication 
+summary: 您可以使用SnapMirror在SVM之間建立資料保護關係。在此類型的資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM擁有的磁碟區中的資料。 
+---
+= 關於SnapMirror SVM複寫
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用SnapMirror在SVM之間建立資料保護關係。在此類型的資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM擁有的磁碟區中的資料。
+
+
+
+== 支援的關係類型
+
+只能複寫資料服務SVM。支援下列資料保護關係類型：
+
+* _SnapMirror DR、目的地通常只包含來源上目前的Snapshot複本。
++
+從ONTAP 功能更新至功能更新至功能更新、當您使用鏡射儲存庫原則時、此行為將有所變更。從供應功能支援的9.9開始ONTAP 、您可以在來源和目的地上建立不同的Snapshot原則、而目的地上的Snapshot複本不會被來源上的Snapshot複本覆寫：
+
++
+** 在正常的排程作業、更新和重新同步期間、不會從來源覆寫到目的地
+** 在中斷作業期間不會刪除這些項目。
+** 它們不會在反轉重新同步作業期間刪除。當您使用ONTAP 鏡射保存原則使用版本號9.9.1及更新版本來設定SVM DR關係時、該原則的行為如下：
+** 來源的使用者定義Snapshot複本原則不會複製到目的地。
+** 系統定義的Snapshot複本原則不會複製到目的地。
+** 磁碟區與使用者和系統定義的Snapshot原則之間的關聯不會複製到目的地。+ SVM：
+
+
+* 從ONTAP SnapMirror 9.2、_SnapMirror統一化複寫開始、目的地設定為DR和長期保留。
+
+
+如需這些關係類型的詳細資料、請參閱： link:snapmirror-replication-concept.html["瞭解SnapMirror Volume複製"]。
+
+複寫原則的_policy類型_決定其支援的關係類型。下表顯示可用的原則類型。
+
+[cols="2*"]
+|===
+
+
+| 原則類型 | 關係類型 
+
+
+ a| 
+非同步鏡射
+ a| 
+SnapMirror災難恢復
+
+
+
+ a| 
+鏡射保存庫
+ a| 
+統一化複寫
+
+|===
+
+
+== XDP取代DP做ONTAP 為SVM複寫的預設值、如《SVM 9.4的預設值
+
+從ONTAP SVM 9.4開始、SVM資料保護關係預設為XDP模式。SVM資料保護關係在ONTAP 更新版本的更新版本中、仍預設為DP模式。
+
+現有關係不受新預設值影響。如果某個關係已經是DP類型、則會繼續是DP類型。下表顯示您可以預期的行為。
+
+[cols="3*"]
+|===
+
+
+| 如果您指定... | 類型為... | 預設原則（如果您未指定原則）是... 
+
+
+ a| 
+DP
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots（SnapMirror DR）
+
+
+
+ a| 
+什麼都沒有
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots（SnapMirror DR）
+
+
+
+ a| 
+XDP
+ a| 
+XDP
+ a| 
+MirrorAndVault（統一複寫）
+
+|===
+如需預設變更的詳細資料、請參閱： link:version-flexible-snapmirror-default-concept.html["XDP取代DP做為SnapMirror預設值"]。
+
+[NOTE]
+====
+SVM複寫不支援版本獨立性。
+
+====
+link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror ONTAP 關係的相容版本"]
+
+
+
+== 如何複寫SVM組態
+
+SVM複寫關係的內容取決於下列欄位的互動：
+
+* "napmirror cree"命令的"idente-preserve"選項會複寫整個SVM組態。
++
+「idente-preserve假」選項只會複寫SVM的磁碟區、驗證和授權組態、以及中所列的傳輸協定和名稱服務設定 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在SVM DR關係中複寫的組態"]。
+
+* 在源SVM和目標SVM位於不同子網路的情況下、可使用「napmirror policy create」命令的「Discard組態」網路選項、將LIF和相關的網路設定排除在SVM複寫中。
+* 「volume modify」命令的「-vserver-dr-protection protection protection protection protection protection」選項可將指定的磁碟區排除在SVM複寫之外。
+
+
+否則、SVM複寫幾乎與Volume複寫相同。您幾乎可以使用與用於磁碟區複寫相同的SVM複寫工作流程。
+
+
+
+== 支援詳細資料
+
+下表顯示SnapMirror SVM複寫的支援詳細資料。
+
+[cols="2*"]
+|===
+
+
+| 資源或功能 | 支援詳細資料 
+
+
+ a| 
+關係類型
+ a| 
+* SnapMirror災難恢復
+* 從ONTAP SnapMirror 9.2開始、SnapMirror統一化複寫
+
+
+
+
+ a| 
+複寫範圍
+ a| 
+僅限叢集間。您無法在同一個叢集中複寫SVM。
+
+
+
+ a| 
+版本獨立
+ a| 
+不支援。
+
+
+
+ a| 
+部署類型
+ a| 
+* 單一來源至單一目的地
+* 從ONTAP 功能檔9.4開始、您只能將風扇輸出至兩個目的地。
++
+根據預設、每個來源SVM只允許一個身分識別保留真正的關係。
+
+
+
+
+
+ a| 
+Volume加密
+ a| 
+* 來源上的加密磁碟區會在目的地上加密。
+* 必須在目的地上設定內建金鑰管理程式或KMIP伺服器。
+* 目的地會產生新的加密金鑰。
+* 如果目的地不包含支援Volume .Encryption的節點、則複寫會成功、但目的地磁碟區不會加密。
+
+
+
+
+ a| 
+FabricPool
+ a| 
+從ONTAP 支援SnapMirror SVM的S9.6開始、FabricPools就支援SnapMirror SVM複寫。
+
+
+
+ a| 
+MetroCluster
+ a| 
+從ONTAP 支援使用支援SnapMirror 9.5開始、MetroCluster SnapMirror SVM複寫功能可在各種組態上執行。
+
+* 無法將此組態作為SVM DR關係的目的地。MetroCluster
+* 只有MetroCluster 在一個SVM組態內的作用中SVM、才能成為SVM DR關係的來源。
++
+來源可以是切換前的同步來源SVM、或是切換後的同步目的地SVM。
+
+* 當某個不穩定的組態處於穩定狀態時、由於磁碟區不在線上、所以無法將來源SVM DR關係視為來源。MetroCluster MetroCluster
+* 當sync-source sVM是SVM DR關係的來源時、來源SVM DR關係資訊會複寫到MetroCluster 該合作夥伴。
+* 在切換和切換程序期間、複寫到SVM DR目的地可能會失敗。
++
+不過、在切換或切換程序完成之後、下一個SVM DR排程更新將會成功。
+
+
+
+
+
+ a| 
+SnapMirror同步
+ a| 
+SVM DR不支援。
+
+|===
+
+
+== 在SVM DR關係中複寫的組態
+
+下表顯示了"shnapmirror create `-idente-preserv"選項和"shapmirror policy cre"-dap-configs network"選項之間的互動：
+
+[cols="5*"]
+|===
+
+
+2+| 組態已複寫 2+| 《*身分識別保護》（Identity‑Preserve true*） | 「*」身分識別保護假* 
+
+
+|  |  | *不含「丟棄組態」網路組態的原則* | *使用「-discard組態」網路組態的原則* |  
+
+
+ a| 
+網路
+ a| 
+NAS生命里
+ a| 
+是的
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+LIF Kerberos組態
+ a| 
+是的
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SAN LIF
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+防火牆原則
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+路由
+ a| 
+是的
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+廣播網域
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+子網路
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+IPSpace
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+中小企業
+ a| 
+SMB 伺服器
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+本機群組和本機使用者
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+權限
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+陰影複製
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+BranchCache
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+伺服器選項
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+伺服器安全性
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+主目錄、共享
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+symlink
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+Fpolicy原則、FSecurity原則及FSecurity NTFS
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+名稱對應與群組對應
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+稽核資訊
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+NFS
+ a| 
+匯出原則
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+匯出原則規則
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+NFS 伺服器
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+RBAC
+ a| 
+安全性憑證
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+登入使用者、公開金鑰、角色和角色組態
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+SSL
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+名稱服務
+ a| 
+DNS和DNS主機
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+UNIX使用者與UNIX群組
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+Kerberos領域和Kerberos金鑰區塊
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+LDAP與LDAP用戶端
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+網路群組
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+NIS
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+網路與網路存取
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+Volume
+ a| 
+物件
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+Snapshot複本、Snapshot原則及自動刪除原則
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+效率原則
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+配額原則和配額原則規則
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+恢復佇列
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+根Volume
+ a| 
+命名空間
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+使用者資料
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+qtree
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+配額
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+檔案層級QoS
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+屬性：根磁碟區的狀態、空間保證、大小、自動調整大小及檔案總數
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+儲存QoS
+ a| 
+QoS原則群組
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+光纖通道（FC）
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+iSCSI
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+LUN
+ a| 
+物件
+ a| 
+是的
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+igroup
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+連接埠集
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+序號
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SNMP
+ a| 
+v3使用者
+ a| 
+是的
+ a| 
+是的
+ a| 
+否
+
+|===

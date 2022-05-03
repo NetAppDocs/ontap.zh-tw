@@ -1,0 +1,135 @@
+---
+sidebar: sidebar 
+permalink: task_san_provision_linux.html 
+keywords: netapp, ontap, san, provisioning, linux, servers, provision, storage, create lun, fc, iscsi, zone switches, scsi disk, iscsi 
+summary: 建立LUN、以使用FC或iSCSI SAN傳輸協定為Linux伺服器提供儲存設備。LUN在Linux上顯示為SCSI磁碟裝置。 
+---
+= 為Linux伺服器配置SAN儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+使用FC或iSCSI SAN傳輸協定搭配ONTAP 使用支援《Estr系統 管理程式》的功能來建立LUN、以提供Linux伺服器的儲存空間、ONTAP 此功能可搭配使用《Etrz 9.7》ONTAP 及更新版本的《支援更新版本》（更新版本）。
+
+此程序會在現有的儲存VM上建立新的LUN。LUN在Linux上顯示為SCSI磁碟裝置。
+
+您的FC或iSCSI傳輸協定應已設定完成。您需要知道Linux伺服器的啟動器識別碼（FC WWPN或iSCSI iqn）。
+
+image:workflow_san_provision_linux.gif["為Linux配置SAN儲存設備的工作流程圖"]
+
+
+NOTE: 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
+
+.步驟
+. 在Linux伺服器上、安裝 link:https://docs.netapp.com/us-en/ontap-sanhost/hu_luhu_71.html#installing-linux-unified-host-utilities["NetApp Linux主機公用程式"] 套件：
+. 在System Manager中、按一下* Storage > LUN*、然後按一下* Add*。
++
+.. 輸入建立LUN所需的資訊。
+.. 視ONTAP 您的版本而定、您可以按一下*更多選項*來執行下列動作。
++
+[cols="80,20"]
+|===
+
+
+| 選項 | 從開始提供 
+
+
+ a| 
+將QoS原則指派給LUN、而非父Volume
+
+*** *更多選項>儲存與最佳化*
+*** 選擇*效能服務層級*。
+*** 若要將QoS原則套用至個別LUN而非整個磁碟區、請選取*將這些效能限制強制套用至每個LUN*。
++
+ By default, performance limits are applied at the volume level.
+
+| 零點9.10.1 ONTAP 
+
+
+ a| 
+使用現有的啟動器群組建立新的啟動器群組
+
+*** *更多選項>主機資訊*
+*** 使用現有的啟動器群組*選取*新的啟動器群組。
++
+*附註*：包含其他igroup的igroup的OS類型無法在建立之後變更。
+
+
+| 部分9.9.1 ONTAP 
+
+
+ a| 
+將說明新增至igroup或主機啟動器
+
+此說明可做為igroup或主機啟動器的別名。
+
+*** *更多選項>主機資訊*
+
+| 部分9.9.1 ONTAP 
+
+
+ a| 
+在現有磁碟區上建立LUN
+
+根據預設、新的LUN會建立在新的Volume中。
+
+*** *更多選項>新增LUN*
+*** 選擇*組相關LUN*。
+
+| 部分9.9.1 ONTAP 
+
+
+ a| 
+停用QoS或選擇自訂QoS原則
+
+*** *更多選項>儲存與最佳化*
+*** 選擇*效能服務層級*。
++
+*附註*：ONTAP 在S209.9.1及更新版本中、如果您選取自訂QoS原則、也可以選取手動放置在指定的本機層。
+
+
+| 部分9.8 ONTAP 
+|===
+
+
+
+
+. 對於FC、請根據WWPN對FC交換器進行分區。每個啟動器使用一個區域、並在每個區域中包含所有目標連接埠。
+. 在您的Linux伺服器上、探索新的LUN：
++
+usr/bin/resce-scsi-bus.sh'
+
++
+
+NOTE: （可選）對LUN進行分區並創建文件系統。
+
+. 驗證Linux伺服器是否能在LUN上寫入和讀取資料。
+
+
+如果您需要有關SAN管理的其他詳細資料、請參閱 link:../san-admin/index.html["SAN管理總覽"]。
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+|===
+
+
+| 若要完成此工作、請使用... | 請參閱... 
+
+
+| System Manager Classic（9.7及更早版本提供） | https://docs.netapp.com/us-en/ontap-sm-classic/iscsi-config-rhel/index.html["適用於Red Hat Enterprise Linux的iSCSI組態"] 
+
+
+| 指令行介面（CLI）ONTAP | https://docs.netapp.com/us-en/ontap/san-admin/lun-setup-workflow-concept.html["使用CLI進行LUN設定工作流程"] 
+|===

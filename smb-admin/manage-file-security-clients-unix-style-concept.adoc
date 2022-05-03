@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/manage-file-security-clients-unix-style-concept.html 
+sidebar: sidebar 
+keywords: present, file, security, smb, client, unix, security-style, data, disabling, disable, presentation, ntfs, acl, client, advantage, setting, business, requirement, manage how file security is presented to smb clients for unix security-style data 
+summary: 您可以啟用或停用將NTFS ACL呈現給SMB用戶端的功能、來選擇如何向SMB用戶端展示UNIX安全型資料的檔案安全性。每項設定都有優點、您應該瞭解如何選擇最適合您業務需求的設定。 
+---
+= 管理如何向SMB用戶端提供檔案安全性、以利UNIX安全型態的資料總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用或停用將NTFS ACL呈現給SMB用戶端的功能、來選擇如何向SMB用戶端展示UNIX安全型資料的檔案安全性。每項設定都有優點、您應該瞭解如何選擇最適合您業務需求的設定。
+
+根據預設、ONTAP 將UNIX安全型磁碟區上的UNIX權限以NTFS ACL形式呈現給SMB用戶端。有些情況需要這樣做、包括：
+
+* 您想要使用「Windows內容」方塊中的「*安全性*」索引標籤來檢視及編輯UNIX權限。
++
+如果UNIX系統不允許此作業、您就無法從Windows用戶端修改權限。例如、您無法變更您不擁有的檔案所有權、因為UNIX系統不允許此作業。此限制可防止SMB用戶端略過在檔案和資料夾上設定的UNIX權限。
+
+* 使用者使用某些Windows應用程式（例如Microsoft Office）來編輯及儲存UNIX安全型磁碟區上的檔案、ONTAP 而在這些應用程式中、當執行儲存作業時、必須保留UNIX權限。
+* 您環境中有些Windows應用程式預期會讀取其所使用檔案的NTFS ACL。
+
+
+在某些情況下、您可能會想要停用將UNIX權限呈現為NTFS ACL的功能。如果停用此功能、ONTAP 則將UNIX安全型磁碟區顯示為SMB用戶端的FAT磁碟區。您可能會想要將UNIX安全型磁碟區以FAT磁碟區的形式呈現給SMB用戶端的具體理由如下：
+
+* 您只能在UNIX用戶端上使用掛載來變更UNIX權限。
++
+當SMB用戶端上對應UNIX安全型磁碟區時、「安全性」索引標籤將無法使用。對應的磁碟機似乎是以不具檔案權限的檔案系統格式化。
+
+* 您正在使用SMB上的應用程式、在存取的檔案和資料夾上設定NTFS ACL、如果資料位於UNIX安全型磁碟區、則這些應用程式可能會失敗。
++
+如果ONTAP 將磁碟區報告為「FAT」、應用程式就不會嘗試變更ACL。
+
+
+
+xref:configure-security-styles-task.adoc[在FlexVol 功能區上設定安全樣式]
+
+xref:configure-security-styles-qtrees-task.adoc[在qtree上設定安全性樣式]

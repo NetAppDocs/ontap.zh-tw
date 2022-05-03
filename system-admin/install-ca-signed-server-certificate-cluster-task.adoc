@@ -1,0 +1,45 @@
+---
+permalink: system-admin/install-ca-signed-server-certificate-cluster-task.html 
+sidebar: sidebar 
+keywords: install, ca, signed, server, certificate, cluster, ssl, svm, sotrage, virtual, machine, administrator 
+summary: 若要讓SSL伺服器將叢集或儲存虛擬機器（SVM）驗證為SSL用戶端、請在叢集或SVM上安裝具有用戶端類型的數位憑證。然後將用戶端CA憑證提供給SSL伺服器管理員、以便在伺服器上安裝。 
+---
+= 為叢集安裝CA簽署的伺服器憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要讓SSL伺服器將叢集或儲存虛擬機器（SVM）驗證為SSL用戶端、請在叢集或SVM上安裝具有用戶端類型的數位憑證。然後將用戶端CA憑證提供給SSL伺服器管理員、以便在伺服器上安裝。
+
+您必須已在叢集或SVM上安裝SSL伺服器的根憑證、並使用「伺服器- CA」憑證類型。
+
+.步驟
+. 若要使用自我簽署的數位憑證進行用戶端驗證、請使用「安全憑證建立」命令搭配「type client」參數。
+. 若要使用CA簽署的數位憑證進行用戶端驗證、請完成下列步驟：
++
+.. 使用安全性憑證「genere-csr」命令來產生數位憑證簽署要求（CSR）。
++
+包含憑證要求和私密金鑰的CSR輸出會顯示出來、並提醒您將輸出複製到檔案、以供日後參考。ONTAP
+
+.. 將CSR輸出的憑證要求以電子形式（例如電子郵件）傳送至信任的CA進行簽署。
++
+您應該保留一份私密金鑰和CA簽署憑證的複本、以供日後參考。
+
++
+在處理您的要求之後、CA會將簽署的數位憑證傳送給您。
+
+.. 使用帶有「類型用戶端」參數的「安全性憑證安裝」命令來安裝CA簽署的憑證。
+.. 在系統提示時輸入憑證和私密金鑰、然後按* Enter *。
+.. 在出現提示時輸入任何其他根或中繼憑證、然後按* Enter *。
++
+如果從信任的根CA開始且以核發給您的SSL憑證結束的憑證鏈結遺失中繼憑證、您可以在叢集或SVM上安裝中繼憑證。中繼憑證是由信任的根所核發的次要憑證、專門用於發行終端實體伺服器憑證。結果是憑證鏈結從信任的根CA開始、經過中繼憑證、最後以核發給您的SSL憑證結束。
+
+
+
+. 將叢集或SVM的「用戶端- CA」憑證提供給SSL伺服器管理員、以便安裝在伺服器上。
++
+安全憑證show命令搭配「-instance」和「-type client-ca」參數、會顯示「client-ca」憑證資訊。
+
+

@@ -1,0 +1,47 @@
+---
+permalink: nas-audit/enable-disable-fpolicy-policies-task.html 
+sidebar: sidebar 
+keywords: enable, disable, fpolicy policies 
+summary: 您可以在組態完成後啟用FPolicy原則。啟用原則會設定其優先順序、並開始監控原則的檔案存取。若要停止原則的檔案存取監控、您可以停用FPolicy原則。 
+---
+= 啟用或停用FPolicy原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在組態完成後啟用FPolicy原則。啟用原則會設定其優先順序、並開始監控原則的檔案存取。若要停止原則的檔案存取監控、您可以停用FPolicy原則。
+
+在啟用FPolicy原則之前、必須先完成FPolicy組態。
+
+.關於這項工作
+* 當在儲存虛擬機器（SVM）上啟用多個原則、且有多個原則已訂閱相同的檔案存取事件時、就會使用優先順序。
+* 使用原生引擎組態的原則優先順序高於任何其他引擎的原則、無論啟用原則時指派給它們的順序編號為何。
+* 若要變更FPolicy原則的優先順序、您必須停用該原則、然後使用新的順序編號重新啟用。
+
+
+.步驟
+. 執行適當的行動：
++
+[cols="35,65"]
+|===
+
+
+| 如果您想要... | 輸入下列命令... 
+
+
+ a| 
+啟用FPolicy原則
+ a| 
+「vserver fpolicy enable -vserver-name vserver_name -police-name policy_name -seque-number integer'
+
+
+
+ a| 
+停用FPolicy原則
+ a| 
+「vserver fpolicy disable-vserver_name vserver_name -police-name policy_name`
+
+|===
+

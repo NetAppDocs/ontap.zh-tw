@@ -1,0 +1,86 @@
+---
+permalink: encryption-at-rest/replace-self-encrypting-disk-task.html 
+sidebar: sidebar 
+keywords: replacing, fips drive, sed 
+summary: 更換FIPS磁碟機或SED的方式與更換一般磁碟相同。請務必將新的資料驗證金鑰指派給更換的磁碟機。對於FIPS磁碟機、您可能也想指派新的FIPS 140-2驗證金鑰。 
+---
+= 更換FIPS磁碟機或SED
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+更換FIPS磁碟機或SED的方式與更換一般磁碟相同。請務必將新的資料驗證金鑰指派給更換的磁碟機。對於FIPS磁碟機、您可能也想指派新的FIPS 140-2驗證金鑰。
+
+
+NOTE: 如果HA配對正在使用 xref:../encryption-at-rest/support-storage-encryption-concept.html[加密SAS或NVMe磁碟機（SED、NSE、FIPS）]、您必須遵循主題中的指示 xref:../encryption-at-rest/return-seds-unprotected-mode-task.html[將FIPS磁碟機或SED恢復為無保護模式] 在初始化系統之前、HA配對內的所有磁碟機（開機選項4或9）。如果未這麼做、可能會在磁碟機重新調整用途時、導致未來的資料遺失。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須知道磁碟機使用的驗證金鑰金鑰ID。
+* 您必須是叢集管理員才能執行此工作。
+
+
+.步驟
+. 確定磁碟已標示為故障：
++
+「torage disk show -dis中斷」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage disk show -broken
+Original Owner: cluster1-01
+  Checksum Compatibility: block
+                                                                 Usable Physical
+    Disk   Outage Reason HA Shelf Bay Chan   Pool  Type    RPM     Size     Size
+    ------ ---- ------------ ---- --- ---- ------ -----  -----  -------  -------
+    0.0.0  admin  failed  0b    1   0    A  Pool0  FCAL  10000  132.8GB  133.9GB
+    0.0.7  admin  removed 0b    2   6    A  Pool1  FCAL  10000  132.8GB  134.2GB
+[...]
+----
+. 請依照磁碟櫃模型硬體指南中的指示、移除故障磁碟、並以新的FIPS磁碟機或SED進行更換。
+. 指派新更換磁碟的擁有權：
++
+'磁碟指派磁碟磁碟名稱-擁有者節點'
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage disk assign -disk 2.1.1 -owner cluster1-01
+----
+. 確認已指派新磁碟：
++
+「torage加密磁碟顯示」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+1.10.0  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+1.10.1  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+2.1.1   open 0x0
+[...]
+----
+. 將資料驗證金鑰指派給FIPS磁碟機或SED。
++
+link:assign-authentication-keys-seds-external-task.html["指派資料驗證金鑰給FIPS磁碟機或SED（外部金鑰管理）"]
+
+. 如有必要、請指派FIPS 140-2驗證金鑰給FIPS磁碟機。
++
+link:assign-fips-140-2-authentication-key-task.html["將FIPS 140-2驗證金鑰指派給FIPS磁碟機"]
+
+

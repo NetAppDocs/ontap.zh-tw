@@ -1,0 +1,34 @@
+---
+permalink: nfs-admin/enable-nfsv42-security-labels-task.html 
+sidebar: sidebar 
+keywords: enable, nfs, v4.2, security, label 
+summary: 從ONTAP 推出支援NFS9.9.1的功能開始、就能啟用NFS安全標籤。依預設會停用。 
+---
+= 啟用NFS v4.2安全性標籤
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 推出支援NFS9.9.1的功能開始、就能啟用NFS安全標籤。依預設會停用。
+
+使用NFS v4.2安全性標籤時、ONTAP 即可識別出需求性的NFS伺服器存取控制（MAC）、儲存及擷取用戶端傳送的sec_label屬性。
+
+如需詳細資訊、請參閱 https://tools.ietf.org/html/rfc7204["RFC7240"]
+
+[NOTE]
+====
+NDMP傾印作業目前不支援NFS v4.2安全性標籤。如果在檔案或目錄上遇到安全性標籤、傾印就會失敗。
+
+====
+.步驟
+. 將權限設定變更為進階：
++
+《先進的權限》
+
+. 啟用安全性標籤：
++
+'vserver NFS modify -vserver Svm_name -v4.2-seclabel enabled_'
+
+

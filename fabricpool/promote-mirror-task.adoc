@@ -1,0 +1,30 @@
+---
+permalink: fabricpool/promote-mirror-task.html 
+sidebar: sidebar 
+keywords: promoting, fabricpool, mirror 
+summary: 您可以將物件存放區鏡像重新指派為主要物件存放區、方法是加以提升。當物件存放區鏡射成為主要鏡射時、原始主要鏡射會自動變成鏡射。 
+---
+= 推廣FabricPool 鏡像
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將物件存放區鏡像重新指派為主要物件存放區、方法是加以提升。當物件存放區鏡射成為主要鏡射時、原始主要鏡射會自動變成鏡射。
+
+.您需要的是 #8217 ；需要的是什麼
+* 此鏡射必須同步FabricPool
+* 物件存放區必須正常運作
+
+
+您可以使用不同雲端供應商的物件存放區來取代原始物件存放區。例如、您的原始鏡像可能是AWS物件存放區、但您可以用Azure物件存放區來取代它。
+
+.步驟
+. 使用「儲存區Aggregate object-store modify -Aggregate」命令來升級物件存放區鏡像。
++
+[listing]
+----
+cluster1::> storage aggregate object-store modify -aggregate aggr1 -name my-store-2 -mirror-type primary
+----
+

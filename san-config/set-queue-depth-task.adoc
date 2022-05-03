@@ -1,0 +1,489 @@
+---
+permalink: san-config/set-queue-depth-task.html 
+sidebar: sidebar 
+keywords: calculate, queue depth 
+summary: 您可能需要調整主機上的FC佇列深度、以達到每個節點和FC連接埠Fan-in的ITN最大值。LUN的最大數目和可連線至FC連接埠的HBA數目、會受到FC目標連接埠上可用佇列深度的限制。 
+---
+= 在SAN主機上設定佇列深度
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要變更主機上的佇列深度、以達到每個節點和FC連接埠Fan-in的ITN最大值。
+
+
+
+== AIX主機
+
+您可以使用「chdev]命令變更AIX主機上的佇列深度。使用chdev'命令所做的變更會在重新開機後持續進行。
+
+範例：
+
+* 若要變更hdisk7裝置的佇列深度、請使用下列命令：
++
+「chdev-l hdisk7-a queue_de深度=32」
+
+* 若要變更fcs0 HBA的佇列深度、請使用下列命令：
++
+「chdev-l fcs0 -A num_cmd _elems=128」
+
++
+「num_cmd _elems」的預設值為200。最大值為2、048。
+
++
+[NOTE]
+====
+可能需要使HBA離線以變更「nm_cmd _elems」、然後使用「rmmev -l fcs0 -R」和「makdev-l fcs0 -P」命令將其重新連線。
+
+====
+
+
+
+
+== HP-UX主機
+
+您可以使用核心參數「scsi _max-qdepth」變更HP-UX主機上的LUN或裝置佇列深度。您可以使用核心參數「max_FCP _reqs」來變更HBA佇列深度。
+
+* 「scsi最大_qdepth」的預設值為8。最大值為255。
++
+可以使用kmTUNE命令上的「-u」選項、在執行中的系統上動態變更「csm_ma_qdepth」。變更將對系統上的所有裝置生效。例如、使用下列命令將LUN佇列深度增加至64：
+
++
+「kmtune -u -s scsi_main_qdepth=64」
+
++
+您可以使用「csicll」命令來變更個別裝置檔案的佇列深度。在系統重新開機後、使用「csicll」命令所做的變更不會持續發生。若要檢視及變更特定裝置檔案的佇列深度、請執行下列命令：
+
++
+「csictl -A /dev/rdsk/c2t2d0」
+
++
+"csictl -m quote_depth=16 /dev/rdsk/c2t2d0"
+
+* 「max_FCP _reqs」的預設值為512。最大值為1024。
++
+核心必須重新建構、系統必須重新開機、才能使「max_FCP _reqs」的變更生效。例如、若要將HBA佇列深度變更為256、請使用下列命令：
+
++
+「kmtune -u -s mab_fcf_reqs=256」
+
+
+
+
+
+== Solaris主機
+
+您可以為Solaris主機設定LUN和HBA佇列深度。
+
+* 對於LUN佇列深度：主機上使用的LUN數目乘以每LUN節流（LUN佇列深度）、必須小於或等於主機上的tgt-queue-深度 值。
+* 對於Sun堆疊中的佇列深度：原生驅動程式不允許在HBA層級針對每個LUN或每個目標「mast_thun」設定使用原生驅動程式。對於原生驅動程式、建議使用「MAX_TOND」值的設定方法、是在「/kernel-drv/sd.conf」和「/kernel-drv/ssd．conf」檔案中、針對每個裝置類型（VID_PID）層級進行設定。主機公用程式會將MPxIO組態的值設為64、將Veritas DMP組態的值設為8。
+
+
+.步驟
+. ？？#"CD/kernel/drv"
+. vi lpsfc.conf
+. 搜尋「/tft-queue（/tgt-queue）」
++
+「tgt-queue-te深度=32」
+
++
+[NOTE]
+====
+安裝時、預設值設為32。
+
+====
+. 根據環境的組態設定所需的值。
+. 儲存檔案。
+. 使用「+sync」、「sync」、「sync」、「sync」、「Reboot」、「-r+」命令重新啟動主機。
+
+
+
+
+== 適用於QLogic HBA的VMware主機
+
+使用「esxcfg-module"命令變更HBA逾時設定。不建議手動更新「esx.conf"檔案。
+
+.步驟
+. 以root使用者身分登入服務主控台。
+. 使用「#vmkload_mod-l」命令來驗證目前載入的是哪個邏輯HBA模組。
+. 對於QLogic HBA的單一執行個體、請執行下列命令：
++
+#esxcfg-module-s ql2xmaqdepth=64 qla232_707'
+
++
+[NOTE]
+====
+此範例使用qla232_707模組。請根據「vmkload_mod-l」的輸出使用適當的模組。
+
+====
+. 使用下列命令儲存變更：
++
+Check Alignment of PHs>#/sbin/esxcfg-boot -b
+
+. 使用下列命令重新啟動伺服器：
++
+'#reboot'
+
+. 使用下列命令確認變更：
++
+.. #esxcfg-module-g qla232_707'
+.. 「qla232_707啟用= 1個選項='ql2xmaqdepth=64'」
+
+
+
+
+
+
+== 適用於Emulex HBA的VMware主機
+
+使用「esxcfg-module"命令變更HBA逾時設定。不建議手動更新「esx.conf"檔案。
+
+.步驟
+. 以root使用者身分登入服務主控台。
+. 使用「#vmkload_mod-l grp lpfc'」命令來驗證目前載入的Emulex HBA。
+. 對於Emulex HBA的單一執行個體、請輸入下列命令：
++
+#esxcfg/module-s lpsfc0_lun_queue_dep=16 lfcdd_7xx'
+
++
+[NOTE]
+====
+視HBA機型而定、模組可以是lfcdd_7xx或lfcdd_732。上述命令使用lfcdd_7xx模組。您應該根據「vmkload_mod-l」的結果來使用適當的模組。
+
+====
++
+執行此命令會針對由lfc0代表的HBA、將LUN佇列深度設為16。
+
+. 對於Emulex HBA的多個執行個體、請執行下列命令：
++
+「a esxcfg/module-s "lbfc0_lun_queue_de深度=16 lfc1_lun_queue_the=16" lfcdd_7xx"
+
++
+lffc0的LUN佇列深度和lffc1的LUN佇列深度設為16。
+
+. 輸入下列命令：
++
+#esxcfg-boot -b
+
+. 使用「#reboot'重新開機。
+
+
+
+
+== 適用於Emulex HBA的Windows主機
+
+在Windows主機上、您可以使用「LUTILNT」公用程式來更新Emulex HBA的佇列深度。
+
+.步驟
+. 執行位於「C：\winnt\system32"目錄中的「LUTILNT"公用程式。
+. 從右側的功能表中選取*磁碟機參數*。
+. 向下捲動並按兩下*「QuesteDepth*」。
++
+[NOTE]
+====
+如果您設定*「Queste深度」*大於150、則下列Windows登錄值也必須適當增加：
+
+「HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\lpsnd\Parameters\Device」
+
+====
+
+
+
+
+== 適用於邏輯HBA的Windows主機
+
+在Windows主機上、您可以使用和「ANsurfer」HBA manager公用程式來更新QLogic HBA的佇列深度。
+
+.步驟
+. 執行「衝浪者」HBA管理公用程式。
+. 按一下「* HBA連接埠*>*設定*」。
+. 按一下清單方塊中的*進階HBA連接埠設定*。
+. 更新「執行節流」參數。
+
+
+
+
+== 適用於Emulex HBA的Linux主機
+
+您可以更新Linux主機上Emulex HBA的佇列深度。若要在重新開機後持續更新、您必須建立新的RAM磁碟映像、然後重新啟動主機。
+
+.步驟
+. 識別要修改的佇列深度參數：
++
+"modinfo lffc|grep queue_thep"
+
++
+隨即顯示佇列深度參數及其說明清單。視作業系統版本而定、您可以修改下列一或多個佇列深度參數：
+
++
+** 「lffc_lun_queue_de深度」：可排入特定LUN佇列的FC命令數目上限（uint）
+** 「lffc_HBA佇列深度」：可排入lprb HBA佇列的FC命令數目上限（uint）
+** 「lfc_tgt_queue_de深度」：可排入特定目標連接埠佇列的FC命令數目上限（uint）
++
+「lfc_tgt_queue_de深度」參數僅適用於Red Hat Enterprise Linux 7.x系統、SUSE Linux Enterprise Server 11 SP4系統和12.x系統。
+
+
+
+. 將佇列深度參數新增至Red Hat Enterprise Linux 5.x系統的「/etc/modprobe.conf」檔案、以及Red Hat Enterprise Linux 6.x或7.x系統的「/etc/modprobe.d/scsi.conf」檔案、或SUSE Linux Enterprise Server 11.x或12.x系統、以更新佇列深度。
++
+視作業系統版本而定、您可以新增下列一或多個命令：
+
++
+** "options lfit lfc_HBA佇列深度= new_queue_深度"
+** 選項lffc lffc_lun_queue_de深度=new_queue深度
+** "options lfc_tgt_queue_de深度=new_queue_深度"
+
+
+. 建立新的RAM磁碟映像、然後重新啟動主機、使更新在重新開機後持續更新。
++
+如需詳細資訊、請參閱 link:../system-admin/index.html["系統管理"] 適用於您的Linux作業系統版本。
+
+. 確認已針對您修改的每個佇列深度參數更新佇列深度值：
++
+"CAT /sys/class/scsi_host/host_number/lffc_lun_quote_depth'cat /sys/class/scsi_host/host_number/lffc_tgt_queue_depth'CAT /sys/class/scsi_host_number/lffc_HBA佇列深度"
+
++
+[listing]
+----
+root@localhost ~]#cat /sys/class/scsi_host/host5/lpfc_lun_queue_depth
+      30
+----
++
+此時會顯示佇列深度的目前值。
+
+
+
+
+
+== 適用於QLogic HBA的Linux主機
+
+您可以更新Linux主機上QLogic驅動程式的裝置佇列深度。若要在重新開機後持續更新、您必須建立新的RAM磁碟映像、然後重新啟動主機。您可以使用QLogic HBA管理GUI或命令列介面（CLI）來修改QLogic HBA佇列深度。
+
+本工作說明如何使用QLogic HBA CLI來修改QLogic HBA佇列深度
+
+.步驟
+. 識別要修改的裝置佇列深度參數：
++
+"modinfo qla2xxx | grep ql2xmaqdepth"
+
++
+您只能修改「ql2xmaqdepth」佇列深度參數、此參數表示可為每個LUN設定的最大佇列深度。RHEL 7.5及更新版本的預設值為64。RHEL 7.4及更早版本的預設值為32。
+
++
+[listing]
+----
+root@localhost ~]# modinfo qla2xxx|grep ql2xmaxqdepth
+parm:       ql2xmaxqdepth:Maximum queue depth to set for each LUN. Default is 64. (int)
+----
+. 更新裝置佇列深度值：
++
+** 如果您要使修改持續進行、請執行下列步驟：
++
+... 將佇列深度參數新增至Red Hat Enterprise Linux 5.x系統的「/etc/modprobe.conf」檔案、Red Hat Enterprise Linux 6.x或7.x系統的「/etc/modprobe.d/scsi.conf」檔案、或SUSE Linux Enterprise Server 11.x或12.x系統的「options qla2xqx_depth」檔案、以更新佇列深度：「options qla2x=new
+... 建立新的RAM磁碟映像、然後重新啟動主機、使更新在重新開機後持續更新。
++
+如需詳細資訊、請參閱 link:../system-admin/index.html["系統管理"] 適用於您的Linux作業系統版本。
+
+
+
+** 如果您只想修改目前工作階段的參數、請執行下列命令：
++
+「ECHO new_queue_de深度>/sys/module/qla2xxx /參數/ql2xmaqdepth」
+
++
+在下列範例中、佇列深度設為128。
+
++
+[listing]
+----
+echo 128 > /sys/module/qla2xxx/parameters/ql2xmaxqdepth
+----
+
+
+. 確認佇列深度值已更新：
++
+"CAT /sys/module/qla2xxx/parameters/ql2xmaqdepth"
+
++
+此時會顯示佇列深度的目前值。
+
+. 從QLogic HBA BIOS更新韌體參數「執行節流」、以修改QLogic HBA佇列深度。
++
+.. 登入QLogic HBA管理CLI：
++
+/`opt/QLogic公司/QConvertgeConsole CLI/qauci
+
+.. 從主功能表中、選取「Adapter Configuration（介面卡組態）」選項。
++
+[listing]
+----
+[root@localhost ~]# /opt/QLogic_Corporation/QConvergeConsoleCLI/qaucli
+Using config file: /opt/QLogic_Corporation/QConvergeConsoleCLI/qaucli.cfg
+Installation directory: /opt/QLogic_Corporation/QConvergeConsoleCLI
+Working dir: /root
+
+QConvergeConsole
+
+        CLI - Version 2.2.0 (Build 15)
+
+    Main Menu
+
+    1:  Adapter Information
+    **2:  Adapter Configuration**
+    3:  Adapter Updates
+    4:  Adapter Diagnostics
+    5:  Monitoring
+    6:  FabricCache CLI
+    7:  Refresh
+    8:  Help
+    9:  Exit
+
+
+        Please Enter Selection: 2
+----
+.. 從介面卡組態參數清單中、選取「HBA參數」選項。
++
+[listing]
+----
+1:  Adapter Alias
+    2:  Adapter Port Alias
+    **3:  HBA Parameters**
+    4:  Persistent Names (udev)
+    5:  Boot Devices Configuration
+    6:  Virtual Ports (NPIV)
+    7:  Target Link Speed (iiDMA)
+    8:  Export (Save) Configuration
+    9:  Generate Reports
+   10:  Personality
+   11:  FEC
+(p or 0: Previous Menu; m or 98: Main Menu; ex or 99: Quit)
+        Please Enter Selection: 3
+----
+.. 從HBA連接埠清單中、選取所需的HBA連接埠。
++
+[listing]
+----
+Fibre Channel Adapter Configuration
+
+    HBA Model QLE2562 SN: BFD1524C78510
+      1: Port   1: WWPN: 21-00-00-24-FF-8D-98-E0 Online
+      2: Port   2: WWPN: 21-00-00-24-FF-8D-98-E1 Online
+    HBA Model QLE2672 SN: RFE1241G81915
+      3: Port   1: WWPN: 21-00-00-0E-1E-09-B7-62 Online
+      4: Port   2: WWPN: 21-00-00-0E-1E-09-B7-63 Online
+
+
+        (p or 0: Previous Menu; m or 98: Main Menu; ex or 99: Quit)
+        Please Enter Selection: 1
+----
++
+此時會顯示HBA連接埠的詳細資料。
+
+.. 從HBA參數功能表中、選取「顯示HBA參數」選項以檢視「執行節流」選項的目前值。
++
+「執行節流」選項的預設值為65535.
+
++
+[listing]
+----
+HBA Parameters Menu
+
+=======================================================
+HBA           : 2 Port: 1
+SN            : BFD1524C78510
+HBA Model     : QLE2562
+HBA Desc.     : QLE2562 PCI Express to 8Gb FC Dual Channel
+FW Version    : 8.01.02
+WWPN          : 21-00-00-24-FF-8D-98-E0
+WWNN          : 20-00-00-24-FF-8D-98-E0
+Link          : Online
+=======================================================
+
+    1:  Display HBA Parameters
+    2:  Configure HBA Parameters
+    3:  Restore Defaults
+
+
+        (p or 0: Previous Menu; m or 98: Main Menu; x or 99: Quit)
+        Please Enter Selection: 1
+--------------------------------------------------------------------------------
+HBA Instance 2: QLE2562 Port 1 WWPN 21-00-00-24-FF-8D-98-E0 PortID 03-07-00
+Link: Online
+--------------------------------------------------------------------------------
+Connection Options             : 2 - Loop Preferred, Otherwise Point-to-Point
+Data Rate                      : Auto
+Frame Size                     : 2048
+Hard Loop ID                   : 0
+Loop Reset Delay (seconds)     : 5
+Enable Host HBA BIOS           : Enabled
+Enable Hard Loop ID            : Disabled
+Enable FC Tape Support         : Enabled
+Operation Mode                 : 0 - Interrupt for every I/O completion
+Interrupt Delay Timer (100us)  : 0
+**Execution Throttle             : 65535**
+Login Retry Count              : 8
+Port Down Retry Count          : 30
+Enable LIP Full Login          : Enabled
+Link Down Timeout (seconds)    : 30
+Enable Target Reset            : Enabled
+LUNs Per Target                : 128
+Out Of Order Frame Assembly    : Disabled
+Enable LR Ext. Credits         : Disabled
+Enable Fabric Assigned WWN     : N/A
+
+Press <Enter> to continue:
+----
+.. 按* Enter鍵*繼續。
+.. 從HBA參數功能表中、選取「Configure HBA參數字」選項以修改HBA參數。
+.. 從Configure參數字表中、選取「執行節流」選項、然後更新此參數的值。
++
+[listing]
+----
+Configure Parameters Menu
+
+=======================================================
+HBA           : 2 Port: 1
+SN            : BFD1524C78510
+HBA Model     : QLE2562
+HBA Desc.     : QLE2562 PCI Express to 8Gb FC Dual Channel
+FW Version    : 8.01.02
+WWPN          : 21-00-00-24-FF-8D-98-E0
+WWNN          : 20-00-00-24-FF-8D-98-E0
+Link          : Online
+=======================================================
+
+    1:  Connection Options
+    2:  Data Rate
+    3:  Frame Size
+    4:  Enable HBA Hard Loop ID
+    5:  Hard Loop ID
+    6:  Loop Reset Delay (seconds)
+    7:  Enable BIOS
+    8:  Enable Fibre Channel Tape Support
+    9:  Operation Mode
+   10:  Interrupt Delay Timer (100 microseconds)
+   11:  Execution Throttle
+   12:  Login Retry Count
+   13:  Port Down Retry Count
+   14:  Enable LIP Full Login
+   15:  Link Down Timeout (seconds)
+   16:  Enable Target Reset
+   17:  LUNs per Target
+   18:  Enable Receive Out Of Order Frame
+   19:  Enable LR Ext. Credits
+   20:  Commit Changes
+   21:  Abort Changes
+
+
+        (p or 0: Previous Menu; m or 98: Main Menu; x or 99: Quit)
+        Please Enter Selection: 11
+Enter Execution Throttle [1-65535] [65535]: 65500
+----
+.. 按* Enter鍵*繼續。
+.. 從Configure參數字表中、選取「Commit changes」（提交變更）選項以儲存變更。
+.. 結束功能表。
+
+
+

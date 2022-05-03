@@ -1,0 +1,43 @@
+---
+permalink: nfs-config/assign-export-policy-qtree-task.html 
+sidebar: sidebar 
+keywords: assign, export, policy, qtree 
+summary: 您也可以在磁碟區上匯出特定qtree、讓用戶端直接存取、而非匯出整個磁碟區。您可以將匯出原則指派給qtree來匯出qtree。您可以在建立新的qtree或修改現有的qtree時指派匯出原則。 
+---
+= 將匯出原則指派給qtree
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您也可以在磁碟區上匯出特定qtree、讓用戶端直接存取、而非匯出整個磁碟區。您可以將匯出原則指派給qtree來匯出qtree。您可以在建立新的qtree或修改現有的qtree時指派匯出原則。
+
+匯出原則必須存在。
+
+根據預設、如果在建立時未另外指定、qtree會繼承包含Volume的父匯出原則。
+
+您可以在建立qtree時或在建立qtree之後的任何時間、將匯出原則與qtree建立關聯。您可以將一個匯出原則與qtree建立關聯、不過一個原則可以與許多qtree建立關聯。
+
+.步驟
+. 如果在建立qtree時未指定匯出原則、請將匯出原則指派給qtree：
++
+「Volume qtree modify -vserver _vserver_name_-qtree路徑/vol/_volVolume名稱/qtree名稱_-export/policy _export/policy_name_」
+
+. 確認原則已指派給qtree：
++
+「Volume qtree show -qtree _qtree _qtree name_-功能 變數匯出原則」
+
+
+
+下列命令會將匯出原則nfs_policy指派給SVM VS1上的qtree qt1、並驗證指派：
+
+[listing]
+----
+cluster::> volume modify -v1server vs1 -qtree-path /vol/vol1/qt1 -policy nfs_policy
+
+cluster::>volume qtree show -volume vol1 -fields export-policy
+vserver volume qtree export-policy
+------- ------ ----- -------------
+vs1     data1  qt01  nfs_policy
+----

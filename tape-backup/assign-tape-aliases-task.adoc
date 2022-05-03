@@ -1,0 +1,44 @@
+---
+permalink: tape-backup/assign-tape-aliases-task.html 
+sidebar: sidebar 
+keywords: assign, tape, aliases, device, identification, drive, medium, changer, logical, names, backup 
+summary: 為了便於識別裝置、您可以將磁帶別名指派給磁帶機或媒體更換器。別名可在備份裝置的邏輯名稱與永久指派給磁帶機或媒體更換器的名稱之間提供對應關係。 
+---
+= 指派磁帶別名
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了便於識別裝置、您可以將磁帶別名指派給磁帶機或媒體更換器。別名可在備份裝置的邏輯名稱與永久指派給磁帶機或媒體更換器的名稱之間提供對應關係。
+
+.步驟
+. 使用「儲存磁帶別名組」命令、將別名指派給磁帶機或媒體轉換器。
++
+如需此命令的詳細資訊、請參閱手冊頁。
+
++
+您可以使用「系統節點硬體磁帶機show」命令來檢視磁帶機的序號（SN）資訊、也可以使用「系統節點硬體磁帶庫show」命令來檢視磁帶庫的相關資訊。
+
++
+下列命令會將別名設定為連接至節點cluster1-01的磁帶機、序號為SN[123456]L4：
+
++
+[listing]
+----
+cluster-01::> storage tape alias set  -node cluster-01 -name st3 -mapping SN[123456]L4
+----
++
+下列命令會將別名設定為連接至節點cluster1-01的媒體更換器、序號為SN[65432]：
+
++
+[listing]
+----
+cluster-01::> storage tape alias set  -node cluster-01 -name mc1 -mapping SN[65432]
+----
+
+
+xref:assign-tape-aliases-concept.adoc[什麼是磁帶別名]
+
+xref:remove-tape-aliases-task.adoc[移除磁帶別名]

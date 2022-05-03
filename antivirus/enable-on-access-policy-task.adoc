@@ -1,0 +1,54 @@
+---
+permalink: antivirus/enable-on-access-policy-task.html 
+sidebar: sidebar 
+keywords: enable, on-access, policy 
+summary: 您必須在SVM上啟用存取原則、才能掃描其檔案。如果您為叢集中的所有SVM建立了存取原則、則必須個別在每個SVM上啟用原則。您一次只能在SVM上啟用一個存取原則。 
+---
+= 啟用存取原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須在SVM上啟用存取原則、才能掃描其檔案。如果您為叢集中的所有SVM建立了存取原則、則必須個別在每個SVM上啟用原則。您一次只能在SVM上啟用一個存取原則。
+
+.步驟
+. 啟用存取原則：
++
+「vserver vscan on存取原則啟用-vserver data_SVM -police-name policy_name」
+
++
+下列命令可在'VS1'的「VM：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy enable -vserver vs1 -policy-name Policy1
+----
+. 驗證是否已啟用存取原則：「vserver vscan on-access-policy show -instance _data_svm_-police-name _policy_name_」
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示「Policy1」存取原則的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy show -instance vs1 -policy-name Policy1
+
+                           Vserver: vs1
+                            Policy: Policy1
+                     Policy Status: on
+               Policy Config Owner: vserver
+              File-Access Protocol: CIFS
+                           Filters: scan-ro-volume
+                    Mandatory Scan: on
+Max File Size Allowed for Scanning: 3GB
+            File Paths Not to Scan: \vol\a b\, \vol\a,b\
+       File Extensions Not to Scan: mp3, txt
+           File Extensions to Scan: mp*, tx*
+      Scan Files with No Extension: false
+----
+

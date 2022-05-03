@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/offline-files-allow-caching-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, microsoft, offline, file, feature, client-side, caching, cache, file, local, host, offline, disconnect, network, use offline files to allow caching of files for offline use 
+summary: 支援Microsoft離線檔案功能或用戶端快取、可將檔案快取至本機主機供離線使用。ONTAP即使使用者與網路中斷連線、仍可使用離線檔案功能繼續處理檔案。 
+---
+= 使用離線檔案來允許快取檔案以供離線使用總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援Microsoft離線檔案功能（或用戶端快取）、可在本機主機上快取檔案以供離線使用。ONTAP即使使用者與網路中斷連線、仍可使用離線檔案功能繼續處理檔案。
+
+您可以指定Windows使用者文件和程式是自動快取到共用區、還是必須手動選取檔案以供快取。預設會針對新共用啟用手動快取。離線使用的檔案會同步處理至Windows用戶端的本機磁碟。當連線至特定儲存系統共用區的網路連線恢復時、就會發生同步。
+
+由於離線檔案和資料夾的存取權限與儲存在CIFS伺服器上的檔案和資料夾版本相同、因此使用者必須對儲存在CIFS伺服器上的檔案和資料夾擁有足夠的權限、才能對離線檔案和資料夾執行動作。
+
+當使用者和網路上的其他人變更同一個檔案時、使用者可以將檔案的本機版本儲存到網路、保留其他版本、或同時儲存兩者。如果使用者同時保留這兩個版本、則會在本機儲存含有本機使用者變更的新檔案、而快取的檔案會被保存在CIFS伺服器上的檔案版本變更所覆寫。
+
+您可以使用共用組態設定、逐一設定離線檔案。您可以在建立或修改共用時、從四個離線資料夾組態中選擇一個：
+
+* 無快取
++
+停用共用區的用戶端快取。檔案和資料夾不會自動在本機用戶端上快取、而且使用者無法選擇在本機快取檔案或資料夾。
+
+* 手動快取
++
+可手動選取要快取至共用區的檔案。這是預設設定。根據預設、不會在本機用戶端上快取任何檔案或資料夾。使用者可以選擇要在本機快取以供離線使用的檔案和資料夾。
+
+* 自動文件快取
++
+可讓使用者文件自動快取至共用區。只有存取的檔案和資料夾才會在本機快取。
+
+* 自動程式快取
++
+可讓程式和使用者文件自動快取至共用區。只有存取的檔案、資料夾和程式才會在本機快取。此外、此設定可讓用戶端執行本機快取的可執行檔、即使連線到網路也沒問題。
+
+
+
+如需在Windows伺服器和用戶端上設定離線檔案的詳細資訊、請參閱Microsoft TechNet資源庫。
+
+xref:roaming-profiles-store-user-profiles-concept.adoc[使用漫遊設定檔、將使用者設定檔集中儲存在與SVM相關的CIFS伺服器上]
+
+xref:folder-redirection-store-data-concept.adoc[使用資料夾重新導向將資料儲存在CIFS伺服器上]
+
+xref:branchcache-cache-share-content-branch-office-concept.adoc[使用BranchCache快取分公司的SMB共用內容]
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com/en-us/library/"]

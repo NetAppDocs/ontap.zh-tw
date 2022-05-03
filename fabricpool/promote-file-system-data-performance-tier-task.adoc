@@ -1,0 +1,23 @@
+---
+permalink: fabricpool/promote-file-system-data-performance-tier-task.html 
+sidebar: sidebar 
+keywords: promoting, data, file, system, performance, tier 
+summary: 您可以主動從雲端層中還原的Snapshot複本擷取作用中檔案系統資料、並將其提升至效能層級。 
+---
+= 將檔案系統資料提升至效能層級
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以主動從雲端層中還原的Snapshot複本擷取作用中檔案系統資料、並將其提升至效能層級。
+
+.步驟
+. 使用「volume modify」命令、將「分層原則」設為「純快照」、「雲端擷取原則」設為「促銷」。
++
+[listing]
+----
+volume modify -vserver <vserver-name> -volume <volume-name> -tiering-policy snapshot-only cloud-retrieval-policy promote
+----
+

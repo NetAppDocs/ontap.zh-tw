@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: networking/migrate_a_lif.html 
+keywords: move the lif, change lif port, migrate a lif, migrate a LIF to a different port on the same node or a different node within the cluster 
+summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的不同節點 
+---
+= 移轉LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果連接埠故障或需要維護、您可能必須將LIF移轉至同一個節點或叢集中的不同節點上的不同連接埠。移轉LIF與LIF容錯移轉類似、但LIF移轉是手動作業、而LIF容錯移轉則是LIF的自動移轉、以因應LIF目前網路連接埠上的連結故障。
+
+.開始之前
+* 必須已為lifs設定容錯移轉群組。
+* 目的地節點和連接埠必須正常運作、而且必須能夠存取與來源連接埠相同的網路。
+
+
+.關於這項工作
+* BGP LIF位於主連接埠上、無法移轉至任何其他節點或連接埠。
+* 從節點移除NIC之前、您必須先將屬於NIC的連接埠上裝載的LIF移轉至叢集中的其他連接埠。
+* 您必須執行命令、從裝載叢集LIF的節點移轉叢集LIF。
+* 節點範圍的LIF（例如節點範圍管理LIF、叢集LIF、叢集間LIF）無法移轉至遠端節點。
+* 當NFSv4 LIF在節點之間移轉時、新連接埠上的LIF可用前、延遲最多可達45秒。
++
+若要解決此問題、請在沒有延遲的情況下使用NFSv4.1。
+
+* 您無法將iSCSI生命體從一個節點移轉至另一個節點。
++
+若要解決此限制、您必須在目的地節點上建立iSCSI LIF。如需建立iSCSI LIF的準則相關資訊、請參閱 link:../san-admin/index.html["SAN管理"^]。
+
+* 當您移轉來源或目的地LIF時、VMware VAAI複製卸載作業會失敗。如需VMware VAAI的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS參考資料"^] 或 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D97EE182-9068-4BD8-A3BF-F5C458303740.html["SAN管理"^]。
+
+
+視您要移轉特定LIF或所有LIF而定、請執行適當的動作：
+
+[cols="30,70"]
+|===
+
+
+| 如果您想要移轉... | 輸入下列命令... 
+
+
+ a| 
+特定LIF
+ a| 
+網路介面移轉
+
+
+
+ a| 
+節點上的所有資料和叢集管理生命體
+ a| 
+「網路介面移轉到全部」
+
+
+
+ a| 
+連接埠上的所有生命
+ a| 
+「network interface migration-all -Node <node>-port <port>」
+
+|===
+以下範例說明如何將SVM vs0上名為datalif1的LIF移轉到node0b上的連接埠e0d：
+
+....
+network interface migrate -vserver vs0 -lif datalif1 -dest-node node0b -dest-port e0d
+....
+以下範例說明如何從目前（本機）節點移轉所有資料與叢集管理生命週期：
+
+....
+network interface migrate-all -node local
+....

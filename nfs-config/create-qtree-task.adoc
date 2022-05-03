@@ -1,0 +1,58 @@
+---
+permalink: nfs-config/create-qtree-task.html 
+sidebar: sidebar 
+keywords: create, qtree 
+summary: 您可以使用volume qtree create命令來建立qtree以包含資料、並指定其內容。 
+---
+= 建立qtree
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「volume qtree create」命令來建立qtree以包含資料、並指定其內容。
+
+.您需要的是 #8217 ；需要的是什麼
+* SVM和將要包含新qtree的Volume必須已經存在。
+* SVM的安全樣式必須是UNIX、NFS應設定並執行。
+
+
+.步驟
+. 建立qtree：
++
+「Volume qtree create -vserver _vserver_name_｛-volume _volume _name_-qtree _qtree name_|-qtree路徑_qtree path_｝-安全型UNIX [-policy _policy_name_]
+
++
+您可以將Volume和qtree指定為個別的引數、或是以「/vol/_volume_name/_qtree名稱_」格式指定qtree路徑引數。
+
++
+根據預設、qtree會繼承其父Volume的匯出原則、但可以設定為使用自己的原則。如果您打算使用現有的匯出原則、則可以在建立qtree時加以指定。您也可以稍後使用「volume qtree modify」命令新增匯出原則。
+
+. 確認qtree是以所需的交會路徑建立：
++
+「Volume qtree show -vserver _vserver_name_｛-volume _volume _name_-qtree _qtree name_|-qtree路徑_qtree path_｝」
+
+
+
+以下範例會在SVM vs1.example.com上建立一個名為qt01的qtree、該qtree具有連接路徑「/vol/data1」：
+
+[listing]
+----
+cluster1::> volume qtree create -vserver vs1.example.com -qtree-path /vol/data1/qt01 -security-style unix
+[Job 1642] Job succeeded: Successful
+
+cluster1::> volume qtree show -vserver vs1.example.com -qtree-path /vol/data1/qt01
+
+                      Vserver Name: vs1.example.com
+                       Volume Name: data1
+                        Qtree Name: qt01
+  Actual (Non-Junction) Qtree Path: /vol/data1/qt01
+                    Security Style: unix
+                       Oplock Mode: enable
+                  Unix Permissions: ---rwxr-xr-x
+                          Qtree Id: 2
+                      Qtree Status: normal
+                     Export Policy: default
+        Is Export Policy Inherited: true
+----

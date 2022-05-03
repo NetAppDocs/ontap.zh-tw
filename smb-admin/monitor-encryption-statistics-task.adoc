@@ -1,0 +1,231 @@
+---
+permalink: smb-admin/monitor-encryption-statistics-task.html 
+sidebar: sidebar 
+keywords: monitor, smb, encryption, statistics, determine, establish, session, share, connection, encrypt, monitor smb encryption statistics 
+summary: 您可以監控SMB加密統計資料、並判斷哪些已建立的工作階段和共用連線已加密、哪些尚未加密。 
+---
+= 監控SMB加密統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以監控SMB加密統計資料、並判斷哪些已建立的工作階段和共用連線已加密、哪些尚未加密。
+
+進階權限層級的「統計資料」命令提供下列計數器、可用來監控加密的SMB工作階段數量及共用連線：
+
+|===
+| 計數器名稱 | 說明 
+
+
+ a| 
+"Encrypted_sessions"
+ a| 
+提供加密的SMB 3.0工作階段數量
+
+
+
+ a| 
+"Encrypted_share_connections"
+ a| 
+提供樹狀結構連線所在的加密共用數
+
+
+
+ a| 
+"REAided_Un加密 工作階段"
+ a| 
+提供因缺乏用戶端加密功能而遭拒的工作階段設定數
+
+
+
+ a| 
+'拒絕_未加密共享'
+ a| 
+提供因缺乏用戶端加密功能而遭拒的共用對應數目
+
+|===
+這些計數器可與下列統計資料物件一起使用：
+
+* CIFS可讓您監控所有SMB 3.0工作階段的SMB加密。
++
+[NOTE]
+====
+SMB 3.0統計資料會包含在「CIFS」物件的輸出中。如果您想要比較加密工作階段的數量與工作階段總數、可以比較「Encrypted_sessions」計數器的輸出與「etided_sessions」計數器的輸出。
+
+ If you want to compare the number of encrypted share connections to the total number of share connections, you can compare output for the `encrypted_share_connections` counter with the output for the `connected_shares` counter.
+====
+* 「拒絕的未加密工作階段」提供嘗試建立SMB工作階段的次數、此工作階段需要從不支援SMB加密的用戶端進行加密。
+* 「拒絕的_未加密的共享區」提供嘗試連線至SMB共用區的次數、此SMB共用區需要從不支援SMB加密的用戶端進行加密。
+
+
+您必須先開始收集統計資料樣本、才能檢視結果資料。如果不停止資料收集、您可以檢視範例中的資料。停止資料收集可提供固定的範例。不停止資料收集可讓您取得更新的資料、以便與先前的查詢進行比較。這項比較可協助您識別趨勢。
+
+link:../performance-admin/index.html["效能管理"]
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 開始資料收集：「統計資料起始物件｛CIFS | SMB1| smb2｝-instance _instance_-same-id _sample _ID_[-node_node_name_]」
++
+如果未指定"-same-id"參數、命令會為您產生範例識別碼、並將此範例定義為CLI工作階段的預設範例。「-sample-id」的值是一個字串。如果您在相同的CLI工作階段中執行此命令、但未指定「-same-id」參數、則命令會覆寫先前的預設範例。
+
++
+您可以選擇性地指定要收集統計資料的節點。如果您未指定節點、範例會收集叢集中所有節點的統計資料。
+
+. 使用「統計資料停止」命令停止收集範例的資料。
+. 檢視SMB加密統計資料：
++
+|===
+| 如果您要檢視下列項目的資訊... | 輸入... 
+
+
+ a| 
+加密工作階段
+ a| 
+「How -same-id _sample _id_-counter Encrypted_sessions|_nnode_name_（節點節點名稱）」
+
+
+
+ a| 
+加密的工作階段和已建立的工作階段
+ a| 
+「How -same-id _sample _id_-counter Encrypted_sessions|isted_sessions（如何樣例ID _same_id_計數器加密工作階段）」、「isited_sessions（已建立工作階段）」、「_nnode_node_name_
+
+
+
+ a| 
+加密的共用連線
+ a| 
+「How -same-id _sample _id_-counter Encrypted_sshare_connections」（如何樣本ID _樣本ID _計數器加密共享連線）、節點名稱_（-node_node_name_]）」
+
+
+
+ a| 
+加密的共用連線和連線共用
+ a| 
+「How -same-id _sample _id_-counter Encrypted_share_connections | connected_shares|_norme_name_[-node_node_name_]」
+
+
+
+ a| 
+拒絕未加密的工作階段
+ a| 
+「How -same-id _sample _id_-counter Rejected_Unelged_sitlessions|_norme_name_（節點節點名稱_）」
+
+
+
+ a| 
+拒絕未加密的共用連線
+ a| 
+「How -same-id _sample _id_-counter已拒絕_未加密共享|節點名稱_[-node_node_name_]」
+
+|===
++
+如果您只想顯示單一節點的資訊、請指定選用的「節點」參數。
+
+. 返回管理員權限等級：「et -priv. admin」
+
+
+以下範例說明如何監控儲存虛擬機器（SVM）VS1上的SMB 3.0加密統計資料。
+
+下列命令會移至進階權限層級：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+----
+下列命令會啟動新範例的資料收集：
+
+[listing]
+----
+cluster1::*> statistics start -object cifs -sample-id smbencryption_sample -vserver vs1
+Statistics collection is being started for Sample-id: smbencryption_sample
+----
+下列命令會停止該範例的資料收集：
+
+[listing]
+----
+cluster1::*> statistics stop -sample-id smbencryption_sample
+Statistics collection is being stopped for Sample-id: smbencryption_sample
+----
+下列命令顯示節點從範例中所建立的加密SMB工作階段和已建立的SMB工作階段：
+
+[listing]
+----
+cluster2::*> statistics show -object cifs -counter established_sessions|encrypted_sessions|node_name –node node_name
+
+Object: cifs
+Instance: [proto_ctx:003]
+Start-time: 4/12/2016 11:17:45
+End-time: 4/12/2016 11:21:45
+Scope: vsim2
+
+    Counter                               Value
+    ----------------------------  ----------------------
+    established_sessions                     1
+    encrypted_sessions                       1
+
+2 entries were displayed
+----
+下列命令顯示節點從範例中拒絕的未加密SMB工作階段數目：
+
+[listing]
+----
+clus-2::*> statistics show -object cifs -counter rejected_unencrypted_sessions –node node_name
+
+Object: cifs
+Instance: [proto_ctx:003]
+Start-time: 4/12/2016 11:17:45
+End-time: 4/12/2016 11:21:51
+Scope: vsim2
+
+    Counter                                    Value
+    ----------------------------    ----------------------
+    rejected_unencrypted_sessions                1
+
+1 entry was displayed.
+----
+下列命令顯示範例中節點所連線的SMB共用數和加密的SMB共用數：
+
+[listing]
+----
+clus-2::*> statistics show -object cifs -counter connected_shares|encrypted_share_connections|node_name –node node_name
+
+Object: cifs
+Instance: [proto_ctx:003]
+Start-time: 4/12/2016 10:41:38
+End-time: 4/12/2016 10:41:43
+Scope: vsim2
+
+    Counter                                     Value
+    ----------------------------    ----------------------
+    connected_shares                              2
+    encrypted_share_connections                   1
+
+2 entries were displayed.
+----
+下列命令顯示節點從範例中拒絕的未加密SMB共用連線數目：
+
+[listing]
+----
+clus-2::*> statistics show -object cifs -counter rejected_unencrypted_shares –node node_name
+
+Object: cifs
+Instance: [proto_ctx:003]
+Start-time: 4/12/2016 10:41:38
+End-time: 4/12/2016 10:42:06
+Scope: vsim2
+
+    Counter                                     Value
+    --------------------------------    ----------------------
+    rejected_unencrypted_shares                   1
+
+1 entry was displayed.
+----
+xref:determine-statistics-objects-counters-available-task.adoc[判斷可用的統計資料物件和計數器]
+
+link:../performance-config/index.html["效能監控快速設定"]

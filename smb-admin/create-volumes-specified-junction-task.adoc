@@ -1,0 +1,54 @@
+---
+permalink: smb-admin/create-volumes-specified-junction-task.html 
+sidebar: sidebar 
+keywords: specify, junction, point, create, data, volume, resultant, automatic, mount, configure, nas, access, create data volumes with specified junction points 
+summary: 您可以在建立資料Volume時指定交會點。結果Volume會自動掛載於交會點、並可立即設定以進行NAS存取。 
+---
+= 使用指定的交會點建立資料磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在建立資料Volume時指定交會點。結果Volume會自動掛載於交會點、並可立即設定以進行NAS存取。
+
+您要在其中建立磁碟區的集合體必須已經存在。
+
+[NOTE]
+====
+下列字元無法用於交會路徑：*#"><|？\
+
+此外、交會路徑長度不得超過255個字元。
+
+====
+.步驟
+. 建立具有連接點的磁碟區：「volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _aggregate name_-size｛integer[kb| MB| GB| TB| PB ]｝-SECURITY樣式｛ntfs|unix | mixed｝-path _jeting_path_」
++
+交會路徑必須以根（/）開頭、且可同時包含目錄和輔助磁碟區。交會路徑不需要包含磁碟區名稱。交會路徑與磁碟區名稱無關。
+
++
+指定Volume安全樣式為選用項目。如果您未指定安全樣式、ONTAP 則會以套用至儲存虛擬機器（SVM）根磁碟區的相同安全樣式來建立磁碟區。不過、根磁碟區的安全樣式可能不是您要套用至所建立資料磁碟區的安全樣式。建議您在建立磁碟區時指定安全樣式、以將難以疑難排解的檔案存取問題降至最低。
+
++
+交會路徑不區分大小寫；「/eng」與「/eng」相同。如果您建立CIFS共用區、Windows會將交會路徑視為區分大小寫。例如、如果交會是「/eng」、則CIFS共用路徑必須以「/eng」開頭、而非「/eng」開頭。
+
++
+您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱「Volume create」命令的手冊頁。
+
+. 驗證是否已使用所需的交會點建立磁碟區：「volume show -vserver _vserver_name_-volume _volume _name_-jetion」
+
+
+下列範例建立名為「home4」的磁碟區、位於SVM VS1、其交會路徑為「/eng/hHome」：
+
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume home4 -aggregate aggr1 -size 1g -junction-path /eng/home
+[Job 1642] Job succeeded: Successful
+
+cluster1::> volume show -vserver vs1 -volume home4 -junction
+                  Junction                 Junction
+Vserver   Volume  Active   Junction Path   Path Source
+--------- ------- -------- --------------- -----------
+vs1       home4   true     /eng/home       RW_volume
+----

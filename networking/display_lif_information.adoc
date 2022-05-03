@@ -1,0 +1,105 @@
+---
+sidebar: sidebar 
+permalink: networking/display_lif_information.html 
+keywords: display, view, show, lif, logical, interface, display lif information, view detailed information about a lif to determine its configuration 
+summary: 檢視LIF的詳細資訊、以判斷其組態 
+---
+= 顯示LIF資訊
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以檢視LIF的詳細資訊、以判斷其組態。
+
+您也可能想要檢視此資訊來診斷基本的LIF問題、例如檢查是否有重複的IP位址、或驗證網路連接埠是否屬於正確的子網路。儲存虛擬機器（SVM）管理員只能檢視與SVM相關聯的LIF資訊。
+
+將顯示下列資訊：
+
+* 與LIF相關的IP位址
+* LIF的管理狀態
+* LIF的作業狀態
++
+資料生命體的作業狀態取決於資料生命體相關聯的SVM狀態。當SVM停止時、LIF的作業狀態會變更為「關閉」。當SVM再次啟動時、作業狀態會變更為up
+
+* 節點和LIF所在的連接埠
+
+
+如果某個欄位的資料無法使用（例如、如果沒有延伸狀態資訊）、欄位值會列為「-」。
+
+使用network interface show命令顯示LIF資訊。
+
+您可以指定-instance參數來檢視每個LIF的詳細資訊、或使用-fields參數指定欄位名稱來取得特定資訊。
+
+下列命令會顯示叢集中所有LIF的一般資訊：
+
+....
+network interface show
+           Logical    Status     Network          Current      Current Is
+Vserver    Interface  Admin/Oper Address/Mask     Node         Port    Home
+---------- ---------- ---------- ---------------- ------------ ------- ----
+example
+           lif1         up/up    192.0.2.129/22   node-01
+                                                               e0d     false
+node
+           cluster_mgmt up/up    192.0.2.3/20     node-02
+                                                               e0c     false
+node-01
+           clus1        up/up    192.0.2.65/18    node-01
+                                                               e0a     true
+           clus2        up/up    192.0.2.66/18    node-01
+                                                               e0b     true
+           mgmt1        up/up    192.0.2.1/20     node-01
+                                                               e0c     true
+node-02
+           clus1        up/up    192.0.2.67/18    node-02
+                                                               e0a     true
+           clus2        up/up    192.0.2.68/18    node-02
+                                                               e0b     true
+           mgmt2        up/up    192.0.2.2/20     node-02
+                                                               e0d     true
+vs1
+           d1           up/up    192.0.2.130/21   node-01
+                                                               e0d     false
+           d2           up/up    192.0.2.131/21   node-01
+                                                               e0d     true
+           data3        up/up    192.0.2.132/20   node-02
+                                                               e0c     true
+....
+下列命令顯示單一LIF的詳細資訊：
+
+....
+network interface show -lif data1 -instance
+
+                    Vserver Name: vs1
+          Logical Interface Name: data1
+                            Role: data
+                   Data Protocol: nfs,cifs
+                       Home Node: node-01
+                       Home Port: e0c
+                    Current Node: node-03
+                    Current Port: e0c
+              Operational Status: up
+                 Extended Status: -
+                         Is Home: false
+                 Network Address: 192.0.2.128
+                         Netmask: 255.255.192.0
+             Bits in the Netmask: 18
+                 IPv4 Link Local: -
+                     Subnet Name: -
+           Administrative Status: up
+                 Failover Policy: local-only
+                 Firewall Policy: data
+                     Auto Revert: false
+   Fully Qualified DNS Zone Name: xxx.example.com
+         DNS Query Listen Enable: false
+             Failover Group Name: Default
+                        FCP WWPN: -
+                  Address family: ipv4
+                         Comment: -
+                  IPspace of LIF: Default
+....

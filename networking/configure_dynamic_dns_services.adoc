@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dynamic_dns_services.html 
+keywords: dns, service, services, configuration, configure, configuring, set, up, setup, nfs, smb, cifs, active, directory, statistics, configure dns services for the svm before creating an nfs or smb server, ddns, vserver services name-service dns dynamic-update modify, vserver services name-service dns dynamic-update show 
+summary: 在建立NFS或SMB伺服器之前、請先設定SVM的DNS服務 
+---
+= 設定動態DNS服務
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果您想要Active Directory整合式DNS伺服器在DNS中動態登錄NFS或SMB伺服器的DNS記錄、則必須在SVM上設定動態DNS（DDNS）。
+
+必須在SVM上設定DNS名稱服務。如果您使用的是安全的DDNS、則必須使用Active Directory整合的DNS名稱伺服器、而且必須為SVM建立NFS或SMB伺服器或Active Directory帳戶。
+
+指定的FQDN必須是唯一的。
+
+
+NOTE: 若要避免SVM FQDN組態失敗、但不符合DDNS更新的RFC規則、請使用符合RFC規範的FQDN名稱。
+
+.步驟
+. 在SVM上設定DDNS：
++
+「Vserver服務名稱服務DNS動態更新修改-vserver _vserver_name_-is-已啟用_true_[-use-secure{true|fals}-vserver_FQDN _fqd_used_for_dns_updates_」
+
++
+「Vserver服務名稱服務DNS動態更新修改-vserver _VS1_-is啟用的_true_-使用安全的_true_-vserver-FQDN _vs1.example.com_`
+
++
+星號無法作為自訂FQDN的一部分使用。例如、「*.netapp.com」無效。
+
+. 確認DDNS組態正確：
++
+「Vserver服務名稱服務DNS動態更新展示」
+
++
+....
+Vserver  Is-Enabled Use-Secure Vserver FQDN      TTL
+-------- ---------- ---------- ----------------- -------
+vs1      true       true       vs1.example.com   24h
+....
+

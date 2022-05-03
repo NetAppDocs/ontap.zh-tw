@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_plan_summary_of_deployment_best_practices.html 
+keywords: SM-BC, SMBC, best practices, planning, SAN, Mediator, SnapMirror 
+summary: 在規劃SnapMirror營運持續性部署時、您應該考量幾種最佳實務做法。 
+---
+= 部署最佳實務做法摘要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在規劃SnapMirror營運持續性部署時、您應該考量幾種最佳實務做法。
+
+
+
+=== SAN
+
+SnapMirror營運不中斷解決方案僅支援SAN工作負載。您應該在所有情況下遵循SAN最佳實務做法。
+
+此外：
+
+* 次要叢集中的複寫LUN必須對應至主機、且必須在主機組態時探索從主要和次要叢集到LUN的I/O路徑。
+* 當不同步（OOS）事件超過80秒、或是在自動非計畫性容錯移轉之後、重新掃描主機LUN I/O路徑以確保沒有I/O路徑遺失、這一點非常重要。如需詳細資訊、請參閱各主機作業系統廠商在重新掃描LUN I/O路徑上的文件。
+
+
+
+
+=== 中介者
+
+為了使功能完整、並啟用自動非計畫性容錯移轉、外部ONTAP 的整套功能應該以ONTAP 支援叢集的方式配置和設定。
+
+安裝中介程式時、您應該使用由主流可靠CA簽署的有效憑證來取代自我簽署的憑證。
+
+
+
+=== SnapMirror
+
+您應依下列順序終止SnapMirror關係：
+
+. 在目的地叢集上執行「napmirror DELETE」
+. 在來源叢集上執行「napmirror release」
+

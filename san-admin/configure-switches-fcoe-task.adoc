@@ -1,0 +1,52 @@
+---
+permalink: san-admin/configure-switches-fcoe-task.html 
+sidebar: sidebar 
+keywords: configure, switches, fcoe 
+summary: 您必須先為FCoE設定交換器、FC服務才能在現有的乙太網路基礎架構上執行。 
+---
+= 設定FCoE的交換器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先為FCoE設定交換器、FC服務才能在現有的乙太網路基礎架構上執行。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您的SAN組態必須受到支援。
++
+如需支援組態的詳細資訊、請參閱互通性對照表。
+
+* 您的儲存系統必須安裝統一化目標介面卡（UTA）。
++
+如果您使用UTA2、則必須將其設定為「cna」模式。
+
+* 主機上必須安裝整合式網路卡（CNA）。
+
+
+.步驟
+. 請使用交換器文件來設定FCoE的交換器。
+. 使用「dCB show」命令來確認叢集中每個節點的DCB設定已正確設定。
++
+「run -node1 -command DCB show」
+
++
+DCB設定值是在交換器上設定的。如果設定不正確、請參閱交換器文件。
+
+. 使用「FCP介面卡show」命令來確認FC目標連接埠線上狀態為「true」時、FCoE登入是否正常運作。
++
+「cluster1：> FCP介面卡顯示欄位節點、介面卡、狀態、狀態、速度、架構建立、實體傳輸協定」
+
++
+如果FC目標連接埠線上狀態為「假」、請參閱交換器文件。
+
+
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+http://www.netapp.com/us/media/tr-3800.pdf["NetApp技術報告3800：乙太網路光纖通道（FCoE）端點對端點部署指南"]
+
+http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["Cisco MDS 9000 NX-OS與SAN-OS軟體組態指南"]
+
+http://www.brocade.com/products/all/index.page["Brocade產品"]

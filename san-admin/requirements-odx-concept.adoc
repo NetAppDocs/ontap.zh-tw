@@ -1,0 +1,60 @@
+---
+permalink: san-admin/requirements-odx-concept.html 
+sidebar: sidebar 
+keywords: microsoft Offloaded Data Transfer, using, odx 
+summary: 如果您打算使用ODX進行複本卸載、則必須熟悉Volume支援考量、系統需求及軟體功能需求。 
+---
+= 使用ODX的需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您打算使用ODX進行複本卸載、則必須熟悉Volume支援考量、系統需求及軟體功能需求。
+
+若要使用ODX、您的系統必須具備下列條件：
+
+* ONTAP
++
+在支援的ONTAP 版本的支援中、會自動啟用ODX。
+
+* 來源Volume下限為2 GB
++
+為獲得最佳效能、來源磁碟區應大於260 GB。
+
+* 重複資料刪除
++
+ODX在複製程序中使用重複資料刪除技術。如果您不想在SVM上執行重複資料刪除、應該停用該SVM上的ODX。
+
+* Windows用戶端上的ODX支援
++
+ODX在Windows Server 2012或更新版本以及Windows 8或更新版本中均受支援。互通性對照表包含有關支援的Windows用戶端的最新資訊。
+
++
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+* 複製ODX的應用程式支援
++
+執行資料傳輸的應用程式必須支援ODX。支援ODX的應用程式作業包括：
+
++
+** Hyper-V管理作業、例如建立及轉換虛擬硬碟（VHD）、管理Snapshot複本、以及在虛擬機器之間複製檔案
+** Windows檔案總管作業
+** Windows PowerShell複製命令
+** Windows命令提示字元複製命令Microsoft TechNet程式庫包含Windows伺服器和用戶端上支援的ODX應用程式的詳細資訊。
+
+
+* 如果使用壓縮磁碟區、壓縮群組大小必須為8K。
++
+不支援32K壓縮群組大小。
+
+
+
+ODX不適用於下列磁碟區類型：
+
+* 容量低於2 GB的來源磁碟區
+* 唯讀磁碟區
+* link:../flexcache/supported-unsupported-features-concept.html["資料量FlexCache"]
+* link:../san-admin/san-volumes-concept.html#semi-thick-provisioning-for-volumes["半厚的已配置磁碟區"]
+

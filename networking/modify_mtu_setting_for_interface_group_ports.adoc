@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_mtu_setting_for_interface_group_ports.html 
+keywords: modify, modifying, change, changing, mtu, modify mtu setting for interface group ports, modify the mtu of the broadcast domain 
+summary: 修改廣播網域的MTU 
+---
+= 修改介面群組連接埠的MTU設定
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+若要修改介面群組的MTU設定、您必須修改廣播網域的MTU。
+
+VLAN MTU大小應符合基礎介面群組和實體連接埠的廣播網域MTU。如果VLAN需要不同的VLAN設定、則其大小不得超過基礎廣播網域指定的大小。
+
+.步驟
+. 修改廣播網域設定：
++
+「broadcast網域修改-broadcast網域_broadcast網域名稱_-MTU _MTU設定_」
+
++
+此時會顯示下列警告訊息：
+
++
+....
+Warning: Changing broadcast domain settings will cause a momentary data-serving interruption.
+Do you want to continue? {y|n}: y
+....
+. 輸入y以繼續。
+. 確認MTU設定已正確修改：
++
+「網路連接埠展示」
+
+
+
+....
+net port show
+(network port show)
+Node: vsim-01
+                                                              Ignore
+                                         Speed(Mbps) Health   Health
+Port IPspace Broadcast Domain  Link  MTU Admin/Oper  Status   Status
+---- ------- ----------------  ---- ---- ----------- -------- ------
+a0a  Default Default-1         up   1300 auto/1000   healthy  false
+e0a  Default Default-1         up   1300 auto/1000   healthy  false
+e0b  Default Default           up   1500 auto/1000   healthy  false
+e0c  Default Default           up   1500 auto/1000   healthy  false
+e0d  Default Default           up   1500 auto/1000   healthy  false
+5 entries were displayed.
+....

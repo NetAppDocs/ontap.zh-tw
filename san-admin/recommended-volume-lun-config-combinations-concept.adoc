@@ -1,0 +1,73 @@
+---
+permalink: san-admin/recommended-volume-lun-config-combinations-concept.html 
+sidebar: sidebar 
+keywords: recommended, volume, file, lun, configuration, combinations, space-reserved, thick volume, thin, semi-thick, provisioning 
+summary: 根據您的應用程式和管理需求、FlexVol 您可以使用特定的功能組合來搭配使用。瞭解這些組合的優點與成本、有助於判斷適合您環境的磁碟區與LUN組態組合。 
+---
+= 建議的Volume與檔案或LUN組態組合總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據您的應用程式和管理需求、FlexVol 您可以使用特定的功能組合來搭配使用。瞭解這些組合的優點與成本、有助於判斷適合您環境的磁碟區與LUN組態組合。
+
+建議使用下列磁碟區和LUN組態組合：
+
+* 保留空間的檔案或LUN、具有完整磁碟區資源配置
+* 非空間保留的檔案或LUN、採用精簡磁碟區資源配置
+* 使用半厚磁碟區資源配置的空間保留檔案或LUN
+
+
+您可以在LUN上搭配任何這些組態組合使用SCSI精簡配置。
+
+
+
+== 保留空間的檔案或LUN、具有完整磁碟區資源配置
+
+*效益：*
+
+* 保證空間保留檔案內的所有寫入作業、不會因為空間不足而失敗。
+* 磁碟區上的儲存效率和資料保護技術沒有任何限制。
+
+
+*成本與限制：*
+
+* 必須在Aggregate up Front預留足夠的空間、以支援最厚的已配置磁碟區。
+* 在LUN建立時、從磁碟區配置的空間大小為LUN大小的兩倍。
+
+
+
+
+== 非空間保留的檔案或LUN、採用精簡磁碟區資源配置
+
+*效益：*
+
+* 磁碟區上的儲存效率和資料保護技術沒有任何限制。
+* 空間只會在使用時分配。
+
+
+*成本與限制：*
+
+* 寫入作業無法保證；如果磁碟區的可用空間不足、則寫入作業可能會失敗。
+* 您必須有效管理Aggregate中的可用空間、以避免Aggregate耗盡可用空間。
+
+
+
+
+== 使用半厚磁碟區資源配置的空間保留檔案或LUN
+
+*效益：*
+
+前端保留空間比大型磁碟區資源配置少、而且仍提供盡力寫入保證。
+
+*成本與限制：*
+
+* 使用此選項時、寫入作業可能會失敗。
++
+您可以適當平衡磁碟區中的可用空間與資料波動性、藉此降低此風險。
+
+* 您無法仰賴資料保護物件的保留、例如Snapshot複本、FlexClone檔案和LUN。
+* 您無法使用ONTAP 無法自動刪除的功能、包括重複資料刪除、壓縮及ODX/Copy卸載。
+

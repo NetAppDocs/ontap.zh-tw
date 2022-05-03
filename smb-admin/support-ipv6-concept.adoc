@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/support-ipv6-concept.html 
+sidebar: sidebar 
+keywords: ipv6, cifs, server, ontap, smb, network, communication, service, support for ipv6 with smb access and cifs services 
+summary: 如果您想要在CIFS伺服器上使用IPv6、您必須瞭解ONTAP 如何支援使用IPv6進行SMB存取、以及使用網路通訊來進行CIFS服務。 
+---
+= 支援使用SMB存取和CIFS服務的IPv6
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要在CIFS伺服器上使用IPv6、您必須瞭解ONTAP 如何支援使用IPv6進行SMB存取、以及使用網路通訊來進行CIFS服務。
+
+
+
+== Windows用戶端與伺服器支援
+
+支援支援IPv6的Windows伺服器和用戶端。ONTAP以下說明Microsoft Windows用戶端和伺服器IPv6支援：
+
+* Windows XP和Windows 2003支援IPv6進行SMB檔案共用。
++
+這些版本對IPv6的支援有限。
+
+* Windows 7、Windows 8、Windows Server 2008、Windows Server 2012及更新版本均支援IPv6用於SMB檔案共用及Active Directory服務、包括DNS、LDAP、CLDAP及Kerberos服務。
++
+如果設定IPv6位址、Windows 7和Windows Server 2008及更新版本預設會使用IPv6來執行Active Directory服務。支援透過IPv6連線進行的NTLM和Kerberos驗證。
+
++
+支援的所有Windows用戶端ONTAP 都可以使用IPv6位址連線至SMB共用區。
+
+
+
+如需Windows用戶ONTAP 端所支援的最新資訊、請參閱互通性對照表。
+
+互通性對照表
+
+[NOTE]
+====
+IPv6不支援NT網域。
+
+====
+
+
+== 額外的CIFS服務支援
+
+除了IPv6支援SMB檔案共用和Active Directory服務之外、ONTAP 支援下列項目的功能還包括：
+
+* 用戶端服務、包括離線資料夾、漫遊設定檔、資料夾重新導向及舊版
+* 伺服器端服務、包括動態主目錄（主目錄功能）、symlink和Widgelinks、BranchCache、ODX複本卸載、自動節點參照、 和舊版
+* 檔案存取管理服務、包括使用Windows本機使用者和群組進行存取控制和權限管理、使用CLI設定檔案權限和稽核原則、安全追蹤、檔案鎖定管理、以及監控SMB活動
+* NAS多重傳輸協定稽核
+* FPolicy
+* 持續可用的共享區、見證傳輸協定及遠端VSS（搭配SMB上的Hyper-V組態使用）
+
+
+
+
+== 名稱服務與驗證服務支援
+
+IPv6支援與下列名稱服務的通訊：
+
+* 網域控制器
+* DNS伺服器
+* LDAP伺服器
+* Kdc伺服器
+* NIS伺服器
+

@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: task_dp_back_up_to_cloud.html 
+keywords: netapp, ontap, System Manager, ONTAP 9.9.1, cloud backup, SnapMirror Cloud, cloud object store, add cloud object store, remove cloud object store, StorageGRID, ONTAP S3, cloud restore, restore from cloud 
+summary: 從功能支援的9.9開始ONTAP 、您可以使用System Manager將資料備份到雲端、並將資料從雲端儲存設備還原到不同的磁碟區。您可以使用StorageGRID Suse或ONTAP SS3做為雲端物件儲存區。 
+---
+= 使用SnapMirror將資料備份到雲端
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從功能升級到功能升級到ONTAP 功能升級到功能升級、您可以使用System Manager將資料備份到雲端、並將資料從雲端儲存設備還原到不同的磁碟區。您可以使用StorageGRID Suse或ONTAP SS3做為雲端物件儲存區。
+
+在使用SnapMirror Cloud功能之前、您應該在NetApp支援網站上產生SnapMirror Cloud API授權金鑰： link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["產生SnapMirror Cloud API授權金鑰"^]
+
+
+
+== 新增雲端物件存放區
+
+在設定SnapMirror Cloud備份之前、您必須先新增StorageGRID 一個還原或ONTAP 還原S3雲端物件儲存區。
+
+.步驟
+. 按一下「*保護>總覽>雲端物件存放區*」。
+. 按一下 image:icon_add.gif["新增圖示"]。
+
+
+
+
+== 使用預設原則進行備份
+
+您可以使用預設的雲端保護原則DailyBackup、為現有磁碟區快速設定SnapMirror Cloud備份。
+
+.步驟
+. 按一下「*保護>總覽*」、然後選取「*將磁碟區備份到雲端*」。
+. 如果這是您第一次備份至雲端、請在授權欄位中輸入您的SnapMirror Cloud API授權金鑰、如所示。
+. 按一下*驗證並繼續*。
+. 選取來源Volume。
+. 選取雲端物件存放區。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+== 建立自訂的雲端備份原則
+
+如果您不想將預設的DailyBackup雲端原則用於SnapMirror雲端備份、您可以建立自己的原則。
+
+.步驟
+. 按一下「*保護>總覽>本機原則設定*」、然後選取「*保護原則*」。
+. 按一下「*新增*」、然後輸入新的原則詳細資料。
+. 在*原則類型*區段中、選取*備份至雲端*、表示您正在建立雲端原則。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+== 從「Volumes（磁碟區）」頁面建立備份
+
+您可以使用System Manager * Volumes *頁面、一次選取多個磁碟區並建立雲端備份、或是使用自訂保護原則。
+
+.步驟
+. 按一下「*儲存設備>磁碟區*」。
+. 選取您要備份到雲端的磁碟區、然後按一下* Protect *。
+. 在* Protect Volume*視窗中、按一下*更多選項*。
+. 選取原則。
++
+您可以選取預設原則DailyBackup或您建立的自訂雲端原則。
+
+. 選取雲端物件存放區。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+== 從雲端還原
+
+您可以使用System Manager將備份的資料從雲端儲存設備還原至來源叢集上的不同磁碟區。
+
+.步驟
+. 按一下「*儲存設備>磁碟區*」。
+. 選取*備份至雲端*索引標籤。
+. 按一下 image:icon_kabob.gif["Alt=功能表選項"] 在您要還原的來源磁碟區旁、選取*還原*。
+. 在「*來源*」下、選取儲存VM、然後輸入要還原資料的磁碟區名稱。
+. 在*目的地*下、選取您要還原的Snapshot複本。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+== 刪除SnapMirror雲端關係
+
+您可以使用System Manager刪除雲端關係。
+
+.步驟
+. 按一下「*儲存設備>磁碟區*」、然後選取您要刪除的磁碟區。
+. 按一下 image:icon_kabob.gif["Alt=功能表選項"] 在來源Volume旁邊、然後選取*刪除*。
+. 如果您要刪除雲端物件存放區端點、請選取*刪除雲端物件存放區端點（選用）*。
+. 按一下*刪除*。
+
+
+
+
+== 移除雲端物件存放區
+
+如果雲端物件存放區不是雲端備份關係的一部分、您可以使用System Manager來移除它。當雲端物件存放區是雲端備份關係的一部分時、就無法刪除。
+
+.步驟
+. 按一下「*保護>總覽>雲端物件存放區*」。
+. 選取您要刪除的物件存放區、然後按一下 image:icon_kabob.gif["Alt=功能表選項"] 然後選取*刪除*。
+

@@ -1,0 +1,63 @@
+---
+permalink: upgrade/concept_pre_upgrade_checks.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, plan, planning, upgrade, manually, manual, checks, cluster, ready, verification, verify, verifying 
+summary: 各種組態設定可能會影響叢集升級的準備程度。 
+---
+= 升級前檢查
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+視您的環境而定、在開始升級之前、您必須考量某些因素。請先檢閱下表、瞭解您需要考量哪些特殊考量。
+
+[cols="2*"]
+|===
+| 請自問... | 如果您的答案是*是*、請執行此動作... 
+
+
+| 我是否有混合式版本叢集？ | xref:concept_mixed_version_requirements.html[檢查混合版本需求] 
+
+
+| 我是否有SAN組態？ | xref:task_verifying_the_san_configuration.html[驗證SAN組態] 
+
+
+| 我是否MetroCluster 有一個不知道的組態？  a| 
+* xref:concept_upgrade_requirements_for_metrocluster_configurations.html[檢閱MetroCluster 有關各種組態的特定升級需求]
+* xref:task_verifying_the_networking_and_storage_status_for_metrocluster_cluster_is_ready.html[驗證網路和儲存狀態]
+
+
+
+
+| 叢集上的節點是否使用根資料分割和根資料資料資料分割？ | xref:concept_upgrade_considerations_for_root_data_partitioning.html[檢查根資料和根資料資料分割的升級考量] 
+
+
+| 我是否有重複資料刪除的磁碟區和集合體？ | xref:task_verifying_that_deduplicated_volumes_and_aggregates_contain_sufficient_free_space.html[請確認您有足夠的可用空間來容納重複資料刪除的磁碟區和集合體] 
+
+
+| 我的叢集是否執行SnapMirror？  a| 
+* xref:concept_upgrade_requirements_for_snapmirror.html[檢閱SnapMirror的升級需求]
+* xref:task_preparing_snapmirror_relationships_for_a_nondisruptive_upgrade_or_downgrade.html[準備SnapMirror關係以進行升級]
+
+
+
+
+| 我的叢集是否執行SnapLock 不正常？ | xref:concept_upgrade_considerations_for_snaplock.html[檢閱SnapLock 升級考量以瞭解更多資訊] 
+
+
+| 我是否從ONTAP FAS8.3升級、並有負載共享鏡像？ | xref:task_preparing_all_load_sharing_mirrors_for_a_major_upgrade.html[準備所有負載共用鏡像以進行升級] 
+
+
+| 我是否將NetApp儲存加密與外部金鑰管理伺服器搭配使用？ | xref:task_preparing_to_upgrade_nodes_using_netapp_storage_encryption_with_external_key_management_servers.html[刪除任何現有的金鑰管理伺服器連線] 
+
+
+| 我是否已將網路群組載入SVM？ | xref:task_verifying_that_the_netgroup_file_is_present_on_all_nodes.html[每個節點上都存在netgroup檔案的Vefiry] 
+
+
+| 我是否有使用SSLv3的LDAP用戶端？ | xref:task_configuring_ldap_clients_to_use_tls_for_highest_security.html[設定LDAP用戶端使用TLS] 
+
+
+| 我是否使用工作階段導向的傳輸協定？ | xref:concept_considerations_for_session_oriented_protocols.html[檢閱工作階段導向傳輸協定的考量事項] 
+|===

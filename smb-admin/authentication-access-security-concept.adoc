@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/authentication-access-security-concept.html 
+sidebar: sidebar 
+keywords: create, smb, connection, contain, svm, authenticate, domain, smb, server, support, authentication, method, ntlm, ntlmv1, ntlmv2, kerberos, default, method, user, ontap, how ontap handles smb client authentication 
+summary: 使用者必須先由SMB伺服器所屬的網域驗證、才能建立SMB連線來存取SVM上所含的資料。SMB伺服器支援兩種驗證方法：Kerberos和NTLM（位在NTLMv1或NTLMv2之間）。Kerberos是用於驗證網域使用者的預設方法。 
+---
+= 如何處理SMB用戶端驗證ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用者必須先由SMB伺服器所屬的網域驗證、才能建立SMB連線來存取SVM上所含的資料。SMB伺服器支援兩種驗證方法：Kerberos和NTLM（位在NTLMv1或NTLMv2之間）。Kerberos是用於驗證網域使用者的預設方法。
+
+
+
+== Kerberos驗證
+
+建立驗證的SMB工作階段時、支援Kerberos驗證。ONTAP
+
+Kerberos是Active Directory的主要驗證服務。Kerberos伺服器或Kerberos金鑰發佈中心（Kdc）服務會在Active Directory中儲存及擷取安全性原則的相關資訊。與NTLM模式不同的是、Active Directory用戶端若想要與另一部電腦（例如SMB伺服器）建立工作階段、請直接聯絡Kdc以取得其工作階段認證。
+
+
+
+== NTLM驗證
+
+以密碼為基礎、根據使用者專屬密碼的共享知識、使用挑戰回應傳輸協定來完成NTLM用戶端驗證。
+
+如果使用者使用本機Windows使用者帳戶建立SMB連線、則SMB伺服器會使用NTLMv2在本機執行驗證。

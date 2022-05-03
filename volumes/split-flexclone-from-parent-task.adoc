@@ -1,0 +1,106 @@
+---
+permalink: volumes/split-flexclone-from-parent-task.html 
+sidebar: sidebar 
+keywords: split, flexclone, volume, parent, volume 
+summary: 如果您想要讀寫FlexClone磁碟區擁有自己的磁碟空間、而非使用父磁碟區的磁碟空間、您可以從其父磁碟區分割FlexClone磁碟區。由於此作業會建立目前在父磁碟區與FlexClone磁碟區之間共用的資料複本、因此作業可能需要一些時間才能完成。 
+---
+= 從其父Volume分割FlexClone Volume
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要讀寫FlexClone磁碟區擁有自己的磁碟空間、而非使用父磁碟區的磁碟空間、您可以從其父磁碟區分割FlexClone磁碟區。由於此作業會建立目前在父磁碟區與FlexClone磁碟區之間共用的資料複本、因此作業可能需要一些時間才能完成。
+
+從其父Volume分割FlexClone Volume會佔用包含Aggregate的可用空間。如果您沒有足夠的權限來檢視Aggregate中可用的空間、則必須聯絡儲存管理員、確認集合體中有足夠的空間可供分割作業完成。
+
+從ONTAP 功能不保證的9.4開始AFF 、對於不保證在功能不保證的作業系統、FlexClone Volume的分割作業會共用實體區塊、而不會複製資料。因此AFF 、將FlexClone磁碟區分割到整個系統上的速度、比FAS 在其他功能類似ONTAP 的系統上執行FlexClone分割作業的速度快。改良後AFF 的FlexClone分割作業在整個過程中有下列優點：
+
+* 將實體複本從父實體複本分割後、儲存效率仍會維持不變。
+* 不會刪除現有的Snapshot複本。
+* 作業速度更快。
+* FlexClone磁碟區可從複製階層中的任何點分割。
+
+
+.步驟
+. 判斷完成分割作業所需的可用空間量：
++
+「Volume Clone show -estim虛 擬伺服器vserver_name -FlexClone clone volume名稱-父 磁碟區父磁碟區vol_name」
+
++
+以下範例提供有關從FlexClone Volume vol1分割FlexClone Volume clon1所需的可用空間資訊：
+
++
+[listing]
+----
+cluster1::> volume clone show -estimate -vserver vs1 -flexclone clone1 -parent-volume volume1
+                             Split
+Vserver   FlexClone       Estimate
+--------- ------------- ----------
+vs1       clone1           40.73MB
+----
+. 驗證包含FlexClone Volume及其父磁碟區的集合體是否有足夠的空間：
++
+.. 確定包含FlexClone磁碟區及其父磁碟區的集合體可用空間量：
++
+《集合體展》
+
+.. 如果包含的Aggregate沒有足夠的可用空間、請將儲存空間新增至Aggregate：
++
+「torage Aggregate add-disks」
+
+
+
+. 開始分割作業：
++
+磁碟區複製分割start -vserver vserver_name -FlexClone clone volume名稱
+
++
+以下範例說明如何啟動程序、將FlexClone Volume clon1從其父Volume vol1分割開來：
+
++
+[listing]
+----
+cluster1::> volume clone split start -vserver vs1 -flexclone clone1
+
+Warning: Are you sure you want to split clone volume clone1 in Vserver vs1 ?
+{y|n}: y
+[Job 1617] Job is queued: Split clone1.
+----
+. 監控FlexClone分割作業的狀態：
++
+「Volume clone sap show -vserver vserver_name -FlexClone clone _volume名稱」
+
++
+以下範例顯示AFF 了FlexClone分割作業在整個系統上的狀態：
+
++
+[listing]
+----
+cluster1::> volume clone split show -vserver vs1 -flexclone clone1
+                                              Inodes                   Blocks
+                                     ---------------------    ---------------------
+Vserver   FlexClone    Processed Total    Scanned  Updated      % Inode   % Block
+                                                                 Complete  Complete
+vs1       clone1        0         0       411247   153600         0        37
+----
+. 確認分割磁碟區不再是FlexClone磁碟區：
++
+「Volume show -volume volume volume名稱-功能 變數clone Volume」
+
++
+對於非FlexClone Volume的磁碟區、「clone Volume」選項的值為「假」。
+
++
+下列範例說明如何驗證從其父磁碟區分割的磁碟區clon1是否為FlexClone磁碟區。
+
++
+[listing]
+----
+cluster1::> volume show -volume clone1 -fields clone-volume
+vserver volume **clone-volume**
+------- ------ **------------**
+vs1     clone1 **false**
+----
+

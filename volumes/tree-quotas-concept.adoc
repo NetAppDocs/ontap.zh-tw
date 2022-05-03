@@ -1,0 +1,22 @@
+---
+permalink: volumes/tree-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, tree, quotas, work 
+summary: 您可以使用qtree作為目標來建立配額、以限制目標qtree的大小。這些配額也稱為樹狀結構配額。 
+---
+= 樹狀結構配額的運作方式概觀
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用qtree作為目標來建立配額、以限制目標qtree的大小。這些配額也稱為_tree配額_。
+
+當您將配額套用至qtree時、結果與磁碟分割區類似、只不過您可以隨時變更配額、以變更qtree的最大大小。套用樹狀結構配額時ONTAP 、無論擁有者為何、均會限制qtree中的磁碟空間和檔案數量。如果寫入作業導致超過樹狀結構配額、則任何使用者（包括root和BUILTIN\Administrator群組的成員）都無法寫入qtree。
+
+[NOTE]
+====
+配額大小並不保證有任何特定的可用空間量。配額的大小可以大於qtree可用的可用空間量。您可以使用「Volume quota report」命令來判斷qtree中的實際可用空間量。
+
+====

@@ -1,0 +1,54 @@
+---
+permalink: smb-admin/enable-disable-oplocks-when-creating-shares-task.html 
+sidebar: sidebar 
+keywords: oplock, client, lock, file, cache, content, local, performance, operation, storage, virtual, machine, svm, circumstance, disable, share-by-share, basis, enable, disable, enable or disable oplocks when creating smb shares 
+summary: oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔案作業的效能。在儲存虛擬機器（SVM）上的SMB共用上啟用oplocks。在某些情況下、您可能會想要停用oplocks。您可以逐一啟用或停用oplocks。 
+---
+= 建立SMB共用時啟用或停用oplocks
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔案作業的效能。在儲存虛擬機器（SVM）上的SMB共用上啟用oplocks。在某些情況下、您可能會想要停用oplocks。您可以逐一啟用或停用oplocks。
+
+如果在包含共用區的磁碟區上啟用oplock、但該共用區的oplock共用內容已停用、則該共用區的oplocks會停用。停用共用上的oplocks優先於Volume oplock設定。停用共用區上的oplocks會停用投機和租用oplock。
+
+除了使用以逗號分隔的清單來指定oplock共用屬性之外、您也可以指定其他共用屬性。您也可以指定其他共用參數。
+
+.步驟
+. 執行適用的行動：
++
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+在共用建立期間、在共用區上啟用oplocks
+ a| 
+輸入下列命令：「+vserver CIFS共用區create -vserver _vserver_name_-share-name share_name -path path_to_d共用-share-properties [oplocks、...]+]
+
+[NOTE]
+====
+如果您希望共享區只啟用「oplocks」、「可瀏覽的」和「changenotifening」等預設共用內容、則在建立SMB共用時、不需要指定「-share-properties」參數。如果您想要預設以外的任何共用屬性組合、則必須指定共用屬性清單中的「-share-properties」參數、以供該共用使用。
+
+====
+
+
+ a| 
+在共用建立期間停用共用區上的oplocks
+ a| 
+輸入下列命令：「+vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path _path_to _share_-share-properties [other _share_property、...]+]
+
+[NOTE]
+====
+停用oplocks時、您必須在建立共用時指定共用內容清單、但不應指定oplocks屬性。
+
+====
+|===
+
+
+xref:enable-disable-oplocks-existing-shares-task.adoc[啟用或停用現有SMB共用區上的oplocks]
+
+xref:monitor-oplock-status-task.adoc[監控oplock狀態]

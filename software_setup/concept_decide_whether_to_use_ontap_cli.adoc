@@ -1,0 +1,31 @@
+---
+permalink: software_setup/concept_decide_whether_to_use_ontap_cli.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, deciding, decide, if, whether, use, cli, cluster, System Manager, IPv6, HA, root volumes, FlexArray 
+summary: 如果ONTAP 系統管理程式版本不支援、您只能使用支援的CLI執行初始叢集設定。 
+---
+= 決定要使用System Manager或ONTAP 使用CLI進行叢集設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+雖然您可以使用ONTAP CLI設定新的叢集、但NetApp建議您盡可能使用System Manager來簡化叢集設定程序。只有當您的System Manager版本不支援初始叢集設定、ONTAP 無法進行規劃中的整合時、才可使用這些程序。
+
+您應該瞭解下列System Manager支援要求：
+
+* 叢集設定僅支援單一節點和HA配對
+* 使用CLI手動設定節點管理時、System Manager僅支援IPV4、不支援IPv6。不過、如果您在使用DHCP完成硬體設定後、使用自動指派的IP位址和Windows探索來啟動System Manager、System Manager就能設定IPv6管理位址。
++
+在支援支援支援IPv6網路的部署中、System Manager不ONTAP 支援使用支援。
+
+* 支援的支援範本適用於每個站台有兩個節點的不完整IP組態。MetroCluster MetroCluster
++
+在更新版本的版本中、System Manager不支援針對各種版本的更新叢集設定。ONTAP MetroCluster
+
+
+
+如果您要在FlexArray 非NetApp磁碟上設定一個功能、則需要使用ONTAP CLI在陣列LUN上設定根磁碟區、然後使用叢集設定精靈來設定叢集。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-flexarray/install/concept_flexarray_virtualization_technology_overview_using_array_luns_for_storage.html["解決虛擬化的安裝與需求FlexArray"] 文件。
+
+在完成上述任何程序之前、您應該已根據平台機型的安裝與設定指示、安裝、連接並開啟新的儲存系統。請參閱 https://docs.netapp.com/us-en/ontap-systems/index.html["不再需要使用本技術AFF FAS"]。

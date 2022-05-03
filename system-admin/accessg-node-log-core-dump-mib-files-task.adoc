@@ -1,0 +1,56 @@
+---
+permalink: system-admin/accessg-node-log-core-dump-mib-files-task.html 
+sidebar: sidebar 
+keywords: service, processor, infrastructure, spi, web, service, node, log, core, dump, mib, file, browser 
+summary: 服務處理器基礎架構（SPI）Web服務預設為啟用、可讓Web瀏覽器存取叢集中節點的記錄檔、核心傾印檔和mib檔案。即使節點關閉、只要節點由其合作夥伴接管、檔案仍可存取。 
+---
+= 使用網頁瀏覽器存取節點的記錄檔、核心傾印檔及mib檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+服務處理器基礎架構（「fili」）網路服務預設為啟用、可讓網頁瀏覽器存取叢集中節點的記錄、核心傾印和mib檔案。即使節點關閉、只要節點由其合作夥伴接管、檔案仍可存取。
+
+.您需要的是 #8217 ；需要的是什麼
+* 叢集管理LIF必須已啟動。
++
+您可以使用叢集或節點的管理LIF來存取「sepi」Web服務。不過、建議使用叢集管理LIF。
+
++
+「network interface show」命令會顯示叢集中所有lifs的狀態。
+
+* 如果您的使用者帳戶沒有「admin」角色（預設為存取「pi」網路服務）、您的存取控制角色必須獲得存取「pi」網路服務的權限。
++
+「vserver services web access show」命令會顯示哪些角色被授予存取哪些Web服務的權限。
+
+* 如果您不使用「'admin'」使用者帳戶（預設包含「http」存取方法）、則必須使用「http」存取方法來設定您的使用者帳戶。
++
+「安全登入show」命令會顯示使用者帳戶的存取和登入方法、以及其存取控制角色。
+
+* 如果您想要使用HTTPS進行安全的網路存取、則必須啟用SSL並安裝數位憑證。
++
+「系統服務Web show」命令會在叢集層級顯示Web傳輸協定引擎的組態。
+
+
+
+預設會啟用「sepi」網路服務、並可手動停用該服務（「vserver services web modify -vserver *-name spi -enabled假」）。
+
+「'admin'」角色依預設可存取「sipi'網路服務」、且可手動停用存取（「服務Web存取刪除-vserver _cluster名稱_-name spi -role admin」）。
+
+.步驟
+. 將網頁瀏覽器指向下列其中一種格式的「pi」網路服務URL：
++
+** http://_cluster-mgmt-LIF_/spi/`
+** https://_cluster-mgmt-LIF_/spi/`
++
+「叢集管理- LIF」是叢集管理LIF的IP位址。
+
+
+
+. 當瀏覽器提示時、請輸入您的使用者帳戶和密碼。
++
+驗證帳戶後、瀏覽器會顯示叢集中每個節點的「/mroot/etc/log/」、「/mroot/etc/crash /」和「/mroot/etc/mIB/」目錄連結。
+
+

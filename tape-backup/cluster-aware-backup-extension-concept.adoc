@@ -1,0 +1,18 @@
+---
+permalink: tape-backup/cluster-aware-backup-extension-concept.html 
+sidebar: sidebar 
+keywords: cluster, aware, backup, extension, ndmp, v4, protocol, cab 
+summary: Cab（叢集感知備份）是NDMP v4傳輸協定延伸。此擴充功能可讓NDMP伺服器在擁有磁碟區的節點上建立資料連線。這也可讓備份應用程式判斷磁碟區和磁帶裝置是否位於叢集中的同一個節點上。 
+---
+= 叢集感知備份擴充的功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Cab（叢集感知備份）是NDMP v4傳輸協定延伸。此擴充功能可讓NDMP伺服器在擁有磁碟區的節點上建立資料連線。這也可讓備份應用程式判斷磁碟區和磁帶裝置是否位於叢集中的同一個節點上。
+
+若要讓NDMP伺服器識別擁有磁碟區的節點、並在這類節點上建立資料連線、備份應用程式必須支援CAB擴充功能。在建立資料連線之前、駕駛台擴充功能需要備份應用程式通知NDMP伺服器有關要備份或還原的磁碟區。這可讓NDMP伺服器判斷裝載該磁碟區的節點、並適當建立資料連線。
+
+備份應用程式支援的電纜擴充功能、NDMP伺服器可提供有關磁碟區和磁帶裝置的關聯資訊。如果磁碟區和磁帶設備位於叢集中的同一個節點上、備份應用程式可以使用此相似性資訊來執行本機備份、而非三向備份。

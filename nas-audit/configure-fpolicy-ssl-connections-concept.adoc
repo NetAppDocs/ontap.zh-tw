@@ -1,0 +1,36 @@
+---
+permalink: nas-audit/configure-fpolicy-ssl-connections-concept.html 
+sidebar: sidebar 
+keywords: additional information, configure, fpolicy, external engines, ssl authenticated, connections 
+summary: 如果您想要設定FPolicy外部引擎、以便在連線至FPolicy伺服器時使用SSL、您需要知道一些其他資訊。 
+---
+= 設定FPolicy外部引擎使用SSL驗證連線的其他相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要設定FPolicy外部引擎、以便在連線至FPolicy伺服器時使用SSL、您需要知道一些其他資訊。
+
+
+
+== SSL伺服器驗證
+
+如果您選擇將FPolicy外部引擎設定為SSL伺服器驗證、則在建立外部引擎之前、必須先安裝簽署FPolicy伺服器憑證的憑證授權單位（CA）的公開憑證。
+
+
+
+== 相互驗證
+
+如果您將FPolicy外部引擎設定為在將儲存虛擬機器（SVM）資料LIF連線至外部FPolicy伺服器時使用SSL相互驗證、則在建立外部引擎之前、 您必須安裝簽署FPolicy伺服器憑證的CA公開憑證、以及用於驗證SVM的公開憑證和金鑰檔。當任何FPolicy原則使用已安裝的憑證時、您不得刪除此憑證。
+
+如果在FPolicy連線至外部FPolicy伺服器時、憑證被刪除、則無法重新啟用使用該憑證的停用FPolicy原則。在這種情況下、即使在SVM上建立並安裝了具有相同設定的新憑證、也無法重新啟用FPolicy原則。
+
+如果憑證已刪除、您需要安裝新的憑證、建立使用新憑證的新FPolicy外部引擎、並透過修改FPolicy原則、將新的外部引擎與您要重新啟用的FPolicy原則建立關聯。
+
+
+
+== 安裝SSL憑證
+
+用於簽署FPolicy伺服器憑證的CA公開憑證、是使用「安全憑證安裝」命令安裝、其「類型」參數設為「client_ca」。要安裝SVM驗證所需的私鑰和公共證書、請使用「安全證書安裝」命令、將「類型」參數設為「伺服器」。

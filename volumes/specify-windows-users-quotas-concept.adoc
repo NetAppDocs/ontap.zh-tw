@@ -1,0 +1,33 @@
+---
+permalink: volumes/specify-windows-users-quotas-concept.html 
+sidebar: sidebar 
+keywords: how to, specify, windows users, for quotas 
+summary: 您可以使用三種格式之一來指定Windows使用者的配額：Windows 2000前版格式的Windows名稱、SID、或使用者的SID所擁有的檔案或目錄。 
+---
+= 如何指定Windows使用者配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用三種格式之一來指定Windows使用者的配額：Windows 2000前版格式的Windows名稱、SID、或使用者的SID所擁有的檔案或目錄。
+
+若要指定Windows使用者的配額、您可以使用下列其中一種格式：
+
+* Windows 2000之前版本的Windows名稱。
+* 安全ID（SID）、由Windows以文字形式顯示、例如S-1-5-32-544。
+* 具有該使用者所擁有之ACL的檔案或目錄名稱。
++
+[NOTE]
+====
+如果您指定檔案或目錄名稱、則必須選取一個檔案或目錄、只要使用者帳戶仍保留在系統上、該檔案或目錄就會持續存在。
+
+若要從ACL取得SID、ACL必須有效。ONTAP
+
+如果檔案或目錄存在於UNIX風格的qtree中、或是儲存系統使用UNIX模式進行使用者驗證、ONTAP 則使用者配額將套用至* UID*（而非SID）符合檔案或目錄的使用者。
+
+指定檔案或目錄名稱來識別配額的使用者、並不會導致ONTAP 系統不向該檔案或目錄套用配額。
+
+====
+

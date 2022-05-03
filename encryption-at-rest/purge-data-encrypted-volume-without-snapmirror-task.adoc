@@ -1,0 +1,59 @@
+---
+permalink: encryption-at-rest/purge-data-encrypted-volume-without-snapmirror-task.html 
+sidebar: sidebar 
+keywords: secure, purge, scrub, data, encrypted, volume, nve, netapp, volume, encryption, snapmirror 
+summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、在不中斷營運的情況下「清理」資料。ONTAP 
+---
+= 安全地清除加密磁碟區上的資料、而無需SnapMirror關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從使用支援NVE的磁碟區開始、您可以使用安全清除功能、在不中斷營運的「crub」資料中進行安全清除。ONTAP
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 此工作需要進階權限。
+
+
+視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用「volume encryption fure-purge show」命令來檢視作業狀態。您可以使用「Volume Encryption Secure（磁碟區加密）- Purge abort]（安全清除中止）命令來終止作業。
+
+[NOTE]
+====
+若要在SAN主機上執行安全清除、您必須刪除包含您要清除之檔案的整個LUN、或者您必須能夠在LUN上為屬於您要清除之檔案的區塊鑽孔。如果您無法刪除LUN或主機作業系統不支援在LUN上打孔、則無法執行安全清除。
+
+====
+.步驟
+. 刪除您要安全清除的檔案或LUN。
++
+** 在NAS用戶端上、刪除您要安全清除的檔案。
+** 在SAN主機上、針對屬於您要清除之檔案的區塊、刪除您要安全清除LUN上的LUN或在LUN上鑽孔。
+
+
+. 在儲存系統上、變更為進階權限層級：
++
+"進階權限"
+
+. 如果您要安全清除的檔案位於快照中、請刪除快照：
++
+「napshot DELETE -vserver svm_name -volume vol_name -snapshot」
+
+. 安全地清除刪除的檔案：
++
+「Volume加密安全清除start -vserver Svm_name -volume volume volume名稱」
+
++
+下列命令可安全清除SVM上「vol1」的刪除檔案：
+
++
+[listing]
+----
+cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
+----
+. 驗證安全清除作業的狀態：
++
+「Volume加密安全清除秀」
+
+

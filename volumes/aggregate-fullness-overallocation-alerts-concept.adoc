@@ -1,0 +1,101 @@
+---
+permalink: volumes/aggregate-fullness-overallocation-alerts-concept.html 
+sidebar: sidebar 
+keywords: how to, address, aggregate, fullness, overallocation, alerts 
+summary: 當Aggregate空間不足時、系統會發出EMS訊息、以便您為整個Aggregate提供更多空間來採取修正行動。ONTAP瞭解警示類型及其處理方式、有助於確保資料可用度。 
+---
+= 處理Aggregate完整度和過度配置警示
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當Aggregate空間不足時、系統會發出EMS訊息、以便您為整個Aggregate提供更多空間來採取修正行動。ONTAP瞭解警示類型及其處理方式、有助於確保資料可用度。
+
+如果將Aggregate描述為_f完整_、表示可供磁碟區使用的Aggregate空間百分比已降至預先定義的臨界值以下。當Aggregate變成_overallocated時、ONTAP 由支援中繼資料和基本資料存取的空間已耗盡。有時候通常保留給其他用途的空間可用於維持集合體的運作、但與集合體或資料可用度相關的磁碟區保證可能會有風險。
+
+過度配置可以是邏輯或實體配置。_Logical overall撥款_表示保留以履行未來空間承諾（例如Volume保證）的空間已用於其他用途。_Physical overall撥款_表示該集合體已用完要使用的實體區塊。此狀態的集合體可能會拒絕寫入、離線或導致控制器中斷。
+
+下表說明Aggregate完整度和過度配置警示、您可以採取哪些行動來解決此問題、以及不採取行動的風險。
+
+[cols="5%,5%,5%,35%,25%,25%"]
+|===
+| 警示類型 | EMS層級 | 可設定的？ | 定義 | 解決方法 | 若未採取任何行動、則有風險 
+
+
+ a| 
+幾乎已滿
+ a| 
+偵錯
+ a| 
+n
+ a| 
+已配置給磁碟區的空間量（包括它們的保證）已超過此警示設定的臨界值（95%）。百分比是指「已使用」總和減去Snapshot保留的大小。
+ a| 
+* 將儲存設備新增至Aggregate
+* 正在壓縮或刪除磁碟區
+* 將磁碟區移至另一個具有更多空間的Aggregate
+* 移除Volume保證（將其設為「無」）
+
+ a| 
+還沒有寫入作業或資料可用度的風險。
+
+
+
+ a| 
+完整
+ a| 
+偵錯
+ a| 
+n
+ a| 
+檔案系統已超過此警示設定的臨界值（98%）。百分比是指「已使用」總和減去Snapshot保留的大小。
+ a| 
+* 將儲存設備新增至Aggregate
+* 正在壓縮或刪除磁碟區
+* 將磁碟區移至另一個具有更多空間的Aggregate
+* 移除Volume保證（將其設為「無」）
+
+ a| 
+對集合體中磁碟區的磁碟區保證可能有風險、也可能會對這些磁碟區進行寫入作業。
+
+
+
+ a| 
+邏輯過度配置
+ a| 
+服務錯誤
+ a| 
+n
+ a| 
+除了保留給磁碟區的空間已滿之外、用於中繼資料的集合體空間也已用盡。
+ a| 
+* 將儲存設備新增至Aggregate
+* 正在壓縮或刪除磁碟區
+* 將磁碟區移至另一個具有更多空間的Aggregate
+* 移除Volume保證（將其設為「無」）
+
+ a| 
+對集合體中磁碟區的磁碟區保證會有風險、也會對這些磁碟區進行寫入作業。
+
+
+
+ a| 
+實體過度分派
+ a| 
+節點錯誤
+ a| 
+n
+ a| 
+Aggregate已用盡可寫入的實體區塊。
+ a| 
+* 將儲存設備新增至Aggregate
+* 正在壓縮或刪除磁碟區
+* 將磁碟區移至另一個具有更多空間的Aggregate
+
+ a| 
+將作業寫入集合體中的磁碟區會受到風險、同時也會影響資料可用度、因為集合體可能會離線。在極致情況下、節點可能會發生中斷。
+
+|===
+每當跨越某個集合體的臨界值時、無論全度百分比是上升或下降、都會產生EMS訊息。當Aggregate的完整度低於臨界值時、就會產生「Aggregate ok」（Aggregate ok）EMS訊息。

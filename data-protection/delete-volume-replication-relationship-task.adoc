@@ -1,0 +1,79 @@
+---
+permalink: data-protection/delete-volume-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: delete, volume, replication, relationship, replicate, synchronous, snapmirror, quiese, pause 
+summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除磁碟區複寫關係。然後您可以手動刪除不需要的目的地Volume。 
+---
+= 刪除Volume複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「napmirror DELETE」和「napmirror釋放」命令來刪除磁碟區複寫關係。然後您可以手動刪除不需要的目的地Volume。
+
+命令"shnapmirror版本"會從來源刪除任何SnapMirror建立的Snapshot複本。您可以使用「僅關係資訊」選項來保留Snapshot複本。
+
+.步驟
+. 靜止複寫關係：
++
+「napmirror quiesce -dite-path _Svm:volume」（napmirror靜止-dite-path _Svm:volume）|叢集：//Svm/volume（/volume）
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
+----
+. 中斷複寫關係：
++
+「napmirror中斷-source-path svm:volume | cluster：//Svm/volume、……fis-destination-path svm:volume | cluster：//Svm/volume、…esf2」
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 刪除複寫關係：
++
+"napmirror DELETE -source-path _Svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地叢集或目的地SVM執行此命令。
+
+====
++
+以下範例刪除了來源磁碟區「Vola」（在「svm1」上）與目的地磁碟區「Vola_dst」（在「shvm_backup」上）之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 來自來源SVM的版本複寫關係資訊：
++
+"napmirror發行版-source-path _svm:volume（磁碟區）_cluster（叢集）：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從來源叢集或來源SVM執行此命令。
+
+====
++
+下列範例會從來源SVM「svm1」發佈指定複寫關係的資訊：
+
++
+[listing]
+----
+cluster_src::> snapmirror release -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

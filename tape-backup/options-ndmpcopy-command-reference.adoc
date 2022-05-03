@@ -1,0 +1,97 @@
+---
+permalink: tape-backup/options-ndmpcopy-command-reference.html 
+sidebar: sidebar 
+keywords: ndmpcopy, command, tranfer, data, nodeshell 
+summary: 您應該瞭解ndmpcopy命令可用於成功傳輸資料的選項。 
+---
+= ndmpcopy命令的選項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該瞭解「ndmpcopy」nodesl解除 命令的可用選項、才能成功傳輸資料。
+
+下表列出可用的選項。如需詳細資訊、請參閱nodesdro解除 中的「ndmpcopy」手冊頁。
+
+|===
+| 選項 | 說明 
+
+
+ a| 
+'-sa''username':['password（密碼）]
+ a| 
+此選項可設定來源驗證使用者名稱和密碼、以連線至來源儲存系統。這是必填選項。
+
+對於沒有管理權限的使用者、您必須指定使用者系統產生的NDMP專屬密碼。系統產生的密碼對管理員和非管理員使用者都是必填的。
+
+
+
+ a| 
+'-da''username':['password（密碼）]
+ a| 
+此選項可設定用於連線至目的地儲存系統的目的地驗證使用者名稱和密碼。這是必填選項。
+
+
+
+ a| 
+'-st'｛'md5'|'text｝
+ a| 
+此選項可設定連線至來源儲存系統時所使用的來源驗證類型。這是必要選項、因此使用者應提供「text」或「md5」選項。
+
+
+
+ a| 
+'-dt'｛'md5'|'text｝
+ a| 
+此選項可設定連線至目的地儲存系統時要使用的目的地驗證類型。
+
+
+
+ a| 
+「-l」
+ a| 
+此選項可將用於傳輸的傾印層級設為指定層級值。有效值為「0」、「1」、「9」、其中「0」表示完整傳輸、「1」至「9」表示遞增傳輸。預設值為「0」。
+
+
+
+ a| 
+「-d」
+ a| 
+此選項可產生ndmpcopy除錯記錄訊息。ndmpcopy除錯記錄檔位於「/mroot/etc/log」根磁碟區。ndmpcopy除錯記錄檔名稱為「ndmpcopy．yymmdd」格式。
+
+
+
+ a| 
+「-f'」
+ a| 
+此選項可啟用強制模式。此模式可在7-Mode磁碟區根目錄的「/etc/」目錄中覆寫系統檔案。
+
+
+
+ a| 
+「-h」
+ a| 
+此選項會列印說明訊息。
+
+
+
+ a| 
+「-p」
+ a| 
+此選項會提示您輸入來源和目的地授權的密碼。此密碼會覆寫針對「-sa」和「-da」選項所指定的密碼。
+
+[NOTE]
+====
+只有當命令在互動式主控台中執行時、才能使用此選項。
+
+====
+
+
+ a| 
+「-exclude」
+ a| 
+此選項會將指定的檔案或目錄排除在資料傳輸所指定的路徑之外。此值可以是以逗號分隔的目錄或檔案名稱清單、例如「*。pst」或「*。
+
+|===

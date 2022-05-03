@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/takeover-local-destination-task.html 
+keywords: takeover and serve data from the destination bucket, local cluster, s3 snapmirror relationship 
+summary: 如果來源儲存區中的資料無法使用、您可以中斷SnapMirror關係、使目的地儲存區可寫入、並開始提供資料。 
+---
+= 從目的地儲存區（本機叢集）接管及提供資料
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+如果來源儲存區中的資料無法使用、您可以中斷SnapMirror關係、使目的地儲存區可寫入、並開始提供資料。
+
+執行接管作業時、來源儲存區會轉換為唯讀、而原始目的地儲存區則會轉換為讀寫、因此可反轉S3 SnapMirror關係。
+
+當停用的來源儲存區再次可用時、S3 SnapMirror會自動重新同步兩個儲存區的內容。您不需要像標準Volume SnapMirror部署一樣、明確地重新同步關係。
+
+如果目的地工作區位於遠端叢集上、則必須從遠端叢集啟動接管作業。
+
+
+
+== System Manager程序
+
+從無法使用的儲存區進行容錯移轉、並開始提供資料：
+
+. 按一下「*保護>關係*」、然後選取「* S3 SnapMirror *」。
+. 按一下 image:icon_kabob.gif["更多圖示"]，選擇* Failover *（故障轉移*），然後單擊* Failover *（*故障轉移*）。
+
+
+
+
+== CLI程序
+
+. 針對目的地儲存區起始容錯移轉作業：「napmirror容錯移轉開始- destination-path _Svm_name_/bucket/_bucket_name_」
+. 驗證容錯移轉作業的狀態：「napmirror show -Fields Status」
+
+
+「clusterA：：> SnapMirror容錯移轉開始- destination-path VS1：/Bucket / test-Bucket鏡射」

@@ -1,0 +1,48 @@
+---
+permalink: system-admin/restore-node-config-backup-file-task.html 
+sidebar: sidebar 
+keywords: restore, node, configuration, backup, file, recovering 
+summary: 您可以使用已識別並可供還原節點使用的組態備份檔案來還原節點組態。 
+---
+= 使用組態備份檔案還原節點組態
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用已識別並可供還原節點使用的組態備份檔案來還原節點組態。
+
+您只能執行此工作、從導致節點本機組態檔遺失的災難中恢復。
+
+.步驟
+. 變更為進階權限等級：「et -priv榮幸 進階」
+. 如果節點狀況良好、則在不同節點的進階權限層級、請使用「叢集修改」命令搭配「節點」和「資格」參數、將其標示為不符合資格、並將其與叢集隔離。如果節點不健全、則應跳過此步驟。此範例將節點2修改為不符合參加叢集的資格、以便還原其組態：
+
+
+[listing]
+----
+cluster1::*> cluster modify -node node2 -eligibility false
+----
+. 使用進階權限層級的「系統組態還原節點還原」命令、從組態備份檔案還原節點組態。如果節點的身分識別遺失（包括名稱）、您應該使用「-nodename-in Backup」參數、在組態備份檔案中指定節點名稱。此範例使用儲存在節點上的其中一個組態備份檔案來還原節點的組態：
+
+
+[listing]
+----
+cluster1::*> system configuration recovery node restore -backup cluster1.8hour.2011-02-22.18_15_00.7z
+
+Warning: This command overwrites local configuration files with
+         files contained in the specified backup file. Use this
+         command only to recover from a disaster that resulted
+         in the loss of the local configuration files.
+         The node will reboot after restoring the local configuration.
+Do you want to continue? {y|n}: y
+----
+組態會還原、節點會重新開機。
+
+. 如果您將節點標示為「不合格」、請使用「系統組態恢復叢集同步」命令、將節點標示為符合資格、然後將其與叢集同步。
+. 如果您是在SAN環境中操作、請使用「系統節點重新開機」命令重新啟動節點、然後重新建立SAN仲裁。
+
+
+如果您先前重新建立叢集、而且使用重新建立叢集之前所建立的組態備份檔案來還原節點組態、則必須重新建立叢集。

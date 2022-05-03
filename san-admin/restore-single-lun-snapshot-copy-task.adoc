@@ -1,0 +1,68 @@
+---
+permalink: san-admin/restore-single-lun-snapshot-copy-task.html 
+sidebar: sidebar 
+keywords: restore, single lun, snapshot copy 
+summary: 您可以從Snapshot複本還原單一LUN、而不需還原包含單一LUN的整個Volume。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。 
+---
+= 從Snapshot複本還原單一LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從Snapshot複本還原單一LUN、而不需還原包含單一LUN的整個Volume。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您的磁碟區必須有足夠的空間才能完成還原作業：
++
+** 如果還原的是空間保留LUN、其中部分保留為0%、則需要還原LUN的一倍大小。
+** 如果還原的是空間保留LUN、而部分保留空間為100%、則需要還原LUN的兩倍大小。
+** 如果您要還原非空間保留LUN、則只需要用於還原LUN的實際空間。
+
+
+* 必須已建立目的地LUN的Snapshot複本。
++
+如果還原作業失敗、則目的地LUN可能會被刪減。在這種情況下、您可以使用Snapshot複本來防止資料遺失。
+
+* 必須已建立來源LUN的Snapshot複本。
++
+在極少數情況下、LUN還原可能會失敗、使來源LUN無法使用。如果發生這種情況、您可以使用Snapshot複本、將LUN恢復到還原嘗試前的狀態。
+
+* 目的地LUN和來源LUN必須具有相同的作業系統類型。
++
+如果您的目的地LUN與來源LUN的作業系統類型不同、則在還原作業之後、主機可能會失去對目的地LUN的資料存取權。
+
+
+
+.步驟
+. 從主機停止對LUN的所有主機存取。
+. 卸載主機上的LUN、使主機無法存取LUN。
+. 取消LUN對應：
++
+"LUN對應刪除-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
+
+. 確定要將LUN還原至的Snapshot複本：
++
+「Volume snapshot show -vserver _vserver_name_-volume _volume名稱_」
+
+. 在還原LUN之前、先建立LUN的Snapshot複本：
++
+磁碟區快照建立-vserver _vserver_name_-volume _volume _name_-snapshot _snapshot name_`
+
+. 還原磁碟區中的指定LUN：
++
+「Volume Snapshot還原檔-vserver _vserver_name_-volume _volume _name_-snapshot _snapshot name_-path _lun_path_`
+
+. 請依照畫面上的步驟進行。
+. 如有必要、請將LUN上線：
++
+"LUN modify -vserver _vserver_name_-path _lun_path_-st現 線"
+
+. 如有必要、請重新對應LUN：
++
+"LUN對應會建立-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
+
+. 從主機重新掛載LUN。
+. 從主機重新啟動對LUN的存取。
+

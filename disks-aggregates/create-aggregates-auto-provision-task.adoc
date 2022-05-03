@@ -1,0 +1,51 @@
+---
+permalink: disks-aggregates/create-aggregates-auto-provision-task.html 
+sidebar: sidebar 
+keywords: ontap 9, create, aggregates, auto-provision 
+summary: 如果自動資源配置方法適用於您的環境、您可以執行儲存Aggregate自動資源配置、以產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。 
+---
+= 使用自動資源配置來建立集合體
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果自動資源配置方法適合您的環境、您可以執行「儲存Aggregate自動資源配置」來產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
+
+叢集上必須執行部分為9.2或更新版本。ONTAP
+
+使用"shorage Aggregate auto-Provision "命令產生的預設摘要會列出建議建立的集合體、包括名稱和可用大小。您可以檢視清單、並在出現提示時決定是否要建立建議的集合體。
+
+您也可以使用「-verbose」選項來顯示詳細摘要、該選項會顯示下列報告：
+
+* 每個節點的新集合體摘要、可在建立集合體之後建立、探索備援磁碟和剩餘的備用磁碟和磁碟分割
+* 新的資料集合體可建立要使用的磁碟和分割區數
+* RAID群組配置顯示如何在要建立的新資料集合體中使用備用磁碟和磁碟分割
+* 有關建立Aggregate之後剩餘的備用磁碟和分割區的詳細資料
+
+
+如果您熟悉自動資源配置方法、而且環境已正確準備好、您可以使用「跳過確認」選項建立建議的集合體、而不需顯示和確認。「儲存Aggregate自動資源配置」命令不受CLI工作階段「確認」設定影響。
+
+"shorage Aggregate autology/Provin"手冊頁包含有關集合體配置建議的詳細資訊。
+
+.步驟
+. 使用所需的顯示選項來執行「儲存Aggregate自動資源配置」命令。
++
+** 無選項：顯示標準摘要
+** 「verbose」選項：顯示詳細摘要
+** 「SKIP確認」選項：建立建議的集合體、不需顯示或確認
+
+
+. 檢閱建議的Aggregate顯示之後、請回應提示以建立建議的Aggregate。
++
+[listing]
+----
+Do you want to create recommended aggregates? {y|n}:y
+
+Info: Creating node1_SSD_1 ...
+      Creating node2_SSD_1 ...
+----
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

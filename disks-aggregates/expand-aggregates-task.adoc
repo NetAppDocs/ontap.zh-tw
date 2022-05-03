@@ -1,0 +1,160 @@
+---
+permalink: disks-aggregates/expand-aggregates-task.html 
+sidebar: sidebar 
+keywords: expand, aggregate 
+summary: 您可以將磁碟新增至Aggregate、以便為其相關的磁碟區提供更多儲存設備。將分割磁碟新增至Aggregate的程序類似於新增未分割磁碟的程序。 
+---
+= 展開Aggregate
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將磁碟新增至Aggregate、以便為其相關的磁碟區提供更多儲存設備。將分割磁碟新增至Aggregate的程序類似於新增未分割磁碟的程序。
+
+您必須知道要新增儲存設備之集合體的RAID群組大小。
+
+當您擴充Aggregate時、應該注意是要將分割區或未分割磁碟新增至Aggregate。當您將未分割磁碟機新增至現有的Aggregate時、現有RAID群組的大小會由新的RAID群組繼承、這可能會影響所需的同位元檢查磁碟數量。如果將未分割磁碟新增至由分割磁碟組成的RAID群組、則新磁碟會分割、留下未使用的備用磁碟分割。
+
+在配置磁碟分割時、您必須確保在沒有磁碟機的情況下、不會將兩個磁碟分割區都保留為備援磁碟機的情況下離開節點。如果您這麼做、而且節點發生控制器中斷、可能無法提供有關問題的寶貴資訊（核心檔案）給技術支援人員。
+
+[NOTE]
+====
+請勿使用「disklist」命令來擴充Aggregate。這可能會導致分割區不對齊。
+
+====
+.步驟
+. 顯示擁有Aggregate的系統上可用的備援儲存設備：
++
+「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
+
++
+您可以使用「-is磁碟共用」參數、僅顯示分割磁碟機或未分割磁碟機。
+
++
+[listing]
+----
+cl1-s2::> storage aggregate show-spare-disks -original-owner cl1-s2 -is-disk-shared true
+
+Original Owner: cl1-s2
+ Pool0
+  Shared HDD Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size Status
+ --------------------------- ----- ------ -------------- -------- -------- -------- --------
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB zeroed
+ 1.0.2                       BSAS    7200 block           753.8GB       0B  828.0GB zeroed
+ 1.0.3                       BSAS    7200 block           753.8GB       0B  828.0GB zeroed
+ 1.0.4                       BSAS    7200 block           753.8GB       0B  828.0GB zeroed
+ 1.0.8                       BSAS    7200 block           753.8GB       0B  828.0GB zeroed
+ 1.0.9                       BSAS    7200 block           753.8GB       0B  828.0GB zeroed
+ 1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB zeroed
+2 entries were displayed.
+----
+. 顯示目前的集合體RAID群組：
++
+「torage Aggregate show-STATUS _agger_name_」
+
++
+[listing]
+----
+cl1-s2::> storage aggregate show-status -aggregate data_1
+
+Owner Node: cl1-s2
+ Aggregate: data_1 (online, raid_dp) (block checksums)
+  Plex: /data_1/plex0 (online, normal, active, pool0)
+   RAID Group /data_1/plex0/rg0 (normal, block checksums)
+                                                              Usable Physical
+     Position Disk                        Pool Type     RPM     Size     Size Status
+     -------- --------------------------- ---- ----- ------ -------- -------- ----------
+     shared   1.0.10                       0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.5                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.6                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.11                       0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.0                        0   BSAS    7200  753.8GB  828.0GB (normal)
+5 entries were displayed.
+----
+. 模擬將儲存設備新增至Aggregate：
++
+「torage Aggregate add-disks -Aggregate _aggr_name_-diskcount_number_of_disks_or_partitions _-Simulate true」
+
++
+無需實際配置任何儲存設備、即可查看新增儲存設備的結果。如果模擬命令顯示任何警告、您可以調整命令並重複模擬。
+
++
+[listing]
+----
+cl1-s2::> storage aggregate add-disks data_1 -diskcount 5 -simulate true
+
+Addition of disks would succeed for aggregate "data_1" on node "cl1-s2". The
+following disks would be used to add to the aggregate: 1.0.2, 1.0.3, 1.0.4, 1.0.8, 1.0.9.
+----
+. 將儲存設備新增至Aggregate：
++
+「torage Aggregate add-disks -Aggregate _aggr_name_-raidgroup new -diskcount_number_of_disks_or_parts_」
+
++
+建立Flash Pool Aggregate時、如果您要新增的磁碟與Aggregate的總和檢查碼不同、或是要新增磁碟至混合式Checksum Aggregate、則必須使用「-checksum樣式」參數。
+
++
+如果要將磁碟新增至Flash Pool Aggregate、則必須使用「-disktype」參數來指定磁碟類型。
+
++
+您可以使用「-diskSize'參數來指定要新增的磁碟大小。只會選取約有指定大小的磁碟來新增至集合體。
+
++
+[listing]
+----
+cl1-s2::> storage aggregate add-disks -aggregate data_1 -raidgroup new -diskcount 5
+----
+. 確認儲存設備已成功新增：
++
+「torage Aggregate show-STATUS -Aggregate _aggreg_name_」
+
++
+[listing]
+----
+cl1-s2::> storage aggregate show-status -aggregate data_1
+
+Owner Node: cl1-s2
+ Aggregate: data_1 (online, raid_dp) (block checksums)
+  Plex: /data_1/plex0 (online, normal, active, pool0)
+   RAID Group /data_1/plex0/rg0 (normal, block checksums)
+                                                              Usable Physical
+     Position Disk                        Pool Type     RPM     Size     Size Status
+     -------- --------------------------- ---- ----- ------ -------- -------- ----------
+     shared   1.0.10                       0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.5                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.6                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.11                       0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.0                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.2                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.3                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.4                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.8                        0   BSAS    7200  753.8GB  828.0GB (normal)
+     shared   1.0.9                        0   BSAS    7200  753.8GB  828.0GB (normal)
+10 entries were displayed.
+----
+. 確認節點仍有至少一個磁碟機、其中根分割區和資料分割區都是備援磁碟機：
++
+「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
+
++
+[listing]
+----
+cl1-s2::> storage aggregate show-spare-disks -original-owner cl1-s2 -is-disk-shared true
+
+Original Owner: cl1-s2
+ Pool0
+  Shared HDD Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size Status
+ --------------------------- ----- ------ -------------- -------- -------- -------- --------
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB zeroed
+ 1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB zeroed
+2 entries were displayed.
+----
+

@@ -1,0 +1,28 @@
+---
+permalink: upgrade/task_verifying_cluster_upgrade_limits.html 
+sidebar: sidebar 
+keywords: upgrade, cluster, limits, verify, san 
+summary: 在升級ONTAP 完此功能之前、您必須先確認叢集未超過平台系統限制。 
+---
+= 驗證叢集升級限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不使用 link:https://aiq.netapp.com/["Active IQ"^] 升級顧問、您必須確認叢集未超過平台系統限制。除了平台系統限制之外、SAN也有您應該驗證的限制。
+
+. 確認叢集未超過平台的系統限制。
++
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+. 如果您的叢集已設定SAN、請確認其未超過FC、FCoE和iSCSI的組態限制。
++
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+. 確定CPU和磁碟使用率：「節點執行節點node_name -command Sysstat -c 10 -x 3s」
++
+您應該監控CPU和磁碟使用率30秒。在所有報告的10項測量中、「* CPU*」和「*磁碟使用率*」欄中的值不應超過50%。在升級完成之前、不應將額外的負載新增至叢集。附註：CPU與磁碟使用率可能會因環境的不同時間而有所差異。因此、最好在預期的升級期間檢查CPU和磁碟使用率。
+
+

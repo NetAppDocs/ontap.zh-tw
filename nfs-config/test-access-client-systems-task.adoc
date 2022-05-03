@@ -1,0 +1,76 @@
+---
+permalink: nfs-config/test-access-client-systems-task.html 
+sidebar: sidebar 
+keywords: testing, nfs, access, client, systems 
+summary: 驗證NFS對新儲存物件的存取之後、您應該登入NFS管理主機、從SVM讀取資料並將資料寫入SVM、以測試組態。接著、您應該在用戶端系統上以非root使用者的身分重複此程序。 
+---
+= 測試來自用戶端系統的NFS存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+驗證NFS對新儲存物件的存取之後、您應該登入NFS管理主機、從SVM讀取資料並將資料寫入SVM、以測試組態。接著、您應該在用戶端系統上以非root使用者的身分重複此程序。
+
+.您需要的是 #8217 ；需要的是什麼
+* 用戶端系統必須具有您先前指定的匯出規則所允許的IP位址。
+* 您必須擁有root使用者的登入資訊。
+
+
+.步驟
+. 在叢集上、驗證裝載新磁碟區之LIF的IP位址：
++
+「網路介面show–vserver _svm_name_」
+
+. 以root使用者身分登入管理主機用戶端系統。
+. 將目錄變更為掛載資料夾：
++
+"CD /mnt/"
+
+. 使用SVM的IP位址建立及掛載新資料夾：
++
+.. 建立新資料夾：+「mkdir /mnt/_folder_」
+.. 將新的磁碟區掛載到這個新目錄：+"mount-t nfs -o hard _ipAddress_://_volVolume name_/mnt/_folder_"
+.. 將目錄變更為新資料夾：+"CD _foldem_"
++
+下列命令會建立名為test1的資料夾、將vol1磁碟區掛載到test1掛載資料夾的192.0.2.130 IP位址、然後變更為新的test1目錄：
+
++
+[listing]
+----
+host# mkdir /mnt/test1
+host# mount -t nfs -o hard 192.0.2.130:/vol1 /mnt/test1
+host# cd /mnt/test1
+----
+
+
+. 建立新檔案、確認檔案是否存在、然後將文字寫入：
++
+.. 建立測試檔案：+「Touch _Fil性_」
+.. 確認檔案存在：+「ls -l _fileName」
+.. 輸入：+「CAT >_FILENOY_」
++
+輸入一些文字、然後按下Ctrl+D將文字寫入測試檔案。
+
+.. 顯示測試檔案的內容。+"CAT _FIL_"
+.. 移除測試檔案：+「rm _fileName」
+.. 返回父目錄：+"CD .."
++
+[listing]
+----
+host# touch myfile1
+host# ls -l myfile1
+-rw-r--r-- 1 root root 0 Sep 18 15:58 myfile1
+host# cat >myfile1
+This text inside the first file
+host# cat myfile1
+This text inside the first file
+host# rm -r myfile1
+host# cd ..
+----
+
+
+. 以root使用者的身份、在掛載的Volume上設定任何所需的UNIX擁有權和權限。
+. 在匯出規則中識別的UNIX用戶端系統上、以目前擁有新磁碟區存取權的授權使用者之一登入、然後重複步驟3到5中的程序、確認您可以掛載磁碟區並建立檔案。
+

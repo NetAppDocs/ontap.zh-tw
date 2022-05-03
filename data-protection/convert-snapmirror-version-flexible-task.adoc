@@ -1,0 +1,147 @@
+---
+permalink: data-protection/convert-snapmirror-version-flexible-task.html 
+sidebar: sidebar 
+keywords: convert, exist, dp-type, relationship, xdp 
+summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。 
+---
+= 將現有的DP類型關係轉換為XDP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。
+
+.關於這項工作
+* SnapMirror不會自動將現有的DP類型關係轉換為XDP。若要轉換關係、您必須中斷並刪除現有的關係、建立新的XDP關係、然後重新同步關係。如需背景資訊、請參閱 link:version-flexible-snapmirror-default-concept.html["XDP取代DP做為SnapMirror預設值"]。
+* 規劃轉換時、您應該注意、XDP SnapMirror關係的背景準備和資料倉儲階段可能需要很長時間。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
+
+
+[NOTE]
+====
+將SnapMirror關係類型從DP轉換為XDP之後、與空間相關的設定（例如自動調整大小和空間保證）將不再複寫到目的地。
+
+====
+.步驟
+. 靜止現有的DP類型關係：
++
+"napmirror quiesce -path _svm:volume（napmirror靜止-source-path _svm:volume）_cluster：//svm/volume（虛擬磁碟區/磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例會使來源磁碟區「Vola」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係靜止不動：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 打破現有的DP類型關係：
++
+"napmirror中斷-source-path _svm:volume（磁碟區）_cluster：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例打破了「svm1」上的來源磁碟區「Vola」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 停用在目的地Volume上自動刪除Snapshot複本：
++
+「Volume Snapshot autodete modify -vserver _Svm_-volume _volume _-enablete」
+
++
+以下範例停用目的地磁碟區「Vola_dst」上的Snapshot複本自動刪除功能：
+
++
+[listing]
+----
+cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume volA_dst -enabled false
+----
+. 刪除現有的DP類型關係：
++
+"napmirror DELETE -source-path _Svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例刪除了來源磁碟區「Vola」（在「svm1」上）與目的地磁碟區「Vola_dst」（在「shvm_backup」上）之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 建立新的XDP類型關係：
++
+"napmirror create -source-path _svm:volume（napmirror create -source-path _svm:volume）_cluster（叢集）：//SVM/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... 鍵入XDP -schedule _schedule_-policy _policy
+
++
+新關係必須使用相同的來源和目的地Volume。如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例使用預設的「鏡射AllSnapshots」原則、在來源磁碟區「Vola」與「svm1」上的目的地磁碟區「Vola_dst」之間建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst
+-type XDP -schedule my_daily -policy MirrorAllSnapshots
+----
+. 重新同步來源與目的地磁碟區：
++
+"napmirror resSync -source-path _Svm:Volume _|_cluster：//SVM/Volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+
+====
++
+以下範例重新同步來源磁碟區「Vola」（在「svm1」上）與目的地磁碟區「Vola_dst」（在「shvm_backup」上）之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+
+
+使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。

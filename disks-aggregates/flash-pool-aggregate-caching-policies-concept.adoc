@@ -1,0 +1,28 @@
+---
+permalink: disks-aggregates/flash-pool-aggregate-caching-policies-concept.html 
+sidebar: sidebar 
+keywords: cache, flash pool, policy, work 
+summary: 快取原則會套用至位於Flash Pool Aggregate中的磁碟區。您應該先瞭解快取原則的運作方式、再進行變更。 
+---
+= Flash Pool Aggregate快取原則的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Flash Pool Aggregate中的磁碟區快取原則可讓您將Flash部署為工作資料集的高效能快取、同時使用成本較低的HDD來減少存取資料的頻率。如果您要提供快取給兩個以上的Flash Pool Aggregate、則應該使用Flash Pool SSD分割區、在Flash Pool的集合體之間共用SSD。
+
+快取原則會套用至位於Flash Pool Aggregate中的磁碟區。您應該先瞭解快取原則的運作方式、再進行變更。
+
+在大多數情況下、預設的「自動」快取原則是最佳的快取原則。只有在不同的原則為您的工作負載提供更好的效能時、才應該變更快取原則。設定錯誤的快取原則可能會嚴重降低磁碟區效能、效能降級可能會隨著時間逐漸增加。
+
+快取原則結合了讀取快取原則和寫入快取原則。原則名稱會串連讀取快取原則和寫入快取原則的名稱、並以連字號分隔。如果原則名稱中沒有連字號、則寫入快取原則為「無」、但「自動」原則除外。
+
+除了HDD上儲存的資料、讀取快取原則也會在快取中放置資料複本、以最佳化未來的讀取效能。對於將資料插入快取以進行寫入作業的讀取快取原則、快取會以寫入快取的形式運作。
+
+使用寫入快取原則插入快取的資料僅存在於快取中、HDD中沒有複本。Flash Pool快取受到RAID保護。啟用寫入快取可讓寫入作業中的資料立即從快取讀取、同時將資料延後寫入HDD、直到資料逾時離開快取為止。
+
+您可以使用「volume create」命令搭配「-cache原則」參數、變更位於Flash Pool Aggregate上之磁碟區的快取原則。在Flash Pool Aggregate上建立Volume時、預設會將「自動」快取原則指派給該磁碟區。
+
+如果您將磁碟區從Flash Pool Aggregate移至單一層Aggregate、就會失去其快取原則；如果您稍後將其移回Flash Pool Aggregate、則會將其指派為預設的「自動」快取原則。如果您在兩個Flash Pool Aggregate之間移動磁碟區、快取原則會保留下來。

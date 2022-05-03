@@ -1,0 +1,99 @@
+---
+permalink: smb-admin/statistics-monitor-automatic-node-referral-task.html 
+sidebar: sidebar 
+keywords: smb, connection, refer, monitor, automatic, node, referral, extent, locating, locate, host, redistribute, lif, local, access, cifs, use statistics to monitor automatic node referral activity 
+summary: 若要判斷所參照的SMB連線數量、您可以使用統計資料命令來監控自動節點參照活動。透過監控轉介、您可以判斷自動轉介在裝載共用的節點上尋找連線的程度、以及是否應重新分配資料生命量、以提供對CIFS伺服器上共用區的更佳本機存取。 
+---
+= 使用統計資料來監控自動節點參照活動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要判斷所參照的SMB連線數量、您可以使用「統計資料」命令來監控自動節點參照活動。透過監控轉介、您可以判斷自動轉介在裝載共用的節點上尋找連線的程度、以及是否應重新分配資料生命量、以提供對CIFS伺服器上共用區的更佳本機存取。
+
+「CIFS」物件在進階權限層級提供數個計數器、有助於監控SMB自動節點參照：
+
+* "node_Referring_器 已發出"
++
+在用戶端使用與共用根節點不同的節點所主控的LIF連線之後、已向共用根節點發出參照的用戶端數目。
+
+* "node_Referring_local"
++
+使用裝載共用根目錄之同一個節點所裝載之LIF進行連線的用戶端數目。本機存取通常可提供最佳效能。
+
+* "node_Referring_not _可能性"
++
+使用與共用根節點不同的節點所裝載的LIF進行連線之後、尚未向裝載共用根目錄的節點發出轉介的用戶端數目。這是因為找不到共用根節點的作用中資料LIF。
+
+* "node_Referring_rement"
++
+使用裝載於共享根目錄之節點不同之節點的LIF所連線的用戶端數目。遠端存取可能導致效能降低。
+
+
+
+您可以在儲存虛擬機器（SVM）上收集及檢視特定時間段（範例）的資料、以監控自動節點參照統計資料。如果不停止資料收集、您可以檢視範例中的資料。停止資料收集可提供固定的範例。不停止資料收集可讓您取得更新的資料、以便與先前的查詢進行比較。這項比較可協助您識別效能趨勢。
+
+[NOTE]
+====
+若要評估及使用您從「統計資料」命令收集到的資訊、您應該瞭解用戶端在您環境中的分佈情況。
+
+====
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 使用「統計資料」命令檢視自動節點參照統計資料。
++
+此範例透過收集和檢視取樣期間的資料來檢視自動節點參照統計資料：
+
++
+.. 開始收集：「統計資料start -object CIFS -instance VS1 -same-id sample1」
++
+[listing]
+----
+Statistics collection is being started for Sample-id: sample1
+----
+.. 等待所需的收集時間到。
+.. 停止收集：「統計資料停止-樣本ID範例1」
++
+[listing]
+----
+Statistics collection is being stopped for Sample-id: sample1
+----
+.. 查看自動節點參照統計資料：「tStatistics show -same-id Sample1 -counter * node*」
++
+[listing]
+----
+Object: cifs
+Instance: vs1
+Start-time: 2/4/2013 19:27:02
+End-time: 2/4/2013 19:30:11
+Cluster: cluster1
+
+    Counter                                             Value
+    ----------------------------- ---------------------------
+    node_name                                          node1
+    node_referral_issued                                    0
+    node_referral_local                                     1
+    node_referral_not_possible                              2
+    node_referral_remote                                    2
+    ...
+
+    node_name                                          node2
+    node_referral_issued                                    2
+    node_referral_local                                     1
+    node_referral_not_possible                              0
+    node_referral_remote                                    2
+    ...
+----
++
+輸出會顯示所有參與SVM VS1的節點計數器。為了清楚起見、範例中僅提供與自動節點參照統計資料相關的輸出欄位。
+
+
+
+. 返回管理員權限等級：「et -priv. admin」
+
+
+xref:display-statistics-task.adoc[顯示統計資料]
+
+link:../performance-config/index.html["效能監控設定"]

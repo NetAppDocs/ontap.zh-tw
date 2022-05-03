@@ -1,0 +1,115 @@
+---
+permalink: system-admin/verify-digital-certificates-valid-ocsp-task.html 
+sidebar: sidebar 
+keywords: verfiy, digital, certificate, valid, ocsp, online, status, protocol, transport, layer, security, tls, enable, disable 
+summary: 從ONTAP 功能為2的9.2開始、線上憑證狀態傳輸協定（OCSP）可讓ONTAP 使用傳輸層安全性（TLS）通訊的各種應用程式在啟用OCSP時、接收數位憑證狀態。您可以隨時啟用或停用特定應用程式的OCSP憑證狀態檢查。根據預設、OCSP憑證狀態檢查會停用。 
+---
+= 使用OCSP驗證數位憑證是否有效
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能為2的9.2開始、線上憑證狀態傳輸協定（OCSP）可讓ONTAP 使用傳輸層安全性（TLS）通訊的各種應用程式在啟用OCSP時、接收數位憑證狀態。您可以隨時啟用或停用特定應用程式的OCSP憑證狀態檢查。根據預設、OCSP憑證狀態檢查會停用。
+
+這些命令必須在進階權限層級執行。
+
+OCSP支援下列應用程式：
+
+* AutoSupport
+* 事件管理系統（EMS）
+* LDAP over TLS
+* 金鑰管理互通性傳輸協定（KMIP）
+* 稽核記錄
+* FabricPool
+
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」。
+. 若要啟用或停用OCSP憑證狀態檢查以檢查特定ONTAP 的功能、請使用適當的命令。
++
+|===
+| 如果您希望OCSP憑證狀態檢查某些應用程式... | 使用命令... 
+
+
+ a| 
+已啟用
+ a| 
+「安全性組態OCSP啟用-app」
+
+應用程式名稱
+
+
+
+ a| 
+已停用
+ a| 
+「安全性組態OCSP停用-app」
+
+應用程式名稱
+
+|===
++
+下列命令可支援AutoSupport OCSP for the flexf及EMS。
+
++
+[listing]
+----
+cluster::*> security config ocsp enable -app asup,ems
+----
++
+啟用OCSP時、應用程式會收到下列其中一個回應：
+
++
+** 好-憑證有效且通訊繼續進行。
+** 已撤銷：憑證由其核發的憑證授權單位永久視為不信任、且無法繼續通訊。
+** 不明：伺服器沒有任何關於憑證的狀態資訊、而且無法繼續通訊。
+** 憑證中缺少OCSP伺服器資訊-伺服器的運作方式如同OCSP已停用、並繼續進行TLS通訊、但不會進行狀態檢查。
+** OCSP伺服器無回應-應用程式無法繼續。
+
+
+. 若要啟用或停用使用TLS通訊之所有應用程式的OCSP憑證狀態檢查、請使用適當的命令。
++
+|===
+| 如果您希望OCSP憑證狀態檢查所有應用程式... | 使用命令... 
+
+
+ a| 
+已啟用
+ a| 
+「安全性組態OCSP啟用」
+
+「應用程式全部」
+
+
+
+ a| 
+已停用
+ a| 
+「安全性組態OCSP停用」
+
+「應用程式全部」
+
+|===
++
+啟用時、所有應用程式都會收到已簽署的回應、表示指定的憑證良好、已撤銷或不明。若憑證遭撤銷、應用程式將無法繼續進行。如果應用程式無法從OCSP伺服器接收回應、或伺服器無法連線、則應用程式將無法繼續進行。
+
+. 使用「安全性組態OCSP show」命令來顯示所有支援OCSP的應用程式及其支援狀態。
++
+[listing]
+----
+cluster::*> security config ocsp show
+         Application                        OCSP Enabled?
+         --------------------               ---------------------
+         autosupport                        false
+         audit_log                          false
+         fabricpool                         false
+         ems                                false
+         kmip                               false
+         ldap_ad                            true
+         ldap_nis_namemap                   true
+
+         7 entries were displayed.
+----
+

@@ -1,0 +1,467 @@
+---
+sidebar: sidebar 
+permalink: networking/lifs_and_service_policies96.html 
+keywords: service policies for system svms, lif service policies, lif, logical, interface, service, policy, policies, lifs and service policies in ontap 9.6 and later, assign service policies to lifs to specify the supported traffic, service policies for system svms, service policies for data svms, data-core service 
+summary: 將服務原則指派給LIF以指定支援的流量 
+---
+= 更新版本中的生命與服務政策ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以將服務原則（而非LIF角色）指派給生命期、以決定生命期所支援的流量類型。服務原則定義LIF支援的網路服務集合。提供一組可與LIF相關聯的內建服務原則。ONTAP
+
+您可以使用下列命令來顯示服務原則及其詳細資料：「network interface service-policy show」
+
+
+
+== 系統SVM的服務原則
+
+管理SVM和任何系統SVM都包含可用於該SVM中的LIF的服務原則、包括管理和叢集間LIF。系統會在建立IPspace時自動建立這些原則。
+
+下表列出截至ONTAP 資訊版SVM中的LIF內建政策（截至資訊版SVMS9.10.1）。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+
+「網路介面服務原則展示」
+
+[cols="20,20,20,40"]
+|===
+
+
+| 原則 | 隨附服務 | 等效角色 | 說明 
+
+
+ a| 
+預設叢集間
+ a| 
+叢集間核心、管理-https
+ a| 
+叢集間
+ a| 
+用於傳輸叢集間流量的lifs。附註：ONTAP 服務叢集間核心可從名稱為net-intercluster服務原則的版本中取得。
+
+
+
+ a| 
+default-route-聲明
+ a| 
+管理- BGP
+ a| 
+-
+ a| 
+用於承載BGP對等連線的LIF附註：ONTAP 可從包含名稱net-route-l佈 建服務原則的版本資訊中取得。
+
+
+
+ a| 
+預設管理
+ a| 
+管理核心、管理https、管理http、管理-ssh管理自動支援、管理-EMS、 管理層NTP用戶端、管理SNMP伺服器、管理層NTP伺服器、備份NDMP控制
+ a| 
+節點管理或叢集管理
+ a| 
+用於處理系統範圍內的管理要求。管理- EMS可控制哪些LIF可以發佈EMS內容。系統範圍的管理原則是用來建立系統SVM擁有的節點範圍和叢集範圍管理生命期。這些LIF可用於連往NTP或DNS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。
+
+|===
+下表列出截至ONTAP 資訊版SVM上的LIF服務（截至資訊版SVM）9.10.1：
+
+[cols="25,25,50"]
+|===
+
+
+| 服務 | 容錯移轉限制 | 說明 
+
+
+ a| 
+叢集間核心
+ a| 
+僅限主節點
+ a| 
+核心叢集間服務
+
+
+
+ a| 
+管理核心
+ a| 
+-
+ a| 
+核心管理服務
+
+
+
+ a| 
+管理- ssh
+ a| 
+-
+ a| 
+SSH管理存取服務
+
+
+
+ a| 
+管理-http
+ a| 
+-
+ a| 
+HTTP管理存取服務
+
+
+
+ a| 
+管理- https
+ a| 
+-
+ a| 
+HTTPS管理存取服務
+
+
+
+ a| 
+管理自動支援
+ a| 
+-
+ a| 
+發佈AutoSupport 功能的相關服務
+
+
+
+ a| 
+管理- BGP
+ a| 
+僅限主連接埠
+ a| 
+與BGP對等互動相關的服務
+
+
+
+ a| 
+備份NDMP控制
+ a| 
+-
+ a| 
+NDMP備份控制服務
+
+
+
+ a| 
+管理- EMS
+ a| 
+-
+ a| 
+管理訊息存取服務
+
+
+
+ a| 
+管理- NTP用戶端
+ a| 
+-
+ a| 
+NTP用戶端存取服務。
+
+
+
+ a| 
+管理- NTP伺服器
+ a| 
+僅限系統
+ a| 
+NTP伺服器管理存取服務
+
+
+
+ a| 
+管理-連接埠對應
+ a| 
+-
+ a| 
+portmap管理服務
+
+
+
+ a| 
+管理伺服器
+ a| 
+僅限系統
+ a| 
+rsh伺服器管理服務
+
+
+
+ a| 
+管理SNMP伺服器
+ a| 
+-
+ a| 
+SNMP伺服器管理服務
+
+
+
+ a| 
+管理- Telnet-server
+ a| 
+僅限系統
+ a| 
+用於Telnet伺服器管理的服務
+
+|===
+
+
+== 資料SVM的服務原則
+
+所有資料SVM都包含服務原則、可供該SVM中的LIF使用。
+
+下表列出截至ONTAP 資訊SVM中的LIF內建政策、截至資訊版S209.10.1為止。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+
+「網路介面服務原則展示」
+
+[cols="20,20,20,40"]
+|===
+
+
+| 原則 | 隨附服務 | 等效資料傳輸協定 | 說明 
+
+
+ a| 
+預設管理
+ a| 
+資料核心、management、management、ssh、management、management、https、data-dns伺服器、management、管理http、 備份NDMP控制、管理SNMP伺服器
+ a| 
+無
+ a| 
+用於處理SVM範圍內管理的LIF、以建立資料SVM擁有的SVM管理LIF。這些LIF可用於提供SSH或HTTPS存取給SVM管理員。
+
+
+
+ a| 
+預設資料區塊
+ a| 
+資料核心、資料iSCSI
+ a| 
+iSCSI
+ a| 
+用於傳輸區塊導向SAN資料流量的生命體
+
+
+
+ a| 
+預設資料檔案
+ a| 
+資料核心、資料NFS、資料CIFS、資料FlexCache、資料fpolice-Client
+ a| 
+NFS、CIFS、fcache
+ a| 
+使用預設資料檔案原則來建立支援檔案型資料傳輸協定的NAS lifs。
+
+|===
+下表列出可用於資料SVM的服務、以及從ONTAP 《SVM》9.10.1起、LIF容錯移轉原則所受到的任何限制：
+
+[cols="25,25,50"]
+|===
+
+
+| 服務 | 容錯移轉限制 | 說明 
+
+
+ a| 
+管理- ssh
+ a| 
+-
+ a| 
+SSH管理存取服務
+
+
+
+ a| 
+管理-http
+ a| 
+-
+ a| 
+HTTP管理存取服務
+
+
+
+ a| 
+管理- https
+ a| 
+-
+ a| 
+HTTPS管理存取服務
+
+
+
+ a| 
+管理-連接埠對應
+ a| 
+-
+ a| 
+portmap管理存取服務
+
+
+
+ a| 
+管理SNMP伺服器
+ a| 
+-
+ a| 
+SNMP伺服器管理存取服務
+
+
+
+ a| 
+資料核心
+ a| 
+-
+ a| 
+核心資料服務
+
+
+
+ a| 
+資料NFS
+ a| 
+-
+ a| 
+NFS資料服務
+
+
+
+ a| 
+資料CIFS
+ a| 
+-
+ a| 
+CIFS資料服務
+
+
+
+ a| 
+資料FlexCache
+ a| 
+-
+ a| 
+資料服務FlexCache
+
+
+
+ a| 
+資料iSCSI
+ a| 
+僅限主連接埠
+ a| 
+iSCSI資料服務
+
+
+
+ a| 
+備份NDMP控制
+ a| 
+-
+ a| 
+備份NDMP可控制資料服務
+
+
+
+ a| 
+資料DNS伺服器
+ a| 
+-
+ a| 
+DNS伺服器資料服務
+
+
+
+ a| 
+資料fpolice-client
+ a| 
+-
+ a| 
+檔案篩選原則資料服務
+
+
+
+ a| 
+資料-NVMe-TCP
+ a| 
+僅限主連接埠
+ a| 
+NVMe TCP資料服務
+
+
+
+ a| 
+資料S3伺服器
+ a| 
+-
+ a| 
+簡易儲存服務（S3）伺服器資料服務
+
+|===
+您應該瞭解如何將服務原則指派給資料SVM中的LIF：
+
+* 如果使用資料服務清單建立資料SVM、則會使用指定的服務來建立該SVM中的內建「預設資料檔案」和「預設資料區塊」服務原則。
+* 如果在建立資料SVM時未指定資料服務清單、則會使用預設的資料服務清單來建立該SVM中的內建「預設資料檔案」和「預設資料區塊」服務原則。
++
+預設的資料服務清單包括iSCSI、NFS、SMB及FlexCache 支援服務。
+
+* 如果LIF是以資料傳輸協定清單建立、則會將相當於指定資料傳輸協定的服務原則指派給LIF。
++
+如果不存在等效的服務原則、則會建立自訂服務原則。
+
+* 如果在沒有服務原則或資料傳輸協定清單的情況下建立LIF、預設會將預設資料檔案服務原則指派給LIF。
+
+
+
+
+== 資料核心服務
+
+資料核心服務可讓先前使用LIF搭配資料角色的元件、在已升級的叢集上正常運作、以使用服務原則來管理LIF角色（ONTAP 在S32 9.6中已過時）。
+
+將資料核心指定為服務並不會開啟防火牆中的任何連接埠、但該服務應包含在資料SVM的任何服務原則中。例如、預設的資料檔案服務原則會包含下列服務：
+
+* 資料核心
+* 資料NFS
+* 資料CIFS
+* 資料FlexCache
+
+
+資料核心服務應包含在原則中、以確保使用LIF的所有應用程式都能如預期般運作、但其他三項服務則可視需要移除。
+
+
+
+== 用戶端LIF服務
+
+從推出支援支援多種應用程式的支援服務起、支援客戶端LIF服務。ONTAP ONTAP這些服務可控制代表每個應用程式用於傳出連線的LIF。
+
+下列新服務可讓系統管理員控制哪些LIF是用於特定應用程式的來源位址。
+
+[cols="25,25,50"]
+|===
+
+
+| 服務 | SVM限制 | 說明 
+
+
+ a| 
+管理- NTP用戶端
+ a| 
+僅限系統
+ a| 
+從功能支援的版本起、支援NTP用戶端服務、以便連線至外部NTP伺服器。ONTAP ONTAP
+
+
+
+ a| 
+資料fpolice-client
+ a| 
+純資料
+ a| 
+從功能不全的9.8開始ONTAP 、支援用戶端服務輸出FPolicy連線。ONTAP
+
+|===
+某些內建服務原則會自動包含每項新服務、但系統管理員可以將其從內建原則中移除、或將其新增至自訂原則中、以控制代表每個應用程式用於傳出連線的LIF。

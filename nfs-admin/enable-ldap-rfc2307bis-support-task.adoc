@@ -1,0 +1,52 @@
+---
+permalink: nfs-admin/enable-ldap-rfc2307bis-support-task.html 
+sidebar: sidebar 
+keywords: enable, ldap, rfc2307bis, support 
+summary: 如果您想要使用LDAP並需要額外的功能來使用巢狀群組成員資格、您可以設定ONTAP 支援功能以啟用LDAP RFC2307bis。 
+---
+= 啟用LDAP RFC2307bis支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要使用LDAP並需要額外的功能來使用巢狀群組成員資格、您可以設定ONTAP 支援功能以啟用LDAP RFC2307bis。
+
+您必須已建立要使用的預設LDAP用戶端架構之一的複本。
+
+在LDAP用戶端架構中、群組物件使用memberUid屬性。此屬性可包含多個值、並列出屬於該群組的使用者名稱。在啟用RFC2307bis的LDAP用戶端架構中、群組物件會使用uniqueMember屬性。此屬性可包含LDAP目錄中其他物件的完整辨別名稱（DN）。這可讓您使用巢狀群組、因為群組可以有其他群組作為成員。
+
+使用者不應是256個以上群組的成員、包括巢狀群組。不考慮超過256個群組限制的任何群組。ONTAP
+
+根據預設、會停用RFC2307bis支援。
+
+[NOTE]
+====
+當ONTAP 使用MS -AD-BIS架構建立LDAP用戶端時、即可在功能上自動啟用RFC2307bis支援。
+
+====
+如需其他資訊、請參閱 https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp技術報告4835：如何在ONTAP 功能方面設定LDAP"]。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 修改複製的RFC2307 LDAP用戶端架構、以啟用RFC2307bis支援：
++
+「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema-name -enable rfc2307bis true」
+
+. 修改架構以符合LDAP伺服器支援的物件類別：
++
+「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema_name -group of Unique名稱-object-Class object_Class」
+
+. 修改架構以符合LDAP伺服器支援的屬性名稱：
++
+「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema_name -unice-member-attribute_name`
+
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

@@ -1,0 +1,38 @@
+---
+permalink: smb-hyper-v-sql/health-monitoring-nondisruptive-operation-concept.html 
+sidebar: sidebar 
+keywords: health, monitoring, nondisruptive, operation, status, healthy, ndo, hyper, v, sql, server, recovery, cluster, system 
+summary: 健全狀況監控提供有關整個叢集系統健全狀況狀態的資訊。健全狀況監視器會透過SMB組態監控Hyper-V和SQL Server、以確保應用程式伺服器的營運不中斷（NDOS）。如果狀態為降級、您可以檢視問題的詳細資料、包括可能原因和建議的還原動作。 
+---
+= 使用健全狀況監控來判斷不中斷營運狀態是否健全
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+健全狀況監控提供有關整個叢集系統健全狀況狀態的資訊。健全狀況監視器會透過SMB組態監控Hyper-V和SQL Server、以確保應用程式伺服器的營運不中斷（NDOS）。如果狀態為降級、您可以檢視問題的詳細資料、包括可能原因和建議的還原動作。
+
+有多個健全狀況監視器。此功能可監控個別健全狀況監視器的整體系統健全狀況和健全狀況。ONTAP節點連線能力健全狀況監視器包含CIFS/NDO子系統。監視器有一組健全狀況原則、可在特定實體狀況可能導致中斷時觸發警示、如果發生中斷情況、則會產生警示並提供修正行動的相關資訊。對於SMB組態而言、會針對下列兩種情況產生警示：
+
+|===
+| 警示ID | 嚴重性 | 條件 
+
+
+ a| 
+「HaNotReadyCifsNDo_Alert *」
+ a| 
+主要
+ a| 
+節點上某個集合體中某個磁碟區所裝載的一或多個檔案、已透過持續可用的SMB共用區開啟、並承諾在發生故障時持續存在；不過、HA與該合作夥伴的關係可能未設定或不健全。
+
+
+
+ a| 
+「* NoStandardbyLifCifsNDo_Notify*」
+ a| 
+次要
+ a| 
+儲存虛擬機器（SVM）正透過節點主動透過SMB提供資料、且持續在持續可用的共用區上開啟SMB檔案；然而、其合作夥伴節點並未揭露SVM的任何作用中資料生命期。
+
+|===

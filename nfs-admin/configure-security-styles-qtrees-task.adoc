@@ -1,0 +1,49 @@
+---
+permalink: nfs-admin/configure-security-styles-qtrees-task.html 
+sidebar: sidebar 
+keywords: configure, security, style, qtree 
+summary: 您可以設定qtree Volume安全樣式、以決定用於qtree上資料的權限類型。 
+---
+= 在qtree上設定安全性樣式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定qtree Volume安全樣式、以決定用於qtree上資料的權限類型。
+
+.步驟
+. 執行下列其中一項動作：
++
+[cols="30,70"]
+|===
+
+
+| 如果qtree ... | 使用命令... 
+
+
+ a| 
+尚未存在
+ a| 
+「Volume qtree create」、並包含「安全樣式」參數以指定安全樣式。
+
+
+
+ a| 
+已存在
+ a| 
+「Volume qtree modify」（Volume qtree修改）、並加入「-security-style」參數以指定安全性樣式。
+
+|===
++
+qtree安全樣式的可能選項包括「UNIX」、「NTFS」或「mixed」。
+
++
+如果在創建qtree時未指定安全樣式，則缺省的安全樣式是"mithx"。
+
++
+如需「volume qtree create」或「volume qtree modify」命令的詳細資訊、請參閱 link:../volumes/index.html["邏輯儲存管理"]。
+
+. 若要顯示組態、包括所建立qtree的安全樣式、請輸入下列命令：「volume qtree show -qtree _qtree _name_-instance」
+

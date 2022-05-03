@@ -1,0 +1,149 @@
+---
+permalink: system-admin/troubleshoot-autosupport-delivery-smtp-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, autosupport, deliver, system, smtp, settings, resolve, problem 
+summary: 如果系統無法透過AutoSupport SMTP傳送不實訊息、您可以檢查許多設定來解決問題。 
+---
+= 疑難排解AutoSupport 透過SMTP傳送訊息的問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果系統無法透過AutoSupport SMTP傳送不實訊息、您可以檢查許多設定來解決問題。
+
+您應該已經確認基本的網路連線和DNS查詢：
+
+* 您的節點管理LIF必須處於作業和管理狀態。
+* 您必須能夠從叢集管理LIF ping同一子網路上正常運作的主機（而非任何節點上的LIF）。
+* 您必須能夠從叢集管理LIF ping子網路外正常運作的主機。
+* 您必須能夠使用主機名稱（而非IP位址）、從叢集管理LIF ping子網路外的正常運作主機。
+
+
+這些步驟適用於判斷AutoSupport 出無法透過SMTP傳送訊息的情況。
+
+如果您遇到錯誤或無法完成此程序中的步驟、請先判斷並解決此問題、然後再繼續下一步。
+
+除非ONTAP 另有說明、否則所有命令都會在指令行介面上輸入。
+
+.步驟
+. 驗證節點管理LIF的狀態：
++
+`*網路介面show -home-node-local -role node-mgmt -功能 變數vserver、lif,STATUS-oper、STATUS-admin、address,role *
+
++
+「狀態選項」和「狀態管理」欄位應會傳回「UP」。
+
+. 記下SVM名稱、LIF名稱及LIF IP位址以供日後使用。
+. 確認DNS已啟用且設定正確：
++
+'* vserver服務名稱服務DNS show*
+
+. 顯示AutoSupport 所有設定供下列對象使用的伺服器：
++
+系統節點AutoSupport 不顯示字段mail-hosts*
+
++
+記錄顯示的所有伺服器名稱。
+
+. 對於上一步顯示的每個伺服器和「upport.netapp.com`」、請確定節點可以連線到伺服器或URL：
++
+h.* network traceroute節點local -destination_server_name_*
+
++
+如果其中任何一條路由無法運作、請使用大多數協力廠商網路用戶端上的「'traceroute」或「`TRACERT」公用程式、嘗試從與叢集位於同一子網路上的正常運作主機發出相同的路由。這有助於判斷問題是發生在您的網路組態或叢集組態中。
+
+. 登入指定為郵件主機的主機、並確保它可以處理下列的SMTP要求：
++
+‘* netstat-aaaae|grep 25*’
+
++
+「25」是接聽程式的SMTP連接埠號碼。
+
++
+此時會顯示類似下列文字的訊息：
+
++
+[listing]
+----
+ff64878c tcp        0      0  *.25    *.*    LISTEN.
+----
+. 從其他主機、開啟與郵件主機之SMTP連接埠的遠端登入工作階段：
++
+[* Telnet_mailhost_25*（登錄_mailhost_25*）]
+
++
+此時會顯示類似下列文字的訊息：
+
++
+[listing]
+----
+
+220 filer.yourco.com Sendmail 4.1/SMI-4.1 ready at Thu, 30 Nov 2014 10:49:04 PST
+----
+. 在登入提示字元時、請確定訊息可以從您的郵件主機轉送：
++
+hy*hiLO_domain_name_*
+
++
+郵件寄件者：_yue_email_address_*
+
++
+「* RCPt To：\autosupport@netapp.com *」
+
++
+「Domain_name」是您網路的網域名稱。
+
++
+如果傳回錯誤、指出中繼遭拒、則不會在郵件主機上啟用中繼。請聯絡您的系統管理員。
+
+. 在登入提示字元下、傳送測試訊息：
++
+*資料*
+
++
+主題：test*（測試*）、*這是一項測試*
+
++
+*。*
+
++
+[NOTE]
+====
+請確定您自己在一行輸入最後一個期間（.）。期間會向郵件主機指出訊息已完成。
+
+====
++
+如果傳回錯誤、表示您的郵件主機設定不正確。請聯絡您的系統管理員。
+
+. 從這個指令行介面、將一份不實的測試訊息傳送到您有權存取的信任電子郵件地址：ONTAP AutoSupport
++
+‘*系統節點AutoSupport 可叫用節點本機類型test*
+
+. 尋找嘗試的順序編號：
++
+系統節點AutoSupport 的不全歷史記錄顯示節點本機-目的地SMTP*
+
++
+根據時間戳記尋找嘗試的順序編號。這可能是最近的嘗試。
+
+. 顯示測試訊息嘗試的錯誤：
++
+系統節點AutoSupport 的不全歷史記錄顯示節點local -sq-num seq_um -Fields error*
+
++
+如果顯示的錯誤為「Login Denied（登入遭拒）」、表示您的SMTP伺服器不接受來自叢集管理LIF的傳送要求。如果您不想變更為使用HTTPS作為傳輸傳輸協定、請聯絡您的站台網路管理員、設定以解決此問題的SMTP閘道。
+
++
+如果此測試成功、但傳送至mailto：autosupport@netapp.com的同一訊息卻沒有、請確定所有的SMTP郵件主機都已啟用了SMTP轉送、或使用HTTPS作為傳輸傳輸傳輸傳輸傳輸協定。
+
++
+如果連本機管理電子郵件帳戶的訊息都未成功、請確認您的SMTP伺服器已設定為轉送具有下列兩項特性的附件：
+
++
+** 「'7z'」字尾
+** 「application/x-7x-compressed」MIME類型。
+
+
+

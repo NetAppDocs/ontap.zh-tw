@@ -1,0 +1,53 @@
+---
+permalink: nfs-admin/enable-disable-pnfs-task.html 
+sidebar: sidebar 
+keywords: enable, disable, pnfs 
+summary: pNFS可讓NFS用戶端直接並平行地在儲存裝置上執行讀寫作業、藉此改善效能、避免NFS伺服器成為潛在的瓶頸。若要啟用或停用pNFS（平行NFS）、您可以修改-v4.1-pNFS選項。 
+---
+= 啟用或停用pNFS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS可讓NFS用戶端直接並平行地在儲存裝置上執行讀寫作業、藉此改善效能、避免NFS伺服器成為潛在的瓶頸。若要啟用或停用pNFS（平行NFS）、您可以修改「-v4.1-pNFS」選項。
+
+[cols="50,50"]
+|===
+| 如果ONTAP 這個版本是... | pNFS預設為... 
+
+
+| 9.8或更新版本 | 已停用 
+
+
+| 9.7或更早版本 | 已啟用 
+|===
+需要NFSv4.1支援才能使用pNFS。
+
+如果您要啟用pNFS、必須先停用NFS參照。兩者無法同時啟用。
+
+如果您在SVM上使用pNFS搭配Kerberos、則必須在SVM上的每個LIF上啟用Kerberos。
+
+.步驟
+. 執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+啟用pNFS
+ a| 
+「vserver NFS modify -vserver vserver_name -v4.1-pNFS enabled_
+
+
+
+ a| 
+停用pNFS
+ a| 
+「vserver NFS modify -vserver vserver_name -v4.1-pNFS disabled'
+
+|===
+

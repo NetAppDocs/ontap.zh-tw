@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: networking/display_dns_host_table_entries_@cluster_administrators_only@.html 
+keywords: 'display, view, show, dns, host, names, alias, display dns host table entries (cluster administrators only), view the host and alias names and the mapped ip addresses for all svms in a cluster, vserver services name-service dns' 
+summary: 檢視叢集中所有SVM的主機名稱和別名、以及對應的IP位址 
+---
+= 顯示DNS主機表項目（僅限叢集管理員）
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+DNS主機表項目會將主機名稱對應至IP位址。您可以針對叢集中的所有SVM顯示主機名稱和別名、以及它們對應的IP位址。
+
+使用vserver services name-service DNS hosts show命令顯示所有SVM的主機名稱項目。
+
+下列範例顯示主機表格項目：
+
+....
+vserver services name-service dns hosts show
+Vserver    Address        Hostname        Aliases
+---------- -------------- --------------- ---------------------
+cluster-1
+           10.72.219.36   lnx219-36       -
+vs1
+           10.72.219.37   lnx219-37       lnx219-37.example.com
+....
+您可以使用「vserver services name-service DNS」命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。

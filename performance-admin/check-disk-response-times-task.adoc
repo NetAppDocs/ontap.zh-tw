@@ -1,0 +1,46 @@
+---
+permalink: performance-admin/check-disk-response-times-task.html 
+sidebar: sidebar 
+keywords: check, disk, throughput, latency 
+summary: 您可以檢查叢集節點的磁碟處理量和延遲度量、以協助您進行疑難排解。 
+---
+= 檢查磁碟處理量和延遲
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢查叢集節點的磁碟處理量和延遲度量、以協助您進行疑難排解。
+
+此工作需要進階權限層級命令。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 檢查磁碟處理量與延遲度量：
++
+「磁碟統計資料顯示-排序-金鑰延遲」
+
+
+
+以下範例顯示每個使用者在「cluster1」上執行「node2」讀取或寫入作業的總計：
+
+[listing]
+----
+::*> statistics disk show -sort-key latency
+cluster1 : 8/24/2015 12:44:15
+                    Busy Total Read  Write  Read    Write   *Latency
+  Disk       Node  (%)   Ops   Ops   Ops   (Bps)    (Bps)       (us)
+------------ ----   ---- ----   ----- ----- ------   -----    -----
+
+1.10.20      node2     4    5       3     2  95232  367616    23806
+1.10.8       node2     4    5       3     2 138240  386048    22113
+
+1.10.6       node2     3    4       2     2  48128  371712    19113
+1.10.19      node2     4    6       3     2 102400  443392    19106
+
+1.10.11      node2     4    4       2     2 122880  408576    17713
+----

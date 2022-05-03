@@ -1,0 +1,35 @@
+---
+permalink: tape-backup/remove-tape-aliases-task.html 
+sidebar: sidebar 
+keywords: remove, tape, aliases, clear, command, drive, medium, changer 
+summary: 當磁帶機或媒體更換器不再需要持續別名時、您可以使用storage tape alias清除命令來移除別名。 
+---
+= 移除磁帶別名
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當磁帶機或媒體更換器不再需要持續別名時、您可以使用「儲存磁帶別名清除」命令來移除別名。
+
+.步驟
+. 使用「shorage tape alias Clear'」命令、從磁帶機或媒體更換器中移除別名。
++
+如需此命令的詳細資訊、請參閱手冊頁。
+
++
+下列命令會將別名清除作業的範圍指定給「tape（磁帶））”、以移除所有磁帶機的別名：
+
++
+[listing]
+----
+cluster-01::>storage tape alias clear -node cluster-01 -clear-scope tape
+----
+
+
+如果您使用NDMP執行磁帶備份或還原作業、則在從磁帶機或媒體更換器移除別名之後、您必須為磁帶機或媒體更換器指派新的別名、才能繼續存取磁帶設備。
+
+xref:assign-tape-aliases-concept.adoc[什麼是磁帶別名]
+
+xref:assign-tape-aliases-task.adoc[指派磁帶別名]

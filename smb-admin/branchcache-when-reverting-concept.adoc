@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/branchcache-when-reverting-concept.html 
+sidebar: sidebar 
+keywords: revert, ontap, release, support, branchcache, what happens to branchcache when reverting 
+summary: 請務必瞭解ONTAP 當您將不支援BranchCache的版本還原為版本時、會發生什麼情況。 
+---
+= 轉換時會發生什麼情況
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+請務必瞭解ONTAP 當您將不支援BranchCache的版本還原為版本時、會發生什麼情況。
+
+* 當您回復ONTAP 到不支援BranchCache的版本時、SMB共用區不會向啟用BranchCache的用戶端通告BranchCache功能、因此用戶端不會要求雜湊資訊。
++
+而是使用一般SMB讀取要求來要求實際內容。為了回應內容要求、SMB伺服器會傳送儲存在儲存虛擬機器（SVM）上的實際內容。
+
+* 當主控雜湊存放區的節點還原至不支援BranchCache的版本時、儲存管理員需要使用還原期間列印的命令、手動還原BranchCache組態。
++
+此命令會刪除BranchCache組態和雜湊。
+
++
+還原完成後、儲存管理員可視需要手動刪除包含雜湊存放區的目錄。
+
+
+
+xref:delete-branchcache-config-task.html[刪除SVM上的BranchCache組態]

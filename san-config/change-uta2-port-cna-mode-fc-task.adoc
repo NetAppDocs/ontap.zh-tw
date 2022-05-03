@@ -1,0 +1,111 @@
+---
+permalink: san-config/change-uta2-port-cna-mode-fc-task.html 
+sidebar: sidebar 
+keywords: change, uta2, port, cna mode, fc mode 
+summary: 您應該將UTA2連接埠從「融合式網路介面卡」（CNA）模式變更為「光纖通道」（FC）模式、以支援FC啟動器和FC目標模式。當您需要變更連接埠與網路的實體媒體時、應該將特性設定從CNA模式變更為FC模式。 
+---
+= 將UTA2連接埠從CNA模式變更為FC模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該將UTA2連接埠從「融合式網路介面卡」（CNA）模式變更為「光纖通道」（FC）模式、以支援FC啟動器和FC目標模式。當您需要變更連接埠與網路的實體媒體時、應該將特性設定從CNA模式變更為FC模式。
+
+.步驟
+. 使介面卡離線：
++
+「網路FCP介面卡修改節點node_name介面卡介面卡名稱-STATUS-admin DOWN」
+
+. 變更連接埠模式：
++
+「ucadmin modify -node_name -Adapter adapter_name -mode FCP」
+
+. 重新啟動節點、然後將介面卡上線：
++
+「網路FCP介面卡修改節點node_name介面卡介面卡名稱-STATUS-admin up」
+
+. 請通知您的管理員或VIF管理程式、視情況刪除或移除連接埠：
++
+** 如果連接埠作為LIF的主連接埠、介面群組（ifgrp）或主機VLAN的成員、則管理員應執行下列動作：
++
+... 移動LIF、從ifgrp移除連接埠、或分別刪除VLAN。
+... 執行「network port delete」命令、手動刪除連接埠。
++
+如果「網路連接埠刪除」命令失敗、系統管理員應該解決錯誤、然後再次執行命令。
+
+
+
+** 如果連接埠不是LIF的主連接埠、不是ifgrp的成員、也不是主控VLAN、則VIF管理程式應在重新開機時從記錄中移除連接埠。
++
+如果VIF管理程式未移除連接埠、則管理員必須在重新開機後使用「network port DELETE」命令手動移除連接埠。
+
+
+
++
+[listing]
+----
+net-f8040-34::> network port show
+
+    Node: net-f8040-34-01
+                                                      Speed(Mbps) Health
+    Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status
+    --------- ------------ ---------------- ---- ---- ----------- --------
+    ...
+    e0i       Default      Default          down 1500  auto/10    -
+    e0f       Default      Default          down 1500  auto/10    -
+    ...
+
+    net-f8040-34::> ucadmin show
+                           Current  Current    Pending  Pending    Admin
+    Node          Adapter  Mode     Type       Mode     Type       Status
+    ------------  -------  -------  ---------  -------  ---------  -----------
+    net-f8040-34-01
+                  0e       cna      target     -        -          offline
+    net-f8040-34-01
+                  0f       cna      target     -        -          offline
+    ...
+
+    net-f8040-34::> network interface create -vs net-f8040-34 -lif m -role
+node-mgmt-home-node net-f8040-34-01 -home-port e0e -address 10.1.1.1
+-netmask 255.255.255.0
+
+
+    net-f8040-34::> network interface show -fields home-port, curr-port
+
+    vserver lif                   home-port curr-port
+    ------- --------------------- --------- ---------
+    Cluster net-f8040-34-01_clus1 e0a       e0a
+    Cluster net-f8040-34-01_clus2 e0b       e0b
+    Cluster net-f8040-34-01_clus3 e0c       e0c
+    Cluster net-f8040-34-01_clus4 e0d       e0d
+    net-f8040-34
+            cluster_mgmt          e0M       e0M
+    net-f8040-34
+            m                     e0e       e0i
+    net-f8040-34
+            net-f8040-34-01_mgmt1 e0M       e0M
+    7 entries were displayed.
+
+    net-f8040-34::> ucadmin modify local 0e fc
+
+    Warning: Mode on adapter 0e and also adapter 0f will be changed to fc.
+    Do you want to continue? {y|n}: y
+    Any changes will take effect after rebooting the system. Use the
+"system node reboot" command to reboot.
+
+    net-f8040-34::> reboot local
+      (system node reboot)
+
+    Warning: Are you sure you want to reboot node "net-f8040-34-01"?
+    {y|n}: y
+----
+. 確認您已安裝正確的SFP+：
++
+「網路FCP介面卡顯示-instance -Node介面卡」
+
++
+對於CNA、您應該使用10Gb乙太網路SFP。對於FC、您應該先使用8 GB SFP或16 GB SFP、再變更節點上的組態。
+
+

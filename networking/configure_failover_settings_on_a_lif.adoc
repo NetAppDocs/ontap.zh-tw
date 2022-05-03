@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_failover_settings_on_a_lif.html 
+keywords: configure, configuring, configuration, setup, set, up, failover, fail, over, group, policy, lif, configure failover settings on a lif, broadcast-domain-wide, system-defined, local-only, sfo-partner-only, disabled, network interface modify -vserver <vserver_name> -lif <lif_name> -failover-policy <failover_policy> -failover-group <failover_group>, examples of configuring failover settings and disabling failover 
+summary: 設定LIF容錯移轉至特定的網路連接埠群組 
+---
+= 在LIF上設定容錯移轉設定
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以將容錯移轉原則和容錯移轉群組套用至LIF、將LIF設定為容錯移轉至特定的網路連接埠群組。您也可以停用LIF、使其無法容錯移轉至其他連接埠。
+
+.關於這項工作
+* 建立LIF時、預設會啟用LIF容錯移轉、可用的目標連接埠清單則由預設的容錯移轉群組和容錯移轉原則根據LIF類型和服務原則來決定。
++
+從9.5開始、您可以為LIF指定服務原則、以定義哪些網路服務可以使用LIF。有些網路服務會對LIF強制容錯移轉限制。
+
++
+
+NOTE: 如果LIF的服務原則變更後會進一步限制容錯移轉、則系統會自動更新LIF的容錯移轉原則。
+
+* 您可以在network interface modify命令中指定-容 錯移轉群組和-容 錯移轉原則參數的值、以修改l生命 體的容錯移轉行為。
+* 修改LIF會導致LIF沒有有效的容錯移轉目標、因此會產生警告訊息。
++
+如果沒有有效容錯移轉目標的LIF嘗試進行容錯移轉、可能會發生中斷。
+
+* 下列清單說明容錯移轉原則設定如何影響從容錯移轉群組選取的目標連接埠：
++
+** 「廣播網域範圍」適用於容錯移轉群組中所有節點上的所有連接埠。
+** 「系統定義」僅適用於LIF主節點上的連接埠、以及叢集中的另一個節點、通常為非SFO合作夥伴（如果存在）。
+** 「僅限本機」僅適用於LIF主節點上的連接埠。
+** 「僅限合作夥伴」僅適用於LIF主節點及其SFO合作夥伴上的連接埠。
+** 「停用」表示LIF未設定容錯移轉。
++
+
+NOTE: SAN傳輸協定的邏輯介面不支援容錯移轉、因此這些LIF一律設定為停用。
+
+
+
+
+
+設定現有介面的容錯移轉設定：
+
+....
+network interface modify -vserver <vserver_name> -lif <lif_name> -failover-policy <failover_policy> -failover-group <failover_group>
+....
+
+
+== 設定容錯移轉設定及停用容錯移轉的範例
+
+下列命令會將容錯移轉原則設定為廣播網域範圍、並使用容錯移轉群組fg3中的連接埠做為SVM VS3上LIF資料1的容錯移轉目標：
+
+....
+network interface modify -vserver vs3 -lif data1 failover-policy broadcast-domain-wide - failover-group fg3
+
+network interface show -vserver vs3 -lif * -fields failover-group,failover-policy
+
+vserver lif             failover-policy       failover-group
+------- -------------- ---------------        --------------
+vs3     data1          broadcast-domain-wide  fg3
+....
+下列命令會停用SVM VS3上LIF資料1的容錯移轉：
+
+....
+network interface modify -vserver vs3 -lif data1 failover-policy disabled
+....

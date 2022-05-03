@@ -1,0 +1,44 @@
+---
+permalink: smb-hyper-v-sql/add-sesecurityprivilege-user-account-task.html 
+sidebar: sidebar 
+keywords: add, sesecurityprivilege, privilege, user, aacount, sql, server, smb, share 
+summary: 用於安裝SQL伺服器的網域使用者帳戶必須指派「SeSecurityPrivilege」權限、才能在CIFS伺服器上執行某些動作、而這些動作需要預設未指派給網域使用者的權限。 
+---
+= 將SeSecurityPrivilege權限新增至使用者帳戶（適用於SMB共用的SQL Server）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+用於安裝SQL伺服器的網域使用者帳戶必須指派「eSecurity權限」權限、才能在CIFS伺服器上執行某些動作、而這些動作需要預設未指派給網域使用者的權限。
+
+用於安裝SQL Server的網域帳戶必須已經存在。
+
+將權限新增至SQL Server安裝程式的帳戶時ONTAP 、可能會聯絡網域控制器來驗證帳戶。如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
+
+.步驟
+. 新增「eSecurity權限」權限：
++
+「* vserver CIFS使用者與群組權限附加權限-vserver _vserver_name_-user-or群組名稱_account_name_-priv家 權限SeSecuritypriv家*」
+
++
+「-user-or group名稱」參數的值是用於安裝SQL Server的網域使用者帳戶名稱。
+
+. 確認已將權限套用至帳戶：
++
+「* vserver CIFS user-and-group」權限顯示-vserver _vserver_name_‑user-or -group name _account_name_*
+
+
+
+下列命令會在儲存虛擬機器（SVM）VS1的範例網域中、將「『安全性權限』」權限新增至SQL Server安裝程式的帳戶：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege add-privilege -vserver vs1 -user-or-group-name EXAMPLE\SQLinstaller -privileges SeSecurityPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name          Privileges
+--------- ---------------------       ---------------
+vs1       EXAMPLE\SQLinstaller        SeSecurityPrivilege
+----

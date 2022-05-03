@@ -1,0 +1,171 @@
+---
+permalink: peering/create-cluster-relationship-93-later-task.html 
+sidebar: sidebar 
+keywords: create, cluster, peer, relationship 
+summary: 您可以使用叢集對等項create命令、在本機與遠端叢集之間建立對等關係。建立對等關係之後、您可以在遠端叢集上執行叢集對等建立、將其驗證至本機叢集。 
+---
+= 建立叢集對等關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「叢集對等建立」命令、在本機與遠端叢集之間建立對等關係。建立對等關係之後、您可以在遠端叢集上執行「叢集對等實體建立」、將其驗證到本機叢集。
+
+.開始之前
+* 您必須在叢集中每個要處理的節點上建立叢集間生命體。
+* 叢集必須執行ONTAP 的是不含更新版本的版本。（如果叢集執行ONTAP 的是版本號為2或更早的版本、請參閱中的程序 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2494079["此歸檔文件"^]）
+
+
+.步驟
+. 在目的地叢集上、建立與來源叢集的對等關係：
++
+「叢集對等實體建立-產生密碼-優惠到期日_mm/DD/YYYY hh：mm:ss_|1...7天|1...168hours-peer-addrs _Peer_Lif_ips_-初始允許的Vserver對等實體_Svm_name_.|*-IPspace _IPspace_」
+
++
+如果您同時指定「-genere-phrase」和「-peer-addrs」、則只有在「-per-addrs」中指定叢集間生命體的叢集才能使用所產生的密碼。
+
++
+如果不使用自訂IPspace、您可以忽略「-IPSpace」選項。如需完整的命令語法、請參閱手冊頁。
+
++
+如果ONTAP 您在更新版本的版本中建立對等關係、但不想加密跨叢集對等通訊、則必須使用「加密傳輸協定建議的NONE」選項來停用加密。
+
++
+下列範例建立與未指定遠端叢集的叢集對等關係、並預先授權與本機叢集上的SVM「VS1」和「VS2」建立對等關係：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers vs1,vs2
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
++
+下列範例會在叢集間LIF IP位址192.140.112.103和192.140.112.104與遠端叢集建立叢集對等關係、並預先授權與本機叢集上的任何SVM建立對等關係：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -peer-addrs 192.140.112.103,192.140.112.104 -offer-expiration 2days -initial-allowed-vserver-peers *
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101,192.140.112.102
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
++
+以下範例建立與未指定遠端叢集的叢集對等關係、並預先授權與本機叢集上的SVMs 'VS1'和'VS2'建立對等關係：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers vs1,vs2
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
+. 在來源叢集上、驗證來源叢集到目的地叢集的驗證：
++
+「叢集對等端點create -對等 端點addrs _Peer_LIF_IPS_-IPSpace IPSpace」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列範例驗證本機叢集到叢集間LIF IP位址192.140.112.101和192.140.112.102的遠端叢集：
+
++
+[listing]
+----
+cluster01::> cluster peer create -peer-addrs 192.140.112.101,192.140.112.102
+
+Notice: Use a generated passphrase or choose a passphrase of 8 or more characters.
+        To ensure the authenticity of the peering relationship, use a phrase or sequence of characters that would be hard to guess.
+
+Enter the passphrase:
+Confirm the passphrase:
+
+Clusters cluster02 and cluster01 are peered.
+----
++
+出現提示時、請輸入對等關係的通關密碼。
+
+. 確認已建立叢集對等關係：
++
+「叢集對等端點顯示-instance」
+
++
+[listing]
+----
+cluster01::> cluster peer show -instance
+
+                               Peer Cluster Name: cluster02
+                   Remote Intercluster Addresses: 192.140.112.101, 192.140.112.102
+              Availability of the Remote Cluster: Available
+                             Remote Cluster Name: cluster2
+                             Active IP Addresses: 192.140.112.101, 192.140.112.102
+                           Cluster Serial Number: 1-80-123456
+                  Address Family of Relationship: ipv4
+            Authentication Status Administrative: no-authentication
+               Authentication Status Operational: absent
+                                Last Update Time: 02/05 21:05:41
+                    IPspace for the Relationship: Default
+----
+. 檢查對等關係中節點的連線能力和狀態：
++
+「叢集同儕健康展」
+
++
+[listing]
+----
+cluster01::> cluster peer health show
+Node       cluster-Name                Node-Name
+             Ping-Status               RDB-Health Cluster-Health  Avail…
+---------- --------------------------- ---------  --------------- --------
+cluster01-01
+           cluster02                   cluster02-01
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+                                       cluster02-02
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+cluster01-02
+           cluster02                   cluster02-01
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+                                       cluster02-02
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+----
+
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_prepare_mirror.html["準備鏡射和保存"^] 
+
+
+| System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/volume-disaster-prep/index.html["Volume災難恢復準備總覽"^] 
+|===

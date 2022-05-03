@@ -1,0 +1,117 @@
+---
+permalink: flexgroup/perform-snapmirror-single-file-restore-task.html 
+sidebar: sidebar 
+keywords: perform, snapmirror, single, file, restore, flexgroup, volume, snap mirror, flex group, vault, udp, destination, transfer 
+summary: 從ONTAP 功能不完整的9.8開始、您可以從FlexGroup SnapMirror保存庫或從udp目的地還原單一檔案。 
+---
+= 從FlexGroup 一個無法恢復的資料區執行SnapMirror單一檔案還原
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能不完整的9.8開始、您可以從FlexGroup SnapMirror保存庫或從udp目的地還原單一檔案。
+
+.關於這項工作
+* 您可以從FlexGroup 任何幾何的聲音量還原FlexGroup 至任何幾何的聲音量
+* 每個還原作業只支援一個檔案
+* 您可以還原至原始來源FlexGroup 的「聲音量」或新FlexGroup 的「聲音量」
+* 不支援遠端隔離檔案查詢。
++
+如果來源檔案設有保護區、則單一檔案還原會失敗。
+
+* 您可以重新啟動或清除中止的單一檔案還原
+* 您應該使用「napmirror還原」命令的「清除故障」選項來清除單一檔案還原傳輸失敗
+* 當進行還原單一檔案或處於中止狀態時、支援擴充FlexGroup 功能FlexGroup
+
+
+.步驟
+. 從FlexGroup 無法還原的磁碟區還原檔案：「快照鏡像還原- destination-path dite_path -source-path source_path -file-list /f1 -t節 流控制- source-snapshot snapshot快照」
++
+以下是FlexGroup 一個關於使用單一檔案還原功能的範例。
+
++
+[listing]
+----
+vserverA::> snapmirror restore -destination-path vs0:fg2 -source-path vs0:fgd -file-list /f1 -throttle 5 -source-snapshot snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631
+[Job 135] Job is queued: snapmirror restore from source "vs0:fgd" for the snapshot snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631.
+vserverA::> snapmirror show
+                                                                                         Source              Destination Mirror   Relationship                   Total Last
+Path       Type   Path            State    Status           Progress Healthy Updated
+----------- ----      ------------     -------    ---------          ----- --------- ------- --------
+vs0:v1d RST    vs0:v2          -           Transferring Idle 83.12KB true 09/19 11:38:42
+
+vserverA::*> snapmirror show vs0:fg2
+
+Source Path: vs0:fgd
+Source Cluster: -
+Source Vserver: vs0
+Source Volume: fgd
+Destination Path: vs0:fg2
+Destination Cluster: -
+Destination Vserver: vs0
+Destination Volume: fg2
+Relationship Type: RST
+Relationship Group Type: none
+Managing Vserver: vs0
+SnapMirror Schedule: -
+SnapMirror Policy Type: -
+SnapMirror Policy: -
+Tries Limit: -
+Throttle (KB/sec): unlimited
+Current Transfer Throttle (KB/sec): 2
+Mirror State: -
+Relationship Status: Transferring
+File Restore File Count: 1
+File Restore File List: f1
+Transfer Snapshot: snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631
+Snapshot Progress: 2.87MB
+Total Progress: 2.87MB
+Network Compression Ratio: 1:1
+Snapshot Checkpoint: 2.97KB
+Newest Snapshot: -
+Newest Snapshot Timestamp: -
+Exported Snapshot: -
+Exported Snapshot Timestamp: -
+Healthy: true
+Physical Replica: -
+Relationship ID: e6081667-dacb-11e9-94c0-005056a7e422
+Source Vserver UUID: 81072ce1-d57b-11e9-94c0-005056a7e422
+Destination Vserver UUID: 81072ce1-d57b-11e9-94c0-005056a7e422
+Current Operation ID: 138f12e6-dacc-11e9-94c0-005056a7e422
+Transfer Type: cg_file_restore
+Transfer Error: -
+Last Transfer Type: -
+Last Transfer Error: -
+Last Transfer Error Codes: -
+Last Transfer Size: -
+Last Transfer Network Compression Ratio: -
+Last Transfer Duration: -
+Last Transfer From: -
+Last Transfer End Timestamp: -
+Unhealthy Reason: -
+Progress Last Updated: 09/19 07:07:36
+Relationship Capability: 8.2 and above
+Lag Time: -
+Current Transfer Priority: normal
+SMTape Operation: -
+Constituent Relationship: false
+Destination Volume Node Name: vserverA
+Identity Preserve Vserver DR: -
+Number of Successful Updates: 0
+Number of Failed Updates: 0
+Number of Successful Resyncs: 0
+Number of Failed Resyncs: 0
+Number of Successful Breaks: 0
+Number of Failed Breaks: 0
+Total Transfer Bytes: 0
+Total Transfer Time in Seconds: 0
+Source Volume MSIDs Preserved: -
+OpMask: ffffffffffffffff
+Is Auto Expand Enabled: -
+Source Endpoint UUID: -
+Destination Endpoint UUID: -
+Is Catalog Enabled: false
+----
+

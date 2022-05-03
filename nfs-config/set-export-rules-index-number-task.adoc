@@ -1,0 +1,31 @@
+---
+permalink: nfs-config/set-export-rules-index-number-task.html 
+sidebar: sidebar 
+keywords: manage, processing, order, export rules 
+summary: 您可以使用vserver匯出原則規則setindex命令手動設定現有匯出規則的索引編號。這可讓您指定ONTAP 將匯出規則套用至用戶端要求的優先順序。 
+---
+= 管理匯出規則的處理順序
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver匯出原則規則setindex」命令、手動設定現有匯出規則的索引編號。這可讓您指定ONTAP 將匯出規則套用至用戶端要求的優先順序。
+
+如果新的索引編號已經在使用中、命令會在指定的點插入規則、並據此重新排序清單。
+
+.步驟
+. 修改指定匯出規則的索引編號：
++
+「vserver匯出原則規則集索引-vserver _virtual_server_name_-policyname _policy_name_-ruleindex _integer_-newululeindex _integer_」
+
+
+
+下列命令會將索引編號3的匯出規則索引編號變更為SVM上名為VS1的匯出原則RSR1編號2：
+
+[listing]
+----
+vs1::> vserver export-policy rule setindex -vserver vs1
+-policyname rs1 -ruleindex 3 -newruleindex 2
+----

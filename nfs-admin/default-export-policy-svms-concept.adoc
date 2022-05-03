@@ -1,0 +1,18 @@
+---
+permalink: nfs-admin/default-export-policy-svms-concept.html 
+sidebar: sidebar 
+keywords: default, export, policy, svm 
+summary: 每個SVM都有一個預設匯出原則、不含任何規則。用戶端必須先存在具有規則的匯出原則、才能存取SVM上的資料。SVM中包含的每FlexVol 個SVM磁碟區都必須與匯出原則相關聯。 
+---
+= SVM的預設匯出原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每個SVM都有一個預設匯出原則、不含任何規則。用戶端必須先存在具有規則的匯出原則、才能存取SVM上的資料。SVM中包含的每FlexVol 個SVM磁碟區都必須與匯出原則相關聯。
+
+建立SVM時、儲存系統會自動為SVM的根Volume建立名為「預設」的預設匯出原則。您必須先為預設匯出原則建立一或多個規則、用戶端才能存取SVM上的資料。或者、您也可以建立具有規則的自訂匯出原則。您可以修改及重新命名預設匯出原則、但無法刪除預設匯出原則。
+
+當您在FlexVol 包含SVM的磁碟區中建立一個SVM時、儲存系統會建立該磁碟區、並將該磁碟區與SVM根磁碟區的預設匯出原則建立關聯。根據預設、在SVM中建立的每個Volume都會與根Volume的預設匯出原則相關聯。您可以針對SVM中包含的所有磁碟區使用預設匯出原則、也可以針對每個磁碟區建立唯一的匯出原則。您可以將多個磁碟區與相同的匯出原則建立關聯。

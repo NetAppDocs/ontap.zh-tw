@@ -1,0 +1,46 @@
+---
+permalink: smb-admin/share-naming-requirements-concept.html 
+sidebar: sidebar 
+keywords: ontap, share, naming, name, requirement, mind, creating, create, smb, server, smb share naming requirements 
+summary: 在SMB伺服器ONTAP 上建立SMB共用時、請務必記住「不共享區」的命名要求。 
+---
+= SMB共用命名需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SMB伺服器ONTAP 上建立SMB共用時、請務必記住「不共享區」的命名要求。
+
+共享的名稱命名慣例ONTAP 與Windows相同、並包含下列需求：
+
+* SMB伺服器的每個共用區名稱必須是唯一的。
+* 共用名稱不區分大小寫。
+* 共享區名稱長度上限為80個字元。
+* 支援統一碼共用名稱。
+* 以$字元結尾的共用名稱為隱藏共用。
+* 系統會自動在每部CIFS伺服器上建立管理共用區（admin$、IPC$和c$管理共用區）、並保留共用區名稱。
+* 建立共用時、您無法使用共用名稱ONTAP_admin$。
+* 支援含有空格的共用名稱：
++
+** 您不能使用空格作為共用名稱的第一個字元或最後一個字元。
+** 您必須以引號括住包含空格的共用名稱。
++
+[NOTE]
+====
+單引號被視為共享區名稱的一部分、無法用來取代引號。
+
+====
+
+
+* 當您命名SMB共用時、支援下列特殊字元：
++
+！@#$%&'_-。~(){}
+
+* 當您命名SMB共用時、不支援下列特殊字元：
++
+** "/\：；|<>、？*=
+
+
+

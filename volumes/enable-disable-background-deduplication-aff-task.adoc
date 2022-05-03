@@ -1,0 +1,59 @@
+---
+permalink: volumes/enable-disable-background-deduplication-aff-task.html 
+sidebar: sidebar 
+keywords: manage, aggregate-level, background, deduplication, aff systems 
+summary: Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各磁碟區之間消除重複區從功能介紹9.3開始ONTAP 、您可以在AFF 幕後執行Aggregate層級的重複資料刪除技術。此功能預設會針對所有新建立的磁碟區和所有已升級且已開啟Volume背景重複資料刪除功能的磁碟區啟用。 
+---
+= 在AFF 不完善的系統上管理集合體層級的背景重複資料刪除技術
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各磁碟區之間消除重複區從功能介紹9.3開始ONTAP 、您可以在AFF 幕後執行Aggregate層級的重複資料刪除技術。此功能預設會針對所有新建立的磁碟區和所有已升級且已開啟Volume背景重複資料刪除功能的磁碟區啟用。
+
+當填入足夠大的變更記錄百分比時、系統會自動觸發此作業。沒有與作業相關的排程或原則。
+
+從使用者執行的功能為物件9.4開始ONTAP 、AFF 使用者也可以執行Aggregate層級的重複資料刪除掃描程式、以消除集合體中各磁碟區之間現有資料的重複資料。您可以使用「sorage Aggregate Effiate Effiue-volume -dedupe start」命令搭配「scope-old-data=true」選項來啟動掃描器：
+
+[listing]
+----
+cluster-1::> storage aggregate efficiency cross-volume-dedupe start -aggregate aggr1 -scan-old-data true
+----
+重複資料刪除掃描可能會耗費大量時間。您可能想要在非尖峰時間執行作業。
+
+[NOTE]
+====
+Aggregate層級的背景重複資料刪除技術有時稱為跨Volume背景重複資料刪除技術。
+
+====
+.步驟
+. 管理AFF 位於整個系統上的Aggregate層級背景重複資料刪除技術：
++
+[cols="2*"]
+|===
+| 如果您想要... | 使用此命令 
+
+
+ a| 
+啟用Aggregate層級的背景重複資料刪除
+ a| 
+「Volume EffiveiverEff間 修改-vserver <vserver_name\>-volume <vol_name\>-Cross-volVolume背景重複資料刪除true」
+
+
+
+ a| 
+停用Aggregate層級的背景重複資料刪除
+ a| 
+「Volume EffiveiverEff間 修改-vserver <vserver_name\>-volume <vol_name\>-Cross-volVolume背景重複資料刪除錯誤」
+
+
+
+ a| 
+顯示Aggregate層級的背景重複資料刪除狀態
+ a| 
+「Aggregate EffeEffe效率 跨磁碟區重複資料刪除顯示」
+
+|===
+

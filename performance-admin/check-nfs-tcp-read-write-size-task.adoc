@@ -1,0 +1,45 @@
+---
+permalink: performance-admin/check-nfs-tcp-read-write-size-task.html 
+sidebar: sidebar 
+keywords: check, nfs, tcp, maximum, transfer, size 
+summary: 對於NFS、您可以檢查讀取和寫入的TCP最大傳輸大小是否會造成效能問題。如果您認為規模正在減緩效能、您可以增加效能。 
+---
+= 檢查NFS TCP的最大傳輸大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於NFS、您可以檢查讀取和寫入的TCP最大傳輸大小是否會造成效能問題。如果您認為規模正在減緩效能、您可以增加效能。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須擁有叢集管理員權限才能執行此工作。
+* 您必須使用進階權限層級命令來執行此工作。
+
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 檢查TCP最大傳輸大小：
++
+「vserver NFS show -vserver _vserver_name_-instance」
+
+. 如果TCP最大傳輸大小太小、請增加大小：
++
+「vserver NFS modify -vserver _vserver_name_-tcp-max-xfer-size _integer_」
+
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+
+
+以下範例將TCP最大傳輸大小「VM1（VM1）”變更為1048576：
+
+[listing]
+----
+cluster1::*> vserver nfs modify -vserver SVM1 -tcp-max-xfer-size 1048576
+----

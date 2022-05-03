@@ -1,0 +1,46 @@
+---
+permalink: nas-audit/interpret-security-trace-results-concept.html 
+sidebar: sidebar 
+keywords: interpret, security trace, results 
+summary: 安全性追蹤結果提供允許或拒絕要求的原因。輸出會結合允許或拒絕存取的原因、以及允許或拒絕存取的存取檢查路徑中的位置、來顯示結果。您可以使用結果來隔離及識別為何允許或不允許採取行動。 
+---
+= 解讀安全性追蹤結果
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全性追蹤結果提供允許或拒絕要求的原因。輸出會結合允許或拒絕存取的原因、以及允許或拒絕存取的存取檢查路徑中的位置、來顯示結果。您可以使用結果來隔離及識別為何允許或不允許採取行動。
+
+
+
+== 尋找結果類型清單和篩選詳細資料的相關資訊
+
+您可以在「vserver安全性追蹤追蹤結果show」命令的手冊頁中找到結果類型清單和篩選器詳細資料。
+
+以下是在追蹤結果記錄中顯示「允許」結果類型的「原因」欄位輸出範例：
+
+[listing]
+----
+Access is allowed because SMB implicit permission grants requested
+access while opening existing file or directory.
+----
+[listing]
+----
+Access is allowed because NFS implicit permission grants requested
+access while opening existing file or directory.
+----
+以下是在追蹤結果記錄中顯示的「原因」欄位輸出「詳細」結果類型的範例：
+
+[listing]
+----
+Access is denied. The requested permissions are not granted by the
+ACE while checking for child-delete access on the parent.
+----
+以下是追蹤結果記錄中「篩選詳細資料」欄位的輸出範例、其中列出檔案系統的有效安全樣式、其中包含符合篩選條件的檔案和資料夾：
+
+[listing]
+----
+Security Style: MIXED and ACL
+----

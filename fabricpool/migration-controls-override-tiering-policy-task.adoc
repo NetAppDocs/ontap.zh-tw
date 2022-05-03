@@ -1,0 +1,37 @@
+---
+permalink: fabricpool/migration-controls-override-tiering-policy-task.html 
+sidebar: sidebar 
+keywords: cloud migration, controls, override, volume, default, tiering policy 
+summary: 您可以使用ONTAP 《》（更新）中介紹的-Cloud retrieve-policy（雲端擷取原則）選項、將Volume的預設分層原則從雲端層控制使用者資料擷取、變更為效能層。 
+---
+= 使用雲端移轉控制來覆寫Volume的預設分層原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用ONTAP 《資訊安全規則》（《資訊安全規範》）中介紹的「雲端擷取原則」（Cloud retrieve-policy）選項、將Volume的預設分層原則從雲端層控制使用者資料擷取、改為效能層。
+
+.您需要的是 #8217 ；需要的是什麼
+* 若要使用「雲端擷取原則」選項修改Volume、則需要ONTAP 使用更新版本的版本。
+* 您必須具備進階權限層級才能執行此作業。
+* 您應該瞭解使用「雲端擷取原則」分層原則的行為。
++
+link:tiering-policies-concept.html#how-tiering-policies-work-with-cloud-migration["分層原則如何與雲端移轉搭配運作"]
+
+
+
+.步驟
+. 使用「volume modify」命令搭配「-Cloud檢索原則」選項、修改現有磁碟區的分層原則行為：
++
+[listing]
+----
+ volume create -volume <volume_name> -vserver <vserver_name> - tiering-policy <policy_name> -cloud-retrieval-policy
+----
++
+[listing]
+----
+vol modify -volume fp_volume4 -vserver vs0 -cloud-retrieval-policy promote
+----
+

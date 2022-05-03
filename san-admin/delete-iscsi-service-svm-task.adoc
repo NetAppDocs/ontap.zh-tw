@@ -1,0 +1,31 @@
+---
+permalink: san-admin/delete-iscsi-service-svm-task.html 
+sidebar: sidebar 
+keywords: delete, iscsi, service, svm 
+summary: 如果不再需要、您可以刪除儲存虛擬機器（SVM）的iSCSI服務。 
+---
+= 刪除SVM的iSCSI服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要、您可以刪除儲存虛擬機器（SVM）的iSCSI服務。
+
+在刪除iSCSI服務之前、iSCSI服務的管理狀態必須為「直接」狀態。您可以使用「vserver iSCSI modify」命令將管理狀態移至「向下」。
+
+.步驟
+. 使用「vserver iSCSI modify」命令來停止對LUN的I/O。
++
+「vserver iSCSI modify -vserver VS1 -STATUS-admin down」
+
+. 使用「vserver iSCSI刪除」命令、從SVM移除iSCSI服務。
++
+vserver iSCSI刪除-vserver vvs 1
+
+. 使用「vserver iSCSI show命令」來確認您已從SVM刪除iSCSI服務。
++
+「vserver iSCSI show -vserver VS1」
+
+

@@ -1,0 +1,93 @@
+---
+permalink: volumes/move-between-secondary-adaptive-compression-task.html 
+sidebar: sidebar 
+keywords: move, secondary compression, adaptive compression 
+summary: 視資料讀取量而定、您可以在二線壓縮和調適性壓縮之間切換。如果系統隨機讀取量很大、而且需要較高的效能、則建議使用調適性壓縮。如果資料是循序寫入、而且需要更高的壓縮節約量、則偏好使用二線壓縮。 
+---
+= 在二線壓縮和調適性壓縮之間移動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+視資料讀取量而定、您可以在二線壓縮和調適性壓縮之間切換。如果系統隨機讀取量很大、而且需要較高的效能、則建議使用調適性壓縮。如果資料是循序寫入、而且需要更高的壓縮節約量、則偏好使用二線壓縮。
+
+預設的壓縮類型是根據您的Aggregate與平台而選擇。
+
+.步驟
+. 停用Volume上的資料壓縮：
++
+《Volume Eff高效 修改》
+
++
+下列命令會停用Volume vol1上的資料壓縮：
+
++
+「Volume Eff效率 修改-壓縮假內嵌壓縮假Volume vol1」
+
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 解壓縮壓縮資料：
++
+《Volume Eff效率 復原》
+
++
+下列命令會解壓縮Volume vol1上的壓縮資料：
+
++
+磁碟區效率復原-vserver VS1 -volume vol1 -壓縮true
+
++
+[NOTE]
+====
+您必須驗證磁碟區中是否有足夠的空間來容納解壓縮的資料。
+
+====
+. 確認作業狀態為閒置：
++
+「Volume Eff效率 展」
+
++
+下列命令會顯示Volume vol1上效率作業的狀態：
+
++
+「Volume Eff效率」顯示-vserver VS1 -volume vol1
+
+. 啟用資料壓縮、然後設定壓縮類型：
++
+《Volume Eff高效 修改》
+
++
+下列命令可啟用資料壓縮、並將壓縮類型設為Volume vol1的次要壓縮：
+
++
+「Volume Effiv更 有效率修改-vserver VS1 -volume vol1 -壓縮true -壓縮 類型為二線」
+
++
+[NOTE]
+====
+此步驟只會啟用磁碟區的二次壓縮、而不會壓縮磁碟區上的資料。
+
+** 若要壓縮AFF 現有的資料至非資料系統、您必須執行背景壓縮掃描程式。
+** 若要壓縮Flash Pool Aggregate或HDD Aggregate上的現有資料、您必須執行背景壓縮。
+
+
+====
+. 變更為管理權限層級：
++
+「et -priv. admin」
+
+. 選用：啟用即時壓縮：
++
+《Volume Eff高效 修改》
+
++
+下列命令可在Volume vol1上啟用即時壓縮：
+
++
+「Volume Effiv更 有效率修改-vserver VS1 -volume vol1 -ine-壓縮true」
+
+

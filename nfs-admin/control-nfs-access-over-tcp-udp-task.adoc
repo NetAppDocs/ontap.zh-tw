@@ -1,0 +1,60 @@
+---
+permalink: nfs-admin/control-nfs-access-over-tcp-udp-task.html 
+sidebar: sidebar 
+keywords: control, nfs, access, tcp, udp 
+summary: 您可以分別修改-tcp和-udp參數、以啟用或停用透過TCP和udp存取儲存虛擬機器（SVM）的NFS。這可讓您控制NFS用戶端是否能在您的環境中透過TCP或UDP存取資料。 
+---
+= 透過TCP和UDP控制NFS存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以分別修改「-tcp」和「-udp」參數、以啟用或停用透過TCP和udp存取儲存虛擬機器（SVM）的NFS。這可讓您控制NFS用戶端是否能在您的環境中透過TCP或UDP存取資料。
+
+這些參數僅適用於NFS。它們不會影響輔助通訊協定。例如、如果停用NFS over TCP、則透過TCP掛載作業仍會成功。若要完全封鎖TCP或UDP流量、您可以使用匯出原則規則。
+
+[NOTE]
+====
+在停用TCP for NFS之前、您必須先關閉SnapDiff RPC伺服器、以免發生命令故障的錯誤。您可以使用命令「vserver snapdiiff-rpc伺服器Off -vserver vserver name」來停用TCP。
+
+====
+.步驟
+. 執行下列其中一項動作：
++
+[cols="30,70"]
+|===
+
+
+| 如果您想要NFS存取... | 輸入命令... 
+
+
+ a| 
+透過TCP啟用
+ a| 
+「vserver NFS modify -vserver vserver_name -tcp enabled」
+
+
+
+ a| 
+已透過TCP停用
+ a| 
+"Vserver NFS modify -vserver vserver_name -tcp disabled"
+
+
+
+ a| 
+已透過udp啟用
+ a| 
+「vserver NFS modify -vserver vserver_name -udp enabl用」
+
+
+
+ a| 
+已透過udp停用
+ a| 
+"Vserver NFS modify -vserver vserver_name -udp disabled"
+
+|===
+

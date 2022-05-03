@@ -1,0 +1,58 @@
+---
+permalink: tape-backup/ndmp-concept.html 
+sidebar: sidebar 
+keywords: ncmp, considerations, using, service, storage, system 
+summary: 在儲存系統上啟動NDMP服務時、您必須考量許多因素。 
+---
+= 使用NDMP時的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存系統上啟動NDMP服務時、您必須考量許多因素。
+
+* 每個節點最多可支援16個並行備份、還原、或使用連接的磁帶機結合使用兩個節點。
+* NDMP服務可應NDMP備份應用程式的要求、產生檔案歷程記錄資料。
++
+備份應用程式會使用檔案歷程記錄、以最佳化方式從備份映像還原所選的資料子集。對於儲存系統和備份應用程式而言、產生和處理檔案歷程記錄可能會耗費大量時間和CPU資源。
+
++
+[NOTE]
+====
+SMTape不支援檔案歷程記錄。
+
+====
++
+如果您的資料保護設定為災難恢復（即恢復整個備份映像）、您可以停用產生檔案歷史記錄、以縮短備份時間。請參閱備份應用程式文件、以判斷是否可以停用產生NDMP檔案歷程記錄。
+
+* NDMP的防火牆原則預設會在所有LIF類型上啟用。
+* 在節點範圍的NDMP模式中、若要備份FlexVol 某個支援區、您必須使用備份應用程式、在擁有該磁碟區的節點上啟動備份。
++
+不過、您無法備份節點根磁碟區。
+
+* 您可以在防火牆原則允許的情況下、從任何LIF執行NDMP備份。
++
+如果您使用資料LIF、則必須選取未設定容錯移轉的LIF。如果資料LIF在NDMP作業期間容錯移轉、NDMP作業就會失敗、必須重新執行。
+
+* 在節點範圍的NDMP模式和儲存虛擬機器（SVM）範圍NDMP模式中、NDMP資料連線使用與NDMP控制連線相同的LIF。
+* 在LIF移轉期間、持續的備份與還原作業會中斷。
++
+在LIF移轉之後、您必須啟動備份與還原作業。
+
+* NDMP備份路徑的格式為「_/vserver_name/volume名稱/path_name_」。
++
+「_path_name_」為選用項目、並指定目錄、檔案或Snapshot複本的路徑。
+
+* 使用傾印引擎將SnapMirror目的地備份至磁帶時、只會備份磁碟區中的資料。
++
+不過、如果SnapMirror目的地是使用SMTape備份到磁帶、則中繼資料也會備份。SnapMirror關係及相關的中繼資料不會備份到磁帶。因此、在還原期間、只會還原該磁碟區上的資料、但不會還原相關的SnapMirror關係。
+
+
+
+xref:cluster-aware-backup-extension-concept.adoc[叢集感知備份擴充的功能]
+
+link:../concepts/index.html["概念ONTAP"]
+
+link:../system-admin/index.html["系統管理"]

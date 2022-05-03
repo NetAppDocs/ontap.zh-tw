@@ -1,0 +1,35 @@
+---
+permalink: smb-config/create-keytab-files-authentication-concept.html 
+sidebar: sidebar 
+keywords: begin, ontap, support, svm, authentication, active, directory, ad, server, keytab, file, administrator, generate, uniform, resource, identifier, uri, supplied, supply, vserver, cifs, command, kerberos, create keytab files for smb authentication 
+summary: 從支援SVM 9.7開始ONTAP 、ONTAP 使用Keytab檔案、透過Active Directory（AD）伺服器支援SVM驗證。AD管理員會產生Keytab檔案、ONTAP 並將其作為統一的資源識別元（URI）提供給各個管理員、當Vserver CIFS命令需要AD網域的Kerberos驗證時、就會提供此檔案。 
+---
+= 建立用於SMB驗證的Keytab檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從支援SVM 9.7開始ONTAP 、ONTAP 使用Keytab檔案、透過Active Directory（AD）伺服器支援SVM驗證。AD系統管理員會產生Keytab檔案、ONTAP 並將其作為統一的資源識別元（URI）提供給各個管理員、當「Vserver CIFS」命令需要使用AD網域進行Kerberos驗證時、就會提供此檔案。
+
+AD管理員可以使用標準的Windows Server「ktpass」命令來建立Keytab檔案。命令應在需要驗證的主要網域上執行。「ktpass」命令僅可用於為主要網域使用者產生Keytab檔案、不支援使用信任網域使用者所產生的金鑰。
+
+Keytab檔案是針對特定ONTAP 的資訊管理員使用者所產生。只要管理員使用者的密碼未變更、針對特定加密類型和網域所產生的金鑰就不會變更。因此、每當管理員使用者的密碼變更時、都需要新的Keytab檔案。
+
+支援下列加密類型：
+
+* AES256-SHA1
+* 德斯CBC-MD5
++
+[NOTE]
+====
+不支援DES-CBC-CRC加密類型。ONTAP
+
+====
+* RC4-HMAC
+
+
+ES256是最高的加密類型、如果在ONTAP 支援的系統上啟用、就應該使用。
+
+您可以指定管理密碼或使用隨機產生的密碼來產生Keytab檔案。不過、在任何指定時間、只能使用一個密碼選項、因為AD伺服器需要專屬的管理使用者私密金鑰、才能解密Keytab檔案中的金鑰。對特定管理員的私密金鑰進行任何變更、都會使Keytab檔案失效。

@@ -1,0 +1,161 @@
+---
+permalink: element-replication/reactivate-original-source-volume-task.html 
+sidebar: sidebar 
+keywords: reactivate. original, source, volume 
+summary: 當您不再需要從目的地提供資料時、可以重新建立來源與目的地磁碟區之間的原始資料保護關係。 
+---
+= 重新啟動原始來源Volume
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您不再需要從目的地提供資料時、可以重新建立來源與目的地磁碟區之間的原始資料保護關係。
+
+以下程序假設原始來源Volume中的基準線完整無缺。如果基準不完整、您必須先建立並初始化您要從中處理資料的磁碟區與原始來源磁碟區之間的關係、然後再執行程序。
+
+您必須以「_hostip：_/LUN/_name_」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+
+從ONTAP 功能表9.4開始、當ONTAP 您從功能表來源重新啟動時、系統會自動複寫在從功能表目的地處理資料時所建立的LUN Snapshot複本。
+
+複寫規則如下：
+
+* 僅支援iSCSI LUN。
+* 您無法將ONTAP 多個LUN從一個實體磁碟區複寫到一個元素磁碟區。
+* 您無法將LUN從ONTAP 一個實體磁碟區複寫到多個元素磁碟區。
+
+
+.步驟
+. 刪除原始資料保護關係：
++
+「napmirror DELETE -source-path _svm:volume _」（napmirror刪除-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/名稱_-policy _」（原則_）
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例刪除原始來源磁碟區「0005」（IP位址為10.0.11）與您所提供資料的磁碟區之間的關係、「svm_backup」上的「Vola_dst」（Vola_dst）：
+
++
+[listing]
+----
+cluster_dst::> snapmirror delete -source-path 10.0.0.11:/lun/0005 -policy MirrorLatest -destination-path svm_backup:volA_dst
+----
+. 反轉原始資料保護關係：
++
+「napmirror resSync -source-path _svm:volume _」（napmirror重新同步-來源路徑_Svm:volume _）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_-policy _」（原則_）
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+
++
+以下範例反轉了原始來源磁碟區（IP位址為10.0.11的「0005」）與您所提供資料的磁碟區之間的關係、即在「shvm_backup」上的「Vola_dst」（Vola_dst）：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005 -policy MirrorLatest
+----
+. 更新反轉的關係：
++
+「napmirror update -source-path _svm:volume？」（napmirror update -source-path _svm:volume）|叢集：//Svm/volume（/volume）- dite-path _hostips：_/lun/_name_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+
+====
++
+以下範例更新您提供資料的磁碟區、「svm_backup」上的「Vola_dst」、以及IP位址為10.0.11的原始來源磁碟區「0005」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005
+----
+. 停止針對反向關係進行排程的轉帳：
++
+「napmirror quiesce -source-path _svm:volume _」（napmirror靜止-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例會停止您所提供資料的磁碟區之間的排程傳輸、在「shvm_backup」上停止「Vola_dst」、在IP位址10.0.11上停止原始來源磁碟區「0005」：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005
+----
+. 停止針對反向關係進行中的轉帳：
++
+「napmirror abort-source-path _svm:volume？」（napmirror abort-source-path _svm:volume）|叢集：//Svm/volume（/volume）- dite-path _hostips：_/lun/_name_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例會停止在您提供資料的磁碟區之間進行傳輸、在「shvm_backup」上停止「Vola_dst」、在IP位址10.0.11上停止原始來源磁碟區「0005」：
+
++
+[listing]
+----
+cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005
+----
+. 打破反向關係：
++
+「napmirror中斷-source-path _svm:volume？」|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例打破了您提供資料的磁碟區、「svm_backup」上的「Vola_dst」、以及IP位址為10.0.11的原始來源磁碟區「0005」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005
+----
+. 刪除反轉的資料保護關係：
++
+「napmirror DELETE -source-path _svm:volume _」（napmirror刪除-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostip_：/lun/_name_-policy _」（原則_）
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例刪除了原始來源磁碟區「0005」（IP位址為10.0.11）與您提供資料的磁碟區之間的反向關係：「VM備份」上的「Vola_dst」（Vola_dst）：
+
++
+[listing]
+----
+cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-path 10.0.0.11:/lun/0005 -policy MirrorLatest
+----
+. 重新建立原始資料保護關係：
++
+「napmirror resSync -source-path _hostip_:/LUN/_name_-destination-path _svm:volume | cluster：//Svm/volume _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例重新建立原始來源磁碟區（IP位址為10.0.11的「0005」）與原始目的地磁碟區（在「shvm_backup」上為「Vola_dst」）之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
+----
+
+
+使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。

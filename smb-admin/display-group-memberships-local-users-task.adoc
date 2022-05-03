@@ -1,0 +1,63 @@
+---
+permalink: smb-admin/display-group-memberships-local-users-task.html 
+sidebar: sidebar 
+keywords: display, information, local, group, user, belong, folder, determine, access, file, useful, troubleshoot, display information about group memberships for local users 
+summary: 您可以顯示本機使用者所屬的本機群組資訊。您可以使用此資訊來判斷使用者對檔案和資料夾的存取權限。此資訊有助於判斷使用者對檔案和資料夾的存取權限、或是疑難排解檔案存取問題。 
+---
+= 顯示本機使用者群組成員資格的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示本機使用者所屬的本機群組資訊。您可以使用此資訊來判斷使用者對檔案和資料夾的存取權限。此資訊有助於判斷使用者對檔案和資料夾的存取權限、或是疑難排解檔案存取問題。
+
+您可以自訂命令、僅顯示您要查看的資訊。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+顯示指定本機使用者的本機使用者成員資格資訊
+ a| 
+「Vserver CIFS使用者與群組本機使用者顯示成員資格-使用者名稱_user_name_」
+
+
+
+ a| 
+顯示本機使用者所屬本機群組的本機使用者成員資格資訊
+ a| 
+「Vserver CIFS使用者與群組本機使用者顯示成員資格-會員資格_group名稱_」
+
+
+
+ a| 
+顯示與指定儲存虛擬機器（SVM）相關聯之本機使用者的使用者成員資格資訊
+ a| 
+「Vserver CIFS使用者與群組本機使用者show成員資格-vserver _vserver_name_」
+
+
+
+ a| 
+顯示指定SVM上所有本機使用者的詳細資訊
+ a| 
+「Vserver CIFS使用者與群組本機使用者顯示成員資格-執行個體_vserver _vserver_name_」
+
+|===
+
+
+以下範例顯示SVM VS1上所有本機使用者的成員資格資訊；使用者「CIFS伺服器管理員」是「BUILTIN\Administrators」群組的成員、而「CIFS伺服器\ sue」是「CIFS伺服器\ g1`」群組的成員：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show-membership -vserver vs1
+Vserver    User Name                    Membership
+---------- ---------------------------- ------------------------
+vs1        CIFS_SERVER\Administrator    BUILTIN\Administrators
+           CIFS_SERVER\sue              CIFS_SERVER\g1
+----

@@ -1,0 +1,85 @@
+---
+permalink: data-protection/make-destination-volume-writeable-task.html 
+sidebar: sidebar 
+keywords: destination, volume, writeable, write, serve data, snapmirror, quiesce, pause, abort, transfers 
+summary: 您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用SnapMirror quiesce命令來停止排程的目的地傳輸、使用SnapMirror abort-command來停止進行中的傳輸、以及使用SnapMirror中斷命令來使目的地可寫入。 
+---
+= 使目的地Volume可寫入
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用「napmirror quiesce」命令來停止排程的目的地傳輸、使用「napmirror abort]命令來停止進行中的傳輸、以及使用「shapmirror Break」命令來使目的地可寫入。
+
+您必須從目的地SVM或目的地叢集執行此工作。
+
+.步驟
+. 停止排程的目的地傳輸：
++
+"napmirror quiesce -path _svm:volume | cluster：//svm/volume _、... -destination-path _svm:volume | cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例會停止在來源磁碟區「Vola」（位於「svm1」）和目的地磁碟區「Vola_dst」（位於「shvm_backup」）之間的排程傳輸：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 停止持續傳輸至目的地：
++
+"napmirror abort-source-path _svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+SnapMirror同步關係不需要執行此步驟（ONTAP 從支援的版本號為9.5開始）。
+
+====
++
+以下範例會停止在來源磁碟區「Vola」（在「svm1」）和目的地磁碟區「Vola_dst」（在「shvm_backup」）之間進行傳輸：
+
++
+[listing]
+----
+cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 打破SnapMirror DR關係：
++
+"napmirror中斷-source-path _svm:volume（磁碟區）_cluster：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例打破了「svm1」上的來源磁碟區「Vola」與「svm_backup」上的目的地磁碟區「Vola_dst」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_serve_data_from_destination.html["從SnapMirror目的地提供資料"^] 
+
+
+| System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/volume-disaster-recovery/index.html["Volume災難恢復總覽"^] 
+|===

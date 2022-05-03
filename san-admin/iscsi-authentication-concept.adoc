@@ -1,0 +1,39 @@
+---
+permalink: san-admin/iscsi-authentication-concept.html 
+sidebar: sidebar 
+keywords: how, iscsi, authentication, works 
+summary: 在iSCSI工作階段的初始階段、啟動器會傳送登入要求至儲存系統、以開始iSCSI工作階段。然後儲存系統會允許或拒絕登入要求、或是判斷不需要登入。 
+---
+= iSCSI驗證的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在iSCSI工作階段的初始階段、啟動器會傳送登入要求至儲存系統、以開始iSCSI工作階段。然後儲存系統會允許或拒絕登入要求、或是判斷不需要登入。
+
+iSCSI驗證方法包括：
+
+* 挑戰握手驗證傳輸協定（CHAP）：啟動器使用CHAP使用者名稱和密碼登入。
++
+您可以指定CHAP密碼或產生一個十六進位密碼。CHAP使用者名稱和密碼有兩種類型：
+
++
+** 傳入：儲存系統會驗證啟動器。
++
+如果您使用CHAP驗證、則需要輸入設定。
+
+** Outbound（傳出）：這是一項選用設定、可讓啟動器驗證儲存系統。
++
+只有在儲存系統上定義傳入使用者名稱和密碼時、才能使用傳出設定。
+
+
+
+* Deny（拒絕）-拒絕啟動器存取儲存系統。
+* 無-儲存系統不需要對啟動器進行驗證。
+
+
+您可以定義啟動器清單及其驗證方法。您也可以定義適用於此清單以外之啟動器的預設驗證方法。
+
+https://www.netapp.com/pdf.html?item=/media/19668-tr-3441.pdf["Windows多重路徑選項Data ONTAP 、包含下列功能：Fibre Channel和iSCSI"]

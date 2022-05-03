@@ -1,0 +1,95 @@
+---
+permalink: fabricpool/replace-existing-object-store-mirror-task.html 
+sidebar: sidebar 
+keywords: replacing, existing, object, store, fabricpool, mirror 
+summary: 您可以使用FabricPool 鏡射技術、將一個物件存放區換成另一個物件存放區。新的物件存放區不需要使用與原始物件存放區相同的雲端供應商。 
+---
+= 使用FabricPool 鏡射取代現有的物件存放區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用FabricPool 鏡射技術、將一個物件存放區換成另一個物件存放區。新的物件存放區不需要使用與原始物件存放區相同的雲端供應商。
+
+您可以使用使用不同雲端供應商的物件存放區來取代原始物件存放區。例如、您的原始物件存放區可能會使用AWS做為雲端供應商、但您可以將它取代為使用Azure做為雲端供應商的物件存放區、反之亦然。不過、新的物件存放區必須保留與原始物件相同的物件大小。
+
+.步驟
+. 使用FabricPool 「儲存物件儲存鏡射」命令、將新的物件儲存區新增至現有FabricPool 的物件儲存區、以建立一個鏡射。
++
+[listing]
+----
+cluster1::> storage aggregate object-store mirror -aggregate aggr1 -name my-AZURE-store
+----
+. 使用「shorage Aggregate object-store show-res出 同步狀態」命令監控鏡射重新同步狀態。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show-resync-status -aggregate aggr1
+----
++
+[listing]
+----
+                                                  Complete
+      Aggregate    Primary          Mirror        Percentage
+      ---------    -----------      ----------    ----------
+      aggr1        my-AWS-store     my-AZURE-store     40%
+----
+. 使用「儲存Aggregate object-store> show -Fields mirror type、is鏡射降級」命令來驗證鏡射是否同步。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AWS-store        primary           -
+               my-AZURE-store      mirror          false
+----
+. 使用「儲存區Aggregate object-store modify」命令、將主要物件存放區與鏡射物件存放區交換。
++
+[listing]
+----
+cluster1::> storage aggregate object-store modify -aggregate aggr1 -name my-AZURE-store -mirror-type primary
+----
+. 使用「shorage Aggregate object-store show -Fields mirror type、is-mirror降級」命令來顯示FabricPool 有關此鏡射的詳細資料。
++
+此範例顯示FabricPool 有關鏡射的資訊、包括鏡射是否降級（非同步）。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type, is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AZURE-store      primary           -
+               my-AWS-store        mirror          false
+----
+. 使用FabricPool 「shorage Aggregate object-store unmirror」命令移除鏡射鏡射。
++
+[listing]
+----
+cluster1::> storage aggregate object-store unmirror -aggregate aggr1
+----
+. 使用FabricPool 「shorage aggregate object-store show -Fields mirror type、is鏡射降級」命令、驗證該物件是否回到單一物件存放區組態中。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AZURE-store      primary           -
+----
+

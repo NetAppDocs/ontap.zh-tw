@@ -1,0 +1,67 @@
+---
+permalink: smb-admin/enable-disable-gpo-support-task.html 
+sidebar: sidebar 
+keywords: enable, disable, group, policy, object, gpo, support, cifs, server, applicable, define, policy, organizational, unit, ou, enable or disable gpo support on a cifs server 
+summary: 您可以在CIFS伺服器上啟用或停用群組原則物件（GPO）支援。如果您在CIFS伺服器上啟用GPO支援、則會將群組原則上定義的適用GPO（套用至包含CIFS伺服器電腦物件之組織單位（OU）的原則）套用至CIFS伺服器。 
+---
+= 在CIFS伺服器上啟用或停用GPO支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在CIFS伺服器上啟用或停用群組原則物件（GPO）支援。如果您在CIFS伺服器上啟用GPO支援、則會將群組原則上定義的適用GPO（套用至包含CIFS伺服器電腦物件之組織單位（OU）的原則）套用至CIFS伺服器。
+
+[NOTE]
+.關於這項工作
+====
+無法在CIFS伺服器上以工作群組模式啟用GPO。
+
+====
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+啟用GPO
+ a| 
+「vserver CIFS群組原則修改-vserver _vserver_name_-STATUS enabled_
+
+
+
+ a| 
+停用GPO
+ a| 
+「vserver CIFS群組原則修改-vserver _vserver_name_-STATUS disabled'
+
+|===
+. 確認GPO支援處於所需狀態：「vserver CIFS group原則show -vserver +vserver_name_」
++
+工作群組模式中CIFS伺服器的群組原則狀態顯示為「停用」。
+
+
+
+下列範例可在儲存虛擬機器（SVM）VS1上啟用GPO支援：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy modify -vserver vs1 -status enabled
+
+cluster1::> vserver cifs group-policy show -vserver vs1
+
+            Vserver: vs1
+Group Policy Status: enabled
+----
+xref:supported-gpos-concept.adoc[支援的GPO]
+
+xref:requirements-gpos-concept.adoc[在CIFS伺服器上使用GPO的需求]
+
+xref:gpos-updated-server-concept.adoc[如何在CIFS伺服器上更新GPO]
+
+xref:manual-update-gpo-settings-task.adoc[手動更新CIFS伺服器上的GPO設定]
+
+xref:display-gpo-config-task.adoc[顯示有關GPO組態的資訊]

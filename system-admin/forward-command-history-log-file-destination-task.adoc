@@ -1,0 +1,62 @@
+---
+permalink: system-admin/forward-command-history-log-file-destination-task.html 
+sidebar: sidebar 
+keywords: forward, audit, log, destination, cluster, forwarding, splunk, create, command 
+summary: 您可以使用叢集記錄轉送create命令、將稽核記錄轉送到最多10個目的地。例如、您可以將記錄轉送至Splunk或syslog伺服器、以供監控、分析或備份之用。 
+---
+= 將稽核記錄轉送到目的地
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「叢集記錄轉送create」命令、將稽核記錄轉送到最多10個目的地。例如、您可以將記錄轉送至Splunk或syslog伺服器、以供監控、分析或備份之用。
+
+如果「叢集記錄轉送create」命令無法ping目的地主機以驗證連線能力、則命令會失敗並顯示錯誤訊息。雖然不建議使用、但使用「-force」參數搭配命令會略過連線驗證。
+
+您可以在轉送記錄檔時設定傳輸安全性選項：
+
+* 傳送訊息至目的地的傳輸協定
++
+您可以選取下列其中一個「-Protocol」值：
+
++
+** 「UDP-未加密」：無安全性的使用者資料包傳輸協定（預設）
+** 「TCP未加密」：傳輸控制傳輸協定、無安全性
+** 「TCP加密」：傳輸層安全傳輸控制傳輸協定（TLS）
+
+
+* 驗證目的地伺服器身分
++
+當您將「-VERIFY -伺服器」參數設定為「true」時、記錄轉送目的地的身分識別會透過驗證其憑證來驗證。只有在「-Protocol（傳輸協定）」欄位中選取「TCP-Encrypted（TCP加密）」值時、才能將值設為「true（真）」。
+
+
+
+.步驟
+. 針對您要轉送稽核記錄的每個目的地、指定目的地IP位址或主機名稱及任何安全性選項。
++
+[listing]
+----
+cluster1::> cluster log-forwarding create -destination 192.168.123.96
+-port 514 -facility user
+
+cluster1::> cluster log-forwarding create -destination 192.168.123.98
+-port 514 -protocol tcp-encrypted -facility user
+----
+. 使用「cluster log-forwarding show」命令確認目的地記錄正確無誤。
++
+[listing]
+----
+cluster1::> cluster log-forwarding show
+
+                                                 Verify Syslog
+Destination Host          Port   Protocol        Server Facility
+------------------------- ------ --------        ------ --------
+192.168.123.96            514    udp-unencrypted false  user
+192.168.123.98            514    tcp-encrypted   true   user
+2 entries were displayed.
+----
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

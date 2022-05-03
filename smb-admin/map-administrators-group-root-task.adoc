@@ -1,0 +1,41 @@
+---
+permalink: smb-admin/map-administrators-group-root-task.html 
+sidebar: sidebar 
+keywords: cifs, client, environment, storage, virtual, machine, svm, multiprotocol, storage, system, windows, account, root, privilege, svm, sufficient, user, right, map the administrators group to root 
+summary: 如果您的環境中只有CIFS用戶端、且儲存虛擬機器（SVM）設定為多重傳輸協定儲存系統、則您必須擁有至少一個具有root權限的Windows帳戶、才能存取SVM上的檔案； 否則、您將無法管理SVM、因為您沒有足夠的使用者權限。 
+---
+= 將系統管理員群組對應至root
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的環境中只有CIFS用戶端、且儲存虛擬機器（SVM）設定為多重傳輸協定儲存系統、則您必須擁有至少一個具有root權限的Windows帳戶、才能存取SVM上的檔案； 否則、您將無法管理SVM、因為您沒有足夠的使用者權限。
+
+不過、如果您的儲存系統設定為僅限NTFS、則「/etc/」目錄會有檔案層級的ACL、讓系統管理員群組能夠存取ONTAP 還原組態檔。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 設定CIFS伺服器選項、將系統管理員群組適當對應至root：
++
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+將系統管理員群組成員對應至root
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is -admin-users-Mapped to root enabled true」（Vserver CIFS選項修改-vserver _vserver_name_-is -admin-users-Mapped to root）管理員群組中的所有帳戶都會被視為root（即使您沒有將帳戶對應至root的/etc/usermap.cfg/）項目）。如果您使用屬於系統管理員群組的帳戶來建立檔案、則當您從UNIX用戶端檢視檔案時、檔案將由root擁有。
+
+
+
+ a| 
+停用將系統管理員群組成員對應至root
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is -admin-user-Mapped to root enabled假帳戶」（在系統管理員群組中）、不再對應至root。您只能明確地將單一使用者對應至root。
+
+|===
+. 確認選項已設定為所需的值：「vserver CIFS options show -vserver _vserver_name_」
+. 返回管理員權限等級：「et -priv. admin」
+

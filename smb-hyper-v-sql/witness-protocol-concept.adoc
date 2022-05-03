@@ -1,0 +1,26 @@
+---
+permalink: smb-hyper-v-sql/witness-protocol-concept.html 
+sidebar: sidebar 
+keywords: witness, protocol, node, sfo, partner, failure, smb, client 
+summary: 利用節點的SFO合作夥伴作為見證人、實作見證協議。ONTAP如果發生故障、合作夥伴會快速偵測故障、並通知SMB用戶端。 
+---
+= 見證協定的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+利用節點的SFO合作夥伴作為見證人、實作見證協議。ONTAP如果發生故障、合作夥伴會快速偵測故障、並通知SMB用戶端。
+
+見證傳輸協定使用下列程序提供增強的容錯移轉：
+
+. 當應用程式伺服器建立與Node1的持續可用SMB連線時、CIFS伺服器會通知應用程式伺服器有覆核人可用。
+. 應用程式伺服器從Node1要求見證伺服器的IP位址、並接收指派給儲存虛擬機器（SVM）的Node2（SFO合作夥伴）資料LIF IP位址清單。
+. 應用程式伺服器會選擇其中一個IP位址、建立節點2的見證連線、並在節點1上持續可用的連線必須移動時登錄以通知。
+. 如果節點1上發生容錯移轉事件、見證可簡化容錯移轉事件、但不涉及還原。
+. 見證會偵測容錯移轉事件、並透過見證連線通知應用程式伺服器SMB連線必須移至節點2。
+. 應用程式伺服器會將SMB工作階段移至節點2、並在不中斷用戶端存取的情況下恢復連線。
+
+
+image::../media/how-witness-works.gif[見證人的工作方式]

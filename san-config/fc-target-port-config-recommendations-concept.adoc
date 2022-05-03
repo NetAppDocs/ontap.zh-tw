@@ -1,0 +1,133 @@
+---
+permalink: san-config/fc-target-port-config-recommendations-concept.html 
+sidebar: sidebar 
+keywords: fc, target, port, configuration, recommendations 
+summary: 若要獲得最佳效能和最高可用度、您應該使用建議的FC目標連接埠組態。 
+---
+= FC目標連接埠組態建議
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要獲得最佳效能和最高可用度、您應該使用建議的FC目標連接埠組態。
+
+下表顯示內建FC和FC-NVMe目標連接埠的慣用連接埠使用順序。對於擴充介面卡、FC連接埠應該分散、使它們不會使用相同的ASIC來進行連線。中列出了偏好的插槽順序 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得ONTAP 控制器所使用的版本。
+
+以下機型支援FC-NVMe：
+
+* 部分A300 AFF
++
+[NOTE]
+====
+不支援FC-NVMe的部分板載連接埠。AFF
+
+====
+* 部分A700 AFF
+* S4A700s AFF
+* 解答800 AFF
+
+
+[NOTE]
+====
+FAS22xx和FAS2520系統沒有內建FC連接埠、也不支援附加介面卡。
+
+====
+[cols="3*"]
+|===
+| 控制器 | 連接埠配對與共享ASIC | 目標連接埠數量：偏好的連接埠 
+
+
+ a| 
+FAS9000、AFF FASA700、AFF S4A700s和AFF S4A800
+ a| 
+無
+ a| 
+所有資料連接埠都位於擴充介面卡上。請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得更多資訊。
+
+
+
+ a| 
+8080、8080和8040
+ a| 
+0E+0f
+
+0g+0小時
+ a| 
+1：0E
+
+2：0E、0g
+
+3：0E、0g、0小時
+
+4：0E、0g、0f、0小時
+
+
+
+ a| 
+FAS8200與AFF FASA300
+ a| 
+0g+0小時
+ a| 
+1：0g
+
+2：0 g、0小時
+
+
+
+ a| 
+8020
+ a| 
+0C+0d
+ a| 
+1：0C
+
+2：0C、0d
+
+
+
+ a| 
+62xx
+ a| 
+0A+0b
+
+0C+0d
+ a| 
+1：0A
+
+2：0A、0c
+
+3：0A、0c、0b
+
+4：0A、0c、0b、0d
+
+
+
+ a| 
+32xx
+ a| 
+0C+0d
+ a| 
+1：0C
+
+2：0C、0d
+
+
+
+ a| 
+FAS2554、FAS2552、FAS2600系列、FAS2720、FAS2750、AFF 百出A200和AFF 百出A220
+ a| 
+0C+0d
+
+0E+0f
+ a| 
+1：0C
+
+2：0C、0e
+
+3：0C、0e、0d
+
+4：0C、0e、0d、0f
+
+|===

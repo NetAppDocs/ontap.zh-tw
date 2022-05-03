@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: networking/create_lifs.html 
+keywords: create, creation, creating, add, adding, lifs, logical, interface, create lifs 
+summary: 建立LIF、將SVM資料提供給用戶端 
+---
+= 建立生命
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+SVM透過一或多個網路邏輯介面（LIF）、為用戶端提供資料服務。您必須在您要用來存取資料的連接埠上建立LIF。
+
+您必須是叢集管理員才能執行此工作。
+
+從ONTAP 支援支援的版本9.7開始、ONTAP 只要IPspace的同一子網路中至少已存在一個LIF、則該產品就會自動選擇LIF的主連接埠。在同一個廣播網域中選擇一個主連接埠、以作為該子網路中的其他LIF。ONTAP您仍可指定主連接埠、但不再需要主連接埠（除非該子網路在指定的IPspace中尚不存在任何生命區）。
+
+您不應設定承載SMB流量的生命期、以自動還原至其主節點。如果SMB伺服器要裝載解決方案、以便透過Hyper-V或SQL Server透過SMB進行不中斷營運、則此建議為必填。
+
+.步驟
+. 確定要用於LIF的廣播網域連接埠。
++
+「網路連接埠廣播網域show -IPSpace _ipspace1_」
+
++
+....
+IPspace     Broadcast                       Update
+Name        Domain name   MTU   Port List   Status Details
+ipspace1
+            default       1500
+                                node1:e0d   complete
+                                node1:e0e   complete
+                                node2:e0d   complete
+                                node2:e0e   complete
+....
+. 驗證要用於lifs的子網路是否包含足夠的未使用IP位址。
++
+「network subnet show -IPspace _ipspace1_」
+
+. 在您要用來存取資料的連接埠上建立一個或多個生命體。
++
+「網路介面create -vserver _VS1_-lif_lif1_-home-node1_-home-port _e0d_-service-policy _default-data-filers_-subnet-name _ipspace1_」
+
+. 驗證LIF介面組態是否正確。
++
+「網路介面show -vserver VS1」
+
++
+....
+          Logical    Status     Network         Current   Current Is
+Vserver   Interface  Admin/Oper Address/Mask    Node      Port    Home
+--------- ---------- ---------- --------------- --------- ------- ----
+vs1
+           lif1       up/up      10.0.0.128/24   node1     e0d     true
+....
+. 確認容錯移轉群組組態符合需求。
++
+「網路介面show -Failover -vserver _VS1_」
+
++
+....
+         Logical    Home       Failover        Failover
+Vserver  interface  Node:Port  Policy          Group
+-------- ---------- ---------  ---------       --------
+vs1
+         lif1       node1:e0d  system-defined  ipspace1
+Failover Targets: node1:e0d, node1:e0e, node2:e0d, node2:e0e
+....
+

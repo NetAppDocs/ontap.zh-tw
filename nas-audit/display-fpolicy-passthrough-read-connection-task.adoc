@@ -1,0 +1,105 @@
+---
+permalink: nas-audit/display-fpolicy-passthrough-read-connection-task.html 
+sidebar: sidebar 
+keywords: display, information, fpolicy, passthrough-read, connection status 
+summary: 您可以針對叢集或特定儲存虛擬機器（SVM）、顯示與外部FPolicy伺服器（FPolicy伺服器）的FPolicy Passthrough-read連線狀態相關資訊。此資訊可協助您判斷哪些FPolicy伺服器具有直通讀取資料連線、以及哪些FPolicy伺服器的直通讀取連線中斷。 
+---
+= 顯示有關FPolicy Passthrough-read連線狀態的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以針對叢集或特定儲存虛擬機器（SVM）、顯示與外部FPolicy伺服器（FPolicy伺服器）的FPolicy Passthrough-read連線狀態相關資訊。此資訊可協助您判斷哪些FPolicy伺服器具有直通讀取資料連線、以及哪些FPolicy伺服器的直通讀取連線中斷。
+
+如果未指定任何參數、命令會顯示下列資訊：
+
+* SVM名稱
+* FPolicy原則名稱
+* 節點名稱
+* FPolicy伺服器IP位址
+* FPolicy Passthrough-read連線狀態
+
+
+除了顯示叢集或特定SVM上FPolicy連線的相關資訊、您也可以使用命令參數、根據其他條件篩選命令的輸出。
+
+您可以指定「-instance」參數、以顯示所列原則的詳細資訊。或者、您也可以使用「-Fields」參數、在命令輸出中僅顯示指定的欄位。您可以輸入「？」 在「-Fields」參數之後、找出您可以使用的欄位。
+
+.步驟
+. 使用適當的命令、顯示節點與FPolicy伺服器之間連線狀態的篩選資訊：
++
+[cols="35,65"]
+|===
+
+
+| 如果您要顯示有關...的連線狀態資訊 | 輸入命令... 
+
+
+ a| 
+叢集的FPolicy Passthrough-read連線狀態
+ a| 
+「vserver fpolicy show-pass-read-connection」
+
+
+
+ a| 
+指定SVM的FPolicy Passthrough-read連線狀態
+ a| 
+「vserver fpolicy show-pass-read-connection -vserver vserver_name」
+
+
+
+ a| 
+指定原則的FPolicy Passthrough-read連線狀態
+ a| 
+「vserver fpolicy show-pass-read-connection -police-name policy_name」
+
+
+
+ a| 
+指定原則的詳細FPolicy Passthrough-read連線狀態
+ a| 
+「vserver fpolicy show-pass-read-connection -police-name policy_name -instance」
+
+
+
+ a| 
+您指定狀態的FPolicy Passthrough-read連線狀態
+ a| 
+「vserver fpolicy show-pass-read-connection -police-name policy_name -server_STATUS」伺服器狀態可以是下列其中一項：
+
+** 已連線
+** "已連線"
+
+
+|===
+
+
+下列命令會顯示叢集上所有FPolicy伺服器的Passthrough-read連線相關資訊：
+
+[listing]
+----
+cluster1::> vserver fpolicy show-passthrough-read-connection
+                                            FPolicy           Server
+Vserver          Policy Name   Node         Server            Status
+---------------  ------------- ------------ ----------------- --------------
+vs2.example.com  pol_cifs_2    FPolicy-01   2.2.2.2           disconnected
+vs1.example.com  pol_cifs_1    FPolicy-01   1.1.1.1           connected
+----
+下列命令會顯示「'pol_CIFS _1'」原則中所設定之FPolicy伺服器的Passthrough-read連線詳細資訊：
+
+[listing]
+----
+cluster1::> vserver fpolicy show-passthrough-read-connection -policy-name pol_cifs_1 -instance
+
+                                             Node: FPolicy-01
+                                          Vserver: vs1.example.com
+                                           Policy: pol_cifs_1
+                                           Server: 1.1.1.1
+                Session ID of the Control Channel: 8cef052e-2502-11e3-88d4-123478563412
+                                    Server Status: connected
+      Time Passthrough Read Channel was Connected: 9/24/2013 10:17:45
+   Time Passthrough Read Channel was Disconnected: -
+Reason for Passthrough Read Channel Disconnection: none
+----

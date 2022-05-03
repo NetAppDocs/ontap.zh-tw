@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: task_nas_enable_windows_smb.html 
+keywords: ontap, netapp, modify storage VM, enable NAS, provision NAS storage, NFS, SMB, windows, enable NFS, enable SMB, configure DNS, configure name server, configure Kerberos 
+summary: 修改儲存VM、以啟用SMB伺服器、將資料提供給Windows用戶端。 
+---
+= 使用SMB為Windows伺服器啟用NAS儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+修改儲存VM、以啟用SMB伺服器、將資料提供給Windows用戶端。
+
+此程序可啟用現有的儲存VM。假設您的環境中所需的任何驗證或安全服務都有組態詳細資料可供使用。
+
+image:workflow_nas_enable_windows_smb.gif["使用SMB為Windows伺服器啟用NAS的工作流程圖"]
+
+.步驟
+. 在現有VM上啟用SMB：按一下*儲存設備>儲存VM*、選取儲存VM、按一下*設定*、然後按一下 image:icon_gear.gif["設定圖示"] 低於* SMB *。
+. 開啟儲存VM根磁碟區的匯出原則：
++
+.. 按一下「*儲存設備>磁碟區*」、選取儲存VM的根磁碟區（預設為_volume名稱_root_）、然後按一下「*匯出原則*」下顯示的原則。
+.. 按一下「*新增*」以新增規則。
++
+*** 用戶端規格= 0.00.0.0/0
+*** 存取傳輸協定= SMB
+*** 存取詳細資料= NTFS唯讀
+
+
+
+
+. 設定DNS進行主機名稱解析：
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 在* DNS *下。
+.. 切換到DNS伺服器、然後對應SMB伺服器。
++
+*** 建立轉送（A -位址記錄）和反轉（PTTR-指標記錄）查詢項目、將SMB伺服器名稱對應至資料網路介面的IP位址。
+*** 如果您使用的是NetBios別名、請建立別名標準名稱（CNAME資源記錄）查詢項目、將每個別名對應至SMB伺服器資料網路介面的IP位址。
+
+
+
+
+. 視需要設定名稱服務
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 在* LDAP*或* NIS *下。
+.. 在名稱服務交換器檔案中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] 在*名稱服務交換器*下。
+
+
+. 如有必要、請設定Kerberos：
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
+.. 按一下 image:icon_arrow.gif["箭頭圖示"] 在「* Kerberos *」下、然後按一下「* Add *」。
+
+
+

@@ -1,0 +1,552 @@
+---
+sidebar: sidebar 
+permalink: networking/display_network_connectivity_with_neighbor_discovery_protocols.html 
+keywords: display, view, show, network, connectivity, neighbor, discovery, protocol, ndp, cdp, cisco, link, layer, lldp, display network connectivity with neighbor discovery protocols, use neighbor discovery protocols to view network connectivity between a pair of physical or virtual systems and their network interfaces, use cdp to detect network connectivity, considerations for using cdp, enable or disable cdp, view cdp neighbor information, example of showing and clearing statistics, use lldp to detect network connectivity, enable or disable lldp, view lldp neighbor information, adjust the interval for transmitting lldp advertisements 
+summary: 使用鄰近探索傳輸協定來檢視實體或虛擬系統與其網路介面配對之間的網路連線 
+---
+= 使用鄰近探索傳輸協定來顯示網路連線能力
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在資料中心中、您可以使用鄰近探索通訊協定來檢視實體或虛擬系統與其網路介面配對之間的網路連線。支援兩種鄰近探索傳輸協定：Cisco探索傳輸協定（CDP）和連結層探索傳輸協定（LLDP）ONTAP 。
+
+鄰近探索傳輸協定可讓您自動探索及檢視網路中已直接連線之傳輸協定裝置的相關資訊。每個裝置都會通告識別、功能和連線資訊。此資訊會以乙太網路框架傳輸至多點傳送MAC位址、並由所有鄰近的啟用傳輸協定的裝置接收。
+
+若要讓兩個裝置成為鄰近裝置、每個裝置都必須啟用並正確設定傳輸協定。探索傳輸協定功能僅限於直接連線的網路。鄰近設備可包括採用傳輸協定的裝置、例如交換器、路由器、橋接器等。支援兩種鄰近探索通訊協定、可個別或一起使用。ONTAP
+
+* Cisco探索傳輸協定（CDP）*
+
+CDP是Cisco Systems開發的專屬連結層傳輸協定。叢ONTAP 集連接埠的預設功能為啟用、但必須明確啟用資料連接埠。
+
+*連結層探索傳輸協定（LLDP）*
+
+LLDP是標準文件IEEE 802.1AB中指定的廠商中立傳輸協定。所有連接埠都必須明確啟用此功能。
+
+
+
+== 使用CDP偵測網路連線
+
+使用CDP偵測網路連線能力、包括審查部署考量、在資料連接埠上啟用、檢視鄰近裝置、以及視需要調整CDP組態值。預設會在叢集連接埠上啟用CDP。
+
+也必須在任何交換器和路由器上啟用CDP、才能顯示鄰近裝置的相關資訊。
+
+叢集交換器健全狀況監視器也會使用CDP來自動探索叢集和管理網路交換器。
+
+link:../system-admin/index.html["系統管理"^]
+
+
+
+=== 使用CDP的考量事項
+
+根據預設、符合CDP的裝置會傳送CDPv2通告。CDP相容的裝置僅在收到CDPv1廣告時才會傳送CDPv1廣告。僅支援CDPv1。ONTAP因此ONTAP 、當某個節點傳送CDPv1廣告時、符合CDP的鄰近裝置會傳回CDPv1廣告。
+
+在節點上啟用CDP之前、您應該先考慮下列資訊：
+
+* 叢集連接埠上一律會啟用CDP。
+* 預設會在所有非叢集連接埠上停用CDP。
+* 所有連接埠均支援CDP。
+* CDP通告由處於up狀態的連接埠傳送和接收。
+* 必須在傳輸和接收裝置上啟用CDP、才能傳送和接收CDP通告。
+* CDP通告會定期傳送、您可以設定時間間隔。
+* 當LIF的IP位址變更時、節點會在下一個CDP通告中傳送更新的資訊。
+
+
+
+NOTE: 有時當節點上的生命區發生變更時、接收裝置端（例如交換器）的CDP資訊不會更新。如果遇到這樣的問題、您應該將節點的網路介面設定為停機狀態、然後再設定為UP狀態。
+
+* CDP通告中只會通告IPv4位址。
+* 對於具有VLAN的實體網路連接埠、會通告在該連接埠上VLAN上設定的所有生命體。
+* 對於屬於介面群組一部分的實體連接埠、該介面群組上設定的所有IP位址都會在每個實體連接埠上通告。
+* 對於裝載VLAN的介面群組、介面群組和VLAN上設定的所有生命體都會在每個網路連接埠上通告。
+* 對於MTU大小等於或大於1、500位元組的封包、只會通告可容納1500個MTU大小封包的LIF數量。
+
+
+
+
+=== 啟用或停用CDP
+
+若要探索及傳送通告至符合CDP的鄰近裝置、必須在叢集的每個節點上啟用CDP。依預設、CDP會在節點的所有叢集連接埠上啟用、並在節點的所有非叢集連接埠上停用。
+
+「CDPD.enable」選項可控制節點的連接埠是否啟用或停用CDP：
+
+* On（開）可在非叢集連接埠上啟用CDP。
+* Off（關）在非叢集連接埠上停用CDP；您無法在叢集連接埠上停用CDP。
+
+
+如果在連接至CDP相容裝置的連接埠上停用CDP、則可能無法最佳化網路流量。
+
+.步驟
+. 顯示節點或叢集中所有節點的目前CDP設定：
++
+[cols="30,70"]
+|===
+
+
+| 若要檢視CDP設定... | 輸入... 
+
+
+ a| 
+節點
+ a| 
+「RUN - node_name> options CDPD.enable」
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+選項CDPD.enable
+
+|===
+. 在節點的所有連接埠或叢集中所有節點的所有連接埠上啟用或停用CDP：
++
+[cols="30,70"]
+|===
+
+
+| 若要啟用或停用CDP： | 輸入... 
+
+
+ a| 
+節點
+ a| 
+「run -node_name options CDpd.enable｛on or off｝」（執行節點節點名稱選項CDpd.enable｛on or Off｝）
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+「options CDPD.enable｛on or off｝」
+
+|===
+
+
+
+
+=== 檢視CDP鄰近資訊
+
+只要連接埠連接至符合CDP的裝置、即可檢視連接至叢集節點每個連接埠的鄰近裝置相關資訊。您可以使用「network device-dDiscovery show -protocol cup」命令來檢視鄰近資訊。
+
+由於叢集連接埠一律啟用CDP、因此這些連接埠的CDP鄰近資訊一律會顯示。必須在非叢集連接埠上啟用CDP、這些連接埠才會顯示鄰近資訊。
+
+顯示所有連接至叢集中節點上連接埠的CDP相容裝置相關資訊：
+
+....
+network device-discovery show -node node -protocol cdp
+....
+下列命令顯示連接至節點叢集-1_01上連接埠的鄰近節點：
+
+....
+network device-discovery show -node sti2650-212 -protocol cdp
+Node/       Local  Discovered
+Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+sti2650-212/cdp
+            e0M    RTP-LF810-510K37.gdl.eng.netapp.com(SAL1942R8JS)
+                                             Ethernet1/14      N9K-C93120TX
+            e0a    CS:RTP-CS01-510K35        0/8               CN1610
+            e0b    CS:RTP-CS01-510K36        0/8               CN1610
+            e0c    RTP-LF350-510K34.gdl.eng.netapp.com(FDO21521S76)
+                                             Ethernet1/21      N9K-C93180YC-FX
+            e0d    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/22      N9K-C93180YC-FX
+            e0e    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/23      N9K-C93180YC-FX
+            e0f    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/24      N9K-C93180YC-FX
+....
+輸出會列出連線至指定節點每個連接埠的Cisco裝置。
+
+
+
+=== 設定CDP訊息的保留時間
+
+保留時間是指CDP通告儲存在鄰近CDP相容裝置快取中的期間。保留時間會在每個CDPv1封包中通告、並在節點收到CDPv1封包時更新。
+
+* 在HA配對的兩個節點上、「CDPD.HoldTime」選項的值應設定為相同的值。
+* 預設的保留時間值為180秒、但您可以輸入介於10秒到255秒之間的值。
+* 如果在保留時間到期之前移除IP位址、則CDP資訊會快取、直到保留時間過期為止。
+
+
+.步驟
+. 顯示節點或叢集中所有節點的目前CDP保留時間：
++
+[cols="30,70"]
+|===
+
+
+| 若要檢視保留時間... | 輸入... 
+
+
+ a| 
+節點
+ a| 
+「run -node_name options CDPD.HoldTime」
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+「options CDPD.HoldTime」
+
+|===
+. 在節點的所有連接埠或叢集中所有節點的所有連接埠上設定CDP保留時間：
++
+[cols="30,70"]
+|===
+
+
+| 若要設定保留時間... | 輸入... 
+
+
+ a| 
+節點
+ a| 
+「RUN -node_name options CDPD.HoldTime HoldTime」
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+「options CDPD.HoldTime HoldTime」
+
+|===
+
+
+
+
+=== 設定傳送CDP通告的時間間隔
+
+CDP通告會定期傳送給CDP鄰近裝置。視網路流量和網路拓撲的變更而定、您可以增加或減少傳送CDP通告的時間間隔。
+
+* 在HA配對的兩個節點上、「cdpd.interval`」選項的值應設定為相同的值。
+* 預設時間間隔為60秒、但您可以輸入5秒到900秒之間的值。
+
+
+.步驟
+. 顯示節點或叢集中所有節點的目前CDP通告時間間隔：
++
+[cols="30,70"]
+|===
+
+
+| 若要檢視時間間隔... | 輸入... 
+
+
+ a| 
+節點
+ a| 
+執行節點node_name選項cdpd.interval`
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+“選項：cdpd.interval`
+
+|===
+. 針對節點的所有連接埠或叢集中所有節點的所有連接埠、設定傳送CDP通告的時間間隔：
++
+[cols="30,70"]
+|===
+
+
+| 若要設定時間間隔... | 輸入... 
+
+
+ a| 
+節點
+ a| 
+執行節點node_name選項cdpd.interval時間間隔
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+選項cdpd.interval時間間隔
+
+|===
+
+
+
+
+=== 檢視或清除CDP統計資料
+
+您可以檢視每個節點上叢集和非叢集連接埠的CDP統計資料、以偵測潛在的網路連線問題。CDP統計資料會從上次清除的時間開始累計。
+
+由於叢集連接埠一律啟用CDP、因此這些連接埠上的流量一律會顯示CDP統計資料。必須在非叢集連接埠上啟用CDP、才能顯示這些連接埠的統計資料。
+
+顯示或清除節點上所有連接埠的目前CDP統計資料：
+
+[cols="30,70"]
+|===
+
+
+| 如果您想要... | 輸入... 
+
+
+ a| 
+檢視CDP統計資料
+ a| 
+「run -node_name CDPD show-stats」
+
+
+
+ a| 
+清除CDP統計資料
+ a| 
+「run -node_name CDPD零統計資料」
+
+|===
+
+
+==== 顯示及清除統計資料的範例
+
+下列命令會在清除CDP統計資料之前顯示這些統計資料。輸出會顯示自上次清除統計資料以來、已傳送和接收的封包總數。
+
+....
+run -node node1 cdpd show-stats
+
+RECEIVE
+ Packets:         9116  | Csum Errors:       0  | Unsupported Vers:  4561
+ Invalid length:     0  | Malformed:         0  | Mem alloc fails:      0
+ Missing TLVs:       0  | Cache overflow:    0  | Other errors:         0
+
+TRANSMIT
+ Packets:         4557  | Xmit fails:        0  | No hostname:          0
+ Packet truncated:   0  | Mem alloc fails:   0  | Other errors:         0
+
+OTHER
+ Init failures:      0
+....
+下列命令會清除CDP統計資料：
+
+....
+run -node node1 cdpd zero-stats
+....
+....
+run -node node1 cdpd show-stats
+
+RECEIVE
+ Packets:            0  | Csum Errors:       0  | Unsupported Vers:     0
+ Invalid length:     0  | Malformed:         0  | Mem alloc fails:      0
+ Missing TLVs:       0  | Cache overflow:    0  | Other errors:         0
+
+TRANSMIT
+ Packets:            0  | Xmit fails:        0  | No hostname:          0
+ Packet truncated:   0  | Mem alloc fails:   0  | Other errors:         0
+
+OTHER
+ Init failures:      0
+....
+統計資料清除後、會在傳送或接收下一個CDP廣告之後開始累積。
+
+
+
+== 使用LLDP偵測網路連線
+
+使用LLDP偵測網路連線能力包括審查部署考量、在所有連接埠上啟用、檢視鄰近裝置、以及視需要調整LLDP組態值。
+
+在顯示鄰近裝置的相關資訊之前、也必須在任何交換器和路由器上啟用LLDP。
+
+目前可報告下列類型長度值結構（TLV）ONTAP ：
+
+* 機箱ID
+* 連接埠ID
+* 存留時間（TTL）
+* 系統名稱
++
+系統名稱TLV不會傳送至CNA裝置。
+
+
+
+某些整合式網路介面卡（CNA）、例如X1143介面卡和UTA2內建連接埠、包含LLDP的卸載支援：
+
+* LLDP卸載用於資料中心橋接（DCB）。
+* 叢集與交換器之間顯示的資訊可能有所不同。
++
+例如、交換器所顯示的機箱ID和連接埠ID資料、對於CNA和非CNA連接埠而言可能不同、但叢集所顯示的資料對於這些連接埠類型而言是一致的。
+
+
+
+
+NOTE: LLDP規格定義透過SNMP mib存取所收集的資訊。不過ONTAP 、目前不支援LLDP MIB.
+
+
+
+=== 啟用或停用LLDP
+
+若要探索及傳送通告給符合LLDP的鄰近裝置、必須在叢集的每個節點上啟用LLDP。從ONTAP 推出支援支援支援的支援方案開始、在節點的所有連接埠上預設都會啟用LLDP。
+
+「LLDP.enable」選項可控制節點的連接埠是否啟用或停用LLDP：
+
+* 「On」可在所有連接埠上啟用LLDP。
+* "Off"會停用所有連接埠上的LLDP。
+
+
+.步驟
+. 顯示節點或叢集中所有節點的目前LLDP設定：
++
+** 單一節點：「run -node_name options LLDP.enable」
+** 所有節點：選項'ldP.enable
+
+
+. 在節點的所有連接埠或叢集中所有節點的所有連接埠上啟用或停用LLDP：
++
+[cols="30,70"]
+|===
+
+
+| 若要啟用或停用LLDP： | 輸入... 
+
+
+ a| 
+節點
+ a| 
+「run -node_name options LLDP.enable｛on|off｝」（執行節點節點名稱選項LLDP.enable｛on|off｝）
+
+
+
+ a| 
+叢集中的所有節點
+ a| 
+「options LLDP.enable｛on|off｝」
+
+|===
++
+** 單一節點：
++
+....
+run -node node_name options lldp.enable {on|off}
+....
+** 所有節點：
++
+....
+options lldp.enable {on|off}
+....
+
+
+
+
+
+
+=== 檢視LLDP鄰近資訊
+
+只要連接埠連接至符合LLDP標準的裝置、即可檢視連接至叢集節點每個連接埠的鄰近裝置相關資訊。您可以使用network device-dinDiscovery show命令來檢視鄰近資訊。
+
+.步驟
+. 顯示所有與LLDP相容裝置連線至叢集中節點上之連接埠的相關資訊：
++
+....
+network device-discovery show -node node -protocol lldp
+....
++
+下列命令顯示連接至節點叢集-1_01上連接埠的鄰近節點。輸出會列出連線至指定節點每個連接埠的啟用LLDP的裝置。如果省略了「-Protocol」選項、則輸出也會列出啟用CDP的裝置。
+
++
+....
+network device-discovery show -node cluster-1_01 -protocol lldp
+Node/       Local  Discovered
+Protocol    Port   Device                    Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+cluster-1_01/lldp
+            e2a    0013.c31e.5c60            GigabitEthernet1/36
+            e2b    0013.c31e.5c60            GigabitEthernet1/35
+            e2c    0013.c31e.5c60            GigabitEthernet1/34
+            e2d    0013.c31e.5c60            GigabitEthernet1/33
+....
+
+
+
+
+=== 調整傳輸LLDP廣告的時間間隔
+
+LLDP廣告會定期傳送給LLDP鄰近裝置。視網路流量和網路拓撲的變更而定、您可以增加或減少傳送LLDP通告的時間間隔。
+
+IEEE建議的預設時間間隔為30秒、但您可以輸入5秒到300秒之間的值。
+
+.步驟
+. 顯示節點或叢集中所有節點目前的LLDP通告時間間隔：
++
+** 單一節點：
++
+....
+run -node <node_name> options lldp.xmit.interval
+....
+** 所有節點：
++
+....
+options lldp.xmit.interval
+....
+
+
+. 調整為節點的所有連接埠或叢集中所有節點的所有連接埠傳送LLDP通告的時間間隔：
++
+** 單一節點：
++
+....
+run -node <node_name> options lldp.xmit.interval <interval>
+....
+** 所有節點：
++
+....
+options lldp.xmit.interval <interval>
+....
+
+
+
+
+
+
+=== 調整LLDP廣告的即時時間值
+
+存留時間（TTL）是LLDP廣告儲存在鄰近的LLDP相容裝置快取中的一段時間。TTL會在每個LLDP封包中通告、並在節點收到LLDP封包時進行更新。TTL可在傳出的LLDP框架中修改。
+
+.關於這項工作
+* TTL是計算值、傳輸時間間隔的產品（「LLldp.xmit.interval`」）和保留倍頻（「LLDP.Xmit.hold」）再加上一個。
+* 預設的保留倍數值為4、但您可以輸入1到100之間的值。
+* 因此、根據IEEE的建議、預設TTL為121秒、但調整傳輸時間間隔並保留倍頻值、即可指定傳出訊框的值、從6秒到30001秒。
+* 如果在TTL過期之前移除IP位址、則會快取LLDP資訊、直到TTL過期為止。
+
+
+.步驟
+. 顯示節點或叢集中所有節點的目前保留倍數值：
++
+** 單一節點：
++
+....
+run -node <node_name> options lldp.xmit.hold
+....
+** 所有節點：
++
+....
+options lldp.xmit.hold
+....
+
+
+. 調整節點的所有連接埠或叢集中所有節點的所有連接埠上的保留倍頻值：
++
+** 單一節點：
++
+....
+run -node <node_name> options lldp.xmit.hold <hold_value>
+....
+** 所有節點：
++
+....
+options lldp.xmit.hold <hold_value>
+....
+
+
+

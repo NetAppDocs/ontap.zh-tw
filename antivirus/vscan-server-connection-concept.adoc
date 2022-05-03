@@ -1,0 +1,22 @@
+---
+permalink: antivirus/vscan-server-connection-concept.html 
+sidebar: sidebar 
+keywords: potential connectivity, issues, involve, scan-mandatory, option 
+summary: 依預設、當VScan伺服器連線無法進行掃描時、存取時掃描的掃描強制選項會拒絕檔案存取。雖然此選項提供重要的安全功能、但在少數情況下可能會導致問題。 
+---
+= 可能涉及掃描強制選項的連線問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver vscan connection-Status show」命令來檢視VScan伺服器連線的相關資訊、這些資訊可能有助於疑難排解連線問題。
+
+根據預設、當VScan伺服器連線無法進行掃描時、「隨存取掃描所需的掃描」選項會拒絕檔案存取。雖然此選項提供重要的安全功能、但在少數情況下可能會導致問題。
+
+* 在啟用用戶端存取之前、您必須確保至少有一部VScan伺服器連線至每個具有LIF的節點上的SVM。如果啟用用戶端存取之後需要將伺服器連線至SVM、您必須關閉SVM上的「強制掃描」選項、以確保不會因為VScan伺服器連線無法使用而拒絕檔案存取。您可以在伺服器連線後重新開啟選項。
+* 如果目標LIF主控SVM的所有VScan伺服器連線、則移轉LIF時、伺服器與SVM之間的連線將會中斷。為了確保不會因為VScan伺服器連線無法使用而拒絕檔案存取、您必須在移轉LIF之前先關閉「強制掃描」選項。您可以在LIF移轉後重新開啟選項。
+
+
+每個SVM應至少指派兩部VScan伺服器給它。最佳實務做法是透過不同網路、將VScan伺服器連接至儲存系統、而不使用用於用戶端存取的網路。

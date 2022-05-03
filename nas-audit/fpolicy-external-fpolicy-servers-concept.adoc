@@ -1,0 +1,23 @@
+---
+permalink: nas-audit/fpolicy-external-fpolicy-servers-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, works, external fpolicy servers 
+summary: 在儲存虛擬機器（SVM）上設定並啟用FPolicy之後、FPolicy會在SVM所參與的每個節點上執行。FPolicy負責建立及維護與外部FPolicy伺服器（FPolicy伺服器）的連線、通知處理、以及管理與FPolicy伺服器之間的通知訊息。 
+---
+= FPolicy如何與外部FPolicy伺服器搭配運作總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存虛擬機器（SVM）上設定並啟用FPolicy之後、FPolicy會在SVM所參與的每個節點上執行。FPolicy負責建立及維護與外部FPolicy伺服器（FPolicy伺服器）的連線、通知處理、以及管理與FPolicy伺服器之間的通知訊息。
+
+此外、在連線管理中、FPolicy有下列責任：
+
+* 確保檔案通知會透過正確的LIF傳送到FPolicy伺服器。
+* 確保當多個FPolicy伺服器與某個原則相關聯時、會在傳送通知給FPolicy伺服器時完成負載平衡。
+* 當與FPolicy伺服器的連線中斷時、嘗試重新建立連線。
+* 透過驗證的工作階段將通知傳送至FPolicy伺服器。
+* 管理FPolicy伺服器所建立的Passthrough-read資料連線、以便在啟用passe-read時、為用戶端要求提供服務。
+

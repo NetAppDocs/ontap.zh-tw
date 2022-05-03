@@ -1,0 +1,34 @@
+---
+permalink: snaplock/create-compliance-administrator-account-task.html 
+sidebar: sidebar 
+keywords: create, snaplock, administrator, support, cluster, svm, compliance 
+summary: 您必須擁有SnapLock 管理員權限才能執行特殊權限刪除。這些權限是在vsadmin-SnapLock角色中定義。如果您尚未被指派該角色、您可以要求叢集管理員建立一個SVM系統管理員帳戶SnapLock 、以執行此功能的管理員角色。 
+---
+= 建立SnapLock 一個管理員帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須擁有SnapLock 管理員權限才能執行特殊權限刪除。這些權限是在vsadmin-SnapLock角色中定義。如果您尚未被指派該角色、您可以要求叢集管理員建立一個SVM系統管理員帳戶SnapLock 、以執行此功能的管理員角色。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 您必須登入安全連線（SSH、主控台或ZAPI）。
+
+
+.步驟
+. 建立SnapLock 具備管理員角色的SVM系統管理員帳戶：
++
+hy*安全性登入可建立-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _imization_method_-role _role_-comment _comment _*
+
++
+下列命令可讓SVM系統管理員帳戶「napLockAdmin」使用預先定義的「vsadmin-SnapLock」角色、使用密碼存取「VM1」：
+
++
+[listing]
+----
+cluster1::> security login create -vserver SVM1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role vsadmin-snaplock
+----
+

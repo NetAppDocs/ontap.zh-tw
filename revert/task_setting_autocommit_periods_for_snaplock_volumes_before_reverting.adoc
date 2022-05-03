@@ -1,0 +1,18 @@
+---
+permalink: revert/task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, set, setting, autocommit, periods, snaplock 
+summary: 若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設定為小時、而非天。在嘗試回復之前、您必須檢查SnapLock 您的功能驗證資料、並視需要從數天改為數小時。 
+---
+= 在還原之前、請先設定SnapLock 自動提交期間以供使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設定為小時、而非天。在嘗試回復之前、您必須檢查SnapLock 您的功能驗證資料、並視需要從數天改為數小時。
+
+. 驗證SnapLock 叢集中是否有不受支援的自動提交期間：'volume SnapLock show -autocomple-period * days
+. 將不受支援的自動提交期間修改為小時：「Volume SnapLock flexmodify -vserver vserver_name -volume volume volume volume name -autocomple-period Value Hours」
+

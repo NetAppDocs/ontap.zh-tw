@@ -1,0 +1,52 @@
+---
+permalink: smb-admin/access-snapshot-directories-clients-smb2-concept.html 
+sidebar: sidebar 
+keywords: method, access, snapshot, directory, windows, client, smb, data, store, copies, copy, how to access the snapshot directory from windows clients using smb 2.x 
+summary: 您使用SMB 2.x從Windows用戶端存取~snapshot目錄的方法、與SMB 1.0使用的方法不同。使用SMB 2.x連線成功存取儲存在Snapshot複本中的資料時、您必須瞭解如何存取~Snapshot目錄。 
+---
+= 使用SMB 2.x從Windows用戶端存取~snapshot目錄
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用SMB 2.x從Windows用戶端存取「~snapshot」目錄的方法、與SMB 1.0使用的方法不同。使用SMB 2.x連線成功存取儲存在Snapshot複本中的資料時、您必須瞭解如何存取「~snapshot」目錄。
+
+SVM系統管理員會使用Vserver CIFS共用內容系列的命令、啟用或停用「show snapshot」共用內容、來控制Windows用戶端上的使用者是否可以檢視及存取共用區上的「~snapshot」目錄。
+
+停用「show snapshot」共用內容時、Windows用戶端上使用SMB 2.x的使用者無法檢視「~snapshot」目錄、也無法存取「~snapshot」目錄內的Snapshot複本、即使手動輸入「~snapshot」目錄路徑或目錄內的特定Snapshot複本也一樣。
+
+啟用「show snapshot」共用屬性時、Windows用戶端上使用SMB 2.x的使用者仍無法在共用根目錄或共用根目錄下的任何連接點或目錄中檢視「~snapshot」目錄。不過、連線至共用區之後、使用者可以手動將「\~snapshot」附加到共用路徑的末端、以存取隱藏的「~snapshot」目錄。可從兩個入口點存取隱藏的「~snapshot」目錄：
+
+* 位於共用區的根目錄
+* 在共享空間的每個交會點
+
+
+無法從共享區內的非交會子目錄存取隱藏的「~snapshot」目錄。
+
+在下列範例中所示的組態下、Windows用戶端上連線至「'eng'」共用區的SMB 2.x連線使用者、可以手動將「\~snapshot」附加至共用路徑的根部和路徑中的每個交會點、以存取「~snapshot」目錄。隱藏的「~snapshot」目錄可從下列三個路徑存取：
+
+* 「\VS1\eng\~snapshot」
+* 「\VS1\eng\projects1\~snapshot」
+* 「\VS1\eng\projects2\~snapshot」
+
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -fields volume,junction-path
+vserver volume       junction-path
+------- ------------ ----------------------------------------
+vs1     vs1_root      /
+vs1     vs1_vol1      /eng
+vs1     vs1_vol2      /eng/projects1
+vs1     vs1_vol3      /eng/projects2
+
+cluster1::> vserver cifs share show
+Vserver  Share   Path     Properties    Comment  ACL
+-------- ------  -------  ----------    -------- ----------
+vs1      eng     /eng     oplocks       -        Everyone / Full Control
+                          changenotify
+                          browsable
+                          showsnapshot
+----

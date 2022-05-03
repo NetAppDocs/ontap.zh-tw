@@ -1,0 +1,57 @@
+---
+permalink: nfs-admin/enable-disable-nfsv4-write-file-delegations-task.html 
+sidebar: sidebar 
+keywords: enable, disable, nfsv4, write, file, delegation 
+summary: 若要啟用或停用寫入檔案委派、您可以修改-vv4.0寫入委派或-v4.1寫入委派選項。啟用寫入檔案委派之後、除了開啟和關閉檔案之外、您還可以免除與檔案和記錄鎖定相關的大部分訊息負荷。 
+---
+= 啟用或停用NFSv4寫入檔案委派
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要啟用或停用寫入檔案委派、您可以修改「-v4.0-write委派」或「-v4.1-write委派」選項。啟用寫入檔案委派之後、除了開啟和關閉檔案之外、您還可以免除與檔案和記錄鎖定相關的大部分訊息負荷。
+
+預設會停用寫入檔案委派。
+
+啟用寫入檔案委派的缺點是、伺服器及其用戶端必須在伺服器重新開機或重新啟動、用戶端重新開機或重新啟動、或發生網路分割之後、執行其他工作來恢復委派。
+
+.步驟
+. 執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+啟用NFSv4寫入檔案委派
+ a| 
+輸入下列命令：「vserver NFS modify -vserver vserver_name -vv4.0寫入委派enabled_
+
+
+
+ a| 
+啟用NFSv4.1寫入檔案委派
+ a| 
+輸入下列命令：「vserver NFS modify -vserver vserver_name -v4.1-write委派enabled_
+
+
+
+ a| 
+停用NFSv4寫入檔案委派
+ a| 
+輸入下列命令：「vserver NFS modify -vserver vserver_name -vv4.0寫入委派disabled'
+
+
+
+ a| 
+停用NFSv4.1寫入檔案委派
+ a| 
+輸入下列命令：「vserver NFS modify -vserver vserver_name -v4.1-write委派disabled'
+
+|===
+
+
+檔案委派選項會在變更後立即生效。不需要重新開機或重新啟動NFS。

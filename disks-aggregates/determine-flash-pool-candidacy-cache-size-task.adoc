@@ -1,0 +1,69 @@
+---
+permalink: disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html 
+sidebar: sidebar 
+keywords: determine, flash pool, candidacy, optimal cache size 
+summary: 在將現有的Aggregate轉換成Flash Pool Aggregate之前、您可以判斷Aggregate是否為I/O綁定、以及針對工作負載和預算而言、Flash Pool快取大小的最佳選擇。您也可以檢查現有Flash Pool Aggregate的快取大小是否正確。 
+---
+= 判斷Flash Pool候選資格和最佳快取大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在將現有的Aggregate轉換成Flash Pool Aggregate之前、您可以判斷Aggregate是否為I/O綁定、以及針對工作負載和預算而言、Flash Pool快取大小的最佳選擇。您也可以檢查現有Flash Pool Aggregate的快取大小是否正確。
+
+您應該大約知道分析的集合體何時會經歷其尖峰負載。
+
+.步驟
+. 進入進階模式：
++
+《進階設定》
+
+. 如果您需要判斷現有的Aggregate是否適合轉換成Flash Pool Aggregate、請判斷Aggregate中的磁碟在尖峰負載期間的忙碌程度、以及這會如何影響延遲：
++
+「統計資料顯示週期性物件磁碟：RAID_group -instance _RAID_group名稱_-counter disk_busy | user_read_imeriods -interiodes 1 -迭 代60」
+
++
+您可以新增Flash Pool快取來決定是否要縮短延遲、以利此集合體。
+
++
+以下命令顯示Agggr1'集合體第一個RAID群組的統計資料：
+
++
+「統計資料顯示週期性物件磁碟：RAID_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_im滯 後時間間隔1 -迭代60」
+
+. 啟動自動化工作負載分析程式（AWA）：
++
+「torage automated－ter-set-analyster-analyst-node_node_name_-Aggregate _name_」
+
++
+AWA開始收集與指定集合體相關聯之磁碟區的工作負載資料。
+
+. 結束進階模式：
++
+「et admin」
+
++
+允許AWA執行、直到發生一或多個尖峰負載間隔為止。AWA會收集與指定集合體相關之磁碟區的工作負載統計資料、並分析資料持續最多一週。執行AWA超過一週、只會報告最近一週收集的資料。快取大小預估值是根據資料收集期間所見的最高負載而定；在整個資料收集期間、負載不需要太高。
+
+. 進入進階模式：
++
+《進階設定》
+
+. 顯示工作負載分析：
++
+「torage automated－ter-set-analyst-analyst-node_node_name_」
+
+. 停止AWA：
++
+「自動化工作集分析程式停止節點名稱」
+
++
+所有工作負載資料都會被清除、不再可供分析。
+
+. 結束進階模式：
++
+「et admin」
+
+

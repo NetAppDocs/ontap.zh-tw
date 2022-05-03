@@ -1,0 +1,66 @@
+---
+permalink: san-admin/san-host-provisioning-concept.html 
+sidebar: sidebar 
+keywords: understand, san host, provisioning 
+summary: 在SAN環境中、儲存系統是具有儲存目標裝置的目標系統。對於iSCSI和FC、儲存目標裝置稱為LUN（邏輯單元）。對於光纖通道上的非揮發性記憶體Express（NVMe）、儲存目標裝置稱為命名空間。 
+---
+= 使用iSCSI進行SAN資源配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SAN環境中、儲存系統是具有儲存目標裝置的目標系統。對於iSCSI和FC、儲存目標裝置稱為LUN（邏輯單元）。對於光纖通道上的非揮發性記憶體Express（NVMe）、儲存目標裝置稱為命名空間。
+
+您可以建立iSCSI和FC的LUN、或建立NVMe的命名空間、來設定儲存設備。然後、主機使用網際網路小型電腦系統介面（iSCSI）或光纖通道（FC）傳輸協定網路來存取LUN或命名空間。
+
+若要連線至iSCSI網路、主機可以使用標準乙太網路介面卡（NIC）、TCP卸載引擎（TOE）卡搭配軟體啟動器、整合式網路介面卡（CNA）或專用iSCSI主機匯流排介面卡（HBA）。
+
+若要連線至FC網路、主機需要FC HBA或CNA。
+
+支援的FC傳輸協定包括：
+
+* FC
+* FCoE
+* NVMe
+
+
+
+
+== iSCSI目標節點網路連線和名稱
+
+iSCSI目標節點可透過多種方式連線至網路：
+
+* 透過乙太網路介面、使用整合至ONTAP 整個功能的軟體。
+* 透過多個系統介面、搭配用於iSCSI的介面、也能傳輸SMB和NFS等其他傳輸協定的流量。
+* 使用統一化目標介面卡（UTA）或整合式網路介面卡（CNA）。
+
+
+每個iSCSI節點都必須有節點名稱。
+
+iSCSI節點名稱的兩種格式（或類型指示符）是_iqn_和_EUI_。SVM iSCSI目標一律使用iqn類型的指定器。啟動器可以使用iqn-type或EUI-type標示器。
+
+
+
+== 儲存系統節點名稱
+
+每個執行iSCSI的SVM都會根據反轉網域名稱和唯一編碼編號、提供預設節點名稱。
+
+節點名稱會以下列格式顯示：
+
+iqn.1992-08.com.netapp:sn.`_unique-encoding-number_`
+
+以下範例顯示具有唯一編碼編號的儲存系統預設節點名稱：
+
+iqn.1992-08.com.netapp:sn.812921059e6c11e097b3123478563412:vs.6
+
+
+
+== iSCSI的TCP連接埠
+
+iSCSI傳輸協定在ONTAP 中設定為使用TCP連接埠編號3260。
+
+不支援變更iSCSI的連接埠號碼。ONTAP連接埠編號3260已登錄為iSCSI規格的一部分、不得用於任何其他應用程式或服務。
+
+https://docs.netapp.com/us-en/ontap-sanhost/["NetApp文件：ONTAP 《SAN主機組態》"]

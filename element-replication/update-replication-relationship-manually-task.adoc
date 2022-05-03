@@ -1,0 +1,40 @@
+---
+permalink: element-replication/update-replication-relationship-manually-task.html 
+sidebar: sidebar 
+keywords: update, replication, relationship, manually 
+summary: 如果更新因為網路錯誤而失敗、您可能需要手動更新複寫關係。 
+---
+= 手動更新複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果更新因為網路錯誤而失敗、您可能需要手動更新複寫關係。
+
+您必須以「_hostip：_/LUN/_name_」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+
+.步驟
+. 手動更新複寫關係：
++
+「napmirror update -source-path _hostip:_/LUN/名稱_-dite-path _svm:volume _」|_cluster：//Svm/volume _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+
+====
++
+以下範例更新IP位址為10.0.0.11的來源Volume「0005」與「shvm_backup」上的目的地Volume「Vola_dst」之間的關係：
+
++
+[listing]
+----
+cluster_src::> snapmirror update -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
+----
+

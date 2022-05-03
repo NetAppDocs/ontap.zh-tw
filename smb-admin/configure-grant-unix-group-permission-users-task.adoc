@@ -1,0 +1,39 @@
+---
+permalink: smb-admin/configure-grant-unix-group-permission-users-task.html 
+sidebar: sidebar 
+keywords: configure, grant, group, permission, access, file, directories, directory, incoming, cifs, ownder, configure the grant unix group permission to smb users 
+summary: 即使傳入的SMB使用者不是檔案的擁有者、您也可以設定此選項、以授予群組存取檔案或目錄的權限。 
+---
+= 設定授予SMB使用者UNIX群組權限
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+即使傳入的SMB使用者不是檔案的擁有者、您也可以設定此選項、以授予群組存取檔案或目錄的權限。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 視需要設定授予UNIX群組權限：
++
+|===
+| 如果您想要 | 輸入命令 
+
+
+ a| 
+即使使用者不是檔案的擁有者、也能存取檔案或目錄、以取得群組權限
+ a| 
+「Vserver CIFS選項修改–vass-unix-group perms-to nothers true」
+
+
+
+ a| 
+即使使用者不是檔案的擁有者、也請停用檔案或目錄的存取權、以取得群組權限
+ a| 
+「Vserver CIFS選項修改–vass-unix-group、perms-to sothers fals'
+
+|===
+. 確認選項設定為所需的值：「vserver CIFS options show–功能變數贈與unix-group perms-to others」（vserver CIFS選項顯示–功能變數贈與unix-group perms-to others）
+. 返回管理員權限等級：「et -priv. admin」
+

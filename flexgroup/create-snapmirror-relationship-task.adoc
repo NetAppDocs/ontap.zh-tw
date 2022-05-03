@@ -1,0 +1,133 @@
+---
+permalink: flexgroup/create-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: create, snapmirror, relationship, flexgroup, volume, snap mirror, flex group, peered svm, replicate, replicating, disaster 
+summary: 您可以在FlexGroup 連接的SVM上、在來源Sf2 Volume和目的地FlexGroup Sfvolume之間建立SnapMirror關係、以便複寫資料以進行災難恢復。發生災難時、您可以使用FlexGroup 鏡射複本的現象來恢復資料。 
+---
+= 建立FlexGroup SnapMirror關係、以利實現不只是個資料區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在FlexGroup 連接的SVM上、在來源Sf2 Volume和目的地FlexGroup Sfvolume之間建立SnapMirror關係、以便複寫資料以進行災難恢復。發生災難時、您可以使用FlexGroup 鏡射複本的現象來恢復資料。
+
+您必須建立叢集對等關係和SVM對等關係。
+
+link:../peering/index.html["叢集與SVM對等關係"]
+
+.關於這項工作
+* 您可以建立FlexGroup 叢集間的SnapMirror關係、以及針對各個磁碟區建立叢集內的叢集SnapMirror關係。
+* 從ONTAP 功能區9.3開始、您可以擴充FlexGroup SnapMirror關係中的功能區。
++
+如果您使用ONTAP 的是ONTAP 版本早於版本的SnapMirror、則FlexGroup 在建立SnapMirror關係之後、不得擴充版本的功能；不過FlexGroup 、您可以在建立SnapMirror關係之後、再增加功能的功能。如果FlexGroup 您在ONTAP 更新版本早於版本的SnapMirror關係之後、擴充來源的聲音量、則必須執行基準傳輸至目的地FlexGroup 的聲音量。
+
+
+
+.步驟
+. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
++
+.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
++
+[listing]
+----
+cluster1::> volume show  -volume srcFG* -is-constituent true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vss       srcFG          -            online     RW         400TB   172.86GB  56%
+vss       srcFG__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vss       srcFG__0002    aggr1        online     RW         25TB    10.86TB   56%
+vss       srcFG__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vss       srcFG__0004    aggr1        online     RW         25TB    10.73TB   57%
+vss       srcFG__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57%
+vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
++
+[listing]
+----
+cluster2::> volume create -vserver vsd -aggr-list aggr1,aggr2 -aggr-list-multiplier 8 -size 400TB -type DP dstFG
+
+Warning: The FlexGroup volume "dstFG" will be created with the following number of constituents of size 25TB: 16.
+Do you want to continue? {y|n}: y
+[Job 766] Job succeeded: Successful
+----
+.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
++
+[listing]
+----
+cluster2::> volume show  -volume dstFG* -is-constituent true
+Vserver   Volume        Aggregate    State      Type       Size  Available  Used%
+--------- ------------  ------------ ---------- ---- ----------  ---------- -----
+vsd       dstFG          -            online     DP         400TB   172.86GB  56%
+vsd       dstFG__0001    Aggr_cmode   online     DP         25GB    10.86TB   56%
+vsd       dstFG__0002    aggr1        online     DP         25TB    10.86TB   56%
+vsd       dstFG__0003    Aggr_cmode   online     DP         25TB    10.72TB   57%
+vsd       dstFG__0004    aggr1        online     DP         25TB    10.73TB   57%
+vsd       dstFG__0005    Aggr_cmode   online     DP         25TB    10.67TB   57%
+vsd       dstFG__0006    aggr1        online     DP         25TB    10.64TB   57%
+vsd       dstFG__0007    Aggr_cmode   online     DP         25TB    10.63TB   57%
+...
+----
+
+
+. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
++
+在「月」、「星期」及「小時」選項中、您可以分別指定「所有」來執行每月、每週的每一天和每小時的工作。
+
++
+以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 針對SnapMirror關係建立類型為「asn同步 鏡射」的自訂原則：「napmirror policy create -vserver sVM -policy SnapMirror -type asn同步 鏡射」
++
+如果您不建立自訂原則、則應針對SnapMirror關係指定「鏡像AllSnapshots」原則。
+
+. 從目的地叢集、在來源FlexGroup 供應區與目的地FlexGroup 供應區之間建立SnapMirror關係：「napmirror create -source-path src/svm:sr_flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -policy -scheduled sched_name」
++
+SnapMirror與FlexGroup 資料區的關係必須是XDP類型。
+
++
+如果您為FlexGroup SnapMirror關係指定一個流向值、則每個組成部分都會使用相同的節流值。節流值不會分成多個部分。
+
++
+[NOTE]
+====
+您無法將Snapshot複本的SnapMirror標籤用於FlexGroup 不符合需求的磁碟區。
+
+====
++
+在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+
++
+[listing]
+----
+cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -policy MirrorAllSnapshots -schedule hourly
+Operation succeeded: snapmirror create for the relationship with destination "vsd:dstFG".
+----
+. 從目的地叢集、執行基礎傳輸來初始化SnapMirror關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」
++
+基礎傳輸完成後、目的地FlexGroup 的E動磁 碟區會根據SnapMirror關係的排程定期更新。
+
++
+[listing]
+----
+cluster2::> snapmirror initialize -destination-path vsd:dstFG
+Operation is queued: snapmirror initialize of destination "vsd:dstFG".
+----
++
+[NOTE]
+====
+如果FlexGroup 您已在來源叢集執行ONTAP 版本為9.3的來源叢集與執行ONTAP 版本為9.2或更早版本的目的地叢集之間建立任何SnapMirror關係、而且如果您在來源FlexGroup 版本為0、SnapMirror更新就會失敗。若要從這種情況中恢復、您必須刪除FlexGroup 整個非預設qtree中的所有qtree、停用FlexGroup 該實體磁碟區上的qtree功能、然後刪除所有啟用qtree功能的Snapshot複本。如果您已在支援qtree功能的情況下、您也必須在從ONTAP 還原為ONTAP 舊版的支援功能之前執行這些步驟FlexGroup 。  https://docs.netapp.com/us-en/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["還原之前、請先停用FlexGroup 完所有的qtree功能"]
+
+====
+
+
+您應設定必要的組態、例如lifs和匯出原則、以設定目的地SVM進行資料存取。

@@ -1,0 +1,100 @@
+---
+permalink: system-admin/create-motd-task.html 
+sidebar: sidebar 
+keywords: create, motd, cli, user, clustershell, ssh, session, cluster, access, message, day 
+summary: 您可以建立當天訊息（MOTD）、將資訊傳達給已驗證的CLI使用者。MOTD會在驗證使用者之後顯示於主控台工作階段（僅供叢集存取）或SSH工作階段（用於叢集或SVM存取）、但會在叢集Shell提示出現之前顯示。 
+---
+= 建立MOTD
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立當天訊息（MOTD）、將資訊傳達給已驗證的CLI使用者。MOTD會在驗證使用者之後顯示於主控台工作階段（僅供叢集存取）或SSH工作階段（用於叢集或SVM存取）、但會在叢集Shell提示出現之前顯示。
+
+.步驟
+. 使用「安全登入motd modify」命令、為叢集或SVM建立MOTD：
++
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+指定單一行的訊息
+ a| 
+使用「-mESTESE」「[.code]'text」參數來指定文字。
+
+
+
+ a| 
+包括新行（也稱為行尾）
+ a| 
+使用不含「-mMessage」或「-uri」參數的命令來啟動互動模式以編輯MOTD。
+
+
+
+ a| 
+從用於MOTD的位置上傳內容
+ a| 
+使用「-Uri'」參數指定內容的FTP或HTTP位置。
+
+|===
++
+MOTD的最大大小為2、048位元組、包括換行字元。
+
++
+「安全登入motd modify」手冊頁說明可用來讓MOTD顯示動態產生內容的轉義序列。
+
++
+使用「-uri」參數建立的MOTD是靜態的。系統不會自動重新整理以反映來源內容的後續變更。
+
++
+根據預設、為叢集建立的MOTD也會針對所有SVM登入顯示、同時也會顯示SVM層級的MOTD、您可以針對特定SVM個別建立。將SVM的「-is叢集訊息啟用」參數設為「假」、可防止該SVM顯示叢集層級的MOTD。
+
+. 使用「安全登入motd show」命令來顯示MOTD、以驗證是否已建立MOTD。
++
+使用空白字串（「」）指定「-m則」參數、會顯示未設定或沒有內容的MOTD。
+
++
+請參閱 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr-980/security%5F%5Flogin%5F%5Fmotd%5F%5Fmodify.html["安全登入motd修改"] 命令手冊頁、其中列出可讓MOTD顯示動態產生內容的參數清單。請務必查看ONTAP 您的資訊版專屬的手冊頁。
+
+
+
+以下範例使用非互動模式來建立「cluster1」叢集的MOTD：
+
+[listing]
+----
+cluster1::> security login motd modify -message "Greetings!"
+----
+以下範例使用互動模式來建立「svm1」SVM的MOTD、使用轉義序列來顯示動態產生的內容：
+
+[listing]
+----
+cluster1::> security login motd modify -vserver svm1
+
+Enter the message of the day for Vserver "svm1".
+Max size: 2048. Enter a blank line to terminate input. Press Ctrl-C to abort.
+0        1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+Welcome to the \n SVM.  Your user ID is '\N'. Your last successful login was \L.
+----
+下列範例顯示已建立的教學影片：
+
+[listing]
+----
+cluster1::> security login motd show
+Vserver: cluster1
+Is the Cluster MOTD Displayed?: true
+Message
+-----------------------------------------------------------------------------
+Greetings!
+
+Vserver: svm1
+Is the Cluster MOTD Displayed?: true
+Message
+-----------------------------------------------------------------------------
+Welcome to the \n SVM.  Your user ID is '\N'. Your last successful login was \L.
+
+2 entries were displayed.
+----

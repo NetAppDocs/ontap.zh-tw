@@ -1,0 +1,57 @@
+---
+permalink: smb-admin/enable-disable-local-users-groups-task.html 
+sidebar: sidebar 
+keywords: enable, disable, local, user, group, smb, access, storage, virtual, machine, svm, functionality, default, enable or disable local users and groups 
+summary: 您可以在儲存虛擬機器（SVM）上啟用或停用本機使用者和群組進行SMB存取。預設會啟用本機使用者和群組功能。 
+---
+= 啟用或停用本機使用者和群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上啟用或停用本機使用者和群組進行SMB存取。預設會啟用本機使用者和群組功能。
+
+您可以在設定SMB共用區和NTFS檔案權限時使用本機使用者和群組、也可以在建立SMB連線時選用本機使用者進行驗證。若要使用本機使用者進行驗證、您也必須啟用本機使用者和群組驗證選項。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 執行下列其中一項動作：
++
+|===
+| 如果您希望本機使用者和群組... | 輸入命令... 
+
+
+ a| 
+已啟用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is - local-user-and - Group-enabled_true」
+
+
+
+ a| 
+已停用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is - local-user-and - Groups -啟用假」
+
+|===
+. 返回管理員權限等級：「et -priv. admin」
+
+
+下列範例可在SVM VS1上啟用本機使用者和群組功能：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-users-and-groups-enabled true
+
+cluster1::*> set -privilege admin
+----
+xref:enable-disable-local-user-authentication-task.adoc[啟用或停用本機使用者驗證]
+
+xref:enable-disable-local-user-accounts-task.adoc[啟用或停用本機使用者帳戶]

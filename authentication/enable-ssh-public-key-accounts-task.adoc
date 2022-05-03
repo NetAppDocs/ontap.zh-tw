@@ -1,0 +1,59 @@
+---
+permalink: authentication/enable-ssh-public-key-accounts-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, public key, accounts 
+summary: 您可以使用安全登入create命令、讓系統管理員帳戶使用SSH公開金鑰來存取管理或資料SVM。 
+---
+= 啟用SSH公開金鑰帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全登入create」命令、讓系統管理員帳戶使用SSH公開金鑰來存取管理或資料SVM。
+
+您必須是叢集管理員才能執行此工作。
+
+.關於這項工作
+* 您必須先將公開金鑰與帳戶建立關聯、帳戶才能存取SVM。
++
+xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者帳戶建立關聯]
+
++
+您可以在啟用帳戶存取之前或之後執行此工作。
+
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
+
+
+如果您想要在系統管理員帳戶使用SSH公開金鑰驗證的叢集上啟用SSL FIPS模式、則在存取SVM之前、必須先確認主機金鑰演算法受到支援、然後再啟用FIPS。
+
+* 支援的金鑰類型：ECDSA-SHA2-nistp256、ssh - ed25519
+* 不支援的金鑰類型：SSH-RSA、SSH-DSS
+
+
+沒有支援金鑰演算法的現有SSH公開金鑰帳戶、必須先以支援的金鑰類型重新設定、才能啟用FIPS、否則系統管理員驗證將會失敗。
+
+如需詳細資訊、請參閱 link:../networking/configure_network_security_using_federal_information_processing_standards_@fips@.html["使用FIPS設定網路安全性"]。
+
+.步驟
+. 允許本機系統管理員帳戶使用SSH公開金鑰存取SVM：
++
+「安全性登入建立-vserver _Svm_name_-user-or group名稱user_or group名稱-application_application_-authmethod _auth_method_-role _role__-comment _comment _」
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+下列命令可讓SVM系統管理員帳戶「svmadmin1」使用預先定義的「vsadmin-volume」角色、使用SSH公開金鑰來存取SVM「engData1」：
+
++
+[listing]
+----
+cluster1::>security login create -vserver engData1 -user-or-group-name svmadmin1 -application ssh -authmethod publickey -role vsadmin-volume
+----
+
+
+如果您尚未將公開金鑰與系統管理員帳戶建立關聯、則必須先建立公開金鑰、帳戶才能存取SVM。
+
+xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者帳戶建立關聯]

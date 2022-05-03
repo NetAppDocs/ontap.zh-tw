@@ -1,0 +1,80 @@
+---
+permalink: encryption-at-rest/restore-onboard-key-management-encryption-keys-task.html 
+sidebar: sidebar 
+keywords: restoring, onboard, key management encryption 
+summary: 有時候、您可能需要還原內建金鑰管理加密金鑰。一旦您確認需要還原金鑰、就可以設定Onboard Key Manager來還原金鑰。 
+---
+= 還原內建金鑰管理加密金鑰
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果需要還原內建金鑰管理加密金鑰、請先確認需要還原金鑰、然後再設定內建金鑰管理程式來還原金鑰。
+
+.您需要的是 #8217 ；需要的是什麼
+* 如果您使用NSE搭配外部金鑰管理（KMIP）伺服器、則必須刪除外部金鑰管理程式資料庫。
++
+link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
+
+* 您必須是叢集管理員才能執行此工作。
+
+
+
+
+== 適用於不含更新版本的步驟ONTAP
+
+. 驗證是否需要還原金鑰：+「安全金鑰管理程式金鑰查詢-節點節點_」
+. 如果您執行ONTAP 的是更新版本的版本、而且根磁碟區已加密、請完成 <<root_volume_encrypted>>。
++
+如果您執行ONTAP 的是32個版本的更新版本、或者執行ONTAP 的是32個版本的更新版本、而且根磁碟區並未加密、請跳過此步驟。
+
+. 還原金鑰：+「安全金鑰管理程式內建同步」
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列ONTAP 功能可同步機載金鑰階層中的金鑰：
+
++
+[listing]
+----
+cluster1::> security key-manager onboard sync
+
+Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
+----
+. 在通關密碼提示字元下、輸入叢集的內建金鑰管理通關密碼。
+
+
+
+
+== 適用於不含更新版本的步驟ONTAP
+
+. 驗證是否需要還原金鑰：+「安全金鑰管理程式金鑰顯示」
+. 如果您執行ONTAP 的是更新版本的版本、且根磁碟區已加密、請完成下列步驟：
++
+如果您執行ONTAP 的是32個版本的更新版本、或者執行ONTAP 的是32個版本的更新版本、而且根磁碟區並未加密、請跳過此步驟。
+
+. 還原機碼：+「安全金鑰管理程式設定-節點節點_nodE_」
++
+如需完整的命令語法、請參閱手冊頁。
+
+. 在通關密碼提示字元下、輸入叢集的內建金鑰管理通關密碼。
+
+
+
+
+== 如果根磁碟區已加密、請執行步驟
+
+如果您執行ONTAP 的是更新版本的版本、而且根磁碟區已加密、則必須使用開機功能表設定內建金鑰管理還原密碼。
+
+. 將節點開機至開機功能表、然後選取選項「（10）Set Onboard Key Management Recovery Secrets」（設定內建金鑰管理還原機密）。
+. 輸入「y」以使用此選項。
+. 出現提示時、輸入叢集的內建金鑰管理通關密碼。
+. 出現提示時、輸入備份金鑰資料。
++
+節點會返回開機功能表。
+
+. 從開機功能表中、選取選項「（1）正常開機」。
+

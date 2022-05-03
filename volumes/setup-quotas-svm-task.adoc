@@ -1,0 +1,53 @@
+---
+permalink: volumes/setup-quotas-svm-task.html 
+sidebar: sidebar 
+keywords: set up, quotas on svm 
+summary: 若要在新的儲存虛擬機器（SVM、先前稱為Vserver）上設定配額、您必須建立配額原則、新增配額原則規則至原則、將原則指派給SVM、並在FlexVol SVM上的每個SVM Volume上初始化配額。 
+---
+= 在SVM上設定配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要在新的儲存虛擬機器（SVM、先前稱為Vserver）上設定配額、您必須建立配額原則、新增配額原則規則至原則、將原則指派給SVM、並在FlexVol SVM上的每個SVM Volume上初始化配額。
+
+.步驟
+. 使用帶有"-instance"選項的"vserver show"命令可顯示在建立SVM時自動建立的預設配額原則名稱。
++
+如果在建立SVM時未指定名稱、則名稱為「預設」。您也可以使用「vserver配額原則重新命名」命令、為預設原則命名。
+
++
+[NOTE]
+====
+您也可以使用「volume quota policy create」命令來建立新原則。
+
+====
+. 使用「volume quota policy rRule cree"（磁碟區配額原則規則建立）」命令、為SVM上的每個磁碟區建立下列配額規則中的_any：
++
+** 所有使用者的預設配額規則
+** 針對特定使用者的明確配額規則
+** 所有群組的預設配額規則
+** 特定群組的明確配額規則
+** 所有qtree的預設配額規則
+** 特定qtree的明確配額規則
+
+
+. 使用「volume quota policy rRule show」命令檢查配額規則的設定是否正確。
+. 如果您正在制定新原則、請使用「vserver modify」命令將新原則指派給SVM。
+. 使用「Volume quota on」命令初始化SVM上每個磁碟區的配額。
++
+您可以使用下列方式監控初始化程序：
+
++
+** 使用「Volume quota on」命令時、您可以新增「-foreground」參數、在前景的工作上執行配額。（依預設、工作會在背景執行。）
++
+當工作在背景中執行時、您可以使用「jobshow」命令來監控其進度。
+
+** 您可以使用「volume quota show」命令來監控配額初始化的狀態。
+
+
+. 使用「volume quota show -instance」命令來檢查初始化錯誤、例如無法初始化的配額規則。
+. 使用「Volume quota report」命令顯示配額報告、確保強制執行的配額符合您的期望。
+

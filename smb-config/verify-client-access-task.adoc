@@ -1,0 +1,34 @@
+---
+permalink: smb-config/verify-client-access-task.html 
+sidebar: sidebar 
+keywords: verify, configure, smb, correct, access, writing, write, data, share, server, name, netbios, alias, verify smb client access 
+summary: 您應該存取並寫入資料至共用區、以確認SMB設定正確。您應該使用SMB伺服器名稱和任何NetBios別名來測試存取。 
+---
+= 驗證SMB用戶端存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該存取並寫入資料至共用區、以確認SMB設定正確。您應該使用SMB伺服器名稱和任何NetBios別名來測試存取。
+
+.步驟
+. 登入Windows用戶端。
+. 使用SMB伺服器名稱進行測試存取：
++
+.. 在Windows檔案總管中、以下列格式將磁碟機對應至共用區：「\」、「\」、「SMB伺服器名稱\共用名稱」
++
+如果對應不成功、則DNS對應可能尚未傳播到整個網路。您必須在稍後使用SMB伺服器名稱來測試存取。
+
++
+如果SMB伺服器名稱為vs1.example.com、且共用名稱為share1、您應該輸入下列內容：「\ vs0.example.com\SHARE1`
+
+.. 在新建立的磁碟機上、建立測試檔案、然後刪除該檔案。
+
+
++
+您已使用SMB伺服器名稱驗證共用的寫入存取權。
+
+. 對任何NetBios別名重複步驟2。
+

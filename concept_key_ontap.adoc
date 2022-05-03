@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: concept_key_ontap.html 
+keywords: netapp, ontap, cluster, node, local tier, cloud tier, aggregate, SVM, storage VM, service level, volume, qtree, LUN, automatic aggregate selection, tier selection, vserver, ONTAP concepts, terms, Snapshot copy, data protection, mirroring, HA pair, storage efficiency, compression, deduplication, compaction, multifactor authentication, client, LUN, NVMe, quiesce, quiescing, pause, namespace, flash storage 
+summary: 快速介紹ONTAP 功能、以及針對目前客戶所做的一些詞彙變更 
+---
+= 主要概念
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+NetApp ONTAP 解決方案是NetApp備受肯定的資料管理軟體。您可以在ONTAP NetApp設計的硬體、市售硬體或任何主要公有雲上的資料中心執行功能。
+
+
+
+== 關於System Manager
+
+System Manager（前身OnCommand 為《支援系統管理程式》）是一套簡單易用的產品、可讓您輕鬆設定及管理ONTAP 各種叢集。System Manager可簡化常見的儲存工作、例如建立磁碟區、LUN、qtree、共用區和匯出、 可節省時間並協助預防錯誤。
+
+從完全重新設計的System Manager開始、使用直覺式圖形化使用者介面來簡化功能、提供下列功能：ONTAP ONTAP
+
+* 快速簡單的組態
++
+簡化工作流程ONTAP 、以利設定及管理一般工作。
+
+* 智慧型預設值
++
+可讓您根據獲證實的部署建立最佳實務做法組態。
+
+* 廣泛的管理能力
++
+輕鬆設定及配置儲存設備、以供檔案共用、應用程式及資料庫工作負載使用。
+
+* 整合式管理系統管理程式隨附ONTAP 於此功能中、無需另行安裝。一種新儀表板、可在單一畫面上顯示主要叢集狀態和效能。
+
+
+System Manager可讓您清楚掌握叢集的狀態、並引導您找出達成儲存目標的最佳方法。
+
+如果您熟悉ONTAP 舊版的不二之選、您會感覺就像在家一樣。您應該注意System Manager的一些術語變更。
+
+* *本機層*：一組實體固態硬碟或儲存資料的硬碟。您可能知道這些是集合體。事實上、如果您使用ONTAP 的是SURFCLI、您仍會看到用來代表本機層的術語_Aggregate。
+* *雲端層*：ONTAP 當您想要將部分資料從內部部署中移出時、可將資料儲存在由NetApp使用的雲端中、原因有幾個。如果您想FabricPool 知道某個環節的雲端、就已經知道了。而且StorageGRID 如果您使用的是一套資料不全系統、那麼您的雲端可能根本就不在內部部署。（內部部署的雲端體驗稱為_Private Cloud。）
+* *儲存VM*：ONTAP 執行於支援內部的虛擬機器、可為您的用戶端提供儲存與資料服務。您可能知道這是 _SVM_ 或 _vserver_ 。
+* *網路介面*：指派給實體網路連接埠的位址和內容。您可能知道這是_邏輯介面（LIF）_。
+* *暫停*：停止作業的動作。在使用本版本之前、您可能已經在其他版本的System Manager中提及_quiesce_。ONTAP
+
+
+如果您是ONTAP 不瞭解事物的新手、以下是其他一些概念、可讓您快速上手。
+
+* *叢集*：這就是最大的效益。叢集由一或多個節點組成。將節點視為專精於資料管理與儲存的電腦。您可以隨著需求增加而將節點新增至叢集、或是以較大的節點取代較小的節點。當然、您可以在不中斷資料存取的情況下完成所有工作。
+* * Snapshot複本*：這是即時的資料複本、可用來復原錯誤、移至雲端或備份、鏡射至其他叢集、甚至複製到磁帶。不會中斷客戶的使用。誰能負擔停機時間？
+* *資料保護*：您使用的保護功能取決於您需要保護的項目、以及發生錯誤時需要等待多久才能恢復。支援同步與非同步鏡射等功能。ONTAP
+* * HA配對*–談到避免停機、高可用度配對是ONTAP 指一個穩定叢集的基本單元。它由兩個合作夥伴節點組成、可以彼此接管。假設您想要升級ONTAP 至最新版的更新版的更新版本、以獲得全新的資料管理功能。只要讓合作夥伴接管節點的用戶端負載、升級該用戶端、然後將負載交回即可。針對合作夥伴節點重複上述步驟、您剛升級時不會造成任何中斷。
+* *儲存效率*：磁碟的成本（實際成本！）、但儲存效率可讓您在更少的空間中儲存更多資料。如此不但能節省實際成本、也能讓您成為資料的主角。您可以使用任何或全部ONTAP的壓縮、重複資料刪除和壓縮功能。我們確定您已經知道壓縮是什麼。重複資料刪除技術可識別相同資料的多個複本、並以指向單一複本的指標取代重複資料。壓縮功能可將多個小型檔案放入單一儲存區塊、填入原本浪費空間的內容。
+* *安全性*–安全性是ONTAP 功能完善的資料管理軟體。支援多種方式、例如為系統管理員使用多因素驗證、加密磁碟和傳輸中的資料、以及使用防毒工具來保護Windows檔案。ONTAP
+* * Volumes *：就是您認為Volume的確切內容。它們是儲存檔案的容器。您可以將磁碟區匯出至Linux用戶端、與Windows用戶端共用磁碟區、甚至可以同時使用相同的檔案來執行這兩者。
+* * LUN*–SAN的基本單元。這就是光纖通道和iSCSI。在SAN環境中ONTAP 、利用支援功能將虛擬磁碟提供給用戶端、而非檔案。資料庫管理員通常想要低層級管理的虛擬磁碟、或是套用專用檔案系統。許多ONTAP 不只是全部的支援系統、都能將資料提供給SAN用戶端。
+* * NVMe命名空間*：Flash儲存設備的未來發展。NVMe傳輸協定已針對SSD型儲存設備進行最佳化、而且速度非常快。NVMe是SAN的一種風格、但基本的儲存單元稱為_namespacity_、而非LUN。
+
+
+現在您已經瞭解ONTAP 了關於這個問題的基本知識、而且已經準備好開始工作了。請閱讀後續章節、瞭解如何使用System Manager設定及管理叢集。
+
+如果您想要深入瞭ONTAP 解、請參閱《知識》 link:link:../concepts/index.html["概念指南"]。加入NetApp社群。只要按一下、就能瞭解還有什麼。
+
+
+
+== System Manager使用案例影片
+
+video::PrpfVnN3dyk[youtube, width=848,height=480]

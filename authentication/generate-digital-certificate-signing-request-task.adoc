@@ -1,0 +1,59 @@
+---
+permalink: authentication/generate-digital-certificate-signing-request-task.html 
+sidebar: sidebar 
+keywords: generate, certificate, signing, request 
+summary: 您可以使用安全性憑證genere-CSR命令來產生憑證簽署要求（CSR）。在處理您的要求之後、憑證授權單位（CA）會傳送簽署的數位憑證給您。 
+---
+= 產生憑證簽署要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全憑證genere-csr」命令來產生憑證簽署要求（CSR）。在處理您的要求之後、憑證授權單位（CA）會傳送簽署的數位憑證給您。
+
+您必須是叢集或SVM管理員、才能執行此工作。
+
+.步驟
+. 產生CSR：
++
+「安全性憑證generation-csr -common-name fqfqd_or common_name -size 512|102010| 1536|2048-國家/地區-州/省/地區-位置-組織單位-單位- email-addr email_of_contact-hash-flexic-Function SHA1_SHA256| md5」
+
++
+以下命令會建立一個CSR、其中「2048」位元的私密金鑰是由「S25256」雜湊功能所產生、以供公司「IT」部門的「軟體」群組使用、該公司的自訂通用名稱為「erver1.companyname.com`」、位於「Unnyvale」、「California」、「USA」。SVM聯絡人管理員的電子郵件地址為「web@example.com」。系統會在輸出中顯示CSR和私密金鑰。
+
++
+[listing]
+----
+cluster1::>security certificate generate-csr -common-name server1.companyname.com -size 2048 -country US -state California -locality Sunnyvale -organization IT -unit Software -email-addr web@example.com -hash-function SHA256
+
+Certificate Signing Request :
+-----BEGIN CERTIFICATE REQUEST-----
+MIIBGjCBxQIBADBgMRQwEgYDVQQDEwtleGFtcGxlLmNvbTELMAkGA1UEBhMCVVMx
+CTAHBgNVBAgTADEJMAcGA1UEBxMAMQkwBwYDVQQKEwAxCTAHBgNVBAsTADEPMA0G
+CSqGSIb3DQEJARYAMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAPXFanNoJApT1nzS
+xOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJbmXuj6U3a1woUsb13wfEvQnHVFNci
+2ninsJ8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA0EA6EagLfso5+4g+ejiRKKTUPQO
+UqOUEoKuvxhOvPC2w7b//fNSFsFHvXloqEOhYECn/NX9h8mbphCoM5YZ4OfnKw==
+-----END CERTIFICATE REQUEST-----
+
+
+Private Key :
+-----BEGIN RSA PRIVATE KEY-----
+MIIBOwIBAAJBAPXFanNoJApT1nzSxOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJb
+mXuj6U3a1woUsb13wfEvQnHVFNci2ninsJ8CAwEAAQJAWt2AO+bW3FKezEuIrQlu
+KoMyRYK455wtMk8BrOyJfhYsB20B28eifjJvRWdTOBEav99M7cEzgPv+p5kaZTTM
+gQIhAPsp+j1hrUXSRj979LIJJY0sNez397i7ViFXWQScx/ehAiEA+oDbOooWlVvu
+xj4aitxVBu6ByVckYU8LbsfeRNsZwD8CIQCbZ1/ENvmlJ/P7N9Exj2NCtEYxd0Q5
+cwBZ5NfZeMBpwQIhAPk0KWQSLadGfsKO077itF+h9FGFNHbtuNTrVq4vPW3nAiAA
+peMBQgEv28y2r8D4dkYzxcXmjzJluUSZSZ9c/wS6fA==
+-----END RSA PRIVATE KEY-----
+
+Note: Please keep a copy of your certificate request and private key for future reference.
+----
+. 從CSR輸出複製憑證要求、然後以電子形式（例如電子郵件）將其傳送至信任的協力廠商CA進行簽署。
++
+在處理您的要求之後、CA會將簽署的數位憑證傳送給您。您應該保留一份私密金鑰和CA簽署的數位憑證複本。
+
+

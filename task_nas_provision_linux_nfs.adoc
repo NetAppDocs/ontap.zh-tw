@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: task_nas_provision_linux_nfs.html 
+keywords: netapp, ontap, provisioning, nas, linux, servers, provision, LIF, network interface 
+summary: 利用NFS傳輸協定搭配ONTAP 使用NetApp System Manager（9.7及更新版本）、建立磁碟區以提供Linux伺服器的儲存設備。 
+---
+= 使用NFS為Linux伺服器配置NAS儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+使用NFS傳輸協定搭配ONTAP 使用NetApp System Manager（9.7及更新版本）、建立Volume以提供Linux伺服器的儲存設備。
+
+此程序會在上建立新的磁碟區 link:task_nas_enable_linux_nfs.html["現有的NFS型儲存VM"]。您可以在設定Volume或指定自訂組態時、接受系統預設值。
+
+您可以建立FlexVol 不穩定的資料、或是建立高效能需求的大型檔案系統FlexGroup 、也可以建立一個穩定的資料區。另請參閱 link:task_nas_provision_flexgroup.html["為使用FlexGroup 「供應」功能的大型檔案系統配置NAS儲存設備"]。
+
+您也可以將本冊的規格儲存至可執行的教戰手冊。如需詳細資料、請前往 link:task_admin_use_ansible_playbooks_add_edit_volumes_luns.html["使用「可執行教戰手冊」來新增或編輯磁碟區或LUN"]。
+
+如果您想要瞭解ONTAP 有關各種功能的詳細資訊、請參閱 link:nfs-admin/index.html["NFS參考總覽"]。
+
+.步驟
+. 在啟用NFS的儲存VM中新增磁碟區。
++
+.. 按一下「*儲存設備>磁碟區*」、然後按一下「*新增*」。
+.. 輸入名稱、選取儲存VM、然後輸入大小。
++
+只會列出使用NFS傳輸協定設定的儲存VM。如果只有一個使用SMB傳輸協定設定的儲存VM可供使用、則不會顯示「*儲存VM*」欄位。
+
++
+*** 如果此時按一下*「Save」（儲存）*、System Manager會使用系統預設值來建立FlexVol 及新增一個「Sof Volume」（資料集）。
++
+
+NOTE: 預設匯出原則會授予所有使用者完整存取權。
+
+*** 您可以按一下*更多選項*來自訂磁碟區的組態、以啟用授權、服務品質及資料保護等服務。請參閱 <<Customize the volume configuration>>，然後返回此處完成下列步驟。
+
+
+
+
+. [[step2、Step 2 in the workflow ]）]在Linux用戶端上、執行下列動作來驗證存取。
++
+.. 使用儲存VM的網路介面建立及掛載Volume。
+.. 在新掛載的磁碟區上、建立測試檔案、將文字寫入其中、然後刪除該檔案。
+
+
++
+驗證存取之後、您可以 link:task_nas_provision_export_policies.html["使用磁碟區的匯出原則來限制用戶端存取"] 並在掛載的磁碟區上設定任何所需的UNIX擁有權和權限。
+
+
+
+
+
+== 自訂Volume組態
+
+您可以在新增磁碟區時自訂磁碟區組態、而非接受系統預設值。
+
+按一下*更多選項*之後、選取您需要的功能、然後輸入所需的值。
+
+* 遠端磁碟區的快取。
+* 效能服務層級（服務品質、QoS）。
++
+從ONTAP 功能表9.8開始、除了預設值選項、您還可以指定自訂QoS原則或停用QoS。
+
++
+** 若要停用QoS、請選取*自訂*、*現有*、然後選取*無*。
+** 如果您選取*自訂*並指定現有的服務層級、則會自動選擇本機層級。
+** 從ONTAP 《支援範圍》9.9.1開始、如果您選擇建立自訂效能服務層級、您可以使用System Manager手動選取您要放置所建立Volume的本機層（*手動放置*）。
++
+如果您選擇遠端快取或FlexGroup 是使用「聲音量」選項、則無法使用此選項。
+
+
+
+* 供應量（選擇*在叢集內分散磁碟區資料*）FlexGroup 。
++
+如果您先前在*效能服務層級*下選擇*手動放置*、則無法使用此選項。否則、您要新增的磁碟區FlexVol 預設會變成一個不全的磁碟區。
+
+* 設定磁碟區之傳輸協定的存取權限。
+* 使用SnapMirror（本機或遠端）進行資料保護、然後從下拉式清單中指定目的地叢集的保護原則和設定。
+* 按一下「*儲存*」以建立磁碟區、並將其新增至叢集和儲存VM。
+
+
+
+NOTE: 儲存磁碟區之後、請返回 <<step2>> 使用NFS完成Linux伺服器的資源配置。
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+|===
+
+
+| 若要執行此工作... | 請參閱... 
+
+
+| System Manager Classic（ONTAP 僅限版本9.7及更早版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/nfs-config/index.html["NFS組態總覽"^] 
+
+
+| 指令行介面（CLI）ONTAP | link:nfs-config/index.html["使用CLI進行NFS組態總覽"] 
+|===

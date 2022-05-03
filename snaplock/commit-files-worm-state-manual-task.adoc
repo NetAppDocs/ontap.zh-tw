@@ -1,0 +1,41 @@
+---
+permalink: snaplock/commit-files-worm-state-manual-task.html 
+sidebar: sidebar 
+keywords: commit, file, worm, manually, nfs, cifs, read, only 
+summary: 您可以將檔案變成唯讀、以手動方式將檔案提交至WORM。您可以透過NFS或CIFS使用任何適當的命令或程式、將檔案的讀寫屬性變更為唯讀。 
+---
+= 手動將檔案提交至WORM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將檔案變成唯讀、以手動方式將檔案提交至WORM。您可以透過NFS或CIFS使用任何適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您想要提交的檔案必須位於SnapLock 一個流通不全的流通不全的流通不全。
+* 檔案必須可寫入。
+
+
+執行命令或程式時、Volume Compliance時鐘 時間會寫入檔案的「ctime」欄位。「完成時鐘時間」可決定何時達到檔案的保留時間。
+
+.步驟
+. 使用適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
++
+在UNIX Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+
++
+[listing]
+----
+chmod -w document.txt
+----
++
+在Windows Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+
++
+[listing]
+----
+attrib +r document.txt
+----
+

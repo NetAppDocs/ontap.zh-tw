@@ -1,0 +1,31 @@
+---
+permalink: smb-admin/control-automatic-dfs-advertisements-concept.html 
+sidebar: sidebar 
+keywords: cifs, server, option, control, dfs, capabilities, advertise, smb, client, connect, share, ontap, dfs, referral, access, symbol, link, how to control automatic dfs advertisements in ontap with a cifs server option 
+summary: CIFS伺服器選項可控制連線至共用時、如何向SMB用戶端通告DFS功能。由於當用戶端透過SMB存取符號連結時、使用的是DFS轉介、因此您應該瞭解停用或啟用此選項時會有什麼影響。ONTAP 
+---
+= 透過ONTAP CIFS伺服器選項、在功能不全的情況下控制自動的DFS廣告
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+CIFS伺服器選項可控制連線至共用時、如何向SMB用戶端通告DFS功能。由於當用戶端透過SMB存取符號連結時、使用的是DFS轉介、因此您應該瞭解停用或啟用此選項時會有什麼影響。ONTAP
+
+CIFS伺服器選項可決定CIFS伺服器是否自動向SMB用戶端通告其具備的DFS功能。根據預設、此選項會啟用、而且CIFS伺服器一律會向SMB用戶端通告它具有DFS-功能（即使連線至停用符號連結存取權的共用區）。如果您想要CIFS伺服器只在連接到已啟用符號連結存取權限的共用時、才向用戶端通告它具有DFS-功能、您可以停用此選項。
+
+您應該注意停用此選項時會發生什麼情況：
+
+* 符號連結的共用組態不變。
+* 如果共用參數設定為允許符號連結存取（讀寫存取或唯讀存取）、則CIFS伺服器會將DFS功能通告給連線至該共用的用戶端。
++
+用戶端連線和符號連結存取不中斷地繼續進行。
+
+* 如果共用參數設定為不允許符號連結存取（停用存取或如果共用參數值為null）、則CIFS伺服器不會向連線至該共用的用戶端通告DFS功能。
++
+由於用戶端已快取CIFS伺服器可支援的資訊、而且不再廣告、因此在停用CIFS伺服器選項之後、連線至停用符號連結存取的共用區的用戶端、可能無法存取這些共用區。停用此選項之後、您可能需要重新開機連線至這些共用的用戶端、以便清除快取的資訊。
+
+
+
+這些變更不適用於SMB 1.0連線。

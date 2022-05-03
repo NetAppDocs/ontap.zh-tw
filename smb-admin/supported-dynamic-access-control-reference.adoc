@@ -1,0 +1,89 @@
+---
+permalink: smb-admin/supported-dynamic-access-control-reference.html 
+sidebar: sidebar 
+keywords: dynamic, access, control, dac, cifs, server, understand, ontap, support, functionality, active, directory, environment, supported dynamic access control functionality 
+summary: 如果您想要在CIFS伺服器上使用動態存取控制（DAC）、您需要瞭解ONTAP 如何在Active Directory環境中支援動態存取控制功能。 
+---
+= 支援的動態存取控制功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要在CIFS伺服器上使用動態存取控制（DAC）、您需要瞭解ONTAP 如何在Active Directory環境中支援動態存取控制功能。
+
+
+
+== 支援動態存取控制
+
+在CIFS伺服器上啟用動態存取控制時、支援下列功能：ONTAP
+
+|===
+| 功能 | 註解 
+
+
+ a| 
+宣告進入檔案系統
+ a| 
+聲稱是簡單的名稱和值配對、說明使用者的一些真實情況。使用者認證現在包含請款資訊、而檔案上的安全性描述元可執行包含請款檢查的存取檢查。如此可讓系統管理員更精細地控制哪些人可以存取檔案。
+
+
+
+ a| 
+檔案存取檢查的條件式運算式
+ a| 
+修改檔案的安全性參數時、使用者現在可以將任意複雜的條件式運算式新增至檔案的安全性描述元。條件運算式可以包含宣告檢查。
+
+
+
+ a| 
+透過集中存取原則集中控制檔案存取
+ a| 
+集中存取原則是一種儲存在Active Directory中的ACL、可標記為檔案。只有在磁碟上的安全性描述元和標記的集中存取原則都允許存取時、才會授予檔案存取權。這可讓系統管理員控制從中央位置（AD）存取檔案的權限、而不需要修改磁碟上的安全性描述元。
+
+
+
+ a| 
+集中存取原則接移
+ a| 
+藉由「老舊」變更中央存取原則、並在稽核報告中看到變更的影響、來增加在不影響實際檔案存取的情況下嘗試安全性變更的能力。
+
+
+
+ a| 
+支援使用ONTAP CLI顯示有關中央存取原則安全性的資訊
+ a| 
+延伸「vserver安全檔案目錄show」命令、以顯示有關套用的集中存取原則資訊。
+
+
+
+ a| 
+包括集中存取原則的安全性追蹤
+ a| 
+延伸「vserver安全性追蹤」命令系列、以顯示包含已套用中央存取原則資訊的結果。
+
+|===
+
+
+== 不支援動態存取控制
+
+在CIFS伺服器上啟用動態存取控制時、不支援下列功能：ONTAP
+
+|===
+| 功能 | 註解 
+
+
+ a| 
+NTFS檔案系統物件的自動分類
+ a| 
+這是ONTAP Windows檔案分類基礎架構的副檔名、不受支援。
+
+
+
+ a| 
+進階稽核、不包括集中存取原則接移
+ a| 
+進階稽核僅支援集中存取原則移位。
+
+|===

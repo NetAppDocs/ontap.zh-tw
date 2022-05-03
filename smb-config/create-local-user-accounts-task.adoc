@@ -1,0 +1,63 @@
+---
+permalink: smb-config/create-local-user-accounts-task.html 
+sidebar: sidebar 
+keywords: create, local, user, account, authorize, access, data, contain, svm, sb, connection, local, user, authentication, create local user accounts 
+summary: 您可以建立本機使用者帳戶、以便透過SMB連線授權存取SVM中所含的資料。您也可以在建立SMB工作階段時、使用本機使用者帳戶進行驗證。 
+---
+= 建立本機使用者帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立本機使用者帳戶、以便透過SMB連線授權存取SVM中所含的資料。您也可以在建立SMB工作階段時、使用本機使用者帳戶進行驗證。
+
+建立SVM時、預設會啟用本機使用者功能。
+
+建立本機使用者帳戶時、您必須指定使用者名稱、並指定要與帳戶建立關聯的SVM。
+
+"vserver CIFS user-and Groups local-user-users"手冊頁包含有關可選參數和命名要求的詳細信息。
+
+.步驟
+. 建立本機使用者：「vserver CIFS user-and -Groups local-user create -vserver _vserver_name_-user-name _user_name__Optional _parameters_」
++
+下列選用參數可能很有用：
+
++
+** 「全名」
++
+使用者的全名。
+
+** 「-`-description'」
++
+本機使用者的說明。
+
+** 停用「is-Account」｛true|假｝
++
+指定使用者帳戶是啟用還是停用。如果未指定此參數、則預設為啟用使用者帳戶。
+
+
+
++
+命令會提示輸入本機使用者的密碼。
+
+. 輸入本機使用者的密碼、然後確認密碼。
+. 驗證是否已成功建立使用者：「vserver CIFS user-and -Groups local-user show -vserver _vserver_name_」
+
+
+以下範例建立一個本機使用者「'Smb_server01\sue」、全名為「'Shue Chang'」、與SVM vs1.example.com相關聯：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user create -vserver vs1.example.com ‑user-name SMB_SERVER01\sue -full-name "Sue Chang"
+
+Enter the password:
+Confirm the password:
+
+cluster1::> vserver cifs users-and-groups local-user show
+Vserver  User Name                  Full Name  Description
+-------- -------------------------- ---------- -------------
+vs1      SMB_SERVER01\Administrator            Built-in administrator account
+vs1      SMB_SERVER01\sue            Sue Chang
+----

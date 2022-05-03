@@ -1,0 +1,43 @@
+---
+permalink: authentication/configure-nis-server-access-task.html 
+sidebar: sidebar 
+keywords: configure, nis server, access 
+summary: 您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存取SVM。您可以使用vserver services name-service NIS網域create命令、在SVM上建立NIS網域組態。 
+---
+= 設定NIS伺服器存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存取SVM。您可以使用「vserver services name-service NIS網域create」命令、在SVM上建立NIS網域組態。
+
+.您需要的是 #8217 ；需要的是什麼
+* 在SVM上設定NIS網域之前、所有已設定的伺服器都必須可供使用和存取。
+* 您必須是叢集或SVM管理員、才能執行此工作。
+
+
+您可以建立多個NIS網域。一次只能將一個NIS網域設定為「現用」。
+
+.步驟
+. 在SVM上建立NIS網域組態：「vserver services name-service nis-domain create -vserver svm_name -domain client_configuration -active true|假-nis-servers ns_server_ips」
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+從ONTAP 功能變數《-NIS伺服器》開始、這個功能變數取代了現場的「伺服器」。此新欄位可以使用NIS伺服器的主機名稱或IP位址。
+
+====
++
+以下命令可在SVM 'engData'上建立NIS網域組態。NIS網域「nisdomain」在建立時會作用、並以IP位址「192.0.2.180」與NIS伺服器通訊。
+
++
+[listing]
+----
+cluster1::>vserver services name-service nis-domain create
+-vserver engData -domain nisdomain -active true -nis-servers 192.0.2.180
+----
+

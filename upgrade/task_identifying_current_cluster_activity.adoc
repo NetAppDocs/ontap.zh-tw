@@ -1,0 +1,123 @@
+---
+permalink: upgrade/task_identifying_current_cluster_activity.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, cluster, activity, running, jobs, stop, shutdown, active, cifs, sessions 
+summary: 在執行不中斷升級之前、您應該先識別並順利終止任何無法持續使用的CIFS工作階段。 
+---
+= 驗證目前的叢集活動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不使用 link:https://aiq.netapp.com/["Active IQ"^] 升級顧問程式、在升級之前、您應該手動確認沒有任何工作正在執行、而且任何無法持續使用的CIFS工作階段都會終止。
+
+
+
+== 確認沒有工作正在執行
+
+在升級ONTAP 此功能之前、您必須先確認叢集工作的狀態。如果有任何Aggregate、Volume、NDMP（傾印或還原）或Snapshot工作（例如建立、刪除、移動、修改、複寫、 和掛載工作）正在執行或排入佇列、您必須允許工作成功完成或停止佇列的項目。
+
+. 檢閱任何執行中或佇列的Aggregate、Volume或Snapshot工作清單：「jobshow」
++
+[listing]
+----
+cluster1::> job show
+                            Owning
+Job ID Name                 Vserver    Node           State
+------ -------------------- ---------- -------------- ----------
+8629   Vol Reaper           cluster1   -              Queued
+       Description: Vol Reaper Job
+8630   Certificate Expiry Check
+                            cluster1   -              Queued
+       Description: Certificate Expiry Check
+.
+.
+.
+----
+. 如果有任何執行中的工作、請允許他們成功完成。
+. 刪除任何佇列的Aggregate、Volume或Snapshot複本工作：「jobdelete -id job_id」
++
+[listing]
+----
+cluster1::> job delete -id 8629
+----
+. 確認沒有正在執行或排入佇列的Aggregate、Volume或Snapshot工作：「jobshow」
++
+在此範例中、所有執行中和佇列中的工作都已刪除：
+
++
+[listing]
+----
+cluster1::> job show
+                            Owning
+Job ID Name                 Vserver    Node           State
+------ -------------------- ---------- -------------- ----------
+9944   SnapMirrorDaemon_7_2147484678
+                            cluster1   node1          Dormant
+       Description: Snapmirror Daemon for 7_2147484678
+18377  SnapMirror Service Job
+                            cluster1   node0          Dormant
+       Description: SnapMirror Service Job
+2 entries were displayed
+----
+
+
+
+
+== 識別應終止的作用中CIFS工作階段
+
+在升級ONTAP 完這個功能之前、您應該先識別並順利終止任何無法持續使用的CIFS工作階段。
+
+持續可用的CIFS共用（可由Hyper-V或使用SMB 3.0傳輸協定的Microsoft SQL Server用戶端存取）不需要在升級之前終止。
+
+. 識別任何無法持續使用的已建立CIFS工作階段：「vserver CIFS工作階段顯示-持續可用的是執行個體」
++
+此命令會顯示任何未持續可用的CIFS工作階段的詳細資訊。在繼續ONTAP 執行升級之前、您應該先終止這些更新。
+
++
+[listing]
+----
+cluster1::> vserver cifs session show -continuously-available Yes -instance
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 4160072788
+Incoming Data LIF IP Address: 198.51.100.5
+      Workstation IP address: 203.0.113.20
+    Authentication Mechanism: NTLMv2
+                Windows User: CIFSLAB\user1
+                   UNIX User: nobody
+                 Open Shares: 1
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 8m 39s
+                   Idle Time: 7m 45s
+            Protocol Version: SMB2_1
+      Continuously Available: No
+1 entry was displayed.
+----
+. 如有必要、請識別您所識別的每個CIFS工作階段所開啟的檔案：「vserver CIFS工作階段檔案show -session-id session_ID」
++
+[listing]
+----
+cluster1::> vserver cifs session file show -session-id 1
+
+Node:       node1
+Vserver:    vs1
+Connection: 4160072788
+Session:    1
+File    File      Open Hosting                               Continuously
+ID      Type      Mode Volume          Share                 Available
+------- --------- ---- --------------- --------------------- ------------
+1       Regular   rw   vol10           homedirshare          No
+Path: \TestDocument.docx
+2       Regular   rw   vol10           homedirshare          No
+Path: \file1.txt
+2 entries were displayed.
+----
+
+
+xref:concept_considerations_for_session_oriented_protocols.adoc[工作階段導向傳輸協定的考量]

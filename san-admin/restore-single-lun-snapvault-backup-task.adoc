@@ -1,0 +1,104 @@
+---
+permalink: san-admin/restore-single-lun-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, restore, single, lun, snapvault backup 
+summary: 您可以將單一LUN還原至新位置或原始位置。您可以從SnapVault 任何Snapshot複本還原到二線版。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。 
+---
+= 從SnapVault 一個不完整的備份還原單一LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將單一LUN還原至新位置或原始位置。您可以從SnapVault 任何Snapshot複本還原到二線版。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。
+
+.您需要的是 #8217 ；需要的是什麼
+* 必須初始化此資訊關係、且無法還原的次要磁碟區必須包含適當的Snapshot複本。SnapVault SnapVault
+* 包含SnapVault 不支援的二線磁碟區的儲存虛擬機器（SVM）必須具有一個或多個具備所需SAN傳輸協定的LIF、才能從用於存取LUN複本的主機存取。
+* igroup必須已存在SnapVault 於SVM上。
+
+
+此程序包括從SnapVault 位於恢復二線磁碟區的Snapshot複本建立讀寫磁碟區複本。您可以直接從實體複本使用LUN、也可以選擇將LUN內容複製回原始LUN位置。
+
+實體複本中的LUN路徑和序號與原始LUN不同。不保留持續保留。
+
+.步驟
+. 執行「shnapmirror show」命令來驗證包含SnapVault 該支援的次要Volume。
++
+[listing]
+----
+cluster::> snapmirror show
+
+Source         Dest     Mirror  Relation  Total             Last
+Path     Type  Path     State   Status    Progress  Healthy Updated
+-------- ---- --------- ------- --------- --------- ------- -------
+vserverA:srcvolA
+         XDP  vserverB:dstvolB
+                        Snapmirrored
+                                Idle       -         true    -
+----
+. 執行「volume snapshot show」命令來識別您要從中還原LUN的Snapshot複本。
++
+[listing]
+----
+cluster::> volume snapshot show
+
+Vserver  Volume  Snapshot               State Size   Total% Used%
+-------- ------- ---------------------- ----- ------ ------ -----
+vserverB
+         dstvolB
+                 snap2.2013-02-10_0010  valid  124KB     0%    0%
+                 snap1.2013-02-10_0015 valid  112KB     0%    0%
+                 snap2.2013-02-11_0010  valid  164KB     0%    0%
+----
+. 執行「volume clone create」命令、從所需的Snapshot複本建立讀寫複本。
++
+磁碟區複製是以SnapVault 相同的Aggregate建立、如同使用支援功能進行備份。集合體中必須有足夠的空間來儲存實體複本。
+
++
+[listing]
+----
+cluster::> volume clone create -vserver vserverB
+  -flexclone dstvolB_clone -type RW -parent-volume dstvolB
+  -parent-snapshot daily.2013-02-10_0010
+[Job 108] Job succeeded: Successful
+----
+. 執行「LUN show」命令、列出Volume Clone中的LUN。
++
+[listing]
+----
+cluster::> lun show -vserver vserverB -volume dstvolB_clone
+
+Vserver   Path                      State   Mapped   Type
+--------- ------------------------  ------- -------- --------
+vserverB  /vol/dstvolB_clone/lun_A  online  unmapped windows
+vserverB  /vol/dstvolB_clone/lun_B  online  unmapped windows
+vserverB  /vol/dstvolB_clone/lun_C  online  unmapped windows
+
+3 entries were displayed.
+----
+. 如果所需主機的igroup尚未存在於包含SnapVault 該支援的SVM上、請執行「igroup create」命令來建立igroup。
++
+此範例為使用iSCSI傳輸協定的Windows主機建立igroup：
+
++
+[listing]
+----
+cluster::> igroup create -vserver vserverB -igroup temp_igroup
+  -protocol iscsi -ostype windows
+  -initiator iqn.1991-05.com.microsoft:hostA
+----
+. 執行「LUN對應建立」命令、將所需的LUN複本對應至igroup。
++
+[listing]
+----
+cluster::> lun mapping create -vserver vserverB
+  -path /vol/dstvolB_clone/lun_C -igroup temp_igroup
+----
+. 將主機連接至LUN、並視需要存取LUN的內容。
++
+LUN為讀寫、可用於取代原始LUN。由於LUN序號不同、因此主機會將其解譯為與原始LUN不同的LUN。
+
+. 使用主機上的複製程式、將LUN內容複製回原始LUN。
+

@@ -1,0 +1,64 @@
+---
+permalink: nfs-admin/improve-performance-ldap-directory-searches-task.html 
+sidebar: sidebar 
+keywords: improve, performance, ldap, directory, netgroup, host, search, ptr, forward, reverse, rfc 5952, export rule, 
+summary: 如果您的LDAP環境已設定為允許依主機進行網路群組搜尋、您可以設定ONTAP 支援使用此功能的支援、並依主機執行網路群組搜尋。如此可大幅加快網路群組搜尋速度、並減少網路群組搜尋期間的延遲所導致的NFS用戶端存取問題。 
+---
+= 改善LDAP目錄網路群組各主機搜尋的效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的LDAP環境已設定為允許依主機進行網路群組搜尋、您可以設定ONTAP 支援使用此功能的支援、並依主機執行網路群組搜尋。如此可大幅加快網路群組搜尋速度、並減少網路群組搜尋期間的延遲所導致的NFS用戶端存取問題。
+
+您的LDAP目錄必須包含「netgroup .byhost」對應。
+
+您的DNS伺服器應同時包含NFS用戶端的轉送（A）和反轉（PTr）查詢記錄。
+
+當您在netGroups中指定IPv6位址時、必須一律縮短並壓縮RFC 5952中指定的每個位址。
+
+NIS伺服器會將網路群組資訊儲存在三個獨立的地圖中、分別稱為「netgroup」、「netgroup．byuser」和「netgroup．byhost」。netgroup byuser'和netgroup byhost地圖的目的是加快netgroup的搜尋速度。支援在NIS伺服器上執行各主機的網路群組搜尋、以縮短掛載回應時間。ONTAP
+
+根據預設、LDAP目錄沒有類似NIS伺服器的「netgroup .byhost」對應。不過、在協力廠商工具的協助下、可以將NIS的「netgroup .byhost」對應匯入LDAP目錄、以便快速地逐主機進行網路群組搜尋。如果您已將LDAP環境設定為允許逐主機進行網路群組搜尋、您可以使用ONTAP 「netgroup .byhost」對應名稱、DN及搜尋範圍來設定支援對象LDAP用戶端、以加快各主機的網路群組搜尋速度。
+
+當ONTAP NFS用戶端要求存取匯出時、若能更快接收各主機的網路群組搜尋結果、則可讓支援者更快處理匯出規則。如此可降低網路群組搜尋延遲問題導致存取延遲的機率。
+
+.步驟
+. 取得匯入LDAP目錄的NIS「netgroup .byhost」對應完整辨別名稱。
++
+對應DN可能會因您用於匯入的協力廠商工具而異。若要獲得最佳效能、您應該指定確切的對應DN。
+
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 在儲存虛擬機器（SVM）的LDAP用戶端組態中啟用netgroup byte-byte-name搜尋：「vserver services name-service LDAP用戶端modify -vserver vserver_name -client-config config_name -is -netgroup byte-enable true -netgroup byhost_map_b辨別 名稱-netgroup byhost-scene_scene_scene_scene_scape-scape-scene_scape-scene_scene_scene_scene_scene_scene_scene_scene_sc
++
+Check Alignment of PHs>-is、netgroup、byhost-enabled.{'true'|'假'}可啟用或停用netgroup逐主機搜尋LDAP目錄。預設值為「假」。
+
++
+netgroup byhost-dn'、netgroup by host_map_bedy_name'指定LDAP目錄中"netgroup .byhost"對應的辨別名稱。它會覆寫基礎DN、以便依主機搜尋網路群組。如果您未指定此參數、ONTAP 則使用基礎DN。
+
++
+netgroup byhost-scoes'｛'base（基本）|'onele'（onele'）|'shubtree（子樹）'｝指定了依主機搜尋netgroup的搜尋範圍。如果未指定此參數、預設值為「子樹狀結構」。
+
++
+如果LDAP用戶端組態尚不存在、您可以在使用「vserver services name-service LDAP用戶端create」命令建立新的LDAP用戶端組態時、指定這些參數、以啟用逐主機的netgroup搜尋。
+
++
+[NOTE]
+====
+從ONTAP 功能變數《LDAP伺服器》開始、功能變數《LDAP伺服器》將取代功能變數《伺服器》。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
+
+====
+. 返回管理員權限等級：「et -priv. admin」
+
+
+下列命令會修改名為「'LDAP_corp'」的現有LDAP用戶端組態、以便使用名為「'nisMapName="netGroup.byhost"、DC=corp、DC=example、DC=com'的「nettree」對應、以及預設的搜尋範圍「shubtree」來啟用netgroup byter-host搜尋：
+
+[listing]
+----
+cluster1::*> vserver services name-service ldap client modify -vserver vs1 -client-config ldap_corp -is-netgroup-byhost-enabled true -netgroup-byhost-dn nisMapName="netgroup.byhost",dc=corp,dc=example,dc=com
+----
+目錄中的「netgroup.byhost」和「netgroup」對應必須隨時保持同步、以避免用戶端存取問題。
+
+https://datatracker.ietf.org/doc/html/rfc5952["IETF RFC 5952：IPv6位址文字呈現的建議"]

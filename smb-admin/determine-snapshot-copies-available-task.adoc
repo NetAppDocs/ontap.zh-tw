@@ -1,0 +1,67 @@
+---
+permalink: smb-admin/determine-snapshot-copies-available-task.html 
+sidebar: sidebar 
+keywords: view, snapshot, copies, copy, previous, version, enable, policy, applied, apply, contain, share, previous, version, access, determine whether snapshot copies are available for previous versions use 
+summary: 只有在已啟用的Snapshot原則套用至包含該共用區的磁碟區、且磁碟區組態允許存取Snapshot複本時、才能從「舊版」索引標籤檢視Snapshot複本。判斷Snapshot複本可用度有助於協助使用者存取舊版。 
+---
+= 判斷Snapshot複本是否可供舊版使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+只有在已啟用的Snapshot原則套用至包含該共用區的磁碟區、且磁碟區組態允許存取Snapshot複本時、才能從「舊版」索引標籤檢視Snapshot複本。判斷Snapshot複本可用度有助於協助使用者存取舊版。
+
+.步驟
+. 判斷共用資料所在的磁碟區是否已啟用自動Snapshot複本、以及用戶端是否有權存取Snapshot目錄：「Volume show -vserver vserver-name -volume volume volume volume名稱-功能 變數vserver、volume、snapdir-access、snapsnapshot policy、snap-count'
++
+輸出會顯示與磁碟區相關聯的Snapshot原則、是否啟用用戶端Snapshot目錄存取、以及可用的Snapshot複本數量。
+
+. 確定是否已啟用相關的Snapshot原則：「Volume snapshot policy show -policy police-name」
+. 列出可用的Snapshot複本：「Volume Snapshot show -volume volume volume volume _name」
++
+如需設定及管理Snapshot原則與Snapshot排程的詳細資訊、請參閱 link:../data-protection/index.html["資料保護"]。
+
+
+
+以下範例顯示與「data1」磁碟區相關聯的Snapshot原則資訊、該磁碟區包含「data1」上的共享資料和可用Snapshot複本。
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -volume data1 -fields vserver,volume,snapshot-policy,snapdir-access,snapshot-count
+vserver  volume snapdir-access snapshot-policy snapshot-count
+-------- ------ -------------- --------------- --------------
+vs1      data1  true           default         10
+
+cluster1::> volume snapshot policy show -policy default
+Vserver: cluster1
+                   Number of Is
+Policy Name        Schedules Enabled Comment
+------------------ --------- ------- ----------------------------------
+default                    3 true    Default policy with hourly, daily & weekly schedules.
+    Schedule         Count     Prefix                 SnapMirror Label
+    ---------------- -----     ---------------------- -------------------
+    hourly               6     hourly                 -
+    daily                2     daily                  daily
+    weekly               2     weekly                 weekly
+
+cluster1::> volume snapshot show -volume data1
+                                                             ---Blocks---
+Vserver  Volume  Snapshot                  State        Size Total% Used%
+-------- ------- ------------------------- -------- -------- ------ -----
+vs1      data1
+                 weekly.2012-12-16_0015    valid       408KB     0%    1%
+                 daily.2012-12-22_0010     valid       420KB     0%    1%
+                 daily.2012-12-23_0010     valid       192KB     0%    0%
+                 weekly.2012-12-23_0015    valid       360KB     0%    1%
+                 hourly.2012-12-23_1405    valid       196KB     0%    0%
+                 hourly.2012-12-23_1505    valid       196KB     0%    0%
+                 hourly.2012-12-23_1605    valid       212KB     0%    0%
+                 hourly.2012-12-23_1705    valid       136KB     0%    0%
+                 hourly.2012-12-23_1805    valid       200KB     0%    0%
+                 hourly.2012-12-23_1905    valid       184KB     0%    0%
+----
+xref:create-snapshot-config-previous-versions-access-task.adoc[建立Snapshot組態以啟用舊版存取]
+
+link:../data-protection/index.html["資料保護"]

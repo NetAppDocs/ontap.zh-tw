@@ -1,0 +1,53 @@
+---
+permalink: san-admin/clone-luns-active-volume-task.html 
+sidebar: sidebar 
+keywords: clone, luns, active, volume 
+summary: 您可以透過複製作用中磁碟區中的LUN來建立LUN複本。這些FlexClone LUN是作用中磁碟區中原始LUN的可讀寫複本。 
+---
+= 從作用中磁碟區複製LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以透過複製作用中磁碟區中的LUN來建立LUN複本。這些FlexClone LUN是作用中磁碟區中原始LUN的可讀寫複本。
+
+必須安裝FlexClone授權。
+
+空間保留的FlexClone LUN所需空間與空間保留的父LUN相同。如果FlexClone LUN未保留空間、您必須確保該磁碟區有足夠空間來容納FlexClone LUN的變更。
+
+.步驟
+. 在製作實體複本之前、您必須先確認LUN未對應至igroup或寫入。
+. 使用「LUN show」命令來驗證LUN是否存在。
++
+「LUN show -vserver VS1」
+
++
+[listing]
+----
+Vserver  Path              State     Mapped    Type     Size
+-------- ----------------- --------- --------- -------- -------
+vs1      /vol/vol1/lun1    online   unmapped  windows  47.07MB
+----
+. 使用「volume file clone cre創作」命令來建立FlexClone LUN。
++
+「Volume file clone create -vserver VS1 -volume vol1 -source-path lun1 -destination-path/lun1_clone」
+
++
+如果您需要FlexClone LUN可供自動刪除、請加入「-autodete true」。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+
+. 使用「LUN show」命令來驗證您是否已建立LUN。
++
+「LUN show -vserver VS1」
+
++
+[listing]
+----
+
+Vserver  Path                    State    Mapped   Type     Size
+-------- ----------------------- -------- -------- -------- ------
+vs1      /vol/volX/lun1          online   unmapped windows  47.07MB
+vs1      /vol/volX/lun1_clone    online   unmapped windows  47.07MB
+----
+

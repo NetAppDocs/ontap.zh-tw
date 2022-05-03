@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: networking/display_routing_information_01.html 
+keywords: display, view, show, route, svm, storage, virtual, machine, display routing information, view information about routes within an svm 
+summary: 檢視SVM內的路由資訊 
+---
+= 顯示路由資訊
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以顯示SVM內的路由資訊。
+
+視您要檢視的路由資訊類型而定、輸入適當的命令：
+
+[cols="40,60"]
+|===
+
+
+| 若要檢視有關...的資訊 | 輸入... 
+
+
+ a| 
+靜態路由（每SVM）
+ a| 
+「網路路由秀」
+
+
+
+ a| 
+每個路由上的LIF（每個SVM）
+ a| 
+「網路路由顯示生命」
+
+|===
+您可以指定「-instance」參數來顯示每個路由的詳細資訊。下列命令會顯示叢集1中SVM內的靜態路由：
+
+....
+network route show
+Vserver             Destination     Gateway         Metric
+------------------- --------------- --------------- ------
+Cluster
+                    0.0.0.0/0       10.63.0.1       10
+cluster-1
+                    0.0.0.0/0       198.51.9.1      10
+vs1
+                    0.0.0.0/0       192.0.2.1       20
+vs3
+                    0.0.0.0/0       192.0.2.1       20
+....
+下列命令會顯示叢集1中所有SVM的靜態路由和邏輯介面（lifs）關聯：
+
+....
+network route show-lifs
+Vserver: Cluster
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               10.63.0.1               -
+
+Vserver: cluster-1
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               198.51.9.1              cluster_mgmt,
+                                                cluster-1_mgmt1,
+
+Vserver: vs1
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               192.0.2.1               data1_1, data1_2
+
+Vserver: vs3
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               192.0.2.1               data2_1, data2_2
+....

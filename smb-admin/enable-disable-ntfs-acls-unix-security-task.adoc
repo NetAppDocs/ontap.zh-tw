@@ -1,0 +1,23 @@
+---
+permalink: smb-admin/enable-disable-ntfs-acls-unix-security-task.html 
+sidebar: sidebar 
+keywords: enable, disable, presentation, ntfs, acl, smb, client, unix, security-style, data, volume, enable or disable the presentation of ntfs acls for unix security-style data 
+summary: 您可以針對UNIX安全型資料（UNIX安全型磁碟區和混合式安全型磁碟區、以及UNIX有效安全性）、啟用或停用將NTFS ACL呈現給SMB用戶端的功能。 
+---
+= 啟用或停用NTFS ACL的UNIX安全型資料呈現
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以針對UNIX安全型資料（UNIX安全型磁碟區和混合式安全型磁碟區、以及UNIX有效安全性）、啟用或停用將NTFS ACL呈現給SMB用戶端的功能。
+
+如果啟用此選項、ONTAP 則將具有有效UNIX安全樣式的磁碟區上的檔案和資料夾、呈現給SMB用戶端、如同使用NTFS ACL。如果停用此選項、磁碟區會以FAT磁碟區的形式呈現給SMB用戶端。預設為向SMB用戶端顯示NTFS ACL。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 設定UNIX NTFS ACL選項設定：「vserver CIFS選項修改-vserver _vserver_name_-is-unX-NT-acl-enabled {true|假}」
+. 確認選項已設定為所需的值：「vserver CIFS options show -vserver _vserver_name_」
+. 返回管理員權限等級：「et -priv. admin」
+

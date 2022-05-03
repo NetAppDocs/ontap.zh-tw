@@ -1,0 +1,41 @@
+---
+permalink: smb-admin/configure-lifetime-metadata-cache-entries-task.html 
+sidebar: sidebar 
+keywords: configure, lifetime, smb, metadata, cache, entries, optimise, environment, configure the lifetime of smb metadata cache entries 
+summary: 您可以設定SMB中繼資料快取項目的生命週期、以最佳化環境中的SMB中繼資料快取效能。預設值為10秒。 
+---
+= 設定SMB中繼資料快取項目的生命週期
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以設定SMB中繼資料快取項目的生命週期、以最佳化環境中的SMB中繼資料快取效能。預設值為10秒。
+
+您必須啟用SMB中繼資料快取功能。如果未啟用SMB中繼資料快取、則不會使用SMB快取TTL設定。
+
+.步驟
+. 執行所需的動作：
++
+|===
+| 如果您想要在下列情況下設定SMB中繼資料快取項目的生命週期... | 輸入命令... 
+
+
+ a| 
+建立共用區
+ a| 
+「Vserver CIFS共用區- create -vserver _vserver_name_-share-name _share_name_-path _path_-attribute-cache -tTTL [intergerh][intergerm][integer]'
+
+
+
+ a| 
+修改現有的共用區
+ a| 
+「Vserver CIFS共用區-modify -vserver _vserver_name_-share-name _share_name_-attribute-cache-TTL [intergerh][intergerm][integer]
+
+|===
++
+您可以在建立或修改共用時指定其他共用組態選項和屬性。如需詳細資訊、請參閱手冊頁。
+
+

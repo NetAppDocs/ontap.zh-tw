@@ -1,0 +1,66 @@
+---
+permalink: nas-audit/create-fpolicy-external-engine-task.html 
+sidebar: sidebar 
+keywords: create, fpolicy, external engine 
+summary: 您必須建立外部引擎、才能開始建立FPolicy組態。外部引擎定義FPolicy如何建立及管理外部FPolicy伺服器的連線。如果您的組態使用內部ONTAP 的靜態引擎（原生外部引擎）來進行簡單的檔案封鎖、則不需要設定個別的FPolicy外部引擎、也不需要執行此步驟。 
+---
+= 建立FPolicy外部引擎
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須建立外部引擎、才能開始建立FPolicy組態。外部引擎定義FPolicy如何建立及管理外部FPolicy伺服器的連線。如果您的組態使用內部ONTAP 的靜態引擎（原生外部引擎）來進行簡單的檔案封鎖、則不需要設定個別的FPolicy外部引擎、也不需要執行此步驟。
+
+應填寫外部引擎工作表。
+
+如果外部引擎用於MetroCluster 整個功能表組態、您應該將來源站台的FPolicy伺服器IP位址指定為主要伺服器。目的地站台FPolicy伺服器的IP位址應指定為次要伺服器。
+
+.步驟
+. 使用「vserver fpolicy policy exter-engine create」命令建立FPolicy外部引擎。
++
+下列命令會在儲存虛擬機器（SVM）vs1.example.com上建立外部引擎。與FPolicy伺服器的外部通訊不需要驗證。
+
++
+「vserver fpolicy原則exter-engine create -vserver-name vs1.example.com -enginer-name enginers 1 - primary伺服器10.1.1.2、10.1.1.3 -連接埠6789 -SSL選項無驗證」
+
+. 使用「vserver fpolicy policy exter-engine show」命令來驗證FPolicy外部引擎組態。
++
+下列命令會顯示有關SVM vs1.example.com上設定的所有外部引擎資訊：
+
++
+「vserver fpolicy policy exter-engine show -vserver vs1.example.com」
+
++
+[listing]
+----
+
+                                Primary        Secondary          External
+Vserver            Engine       Servers        Servers       Port Engine Type
+---------------    -----------  -------------- ----------- ------ -----------
+vs1.example.com    engine1      10.1.1.2,      -             6789 synchronous
+                                10.1.1.3
+----
++
+下列命令會在SVM vs1.example.com上顯示名為「engin1」的外部引擎詳細資訊：
+
++
+「vserver fpolicy原則exter-engine show -vserver vs1.example.com -enger-name engine 1」
+
++
+[listing]
+----
+
+                              Vserver: vs1.example.com
+                               Engine: engine1
+              Primary FPolicy Servers: 10.1.1.2, 10.1.1.3
+       Port Number of FPolicy Service: 6789
+            Secondary FPolicy Servers: -
+                 External Engine Type: synchronous
+SSL Option for External Communication: no-auth
+           FQDN or Custom Common Name: -
+         Serial Number of Certificate: -
+                Certificate Authority: -
+----
+

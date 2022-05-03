@@ -1,0 +1,22 @@
+---
+permalink: volumes/ndmp-dump-flexclone-files-luns-concept.html 
+sidebar: sidebar 
+keywords: how, ndmp, works, flexclone files, flexclone luns 
+summary: NDMP可在邏輯層級與FlexClone檔案和FlexClone LUN搭配運作。所有FlexClone檔案或LUN都會備份為個別檔案或LUN。 
+---
+= NDMP如何與FlexClone檔案和FlexClone LUN搭配使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NDMP可在邏輯層級與FlexClone檔案和FlexClone LUN搭配運作。所有FlexClone檔案或LUN都會備份為個別檔案或LUN。
+
+當您使用NDMP服務來備份包含FlexVol FlexClone檔案或FlexClone LUN的qtree或支援的支援磁碟區時、父實體與複製實體之間的區塊共用不會保留、而且複製實體會以個別檔案或LUN的形式備份到磁帶。節省空間已遺失。因此、您要備份的磁帶應有足夠空間來儲存擴充的資料量。還原時、所有FlexClone檔案和FlexClone LUN都會還原為個別的實體檔案和LUN。您可以在磁碟區上啟用重複資料刪除、以還原區塊共用的優點。
+
+[NOTE]
+====
+當FlexClone檔案和FlexClone LUN是從FlexVol 現有的Snapshot Snapshot Volume複本建立時、您無法將磁碟區備份到磁帶、直到區塊共用程序（發生於背景）完成為止。如果在進行區塊共用程序時、您在磁碟區上使用NDMP、系統會顯示一則訊息、要求您在一段時間後重試該作業。在這種情況下、您必須持續重試磁帶備份作業、以便在區塊共用完成之後成功。
+
+====

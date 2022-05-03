@@ -1,0 +1,43 @@
+---
+permalink: system-admin/install-ca-signed-client-certificate-kmip-server-task.html 
+sidebar: sidebar 
+keywords: install, ca, signed, client, certificate, kmip, server, key, management, interoperability, protocol, server 
+summary: 金鑰管理互通性傳輸協定（KMIP）的憑證子類型（-subtype kmip-cert參數）、以及用戶端和伺服器-ca類型、都會指定該憑證用於互動驗證叢集和外部金鑰管理程式、例如KMIP伺服器。 
+---
+= 為KMIP伺服器安裝CA簽署的用戶端憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+金鑰管理互通性傳輸協定（KMIP）的憑證子類型（-subtype kmip-cert參數）、以及用戶端和伺服器-ca類型、都會指定該憑證用於互動驗證叢集和外部金鑰管理程式、例如KMIP伺服器。
+
+安裝KMIP憑證、將KMIP伺服器驗證為叢集的SSL伺服器。
+
+.步驟
+. 使用帶有類型為「server－ca」和「-subtype kmip-cert」參數的「安全證書安裝」命令、為KMIP伺服器安裝KMIP憑證。
+. 出現提示時、請輸入憑證、然後按Enter。
++
+提醒您保留一份憑證複本、以供日後參考。ONTAP
+
++
+[listing]
+----
+cluster1::> security certificate install -type server-ca -subtype kmip-cert
+-vserver cluster1
+
+Please enter Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIICPDCCAaUCEDyRMcsf9tAbDpq40ES/Er4wDQYJKoZIhvcNAQEFBQAwXzELMAkG
+2JhucwNhkcV8sEVAbkSdjbCxlnRhLQ2pRdKkkirWmnWXbj9T/UWZYB2oK0z5XqcJ
+2HUw19JlYD1n1khVdWk/kfVIC0dpImmClr7JyDiGSnoscxlIaU5rfGW/D/xwzoiQ
+...
+-----END CERTIFICATE-----
+
+
+You should keep a copy of the CA-signed digital certificate for future reference.
+
+cluster1::>
+----
+

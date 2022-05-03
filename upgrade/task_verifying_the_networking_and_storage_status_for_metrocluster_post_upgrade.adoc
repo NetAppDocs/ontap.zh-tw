@@ -1,0 +1,109 @@
+---
+permalink: upgrade/task_verifying_the_networking_and_storage_status_for_metrocluster_post_upgrade.html 
+sidebar: sidebar 
+keywords: ontap, post, after, upgrade, verify, networking, storage, status, metrocluster, mcc 
+summary: 在執行完更新以更新的過程之前和之後MetroCluster 、您應該確認每個叢集的生命、集合體和磁碟區狀態。 
+---
+= 驗證MetroCluster 網路和儲存設備的資訊不完整組態狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在執行完更新以執行完整個過程後、您應該確認每個叢集的生命、集合體和磁碟區狀態。MetroCluster
+
+. 驗證LIF狀態：「network interface show」（網路介面顯示）
++
+在正常操作中、來源SVM的l生命 區必須具有UP（啟動）管理狀態、並且位於其主節點上。目的地SVM的LIF不需要在其主節點上啟動或定位。在切換時、所有生命期的管理員狀態都為up、但不需要位於主節點上。
+
++
+[listing]
+----
+cluster1::> network interface show
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+Cluster
+            cluster1-a1_clus1
+                         up/up    192.0.2.1/24       cluster1-01
+                                                                   e2a     true
+            cluster1-a1_clus2
+                         up/up    192.0.2.2/24       cluster1-01
+                                                                   e2b     true
+
+
+cluster1-01
+            clus_mgmt    up/up    198.51.100.1/24    cluster1-01
+                                                                   e3a     true
+            cluster1-a1_inet4_intercluster1
+                         up/up    198.51.100.2/24    cluster1-01
+                                                                   e3c     true
+            ...
+
+27 entries were displayed.
+----
+. 驗證集合體的狀態：「torage Aggregate show -state！online」
++
+此命令會顯示任何非連線的Aggregate。正常運作時、位於本機站台的所有集合體都必須在線上。但是MetroCluster 、如果將S還原 組態切換到災難恢復站台、則允許位於災難恢復站台的根集合體離線。
+
++
+此範例顯示叢集處於正常運作狀態：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+There are no entries matching your query.
+----
++
+此範例顯示切換中的叢集、災難恢復站台的根集合體處於離線狀態：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
+--------- -------- --------- ----- ------- ------ ---------------- ------------
+aggr0_b1
+                0B        0B    0% offline      0 cluster2-01      raid_dp,
+                                                                   mirror
+                                                                   degraded
+aggr0_b2
+                0B        0B    0% offline      0 cluster2-02      raid_dp,
+                                                                   mirror
+                                                                   degraded
+2 entries were displayed.
+----
+. 驗證磁碟區的狀態：「Volume show -state！online」
++
+此命令會顯示任何非連線的磁碟區。
+
++
+如果MetroCluster 此支援功能組態處於正常運作狀態（非切換狀態）、則輸出應顯示叢集次要SVM擁有的所有磁碟區（其SVM名稱會附加「-MC」）。
+
++
+這些磁碟區只有在切換時才會上線。
+
++
+此範例顯示正常運作的叢集、災難恢復站台的磁碟區不在線上。
+
++
+[listing]
+----
+cluster1::> volume show -state !online
+  (volume show)
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vs2-mc    vol1         aggr1_b1     -          RW            -          -     -
+vs2-mc    root_vs2     aggr0_b1     -          RW            -          -     -
+vs2-mc    vol2         aggr1_b1     -          RW            -          -     -
+vs2-mc    vol3         aggr1_b1     -          RW            -          -     -
+vs2-mc    vol4         aggr1_b1     -          RW            -          -     -
+5 entries were displayed.
+----
+. 確認沒有不一致的磁碟區：「Volume show -is不一致true」
++
+如果傳回任何不一致的磁碟區、您必須在升級之前聯絡NetApp支援部門。
+
+

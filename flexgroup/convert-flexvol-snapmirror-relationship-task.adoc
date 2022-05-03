@@ -1,0 +1,102 @@
+---
+permalink: flexgroup/convert-flexvol-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: convert, flexvol, volume, snapmirror, relation, flexgroup 
+summary: 若要將FlexVol 位於FlexGroup SnapMirror中的SnapMirror與不景區的SnapMirror關係轉換成不景區的SnapMirror關係ONTAP 、您必須先轉換目的地FlexVol 的SnapMirror Volume、再轉換來源FlexVol 的不景區。 
+---
+= 將FlexVol 一個不只是SnapMirror的問題轉換成FlexGroup 一個不只是SnapMirror的問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要將FlexVol 位於FlexGroup SnapMirror中的SnapMirror與不景區的SnapMirror關係轉換成不景區的SnapMirror關係ONTAP 、您必須先轉換目的地FlexVol 的SnapMirror Volume、再轉換來源FlexVol 的不景區。
+
+.您需要的是 #8217 ；需要的是什麼
+* 正在轉換的這個版本必須在線上。FlexVol
+* SnapMirror關係中的來源FlexVol 供應區不可以是多個SnapMirror關係的來源磁碟區。
++
+不支援FlexGroup 將SnapMirror關係扇出至不支援使用的功能。
+
+* 在這個過程中、執行的操作和設定FlexVol 必須與轉換程序相容。
++
+如果FlexVol 現象不一致、而且中止了Volume轉換、就會產生錯誤訊息。您可以採取修正行動、然後重試轉換。
+
+
+
+僅支援非同步SnapMirror關係進行的支援。FlexGroup
+
+.步驟
+. 驗證SnapMirror關係是否健全：「napmirror show」
++
+只能轉換XDP類型的鏡射關係。
+
++
+[listing]
+----
+cluster2::> snapmirror show
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs0:src_dpv DP   vs2:dst_dpv  Snapmirrored
+                                      Idle           -         true    -
+vs0:src_xdp XDP  vs2:dst_xdp  Snapmirrored
+                                      Idle           -         true    -
+----
+. 確認來源Volume是否相容於轉換：
++
+.. 登入進階權限模式：「et -priv榮幸 進階」
+.. 驗證轉換程序：「Volume conversion start -vserver VS1 -volume rc/vol-Check only true」
++
+在轉換磁碟區之前、您必須先修正所有錯誤。
+
+
+
+. 將目的地FlexVol 的聲音量轉換為FlexGroup 聲音量。
++
+.. 靜止FlexVol 不動SnapMirror關係：「napmirror quiesce -dest-path dest_svm:dest_volume」
++
+[listing]
+----
+cluster2::> snapmirror quiesce -destination-path vs2:dst_xdp
+----
+.. 開始轉換：「Volume Conversion start -vserver dest_sVM -volume dest_volume」
++
+[listing]
+----
+cluster-1::> volume conversion start -vserver vs2 -volume dst_xdp
+
+Warning: After the volume is converted to a FlexGroup, it will not be possible
+to change it back to a flexible volume.
+Do you want to continue? {y|n}: y
+
+[Job 510] Job succeeded: SnapMirror destination volume "dst_xdp" has been successfully converted to a FlexGroup volume.
+You must now convert the relationship's source volume, "vs0:src_xdp", to a FlexGroup.
+Then, re-establish the SnapMirror relationship using the "snapmirror resync" command.
+----
+
+
+. 將來源FlexVol 的Sfidvolume轉換為FlexGroup fidsvolume：「volume convert start -vserver sr_svm_name -volume rc/vol_name」
++
+[listing]
+----
+cluster-1::> volume conversion start -vserver vs0 -volume src_xdp
+
+Warning: Converting flexible volume "src_xdp" in Vserver "vs0" to a FlexGroup
+         will cause the state of all Snapshot copies from the volume to be set
+         to "pre-conversion". Pre-conversion Snapshot copies cannot be
+         restored.
+Do you want to continue? {y|n}: y
+[Job 57] Job succeeded: success
+----
+. 重新同步關係：「napmirror resSync -destination-path dest_svm_name：dest_volume」
++
+[listing]
+----
+cluster2::> snapmirror resync -destination-path vs2:dst_xdp
+----
+
+
+您必須確保當來源FlexGroup 的供應區擴大以包含更多成分時、目的地Volume也會隨之擴充。

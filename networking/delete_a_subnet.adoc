@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: networking/delete_a_subnet.html 
+keywords: delete, deleting, remove, removing, subnet, deallocate, ip, address, delete a subnet, remove unneeded subnets and deallocate the associated ip addresses 
+summary: 移除不需要的子網路、並取消分配相關的IP位址 
+---
+= 刪除子網路
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果您不再需要子網路、而想要取消分配指派給子網路的IP位址、您可以將其刪除。
+
+如果任何服務處理器或網路介面目前使用指定範圍內的IP位址、您將會收到錯誤訊息。如果希望介面在刪除子網路之後仍繼續使用IP位址、您可以將-force-update-lif-associations-true選項設定為true、以移除子網路與lifs的關聯。
+
+刪除子網路：
+
+....
+network subnet delete -subnet-name subnet_name [-ipspace ipspace_name] [-force-update-lif- associations true]
+....
+下列命令會刪除IPspace ipspace1中的子網路子網路1：
+
+....
+network subnet delete -subnet-name sub1 -ipspace ipspace1
+....

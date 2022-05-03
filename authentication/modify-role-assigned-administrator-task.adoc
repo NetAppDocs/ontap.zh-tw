@@ -1,0 +1,45 @@
+---
+permalink: authentication/modify-role-assigned-administrator-task.html 
+sidebar: sidebar 
+keywords: modify, role, assigned, administrator 
+summary: 您可以使用安全性登入修改命令來變更叢集或SVM系統管理員帳戶的角色。您可以指派預先定義或自訂的角色。 
+---
+= 修改指派給系統管理員的角色
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全登入修改」命令來變更叢集或SVM系統管理員帳戶的角色。您可以指派預先定義或自訂的角色。
+
+您必須是叢集管理員才能執行此工作。
+
+.步驟
+. 變更叢集或SVM管理員的角色：
++
+「安全性登入修改-vserver Svm_name -user-or group名稱user_or group名稱-applicationer -authmethod驗證方法-role role -comment comment」
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+link:config-worksheets-reference.html["建立或修改登入帳戶"]
+
++
+下列命令會將AD叢集系統管理員帳戶「DOMAIN1\guest1」的角色變更為預先定義的「只讀」角色。
+
++
+[listing]
+----
+cluster1::>security login modify -vserver engCluster -user-or-group-name DOMAIN1\guest1 -application ssh -authmethod domain -role readonly
+----
++
+下列命令會將AD群組帳戶「DOMAIN1\adgroup」中SVM系統管理員帳戶的角色變更為自訂的「vol_role」角色。
+
++
+[listing]
+----
+cluster1::>security login modify -vserver engData -user-or-group-name DOMAIN1\adgroup -application ssh -authmethod domain -role vol_role
+----
+

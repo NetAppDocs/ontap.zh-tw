@@ -1,0 +1,43 @@
+---
+permalink: fabricpool/assign-new-tag-volume-creation-task.html 
+sidebar: sidebar 
+keywords: assigning, new tag, volume creation 
+summary: 當您想要將一或多個標記指派給新物件、並從您建立的新磁碟區分層時、可以建立新的物件標記。 
+---
+= 在磁碟區建立期間指派新標記
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您想要將一或多個標記指派給新物件、並從您建立的新磁碟區分層時、可以建立新的物件標記。
+
+.關於這項工作
+* 每個Volume最多允許4個標記
+* 每個物件標籤都必須是以等號（「」）分隔的金鑰值配對
+* 多個標籤必須以逗號（「」）分隔
+* 每個標記值最多可包含127個字元
+* 每個標記鍵都必須以字母字元或底線開頭。
++
+金鑰只能包含英數字元和底線、最多允許127個字元。
+
+
+
+.步驟
+. 使用帶有「分層物件標記」選項的「Volume create」命令、以指定的標記建立新的Volume。您可以使用以逗號分隔的配對來指定多個標記：
++
+[listing]
+----
+volume create [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [
+    ,<key2=value2>,<key3=value3>,<key4=value4> ]
+----
++
+下列範例會建立一個名為fp_dvolume1的磁碟區、其中包含三個物件標籤。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=abc,content=data
+----
+

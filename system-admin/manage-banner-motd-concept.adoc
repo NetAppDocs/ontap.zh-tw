@@ -1,0 +1,93 @@
+---
+permalink: system-admin/manage-banner-motd-concept.html 
+sidebar: sidebar 
+keywords: manage, banner, motd, clu, user, svm, storage, virtual, machine, cluster 
+summary: 利用此功能、您可以設定登入橫幅或當日訊息（MOTD）、將管理資訊傳達給叢集或儲存虛擬機器（SVM）的CLI使用者。ONTAP 
+---
+= 管理橫幅和MOTD總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+利用此功能、您可以設定登入橫幅或當日訊息（MOTD）、將管理資訊傳達給叢集或儲存虛擬機器（SVM）的CLI使用者。ONTAP
+
+主控台工作階段（僅限叢集存取）或SSH工作階段（用於叢集或SVM存取）會顯示橫幅、然後提示使用者進行驗證（例如密碼）。例如、您可以使用橫幅向嘗試登入系統的人員顯示以下警告訊息：
+
+[listing]
+----
+$ ssh admin@cluster1-01
+
+This system is for authorized users only. Your IP Address has been logged.
+
+Password:
+
+----
+在驗證使用者之後、但叢集Shell提示出現之前、MOTD會顯示在主控台工作階段（僅供叢集存取）或SSH工作階段（供叢集或SVM存取）中。例如、您可以使用MOTD來顯示歡迎訊息或資訊訊息、例如以下只有已驗證的使用者會看到的訊息：
+
+[listing]
+----
+$ ssh admin@cluster1-01
+
+Password:
+
+Greetings. This system is running ONTAP 9.0.
+Your user name is 'admin'. Your last login was Wed Apr 08 16:46:53 2015 from 10.72.137.28.
+
+----
+您可以使用「安全登入橫幅修改」或「安全登入模式修改」命令、分別建立或修改橫幅或MOTD的內容、方法如下：
+
+* 您可以互動或非互動方式使用CLI來指定橫幅或MOTD所使用的文字。
++
+當命令不使用「-message'」或「-uri」參數時、就會啟動互動模式、讓您可以在訊息中使用換行（也稱為行尾）。
+
++
+非互動模式使用「-Message」參數來指定訊息字串、不支援換行。
+
+* 您可以從FTP或HTTP位置上傳內容、以用於橫幅或MOTD。
+* 您可以設定MOTD以顯示動態內容。
++
+您可以設定MOTD動態顯示的範例包括：
+
++
+** 叢集名稱、節點名稱或SVM名稱
+** 叢集日期與時間
+** 登入的使用者名稱
+** 使用者在叢集中任何節點上的上次登入
+** 登入裝置名稱或IP位址
+** 作業系統名稱
+** 軟體版本
+** 有效的叢集版本字串「安全登入motd modify」手冊頁說明可用來讓MOTD顯示動態產生內容的轉義序列。
+
+
++
+橫幅不支援動態內容。
+
+
+
+您可以在叢集或SVM層級管理橫幅和MOTD：
+
+* 以下事實適用於橫幅廣告：
++
+** 為叢集設定的橫幅也會用於未定義橫幅訊息的所有SVM。
+** 您可以為每個SVM設定SVM層級橫幅。
++
+如果已設定叢集層級橫幅、則會被指定SVM的SVM層級橫幅覆寫。
+
+
+
+* 以下事實適用於MOTD：
++
+** 根據預設、為叢集設定的MOTD也會針對所有SVM啟用。
+** 此外、也可針對每個SVM設定SVM層級的MOTD。
++
+在這種情況下、登入SVM的使用者會看到兩個MOTD、一個在叢集層級定義、另一個在SVM層級定義。
+
+** 叢集管理員可在每個SVM上啟用或停用叢集層級的MOTD。
++
+如果叢集管理員停用SVM的叢集層級MOTD、則登入SVM的使用者不會看到叢集層級MOTD。
+
+
+
+

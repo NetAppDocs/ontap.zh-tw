@@ -1,0 +1,47 @@
+---
+permalink: snaplock/create-snaplock-volume-task.html 
+sidebar: sidebar 
+keywords: snaplock, volume, shanpshot, copy, create, complianceclock, file, worm, compliance, enterprise 
+summary: 您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用「-SnapLock類型」選項、指定SnapLock 「Compliance」（符合性）SnapLock 或「Enterprise」（企業）做為該類型的資訊、以明確建立一個資訊區。根據預設、SnapLock 將此類型設為「非SnapLock」。 
+---
+= 建立SnapLock 一個流通量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用「-SnapLock類型」選項、指定SnapLock 「Compliance」（符合性）SnapLock 或「Enterprise」（企業）做為該類型的資訊、以明確建立一個資訊區。根據預設、SnapLock 將此類型設為「非SnapLock」。
+
+.您需要的是 #8217 ；需要的是什麼
+* 此資訊必須在線上。SnapLock
+* 必須在節點上安裝此功能的不必要授權。SnapLock
+* 必須初始化節點上的「完成時鐘」。
+
+
+只要SnapLock 具備適當的功能、您就能隨時銷毀或重新命名Enterprise Volume。在保留期間結束之前、您無法銷毀Compliance Volume。您永遠無法重新命名Compliance Volume。
+
+您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。實體複本磁碟區SnapLock 將與父磁碟區相同的實體類型。
+
+[NOTE]
+====
+不支援SnapLock 在支援LUN的功能上使用。雖然可以SnapLock 使用舊有技術將LUN移至某個不穩定的磁碟區、但這並不受支援、SnapLock 也不涉及任何涉及位於某個穩定區上LUN的其他作業。
+
+====
+.步驟
+. 建立SnapLock 一個流通量：
++
+'磁碟區create -vserver _svm_name_-volume _volume _name_-Aggregate _Aggregate name_*-SnapLock類型法規遵循|企業'
+
++
+如需選項的完整清單、請參閱命令的手冊頁。下列選項不適用於SnapLock 整個流程：「-nvail」、「-atime-update」、「-is-autolance-資格」、「-space-mgmt-ter-first」和「vmalign」。
+
++
+以下命令可在SnapLock 「VS1」上的「aggr1」上建立名為「vol1」的「符合法規」磁碟區：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1 -snaplock-type compliance
+----
+

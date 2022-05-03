@@ -1,0 +1,39 @@
+---
+permalink: smb-admin/gpos-updated-server-concept.html 
+sidebar: sidebar 
+keywords: default, ontap, retrieve, applies, apply, group, policy, object, gpo, minute, security, refresh, update, automatic, manual, cifs, server, command, how gpos are updated on the cifs server 
+summary: 根據預設ONTAP 、每90分鐘擷取並套用群組原則物件（GPO）變更一次。安全性設定每16小時重新整理一次。如果您想在ONTAP 更新GPO之前先套用新的GPO原則設定、然後再自動更新、您可以在CIFS伺服器上使用ONTAP flexto命令觸發手動更新。 
+---
+= 如何在CIFS伺服器總覽中更新GPO
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設ONTAP 、每90分鐘擷取並套用群組原則物件（GPO）變更一次。安全性設定每16小時重新整理一次。如果您想在ONTAP 更新GPO之前先套用新的GPO原則設定、然後再自動更新、您可以在CIFS伺服器上使用ONTAP flexto命令觸發手動更新。
+
+* 根據預設、所有的GPO都會視需要每90分鐘進行一次驗證和更新。
++
+此時間間隔可設定、並可使用「Refresh interval」（重新整理時間間隔）和「Random offset」（隨機偏移）GPO設定來設定。
+
++
+可查詢Active Directory以取得變更GPO的資訊。ONTAP如果Active Directory中記錄的GPO版本號碼高於CIFS伺服器、ONTAP 則會擷取並套用新的GPO。如果版本號碼相同、則CIFS伺服器上的GPO不會更新。
+
+* 安全性設定GPO每16小時重新整理一次。
++
+無論這些GPO是否已變更、均可每16小時擷取並套用安全性設定GPO。ONTAP
+
++
+[NOTE]
+====
+目前ONTAP 版本的16小時預設值無法變更。這是Windows用戶端的預設設定。
+
+====
+* 所有的GPO都可以使用ONTAP flexflexfcommand手動更新。
++
+此命令模擬Windows「gpupdate．exe」（gpupdate．exe）或「force」（force）命令。
+
+
+
+xref:manual-update-gpo-settings-task.adoc[手動更新CIFS伺服器上的GPO設定]

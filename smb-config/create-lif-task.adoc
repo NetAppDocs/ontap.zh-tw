@@ -1,0 +1,158 @@
+---
+permalink: smb-config/create-lif-task.html 
+sidebar: sidebar 
+keywords: lif, ip, address, associate, physical, logical, port, component, failure, migrate, communicate, network, create a lif 
+summary: LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障、LIF可能會容錯移轉至不同的實體連接埠、或移轉至不同的實體連接埠、進而繼續與網路通訊。 
+---
+= 建立LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障、LIF可能會容錯移轉至不同的實體連接埠、或移轉至不同的實體連接埠、進而繼續與網路通訊。
+
+.開始之前
+* 基礎實體或邏輯網路連接埠必須設定為管理「up」狀態。
+* 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。
++
+子網路包含屬於同一第3層子網路的IP位址集區。它們是使用「network subnet create」命令建立的。
+
+* 指定LIF處理之流量類型的機制已變更。對於僅適用於更新版本的版本、LIF會使用角色來指定其處理的流量類型。ONTAP從ONTAP Sf6開始、l生命 就會使用服務原則來指定處理的流量類型。
+
+
+.關於這項工作
+* 您可以在同一個網路連接埠上同時建立IPV4和IPv6 LIF。
+* 如果叢集內有大量的生命量、您可以使用「network interface cape流量show」命令來驗證叢集上支援的LIF容量、並使用「network interface cape流量 詳細資料show」命令來驗證每個節點上支援的LIF容量 （進階權限層級）。
+* 從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP
+
+
+從ONTAP 支援FFC-NVMe的支援功能到支援的功能表9.4開始。如果您要建立FC-NVMe LIF、應該注意下列事項：
+
+* NVMe傳輸協定必須受到建立LIF的FC介面卡支援。
+* FC-NVMe是資料生命中唯一的資料傳輸協定。
+* 必須為每個支援SAN的儲存虛擬機器（SVM）設定一個LIF處理管理流量。
+* NVMe LIF和命名空間必須裝載在同一個節點上。
+* 每個SVM只能設定一個處理資料流量的NVMe LIF
+
+
+.步驟
+. 建立LIF：
++
+「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定CIFS -home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmaskip_address |-subnet-name _subnet_name_｝-firewall-policy data -auto-revert｛true｝
+
++
+|===
+
+
+| *《*》第9.5版及更早版本* ONTAP 
+
+
+ a| 
+「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定CIFS -home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_ip_address_|-subnet-name _subnet_name_｝-firewall-policy data -auto-revert｛true｝
+
+|===
++
+|===
+
+
+| *版本9.6及更新版本* ONTAP 
+
+
+ a| 
+「網路介面create -vserver _vserver_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_ip_address_|-subnet-name _subnet_name_｝-firewall-policy data -facture_true｛
+
+|===
++
+** 使用服務原則建立LIF時、不需要使用「-role」（角色）參數（從ONTAP 功能9.6開始）。
+** 在建立LIF時、必須指定「-data-Protocol」參數、之後在不破壞及重新建立資料LIF的情況下、也無法修改該參數。
++
+使用服務原則建立LIF時、不需要使用「-data-Protocol」（資料傳輸協定）參數（從ONTAP 功能性的9.6開始）。
+
+** 當LIF上執行「網路介面回復」命令時、LIF會傳回的節點為「主節點」。
++
+您也可以使用「-autom-revert」選項、指定LIF是否應自動還原為主節點和主連接埠。
+
+** 首頁連接埠是LIF在LIF上執行「網路介面回復」命令時、LIF傳回的實體或邏輯連接埠。
+** 您可以使用"-address"和"-netask"選項來指定IP位址、也可以使用"-subnet_name"選項從子網路進行分配。
+** 使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。
+** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。"network rout" creation"手冊頁包含有關在SVM中建立靜態路由的資訊。
+** 對於"-firewall-policy"選項、請使用與LIF角色相同的預設"data"。
++
+如果需要、您可以稍後建立並新增自訂防火牆原則。
+
+** 「自動還原」可讓您指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、是否將資料LIF自動還原至其主節點。預設設定為「假」、但您可以根據環境中的網路管理原則、將其設為「假」。
+
+
+. 確認LIF已成功建立：
++
+「網路介面展示」
+
+. 確認已設定的IP位址可連線：
++
+|===
+
+
+| 若要驗證... | 使用... 
+
+
+ a| 
+IPV4位址
+ a| 
+網路ping
+
+
+
+ a| 
+IPv6位址
+ a| 
+《網路ping6》
+
+|===
+
+
+下列命令會建立LIF、並使用「-address'（位址）」和「-netmask'（網路遮罩）」參數來指定IP位址和網路遮罩值：
+
+[listing]
+----
+network interface create -vserver vs1.example.com -lif datalif1 -role data -data-protocol cifs -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -firewall-policy data -auto-revert true
+----
+下列命令會建立LIF、並從指定的子網路（名為client1_sub）指派IP位址和網路遮罩值：
+
+[listing]
+----
+network interface create -vserver vs3.example.com -lif datalif3 -role data -data-protocol cifs -home-node node-3 -home-port e1c -subnet-name client1_sub -firewall-policy data -auto-revert true
+----
+下列命令顯示叢集1中的所有LIF。資料生命週期1和資料傳輸3均設定為使用IPv4位址、而資料傳輸4則設定為使用IPv6位址：
+
+[listing]
+----
+network interface show
+
+            Logical    Status     Network          Current      Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node         Port    Home
+----------- ---------- ---------- ---------------- ------------ ------- ----
+cluster-1
+            cluster_mgmt up/up    192.0.2.3/24     node-1       e1a     true
+node-1
+            clus1        up/up    192.0.2.12/24    node-1       e0a     true
+            clus2        up/up    192.0.2.13/24    node-1       e0b     true
+            mgmt1        up/up    192.0.2.68/24    node-1       e1a     true
+node-2
+            clus1        up/up    192.0.2.14/24    node-2       e0a     true
+            clus2        up/up    192.0.2.15/24    node-2       e0b     true
+            mgmt1        up/up    192.0.2.69/24    node-2       e1a     true
+vs1.example.com
+            datalif1     up/down  192.0.2.145/30   node-1       e1c     true
+vs3.example.com
+            datalif3     up/up    192.0.2.146/30   node-2       e0c     true
+            datalif4     up/up    2001::2/64       node-2       e0c     true
+5 entries were displayed.
+----
+下列命令說明如何建立指派「預設資料檔案」服務原則的NAS資料LIF：
+
+[listing]
+----
+network interface create -vserver vs1 -lif lif2 -home-node node2 -homeport e0d -service-policy default-data-files -subnet-name ipspace1
+----

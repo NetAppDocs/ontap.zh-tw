@@ -1,0 +1,35 @@
+---
+permalink: system-admin/methods-extended-queries-concept.html 
+sidebar: sidebar 
+keywords: method, extended, queries, operations, perform, specified, values 
+summary: 您可以使用延伸查詢來比對具有指定值的物件、並對其執行作業。 
+---
+= 使用延伸查詢的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用延伸查詢來比對具有指定值的物件、並對其執行作業。
+
+您可以在大括弧（｛｝）內將延伸查詢括起來、以指定延伸查詢。延伸查詢必須在命令名稱之後的第一個引數中指定為任何其他參數之前的第一個引數。例如、若要將名稱包含字串「tmp」的所有磁碟區設為離線、請執行下列範例中的命令：
+
+[listing]
+----
+cluster1::> volume modify {-volume *tmp*} -state offline
+----
+一般而言、只有在使用「修改」和「刪除」命令時、延伸查詢才有用。他們在「create」或「show」命令中沒有任何意義。
+
+查詢與修改作業的組合是一項實用工具。但是、如果實作不正確、可能會造成混淆和錯誤。例如、使用（進階權限）「System Node image modify」（系統節點映像修改）命令來設定節點的預設軟體映像、會自動將其他軟體映像設為預設映像。下列範例中的命令實際上是null作業：
+
+[listing]
+----
+cluster1::*> system node image modify {-isdefault true} -isdefault false
+----
+此命令會將目前的預設映像設為非預設映像、然後將新的預設映像（前一個非預設映像）設為非預設映像、進而保留原始的預設設定。若要正確執行作業、您可以使用下列範例所提供的命令：
+
+[listing]
+----
+cluster1::*> system node image modify {-iscurrent false} -isdefault true
+----

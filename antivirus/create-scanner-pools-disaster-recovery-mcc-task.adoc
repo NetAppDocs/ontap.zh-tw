@@ -1,0 +1,100 @@
+---
+permalink: antivirus/create-scanner-pools-disaster-recovery-mcc-task.html 
+sidebar: sidebar 
+keywords: create, scanner pools, metrocluster, configurations 
+summary: 您必須在MetroCluster 每個叢集上建立一個適用於整個叢集的主和次掃描儀資源池、以對應於叢集上的主要和次要SVM。 
+---
+= 以MetroCluster 各種不完整的組態建立掃描器資源池
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須在MetroCluster 每個叢集上建立一個適用於整個叢集的主和次掃描儀資源池、以對應於叢集上的主要和次要SVM。
+
+.您需要的是 #8217 ；需要的是什麼
+* SVM和VScan伺服器必須位於同一個網域或信任的網域中。
+* 針對為個別SVM定義的掃瞄器資源池、您必須使用ONTAP SVM管理LIF或SVM資料LIF來設定SVM防毒連接器。
+* 針對為叢集中所有SVM定義的掃瞄器資源池、您必須使用ONTAP 叢集管理LIF來設定支援此功能的《支援Scorp防毒 連接器》。
+
+
+透過實作兩個實體獨立的鏡射叢集、可利用各種組態來保護資料。MetroCluster每個叢集都會同步複寫另一個叢集的資料和SVM組態。當叢集上線時、本機叢集上的主要SVM會提供資料。當遠端叢集離線時、本機叢集上的次要SVM會提供資料。
+
+這表示您必須在MetroCluster 每個叢集上建立一個適用於叢集上主要和次要SVM的支援程式集區、以配合叢集上的主要和次要SVM。當叢集開始從次要SVM提供資料時、次要資源池會變成作用中資源池。下圖顯示典型MetroCluster 的示例組態。
+
+image::../media/metrocluster-av-config.gif[資訊地圖組態MetroCluster]
+
+[NOTE]
+====
+授權使用者清單必須包含VScan伺服器用來連線至SVM的網域使用者帳戶。
+
+====
+.步驟
+. 建立掃描器集區：
++
+「vserver vscan掃描儀資源池create -vserver _data_SVM |叢集管理_svm_-掃描儀資源池_strober_pool _-主機名稱_vscan伺服器主機名稱_-特權使用者_privacy_users _」
+
++
+** 為個別SVM定義的資源池指定資料SVM、並為叢集中所有SVM定義的資源池指定叢集管理SVM。
+** 為每個VScan伺服器主機名稱指定IP位址或FQDN。
+** 指定每個授權使用者的網域和使用者名稱。
+
+
++
+[NOTE]
+====
+您必須從包含主要SVM的叢集建立所有掃描器集區。
+
+====
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會在MetroCluster 每個叢集上建立一個以功能為基礎的基本和次要掃描器集區：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_site1 -hostnames scan1 -privileged-users cifs
+\u1,cifs\u2
+
+cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_site2 -hostnames scan1 -privileged-users cifs
+\u1,cifs\u2
+
+cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_site1 -hostnames scan2 -privileged-users cifs
+\u1,cifs\u2
+
+cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_site2 -hostnames scan2 -privileged-users cifs
+\u1,cifs\u2
+----
+. 確認已建立掃瞄器資源池：「vserver vscan Sciper-Pool show -vserver _data_svm|叢集管理_svm_-staer-pool _sta_」
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示掃描器集區「Pool1」的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool show -vserver cifssvm1 -scanner-pool pool1_for_site1
+
+                                    Vserver: cifssvm1
+                               Scanner Pool: pool1_for_site1
+                             Applied Policy: idle
+                             Current Status: off
+         Cluster on Which Policy Is Applied: -
+                  Scanner Pool Config Owner: vserver
+       List of IPs of Allowed Vscan Servers:
+List of Host Names of Allowed Vscan Servers: scan1
+                   List of Privileged Users: cifs\u1,cifs\u2
+----
++
+您也可以使用「vserver vscan ScANer-Pool show」命令來檢視SVM上的所有掃描器集區。如需完整的命令語法、請參閱命令的手冊頁。
+
+

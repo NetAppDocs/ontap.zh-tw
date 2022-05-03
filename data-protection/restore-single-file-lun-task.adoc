@@ -1,0 +1,105 @@
+---
+permalink: data-protection/restore-single-file-lun-task.html 
+sidebar: sidebar 
+keywords: restore, single file, lun, nvme, namespace, snapmirror, destination, snapshot, copy, snap mirror, baseline, 
+summary: 您可以從Snapshot複本還原單一檔案、LUN、一組檔案或LUN、或從SnapMirror目的地Volume還原NVMe命名空間。從ONTAP 支援支援支援的9.7開始、您也可以從SnapMirror同步目的地還原NVMe命名空間。您可以將檔案還原至原始來源磁碟區或不同的磁碟區。 
+---
+= 從SnapMirror目的地還原單一檔案、LUN或NVMe命名空間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從Snapshot複本還原單一檔案、LUN、一組檔案或LUN、或從SnapMirror目的地Volume還原NVMe命名空間。從ONTAP 支援支援支援的9.7開始、您也可以從SnapMirror同步目的地還原NVMe命名空間。您可以將檔案還原至原始來源磁碟區或不同的磁碟區。
+
+若要從SnapMirror同步目的地還原檔案或LUN（ONTAP 從支援的版本號為9.5開始）、您必須先刪除並釋出此關係。
+
+您要還原檔案或LUN（目的地Volume）的磁碟區必須是讀寫磁碟區：
+
+* 如果來源與目的地磁碟區具有通用的Snapshot複本（通常是還原至原始來源磁碟區時的情況）、SnapMirror會執行_遞增 式還原。
+* 否則、SnapMirror會執行_基準還原_、將指定的Snapshot複本及其參照的所有資料區塊傳輸到目的地Volume。
+
+
+.步驟
+. 列出目的地Volume中的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume volume」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例顯示「vserverB：secondary1」目的地上的Snapshot複本：
+
++
+[listing]
+----
+
+cluster_dst::> volume snapshot show -vserver vserverB -volume secondary1
+
+Vserver     Volume      Snapshot                State    Size  Total% Used%
+-------     ------      ---------- ----------- ------   -----  ------ -----
+vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
+                        daily.2013-01-25_0010   valid   92KB      0%    0%
+                        hourly.2013-01-25_0105  valid   228KB     0%    0%
+                        hourly.2013-01-25_0205  valid   236KB     0%    0%
+                        hourly.2013-01-25_0305  valid   244KB     0%    0%
+                        hourly.2013-01-25_0405  valid   244KB     0%    0%
+                        hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 從SnapMirror目的地Volume中的Snapshot複本還原單一檔案或LUN、或一組檔案或LUN：
++
+"napmirror restore -source-path _Svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... -source-snapshot snapshot -file-list _source_file_path、@dite_file_path_`
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+下列命令會將原始目的地Volume「econdary1」中的Snapshot複本「daily.2013-01-25_0010」中的檔案「file1」和「file2」還原至原始來源Volume「primary1」作用中檔案系統中的相同位置：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir1/file1,/dir2/file2
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
++
+下列命令會將原始目的地Volume「econdary1」中的Snapshot複本「daily.2013-01-25_0010」中的檔案「file1」和「file2」還原至原始來源Volume「primary1」的作用中檔案系統中的不同位置。
+
++
+目的地檔案路徑以@符號開頭、接著是原始來源Volume根目錄下的檔案路徑。在此範例中、「file1」會還原至「/dir1/file1」、而檔案2則會還原至「primary1」上的「/dir2」、新增檔案/檔案2：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir/file1,@/dir1/file1.new,/dir2/file2,@/dir2.new/file2
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
++
+下列命令可將原始目的地Volume「econdary1」中的Snapshot複本「daily.2013-01-25_0010」中的檔案「file1」和「file3」還原至原始來源Volume「primary1」的作用中檔案系統中的不同位置、並將「file2」從「snap1」還原至作用中檔案系統的同一位置。
+
++
+在此範例中、檔案「file1」會還原為「/dir1/file1.new」、而「file3」則會還原為「/dir3.new / file3」：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir/file1,@/dir1/file1.new,/dir2/file2,/dir3/file3,@/dir3.new/file3
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
+

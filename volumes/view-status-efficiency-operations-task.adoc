@@ -1,0 +1,39 @@
+---
+permalink: volumes/view-status-efficiency-operations-task.html 
+sidebar: sidebar 
+keywords: efficiency, operation, status, view 
+summary: 您可以檢視磁碟區是否啟用重複資料刪除或資料壓縮。您也可以使用Volume Eff效率show命令來檢視磁碟區上效率作業的狀態、狀態、壓縮類型及進度。 
+---
+= 檢視效率作業的狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視磁碟區是否啟用重複資料刪除或資料壓縮。您也可以使用「Volume Eff效率show」命令、檢視磁碟區上效率作業的狀態、狀態、壓縮類型及進度。
+
+.步驟
+. 使用「Volume Eff效率show」命令來檢視磁碟區上效率作業的狀態。
++
+下列命令會顯示指派自適性壓縮類型之Volume Vola的效率作業狀態：
+
++
+「Volume Effiv更 有效率」顯示-instance -vserver VS1 -volume Vola
+
++
+如果已在Volume Vola上啟用效率作業、且作業閒置、則您可以在系統輸出中看到下列內容：
+
++
+[listing]
+----
+cluster1::> volume efficiency show -vserver vs1 -volume VolA
+
+  Vserver Name: vs1
+   Volume Name: VolA
+   Volume Path: /vol/VolA
+         State: Enabled
+        Status: Idle
+      Progress: Idle for 00:03:20
+----
+

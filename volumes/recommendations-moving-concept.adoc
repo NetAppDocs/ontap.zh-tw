@@ -1,0 +1,80 @@
+---
+permalink: volumes/recommendations-moving-concept.html 
+sidebar: sidebar 
+keywords: considerations, recommendations, when, moving, volumes, flexclone volume, metroCluster configuration 
+summary: 移動磁碟區有許多考量因素和建議、會受到您正在移動的磁碟區或系統組態的影響、例如MetroCluster ：一個邊區組態。您應該瞭解與移動磁碟區相關的考量與建議。 
+---
+= 移動磁碟區時的考量與建議
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+移動磁碟區有許多考量因素和建議、會受到您正在移動的磁碟區或系統組態的影響、例如MetroCluster ：一個邊區組態。您應該瞭解與移動磁碟區相關的考量與建議。
+
+
+
+== 一般考量與建議
+
+* 如果您要升級叢集的發行系列、則在升級叢集中的所有節點之前、請勿移動磁碟區。
++
+此建議可防止您不慎嘗試將磁碟區從較新的發行系列移至較舊的發行系列。
+
+* 來源Volume必須一致。
+* 如果您已將一個或多個集合體指派給相關的儲存虛擬機器（SVM）、則目的地集合體必須是其中一個指派的集合體。
+* 您無法將磁碟區移至接管的CFO集合體、或從該集合體移出該磁碟區。
+* 如果在您移動包含LUN的磁碟區之前、未啟用NVFIL、則在您移動磁碟區之後、該磁碟區將會啟用NVFIL。
+* 您可以將磁碟區從Flash Pool Aggregate移至其他Flash Pool Aggregate。
++
+** 也會移動該磁碟區的快取原則。
+** 移動可能會影響磁碟區效能。
+
+
+* 您可以在Flash Pool Aggregate與非Flash Pool Aggregate之間移動磁碟區。
++
+** 如果您將磁碟區從Flash Pool Aggregate移至非Flash Pool Aggregate、ONTAP 則會顯示訊息警告您移動可能會影響磁碟區效能、並詢問您是否要繼續。
+** 如果您將Volume從非Flash Pool Aggregate移至Flash Pool Aggregate、ONTAP 則會指派「自動」快取原則。
+
+
+* 磁碟區擁有其所在之集合體的閒置資料保護。如果您將磁碟區從包含NSE磁碟機的集合體移至不包含的磁碟區、則該磁碟區將不再具有NSE資料閒置保護。
+
+
+
+
+== FlexClone Volume考量與建議
+
+* FlexClone Volume在移動時無法離線。
+* 您可以將FlexClone磁碟區從同一個Aggregate移至同一個節點或同一個SVM中的另一個節點上的另一個Aggregate、而不需分割。
+* FlexClone Volume Snapshot複本在移動複本之後不會遺失。
+* 您可以將FlexClone父磁碟區從一個Aggregate移至另一個Aggregate。
++
+當您移動FlexClone父Volume時、暫存磁碟區會被留在後方、做為所有FlexClone Volume的父Volume。暫用磁碟區上不允許執行任何作業、除非是將其離線或刪除。在所有FlexClone磁碟區分割或銷毀之後、暫存磁碟區會自動清理。
+
+* 在您移動FlexClone子Volume之後、該Volume不再是FlexClone Volume。
+* FlexClone Move作業與FlexClone複製或分割作業互不互用。
+* 如果正在進行複製分割作業、則移動磁碟區可能會失敗。
++
+在完成複製分割作業之前、不應移動磁碟區。
+
+
+
+
+
+== 組態考量MetroCluster
+
+* 在MetroCluster 以等位組態移動磁碟區期間、當在來源叢集的目的地集合體上建立暫存磁碟區時、也會在存續叢集上建立與鏡射磁碟區相對應但未同化的暫存磁碟區記錄。
+* 如果MetroCluster 在轉換之前發生了一個故障切換、則目的地Volume會有一筆記錄、而且是一個暫用Volume（TMP類型的Volume）。
++
+移動工作會在存續（災難恢復）叢集上重新啟動、報告故障、並清除所有與移動相關的項目、包括暫存磁碟區。如果無法正確執行清除作業、系統會產生EMS、提醒系統管理員執行必要的清除作業。
+
+* 如果MetroCluster 在轉換階段開始之後、但在移動工作完成之前（也就是移動到可將叢集更新為指向目的地Aggregate的階段）發生了還原切換、則移動工作會在存續期間重新啟動（災難恢復） 完成叢集和執行。
++
+所有與移動相關的項目都會清除、包括暫用Volume（原始來源）。如果無法正確執行清除作業、系統會產生EMS、提醒系統管理員執行必要的清除作業。
+
+* 如果屬於切換站台的磁碟區正在執行任何Volume搬移作業、則不MetroCluster 允許強制或非強制性的停止功能。
++
+當本機磁碟區的磁碟區移動作業正在進行至存續站台時、不會封鎖切換。
+
+* 非強制MetroCluster 的交換器會被封鎖、但如果MetroCluster 正在進行任何Volume搬移作業、則不會封鎖強制的交換器。
+

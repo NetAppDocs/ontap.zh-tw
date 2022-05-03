@@ -1,0 +1,119 @@
+---
+permalink: tape-backup/transfer-data-ndmpcopy-task.html 
+sidebar: sidebar 
+keywords: transfer, data, ndmpcopy, incremental, full, qtree, directory, files, v4, ndmp 
+summary: ndmpcopy命令可在支援NDMP v4的儲存系統之間傳輸資料。您可以執行完整和遞增資料傳輸。您可以傳輸完整或部分磁碟區、qtree、目錄或個別檔案。 
+---
+= 使用ndmpcopy概述傳輸資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在支援NDMP v4的儲存系統之間、「ndmpcopy」nodesl解除 命令會傳輸資料。您可以執行完整和遞增資料傳輸。您可以傳輸完整或部分磁碟區、qtree、目錄或個別檔案。
+
+使用發行版本的不限次數地進行遞增傳輸（一次完整備份、最多兩次遞增備份）ONTAP 。
+
+從發行版的更新版本開始、遞增式傳輸最多只能有九個層級（一個完整備份、最多九個遞增備份）ONTAP 。
+
+您可以在來源與目的地儲存系統的nodesdro解除 命令列執行「ndmpcopy」、或是在非資料傳輸來源或目的地的儲存系統上執行。您也可以在單一儲存系統上執行「ndmpcopy」、這是資料傳輸的來源和目的地。
+
+您可以在"ndmpcopy（ndmpcopy）"命令中使用來源和目的地儲存系統的IPv6位址。路徑格式為「/vserver_name/volume名稱\[path\]」。
+
+.步驟
+. 在來源與目的地儲存系統上啟用NDMP服務：
++
+|===
+
+
+| 如果您要在下列位置的來源或目的地執行資料傳輸： | 使用下列命令... 
+
+
+ a| 
+SVM範圍的NDMP模式
+ a| 
+「Vserver服務NDMP開啟」
+
+[NOTE]
+====
+對於管理SVM中的NDMP驗證、使用者帳戶為「admin」、使用者角色為「admin」或「備份」。在資料SVM中、使用者帳戶為「vsadmin」、使用者角色為「vsadmin」或「vsadmin-Backup」。
+
+====
+
+
+ a| 
+節點範圍的NDMP模式
+ a| 
+「系統服務NDMP開啟」
+
+|===
+. 在儲存系統內或儲存系統之間、使用nnodesdro解除 命令「ndmpcopy」來傳輸資料：
++
+系統節點執行節點<節點名稱>< ndmpcopy [選項] source_ip:source_path dite_ip:destination_path [-MCS {inet| inet6}][-mcd {inet| inet6}][-md {inet|inson6}]*
+
++
+[NOTE]
+====
+在ndmpcopy中不支援DNS名稱。您必須提供來源和目的地的IP位址。來源IP位址或目的地IP位址不支援回送位址（127.0.0.1）。
+
+====
++
+** "ndmpcopy（ndmpcopy）"命令決定控制連線的位址模式、如下所示：
++
+*** 控制連線的位址模式會對應所提供的IP位址。
+*** 您可以使用「-mcs」和「-mcd」選項來覆寫這些規則。
+
+
+** 如果來源或目的地是ONTAP 指不支援的系統、則視NDMP模式（節點範圍或SVM範圍）而定、請使用允許存取目標Volume的IP位址。
+** 「source_path」和「destining_path」是直到磁碟區、qtree、目錄或檔案精細層級為止的絕對路徑名稱。
+** 「-mcs」指定控制連線至來源儲存系統的偏好定址模式。
++
+「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+
+** mcd'指定控制連線到目的地儲存系統的偏好定址模式。
++
+「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+
+** 「-md」指定來源與目的地儲存系統之間資料傳輸的偏好定址模式。
++
+「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+
++
+如果在"ndmpcopy（ndmpcopy）"命令中不使用"-md"選項、則資料連線的定址模式如下所示：
+
++
+*** 如果為控制連線指定的任一位址是IPv6位址、則資料連線的位址模式為IPv6。
+*** 如果為控制連線指定的兩個位址都是IPV4位址、則「ndmpcopy」命令會先嘗試使用IPv6位址模式進行資料連線。
++
+如果失敗、命令會使用IPv4位址模式。
+
++
+[NOTE]
+====
+如果指定IPv6位址、則必須以方括弧括住。
+
+====
++
+此命令範例可將資料從來源路徑（「來源路徑」）移轉至目的地路徑（「目的地路徑」）。
+
++
+[listing]
+----
+> ndmpcopy -sa admin:<ndmp_password> -da admin:<ndmp_password>
+ -st md5 -dt md5 192.0.2.129:/<src_svm>/<src_vol> 192.0.2.131:/<dst_svm>/<dst_vol>
+----
++
+此命令範例明確設定控制連線和資料連線、以使用IPv6位址模式：
+
++
+[listing]
+----
+> ndmpcopy -sa admin:<ndmp_password> -da admin:<ndmp_password> -st md5 -dt md5 -mcs inet6 -mcd inet6 -md
+ inet6 [2001:0db8:1:1:209:6bff:feae:6d67]:/<src_svm>/<src_vol> [2001:0ec9:1:1:200:7cgg:gfdf:7e78]:/<dst_svm>/<dst_vol>
+----
+
+
+
+
+

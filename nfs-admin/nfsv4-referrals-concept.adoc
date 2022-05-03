@@ -1,0 +1,16 @@
+---
+permalink: nfs-admin/nfsv4-referrals-concept.html 
+sidebar: sidebar 
+keywords: nfsv4, referral, work 
+summary: 啟用NFSv4轉介時ONTAP 、支援將「SVM內部」轉介給NFSv4用戶端。SVM內部參照是指接收NFSv4要求的叢集節點將NFSv4用戶端參照至儲存虛擬機器（SVM）上的另一個邏輯介面（LIF）。 
+---
+= NFSv4參照的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟用NFSv4轉介時ONTAP 、支援將「IN-SVM」轉介給NFSv4用戶端。SVM內部參照是指接收NFSv4要求的叢集節點將NFSv4用戶端參照至儲存虛擬機器（SVM）上的另一個邏輯介面（LIF）。
+
+NFSv4用戶端應該從該點開始存取目標LIF接收參照的路徑。當原始叢集節點判斷SVM中存在存留在資料磁碟區所在叢集節點上的LIF時、會提供此類參照、進而讓用戶端能夠更快存取資料、並避免額外的叢集通訊。

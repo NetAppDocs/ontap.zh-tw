@@ -1,0 +1,33 @@
+---
+permalink: nfs-admin/name-mapping-concept.html 
+sidebar: sidebar 
+keywords: mapping, work 
+summary: 當必須對應使用者的認證資料時、它會先檢查本機名稱對應資料庫和LDAP伺服器、以找出現有的對應。ONTAP無論是檢查一項或兩項、或是按SVM的名稱服務組態來決定順序。 
+---
+= 名稱對應的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當必須對應使用者的認證資料時、它會先檢查本機名稱對應資料庫和LDAP伺服器、以找出現有的對應。ONTAP無論是檢查一項或兩項、或是按SVM的名稱服務組態來決定順序。
+
+* 適用於Windows至UNIX對應
++
+如果找不到對應、ONTAP 則此功能會檢查UNIX網域中的Windows使用者名稱是否為有效的使用者名稱。如果這不管用、它會使用預設的UNIX使用者、前提是已設定。如果未設定預設UNIX使用者、ONTAP 且無法以這種方式取得對應、則對應會失敗、並傳回錯誤。
+
+* 適用於UNIX至Windows對應
++
+如果找不到對應、ONTAP 則嘗試尋找與SMB網域中UNIX名稱相符的Windows帳戶。如果這不管用、它會使用預設的SMB使用者、前提是已設定。如果預設的SMB使用者未設定、ONTAP 且無法以此方式取得對應、則對應會失敗、並傳回錯誤。
+
+
+
+依預設、機器帳戶會對應至指定的預設UNIX使用者。如果未指定預設UNIX使用者、則機器帳戶對應會失敗。
+
+* 從功能表9.5開始ONTAP 、您可以將機器帳戶對應至預設UNIX使用者以外的使用者。
+* 在更新版本的版本中、您無法將機器帳戶對應到其他使用者。ONTAP
++
+即使已定義機器帳戶的名稱對應、也會忽略對應。
+
+

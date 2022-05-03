@@ -1,0 +1,87 @@
+---
+permalink: smb-admin/add-remove-share-properties-eexisting-share-task.html 
+sidebar: sidebar 
+keywords: customize, exist, smb, share, add, remove, removing, properties, useful, configuration, changing, change, requirement, environment, add or remove share properties on an existing smb share 
+summary: 您可以新增或移除共用內容、來自訂現有的SMB共用區。如果您想要變更共用組態以符合環境中不斷變化的需求、這項功能就很有用。 
+---
+= 新增或移除現有SMB共用區上的共用內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以新增或移除共用內容、來自訂現有的SMB共用區。如果您想要變更共用組態以符合環境中不斷變化的需求、這項功能就很有用。
+
+您要修改其內容的共用區必須存在。
+
+新增共用內容的準則：
+
+* 您可以使用以逗號分隔的清單來新增一或多個共用屬性。
+* 您先前指定的任何共用內容都會維持有效。
++
+新增的內容會附加到現有的共用內容清單中。
+
+* 如果您為已套用至共用區的共用屬性指定新值、則新指定的值會取代原始值。
+* 您無法使用「vserver CIFS共用內容add」命令來移除共用內容。
++
+您可以使用「vserver CIFS共用內容移除」命令來移除共用內容。
+
+
+
+移除共用內容的準則：
+
+* 您可以使用以逗號分隔的清單來移除一或多個共用屬性。
+* 您先前已指定但未移除的任何共用內容都會維持有效。
+
+
+.步驟
+. 輸入適當的命令：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+新增共用內容
+ a| 
+Check Alignment of PHs>+vserver CIFS共享屬性add -vserver _vserver_name_-share-name _share_name_-share-properties_,...+
+
+
+
+ a| 
+移除共用內容
+ a| 
+Check Alignment of PHs>+vserver CIFS共享屬性移除-vserver _vserver_name_-share-name _share_name_-share-properties_,...+
+
+|===
+. 驗證共享內容設定：「vserver CIFS共用區show -vserver vserver_name -share-name share_name」
+
+
+下列命令會將「show snapshot」共用屬性新增至SVM VS1上名為「shafre1」的共用區：
+
+[listing]
+----
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name share1 -share-properties showsnapshot
+
+cluster1::> vserver cifs share show -vserver vs1
+Vserver    Share   Path      Properties   Comment    ACL
+---------  ------  --------  ----------   --------   -----------
+vs1        share1  /share1   oplocks      -          Everyone / Full Control
+                             browsable
+                             changenotify
+                             showsnapshot
+----
+下列命令會從SVM VS1上名為「shafre2」的共用區移除「可瀏覽的」共用內容：
+
+[listing]
+----
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name share2 -share-properties browsable
+
+cluster1::> vserver cifs share show -vserver vs1
+Vserver    Share   Path      Properties   Comment    ACL
+---------  ------  --------  ----------   --------   -----------
+vs1        share2  /share2   oplocks      -          Everyone / Full Control
+                             changenotify
+----
+xref:commands-manage-shares-reference.adoc[管理SMB共用的命令]

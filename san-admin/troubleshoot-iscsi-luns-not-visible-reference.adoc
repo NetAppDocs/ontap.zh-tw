@@ -1,0 +1,97 @@
+---
+permalink: san-admin/troubleshoot-iscsi-luns-not-visible-reference.html 
+sidebar: sidebar 
+keywords: troubleshoot, iscsi luns, not visible, host 
+summary: iSCSI LUN在主機上顯示為本機磁碟。如果儲存系統LUN無法作為主機上的磁碟使用、您應該確認組態設定。 
+---
+= 疑難排解主機上看不到的iSCSI LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+iSCSI LUN在主機上顯示為本機磁碟。如果儲存系統LUN無法作為主機上的磁碟使用、您應該確認組態設定。
+
+[cols="1, 3"]
+|===
+| 組態設定 | 處理方式 
+
+
+ a| 
+纜線
+ a| 
+確認主機與儲存系統之間的纜線已正確連接。
+
+
+
+ a| 
+網路連線能力
+ a| 
+驗證主機與儲存系統之間是否有TCP/IP連線。
+
+* 從儲存系統命令列ping用於iSCSI的主機介面：
++
+"ping–node_node_name_-destination _host_ip_address_for_iscsi_"
+
+* 從主機命令列ping用於iSCSI的儲存系統介面：
++
+"ping–node_node_name_-destination _host_ip_address_for_iscsi_"
+
+
+
+
+
+ a| 
+系統需求
+ a| 
+確認組態的元件符合資格。此外、請確認您擁有正確的主機作業系統（OS）Service Pack層級、啟動器版本、ONTAP 版本、以及其他系統需求。互通性對照表包含最新的系統需求。
+
+
+
+ a| 
+巨型框架
+ a| 
+如果您在組態中使用巨型框架、請確認網路路徑中的所有裝置都已啟用巨型框架：主機乙太網路NIC、儲存系統及任何交換器。
+
+
+
+ a| 
+iSCSI服務狀態
+ a| 
+確認iSCSI服務已獲得授權、並已在儲存系統上啟動。
+
+
+
+ a| 
+啟動器登入
+ a| 
+確認啟動器已登入儲存系統。如果「iSCSI啟動器show」命令輸出顯示沒有啟動器登入、請檢查主機上的啟動器組態。此外、請確認儲存系統已設定為啟動器的目標。
+
+
+
+ a| 
+iSCSI節點名稱（IQN）
+ a| 
+確認您在igroup組態中使用正確的啟動器節點名稱。在主機上、您可以使用啟動器工具和命令來顯示啟動器節點名稱。在igroup和主機上設定的啟動器節點名稱必須相符。
+
+
+
+ a| 
+LUN對應
+ a| 
+確認LUN已對應至igroup。在儲存系統主控台上、您可以使用下列其中一個命令：
+
+* 「LUN對應顯示」會顯示所有LUN及其對應的igroup。
+* 「LUN對應show -igroup」會顯示對應至特定igroup的LUN。
+
+
+
+
+ a| 
+iSCSI LIF已啟用
+ a| 
+確認iSCSI邏輯介面已啟用。
+
+|===
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]

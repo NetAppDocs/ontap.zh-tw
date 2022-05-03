@@ -1,0 +1,114 @@
+---
+permalink: system-admin/troubleshoot-web-access-problems-concept.html 
+sidebar: sidebar 
+keywords: troubleshoot, web, services, access, problems, lif, firewall, policy, protocol, engin, digital, certificate, user, access, authorization 
+summary: 組態錯誤會導致網路服務存取問題。您可以確保LIF、防火牆原則、Web傳輸協定引擎、Web服務、數位憑證、 而且使用者存取授權均設定正確。 
+---
+= 疑難排解網路服務存取問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+組態錯誤會導致網路服務存取問題。您可以確保LIF、防火牆原則、Web傳輸協定引擎、Web服務、數位憑證、 而且使用者存取授權均設定正確。
+
+下表可協助您識別及解決Web服務組態錯誤：
+
+|===
+| 此存取問題... | 發生原因是此組態錯誤... | 若要解決錯誤... 
+
+
+ a| 
+當您嘗試存取網路服務時、您的網路瀏覽器會傳回「無法連線」或「無法建立連線」錯誤。
+ a| 
+您的LIF設定可能不正確。
+ a| 
+請確定您可以ping提供Web服務的LIF。
+
+[NOTE]
+====
+您可以使用「network ping」命令來ping LIF。如需網路組態的相關資訊、請參閱_網路管理指南_。
+
+====
+
+
+ a| 
+您的防火牆可能設定不正確。
+ a| 
+請確定防火牆原則已設定為支援HTTP或HTTPS、而且原則已指派給提供Web服務的LIF。
+
+[NOTE]
+====
+您可以使用「系統服務防火牆原則」命令來管理防火牆原則。您可以使用「network interface modify」命令搭配「-firewall-policy」參數、將原則與LIF建立關聯。
+
+====
+
+
+ a| 
+您的網路傳輸協定引擎可能已停用。
+ a| 
+確保已啟用Web傳輸協定引擎、以便存取Web服務。
+
+[NOTE]
+====
+您可以使用「系統服務Web」命令來管理叢集的Web傳輸協定引擎。
+
+====
+
+
+ a| 
+當您嘗試存取網路服務時、您的網路瀏覽器會傳回「找不到」錯誤。
+ a| 
+Web服務可能已停用。
+ a| 
+確保您要允許存取的每個Web服務都已個別啟用。
+
+[NOTE]
+====
+您可以使用「vserver services web modify」命令來啟用Web服務以供存取。
+
+====
+
+
+ a| 
+Web瀏覽器無法以使用者的帳戶名稱和密碼登入Web服務。
+ a| 
+無法驗證使用者、存取方法不正確、或使用者無權存取Web服務。
+ a| 
+請確定使用者帳戶存在、並使用正確的存取方法和驗證方法進行設定。此外、請確認使用者的角色已獲授權可存取Web服務。
+
+[NOTE]
+====
+您可以使用「安全登入」命令來管理使用者帳戶及其存取方法和驗證方法。若要存取ONTAP 此功能、需要使用「ontapi」存取方法。若要存取所有其他Web服務、則需要使用「http」存取方法。您可以使用「vserver services web access」命令來管理角色對Web服務的存取。
+
+====
+
+
+ a| 
+您使用HTTPS連線至Web服務、而您的Web瀏覽器則表示連線中斷。
+ a| 
+您可能未在提供Web服務的叢集或儲存虛擬機器（SVM）上啟用SSL。
+ a| 
+確認叢集或SVM已啟用SSL、且數位憑證有效。
+
+[NOTE]
+====
+您可以使用「安全SSL」命令來管理HTTP伺服器的SSL組態、以及使用「安全憑證show」命令來顯示數位憑證資訊。
+
+====
+
+
+ a| 
+您使用HTTPS連線至Web服務、Web瀏覽器則表示該連線不受信任。
+ a| 
+您可能使用自我簽署的數位憑證。
+ a| 
+請確定與叢集或SVM相關的數位憑證已由信任的CA簽署。
+
+[NOTE]
+====
+您可以使用「安全性憑證genere-csr」命令來產生數位憑證簽署要求、以及使用「安全性憑證安裝」命令來安裝CA簽署的數位憑證。您可以使用「安全SSL」命令來管理提供Web服務之叢集或SVM的SSL組態。
+
+====
+|===

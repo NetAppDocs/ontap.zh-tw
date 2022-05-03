@@ -1,0 +1,112 @@
+---
+permalink: peering/add-svm-intercluster-relationship-93-later-task.html 
+sidebar: sidebar 
+keywords: add, intercluster, svm, peer, relationship 
+summary: 如果您在設定叢集對等關係之後建立SVM、則需要手動新增SVM的對等關係。您可以使用vserver對等項create命令來建立SVM之間的對等關係。建立對等關係之後、您可以在遠端叢集上執行Vserver對等端點接受、以授權對等關係。 
+---
+= 新增叢集間SVM對等關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在設定叢集對等關係之後建立SVM、則需要手動新增SVM的對等關係。您可以使用「vserver對等點create」命令、在SVM之間建立對等關係。建立對等關係之後、您可以在遠端叢集上執行「vserver對等端點接受」、以授權對等關係。
+
+來源叢集和目的地叢集必須執行對等關係。
+
+您可以在同一個叢集中的SVM之間建立對等關係、以進行本機資料備份。如需詳細資訊、請參閱「vserver對等點建立」手冊頁。
+
+系統管理員偶爾會使用「vserver對等拒絕」命令來拒絕提議的SVM對等關係。如果SVM之間的關係處於「拒絕」狀態、您必須先刪除關係、才能建立新關係。如需詳細資訊、請參閱「vserver對等刪除」手冊頁。
+
+.步驟
+. 在資料保護來源叢集上、與資料保護目的地叢集上的SVM建立對等關係：
++
+「vserver對等點create -vserver _local_svm_-對等 虛擬伺服器_remise_svm_-應用程式SnapMirror | file-copy | lun-copy -對等 叢集_remise_cluster _」
+
++
+以下範例建立本機SVM 'pvs1'與遠端SVM 'VS1'之間的對等關係
+
++
+[listing]
+----
+cluster01::> vserver peer create -vserver pvs1 -peer-vserver vs1 -applications snapmirror -peer-cluster cluster02
+----
++
+如果本機和遠端SVM的名稱相同、您必須使用_local name_建立SVM對等關係：
+
++
+[listing]
+----
+cluster01::> vserver peer create -vserver vs1 -peer-vserver
+vs1 -applications snapmirror -peer-cluster cluster01
+-local-name cluster1vs1LocallyUniqueName
+----
+. 在資料保護來源叢集上、確認對等關係已啟動：
++
+「vserver對等點對點」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例顯示SVM’'pvs1'與SVM 'VS1'之間的對等關係已經開始：
+
++
+[listing]
+----
+cluster01::> vserver peer show-all
+            Peer        Peer                      Peering
+Vserver     Vserver     State      Peer Cluster   Applications
+--------    --------    ---------  -------------  ------------
+pvs1        vs1         initiated   Cluster02       snapmirror
+----
+. 在資料保護目的地叢集上、顯示擱置中的SVM對等關係：
++
+「Vserver對等展示」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例列出「cluster02」的擱置對等關係：
+
++
+[listing]
+----
+cluster02::> vserver peer show
+
+                   Peer               Peer
+Vserver            Vserver            State
+-----------        -----------        ------------
+vs1                pvs1               pending
+----
+. 在資料保護目的地叢集上、授權擱置的對等關係：
++
+「Vserver對等端點接受-vserver _local_svm_-對等 虛擬伺服器_remente_svm_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例授權本機SVM「VS1」與遠端SVM「pvs1」之間建立對等關係：
+
++
+[listing]
+----
+cluster02::> vserver peer accept -vserver vs1 -peer-vserver pvs1
+----
+. 驗證SVM對等關係：
++
+「Vserver對等展示」
+
++
+[listing]
+----
+cluster01::> vserver peer show
+            Peer        Peer                           Peering        Remote
+Vserver     Vserver     State        Peer Cluster      Applications   Vserver
+----------- ----------- ------------ ----------------- -------------- ---------
+pvs1        vs1         peered       cluster02         snapmirror     vs1
+----
+

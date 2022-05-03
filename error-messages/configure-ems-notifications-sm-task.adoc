@@ -1,0 +1,214 @@
+---
+permalink: error-messages/configure-ems-notifications-sm-task.html 
+sidebar: sidebar 
+keywords: system manager, ems, event, notifications, email, syslog, webhook, destination, filters, configure, add, edit, delete, rest api, snmp traphost, trap host 
+summary: 您可以使用System Manager來設定事件管理系統（EMS）傳送事件通知的方式、以便在系統問題需要您立即注意時通知您。 
+---
+= 使用System Manager設定EMS事件通知和篩選器
+:allow-uri-read: 
+
+
+[role="lead"]
+您可以使用System Manager來設定事件管理系統（EMS）傳送事件通知的方式、以便在系統問題需要您立即注意時通知您。
+
+[cols="35,65"]
+|===
+
+
+| 版本ONTAP | 有了System Manager、您可以... 
+
+
+ a| 
+零點9.10.1 ONTAP
+ a| 
+設定電子郵件地址、syslog伺服器、REST API用戶端（Webhooks）、以及SNMP traphosts。
+
+
+
+ a| 
+零點9.7至9.10.0 ONTAP
+ a| 
+僅設定SNMP traphosts。您可以使用ONTAP CLI設定其他EMS目的地。請參閱 link:index.html["EMS組態總覽"]。
+
+|===
+您可以執行下列程序：
+
+* <<add-ems-destination>>
+* <<create-ems-filter>>
+* <<edit-ems-destination>>
+* <<edit-ems-filter>>
+* <<delete-ems-destination>>
+* <<delete-ems-filter>>
+
+
+.相關資訊
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2876977["EMS活動目錄"]
+* link:configure-snmp-traphosts-event-notifications-task.html["使用CLI設定SNMP traphosts以接收事件通知"]
+
+
+
+
+== 新增EMS事件通知目的地
+
+您可以使用System Manager來指定要將EMS訊息傳送到何處。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在*通知管理*頁面上、選取*事件目的地*索引標籤。
+. 按一下 image:../media/icon_add.gif["新增圖示"]。
+. 指定名稱、EMS目的地類型及篩選條件。
++
+
+NOTE: 如有需要、您可以新增篩選條件。按一下「*新增事件篩選器*」。
+
+. 視您選取的EMS目的地類型而定、請指定下列項目：
+
+
+[cols="40,60"]
+|===
+
+
+| 若要設定… | 指定或選取… 
+
+
+ a| 
+SNMP traphost
+ a| 
+* TrapHost名稱
+
+
+
+
+ a| 
+電子郵件
+
+（從9.10.1開始）
+ a| 
+* 目的地電子郵件地址
+* 郵件伺服器
+* 寄件者電子郵件地址
+
+
+
+
+ a| 
+系統記錄伺服器
+
+（從9.10.1開始）
+ a| 
+* 伺服器的主機名稱或IP位址
+
+
+
+
+ a| 
+Webhook
+
+（從9.10.1開始）
+ a| 
+* Webhook URL
+* 用戶端驗證（選取此選項以指定用戶端憑證）
+
+
+|===
+
+
+== 建立新的EMS事件通知篩選器
+
+從ONTAP 《E59.10.1》開始、您可以使用System Manager定義新的自訂篩選條件、以指定處理EMS通知的規則。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在「*通知管理*」頁面上、選取「*事件篩選器*」索引標籤。
+. 按一下 image:../media/icon_add.gif["新增圖示"]。
+. 指定名稱、然後選取是要從現有事件篩選器複製規則、還是要新增規則。
+. 視您的選擇而定、請執行下列步驟：
+
+
+[cols="40,60"]
+|===
+
+
+| 如果您選擇…… | 然後執行下列步驟… 
+
+
+ a| 
+*從現有事件篩選器複製規則*
+ a| 
+. 選取現有的事件篩選器。
+. 修改現有規則。
+. 如有需要、請按一下以新增其他規則 image:../media/icon_add.gif["新增圖示"]。
+
+
+
+
+ a| 
+*新增規則*
+ a| 
+指定每個新規則的類型、名稱模式、嚴重性及SNMP設陷類型。
+
+|===
+
+
+== 編輯EMS事件通知目的地
+
+從ONTAP 版本支援的版本起、您可以使用System Manager來變更事件通知目的地資訊。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在*通知管理*頁面上、選取*事件目的地*索引標籤。
+. 在事件目的地名稱旁、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*編輯*。
+. 修改事件目的地資訊、然後按一下「*儲存*」。
+
+
+
+
+== 編輯EMS事件通知篩選器
+
+從ONTAP 功能更新至功能更新至功能更新、您可以使用System Manager修改自訂的篩選條件、以變更事件通知的處理方式。
+
+
+NOTE: 您無法修改系統定義的篩選條件。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在「*通知管理*」頁面上、選取「*事件篩選器*」索引標籤。
+. 在事件篩選器名稱旁、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*編輯*。
+. 修改事件篩選器資訊、然後按一下「*儲存*」。
+
+
+
+
+== 刪除EMS事件通知目的地
+
+從ONTAP 《支援範本》（《支援範本》）9.10.1開始、您可以使用System Manager刪除EMS事件通知目的地。
+
+
+NOTE: 您無法刪除SNMP目的地。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在*通知管理*頁面上、選取*事件目的地*索引標籤。
+. 在事件目的地名稱旁、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*刪除*。
+
+
+
+
+== 刪除EMS事件通知篩選器
+
+從《軟件及應用程式》（2019）9.10.1開始ONTAP 、您可以使用System Manager刪除自訂的篩選條件。
+
+
+NOTE: 您無法刪除系統定義的篩選條件。
+
+.步驟
+. 按一下*叢集>設定*。
+. 在*通知管理*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看事件目的地*。
+. 在「*通知管理*」頁面上、選取「*事件篩選器*」索引標籤。
+. 在事件篩選器名稱旁、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*刪除*。
+

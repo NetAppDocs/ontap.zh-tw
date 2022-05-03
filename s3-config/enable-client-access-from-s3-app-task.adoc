@@ -1,0 +1,52 @@
+---
+permalink: s3-config/enable-client-access-from-s3-app-task.html 
+sidebar: sidebar 
+keywords: enable, client, access, s3 app 
+summary: 若要讓S3用戶端應用程式存取ONTAP S3伺服器、ONTAP 則該管理員必須向S3使用者提供組態資訊。 
+---
+= 從S3應用程式啟用用戶端存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要讓S3用戶端應用程式存取ONTAP S3伺服器、ONTAP 則該管理員必須向S3使用者提供組態資訊。
+
+S3用戶端應用程式必須能夠使用ONTAP AWS簽名版本4、與Sfor S3伺服器進行驗證。舊版的簽名版本不受ONTAP 支援。
+
+此S3管理員必須已建立S3使用者、並在儲存區原則或物件儲存伺服器原則中、以個別使用者或群組成員的身分授予他們存取權限。ONTAP
+
+S3用戶端應用程式必須能夠解析ONTAP 不支援的S3伺服器名稱、ONTAP 因為該名稱需要由S3管理員提供S3伺服器的正式作業的S3伺服器名稱（FQDN）和IP位址。
+
+若要存取ONTAP S3儲存區、S3用戶端應用程式的使用者會輸入ONTAP 由S3管理員提供的資訊。
+
+從S9.9開始ONTAP 、ONTAP 支援下列AWS用戶端功能的不支援SS3伺服器：
+
+* 使用者定義的物件中繼資料
++
+使用PUT（或POST）建立物件時、可將一組金鑰值配對指派給物件做為中繼資料。在物件上執行取得/取得作業時、會傳回使用者定義的中繼資料以及系統中繼資料。
+
+* 物件標記
++
+您可以指派一組個別的金鑰值配對作為標籤、以便將物件分類。與中繼資料不同的是、標記是以物件的REST API獨立建立和讀取、而且會在物件建立或之後的任何時間執行。
+
++
+[NOTE]
+====
+若要讓用戶端取得並放置標記資訊、必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「PuttObjectTagging」和「刪除ObjectTagging」等動作。
+
+====
+
+
+如需詳細資訊、請參閱AWS S3文件。
+
+.步驟
+. 輸入S3伺服器名稱和CA憑證、以ONTAP 驗證S3用戶端應用程式與S3伺服器。
+. 輸入下列資訊、在S3用戶端應用程式上驗證使用者：
++
+** S3伺服器名稱（FQDN）和儲存區名稱
+** 使用者的存取金鑰和秘密金鑰
+
+
+

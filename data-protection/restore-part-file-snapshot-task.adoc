@@ -1,0 +1,60 @@
+---
+permalink: data-protection/restore-part-file-snapshot-task.html 
+sidebar: sidebar 
+keywords: restore, part, file, snapshot copy 
+summary: 假設您知道資料的起始位元組偏移量和位元組數、您可以使用Volume Snapshot partne-還原 檔案命令、將一系列資料從Snapshot複本還原至LUN、NFS或SMB Container檔案。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。 
+---
+= 從Snapshot複本還原部分檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+假設您知道資料的起始位元組偏移量和位元組數、您可以使用「Volume Snapshot partne-還原 檔案」命令、將一組資料從Snapshot複本還原至LUN、NFS或SMB Container檔案。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。
+
+.步驟
+. 列出Volume中的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume _volume _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例顯示「vol1」中的Snapshot複本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 從Snapshot複本還原部分檔案：
++
+「Volume Snapshot part-f還原 檔案-vserver _Svm_-volume _volume _-snapshot _snapshot -path _file_path_-start-byte_byte_-byte-count_byte_count_」
+
++
+起始位元組偏移和位元組數必須是4、096的倍數。
+
++
+以下範例還原檔案「myfile.txt'的前4、096位元組：
+
++
+[listing]
+----
+cluster1::> volume snapshot partial-restore-file -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010 -path /myfile.txt -start-byte 0 -byte-count 4096
+----
+

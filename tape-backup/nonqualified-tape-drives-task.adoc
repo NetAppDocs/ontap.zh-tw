@@ -1,0 +1,49 @@
+---
+permalink: tape-backup/nonqualified-tape-drives-task.html 
+sidebar: sidebar 
+keywords: nonqualified, tape, drive, storage, system, emulate, qualified 
+summary: 如果儲存系統可以模擬合格的磁帶機、您可以在該系統上使用非合格的磁帶機。然後、它會被視為合格的磁帶機。若要使用非合格的磁帶機、您必須先判斷它是否模擬任何合格的磁帶機。 
+---
+= 使用非合格的磁帶機
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果儲存系統可以模擬合格的磁帶機、您可以在該系統上使用非合格的磁帶機。然後、它會被視為合格的磁帶機。若要使用非合格的磁帶機、您必須先判斷它是否模擬任何合格的磁帶機。
+
+非合格的磁帶機是連接至儲存系統的磁帶機、ONTAP 但不受支援或不被支援。
+
+.步驟
+. 使用「shorage tape show-support-STATUS'命令、檢視附加至儲存系統的非合格磁帶機。
++
+以下命令顯示連接至儲存系統的磁帶機、以及每個磁帶機的支援與資格狀態。也會列出非合格的磁帶機。「'tape磁碟機廠商名稱'」是連接至儲存系統的非合格磁帶機、ONTAP 但不受支援。
+
++
+[listing]
+----
+
+cluster1::> storage tape show-supported-status -node Node1
+
+          Node: Node1
+                                    Is
+          Tape Drive                Supported  Support Status
+          --------------------      ---------  --------------
+          "tape_drive_vendor_name"  false      Nonqualified tape drive
+          Hewlett-Packard C1533A    true       Qualified
+          Hewlett-Packard C1553A    true       Qualified
+          Hewlett-Packard Ultrium 1 true       Qualified
+          Sony SDX-300C             true       Qualified
+          Sony SDX-500C             true       Qualified
+          StorageTek T9840C         true       Dynamically Qualified
+          StorageTek T9840D         true       Dynamically Qualified
+          Tandberg LTO-2 HH         true       Dynamically Qualified
+----
+. 模擬合格的磁帶機。
++
+http://mysupport.netapp.com/NOW/download/tools/tape_config["NetApp下載：磁帶設備組態檔案"]
+
+
+
+xref:qualified-tape-drives-concept.adoc[哪些是合格的磁帶機]

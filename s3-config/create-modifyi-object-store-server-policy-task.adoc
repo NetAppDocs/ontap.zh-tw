@@ -1,0 +1,77 @@
+---
+permalink: s3-config/create-modifyi-object-store-server-policy-task.html 
+sidebar: sidebar 
+keywords: create, modify, object, store, server, policy 
+summary: 您可以建立可套用至物件存放區中一或多個儲存區的原則。物件存放區伺服器原則可附加至使用者群組、因此可簡化跨多個資源區的資源存取管理。 
+---
+= 建立或修改物件存放區伺服器原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立可套用至物件存放區中一或多個儲存區的原則。物件存放區伺服器原則可附加至使用者群組、因此可簡化跨多個資源區的資源存取管理。
+
+已啟用S3的SVM必須已存在S3伺服器和儲存區。
+
+您可以在物件儲存伺服器群組中指定預設或自訂原則、以在SVM層級啟用存取原則。原則只有在群組定義中指定之後才會生效。
+
+[NOTE]
+====
+使用物件儲存伺服器原則時、您可以在群組定義中指定主體（即使用者和群組）、而非在原則本身中指定主體。
+
+====
+有三種唯讀的預設原則可供存取ONTAP 不完整的S3資源：
+
+* FullAccess
+* NoS3Access
+* ReadOnlyAccess
+
+
+您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱「vserver object-store-server policy」手冊頁。
+
+.步驟
+. 建立物件儲存伺服器原則：
++
+「vserver object-store-server原則create -vserver Svm_name -policy policy_name（-註釋文字）」
+
+. 建立原則聲明：
++
+「vserver object-store-server policy陳述式create -vserver Svm_name」-policy policy_name -effect｛allow|deny｝-action object_store_actions -resource [-sID text]」
+
++
+下列參數定義存取權限：
+
++
+[cols="2*"]
+|===
+
+
+ a| 
+「效果」
+ a| 
+此聲明可能允許或拒絕存取
+
+
+
+ a| 
+「行動」
+ a| 
+您可以指定「*」表示所有動作、或是下列一或多個清單：「GetObject、PuttObject、刪除物件、清單庫、GetBucketAcl、GetObjectAcl、 listAllMybBucks、listBucketMultiPartUploads、以及「ListMultpartUploParts」。
+
+
+
+ a| 
+資源
+ a| 
+儲存區及其所包含的任何物件。通配字元「*」和「？」 可用於形成規則運算式、以指定資源。
+
+|===
++
+您可以選擇使用「-SID'」選項、將文字字串指定為註解。
+
++
+根據預設、新的對帳單會新增至對帳單清單的結尾、並依順序處理。稍後新增或修改陳述式時、您可以選擇修改陳述式的「索引」設定、以變更處理順序。
+
+

@@ -1,0 +1,34 @@
+---
+permalink: nfs-config/create-local-unix-group-task.html 
+sidebar: sidebar 
+keywords: create, local, unix, group 
+summary: 您可以使用vserver services name-service unix-group create命令來建立SVM本機的UNIX群組。本機UNIX群組適用於本機UNIX使用者。 
+---
+= 建立本機UNIX群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver services name-service unix-group create」命令來建立SVM本機的UNIX群組。本機UNIX群組適用於本機UNIX使用者。
+
+.步驟
+. 建立本機UNIX群組：
++
+「Vserver服務名稱服務UNIX群組create -vserver _vserver_name_-name _group name_-id _integer_」
+
++
+名稱_group名稱_'指定群組名稱。群組名稱長度必須少於64個字元。
+
++
+-id _integer__指定您指派的群組ID。
+
+
+
+下列命令會在名為VS1的SVM上建立名為eng的本機群組。群組的ID為101。
+
+[listing]
+----
+vs1::> vserver services name-service unix-group create -vserver vs1 -name eng -id 101
+----

@@ -1,0 +1,71 @@
+---
+permalink: data-protection/restore-svm-root-volume-promote-mirror-task.html 
+sidebar: sidebar 
+keywords: promote, load-sharing, mirror 
+summary: 如果根磁碟區永久無法使用、您可以升級負載共用鏡像（LSM）磁碟區、以提供對根磁碟區資料的寫入存取權。 
+---
+= 升級負載共用鏡像
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果根磁碟區永久無法使用、您可以升級負載共用鏡像（LSM）磁碟區、以提供對根磁碟區資料的寫入存取權。
+
+您必須使用進階權限層級命令來執行此工作。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 升級LSM Volume：
++
+「napmirror Promote -dite-path _Svm:volume」（napmirror提升-dite-path _Svm:volume）|「_cluster」（叢集）：//Svm/volume」（虛擬磁
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例將磁碟區「svm1_m2」升級為新的SVM根磁碟區：
+
++
+[listing]
+----
+cluster_src::*> snapmirror promote -destination-path svm1:svm1_m2
+
+Warning: Promote will delete the offline read-write volume
+         cluster_src://svm1/svm1_root and replace it with
+         cluster_src://svm1/svm1_m2. Because the volume is offline,
+         it is not possible to determine whether this promote will
+         affect other relationships associated with this source.
+Do you want to continue? {y|n}: y
+----
++
+輸入「y」。利用此功能、LSM磁碟區可成為讀寫磁碟區、並可在存取時刪除原始根磁碟區。ONTAP
+
++
+[NOTE]
+====
+如果最近未進行更新、則升級的根Volume可能沒有原始根磁碟區中的所有資料。
+
+====
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+. 依照您用於根磁碟區的命名慣例、重新命名所升級的磁碟區：
++
+「Volume rame -vserver _svm_-volume _volume _-newname _new_name_`」
+
++
+以下範例將升級的Volume「svm1_m2（svm1_root）”重新命名為「svm1_root（svm1_root））：
+
++
+[listing]
+----
+cluster_src::> volume rename -vserver svm11 -volume svm1_m2 -newname svm1_root
+----
+. 保護重新命名的根Volume、如步驟所述 link:create-load-sharing-mirror-task.html#steps["3."] 逐步完成 link:create-load-sharing-mirror-task.html#steps["4."] 在中 link:create-load-sharing-mirror-task.html["建立及初始化負載共用鏡射關係"]。
+

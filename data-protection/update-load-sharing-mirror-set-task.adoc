@@ -1,0 +1,36 @@
+---
+permalink: data-protection/update-load-sharing-mirror-set-task.html 
+sidebar: sidebar 
+keywords: update, loaad-sharing, mirror, relationship, LSM, manual update 
+summary: 'SVM根磁碟區的負載共用鏡像（LSM）關係會在裝載或卸載SVM中的某個磁碟區之後、以及在包含「june-path"option」的「Volume create」（磁碟區建立）作業期間自動更新。如果您想要在下次排程更新之前更新LSM關係、可以手動更新該關係。' 
+---
+= 更新負載共用鏡射關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SVM根磁碟區的負載共用鏡像（LSM）關係會在裝載或卸載SVM中的某個磁碟區之後、以及在包含「june-path'option」的「Volume create」（磁碟區建立）作業期間自動更新。如果您想要在下次排程更新之前更新LSM關係、可以手動更新該關係。
+
+在下列情況下、負載共用鏡射關係會自動更新：
+
+* 現在是進行排程更新的時候了
+* 在SVM根磁碟區的磁碟區上執行掛載或卸載作業
+* 系統會發出包含「juntion-path」選項的「volume create」命令
+
+
+.步驟
+. 手動更新負載共用鏡射關係：
++
+「napmirror update-ls-set -source-path _svm:volume」（napmirror update-ls-set -source-path _svm:volume）|「叢集」：//Svm/volume」
+
++
+以下範例更新根磁碟區「svm1_root）的負載共用鏡射關係：
+
++
+[listing]
+----
+cluster_src::> snapmirror update-ls-set -source-path svm1:svm1_root
+----
+

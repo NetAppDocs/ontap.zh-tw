@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/decide-security-style-svm-flexvol-concept.html 
+sidebar: sidebar 
+keywords: security, style, volume, factor, primary, administrator, manage, file, system, type, secondary, service, access, data, how to decide which security style to use on svms 
+summary: 為了協助您決定要在磁碟區上使用哪種安全樣式、您應該考慮兩個因素。主要因素是管理檔案系統的系統管理員類型。次要因素是存取磁碟區上資料的使用者或服務類型。 
+---
+= 決定要在SVM上使用哪種安全型態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了協助您決定要在磁碟區上使用哪種安全樣式、您應該考慮兩個因素。主要因素是管理檔案系統的系統管理員類型。次要因素是存取磁碟區上資料的使用者或服務類型。
+
+在Volume上設定安全樣式時、您應該考慮環境的需求、以確保您選擇最佳的安全樣式、並避免管理權限時發生問題。下列考量事項可協助您決定：
+
+|===
+| 安全風格 | 選擇是否... 
+
+
+ a| 
+UNIX
+ a| 
+* 檔案系統由UNIX管理員管理。
+* 大多數使用者是NFS用戶端。
+* 存取資料的應用程式會使用UNIX使用者做為服務帳戶。
+
+
+
+
+ a| 
+NTFS
+ a| 
+* 檔案系統由Windows管理員管理。
+* 大多數使用者是SMB用戶端。
+* 存取資料的應用程式會使用Windows使用者做為服務帳戶。
+
+
+
+
+ a| 
+混合
+ a| 
+檔案系統由UNIX和Windows系統管理員管理、使用者同時由NFS和SMB用戶端組成。
+
+|===

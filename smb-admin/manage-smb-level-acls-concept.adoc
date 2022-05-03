@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/manage-smb-level-acls-concept.html 
+sidebar: sidebar 
+keywords: change, share-level, acl, user, access, right, share, configure, windows, unix, group, guidelines for managing smb share-level acls 
+summary: 您可以變更共用層級的ACL、讓使用者擁有更多或更少的共用存取權限。您可以使用Windows使用者和群組或UNIX使用者和群組來設定共用層級ACL。 
+---
+= 管理SMB共用層級ACL的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以變更共用層級的ACL、讓使用者擁有更多或更少的共用存取權限。您可以使用Windows使用者和群組或UNIX使用者和群組來設定共用層級ACL。
+
+建立共用之後、根據預設、共用層級ACL會提供對名為「所有人」的標準群組的讀取存取權。ACL中的讀取存取權表示網域和所有信任網域中的所有使用者都擁有共用的唯讀存取權。
+
+您可以使用Windows用戶端上的Microsoft管理主控台（MMC）或ONTAP 是使用Windows命令列來變更共用層級的ACL。
+
+當您使用MMC時、適用下列準則：
+
+* 指定的使用者和群組名稱必須是Windows名稱。
+* 您只能指定Windows權限。
+
+
+當您使用ONTAP flexfuse命令列時、適用下列準則：
+
+* 指定的使用者和群組名稱可以是Windows名稱或UNIX名稱。
++
+如果在建立或修改ACL時未指定使用者和群組類型、則預設類型為Windows使用者和群組。
+
+* 您只能指定Windows權限。
+

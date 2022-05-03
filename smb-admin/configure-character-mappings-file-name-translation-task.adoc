@@ -1,0 +1,167 @@
+---
+permalink: smb-admin/configure-character-mappings-file-name-translation-task.html 
+sidebar: sidebar 
+keywords: nfs, client, create, file, name, character, valid, smb, windows, application, configure, map, translation, configure character mapping for smb file name translation on volumes 
+summary: NFS用戶端可以建立檔案名稱、其中包含對SMB用戶端和某些Windows應用程式無效的字元。您可以設定磁碟區上檔案名稱轉譯的字元對應、讓SMB用戶端能夠存取NFS名稱、否則將無效。 
+---
+= 設定磁碟區上SMB檔案名稱轉譯的字元對應
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS用戶端可以建立檔案名稱、其中包含對SMB用戶端和某些Windows應用程式無效的字元。您可以設定磁碟區上檔案名稱轉譯的字元對應、讓SMB用戶端能夠存取NFS名稱、否則將無效。
+
+當SMB用戶端存取NFS用戶端所建立的檔案時、ONTAP 即可查看檔案名稱。如果名稱不是有效的SMB檔案名稱（例如、如果名稱有內嵌的結腸「」字元）、ONTAP 則無法返回每個檔案所保留的8.3檔名。不過、這會對將重要資訊編碼成長檔名的應用程式造成問題。
+
+因此、如果您要在不同作業系統上的用戶端之間共用檔案、則應該在兩個作業系統中都有效的檔案名稱中使用字元。
+
+不過、如果您有NFS用戶端建立的檔案名稱包含SMB用戶端無效檔案名稱的字元、您可以定義將無效NFS字元轉換成SMB和某些Windows應用程式所接受的統一碼字元的對應。例如、此功能支援CATIA MCAD和Mathatica應用程式、以及其他有此需求的應用程式。
+
+您可以依Volume設定字元對應。
+
+在磁碟區上設定字元對應時、必須謹記下列事項：
+
+* 字元對應不會套用至交叉點。
++
+您必須明確設定每個交會Volume的字元對應。
+
+* 您必須確定用於表示無效或非法字元的unicode字元是通常不會出現在檔案名稱中的字元、否則會產生不必要的對應。
++
+例如、如果您嘗試將一個分號（：）對應至連字號（-）、但檔案名稱中正確使用連字號（-）、則嘗試存取名為「a-b」的檔案的Windows用戶端會將其要求對應至NFS名稱「a:b」（而非所需結果）。
+
+* 套用字元對應之後、如果對應仍包含無效的Windows字元、ONTAP 則將還原為Windows 8.3檔名。
+* 在FPolicy通知、NAS稽核記錄和安全追蹤訊息中、會顯示對應的檔案名稱。
+* 建立DP類型的SnapMirror關係時、來源磁碟區的字元對應不會複寫到目的地DP磁碟區。
+* 區分大小寫：由於對應的Windows名稱會變成NFS名稱、因此名稱的查詢會遵循NFS語義。這包括NFS查詢區分大小寫。這表示存取對應共用的應用程式不得仰賴Windows不區分大小寫的行為。但是8.3名稱是可用的、而且不區分大小寫。
+* 部分或無效對應：在將名稱對應至執行目錄列舉（「dir」）的用戶端之後、會檢查所產生的UNICODE名稱是否為Windows有效性。如果該名稱中仍有無效字元、或Windows的名稱無效（例如結尾為「.」或空白）、則會傳回8.3名稱而非無效名稱。
+
+
+.步驟
+. 設定字元對應：+
+
+
+「Vserver CIFS字元對應可建立-vserver _vserver_name_-volume _volume名稱_-mapping _mapping _text_、...」 +
+
+對應包含以「」分隔的來源目標字元配對清單。這些字元是以十六進位數字輸入的統一碼字元。例如：3c：E03C。+
+
+每個以分號分隔的「maping_text」配對的第一個值、是您要轉譯的NFS字元的十六進位值、第二個值是SMB使用的unicode值。對應配對必須是唯一的（一對一對應應該存在）。
+
+* 來源對應+
+
+
+下表顯示來源對應的允許UNICODE字元集：
+
++
+
+|===
+| 統一碼字元 | 列印字元 | 說明 
+
+
+ a| 
+01-0x19
+ a| 
+不適用
+ a| 
+非列印控制字元
+
+
+
+ a| 
+0x5C
+ a| 
+ a| 
+反斜槓
+
+
+
+ a| 
+x3A.
+ a| 
+：
+ a| 
+結腸
+
+
+
+ a| 
+0X2A
+ a| 
+*
+ a| 
+星號
+
+
+
+ a| 
+x3F
+ a| 
+？
+ a| 
+問號
+
+
+
+ a| 
+x22
+ a| 
+"
+ a| 
+引號
+
+
+
+ a| 
+x3C
+ a| 
+<
+ a| 
+小於
+
+
+
+ a| 
+x3E
+ a| 
+>
+ a| 
+大於
+
+
+
+ a| 
+x7C
+ a| 
+|
+ a| 
+垂直線
+
+
+
+ a| 
+0xB1
+ a| 
+±
+ a| 
+加減號
+
+|===
+* 目標對應
++
+您可以在下列範圍內指定「Private Use Area」（私有使用區域）中的目標字元：u+E0000...U+F8FF。
+
+
+
+下列命令會在儲存虛擬機器（SVM）VS1上、針對名為「dATA」的磁碟區建立字元對應：
+
+[listing]
+----
+cluster1::> vserver cifs character-mapping create -volume data -mapping 3c:e17c,3e:f17d,2a:f745
+cluster1::> vserver cifs character-mapping show
+
+Vserver         Volume Name  Character Mapping
+--------------  -----------  ------------------------------------------
+vs1             data         3c:e17c, 3e:f17d, 2a:f745
+----
+xref:create-manage-data-volumes-nas-namespaces-concept.adoc[在NAS命名空間中建立及管理資料磁碟區]

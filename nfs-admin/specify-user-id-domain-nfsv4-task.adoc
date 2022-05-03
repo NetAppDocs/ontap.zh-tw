@@ -1,0 +1,23 @@
+---
+permalink: nfs-admin/specify-user-id-domain-nfsv4-task.html 
+sidebar: sidebar 
+keywords: specify, user, domain, nfsv4 
+summary: 若要指定使用者ID網域、您可以設定-v4.x id-domain選項。 
+---
+= 指定NFSv4的使用者ID網域
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要指定使用者ID網域、您可以設定「-v4.x id-domain」選項。
+
+根據預設ONTAP 、如果已設定NFSv4使用者ID對應、則使用NIS網域。如果未設定NIS網域、則會使用DNS網域。例如、如果您有多個使用者ID網域、則可能需要設定使用者ID網域。網域名稱必須符合網域控制器上的網域組態。NFSv3不需要此功能。
+
+.步驟
+. 輸入下列命令：
++
+「vserver NFS modify -vserver vserver_name -v4.x id-domain ns_domain_name」
+
+

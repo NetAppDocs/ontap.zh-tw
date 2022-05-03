@@ -1,0 +1,104 @@
+---
+permalink: data-protection/make-svm-destination-volumes-writeable-task.html 
+sidebar: sidebar 
+keywords: make, svm, destination, volume, writable 
+summary: 您必須先將SVM目的地磁碟區設為可寫入、才能將資料提供給用戶端。此程序與磁碟區複寫程序大致相同、但有一項例外。如果您在建立SVM複寫關係時設定-identity保留為true、則必須先停止來源SVM、再啟動目的地SVM。 
+---
+= 使SVM目的地磁碟區可寫入
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先將SVM目的地磁碟區設為可寫入、才能將資料提供給用戶端。此程序與磁碟區複寫程序大致相同、但有一項例外。如果您在建立SVM複寫關係時設定了「-idente-preserve true」、則必須在啟動目的地SVM之前停止來源SVM。
+
+如需完整的命令語法、請參閱手冊頁。
+
+[NOTE]
+====
+在災難恢復案例中、您無法從來源SVM執行SnapMirror更新至災難恢復目的地SVM、因為您的來源SVM及其資料將無法存取、而且自上次重新同步後的更新可能損毀或毀損。
+
+====
+.步驟
+. 從目的地SVM或目的地叢集停止排程傳輸至目的地：
++
+「napmirror quiesce -source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+以下範例會停止來源SVM「svm1」與目的地SVM「svm_backup」之間的排程傳輸：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm1: -destination-path svm_backup:
+----
+. 從目的地SVM或目的地叢集停止持續傳輸至目的地：
++
+「napmirror abort-source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+以下範例會停止來源SVM「svm1」與目的地SVM「svm_backup」之間的持續傳輸：
+
++
+[listing]
+----
+cluster_dst::> snapmirror abort -source-path svm1: -destination-path svm_backup:
+----
+. 從目的地SVM或目的地叢集、中斷複寫關係：
++
+「napmirror中斷-source-path _svm_：-destination-path _svm_：」
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+====
++
+以下範例打破了來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
+----
+. 如果您在建立SVM複寫關係時設定了「-idente-preserve true」、請停止來源SVM：
++
+「Vserver stop -vserver _svm_」
+
++
+以下範例會停止來源SVM「svm1」：
+
++
+[listing]
+----
+cluster_src::> vserver stop svm1
+----
+. 啟動目的地SVM：
++
+「vserver start -vserver _svm_」
+
++
+以下範例會啟動目的地SVM「shvm_backup」：
+
++
+[listing]
+----
+cluster_dst::> vserver start svm_backup
+----
+
+
+如所述、設定SVM目的地磁碟區以進行資料存取 link:configure-destination-volume-data-access-concept.html["設定目的地Volume以進行資料存取"]。

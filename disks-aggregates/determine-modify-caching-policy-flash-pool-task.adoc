@@ -1,0 +1,54 @@
+---
+permalink: disks-aggregates/determine-modify-caching-policy-flash-pool-task.html 
+sidebar: sidebar 
+keywords: determine, modify, cache, policy, flash pool, aggregates 
+summary: 您可以將快取保留原則指派給Flash Pool Aggregate中的磁碟區、以決定磁碟區資料保留在Flash Pool快取中的時間長度。不過、在某些情況下、變更快取保留原則可能不會影響磁碟區資料保留在快取中的時間量。 
+---
+= 判斷是否要修改Flash Pool Aggregate總覽的快取原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將快取保留原則指派給Flash Pool Aggregate中的磁碟區、以決定磁碟區資料保留在Flash Pool快取中的時間長度。不過、在某些情況下、變更快取保留原則可能不會影響磁碟區資料保留在快取中的時間量。
+
+如果您的資料符合下列任一條件、變更快取保留原則可能不會造成影響：
+
+* 您的工作負載是連續的。
+* 您的工作負載不會重新讀取固態硬碟（SSD）中快取的隨機區塊。
+* 磁碟區的快取大小太小。
+
+
+下列步驟會檢查這些情況。工作必須以進階權限模式完成。
+
+.步驟
+. 檢視工作負載Volume：
++
+「開始統計資料-物件工作負載磁碟區」
+
+. 判斷Volume的工作負載模式：
++
+「tnetfitical show -object Workload Volume -instance _Volume -Workload _-counter連續讀取」
+
+. 判斷Volume的命中率：
++
+「tstatisticsshow -object WAFL_hya_VVOL -instance _volume _-counter read_ops_replace_pwer百分 點」
+
+. 確定磁碟區的「可快取讀取」和「專案快取分配」：
++
+'System節點執行節點node_name WAFL flexawa start _agger_name_'
+
+. 顯示AWA摘要：
++
+'System節點執行節點node_name WAFL flexawa print _agger_name_'
+
+. 比較Volume的命中率與「可快取讀取」。
++
+如果磁碟區的命中率大於「可快取的讀取」、則工作負載不會重新讀取快取到SSD中的隨機區塊。
+
+. 將磁碟區目前的快取大小與「Project Cache Alloc'」進行比較。
++
+如果磁碟區目前的快取大小大於「Project Cache Alloc」、則磁碟區快取的大小太小。
+
+

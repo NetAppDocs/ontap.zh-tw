@@ -1,0 +1,52 @@
+---
+permalink: flexgroup/create-snapmirror-cascade-fanout-reference.html 
+sidebar: sidebar 
+keywords: consider, create, snapmirror, cascade, fanout, relationship, flexgroup 
+summary: 在建立FlexGroup SnapMirror串聯和針對SnapMirror磁碟區的扇出關係時、請謹記支援考量和限制。 
+---
+= 為FlexGroups建立SnapMirror串聯和展開關係的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立FlexGroup SnapMirror串聯和針對SnapMirror磁碟區的扇出關係時、請謹記支援考量和限制。
+
+
+
+== 建立串聯關係的考量
+
+* 每種關係都可以是叢集間關係或叢集內關係。
+* 這兩種關係都支援所有非同步原則類型、包括非同步鏡射、鏡射保存庫和保存庫。
+* 僅支援「MirrorAllSnapshots」、而非「MirrorLatest」非非同步鏡射原則。
+* 支援同步更新串聯的XDP關係。
+* 支援移除A至B和B至C、並重新同步A至C或重新同步C至A
+* A和B FlexGroup 版的支援功能也可在所有節點執行ONTAP 版本的支援版本號為b、9.9.1或更新版本時進行。
+* 支援從B或C FlexGroup 等磁碟區還原作業。
+* 不支援在不支援之間傳輸FlexGroup 資料、而目的地則是還原關係的來源。
+* 無法將還原目的地FlexGroup 作為任何其他FlexGroup 關聯的目的地。
+* 還原檔案作業的限制與一般的還原作業相同。FlexGroup FlexGroup
+* 叢集中FlexGroup B和C等功能區所在的所有節點、都必須執行ONTAP 版本號為「版本號」的版本號為「版本號」的版本號。
+* 支援所有擴充和自動擴充功能。
+* 在串聯組態（例如A到B到C）中、如果A到B和B到C的組成SnapMirror關係數量不同、則B到C SnapMirror關係不支援來源的中止作業。
+* System Manager不支援ONTAP 在支援方面的串聯關係。
+* 將A轉B轉B轉C組FlexVol 的不景點關係轉換為FlexGroup 不景點關係時、您必須先將B轉換為C躍點。
+* REST API也支援所有的與REST支援之原則類型關係的支援、可在串聯式功能表組態中使用。FlexGroup FlexGroup
+* 就FlexVol 像使用人際關FlexGroup 係一樣、「napmirror Protect」命令也不支援執行不完整的功能。
+
+
+
+
+== 建立扇出關係的考量事項
+
+* 支援兩FlexGroup 個或更多的「橫向」關係、例如A到B、A到C、最多8個「扇形」雙腳。
+* 每種關係都可以是叢集間或叢集內的關係。
+* 這兩種關係都支援並行更新。
+* 支援所有擴充和自動擴充功能。
+* 如果關係的扇形分支具有不同數量的組成SnapMirror關係、則來源的中止作業不支援A對B和A對C關係。
+* 叢集中來源和目的地FlexGroups所在的所有節點、都必須執行ONTAP 版本號為「更新版本」的版本號。
+* 目前支援FlexGroup 的所有非同步原則類型均可用於Fanout關係。
+* 您可以從B到C FlexGroups執行還原作業。
+* 所有具有REST支援之原則類型的扇出組態、FlexGroup 也支援在支援的靜態組態中使用REST API。
+

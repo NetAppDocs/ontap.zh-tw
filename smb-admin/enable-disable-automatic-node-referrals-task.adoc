@@ -1,0 +1,49 @@
+---
+permalink: smb-admin/enable-disable-automatic-node-referrals-task.html 
+sidebar: sidebar 
+keywords: enable, smb, automatic, node, referral, client, access, performance, disable, ontap, enable or disable smb automatic node referrals 
+summary: 您可以啟用SMB自動節點參照、以提升SMB用戶端存取效能。如果您不想ONTAP 讓使用者向SMB用戶端轉介資料、可以停用自動節點轉介。 
+---
+= 啟用或停用SMB自動節點參照
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用SMB自動節點參照、以提升SMB用戶端存取效能。如果您不想ONTAP 讓使用者向SMB用戶端轉介資料、可以停用自動節點轉介。
+
+CIFS伺服器必須設定並在儲存虛擬機器（SVM）上執行。
+
+SMB自動節點參照功能預設為停用。您可以視需要在每個SVM上啟用或停用此功能。
+
+此選項適用於進階權限層級。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 視需要啟用或停用SMB自動節點參照：
++
+|===
+| 如果您想要SMB自動節點參照... | 輸入下列命令... 
+
+
+ a| 
+已啟用
+ a| 
+「Vserver CIFS選項修改-vserver vserver_name -is參照啟用的true」
+
+
+
+ a| 
+已停用
+ a| 
+「vserver CIFS選項修改-vserver vserver_name -is參照啟用的假」
+
+|===
++
+選項設定會對新的SMB工作階段生效。只有在現有的快取逾時過期時、具有現有連線的用戶端才能使用節點參照。
+
+. 切換至管理權限層級：「et -priv榮幸admin」
+
+
+xref:server-options-reference.adoc[可用的SMB伺服器選項]

@@ -1,0 +1,48 @@
+---
+permalink: authentication/configure-authentication-tunnel-task.html 
+sidebar: sidebar 
+keywords: configure, authentication tunnel, SMB server 
+summary: 如果您已為資料SVM設定SMB伺服器、則可以使用安全登入網域通道create命令、將SVM設定為閘道或通道、以供AD存取叢集。 
+---
+= 設定驗證通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已經為資料SVM設定了SMB伺服器、可以使用「安全登入網域通道建立」命令、將SVM設定為閘道、或是_通道_、以便AD存取叢集。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須為資料SVM設定SMB伺服器。
+* 您必須啟用AD網域使用者帳戶、才能存取叢集的管理SVM。
+* 您必須是叢集管理員才能執行此工作。
+
+
+從ONTAP 《S209.10.1》開始、如果您有SVM閘道（網域通道）可供AD存取、則如果您在AD網域中停用了NTLM、就可以使用Kerberos進行系統管理驗證。在舊版中、不支援Kerberos搭配SVM閘道的管理驗證。此功能預設為可用、不需設定。
+
+一律會先嘗試Kerberos驗證。一旦失敗、就會嘗試執行NTLM驗證。
+
+.步驟
+. 將啟用SMB的資料SVM設定為驗證通道、以便AD網域控制器存取叢集：
++
+「安全登入網域通道建立-vserver Svm_name」
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+SVM必須執行、使用者才能通過驗證。
+
+====
++
+下列命令可將啟用SMB的資料SVM'engData'設定為驗證通道。
+
++
+[listing]
+----
+cluster1::>security login domain-tunnel create -vserver engData
+----
+

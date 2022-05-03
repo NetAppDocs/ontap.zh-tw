@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: networking/remove_dynamic_routes_from_routing_tables.html 
+keywords: dynamic, route, routes, icmp, ipv4, ipv6, routing, table, timeout, expire, expiry, performance, delete, deleting, remove, removing, remove dynamic routes to prevent a loss of connectivity when routes expire, remove dynamic routes from routing tables, network tuning icmp show, network tuning icmp6 show 
+summary: 移除動態路由、以避免路由過期時失去連線 
+---
+= 從路由表中移除動態路由
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+收到針對IPv6和IPv6的ICMP重新導向時、動態路由會新增至路由表。根據預設、動態路由會在300秒後移除。如果您想要在不同時間內維持動態路由、可以變更逾時值。
+
+您可以將逾時值從0設定為65,535秒。如果您將值設為0、則路由永遠不會過期。移除動態路由可避免因無效路由持續存在而導致連線中斷。
+
+.步驟
+. 顯示目前的逾時值。
++
+** 對於IPV4：
++
+....
+network tuning icmp show
+....
+** 對於IPv6：
++
+....
+network tuning icmp6 show
+....
+
+
+. 修改逾時值。
++
+** 對於IPV4：
++
+....
+network tuning icmp modify -node node_name -redirect-timeout timeout_value
+....
+** 對於IPv6：
++
+....
+network tuning icmp6 modify -node node_name -redirect-v6-timeout timeout_value
+....
+
+
+. 確認逾時值已正確修改。
++
+** 對於IPV4：
++
+....
+network tuning icmp show
+....
+** 對於IPv6：
++
+....
+network tuning icmp6 show
+....
+
+
+

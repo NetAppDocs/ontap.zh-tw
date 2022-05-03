@@ -1,0 +1,244 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_firewall_policies_for_lifs.html 
+keywords: firewall, policy, policies, security, cluster, unauthorized, access, storage, system, service, enable, enabling, disable, disabling, apply, applying, create, creating, add, adding, lif, protocols, nfs, smb, cifs, svm, firewall policies enhance the security of the cluster, configure firewall policies for lifs, firewall policies and lifs, network interface create, network interface modify, firewall-policy, portmap service configuration, what behavior you can expect portmap service, how to add or remove the portmap service, create a firewall policy and assigning it to a lif, example of creating a firewall policy and applying it to a lif 
+summary: 防火牆原則可增強叢集的安全性 
+---
+= 設定lifs的防火牆原則
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+設定防火牆可增強叢集的安全性、並有助於防止未獲授權的存取儲存系統。根據預設、內建防火牆會設定為允許遠端存取特定的IP服務集、以供資料、管理及叢集間生命體使用。
+
+從功能部分9.10.1開始ONTAP ：
+
+* 防火牆服務原則已過時、並由LIF服務原則取代。之前、內建防火牆是使用防火牆原則來管理。此功能現在是使用LIF服務原則來完成。
+* 所有的防火牆原則都是空的、而且不會開啟基礎防火牆中的任何連接埠。而是必須使用LIF服務原則開啟所有連接埠。
+* 升級至9.10.1或更新版本、從防火牆服務原則轉換至LIF服務原則之後、不需要採取任何行動。系統會自動建構符合先前ONTAP 版本所使用之防火牆服務原則的LIF服務原則。如果您使用指令碼或其他工具來建立及管理自訂防火牆原則、則可能需要升級這些指令碼、以建立自訂服務原則。
+
+
+若要深入瞭解、請參閱 link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ONTAP"]。
+
+防火牆原則可用來控制對管理服務傳輸協定的存取、例如SSH、HTTP、HTTPS、Telnet、NTP、 NDMP、NDMPS、RSH、DNS或SNMP。無法為NFS或SMB等資料傳輸協定設定防火牆原則。
+
+您可以使用下列方式來管理防火牆服務和原則：
+
+* 啟用或停用防火牆服務
+* 顯示目前的防火牆服務組態
+* 使用指定的原則名稱和網路服務建立新的防火牆原則
+* 將防火牆原則套用至邏輯介面
+* 建立新的防火牆原則、該原則是現有原則的確切複本
++
+您可以使用這項功能、在同一個SVM中建立具有類似特性的原則、或將原則複製到不同的SVM。
+
+* 顯示防火牆原則的相關資訊
+* 修改防火牆原則所使用的IP位址和網路遮罩
+* 刪除LIF未使用的防火牆原則
+
+
+
+
+== 防火牆原則與生命
+
+LIF防火牆原則是用來限制透過每個LIF存取叢集。您需要瞭解預設防火牆原則如何影響每種LIF類型的系統存取、以及如何自訂防火牆原則以提高或降低LIF的安全性。
+
+使用「網路介面create」或「網路介面modify」命令設定LIF時、針對「-firewall-policy」參數指定的值會決定允許存取LIF的服務傳輸協定和IP位址。
+
+在許多情況下、您可以接受預設的防火牆原則值。在其他情況下、您可能需要限制特定IP位址和特定管理服務傳輸協定的存取。可用的管理服務傳輸協定包括SSH、HTTP、HTTPS、Telnet、NTP、 NDMP、NDMPS、RSH, DNS及SNMP。
+
+所有叢集lifs的防火牆原則預設為「」、無法修改。
+
+下表說明在ONTAP 建立LIF時指派給每個LIF的預設防火牆原則、具體取決於其角色（版本號為9.5或更早）或服務原則ONTAP （版本為9.6及更新版本）：
+
+|===
+
+
+| 防火牆原則 | 預設服務傳輸協定 | 預設存取 | LIF套用至 
+
+
+ a| 
+管理
+ a| 
+DNS、http、https、NDMP、ndmps、 NTP、SNMP、ssh
+ a| 
+任何位址（0.00.0.0/0）
+ a| 
+叢集管理、SVM管理及節點管理生命里
+
+
+
+ a| 
+MGMT-NFS
+ a| 
+DNS、http、https、NDMP、ndmps、 NTP、portmap、SNMP、ssh
+ a| 
+任何位址（0.00.0.0/0）
+ a| 
+也支援SVM管理存取的資料生命量
+
+
+
+ a| 
+叢集間
+ a| 
+HTTPS、NDMP、ndmps
+ a| 
+任何位址（0.00.0.0/0）
+ a| 
+所有叢集間LIF
+
+
+
+ a| 
+資料
+ a| 
+DNS、NDMP、ndms、portmap
+ a| 
+任何位址（0.00.0.0/0）
+ a| 
+所有資料生命量
+
+|===
+
+
+== portmap服務組態
+
+portmap服務會將RPC服務對應至其接聽的連接埠。
+
+Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP 從版本9.4到ONTAP 版本9.6均可設定、並從ONTAP 版本9.7開始自動管理。
+
+* 在更新版本的版本中、連接埠對應服務（rpcbind）一律可在連接埠111上存取、因為網路組態必須仰賴內建的不只是第三方防火牆的功能。ONTAP ONTAP
+* 從S得9.4到S得9.6、您可以修改防火牆原則、以控制portmap服務是否可在特定的生命期中存取。ONTAP ONTAP
+* 從功能更新至功能更新至功能更新至功能更新至功能更新至功能更新。ONTAP而是會自動為所有支援NFS服務的LIF開啟portmap連接埠。
+
+
+* Portmap服務可在ONTAP 防火牆內設定、範圍從版本9.4到ONTAP 版本9.6。*
+
+本主題的其餘部分將討論如何設定ONTAP 從版本ONTAP 號至版本號之間的適用效能提升介面防火牆服務。
+
+視組態而定、您可能無法在特定類型的生命期（通常是管理生命期和叢集間生命期）上存取服務。在某些情況下、您甚至可能無法存取資料生命期。
+
+從版本9.4到版本9.6的功能設計、可在升級時提供無縫轉換。ONTAP ONTAP如果已透過特定類型的lifs存取portmap服務、則可透過這些類型的lifs繼續存取。如同先前ONTAP 的版本、您可以在LIF類型的防火牆原則中、指定防火牆內可存取的服務。
+
+叢集中的所有節點都必須執行ONTAP 從功能上到ONTAP 功能上的從功能上的資訊、才能使行為生效。只有傳入流量會受到影響。
+
+新規則如下：
+
+* 升級至9.4到9.6版時ONTAP 、根據預設或自訂、將portmap服務新增至所有現有的防火牆原則。
+* 建立新叢集或新的IPspace時ONTAP 、不將portmap服務新增至預設資料原則、而只新增至預設管理或叢集間原則。
+* 您可以視需要將portmap服務新增至預設或自訂原則、並視需要移除服務。
+
+
+若要將portmap服務新增至SVM或叢集防火牆原則（可在防火牆內存取）、請輸入：
+
+「系統服務防火牆原則create -vserver SVM -policy mgmt| intercluster | data| custom -service portmap」
+
+若要從SVM或叢集防火牆原則中移除portmap服務（使其在防火牆內無法存取）、請輸入：
+
+「系統服務防火牆原則刪除-vserver SVM -policy mgmt| intercluster | data| custom -service portmap」
+
+您可以使用網路介面modify命令、將防火牆原則套用至現有的LIF。如需完整的命令語法、請參閱 link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]。
+
+
+
+== 建立防火牆原則並將其指派給LIF
+
+當您建立LIF時、預設的防火牆原則會指派給每個LIF。在許多情況下、預設的防火牆設定運作良好、您不需要變更這些設定。如果您想要變更可存取LIF的網路服務或IP位址、可以建立自訂防火牆原則並將其指派給LIF。
+
+.關於這項工作
+* 您無法使用「policy」名稱「data"、「intercluster」、「cluster」或「mGMT」來建立防火牆原則。
++
+這些值保留給系統定義的防火牆原則。
+
+* 您無法設定或修改叢集l生命 的防火牆原則。
++
+所有服務類型的叢集LIF防火牆原則都設為0.00.0.0/0。
+
+* 如果您需要從原則中移除服務、則必須刪除現有的防火牆原則並建立新原則。
+* 如果叢集上已啟用IPv6、您可以使用IPv6位址建立防火牆原則。
++
+啟用IPv6之後、「data"、「叢集間」和「mGMT」防火牆原則會在其接受的位址清單中包括：：：/0、IPv6萬用字元。
+
+* 使用System Manager設定跨叢集的資料保護功能時、您必須確保叢集間LIF IP位址包含在允許的清單中、而且叢集間LIF和公司擁有的防火牆都允許HTTPS服務。
++
+根據預設、「叢集間」防火牆原則允許從所有IP位址（0.00.0.0/0或：/0 for IPv6）存取、並啟用HTTPS、NDMP和NDMPS服務。如果您修改此預設原則、或是為叢集間LIF建立自己的防火牆原則、則必須將每個叢集間LIF IP位址新增至允許的清單、並啟用HTTPS服務。
+
+* 從支援SJS9.6開始ONTAP 、不支援HTTPS和SSH防火牆服務。
++
+在S69.6中ONTAP 、「management -https」和「management -ssh」LIF服務可用於HTTPS和SSH管理存取。
+
+
+
+.步驟
+. 建立防火牆原則、讓特定SVM上的LIF可以使用：
++
+「系統服務防火牆原則」會建立-vserver _vserver_name_-policy _policy_name_-service _network_service_-list_ip_address/mask_
+
++
+您可以多次使用此命令、為防火牆原則中的每個服務新增多個網路服務和允許的IP位址清單。
+
+. 使用「系統服務防火牆原則show」命令、確認原則已正確新增。
+. 將防火牆原則套用至LIF：
++
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-firewall-policy _policy_name_」
+
+. 使用「network interface show -Fields firewall-policy」命令、確認原則已正確新增至LIF。
+
+
+下列命令會建立名為data_http的防火牆原則、以啟用從10.10子網路IP位址存取HTTP和HTTPS傳輸協定、將該原則套用至SVM VS1上名為data1的LIF、然後顯示叢集上的所有防火牆原則：
+
+....
+system services firewall policy create -vserver vs1 -policy data_http -service http - allow-list 10.10.0.0/16
+....
+....
+system services firewall policy show
+
+Vserver Policy       Service    Allowed
+------- ------------ ---------- -------------------
+cluster-1
+        data
+                     dns        0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+cluster-1
+        intercluster
+                     https      0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+cluster-1
+        mgmt
+                     dns        0.0.0.0/0
+                     http       0.0.0.0/0
+                     https      0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+                     ntp        0.0.0.0/0
+                     snmp       0.0.0.0/0
+                     ssh        0.0.0.0/0
+vs1
+        data_http
+                     http       10.10.0.0/16
+                     https      10.10.0.0/16
+
+network interface modify -vserver vs1 -lif data1 -firewall-policy data_http
+
+network interface show -fields firewall-policy
+
+vserver  lif                  firewall-policy
+-------  -------------------- ---------------
+Cluster  node1_clus_1
+Cluster  node1_clus_2
+Cluster  node2_clus_1
+Cluster  node2_clus_2
+cluster-1 cluster_mgmt         mgmt
+cluster-1 node1_mgmt1          mgmt
+cluster-1 node2_mgmt1          mgmt
+vs1      data1                data_http
+vs3      data2                data
+....

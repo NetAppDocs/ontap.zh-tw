@@ -1,0 +1,44 @@
+---
+permalink: disks-aggregates/display-partition-ownership-task.html 
+sidebar: sidebar 
+keywords: display, disk, partition, ownership 
+summary: 您可以檢視磁碟擁有權、以判斷哪個節點控制儲存設備。您也可以在使用共用磁碟的系統上檢視磁碟分割擁有權。 
+---
+= 顯示磁碟和分割區擁有權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視磁碟擁有權、以判斷哪個節點控制儲存設備。您也可以在使用共用磁碟的系統上檢視磁碟分割擁有權。
+
+.步驟
+. 使用"shorage disk show -所有權"命令顯示實體磁碟的擁有權：
++
+[listing]
+----
+cluster::> storage disk show -ownership
+Disk     Aggregate Home     Owner    DR Home  Home ID     Owner ID   DR Home ID  Reserver    Pool
+-------- --------- -------- -------- -------- ---------- ----------- ----------- ----------- ------
+1.0.0    aggr0_2   node2    node2    -        2014941509 2014941509  -           2014941509  Pool0
+1.0.1    aggr0_2   node2    node2    -        2014941509 2014941509  -           2014941509  Pool0
+1.0.2    aggr0_1   node1    node1    -        2014941219 2014941219  -           2014941219  Pool0
+1.0.3    -         node1    node1    -        2014941219 2014941219  -           2014941219  Pool0
+...
+----
+. 如果您的系統使用共享磁碟、請使用「儲存磁碟show -partition-所有權」命令來顯示磁碟分割擁有權：
++
+[listing]
+----
+cluster::> storage disk show -partition-ownership
+                               Root                    Data        Container  Container
+Disk     Aggregate Root Owner  Owner ID    Data Owner  Owner ID    Owner      Owner ID
+-------- --------- ----------- ----------- ----------- ----------- ---------- -----------
+1.0.0    -         node1       1886742616  node1       1886742616  node1      1886742616
+1.0.1    -         node1       1886742616  node1       1886742616  node1      1886742616
+1.0.2    -         node2       1886742657  node2       1886742657  node2      1886742657
+1.0.3    -         node2       1886742657  node2       1886742657  node2      1886742657
+...
+----
+

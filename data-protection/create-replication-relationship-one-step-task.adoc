@@ -1,0 +1,101 @@
+---
+permalink: data-protection/create-replication-relationship-one-step-task.html 
+sidebar: sidebar 
+keywords: configure, replication, relationship, one step, snapmirror, protect, policy, volumes, job schedule 
+summary: 從ONTAP 功能介紹9.3開始、您可以使用SnapMirror Protect命令、在單一步驟中設定資料保護關係。您可以指定要複寫的磁碟區清單、目的地叢集上的SVM、工作排程和SnapMirror原則。SnapMirror Protect則是其餘功能。 
+---
+= 只需一個步驟即可設定複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能介紹9.3開始ONTAP 、您可以使用「napmirror protection」命令、在單一步驟中設定資料保護關係。您可以指定要複寫的磁碟區清單、目的地叢集上的SVM、工作排程和SnapMirror原則。剩下的就是「napmirror Protect」。
+
+.您需要的是 #8217 ；需要的是什麼
+* 來源與目的地叢集和SVM必須進行對等關係。
++
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+* 目的地Volume上的語言必須與來源Volume上的語言相同。
+
+
+「napmirror Protect」命令會選擇與指定SVM相關聯的集合體。如果SVM沒有相關聯的Aggregate、則會從叢集中的所有Aggregate中進行選擇。集合體的選擇取決於可用空間量和集合體上的磁碟區數量。
+
+然後執行以下步驟：
+
+* 為要複寫之磁碟區清單中的每個磁碟區建立具有適當類型和保留空間量的目的地磁碟區。
+* 設定適合您所指定原則的複寫關係。
+* 初始化關係。
+
+
+目的地Volume名稱的格式為「_SOUR資料 來源磁碟區名稱_DST_」。如果與現有名稱發生衝突、命令會在磁碟區名稱加上一個數字。您可以在命令選項中指定字首和/或字尾。後置字元會取代系統提供的「dst」後置字元。
+
+在不含更新版本的版本中、目的地Volume最多可包含251個Snapshot複本。ONTAP在0、9.4及更新版本中、目的地Volume最多可包含1019個Snapshot複本。ONTAP
+
+[NOTE]
+====
+初始化可能會很耗時。「napmirror Protect」功能不會等待初始化完成、而不會等到工作完成。因此、您應該使用「shnapmirror show」命令、而非「jobshow」命令來判斷初始化完成的時間。
+
+====
+從ONTAP 推出SnapMirror 9.5開始、SnapMirror同步關係可透過使用「napmirror Protect」命令來建立。
+
+.步驟
+. 只需一個步驟即可建立及初始化複寫關係：
++
+"napmirror Protect -path-list _Svm:Volume _|_cluster：//SVM/Volume _、... destination-vserver _destination_svm_-policy _policy _-schedule _schedule_-aut-initialize true|假-destination-volume前置字元_-tape-volume後置字元_`
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。自動初始化選項預設為「true」。
+
+====
++
+以下範例使用預設的「鏡像AllSnapshots（即時資料））原則來建立及初始化SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAllSnapshots -schedule replication_daily
+----
++
+[NOTE]
+====
+您可以視需要使用自訂原則。如需詳細資訊、請參閱 link:create-custom-replication-policy-concept.html["建立自訂複寫原則"]。
+
+====
++
+以下範例SnapVault 使用預設的「XDPDefault」原則來建立及初始化等功能關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy XDPDefault -schedule replication_daily
+----
++
+以下範例使用預設的「鏡像AndVault（鏡像AndVault）原則來建立及初始化統一化複寫關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAndVault
+----
++
+以下範例使用預設的「同步化（Sync）原則來建立及初始化SnapMirror同步關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_sync -policy Sync
+----
++
+[NOTE]
+====
+對於SnapVault 統一化的複寫原則、您可能會發現在目的地上定義建立上次傳輸之Snapshot複本複本的排程很有用。如需詳細資訊、請參閱 link:define-schedule-create-local-copy-destination-task.html["定義在目的地上建立本機複本的排程"]。
+
+====
+
+
+使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。

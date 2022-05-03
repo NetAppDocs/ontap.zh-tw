@@ -1,0 +1,76 @@
+---
+permalink: smb-hyper-v-sql/verify-kerberos-ntlmv2-authentication-task.html 
+sidebar: sidebar 
+keywords: nondisruptive, operation, hyper, v, verify, kerberos, ntlmv2, authentication, cifs, server, svm, data 
+summary: Hyper-V over SMB的不中斷營運需要資料SVM和Hyper-V伺服器上的CIFS伺服器同時允許Kerberos和NTLMv2驗證。您必須驗證CIFS伺服器和Hyper-V伺服器上的設定、以控制允許的驗證方法。 
+---
+= 驗證是否同時允許Kerberos和NTLMv2驗證（Hyper-V over SMB共享）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Hyper-V over SMB的不中斷營運需要資料SVM和Hyper-V伺服器上的CIFS伺服器同時允許Kerberos和NTLMv2驗證。您必須驗證CIFS伺服器和Hyper-V伺服器上的設定、以控制允許的驗證方法。
+
+建立持續可用的共用連線時、必須進行Kerberos驗證。遠端VSS程序的一部分使用了NTLMv2驗證。因此、Hyper-V over SMB組態必須支援使用這兩種驗證方法的連線。
+
+下列設定必須設定為允許Kerberos和NTLMv2驗證：
+
+* 必須在儲存虛擬機器（SVM）上停用SMB的匯出原則。
+
+
+在SVM上一律會啟用Kerberos和NTLMv2驗證、但匯出原則可用來根據驗證方法來限制存取。
+
+SMB的匯出原則是選用的、預設為停用。如果停用匯出原則、則CIFS伺服器預設會允許Kerberos和NTLMv2驗證。
+
+* CIFS伺服器和Hyper-V伺服器所屬的網域必須同時允許Kerberos和NTLMv2驗證。
+
+
+Active Directory網域預設會啟用Kerberos驗證。不過、可以使用「安全性原則」設定或「群組原則」來禁止NTLMv2驗證。
+
+.步驟
+. 請執行下列步驟、確認SVM上的匯出原則已停用：
++
+.. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+.. 驗證是否將"-is exportpolice-enable" CIFS server選項設置爲"假"：
++
+hy*vserver CIFS選項可顯示-vserver _vserver_name_-fields vserver、is匯出原則啟用*
+
+.. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+
+
+. 如果未停用SMB的匯出原則、請停用這些原則：
++
+hy*vserver CIFS選項可修改-vserver _vserver_name_-is匯出原則啟用的fal*
+
+. 確認網域中同時允許使用NTLMv2和Kerberos驗證。
++
+如需判斷網域中允許使用哪些驗證方法的相關資訊，請參閱Microsoft TechNet程式庫。
+
+. 如果網域不允許NTMLv2驗證、請使用Microsoft文件中所述的其中一種方法來啟用NTLMv2驗證。
+
+
+下列命令可驗證SVM VS1上的SMB匯出原則是否已停用：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields vserver,is-exportpolicy-enabled
+
+vserver  is-exportpolicy-enabled
+-------- -----------------------
+vs1      false
+
+cluster1::*> set -privilege admin
+----

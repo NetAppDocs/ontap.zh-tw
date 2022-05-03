@@ -1,0 +1,96 @@
+---
+permalink: volumes/configure-flexvol-delete-flexclone-files-luns-task.html 
+sidebar: sidebar 
+keywords: configure, flexvol volume, automatically, delete, flexclone files, flexclone luns 
+summary: 當磁碟區中的可用空間降至特定臨界值以下時、您可以啟用FlexVol 啟用「自動刪除」功能、自動刪除FlexClone檔案和FlexClone LUN。 
+---
+= 設定FlexVol 一個動態磁碟區、以自動刪除FlexClone檔案和FlexClone LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當磁碟區中的可用空間降至特定臨界值以下時、您可以啟用FlexVol 啟用「自動刪除」功能、自動刪除FlexClone檔案和FlexClone LUN。
+
+.您需要的是 #8217 ；需要的是什麼
+* 這個流通量必須包含FlexClone檔案和FlexClone LUN、而且必須處於線上狀態。FlexVol
+* 不能將此資訊區做為唯讀磁碟區。FlexVol
+
+
+.步驟
+. 使用FlexVol 「volume snapshot autod刪除modify」命令、自動刪除位於現象區的FlexClone檔案和FlexClone LUN。
++
+** 對於"-觸發器"參數、您可以指定"volume（磁碟區）"或"nap_reserve"。
+** 對於"-dest-list"參數、無論您是否只想刪除一種類型的實體複本、都必須指定「LUN_clone、file_clone」。以下範例說明如何啟用Volume vol1以觸發自動刪除FlexClone檔案和FlexClone LUN以進行空間回收、直到25%的磁碟區包含可用空間為止：
++
+[listing]
+----
+cluster1::> volume snapshot autodelete modify -vserver vs1 -volume vol1 -enabled true -commitment disrupt -trigger volume -target-free-space 25 -destroy-list lun_clone,file_clone
+
+Volume modify successful on volume:vol1
+----
++
+[NOTE]
+====
+啟用FlexVol 自動刪除功能時、如果您將「-致力」參數的值設為「estroy」、則當磁碟區中的可用空間降至指定臨界值以下時、所有設為「true」的FlexClone檔案和FlexClone LUN都可能會被刪除。不過、將「-autodete」參數設為「假」的FlexClone檔案和FlexClone LUN將不會刪除。
+
+====
+
+
+. 使用FlexVol 「volume snapshot autodete show」命令、確認在支援的現象中已啟用自動刪除FlexClone檔案和FlexClone LUN。
++
+以下範例顯示已啟用Volume vol1來自動刪除FlexClone檔案和FlexClone LUN：
+
++
+[listing]
+----
+cluster1::> volume snapshot autodelete show -vserver vs1 -volume vol1
+
+         Vserver Name: vs1
+          Volume Name: vol1
+          Enabled: true
+           Commitment: disrupt
+         Defer Delete: user_created
+         Delete Order: oldest_first
+  Defer Delete Prefix: (not specified)
+    Target Free Space: 25%
+              Trigger: volume
+     *Destroy List: lun_clone,file_clone*
+Is Constituent Volume: false
+----
+. 執行下列步驟、確保您要刪除的磁碟區中的FlexClone檔案和FlexClone LUN已啟用自動刪除：
++
+.. 使用「volume file clone autod刪除」命令、自動刪除特定的FlexClone檔案或FlexClone LUN。
++
+您可以使用「volume file clone autodete」命令搭配「-force」參數、強制自動刪除特定的FlexClone檔案或FlexClone LUN。
+
++
+下列範例顯示已啟用磁碟區vol1中所含的FlexClone LUN lun1_clone自動刪除：
+
++
+[listing]
+----
+cluster1::> volume file clone autodelete -vserver vs1 -clone-path /vol/vol1/lun1_clone -enabled true
+----
++
+您可以在建立FlexClone檔案和FlexClone LUN時啟用自動刪除功能。
+
+.. 使用「volume file clone show-autodete」命令、確認FlexClone檔案或FlexClone LUN已啟用自動刪除功能。
++
+下列範例顯示已啟用FlexClone LUN lun1_clone以自動刪除：
+
++
+[listing]
+----
+cluster1::> volume file clone show-autodelete -vserver vs1 -clone-path vol/vol1/lun1_clone
+Vserver Name: vs1
+Clone Path: vol/vol1/lun1_clone
+**Autodelete Enabled: true**
+----
+
+
++
+如需使用命令的詳細資訊、請參閱個別的手冊頁。
+
+

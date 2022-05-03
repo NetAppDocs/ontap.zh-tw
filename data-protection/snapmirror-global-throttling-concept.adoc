@@ -1,0 +1,81 @@
+---
+permalink: data-protection/snapmirror-global-throttling-concept.html 
+sidebar: sidebar 
+keywords: using snapmirror, global, throttling 
+summary: 全域網路節流功能適用於SnapVault 每節點層級的所有SnapMirror和SnapMirror傳輸。 
+---
+= 使用SnapMirror全域節流
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+全域網路節流功能適用於SnapVault 每節點層級的所有SnapMirror和SnapMirror傳輸。
+
+SnapMirror全域節流可限制傳入和/或傳出SnapMirror和SnapVault SnapMirror傳輸所使用的頻寬。此限制會在叢集中的所有節點上強制整個叢集。
+
+例如、如果傳出節流設定為100 Mbps、叢集中的每個節點都會將傳出頻寬設為100 Mbps。如果停用全域節流、則會在所有節點上停用此功能。
+
+[NOTE]
+====
+節流對「Volume Move」（Volume Move）傳輸或負載共享鏡像傳輸沒有影響。雖然資料傳輸率通常以每秒位元數（bps）表示、但節流值必須以每秒千位元組（KB）為單位輸入。
+
+====
+全域節流可搭配SnapMirror和SnapVault SnapMirror傳輸的個別關係節流功能。在每個關係傳輸的總頻寬超過全域節流的值之前、會強制執行每個關係節流、之後會強制執行全域節流。節流值「0」表示停用全域節流。
+
+[NOTE]
+====
+SnapMirror全域節流在SnapMirror同步關係中不會對SnapMirror同步關係造成影響。但是、當SnapMirror同步關係執行非同步傳輸階段（例如初始化作業）或發生「不同步」事件之後、節流功能確實會影響SnapMirror同步關係。因此、不建議使用SnapMirror同步關係來啟用全域節流。
+
+====
+.步驟
+. 啟用全域節流：
++
+「options -option-name replace.throus.enable on | off'
+
++
+以下範例說明如何在「叢集_dst」上啟用SnapMirror全域節流：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.enable on
+----
+. 指定傳入傳輸所使用的最大總頻寬：
++
+「options -option-name replication.throttle.incoming.max_kbs _kbps_」
+
++
+建議的最小節流頻寬為4 KB、最大值為2 Tbps。此選項的預設值為「無限」、表示使用的總頻寬不受限制。
+
++
+下列範例說明如何將傳入傳輸所使用的最大總頻寬設定為100 Mbps：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.incoming.max_kbs 12500
+----
++
+[NOTE]
+====
+100 Mbps = 12500 KB
+
+====
+. 指定傳出傳輸所使用的最大總頻寬：
++
+「options -option-name replite.kower.outgoing_mast_kbs_kps_」
+
++
+kbps是以每秒千位元組為單位的最大傳輸率。有效傳輸率值為1至125000。此選項的預設值為「無限」、表示使用的總頻寬不受限制。
+
++
+下列範例說明如何將傳出傳輸所使用的最大總頻寬設定為100 Mbps：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.outgoing.max_kbs 12500
+----
+

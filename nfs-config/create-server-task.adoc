@@ -1,0 +1,97 @@
+---
+permalink: nfs-config/create-server-task.html 
+sidebar: sidebar 
+keywords: create, nfs, server 
+summary: 驗證叢集上的NFS是否已獲授權之後、您可以使用vserver NFS create命令在SVM上建立NFS伺服器、並指定其支援的NFS版本。 
+---
+= 建立NFS伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+驗證叢集上的NFS是否已獲得授權之後、您可以使用「vserver NFS create」命令在SVM上建立NFS伺服器、並指定其支援的NFS版本。
+
+SVM必須已設定為允許NFS傳輸協定。
+
+SVM可設定為支援一或多個NFS版本。如果您支援NFSv4或更新版本：
+
+* NFSv4使用者ID對應網域名稱在NFSv4伺服器和目標用戶端上必須相同。
++
+只要NFSv4伺服器和用戶端使用相同名稱、就不一定需要與LDAP或NIS網域名稱相同。
+
+* 目標用戶端必須支援NFSv4數值ID設定。
+* 基於安全考量、您應該在NFSv4部署中使用LDAP作為名稱服務。
+
+
+.步驟
+. 驗證叢集上的NFS是否已獲得授權：
++
+「System license show -package NFS」
+
++
+如果沒有、請聯絡您的銷售代表。
+
+. 建立NFS伺服器：
++
+「vserver NFS create -vserver _vserver_name_-v3｛enabled| disabled｝-v4.0｛enabled| disabled｝-v4-id-domain_NFSv4_id_ddomain_-v4-數值ID｛enabled| disabled｝-v4.1｛enabled| disabled｝-v4.1-pNFS｛enabled|
+
++
+您可以選擇啟用任何NFS版本組合。如果您想要支援pNFS、則必須同時啟用「-v4.1」和「-v4.1-pNFS」選項。
+
++
+如果您啟用v4或更新版本、也應該確定下列選項設定正確：
+
++
+** vv4 id-domain'
++
+此選用參數指定NFSv4傳輸協定所定義之使用者和群組名稱字串形式的網域部分。根據預設、ONTAP 如果已設定NIS網域、則會使用該NIS網域；如果未設定、則會使用DNS網域。您必須提供與目標用戶端所使用的網域名稱相符的值。
+
+** vv4數字ID
++
+此選用參數可指定是否啟用NFSv4擁有者屬性中的數字字串識別碼支援。預設設定為已啟用、但您應該確認目標用戶端是否支援此設定。
+
+
+
++
+您可以稍後使用「vserver NFS modify」命令來啟用其他NFS功能。
+
+. 確認NFS正在執行：
++
+「Vserver NFS狀態-vserver _vserver_name_」
+
+. 確認NFS已設定為所需：
++
+「vserver NFS show -vserver _vserver_name_」
+
+
+
+下列命令會在名為VS1的SVM上建立NFS伺服器、並啟用NFSv3和NFSv4.0：
+
+[listing]
+----
+vs1::> vserver nfs create -vserver vs1 -v3 enabled -v4.0 enabled -v4-id-domain my_domain.com
+----
+下列命令可驗證名為VS1的新NFS伺服器的狀態和組態值：
+
+[listing]
+----
+vs1::> vserver nfs status -vserver vs1
+The NFS server is running on Vserver "vs1".
+
+vs1::> vserver nfs show -vserver vs1
+
+                            Vserver: vs1
+                 General NFS Access: true
+                             NFS v3: enabled
+                           NFS v4.0: enabled
+                       UDP Protocol: enabled
+                       TCP Protocol: enabled
+               Default Windows User: -
+                NFSv4.0 ACL Support: disabled
+    NFSv4.0 Read Delegation Support: disabled
+   NFSv4.0 Write Delegation Support: disabled
+            NFSv4 ID Mapping Domain: my_domain.com
+...
+----

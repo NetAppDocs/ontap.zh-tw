@@ -1,0 +1,73 @@
+---
+permalink: encryption-at-rest/restore-external-encryption-keys-93-later-task.html 
+sidebar: sidebar 
+keywords: restoring, external key management, encryption keys 
+summary: 您可以手動還原外部金鑰管理加密金鑰、並將其「推送」至不同的節點。如果您重新啟動的節點在建立叢集的金鑰時暫時停機、您可能會想要這麼做。 
+---
+= 還原外部金鑰管理加密金鑰
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以手動還原外部金鑰管理加密金鑰、並將其「推送」至不同的節點。如果您重新啟動的節點在建立叢集的金鑰時暫時停機、您可能會想要這麼做。
+
+您必須是叢集或SVM管理員、才能執行此工作。
+
+在更新版本的版本中、您可以使用「安全金鑰管理程式金鑰查詢節點node_name」命令來驗證是否需要還原金鑰。ONTAP
+
+在更新版本的版本中、您可以使用「安全金鑰管理程式金鑰顯示」命令來驗證是否需要還原金鑰。ONTAP
+
+.步驟
+. 如果您執行ONTAP 的是更新版本的版本、且根磁碟區已加密、請執行下列步驟：
++
+如果您執行ONTAP 的是更新版本的版本、或是執行ONTAP 的是版本不加密的版本、請跳過此步驟。
+
++
+.. 設定bootargs：+"show kmip.init.ipaddr <ip-address>"+"show kmip.init.netmask <netmask>"+"show kmip.init.gateway <gateway>"+"show kmip.init.interface e0m"+"boot_ontap
+.. 將節點開機至開機功能表、然後選取選項「（11）Configure node" for external key management（設定外部金鑰管理節點）」。
+.. 依照提示輸入管理憑證。
++
+輸入所有管理憑證資訊後、系統會返回開機功能表。
+
+.. 從開機功能表中、選取選項「（1）正常開機」。
+
+
+. 還原金鑰：
++
+[cols="35,65"]
+|===
+
+
+| 此版本... ONTAP | 使用此命令... 
+
+
+ a| 
+更新版本ONTAP
+ a| 
+「安全金鑰管理程式外部還原-vserver SVM節點-key-server host_name | ip_address:連接埠-key-id key_id -key-tag key_tag」
+
+
+
+ a| 
+不含更新版本ONTAP
+ a| 
+「安全金鑰管理程式還原節點節點-address ip_address -key-id key_id -key-tag key_tag'
+
+|===
++
+[NOTE]
+====
+「節點」預設為所有節點。如需完整的命令語法、請參閱手冊頁。啟用內建金鑰管理時、不支援此命令。
+
+====
++
+下列ONTAP 功能可將外部金鑰管理驗證金鑰還原至「cluster1（叢集1）》中的所有節點：
+
++
+[listing]
+----
+clusterl::> security key-manager external restore
+----
+

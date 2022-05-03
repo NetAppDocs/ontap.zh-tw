@@ -1,0 +1,71 @@
+---
+permalink: system-admin/shut-down-node-task.html 
+sidebar: sidebar 
+keywords: shut, down, node, unresponsive, support, personnel, direct, troubleshoot 
+summary: 如果某個節點沒有回應、或是支援人員引導您進行疑難排解、您可以關閉該節點。 
+---
+= 關閉節點
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果某個節點沒有回應、或是支援人員引導您進行疑難排解、您可以關閉該節點。
+
+.步驟
+. 如果叢集包含四個或更多節點、請確認要關閉的節點未保留epsilon：
++
+.. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+.. 判斷哪個節點擁有epsilon：
++
+‘*叢集顯示*’
+
++
+以下範例顯示「'node1'」擁有epsilon：
+
++
+[listing]
+----
+cluster1::*> cluster show
+Node                 Health  Eligibility   Epsilon
+-------------------- ------- ------------  ------------
+node1                true    true          true
+node2                true    true          false
+node3                true    true          false
+node4                true    true          false
+4 entries were displayed.
+----
+.. 如果要關閉的節點保留了epsilon、請從節點移除epsilon：
++
+hy*叢集修改-node_node_name_-epsilon假*
+
+.. 將epsilon指派給另一個將維持正常運作的節點：
++
+hy*叢集修改-node_node_name_-epsilon true*
+
+.. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+
+
+. 使用「系統節點停止」命令來關閉節點。
++
+如果您未指定「-skip-lif-migrate」參數、命令會在關機之前、嘗試將資料和叢集管理lifs同步移轉至另一個節點。如果LIF移轉失敗或逾時、關機程序便會中止、ONTAP 而導致錯誤顯示LIF移轉失敗。
+
++
+您可以同時使用「dump」參數、以手動方式觸發關機核心傾印。
+
++
+下列範例會關閉名為「'node1'」的節點、以進行硬體維護：
+
++
+[listing]
+----
+cluster1::> system node halt -node node1 -reason 'hardware maintenance'
+----
+

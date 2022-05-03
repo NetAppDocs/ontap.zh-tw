@@ -1,0 +1,38 @@
+---
+permalink: nfs-admin/enable-access-windows-nfs-clients-task.html 
+sidebar: sidebar 
+keywords: enable, access, windows, nfs, clients 
+summary: 支援從Windows NFSv3用戶端存取檔案。ONTAP這表示執行Windows作業系統且支援NFSv3的用戶端現在可以存取叢集上NFSv3匯出的檔案。若要成功使用此功能、您必須正確設定儲存虛擬機器（SVM）、並注意某些需求和限制。 
+---
+= 啟用Windows NFS用戶端的存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援從Windows NFSv3用戶端存取檔案。ONTAP這表示執行Windows作業系統且支援NFSv3的用戶端現在可以存取叢集上NFSv3匯出的檔案。若要成功使用此功能、您必須正確設定儲存虛擬機器（SVM）、並注意某些需求和限制。
+
+必須在SVM上啟用NFSv3。
+
+依照預設、Windows NFSv3用戶端支援會停用。
+
+Windows NFSv3用戶端不支援網路狀態監視器（NSM）傳輸協定。因此、Windows NFSv3用戶端工作階段可能會在儲存容錯移轉和磁碟區移動作業期間發生中斷。
+
+.步驟
+. 啟用Windows NFSv3用戶端支援：
++
+「vserver NFS modify -vserver vserver_name -v3-ms-dos-clients enabl用」
+
+. 在所有支援Windows NFSv3用戶端的SVM上、停用「-enable e-edjuakers」和「-v3-connection-drop」參數：「vserver NFS modify -vserver vserver_name -enable e-j胡 點唱機假-v3-connection-dDrop disabled」
++
+Windows NFSv3用戶端現在可以在儲存系統上掛載匯出。
+
+. 指定「-o mtype=hard」選項、確保每個Windows NFSv3用戶端都使用硬掛載。
++
+這是確保可靠掛載的必要條件。
+
++
+「Mount-o mtype=hard \10.53.10\vol\vol1 z：\」
+
+

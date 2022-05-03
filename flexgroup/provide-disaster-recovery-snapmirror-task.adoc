@@ -1,0 +1,54 @@
+---
+permalink: flexgroup/provide-disaster-recovery-snapmirror-task.html 
+sidebar: sidebar 
+keywords: data, protection, workflow, flexgroup, volumes, snapmirror, snap mirror, disaster recovery, dr, unified, relationship 
+summary: 您可以建立FlexGroup SnapMirror災難恢復（DR）關係、以利解決此問題。從使用支援支援功能的支援功能9.3開始ONTAP 、您也FlexGroup 可以使用SnapVault 支援功能的功能來備份和還原支援功能、並建立統一化的資料保護關係、使用相同的目的地來進行備份和災難恢復。 
+---
+= 資料保護工作流程FlexGroup 、適用於所有的資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立FlexGroup SnapMirror災難恢復（DR）關係、以利解決此問題。從使用支援支援功能的支援功能9.3開始ONTAP 、您也FlexGroup 可以使用SnapVault 支援功能的功能來備份和還原支援功能、並建立統一化的資料保護關係、使用相同的目的地來進行備份和災難恢復。
+
+資料保護工作流程包括驗證叢集與SVM對等關係、建立目的地Volume、建立工作排程、指定原則、建立資料保護關係、以及初始化關係。
+
+image::../media/flexgroups-data-protection-workflow.gif[還原Volume準備工作流程FlexGroup]
+
+SnapMirror關係類型永遠是FlexGroup 「XDP」、適用於整個過程。SnapMirror關係所提供的資料保護類型、取決於您使用的複寫原則。您可以針對您要建立的複寫關係、使用預設原則或所需類型的自訂原則。下表顯示不同類型資料保護關係的預設原則類型和支援的自訂原則類型。
+
+|===
+
+
+| 關係類型 | 預設原則 | 自訂原則類型 
+
+
+ a| 
+SnapMirror災難恢復
+ a| 
+MirrorAllSnapshots
+ a| 
+非同步鏡射
+
+
+
+ a| 
+支援SnapVault
+ a| 
+XDPDefault
+ a| 
+保存庫
+
+
+
+ a| 
+統一化資料保護
+ a| 
+MirrorAndVault
+ a| 
+鏡射保存庫
+
+|===
+不支援FlexGroup 使用MirrorLatest原則的功能。

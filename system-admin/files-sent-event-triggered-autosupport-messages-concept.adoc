@@ -1,0 +1,30 @@
+---
+permalink: system-admin/files-sent-event-triggered-autosupport-messages-concept.html 
+sidebar: sidebar 
+keywords: files, event, triggered, autosupport, message, troubleshoot, subsystem, problem 
+summary: 事件觸發AutoSupport 的部分訊息僅包含子系統的基本資訊和疑難排解資訊、這些子系統與導致AutoSupport 產生訊息的事件有關。特定資料可協助NetApp支援與支援合作夥伴疑難排解問題。 
+---
+= 以事件觸發AutoSupport 的資訊訊息傳送檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+事件觸發AutoSupport 的部分訊息僅包含子系統的基本資訊和疑難排解資訊、這些子系統與導致AutoSupport 產生訊息的事件有關。特定資料可協助NetApp支援與支援合作夥伴疑難排解問題。
+
+使用下列條件來控制事件觸發的消息中的內容：AutoSupport AutoSupport
+
+* 包含哪些子系統
++
+資料會分組為子系統、包括常用子系統、例如記錄檔、以及特定子系統、例如RAID。每個事件都會觸發一則訊息、其中只包含來自特定子系統的資料。
+
+* 每個隨附子系統的詳細資料層級
++
+每個隨附子系統的資料均以基本或疑難排解層級提供。
+
+
+
+您可以使用AutoSupport 帶有「-instance」參數的「system node觸發show」命令來檢視所有可能的事件、並判斷每個事件的相關訊息中包含哪些子系統。
+
+除了每個事件預設包含的子系統之外、您也可以使用「System Node AutoSupport 現象修改」命令、在基本或疑難排解層級新增其他子系統。

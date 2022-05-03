@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_traphosts_to_receive_snmp_notifications.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, traphosts, trap, host, receive, snmp, notifications, configure traphosts to receive snmp notifications. system snmp traphost add 
+summary: 設定SNMP管理程式以接收陷阱通知 
+---
+= 設定traphosts以接收SNMP通知
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以將traphost（SNMP管理程式）設定為在叢集中產生SNMP設陷時接收通知（SNMP設陷PDU）。您可以指定SNMP traphost的主機名稱或IP位址（IPv4或IPv6）。
+
+.開始之前
+* 必須在叢集上啟用SNMP和SNMP設陷。
+
+
+
+NOTE: SNMP和SNMP設陷預設為啟用。
+
+* 必須在叢集上設定DNS、才能解析traphost名稱。
+* 叢集上必須啟用IPv6、才能使用IPv6位址來設定SNMP traphosts。
+* 對於更新的版本、您必須在建立traphosts時、指定預先定義的使用者型安全模式（USM）驗證和隱私權認證。ONTAP
+
+
+新增SNMP traphost：
+
+....
+system snmp traphost add
+....
+
+NOTE: 只有當至少有一個SNMP管理站台指定為traphost時、才能傳送陷阱。
+
+下列命令會以已知的USM使用者新增名為yyy.example.com的v3 traphost：
+
+....
+system snmp traphost add -peer-address yyy.example.com -usm-username MyUsmUser
+....
+下列命令會使用主機的IPv6位址來新增traphost：
+
+....
+system snmp traphost add -peer-address 2001:0db8:1:1:209:6bff:feae:6d67
+....

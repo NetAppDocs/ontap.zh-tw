@@ -1,0 +1,59 @@
+---
+permalink: smb-admin/enable-disable-local-user-authentication-task.html 
+sidebar: sidebar 
+keywords: enable, disable, local, user, authentication, smb, access, storage, virtual, machine, svm, domain, controller, domain-level, level, enable or disable local user authentication 
+summary: 您可以在儲存虛擬機器（SVM）上啟用或停用SMB存取的本機使用者驗證。預設為允許本機使用者驗證、這在SVM無法連絡網域控制器或您選擇不使用網域層級存取控制時非常有用。 
+---
+= 啟用或停用本機使用者驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存虛擬機器（SVM）上啟用或停用SMB存取的本機使用者驗證。預設為允許本機使用者驗證、這在SVM無法連絡網域控制器或您選擇不使用網域層級存取控制時非常有用。
+
+必須在CIFS伺服器上啟用本機使用者和群組功能。
+
+您可以隨時啟用或停用本機使用者驗證。如果您想要在建立SMB連線時使用本機使用者進行驗證、也必須啟用CIFS伺服器的本機使用者和群組選項。
+
+.步驟
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 執行下列其中一項動作：
++
+|===
+| 如果您希望本機驗證... | 輸入命令... 
+
+
+ a| 
+已啟用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is - local-auth-enably true」
+
+
+
+ a| 
+已停用
+ a| 
+「Vserver CIFS選項修改-vserver _vserver_name_-is - local-auth-enably假」
+
+|===
+. 返回管理員權限等級：「et -priv. admin」
+
+
+下列範例可在SVM VS1上啟用本機使用者驗證：
+
+[listing]
+----
+cluster1::>set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-auth-enabled true
+
+cluster1::*> set -privilege admin
+----
+xref:local-user-authentication-concept.adoc[本機使用者驗證的運作方式]
+
+xref:enable-disable-local-users-groups-task.adoc[啟用或停用本機使用者和群組]

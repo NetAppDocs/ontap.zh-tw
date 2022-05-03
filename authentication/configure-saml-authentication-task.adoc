@@ -1,0 +1,104 @@
+---
+permalink: authentication/configure-saml-authentication-task.html 
+sidebar: sidebar 
+keywords: configure, saml authentication 
+summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。 
+---
+= 設定SAML驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須已設定SAML驗證的IDP。
+* 您必須擁有IDP URI。
+
+
+.關於這項工作
+* SAML驗證僅適用於「http」和「ontapi」應用程式。
++
+下列網路服務使用「http」和「ontapi」應用程式：服務處理器基礎架構、ONTAP 介紹API或系統管理員。
+
+* SAML驗證僅適用於存取管理SVM。
+
+
+.步驟
+. 建立SAML組態、ONTAP 以便讓整個程序能夠存取IDP中繼資料：
++
+「安全性SAML-sp create -IDM-URI IDP -uri -sp-host ONTAP_host_name」
+
++
+「IDP開放給我們」是IDP主機的FTP或HTTP位址、可從其中下載IDP中繼資料。
+
++
+「ONTAP_HOST_NAME」是SAML服務供應商主機的主機名稱或IP位址、在此例中是ONTAP 指支援系統。根據預設、會使用叢集管理LIF的IP位址。
+
++
+您可以選擇性地提供ONTAP 伺服器的驗證資訊。根據預設ONTAP 、會使用「驗證」Web伺服器憑證資訊。
+
++
+[listing]
+----
+cluster_12::> security saml-sp create -idp-uri https://scspr0235321001.gdl.englab.netapp.com/idp/shibboleth -verify-metadata-server false
+
+Warning: This restarts the web server. Any HTTP/S connections that are active
+         will be disrupted.
+Do you want to continue? {y|n}: y
+[Job 179] Job succeeded: Access the SAML SP metadata using the URL:
+https://10.63.56.150/saml-sp/Metadata
+
+Configure the IdP and Data ONTAP users for the same directory server domain to ensure that users are the same for different authentication methods. See the "security login show" command for the Data ONTAP user configuration.
+----
++
+畫面ONTAP 會顯示存取主機中繼資料的URL。
+
+. 在IDP主機上、使用ONTAP 不受支援的中繼資料來設定IDP。
++
+如需設定IDP的詳細資訊、請參閱IDP文件。
+
+. 啟用SAML組態：
++
+「安全性SAML-sp modify -is啟用true」
+
++
+任何存取「http」或「ontapi」應用程式的現有使用者、都會自動設定為SAML驗證。
+
+. 如果您想要在設定SAML之後、為「http」或「ontapi」應用程式建立使用者、請將SAML指定為新使用者的驗證方法。
++
+.. 使用SAML驗證建立新使用者的登入方法：「安全登入建立-使用者或群組名稱使用者名稱-應用程式[http | ontapi]-驗證方法SAML -vserver Svm_name」
++
+[listing]
+----
+cluster_12::> security login create -user-or-group-name admin1 -application http -authentication-method saml -vserver  cluster_12
+----
+.. 確認已建立使用者項目：+「安全登入顯示」
++
+[listing]
+----
+cluster_12::> security login show
+
+Vserver: cluster_12
+                                                                 Second
+User/Group                 Authentication                 Acct   Authentication
+Name           Application Method        Role Name        Locked Method
+-------------- ----------- ------------- ---------------- ------ --------------
+admin          console     password      admin            no     none
+admin          http        password      admin            no     none
+admin          http        saml          admin            -      none
+admin          ontapi      password      admin            no     none
+admin          ontapi      saml          admin            -      none
+admin          service-processor
+                           password      admin            no     none
+admin          ssh         password      admin            no     none
+admin1         http        password      backup           no     none
+**admin1         http        saml          backup           -      none**
+----
+
+
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

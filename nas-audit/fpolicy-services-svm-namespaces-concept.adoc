@@ -1,0 +1,33 @@
+---
+permalink: nas-audit/fpolicy-services-svm-namespaces-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, services, work, svm, namespaces 
+summary: 提供統一化儲存虛擬機器（SVM）命名空間。ONTAP叢集內的磁碟區會透過連接點連接在一起、以提供單一的邏輯檔案系統。FPolicy伺服器知道命名空間拓撲、並在命名空間中提供FPolicy服務。 
+---
+= FPolicy服務如何跨SVM命名空間運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+提供統一化儲存虛擬機器（SVM）命名空間。ONTAP叢集內的磁碟區會透過連接點連接在一起、以提供單一的邏輯檔案系統。FPolicy伺服器知道命名空間拓撲、並在命名空間中提供FPolicy服務。
+
+命名空間是特定於SVM並包含在SVM中、因此您只能從SVM內容中查看命名空間。命名空間具有下列特性：
+
+* 每個SVM中都有一個命名空間、命名空間的根目錄為根磁碟區、在命名空間中以斜槓（/）表示。
+* 所有其他磁碟區的交會點均低於根（/）。
+* Volume交會對用戶端而言是透明的。
+* 單一NFS匯出可提供完整命名空間的存取權、否則匯出原則可匯出特定磁碟區。
+* SMB共用可在磁碟區或磁碟區內的qtree上建立、或是在命名空間內的任何目錄上建立。
+* 命名空間架構具有彈性。
++
+典型命名空間架構的範例如下：
+
++
+** 具有根目錄外單一分支的命名空間
+** 具有多個根目錄分支的命名空間
+** 一個命名空間、其根部有多個未分支的磁碟區
+
+
+

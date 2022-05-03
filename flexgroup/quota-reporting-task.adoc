@@ -1,0 +1,468 @@
+---
+permalink: flexgroup/quota-reporting-task.html 
+sidebar: sidebar 
+keywords: quota, flexgroup, volume, flex group, limit, snap mirror, snapmirror, qtree, user, group 
+summary: 在僅供報告之用的情形下、您可以在適用配額規則的情形下、僅將配額規則套用至不適用配額限制的情形。ONTAP FlexGroup從功能介紹9.5開始ONTAP 、您可以對FlexGroup 套用至功能介紹區的配額規則強制限制。 
+---
+= 使用FlexGroup 配額來處理不符合需求的磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在僅供報告之用的情形下、您可以在適用配額規則的情形下、僅將配額規則套用至不適用配額限制的情形。ONTAP FlexGroup從功能介紹9.5開始ONTAP 、您可以對FlexGroup 套用至功能介紹區的配額規則強制限制。
+
+.關於這項工作
+* 從功能表9.5開始ONTAP 、您可以指定FlexGroup 硬、軟和臨界值的等量配額、以供支援各種功能。
++
+您可以指定這些限制來限制空間量、特定使用者、群組或qtree可以建立的檔案數量、或兩者。配額限制會在下列情況下產生警告訊息：
+
++
+** 當使用量超過設定的軟體限制時ONTAP 、功能性功能會發出警告訊息、但仍允許進一步的流量。
++
+如果稍後使用量再次低於設定的軟體限制、系統會發出一則完全清除的訊息。
+
+** 當使用量超過設定的臨界值上限時ONTAP 、功能不均會發出第二則警告訊息。
++
+當使用量稍後低於設定的臨界值限制時、不會發出「完全清除」的管理訊息。
+
+** 如果使用量達到設定的硬限制、ONTAP 則無法拒絕流量、藉此防止資源進一步耗用。
+
+
+* 在SnapMirror 9.5中ONTAP 、配額規則無法在FlexGroup SnapMirror關係的目的地SnapMirror磁碟區上建立或啟動。
+
+
+
+
+== 配額目標和類型
+
+配額有一種類型：可以是使用者、群組或樹狀結構。配額目標會指定套用配額限制的使用者、群組或qtree。
+
+下表列出配額目標的類型、每個配額目標關聯的配額類型、以及每個配額目標的呈現方式：
+
+|===
+
+
+| 配額目標 | 配額類型 | 目標的呈現方式 | 附註 
+
+
+ a| 
+使用者
+ a| 
+使用者配額
+ a| 
+UNIX使用者名稱UNIX UID
+
+Windows 2000之前版本的Windows使用者名稱
+
+Windows SID
+ a| 
+使用者配額可套用至特定磁碟區或qtree。
+
+
+
+ a| 
+群組
+ a| 
+群組配額
+ a| 
+UNIX群組名稱UNIX Gid
+ a| 
+群組配額可套用至特定磁碟區或qtree。
+
+[NOTE]
+====
+不適用以Windows ID為基礎的群組配額。ONTAP
+
+====
+
+
+ a| 
+qtree
+ a| 
+樹狀結構配額
+ a| 
+qtree名稱
+ a| 
+樹狀結構配額會套用至特定的磁碟區、不會影響其他磁碟區中的qtree。
+
+
+
+ a| 
+ a| 
+使用者配額
+
+樹狀結構配額
+ a| 
+雙引號（""）
+ a| 
+配額目標為「」表示預設配額_。對於預設配額、配額類型取決於類型欄位的值。
+
+|===
+
+
+== 超出配額限制時的現象FlexGroup
+
+從功能介紹9.5開始ONTAP 、FlexGroup 支援在功能區上設定配額限制。在FlexGroup 執行配額限制的方式上、與FlexVol 使用此功能的整個過程相比、在這個過程中、存在一些差異。
+
+超過配額限制時、可能會顯示下列行為：FlexGroup
+
+* 在強制執行配額限制之前、由於拒絕更多流量、所以在使用完這個配額之前、使用於一個流通量的空間和檔案FlexGroup 可能會比設定的硬限制高出5%。
++
+為了提供最佳效能、ONTAP 在開始執行配額之前、使用的空間量可能會超過設定的硬限制、只有一小段距離。這項額外的空間使用量不會超過設定硬限制（1 GB或65536個檔案）的5%、以較低者為準。
+
+* 達到配額上限後、如果使用者或系統管理員刪除部分檔案或目錄、使配額使用量低於上限、則後續的耗用配額檔案作業可能會以延遲的方式恢復（可能需要5秒才能恢復）。
+* 當某個現象磁碟區的總空間和檔案使用量FlexGroup 超過設定的配額限制時、記錄事件記錄訊息可能會略有延遲。
+* 如果某些部分包含整個流程、可能會出現「no space'」錯誤FlexGroup 、但無法達到配額限制。
+* 配額目標上的作業、例如重新命名檔案或目錄、或在qtree之間移動檔案、而配額目標上已設定配額硬限制、相較FlexVol 於類似的功能、可能需要更長的時間。
+
+
+[role="lead"]
+您可以使用範例來瞭解如何在ONTAP 更新版本的版本中設定限制配額。
+
+.範例1：以磁碟限制強制執行配額規則
+. 您應該建立「使用者」類型的配額原則規則、同時具有可達成的軟碟限制和硬碟限制。
++
+[listing]
+----
+cluster1::> volume quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target "" -qtree "" -disk-limit 1T -soft-disk-limit 800G
+----
+. 您可以檢視配額原則規則：
++
+[listing]
+----
+cluster1::> volume quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off           1TB    800GB       -        -          -
+----
+. 若要啟動新的配額規則、請在磁碟區上初始化配額：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以使用配額報告來檢視FlexGroup 有關此問題的磁碟使用量和檔案使用資訊。
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    root      50GB      -       1       -
+FG                 user    *         800GB    1TB      0       -   *
+2 entries were displayed.
+----
+
+
+在達到硬碟限制之後、配額原則規則目標（在此情況下為使用者）將無法寫入更多資料至檔案。
+
+.範例2：為多個使用者強制執行配額規則
+. 您應該建立類型為「user"的配額原則規則、在配額目標中指定多個使用者（UNIX使用者、SMB使用者或兩者的組合）、且規則同時具有可達成的軟碟限制和硬碟限制。
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target "rdavis,ABCCORP\RobertDavis" -qtree "" -disk-limit 1TB -soft-disk-limit  800GB
+----
+. 您可以檢視配額原則規則：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   "rdavis,ABCCORP\RobertDavis"  "" off  1TB  800GB  -  -
+----
+. 若要啟動新的配額規則、請在磁碟區上初始化配額：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以驗證配額狀態是否為作用中：
++
+[listing]
+----
+cluster1::> volume quota show -vserver vs0 -volume FG
+              Vserver Name: vs0
+               Volume Name: FG
+               Quota State: on
+               Scan Status: -
+          Logging Messages: on
+          Logging Interval: 1h
+          Sub Quota Status: none
+  Last Quota Error Message: -
+Collection of Quota Errors: -
+----
+. 您可以使用配額報告來檢視FlexGroup 有關此問題的磁碟使用量和檔案使用資訊。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis,ABCCORP\RobertDavis
+----
++
+配額限制會在配額目標中列出的所有使用者之間共用。
+
+
+
+達到硬碟限制後、配額目標中所列的使用者將無法寫入更多資料至檔案。
+
+.範例3：啟用使用者對應來強制執行配額
+. 您應該建立類型為「使用者」的配額原則規則、將UNIX使用者或Windows使用者指定為配額目標、並將「使用者對應」設定為「開啟」、然後建立具有可達成的軟碟限制和硬碟限制的規則。
++
+UNIX和Windows使用者之間的對應必須使用「vserver name-mapping cre創作」命令來提早設定。
+
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target rdavis -qtree "" -disk-limit 1TB -soft-disk-limit  800GB -user-mapping on
+----
+. 您可以檢視配額原則規則：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   rdavis    ""      on           1TB    800GB       -        -          -
+----
+. 若要啟動新的配額規則、請在磁碟區上初始化配額：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以驗證配額狀態是否為作用中：
++
+[listing]
+----
+cluster1::> volume quota show -vserver vs0 -volume FG
+              Vserver Name: vs0
+               Volume Name: FG
+               Quota State: on
+               Scan Status: -
+          Logging Messages: on
+          Logging Interval: 1h
+          Sub Quota Status: none
+  Last Quota Error Message: -
+Collection of Quota Errors: -
+----
+. 您可以使用配額報告來檢視FlexGroup 有關此問題的磁碟使用量和檔案使用資訊。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis
+----
++
+配額限制會在配額目標中所列的使用者與其對應的Windows或UNIX使用者之間共用。
+
+
+
+在達到硬碟限制之後、配額目標中列出的使用者及其對應的Windows或UNIX使用者都會遭到封鎖、無法將更多資料寫入檔案。
+
+.範例4：啟用配額時驗證qtree大小
+. 您應該建立一個類型為「tree」的配額原則規則、而且該規則具有可達成的軟碟限制和硬碟限制。
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type tree -target tree_4118314302 -qtree "" -disk-limit 48GB -soft-disk-limit 30GB
+----
+. 您可以檢視配額原則規則：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   tree_4118314302  "" -          48GB        -      20        -
+----
+. 若要啟動新的配額規則、請在磁碟區上初始化配額：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
++
+.. 您可以使用配額報告來檢視FlexGroup 有關此問題的磁碟使用量和檔案使用資訊。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0
+Vserver: vs0
+----Disk---- ----Files----- Quota
+Volume Tree Type ID Used Limit Used Limit Specifier
+------- -------- ------ ------- ----- ----- ------ ------ ---------
+FG tree_4118314302 tree 1 30.35GB 48GB 14 20 tree_4118314302
+----
++
+配額限制會在配額目標中所列的使用者與其對應的Windows或UNIX使用者之間共用。
+
+
+
+. 從NFS用戶端、使用「df」命令來檢視總空間使用量、可用空間和已用空間。
++
+[listing]
+----
+scsps0472342001# df -m /t/10.53.2.189/FG-3/tree_4118314302
+Filesystem 1M-blocks Used Available Use% Mounted on
+10.53.2.189/FG-3 49152 31078 18074 63% /t/10.53.2.189/FG-3
+----
++
+使用硬限制時、空間使用量會從NFS用戶端計算、如下所示：
+
++
+** 總空間使用量=樹狀結構的硬限制
+** 可用空間=硬限制減去qtree空間使用量而不受硬限制、空間使用量是從NFS用戶端計算得出、如下所示：
+** 空間使用量=配額使用量
+** 總空間=磁碟區中配額使用量和實體可用空間的總和
+
+
+. 在SMB共用區中、使用Windows檔案總管來檢視總空間使用量、可用空間和已用空間。
++
+在SMB共用區中、計算空間使用量時、您應注意下列考量事項：
+
++
+** 使用者和群組的使用者配額硬限制會納入計算總可用空間的考量。
+** 樹狀結構配額規則、使用者配額規則和群組配額規則的可用空間中、最小值會被視為SMB共用的可用空間。
+** SMB的總空間使用量是可變的、取決於對應於樹狀結構、使用者和群組之間最小可用空間的硬限制。
+
+
+
+
+
+
+== 在FlexGroups磁碟區上套用規則和限制
+
+.步驟
+. 為目標建立配額規則：「Volume quota policy規則create -vserver vs0 -police-name quota policy_for_the_rRule -volume flexgroup_vol-type｛tree | user| group｝-target target for_rRule -qtree qtree qtree名稱[-disk-limit hard_disk_limit_size_sized][-file-file-limit_th_limit_station_number_ent_limit_ent_ent_limit_number_station
++
+** 在0版9.2和2版9.1中、配額目標類型只能是「使用者」或「群組」、才能用於2版。ONTAP ONTAP FlexGroup
++
+不支援FlexGroup 使用樹狀結構配額類型來執行ONTAP 支援的功能。ONTAP
+
+** 在更新版本的版本中、配額目標類型可以是「使用者」、「群組」或「樹狀結構」、以供查看。ONTAP FlexGroup
+** 建立FlexGroup 適用於整個過程的配額規則時、路徑不支援作為目標路徑。
+** 從ONTAP 功能表9.5開始、您可以指定硬碟限制、硬碟檔案限制、軟碟限制、軟式檔案限制、FlexGroup 以及針對功能表磁碟區的臨界值限制配額。
++
+在《支援範圍》9.4及更早版本中、當您建立適用於此功能的配額規則時、無法指定磁碟限制、檔案限制、磁碟限制臨界值、軟碟限制或軟式檔案限制。ONTAP FlexGroup
+
+
+
+
+
+下列範例顯示要為使用者目標類型建立的預設配額規則：
+
+[listing]
+----
+cluster1::> volume quota policy rule create -vserver vs0 -policy-name quota_policy_vs0_1 -volume fg1 -type user -target "" -qtree ""
+----
+以下範例顯示正在為qtree命名為qtree1建立樹狀結構配額規則：
+
+[listing]
+----
+cluster1::> volume quota policy rule create -policy-name default -vserver vs0 -volume fg1 -type tree -target "qtree1"
+----
+. 啟動指定FlexGroup 的SflexvolVolume配額：「Volume quota on -vserver Svm_name -volume flexgroup_vol-foregroundtrue」（vserver Svm_name -volume flexgroup_vol -foregrod true上的Volume配額）
+
+
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume fg1 -foreground true
+----
+. 監控配額初始化狀態：「Volume quota show -vserver Svm_name」
+
+
+可能會顯示「mithed」狀態、表示所有的組成磁碟區尚未處於相同狀態。FlexGroup
+
+[listing]
+----
+cluster1::> volume quota show -vserver vs0
+                                          Scan
+Vserver    Volume        State            Status
+---------  ------------  ---------------  ------
+vs0        fg1           initializing         95%
+vs0        vol1          off                   -
+2 entries were displayed.
+----
+. 檢視FlexGroup 使用中配額的Sfetsvolume配額報告：「Volume quota report -vserver Svm_name -volume flexgroup_vol」
++
+您無法使用FlexGroup 「Volume quota report」命令來指定路徑、以供使用。
+
++
+以下範例顯示FlexGroup 使用者配額、以供使用支援Refvolume fg1：
+
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume fg1
+  Vserver: vs0
+                                      ----Disk----  ----Files-----   Quota
+  Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+  -------  --------  ------  -------  -----  -----  ------  ------   ---------
+  fg1                user    *           0B      -       0       -   *
+  fg1                user    root       1GB      -       1       -   *
+  2 entries were displayed.
+----
++
+以下範例顯示FlexGroup 適用於Refvolume fg1的樹狀結構配額：
+
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume fg1
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+fg1      qtree1  tree      1         68KB      -      18       -   qtree1
+fg1              tree      *           0B      -       0       -   *
+2 entries were displayed.
+----
+
+
+配額規則和限制會套用至FlexGroups磁碟區。
+
+使用量可能會比設定的硬限制高出5%、ONTAP 而在執行此配額之前、會拒絕更多流量。
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

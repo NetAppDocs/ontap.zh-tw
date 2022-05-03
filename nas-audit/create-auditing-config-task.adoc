@@ -1,0 +1,82 @@
+---
+permalink: nas-audit/create-auditing-config-task.html 
+sidebar: sidebar 
+keywords: create, audit, configuration 
+summary: 在開始稽核檔案和目錄事件之前、您必須先在儲存虛擬機器（SVM）上建立稽核組態。 
+---
+= 建立稽核組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存虛擬機器（SVM）上建立檔案和目錄稽核組態、包括瞭解可用的組態選項、規劃組態、然後設定和啟用組態。然後您可以顯示稽核組態的相關資訊、以確認所產生的組態為所需的組態。
+
+在開始稽核檔案和目錄事件之前、您必須先在儲存虛擬機器（SVM）上建立稽核組態。
+
+如果您打算建立稽核組態以進行集中存取原則暫存、則SVM上必須有SMB伺服器。
+
+[NOTE]
+====
+* 雖然您可以在稽核組態中啟用集中存取原則接移功能、但不會在SMB伺服器上啟用動態存取控制、但只有啟用動態存取控制時、才會產生集中存取原則接移事件。
++
+動態存取控制是透過SMB伺服器選項來啟用。預設不會啟用此功能。
+
+* 如果命令中某個欄位的引數無效、例如欄位的輸入無效、項目重複、以及項目不存在、則命令會在稽核階段之前失敗。
++
+此類失敗不會產生稽核記錄。
+
+
+
+====
+如果SVM是SVM災難恢復來源、則目的地路徑無法位於根磁碟區上。
+
+.步驟
+. 使用規劃工作表中的資訊、建立稽核組態、根據記錄大小或排程來旋轉稽核記錄：
++
+[cols="30,70"]
+|===
+
+
+| 如果您想要以下列方式來旋轉稽核記錄... | 輸入... 
+
+
+ a| 
+記錄檔大小
+ a| 
+「vserver稽核建立-vserver vserver_name -目的地路徑-events [{file-ops|cs-logon-log註 銷| cap-stage| file-share| nap-police-changes|user-account|資訊安全組|授權-原則變更｝][-format {XML | evtx}][-rotation-limit integer][-size-size {leger[TB_bap][TB[TB
+
+
+
+ a| 
+排程
+ a| 
+「vserver稽核建立-vserver vserver_name -目的地路徑-事件[{file-ops|cs-login-log註 銷| cap-stived}][-format {XML | evtx}][-rotation-limit integer][-rotation-schedule-month chron_month][-schedule-chway_chmonth
+
+[NOTE]
+====
+如果您要設定時間型稽核記錄輪調、則必須使用「-rote-schedule-minute-minute」參數。
+
+====
+|===
+
+
+下列範例會建立稽核組態、以大小為基礎的旋轉方式來稽核檔案作業和SMB登入及登出事件（預設值）。記錄格式為「evtx」（預設）。這些記錄儲存在「/Audit記錄檔」目錄中。記錄檔大小上限為「200 MB」。當記錄大小達到200 MB時、就會進行旋轉：
+
+[listing]
+----
+cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200MB
+----
+下列範例會建立稽核組態、以大小為基礎的旋轉方式來稽核檔案作業和SMB登入及登出事件（預設值）。記錄格式為「evtx」（預設）。記錄檔大小上限為「100 MB」（預設值）、記錄檔旋轉上限為「5」：
+
+[listing]
+----
+cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-limit 5
+----
+下列範例建立稽核組態、以稽核檔案作業、CIFS登入和登出事件、以及使用時間型輪調的集中存取原則暫存事件。記錄格式為「evtx」（預設）。稽核記錄會每月於下午12：30循環一次一週中的所有天。日誌旋轉限制為「5」：
+
+[listing]
+----
+cluster1::> vserver audit create -vserver vs1 -destination /audit_log -events file-ops,cifs-logon-logoff,file-share,audit-policy-change,user-account,security-group,authorization-policy-change,cap-staging -rotate-schedule-month all -rotate-schedule-dayofweek all -rotate-schedule-hour 12 -rotate-schedule-minute 30 -rotate-limit 5
+----

@@ -1,0 +1,36 @@
+---
+permalink: data-protection/check-available-snapshot-reserve.html 
+sidebar: sidebar 
+keywords: modify, snapshot, copy, reserve 
+summary: 您可能需要使用「volume show」命令的「napshot-reserve-可用」參數、來檢查磁碟區上可用的Snapshot複本保留量。 
+---
+= 檢查磁碟區上可用的Snapshot複本保留區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要使用「volume show」命令的「napshot-reserve-可用」參數、來檢查磁碟區上可用的Snapshot複本保留量。
+
+.步驟
+. 檢查磁碟區上可用的Snapshot複本保留：
++
+「vol show -vserver _svm_-volume _volVolume _-Fields snapshot reserve-可用」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例顯示「vol1」的可用Snapshot複本保留：
+
++
+[listing]
+----
+cluster1::> vol show -vserver vs0 -volume vol1 -fields snapshot-reserve-available
+
+vserver volume snapshot-reserve-available
+------- ------ --------------------------
+vs0     vol1   4.84GB
+----
+

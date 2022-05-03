@@ -1,0 +1,41 @@
+---
+permalink: smb-admin/enable-netbios-name-service-task.html 
+sidebar: sidebar 
+keywords: ontap, netbios, name, service, nbns, windows, internet, name, service, wins, disable, default, cifs-enable, storage, virtual, machine, svm, registration, broadcast, network, server, wnable the netbios name service 
+summary: 從ONTAP 功能更新開始、預設會停用NetBios名稱服務（NBNS、有時稱為Windows網際網路名稱服務或WINS）。先前、不論網路上是否啟用了WINS、均會傳送名稱登錄廣播給啟用CIFS的儲存虛擬機器（SVM）。若要將此類廣播限制在需要NBNS的組態、您必須針對新的CIFS伺服器明確啟用NBNS。 
+---
+= 啟用NetBios名稱服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能更新開始、預設會停用NetBios名稱服務（NBNS、有時稱為Windows網際網路名稱服務或WINS）。先前、不論網路上是否啟用了WINS、均會傳送名稱登錄廣播給啟用CIFS的儲存虛擬機器（SVM）。若要將此類廣播限制在需要NBNS的組態、您必須針對新的CIFS伺服器明確啟用NBNS。
+
+.開始之前
+* 如果您已經使用NBNS並升級ONTAP 至版本S9、則不需要完成此工作。NBNS將繼續如以往一樣運作。
+* 透過udp（連接埠137）啟用NBNS。
+* 不支援透過IPv6的NBNS。
+
+
+.步驟
+. 將權限層級設為進階。
++
+[listing]
+----
+set -privilege advanced
+----
+. 在CIFS伺服器上啟用NBNS。
++
+[listing]
+----
+vserver cifs options  modify -vserver <vserver name> -is-nbns-enabled true
+----
+. 返回管理權限層級。
++
+[listing]
+----
+set -privilege admin
+----
+

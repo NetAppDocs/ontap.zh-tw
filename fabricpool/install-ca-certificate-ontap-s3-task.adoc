@@ -1,0 +1,30 @@
+---
+permalink: fabricpool/install-ca-certificate-ontap-s3-task.html 
+sidebar: sidebar 
+keywords: installing, ca certificate, ontap s3 
+summary: 除非您計畫停用ONTAP 驗證以檢查S3的憑證、否則您必須在ONTAP 叢集上安裝一個物件S3 CA憑證、ONTAP 以便讓S3驗證ONTAP 為FabricPool 物件存放區。 
+---
+= 如果您使用ONTAP 的是SS3、請安裝CA憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除非您計畫停用ONTAP 驗證以檢查S3的憑證、否則您必須在ONTAP 叢集上安裝一個物件S3 CA憑證、ONTAP 以便讓S3驗證ONTAP 為FabricPool 物件存放區。
+
+.步驟
+. 取得ONTAP S3系統的CA認證。
+. 使用「安全憑證安裝」命令搭配「-type」「sherver-ca」參數、在ONTAP 叢集上安裝「S3 CA」憑證。
++
+您輸入的完整網域名稱（FQDN）必須與ONTAP 「S3 CA」憑證上的自訂通用名稱相符。
+
+
+
+
+
+= 更新過期的憑證
+
+若要更新過期的憑證、最佳做法是使用信任的CA來產生新的伺服器憑證。此外、您應確保在ONTAP 更新驗證證時、ONTAP 同時更新到位址為「S3」的伺服器和「支援」的叢集上、以將任何停機時間降至最低。
+
+link:../s3-config/index.html["S3組態"]

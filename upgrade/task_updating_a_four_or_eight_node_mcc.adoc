@@ -1,0 +1,608 @@
+---
+permalink: upgrade/task_updating_a_four_or_eight_node_mcc.html 
+sidebar: sidebar 
+keywords: 4-node MetroCluster configurations,8-node MetroCluster configurations 
+summary: 升級或降級四節點MetroCluster 或八節點的版塊架構的手動更新程序、包括準備更新、同時更新一或兩個DR群組中的每個DR組、以及執行一些更新後工作。 
+---
+= 使用MetroCluster CLI手動不中斷地升級四節點或八節點的支援功能組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+升級或降級四節點MetroCluster 或八節點的版塊架構的手動更新程序、包括準備更新、同時更新一或兩個DR群組中的每個DR組、以及執行一些更新後工作。
+
+* 此工作適用於下列組態：
++
+** 執行不含更新版本的4節點MetroCluster 的不含功能的FC或IP組態ONTAP
+** 八節點MetroCluster 的不ONTAP 受限於任何版本的不受影響的不受限的FFC組態
+
+
+* 如果您有雙節點MetroCluster 的不全功能組態、請勿使用此程序。
+* 下列工作是指ONTAP 舊版和新版的《不一樣》。
++
+** 升級時、舊版ONTAP 是舊版的版次、版本編號比新版ONTAP 的版次低。
+** 降級時、舊版本ONTAP 是更新版本的版次、版本編號比ONTAP 新版的版次更高。
+
+
+* 此工作使用下列高層級工作流程：
++
+image::../media/workflow_mcc_lockstep_upgrade.gif[工作流程MCC鎖定步驟升級]
+
+
+
+
+
+== 在八節點或四節點MetroCluster 的零位功能組態上更新軟體時的差異
+
+根據BIOS組態中是否有八或四個節點、所以更新程序會有所不同。MetroCluster MetroCluster
+
+一個由一或兩個DR群組所組成的支援組態。MetroCluster每個DR群組包含兩個HA配對、每MetroCluster 個VMware叢集各一個HA配對。八節點MetroCluster 的功能不全包含兩個DR群組：
+
+image::../media/mcc_dr_groups_8_node.gif[MCC DR群組8節點]
+
+此更新程序涉及一次升級或降級一個DR群組。MetroCluster
+
+對於四節點MetroCluster 的不完整組態：
+
+. 更新DR群組一：
++
+.. 更新node_a_1和node_b_1。
+.. 更新node_a_2和node_b_2。
+
+
+
+
+對於八節點MetroCluster 的不完整組態、您需要執行兩次DR群組更新程序：
+
+. 更新DR群組一：
++
+.. 更新node_a_1和node_b_1。
+.. 更新node_a_2和node_b_2。
+
+
+. 更新DR群組二：
++
+.. 更新node_a_3和node_b_3。
+.. 更新node_a_4和node_b_4。
+
+
+
+
+
+
+== 正在準備更新MetroCluster 一個解決方法DR群組
+
+在實際更新節點上的軟體之前、您必須先識別節點之間的DR關係、傳送AutoSupport 正在開始更新的消息以供使用、並確認ONTAP 每個節點上執行的版本為更新版本。
+
+您必須擁有 xref:task_download_and_install_ontap_software_image.html[已下載並安裝軟體映像]。
+
+此工作必須在每個DR群組上重複執行。如果這個支援功能組態由八個節點組成、則有兩個DR群組。MetroCluster因此、此工作必須在每個DR群組上重複執行。
+
+本工作所提供的範例使用下圖所示的名稱來識別叢集和節點：
+
+image::../media/mcc_dr_groups_8_node.gif[MCC DR群組8節點]
+
+. 識別組態中的DR配對：MetroCluster 「不二節點show -Fields DR-Partner」
++
+[listing]
+----
+ cluster_A::> metrocluster node show -fields dr-partner
+   (metrocluster node show)
+ dr-group-id cluster     node       dr-partner
+ ----------- -------     --------   ----------
+ 1           cluster_A   node_A_1   node_B_1
+ 1           cluster_A   node_A_2   node_B_2
+ 1           cluster_B   node_B_1   node_A_1
+ 1           cluster_B   node_B_2   node_A_2
+ 4 entries were displayed.
+
+ cluster_A::>
+----
+. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
++
+出現進階提示（「*>」）。
+
+. 確認ONTAP 每個節點上執行的版本：
++
+.. 確認叢集A上的版本：「System image show」（系統映像顯示）
++
+[listing]
+----
+ cluster_A::*> system image show
+                  Is      Is                Install
+ Node     Image   Default Current Version   Date
+ -------- ------- ------- ------- -------   -------------------
+ node_A_1
+          image1  true    true    X.X.X     MM/DD/YYYY TIME
+          image2  false   false   Y.Y.Y     MM/DD/YYYY TIME
+ node_A_2
+          image1  true    true    X.X.X     MM/DD/YYYY TIME
+          image2  false   false   Y.Y.Y     MM/DD/YYYY TIME
+ 4 entries were displayed.
+
+ cluster_A::>
+----
+.. 確認叢集B上的版本：「System image show」（系統映像顯示）
++
+[listing]
+----
+ cluster_B::*> system image show
+                  Is      Is                 Install
+ Node     Image   Default Current Version    Date
+ -------- ------- ------- ------- -------    -------------------
+ node_B_1
+          image1  true    true    X.X.X      MM/DD/YYYY TIME
+          image2  false   false   Y.Y.Y      MM/DD/YYYY TIME
+ node_B_2
+          image1  true    true    X.X.X      MM/DD/YYYY TIME
+          image2  false   false   Y.Y.Y      MM/DD/YYYY TIME
+ 4 entries were displayed.
+
+ cluster_B::>
+----
+
+
+. 觸發AutoSupport 一個功能不全的通知：「AutoSupport 不完整地叫用-node*-type all -messing_NDU」
++
+本資訊更新通知包含更新前系統狀態的記錄。AutoSupport如果更新程序發生問題、它會儲存有用的疑難排解資訊。
+
++
+如果您的叢集未設定為傳送AutoSupport 功能性訊息、則通知複本會儲存在本機。
+
+. 針對第一組中的每個節點、將目標ONTAP SURFESS-軟體映像設為預設映像：「系統映像修改｛節點節點名稱-is潮流 錯誤｝-IsDefault true」
++
+此命令會使用延伸查詢、將安裝為替代映像的目標軟體映像變更為節點的預設映像。
+
+. 驗證目標ONTAP 不實軟體映像是否設為預設映像：
++
+.. 驗證叢集A上的映像：「System image show」（系統映像顯示）
++
+在下列範例中、image2是新ONTAP 的版本、並在第一組的每個節點上設為預設影像：
+
++
+[listing]
+----
+ cluster_A::*> system image show
+                  Is      Is              Install
+ Node     Image   Default Current Version Date
+ -------- ------- ------- ------- ------- -------------------
+ node_A_1
+          image1  false   true    X.X.X   MM/DD/YYYY TIME
+          image2  true    false   Y.Y.Y   MM/DD/YYYY TIME
+ node_A_2
+          image1  false   true    X.X.X   MM/DD/YYYY TIME
+          image2  true   false   Y.Y.Y   MM/DD/YYYY TIME
+
+ 2 entries were displayed.
+----
+.. 驗證叢集B上的映像：「System image show」（系統映像顯示）
++
+下列範例顯示、目標版本已設定為第一組中每個節點的預設映像：
+
++
+[listing]
+----
+ cluster_B::*> system image show
+                  Is      Is              Install
+ Node     Image   Default Current Version Date
+ -------- ------- ------- ------- ------- -------------------
+ node_A_1
+          image1  false   true    X.X.X   MM/DD/YYYY TIME
+          image2  true    false   Y.Y.Y   MM/YY/YYYY TIME
+ node_A_2
+          image1  false   true    X.X.X   MM/DD/YYYY TIME
+          image2  true    false   Y.Y.Y   MM/DD/YYYY TIME
+
+ 2 entries were displayed.
+----
+
+
+. 判斷要升級的節點目前是否為每個節點提供兩次用戶端服務：「System Node run -node-node-command uptime」（系統節點執行節點目標節點命令正常運作時間）
++
+正常運作時間命令會顯示節點自上次開機以來、針對NFS、CIFS、FC和iSCSI用戶端執行的作業總數。對於每個傳輸協定、您需要執行兩次命令、以判斷作業數是否增加。如果數量不斷增加、則節點目前正在為該傳輸協定的用戶端提供服務。如果不增加、則節點目前不會為該傳輸協定的用戶端提供服務。
+
++
+*附註*：您應該記下每個增加用戶端作業的傳輸協定、以便在節點升級後、確認用戶端流量已恢復。
+
++
+此範例顯示具有NFS、CIFS、FC和iSCSI作業的節點。不過、節點目前僅提供NFS和iSCSI用戶端服務。
+
++
+[listing]
+----
+ cluster_x::> system node run -node node0 -command uptime
+   2:58pm up  7 days, 19:16 800000260 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32810 iSCSI ops
+
+ cluster_x::> system node run -node node0 -command uptime
+   2:58pm up  7 days, 19:17 800001573 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32815 iSCSI ops
+----
+
+
+
+
+== 更新MetroCluster 不只一個DR群組的第一個DR配對
+
+您必須以正確順序執行節點的接管和恢復、才能使ONTAP 節點的新版本成為節點的目前版本。
+
+所有節點都必須執行舊版ONTAP 的功能。
+
+在此工作中、node_a_1和node_B_1會更新。
+
+如果您已在ONTAP 第一個DR群組上更新了該軟件、並正在更新八節點MetroCluster 的版本資訊功能組態中的第二個DR群組、在此工作中、您將會更新node_a_3和node_b_3。
+
+. 如果MetroCluster 啟用了《斷電器軟體》、請將其停用。
+. 針對HA配對中的每個節點、停用自動還原：「儲存容錯移轉修改節點目標節點-自動還原錯誤」
++
+此命令必須針對HA配對中的每個節點重複執行。
+
+. 驗證自動恢復功能是否已停用：「torage容錯移轉顯示欄位自動恢復」
++
+此範例顯示兩個節點上的自動恢復功能均已停用：
+
++
+[listing]
+----
+ cluster_x::> storage failover show -fields auto-giveback
+ node     auto-giveback
+ -------- -------------
+ node_x_1 false
+ node_x_2 false
+ 2 entries were displayed.
+----
+. 確保每個控制器的I/O不超過約50%。確保每個控制器的CPU使用率不超過約50%。
+. 啟動叢集A上目標節點的接管：
++
+請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
+
++
+.. 接管叢集A（node_a_1）上的DR合作夥伴：「儲存容錯移轉接管-ofnode_a_1`
++
+節點會開機至「等待恢復」狀態。
+
++
+
+NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
+
+.. 驗證接管是否成功：「儲存容錯移轉顯示」
++
+以下範例顯示接管作業成功。node_a_1處於「等待恢復」狀態、node_a_2則處於「接管」狀態。
+
++
+[listing]
+----
+ cluster1::> storage failover show
+                               Takeover
+ Node           Partner        Possible State Description
+ -------------- -------------- -------- -------------------------------------
+ node_A_1       node_A_2       -        Waiting for giveback (HA mailboxes)
+ node_A_2       node_A_1       false    In takeover
+ 2 entries were displayed.
+----
+
+
+. 接管叢集B（node_B_1）上的DR合作夥伴：
++
+請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
+
++
+.. 接管node_B_1：「torage容錯移轉接管-ofnode_B_1」
++
+節點會開機至「等待恢復」狀態。
+
++
+
+NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
+
+.. 驗證接管是否成功：「儲存容錯移轉顯示」
++
+以下範例顯示接管作業成功。node_B_1處於「等待恢復」狀態、node_B_2則處於「接管」狀態。
+
++
+[listing]
+----
+ cluster1::> storage failover show
+                               Takeover
+ Node           Partner        Possible State Description
+ -------------- -------------- -------- -------------------------------------
+ node_B_1       node_B_2       -        Waiting for giveback (HA mailboxes)
+ node_B_2       node_B_1       false    In takeover
+ 2 entries were displayed.
+----
+
+
+. 至少等待八分鐘、以確保發生下列情況：
++
+** 用戶端多重路徑（若已部署）會穩定下來。
+** 用戶端會從接管期間發生的I/O暫停中恢復。
++
+還原時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
+
+
+
+. 將集合體傳回目標節點：
++
+將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5或更新版本之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。
+
++
+.. 將Aggregate歸還給叢集_A上的DR合作夥伴：「儲存容錯移轉恢復–ofnode_a_1」
+.. 將Aggregate歸還給叢集B上的DR合作夥伴：「torage容錯移轉恢復–ofnode_b_1」
++
+恢復作業會先將根Aggregate傳回節點、然後在節點完成開機之後、傳回非根Aggregate。
+
+
+
+. 請在兩個叢集上發出下列命令、確認所有的集合體都已傳回：「儲存容錯移轉show -gorback」
++
+如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪個子系統已對恢復執行了指令。
+
+. 如果尚未傳回任何Aggregate、請執行下列動作：
++
+.. 請檢閱「否決因應措施」、以判斷您是否想要處理「『直接』條件、或是要撤銷「否決」。
+.. 如有必要、請解決錯誤訊息中所述的「『驗證』條件、確保所有已識別的作業都能正常終止。
+.. 重新輸入儲存容錯移轉恢復命令。
++
+如果您決定覆寫「vito'」條件、請將-overre-etoes參數設為true。
+
+
+
+. 至少等待八分鐘、以確保發生下列情況：
++
+** 用戶端多重路徑（若已部署）會穩定下來。
+** 用戶端會從還原期間發生的I/O暫停中恢復。
++
+還原時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
+
+
+
+. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
++
+出現進階提示（「*>」）。
+
+. 確認叢集A上的版本：「System image show」（系統映像顯示）
++
+下列範例顯示、節點a_1上的系統影像2應為預設版本和目前版本：
+
++
+[listing]
+----
+ cluster_A::*> system image show
+                  Is      Is               Install
+ Node     Image   Default Current Version  Date
+ -------- ------- ------- ------- -------- -------------------
+ node_A_1
+          image1  false   false    X.X.X   MM/DD/YYYY TIME
+          image2  true    true     Y.Y.Y   MM/DD/YYYY TIME
+ node_A_2
+          image1  false   true     X.X.X   MM/DD/YYYY TIME
+          image2  true    false    Y.Y.Y   MM/DD/YYYY TIME
+ 4 entries were displayed.
+
+ cluster_A::>
+----
+. 確認叢集B上的版本：「System image show」（系統映像顯示）
++
+下列範例顯示、節點ONTAP _a_1上的系統影像2（0版）為預設版本和目前版本：
+
++
+[listing]
+----
+ cluster_A::*> system image show
+                  Is      Is               Install
+ Node     Image   Default Current Version  Date
+ -------- ------- ------- ------- -------- -------------------
+ node_B_1
+          image1  false   false    X.X.X   MM/DD/YYYY TIME
+          image2  true    true     Y.Y.Y   MM/DD/YYYY TIME
+ node_B_2
+          image1  false   true     X.X.X   MM/DD/YYYY TIME
+          image2  true    false    Y.Y.Y   MM/DD/YYYY TIME
+ 4 entries were displayed.
+
+ cluster_A::>
+----
+
+
+
+
+== 正在更新MetroCluster 不只是個DR群組的第二個DR配對
+
+您必須以正確順序執行節點接管與恢復、才能使ONTAP 節點的新版本成為節點的目前版本。
+
+您應該已經升級第一個DR配對（node_a_1和node_B_1）。
+
+在此工作中、node_a_2和node_b_2會更新。
+
+如果您已在ONTAP 第一個DR群組上更新了這個功能、現在正在更新八節點MetroCluster 的版本資訊功能組態中的第二個DR群組、請在本工作中更新node_a_4和node_b_4。
+
+. 啟動叢集A上目標節點的接管：
++
+請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
+
++
+.. 接管叢集_A上的DR合作夥伴：
++
+「容錯移轉接管-節點節點_a_2選項允許版本不符」
+
++
+
+NOTE: 從BIOS 9.0升級ONTAP 至ONTAP BIOS 9.1或任何修補程式升級時、不需要使用「允許版本不符」選項。
+
++
+節點會開機至「等待恢復」狀態。
+
++
+如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
+
+.. 驗證接管是否成功：「儲存容錯移轉顯示」
++
+以下範例顯示接管作業成功。node_a_2處於「等待恢復」狀態、node_a_1處於「接管」狀態。
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State Description
+-------------- -------------- -------- -------------------------------------
+node_A_1       node_A_2       false    In takeover
+node_A_2       node_A_1       -        Waiting for giveback (HA mailboxes)
+2 entries were displayed.
+----
+
+
+. 在叢集B上啟動目標節點的接管：
++
+請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
+
++
+.. 接管叢集B（node_B_2）上的DR合作夥伴：
++
+[cols="2*"]
+|===
+| 如果您要從...升級 | 輸入此命令... 
+
+
+ a| 
+部分版本ONTAP ONTAP
+ a| 
+'容錯移轉接管-節點節點_B_2'
+
+
+
+ a| 
+部分版本的升級版ONTAP Data ONTAP
+ a| 
+「容錯移轉接管-節點節點_B_2 -選項允許版本不符」附註：ONTAP 「允許版本不符」選項不適用於從BIOS 9.0升級至ONTAP 更新版本至更新版本或任何修補程式升級。
+
+|===
+
+
+
+
+節點會開機至「等待恢復」狀態。
+
++附註：如果AutoSupport 啟用了S廳、AutoSupport 系統會傳送一則不確定訊息、指出節點已超出叢集仲裁。您可以安全地忽略此通知並繼續升級。
+
+. 驗證接管是否成功：「儲存容錯移轉顯示」
++
+以下範例顯示接管作業成功。node_B_2處於「等待恢復」狀態、node_B_1處於「接管中」狀態。
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State Description
+-------------- -------------- -------- -------------------------------------
+node_B_1       node_B_2       false    In takeover
+node_B_2       node_B_1       -        Waiting for giveback (HA mailboxes)
+2 entries were displayed.
+----
++
+.. 至少等待八分鐘、以確保發生下列情況：
++
+*** 用戶端多重路徑（若已部署）會穩定下來。
+*** 用戶端會從接管期間發生的I/O暫停中恢復。
++
+還原時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
+
+
+
+.. 將集合體傳回目標節點：
++
+將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。
+
+
+
+. 將Aggregate歸還給叢集_A上的DR合作夥伴：「儲存容錯移轉恢復–ofnode_a_2」
+. 將Aggregate歸還給叢集B上的DR合作夥伴：「torage容錯移轉恢復–ofnode_b_2」
++
+恢復作業會先將根Aggregate傳回節點、然後在節點完成開機之後、傳回非根Aggregate。
+
++
+.. 請在兩個叢集上發出下列命令、確認所有的集合體都已傳回：「儲存容錯移轉show -gorback」
++
+如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪個子系統已對恢復執行了指令。
+
+.. 如果尚未傳回任何Aggregate、請執行下列動作：
+
+
+. 請檢閱「否決因應措施」、以判斷您是否想要處理「『直接』條件、或是要撤銷「否決」。
+. 如有必要、請解決錯誤訊息中所述的「『驗證』條件、確保所有已識別的作業都能正常終止。
+. 重新輸入儲存容錯移轉恢復命令。
++
+如果您決定覆寫「vito'」條件、請將-overre-etoes參數設為true。。至少等待八分鐘、以確保下列情況穩定：*用戶端多重路徑（若已部署）。**用戶端會從還原期間發生的I/O暫停中恢復。
+
++
++恢復時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
+
++
+.. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
++
+出現進階提示（「*>」）。
+
+.. 確認叢集A上的版本：「System image show」（系統映像顯示）
++
+下列範例顯示、節點ONTAP _a_2上的系統影像2（目標版本）為預設版本和目前版本：
+
++
+[listing]
+----
+cluster_B::*> system image show
+                 Is      Is                 Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- ---------- -------------------
+node_A_1
+         image1  false   false    X.X.X     MM/DD/YYYY TIME
+         image2  true    true     Y.Y.Y     MM/DD/YYYY TIME
+node_A_2
+         image1  false   false    X.X.X     MM/DD/YYYY TIME
+         image2  true    true     Y.Y.Y     MM/DD/YYYY TIME
+4 entries were displayed.
+
+cluster_A::>
+----
+.. 確認叢集B上的版本：「System image show」（系統映像顯示）
++
+下列範例顯示、節點ONTAP _B_2上的系統影像2（目標版本）為預設版本和目前版本：
+
++
+[listing]
+----
+cluster_B::*> system image show
+                 Is      Is                 Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- ---------- -------------------
+node_B_1
+         image1  false   false    X.X.X     MM/DD/YYYY TIME
+         image2  true    true     Y.Y.Y     MM/DD/YYYY TIME
+node_B_2
+         image1  false   false    X.X.X     MM/DD/YYYY TIME
+         image2  true    true     Y.Y.Y     MM/DD/YYYY TIME
+4 entries were displayed.
+
+cluster_A::>
+----
+.. 針對HA配對中的每個節點、啟用自動還原：「儲存容錯移轉修改節點目標節點-自動恢復為真」
++
+此命令必須針對HA配對中的每個節點重複執行。
+
+.. 驗證是否已啟用自動還原：「torage容錯移轉顯示欄位自動還原」
++
+此範例顯示兩個節點均已啟用自動恢復功能：
+
++
+[listing]
+----
+cluster_x::> storage failover show -fields auto-giveback
+node     auto-giveback
+-------- -------------
+node_x_1 true
+node_x_2 true
+2 entries were displayed.
+----
+
+
+

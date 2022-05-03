@@ -1,0 +1,50 @@
+---
+permalink: nas-audit/delete-security-trace-records-task.html 
+sidebar: sidebar 
+keywords: delete, security trace records 
+summary: 使用篩選器追蹤記錄來驗證檔案存取安全性或疑難排解SMB或NFS用戶端存取問題之後、您可以從安全性追蹤記錄中刪除安全性追蹤記錄。 
+---
+= 刪除安全性追蹤記錄
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用篩選器追蹤記錄來驗證檔案存取安全性或疑難排解SMB或NFS用戶端存取問題之後、您可以從安全性追蹤記錄中刪除安全性追蹤記錄。
+
+在刪除安全性追蹤記錄之前、您必須知道記錄的序號。
+
+[NOTE]
+====
+每個儲存虛擬機器（SVM）最多可儲存128筆追蹤記錄。如果SVM達到上限、則會在新增追蹤記錄時自動刪除最舊的追蹤記錄。如果您不想手動刪除此SVM上的追蹤記錄、ONTAP 可讓SVM在達到最大值後自動刪除最舊的追蹤結果、以便留出新結果的空間。
+
+====
+.步驟
+. 識別您要刪除的記錄序號：
++
+「vserver安全性追蹤追蹤追蹤結果show -vserver vserver_name -instance」
+
+. 刪除安全性追蹤記錄：
++
+「vserver安全性追蹤追蹤追蹤結果刪除-node_name -vserver vserver_name -seqnum integer'
+
++
+「vserver安全性追蹤追蹤追蹤結果刪除-vserver VS1節點節點1 -seqnum 999」
+
++
+** 節點的「node_name」是您要刪除之權限追蹤事件發生的叢集節點名稱。
++
+這是必要的參數。
+
+** vserver的「vserver_name」是您要刪除之權限追蹤事件發生的SVM名稱。
++
+這是必要的參數。
+
+** Seqnum'"integer"是您要刪除的記錄事件的順序編號。
++
+這是必要的參數。
+
+
+
+

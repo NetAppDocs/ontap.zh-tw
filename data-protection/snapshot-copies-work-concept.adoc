@@ -1,0 +1,38 @@
+---
+permalink: data-protection/snapshot-copies-work-concept.html 
+sidebar: sidebar 
+keywords: restore, file, snapshot copy, nfs, cifs, smb, client 
+summary: NFS或SMB用戶端上的使用者可以直接從Snapshot複本還原檔案、而無需儲存系統管理員的介入。 
+---
+= 從NFS或SMB用戶端上的Snapshot複本還原檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS或SMB用戶端上的使用者可以直接從Snapshot複本還原檔案、而無需儲存系統管理員的介入。
+
+檔案系統中的每個目錄都包含一個子目錄、名稱為「.snapshot」、可供NFS和SMB使用者存取。Snapshot子目錄包含與Volume Snapshot複本相對應的子目錄：
+
+....
+$ ls .snapshot
+daily.2017-05-14_0013/              hourly.2017-05-15_1106/
+daily.2017-05-15_0012/              hourly.2017-05-15_1206/
+hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
+....
+每個子目錄都包含Snapshot複本所參照的檔案。如果使用者不小心刪除或覆寫檔案、可以將檔案從Snapshot子目錄複製到讀寫目錄、將檔案還原到父讀寫目錄：
+
+....
+$ ls my.txt
+ls: my.txt: No such file or directory
+$ ls .snapshot
+daily.2017-05-14_0013/              hourly.2017-05-15_1106/
+daily.2017-05-15_0012/              hourly.2017-05-15_1206/
+hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
+$ ls .snapshot/hourly.2017-05-15_1306/my.txt
+my.txt
+$ cp .snapshot/hourly.2017-05-15_1306/my.txt .
+$ ls my.txt
+my.txt
+....

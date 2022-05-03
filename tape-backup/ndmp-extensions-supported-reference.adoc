@@ -1,0 +1,38 @@
+---
+permalink: tape-backup/ndmp-extensions-supported-reference.html 
+sidebar: sidebar 
+keywords: ndmp, extensions, supported, ontap, v4, protocols, core, modify, extension 
+summary: NDMP v4提供建立NDMP v4傳輸協定延伸的機制、無需修改核心NDMP v4傳輸協定。您應該注意ONTAP 到支援的NDMP v4副檔名。 
+---
+= 支援NDMP擴充功能ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NDMP v4提供建立NDMP v4傳輸協定延伸的機制、無需修改核心NDMP v4傳輸協定。您應該注意ONTAP 到支援的NDMP v4副檔名。
+
+下列NDMP v4副檔名受ONTAP 支援：
+
+* 叢集感知備份（CAB）
++
+[NOTE]
+====
+此擴充僅在SVM範圍的NDMP模式中受支援。
+
+====
+* 連線位址擴充（CAE）以支援IPv6
+* 副檔名類別0x2050
++
+此擴充支援可重新程式化的備份作業和Snapshot Management Extensions。
+
++
+[NOTE]
+====
+「NDMP管理擴充」訊息是Snapshot Management Extensions的一部分、用於啟動還原作業、並將還原的資料從本機Snapshot複本傳輸到本機檔案系統位置。在本訊息中、此訊息僅允許恢復磁碟區和一般檔案。ONTAP
+
+「NDMP快照」訊息可讓您瀏覽磁碟區的Snapshot複本。如果在瀏覽作業進行期間執行不中斷營運、則備份應用程式必須重新啟動瀏覽作業。
+
+====
+

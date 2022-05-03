@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/configure-required-encryption-concept.html 
+sidebar: sidebar 
+keywords: smb, encryption, data, transfer, security, enhancement, enable, disable, server, configure, desire, share-by-share, basis, property, setting, configure, configure required smb encryption on smb servers for data transfer over smb 
+summary: SMB加密可在SMB伺服器上啟用或停用SMB資料傳輸功能、是一項安全性增強功能。您也可以透過共用內容設定、逐一設定所需的SMB加密設定。 
+---
+= 在SMB伺服器上設定必要的SMB加密、以便透過SMB傳輸資料總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB加密可在SMB伺服器上啟用或停用SMB資料傳輸功能、是一項安全性增強功能。您也可以透過共用內容設定、逐一設定所需的SMB加密設定。
+
+根據預設、當您在儲存虛擬機器（SVM）上建立SMB伺服器時、SMB加密會停用。您必須讓IT能夠充分利用SMB加密所提供的增強安全性。
+
+若要建立加密的SMB工作階段、SMB用戶端必須支援SMB加密。從Windows Server 2012和Windows 8開始的Windows用戶端支援SMB加密。
+
+SVM上的SMB加密可透過兩種設定加以控制：
+
+* SMB伺服器安全選項、可在SVM上啟用功能
+* SMB共用內容、可依共用區設定SMB加密設定
+
+
+您可以決定是否需要加密才能存取SVM上的所有資料、或是需要SMB加密才能存取所選共用區中的資料。SVM層級的設定會取代共用層級的設定。
+
+有效的SMB加密組態取決於兩項設定的組合、如下表所述：
+
+|===
+| 啟用SMB伺服器SMB加密 | 共用加密資料設定已啟用 | 伺服器端加密行為 
+
+
+ a| 
+是的
+ a| 
+錯
+ a| 
+SVM中的所有共用都啟用伺服器層級加密。有了這項組態、整個SMB工作階段就會進行加密。
+
+
+
+ a| 
+是的
+ a| 
+是的
+ a| 
+無論共用層級加密為何、SVM中的所有共用都會啟用伺服器層級加密。有了這項組態、整個SMB工作階段就會進行加密。
+
+
+
+ a| 
+錯
+ a| 
+是的
+ a| 
+特定共用區已啟用共用層級加密。使用此組態、即可從樹狀結構連線進行加密。
+
+
+
+ a| 
+錯
+ a| 
+錯
+ a| 
+未啟用加密。
+
+|===
+不支援加密的SMB用戶端無法連線至需要加密的SMB伺服器或共用區。

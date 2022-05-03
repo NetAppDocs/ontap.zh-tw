@@ -1,0 +1,146 @@
+---
+permalink: nas-audit/create-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: create, security trace filters 
+summary: 您可以建立安全追蹤篩選器、以偵測儲存虛擬機器（SVM）上的SMB和NFS用戶端作業、並追蹤符合篩選器的所有存取檢查。您可以使用安全追蹤的結果來驗證組態或疑難排解存取問題。 
+---
+= 建立安全追蹤篩選器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立安全追蹤篩選器、以偵測儲存虛擬機器（SVM）上的SMB和NFS用戶端作業、並追蹤符合篩選器的所有存取檢查。您可以使用安全追蹤的結果來驗證組態或疑難排解存取問題。
+
+Vserver安全追蹤篩選器create命令需要兩個參數：
+
+[cols="35,65"]
+|===
+
+
+| 必要參數 | 說明 
+
+
+ a| 
+vserver的「vserver_name」
+ a| 
+_SVM名稱_
+
+包含您要套用安全性追蹤篩選器之檔案或資料夾的SVM名稱。
+
+
+
+ a| 
+索引「index_number」
+ a| 
+篩選索引編號_
+
+要套用至篩選的索引編號。每個SVM最多可有10個追蹤篩選器。此參數允許的值為1到10。
+
+|===
+許多選用的篩選參數可讓您自訂安全性追蹤篩選器、以便縮小安全性追蹤所產生的結果：
+
+[cols="35,65"]
+|===
+
+
+| 篩選參數 | 說明 
+
+
+ a| 
+「-'用戶端-IP'「IP位址」
+ a| 
+此篩選器會指定使用者存取SVM的IP位址。
+
+
+
+ a| 
+路徑（path）
+ a| 
+此篩選器會指定要套用權限追蹤篩選器的路徑。「-path（路徑）”的值可以使用下列任一格式：
+
+* 完整路徑、從共用區根目錄或匯出開始
+* 部分路徑、相對於共用的根目錄
+
+
+您必須在路徑值中使用NFS樣式目錄UNIX型目錄分隔符號。
+
+
+
+ a| 
+windows-name'、'win_user_name'或'-unix-name'unix_user_name'
+ a| 
+您可以指定要追蹤其存取要求的Windows使用者名稱或UNIX使用者名稱。使用者名稱變數不區分大小寫。您無法在同一個篩選器中同時指定Windows使用者名稱和UNIX使用者名稱。
+
+[NOTE]
+====
+即使您可以追蹤SMB和NFS存取事件、對應的UNIX使用者和對應的UNIX使用者群組也可以在混合或UNIX安全型資料上執行存取檢查。
+
+====
+
+
+ a| 
+"-fact-allow"｛'yes（是）|'no（否）｝
+ a| 
+安全性追蹤篩選器一律會啟用拒絕事件追蹤。您可以選擇追蹤允許事件。若要追蹤允許事件、請將此參數設為「yes」。
+
+
+
+ a| 
+啟用的「{'enable'|'disable'}」
+ a| 
+您可以啟用或停用安全性追蹤篩選器。依預設、安全性追蹤篩選器為啟用狀態。
+
+
+
+ a| 
+時間已啟用的「整數」
+ a| 
+您可以指定篩選器的逾時時間、之後篩選器就會停用。
+
+|===
+.步驟
+. 建立安全追蹤篩選器：
++
+"Vserver安全性追蹤篩選器create -vserver vserver_name -index index_numberfilter參數"
+
++
+「filter參數」是選用的篩選參數清單。
+
++
+如需詳細資訊、請參閱命令的手冊頁。
+
+. 驗證安全性追蹤篩選器項目：
++
+「Vserver安全性追蹤篩選器show -vserver vserver_name -index index_number'
+
+
+
+下列命令會為任何使用者建立安全性追蹤篩選器、以便存取IP位址為10.10.10.710.7\server\share1\dir1\dir2\file.txt'的檔案。篩選器使用完整路徑來顯示「-path」選項。用於存取資料的用戶端IP位址為10.10.10.7.篩選器在30分鐘後逾時：
+
+[listing]
+----
+cluster1::> vserver security trace filter create -vserver vs1 -index 1 -path /dir1/dir2/file.txt -time-enabled 30 -client-ip 10.10.10.7
+cluster1::> vserver security trace filter show -index 1
+Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
+-------- -----  -----------  ----------------------   -----------  -------------
+vs1        1    10.10.10.7   /dir1/dir2/file.txt          no       -
+----
+下列命令會使用相對路徑來建立安全性追蹤篩選器。篩選器會追蹤名為「'joe'」之Windows使用者的存取權。Joe正在存取共用路徑為「\server\share1\dir1\dir2\file.txt'」的檔案。篩選器追蹤會允許及拒絕事件：
+
+[listing]
+----
+cluster1::> vserver security trace filter create -vserver vs1 -index 2 -path /dir1/dir2/file.txt -trace-allow yes -windows-name mydomain\joe
+
+cluster1::> vserver security trace filter show -vserver vs1 -index 2
+                                 Vserver: vs1
+                            Filter Index: 2
+              Client IP Address to Match: -
+                                    Path: /dir1/dir2/file.txt
+                       Windows User Name: mydomain\joe
+                          UNIX User Name: -
+                      Trace Allow Events: yes
+                          Filter Enabled: enabled
+               Minutes Filter is Enabled: 60
+----

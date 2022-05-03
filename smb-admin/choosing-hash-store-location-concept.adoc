@@ -1,0 +1,36 @@
+---
+permalink: smb-admin/choosing-hash-store-location-concept.html 
+sidebar: sidebar 
+keywords: configuring, configure, branchcache, store, hash, size, guideline, cids-enabled, svm, guidelines for choosing the hash store location 
+summary: 設定BranchCache時、您可以選擇要儲存雜湊的位置、以及雜湊存放區的大小。瞭解在選擇雜湊存放區位置和大小時的準則、有助於在啟用CIFS的SVM上規劃您的BranchCache組態。 
+---
+= 選擇雜湊存放區位置的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+設定BranchCache時、您可以選擇要儲存雜湊的位置、以及雜湊存放區的大小。瞭解在選擇雜湊存放區位置和大小時的準則、有助於在啟用CIFS的SVM上規劃您的BranchCache組態。
+
+* 您應該在允許更新atime的磁碟區上找到雜湊存放區。
++
+雜湊檔案的存取時間是用來將經常存取的檔案保留在雜湊存放區中。如果停用atime更新、建立時間就會用於此用途。最好使用atime來追蹤經常使用的檔案。
+
+* 您無法將雜湊儲存在唯讀檔案系統上、例如SnapMirror目的地和SnapLock SnapMirror Volume。
+* 如果達到雜湊存放區的最大大小、則會清除舊雜湊、以便留出新雜湊的空間。
++
+您可以增加雜湊存放區的最大大小、以減少從快取排清的雜湊量。
+
+* 如果您儲存雜湊的磁碟區無法使用或已滿、或是叢集內通訊發生問題、導致無法擷取雜湊資訊、則無法使用BranchCache服務。
++
+磁碟區可能無法使用、因為它離線、或是儲存管理員為雜湊存放區指定新位置。
+
++
+這不會造成檔案存取問題。如果存取雜湊存放區受到阻礙、ONTAP 則將Microsoft定義的錯誤傳回給用戶端、這會導致用戶端使用一般SMB讀取要求來要求檔案。
+
+
+
+xref:configure-branchcache-task.adoc[在SMB伺服器上設定BranchCache]
+
+xref:modify-branchcache-config-task.html[修改BranchCache組態]

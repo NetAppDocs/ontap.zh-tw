@@ -1,0 +1,50 @@
+---
+permalink: san-admin/configure-nvme-lif-task.html 
+sidebar: sidebar 
+keywords: configure, nvme, lif 
+summary: 設定NVMe LIF時、必須符合特定需求。 
+---
+= 設定NVMe LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+設定NVMe LIF時、必須符合特定需求。
+
+NVMe必須受您建立LIF的FC介面卡支援。受支援的介面卡列於_SUR__ Hardware Universe 。
+
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+建立NVMe LIF時適用下列規則：
+
+* NVMe可以是資料生命里的唯一資料傳輸協定。
+* 您應該為每個支援SAN的SVM設定一個管理LIF。
+* 適用對象：ONTAP
++
+** 每個節點最多只能在四個節點上設定兩個NVMe LIF。
+** 您必須在包含命名空間的節點和節點的HA合作夥伴上設定NVMe LIF。
+
+
+* 僅適用於下列項目：ONTAP
++
+** NVMe LIF和命名空間必須裝載在同一個節點上。
+** 每個SVM只能設定一個NVMe資料LIF。
+
+
+
+
+.步驟
+. 建立LIF：
++
+「網路介面create -vserver _svm_name_-lif_lif_name_-role _lif_role_-data傳輸協定fc-nvm-home-node_node_home-port'
+
++
+首頁連接埠_
+
+. 確認LIF已建立：
++
+「網路介面show -vserver _svm_name_'
+
+

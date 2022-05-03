@@ -1,0 +1,27 @@
+---
+permalink: system-admin/enable-telnet-rsh-access-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, telnet, rsh, access, cluster, mgmt, management, firewall, policy 
+summary: 最佳安全做法是在預先定義的管理防火牆原則（mgmt）中停用遠端登入和RSH。若要讓叢集接受遠端登入或RSHE要求、您必須建立新的管理防火牆原則、並啟用「遠端登入」或「RSHH」、然後將新原則與叢集管理LIF建立關聯。 
+---
+= 啟用對叢集的遠端登入或RSH存取
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+最佳安全做法是在預先定義的管理防火牆原則（「mGMT」）中停用遠端登入和RSH。若要讓叢集接受遠端登入或RSHE要求、您必須建立新的管理防火牆原則、並啟用「遠端登入」或「RSHH」、然後將新原則與叢集管理LIF建立關聯。
+
+無法變更預先定義的防火牆原則、但您可以複製預先定義的「mGMT」管理防火牆原則、然後在新原則下啟用「遠端登入」或「RSH」來建立新原則。ONTAP不過、由於遠端登入和RSHH並非安全傳輸協定、因此您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
+
+請執行下列步驟以啟用遠端登入或RSHE存取叢集：
+
+.步驟
+. 進入進階權限模式：「*設定進階*」
+. 啟用安全性傳輸協定（RSHE或Telnet）：「*安全性傳輸協定修改-應用程式_SECURITY傳輸協定_-啟用TRUD*」
+. 根據「mGMT"管理防火牆原則：「*系統服務防火牆原則複製-原則管理-目的地原則_police-name_*」建立新的管理防火牆原則
+. 在新的管理防火牆原則中啟用「遠端登入」或「RSH」：「*系統服務防火牆原則」建立-policy _policy-name_-service _security_protocol_-action enable -ip-list _ip_address/netmask_*」以允許所有IP位址、您應該指定「-ip-list 0.0.0/0」
+. 將新原則與叢集管理LIF建立關聯：「*網路介面修改-vserver _cluster管理_lif_-lIF cluster管理-firewall-policy _police-name_*」
+

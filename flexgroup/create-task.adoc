@@ -1,0 +1,116 @@
+---
+permalink: flexgroup/create-task.html 
+sidebar: sidebar 
+keywords: create, flexgroup, volume, flex group, aggregate, fabricpool, fabric pool 
+summary: 您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁碟區的集合體、然後在每個集合體上指定組成數量、藉此建立一個靜態磁碟區。 
+---
+= 建立FlexGroup 一個流通量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁碟區的集合體、然後在每個集合體上指定組成數量、藉此建立一個靜態磁碟區。
+
+您必須注意到集合體中建立FlexGroup 一個聲音量所需的空間。
+
+link:aggregate-space-requirements-concept.html["配置FlexGroup 完一個供應不全的磁碟區時的集合體空間準則"]
+
+您也應該瞭解選擇集合體來配置FlexGroup 一個現象區的考量和要求。
+
+建立FlexGroup 一套用於FlexGroup 實現最佳效能結果的功能集區時、您必須考量下列準則：
+
+* 僅能跨越相同硬體系統上的集合體。FlexGroup
++
+使用相同的硬體系統、有助於在FlexGroup 整個VMware Volume中提供可預測的效能。
+
+* 一個包含相同磁碟類型和RAID群組組組態的支援區塊。FlexGroup
++
+若要獲得一致的效能、您必須確保所有的集合體都是由所有SSD、所有HDD或所有混合式集合體所組成。此外、整合應該擁有FlexGroup 相同數量的磁碟機和RAID群組、橫跨整個Sidvolume。
+
+* 一個可跨越叢集的部分的供應量。FlexGroup
++
+不需要將一個穩定磁碟區設定為橫跨整個叢集、但這樣做可以更充分地利用可用的硬體資源。FlexGroup
+
+* 建立FlexGroup 一個流通量時、最好是FlexGroup 將部署該功能的集合體具備下列特性：
++
+** 在多個集合體中、可用空間應大致相同、尤其是使用精簡配置時。
+** 建立FlexGroup 完這個功能後、約有3%的可用空間應保留給集合體中繼資料。
+
+
+* 對於僅供使用的系統、最好是每個節點有兩個Aggregate、而對於僅供使用的系統、則每個節點必須有一個Aggregate才能使用此功能。FAS AFF FlexGroup
+* 對於每FlexGroup 個支援區塊、您至少應該建立八個分佈在FAS 兩個以上的支援區塊上的支援區塊、以及AFF 在一個或多個支援區塊上的支援區塊上的支援區塊。
+
+
+.步驟
+. 建立FlexGroup 《Volume create -vserver Svm_name -volume flexgroup_name -aggr-list aggr1、aggr2、..-agger-list-plier bizer_per _aggr -size fa_size [–加密true][-qos-policy_group qos_policy_group name]
++
+** 「-agg-lists」參數會指定要用於FlexGroup 資料的集合體清單。
++
+清單中的每個項目都會在指定的Aggregate上建立一個組成項目。您可以多次指定集合體、以便在集合上建立多個成員。
+
++
+為了在FlexGroup 整個Singfuse Volume中提供一致的效能、所有的集合體都必須使用相同的磁碟類型和RAID群組組組態。
+
+** Check Alignment of PHs>-agger-list-gulier參數指定在建立FlexGroup 一個循環Volume時、重複使用"-agger-list"參數列出的集合體的次數。
++
+預設的「-agger-list-gulier」參數值為4。
+
+** 「最小化」參數指定FlexGroup 以KB、MB、GB、TB或PB為單位的現象Volume大小。
+** 從功能完整的S59.5開始ONTAP 、您可以建立FlexGroup 僅FabricPool 使用所有SSD集合體的功能不只適用於功能完整的功能。
++
+若要建立FlexGroup 一個供用作供分析用的功能、FabricPool 所有使用「-aggreg-lists」參數指定的集合體都FabricPool 必須是「不」。Volume保證必須永遠設定FabricPool 為「無」、才能用於顯示。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
+
++
+xref:../disks-aggregates/index.html[磁碟與Aggregate管理]
+
+** 從ONTAP S得9.4開始、您可以指定處理量層（QoS下限）和適用於FlexGroup 整個過程的調適QoS。
++
+link:../performance-admin/index.html["效能管理"]
+
+** 從ONTAP 功能表支援的9.3開始、您可以指定FlexGroup 一個適用於功能區的處理量上限（QoS Max）、這會限制FlexGroup 功能區使用的效能資源。
+** 從ONTAP 支援支援支援功能的功能9.2開始、您可以將「-加密」參數設為「真」、以便在FlexGroup 支援功能的支援下對此功能進行加密。
++
+若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
+
++
+[NOTE]
+====
+您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
+
+====
++
+link:../encryption-at-rest/index.html["加密閒置的資料"]
+
+
+
++
+[listing]
+----
+cluster-1::> volume create -vserver vs0 -volume fg2 -aggr-list aggr1,aggr2,aggr3,aggr1 -aggr-list-multiplier 2 -size 500TB
+
+Warning: A FlexGroup "fg2" will be created with the following number of constituents of size 62.50TB: 8.
+Do you want to continue? {y|n}: y
+
+[Job 43] Job succeeded: Successful
+----
+
+
+在前一個範例中、如果您想要建立FlexGroup 適用於Oracle的支援區、FabricPool 則所有的集合體（aggr1、aggr2和aggr3）都必須在FabricPool 支援區內集合體。。使用FlexGroup 交會路徑「volume mount -vserver vserver_name -volume vol_name -jet-path jeting_path」來掛載此現象
+
+[listing]
+----
+cluster1::> volume mount -vserver vs0 -volume fg2 -junction-path /fg
+----
+您應該從FlexGroup 用戶端掛載此功能。
+
+如果您執行ONTAP 的是32位或更早版本的版本、而且儲存虛擬機器（SVM）同時設定了NFSv3和NFSv4、FlexGroup 則從用戶端安裝此支援卷可能會失敗。在這種情況FlexGroup 下、您必須在從用戶端掛載完這個版本的時、明確指定NFS版本。
+
+[listing]
+----
+# mount -t nfs -o vers=3 192.53.19.64:/fg /mnt/fg2
+# ls /mnt/fg2
+file1  file2
+----
+http://www.netapp.com/us/media/tr-4571.pdf["NetApp技術報告4571：NetApp FlexGroup 《最佳實務做法與實作指南》"]

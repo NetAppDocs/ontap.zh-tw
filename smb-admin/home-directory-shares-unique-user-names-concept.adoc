@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/home-directory-shares-unique-user-names-concept.html 
+sidebar: sidebar 
+keywords: careful, assign, unique, user, name, creating, create, home, directory, share, windows, user, name, unix, variable, generate, dynamic, share, map, home directory shares require unique user names 
+summary: '使用%w（Windows使用者名稱）或%u（UNIX使用者名稱）變數建立主目錄共用時、請小心指派獨特的使用者名稱、以動態產生共用。共用名稱會對應至您的使用者名稱。' 
+---
+= 主目錄共用需要唯一的使用者名稱
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用「%w」（Windows使用者名稱）或「%u」（UNIX使用者名稱）變數來建立主目錄共用時、請小心指派獨特的使用者名稱、以動態產生共用。共用名稱會對應至您的使用者名稱。
+
+靜態共用區名稱和使用者名稱相同時、可能會發生兩個問題：
+
+* 當使用者使用「net view」命令列出叢集上的共用時、會顯示兩個具有相同使用者名稱的共用區。
+* 當使用者連線至該共用名稱時、該使用者一律會連線至靜態共用區、而且無法以相同名稱存取主目錄共用區。
+
+
+例如、有一個名稱為「管理員」的共用區、您有一個「管理員」Windows使用者名稱。如果您建立主目錄共用並連線至該共用區、就會連線至「管理員」靜態共用區、而非「管理員」主目錄共用區。
+
+您可以依照下列任一步驟、以重複的共用名稱來解決此問題：
+
+* 重新命名靜態共用、使其不再與使用者的主目錄共用發生衝突。
+* 為使用者提供新的使用者名稱、使其不再與靜態共用名稱衝突。
+* 使用靜態名稱（如「home'」）建立CIFS主目錄共用、而非使用「%w」參數、以避免與共用名稱發生衝突。
+

@@ -1,0 +1,48 @@
+---
+permalink: nfs-admin/ontap-support-nfsv42-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, nfsv4.2 
+summary: 從ONTAP 功能支援的SZ9.8開始、NFSv4.2傳輸協定可讓NFSv4.2用戶端存取。 
+---
+= 支援NFSv4.2 ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能支援的SZ9.8開始、NFSv4.2傳輸協定可讓NFSv4.2用戶端存取。
+
+NFSSv4.2預設會在ONTAP 支援更新版本的版本中啟用。在S9.8中ONTAP 、您可以指定「-v4.1」選項來啟用v4.2、並在儲存虛擬機器（SVM）上建立NFS伺服器時將其設為「已啟用」。啟用NFSv4.1也可讓用戶端在安裝為v4.2時使用NFSv4.1功能。
+
+支援下列NFSv4.2選用功能：
+
+* 從ONTAP 推出支援NFSv4.2的《支援強制存取控制（MAC）》（英文）中、從推出《支援NFS》（英文）一開始。
+* 其他NFSv4.2選用功能將會新增至後續ONTAP 版本的更新版本。
+
+
+
+
+== 啟用NFS v4.2安全性標籤
+
+從ONTAP 推出支援NFS9.9.1的功能開始、就能啟用NFS安全標籤。依預設會停用。
+
+使用NFS v4.2安全性標籤時、ONTAP 即可識別出需求性的NFS伺服器存取控制（MAC）、儲存及擷取用戶端傳送的sec_label屬性。
+
+如需詳細資訊、請參閱 https://tools.ietf.org/html/rfc7204["RFC7240"]
+
+[NOTE]
+====
+NDMP傾印作業目前不支援NFS v4.2安全性標籤。如果在檔案或目錄上遇到安全性標籤、傾印就會失敗。
+
+====
+.步驟
+. 將權限設定變更為進階：
++
+《先進的權限》
+
+. 啟用安全性標籤：
++
+'vserver NFS modify -vserver Svm_name -v4.2-seclabel enabled_'
+
+

@@ -1,0 +1,29 @@
+---
+permalink: tape-backup/data-backup-dump-concept.html 
+sidebar: sidebar 
+keywords: dump, engine, flexvol, volumes, backup, recovery, snapshot, copy, tape, device 
+summary: dump是ONTAP 一套以Snapshot複本為基礎的備份與還原解決方案、可協助您將Snapshot複本中的檔案與目錄備份到磁帶設備、並將備份的資料還原到儲存系統。 
+---
+= 關於FlexVol 針對資料量的傾印引擎
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+dump是ONTAP 一套以Snapshot複本為基礎的備份與還原解決方案、可協助您將Snapshot複本中的檔案與目錄備份到磁帶設備、並將備份的資料還原到儲存系統。
+
+您可以使用傾印備份、將檔案系統資料（例如目錄、檔案及其相關的安全性設定）備份到磁帶設備。您可以備份整個Volume、整個qtree或子樹、而不是整個Volume或整個qtree。
+
+您可以使用NDMP相容的備份應用程式來執行傾印備份或還原。
+
+執行傾印備份時、您可以指定要用於備份的Snapshot複本。如果您未指定備份的Snapshot複本、傾印引擎會建立Snapshot複本以供備份。備份作業完成後、傾印引擎會刪除此Snapshot複本。
+
+您可以使用傾印引擎、對磁帶執行層級0、遞增或差異備份。
+
+[NOTE]
+====
+還原至Data ONTAP 版本早於更新版本的版本之後、您必須先執行基礎備份作業、才能執行遞增備份作業。
+
+====
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ug-rdg/home.html["升級、回復或降級"]

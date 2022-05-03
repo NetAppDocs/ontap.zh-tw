@@ -1,0 +1,88 @@
+---
+permalink: data-protection/snapmirror-unified-replication-concept.html 
+sidebar: sidebar 
+keywords: snapmirror, unified, replication 
+summary: SnapMirror統一化複寫可讓您在同一個目的地磁碟區上設定災難恢復和歸檔。當統一化複寫適當時、它可協助您減少所需的二線儲存設備數量、限制基礎傳輸數量、以及減少網路流量。 
+---
+= SnapMirror統一化複寫基礎
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror _統一化複寫_可讓您在同一個目的地磁碟區上設定災難恢復與歸檔。當統一化複寫適當時、它可協助您減少所需的二線儲存設備數量、限制基礎傳輸數量、以及減少網路流量。
+
+
+
+== 如何初始化統一化資料保護關係
+
+與SnapMirror一樣、統一化資料保護會在您第一次叫用時執行基準傳輸。關係的SnapMirror原則定義了基礎的內容和任何更新。
+
+根據預設的統一化資料保護原則「鏡射AndVault」進行的基礎傳輸會建立來源磁碟區的Snapshot複本、然後將該複本及其參照的資料區塊傳輸到目的地磁碟區。如同保存庫歸檔、統一化資料保護功能不會在基準中包含舊的Snapshot複本。
+
+
+
+== 如何更新統一化資料保護關係
+
+在「鏡射AndVault」原則下的每次更新中、SnapMirror都會建立來源Volume的Snapshot複本、並傳輸該Snapshot複本和自上次更新以來所建立的任何Snapshot複本、前提是這些複本的標籤符合Snapshot原則規則中所定義的標籤。在「鏡射原則show」命令的「鏡射原則show」命令針對「鏡射AndVault」原則所做的下列輸出中、請注意下列事項：
+
+* 「Create Snapshot」是「true」、表示SnapMirror更新關係時、「鏡像AndVault」會建立Snapshot複本。
+* 「鏡射AndVault」的規則為「shim_已 建立」、「每日」和「每週」、表示SnapMirror建立的Snapshot複本和來源上具有相符標籤的Snapshot複本、都會在SnapMirror更新關係時傳輸。
+
+
+[listing]
+----
+cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
+
+                     Vserver: vs0
+      SnapMirror Policy Name: MirrorAndVault
+      SnapMirror Policy Type: mirror-vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: true
+                     Comment: A unified Synchronous SnapMirror and SnapVault policy for
+                              mirroring the latest file system and daily and weekly snapshots.
+       Total Number of Rules: 3
+                  Total Keep: 59
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+                              daily                   7  false       0 -        -
+                              weekly                 52  false       0 -        -
+----
+
+
+== Unified7年政策
+
+預先設定的「Unified7年」原則的運作方式與「鏡像AndVault」完全相同、但第四項規則是每月傳輸Snapshot複本並保留七年。
+
+[listing]
+----
+
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+                              daily                   7  false       0 -        -
+                              weekly                 52  false       0 -        -
+                              monthly                84  false       0 -        -
+----
+
+
+== 避免可能的資料毀損
+
+統一化複寫會限制基礎傳輸的內容、以供SnapMirror在初始化時建立Snapshot複本。每次更新時、SnapMirror都會建立另一個來源的Snapshot複本、並傳輸該Snapshot複本和任何新的Snapshot複本、這些複本的標籤與Snapshot原則規則中定義的標籤相符。
+
+您可以在目的地上建立上次傳輸的Snapshot複本複本、避免更新的Snapshot複本毀損。無論來源上的保留規則為何、都會保留此「本機複本」、即使來源上不再提供SnapMirror原本傳輸的Snapshot、也會在目的地上提供該Snapshot複本。
+
+
+
+== 何時使用統一化資料複寫
+
+您需要權衡維護完整鏡像的優點、以及統一化複寫在減少二線儲存設備數量、限制基礎傳輸數量及減少網路流量方面所提供的優勢。
+
+決定統一化複寫是否適當的關鍵因素、在於作用中檔案系統的變更率。例如、傳統鏡像可能更適合存放資料庫交易記錄每小時Snapshot複本的磁碟區。

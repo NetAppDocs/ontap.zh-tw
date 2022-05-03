@@ -1,0 +1,122 @@
+---
+permalink: system-admin/commands-manage-system-time-reference.html 
+sidebar: sidebar 
+keywords: command, manage, cluster, time, ntp, server, date, ntp, time, manually 
+summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NTP伺服器。您可以使用叢集日期命令手動管理叢集時間。 
+---
+= 管理叢集時間的命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「叢集時間服務NTP伺服器」命令來管理叢集的NTP伺服器。您可以使用「叢集日期」命令手動管理叢集時間。
+
+從使用S25 9.5開始ONTAP 、您可以使用對稱驗證來設定NTP伺服器。
+
+下列命令可讓您管理叢集的NTP伺服器：
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+將叢集與外部NTP伺服器建立關聯、而不進行對稱驗證
+ a| 
+「叢集時間服務NTP伺服器create -server server_name」
+
+
+
+ a| 
+將叢集與外部NTP伺服器建立關聯、使其具有ONTAP 可在版次9.5或更新版本中使用的對稱驗證
+ a| 
+「叢集時間服務NTP伺服器create -server server_ip_address -key-id key_id」
+
+[NOTE]
+====
+「key_id」必須指已設定「叢集時間服務NTP金鑰」的現有共用金鑰。
+
+====
+
+
+ a| 
+啟用現有NTP伺服器的對稱驗證您可以修改現有NTP伺服器、藉由新增所需的金鑰ID來啟用驗證。
+
+提供版本僅適用於S9.5或更新版本ONTAP
+ a| 
+「叢集時間服務NTP伺服器修改-server server_name -key-id key_id」
+
+
+
+ a| 
+停用對稱驗證
+ a| 
+「叢集時間服務NTP伺服器修改-伺服器server_name -驗證已停用」
+
+
+
+ a| 
+設定共用的NTP金鑰
+ a| 
+「叢集時間服務NTP金鑰create -id shared_key_id -type shared_key_type -Value shared_key_value'
+
+[NOTE]
+====
+共用金鑰是由ID所指。節點和NTP伺服器上的ID、其類型和值必須相同
+
+====
+
+
+ a| 
+顯示與叢集相關聯之NTP伺服器的相關資訊
+ a| 
+「叢集時間服務NTP伺服器顯示」
+
+
+
+ a| 
+修改與叢集相關聯的外部NTP伺服器組態
+ a| 
+「叢集時間服務NTP伺服器修改」
+
+
+
+ a| 
+將NTP伺服器與叢集取消關聯
+ a| 
+「叢集時間服務NTP伺服器刪除」
+
+
+
+ a| 
+清除所有外部NTP伺服器與叢集的關聯、以重設組態
+ a| 
+「叢集時間服務NTP伺服器重設」
+
+[NOTE]
+====
+此命令需要進階權限層級。
+
+====
+|===
+下列命令可讓您手動管理叢集時間：
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+設定或修改時區、日期和時間
+ a| 
+《叢集日期修改》
+
+
+
+ a| 
+顯示叢集的時區、日期和時間設定
+ a| 
+「叢集日期顯示」
+
+|===
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]

@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: networking/monitor_the_health_of_network_ports.html 
+keywords: monitor, monitoring, manage, managing, automatic, health, port, monitor the health of network ports, automatic health monitoring and a set of health monitors help you identify network ports that might not be suitable for hosting lifs, network options port-health-monitor modify 
+summary: 自動健全狀況監控和一組健全狀況監視器、可協助您識別可能不適合裝載lifs的網路連接埠 
+---
+= 監控網路連接埠的健全狀況
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+網路連接埠的支援管理包括自動健全狀況監控和一組健全狀況監控、可協助您識別可能不適合裝載生命設備的網路連接埠。ONTAP
+
+如果健全狀況監視器判定網路連接埠不健全、它會透過EMS訊息警告系統管理員、或將連接埠標記為降級。如果該LIF有健全的替代容錯移轉目標、則可避免在降級的網路連接埠上裝載LIF。ONTAP連接埠可能會因為軟性故障事件而降級、例如連結跳轉（上下快速跳轉連結）或網路分割：
+
+* 當叢集IPspace中的網路連接埠遇到連結Flapping或失去與廣播網域中其他網路連接埠的第2層（L2）連線能力時、它們會標示為降級。
+* 非叢集IPspaces中的網路連接埠遇到連結Flapping時、會標示為降級。
+
+
+您必須瞭解降級連接埠的下列行為：
+
+* 降級的連接埠無法包含在VLAN或介面群組中。
++
+如果介面群組的成員連接埠已標示為降級、但介面群組仍標示為健全、則該介面群組可裝載lifs。
+
+* LIF會自動從降級的連接埠移轉至正常的連接埠。
+* 在容錯移轉事件期間、降級的連接埠不會被視為容錯移轉目標。如果沒有可用的正常連接埠、則降級的連接埠會根據正常的容錯移轉原則來主機生命期。
+* 您無法建立、移轉LIF或將其還原為降級連接埠。
++
+您可以將網路連接埠的「ignore、health、Status」設定修改為「true」。然後、您可以在健全的連接埠上裝載LIF。
+
+
+
+.步驟
+. 登入進階權限模式：
++
+....
+set -privilege advanced
+....
+. 檢查啟用哪些健全狀況監視器來監控網路連接埠健全狀況：
++
+....
+network options port-health-monitor show
+....
++
+連接埠的健全狀況狀態取決於健全狀況監視器的值。
+
++
+下列健全狀況監視器預設ONTAP 可在支援中使用：
+
++
+** 連結Flapping健全狀況監視器：監控連結Flapping
++
+如果連接埠在五分鐘內有一次以上的連結Flapping、則此連接埠會標示為降級。
+
+** L2可到達性健全狀況監視器：監控同一個廣播網域中設定的所有連接埠是否彼此具有L2可到達性
++
+此健全狀況監視器會報告所有IPspace中的L2可連線性問題、但只會將叢集IPspace中的連接埠標記為降級。
+
+** crc監控：監控連接埠上的crc統計資料
++
+此健全狀況監視器不會將連接埠標記為降級、但會在觀察到極高的CRC故障率時產生EMS訊息。
+
+
+
+. 使用「network options port-health監控modify」命令、視需要啟用或停用IPspace的任何健全狀況監視器。
+. 檢視連接埠的詳細健全狀況：
++
+....
+network port show -health
+....
+
+
+命令輸出會顯示連接埠的健全狀況狀態、「Ignore health Status」（忽略健全狀況狀態）設定、以及連接埠標示為降級的原因清單。
+
+連接埠健全狀況可以是「健全」或「降級」。
+
+如果「忽略健全狀況」設定為「真」、表示管理員已將連接埠健全狀況從「降級」改為「健全」。
+
+如果「ignore healing Status」（忽略健全狀況狀態）設定為「假」、則連接埠健全狀況會由系統自動決定。

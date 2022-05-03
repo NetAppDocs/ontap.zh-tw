@@ -1,0 +1,57 @@
+---
+permalink: encryption-at-rest/enable-root-volume-encryption-task.html 
+sidebar: sidebar 
+keywords: root, volume, encryption, enabling, node 
+summary: 從功能介紹9.8開始ONTAP 、您可以使用NetApp Volume Encryption來保護節點的根磁碟區。 
+---
+= 啟用節點根磁碟區加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能介紹9.8開始ONTAP 、您可以使用NetApp Volume Encryption來保護節點的根磁碟區。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您的系統必須使用HA組態。
++
+單一節點組態不支援根Volume加密。
+
+* 您的節點根磁碟區必須已建立。
+* 您的系統必須具有內建金鑰管理程式、或是使用金鑰管理互通性傳輸協定（KMIP）的外部金鑰管理伺服器。
+
+
+[NOTE]
+.關於這項工作
+====
+此程序適用於節點根磁碟區。不適用於SVM根磁碟區。SVM根磁碟區可透過Aggregate層級加密來保護。
+
+====
+根磁碟區加密一旦開始、就必須完成。您無法暫停作業。加密完成後、您無法將新金鑰指派給根磁碟區、也無法執行安全清除作業。
+
+.步驟
+. 加密根磁碟區：
++
+「Volume加密轉換開始- vserver Svm_name -volume root_vol_name」
+
+. 確認轉換作業的狀態：
++
+「Volume加密轉換顯示」
+
+. 完成轉換作業後、請確認磁碟區已加密：
++
+「Volume show -Fields」
+
++
+以下顯示加密Volume的輸出範例。
+
++
+[listing]
+----
+::> volume show -vserver xyz  -volume vol0 -fields is-encrypted
+vserver    volume is-encrypted
+---------- ------ ------------
+xyz        vol0   true
+----
+

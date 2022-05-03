@@ -1,0 +1,60 @@
+---
+permalink: smb-admin/stop-start-server-task.html 
+sidebar: sidebar 
+keywords: stop, cifs, server, svm, perform, task, user, access, data, smb, share, restart, protocol, storage, virtual, machine, stop or start the cifs server 
+summary: 您可以停止SVM上的CIFS伺服器、這在使用者無法透過SMB共用存取資料時、在執行工作時很有用。您可以啟動CIFS伺服器來重新啟動SMB存取。停止CIFS伺服器之後、您也可以修改儲存虛擬機器（SVM）上允許的傳輸協定。 
+---
+= 停止或啟動CIFS伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以停止SVM上的CIFS伺服器、這在使用者無法透過SMB共用存取資料時、在執行工作時很有用。您可以啟動CIFS伺服器來重新啟動SMB存取。停止CIFS伺服器之後、您也可以修改儲存虛擬機器（SVM）上允許的傳輸協定。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+停止CIFS伺服器
+ a| 
+「Vserver CIFS stop -vserver _vserver_name_（-foreground{true|fals}]）」
+
+
+
+ a| 
+啟動CIFS伺服器
+ a| 
+「Vserver CIFS start -vserver _vserver_name_（-foreground{true|fals}]）」
+
+|===
++
+foreground'指定命令應在前景或背景中執行。如果您未輸入此參數、則會將其設為「true」、命令會在前景執行。
+
+. 使用「vserver CIFS show」命令確認CIFS伺服器管理狀態正確。
+
+
+下列命令會在SVM VS1上啟動CIFS伺服器：
+
+[listing]
+----
+cluster1::> vserver start -vserver vs1
+
+cluster1::> vserver cifs show -vserver vs1
+
+                                          Vserver: vs1
+                         CIFS Server NetBIOS Name: VS1
+                    NetBIOS Domain/Workgroup Name: DOMAIN
+                      Fully Qualified Domain Name: DOMAIN.LOCAL
+Default Site Used by LIFs Without Site Membership:
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+----
+xref:display-discovered-servers-task.adoc[顯示已探索伺服器的相關資訊]
+
+xref:reset-rediscovering-servers-task.adoc[重新設定及重新探索伺服器]

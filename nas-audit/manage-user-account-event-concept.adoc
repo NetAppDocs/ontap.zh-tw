@@ -1,0 +1,66 @@
+---
+permalink: nas-audit/manage-user-account-event-concept.html 
+sidebar: sidebar 
+keywords: manage, user-account, event 
+summary: 當儲存虛擬機器（SVM）的使用者帳戶事件設定為啟用稽核時、就會產生稽核事件。 
+---
+= 管理使用者帳戶事件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當儲存虛擬機器（SVM）的使用者帳戶事件設定為啟用稽核時、就會產生稽核事件。
+
+事件ID為4720、4722、4724、4725、4726、 當本機SMB或NFS使用者從系統建立或刪除、本機使用者帳戶啟用、停用或修改、以及本機SMB使用者密碼重設或變更時、就會產生4738和4781。使用者帳戶事件是在使用「vserver CIFS user-and -Groups（vserver CIFS使用者與群組）_（本機使用者）」和「vserver services name-service（vserver服務名稱服務）_（<UNIX使用者>_）」命令修改使用者帳戶時產生。
+
+下列範例顯示建立本機SMB使用者時產生ID 4720的使用者帳戶事件：
+
+[listing]
+----
+netapp-clus1::*> vserver cifs users-and-groups local-user create -user-name testuser -is-account-disabled false -vserver vserver_1
+Enter the password:
+Confirm the password:
+
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4720
+   EventName Local Cifs User Created
+   ...
+   ...
+  TargetUserName testuser
+  TargetDomainName NETAPP-CLUS1
+  TargetSid S-1-5-21-2447422786-1297661003-4197201688-1003
+  TargetType CIFS
+  DisplayName testuser
+  PasswordLastSet 1472662216
+  AccountExpires NO
+  PrimaryGroupId 513
+  UserAccountControl %%0200
+  SidHistory ~
+  PrivilegeList ~
+----
+下列範例顯示在先前範例中建立的本機SMB使用者重新命名時、產生ID為4781的使用者帳戶事件：
+
+[listing]
+----
+ netapp-clus1::*> vserver cifs users-and-groups local-user rename -user-name testuser -new-user-name testuser1
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4781
+   EventName Local Cifs User Renamed
+   ...
+   ...
+  OldTargetUserName testuser
+  NewTargetUserName testuser1
+  TargetDomainName NETAPP-CLUS1
+  TargetSid S-1-5-21-2447422786-1297661003-4197201688-1000
+  TargetType CIFS
+  SidHistory ~
+  PrivilegeList ~
+----

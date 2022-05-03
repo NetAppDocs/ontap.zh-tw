@@ -1,0 +1,34 @@
+---
+permalink: san-admin/iscsi-endpoint-isolation-concept.html 
+sidebar: sidebar 
+keywords: iscsi, endpoint, isolation, add, remove, initiator, address, range 
+summary: 從現有的iSCSI安全命令中、以支援IP位址範圍或多個IP位址為起點ONTAP 。 
+---
+= iSCSI端點隔離
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從現有的iSCSI安全命令中、以支援IP位址範圍或多個IP位址為起點ONTAP 。
+
+所有iSCSI啟動器在建立工作階段或與目標連線時、都必須提供起始IP位址。如果來源IP位址不受支援或不明、這項新功能可防止啟動器登入叢集、提供獨特的識別配置。來自不受支援或未知IP位址的任何啟動器、都會在iSCSI工作階段層拒絕其登入、使啟動器無法存取叢集內的任何LUN或磁碟區。
+
+使用兩個新命令來實作這項新功能、以協助管理預先存在的項目。
+
+
+
+== 新增啟動器位址範圍
+
+使用「vserver iSCSI安全性附加啟動器位址範圍」命令新增IP位址範圍或多個IP位址、以改善iSCSI啟動器的安全管理。
+
+「cluster1：：> vserver iSCSI安全性附加啟動器位址範圍」
+
+
+
+== 移除啟動器位址範圍
+
+使用「vserver iSCSI安全移除-initiator位址範圍」命令移除IP位址範圍或多個IP位址。
+
+「cluster1：：> vserver iSCSI安全性移除啟動器位址範圍」

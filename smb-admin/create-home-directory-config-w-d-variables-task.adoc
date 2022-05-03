@@ -1,0 +1,100 @@
+---
+permalink: smb-admin/create-home-directory-config-w-d-variables-task.html 
+sidebar: sidebar 
+keywords: 'create, home, directory, configuration, variable, user, connect, share, dynamic, create, share, %w, %d, create a home directory configuration using the %w and %d variables' 
+summary: '您可以使用%w和%d變數來建立主目錄組態。然後使用者可以使用動態建立的共用區連線到他們的主共用區。' 
+---
+= 使用%w和%d變數建立主目錄組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「%w」和「%d」變數來建立主目錄組態。然後使用者可以使用動態建立的共用區連線到他們的主共用區。
+
+.步驟
+. 建立qtree以包含使用者的主目錄：「Volume qtree create -vserver vserver_name -qtree路徑qtree路徑」
+. 驗證qtree是否使用正確的安全樣式：「Volume qtree show」
+. 如果qtree未使用所需的安全樣式、請使用「volume qtree Security」命令變更安全樣式。
+. 新增主目錄共用區：`+vserver CIFS共用區create -vserver vserver -share-name %w -path %d/%w -share-properties HomeDirectory（、...\]+）
++
+vserver的「vserver」指定要新增搜尋路徑的CIFS型儲存虛擬機器（SVM）。
+
++
+共享名`%w'指定主目錄共享名。當每位使用者連線至其主目錄時、系統會動態建立共用名稱。ONTAP共用名稱的格式為_windows_user_name_。
+
++
+「-path」、「%d/%w」指定主目錄的相對路徑。當每個使用者連線至其主目錄時、會動態建立相對路徑、其格式為_domain/windows_user_name_。
+
++
+共享屬性HomeDirectory（、...）+（）指定該共享的共享屬性。您必須指定「HomeDirectory」值。您可以使用以逗號分隔的清單來指定其他共用屬性。
+
+. 使用「vserver CIFS share show」命令確認共用區的組態符合所需。
+. 新增主目錄搜尋路徑：「vserver CIFS主目錄搜尋路徑add -vserver vserver -path path」
++
+-`-vserver _vserver-name_'指定要在其中新增搜尋路徑的CIFS型SVM。
+
++
+-`-path _path_'指定搜尋路徑的絕對目錄路徑。
+
+. 使用「vserver CIFS主目錄search-path show」命令、確認您已成功新增搜尋路徑。
+. 對於擁有主目錄的使用者、請在qtree或指定包含主目錄的磁碟區中建立對應的目錄。
++
+例如、如果您建立的qtree路徑為「/vol/vol1/users'」、而您要建立的目錄為mydomain\user1、您就會建立一個路徑如下的目錄：「/vol/vol1/users/mydomain/user1」。
+
++
+如果您建立的磁碟區名稱為「home1」、安裝於「/home1」、您可以建立一個路徑如下的目錄：「/home1/mydomain/user1」。
+
+. 確認使用者可以透過對應磁碟機或使用UNC路徑連線、成功連線至主共用區。
++
+例如、如果使用者mydomain\user1想要連線到在步驟8中建立的SVM VS1目錄、則user1會使用UNC路徑「\VS1\user1」連線。
+
+
+
+下列範例中的命令會以下列設定建立主目錄組態：
+
+* 共享區名稱為%W.
+* 相對主目錄路徑為%d/%w
+* 用於包含主目錄的搜尋路徑「/hhome1」是設定為NTFS安全樣式的磁碟區。
+* 組態是在SVM VS1上建立。
+
+
+當使用者從Windows主機存取其主目錄時、您可以使用此類型的主目錄組態。當使用者從Windows和UNIX主機存取其主目錄時、您也可以使用此類組態、而檔案系統管理員則使用Windows型使用者和群組來控制對檔案系統的存取。
+
+[listing]
+----
+cluster::> vserver cifs share create -vserver vs1 -share-name %w -path %d/%w -share-properties oplocks,browsable,changenotify,homedirectory
+
+cluster::> vserver cifs share show -vserver vs1 -share-name %w
+
+                      Vserver: vs1
+                        Share: %w
+     CIFS Server NetBIOS Name: VS1
+                         Path: %d/%w
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               homedirectory
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+
+cluster::> vserver cifs home-directory search-path add -vserver vs1 ‑path /home1
+
+cluster::> vserver cifs home-directory search-path show
+Vserver     Position Path
+----------- -------- -----------------
+vs1         1        /home1
+----
+xref:configure-home-directories-u-variable-task.adoc[使用%u變數設定主目錄]
+
+xref:home-directory-config-concept.adoc[其他主目錄組態]
+
+xref:display-user-home-directory-path-task.adoc[顯示SMB使用者主目錄路徑的相關資訊]

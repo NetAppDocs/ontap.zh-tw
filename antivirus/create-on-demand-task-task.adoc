@@ -1,0 +1,72 @@
+---
+permalink: antivirus/create-on-demand-task-task.html 
+sidebar: sidebar 
+keywords: create, on-demand, task 
+summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。 
+---
+= 建立隨需工作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+隨需工作可定義隨需掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。
+
+.步驟
+. 建立隨需工作：
++
+「vserver vscan on需求工作create -vserver data_SVM -task-name task_name -scan路徑_of_fils_to _scan -report-directoryreport_directory_path -report-expire-time_for_report -schedule cron副檔名-max-file-size max _size_for_fils_to _scan -the-ext-paths的文件不包括文件的副檔名
+
++
+** 「-file-ext-to-exclude」設定會覆寫「-file-ext-to-including」設定。
+** 將「掃描檔案、無副檔名」設為「真」、即可掃描無副檔名的檔案。如需選項的完整清單、請參閱命令的手冊頁。
+
+
++
+下列命令會在「vs1's1'sVM」上建立名為「task1」的存取時工作：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task create -vserver vs1 -task-name Task1 -scan-paths "/vol1/","/vol2/cifs/" -report-directory "/report" -schedule daily -max-file-size 5GB -paths-to-exclude "/vol1/cold-files/" -file-ext-to-include "vmdk?","mp*" -file-ext-to-exclude "mp3","mp4" -scan-files-with-no-ext false
+[Job 126]: Vscan On-Demand job is queued. Use the "job show -id 126" command to view the status.
+----
++
+[NOTE]
+====
+您可以使用「jobshow」命令來檢視工作狀態。您可以使用「工作暫停」和「工作恢復」命令來暫停和重新啟動工作、或使用「工作停止」命令來結束工作。
+
+====
+. 確認已建立隨需工作：「vserver vscan隨需工作show -instance data_SVM -task-name task_name」
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會顯示「task1」工作的詳細資料：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task show -instance vs1 -task-name Task1
+
+                           Vserver: vs1
+                         Task Name: Task1
+                List of Scan Paths: /vol1/, /vol2/cifs/
+             Report Directory Path: /report
+                      Job Schedule: daily
+Max File Size Allowed for Scanning: 5GB
+            File Paths Not to Scan: /vol1/cold-files/
+       File Extensions Not to Scan: mp3, mp4
+           File Extensions to Scan: vmdk?, mp*
+      Scan Files with No Extension: false
+           Request Service Timeout: 5m
+                    Cross Junction: true
+               Directory Recursion: true
+                     Scan Priority: low
+                  Report Log Level: info
+        Expiration Time for Report: -
+----
+
+
+您必須先在SVM上啟用掃描、工作才會排程執行。

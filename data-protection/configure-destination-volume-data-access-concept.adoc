@@ -1,0 +1,33 @@
+---
+permalink: data-protection/configure-destination-volume-data-access-concept.html 
+sidebar: sidebar 
+keywords: configure, destination, volume, data, access 
+summary: 將目的地Volume設為可寫入後、您必須設定該磁碟區以進行資料存取。NAS用戶端、NVMe子系統和SAN主機可從目的地Volume存取資料、直到重新啟動來源Volume為止。 
+---
+= 設定目的地Volume以進行資料存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將目的地Volume設為可寫入後、您必須設定該磁碟區以進行資料存取。NAS用戶端、NVMe子系統和SAN主機可從目的地Volume存取資料、直到重新啟動來源Volume為止。
+
+NAS環境：
+
+. 將NAS磁碟區掛載至命名空間、其路徑與來源SVM中的來源磁碟區掛載路徑相同。
+. 將適當的ACL套用到目的地磁碟區的SMB共用區。
+. 將NFS匯出原則指派給目的地Volume。
+. 將配額規則套用至目的地Volume。
+. 將用戶端重新導向至目的地Volume。
+. 在用戶端上重新掛載NFS和SMB共用。
+
+
+SAN環境：
+
+. 將磁碟區中的LUN對應至適當的啟動器群組。
+. 對於iSCSI、請從SAN主機啟動器建立iSCSI工作階段至SAN LIF。
+. 在SAN用戶端上、執行儲存設備重新掃描、以偵測連接的LUN。
+
+
+如需NVMe環境的相關資訊、請參閱 link:../san-admin/index.html["SAN管理"]。

@@ -1,0 +1,79 @@
+---
+permalink: disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html 
+sidebar: sidebar 
+keywords: create, flash pool, aggregate, ssd, storage pool, allocation units 
+summary: 您可以將一或多個配置單元從SSD儲存資源池新增至現有HDD集合體、以設定Flash資源池集合體。 
+---
+= 使用SSD儲存資源池配置單元建立Flash Pool Aggregate
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將一或多個配置單元從SSD儲存資源池新增至現有HDD集合體、以設定Flash資源池集合體。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須識別由HDD組成的有效集合體、才能轉換成Flash Pool Aggregate。
+* 您必須確定與Aggregate相關之磁碟區的寫入快取資格、並完成任何必要步驟以解決資格問題。
+* 您必須建立SSD儲存池、才能將SSD快取提供給此Flash Pool Aggregate。
++
+您要使用之儲存資源池中的任何配置單元、都必須由擁有Flash Pool Aggregate的同一個節點擁有。
+
+* 您必須決定要新增至集合體的快取容量。
++
+您可以依配置單位將快取新增至Aggregate。如果有空間、您可以稍後將SSD新增至儲存資源池、以增加配置單位的大小。
+
+* 您必須確定要用於SSD快取的RAID類型。
++
+從SSD儲存資源池新增快取至Aggregate之後、您就無法變更快取RAID群組的RAID類型。
+
+* 您必須確定系統的最大快取大小、並確定將SSD快取新增至Aggregate不會導致您超過它。
++
+您可以使用「儲存池show」命令查看要新增至總快取大小的快取容量。
+
+* 您必須熟悉Flash Pool Aggregate的組態需求。
+
+
+如果您希望快取的RAID類型與HDD RAID群組的RAID類型不同、則在新增SSD容量時、必須指定快取RAID類型。將SSD容量新增至Aggregate之後、您就無法再變更快取的RAID類型。
+
+將SSD快取新增至Aggregate以建立Flash Pool Aggregate之後、就無法移除SSD快取、將Aggregate轉換回其原始組態。
+
+.步驟
+. 將Aggregate標示為符合資格可成為Flash Pool Aggregate：
++
+「torage Aggregate modify -Aggregate _aggreg_name_-himge-enabled_true」
+
++
+如果此步驟失敗、請判斷目標Aggregate的寫入快取資格。
+
+. 顯示可用的SSD儲存池配置單元：
++
+「torage Pool show-可用 容量」
+
+. 將SSD容量新增至Aggregate：
++
+「torage Aggregate add _aggreg_name_-storage資源池_sp_name_-all撥款 單位_number_of_units _」
+
++
+如果您希望快取的RAID類型與HDD RAID群組的RAID類型不同、則在輸入此命令時、必須使用「raidtype」參數加以變更。
+
++
+您不需要指定新的RAID群組；ONTAP 而無法自動將SSD快取放入不同於HDD RAID群組的RAID群組。
+
++
+您無法設定快取的RAID群組大小；它是由儲存資源池中的SSD數量所決定。
+
++
+快取會新增至Aggregate、而Aggregate現在是Flash Pool Aggregate。新增至Aggregate的每個分配單元都會成為自己的RAID群組。
+
+. 確認SSD快取是否存在及大小：
++
+「torage Aggregate show _aggreg_name_'」
+
++
+快取大小列在「Total Hybrid Cache Sizing」（混合式快取大小總計）下。
+
+
+
+http://www.netapp.com/us/media/tr-4070.pdf["NetApp技術報告4070：Flash Pool設計與實作指南"]

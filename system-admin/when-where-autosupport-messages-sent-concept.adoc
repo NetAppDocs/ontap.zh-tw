@@ -1,0 +1,156 @@
+---
+permalink: system-admin/when-where-autosupport-messages-sent-concept.html 
+sidebar: sidebar 
+keywords: active, iq, autosupport, messages, email, manual, scheduled, event, triggered 
+summary: 根據訊息類型、將訊息傳送給不同的收件者。AutoSupport瞭解AutoSupport 何時何地發送消息可協助您瞭解透過電子郵件接收的訊息、或是在Active IQ 本網站上查看（先前稱為My AutoSupport 原地）。 
+---
+= 何時及何處AutoSupport 傳送資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據訊息類型、將訊息傳送給不同的收件者。AutoSupport瞭解AutoSupport 何時何地發送消息可協助您瞭解透過電子郵件接收的訊息、或是在Active IQ 本網站上查看（先前稱為My AutoSupport 原地）。
+
+除非另有說明、否則下表中的設定為「系統節點AutoSupport 還原」命令的參數。
+
+
+
+== 事件觸發的訊息
+
+當系統發生需要採取修正行動的事件時AutoSupport 、則會自動傳送事件觸發的訊息。
+
+|===
+| 訊息傳送時 | 訊息傳送位置 
+
+
+ a| 
+回應EMS中的觸發事件AutoSupport
+ a| 
+地址在「收件者」和「附註收件者」中指定。（僅會傳送影響服務的重大事件。）
+
+「合作夥伴地址」中指定的地址
+
+如果將"support"（支援）設為"enable（啟用）"、則會提供技術支援
+
+|===
+
+
+== 排程的訊息
+
+自動定期傳送數則訊息。AutoSupport
+
+|===
+| 訊息傳送時 | 訊息傳送位置 
+
+
+ a| 
+每日（依預設、於上午12：00之間傳送和上午1：00作為記錄訊息）
+ a| 
+「合作夥伴地址」中指定的地址
+
+如果將"support"（支援）設為"enable（啟用）"、則會提供技術支援
+
+
+
+ a| 
+每日（依預設、於上午12：00之間傳送和上午1：00如果將"-perf"參數設為"true"、則為效能訊息）
+ a| 
+合作夥伴地址中指定的地址
+
+如果將"support"（支援）設為"enable（啟用）"、則會提供技術支援
+
+
+
+ a| 
+每週（依預設、星期日的傳送時間為上午12：00和上午1：00）
+ a| 
+「合作夥伴地址」中指定的地址
+
+如果將"support"（支援）設為"enable（啟用）"、則會提供技術支援
+
+|===
+
+
+== 手動觸發的訊息
+
+您可以手動初始化AutoSupport 或重新傳送一個消息。
+
+|===
+| 訊息傳送時 | 訊息傳送位置 
+
+
+ a| 
+您可以使用「System Node AutoSupport 現象叫用」命令手動啟動訊息
+ a| 
+如果使用「System Node AutoSupport 現象叫用」命令中的「-uri」參數指定URI、則會將訊息傳送至該URI。
+
+如果省略了「-uri」、訊息會傳送到「-to」和「-Partner - Address」中指定的位址。如果將「-support"（支援）設為「enable」（啟用）、也會傳送訊息給技術支援部門。
+
+
+
+ a| 
+您可以使用「系統節點AutoSupport 無法叫用核心上傳」命令手動啟動訊息
+ a| 
+如果使用「System Node AutoSupport 現象叫用核心上傳」命令中的「-Uri'」參數指定URI、訊息就會傳送到該URI、核心傾印檔案就會上傳至URI。
+
+如果在「系統節點AutoSupport ‘叫用核心上傳’命令中省略了「-Uri'」、訊息會傳送至技術支援、核心傾印檔案會上傳至技術支援網站。
+
+這兩種情況都要求將"-support"設置爲"enable（啓用）"，而"-transport"設置爲"https（https）"或"http（http）"。
+
+由於核心傾印檔案很大、因此訊息不會傳送到「收件者」和「合作夥伴位址」參數中指定的位址。
+
+
+
+ a| 
+您可以使用「System Node AutoSupport 現象叫用效能歸檔」命令手動啟動訊息
+ a| 
+如果使用「System Node AutoSupport 現象叫用效能歸檔」命令中的「-Uri'」參數指定URI、則訊息會傳送到該URI、而效能歸檔檔案會上傳至URI。
+
+如果在「系統節點AutoSupport 的叫用效能歸檔」中省略「-Uri'」、訊息會傳送至技術支援、而效能歸檔檔案會上傳至技術支援網站。
+
+這兩種情況都要求將"-support"設置爲"enable（啓用）"，而"-transport"設置爲"https（https）"或"http（http）"。
+
+由於效能歸檔檔案的大小很大、因此訊息不會傳送到「收件者」和「合作夥伴位址」參數中指定的位址。
+
+
+
+ a| 
+您可以使用「系統節點AutoSupport 資訊重新傳輸歷史記錄」命令手動重新傳送過去的訊息
+ a| 
+僅限於您在「系統節點AutoSupport ‘history reTransmit」命令的「-Uri'」參數中指定的URI
+
+|===
+
+
+== 由技術支援所觸發的訊息
+
+技術支援人員AutoSupport 可以使用AutoSupport 「支援不受需求」功能、向支援中心索取訊息。
+
+|===
+| 訊息傳送時 | 訊息傳送位置 
+
+
+ a| 
+當獲取交付指示以產生新的資訊提供訊息時AutoSupport AutoSupport
+ a| 
+「合作夥伴地址」中指定的地址
+
+如果將"support"（支援）設為"enable（啟用）"、而"-transport（傳輸）"則設為"https（https）"
+
+
+
+ a| 
+當獲得傳遞指示以重新傳送過去的消息時AutoSupport AutoSupport
+ a| 
+如果將"support"（支援）設為"enable（啟用）"、而"-transport（傳輸）"則設為"https（https）"
+
+
+
+ a| 
+當您取得交付指示、以產生新的資訊檔來上傳核心傾印或效能歸檔檔案時AutoSupport AutoSupport
+ a| 
+如果將"support"（支援）設為"enable（啟用）"、而"-transport（傳輸）"則設為"https（https）"。核心傾印或效能歸檔檔案會上傳至技術支援網站。
+
+|===

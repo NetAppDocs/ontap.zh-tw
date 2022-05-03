@@ -1,0 +1,79 @@
+---
+permalink: smb-admin/determine-clients-connected-encrypted-task.html 
+sidebar: sidebar 
+keywords: display, information, connect, smb, session, determine, client, encrypt, smb, connection, helpful, determining, session, desire, security, setting, determine whether client are connected using encrypted smb sessions 
+summary: 您可以顯示連線SMB工作階段的相關資訊、以判斷用戶端是否使用加密的SMB連線。這有助於判斷SMB用戶端工作階段是否與所需的安全性設定連線。 
+---
+= 判斷用戶端是否使用加密的SMB工作階段連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示連線SMB工作階段的相關資訊、以判斷用戶端是否使用加密的SMB連線。這有助於判斷SMB用戶端工作階段是否與所需的安全性設定連線。
+
+SMB用戶端工作階段可以有三種加密層級之一：
+
+* "未加密"
++
+SMB工作階段未加密。未設定儲存虛擬機器（SVM）層級或共用層級的加密。
+
+* 「部分加密」
++
+當樹狀結構連線發生時、會啟動加密。已設定共用層級加密。未啟用SVM層級的加密。
+
+* "加密"
++
+SMB工作階段已完全加密。已啟用SVM層級的加密。共用層級加密可能已啟用、也可能未啟用。SVM層級的加密設定會取代共用層級的加密設定。
+
+
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要顯示有關...的資訊 | 輸入命令... 
+
+
+ a| 
+針對指定SVM上的工作階段、具有指定加密設定的工作階段
+ a| 
+「Vserver CIFS工作階段顯示-vserver _vserver_name_｛un加密|部分加密|加密｝-instance」
+
+
+
+ a| 
+指定SVM上特定工作階段ID的加密設定
+ a| 
+「Vserver CIFS工作階段show -vserver _vserver_name_-session-id _integer_-instanceued'
+
+|===
+
+
+下列命令會在工作階段ID為2的SMB工作階段上顯示詳細的工作階段資訊、包括加密設定：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver vs1 -session-id 2 -instance
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 2
+               Connection ID: 3151274158
+Incoming Data LIF IP Address: 10.2.1.1
+                 Workstation: 10.1.1.2
+    Authentication Mechanism: Kerberos
+                Windows User: DOMAIN\joe
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 1
+                  Open Other: 0
+              Connected Time: 10m 43s
+                   Idle Time: 1m 19s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: true
+       User Authenticated as: domain-user
+                NetBIOS Name: CIFS_ALIAS1
+       SMB Encryption Status: Unencrypted
+----

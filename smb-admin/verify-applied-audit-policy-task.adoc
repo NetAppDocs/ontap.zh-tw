@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/verify-applied-audit-policy-task.html 
+sidebar: sidebar 
+keywords: verify, audit, policy, confirm, file, folder, storage, virtual, machine, svm, applied, apply, security, desire, verify the applied audit policy 
+summary: 您可以驗證稽核原則、確認您套用安全性原則的儲存虛擬機器（SVM）上的檔案或資料夾具有所需的稽核安全性設定。 
+---
+= 驗證套用的稽核原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以驗證稽核原則、確認您套用安全性原則的儲存虛擬機器（SVM）上的檔案或資料夾具有所需的稽核安全性設定。
+
+您可以使用「vserver安全檔案目錄show」命令來顯示稽核原則資訊。您必須提供SVM名稱、其中包含您要顯示其檔案或資料夾稽核原則資訊的資料、以及其路徑。
+
+.步驟
+. 顯示稽核原則設定：「vserver安全性檔案目錄show -vserver _vserver_name_-path _path_」
+
+
+下列命令會顯示套用至SVM VS1路徑「/corp」的稽核原則資訊。這條路徑既成功、也套用成功/失敗的SACL項目：
+
+[listing]
+----
+cluster::> vserver security file-directory show -vserver vs1 -path /corp
+
+                Vserver: vs1
+              File Path: /corp
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0x8014
+                         Owner:DOMAIN\Administrator
+                         Group:BUILTIN\Administrators
+                         SACL - ACEs
+                           ALL-DOMAIN\Administrator-0x100081-OI|CI|SA|FA
+                           SUCCESSFUL-DOMAIN\user1-0x100116-OI|CI|SA
+                         DACL - ACEs
+                           ALLOW-BUILTIN\Administrators-0x1f01ff-OI|CI
+                           ALLOW-BUILTIN\Users-0x1f01ff-OI|CI
+                           ALLOW-CREATOR OWNER-0x1f01ff-OI|CI
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff-OI|CI
+----

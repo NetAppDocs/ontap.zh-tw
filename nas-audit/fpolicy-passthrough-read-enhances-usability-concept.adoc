@@ -1,0 +1,51 @@
+---
+permalink: nas-audit/fpolicy-passthrough-read-enhances-usability-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, passthrough-read, enhances, usability, hierarchical, storage management 
+summary: Passthsthro-read可讓FPolicy伺服器（做為階層式儲存管理（HSM）伺服器）提供離線檔案的讀取存取權限、而不需要從次要儲存系統將檔案重新叫用至主要儲存系統。 
+---
+= FPolicy Passthrough-read如何強化階層式儲存管理的使用性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Passthsthro-read可讓FPolicy伺服器（做為階層式儲存管理（HSM）伺服器）提供離線檔案的讀取存取權限、而不需要從次要儲存系統將檔案重新叫用至主要儲存系統。
+
+當FPolicy伺服器設定為提供HSM給SMB伺服器上的檔案時、會發生原則型檔案移轉、檔案會離線儲存在次要儲存設備上、而且只有存根檔案保留在主要儲存設備上。雖然存根檔案對用戶端而言是正常檔案、但實際上是與原始檔案大小相同的稀疏檔案。該檔案設有SMB離線位元、並指向已移轉至次要儲存設備的實際檔案。
+
+一般而言、當收到離線檔案的讀取要求時、必須將要求的內容重新叫用回主要儲存設備、然後再透過主要儲存設備存取。需要將資料重新叫用回主儲存設備、會產生幾種不良影響。其中不良的影響包括：回應要求前必須回收內容、導致用戶端要求延遲增加、以及主儲存設備上已回收檔案所需的空間使用量增加。
+
+FPolicy Passthrough-read可讓HSM伺服器（FPolicy伺服器）提供移轉離線檔案的讀取存取權、而不需要從次要儲存系統將檔案重新叫用至主要儲存系統。讀取要求可直接從次要儲存設備處理、而非將檔案重新叫用回主要儲存設備。
+
+[NOTE]
+====
+FPolicy pass-read作業不支援複本卸載（ODX）。
+
+====
+Passthsther-read提供下列優點、可增強使用性：
+
+* 即使主儲存設備沒有足夠空間可將要求的資料回收回主儲存設備、仍可處理讀取要求。
+* 當發生大量的資料回收時（例如指令碼或備份解決方案需要存取許多離線檔案）、容量和效能管理會更好。
+* Snapshot複本中離線檔案的讀取要求可以提供服務。
++
+由於Snapshot複本為唯讀、因此如果存根檔案位於Snapshot複本中、FPolicy伺服器將無法還原原始檔案。使用Passthrough-read可消除此問題。
+
+* 您可以設定原則、以控制何時透過存取次要儲存設備上的檔案來處理讀取要求、以及何時應將離線檔案重新叫用至主要儲存設備。
++
+例如、您可以在HSM伺服器上建立原則、指定在檔案移轉回主要儲存設備之前、於指定時間段內存取離線檔案的次數。這類原則可避免重呼很少存取的檔案。
+
+
+
+
+
+== 啟用FPolicy Passthrough-read時、如何管理讀取要求
+
+您應該瞭解啟用FPolicy pass-read時如何管理讀取要求、以便最佳設定儲存虛擬機器（SVM）與FPolicy伺服器之間的連線。
+
+啟用FPolicy Passthrough-read且SVM收到離線檔案的要求時、FPolicy會透過標準連線通道傳送通知給FPolicy伺服器（HSM伺服器）。
+
+收到通知後、FPolicy伺服器會從通知中傳送的檔案路徑讀取資料、並透過SVM與FPolicy伺服器之間建立的Passthrough-read權限資料連線、將要求的資料傳送至SVM。
+
+傳送資料後、FPolicy伺服器會以允許或拒絕的形式回應讀取要求。根據讀取要求是允許還是拒絕、ONTAP 所以無法傳送要求的資訊或傳送錯誤訊息給用戶端。

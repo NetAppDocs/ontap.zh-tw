@@ -1,0 +1,168 @@
+---
+permalink: nfs-admin/troubleshoot-name-service-issues-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, name, service, issue 
+summary: 當用戶端因為名稱服務問題而遭遇存取失敗時、您可以使用vserver服務名稱服務getxxbyyy命令系列手動執行各種名稱服務查詢、並檢查查詢的詳細資料和結果、以協助疑難排解。 
+---
+= 疑難排解名稱服務問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當用戶端因為名稱服務問題而遭遇存取失敗時、您可以使用「vserver services name-service getxxbyyyy'命令系列」手動執行各種名稱服務查詢、並檢查查詢的詳細資料和結果、以協助疑難排解。
+
+.關於這項工作
+* 您可以針對每個命令指定下列項目：
++
+** 執行查詢的節點或儲存虛擬機器（SVM）名稱。
++
+這可讓您測試特定節點或SVM的名稱服務查詢、以縮小搜尋名稱服務組態問題的範圍。
+
+** 是否顯示用於查詢的來源。
++
+這可讓您檢查是否使用了正確的來源。
+
+
+
+* 根據設定的名稱服務交換器訂單、選擇執行查詢的服務。ONTAP
+* 這些命令可在進階權限層級使用。
+
+
+.步驟
+. 執行下列其中一項動作：
++
+....
+[cols="2*",options="header"]
+|===
+| To retrieve the...| Use the command...
+a|
+IP address of a host name
+a|
+`vserver services name-service getxxbyyy getaddrinfo`     `vserver services name-service getxxbyyy gethostbyname` (IPv4 addresses only)
+a|
+Members of a group by group ID
+a|
+`vserver services name-service getxxbyyy getgrbygid`
+a|
+Members of a group by group name
+a|
+`vserver services name-service getxxbyyy getgrbyname`
+a|
+List of groups a user belongs to
+a|
+`vserver services name-service getxxbyyy getgrlist`
+a|
+Host name of an IP address
+a|
+`vserver services name-service getxxbyyy getnameinfo`     `vserver services name-service getxxbyyy gethostbyaddr` (IPv4 addresses only)
+a|
+User information by user name
+a|
+`vserver services name-service getxxbyyy getpwbyname`     You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
+a|
+User information by user ID
+a|
+`vserver services name-service getxxbyyy getpwbyuid`
+....
++
+....
+You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
+a|
+Netgroup membership of a client
+a|
+`vserver services name-service getxxbyyy netgrp`
+a|
+Netgroup membership of a client using netgroup-by-host search
+a|
+`vserver services name-service getxxbyyy netgrpbyhost`
+|===
+The following example shows a DNS lookup test for the SVM vs1 by attempting to obtain the IP address for the host acast1.eng.example.com:
+----
+cluster1::*> vserver services name-service getxxbyyy getaddrinfo -vserver vs1 -hostname acast1.eng.example.com -address-family all -show-source true
+Source used for lookup: DNS
+Host name: acast1.eng.example.com
+Canonical Name: acast1.eng.example.com
+IPv4: 10.72.8.29
+----
+....
++
+....
+The following example shows a NIS lookup test for the SVM vs1 by attempting to retrieve user information for a user with the UID 501768:
+----
+cluster1::*> vserver services name-service getxxbyyy getpwbyuid -vserver vs1 -userID 501768 -show-source true
+Source used for lookup: NIS
+pw_name: jsmith
+pw_passwd: $1$y8rA4XX7$/DDOXAvc2PC/IsNFozfIN0
+pw_uid: 501768
+pw_gid: 501768
+pw_gecos:
+pw_dir: /home/jsmith
+pw_shell: /bin/bash
+----
+The following example shows an LDAP lookup test for the SVM vs1 by attempting to retrieve user information for a user with the name ldap1:
+....
++
+....
+----
+cluster1::*> vserver services name-service getxxbyyy getpwbyname -vserver vs1 -username ldap1 -use-rbac false -show-source true
+Source used for lookup: LDAP
+pw_name: ldap1
+pw_passwd: {crypt}JSPM6yc/ilIX6
+pw_uid: 10001
+pw_gid: 3333
+pw_gecos: ldap1 user
+pw_dir: /u/ldap1
+pw_shell: /bin/csh
+----
+....
++
+ The following example shows a netgroup lookup test for the SVM vs1 by attempting to find out whether the client dnshost0 is a member of the netgroup lnetgroup136:
++
+....
+----
+cluster1::*> vserver services name-service getxxbyyy netgrp -vserver vs1 -netgroup lnetgroup136 -client dnshost0 -show-source true
+Source used for lookup: LDAP
+dnshost0 is a member of lnetgroup136
+----
+....
+. 分析您執行的測試結果、並採取必要行動。
++
+[cols="2*"]
+|===
+| 如果... | 請查看... 
+
+
+ a| 
+主機名稱或IP位址查詢失敗或產生不正確的結果
+ a| 
+DNS組態
+
+
+
+ a| 
+查詢查詢的來源不正確
+ a| 
+名稱服務交換器組態
+
+
+
+ a| 
+使用者或群組查詢失敗或產生不正確的結果
+ a| 
+名稱服務交換器組態來源組態（本機檔案、NIS網域、LDAP用戶端）
+
+網路組態（例如、LIF和Routes）
+
+
+
+ a| 
+主機名稱查詢失敗或逾時、而且DNS伺服器不會解析DNS短名稱（例如host1）
+ a| 
+頂層網域（頂層網域）查詢的DNS組態您可以使用「vserver services name-service DNS modify」命令的「is tld-query-enabled假」選項來停用頂層網域（頂層網域）查詢。
+
+|===
+
+
+https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf["NetApp技術報告4668：名稱服務最佳實務做法指南"]

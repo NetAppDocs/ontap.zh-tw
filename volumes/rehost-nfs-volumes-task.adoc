@@ -1,0 +1,80 @@
+---
+permalink: volumes/rehost-nfs-volumes-task.html 
+sidebar: sidebar 
+keywords: rehost, nfs, volumes 
+summary: 您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。在重新裝載NFS磁碟區之後、若要繼續透過NFS傳輸協定存取資料、您必須將磁碟區與裝載SVM的匯出原則建立關聯、並手動設定原則和相關規則。 
+---
+= 重新裝載NFS磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。在重新裝載NFS磁碟區之後、若要繼續透過NFS傳輸協定存取資料、您必須將磁碟區與裝載SVM的匯出原則建立關聯、並手動設定原則和相關規則。
+
+.您需要的是 #8217 ；需要的是什麼
+* Volume必須處於線上狀態。
+* Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
+* 必須停止對正在重新託管的磁碟區的資料存取。
+* 目標SVM的ns交換器和名稱服務組態必須設定為支援重新託管Volume的資料存取。
+* 磁碟區的使用者ID和群組ID必須在目標SVM中可用、或在託管Volume上變更。
+
+
+.關於這項工作
+* 重新託管是一項顛覆性的作業。
+* 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
+* 重新裝載作業之後、下列磁碟區原則、原則規則和組態會從來源磁碟區遺失、必須在重新裝載的磁碟區上手動重新設定：
++
+** Volume與qtree匯出原則
+** 防毒原則
+** Volume效率原則
+** 服務品質（QoS）原則
+** Snapshot原則
+** 配額規則
+** NS-SWITCH與名稱服務組態匯出原則與規則
+** 使用者和群組ID
+
+
+
+
+.步驟
+. 記錄NFS匯出原則的相關資訊、避免在磁碟區重新主機作業失敗時遺失NFS原則的相關資訊。
+. 從父Volume卸載磁碟區：
++
+"Volume unmount（Volume卸載）"
+
+. 切換至進階權限層級：
++
+"進階權限"
+
+. 在目的地SVM上重新裝載磁碟區：
++
+「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+
++
+目的地SVM的預設匯出原則會套用至重新裝載的Volume。
+
+. 建立匯出原則：
++
+「vserver匯出原則建立」
+
+. 將重新裝載磁碟區的匯出原則更新為使用者定義的匯出原則：
++
+"Volume modify"（Volume修改）
+
+. 將磁碟區掛載到目的地SVM中適當的交會路徑下：
++
+磁碟區掛載
+
+. 確認NFS服務正在目的地SVM上執行。
+. 恢復NFS對重新託管磁碟區的存取。
+. 更新NFS用戶端認證和LIF組態、以反映目的地SVM LIF。
++
+這是因為磁碟區存取路徑（LIF和接合路徑）已發生變更。
+
+
+
+您必須手動重新設定重新裝載磁碟區上的原則和相關規則。
+
+https://docs.netapp.com/us-en/ontap-sm-classic/nfs-config/index.html["NFS組態"]

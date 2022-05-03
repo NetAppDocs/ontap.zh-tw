@@ -1,0 +1,46 @@
+---
+permalink: volumes/enable-logical-space-reporting-enforcement-task.html 
+sidebar: sidebar 
+keywords: enable, logical, space, reporting, enforcement 
+summary: 從功能區9.4開始ONTAP 、您可以啟用邏輯空間報告功能。從9.5開始、您可以啟用邏輯空間強制、或同時執行報告和強制。 
+---
+= 啟用邏輯空間報告與強制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能區9.4開始ONTAP 、您可以啟用邏輯空間報告功能。從9.5開始、您可以啟用邏輯空間強制、或同時執行報告和強制。
+
+除了在個別磁碟區層級啟用邏輯空間報告和強制、您也可以在SVM層級為每個支援該功能的磁碟區啟用這些功能。如果您為整個SVM啟用邏輯空間功能、也可以針對個別Volume停用這些功能。
+
+從9.8開始、如果您在SnapMirror來源磁碟區上啟用邏輯空間報告、則會在傳輸後自動在目的地磁碟區上啟用邏輯空間報告。
+
+[NOTE]
+====
+如果在SnapMirror來源Volume上啟用強制選項、則強制設定會傳輸到目的地Volume。但是、由於目的地Volume不支援強制、目的地會報告邏輯空間使用量、但不會遵守其強制規定。
+
+====
+.選擇
+* 啟用磁碟區的邏輯空間報告：
++
+「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume－size -is空間報告邏輯真」
+
+* 啟用磁碟區的邏輯空間強制：
++
+「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume－size -is空間強制邏輯true」
+
+* 為磁碟區同時提供邏輯空間報告與強制：
++
+「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume size -is空間報告邏輯真-is空間強制邏輯真」
+
+* 啟用新SVM的邏輯空間報告或強制：
++
+Check Alignment of PHs>+vserver create -vserver Svm-name -rootvolume root-volume名稱-rootvolume安全型UNIX -data-services｛所需的-data-services｝[-is空間報告邏輯真][-is空間強制邏輯真]+]
+
+* 啟用現有SVM的邏輯空間報告或強制：
++
++vserver modify -vserver Svm-name｛wed理想 的-data-services｝[-is空間報告邏輯true][-is空間強制邏輯true]+]
+
+

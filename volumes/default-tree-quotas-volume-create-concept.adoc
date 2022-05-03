@@ -1,0 +1,47 @@
+---
+permalink: volumes/default-tree-quotas-volume-create-concept.html 
+sidebar: sidebar 
+keywords: how, default, tree quotas, flexvol volume, create, derived tree quotas 
+summary: 當您在FlexVol 某個流通量上建立預設的樹狀結構配額時、系統會自動為該磁碟區中的每個qtree建立對應的衍生樹狀結構配額。 
+---
+= 如何在FlexVol 一個流通量上建立預設的樹狀結構配額、才能建立衍生的樹狀結構配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您在FlexVol 某個流通量上建立預設的樹狀結構配額時、系統會自動為該磁碟區中的每個qtree建立對應的衍生樹狀結構配額。
+
+這些衍生樹狀結構配額的限制與預設樹狀結構配額相同。如果不存在其他配額、則限制會產生下列影響：
+
+* 使用者可以在qtree中使用與分配給整個磁碟區相同的空間（前提是使用根目錄或其他qtree中的空間不會超過磁碟區的限制）。
+* 每個qtree都可以擴充以使用整個Volume。
+
+
+在磁碟區上存在預設的樹狀結構配額、仍會影響所有新增至磁碟區的qtree。每次建立新的qtree時、也會建立衍生的樹狀結構配額。
+
+如同所有衍生配額、衍生樹狀結構配額會顯示下列行為：
+
+* 只有在目標尚未有明確配額時才會建立。
+* 在配額報告中顯示、但當您使用「volume quota policy rRule show」命令顯示配額規則時、不會顯示配額規則。
+
+
+您的磁碟區有三個qtree（proj1、proj2和proj3）、唯一的樹狀結構配額是proj1 qtree上的明確配額、限制其磁碟大小為10 GB。如果您在磁碟區上建立預設樹狀結構配額、並重新初始化磁碟區上的配額、配額報告現在會包含四個樹狀結構配額：
+
+[listing]
+----
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     proj1     tree    1           0B   10GB       1       -   proj1
+vol1               tree    *           0B   20GB       0       -   *
+vol1     proj2     tree    2           0B   20GB       1       -   proj2
+vol1     proj3     tree    3           0B   20GB       1       -   proj3
+...
+----
+第一行顯示proj1 qtree上的原始明確配額。此配額維持不變。
+
+第二行顯示磁碟區上的新預設樹狀結構配額。星號（*）Quota說明符表示它是預設配額。此配額是您所建立配額規則的結果。
+
+最後兩行顯示專案2和專案3 qtree的新衍生樹狀結構配額。由於磁碟區上的預設樹狀結構配額、所以系統會自動建立這些配額。ONTAP這些衍生的樹狀結構配額具有與磁碟區上預設樹狀結構配額相同的20-GB磁碟限制。由於proj1 qtree已經有明確的配額、所以無法為proj1 qtree建立衍生的樹狀結構配額。ONTAP

@@ -1,0 +1,27 @@
+---
+permalink: volumes/run-efficiency-operations-depending-new-data-task.html 
+sidebar: sidebar 
+keywords: run deduplication based on new data, run data compression based on new data, efficiency operation, written 
+summary: 您可以修改效率作業排程、以便在先前的效率作業（手動執行或排程）超過指定臨界值百分比後、於寫入磁碟區的新區塊數時執行重複資料刪除或資料壓縮。 
+---
+= 視寫入的新資料量而定、執行效率作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改效率作業排程、以便在先前的效率作業（手動執行或排程）超過指定臨界值百分比後、於寫入磁碟區的新區塊數時執行重複資料刪除或資料壓縮。
+
+如果將「排程」選項設為「自動」、則當新資料量超過指定百分比時、就會執行排程效率作業。預設臨界值為20%。此臨界值是效率作業已處理之區塊總數的百分比。
+
+.步驟
+. 使用「volume Effiency modify」命令搭配「auto@num'」選項、即可修改臨界值百分比值。
++
+「數字」是兩位數的數字、用以指定百分比。
+
+
+
+下列命令會將Volume Vola的臨界值百分比值修改為30%：
+
+「Volume Effiiveriiveriation-vserver VS1 -volume -Vola -schedule auto@30」

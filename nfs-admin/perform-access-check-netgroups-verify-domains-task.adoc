@@ -1,0 +1,53 @@
+---
+permalink: nfs-admin/perform-access-check-netgroups-verify-domains-task.html 
+sidebar: sidebar 
+keywords: perform, strict, access, check, netgroup, verify, domain 
+summary: 根據預設、ONTAP 在評估網路群組的用戶端存取時、會執行額外的驗證。額外檢查可確保用戶端的網域符合儲存虛擬機器（SVM）的網域組態。否則ONTAP 、不允許用戶端存取。 
+---
+= 透過驗證網域、對網路群組執行更嚴格的存取檢查
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設、ONTAP 在評估網路群組的用戶端存取時、會執行額外的驗證。額外檢查可確保用戶端的網域符合儲存虛擬機器（SVM）的網域組態。否則ONTAP 、不允許用戶端存取。
+
+當針對用戶端存取評估匯出原則規則、且匯出原則規則包含netgroup時ONTAP 、必須判斷用戶端的IP位址是否屬於netgroup。ONTAP為此目的、ONTAP 將用戶端的IP位址轉換成使用DNS的主機名稱、並取得完整網域名稱（FQDN）。
+
+如果netgroup檔案只列出主機的簡短名稱、而且主機的簡短名稱存在於多個網域中、則不同網域的用戶端可以在不進行此檢查的情況下取得存取權。
+
+為了避免這種情況ONTAP 、此功能會將從DNS傳回的主機網域、與針對SVM設定的DNS網域名稱清單進行比較。如果符合、則允許存取。如果不相符、則會拒絕存取。
+
+此驗證預設為啟用。您可以修改「-netgroup -dns網域搜尋」參數來管理它、此參數可在進階權限層級取得。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行所需的動作：
++
+[cols="2*"]
+|===
+| 如果您希望網路群組的網域驗證... | 輸入... 
+
+
+ a| 
+已啟用
+ a| 
+「vserver NFS modify -vserver vserver_name -netgroup DNS網域搜尋已啟用」
+
+
+
+ a| 
+已停用
+ a| 
+「vserver NFS modify -vserver vserver_name -netgroup -DNs網域搜尋已停用」
+
+|===
+. 將權限等級設為admin：
++
+「et -priv. admin」
+
+

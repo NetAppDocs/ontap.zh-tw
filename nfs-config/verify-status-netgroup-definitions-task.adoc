@@ -1,0 +1,53 @@
+---
+permalink: nfs-config/verify-status-netgroup-definitions-task.html 
+sidebar: sidebar 
+keywords: verify, status, netgroup, definitions 
+summary: 將netgroup載入SVM之後、您可以使用vserver services name-service netgroup狀態命令來驗證netgroup定義的狀態。這可讓您判斷支援SVM的所有節點上的netgroup定義是否一致。 
+---
+= 驗證netgroup定義的狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將netgroup載入SVM之後、您可以使用「vserver services name-service netgroup Status」命令來驗證netgroup定義的狀態。這可讓您判斷支援SVM的所有節點上的netgroup定義是否一致。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 驗證netgroup定義的狀態：
++
+「Vserver服務名稱服務網路群組狀態」
+
++
+您可以在更詳細的檢視畫面中顯示其他資訊。
+
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+
+
+設定權限層級後、下列命令會顯示所有SVM的netgroup狀態：
+
+[listing]
+----
+vs1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when
+         directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+vs1::*> vserver services name-service netgroup status
+Virtual
+Server    Node            Load Time           Hash Value
+--------- --------------- ------------------- --------------------------------
+vs1
+          node1           9/20/2006 16:04:53  e6cb38ec1396a280c0d2b77e3a84eda2
+          node2           9/20/2006 16:06:26  e6cb38ec1396a280c0d2b77e3a84eda2
+          node3           9/20/2006 16:08:08  e6cb38ec1396a280c0d2b77e3a84eda2
+          node4           9/20/2006 16:11:33  e6cb38ec1396a280c0d2b77e3a84eda2
+----

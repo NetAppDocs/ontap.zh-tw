@@ -1,0 +1,28 @@
+---
+permalink: san-config/zoning-restrictions-cisco-fc-fcoe-switches-reference.html 
+sidebar: sidebar 
+keywords: zoning, restrictions, for cisco, fc, fcoe, switches 
+summary: 使用Cisco FC和FCoE交換器時、同一個實體連接埠的單一網路區域不得包含多個目標LIF。如果同一個連接埠上有多個LIF連接埠位於同一個區域、則LIF連接埠可能無法從連線中斷中恢復。 
+---
+= Cisco FC和FCoE交換器的分區限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用Cisco FC和FCoE交換器時、同一個實體連接埠的單一網路區域不得包含多個目標LIF。如果同一個連接埠上有多個LIF連接埠位於同一個區域、則LIF連接埠可能無法從連線中斷中恢復。
+
+FC交換器的使用方式與FC傳輸協定的使用方式完全相同。
+
+* FC和FCoE傳輸協定有多個LIF、只要位於不同區域、就能在節點上共用實體連接埠。
+* FC-NVMe和FCoE無法共用相同的實體連接埠。
+* FC與FC-NVMe可共用相同的32 GB實體連接埠。
+* Cisco FC和FCoE交換器要求指定連接埠上的每個LIF位於與該連接埠上其他LIF不同的區域。
+* 單一區域可以同時擁有FC與FCoE生命區。區域可以包含叢集中每個目標連接埠的LIF、但請注意不要超過主機的路徑限制、並驗證SLM組態。
+* 不同實體連接埠上的LIF可以位於同一個區域。
+* Cisco交換器需要分隔生命區。
++
+儘管並非必要、但建議所有交換器都使用分離lifs
+
+

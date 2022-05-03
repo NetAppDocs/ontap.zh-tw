@@ -1,0 +1,53 @@
+---
+permalink: snaplock/hold-tamper-proof-files-indefinite-period-task.html 
+sidebar: sidebar 
+keywords: legal, hold, feature, compliance, mode, worm, files, retain 
+summary: 從功能介紹的第9.3部分開始ONTAP 、您可以在訴訟期間使用「合法保留」功能來保留「法規遵循模式WORM」檔案。 
+---
+= 使用「保留法律」功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能介紹的第9.3部分開始、您可以在訴訟期間使用_LegalHold_功能來保留法規遵循模式WORM檔案。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須SnapLock 是管理員才能執行此工作。
++
+link:create-compliance-administrator-account-task.html["建立SnapLock 一個管理員帳戶"]
+
+* 您必須登入安全連線（SSH、主控台或ZAPI）。
+
+
+「合法持有」下的檔案、其行為類似WORM檔案、保留期不固定。您有責任指定法律保留期間何時結束。
+
+您可以置於「合法保留」下的檔案數量、取決於磁碟區上可用的空間。
+
+.步驟
+. 開始合法持有：
++
+hy* SnapLock 《*》合法持有beginal -legapide-name _praidation_name_-volume _volume _name_-path _path_name_*》
+
++
+下列命令會針對「vol1」中的所有檔案、啟動「合法保留」：
+
++
+[listing]
+----
+cluster1::>snaplock legal-hold begin -litigation-name litigation1 -volume vol1 -path /
+----
+. 結束合法持有：
++
+《SnapLock *》*《*合法持有終止-訴訟名稱_legendion_name_-volume _volume _name_-path _path_name_*》
+
++
+下列命令會結束「vol1」中所有檔案的「合法持有」：
+
++
+[listing]
+----
+cluster1::>snaplock legal-hold end -litigation-name litigation1 -volume vol1 -path /
+----
+

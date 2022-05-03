@@ -1,0 +1,43 @@
+---
+permalink: data-protection/resynchronize-relationship-task.html 
+sidebar: sidebar 
+keywords: resynchronize, replication, relationship 
+summary: 當您將目的地磁碟區設為可寫入、更新失敗後、因為來源與目的地磁碟區上不存在通用的Snapshot複本、或是想要變更關係的複寫原則、您需要重新同步複寫關係。 
+---
+= 重新同步複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您將目的地磁碟區設為可寫入、更新失敗後、因為來源與目的地磁碟區上不存在通用的Snapshot複本、或是想要變更關係的複寫原則、您需要重新同步複寫關係。
+
+.關於這項工作
+* 雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+* 屬於扇出或串聯組態一部分的磁碟區可能需要較長的時間才能重新同步。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
+
+
+.步驟
+. 重新同步來源與目的地磁碟區：
++
+"napmirror resSync -source-path _Svm:Volume _|_cluster：//SVM/Volume _、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... 鍵入dp | xDP -schedule _schedule_-policy _`
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例重新同步來源磁碟區「Vola」（在「svm1」上）與目的地磁碟區「Vola_dst」（在「shvm_backup」上）之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

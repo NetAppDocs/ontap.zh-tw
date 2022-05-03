@@ -1,0 +1,71 @@
+---
+permalink: s3-config/assess-networking-requirements-task.html 
+sidebar: sidebar 
+keywords: assess, networking, requirements 
+summary: 將S3儲存設備提供給用戶端之前、您必須確認網路設定正確、以符合S3資源配置需求。 
+---
+= 評估網路需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將S3儲存設備提供給用戶端之前、您必須確認網路設定正確、以符合S3資源配置需求。
+
+必須設定下列叢集網路物件：
+
+* 實體與邏輯連接埠
+* 廣播網域
+* 子網路（如有需要）
+* IPspaces（視需要而定、除了預設IPspace）
+* 容錯移轉群組（視需要、以及每個廣播網域的預設容錯移轉群組）
+* 外部防火牆
+
+
+若要使用遠端FabricPool 的支援能力（雲端）階層和遠端S3用戶端、您必須使用資料SVM並設定資料生命量。對於架構雲端層、您也必須設定叢集間的生命體、不需要叢集對等。FabricPool
+
+對於本機FabricPool 的功能區階層、您必須使用系統SVM（稱為「叢集」）、但LIF組態有兩種選項：
+
+* 您可以使用叢集LIF。
++
+在此選項中、不需要進一步的LIF組態、但叢集生命期的流量會增加。此外、其他叢集也無法存取本機層級。
+
+* 您可以使用資料和叢集間的LIF。
++
+此選項需要額外的組態、包括啟用S3傳輸協定的LIF、但也可將本機層作為遠端FabricPool 的異地雲端層存取至其他叢集。
+
+
+
+.步驟
+. 顯示可用的實體和虛擬連接埠：
++
+「網路連接埠展示」
+
++
+** 如果可能、您應該使用資料網路速度最高的連接埠。
+** 資料網路中的所有元件必須具有相同的MTU設定、才能獲得最佳效能。
+
+
+. 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、請確認該子網路存在且有足夠的可用位址：
++
+「網路子網路顯示」
+
++
+子網路包含屬於同一第3層子網路的IP位址集區。子網路是使用「network subnet create」命令建立的。
+
+. 顯示可用的IPspaces：
++
+「網路IPSpace節目」
+
++
+您可以使用預設IPspace或自訂IPspace。
+
+. 如果您要使用IPv6位址、請確認叢集上已啟用IPv6：
++
+「網路選項IPv6 show」
+
++
+如果需要、您可以使用「network options IPv6 modify」命令來啟用IPv6。
+
+

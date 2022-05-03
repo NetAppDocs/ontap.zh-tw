@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: task_nas_enable_nfs_and_smb.html 
+keywords: ontap, netapp, provision nas storage, linux, windows, NFS, SMB, SMB, CIFS, enable NFS, enable SMB, configure DNS, modify storage VM, configure DNS, configure name server, configure Kerberos, map user names 
+summary: 修改儲存VM、讓NFS和SMB伺服器能夠為Linux和Windows用戶端提供資料。 
+---
+= 使用NFS和SMB同時為Windows和Linux啟用NAS儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+修改儲存VM、讓NFS和SMB伺服器能夠為Linux和Windows用戶端提供資料。
+
+此程序可啟用現有的儲存VM。假設您的環境中所需的任何驗證或安全服務都有組態詳細資料可供使用。
+
+image:workflow_nas_enable_nfs_and_smb.gif["使用NFS和SMB為Linux和Windows伺服器啟用NAS的工作流程圖"]
+
+.步驟
+. 在現有VM上啟用NFS：按一下*儲存設備>儲存VM*、選取儲存VM、按一下*設定*、然後按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
+. 在現有VM上啟用SMB：按一下 image:icon_gear.gif["設定圖示"] 低於* SMB *。
+. 開啟儲存VM根磁碟區的匯出原則：
++
+.. 按一下「*儲存設備>磁碟區*」、選取儲存VM的根磁碟區（預設為_volume名稱_root_）、然後按一下「*匯出原則*」下顯示的原則。
+.. 按一下「*新增*」以新增規則。
++
+*** 用戶端規格= 0.00.0.0/0
+*** 存取傳輸協定= NFS
+*** 存取詳細資料= NFS唯讀
+
+
+
+
+. 設定DNS進行主機名稱解析：
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 在* DNS *下。
+.. DNS組態完成後、切換至DNS伺服器並對應SMB伺服器。
++
+*** 建立轉送（A -位址記錄）和反轉（PTTR-指標記錄）查詢項目、將SMB伺服器名稱對應至資料網路介面的IP位址。
+*** 如果您使用的是NetBios別名、請建立別名標準名稱（CNAME資源記錄）查詢項目、將每個別名對應至SMB伺服器資料網路介面的IP位址。
+
+
+
+
+. 視需要設定名稱服務：
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 適用於LDAP或NIS。
+.. 在名稱服務交換器檔案中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] 在*名稱服務交換器*下。
+
+
+. 如有必要、請設定Kerberos：按一下 image:icon_arrow.gif["箭頭圖示"] 在Kerberos方塊中、然後按一下*「Add*（新增*）」。
+. 如有需要、請對應UNIX和Windows使用者名稱：按一下 image:icon_arrow.gif["箭頭圖示"] 在「*名稱對應*」下、然後按一下「*新增*」。
++
+只有當您的網站有Windows和UNIX使用者帳戶並未隱含對應時、才應使用此程序、亦即每個Windows使用者名稱的小寫版本都與UNIX使用者名稱相符時。此程序可使用LDAP、NIS或本機使用者來完成。如果您有兩組使用者不相符、則應設定名稱對應。
+
+

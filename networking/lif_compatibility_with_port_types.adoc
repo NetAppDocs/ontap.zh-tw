@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: networking/lif_compatibility_with_port_types.html 
+keywords: lif, compatibility, port, types, lif compatibility with port types 
+summary: LIF可以具有不同的特性、以支援不同的連接埠類型 
+---
+= LIF與連接埠類型的相容性
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+LIF可以具有不同的特性、以支援不同的連接埠類型。
+
+
+NOTE: 當叢集間和管理生命體設定在同一個子網路中時、外部防火牆可能會封鎖管理流量、AutoSupport 而且可能會導致無法透過不中斷的功能進行。您可以執行「network interface modify -vserver _vserver name_-lif_intercluster LIF_-stue-admin up | down」命令來切換叢集間LIF、藉此恢復系統。不過、您應該在不同的子網路中設定叢集間LIF和管理LIF、以避免此問題。
+
+[cols="30,70"]
+|===
+
+
+| LIF | 說明 
+
+
+| 資料LIF | 與儲存虛擬機器（SVM）相關聯的LIF、用於與用戶端通訊。您可以在一個連接埠上擁有多個資料生命量。這些介面可在整個叢集內進行移轉或容錯移轉。您可以將資料LIF修改成SVM管理LIF、將其防火牆原則修改為管理。建立至NIS、LDAP、Active Directory、WINS和DNS伺服器的工作階段會使用資料生命期。 
+
+
+| 叢集LIF | LIF用於在叢集中的節點之間傳輸叢集內的流量。必須始終在叢集連接埠上建立叢集LIF。叢集LIF可在同一個節點上的叢集連接埠之間容錯移轉、但無法移轉或容錯移轉至遠端節點。當新節點加入叢集時、會自動產生IP位址。不過、如果您想要手動指派IP位址給叢集LIF、則必須確保新的IP位址與現有的叢集LIF位於相同的子網路範圍內。 
+
+
+| 叢集管理LIF | LIF可為整個叢集提供單一管理介面。叢集管理LIF可容錯移轉至叢集中的任何節點。它無法容錯移轉至叢集或叢集間連接埠 
+
+
+| 叢集間 LIF | 用於跨叢集通訊、備份和複寫的LIF。您必須在叢集中的每個節點上建立叢集間LIF、才能建立叢集對等關係。這些LIF只能容錯移轉至同一個節點中的連接埠。它們無法移轉或容錯移轉至叢集中的其他節點。 
+
+
+| 節點管理 LIF | 提供專屬IP位址以管理叢集中的特定節點的LIF。節點管理生命期是在建立或加入叢集時建立的。例如、當節點無法從叢集存取時、這些生命量會用於系統維護。 
+
+
+| VIP LIF | VIP LIF是在VIP連接埠上建立的任何資料LIF。若要深入瞭解、請參閱 link:https://docs.netapp.com/us-en/ontap/networking/configure_virtual_ip_@vip@_lifs.html["設定虛擬IP（VIP）LIF"^]。 
+|===

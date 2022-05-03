@@ -1,0 +1,72 @@
+---
+permalink: fabricpool/setup-ontap-s3-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, ontap s3, cloud tier 
+summary: 如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP S3設定為FabricPool 適用於該產品的雲端層。 
+---
+= 將ONTAP S3設定為雲端層
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP S3設定為FabricPool 適用於該產品的雲端層。
+
+您必須在ONTAP 遠端叢集上擁有該伺服器的名稱及其相關生命的IP位址。
+
+本機和遠端叢集上都必須有叢集間的LIF。
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-s3-cg/GUID-47BBD9BF-7C3A-4902-8E41-88E54A0FDB44.html["建立叢集間的生命體、以進行遠端FabricPool 分層"]
+
+支援以更新版本的功能、在更新版本的更新版本中、啟用Ss3伺服器的負載平衡ONTAP 功能。ONTAP當伺服器的主機名稱解析為多個IP位址時ONTAP 、即可建立用戶端連線、並傳回所有IP位址（最多16個IP位址）。建立連線時、會以循環配置資源的方式來取用IP位址。
+
+.步驟
+. 將S3伺服器和LIF的項目新增至DNS伺服器。
++
+|===
+
+
+| 選項 | 說明 
+
+
+ a| 
+*如果您使用外部DNS伺服器*
+ a| 
+將S3伺服器名稱和IP位址提供給DNS伺服器管理員。
+
+
+
+ a| 
+*如果您使用本機系統的DNS主機表*
+ a| 
+輸入下列命令：
+
+「Dns host create -vserver Svm_name -address ip_address-hostnames2_server_name」
+
+|===
+. 使用ONTAP 「sorage aggregate object-store config create」命令搭配「-provider-type」「ONTAP_S3」參數來指定「SS3」組態資訊。
++
+** 如果本機ONTAP 的資訊無法存取ONTAP 所提供的資訊、則「儲存Aggregate object-store config create」命令會失敗。
+** 您可以使用「-access-keys」參數來指定存取金鑰、以授權要求至ONTAP S3伺服器。
+** 您可以使用「-secret密碼」參數來指定密碼（秘密存取金鑰）、以驗證對ONTAP S3伺服器的要求。
+** 如果ONTAP 變更了「S3伺服器密碼」、您應該立即更新儲存在本機ONTAP 版的BIOS系統中的對應密碼。
++
+如此一來、ONTAP 即可在不中斷的情況下、存取位於現象中心S3物件儲存區的資料。
+
+** 將「-is - Certificate -validation -enabled.」參數設為「假」、會停用ONTAP 驗證S3的憑證檢查。
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name myS3 -provider-type ONTAP_S3 -server myS3server
+-container-name myS3container -access-key myS3key
+-secret-password myS3pass
+----
+. 使用「儲存Aggregate object-store config show」命令來顯示及驗證ONTAP_S3組態資訊。
++
+使用「sorage Aggregate object-store config modify」命令、您可以修改「ONTAP_S3」組態資訊FabricPool 、以利進行更新。
+
+

@@ -1,0 +1,57 @@
+---
+permalink: smb-config/requirements-create-share-concept.html 
+sidebar: sidebar 
+keywords: creating, create, smb, share, requirement, path, properties, property, home, directories, directory, requirements and considerations for creating an smb share 
+summary: 在建立SMB共用區之前、您必須先瞭解共用路徑和共用內容的需求、尤其是對於主目錄。 
+---
+= 建立SMB共用區的需求與考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立SMB共用區之前、您必須先瞭解共用路徑和共用內容的需求、尤其是對於主目錄。
+
+建立SMB共用區需要指定用戶端將存取的目錄路徑結構（使用「vserver CIFS共用create」命令中的「-path」選項）。目錄路徑會對應到您在SVM命名空間中建立之磁碟區或qtree的交會路徑。建立共用區之前、目錄路徑和對應的交會路徑必須存在。
+
+共用路徑有下列需求：
+
+* 目錄路徑名稱最長可達255個字元。
+* 如果路徑名稱中有空格、則必須以引號括住整個字串（例如、「/new volume /mount here」）。
+* 如果共用區的UNC路徑（如「\伺服器名稱\共享名稱\檔案路徑」）包含超過256個字元（不包括在UNC路徑中的初始「\」）、則「Windows內容」方塊中的「*安全性*」索引標籤將無法使用。
++
+這是Windows用戶端問題、而非ONTAP 功能不均的問題。為避免此問題、請勿使用超過256個字元的UNC路徑建立共用。
+
+
+
+共用內容預設值可以變更：
+
+* 所有共享區的預設初始屬性為「oplocks」、「可瀏覽的」、「changenotefit」和「show pre-versions」。
+* 您可以在建立共用時指定共用內容。
++
+不過、如果您在建立共用時確實指定共用內容、則不會使用預設值。如果您在建立共用時使用「-share-properties」參數、則必須使用以逗號分隔的清單來指定要套用至共用的所有共用屬性。
+
+* 若要指定主目錄共用、請使用「HomeDirectory」屬性。
++
+此功能可讓您根據連線的使用者及一組變數、設定對應至不同目錄的共用區。您不需要為每個使用者建立個別的共用區、而是使用幾個主目錄參數來設定單一共用區、以定義使用者在入口點（共用區）及其主目錄（SVM上的目錄）之間的關係。
+
++
+[NOTE]
+====
+您無法在建立共用之後新增或移除此內容。
+
+====
+
+
+主目錄共用具有下列需求：
+
+* 在建立SMB主目錄之前、您必須使用「vserver CIFS主目錄搜尋路徑add」命令來新增至少一個主目錄搜尋路徑。
+* 在共享屬性參數中、以「HomeDirectory」值指定的主目錄共用、必須在共用名稱中包含「%w」（Windows使用者名稱）動態變數。
++
+共用名稱還可包含「%d」（網域名稱）動態變數（例如、「%d/%w」）或共用名稱中的靜態部分（例如、「home1_%w」）。
+
+* 如果系統管理員或使用者使用該共用區來連線至其他使用者的主目錄（使用「vserver CIFS主目錄修改」命令的選項）、則動態共用名稱模式必須在前面加上一個資料符號（'~'）。
+
+
+link:../smb-admin/index.html["中小企業管理"] 而「vserver CIFS共享區」手冊頁則有其他資訊。

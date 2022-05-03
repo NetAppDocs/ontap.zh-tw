@@ -1,0 +1,46 @@
+---
+permalink: encryption-at-rest/replace-ssl-certificates-task.html 
+sidebar: sidebar 
+keywords: replacing, ssl, certificates 
+summary: 所有SSL憑證都有到期日。您必須在憑證過期之前更新憑證、以避免喪失驗證金鑰的存取權。 
+---
+= 取代SSL憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+所有SSL憑證都有到期日。您必須在憑證過期之前更新憑證、以避免喪失驗證金鑰的存取權。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須已取得叢集的替代公開憑證和私密金鑰（KMIP用戶端憑證）。
+* 您必須已取得KMIP伺服器（KMIP伺服器- CA憑證）的替代公共憑證。
+* 您必須是叢集或SVM管理員、才能執行此工作。
+
+
+[NOTE]
+====
+您可以在叢集上安裝憑證之前或之後、在KMIP伺服器上安裝替換用戶端和伺服器憑證。
+
+====
+.步驟
+. 安裝新的KMIP伺服器CA憑證：
++
+「安全性憑證安裝-類型server -ca -vserver <>」
+
+. 安裝新的KMIP用戶端憑證：
++
+「安全性憑證安裝-類型用戶端-vserver <>」
+
+. 更新金鑰管理程式組態以使用新安裝的憑證：
++
+「安全金鑰管理程式外部修改-vserver <>-client-cert <>-server-ca-certs <>」
+
++
+[NOTE]
+====
+如果新用戶端憑證的公開/私密金鑰與先前安裝的金鑰不同、更新金鑰管理程式組態以使用新安裝的憑證將會傳回錯誤。如需如何置換此錯誤的指示、請聯絡NetApp支援部門。
+
+====
+

@@ -1,0 +1,48 @@
+---
+permalink: ndmp/configure-backup-user-cluster-task.html 
+sidebar: sidebar 
+keywords: configure, backup, user, cluster 
+summary: 若要從備份應用程式驗證NDMP、您必須為具有管理員或備份角色的叢集建立本機備份使用者、或是NIS或LDAP使用者、然後為備份使用者產生NDMP密碼。 
+---
+= 設定叢集的備份使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要從備份應用程式驗證NDMP、您必須為具有管理員或備份角色的叢集建立本機備份使用者、或是NIS或LDAP使用者、然後為備份使用者產生NDMP密碼。
+
+如果您使用的是NIS或LDAP使用者、則必須在各自的伺服器上建立該使用者。您無法使用Active Directory使用者。
+
+.步驟
+. 使用「安全登入create」命令、以「admin」或「Backup」角色建立備份使用者。
++
+您可以為「使用者或群組名稱」參數指定本機備份使用者名稱、NIS或LDAP使用者名稱。
+
++
+下列命令會建立備份使用者backup_admin1、其角色為「備份功能（Backup）：
+
++
+[listing]
+----
+cluster1::> security login create -user-or-group-name backup_admin1 -application ssh
+-authmethod password -role backup
+
+Please enter a password for user 'backup_admin1':
+Please enter it again:
+----
+. 使用「vserver services NDMP generate password」命令、為管理SVM產生密碼。
++
+產生的密碼必須用於驗證備份應用程式的NDMP連線。
+
++
+[listing]
+----
+cluster1::> vserver services ndmp generate-password -vserver cluster1 -user backup_admin1
+
+ Vserver: cluster1
+    User: backup_admin1
+Password: qG5CqQHYxw7tE57g
+----
+

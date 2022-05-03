@@ -1,0 +1,73 @@
+---
+permalink: smb-config/create-server-workgroup-task.html 
+sidebar: sidebar 
+keywords: vserver, cifs, create, command, smb, server, workgroup, create an smb server in a workgroup 
+summary: 您可以使用vserver CIFS create命令在SVM上建立SMB伺服器、並指定其所屬的工作群組。 
+---
+= 在工作群組中建立SMB伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver CIFS create」命令、在SVM上建立SMB伺服器、並指定其所屬的工作群組。
+
+您用來提供資料的SVM和LIF必須設定為允許SMB傳輸協定。生命期必須能夠連線到SVM上設定的DNS伺服器。
+
+工作群組模式的SMB伺服器不支援下列SMB功能：
+
+* SMB3見證傳輸協定
+* SMB3 CA共用
+* SQL over SMB
+* 資料夾重新導向
+* 漫遊設定檔
+* 群組原則物件（GPO）
+* Volume Snapshot服務（VSS）
+
+
+「vserver CIFS」手冊頁包含其他選用的組態參數和命名需求。
+
+.步驟
+. 確認叢集上的SMB已獲得授權：「System license show -package CIFS（系統授權顯示-套件CIFS）」
++
+如果沒有、請聯絡您的銷售代表。
+
++
+如果SMB伺服器僅用於驗證、則不需要CIFS授權。
+
+. 在工作群組中建立SMB伺服器：「vserver CIFS create -vserver vserver_name -CIFS伺服器CIFS伺服器名稱-workgroup workgroup名稱（-註釋文字）」
++
+下列命令會在工作群組「workgroup 01」中建立SMB伺服器「'shMB_server01」：
+
++
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs1.example.com -cifs-server SMB_SERVER01 -workgroup workgroup01
+----
+. 使用「vserver CIFS show」命令來驗證SMB伺服器組態。
++
+在下列範例中、命令輸出顯示在工作群組「workgroup 01」的SVM vs1.example.com上建立了名為「shmb_server01」的SMB伺服器：
+
++
+[listing]
+----
+cluster1::> vserver cifs show -vserver vs0
+
+                                          Vserver: vs1.example.com
+                         CIFS Server NetBIOS Name: SMB_SERVER01
+                    NetBIOS Domain/Workgroup Name: workgroup01
+                      Fully Qualified Domain Name: -
+                              Organizational Unit: -
+Default Site Used by LIFs Without Site Membership: -
+                                   Workgroup Name: workgroup01
+                             Authentication Style: workgroup
+                CIFS Server Administrative Status: up
+                          CIFS Server Description:
+                          List of NetBIOS Aliases: -
+----
+
+
+對於工作群組中的CIFS伺服器、您必須在SVM上建立本機使用者及選擇性的本機群組。
+
+link:../smb-admin/index.html["中小企業管理"]

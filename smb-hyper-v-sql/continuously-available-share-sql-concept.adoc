@@ -1,0 +1,55 @@
+---
+permalink: smb-hyper-v-sql/continuously-available-share-sql-concept.html 
+sidebar: sidebar 
+keywords: continuously, share, requirements, considerations, sql, server, smb, nondisuptive 
+summary: 在設定支援不中斷營運的SMB組態上的SQL Server持續可用共用時、您必須瞭解特定的需求和考量。 
+---
+= 持續可用的SQL Server與SMB之間的共用需求和考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在設定支援不中斷營運的SMB組態上的SQL Server持續可用共用時、您必須瞭解特定的需求和考量。
+
+
+
+== 共用需求
+
+* 用於儲存虛擬機器檔案的磁碟區必須建立為NTFS安全型磁碟區。
++
+若要使用持續可用的SMB連線、為應用程式伺服器提供不中斷營運的作業、包含共用區的磁碟區必須是NTFS磁碟區。此外、它必須永遠是NTFS磁碟區。您無法將混合式安全型磁碟區或UNIX安全型磁碟區變更為NTFS安全型磁碟區、並將其直接用於透過SMB共用進行不中斷營運的作業。如果您將混合式安全型磁碟區變更為NTFS安全型磁碟區、並打算在SMB共用區上執行不中斷營運作業、則必須手動將ACL放在磁碟區頂端、並將該ACL傳播至所有內含的檔案和資料夾。否則、如果來源或目的地磁碟區最初建立為混合或UNIX安全型磁碟區、之後改為NTFS安全型態、則將檔案移至另一個磁碟區的虛擬機器移轉或資料庫檔案匯出及匯入可能會失敗。
+
+* 應用程式伺服器使用的共用必須設定為持續可用的內容集。
++
+連線至持續可用共用區的應用程式伺服器會接收持續的處理常式、以便在發生中斷事件（例如接管、恢復和集合重新配置）之後、不中斷地重新連線至SMB共用區、並回收檔案鎖定。
+
+* 雖然包含資料庫檔案的磁碟區可以包含連接點、但在建立資料庫目錄結構時、SQL Server不會交叉連接點。
+* 為了讓Microsoft SQL Server備份作業成功、您必須在磁碟區上有足夠的可用空間。SnapManager
++
+SQL Server資料庫檔案所在的磁碟區必須夠大、足以容納資料庫目錄結構、以及位於共用區內的所有內含檔案。
+
+* 應用程式伺服器所使用的持續可用共用區不得設定下列共用內容：
++
+** 主目錄
+** 屬性快取
+** BranchCache
+** 存取型列舉
+
+
+
+
+
+
+== 分享考量
+
+* 持續可用的共用支援配額。
+* 下列功能不支援SQL Server over SMB組態：
++
+** 稽核
+** FPolicy
+
+
+* 使用「持續可用度」共用內容集、不會在SMB共用區上執行掃毒。
+

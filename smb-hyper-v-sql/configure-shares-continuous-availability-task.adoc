@@ -1,0 +1,129 @@
+---
+permalink: smb-hyper-v-sql/configure-shares-continuous-availability-task.html 
+sidebar: sidebar 
+keywords: configure, shares, continuous, availability, hyper, v, sql, server, virutal, machine, database, file 
+summary: 您可以修改現有的共用區、使其成為持續可用的共用區、讓Hyper-V和SQL Server應用程式伺服器在不中斷營運的情況下存取Hyper-V虛擬機器和組態檔、以及SQL Server資料庫檔案。 
+---
+= 設定現有共用以確保持續可用度
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改現有的共用區、使其成為持續可用的共用區、讓Hyper-V和SQL Server應用程式伺服器在不中斷營運的情況下存取Hyper-V虛擬機器和組態檔、以及SQL Server資料庫檔案。
+
+如果共用具有下列特性、您就無法將現有共用區用作持續可用的共用區、以便透過SMB與應用程式伺服器進行不中斷營運：
+
+* 如果在該共享區上設定了「HomeDirectory」共用內容
+* 如果共用包含已啟用的symlink或wdelinks
+* 如果共用區包含位於共用根目錄下方的輔助磁碟區
+
+
+您必須確認下列兩個共用參數設定正確：
+
+* 離線檔案參數設為「手動」（預設）或「無」。
+* 必須停用symlink。
+
+
+必須設定下列共用內容：
+
+* 「持續可用」
+* 《oplocks》
+
+
+不得設定下列共用內容。如果目前共用內容清單中有這些內容、則必須從持續可用的共用區中移除：
+
+* 《屬性》
+* 《BranchCache》
+* 「存取型列舉」
+
+
+.步驟
+. 顯示目前的共用參數設定和目前設定的共用內容清單：
++
+hy*vserver CIFS共享show -vserver _vserver_name_-share-name _share_name_*
+
+. 如有必要、請使用「vserver CIFS共用內容修改」命令修改共用參數、以停用symlink並將離線檔案設為手動。
++
+您可以將「-symlink」參數的值設為「」、以停用symlink。
+
++
+** 您可以將「-symlink」參數的值設為「」、以停用symlink。
+** 您可以指定「手動」、將「離線檔案」參數設定為正確的設定。
+
+
+. 新增「持續可用」的共享財產、如有需要、也可加入「oplocks」共享財產：
++
+hy*vserver CIFS共享屬性add -vserver _vserver_name_-share-name _share_name_-share-properties sue-available [,oplock]*
+
++
+如果尚未設定「oplocks」共享內容、您必須加上「持續可用」共享內容。
+
+. 移除持續可用共用區上不支援的任何共用內容：
++
+「* vserver CIFS共用內容」會移除-vserver _vserver_name_-share-name _share_name_-share-properties屬性[,...]*
+
++
+您可以使用以逗號分隔的清單來指定共用屬性、以移除一或多個共用屬性。
+
+. 確認「-symlink」和「-offer-filers'參數設定正確：
++
+hy*vserver CIFS共享show -vserver _vserver_name_-share-name _share_name_-功能 變數symlink屬性、offline files*
+
+. 確認已設定的共用內容清單正確無誤：
++
+h.*vserver CIFS共享屬性show -vserver _vserver_name_-share-name share_name*
+
+
+
+以下範例說明如何在儲存虛擬機器（SVM）VS1上、針對NDOS設定名為「shafre1」的現有共用區、並搭配SMB上的應用程式伺服器：
+
+* 將「-symlink」參數設為「」、即可停用共用區的symlink。
+* 「離線檔案」參數會修改並設定為「手動」。
+* 「持續可用」的共用內容會新增至共用區。
+* 「oplocks」共享內容已在共享內容清單中、因此不需要新增。
+* 「attributecache」共享內容會從共享區中移除。
+* 「可瀏覽的」共用內容是選用項目、用於透過SMB搭配應用程式伺服器的NDOS持續可用共用區、並保留為其中一個共用內容。
+
+
+[listing]
+----
+cluster1::> vserver cifs share show -vserver vs1 -share-name share1
+
+                      Vserver: vs1
+                        Share: share1
+     CIFS Server NetBIOS Name: vs1
+                         Path: /data
+             Share Properties: oplocks
+                               browsable
+                               attributecache
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: data
+                Offline Files: documents
+Vscan File-Operations Profile: standard
+
+cluster1::> vserver cifs share modify -vserver vs1 -share-name share1 -offline-file manual -symlink ""
+
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name share1 -share-properties continuously-available
+
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name share1 -share-properties attributecache
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name share1 -fields symlink-properties,offline-files
+vserver  share-name symlink-properties offline-files
+-------- ---------- ------------------ -------------
+vs1      share1    -                  manual
+
+cluster1::> vserver cifs share properties show -vserver vs1 -share-name share1
+
+         Vserver: vs1
+           Share: share1
+Share Properties: oplocks
+                  browsable
+                  continuously-available
+----

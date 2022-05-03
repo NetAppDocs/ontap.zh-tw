@@ -1,0 +1,33 @@
+---
+permalink: san-admin/remove-lif-from-portset-task.html 
+sidebar: sidebar 
+keywords: remove, san, lif, port, set 
+summary: 如果您要刪除或移動的LIF位於連接埠集中、則必須先從連接埠集中移除LIF、才能刪除或移動LIF。 
+---
+= 從連接埠集移除SAN LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您要刪除或移動的LIF位於連接埠集中、則必須先從連接埠集中移除LIF、才能刪除或移動LIF。
+
+只有在連接埠集中有一個LIF時、才需要執行下列程序中的步驟1。如果連接埠集繫結至啟動器群組、則無法移除連接埠集中的最後一個LIF。否則、如果連接埠集內有多個LIF、您可以從步驟2開始。
+
+.步驟
+. 如果連接埠集中只有一個LIF、請使用「LUN igroup unbind」命令、從啟動器群組中取消連接埠集的連結。
++
+[NOTE]
+====
+當您從連接埠集解除啟動器群組的連結時、啟動器群組中的所有啟動器都能存取所有對應至所有網路介面上啟動器群組的所有目標LUN。
+
+====
++
+「cluster1：：>LUN igroup unbind -vserver VS1 -igroup ig1」
+
+. 使用「LUN portset移除」命令、從連接埠集移除LIF。
++
+「cluster1：：>連接埠集移除-vserver VS1 -portset ps1 -port-name lif1'
+
+

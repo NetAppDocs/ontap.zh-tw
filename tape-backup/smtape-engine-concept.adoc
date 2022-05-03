@@ -1,0 +1,25 @@
+---
+permalink: tape-backup/smtape-engine-concept.html 
+sidebar: sidebar 
+keywords: smtape, disaster, recovery, solution, blocks, data, tape, qtree, subtree, volume, license, baseline, differential, incremental, backup 
+summary: SMtape是一套災難恢復解決方案、可ONTAP 將資料區塊備份到磁帶。您可以使用SMTaper對磁帶執行Volume備份。不過、您無法在qtree或子樹狀結構層級執行備份。SMTape支援基準備份、差異備份和遞增備份。SMTape不需要授權。 
+---
+= 關於FlexVol 適用於資料量的SMTape引擎
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMtape是一套災難恢復解決方案、可ONTAP 將資料區塊備份到磁帶。您可以使用SMTaper對磁帶執行Volume備份。不過、您無法在qtree或子樹狀結構層級執行備份。SMTape支援基準備份、差異備份和遞增備份。SMTape不需要授權。
+
+您可以使用NDMP相容的備份應用程式來執行SM磁帶 備份與還原作業。您可以選擇SMTape、只在儲存虛擬機器（SVM）指定NDMP模式下執行備份與還原作業。
+
+[NOTE]
+====
+在進行SM磁帶 備份或還原工作階段時、不支援還原程序。您必須等到工作階段完成、否則必須中止NDMP工作階段。
+
+====
+使用SMTape、您可以備份255個Snapshot複本。對於後續的基礎、遞增或差異備份、您必須刪除舊的備份Snapshot複本。
+
+執行基礎還原之前、要還原資料的磁碟區必須為「DP」類型、而且此磁碟區必須處於受限狀態。成功還原後、此Volume會自動上線。您可以依照執行備份的順序、對此磁碟區執行後續的遞增或差異還原。

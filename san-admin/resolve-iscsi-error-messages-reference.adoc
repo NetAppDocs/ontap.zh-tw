@@ -1,0 +1,45 @@
+---
+permalink: san-admin/resolve-iscsi-error-messages-reference.html 
+sidebar: sidebar 
+keywords: resolve, iscsi, error messages, storage system 
+summary: 您可以使用事件記錄show命令來檢視許多常見的iSCSI相關錯誤訊息。您需要知道這些訊息的意義、以及如何解決這些訊息所識別的問題。 
+---
+= 解決儲存系統上的iSCSI錯誤訊息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「EVENT log show」命令來檢視許多常見的iSCSI相關錯誤訊息。您需要知道這些訊息的意義、以及如何解決這些訊息所識別的問題。
+
+下表包含最常見的錯誤訊息、以及解決問題的指示：
+
+[cols="3*"]
+|===
+| 訊息 | 說明 | 處理方式 
+
+
+ a| 
+「iSCSI：已停用網路介面識別碼以供使用；傳入連線已捨棄」
+ a| 
+介面上未啟用iSCSI服務。
+ a| 
+您可以使用「iSCSI介面啟用」命令來啟用介面上的iSCSI服務。例如：
+
+「iSCSI介面啟用-vserver VS1 -liflif1'
+
+
+
+ a| 
+「iSCSI：啟動器節點名稱的驗證失敗」
+ a| 
+未針對指定的啟動器正確設定CHAP。
+ a| 
+您應該檢查CHAP設定；您無法在儲存系統上使用相同的使用者名稱和密碼來進行傳入和傳出設定：
+
+* 儲存系統上的傳入認證資料必須與啟動器上的傳出認證資料相符。
+* 儲存系統上的傳出認證資料必須與啟動器上的傳入認證資料相符。
+
+
+|===

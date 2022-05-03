@@ -1,0 +1,42 @@
+---
+permalink: volumes/methods-copying-volume-concept.html 
+sidebar: sidebar 
+keywords: methods to, copy, volume 
+summary: 複製磁碟區會建立一個獨立的磁碟區複本、供您用於測試和其他用途。複製Volume的方法取決於使用案例。 
+---
+= 複製Volume的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+複製磁碟區會建立一個獨立的磁碟區複本、供您用於測試和其他用途。複製Volume的方法取決於使用案例。
+
+複製磁碟區的方法取決於您是將磁碟區複製到相同的集合體或不同的集合體、以及是否要保留原始磁碟區的Snapshot複本。下表列出複本的特性及建立複本的方法。
+
+[cols="2*"]
+|===
+| 如果您要複製Volume ... | 您使用的方法是... 
+
+
+ a| 
+在同一個集合體中、您不想從原始磁碟區複製Snapshot複本。
+ a| 
+建立原始Volume的FlexClone Volume。
+
+
+
+ a| 
+您不想從原始磁碟區複製Snapshot複本到其他Aggregate。
+ a| 
+建立原始磁碟區的FlexClone Volume、然後使用「Volume Move」命令將磁碟區移至另一個Aggregate。
+
+
+
+ a| 
+到另一個集合體、並保留原始磁碟區的所有Snapshot複本。
+ a| 
+使用SnapMirror複寫原始磁碟區、然後打破SnapMirror關係以建立讀寫磁碟區複本。
+
+|===

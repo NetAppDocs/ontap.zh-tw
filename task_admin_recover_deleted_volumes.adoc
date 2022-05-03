@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: task_admin_recover_deleted_volumes.html 
+keywords: netapp, ontap, administration, recover, recovering, recovery, deleted, undelete, volume, volumes, recover deleted volume, SVM, storage VM, vserver, FlexVol volume, purging volume, volume retention time, deleting a volume 
+summary: 如果您不小心刪除一FlexVol 或多個不小心刪除的功能區、您可以恢復這些磁碟區。您也可以透過清除磁碟區來永久刪除磁碟區。 
+---
+= 恢復刪除的磁碟區
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+如果您不小心刪除一FlexVol 或多個不小心刪除的功能、可以使用System Manager來恢復這些磁碟區。從功能性的問題9.8開始ONTAP 、您也可以使用System Manager來恢復FlexGroup 功能性的功能。您也可以透過清除磁碟區來永久刪除磁碟區。
+
+磁碟區保留時間可在儲存VM層級上設定。根據預設、Volume保留時間設為12小時。
+
+
+
+== 選取已刪除的磁碟區
+
+.步驟
+. 按一下「*儲存設備>磁碟區*」。
+. 按一下*更多>顯示刪除的磁碟區*。
+. 選取磁碟區、然後按一下所需的動作以恢復或永久刪除磁碟區。
+
+
+
+
+== 重設Volume組態
+
+刪除磁碟區會刪除該磁碟區的相關組態。恢復磁碟區並不會重設所有組態。恢復磁碟區後、請手動執行下列工作、將磁碟區恢復至原始狀態：
+
+.步驟
+. 重新命名Volume。
+. 設定交會路徑（NAS）。
+. 建立磁碟區（SAN）中LUN的對應。
+. 將Snapshot原則與匯出原則與磁碟區建立關聯。
+. 新增磁碟區的配額原則規則。
+. 為磁碟區新增QoS原則。
+

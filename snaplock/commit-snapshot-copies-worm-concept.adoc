@@ -1,0 +1,120 @@
+---
+permalink: snaplock/commit-snapshot-copies-worm-concept.html 
+sidebar: sidebar 
+keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror 
+summary: 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。您可以在SnapLock 這個景點執行所有的基本功能。SnapVault目的地磁碟區會自動以唯讀方式掛載、因此不需要明確將Snapshot複本提交至WORM、因此不支援使用SnapMirror原則在目的地磁碟區上建立排程的Snapshot複本。 
+---
+= 將Snapshot複本提交至WORM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。您可以在SnapLock 這個景點執行所有的基本功能。SnapVault目的地磁碟區會自動以唯讀方式掛載、因此不需要明確將Snapshot複本提交至WORM、因此不支援使用SnapMirror原則在目的地磁碟區上建立排程的Snapshot複本。
+
+.您需要的是 #8217 ；需要的是什麼
+* 來源叢集必須執行ONTAP 不含更新版本的版本。
+* 來源與目的地集合體必須為64位元。
+* 來源Volume不能SnapLock 是一個不全的Volume。
+* 來源與目的地磁碟區必須在具有連接程序的SVM的連接叢集中建立。
++
+如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集對等"]。
+
+* 如果停用Volume自動擴充、則目的地Volume上的可用空間必須至少比來源Volume上的已用空間多出5%。
+
+
+來源Volume可使用NetApp或非NetApp儲存設備。對於非NetApp儲存設備、您必須使用FlexArray 「功能不全的虛擬化」。
+
+[NOTE]
+====
+您無法重新命名已提交至WORM狀態的Snapshot複本。
+
+====
+您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。
+
+[NOTE]
+====
+不支援SnapLock 在支援LUN的功能上使用。雖然可以SnapLock 使用舊有技術將LUN移至某個不穩定的磁碟區、但這並不受支援、SnapLock 也不涉及任何涉及位於某個穩定區上LUN的其他作業。
+
+====
+對於部分組態、您應該注意下列事項：MetroCluster
+
+* 您只能在SnapVault 同步來源的SVM之間建立「不支援」關係、而不能在同步來源SVM和同步目的地SVM之間建立「不支援」關係。
+* 您可以從SnapVault 同步來源SVM上的磁碟區、建立從資料服務SVM到資料服務SVM的不一樣關係。
+* 您可以從SnapVault 資料服務SVM上的磁碟區、建立一個從同步來源SVM上DP磁碟區的不同步關係。
+
+
+下圖顯示初始化SnapVault 不實關係的程序：
+
+image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「相互關聯」的程序：識別目的地叢集,creating a destination volume,creating a policy]
+
+.步驟
+. 識別目的地叢集。
+. 在目的地叢集上、如SnapLock 所述、安裝不含資訊的授權、初始化「完成時鐘」、並建立SnapLock 一個不含資訊的Aggregate xref:configure-snaplock-concept.adoc[設定SnapLock 功能]。
+. 在目的地叢集上、建立SnapLock 一個尺寸等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
++
+‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-type DP -size _size_*
+
++
+[NOTE]
+====
+從Aggregate繼承而來的是「法規遵循」或「企業」等功能。SnapLock不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
+
+====
++
+下列命令會在SnapLock Aggregate「node01_aggr」上的「VM2」中、建立一個名為「dstvolB」的2 GB「Compliance」磁碟區：
+
++
+[listing]
+----
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+----
+. 在目的地叢集上、設定預設保留期間、如所述 xref:set-default-retention-period-task.adoc[設定預設保留期間]。
++
+[NOTE]
+====
+做為保存目的地的流通量會指派預設保留期間給它。SnapLock此期間的值一開始設定SnapLock 為0年以上、而SnapLock 「不符合需求」量則設定為30年以上。每個NetApp Snapshot複本一開始就會提交此預設保留期間。如有需要、可延長保留期間。如需詳細資訊、請參閱 xref:set-retention-period-task.adoc[設定保留時間總覽]。
+
+====
+. xref:../data-protection/create-replication-relationship-task.adoc[建立新的複寫關係] 在非SnapLock來源和SnapLock 您在步驟3中建立的新的目的地之間。
++
+此範例使用SnapLock 「XDPDefault」原則、建立與目的地的SnapMirror Volume「dstvolB」的新SnapMirror關係、以每小時排程標示為每日和每週的資料保存Snapshot複本：
+
++
+[listing]
+----
+cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -vserver SVM2 -policy XDPDefault -schedule hourly
+----
++
+[NOTE]
+====
+xref:../data-protection/create-custom-replication-policy-concept.adoc[建立自訂複寫原則] 或是 xref:/data-protection/create-replication-job-schedule-task.adoc[自訂排程] 如果可用的預設值不適用。
+
+====
+. 在目的地SVM上、初始化SnapVault 步驟5中建立的S動動學 關係：
++
+’* SnapMirror初始化-destination-path _destination_path_*
+
++
+下列命令可初始化來源Volume "srcvola" on "VM1"與目的地Volume "dstvolB" on "VM2"之間的關係：
+
++
+[listing]
+----
+cluster2::> snapmirror initialize -destination-path SVM2:dstvolB
+----
+. 在關係初始化並閒置之後、請在目的地上使用「napshot show」命令、驗證SnapLock 套用至複製Snapshot複本的「不驗證過期時間」。
++
+此範例列出磁碟區「dstvolB」上的Snapshot複本、這些複本具有SnapMirror標籤和SnapLock 該失效日期：
+
++
+[listing]
+----
+cluster2::> snapshot show -vserver SVM2 -volume dstvolB -fields snapmirror-label, snaplock-expiry-time
+----
+
+
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+https://docs.netapp.com/us-en/ontap-sm-classic/volume-backup-snapvault/index.html["使用SnapVault 功能進行Volume備份"]

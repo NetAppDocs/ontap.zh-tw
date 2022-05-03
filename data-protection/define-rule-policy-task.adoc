@@ -1,0 +1,126 @@
+---
+permalink: data-protection/define-rule-policy-task.html 
+sidebar: sidebar 
+keywords: define, rule, policy 
+summary: 對於具有「保存庫」或「鏡射保存庫」原則類型的自訂原則、您必須定義至少一個規則、以決定在初始化與更新期間要傳輸哪些Snapshot複本。您也可以使用「保存庫」或「鏡射保存庫」原則類型來定義預設原則的規則。 
+---
+= 定義原則的規則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於使用「'Vault'」或「mirrror-Vault'」原則類型的自訂原則、您必須定義至少一個規則、以決定在初始化與更新期間傳輸哪些Snapshot複本。您也可以使用「'Vault'」或「mirmirror-Vault'」原則類型來定義預設原則的規則。
+
+每個具有「'vVault」或「mirrror-vVault」原則類型的原則都必須具有指定要複寫哪些Snapshot複本的規則。例如、「兩個月」規則表示只能複寫指派SnapMirror標籤「兩個月」的Snapshot複本。在來源上設定Snapshot原則時、請指定SnapMirror標籤。
+
+每種原則類型都與一或多個系統定義的規則相關聯。當您指定原則類型時、這些規則會自動指派給該原則。下表顯示系統定義的規則。
+
+[cols="3*"]
+|===
+
+
+| 系統定義的規則 | 用於原則類型 | 結果 
+
+
+ a| 
+SM_已 建立
+ a| 
+非同步鏡射、鏡射-保存庫、同步、StrictSync
+ a| 
+SnapMirror建立的Snapshot複本會在初始化與更新時傳輸。
+
+
+
+ a| 
+all_source_snapshots
+ a| 
+非同步鏡射
+ a| 
+來源上的新Snapshot複本會在初始化與更新時傳輸。
+
+
+
+ a| 
+每日
+ a| 
+保存庫、鏡射保存庫
+ a| 
+在初始化和更新時、會傳輸來源上新的Snapshot複本、其SnapMirror標籤為「daily」。
+
+
+
+ a| 
+每週
+ a| 
+保存庫、鏡射保存庫
+ a| 
+在初始化和更新時、會傳輸來源上新的Snapshot複本（SnapMirror標籤為「每週」）。
+
+
+
+ a| 
+每月
+ a| 
+鏡射保存庫
+ a| 
+在初始化和更新時、會傳輸來源上新的Snapshot複本、其SnapMirror標籤為「每月」。
+
+
+
+ a| 
+應用程式一致
+ a| 
+同步、StrictSync
+ a| 
+在來源上使用SnapMirror標籤「app_nistent」的Snapshot複本會同步複寫到目的地。支援從ONTAP 支援的功能從支援的功能9.7開始。
+
+|===
+除了「as同步 鏡射」原則類型之外、您可以視需要為預設或自訂原則指定其他規則。例如：
+
+* 對於預設的「鏡射AndVault」原則、您可以建立一個稱為「每月兩次」的規則、將來源上的Snapshot複本與「每月兩次」SnapMirror標籤配對。
+* 對於具有「鏡射-保存庫」原則類型的自訂原則、您可以建立名為「雙週」的規則、將來源上的Snapshot複本與「雙週」SnapMirror標籤配對。
+
+
+.步驟
+. 定義原則規則：
++
+「napmirror policy add-rule -vserver _svm_-policy _policy_for_rorm_-SnapMirror標籤_SnapMirror標籤_-stee_retent_count_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例將SnapMirror標籤「雙月版（bi-bonev月）”的規則新增至預設的「鏡像AndVault（鏡像AndVault）原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -snapmirror-label bi-monthly -keep 6
+----
++
+以下範例將SnapMirror標籤「雙週」的規則新增至自訂的「my_SnapVault」原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy my_snapvault -snapmirror-label bi-weekly -keep 26
+----
++
+以下範例將SnapMirror標籤「app_nistent」的規則新增至自訂「Sync」原則：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy Sync -snapmirror-label app_consistent -keep 1
+----
++
+然後、您可以從符合此SnapMirror標籤的來源叢集複寫Snapshot複本：
+
++
+[listing]
+----
+cluster_src::> snapshot create -vserver vs1 -volume vol1 -snapshot snapshot1 -snapmirror-label app_consistent
+----
+

@@ -1,0 +1,52 @@
+---
+permalink: smb-admin/modify-local-user-accounts-reference.html 
+sidebar: sidebar 
+keywords: modify, local, user, account, change, exist, name, description, enable, disable, rename, compromise, administrative, modify local user accounts 
+summary: 如果您想要變更現有使用者的完整名稱或說明、以及要啟用或停用使用者帳戶、您可以修改本機使用者帳戶。如果使用者的名稱遭入侵或需要變更名稱以進行系統管理、您也可以重新命名本機使用者帳戶。 
+---
+= 修改本機使用者帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要變更現有使用者的完整名稱或說明、以及要啟用或停用使用者帳戶、您可以修改本機使用者帳戶。如果使用者名稱遭入侵、或是為了管理目的而需要變更名稱、您也可以重新命名本機使用者帳戶。
+
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+修改本機使用者的全名
+ a| 
+「Vserver CIFS使用者與群組本機使用者修改-vserver _vserver_name_-user-name _user_name_‑Full-name text」如果完整名稱包含空格、則必須以雙引號括住。
+
+
+
+ a| 
+修改本機使用者的說明
+ a| 
+「Vserver CIFS使用者與群組本機使用者修改-vserver _vserver_name_-user-name _user_name__-description text」如果說明包含空格、則必須以雙引號括住。
+
+
+
+ a| 
+啟用或停用本機使用者帳戶
+ a| 
+「Vserver CIFS使用者與群組本機使用者修改-vserver _vserver_name_-user-name _user-name_-is-ace-disabled {true|假}」
+
+
+
+ a| 
+重新命名本機使用者帳戶
+ a| 
+「Vserver CIFS使用者與群組本機使用者重新命名-vserver _vserver_name_-user-name _user_name_-new-user-name _new_user_name_」重新命名本機使用者時、新的使用者名稱必須與舊使用者名稱所在的相同CIFS伺服器保持關聯。
+
+|===
+下列範例將儲存虛擬機器（SVM、先前稱為Vserver）VS1上的本機使用者「'CIFs_Server\sue」重新命名為「'CIFS伺服器\ sue新'」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user rename -user-name CIFS_SERVER\sue -new-user-name CIFS_SERVER\sue_new -vserver vs1
+----

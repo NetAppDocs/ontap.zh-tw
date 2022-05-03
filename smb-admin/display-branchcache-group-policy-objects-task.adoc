@@ -1,0 +1,99 @@
+---
+permalink: smb-admin/display-branchcache-group-policy-objects-task.html 
+sidebar: sidebar 
+keywords: display, information, cifs, server, group, policy, object, gpo, configuration, branchcache, define, domain, server, display information about branchcache group policy objects 
+summary: 您可以顯示有關CIFS伺服器的群組原則物件（GPO）組態資訊、以判斷是否為CIFS伺服器所屬的網域定義了BranchCache GPO、如果是、允許的設定為何。您也可以決定是否將BranchCache GPO設定套用至CIFS伺服器。 
+---
+= 顯示有關BranchCache群組原則物件的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示有關CIFS伺服器的群組原則物件（GPO）組態資訊、以判斷是否為CIFS伺服器所屬的網域定義了BranchCache GPO、如果是、允許的設定為何。您也可以決定是否將BranchCache GPO設定套用至CIFS伺服器。
+
+即使在CIFS伺服器所屬的網域中定義了GPO設定、但不一定會套用至包含CIFS型儲存虛擬機器（SVM）的組織單位（OU）。套用的GPO設定是套用至CIFS型SVM的所有已定義GPO的子集。透過GPO套用的BranchCache設定會覆寫透過CLI套用的設定。
+
+.步驟
+. 使用「vserver CIFS group原則show-defined」命令、顯示Active Directory網域的已定義的BranchCache GPO設定。
++
+[NOTE]
+====
+此範例不會顯示命令的所有可用輸出欄位。輸出被截短。
+
+====
++
+[listing]
+----
+cluster1::> vserver cifs group-policy show-defined -vserver vs1
+
+Vserver: vs1
+-----------------------------
+       GPO Name: Default Domain Policy
+       Level: Domain
+      Status: enabled
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication Mode for BranchCache: per-share
+      Hash Version Support for BranchCache: version1
+  [...]
+
+    GPO Name: Resultant Set of Policy
+      Status: enabled
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication for Mode BranchCache: per-share
+      Hash Version Support for BranchCache: version1
+  [...]
+----
+. 使用「vserver CIFS group原則show-applied」命令、顯示套用至CIFS伺服器的「BranchCache GPO」設定。」
++
+[NOTE]
+====
+此範例不會顯示命令的所有可用輸出欄位。輸出被截短。
+
+====
++
+[listing]
+----
+cluster1::> vserver cifs group-policy show-applied -vserver vs1
+
+Vserver: vs1
+-----------------------------
+     GPO Name: Default Domain Policy
+       Level: Domain
+      Status: enabled
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication Mode for BranchCache: per-share
+      Hash Version Support for BranchCache: version1
+  [...]
+
+    GPO Name: Resultant Set of Policy
+       Level: RSOP
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication Mode for BranchCache: per-share
+      Hash Version Support for BranchCache: version1
+ [...]
+----
+
+
+xref:enable-disable-gpo-support-task.adoc[在CIFS伺服器上啟用或停用GPO支援]

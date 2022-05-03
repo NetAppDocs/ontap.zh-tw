@@ -1,0 +1,22 @@
+---
+permalink: nfs-admin/ontap-support-nfsv41-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, nfsv4.1 
+summary: 從功能不支援的問題9.8開始ONTAP 、NFSv4.1啟用時、預設會提供nconnect功能。 
+---
+= 支援NFSv4.1 ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能不支援的問題9.8開始ONTAP 、NFSv4.1啟用時、預設會提供nconnect功能。
+
+較早的NFS用戶端實作只使用單一TCP連線與掛載。在鏈接功能中、單一TCP連線可能會成為瓶頸、導致IOPS增加。ONTAP不過、啟用nconnect-enabled的用戶端可以有多個TCP連線（最多16個）與單一NFS掛載相關聯。這類NFS用戶端會以循環配置資源的方式、將檔案作業多工處理至多個TCP連線、進而從可用的網路頻寬獲得更高的處理量。nConnect建議僅用於NFSv3和NFSv4.1掛載。
+
+請參閱NFS用戶端文件、確認您的用戶端版本是否支援nconnect。
+
+NFSv4.1預設會在ONTAP 更新版本的版本中啟用。在早期版本中、您可以指定「-v4.1」選項來啟用此功能、並在儲存虛擬機器（SVM）上建立NFS伺服器時將其設為「已啟用」。
+
+不支援NFSv4.1目錄和檔案層級委派。ONTAP

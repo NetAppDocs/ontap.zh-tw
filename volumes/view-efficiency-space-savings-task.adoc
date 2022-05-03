@@ -1,0 +1,39 @@
+---
+permalink: volumes/view-efficiency-space-savings-task.html 
+sidebar: sidebar 
+keywords: view space savings with deduplication, view space savings with data compression, view space savings 
+summary: 您可以使用volume show命令、在磁碟區上檢視重複資料刪除和資料壓縮所節省的空間量。 
+---
+= 檢視效率空間節約效益
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「volume show」命令、檢視在磁碟區上透過重複資料刪除和資料壓縮所節省的空間量。
+
+計算在磁碟區上實現的空間節約量時、不會納入Snapshot複本中的空間節約效益。使用重複資料刪除技術不會影響磁碟區配額。配額會在邏輯層級報告、並保持不變。
+
+.步驟
+. 使用「volume show」命令、檢視使用重複資料刪除技術和資料壓縮技術在磁碟區上實現的空間節約效益。
+
+
+下列命令可讓您檢視在Volume Vola上使用重複資料刪除和資料壓縮所達成的空間節約效益：「Volume show -vserver VS1 -volume Vola」
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -volume VolA
+
+                                 Vserver Name: vs1
+                                  Volume Name: VolA
+																											...
+            Space Saved by Storage Efficiency: 115812B
+       Percentage Saved by Storage Efficiency: 97%
+                 Space Saved by Deduplication: 13728B
+            Percentage Saved by Deduplication: 81%
+                Space Shared by Deduplication: 1028B
+                   Space Saved by Compression: 102084B
+        Percentage Space Saved by Compression: 97%
+																											...
+----

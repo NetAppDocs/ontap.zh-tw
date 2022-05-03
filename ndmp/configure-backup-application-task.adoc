@@ -1,0 +1,44 @@
+---
+permalink: ndmp/configure-backup-application-task.html 
+sidebar: sidebar 
+keywords: configure, backup, application 
+summary: 將叢集設定為可存取NDMP之後、您必須從叢集組態收集資訊、然後在備份應用程式中設定其餘的備份程序。 
+---
+= 設定備份應用程式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將叢集設定為可存取NDMP之後、您必須從叢集組態收集資訊、然後在備份應用程式中設定其餘的備份程序。
+
+.步驟
+. 收集您先前在ONTAP 《不知何種情況下所設定的下列資訊：
++
+** 備份應用程式建立NDMP連線所需的使用者名稱和密碼
+** 備份應用程式連線至叢集所需的叢集間生命體IP位址
+
+
+. 在這個功能區中、使用「shorage tape alias show」命令來顯示指派給每個裝置的別名。ONTAP ONTAP
++
+別名通常在設定備份應用程式時很有用。
+
++
+[listing]
+----
+cluster1::> storage tape show -alias
+
+  Device ID: 2a.0
+Device Type: tape drive
+Description: Hewlett-Packard LTO-5
+
+Node                        Alias     Mapping
+--------------------------- --------- ------------------------------
+stsw-3220-4a-4b-02          st2       SN[HU19497WVR]
+...
+----
+. 在備份應用程式中、使用備份應用程式的文件來設定其餘的備份程序。
+
+
+如果發生資料移動事件（例如磁碟區移動或LIF移轉）、您必須準備好重新初始化任何中斷的備份作業。

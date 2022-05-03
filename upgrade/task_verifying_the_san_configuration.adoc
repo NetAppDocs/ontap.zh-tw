@@ -1,0 +1,43 @@
+---
+permalink: upgrade/task_verifying_the_san_configuration.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verify, verifying, san, configuration 
+summary: 在SAN環境中升級會變更直接使用的路徑。因此、在執行升級之前、您應該先確認每部主機的直接和間接路徑設定正確數量、而且每部主機都已連接至正確的LIF。 
+---
+= 驗證SAN組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SAN環境中升級會變更直接使用的路徑。因此、在執行升級之前、您應該先確認每部主機的直接和間接路徑設定正確數量、而且每部主機都已連接至正確的LIF。
+
+. 在每個主機上、確認已設定足夠數量的直接和間接路徑、而且每個路徑都處於作用中狀態。
++
+每個主機都必須有通往叢集中每個節點的路徑。
+
+. 確認每個主機都已連接至每個節點上的LIF。
++
+您應該記錄啟動器清單、以便在升級後進行比較。
+
++
+[cols="2*"]
+|===
+| 適用於... | 輸入... 
+
+
+ a| 
+iSCSI
+ a| 
+「iSCSI啟動器顯示欄位igroup、啟動器名稱、tpgroup」
+
+
+
+ a| 
+FC
+ a| 
+「FCP啟動器顯示欄位igroup、WWPN、lif'
+
+|===
+

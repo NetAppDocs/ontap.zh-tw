@@ -1,0 +1,103 @@
+---
+permalink: smb-hyper-v-sql/verify-lif-status-task.html 
+sidebar: sidebar 
+keywords: verify, lif, status, storage, virtual, machine, hyper, v, sql, server, smb, configuration, cluster 
+summary: 即使您將採用Hyper-V的儲存虛擬機器（SVM）和SQL Server設定為採用SMB組態、以在叢集中的每個節點上擁有生命、在日常作業期間、某些生命體可能會移至另一個節點上的連接埠。您必須驗證LIF狀態、並採取任何必要的修正行動。 
+---
+= 驗證LIF狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+即使您將採用Hyper-V的儲存虛擬機器（SVM）和SQL Server設定為採用SMB組態、以在叢集中的每個節點上擁有生命、在日常作業期間、某些生命體可能會移至另一個節點上的連接埠。您必須驗證LIF狀態、並採取任何必要的修正行動。
+
+若要提供無縫且不中斷營運的作業支援、叢集中的每個節點必須至少有一個LIF用於SVM、而且所有LIF都必須與主連接埠相關聯。如果部分已設定的生命期目前未與其主連接埠建立關聯、您必須修正任何連接埠問題、然後將生命期還原至其主連接埠。
+
+.步驟
+. 顯示SVM的已設定LIF相關資訊：
++
+hy*網路介面show -vserver _vserver_name_*
+
++
+在此範例中、「lif1」不在主連接埠上。
+
++
+「網路介面show -vserver VS1」
+
++
+[listing]
+----
+
+            Logical    Status     Network          Current    Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node       Port    Home
+----------- ---------- ---------- ---------------- ---------- ------- ----
+vs1
+            lif1         up/up    10.0.0.128/24    node2      e0d     false
+            lif2         up/up    10.0.0.129/24    node2      e0d     true
+----
+. 如果部分生命區不在其主連接埠上、請執行下列步驟：
++
+.. 針對每個LIF、判斷LIF的主連接埠：
++
+hy*網路介面show -vserver _vserver_name_-lif_lif_name_-Fields home-node, home-port*
+
++
+`*網路介面show -vserver VS1 -lIF lif1 -功能 變數主節點、主連接埠*
+
++
+[listing]
+----
+
+vserver lif  home-node  home-port
+------- ---- ---------- ---------
+vs1     lif1 node1      e0d
+----
+.. 針對每個LIF、判斷LIF的主連接埠是否正常運作：
++
+hy*網路連接埠show -node_node_name_-port _port_-Fields port,link*
+
++
+「網路連接埠show -node1 -port e0d -功能 變數連接埠、link」
+
++
+[listing]
+----
+
+node       port link
+---------- ---- ----
+node1      e0d  up
+----
++
+在此範例中、「lif1」應移轉回其主連接埠「node1：e0d」。
+
+
+
+. 如果應該與生命期相關聯的任何主連接埠網路介面均未處於「up」狀態、請解決問題、使這些介面正常運作。
+. 如有需要、請將l生命 回復至主連接埠：
++
+h.*網路介面回復-vserver _vserver_name_-lif_lif_name_*
+
++
+`*網路介面還原-vserver VS1 -lIF lif1*
+
+. 確認叢集中的每個節點都有SVM的作用中LIF：
++
+hy*網路介面show -vserver _vserver_name_*
+
++
+`*網路介面show -vserver VS1*
+
++
+[listing]
+----
+
+            Logical    Status     Network          Current    Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node       Port    Home
+----------- ---------- ---------- ---------------- ---------- ------- ----
+vs1
+            lif1         up/up    10.0.0.128/24    node1      e0d     true
+            lif2         up/up    10.0.0.129/24    node2      e0d     true
+----
+

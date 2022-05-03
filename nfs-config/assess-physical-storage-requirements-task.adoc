@@ -1,0 +1,47 @@
+---
+permalink: nfs-config/assess-physical-storage-requirements-task.html 
+sidebar: sidebar 
+keywords: assess, physical, storage, requirements 
+summary: 在為用戶端配置NFS儲存設備之前、您必須確保現有的集合體中有足夠的空間可容納新磁碟區。如果沒有、您可以將磁碟新增至現有的Aggregate、或建立所需類型的新Aggregate。 
+---
+= 評估實體儲存需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在為用戶端配置NFS儲存設備之前、您必須確保現有的集合體中有足夠的空間可容納新磁碟區。如果沒有、您可以將磁碟新增至現有的Aggregate、或建立所需類型的新Aggregate。
+
+.步驟
+. 顯示現有Aggregate中的可用空間：
++
+《集合體展》
+
++
+如果集合體有足夠的空間、請在工作表中記錄其名稱。
+
++
+[listing]
+----
+cluster::> storage aggregate show
+Aggregate     Size Available Used% State   #Vols  Nodes  RAID Status
+--------- -------- --------- ----- ------- ------ ------ -----------
+aggr_0     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_1     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_2     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_3     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_4     239.0GB   238.9GB   95% online       5 node3  raid_dp,
+                                                         normal
+aggr_5     239.0GB   239.0GB   95% online       4 node4  raid_dp,
+                                                         normal
+6 entries were displayed.
+----
+. 如果沒有具有足夠空間的集合體、請使用「儲存Aggregate add-disks」命令將磁碟新增至現有的集合體、或使用「儲存Aggregate create」命令建立新的集合體。
+
+
+link:../concepts/index.html["概念ONTAP"]

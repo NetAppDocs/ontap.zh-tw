@@ -1,0 +1,45 @@
+---
+permalink: nfs-admin/case-sensitivity-file-directory-multiprotocol-concept.html 
+sidebar: sidebar 
+keywords: case sensitivity, file, directory, name, multiprotocol, environment 
+summary: 檔案和目錄名稱對NFS用戶端區分大小寫、對SMB用戶端則不區分大小寫、但大小寫保留。您必須瞭解多重傳輸協定環境的影響、以及在建立SMB共用區時指定路徑以及存取共用區內資料時、可能需要採取的行動。 
+---
+= 多重傳輸協定環境中檔案和目錄名稱的區分大小寫
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+檔案和目錄名稱對NFS用戶端區分大小寫、對SMB用戶端則不區分大小寫、但大小寫保留。您必須瞭解多重傳輸協定環境的影響、以及在建立SMB共用區時指定路徑以及存取共用區內資料時、可能需要採取的行動。
+
+如果SMB用戶端建立名為「testdir」的目錄、SMB和NFS用戶端都會將檔案名稱顯示為「testdir」。但是、如果SMB使用者稍後嘗試建立一個名為「TESTDIR」的目錄、則不允許使用該名稱、因為SMB用戶端目前存在該名稱。如果NFS使用者稍後建立名為「TESTDIR」的目錄、NFS和SMB用戶端會以不同的方式顯示目錄名稱、如下所示：
+
+* 在NFS用戶端上、您會看到兩個建立的目錄名稱、例如「testdir」和「TESTDIR」、因為目錄名稱區分大小寫。
+* SMB用戶端使用8.3名稱來區分這兩個目錄。一個目錄有基礎檔案名稱。其他目錄會指派8.3檔名。
++
+** 在SMB用戶端上、您會看到「testdir」和「TESTDI~1」。
+** 支援以建立「TESTDI~1」目錄名稱來區分這兩個目錄。ONTAP
++
+在這種情況下、您必須在建立或修改儲存虛擬機器（SVM）上的共用區時、使用8.3名稱來指定共用路徑。
+
+
+
+
+
+同樣地、對於檔案而言、如果SMB用戶端建立了「test.txt」、則SMB和NFS用戶端都會將檔案名稱顯示為「text.txt」。但是、如果SMB使用者稍後嘗試建立「Test. TXT」、則不允許使用該名稱、因為SMB用戶端目前存在該名稱。如果NFS使用者稍後建立名為「Test.txt」的檔案、NFS和SMB用戶端會以不同的方式顯示檔案名稱、如下所示：
+
+* 在NFS用戶端上、您會看到兩個檔案名稱都是建立時的「test.txt」和「Test.txt」、因為檔案名稱區分大小寫。
+* SMB用戶端使用8.3名稱來區分這兩個檔案。一個檔案有基礎檔案名稱。其他檔案會指派8.3檔名。
++
+** 在SMB用戶端上、您會看到「test.txt」和「test~1.TXT」。
+** 支援以建立「test~1.TXT」檔案名稱來區分這兩個檔案。ONTAP
+
+
+
+
+[NOTE]
+====
+如果您已使用vserver CIFS字元對應命令啟用或修改字元對應、則通常不區分大小寫的Windows查詢會變成區分大小寫。
+
+====

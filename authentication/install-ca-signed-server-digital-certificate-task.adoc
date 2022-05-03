@@ -1,0 +1,91 @@
+---
+permalink: authentication/install-ca-signed-server-digital-certificate-task.html 
+sidebar: sidebar 
+keywords: install, ca-signed, server, certificate 
+summary: 您可以使用安全性憑證安裝命令、在SVM上安裝CA簽署的伺服器憑證。系統會提示您輸入憑證授權單位（CA）根憑證和中繼憑證、以構成伺服器憑證的憑證鏈結。ONTAP 
+---
+= 安裝CA簽署的伺服器憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全憑證安裝」命令、在SVM上安裝CA簽署的伺服器憑證。系統會提示您輸入憑證授權單位（CA）根憑證和中繼憑證、以構成伺服器憑證的憑證鏈結。ONTAP
+
+您必須是叢集或SVM管理員、才能執行此工作。
+
+.步驟
+. 安裝CA簽署的伺服器憑證：「安全性憑證安裝-vserver Svm_name -type認證類型」
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+系統會提示您輸入CA根憑證和中繼憑證、這些憑證構成伺服器憑證的憑證鏈結。ONTAP鏈結從發行伺服器憑證的CA憑證開始、範圍最多可達CA的根憑證。任何遺失的中繼憑證都會導致伺服器憑證安裝失敗。
+
+====
++
+下列命令會在SVM’'engData2'上安裝CA簽署的「伺服器」憑證和中繼憑證。
+
++
+[listing]
+----
+cluster1::>security certificate install -vserver engData2 -type server
+Please enter Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIB8TCCAZugAwIBAwIBADANBgkqhkiG9w0BAQQFADBfMRMwEQYDVQQDEwpuZXRh
+cHAuY29tMQswCQYDVQQGEwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNV
+BAoTADEJMAcGA1UECxMAMQ8wDQYJKoZIhvcNAQkBFgAwHhcNMTAwNDI2MTk0OTI4
+WhcNMTAwNTI2MTk0OTI4WjBfMRMwEQYDVQQDEwpuZXRhcHAuY29tMQswCQYDVQQG
+EwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNVBAoTADEJMAcGA1UECxMA
+MQ8wDQYJKoZIhvcNAQkBFgAwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAyXrK2sry
+-----END CERTIFICATE-----
+
+
+Please enter Private Key: Press <Enter> when done
+-----BEGIN RSA PRIVATE KEY-----
+MIIBPAIBAAJBAMl6ytrK8nQj82UsWeHOeT8gk0BPX+Y5MLycsUdXA7hXhumHNpvF
+C61X2G32Sx8VEa1th94tx+vOEzq+UaqHlt0CAwEAAQJBAMZjDWlgmlm3qIr/n8VT
+PFnnZnbVcXVM7OtbUsgPKw+QCCh9dF1jmuQKeDr+wUMWknlDeGrfhILpzfJGHrLJ
+z7UCIQDr8d3gOG71UyX+BbFmo/N0uAKjS2cvUU+Y8a8pDxGLLwIhANqa99SuSl8U
+DiPvdaKTj6+EcGuXfCXz+G0rfgTZK8uzAiEAr1mnrfYC8KwE9k7A0ylRzBLdUwK9
+AvuJDn+/z+H1Bd0CIQDD93P/xpaJETNz53Au49VE5Jba/Jugckrbosd/lSd7nQIg
+aEMAzt6qHHT4mndi8Bo8sDGedG2SKx6Qbn2IpuNZ7rc=
+-----END RSA PRIVATE KEY-----
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: y
+
+Please enter Intermediate Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIE+zCCBGSgAwIBAgICAQ0wDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1Zh
+bGlDZXJ0IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIElu
+Yy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24g
+QXV0aG9yaXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAe
+BgkqhkiG9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTA0MDYyOTE3MDYyMFoX
+DTI0MDYyOTE3MDYyMFowYzELMAkGA1UEBhMCVVMxITAfBgNVBAoTGFRoZSBHbyBE
+YWRkeSBHcm91cCwgSW5jLjExMC8GA1UECxMoR28gRGFkZHkgQ2xhc3MgMiBDZXJ0
+-----END CERTIFICATE-----
+
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: y
+
+Please enter Intermediate Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIC5zCCAlACAQEwDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0
+IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAz
+BgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9y
+aXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAeBgkqhkiG
+9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTk5MDYyNjAwMTk1NFoXDTE5MDYy
+NjAwMTk1NFowgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0IFZhbGlkYXRpb24gTmV0d29y
+azEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENs
+YXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9yaXR5MSEwHwYDVQQDExhodHRw
+-----END CERTIFICATE-----
+
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: n
+
+You should keep a copy of the private key and the CA-signed digital certificate for future reference.
+----
+

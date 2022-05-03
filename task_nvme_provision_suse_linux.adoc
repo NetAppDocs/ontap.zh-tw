@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: task_nvme_provision_suse_linux.html 
+keywords: netapp, ontap, nvme, SUSE, linux, servers, Provision NVMe storage, namespace, SCSI disk service 
+summary: 建立命名空間、以使用NVMe傳輸協定為SUSE Linux伺服器提供儲存設備。Linux的命名空間似乎是SCSI磁碟裝置。 
+---
+= 為SUSE Linux配置NVMe儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+建立命名空間、以使用NVMe傳輸協定為SUSE Linux伺服器提供儲存設備。Linux的命名空間似乎是SCSI磁碟裝置。
+
+此程序會在現有的儲存VM上建立新的命名空間。您的儲存VM必須設定為NVMe、而且您的FC或TCP傳輸應該已經設定完成。
+
+image:workflow_nvme_provision_suse_linux_update.png["工作流程圖、以配置適用於SUSE Linux的NVMe"]
+
+
+NOTE: 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
+
+.步驟
+. 在系統管理員中、按一下*儲存設備> NVMe命名空間*、然後按一下*新增*。
++
+如果您需要建立新的子系統、請按一下*「更多選項」*。
+
++
+.. 如果您執行ONTAP 的是支援功能的9.8或更新版本、而您想要停用QoS或選擇自訂QoS原則、請按一下*更多選項*、然後在*儲存與最佳化*下選取*效能服務層級*。
+
+
+
+
+. 將FC交換器分區至WWPN。每個啟動器使用一個區域、並在每個區域中包含所有目標連接埠。
+. 在您的Linux伺服器上、探索新的命名空間。
+. 初始化命名空間並使用檔案系統進行格式化。
+. 確認Linux伺服器可以在命名空間上寫入和讀取資料。
+

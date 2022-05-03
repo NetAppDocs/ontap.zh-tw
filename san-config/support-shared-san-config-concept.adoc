@@ -1,0 +1,28 @@
+---
+permalink: san-config/support-shared-san-config-concept.html 
+sidebar: sidebar 
+keywords: requirements, shared, san, configurations 
+summary: 共享的SAN組態定義為同時連接ONTAP 到NetApp儲存系統和其他廠商儲存系統的主機。只要符合多項需求、即可從單一主機存取ONTAP 功能、以及其他廠商的儲存系統。 
+---
+= 共享SAN組態的需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+共享的SAN組態定義為同時連接ONTAP 到NetApp儲存系統和其他廠商儲存系統的主機。只要符合多項需求、即可從單一主機存取ONTAP 功能、以及其他廠商的儲存系統。
+
+對於所有的主機作業系統、最佳做法是使用個別的介面卡來連接每個廠商的儲存系統。使用獨立的介面卡可降低驅動程式與設定之間發生衝突的機率。若要連線ONTAP 至某個不支援的儲存系統、介面卡型號、BIOS、韌體和驅動程式必須列於NetApp互通性對照表工具中。
+
+您應該為主機設定必要或建議的逾時值及其他儲存參數。您必須始終安裝NetApp軟體、或是最後套用NetApp設定。
+
+* 對於AIX、您應該套用「互通性對照表工具」中所列之AIX主機公用程式版本的值、以供您的組態使用。
+* 對於ESX、您應該使用VMware vSphere的虛擬儲存主控台來套用主機設定。
+* 對於HP-UX、您應該使用HP-UX預設儲存設定。
+* 對於Linux、您應該針對您的組態、套用Interoperability Matrix Tool（互通性對照表工具）中所列Linux主機公用程式版本的值。
+* 對於Solaris、您應該針對您的組態、套用Interoperability Matrix Tool中所列之Solaris Host Utilities版本的值。
+* 對於Windows、您應該針對組態安裝Interoperability Matrix Tool中列出的Windows主機公用程式版本。
+
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]

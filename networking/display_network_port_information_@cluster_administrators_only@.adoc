@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: networking/display_network_port_information_@cluster_administrators_only@.html 
+keywords: 'display, view, show, network, port, information, display network port information (cluster administrators only), view information about a specific port, or about all ports on all nodes in the cluster, network port show' 
+summary: 檢視有關特定連接埠或叢集中所有節點上所有連接埠的資訊 
+---
+= 顯示網路連接埠資訊
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以顯示有關特定連接埠或叢集中所有節點上所有連接埠的資訊。
+
+將顯示下列資訊：
+
+* 節點名稱
+* 連接埠名稱
+* IPSpace名稱
+* 廣播網域名稱
+* 連結狀態（向上或向下）
+* MTU設定
+* 連接埠速度設定與作業狀態（每秒1 Gb或10 Gb）
+* 自動交涉設定（true或假）
+* 雙工模式和作業狀態（半雙工或全雙工）
+* 連接埠的介面群組（若適用）
+* 連接埠的VLAN標記資訊（若適用）
+* 連接埠的健全狀況（健全狀況或降級）
+* 連接埠標記為降級的原因
+
+
+如果欄位的資料無法使用（例如、非作用中連接埠的作業雙工和速度將無法使用）、欄位值會列為「-」
+
+使用「network port show」命令顯示網路連接埠資訊。
+
+您可以指定「-instance」參數來顯示每個連接埠的詳細資訊、或是使用「-fields」參數指定欄位名稱來取得特定資訊。
+
+....
+network port show
+Node: node1
+                                                                       Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/1000  healthy  false
+e0b       Cluster      Cluster          up   9000  auto/1000  healthy  false
+e0c       Default      Default          up   1500  auto/1000  degraded false
+e0d       Default      Default          up   1500  auto/1000  degraded true
+Node: node2
+                                                                       Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/1000  healthy  false
+e0b       Cluster      Cluster          up   9000  auto/1000  healthy  false
+e0c       Default      Default          up   1500  auto/1000  healthy  false
+e0d       Default      Default          up   1500  auto/1000  healthy  false
+8 entries were displayed.
+....

@@ -1,0 +1,137 @@
+---
+permalink: disks-aggregates/setup-active-passive-config-root-data-task.html 
+sidebar: sidebar 
+keywords: setting, active-passive, configuration, nodes, root-data, partitioning 
+summary: 當HA配對設定為由原廠使用根資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想要在主動-被動組態中使用HA配對、則必須先更新磁碟分割擁有權、才能建立資料Aggregate。 
+---
+= 使用根資料分割功能、在節點上設定主動-被動式組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當HA配對設定為由原廠使用根資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想要在主動-被動組態中使用HA配對、則必須先更新磁碟分割擁有權、才能建立資料Aggregate。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您應該已經決定要將哪個節點做為主動節點、以及哪個節點將做為被動節點。
+* 必須在HA配對上設定儲存容錯移轉。
+
+
+此工作會在兩個節點上執行：節點A和節點B
+
+所有命令都在clusterShell輸入。
+
+此程序是針對尚未從分割磁碟建立資料Aggregate的節點所設計。
+
+.步驟
+. 檢視資料分割區的目前擁有權：
++
+「torage Aggregate show-spare磁碟」
+
++
+您可以看到一半的資料分割區是由一個節點擁有、一半是由另一個節點擁有。所有的資料分割區都應該是備用的。
+
++
+[listing]
+----
+
+cluster1::> storage aggregate show-spare-disks
+
+Original Owner: cluster1-01
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.0                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+ 1.0.5                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.6                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.10                      BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.11                      BSAS    7200 block           753.8GB       0B  828.0GB
+
+Original Owner: cluster1-02
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.2                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.3                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.4                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.7                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.8                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+ 1.0.9                       BSAS    7200 block           753.8GB       0B  828.0GB
+12 entries were displayed.
+----
+. 輸入進階權限層級：
++
+《進階設定》
+
+. 對於將成為被動節點的節點所擁有的每個資料分割區、請將其指派給主動節點：
++
+'磁碟指派-force -data true -Owner_active_node_name_-disk _disk_name_'
+
++
+您不需要將分割區納入磁碟名稱中。
+
++
+您可以針對需要重新指派的每個資料分割區、輸入類似下列範例的命令：
+
++
+「torage disk assign -force -data true -Ownercluster1-01 -disk 1.0.3」
+
+. 確認所有分割區都已指派給作用中節點。
++
+[listing]
+----
+cluster1::*> storage aggregate show-spare-disks
+
+Original Owner: cluster1-01
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.0                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+ 1.0.2                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.3                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.4                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.5                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.6                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.7                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.8                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.9                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.10                      BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.11                      BSAS    7200 block           753.8GB       0B  828.0GB
+
+Original Owner: cluster1-02
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.8                       BSAS    7200 block                0B  73.89GB  828.0GB
+13 entries were displayed.
+----
++
+請注意、cluster1-02仍擁有備用根分割區。
+
+. 返回管理權限：
++
+「et admin」
+
+. 建立您的資料Aggregate、至少保留一個資料分割區作為備用：
++
+儲存區Aggregate create _new_aggr_name_-diskcount_number_of_partspace_-node_active_node_name_`
+
++
+資料Aggregate會建立、並由作用中節點擁有。
+
+

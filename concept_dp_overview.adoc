@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: concept_dp_overview.html 
+keywords: netapp, ontap, protection, overview, data, protect, loss, backup, back up, types, mirror, vault, snapmirror, snapvault, SVM, storage VM, LIF, network interface, intercluster, single file snap restore, metrocluster, sfsr, disaster recovery, SnapMirror, protection policy, vault relationship, mirror relationship, relationship, snapshot, Snapshot copy, policy, schedule, replica, standards compliance, vault, default protection policy, asynchronous policy, synchronous policy, custom policy 
+summary: 建立及管理Snapshot複本、鏡射、保存庫及鏡射與保存庫之間的關係、以保護您的資料。 
+---
+= System Manager的資料保護總覽
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+本節主題說明如何在ONTAP 更新版本的更新版本中使用System Manager設定及管理資料保護。
+
+如果您使用的是經典系統管理程式（僅ONTAP 適用於更新版本的版本）、請參閱本主題：
+
+* https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/concept_managing_data_protection.html["管理資料保護"^]
+
+
+建立及管理Snapshot複本、鏡射、保存庫及鏡射與保存庫之間的關係、以保護您的資料。
+
+_SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本或鏡射、以便在主站台發生災難時、繼續提供資料。
+
+_Vault_是專為磁碟對磁碟Snapshot複本複寫而設計、以符合標準及其他與治理相關的用途。與SnapMirror關係不同的是、目的地通常只包含目前位於來源磁碟區的Snapshot複本、而資料保存目的地通常會保留在更長時間內建立的時間點Snapshot複本。
+
+從ONTAP S59.10.1開始、您可以使用S3 SnapMirror在S3儲存區之間建立資料保護關係。目的地庫位可位於本機ONTAP 或遠端的不支援系統、或StorageGRID 是位於非ONTAP系統上、例如：如需詳細資訊、請參閱 link:s3-snapmirror/index.html["S3 SnapMirror總覽"]。

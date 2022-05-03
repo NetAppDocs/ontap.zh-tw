@@ -1,0 +1,77 @@
+---
+permalink: system-admin/free-space-node-root-volume-task.html 
+sidebar: sidebar 
+keywords: free, space, node, root, volume, full, delete, file, core, dump 
+summary: 當節點的根磁碟區已滿或幾乎已滿時、會出現警告訊息。當節點的根磁碟區已滿時、節點無法正常運作。您可以刪除核心傾印檔、封包追蹤檔及根Volume Snapshot複本、以釋放節點根磁碟區上的空間。 
+---
+= 釋放節點根磁碟區上的空間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當節點的根磁碟區已滿或幾乎已滿時、會出現警告訊息。當節點的根磁碟區已滿時、節點無法正常運作。您可以刪除核心傾印檔、封包追蹤檔和根Volume Snapshot複本、以釋放節點根磁碟區上的空間。
+
+.步驟
+. 使用「系統節點coredump show」命令來顯示節點的核心傾印檔案及其名稱。
+. 使用「系統節點coredump刪除」命令、從節點刪除不需要的核心傾印檔案。
+. 存取節點：
++
+系統節點執行節點_nodename_*
+
++
+「節點名稱」是您要釋放其根Volume空間的節點名稱。
+
+. 從nodesdro解除 高階權限層級：
++
+「* priv set advanc進 階*」
+
+. 透過nodesdro解除 顯示及刪除節點的封包追蹤檔案：
++
+.. 顯示節點根磁碟區中的所有檔案：
++
+‘* ls /etc/*’
+
+.. 如果節點的根磁碟區中有任何封包追蹤檔（`*。TRC）、請分別刪除：
++
+例如：* rm /etc/log/packet_tracts/_file_name.TRc_*
+
+
+
+. 透過節點識別並刪除節點的根Volume Snapshot複本：
++
+.. 識別根磁碟區名稱：
++
+「* vol狀態*」
+
++
+root volume由"volStatus（volStatus）"命令輸出的"'Options（選項）"列中的"'root（根）"表示。
+
++
+在下列範例中、根磁碟區為「vol0」：
+
++
+[listing]
+----
+node1*> vol status
+
+         Volume State           Status            Options
+           vol0 online          raid_dp, flex     root, nvfail=on
+                                64-bit
+----
+.. 顯示根Volume Snapshot複本：
++
+h.*快照清單root_vol_name*
+
+.. 刪除不需要的根Volume Snapshot複本：
++
+'快照刪除root_vol_namesnapshot_name*
+
+
+
+. 退出nodesdell並返回clusterShell：
++
+「* exit*」
+
+

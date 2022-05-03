@@ -1,0 +1,34 @@
+---
+permalink: smb-admin/create-snapshot-config-previous-versions-access-task.html 
+sidebar: sidebar 
+keywords: previous, version, functionality, available, client, access, snapshot, copies, copy, enable, snapshot, exist, configuration, requirement, create a snapshot configuration to enable previous versions access 
+summary: 只要已啟用用戶端對Snapshot複本的存取權、且Snapshot複本存在、則舊版功能一律可用。如果Snapshot複本組態不符合這些需求、您可以建立Snapshot複本組態。 
+---
+= 建立Snapshot組態以啟用舊版存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+只要已啟用用戶端對Snapshot複本的存取權、且Snapshot複本存在、則舊版功能一律可用。如果Snapshot複本組態不符合這些需求、您可以建立Snapshot複本組態。
+
+.步驟
+. 如果包含您要允許舊版存取之共用區的磁碟區沒有相關聯的Snapshot原則、請將Snapshot原則與磁碟區建立關聯、然後使用「Volume modify」命令加以啟用。
++
+如需使用「volume modify」命令的詳細資訊、請參閱手冊頁。
+
+. 使用「volume modify」命令、將「-snap目錄」選項設為「true」、即可存取Snapshot複本。
++
+如需使用「volume modify」命令的詳細資訊、請參閱手冊頁。
+
+. 使用「volume show」和「volume snapshot policy show」命令、確認已啟用Snapshot原則、且已啟用Snapshot目錄存取。
++
+如需使用「volume show」和「volume snapshot policy show」命令的詳細資訊、請參閱手冊頁。
+
++
+如需設定及管理Snapshot原則與Snapshot排程的詳細資訊、請參閱 link:../data-protection/index.html["資料保護"]。
+
+
+
+link:../data-protection/index.html["資料保護"]

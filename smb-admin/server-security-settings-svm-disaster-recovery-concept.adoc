@@ -1,0 +1,24 @@
+---
+permalink: smb-admin/server-security-settings-svm-disaster-recovery-concept.html 
+sidebar: sidebar 
+keywords: create, creating, svm, configure, disaster, recovery, destination, identity, preserve, snapmirror, configuration, smb, guideline, guidelines for smb server security settings in an svm disaster recovery configuration 
+summary: 在建立設定為災難恢復目的地的SVM之前（SnapMirror組態中的-identity-preserve選項設為假）、您應該知道如何在目的地SVM上管理SMB伺服器安全性設定。 
+---
+= SVM災難恢復組態中SMB伺服器安全性設定的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立設定為災難恢復目的地的SVM之前（SnapMirror組態中的「identity-preserve」選項設為「假」）、您應該知道如何在目的地SVM上管理SMB伺服器安全性設定。
+
+* 非預設的SMB伺服器安全性設定不會複寫到目的地。
++
+當您在目的地SVM上建立SMB伺服器時、所有SMB伺服器安全性設定都會設為預設值。當SVM災難恢復目的地初始化、更新或重新同步時、來源上的SMB伺服器安全性設定不會複寫到目的地。
+
+* 您必須手動設定非預設的SMB伺服器安全性設定。
++
+如果您在來源SVM上設定了非預設的SMB伺服器安全性設定、則必須在目的地SVM變成讀寫（SnapMirror關係中斷之後）之後、在目的地上手動設定這些相同的設定。
+
+

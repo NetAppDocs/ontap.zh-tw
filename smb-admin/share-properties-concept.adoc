@@ -1,0 +1,90 @@
+---
+permalink: smb-admin/share-properties-concept.html 
+sidebar: sidebar 
+keywords: customize, properties, property, smb, share, how to use smb share properties 
+summary: 您可以自訂SMB共用的內容。 
+---
+= 使用SMB共用內容總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以自訂SMB共用的內容。
+
+可用的共用內容如下：
+
+|===
+| 共用內容 | 說明 
+
+
+ a| 
+《oplocks》
+ a| 
+此內容會指定共用區使用投機性鎖定、也稱為用戶端快取。
+
+
+
+ a| 
+《可瀏覽的》
+ a| 
+此內容可讓Windows用戶端瀏覽共用區。
+
+
+
+ a| 
+「Howsnapshot」
+ a| 
+此屬性指定用戶端可以檢視及周遊Snapshot複本。
+
+
+
+ a| 
+《基因組認證》
+ a| 
+此內容指定共用區支援變更通知要求。對於SVM上的共用、這是預設的初始屬性。
+
+
+
+ a| 
+《屬性》
+ a| 
+此屬性可讓SMB共用區上的檔案屬性快取、以提供更快速的屬性存取。預設為停用屬性快取。只有當用戶端透過SMB 1.0連線至共用時、才應啟用此屬性。如果用戶端透過SMB 2.x或SMB 3.0連線至共用區、則此共用內容不適用。
+
+
+
+ a| 
+「持續可用」
+ a| 
+此內容可讓支援此功能的SMB用戶端持續開啟檔案。以這種方式開啟的檔案可避免發生中斷事件、例如容錯移轉和還原。
+
+
+
+ a| 
+《BranchCache》
+ a| 
+此內容指定共用區可讓用戶端要求此共用區內檔案的BranchCache雜湊。只有在CIFS BranchCache組態中指定「每個共用區」作為作業模式時、此選項才有用。
+
+
+
+ a| 
+「存取型列舉」
+ a| 
+此內容指定在此共用區上啟用_Access Based Enumeration_（ABE）。根據個別使用者的存取權限、使用者可以看到經過Abe篩選的共用資料夾、因此無法顯示使用者無權存取的資料夾或其他共用資源。
+
+
+
+ a| 
+「命名空間快取」
+ a| 
+此內容指定連線至此共用區的SMB用戶端可快取CIFS伺服器傳回的目錄列舉結果、以提供更好的效能。根據預設、SMB 1用戶端不會快取目錄列舉結果。由於SMB 2和SMB 3用戶端預設會快取目錄列舉結果、因此指定此共用內容只能為SMB 1用戶端連線提供效能優勢。
+
+
+
+ a| 
+「加密資料」
+ a| 
+此內容指定存取此共用時必須使用SMB加密。存取SMB資料時不支援加密的SMB用戶端將無法存取此共用區。
+
+|===

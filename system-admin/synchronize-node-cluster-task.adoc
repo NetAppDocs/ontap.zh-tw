@@ -1,0 +1,39 @@
+---
+permalink: system-admin/synchronize-node-cluster-task.html 
+sidebar: sidebar 
+keywords: synchronize, node, cluster, quorum, rdb, replicated, database 
+summary: 如果存在叢集範圍的仲裁、但有一或多個節點與叢集不同步、則您必須同步處理節點、以還原節點上的複寫資料庫（RDB）、並將其加入仲裁。 
+---
+= 將節點與叢集同步
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果存在叢集範圍的仲裁、但有一或多個節點與叢集不同步、則您必須同步處理節點、以還原節點上的複寫資料庫（RDB）、並將其加入仲裁。
+
+.步驟
+. 從健全的節點、在進階權限層級使用「系統組態還原叢集同步」命令、來同步與叢集組態不同步的節點。
++
+此範例可將節點（_node2_）與叢集的其他部分同步：
+
++
+[listing]
+----
+cluster1::*> system configuration recovery cluster sync -node node2
+
+Warning: This command will synchronize node "node2" with the cluster
+         configuration, potentially overwriting critical cluster
+         configuration files on the node. This feature should only be
+         used to recover from a disaster. Do not perform any other
+         recovery operations while this operation is in progress. This
+         command will cause all the cluster applications on node
+         "node2" to restart, interrupting administrative CLI and Web
+         interface on that node.
+Do you want to continue? {y|n}: y
+All cluster applications on node "node2" will be restarted. Verify that the cluster applications go online.
+----
+
+
+RDB會複寫至節點、節點便有資格參與叢集。

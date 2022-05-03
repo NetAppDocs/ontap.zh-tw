@@ -1,0 +1,78 @@
+---
+permalink: software_setup/task_synchronize_the_system_time_across_the_cluster.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, synchronize, system, time, across, cluster 
+summary: 同步時間可確保叢集中的每個節點都有相同的時間、並防止CIFS和Kerberos故障。 
+---
+= 在整個叢集之間同步化系統時間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+同步時間可確保叢集中的每個節點都有相同的時間、並防止CIFS和Kerberos故障。
+
+您的站台應設定網路時間傳輸協定（NTP）伺服器。從功能完善的9.5開始ONTAP 、您可以使用對稱驗證來設定NTP伺服器。如需詳細資訊、請參閱 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/GUID-1E923D05-447D-4323-8D87-12B82F49B6F1.html?cp=4_7_6["管理叢集時間（僅限叢集管理員）"]。
+
+您可以將叢集與一或多個NTP伺服器建立關聯、以同步整個叢集的時間。
+
+. 確認每個節點的系統時間和時區設定正確。
++
+叢集中的所有節點都應設定為相同的時區。
+
++
+.. 使用cluster date show命令顯示每個節點的目前日期、時間和時區。
++
+[listing]
+----
+cluster1::> cluster date show
+Node         Date                Time zone
+------------ ------------------- -----------------
+cluster1-01  01/06/2015 09:35:15 America/New_York
+cluster1-02  01/06/2015 09:35:15 America/New_York
+cluster1-03  01/06/2015 09:35:15 America/New_York
+cluster1-04  01/06/2015 09:35:15 America/New_York
+4 entries were displayed.
+----
+.. 使用cluster date modify命令可變更所有節點的日期或時區。
++
+此範例將叢集的時區變更為GMT:
+
++
+[listing]
+----
+cluster1::> cluster date modify -timezone GMT
+----
+
+
+. 使用叢集時間服務NTP伺服器create命令、將叢集與NTP伺服器建立關聯。
++
+** 若要設定NTP伺服器而不進行對稱驗證、請輸入下列命令：「cluster time-service NTP server create -server server_name」
+** 若要使用對稱驗證設定NTP伺服器、請輸入下列命令：「cluster time-service NTP server create -server server_ip_address -key-id key_id」
++
+
+NOTE: 對稱驗證從ONTAP 推出時起即提供。不適用於ONTAP 更新版本的版本。
+
++
+此範例假設已為叢集設定DNS。如果您尚未設定DNS、則必須指定NTP伺服器的IP位址：
+
++
+[listing]
+----
+cluster1::> cluster time-service ntp server create -server ntp1.example.com
+----
+
+
+. 確認叢集已與NTP伺服器建立關聯：「叢集時間服務NTP伺服器show」
++
+[listing]
+----
+cluster1::> cluster time-service ntp server show
+Server               Version
+-------------------- -----------
+ntp1.example.com     auto
+----
+
+
+link:../system-admin/index.html["系統管理"]

@@ -1,0 +1,52 @@
+---
+permalink: smb-admin/add-list-netbios-aliases-server-task.html 
+sidebar: sidebar 
+keywords: smb, client, connect, cifs, server, alias, create, list, netbios 
+summary: 如果您希望SMB用戶端使用別名連線至CIFS伺服器、您可以建立一份NetBios別名清單、或是將NetBios別名新增至現有的NetBios別名清單。 
+---
+= 新增一組NetBios別名至SMB伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望SMB用戶端使用別名連線到SMB伺服器、您可以建立一份NetBios別名清單、或是將NetBios別名新增到現有的NetBios別名清單。
+
+.關於這項工作
+* NetBios別名長度最多可為15個字元。
+* 您最多可以在SMB伺服器上設定200個NetBios別名。
+* 不允許使用下列字元：
++
+@#*（）=+[]|；："、<>\/？
+
+
+
+.步驟
+. 新增NetBios別名：+「vserver CIFS add-netbios-alias -vserver _vserver_name_-netbios-alias _netbios_alias、...」
++
+「Vserver CIFS add-netbios-alias -vserver VS1 -netbios-alias alias 1、alias 2、alias _3」
+
++
+** 您可以使用以逗號分隔的清單來指定一或多個NetBios別名。
+** 指定的NetBios別名會新增至現有清單。
+** 如果清單目前空白、則會建立新的NetBios別名清單。
+
+
+. 驗證是否正確新增了NetBios別名：「vserver CIFS show -vserver vserver_name -show-netbios-aliases」
++
+「Vserver CIFS show -vserver VS1 -show-netbios-aliases」
+
++
+[listing]
+----
+Vserver: vs1
+
+         Server Name: CIFS_SERVER
+         NetBIOS Aliases: ALIAS_1, ALIAS_2, ALIAS_3
+----
+
+
+xref:remove-netbios-aliases-from-list-task.adoc[從NetBios別名清單中移除NetBios別名]
+
+xref:display-list-netbios-aliases-task.adoc[顯示CIFS伺服器上的NetBios別名清單]

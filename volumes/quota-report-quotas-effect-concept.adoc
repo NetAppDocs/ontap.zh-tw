@@ -1,0 +1,121 @@
+---
+permalink: volumes/quota-report-quotas-effect-concept.html 
+sidebar: sidebar 
+keywords: how you can, use, quota report, see, quotas in effect 
+summary: 由於配額互動的方式各不相同、因此與您明確建立的配額相比、配額效果更高。若要查看哪些配額有效、您可以檢視配額報告。 
+---
+= 如何使用配額報告來查看哪些配額有效
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+由於配額互動的方式各不相同、因此與您明確建立的配額相比、配額效果更高。若要查看哪些配額有效、您可以檢視配額報告。
+
+下列範例顯示FlexVol 套用在某個範圍Vol1上的不同配額類型、以及該磁碟區中所含qtree Q1的配額報告：
+
+在此範例中、磁碟區vol1包含一個qtree、即Q1。系統管理員已建立三個配額：
+
+* 預設的Vol1樹狀結構配額上限為400 MB
+* 預設使用者配額上限為100 MB
+* 使用者jsmith的Vol1明確使用者配額上限為200 MB
+
+
+這些配額的配額檔案類似於下列摘錄：
+
+[listing]
+----
+
+#Quota target type            disk files  thold sdisk  sfile
+#-----------  ----            ---  -----  ----  -----  -----
+*             tree@/vol/vol1  400M
+*             user@/vol/vol1  100M
+jsmith        user@/vol/vol1  200M
+----
+這些配額的配額報告類似於以下摘錄：
+
+[listing]
+----
+
+cluster1::> volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     -          tree   *           0B  400MB       0       -   *
+vol1     -          user   *           0B  100MB       0       -   *
+vol1     -          user   corp/jsmith
+                                     150B  200MB       7       -   corp/jsmith
+vol1     q1         tree   1           0B  400MB       6       -   q1
+vol1     q1         user   *           0B  100MB       0       -
+vol1     q1         user   corp/jsmith 0B  100MB       5       -
+vol1     -          user   root        0B   0MB        1       -
+vol1     q1         user   root        0B   0MB        8       -
+----
+配額報告的前三行顯示系統管理員指定的三個配額。由於其中兩個配額是預設配額、ONTAP 所以不只是由NetApp自動建立衍生配額。
+
+第四行顯示從vol1中每個qtree的預設樹狀結構配額衍生的樹狀結構配額（在此範例中、僅Q1）。
+
+第五行顯示為qtree建立的預設使用者配額、這是因為磁碟區上存在預設使用者配額和qtree配額。
+
+第六行顯示在qtree上為jsmith建立的衍生使用者配額、因為qtree（第5行）有預設的使用者配額、而使用者jsmith擁有該qtree上的檔案。請注意、在qtree Q1中套用至使用者jsmith的限制、並不是由明確的使用者配額限制（200 MB）決定。這是因為磁碟區上有明確的使用者配額限制、所以不會影響qtree的限制。而qtree的衍生使用者配額上限則由qtree的預設使用者配額（100 MB）決定。
+
+最後兩行會顯示更多使用者配額、這些配額是從磁碟區和qtree上的預設使用者配額衍生而來。在Volume和qtree上為root使用者建立了衍生的使用者配額、因為root使用者在Volume和qtree上擁有檔案。由於root使用者在配額方面獲得特殊處理、因此其衍生配額僅會追蹤配額。
+
+此範例與上一個範例類似、只是系統管理員在qtree上新增了兩個配額。
+
+還有一個Volume、vol1和qtree、Q1。系統管理員已建立下列配額：
+
+* 預設的Vol1樹狀結構配額上限為400 MB
+* 預設使用者配額上限為100 MB
+* 使用者jsmith的vol1明確使用者配額上限為200 MB
+* qtree Q1的預設使用者配額上限為50 MB
+* 使用者jsmith的qtree Q1明確使用者配額上限為75 MB
+
+
+這些配額的配額檔案如下所示：
+
+[listing]
+----
+
+#Quota target type             disk files  thold sdisk  sfile
+#-----------  ----             ---  -----  ----  -----  -----
+*             tree@/vol/vol1   400M
+*             user@/vol/vol1   100M
+jsmith        user@/vol/vol1   200M
+*             user@/vol/vol1/q1 50M
+jsmith        user@/vol/vol1/q1 75M
+----
+這些配額的配額報告如下所示：
+
+[listing]
+----
+
+cluster1::> volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     -          tree   *           0B  400MB       0       -   *
+vol1     -          user   *           0B  100MB       0       -   *
+vol1     -          user   corp/jsmith
+                                    2000B  200MB       7       -   corp/jsmith
+vol1     q1         user   *           0B   50MB       0       -   *
+vol1     q1         user   corp/jsmith 0B  75MB        5       -   corp/jsmith
+vol1     q1         tree   1           0B 400MB        6       -   q1
+vol1     -          user   root        0B   0MB        2       -
+vol1     q1         user   root        0B   0MB        1       -
+----
+配額報告的前五行會顯示系統管理員所建立的五個配額。由於其中有些配額是預設配額、ONTAP 所以不只是使用者配額、所以會自動建立衍生配額。
+
+第六行顯示從vol1中每個qtree的預設樹狀結構配額衍生的樹狀結構配額（在此範例中、僅Q1）。
+
+最後兩行顯示從磁碟區和qtree上的預設使用者配額衍生的使用者配額。在Volume和qtree上為root使用者建立了衍生的使用者配額、因為root使用者在Volume和qtree上擁有檔案。由於root使用者在配額方面獲得特殊處理、因此其衍生配額僅會追蹤配額。
+
+由於下列原因、未建立其他預設配額或衍生配額：
+
+* 雖然使用者同時擁有磁碟區和qtree上的檔案、但並未為jsmith使用者建立衍生的使用者配額、因為使用者在這兩個層級都有明確的配額。
+* 沒有為其他使用者建立衍生的使用者配額、因為其他使用者在磁碟區或qtree上都沒有擁有檔案。
+* 磁碟區上的預設使用者配額並未在qtree上建立預設使用者配額、因為qtree已有預設的使用者配額。
+

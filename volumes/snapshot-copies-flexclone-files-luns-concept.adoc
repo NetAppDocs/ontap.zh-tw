@@ -1,0 +1,16 @@
+---
+permalink: volumes/snapshot-copies-flexclone-files-luns-concept.html 
+sidebar: sidebar 
+keywords: how, snapshot copies, work, flexclone files, flexclone luns 
+summary: 您可以從FlexVol 包含在某個實體磁碟區中的父檔案和父LUN的現有Snapshot複本建立FlexClone檔案和FlexClone LUN。 
+---
+= Snapshot複本如何搭配FlexClone檔案和FlexClone LUN運作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從FlexVol 包含在某個實體磁碟區中的父檔案和父LUN的現有Snapshot複本建立FlexClone檔案和FlexClone LUN。
+
+不過、您無法手動刪除正在從中建立FlexClone檔案或FlexClone LUN的Snapshot複本、直到父實體與複製實體之間的區塊共用程序完成為止。Snapshot複本會保持鎖定狀態、直到在背景中完成區塊共用程序為止。因此、當您嘗試刪除鎖定的Snapshot複本時、系統會顯示一則訊息、要求您在一段時間後重試該作業。在這種情況下、如果您想要手動刪除特定的Snapshot複本、則必須持續重新嘗試刪除作業、以便在區塊共用完成後刪除Snapshot複本。

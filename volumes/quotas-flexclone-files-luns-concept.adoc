@@ -1,0 +1,18 @@
+---
+permalink: volumes/quotas-flexclone-files-luns-concept.html 
+sidebar: sidebar 
+keywords: how, quotas work, with, flexclone files, flexclone luns 
+summary: 配額限制會套用至FlexClone檔案或FlexClone LUN的總邏輯大小。即使複製作業導致配額超出、也不會使區塊共用失敗。 
+---
+= 配額如何與FlexClone檔案和FlexClone LUN搭配使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配額限制會套用至FlexClone檔案或FlexClone LUN的總邏輯大小。即使複製作業導致配額超出、也不會使區塊共用失敗。
+
+當您建立FlexClone檔案或FlexClone LUN時、配額無法辨識任何空間節約效益。例如、如果您為父檔案建立10 GB的FlexClone檔案、則只會使用10 GB的實體空間、但配額使用率會記錄為20 GB（父檔案為10 GB、FlexClone檔案為10 GB）。
+
+如果建立FlexClone檔案或LUN導致超出群組或使用者配額、則只要FlexVol 該實體磁碟區有足夠空間容納該實體複本的中繼資料、即會成功完成複製作業。不過、該使用者或群組的配額已超額訂閱。

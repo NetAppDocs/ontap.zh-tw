@@ -1,0 +1,66 @@
+---
+permalink: system-admin/acces-ssp-bmc-administration-host-task.html 
+sidebar: sidebar 
+keywords: access, sp, bmc, administration, host, node, management 
+summary: 您可以從管理主機登入節點的SP、以從遠端執行節點管理工作。 
+---
+= 從管理主機存取SP/BMC
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以從管理主機登入節點的SP、以從遠端執行節點管理工作。
+
+必須符合下列條件：
+
+* 用於存取SP的管理主機必須支援SSHv2。
+* 您的使用者帳戶必須已設定、才能存取SP。
++
+若要存取SP、您的使用者帳戶必須使用「安全登入建立」命令設定為「服務處理器」的「應用程式」參數建立、並將「驗證方法」參數設定為「密碼」。
+
+
+
+[NOTE]
+====
+此工作同時適用於SP和BMC。
+
+====
+如果SP設定為使用IPv4或IPv6位址、而且如果在10分鐘內有五次主機的SSH登入嘗試連續失敗、SP會拒絕SSH登入要求、並暫停與主機IP位址的通訊15分鐘。通訊會在15分鐘後恢復、您可以再次嘗試登入SP。
+
+無法建立或使用系統保留名稱（例如「root」和「naroot」）來存取叢集或SP。ONTAP
+
+.步驟
+. 從管理主機登入SP：
++
+hy*ssh username@SP_ip_address*
+
+. 系統提示時、請輸入「UserName」（使用者名稱）的密碼。
++
+出現SP提示字元、表示您可以存取SP CLI。
+
+
+
+以下範例說明如何使用設定為存取SP的使用者帳戶「Joe」登入SP。
+
+[listing]
+----
+[admin_host]$ ssh joe@192.168.123.98
+joe@192.168.123.98's password:
+SP>
+----
+下列範例說明如何使用IPv6全域位址或IPv6路由器通告位址、在已針對IPv6設定SSH、並針對IPv6設定SP的節點上登入SP。
+
+[listing]
+----
+[admin_host]$ ssh joe@fd22:8b1e:b255:202::1234
+joe@fd22:8b1e:b255:202::1234's password:
+SP>
+----
+[listing]
+----
+[admin_host]$ ssh joe@fd22:8b1e:b255:202:2a0:98ff:fe01:7d5b
+joe@fd22:8b1e:b255:202:2a0:98ff:fe01:7d5b's password:
+SP>
+----

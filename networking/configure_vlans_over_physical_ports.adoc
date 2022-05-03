@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_vlans_over_physical_ports.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, vlan, virtual, local, area, network, physical, port, logical, segmentation, configure vlans over physical ports, vlans provide logical segmentation of networks, create a vlan, network port vlan create, delete a vlan, network port vlan delete 
+summary: VLAN提供網路的邏輯區段 
+---
+= 透過實體連接埠設定VLAN
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+VLAN透過建立在交換器連接埠基礎上定義的獨立廣播網域、而非在實體邊界上定義的傳統廣播網域、來提供網路的邏輯區段。
+
+一個VLAN可以跨越多個實體網路區段。屬於VLAN的終端站台會依功能或應用程式而定。
+
+例如、VLAN中的終端站台可能會依部門（例如工程和會計）或專案（例如releasease1和release2）進行分組。由於終端站台的實體鄰近性在VLAN中並不重要、因此您可以將終端站台分散到不同的地理位置、並將廣播網域保留在交換式網路中。
+
+您可以建立、刪除或顯示有關VLAN的資訊來管理VLAN。
+
+
+NOTE: 您不應該在網路介面上建立與交換器原生VLAN相同識別碼的VLAN。例如、如果網路介面e0b位於原生VLAN 10、則不應在該介面上建立VLAN e0b-10。
+
+
+
+== 建立VLAN
+
+您可以使用「network port vlan create」命令建立VLAN、以維護同一個網路網域內的個別廣播網域。
+
+您的網路管理員必須確認已符合下列要求：
+
+* 部署在網路中的交換器必須符合IEEE 802.1Q標準、或是具有廠商專屬的VLAN實作。
+* 若要支援多個VLAN、端點必須靜態設定為屬於一個或多個VLAN。
+* VLAN未附加至裝載叢集LIF的連接埠。
+* VLAN未連接至指派給叢集IPspace的連接埠。
+* VLAN並非在不含成員連接埠的介面群組連接埠上建立。
+
+
+在某些情況下、如果您想要在效能降低的連接埠上建立VLAN連接埠、而不想修正硬體問題或任何軟體設定錯誤、則可以將「network port modify」命令的「ignore」（忽略）健全狀況狀態參數設為true。
+
+建立VLAN會將VLAN附加至叢集中指定節點上的網路連接埠。
+
+當您第一次透過連接埠設定VLAN時、連接埠可能會關閉、導致網路暫時中斷連線。後續新增至相同連接埠的VLAN不會影響連接埠狀態。
+
+
+NOTE: 您不應該在網路介面上建立與交換器原生VLAN相同識別碼的VLAN。例如、如果網路介面e0b位於原生VLAN 10、則不應在該介面上建立VLAN e0b-10。
+
+.步驟
+. 使用「network port vlan create」命令建立VLAN。
+. 建立VLAN時、您必須指定「vlan-name」或「port」和「vlan-id」選項。VLAN名稱是連接埠（或介面群組）名稱與網路交換器VLAN識別碼的組合、中間有連字號。例如、「e0c-24」和「e1c-80」是有效的VLAN名稱。
+
+
+以下範例說明如何在節點「叢集-01」上建立連接至網路連接埠「e1c」的VLAN「e1c-80」：
+
+....
+network port vlan create -node cluster-1-01 -vlan-name e1c-80
+....
+從ONTAP 功能更新到功能更新的版本開始、VLAN會在建立後約一分鐘自動放入適當的廣播網域。如果ONTAP 您不想使用這個功能、而且想要將VLAN手動置入廣播網域、請將「vlan-cre創作」命令中的「跳過廣播網域放置」參數指定為一部分。
+
+如需此命令的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]。
+
+
+
+== 刪除VLAN
+
+從插槽中移除NIC之前、您可能必須先刪除VLAN。當您刪除VLAN時、它會自動從所有使用它的容錯移轉規則和群組中移除。
+
+請確定沒有任何與VLAN相關的生命里數。
+
+從連接埠刪除最後一個VLAN可能會導致網路暫時中斷與連接埠的連線。
+
+使用「network port vlan DELETE」命令刪除VLAN。
+
+以下範例說明如何從節點「叢集-1-01」上的網路連接埠「e1c」刪除VLAN「e1c-80」：
+
+....
+network port vlan delete -node cluster-1-01 -vlan-name e1c-80
+....

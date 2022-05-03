@@ -1,0 +1,32 @@
+---
+permalink: san-admin/enable-space-allocation-scsi-thin-provisioned-luns-task.html 
+sidebar: sidebar 
+keywords: enable, space, allocation, scsi, thinly, provisioned luns 
+summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空間不足、且磁碟區中的LUN無法接受寫入時、將會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。 
+---
+= 為精簡配置的SCSI LUN啟用空間分配
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您將「最快分配」選項設為「已啟用」、ONTAP 則當磁碟區空間不足且磁碟區中的LUN無法接受寫入時、會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。
+
+「最快分配」選項預設為「停用」、您必須將LUN離線才能啟用空間分配。啟用空間分配之後、您必須在主機上執行探索、主機才能辨識已啟用空間分配。
+
+.步驟
+. 將「空間分配」參數設為「已啟用」：
++
+「LUN modify -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-space-allocation enabl用」
+
+. 確認已啟用空間分配：
++
+「LUN show -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-Fields space-allocation」
+
+. 使LUN上線：
++
+"LUN modify -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-st現 線"
+
+. 在主機上重新掃描所有磁碟、以確保正確探索對「空間分配」選項的變更。
+

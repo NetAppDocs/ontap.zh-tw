@@ -1,0 +1,209 @@
+---
+permalink: encryption-at-rest/configure-netapp-volume-encryption-concept.html 
+sidebar: sidebar 
+keywords: configure, netapp, volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
+summary: NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。只有儲存系統才能存取的加密金鑰、可確保在基礎裝置重新調整用途、退回、放錯位置或遭竊時、無法讀取Volume資料。 
+---
+= 設定NetApp Volume Encryption總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。只有儲存系統才能存取的加密金鑰、可確保在基礎裝置重新調整用途、退回、放錯位置或遭竊時、無法讀取Volume資料。
+
+
+
+== 瞭解NVE
+
+包括Snapshot複本在內的資料和中繼資料都會加密。資料的存取權是由唯一的XTS-AES-256金鑰提供、每個磁碟區一個金鑰。外部金鑰管理伺服器或Onboard Key Manager可為節點提供金鑰：
+
+* 外部金鑰管理伺服器是儲存環境中的第三方系統、使用金鑰管理互通性傳輸協定（KMIP）為節點提供金鑰。最佳實務做法是在不同的儲存系統上設定外部金鑰管理伺服器與資料。
+* 內建金鑰管理程式是一項內建工具、可從與資料相同的儲存系統、為節點提供金鑰。
+
+
+從支援支援支援的版本起、如果您擁有Volume加密（VE）授權、並使用內建或外部金鑰管理程式、則根據預設會啟用Aggregate和Volume加密。ONTAP設定外部或內建金鑰管理程式時、靜止資料加密的設定方式會改變、以供全新的集合體和全新的磁碟區使用。全新的Aggregate依預設會啟用NetApp Aggregate Encryption（NAE）。非NAE Aggregate一部分的全新磁碟區預設會啟用NetApp Volume Encryption（NVE）。如果資料儲存虛擬機器（SVM）是使用多租戶金鑰管理、以自己的金鑰管理程式進行設定、則為該SVM建立的磁碟區會自動設定NVE。
+
+您可以在新的或現有的磁碟區上啟用加密。NVE支援完整的儲存效率功能、包括重複資料刪除與壓縮。
+
+[NOTE]
+====
+如果您使用SnapLock 的是功能區、則只能在新的空白SnapLock 版的功能區上啟用加密功能。您無法在現有SnapLock 的流通量上啟用加密功能。
+
+====
+您可以在任何類型的Aggregate（HDD、SSD、混合式、陣列LUN）上使用NVE、搭配任何RAID類型、也可以在ONTAP 任何支援的支援功能中使用、包括ONTAP Select 用作支援的功能、包括用作支援的功能。您也可以使用NVE搭配硬體加密、在自我加密磁碟機上使用「雙重加密」資料。
+
+[NOTE]
+====
+FASA220、FASA800、FAS2720、FAS2750及更新版本的系統會將核心傾印儲存在其開機裝置上。AFF AFF在這些系統上啟用NVE時、核心傾印也會加密。
+
+====
+
+
+== Aggregate層級加密
+
+通常、每個加密磁碟區都會指派一個唯一的金鑰。刪除磁碟區時、金鑰會隨之刪除。
+
+從ONTAP SURF9.6開始、您可以使用_NetApp Aggregate Encryption（NAE）_將金鑰指派給內含的Aggregate、以便加密磁碟區。刪除加密磁碟區時、會保留該集合體的金鑰。金鑰會刪除整個Aggregate。
+
+如果您打算執行即時或背景Aggregate層級的重複資料刪除、則必須使用Aggregate層級的加密。NVE不支援Aggregate層級的重複資料刪除。
+
+從支援支援支援的版本起、如果您擁有Volume加密（VE）授權、並使用內建或外部金鑰管理程式、則根據預設會啟用Aggregate和Volume加密。ONTAP
+
+NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregate層級加密下加密的磁碟區為NAE磁碟區。加密磁碟區時、您可以覆寫預設值。
+
+您可以使用「Volume Move」命令、將NVE Volume轉換為NAE Volume、反之亦然。您可以將NAE磁碟區複寫至NVE磁碟區。
+
+
+
+== 何時使用外部金鑰管理伺服器
+
+雖然使用內建金鑰管理程式的成本較低、而且通常更方便、但如果下列任一項屬實、您應該設定KMIP伺服器：
+
+* 您的加密金鑰管理解決方案必須符合聯邦資訊處理標準（FIPS）140-2或OASIS KMIP標準。
+* 您需要一套多叢集解決方案、集中管理加密金鑰。
+* 您的企業需要更高的安全性、將驗證金鑰儲存在系統或與資料不同的位置。
+
+
+
+
+== 外部金鑰管理範圍
+
+外部金鑰管理的範圍決定了金鑰管理伺服器是保護叢集中的所有SVM、還是僅保護選取的SVM：
+
+* 您可以使用_叢集範圍_來設定叢集中所有SVM的外部金鑰管理。叢集管理員可以存取儲存在伺服器上的每個金鑰。
+* 從ONTAP S9.6開始、您可以使用_SVM範圍_來設定叢集中命名SVM的外部金鑰管理。這最適合多租戶環境、每個租戶使用不同的SVM（或一組SVM）來提供資料。只有特定租戶的SVM管理員可以存取該租戶的金鑰。
+* 從功能升級到功能升級到ONTAP 功能升級、您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault與Google Cloud KMS] 僅保護資料Vserver的NVE金鑰。
+
+
+您可以在同一個叢集中使用這兩個範圍。如果SVM已設定金鑰管理伺服器、ONTAP 則僅使用這些伺服器來保護金鑰。否則ONTAP 、利用為叢集設定的金鑰管理伺服器來保護金鑰。
+
+中提供已驗證的外部金鑰管理程式清單 link:http://mysupport.netapp.com/matrix/["NetApp互通性對照表工具IMT （不含）"^]。您可以在IMT的搜尋功能中輸入「金鑰管理程式」一詞、以找到此清單。
+
+
+
+== 支援詳細資料
+
+下表顯示NVE支援詳細資料：
+
+[cols="25,75"]
+|===
+
+
+| 資源或功能 | 支援詳細資料 
+
+
+ a| 
+平台
+ a| 
+需要AES-NI卸載功能。請參閱Hardware Universe 《銷售支援》（HWU）、確認您的平台是否支援NVE和NAE。
+
+
+
+ a| 
+加密
+ a| 
+從推出更新版本時開始ONTAP 、新建立的Aggregate和Volume會在您新增Volume加密（VE）授權、並設定內建或外部金鑰管理程式時、依預設進行加密。如果您需要建立未加密的Aggregate、請使用下列命令：
+
+「torage Aggregate create -加密 與agger-key假」
+
+如果您需要建立純文字Volume、請使用下列命令：
+
+「Volume create -加密 假」
+
+在下列情況下、預設不會啟用加密：
+
+* 未安裝ve授權。
+* 未設定金鑰管理程式。
+* 平台或軟體不支援加密。
+* 硬體加密已啟用。
+
+
+
+
+ a| 
+ONTAP
+ a| 
+所有ONTAP 的部分實作。支援不支援支援支援功能可在支援支援支援功能的版本上找到。ONTAP ONTAP
+
+
+
+ a| 
+裝置
+ a| 
+HDD、SSD、混合式陣列LUN。
+
+
+
+ a| 
+RAID
+ a| 
+RAID0、RAID4、RAID-DP、RAID-TEC
+
+
+
+ a| 
+磁碟區
+ a| 
+資料磁碟區和現有的根磁碟區。您無法加密SVM根磁碟區或MetroCluster 不支援中繼資料磁碟區上的資料。
+
+
+
+ a| 
+Aggregate層級加密
+ a| 
+從推出支援Aggregate層級加密（NAE）的ONTAP NVE開始：
+
+* 如果您打算執行即時或背景Aggregate層級的重複資料刪除、則必須使用Aggregate層級的加密。
+* 您無法重新輸入Aggregate層級加密Volume的金鑰。
+* Aggregate層級加密磁碟區不支援安全清除。
+* 除了資料磁碟區之外、NAE也支援加密SVM根磁碟區和MetroCluster 元資料Volume。Nae不支援加密根磁碟區。
+
+
+
+
+ a| 
+SVM範圍
+ a| 
+從支援SVM範圍開始ONTAP 、NVE僅支援外部金鑰管理、不支援Onboard Key Manager。支援從支援的功能為從支援的功能之一直到支援的功能。MetroCluster ONTAP
+
+
+
+ a| 
+儲存效率
+ a| 
+重複資料刪除、壓縮、壓縮、FlexClone。即使將實體複本從父複本分割出去、複本仍會使用與父複本相同的金鑰。系統會警告您重新輸入分割實體複本的金鑰。
+
+
+
+ a| 
+複寫
+ a| 
+* 對於Volume複寫、目的地Volume必須已啟用加密功能。可針對來源設定加密、也可針對目的地設定未設定加密、反之亦然。
+* 對於SVM複寫、目的地磁碟區會自動加密、除非目的地不包含支援Volume加密的節點、在這種情況下、複寫會成功、但目的地磁碟區不會加密。
+* 針對部分組態、每個叢集都會從其設定的金鑰伺服器擷取外部金鑰管理金鑰。MetroCluster組態複寫服務會將OKM金鑰複寫至合作夥伴站台。
+
+
+
+
+ a| 
+法規遵循
+ a| 
+從ONTAP 功能更新至功能更新版9.2開始、SnapLock 功能更新僅適用於新的Volume、同時支援法規遵循與企業模式。您無法在現有SnapLock 的流通量上啟用加密功能。
+
+
+
+ a| 
+FlexGroups
+ a| 
+從ONTAP 支援FlexGroups的支援功能中、從功能表9.2開始。目的地Aggregate必須與來源Aggregate的類型相同、無論是Volume層級或Aggregate層級。從功能更新版開始、支援就地重新更新功能、以取代功能。ONTAP FlexGroup
+
+
+
+ a| 
+7-Mode轉換
+ a| 
+從7-Mode Transition Tool 3.3開始、您可以使用7-Mode Transition Tool CLI、在叢集式系統上執行以複製為基礎的移轉、移轉至啟用NVE的目的地磁碟區。
+
+|===

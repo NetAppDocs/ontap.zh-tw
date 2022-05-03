@@ -1,0 +1,23 @@
+---
+permalink: tape-backup/event-logging-concept.html 
+sidebar: sidebar 
+keywords: monitor, tape, backup, restore, operations, flexvol, volumes 
+summary: 您可以檢視事件記錄檔、以監控磁帶備份與還原作業。系統會自動將重要的備份與還原事件記錄在控制器/etc/log/目錄中名為備份的記錄檔中、以及這些事件發生的時間。ONTAP依預設、事件記錄會設為「開啟」。 
+---
+= 監控磁帶備份與還原作業FlexVol 、以利執行不中斷的作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視事件記錄檔、以監控磁帶備份與還原作業。系統會自動將重要的備份與還原事件記錄在控制器的「/etc/log/」目錄中的「備份」記錄檔中、以及這些事件發生的時間。ONTAP預設情況下、事件記錄會設為「On（開啟）」。
+
+您可能會因為下列原因而想要檢視事件記錄檔：
+
+* 檢查夜間備份是否成功
+* 收集備份作業的統計資料
+* 使用過去事件記錄檔中的資訊來協助診斷備份與還原作業的問題
+
+
+每週會旋轉一次事件記錄檔。「/etc/log/Backup」檔案會重新命名為「/etc/log/backup.0」、「/etc/log/backup.0」檔案會重新命名為「/etc/log/backup.1」、依此類推。系統最多可將記錄檔儲存六週、因此您最多可儲存七個訊息檔案（如「/etc/log/backup」（檔案）、「0-5」（檔案）和目前的「/etc/log/Backup」（檔案）。

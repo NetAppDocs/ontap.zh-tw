@@ -1,0 +1,118 @@
+---
+permalink: smb-admin/security-styles-their-effects-concept.html 
+sidebar: sidebar 
+keywords: unix, ntfs, mixed, unified, security, style, effect, permission, handle, data, what the security styles and their effects are 
+summary: 共有四種不同的安全型態：UNIX、NTFS、混合式及統一化。每種安全樣式對資料權限的處理方式都有不同的影響。您必須瞭解不同的影響、以確保為您的目的選擇適當的安全型態。 
+---
+= 安全樣式及其影響為何
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+共有四種不同的安全型態：UNIX、NTFS、混合式及統一化。每種安全樣式對資料權限的處理方式都有不同的影響。您必須瞭解不同的影響、以確保為您的目的選擇適當的安全型態。
+
+請務必瞭解、安全樣式並未決定哪些用戶端類型可以或無法存取資料。安全樣式只會決定ONTAP 用來控制資料存取的權限類型、以及哪些用戶端類型可以修改這些權限。
+
+例如、如果某個磁碟區使用UNIX安全型態、則SMB用戶端仍可存取資料（前提是他們必須正確驗證及授權）、因為ONTAP 此為多重傳輸協定的本質。不過ONTAP 、VMware使用UNIX權限、只有UNIX用戶端可以使用原生工具進行修改。
+
+|===
+| 安全風格 | 可以修改權限的用戶端 | 用戶端可以使用的權限 | 打造出有效的安全風格 | 可存取檔案的用戶端 
+
+
+ a| 
+UNIX
+ a| 
+NFS
+ a| 
+NFSv3模式位元
+ a| 
+UNIX
+ a| 
+NFS與SMB
+
+
+
+ a| 
+NFSv4.x ACL
+ a| 
+UNIX
+
+
+
+ a| 
+NTFS
+ a| 
+中小企業
+ a| 
+NTFS ACL
+ a| 
+NTFS
+
+
+
+ a| 
+混合
+ a| 
+NFS或SMB
+ a| 
+NFSv3模式位元
+ a| 
+UNIX
+
+
+
+ a| 
+NFSv4.x ACL
+ a| 
+UNIX
+
+
+
+ a| 
+NTFS ACL
+ a| 
+NTFS
+ a| 
+統一化
+ a| 
+NFS或SMB
+
+
+
+ a| 
+NFSv3模式位元
+ a| 
+UNIX
+
+
+
+ a| 
+NFSv4.1 ACL
+ a| 
+UNIX
+ a| 
+NTFS ACL
+ a| 
+NTFS
+
+
+
+.3+| 統一化（ONTAP 僅適用於無限Volume、適用於更新版本的版本。） .3+| NFS或SMB | NFSv3模式位元 .2+| UNIX 
+
+
+| NFSv4.1 ACL | NTFS ACL 
+|===
+支援UNIX、NTFS和混合式安全型態的支援。FlexVol當安全性樣式混合或統一化時、有效權限取決於上次修改權限的用戶端類型、因為使用者是個別設定安全性樣式。如果上次修改權限的用戶端是NFSv3用戶端、則權限為UNIX NFSv3模式位元。如果最後一個用戶端是NFSv4用戶端、則權限為NFSv4 ACL。如果最後一個用戶端是SMB用戶端、則權限為Windows NTFS ACL。
+
+統一化的安全風格僅適用於無限個Volume、ONTAP 而不再支援於更新版本的版本。如需詳細資訊、請參閱 link:..flexgroup/index.html["介紹Volume管理總覽FlexGroup"]。
+
+從ONTAP 功能表9.2開始、「虛擬伺服器安全檔案目錄」命令的「有效權限」參數可讓您顯示在指定檔案或資料夾路徑上授予Windows或UNIX使用者的有效權限。此外、選用的參數「-share-name」可讓您顯示有效的共用權限。
+
+[NOTE]
+====
+最初設定部分預設檔案權限。ONTAP根據預設、UNIX、混合式及統一化安全樣式磁碟區中所有資料的有效安全樣式為UNIX、有效權限類型為UNIX模式位元（0755、除非另有說明）、直到用戶端依照預設安全性樣式所允許的方式進行設定為止。根據預設、NTFS安全型磁碟區中所有資料的有效安全樣式為NTFS、並具有ACL、可讓所有人完全掌控。
+
+====
+2021年12月9日、Burt 1443623

@@ -1,0 +1,42 @@
+---
+permalink: smb-admin/commands-oplocks-volumes-qtrees-reference.html 
+sidebar: sidebar 
+keywords: oplock, client, lock, file, cache, performance, operation, qtree, command, enabling, enable, disabling, disable, volume, commands for enabling or disabling oplocks on volumes and qtrees 
+summary: oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔案作業的效能。您需要知道在磁碟區或qtree上啟用或停用oplocks的命令。您也必須知道何時可以在磁碟區和qtree上啟用或停用oplocks。 
+---
+= 在磁碟區和qtree上啟用或停用oplock的命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔案作業的效能。您需要知道在磁碟區或qtree上啟用或停用oplocks的命令。您也必須知道何時可以在磁碟區和qtree上啟用或停用oplocks。
+
+* 預設會在磁碟區上啟用oplocks。
+* 您無法在建立Volume時停用oplocks。
+* 您可以隨時在現有磁碟區上為SVM啟用或停用oplock。
+* 您可以在qtree上為SVM啟用oplocks。
++
+oplock模式設定是qtree ID 0的屬性、即所有磁碟區的預設qtree。如果您在建立qtree時未指定oplock設定、qtree會繼承父Volume的oplock設定、此設定預設為啟用。不過、如果您在新qtree上指定oplock設定、則其優先於Volume上的oplock設定。
+
+
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+在磁碟區或qtree上啟用oplocks
+ a| 
+將「oplock-mode」參數設為「enable」、「Volume qtree oplocks」
+
+
+
+ a| 
+停用磁碟區或qtree上的oplocks
+ a| 
+將「oplock-mode」參數設為「停用」的「Volume qtree oplocks」
+
+|===
+xref:monitor-oplock-status-task.adoc[監控oplock狀態]

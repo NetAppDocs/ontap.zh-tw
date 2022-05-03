@@ -1,0 +1,52 @@
+---
+permalink: system-admin/manage-web-services-concept.html 
+sidebar: sidebar 
+keywords: manage, web, services, svm, storage, virtual, machine, cluster, controler, user 
+summary: 您可以啟用或停用叢集或儲存虛擬機器（SVM）的Web服務、顯示Web服務的設定、以及控制角色使用者是否可以存取Web服務。 
+---
+= 管理網路服務總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以啟用或停用叢集或儲存虛擬機器（SVM）的Web服務、顯示Web服務的設定、以及控制角色使用者是否可以存取Web服務。
+
+您可以使用下列方式來管理叢集或SVM的Web服務：
+
+* 啟用或停用特定的Web服務
+* 指定是否僅限加密的HTTP（SSL）存取Web服務
+* 顯示Web服務的可用度
+* 允許或禁止角色使用者存取Web服務
+* 顯示允許存取Web服務的角色
+
+
+若要讓使用者存取Web服務、必須符合下列所有條件：
+
+* 使用者必須通過驗證。
++
+例如、Web服務可能會提示輸入使用者名稱和密碼。使用者的回應必須符合有效的帳戶。
+
+* 使用者必須使用正確的存取方法來設定。
++
+驗證只會針對使用者成功、並針對指定的Web服務提供正確的存取方法。對於此功能、使用者必須使用「ontapi」存取方法。ONTAP對於所有其他Web服務、使用者必須擁有「http」存取方法。
+
++
+[NOTE]
+====
+您可以使用「安全登入」命令來管理使用者的存取方法和驗證方法。
+
+====
+* Web服務必須設定為允許使用者的存取控制角色。
++
+[NOTE]
+====
+您可以使用「vserver services web access」命令來控制角色對Web服務的存取。
+
+====
+
+
+如果啟用防火牆、則必須設定用於Web服務的LIF防火牆原則、以允許HTTP或HTTPS。
+
+如果您使用HTTPS進行Web服務存取、也必須啟用提供Web服務之叢集或SVM的SSL、而且必須提供叢集或SVM的數位憑證。

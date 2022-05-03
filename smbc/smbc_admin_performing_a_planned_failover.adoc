@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_performing_a_planned_failover.html 
+keywords: SM-BC, SMBC, testing failover, planned failover, maintenance, Mediator, quorum 
+summary: 您可以執行計畫性容錯移轉、以測試災難恢復組態、或在主叢集上執行維護。 
+---
+= 執行計畫性容錯移轉
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以執行計畫性容錯移轉、以測試災難恢復組態、或在主叢集上執行維護。
+
+.開始之前
+* 關係必須同步
+* 不得執行不中斷營運
+* 必須設定、連線及仲裁中的「這個功能」ONTAP
+
+
+計畫性的容錯移轉是由次要叢集的系統管理員啟動。此作業需要切換主要和次要角色、以便次要叢集從主要叢集接管。然後、新的主叢集便可開始在本機處理輸入和輸出要求、而不會中斷用戶端作業。
+
+.步驟
+. 啟動容錯移轉作業：
++
+「目的地：：：>SnapMirror容錯移轉開始-目的地路徑VS1_DST../cg / Cg _Dst」
+
+. 監控容錯移轉的進度：
++
+「目的地：：>SnapMirror容錯移轉顯示」
+
+. 當容錯移轉作業完成時、您可以從目的地監控同步SnapMirror保護關係狀態：
++
+「目的地：：>SnapMirror show」
+
+

@@ -1,0 +1,112 @@
+---
+permalink: s3-config/create-bucket-task.html 
+sidebar: sidebar 
+keywords: create, bucket 
+summary: S3物件會保留在儲存區中、不會將它們嵌套成其他目錄內目錄內的檔案。 
+---
+= 建立儲存庫
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+S3物件保留在_buckets中-它們不會像其他目錄內的目錄內的檔案一樣嵌套。
+
+包含S3伺服器的SVM必須已經存在。
+
+建立資源桶時、您有兩種資源配置選項：
+
+* 讓ONTAP Select 底層的集合體和FlexGroup 元件不再存在（預設）
++
+** 透過自動選取集合體、即可為第一個儲存區建立及設定一個等量磁碟區。ONTAP FlexGroup它會自動選取適用於您平台的最高服務層級、或是您可以指定儲存服務層級。您稍後在SVM中新增的任何其他儲存區、都會有相同的基礎FlexGroup 版的SVM。
+** 或者、您也可以指定是否要使用儲存區進行分層、在這種情況ONTAP 下、VMware會嘗試選擇低成本的媒體、為階層式資料提供最佳效能。
+
+
+* 您可以選取基礎的Aggregate和FlexGroup 等元件（需要進階權限命令選項）
++
+** 您可以選擇手動選取必須FlexGroup 在其中建立貯體和包含此等Volume的集合體、然後在每個集合體上指定成員數目。新增其他庫位時：
++
+*** 如果您為新的貯體指定集合體和成員、FlexGroup 將會為新的貯體建立新的功能區。
+*** 如果您未指定新儲存區的集合體和成員、則新儲存區將會新增至現有FlexGroup 的版本資訊區。如FlexGroup 需詳細資訊、請參閱《產品介紹》文件。
+
+
++
+link:../flexgroup/index.html["資料區管理FlexGroup"]
+
+
+
++
+當您在建立貯體時指定集合體和成員時、不會套用預設或自訂的QoS原則群組。您可以稍後使用「vserver object-store-server Bucket modify」命令來修改。
+
+
+
+儲存服務層級是預先定義的調適性服務品質（QoS）原則群組、具有_value_、_Performance _和_Extreme _預設層級。您也可以定義自訂QoS原則群組、並將其套用至儲存區、而非預設的儲存服務層級之一。
+
+link:storage-service-definitions-reference.html["儲存服務定義"]
+
+如果您正在設定本機容量分層、則會在資料SVM中建立儲存區和使用者、而非在S3伺服器所在的系統SVM中建立。
+
+link:../performance-admin/index.html["效能管理"]
+
+請參閱「vserver object-store-server p桶」手冊頁、以瞭解其他組態和顯示選項。
+
+.步驟
+. 如果您打算FlexGroup 自行選擇Aggregate和等化元件、請將權限等級設為進階（否則、管理員權限等級就足夠）：「et -private advanc進 階」（設定權限進階）
+. 建立儲存庫：
++
+「vserver object-store-server bucket create -vserver _Svm_name_-bucket _bucket_name_[-size integer[KB | MB | GB | TB | PB ][-comment text][addent_options]」
+
++
+SVM名稱可以是資料SVM、也可以是「叢集」（系統SVM名稱）、如果您正在設定本機分層。
+
++
+如果您未指定任何選項、ONTAP 則會建立一個5GB的儲存區、並將服務層級設為系統可用的最高層級。
+
++
+如果您想ONTAP 要根據效能或使用量來建立儲存庫、請使用下列其中一個選項：
+
++
+** 服務層級
++
+將「儲存服務層級」選項納入下列其中一個值：「Value」（價值）、「Performance」（效能）或「Extreme」。
+
+** 分層
++
+包括「使用容量層真」選項。
+
+
+
++
+如果您要指定要在其上建立基礎FlexGroup 的流通量的集合體、請使用下列選項：
+
++
+** 「-agg-lists」參數會指定要用於FlexGroup 資料的集合體清單。
++
+清單中的每個項目都會在指定的Aggregate上建立一個組成項目。您可以多次指定集合體、以便在集合上建立多個成員。
+
++
+為了在FlexGroup 整個Singfuse Volume中提供一致的效能、所有的集合體都必須使用相同的磁碟類型和RAID群組組組態。
+
+** Check Alignment of PHs>-agger-list-gulier參數指定在建立FlexGroup 一個循環Volume時、重複使用"-agger-list"參數列出的集合體的次數。
++
+預設的「-agger-list-gulier」參數值為4。
+
+
+
+. 視需要新增QoS原則群組：
++
+「vserver object-store-server bucket modify -bucket_name_-qos-police-group _qos_policy_group」
+
+. 確認儲存庫建立：
++
+「vserver object-store-server Bucket show [-instance]」
+
+
+
+下列範例為大小1TB的SVM VS1建立一個儲存區、並指定集合體：
+
+[listing]
+----
+cluster-1::*> vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket -aggr-list aggr1 -size 1TB
+----

@@ -1,0 +1,44 @@
+---
+permalink: smb-admin/create-volumes-without-specifying-junction-task.html 
+sidebar: sidebar 
+keywords: create, data, volume, junction, point, resultant, automatic, mount, nas, access, configure, smb, share, nfs, create data volumes without specifying junction points 
+summary: 您可以建立資料Volume而不指定交會點。結果Volume不會自動掛載、也無法設定NAS存取。您必須先掛載磁碟區、才能設定該磁碟區的SMB共用區或NFS匯出。 
+---
+= 建立資料磁碟區而不指定交會點
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立資料Volume而不指定交會點。結果Volume不會自動掛載、也無法設定NAS存取。您必須先掛載磁碟區、才能設定該磁碟區的SMB共用區或NFS匯出。
+
+您要在其中建立磁碟區的集合體必須已經存在。
+
+.步驟
+. 使用下列命令建立沒有連接點的磁碟區：「volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-size｛integer[kb|MB|GB|TB|PB｝-SECURITY風格｛ntfs|UNIX | mixed}」
++
+指定Volume安全樣式為選用項目。如果您未指定安全樣式、ONTAP 則會以套用至儲存虛擬機器（SVM）根磁碟區的相同安全樣式來建立磁碟區。不過、根磁碟區的安全樣式可能不是您要套用到資料磁碟區的安全樣式。建議您在建立磁碟區時指定安全樣式、以將難以疑難排解的檔案存取問題降至最低。
+
++
+您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱「Volume create」命令的手冊頁。
+
+. 驗證是否在沒有連接點的情況下建立磁碟區：「volume show -vserver _vserver_name_-volume _volume _name_-jetion」
+
+
+下列範例建立名為「shes」的磁碟區、位於SVM VS1上、但未掛載於交會點：
+
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume sales -aggregate aggr3 -size 20GB
+[Job 3406] Job succeeded: Successful
+
+cluster1::> volume show -vserver vs1 -junction
+                     Junction                 Junction
+Vserver   Volume     Active   Junction Path   Path Source
+--------- ---------- -------- --------------- -----------
+vs1       data       true     /data           RW_volume
+vs1       home4      true     /eng/home       RW_volume
+vs1       vs1_root   -        /               -
+vs1       sales      -        -               -
+----

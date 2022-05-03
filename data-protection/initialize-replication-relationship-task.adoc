@@ -1,0 +1,46 @@
+---
+permalink: data-protection/initialize-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: initialize, replication, relationship, snapmirror, snap mirror, synchronous, transfer, snapshot copy, 
+summary: 對於所有關係類型、初始化會執行基準傳輸：它會製作來源Volume的Snapshot複本、然後將該複本及其參照的所有資料區塊傳輸到目的地Volume。否則、傳輸內容取決於原則。 
+---
+= 初始化複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於所有關係類型、初始化會執行_baseline Transfation_：它會製作來源Volume的Snapshot複本、然後將該複本及其參照的所有資料區塊傳輸到目的地Volume。否則、傳輸內容取決於原則。
+
+來源與目的地叢集和SVM必須進行對等關係。
+
+link:../peering/index.html["叢集與SVM對等關係"]
+
+初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。
+
+從ONTAP 支援SnapMirror 9.5開始、即支援SnapMirror同步關係。
+
+.步驟
+. 初始化複寫關係：
++
+"napmirror initialize -source-path _svm:volume（napmirror初始化-source-path _svm:volume）_cluster（//svm/volume）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。
+
+====
++
+以下範例可初始化「svm1」上的來源磁碟區「Vola」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror initialize -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

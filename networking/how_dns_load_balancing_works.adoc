@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: networking/how_dns_load_balancing_works.html 
+keywords: introducing, introduction, overview, dns, naming, name, service, load, balance, balancing, performance, how dns load balancing works, introducing dns load balancing 
+summary: DNS負載平衡簡介 
+---
+= DNS負載平衡的運作方式
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+用戶端可藉由指定IP位址（與LIF關聯）或主機名稱（與多個IP位址關聯）來掛載SVM。依預設、整個站台的DNS伺服器會以循環配置資源的方式選取生命體、以平衡所有生命體的工作負載。
+
+循環資源負載平衡可能會導致部分生命量過載、因此您可以選擇使用DNS負載平衡區域來處理SVM中的主機名稱解析。使用DNS負載平衡區域、可確保新用戶端連線在可用資源之間取得更好的平衡、進而提升叢集的效能。
+
+DNS負載平衡區域是叢集內的DNS伺服器、可動態評估所有LIF上的負載、並傳回適當載入的LIF。在負載平衡區域中、DNS會根據負載、為每個LIF指派權重（度量）。
+
+每個LIF都會根據其主節點的連接埠負載和CPU使用率來指派一個權重。負載較少的連接埠上的LIF在DNS查詢中傳回的機率較高。您也可以手動指派權重。

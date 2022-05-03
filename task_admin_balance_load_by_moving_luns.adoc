@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: task_admin_balance_load_by_moving_luns.html 
+keywords: netapp, ontap, administration, balance, load, moving, move, LUN, LUNs, utilization, performance service level, qtree, origin volume, source volume, destination volume 
+summary: 您可以移動LUN來平衡儲存負載或改善效能。 
+---
+= 透過移動LUN來平衡負載
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以將LUN移至儲存VM內的其他磁碟區、以平衡負載、或將其移至效能較高的服務層級磁碟區、以提升效能。
+
+
+
+== 移動限制
+
+* 無法將LUN移至同一個磁碟區內的qtree。
+* 使用CLI從檔案建立的LUN無法透過System Manager移動。
+* 無法移動處於線上且提供資料的LUN。
+* 如果目的地磁碟區中的已配置空間無法包含LUN、則無法移動LUN（即使已在磁碟區上啟用自動擴充功能）。
+* 無法使用System Manager來移動位於整個資料區上的LUN SnapLock 。
+
+
+image:workflow_balance_load_by_moving_luns.gif["移動LUN以平衡負載的工作流程圖"]
+
+.步驟
+. 單擊* Storage（儲存設備）> LUN*。
+. 選取您要移動的LUN、然後按一下*移動*。
+. 選取您要將LUN移至的現有磁碟區。如果磁碟區包含qtree、請選取qtree。
+
+
+
+NOTE: 在移動作業進行期間、LUN會同時顯示在來源和目的地Volume上。

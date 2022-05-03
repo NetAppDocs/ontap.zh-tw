@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/directory-case-sensitivity-share-multiprotocol-concept.html 
+sidebar: sidebar 
+keywords: create, share, svm, naming, name, scheme, distinguish, directory, difference, share, path, ensure, client, connect, desire, directory, path, directory case-sensitivity requirements when creating shares in a multiprotocol environment 
+summary: 如果您在SVM中建立共用區、使用8.3命名配置來區分只有不同名稱大小寫的目錄名稱、則必須在共用路徑中使用8.3名稱、以確保用戶端連線至所需的目錄路徑。 
+---
+= 在多重傳輸協定環境中建立共用時、目錄區分大小寫的需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在SVM中建立共用區、使用8.3命名配置來區分只有不同名稱大小寫的目錄名稱、則必須在共用路徑中使用8.3名稱、以確保用戶端連線至所需的目錄路徑。
+
+在下列範例中、Linux用戶端上建立了兩個名為「'testdir'」和「'TESTDIR'」的目錄。包含目錄的磁碟區的交會路徑為「/shome/home/」。第一個輸出來自Linux用戶端、第二個輸出來自SMB用戶端。
+
+[listing]
+----
+ ls -l
+drwxrwxr-x 2 user1 group1   4096 Apr 17 11:23 testdir
+drwxrwxr-x 2 user1 group1   4096 Apr 17 11:24 TESTDIR
+----
+[listing]
+----
+dir
+
+ Directory of Z:\
+
+04/17/2015  11:23 AM    <DIR>          testdir
+04/17/2015  11:24 AM    <DIR>          TESTDI~1
+----
+建立第二個目錄的共用時、您必須在共用路徑中使用8.3名稱。在此範例中、第一個目錄的共用路徑為「/home/testdir」、第二個目錄的共用路徑為「/home/TESTDI~1」。

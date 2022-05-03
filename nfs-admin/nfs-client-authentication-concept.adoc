@@ -1,0 +1,20 @@
+---
+permalink: nfs-admin/nfs-client-authentication-concept.html 
+sidebar: sidebar 
+keywords: ontap, nfs, client, authentication 
+summary: NFS用戶端必須經過適當驗證、才能存取SVM上的資料。利用您所設定的名稱服務來檢查UNIX認證、藉此驗證用戶端。ONTAP 
+---
+= 如何處理NFS用戶端驗證總覽ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS用戶端必須經過適當驗證、才能存取SVM上的資料。利用您所設定的名稱服務來檢查UNIX認證、藉此驗證用戶端。ONTAP
+
+當NFS用戶端連線至SVM時、ONTAP 根據SVM的名稱服務組態、透過檢查不同的名稱服務來取得使用者的UNIX認證。可檢查本機UNIX帳戶、NIS網域及LDAP網域的認證資料。ONTAP至少必須設定其中一項、ONTAP 才能讓支援中心成功驗證使用者。您可以指定多個名稱服務及ONTAP 其搜尋順序。
+
+在純NFS環境中使用UNIX Volume安全性樣式、此組態足以驗證並為從NFS用戶端連線的使用者提供適當的檔案存取。
+
+如果您使用混合、NTFS或統一磁碟區安全樣式、ONTAP 則必須為UNIX使用者取得SMB使用者名稱、才能使用Windows網域控制器進行驗證。這可能是因為使用本機UNIX帳戶或LDAP網域來對應個別使用者、或改用預設的SMB使用者。您可以指定ONTAP 名稱服務以何種順序搜尋、或指定預設的SMB使用者。

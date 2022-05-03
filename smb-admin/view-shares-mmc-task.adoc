@@ -1,0 +1,70 @@
+---
+permalink: smb-admin/view-shares-mmc-task.html 
+sidebar: sidebar 
+keywords: information, smb, share, svm, perform, management, task, microsoft, management, console, mmc, view, share, connect, svm, view information about smb shares using the mmc 
+summary: 您可以檢視SVM上SMB共用的相關資訊、並使用Microsoft管理主控台（MMC）執行部分管理工作。您必須先將MMC連線至SVM、才能檢視共用區。 
+---
+= 使用MMC檢視SMB共用的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以檢視SVM上SMB共用的相關資訊、並使用Microsoft管理主控台（MMC）執行部分管理工作。您必須先將MMC連線至SVM、才能檢視共用區。
+
+您可以使用MMC在SVM內的共用上執行下列工作：
+
+* 檢視共享區
+* 檢視作用中工作階段
+* 檢視開啟的檔案
+* 列舉系統中的工作階段、檔案和樹狀結構連線清單
+* 關閉系統中開啟的檔案
+* 關閉開啟的工作階段
+* 建立/管理共用
+
+
+[NOTE]
+====
+上述功能所顯示的檢視是節點專屬的、而非叢集專屬的。因此、當您使用MMC連線至SMB伺服器主機名稱（即cifs01.domain.local）時、系統會根據您設定DNS的方式、將您路由至叢集內的單一LIF。
+
+====
+MMC ONTAP 不支援下列功能以利執行下列功能：
+
+* 建立新的本機使用者/群組
+* 管理/檢視現有的本機使用者/群組
+* 檢視事件或效能記錄
+* 儲存設備
+* 服務與應用程式
+
+
+在不支援此作業的情況下、您可能會遇到「程序呼叫失敗」錯誤。
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Using_Windows_MMC_with_ONTAP["常見問題集：搭配ONTAP 使用Windows MMC搭配使用"]
+
+.步驟
+. 若要在任何Windows伺服器上開啟「電腦管理」MMC、請在*「控制台」*中選取*「系統管理工具」**「電腦管理」*。
+. 選取*「行動*」>*「連線到另一台電腦*」。
++
+「選取電腦」對話方塊隨即出現。
+
+. 鍵入儲存系統的名稱、或按一下*瀏覽*以找出儲存系統。
+. 按一下「*確定*」。
++
+MMC會連線至SVM。
+
+. 在導覽窗格中、按一下*「共享資料夾」*>*「共享資料夾」*。
++
+SVM上的共用清單會顯示在右顯示窗格中。
+
+. 若要顯示共用區的共用內容、請按兩下該共用區、以開啟「*內容*」對話方塊。
+. 如果無法使用MMC連線至儲存系統、您可以在儲存系統上使用下列其中一個命令、將使用者新增至BUILTIN\Administrators群組或BUILTIN\Power Users群組：
++
+[listing]
+----
+
+cifs users-and-groups local-groups add-members -vserver <vserver_name> -group-name BUILTIN\Administrators -member-names <domainuser>
+
+cifs users-and-groups local-groups add-members -vserver <vserver_name> -group-name "BUILTIN\Power Users" -member-names <domainuser>
+----
+

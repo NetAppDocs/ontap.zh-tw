@@ -1,0 +1,48 @@
+---
+permalink: smb-admin/display-discovered-trusted-domains-task.html 
+sidebar: sidebar 
+keywords: display, information, discover, trust, domain, cifs, server, home, contain, computer, trusted-domain, list, display information about discover trusted domains 
+summary: 您可以顯示CIFS伺服器主網域的已探索信任網域相關資訊、該網域是包含CIFS伺服器電腦帳戶的網域。當您想要知道要探索哪些信任網域、以及如何在探索到的信任網域清單中排序時、這項功能就很有用。 
+---
+= 顯示探索到的信任網域相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示CIFS伺服器主網域（包含CIFS伺服器電腦帳戶的網域）的已探索信任網域資訊。當您想要知道要探索哪些信任網域、以及如何在探索到的信任網域清單中排序時、這項功能就很有用。
+
+只會探索具有主網域雙向信任的網域。由於主網域的網域控制器（DC）會依照DC決定的順序傳回信任網域清單、因此無法預測清單中網域的順序。藉由顯示信任網域的清單、您可以決定多網域名稱對應搜尋的搜尋順序。
+
+顯示的信任網域資訊會依節點和儲存虛擬機器（SVM）分組。
+
+.步驟
+. 使用「vserver CIFS網域信任關係show」命令來顯示已探索到的信任網域相關資訊。
++
+「Vserver CIFS網域信任顯示-vserver VS1」
+
++
+[listing]
+----
+   Node: node1
+Vserver: vs1
+
+Home Domain            Trusted Domain
+---------------------  -----------------------------------
+EXAMPLE.COM            CIFS1.EXAMPLE.COM,
+                       CIFS2.EXAMPLE.COM
+                       EXAMPLE.COM
+
+   Node: node2
+Vserver: vs1
+
+Home Domain            Trusted Domain
+---------------------  -----------------------------------
+EXAMPLE.COM            CIFS1.EXAMPLE.COM,
+                       CIFS2.EXAMPLE.COM
+                       EXAMPLE.COM
+----
+
+
+xref:reset-rediscover-trusted-domains-task.adoc[重設及重新探索信任的網域]

@@ -1,0 +1,237 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_lif_service_policies.html 
+keywords: create service policy, assign service policy, service policy commands, configure lif service policies, create and assign a service policy for lifs, configure lif service policies, create a service policy for lifs, network interface service show, service-policy create, assign a service policy to a lif, examples, commands for managing lif service policies 
+summary: 建立及指派LIF的服務原則 
+---
+= 設定LIF服務原則
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以設定LIF服務原則、以識別將使用LIF的單一服務或服務清單。
+
+
+
+== 為lifs建立服務原則
+
+您可以為lifs建立服務原則。您可以將服務原則指派給一或多個LIF、讓LIF能夠傳輸單一服務或服務清單的流量。
+
+內建的服務和服務原則可用於管理資料和系統SVM上的資料和管理流量。大部分的使用案例都是使用內建服務原則而非建立自訂服務原則來滿足。
+
+您可以視需要修改這些內建服務原則。
+
+.步驟
+. 檢視叢集中可用的服務：
++
+....
+network interface service show
+....
++
+服務代表LIF存取的應用程式、以及叢集所服務的應用程式。每項服務都包含零個或多個應用程式正在偵聽的TCP和udp連接埠。
+
++
+提供下列額外的資料與管理服務：
+
++
+....
+network interface service show
+Service                     Protocol:Ports
+-------                     --------------
+cluster-core                -
+data-cifs                   -
+data-core                   -
+data-flexcache              -
+data-iscsi                  -
+data-nfs                    -
+intercluster-core           tcp:11104-11105
+management-autosupport      -
+management-bgp              tcp:179
+management-core             -
+management-https            tcp:443
+management-ssh              tcp:22
+12 entries were displayed.
+....
+. 建立服務原則：
++
+....
+network interface service-policy create -vserver <svm_name> -policy <service_policy_name> -services <service_name> -allowed-addresses <IP_address/mask,...>
+....
++
+** 「service_name」指定應包含在原則中的服務清單。
+** "ip_address/mask"指定允許存取服務原則中服務之位址的子網路遮罩清單。根據預設、所有指定的服務都會新增預設允許位址清單0.00.0.0/0、以允許來自所有子網路的流量。如果提供了非預設允許的位址清單、則使用該原則的LIF會設定為封鎖所有來源位址不符合任何指定遮罩的要求。
++
+下列範例說明如何針對包含NFS和SMB服務的SVM建立svm1_data_policy資料服務原則：
+
++
+....
+network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core -allowed-addresses 10.1.0.0/16
+....
++
+下列範例顯示如何建立叢集間服務原則：
+
++
+....
+network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core -allowed-addresses 10.1.0.0/16
+....
+
+
+. 確認已建立服務原則。
++
+....
+network interface service-policy show
+....
++
+下列輸出顯示可用的服務原則：
+
++
+....
+network interface service-policy show
+Vserver   Policy                     Service: Allowed Addresses
+--------- -------------------------- ----------------------------------------
+cluster1
+          default-intercluster       intercluster-core: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          default-management         management-core: 0.0.0.0/0
+                                     management-autosupport: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          default-route-announce     management-bgp: 0.0.0.0/0
+
+Cluster
+          default-cluster            cluster-core: 0.0.0.0/0
+
+vs0
+          default-data-blocks        data-core: 0.0.0.0/0
+                                     data-iscsi: 0.0.0.0/0
+
+          default-data-files         data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+                                     data-flexcache: 0.0.0.0/0
+
+          default-management         data-core: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+7 entries were displayed.
+....
+
+
+在建立時或修改現有LIF、將服務原則指派給LIF。
+
+
+
+== 將服務原則指派給LIF
+
+您可以在建立LIF時或修改LIF、將服務原則指派給LIF。服務原則會定義可與LIF搭配使用的服務清單。
+
+您可以在管理VM和資料SVM中指派生命權的服務原則。
+
+視您要將服務原則指派給LIF的時間而定、請執行下列其中一項動作：
+
+[cols="25,75"]
+|===
+| 如果您... | 指派服務原則... 
+
+
+| 建立LIF | 網路介面create -vserver Svm_name -lIF <lif_name>-home-node<node_name>-home-port <port_name>｛（-address <ip_address>-netMask<ip_address>）-subnet-name <subnet_name>-service-policy <service_policy_name> 
+
+
+| 修改LIF | 網路介面修改-vserver <Svm_name>-lif<lif_name>-service-policy <service_policy_name> 
+|===
+當您為LIF指定服務原則時、不需要指定LIF的資料傳輸協定和角色。也支援透過指定角色和資料傳輸協定來建立LIF。
+
+
+NOTE: 服務原則只能由建立服務原則時所指定之相同SVM中的LIF使用。
+
+
+
+=== 範例
+
+下列範例說明如何修改LIF的服務原則、以使用預設管理服務原則：
+
+....
+network interface modify -vserver cluster1 -lif lif1 -service-policy default-management
+....
+
+
+== 管理LIF服務原則的命令
+
+使用「網路介面服務原則」命令來管理LIF服務原則。
+
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立服務原則
+ a| 
+「網路介面服務原則建立」
+
+
+
+ a| 
+新增其他服務項目至現有的服務原則
+ a| 
+「網路介面服務原則附加服務」
+
+
+
+ a| 
+複製現有的服務原則
+ a| 
+「網路介面服務原則複製」
+
+
+
+ a| 
+修改現有服務原則中的服務項目
+ a| 
+「網路介面服務原則修改服務」
+
+
+
+ a| 
+從現有的服務原則中移除服務項目
+ a| 
+「網路介面服務原則移除服務」
+
+
+
+ a| 
+重新命名現有的服務原則
+ a| 
+「網路介面服務原則重新命名」
+
+
+
+ a| 
+刪除現有的服務原則
+ a| 
+「網路介面服務原則刪除」
+
+
+
+ a| 
+將內建的服務原則還原為原始狀態
+ a| 
+「網路介面服務原則還原預設值」
+
+
+
+ a| 
+顯示現有的服務原則
+ a| 
+「網路介面服務原則展示」
+
+|===

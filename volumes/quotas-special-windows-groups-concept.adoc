@@ -1,0 +1,32 @@
+---
+permalink: volumes/quotas-special-windows-groups-concept.html 
+sidebar: sidebar 
+keywords: how quotas work, with, special windows groups 
+summary: 配額會套用至「所有人」群組和BUILTIN\Administrator群組、與套用至其他Windows群組的方式不同。 
+---
+= 配額如何搭配特殊的Windows群組使用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配額會套用至「所有人」群組和BUILTIN\Administrator群組、與套用至其他Windows群組的方式不同。
+
+下列清單說明如果配額目標是特殊的Windows群組ID、會發生什麼情況：
+
+* 如果配額目標是「所有人」群組、則ACL顯示擁有者為「所有人」的檔案會被計入「每個人」的「SID」之下。
+* 如果配額目標為BUILTIN\Administrator、則該項目會視為使用者配額、僅供追蹤。
++
+您無法對BUILTIN\Administrator施加限制。
+
++
+如果BUILTIN\Administrator的成員建立檔案、檔案將歸BUILTIN\Administrator所有、並計入BUILTIN\Administrator的SID之下、而非使用者的個人SID。
+
+
+
+[NOTE]
+====
+不支援以Windows群組ID為基礎的群組配額。ONTAP如果您將Windows群組ID指定為配額目標、則配額會被視為使用者配額。
+
+====

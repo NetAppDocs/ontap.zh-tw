@@ -1,0 +1,50 @@
+---
+permalink: nvme/resize-namespace-task.html 
+sidebar: sidebar 
+keywords: nvme, increase, decrease, resize, namespace, resizing, increasing, decreasing 
+summary: 從ONTAP 版本號《支援》（2019）9.10.1開始、您可以使用ONTAP 支援的CLI來增加或減少NVMe命名空間的大小。您可以使用System Manager來增加NVMe命名空間的大小。 
+---
+= 調整命名空間大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 版本號《支援》（2019）9.10.1開始、您可以使用ONTAP 支援的CLI來增加或減少NVMe命名空間的大小。您可以使用System Manager來增加NVMe命名空間的大小。
+
+
+
+== 增加命名空間的大小
+
+|===
+
+
+| 使用System Manager | 使用CLI 
+
+
+ a| 
+. 按一下「*儲存設備> NVMe命名空間*」。
+. 在您要增加的命名空間上執行Hoover、按一下 image:icon_kabob.gif["kabob圖示"]，然後按一下*編輯*。
+. 在* capaciam*下、變更命名空間的大小。
+
+ a| 
+. 輸入下列命令：「vserver NVMe命名空間modify -vserver _Svm_name_-path _path_–size _new_size__of_namespace_」
+
+
+|===
+
+
+== 減少命名空間的大小
+
+您必須使用ONTAP NVMe-CLI來減少NVMe命名空間的大小。
+
+. 將權限設定變更為進階：
++
+"進階權限"
+
+. 減少命名空間的大小：
++
+「Vserver NVMe命名空間修改-vserver _svm_name_-path _namespace_path_-size _new_size__of_namespace_」
+
+

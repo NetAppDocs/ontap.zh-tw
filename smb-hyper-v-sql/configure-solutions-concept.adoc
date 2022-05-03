@@ -1,0 +1,50 @@
+---
+permalink: smb-hyper-v-sql/configure-solutions-concept.html 
+sidebar: sidebar 
+keywords: configure, microsoft, hyper, v, sql, server, smb, solution, virtual, machine, gile 
+summary: 您可以使用持續可用的SMB 3.0及更新版本檔案共用、將Hyper-V虛擬機器檔案或SQL Server系統資料庫及使用者資料庫儲存在位於SVM的磁碟區上、同時為計畫性和非計畫性事件提供不中斷營運（NDOS）。 
+---
+= 設定ONTAP 適用於Microsoft Hyper-V和SQL Server over SMB解決方案的支援功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用持續可用的SMB 3.0及更新版本檔案共用、將Hyper-V虛擬機器檔案或SQL Server系統資料庫及使用者資料庫儲存在位於SVM的磁碟區上、同時為計畫性和非計畫性事件提供不中斷營運（NDOS）。
+
+
+
+== Microsoft Hyper-V over SMB
+
+若要建立Hyper-V over SMB解決方案、您必須先設定ONTAP 支援功能以提供Microsoft Hyper-V伺服器的儲存服務。此外、您也必須設定Microsoft叢集（如果使用叢集式組態）、Hyper-V伺服器、持續可用的SMB 3.0連線至CIFS伺服器所託管的共用、以及選擇性的備份服務、以保護儲存在SVM磁碟區上的虛擬機器檔案。
+
+[NOTE]
+====
+Hyper-V伺服器必須在Windows 2012 Server或更新版本上設定。支援獨立式和叢集式Hyper-V伺服器組態。
+
+====
+* 如需建立Microsoft叢集和Hyper-V伺服器的相關資訊、請參閱Microsoft網站。
+* 適用於Hyper-V的解決方案是以主機為基礎的應用程式、可提供快速的Snapshot複製型備份服務、專為透過SMB組態與Hyper-V整合而設計。SnapManager
++
+如需SnapManager 在SMB組態上搭配Hyper-V使用的相關資訊、請參閱《SnapManager 適用於Hyper-V的_E__安裝與管理指南》。
+
+
+
+
+
+== Microsoft SQL Server over SMB
+
+若要透過SMB建立SQL Server解決方案、您必須先設定ONTAP 支援功能、為Microsoft SQL Server應用程式提供儲存服務。此外、您也必須設定Microsoft叢集（如果使用叢集式組態）。接著您可以在Windows伺服器上安裝及設定SQL Server、並建立持續可用的SMB 3.0連線、以連線至CIFS伺服器所託管的共用區。您可以選擇性地設定備份服務、以保護儲存在SVM磁碟區上的資料庫檔案。
+
+[NOTE]
+====
+SQL Server必須安裝並設定於Windows 2012 Server或更新版本。支援獨立式和叢集式組態。
+
+====
+* 如需建立Microsoft叢集及安裝及設定SQL Server的相關資訊、請參閱Microsoft網站。
+* 適用於Microsoft SQL Server的解決方案是以主機為基礎的應用程式、可加速Snapshot複製型備份服務、其設計可透過SMB組態與SQL Server整合。SnapManager
++
+如需有關使用SnapManager Microsoft SQL Server的資訊、請參閱《Microsoft SnapManager SQL Server安裝與管理指南》_。
+
+

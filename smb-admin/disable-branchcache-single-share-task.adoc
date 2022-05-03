@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/disable-branchcache-single-share-task.html 
+sidebar: sidebar 
+keywords: offer, caching, service, certain, share, offer, cache, disable, branchcache, exist, smb, disable branchcache on a single smb share 
+summary: 如果您不想在先前提供快取內容的某些共用區上提供快取服務、可以停用現有SMB共用區上的BranchCache。 
+---
+= 在單一SMB共用區上停用BranchCache
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不想在先前提供快取內容的某些共用區上提供快取服務、可以停用現有SMB共用區上的BranchCache。
+
+.步驟
+. 輸入下列命令：「vserver CIFS共用內容移除-vserver vserver_name -share-name share_name -share-properties BranchCache」
++
+會移除BranchCache共用內容。其他已套用的共用內容仍會維持有效。
+
+
+
+下列命令會在名為「data2」的現有SMB共用區上停用BranchCache：
+
+[listing]
+----
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data2
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               attributecache
+                               branchcache
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name data2 -share-properties branchcache
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data2
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               attributecache
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----

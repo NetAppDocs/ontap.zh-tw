@@ -1,0 +1,277 @@
+---
+permalink: authentication/manage-certificates-sm-task.html 
+sidebar: sidebar 
+keywords: system manager, certificate, trusted certificate authority, authority, authorities, client server certificate, local certificate authority, onboard, view, add, install, generate, renew, delete, restore, sign a certificate, stored certificate, csr, common name, scope 
+summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager來管理信任的憑證授權單位、用戶端/伺服器憑證、以及本機（內建）憑證授權單位。 
+---
+= 使用System Manager管理憑證
+:allow-uri-read: 
+
+
+[role="lead"]
+從ONTAP 版本號《21：10.1》開始、您可以使用System Manager來管理信任的憑證授權單位、用戶端/伺服器憑證、以及本機（內建）憑證授權單位。
+
+有了System Manager、您可以管理從其他應用程式接收到的憑證、以便驗證這些應用程式的通訊。您也可以管理自己的憑證、以便將系統識別給其他應用程式。
+
+
+
+== 檢視憑證資訊
+
+使用System Manager、您可以檢視儲存在叢集上的信任憑證授權單位、用戶端/伺服器憑證和本機憑證授權單位。
+
+.步驟
+. 在System Manager中、按一下*叢集>設定*。
+. 捲動至* Security（安全性）*區域。在「*憑證*」區段中、會顯示下列詳細資料：
++
+** 儲存的信任憑證授權單位數目。
+** 儲存的用戶端/伺服器憑證數目。
+** 儲存的本機憑證授權單位數目。
+
+
+. 按一下任何數字以檢視某個憑證類別的詳細資料、或按一下 image:icon_arrow.gif["向右鍵"] 可查看*證書*頁面，其中包含所有類別的相關信息。清單會顯示整個叢集的資訊。如果您只想顯示特定儲存VM的資訊、請執行下列步驟：
++
+.. 按一下「*儲存設備>儲存設備VM*」。
+.. 選取儲存VM。
+.. 查看*設定*索引標籤。
+.. 按一下「*憑證*」區段中顯示的數字。
+
+
+
+
+.接下來該怎麼做
+* 您可以從*憑證*頁面 <<Generate a certificate signing request>>。
+* 憑證資訊分成三個索引標籤、每個類別各一個。您可以從每個索引標籤執行下列工作：
+
+
+[cols="30,70"]
+|===
+
+
+| 在此索引標籤上... | 您可以執行下列程序... 
+
+
+ a| 
+*受信任的憑證授權單位*
+ a| 
+* <<install-trusted-cert>>
+* <<Delete a trusted certificate authority>>
+* <<Renew a trusted certificate authority>>
+
+
+
+
+ a| 
+*用戶端/伺服器憑證*
+ a| 
+* <<install-cs-cert>>
+* <<gen-cs-cert>>
+* <<delete-cs-cert>>
+* <<renew-cs-cert>>
+
+
+
+
+ a| 
+*當地證書管理機構*
+ a| 
+* <<Create a new local certificate authority>>
+* <<Sign a certificate using a local certificate authority>>
+* <<Delete a local certificate authority>>
+* <<Renew a local certificate authority>>
+
+
+|===
+
+
+== 產生憑證簽署要求
+
+您可以從「*憑證*」頁面的任何索引標籤、使用System Manager產生憑證簽署要求（CSR）。系統會產生私密金鑰和對應的CSR、您可以使用憑證授權單位來簽署以產生公開憑證。
+
+.步驟
+. 查看*憑證*頁面。請參閱 <<View certificate information>>。
+. 按一下「*+產生CSR *」。
+. 填寫主旨名稱的資訊：
++
+.. 輸入*通用名稱*。
+.. 選擇*國家/地區*。
+.. 輸入*組織*。
+.. 輸入*組織單位*。
+
+
+. 如果您要置換預設值、請選取*更多選項*並提供其他資訊。
+
+
+
+
+== 安裝（新增）信任的憑證授權單位
+
+您可以在System Manager中安裝其他信任的憑證授權單位。
+
+.步驟
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<View certificate information>>。
+. 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
+. 在「*新增信任的憑證授權單位*」面板上、執行下列步驟：
++
+** 輸入*名稱*。
+** 對於*範圍*、請選取儲存VM。
+** 輸入*通用名稱*。
+** 選擇*類型*。
+** 輸入或匯入*憑證詳細資料*。
+
+
+
+
+
+
+== 刪除信任的憑證授權單位
+
+使用System Manager、您可以刪除信任的憑證授權單位。
+
+
+NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單位。
+
+.步驟
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<View certificate information>>。
+. 按一下信任的憑證授權單位名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
+
+
+
+
+== 續約信任的憑證授權單位
+
+有了System Manager、您可以續約已過期或即將過期的信任憑證授權單位。
+
+.步驟
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<View certificate information>>。
+. 按一下信任的憑證授權單位名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
+
+
+
+
+== 安裝（新增）用戶端/伺服器憑證
+
+有了System Manager、您可以安裝其他用戶端/伺服器憑證。
+
+.步驟
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<View certificate information>>。
+. 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
+. 在「*新增用戶端/伺服器憑證*」面板上、執行下列步驟：
++
+** 輸入*憑證名稱*。
+** 對於*範圍*、請選取儲存VM。
+** 輸入*通用名稱*。
+** 選擇*類型*。
+** 輸入或匯入*憑證詳細資料*。您可以從文字檔寫入或複製及貼上憑證詳細資料、也可以按一下*匯入*從憑證檔案匯入文字。
+** 輸入*私密金鑰*。您可以從文字檔中寫入或複製及貼上私密金鑰、也可以按一下*匯入*從私密金鑰檔匯入文字。
+
+
+
+
+
+
+= 產生（新增）自我簽署的用戶端/伺服器憑證
+
+有了System Manager、您可以產生額外的自我簽署用戶端/伺服器憑證。
+
+.步驟
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<View certificate information>>。
+. 按一下「*+產生自我簽署的憑證*」。
+. 在「*產生自我簽署的憑證*」面板上、執行下列步驟：
++
+** 輸入*憑證名稱*。
+** 對於*範圍*、請選取儲存VM。
+** 輸入*通用名稱*。
+** 選擇*類型*。
+** 選取*雜湊函數*。
+** 選取*金鑰大小*。
+** 選擇*儲存VM*。
+
+
+
+
+
+
+== 刪除用戶端/伺服器憑證
+
+使用System Manager、您可以刪除用戶端/伺服器憑證。
+
+.步驟
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<View certificate information>>。
+. 按一下用戶端/伺服器憑證的名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
+
+
+
+
+== 續約用戶端/伺服器憑證
+
+有了System Manager、您可以續約已過期或即將過期的用戶端/伺服器憑證。
+
+.步驟
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<View certificate information>>。
+. 按一下用戶端/伺服器憑證的名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
+
+
+
+
+== 建立新的本機憑證授權單位
+
+有了System Manager、您就能建立新的本機憑證授權單位。
+
+.步驟
+. 查看*本地證書頒發機構*選項卡。請參閱 <<View certificate information>>。
+. 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
+. 在「*新增本機憑證授權單位*」面板上、執行下列步驟：
++
+** 輸入*名稱*。
+** 對於*範圍*、請選取儲存VM。
+** 輸入*通用名稱*。
+
+
+. 如果您要置換預設值、請選取*更多選項*並提供其他資訊。
+
+
+
+
+== 使用本機憑證授權單位簽署憑證
+
+在System Manager中、您可以使用本機憑證授權單位來簽署憑證。
+
+.步驟
+. 查看*本地證書頒發機構*選項卡。請參閱 <<View certificate information>>。
+. 按一下本機憑證授權單位名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*簽署憑證*。
+. 填寫*簽署憑證簽署要求*表單。
++
+** 您可以貼上憑證簽署內容、或按一下*匯入*以匯入憑證簽署要求檔案。
+** 指定憑證有效的天數。
+
+
+
+
+
+
+== 刪除本機憑證授權單位
+
+使用System Manager、您可以刪除本機憑證授權單位。
+
+.步驟
+. 檢視*本機憑證授權單位*索引標籤。請參閱 <<View certificate information>>。
+. 按一下本機憑證授權單位名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
+
+
+
+
+== 更新本機憑證授權單位
+
+有了System Manager、您可以續約已過期或即將過期的本機憑證授權單位。
+
+.步驟
+. 檢視*本機憑證授權單位*索引標籤。請參閱 <<View certificate information>>。
+. 按一下本機憑證授權單位名稱。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
+

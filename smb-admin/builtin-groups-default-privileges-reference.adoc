@@ -1,0 +1,82 @@
+---
+permalink: smb-admin/builtin-groups-default-privileges-reference.html 
+sidebar: sidebar 
+keywords: assign, membership, local, user, domain, predefined, builtin, ontap, predefined builtin groups and default privileges 
+summary: 您可以將本機使用者或網域使用者的成員資格指派給ONTAP 由供應的一組預先定義的BUILTIN群組。預先定義的群組已指派預先定義的權限。 
+---
+= 預先定義的BUILTIN群組和預設權限
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將本機使用者或網域使用者的成員資格指派給ONTAP 由供應的一組預先定義的BUILTIN群組。預先定義的群組已指派預先定義的權限。
+
+下表說明預先定義的群組：
+
+|===
+| 預先定義的BUILTIN群組 | 預設權限 
+
+
+ a| 
+「BUILTIN\Administrators」（RID 544）
+
+第一次建立時、本機的「系統管理員」帳戶會自動成為此群組的成員、但不超過500個。當儲存虛擬機器（SVM）加入網域時、會將「domain\Domain Admins」群組新增至群組。如果SVM離開網域、則會從群組中移除「domain\Domain Admins」群組。
+ a| 
+* 「備份權限」
+* 「eRestorePrivilege」
+* 「安全性權限」
+* 《擁有者船權》
+* 「eChangeleNotifyPrivilege」
+
+
+
+
+ a| 
+「BUILTIN\Power Users」的RID 547
+
+第一次建立時、此群組沒有任何成員。此群組成員具有下列特性：
+
+* 可建立及管理本機使用者和群組。
+* 無法將自己或任何其他物件新增至「BUILTIN\Administrators」群組。
+
+ a| 
+「eChangeleNotifyPrivilege」
+
+
+
+ a| 
+「BUILTIN\Backup Operators」（RID 551）
+
+第一次建立時、此群組沒有任何成員。如果是以備份目的開啟檔案或資料夾、則此群組的成員可以覆寫其讀取和寫入權限。
+ a| 
+* 「備份權限」
+* 「eRestorePrivilege」
+* 「eChangeleNotifyPrivilege」
+
+
+
+
+ a| 
+「BUILTIN\Users」RID 545
+
+第一次建立時、此群組沒有任何成員（除了暗示的「驗證使用者」特殊群組之外）。當SVM加入網域時、會將「Domain Users」群組新增至此群組。如果SVM離開網域、則會從此群組中移除「領域/網域使用者」群組。
+ a| 
+「eChangeleNotifyPrivilege」
+
+
+
+ a| 
+他說：「每個人都是「S－1－0」
+
+此群組包括所有使用者、包括來賓（但非匿名使用者）。這是暗示的群組、具有暗示的成員資格。
+ a| 
+「eChangeleNotifyPrivilege」
+
+|===
+xref:builtin-groups-local-administrator-account-concept.adoc[使用BUILTIN群組和本機系統管理員帳戶的準則]
+
+xref:list-supported-privileges-reference.adoc[支援的權限清單]
+
+xref:configure-bypass-traverse-checking-concept.adoc[設定略過周遊檢查]

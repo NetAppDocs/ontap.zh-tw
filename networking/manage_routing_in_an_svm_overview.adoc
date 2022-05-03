@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: networking/manage_routing_in_an_svm_overview.html 
+keywords: introducing, introduction, overview, route, routing, svm, storage, virtual, machine, network, path, overview, introducing routing tables and network paths 
+summary: 介紹路由表和網路路徑 
+---
+= 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+SVM的路由表會決定SVM用來與目的地通訊的網路路徑。瞭解路由表的運作方式非常重要、如此一來、您就能在網路問題發生之前先行防範。
+
+路由規則如下：
+
+* 透過最具體的可用路由傳送流量。ONTAP
+* 當無法使用更多特定路由時、透過預設閘道路由（網路遮罩為0位元）路由流量。ONTAP
+
+
+如果路由具有相同目的地、網路遮罩和度量、則無法保證系統在重新開機或升級後會使用相同的路由。如果您已設定多個預設路由、這尤其會造成問題。
+
+最佳做法是僅為SVM設定一條預設路由。為避免中斷、您應確保預設路由能夠到達其他特定路由無法到達的任何網路位址。如需詳細資訊、請參閱知識庫文章 https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU134["SU134：叢集ONTAP 式的故障路由組態不正確、可能會中斷網路存取"^]

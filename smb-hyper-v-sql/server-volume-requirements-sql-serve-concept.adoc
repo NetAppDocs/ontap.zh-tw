@@ -1,0 +1,56 @@
+---
+permalink: smb-hyper-v-sql/server-volume-requirements-sql-serve-concept.html 
+sidebar: sidebar 
+keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation 
+summary: 在透過SMB組態建立SQL Server以進行不中斷營運時、您必須瞭解特定的SMB伺服器和磁碟區需求。 
+---
+= SMB伺服器和磁碟區需求、適用於SMB以上的SQL Server
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在透過SMB組態建立SQL Server以進行不中斷營運時、您必須瞭解特定的SMB伺服器和磁碟區需求。
+
+
+
+== SMB 伺服器需求
+
+* 必須啟用SMB 3.0。
++
+此功能預設為啟用。
+
+* 預設UNIX使用者CIFS伺服器選項必須設定有效的UNIX使用者帳戶。
++
+應用程式伺服器會在建立SMB連線時使用機器帳戶。由於所有SMB存取都需要Windows使用者成功對應至UNIX使用者帳戶或預設UNIX使用者帳戶、ONTAP 所以無法將應用程式伺服器的機器帳戶對應至預設的UNIX使用者帳戶。
+
++
+此外、SQL Server使用網域使用者做為SQL Server服務帳戶。服務帳戶也必須對應至預設的UNIX使用者。
+
+* 必須停用自動節點參照（此功能預設為停用）。
++
+如果您想要使用自動節點參照來存取SQL Server資料庫檔案以外的資料、則必須為該資料建立個別的SVM。
+
+* 用於將SQL Server安裝在ONTAP 更新上的Windows使用者帳戶必須指派SeSecurityPrivilege權限。
++
+此權限指派給SMB伺服器本機BUILTIN\Administrator群組。
+
+
+
+
+
+== Volume需求
+
+* 用於儲存虛擬機器檔案的磁碟區必須建立為NTFS安全型磁碟區。
++
+若要使用持續可用的SMB連線、為應用程式伺服器提供NDOS、包含共用區的磁碟區必須是NTFS磁碟區。此外、它必須永遠是NTFS磁碟區。您無法將混合式安全型磁碟區或UNIX安全型磁碟區變更為NTFS安全型磁碟區、並透過SMB共用區直接用於NDOS。如果您將混合式安全型磁碟區變更為NTFS安全型磁碟區、並打算在SMB共用區的NDOS中使用、則必須手動將ACL放在磁碟區頂端、並將該ACL傳播至所有內含的檔案和資料夾。否則、如果來源或目的地磁碟區最初建立為混合或UNIX安全型磁碟區、之後改為NTFS安全型態、則將檔案移至另一個磁碟區的虛擬機器移轉或資料庫檔案匯出及匯入可能會失敗。
+
+* 雖然包含資料庫檔案的磁碟區可以包含連接點、但在建立資料庫目錄結構時、SQL Server不會交叉連接點。
+* 為了讓Microsoft SQL Server備份作業成功、您必須在磁碟區上有足夠的可用空間。SnapManager
++
+SQL Server資料庫檔案所在的磁碟區必須夠大、足以容納資料庫目錄結構、以及位於共用區內的所有內含檔案。
+
+
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com/en-us/library/"]

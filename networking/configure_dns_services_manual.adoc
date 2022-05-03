@@ -1,0 +1,142 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dns_services_manual.html 
+keywords: dns, service, services, configuration, configure, configuring, set, up, setup, nfs, smb, cifs, active, directory, statistics, configure dns services, files, dns, hosts, , vserver services name-service dns create, configure dynamic dns on the svm, vserver-fqdn 
+summary: 在建立NFS或SMB伺服器之前、請先設定SVM的DNS服務 
+---
+= 設定DNS服務
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在建立NFS或SMB伺服器之前、您必須先為SVM設定DNS服務。一般而言、DNS名稱伺服器是NFS或SMB伺服器要加入之網域的Active Directory整合式DNS伺服器。
+
+Active Directory整合式DNS伺服器包含網域LDAP和網域控制器伺服器的服務位置記錄（SRV),如果SVM找不到Active Directory LDAP伺服器和網域控制器、NFS或SMB伺服器設定就會失敗。
+
+SVM使用主機名稱服務ns-交換器資料庫來判斷要使用哪些名稱服務、以及在查詢主機資訊時的順序。主機資料庫支援的兩種名稱服務是「檔案」和「dns」。
+
+在建立SMB伺服器之前、您必須確保「dns」是其中一個來源。
+
+
+NOTE: 若要檢視mgwd程序和SecD程序的DNS名稱服務統計資料、請使用統計資料UI。
+
+.步驟
+. 確定目前的「主機」名稱服務資料庫組態。
++
+在此範例中、主機名稱服務資料庫會使用預設設定。
+
++
+「Vserver services name-service _nse-switch_ show -vserver _Vs1_-database-hosts_」
+
++
+....
+                     Vserver: vs1
+Name Service Switch Database: hosts
+   Name Service Source Order: files, dns
+....
+. 如有必要、請執行下列動作。
++
+.. 依所需順序將DNS名稱服務新增至主機名稱服務資料庫、或重新排序來源。
++
+在此範例中、主機資料庫會設定為依該順序使用DNS和本機檔案。
+
++
+「Vserver服務名稱服務_ns-switch_修改-vserver _Vs1_-database-hosts_-sources _dns、filers_」
+
+.. 驗證名稱服務組態是否正確。
++
+「Vserver services name-service _nse-switch_ show -vserver _Vs1_-database-hosts_」
+
+
+
+. 設定DNS服務。
++
+「Vserver服務名稱服務DNS create -vserver _VS1_-domains _example.com,example2.com_-name-servers _10.0.50,10.0.51_」
+
++
+
+NOTE: vserver服務「name-service DNS creation」命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時回報錯誤訊息。
+
+. 確認DNS組態正確、且服務已啟用。
++
+....
+           Vserver: vs1
+           Domains: example.com, example2.com Name
+           Servers: 10.0.0.50, 10.0.0.51
+Enable/Disable DNS: enabled Timeout (secs): 2
+  Maximum Attempts: 1
+....
+. 驗證名稱伺服器的狀態。
++
+「Vserver服務名稱服務DNS檢查-vserver _VS1_」
+
++
+....
+Vserver  Name Server  Status  Status Details
+-------  -----------  ------  -----------------------
+vs1      10.0.0.50    up      Response time (msec): 2
+vs1      10.0.0.51    up      Response time (msec): 2
+....
+
+
+
+
+== 在SVM上設定動態DNS
+
+如果您想要Active Directory整合式DNS伺服器在DNS中動態登錄NFS或SMB伺服器的DNS記錄、則必須在SVM上設定動態DNS（DDNS）。
+
+必須在SVM上設定DNS名稱服務。如果您使用的是安全的DDNS、則必須使用Active Directory整合的DNS名稱伺服器、而且必須為SVM建立NFS或SMB伺服器或Active Directory帳戶。
+
+指定的完整網域名稱（FQDN）必須是唯一的：
+
+* 對於NFS、在'-vserver-fqd'命令中指定的值、即「vserver services name-service DNS sive-update」命令的一部分、即會成為該LIF的註冊FQDN。
+* 對於SMB、指定為CIFS伺服器的NetBios名稱和CIFS伺服器完整網域名稱的值、會成為該LIF的註冊FQDN。這在ONTAP 不進行設定的情況下無法進行。在下列案例中、LIF FQDN為「CIFS_VS1.EXAMPLE.COM":」
++
+....
+cluster1::> cifs server show -vserver vs1
+
+                                          Vserver: vs1
+                         CIFS Server NetBIOS Name: CIFS_VS1
+                    NetBIOS Domain/Workgroup Name: EXAMPLE
+                      Fully Qualified Domain Name: EXAMPLE.COM
+                              Organizational Unit: CN=Computers
+Default Site Used by LIFs Without Site Membership:
+                                   Workgroup Name: -
+                                   Kerberos Realm: -
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+                          CIFS Server Description:
+                          List of NetBIOS Aliases: -
+....
+
+
+
+NOTE: 若要避免SVM FQDN組態失敗、但不符合DDNS更新的RFC規則、請使用符合RFC規範的FQDN名稱。如需詳細資訊、請參閱 link:https://tools.ietf.org/html/rfc1123["RFC 1123"]。
+
+.步驟
+. 在SVM上設定DDNS：
++
+「Vserver服務名稱服務DNS動態更新修改-vserver _vserver_name_-is-已啟用_true_[-use-secure{true|fals}-vserver_FQDN _fqd_used_for_dns_updates_」
+
++
+「Vserver服務名稱服務DNS動態更新修改-vserver _VS1_-is啟用的_true_-使用安全的_true_-vserver-FQDN _vs1.example.com_`
+
++
+星號無法作為自訂FQDN的一部分使用。例如、「｛星號｝.netapp.com」無效。
+
+. 確認DDNS組態正確：
++
+「Vserver服務名稱服務DNS動態更新展示」
+
++
+....
+Vserver  Is-Enabled Use-Secure Vserver FQDN      TTL
+-------- ---------- ---------- ----------------- -------
+vs1      true       true       vs1.example.com   24h
+....
+

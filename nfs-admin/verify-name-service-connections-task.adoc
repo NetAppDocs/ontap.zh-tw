@@ -1,0 +1,67 @@
+---
+permalink: nfs-admin/verify-name-service-connections-task.html 
+sidebar: sidebar 
+keywords: verify, name, service, connection, dns, ldap, checker, check, configuration, configure 
+summary: 從ONTAP 功能9.2開始、您可以檢查DNS和LDAP名稱伺服器、以確認它們是否已連線ONTAP 至功能驗證。這些命令可在管理權限層級使用。 
+---
+= 驗證名稱服務連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能9.2開始、您可以檢查DNS和LDAP名稱伺服器、以確認它們是否已連線ONTAP 至功能驗證。這些命令可在管理權限層級使用。
+
+您可以使用名稱服務組態檢查程式、視需要檢查有效的DNS或LDAP名稱服務組態。此驗證檢查可在命令列或系統管理員中啟動。
+
+對於DNS組態、所有伺服器均已經過測試、需要進行設定才能視為有效。對於LDAP組態、只要任何伺服器都已啟動、組態就會生效。除非"shkip-config-validalue"欄位為true（預設值為假）、否則名稱服務命令會套用組態檢查程式。
+
+.步驟
+. 使用適當的命令來檢查名稱服務組態。UI會顯示已設定伺服器的狀態。
++
+|===
+
+
+| 若要檢查... | 使用此命令... 
+
+
+ a| 
+DNS組態狀態
+ a| 
+「Vserver服務名稱服務DNS檢查」
+
+
+
+ a| 
+LDAP組態狀態
+ a| 
+「Vserver服務名稱服務LDAP檢查」
+
+|===
++
+[listing]
+----
+cluster1::> vserver services name-service dns check -vserver vs0
+
+Vserver         Name Server     Status  Status Details
+--------------  --------------- ------- -------------------------
+ vs0            10.11.12.13     up      Response time (msec): 55
+ vs0            10.11.12.14     up      Response time (msec): 70
+ vs0            10.11.12.15     down    Connection refused.
++---------------------------------------------------------------+
+----
++
+[listing]
+----
+cluster1::> vserver services name-service ldap check -vserver vs0
+
+| Vserver: vs0                                                |
+| Client Configuration Name: c1                               |
+| LDAP Status: up                                             |
+| LDAP Status Details: Successfully connected to LDAP server "10.11.12.13".                                              |
+----
++
+如果至少有一部已設定的伺服器（名稱伺服器/ LDAP伺服器）可連線並提供服務、則組態驗證會成功。如果部分伺服器無法連線、則會顯示警告。
+
+

@@ -1,0 +1,38 @@
+---
+permalink: snaplock/move-snaplock-volume-task.html 
+sidebar: sidebar 
+keywords: move, snaplock, volume, command, destination, aggregate 
+summary: 您可以使用volume move命令、將SnapLock 一個flexdVolume移至目的地Aggregate。 
+---
+= 移動SnapLock 一個流通量的資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「volume move」命令、將SnapLock 一個現象區移到目的地Aggregate。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須先建立受SnapLock保護的稽核記錄、才能執行SnapLock 循環Volume移動。
++
+link:create-audit-log-task.html["建立稽核記錄"]。
+
+* 如果您使用ONTAP 的是版本早於ONTAP 《不符合指令》9.10.1的版本、則目的地Aggregate必須與SnapLock 您想要移動的《不符合法規》或《企業對企業》的《不符合指令》（Compliance to Compliance）相同的《不SnapLock 符合指令》（Enterprise to Enterprise）。從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新至功能更新至功能更新SnapLock 的版本。從功能更新至功能更新至功能更新至功能更新至功能更新至功能更新的版本。
+* 您必須是SnapLock 具備「非安全性」角色的使用者。
+
+
+.步驟
+. 使用安全連線、登入ONTAP 到「叢集管理LIF」：
++
+hes* ssh SnapLock用戶@node_mgmt_ip*
+
+. 移動SnapLock 一個流通量：
++
+'磁碟區移轉開始- vserver _svm_name_-volume _SnapLock Volume名稱_-destination-Aggregate _dgregate名稱_*
+
+. 檢查Volume Move作業的狀態：
++
+「* Volume Move show -volume _SnapLock Volume name_-vserver _Svm_name_-Fields volume、PHASE、vserver*」
+
+

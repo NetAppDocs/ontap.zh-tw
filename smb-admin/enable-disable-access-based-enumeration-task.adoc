@@ -1,0 +1,85 @@
+---
+permalink: smb-admin/enable-disable-access-based-enumeration-task.html 
+sidebar: sidebar 
+keywords: enable, disable, access-based, enumeration, abe, smb, allow, prevent, user, permission, access, enable or disable access-based enumeration on smb shares 
+summary: 您可以在SMB共用區上啟用或停用存取型列舉（ABE）、以允許或防止使用者看到他們無權存取的共用資源。 
+---
+= 啟用或停用SMB共用區上的存取型列舉
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在SMB共用區上啟用或停用存取型列舉（ABE）、以允許或防止使用者看到他們無權存取的共用資源。
+
+依預設、ABE為停用狀態。
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+在新共用區上啟用ABE
+ a| 
+「Vserver CIFS共用區create -vserver vserver_name -share-name share_name -path -share-properties存取型列舉」您可以在建立SMB共用區時指定其他選用的共用設定和其他共用內容。如需詳細資訊、請參閱「vserver CIFS共用create」命令的手冊頁。
+
+
+
+ a| 
+在現有共用區上啟用ABE
+ a| 
+「Vserver CIFS共用內容add -vserver vserver_name -share-name share_name -share-properties存取型列舉」現有的共用內容會保留下來。ABE共用屬性會新增至現有的共用屬性清單。
+
+
+
+ a| 
+停用現有共用區上的ABE
+ a| 
+「Vserver CIFS共用內容移除-vserver vserver_name -share-name share_name -share-properties存取型列舉」會保留其他共用內容。只有ABE共用內容會從共用內容清單中移除。
+
+|===
+. 使用「vserver CIFS共用show」命令來驗證共用組態是否正確。
+
+
+以下範例在SVM VS1上建立名為「shes」的ABE SMB共用區、路徑為「/sait」。共用區是以「存取型列舉」建立、做為共用內容：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name sales -path /sales  -share-properties access-based-enumeration,oplocks,browsable,changenotify
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name sales
+
+                      Vserver: vs1
+                        Share: sales
+     CIFS Server NetBIOS Name: VS1
+                         Path: /sales
+             Share Properties: access-based-enumeration
+                               oplocks
+                               browsable
+                               changenotify
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----
+以下範例將「存取型列舉」共用內容新增至名為「data2」的SMB共用區：
+
+[listing]
+----
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name data2 -share-properties access-based-enumeration
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2 -fields share-name,share-properties
+server  share-name share-properties
+------- ---------- -------------------------------------------------------
+vs1     data2      oplocks,browsable,changenotify,access-based-enumeration
+----
+xref:add-remove-share-properties-eexisting-share-task.adoc[新增或移除現有SMB共用區上的共用內容]

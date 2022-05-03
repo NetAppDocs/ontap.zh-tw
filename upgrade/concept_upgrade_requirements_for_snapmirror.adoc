@@ -1,0 +1,48 @@
+---
+permalink: upgrade/concept_upgrade_requirements_for_snapmirror.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, requirements, snapmirror 
+summary: 您必須執行某些工作、才能成功升級執行SnapMirror的叢集。 
+---
+= SnapMirror的升級需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須執行某些工作、才能成功升級執行SnapMirror的叢集。
+
+* 如果您要升級具有DP SnapMirror關係的叢集、則必須在升級來源叢集/節點之前升級目的地叢集/節點。
+* 在升級執行SnapMirror的叢集之前、必須先針對包含目的地磁碟區的每個節點執行SnapMirror作業、而且每個連接的SVM都必須在叢集上具有唯一的名稱。
++
+為了避免SnapMirror傳輸失敗、您必須在升級來源節點之前、暫停SnapMirror作業、並在某些情況下升級目的地節點。下表說明暫停SnapMirror作業的兩個選項。
+
++
+[cols="3*"]
+|===
+| 選項 | 說明 | 在來源節點之前升級目的地節點？ 
+
+
+ a| 
+在NDU期間暫停SnapMirror作業（不中斷升級）。
+ a| 
+在SnapMirror環境中升級最簡單的方法是暫停所有SnapMirror作業、執行升級、然後恢復SnapMirror作業。不過、在整個NDU期間不會發生SnapMirror傳輸。如果叢集包含將磁碟區彼此鏡射的節點、則必須使用此方法。
+ a| 
+否、節點可以任何順序升級。
+
+
+
+ a| 
+暫停SnapMirror作業一次一個目的地磁碟區。
+ a| 
+您可以暫停特定目的地Volume的SnapMirror傳輸、升級包含目的地Volume的節點（或HA配對）、升級包含來源Volume的節點（或HA配對）、然後恢復目的地Volume的SnapMirror傳輸。使用此方法、可在升級包含原始目的地和來源磁碟區的節點時、繼續傳輸所有其他目的地磁碟區的SnapMirror傳輸。
+ a| 
+是的。
+
+|===
+
+
+SVM對等處理要求SVM名稱在叢集之間是唯一的。最佳做法是將SVM命名為唯一的完整網域名稱（FQDN）、例如「dataVerser.HQ」或「manrirorVserver.offsite」。使用FQDN命名樣式可更輕鬆地確保唯一性。
+
+link:../concepts/index.html["概念ONTAP"]

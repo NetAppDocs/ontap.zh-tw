@@ -1,0 +1,116 @@
+---
+sidebar: sidebar 
+permalink: task_configure_ontap.html 
+keywords: install, installing, cluster, set up, setup, configure, disk, data ports, guided setup, local tiers, aggregate, vserver, volume, configuring ONTAP on a new cluster, configuring a new cluster, assign a node-management IP address, node, DNS server, host name, hostname, NTP server, synchronize time, create a local tier, configure protocol, SSD, provision storage, add LUN, add volume, add namespace, volume, vserver, configure ONTAP on a new cluster, configuration 
+summary: 您可以快速建立叢集、並為ONTAP 叢集設定適用的功能。System Manager提供簡單易用的工作流程、可設定叢集及設定儲存設備。 
+---
+= 在ONTAP 新叢集上設定
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+System Manager提供簡單易用的工作流程、可設定新叢集及設定儲存設備。
+
+在某些情況MetroCluster 下、例如某些需要IPv6網路定址的支援功能部署或叢集、您可能需要使用ONTAP 支援功能的CLI來設定新的叢集。按一下 link:./software_setup/concept_set_up_the_cluster.html["請按這裡"] 如需這些需求的詳細資訊、以及使用ONTAP CLI進行叢集設定的步驟。
+
+無論您是使用System Manager或CLI進行設定、系統都應該已依照安裝及纜線連接 https://docs.netapp.com/us-en/ontap-systems/index.html["安裝與設定指示"^] 系統隨附的。此外、叢集內的每個節點也應設定叢集網路介面、以進行叢集內通訊。
+
+image:workflow_configure_ontap_on_new_cluster.gif["在ONTAP 新叢集上設定功能的工作流程"]
+
+
+
+== 指派節點管理IP位址
+
+
+
+=== Windows系統
+
+您應該將Windows電腦連線至與控制器相同的子網路。這會自動將節點管理IP位址指派給您的系統。
+
+.步驟
+. 從Windows系統中、開啟*網路*磁碟機以探索節點。
+. 按兩下節點以啟動叢集設定精靈。
+
+
+
+
+=== 其他系統
+
+您應該為叢集中的其中一個節點設定節點管理IP位址。您可以使用此節點管理IP位址來啟動叢集設定精靈。
+
+請參閱 link:./software_setup/task_create_the_cluster_on_the_first_node.html["在第一個節點上建立叢集"] 以取得指派節點管理IP位址的相關資訊。
+
+
+
+== 初始化叢集
+
+您可以設定叢集的管理密碼、並設定叢集管理和節點管理網路、以初始化叢集。您也可以設定DNS伺服器等服務來解析主機名稱、以及設定NTP伺服器來同步時間。
+
+.步驟
+. 在網頁瀏覽器上、輸入您已設定的節點管理IP位址： "https://node-management-IP"[]
++
+System Manager會自動探索叢集中的其餘節點。
+
+. 設定所有節點的叢集管理網路和節點管理IP位址、以初始化儲存系統。
+
+
+
+
+== 建立您的本機層級
+
+從節點中可用的磁碟或SSD建立本機層級。System Manager會根據您的硬體自動計算最佳層級組態。
+
+.步驟
+. 按一下「*儀表板*」、然後按一下「*準備儲存設備*」。
++
+接受本機層的儲存建議。
+
+
+
+
+
+== 設定傳輸協定
+
+視叢集上啟用的授權而定、您可以在叢集上啟用所需的傳輸協定。然後建立可存取儲存設備的網路介面。
+
+.步驟
+. 按一下「*儀表板*」、然後按一下「*設定傳輸協定*」。
++
+** 啟用iSCSI或FC以進行SAN存取。
+** 啟用NFS或SMB以進行NAS存取。
+** 啟用NVMe以進行FC-NVMe存取。
+
+
+
+
+
+
+== 資源配置儲存設備
+
+您現在可以配置儲存設備。您看到的選項取決於安裝的授權。
+
+.步驟
+. 按一下「*儀表板*」、然後按一下「*資源配置儲存設備*」。
++
+** 至 link:concept_san_provision_overview.html["配置SAN存取"]，單擊* Add LUN*（添加LUN*）。
+** 至 link:concept_nas_provision_overview.html["配置NAS存取"]，單擊* Add Volumes（添加卷）*。
+** 至 link:concept_nvme_provision_overview.html["配置NVMe儲存設備"]，單擊* Add Nam空間*（添加命名空間*）。
+
+
+
+
+
+
+== 在ONTAP 新的叢集影片上設定功能
+
+video::6WjyADPXDZ0[youtube, width=848,height=480]

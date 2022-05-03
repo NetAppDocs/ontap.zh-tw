@@ -1,0 +1,125 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_network_security_using_federal_information_processing_standards_@fips@.html 
+keywords: 'federal, information, processing, standards, fips, 140-2, compliant, ssl, connections, tlsv1.2, tlsv1.1, tlsv1, enable, enabling, disable, disabling, view, status, federal information processing standards (fips) 140-2 compliant for all ssl connections, configure network security using federal information processing standards (fips), enable fips, disable fips, view fips compliance status' 
+summary: 所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2 
+---
+= 使用聯邦資訊處理標準（FIPS）設定網路安全性
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2。ONTAP您可以開啟和關閉SSL FIPS模式、全域設定SSL傳輸協定、以及關閉ONTAP 任何弱密碼、例如RC4 in整套功能。
+
+根據預設、ONTAP 將「SSL on支援」設為停用FIPS規範、並啟用SSL傳輸協定、提供下列功能：
+
+* TLSv1.2
+* TLSv1.1
+* TLSv1
+
+
+啟用SSL FIPS模式時、ONTAP 從靜止到外部用戶端或ONTAP 伺服器元件的SSL通訊、將使用FIPS相容的SSL加密。
+
+如果您想要系統管理員帳戶使用SSH公開金鑰來存取SVM、則必須先確認主機金鑰演算法受到支援、才能啟用SSL FIPS模式。
+
+* 支援的金鑰類型：ECDSA-SHA2-nistp256、ssh - ed25519
+* 不支援的金鑰類型：SSH-RSA、SSH-DSS
+
+
+沒有支援金鑰演算法的現有SSH公開金鑰帳戶、必須先以支援的金鑰類型重新設定、才能啟用FIPS、否則系統管理員驗證將會失敗。
+
+如需詳細資訊、請參閱 link:../authentication/enable-ssh-public-key-accounts-task.html["啟用SSH公開金鑰帳戶"]。
+
+如需SSL FIPS模式組態的詳細資訊、請參閱「安全性組態修改」手冊頁。
+
+
+
+== 啟用FIPS
+
+建議所有安全的使用者在系統安裝或升級之後、立即調整其安全組態。啟用SSL FIPS模式時、ONTAP 從靜止到外部用戶端或ONTAP 伺服器元件的SSL通訊、將使用FIPS相容的SSL加密。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 啟用FIPS：
++
+「安全性組態修改介面SSL -is - FIPS啟用true」
+
+. 當系統提示您繼續時、請輸入「y」
+. 如果您執行ONTAP 的是效能不正常的9.8或更早版本、請逐一手動重新開機叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
+
+
+如果您執行ONTAP 的是更新版本的版本、則不會看到警告訊息。
+
+....
+security config modify -interface SSL -is-fips-enabled true
+
+Warning: This command will enable FIPS compliance and can potentially cause some non-compliant components to fail. MetroCluster and Vserver DR require FIPS to be enabled on both sites in order to be compatible.
+Do you want to continue? {y|n}: y
+
+Warning: When this command completes, reboot all nodes in the cluster. This is necessary to prevent components from failing due to an inconsistent security configuration state in the cluster. To avoid a service outage, reboot one node at a time and wait for it to completely initialize before rebooting the next node. Run "security config status show" command to monitor the reboot status.
+Do you want to continue? {y|n}: y
+....
+
+
+== 停用FIPS
+
+如果您仍在執行較舊的系統組態、並想要設定ONTAP 具有向下相容性的功能、則只有在FIPS停用時、才能開啟SSLv3。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 輸入下列命令來停用FIPS：
++
+「安全性組態修改介面SSL -is - FIPS -啟用假」
+
+. 當系統提示您繼續時、請輸入「y」。
+. 如果您執行ONTAP 的是更新版本的版本、請手動重新啟動叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
+
+
+如果您執行ONTAP 的是更新版本的版本、則不會看到警告訊息。
+
+....
+security config modify -interface SSL -supported-protocols SSLv3
+
+Warning: Enabling the SSLv3 protocol may reduce the security of the interface, and is not recommended.
+Do you want to continue? {y|n}: y
+
+Warning: When this command completes, reboot all nodes in the cluster. This is necessary to prevent components from failing due to an inconsistent security configuration state in the cluster. To avoid a service outage, reboot one node at a time and wait for it to completely initialize before rebooting the next node. Run "security config status show" command to monitor the reboot status.
+Do you want to continue? {y|n}: y
+....
+
+
+== 檢視FIPS法規遵循狀態
+
+您可以查看整個叢集是否正在執行目前的安全性組態設定。
+
+.步驟
+. 逐一重新啟動叢集中的每個節點。
++
+請勿同時重新啟動所有叢集節點。必須重新開機、才能確保叢集中的所有應用程式都執行新的安全組態、以及FIPS開/關模式、傳輸協定和密碼的所有變更。
+
+. 檢視目前的法規遵循狀態：
++
+「安全組態顯示」
+
+
+
+....
+security config show
+
+          Cluster                                              Cluster Security
+Interface FIPS Mode  Supported Protocols     Supported Ciphers Config Ready
+--------- ---------- ----------------------- ----------------- ----------------
+SSL       false      TLSv1_2, TLSv1_1, TLSv1 ALL:!LOW:!aNULL:  yes
+                                             !EXP:!eNULL
+....

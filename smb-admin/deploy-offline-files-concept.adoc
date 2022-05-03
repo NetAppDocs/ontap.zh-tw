@@ -1,0 +1,34 @@
+---
+permalink: smb-admin/deploy-offline-files-concept.html 
+sidebar: sidebar 
+keywords: important, guideline, understand, deploy, offline, file, home, directory, share, showsnapshot, property, set, home, directories, directory, guidelines for deploying offline files 
+summary: 當您在主目錄上設定了showsnapshot共用屬性的主目錄共用上部署離線檔案時、需要瞭解一些重要的準則。 
+---
+= 部署離線檔案的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您在主目錄上設定了「show snapshot」共用屬性的主目錄共用上部署離線檔案時、需要瞭解一些重要的準則。
+
+如果在已設定離線檔案的主目錄共用區上設定了「show snapshot」共用屬性、Windows用戶端會快取使用者主目錄中「~snapshot」資料夾下的所有Snapshot複本。
+
+如果滿足下列其中一項條件、Windows用戶端會快取主目錄下的所有Snapshot複本：
+
+* 使用者可從用戶端離線使用主目錄。
++
+主目錄中的「~snapshot」資料夾內容會包含在內、並可離線使用。
+
+* 使用者可設定資料夾重新導向、將「我的文件」等資料夾重新導向至CIFS伺服器共用區上主目錄的根目錄。
++
+某些Windows用戶端可能會自動讓重新導向的資料夾離線使用。如果資料夾重新導向到主目錄的根目錄、快取的離線內容中就會包含「~snapshot」資料夾。
+
+
+
+[NOTE]
+====
+應避免將「~snapshot」資料夾包含在離線檔案中的離線檔案部署。在「~snapshot」資料夾中的Snapshot複本、包含建立ONTAP Snapshot複本時磁碟區上的所有資料。因此、建立「~snapshot」資料夾的離線複本會消耗用戶端上大量的本機儲存空間、在離線檔案同步期間會耗用網路頻寬、並增加同步離線檔案所需的時間。
+
+====

@@ -1,0 +1,66 @@
+---
+permalink: volumes/set-fractional-reserve-concept.html 
+sidebar: sidebar 
+keywords: considerations, setting, fractional, reserve 
+summary: 部分保留（也稱為LUN覆寫保留）可讓您關閉FlexVol 對空間保留LUN和文件的覆寫保留（Overwrite Reserve）。這有助於將儲存使用率最大化、但如果您的環境因為空間不足而導致寫入作業失敗、則必須瞭解此組態所帶來的需求。 
+---
+= 設定部分保留的考量事項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+部分保留（也稱為_LUN覆寫保留區_）可讓您關閉FlexVol 針對空間保留LUN和位於一個實體磁碟區中檔案的覆寫保留。這有助於將儲存使用率最大化、但如果您的環境因為空間不足而導致寫入作業失敗、則必須瞭解此組態所帶來的需求。
+
+部分保留設定以百分比表示、唯一有效值為「0」和「100」%。「部分保留」設定是Volume的屬性。
+
+將部分保留設為「0」、可提高儲存使用率。但是、即使磁碟區保證設定為「Volume」、存取位於磁碟區中資料的應用程式仍可能在磁碟區空間不足的情況下發生資料中斷。不過、只要有適當的Volume組態和使用、就能將寫入失敗的機率降至最低。當符合下列要求時、若部分保留設為「0」的磁碟區、則提供「最佳努力」寫入保證：ONTAP
+
+* 重複資料刪除功能未在使用中
+* 壓縮未在使用中
+* FlexClone子檔案未在使用中
+* 所有FlexClone檔案和FlexClone LUN均已啟用自動刪除功能
++
+這不是預設設定。您必須明確啟用自動刪除功能、無論是在建立時或是在建立FlexClone檔案或FlexClone LUN之後加以修改。
+
+* 不使用ODX和FlexClone複本卸載
+* Volume保證設定為「Volume」
+* 檔案或LUN空間保留為「已啟用」
+* Volume Snapshot保留設為「0」
+* Volume Snapshot複本自動刪除功能已「啟用」、承諾層級為「destroy」、銷毀清單為「LUN_clone、vol_clone、CIFs_Share、file_clone、SFSR」、以及觸發「Volume」
++
+此設定也可確保在必要時刪除FlexClone檔案和FlexClone LUN。
+
+
+
+請注意、如果您的變更率很高、在極少數情況下、Snapshot複本自動刪除可能會落後、導致磁碟區空間不足、即使使用上述所有必要的組態設定也一樣。
+
+此外、您也可以選擇使用Volume自動擴充功能來降低需要自動刪除Volume Snapshot複本的可能性。如果啟用自動擴充功能、則必須監控相關聯Aggregate中的可用空間。如果Aggregate已滿而無法擴充磁碟區、則隨著磁碟區中的可用空間耗盡、可能會刪除更多Snapshot複本。
+
+如果您無法滿足上述所有組態需求、而且需要確保磁碟區沒有用盡空間、則必須將磁碟區的分段保留設定設為「100」。這需要更多的可用空間、但保證資料修改作業即使在使用上述技術時仍能順利完成。
+
+「部分保留」設定的預設值和允許值取決於Volume的保證：
+
+[cols="3*"]
+|===
+| Volume保證 | 預設的部分保留 | 允許的值 
+
+
+ a| 
+Volume
+ a| 
+100
+ a| 
+0、100
+
+
+
+ a| 
+無
+ a| 
+0
+ a| 
+0、100
+
+|===

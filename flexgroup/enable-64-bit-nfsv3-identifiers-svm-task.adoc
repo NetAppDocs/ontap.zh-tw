@@ -1,0 +1,37 @@
+---
+permalink: flexgroup/enable-64-bit-nfsv3-identifiers-svm-task.html 
+sidebar: sidebar 
+keywords: enable, nfsv3, identifier, svm 
+summary: 若要支援FlexGroup 高檔案數的現象、並避免檔案ID衝突、您應該在必須FlexGroup 建立此現象磁碟區的SVM上啟用64位元檔案識別碼。 
+---
+= 在SVM上啟用64位元NFSv3識別碼
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要支援FlexGroup 高檔案數的現象、並避免檔案ID衝突、您應該在必須FlexGroup 建立此現象磁碟區的SVM上啟用64位元檔案識別碼。
+
+.步驟
+. 登入進階權限層級：「et -priv榮幸advanced」（設定-權限進階）
+. 修改SVM以使用64位元NFSv3 FSID和檔案ID：「vserver NFS modify -vserver Svm_name -v3-64bit-identifiers enabl用」
++
+[listing]
+----
+cluster1::*> vserver nfs modify -vserver vs0 -v3-64bit-identifiers enabled
+
+Warning: You are attempting to increase the number of bits used for NFSv3
+         FSIDs and File IDs from 32 to 64 on Vserver "vs0". This could
+         result in older client software no longer working with the volumes
+         owned by Vserver "vs0".
+Do you want to continue? {y|n}: y
+
+Warning: Based on the changes you are making to the NFS server on Vserver
+         "vs0", it is highly recommended that you remount all NFSv3 clients
+         connected to it after the command completes.
+Do you want to continue? {y|n}: y
+----
+
+
+所有用戶端都必須重新掛載。這是必要的、因為檔案系統ID會變更、而且用戶端在嘗試NFS作業時可能會收到過時的檔案處理訊息。

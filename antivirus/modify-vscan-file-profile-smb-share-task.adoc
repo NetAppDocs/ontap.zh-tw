@@ -1,0 +1,38 @@
+---
+permalink: antivirus/modify-vscan-file-profile-smb-share-task.html 
+sidebar: sidebar 
+keywords: modify, vscan, file-operations, profile, cifs share 
+summary: SMB共用區的VScan檔案作業設定檔會定義共用區上哪些作業可以觸發掃描。依預設、參數會設為標準。您可以在建立或修改SMB共用時、視需要調整參數。 
+---
+= 修改SMB共用區的VScan檔案作業設定檔
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB共用區的VScan檔案作業設定檔會定義共用區上哪些作業可以觸發掃描。根據預設、參數會設為「標準」。您可以在建立或修改SMB共用時、視需要調整參數。
+
+如需VScan檔案作業設定檔可用值的詳細資訊、請參閱「VScan檔案作業設定檔」。
+
+link:architecture-concept.html["VScan檔案作業設定檔（僅限存取掃描）"]
+
+[NOTE]
+====
+在SMB共享區上、「持續可用」參數設為「是」時、不會執行掃毒。
+
+====
+.步驟
+. 修改SMB共用區的VScan檔案作業設定檔值：「vserver CIFS共用區modify -vserver _data_svm_-share-name _share_-path _share_path_-vscan檔案op-profile ne-scan |標準|嚴格|只寫入」
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會將SMB共用區的VScan檔案作業設定檔變更為「嚴格」：
+
++
+[listing]
+----
+cluster1::> vserver cifs share modify -vserver vs1 -share-name SALES_SHARE -path /sales -vscan-fileop-profile strict
+----
+

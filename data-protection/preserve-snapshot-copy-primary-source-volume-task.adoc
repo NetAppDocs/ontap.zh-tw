@@ -1,0 +1,74 @@
+---
+permalink: data-protection/preserve-snapshot-copy-primary-source-volume-task.html 
+sidebar: sidebar 
+keywords: ensure, snapshot, copy, mirror-vault, deployment 
+summary: 您可以使用SnapMirror SnapShot SnapShot擁有者create命令、在鏡射儲存庫部署中、將標示為Snapshot的複本保留在次要上。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。 
+---
+= 確保在鏡射保存庫部署中有通用的Snapshot複本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「快照鏡射snapshot -Ownercreate」命令、在鏡射保存庫部署中、將標示為Snapshot的複本保留在次要系統上。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。
+
+如果您使用組合鏡射資料庫的連出或串聯部署、請記住、如果來源和目的地磁碟區上不存在通用的Snapshot複本、更新將會失敗。
+
+這對於鏡射儲存庫的扇出或串聯部署中的鏡射關係而言、絕對不會有任何問題、因為SnapMirror在執行更新之前、一律會先建立來源磁碟區的Snapshot複本。
+
+不過、這可能是資料保險箱關係的問題、因為SnapMirror在更新資料保險箱關係時、不會建立來源磁碟區的Snapshot複本。您需要使用「快照鏡射快照擁有者建立」、以確保在資料保存關係的來源和目的地上、至少有一個通用的Snapshot複本。
+
+.步驟
+. 在來源磁碟區上、將擁有者指派給您要保留的標記Snapshot複本：
++
+「napmirror snapshot -Ownercreate -vserver _svm_-volume _volume _-snapshot _snapshot _-Owner_hon_」
+
++
+以下範例將「ApplicationA」指派為「Snapshot 1」Snapshot複本的擁有者：
+
++
+[listing]
+----
+clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
+-snapshot snap1 -owner ApplicationA
+----
+. 如所述、更新鏡射關係 link:update-replication-relationship-manual-task.html["手動更新複寫關係"]。
++
+或者、您也可以等待鏡射關係的排程更新。
+
+. 將標示的Snapshot複本傳輸至資料保險箱目的地：
++
+"napmirror update -source-path _svm:volume（napmirror更新-source-path _svm:volume）_cluster（叢集）：//Svm/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... -source-snapshot snapshot快照
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例會傳輸「快照1」快照複本::
++
+--
+[listing]
+----
+clust1::> snapmirror update -vserver vs1 -volume vol1
+-source-snapshot snap1
+----
+當資料保存關係更新時、會保留標示為Snapshot的複本。
+
+--
+
+
+. 在來源磁碟區上、從標記為Snapshot複本的擁有者中移除：
++
+「napmirror snapshot -Ownerdelete -vserver _svm_-volume _volume _-snapshot _snapshot _-OOwner_`」
+
++
+以下範例將「ApplicationA」移除為「Snapshot 1」Snapshot複本的擁有者：
+
++
+[listing]
+----
+clust1::> snapmirror snapshot-owner delete -vserver vs1 -volume vol1
+-snapshot snap1 -owner ApplicationA
+----
+

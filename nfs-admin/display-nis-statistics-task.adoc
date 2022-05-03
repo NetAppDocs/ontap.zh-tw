@@ -1,0 +1,79 @@
+---
+permalink: nfs-admin/display-nis-statistics-task.html 
+sidebar: sidebar 
+keywords: display, nis, statistics 
+summary: 您可以在儲存系統上顯示儲存虛擬機器（SVM）的NIS統計資料、以監控效能並診斷問題。 
+---
+= 顯示NIS統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存系統上顯示儲存虛擬機器（SVM）的NIS統計資料、以監控效能並診斷問題。
+
+.步驟
+. 使用「統計資料目錄物件show」命令來識別可從中檢視資料的NIS物件。
++
+「統計資料目錄物件」顯示-object exter_service_op*
+
+. 使用「統計資料開始」和「統計資料停止」命令、從一或多個物件收集資料樣本。
+. 使用「統計資料顯示」命令來檢視範例資料。
+
+
+
+
+== 監控NIS統計資料
+
+下列範例顯示NIS查詢的效能資料。下列命令會開始收集新範例的資料：
+
+[listing]
+----
+vs1::*> statistics start -object external_service_op -sample-id nis_sample1
+vs1::*> statistics start -object external_service_op_error -sample-id nis_sample2
+----
+下列命令會指定計數器來顯示範例中的資料、這些計數器會顯示已傳送的NIS查詢數、以及已接收、失敗或逾時的NIS查詢數：
+
+[listing]
+----
+vs1::*> statistics show -sample-id nis_sample1 -counter instance|num_requests_sent|num_responses_received|num_successful_responses|num_timeouts|num_request_failures|num_not_found_responses
+
+Object: external_service_op
+Instance: vs1:NIS:Query:10.227.13.221
+Start-time: 3/8/2016 11:27:39
+End-time: 3/8/2016 11:27:56
+Elapsed-time: 17s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    num_not_found_responses                                         0
+    num_request_failures                                            1
+    num_requests_sent                                               2
+    num_responses_received                                          1
+    num_successful_responses                                        1
+    num_timeouts                                                    0
+6 entries were displayed.
+----
+下列命令會指定計數器來顯示範例中的資料、這些計數器會顯示特定伺服器上的NIS查詢收到特定錯誤的次數：
+
+[listing]
+----
+vs1::*> statistics show -sample-id nis_sample2 -counter server_ip_address|error_string|count
+
+Object: external_service_op_error
+Instance: vs1:NIS:Query:YP_NOTFOUND:10.227.13.221
+Start-time: 3/8/2016 11:33:05
+End-time: 3/8/2016 11:33:10
+Elapsed-time: 5s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    count                                                           1
+    error_string                                          YP_NOTFOUND
+    server_ip_address                                   10.227.13.221
+3 entries were displayed.
+----
+link:../performance-config/index.html["效能監控設定"]

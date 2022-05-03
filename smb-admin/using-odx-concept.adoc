@@ -1,0 +1,76 @@
+---
+permalink: smb-admin/using-odx-concept.html 
+sidebar: sidebar 
+keywords: odx, copy, offload, aware, guideline, volume, intra-cluster, inter-cluster, consideration, guidelines for using odx 
+summary: 在使用ODX進行複本卸載之前、您必須先瞭解準則。例如、您需要知道可以使用ODX的磁碟區類型、而且需要瞭解叢集內和叢集間ODX的考量。 
+---
+= 使用ODX的準則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用ODX進行複本卸載之前、您必須先瞭解準則。例如、您需要知道可以使用ODX的磁碟區類型、而且需要瞭解叢集內和叢集間ODX的考量。
+
+
+
+== Volume準則
+
+* 您無法使用ODX進行下列Volume組態的複本卸載：
++
+** 來源Volume大小低於1.25 GB
++
+磁碟區大小必須大於或等於1.25 GB、才能使用ODX。
+
+** 唯讀磁碟區
++
+ODX不適用於位於負載共享鏡像或SnapMirror或SnapVault 目的地Volume中的檔案和資料夾。
+
+** 如果來源Volume未進行重複資料刪除
+
+
+* ODX複本僅支援叢集內複本。
++
+您無法使用ODX將檔案或資料夾複製到其他叢集中的磁碟區。
+
+
+
+
+
+== 其他準則
+
+* 在SMB環境中、若要使用ODX進行複本卸載、檔案必須大於或等於256 KB。
++
+較小的檔案會使用傳統的複製作業來傳輸。
+
+* ODX複製卸載會在複製程序中使用重複資料刪除技術。
++
+如果您不想在複製或移動資料時於SVM磁碟區上執行重複資料刪除、則應停用該SVM上的ODX複本卸載。
+
+* 執行資料傳輸的應用程式必須寫入以支援ODX。
++
+支援ODX的應用程式作業包括：
+
++
+** Hyper-V管理作業、例如建立及轉換虛擬硬碟（VHD）、管理Snapshot複本、以及在虛擬機器之間複製檔案
+** Windows檔案總管作業
+** Windows PowerShell複製命令
+** Windows命令提示字元複製命令
++
+Windows命令提示字元的Robocopy支援ODX。
+
++
+[NOTE]
+====
+應用程式必須在支援ODX的Windows伺服器或用戶端上執行。
+
+====
++
+如需Windows伺服器和用戶端上支援的ODX應用程式的詳細資訊、請參閱Microsoft TechNet程式庫。
+
+
+
+
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com/en-us/library/"]

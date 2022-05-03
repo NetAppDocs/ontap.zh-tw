@@ -1,0 +1,36 @@
+---
+permalink: san-admin/configure-network-best-performance-task.html 
+sidebar: sidebar 
+keywords: configure, your, network, best, performance 
+summary: 乙太網路的效能差異極大。您可以選取特定組態值、將用於iSCSI的網路效能最大化。 
+---
+= 設定您的網路以獲得最佳效能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+乙太網路的效能差異極大。您可以選取特定組態值、將用於iSCSI的網路效能最大化。
+
+.步驟
+. 將主機和儲存連接埠連接至同一個網路。
++
+最好連線至相同的交換器。不應使用路由。
+
+. 選取可用的最高速度連接埠、並將其專用於iSCSI。
++
+10 GbE連接埠是最佳選擇。1 GbE連接埠為最低值。
+
+. 停用所有連接埠的乙太網路流量控制。
++
+您應該會看到《_ ONTAP 《_》《9網路管理指南》_、瞭解如何使用CLI來設定乙太網路連接埠流程控制。
+
++
+link:../networking/index.html["網路管理"]
+
+. 啟用巨型框架（通常為9000的MTU）。
++
+資料路徑中的所有裝置、包括啟動器、目標和交換器、都必須支援巨型框架。否則、啟用巨型框架實際上會大幅降低網路效能。
+
+

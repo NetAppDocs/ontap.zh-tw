@@ -1,0 +1,107 @@
+---
+permalink: smb-admin/configure-nis-ldap-name-services-svm-task.html 
+sidebar: sidebar 
+keywords: smb, access, map, unix, user, perform, data, ntfs, security-style, volume, windows, correspond, unix, information, nis, ldap, directory, store, name, configure nis or ldap name services on the svm 
+summary: 透過SMB存取、即使存取NTFS安全型磁碟區中的資料、也會一律執行與UNIX使用者的使用者對應。如果您將Windows使用者對應至儲存在NIS或LDAP目錄存放區中的對應UNIX使用者、或是使用LDAP進行名稱對應、則應該在SMB設定期間設定這些名稱服務。 
+---
+= 在SVM上設定NIS或LDAP名稱服務
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+透過SMB存取、即使存取NTFS安全型磁碟區中的資料、也會一律執行與UNIX使用者的使用者對應。如果您將Windows使用者對應至儲存在NIS或LDAP目錄存放區中的對應UNIX使用者、或是使用LDAP進行名稱對應、則應該在SMB設定期間設定這些名稱服務。
+
+您必須自訂名稱服務資料庫組態、以符合您的名稱服務基礎架構。
+
+SVM會使用名稱服務ns-交換器資料庫來決定查詢指定名稱服務資料庫來源的順序。ns-交換器來源可以是「Files」、「NIS」或「LDAP」的任意組合。針對Groups資料庫、ONTAP Ses庫 會嘗試從所有已設定的來源取得群組成員資格、然後使用整合的群組成員資格資訊進行存取檢查。如果其中一個來源在取得UNIX群組資訊時無法使用、ONTAP 則無法取得完整的UNIX認證、後續的存取檢查可能會失敗。因此、您必須一律在ns交換器設定中、檢查是否已針對群組資料庫設定所有的ns交換器來源。
+
+預設值是讓SMB伺服器將所有Windows使用者對應至儲存在本機「passwd」資料庫中的預設UNIX使用者。如果您想要使用預設組態、則可選擇設定NIS或LDAP UNIX使用者與群組名稱服務或LDAP使用者對應、以供SMB存取。
+
+.步驟
+. 如果UNIX使用者、群組及netgroup資訊是由NIS名稱服務管理、請設定NIS名稱服務：
++
+.. 使用「vserver services name-service nns交換器show」命令來判斷名稱服務的目前順序。
++
+在本例中，可以使用「NIS」做為名稱服務來源的三個資料庫（「group」、「passwd」和「netgroup」）僅使用「Files」做為來源。
+
++
+「Vserver服務名稱服務ns-switchshow -vserver VS1」
+
++
+[listing]
+----
+
+                                               Source
+Vserver         Database       Enabled         Order
+--------------- ------------   ---------       ---------
+vs1             hosts          true            dns,
+                                               files
+vs1             group          true            files
+vs1             passwd         true            files
+vs1             netgroup       true            files
+vs1             namemap        true            files
+----
++
+您必須將「NIS」來源新增至「群組」和「密碼」資料庫、並選擇性新增至「netgroup」資料庫。
+
+.. 使用「vserver services name-service nns交換器modify」命令、視需要調整名稱服務n-switch-資料庫排序。
++
+為獲得最佳效能、除非您計畫在SVM上設定名稱服務、否則不應將名稱服務新增至名稱服務資料庫。
+
++
+如果您修改多個名稱服務資料庫的組態、則必須針對每個要修改的名稱服務資料庫分別執行命令。
+
++
+在本例中、「NIS」和「檔案」會依序設定為「群組」和「密碼」資料庫的來源。其餘的名稱服務資料庫則維持不變。
+
++
+「Vserver服務名稱服務ns-switchmodify -vserver VS1 -database-s1群組-sources nis、files"「vserver服務名稱服務ns-switchmodify -vserver VS1 -database-passwd-sources nis、files"
+
+.. 使用「vserver services name-service nns交換器show」命令來確認名稱服務的順序是否正確。
++
+「Vserver服務名稱服務ns-switchshow -vserver VS1」
+
++
+[listing]
+----
+
+                                               Source
+Vserver         Database       Enabled         Order
+--------------- ------------   ---------       ---------
+vs1             hosts          true            dns,
+                                               files
+vs1             group          true            nis,
+                                               files
+vs1             passwd         true            nis,
+                                               files
+vs1             netgroup       true            files
+vs1             namemap        true            files
+----
+.. 建立NIS名稱服務組態：+「vserver services name-service nse-domain create -vserver _vserver_name_-domain_ns_domain_name_-servers _ns_server_ipaddress_、...」 -active true+
++
+「Vserver services name-service NIS網域create -vserver VS1 -domain example.com -servers 10.0.0.60 -active true」
+
++
+[NOTE]
+====
+從ONTAP 功能變數《-NIS伺服器》開始、這個功能變數取代了現場的「伺服器」。此新欄位可以使用NIS伺服器的主機名稱或IP位址。
+
+====
+.. 確認NIS名稱服務已正確設定且處於作用中狀態：「vserver services name-service nse-domain show vserver _vserver_name_」
++
+「Vserver services name-service NIS網域show vserver VS1」
+
++
+[listing]
+----
+
+Vserver       Domain              Active Server
+------------- ------------------- ------ ---------------
+vs1           example.com         true   10.0.0.60
+----
+
+
+. 如果UNIX使用者、群組及netgroup資訊或名稱對應是由LDAP名稱服務管理、請使用所在的資訊來設定LDAP名稱服務 link:../nfs-admin/index.html["NFS管理"]。
+

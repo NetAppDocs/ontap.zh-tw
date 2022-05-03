@@ -1,0 +1,78 @@
+---
+permalink: smb-admin/modify-branchcache-config-task.html 
+sidebar: sidebar 
+keywords: modify, configuration, branchcache, service, svm, store, directory, path, hash, maximum, size, operating, mode, version, modify branchcache configurations 
+summary: 您可以修改SVM上的BranchCache服務組態、包括變更雜湊存放區目錄路徑、雜湊存放區最大目錄大小、作業模式、以及支援哪些版本的BranchCache。您也可以增加包含雜湊存放區的磁碟區大小。 
+---
+= 修改BranchCache組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改SVM上的BranchCache服務組態、包括變更雜湊存放區目錄路徑、雜湊存放區最大目錄大小、作業模式、以及支援哪些版本的BranchCache。您也可以增加包含雜湊存放區的磁碟區大小。
+
+.步驟
+. 執行適當的行動：
++
+|===
+| 如果您想要... | 輸入下列項目... 
+
+
+ a| 
+修改雜湊存放區目錄大小
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -hash-store-max-size｛integer[kb|MB|GB|TB|PB]｝」
+
+
+
+ a| 
+增加包含雜湊存放區的磁碟區大小
+ a| 
+「Volume size -vserver vserver_name -volume volume volume volume名稱-new-size new_size[k| m|g|t]」如果包含雜湊存放區的磁碟區已滿、您可能可以增加磁碟區的大小。您可以將新的Volume大小指定為數字、然後再指定單位。
+
+請參閱 link:../volumes/index.html["邏輯儲存管理"] 以取得有關增加磁碟區大小的詳細資訊。
+
+
+
+ a| 
+修改雜湊存放區目錄路徑
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -hash-store-path -flush-hashes｛true|fals｝」如果SVM是SVM災難恢復來源、則雜湊路徑無法位於根磁碟區上。這是因為根磁碟區並未複寫到災難恢復目的地。
+
+BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
+
+如果您修改雜湊路徑、則必須使用「-Flush雜湊」參數、指定ONTAP 是否要讓效益分析從原始雜湊存放區位置清除雜湊。您可以為「齊面雜湊」參數設定下列值：
+
+** 如果您指定「true」、ONTAP 則當啟用了BranchCache的用戶端發出新要求時、會刪除原始位置的雜湊、並在新位置建立新的雜湊。
+** 如果您指定「假」、則不會清除雜湊。
++
+在這種情況下、您可以選擇稍後再重複使用現有的雜湊、方法是將雜湊存放區路徑變更回原始位置。
+
+
+
+
+
+ a| 
+變更操作模式
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -operation-tMode｛per共享區| all-shares|停用｝」
+
+[NOTE]
+====
+修改操作模式時、您應該注意下列事項：- ONTAP 當SMB工作階段設定完成時、就會向您宣傳支援某個共用區的BranchCache。-啟用了BranchCache之後、已建立工作階段的用戶端必須中斷連線並重新連線、才能使用此共用區的快取內容。
+
+====
+
+
+ a| 
+變更支援的BranchCache版本
+ a| 
+「Vserver CIFS BranchCache modify -vserver vserver_name -versions｛v1-enable | v2-enable | enable All｝」
+
+|===
+. 使用「vserver CIFS BranchCache show」命令來驗證組態變更。
+
+
+link:../volumes/index.html["邏輯儲存管理指南"]

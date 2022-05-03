@@ -1,0 +1,28 @@
+---
+permalink: upgrade/task_verifying_that_the_netgroup_file_is_present_on_all_nodes.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verifying, verify, netgroup file, present, nodes 
+summary: 如果您已將網路群組載入儲存虛擬機器（SVMs）、則在升級或回復之前、必須先確認每個節點上都有netgroup檔案。節點上遺失的netgroup檔案可能會導致升級或回復失敗。 
+---
+= 驗證所有節點上是否都存在netgroup檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已將網路群組載入儲存虛擬機器（SVM）、則在升級或回復之前、必須先確認每個節點上都存在netgroup檔案。節點上遺失的netgroup檔案可能會導致升級或回復失敗。
+
+link:../nfs-admin/index.html["NFS管理"] 包含更多有關網路群組的資訊、並從URI載入這些群組。
+
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 顯示每個SVM的netgroup狀態：「vserver services netgroup Status」
+. 確認每個SVM的每個節點都顯示相同的netgroup檔案雜湊值：「vserver services name-service netgroup Status」
++
+如果是這種情況、您可以跳過下一步、繼續升級或回復。否則、請繼續下一步。
+
+. 在叢集的任一節點上、手動載入netgroup檔案：「vserver services netgroup load -vserver vserver_name -SOURE Uri」
++
+此命令會在所有節點上下載netgroup檔案。如果某個節點上已存在netgroup檔案、則會將其覆寫。
+
+

@@ -1,0 +1,93 @@
+---
+permalink: smb-admin/display-central-access-policy-rules-task.html 
+sidebar: sidebar 
+keywords: display, detail, information, central, access, policy, rule, policies, define, active, directory, group, object, display information about central access policy rules 
+summary: 您可以顯示與Active Directory中定義的中央存取原則相關聯的中央存取原則規則詳細資訊。您也可以透過集中存取原則GPO（群組原則物件）、顯示套用至CIFS伺服器的中央存取原則規則相關資訊。 
+---
+= 顯示有關集中存取原則規則的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示與Active Directory中定義的中央存取原則相關聯的中央存取原則規則詳細資訊。您也可以透過集中存取原則GPO（群組原則物件）、顯示套用至CIFS伺服器的中央存取原則規則相關資訊。
+
+您可以顯示已定義及已套用之集中存取原則規則的詳細資訊。依預設、會顯示下列資訊：
+
+* Vserver名稱
+* 中央存取規則的名稱
+* 說明
+* 建立時間
+* 修改時間
+* 目前權限
+* 建議的權限
+* 目標資源
+
+
+|===
+| 如果您要顯示與集中存取原則相關的所有集中存取原則規則資訊... | 輸入命令... 
+
+
+ a| 
+在Active Directory中定義
+ a| 
+「Vserver CIFS群組原則集中存取規則、顯示定義的-vserver vserver_name」
+
+
+
+ a| 
+套用至CIFS伺服器
+ a| 
+「Vserver CIFS群組原則集中存取規則show–applied -vserver vserver_name」
+
+|===
+下列範例顯示Active Directory中定義之中央存取原則相關的所有中央存取原則規則資訊：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-rule show-defined
+
+Vserver    Name
+---------- --------------------
+vs1        r1
+           Description: rule #1
+         Creation Time: Tue Oct 22 09:33:48 2013
+     Modification Time: Tue Oct 22 09:33:48 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+
+vs1        r2
+           Description: rule #2
+         Creation Time: Tue Oct 22 10:27:57 2013
+     Modification Time: Tue Oct 22 10:27:57 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+----
+下列範例顯示與套用至叢集上儲存虛擬機器（SVM）的集中存取原則相關的所有集中存取原則規則資訊：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-rule show-applied
+
+Vserver    Name
+---------- --------------------
+vs1        r1
+           Description: rule #1
+         Creation Time: Tue Oct 22 09:33:48 2013
+     Modification Time: Tue Oct 22 09:33:48 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+
+vs1        r2
+           Description: rule #2
+         Creation Time: Tue Oct 22 10:27:57 2013
+     Modification Time: Tue Oct 22 10:27:57 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+----
+xref:secure-file-access-dynamic-access-control-concept.adoc[使用動態存取控制（DAC）保護檔案存取]
+
+xref:display-gpo-config-task.adoc[顯示有關GPO組態的資訊]
+
+xref:display-central-access-policies-task.adoc[顯示中央存取原則的相關資訊]

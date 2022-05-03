@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/configure-guest-unix-user-task.html 
+sidebar: sidebar 
+keywords: configuring, configure, guest, unix, user, untrusted, domain, map, connect, cifs, server, configure the guest unix user 
+summary: 設定來賓UNIX使用者選項表示從不受信任網域登入的使用者會對應到來賓UNIX使用者、並可連線到CIFS伺服器。或者、如果您想要驗證來自不受信任網域的使用者、則不應該設定來賓UNIX使用者。預設值是不允許來自不受信任網域的使用者連線至CIFS伺服器（未設定來賓UNIX帳戶）。 
+---
+= 設定來賓UNIX使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+設定來賓UNIX使用者選項表示從不受信任網域登入的使用者會對應到來賓UNIX使用者、並可連線到CIFS伺服器。或者、如果您想要驗證來自不受信任網域的使用者、則不應該設定來賓UNIX使用者。預設值是不允許來自不受信任網域的使用者連線至CIFS伺服器（未設定來賓UNIX帳戶）。
+
+設定來賓UNIX帳戶時、請謹記下列事項：
+
+* 如果CIFS伺服器無法針對主網域或信任的網域或本機資料庫的網域控制器驗證使用者、且已啟用此選項、則CIFS伺服器會將使用者視為來賓使用者、並將使用者對應至指定的UNIX使用者。
+* 如果此選項設為null字串、則停用來賓UNIX使用者。
+* 您必須建立UNIX使用者、才能在其中一個儲存虛擬機器（SVM）名稱服務資料庫中做為來賓UNIX使用者。
+* 以訪客使用者身分登入的使用者會自動成為CIFS伺服器上BUILTIN\訪 客群組的成員。
+* 「homdirs-public」選項僅適用於已驗證的使用者。以來賓使用者身分登入的使用者沒有主目錄、因此無法存取其他使用者的主目錄。
+
+
+.步驟
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要... | 輸入... 
+
+
+ a| 
+設定來賓UNIX使用者
+ a| 
+「Vserver CIFS選項會修改-guest-unix-user_unix_name_」
+
+
+
+ a| 
+停用來賓UNIX使用者
+ a| 
+「Vserver CIFS選項修改-guest-unix-user」
+
+|===
++
+「Vserver CIFS選項修改-guest-unix-userpcpuser'
+
+. 確認已正確設定來賓UNIX使用者：「vserver CIFS選項顯示-vserver _vserver_name_」
++
+在下列範例中、SVM VS1上的預設UNIX使用者和來賓UNIX使用者均設定為使用UNIX使用者「'pcuser'」：
+
++
+「Vserver CIFS選項顯示-vserver VS1」
+
++
+[listing]
+----
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : pcuser
+  Guest Unix User        : pcuser
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+----
+

@@ -1,0 +1,53 @@
+---
+permalink: smb-admin/reset-privileges-local-domain-users-groups-task.html 
+sidebar: sidebar 
+keywords: reset, privilege, local, domain, user, group, modification, reset privilege for local or domain users and groups 
+summary: 您可以重設本機或網域使用者和群組的權限。當您已修改本機或網域使用者或群組的權限、而且不再需要或需要這些修改時、此功能就很有用。 
+---
+= 重設本機或網域使用者和群組的權限
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重設本機或網域使用者和群組的權限。當您已修改本機或網域使用者或群組的權限、而且不再需要或需要這些修改時、此功能就很有用。
+
+重設本機或網域使用者或群組的權限、會移除該物件的任何權限項目。
+
+.步驟
+. 重設本機或網域使用者或群組的權限：「vserver CIFS user-and Groups priv榮幸 地重設權限-vserver _vserver_name_-user-or group name _name_」
+. 驗證是否已重設物件上的權限：「vserver CIFS user-and -group priv榮幸show -vserver _vserver_name_‑user-or -group name _h...」（Vserver CIFS使用者與群組權限show -vserver _vserver_name_）
+
+
+下列範例會重設儲存虛擬機器（SVM、先前稱為Vserver）VS1上使用者「'CIFs_Server\sue」的權限。根據預設、一般使用者沒有與其帳戶相關的權限：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show
+Vserver   User or Group Name    Privileges
+--------- --------------------- ---------------
+vs1       CIFS_SERVER\sue       SeTcbPrivilege
+                                SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege reset-privilege -vserver vs1 -user-or-group-name CIFS_SERVER\sue
+
+cluster1::> vserver cifs users-and-groups privilege show
+This table is currently empty.
+----
+下列範例會重設群組「'BUILTIN\管理員'」的權限、有效移除權限項目：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show
+Vserver   User or Group Name       Privileges
+--------- ------------------------ -------------------
+vs1       BUILTIN\Administrators   SeRestorePrivilege
+                                   SeSecurityPrivilege
+                                   SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege reset-privilege -vserver vs1 -user-or-group-name BUILTIN\Administrators
+
+cluster1::> vserver cifs users-and-groups privilege show
+This table is currently empty.
+----

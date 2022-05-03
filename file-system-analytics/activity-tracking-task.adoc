@@ -1,0 +1,56 @@
+---
+permalink: file-system-analytics/activity-tracking-task.html 
+sidebar: sidebar 
+keywords: monitor, volume, ontap, FSA, File System Analytics, 
+summary: 活動追蹤：檢視指定Volume中的常用檔案、目錄、用戶端和使用者、以進行即時效能疑難排解 
+---
+= 啟用「活動追蹤」
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從《檔案系統分析》（Filed System Analytics）的ONTAP 《活動追蹤》功能開始、可讓您利用「活動追蹤」識別熱門物件、並將其下載為CSV檔案。
+
+「活動追蹤」可監控四種類別：
+
+* 目錄
+* 檔案
+* 用戶端
+* 使用者
+
+
+對於每個受監控的類別、「活動追蹤」會顯示讀取IOPs、寫入IOPs、讀取流量和寫入流量。「活動追蹤」查詢每10到15秒會重新整理一次、以說明系統在前五秒間隔內出現的熱點。
+
+活動追蹤資訊是大約的、資料的準確度取決於傳入I/O流量的分配。
+
+在System Manager中檢視「活動追蹤」時、只會主動重新整理擴充磁碟區的功能表。如果任何磁碟區的檢視都已收合、則在展開磁碟區顯示之前、這些磁碟區不會重新整理。您可以使用*暫停重新整理*按鈕來停止重新整理。活動資料可以CSV格式下載、以顯示所選磁碟區擷取的所有時間點資料。
+
+如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 xref:considerations-concept.html#RBAC[檔案系統分析考量] 此程序。
+
+
+
+== 程序
+
+您可以使用ONTAP 支援「活動追蹤」功能的支援功能、包括：支援「活動追蹤」功能的支援功能、包括：ONTAP ONTAP
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*儲存>磁碟區*。選取所需的Volume。從個別Volume功能表中、選取File System（檔案系統）、然後選取「活動」索引標籤。
+. 確保*活動追蹤*已開啟、以檢視熱門目錄、檔案、用戶端和使用者的個別報告。
+. 若要在不重新整理的情況下更深入地分析資料、請選取*暫停重新整理*。您也可以下載資料以取得報告的CSV記錄。
+
+
+--
+.CLI
+--
+. 啟用活動追蹤：+「Volume Activity-trackings-trackingon -vsver_Svm_name_-volume _name_」
+. 您可以使用命令+「Volume activity追蹤show -vsver_Svm_name_-volume _volume _name_-stu態」來檢查磁碟區的「活動追蹤」狀態是開啟還是關閉
+. 啟用後、請使用ONTAP 「靜態系統管理程式」或ONTAP 「靜態API」來顯示「活動追蹤」資料。
+
+
+--
+====

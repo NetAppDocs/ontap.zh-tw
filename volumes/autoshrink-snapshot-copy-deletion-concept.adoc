@@ -1,0 +1,23 @@
+---
+permalink: volumes/autoshrink-snapshot-copy-deletion-concept.html 
+sidebar: sidebar 
+keywords: how, autoshrink functionality, interacts with, snapshot copy, deletion 
+summary: 由於自動縮小功能會縮小FlexVol 一個版本的不全區、因此也可能影響自動刪除Volume Snapshot複本的時間。 
+---
+= 自動壓縮功能如何與Snapshot複本刪除功能互動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+由於自動縮小功能會縮小FlexVol 一個版本的不全區、因此也可能影響自動刪除Volume Snapshot複本的時間。
+
+自動壓縮功能會以下列方式與自動刪除Volume Snapshot複本互動：
+
+* 如果同時啟用「放大縮小」自動調整模式和自動刪除Snapshot複本、當磁碟區大小縮小時、就會觸發自動刪除Snapshot複本。
++
+這是因為Snapshot保留區是以磁碟區大小的百分比（預設為5%）為基礎、而該百分比現在是以較小的磁碟區大小為基礎。這可能會導致Snapshot複本從保留區溢出、並自動刪除。
+
+* 如果啟用「gage_shrink」自動調整大小模式、且您手動刪除Snapshot複本、則可能會觸發自動磁碟區縮減。
+

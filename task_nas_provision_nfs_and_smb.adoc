@@ -1,0 +1,114 @@
+---
+sidebar: sidebar 
+permalink: task_nas_provision_nfs_and_smb.html 
+keywords: netapp, ontap, name mapping, multiprotocol, povision NAS, linux, windows, NAS provisioning, active directory, workgroup, smb, CIFS, SMB, share name, default ACL, access control list, LIF, network interface 
+summary: 使用NFS或SMB傳輸協定建立磁碟區以提供儲存設備 
+---
+= 同時使用NFS和SMB為Windows和Linux配置NAS儲存設備
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+建立磁碟區、使用NFS或SMB傳輸協定為用戶端提供儲存設備。
+
+此程序會在上建立新的磁碟區 link:task_nas_enable_nfs_and_smb.html["現有的儲存VM同時啟用NFS和SMB傳輸協定"]。
+
+image:workflow_provision_multi_nas.gif["使用NFS和SMB為Windows和Linux配置NAS儲存設備的工作流程圖"]
+
+您可以建立FlexVol 不穩定的資料、或是建立高效能需求的大型檔案系統FlexGroup 、也可以建立一個穩定的資料區。另請參閱 link:task_nas_provision_flexgroup.html["為使用FlexGroup 「供應」功能的大型檔案系統配置NAS儲存設備"]。
+
+您也可以將本冊的規格儲存至可執行的教戰手冊。如需詳細資料、請前往 link:task_admin_use_ansible_playbooks_add_edit_volumes_luns.html["使用「可執行教戰手冊」來新增或編輯磁碟區或LUN"]。
+
+.步驟
+. 在啟用NFS和SMB的儲存VM中新增磁碟區。
++
+.. 按一下「*儲存設備>磁碟區*」、然後按一下「*新增*」。
+.. 輸入名稱、選取儲存VM、然後輸入大小。只會列出使用NFS和SMB傳輸協定設定的儲存VM。如果只有一個使用NFS和SMB傳輸協定設定的儲存VM可供使用、則不會顯示「*儲存VM*」欄位。
+.. 按一下*「更多選項」*、然後選取*「透過NFS*分享」。
++
+預設設定會授予所有使用者完整存取權。您可以稍後在匯出原則中新增更多限制規則。
+
+.. 選擇*透過SMB分享*。
++
+共享區是以「* Everyon*」群組的預設存取控制清單（ACL）設定為「完全控制」來建立。您可以稍後將限制新增至ACL。
+
+.. 如果此時按一下*「Save」（儲存）*、System Manager會使用系統預設值來建立FlexVol 及新增一個「Sof Volume」（資料集）。
+
+
++
+或者、您也可以繼續啟用任何其他必要服務、例如授權、服務品質和資料保護。請參閱 <<Customize the volume configuration>>，然後返回此處完成下列步驟。
+
+. [[step2、Step 2 in the workflow ]）]在Linux用戶端上、確認匯出功能可存取。
++
+.. 使用儲存VM的網路介面建立及掛載Volume。
+.. 在新掛載的磁碟區上、建立測試檔案、將文字寫入其中、然後刪除該檔案。
+
+
+. 在Windows用戶端上、執行下列動作以驗證共用區是否可存取。
++
+.. 在Windows檔案總管中、以下列格式將磁碟機對應至共用區：「+」\「SMB伺服器名稱」_「Share名稱」_「+」
+.. 在新建立的磁碟機上、建立測試檔案、將文字寫入其中、然後刪除檔案。
+
+
++
+驗證存取之後、您可以 link:task_nas_provision_export_policies.html["使用磁碟區的匯出原則限制用戶端存取、限制使用共用ACL存取用戶端"]，並在匯出的和共用的磁碟區上設定任何所需的擁有權和權限。
+
+
+
+
+
+== 自訂Volume組態
+
+您可以在新增磁碟區時自訂磁碟區組態、而非接受系統預設值。
+
+按一下*更多選項*之後、選取您需要的功能、然後輸入所需的值。
+
+* 遠端磁碟區的快取。
+* 效能服務層級（服務品質、QoS）。
++
+從ONTAP 功能表9.8開始、除了預設值選項、您還可以指定自訂QoS原則或停用QoS。
+
++
+** 若要停用QoS、請選取*自訂*、*現有*、然後選取*無*。
+** 如果您選取*自訂*並指定現有的服務層級、則會自動選擇本機層級。
+** 從ONTAP 《支援範圍》9.9.1開始、如果您選擇建立自訂效能服務層級、您可以使用System Manager手動選取您要放置所建立Volume的本機層（*手動放置*）。
++
+如果您選擇遠端快取或FlexGroup 是使用「聲音量」選項、則無法使用此選項。
+
+
+
+* 供應量（選擇*在叢集內分散磁碟區資料*）FlexGroup 。
++
+如果您先前在*效能服務層級*下選擇*手動放置*、則無法使用此選項。否則、您要新增的磁碟區FlexVol 預設會變成一個不全的磁碟區。
+
+* 設定磁碟區之傳輸協定的存取權限。
+* 使用SnapMirror（本機或遠端）進行資料保護、然後從下拉式清單中指定目的地叢集的保護原則和設定。
+* 按一下「*儲存*」以建立磁碟區、並將其新增至叢集和儲存VM。
+
+
+儲存磁碟區之後、請返回 <<step2>> 完成Windows和Linux伺服器的多重傳輸協定資源配置。
+
+
+
+== 其他方法可在ONTAP 不一樣的情況下執行
+
+[cols="2"]
+|===
+| 若要執行這些工作... | 請參閱此內容... 
+
+
+| System Manager Classic（ONTAP 僅限版本9.7及更早版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/nas-multiprotocol-config/index.html["SMB與NFS多重傳輸協定組態總覽"^] 
+
+
+| 指令行介面ONTAP | link:https://docs.netapp.com/us-en/ontap/smb-config/index.html["使用CLI進行SMB組態總覽"^] +link:https://docs.netapp.com/us-en/ontap/nfs-config/index.html["使用CLI進行NFS組態總覽"^] +link:https://docs.netapp.com/us-en/ontap/nfs-admin/security-styles-their-effects-concept.html["安全樣式及其影響為何"^] +link:https://docs.netapp.com/us-en/ontap/nfs-admin/case-sensitivity-file-directory-multiprotocol-concept.html["多重傳輸協定環境中檔案和目錄名稱的區分大小寫"^] 
+|===

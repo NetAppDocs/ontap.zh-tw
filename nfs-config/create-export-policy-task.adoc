@@ -1,0 +1,40 @@
+---
+permalink: nfs-config/create-export-policy-task.html 
+sidebar: sidebar 
+keywords: create, export, policy 
+summary: 在建立匯出規則之前、您必須先建立匯出原則以保留這些規則。您可以使用vserver匯出原則create命令來建立匯出原則。 
+---
+= 建立匯出原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立匯出規則之前、您必須先建立匯出原則以保留這些規則。您可以使用「vserver匯出原則create」命令來建立匯出原則。
+
+.步驟
+. 建立匯出原則：
++
+「vserver匯出原則create -vserver _vserver_name_-policyname _policy_name_」
+
++
+原則名稱最長可達256個字元。
+
+. 確認已建立匯出原則：
++
+「vserver匯出原則show -policyname _policy_name_」
+
+
+
+下列命令會在名為VS1的SVM上建立並驗證名為exp1的匯出原則：
+
+[listing]
+----
+vs1::> vserver export-policy create -vserver vs1 -policyname exp1
+
+vs1::> vserver export-policy show -policyname exp1
+Vserver          Policy Name
+---------------  -------------------
+vs1              exp1
+----

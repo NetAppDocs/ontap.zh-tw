@@ -1,0 +1,26 @@
+---
+permalink: smb-admin/improve-microsoft-remote-copy-performance-concept.html 
+sidebar: sidebar 
+keywords: microsoft, offload, data, transfer, odx, copy, offload, enable, direct, compatible, computer, improve microsoft remote copy performance 
+summary: Microsoft卸載資料傳輸（ODX、Offloaded Data Transfer）也稱為複本卸載、可在相容的儲存裝置內或之間直接傳輸資料、而無需透過主機電腦傳輸資料。 
+---
+= 改善Microsoft遠端複製效能總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Microsoft卸載資料傳輸（ODX）也稱為_copy offload_、可在相容的儲存裝置內或之間直接傳輸資料、而無需透過主機電腦傳輸資料。
+
+支援適用於SMB與SAN傳輸協定的ODX。ONTAP來源可以是CIFS伺服器或LUN、目的地可以是CIFS伺服器或LUN。
+
+在非ODX檔案傳輸中、資料會從來源讀取、並透過網路傳輸到用戶端電腦。用戶端電腦會透過網路將資料傳輸回目的地。總而言之、用戶端電腦會從來源讀取資料、然後寫入目的地。使用ODX檔案傳輸時、資料會直接從來源複製到目的地。
+
+由於ODX卸載複本是直接在來源與目的地儲存設備之間執行、因此效能優勢顯著。實現的效能效益包括加快來源與目的地之間的複製時間、降低用戶端上的資源使用率（CPU、記憶體）、以及降低網路I/O頻寬使用率。
+
+對於SMB環境、此功能只有在用戶端和儲存伺服器均支援SMB 3.0和ODX功能時才能使用。對於SAN環境、此功能僅在用戶端和儲存伺服器均支援ODX功能時才可使用。支援ODX並自動且透明地啟用ODX的用戶端電腦、可在移動或複製檔案時使用卸載檔案傳輸。無論您是透過Windows檔案總管拖放檔案、還是使用命令列檔案複製命令、或是用戶端應用程式啟動檔案複製要求、都會使用ODX。
+
+xref:improve-client-response-node-referrals-concept.adoc[透過自動定位提供SMB自動節點參照、縮短用戶端回應時間]
+
+link:../smb-hyper-v-sql/index.html["Microsoft Hyper-V和SQL Server的SMB組態"]

@@ -1,0 +1,28 @@
+---
+permalink: upgrade/concept_mixed_version_requirements.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, mixed, version, requirements 
+summary: 從功能更新9.3開始ONTAP 、根據預設、您無法將新節點加入執行ONTAP 版本不同於現有節點上執行版本之功能的叢集。 
+---
+= 混合版本需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能更新9.3開始ONTAP 、根據預設、您無法將新節點加入執行ONTAP 版本不同於現有節點上執行版本之功能的叢集。
+
+如果您計畫在叢集中新增比ONTAP 現有叢集中節點更快的執行版本的更新節點、則應先將叢集中的節點升級至較新版本、然後再新增節點。
+
+不建議使用混合版本叢集、但在某些情況下、您可能需要暫時進入混合版本狀態。例如、如果您要升級至ONTAP 更新版本的、但現有叢集中的某些節點不支援的版本、則需要輸入混合版本狀態。在這種情況下、您應該升級支援更新版本ONTAP 之支援的節點、然後取消加入不支援ONTAP 升級版本之更新版本的節點、使用進階權限「cluster unjoin -skip－lastlow－version－Node Check」命令升級至。
+
+您可能還需要輸入混合版本狀態、才能進行技術更新或中斷升級。在這種情況ONTAP 下、您可以使用下列進階權限命令來覆寫使用不同版本的RUSJ9.3預設行為、並加入節點：
+
+* 「叢集加入-允許混合版本加入」
+* 「叢集附加節點-allow-混合 版本-join」
+
+
+當您必須進入混合版本狀態時、應該儘快完成升級。HA配對不得在ONTAP 叢集中與其他HA配對不同的版本上執行超過七天的版本。若要正確執行叢集作業、叢集處於混合版本狀態的期間應儘可能短。
+
+當叢集處於混合版本狀態時、除了必要時、您不應輸入任何變更叢集作業或組態的命令、以滿足升級需求。

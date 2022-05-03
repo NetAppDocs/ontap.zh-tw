@@ -1,0 +1,68 @@
+---
+permalink: smb-hyper-v-sql/create-continuously-available-shares-task.html 
+sidebar: sidebar 
+keywords: create, continuous, smb, available, share, sql, database, file, server, hyper, v, virtual, machine 
+summary: 建立資料磁碟區之後、您可以建立持續可用的共用區、讓應用程式伺服器用來存取Hyper-V虛擬機器、組態檔和SQL Server資料庫檔案。您應該在建立SMB共用時使用共用組態工作表。 
+---
+= 建立持續可用的SMB共用區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立資料磁碟區之後、您可以建立持續可用的共用區、讓應用程式伺服器用來存取Hyper-V虛擬機器、組態檔和SQL Server資料庫檔案。您應該在建立SMB共用時使用共用組態工作表。
+
+.步驟
+. 顯示現有資料磁碟區及其交會路徑的相關資訊：
++
+‘* Volume show -vserver _vserver_name_-jetion*’
+
+. 建立持續可用的SMB共用區：
++
+hy*vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path _path_-share-properties oplocks、持續可用的-symlink ""（-註釋文字）*
+
++
+** 您可以選擇性地將註解新增至共用組態。
+** 根據預設、離線檔案共用內容是在共用區上設定、並設為「手動」。
+** 利用Windows預設的共享權限「Everyone」/「Full Control」來建立共享區。ONTAP
+
+
+. 針對共用組態工作表中的所有共用重複上一個步驟。
+. 使用「vserver CIFS共用show」命令來驗證您的組態是否正確。
+. 將磁碟機對應至每個共用區、並使用* Windows內容*視窗設定檔案權限、即可在持續可用的共用區上設定NTFS檔案權限。
+
+
+下列命令可在儲存虛擬機器（SVM、先前稱為Vserver）VS1上建立名為「data2」的持續可用共用區。將「-symlink」參數設為「」、即可停用symlink：
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -junction
+                      Junction                  Junction
+Vserver   Volume      Active   Junction Path    Path Source
+--------- ----------- -------- ---------------- ------------
+vs1       data        true     /data            RW_volume
+vs1       data1       true     /data/data1      RW_volume
+vs1       data2       true     /data/data2      RW_volume
+vs1       vs1_root    -        /                -
+
+cluster1::> vserver cifs share create -vserver vs1 -share-name data2 -path /data/data2 -share-properties oplocks,continuously-available -symlink ""
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data/data2
+             Share Properties: oplocks
+                               continuously-available
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----

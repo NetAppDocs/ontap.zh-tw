@@ -1,0 +1,56 @@
+---
+permalink: nas-audit/steps-setup-fpolicy-config-concept.html 
+sidebar: sidebar 
+keywords: steps, setting, fpolicy configuration 
+summary: 在FPolicy能夠監控檔案存取之前、必須先在需要FPolicy服務的儲存虛擬機器（SVM）上建立並啟用FPolicy組態。 
+---
+= 設定FPolicy組態的步驟為何
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在FPolicy能夠監控檔案存取之前、必須先在需要FPolicy服務的儲存虛擬機器（SVM）上建立並啟用FPolicy組態。
+
+在SVM上設定及啟用FPolicy組態的步驟如下：
+
+. 建立FPolicy外部引擎。
++
+FPolicy外部引擎可識別與特定FPolicy組態相關聯的外部FPolicy伺服器（FPolicy伺服器）。如果使用內部的「原生」FPolicy引擎來建立原生檔案封鎖組態、則不需要建立FPolicy外部引擎。
+
+. 建立FPolicy事件。
++
+FPolicy事件說明FPolicy原則應監控的項目。事件包括要監控的傳輸協定和檔案作業、並可包含篩選器清單。事件使用篩選器來縮小FPolicy外部引擎必須傳送通知的受監控事件清單。事件也會指定原則是否監控Volume作業。
+
+. 建立FPolicy原則。
++
+FPolicy原則負責將需要監控的一組事件與適當範圍相關聯、以及哪些受監控的事件通知必須傳送至指定的FPolicy伺服器（若未設定FPolicy伺服器、則會傳送至原生引擎）。該原則也定義是否允許FPolicy伺服器以權限存取其接收通知的資料。如果伺服器需要存取資料、FPolicy伺服器就需要存取權限。需要存取權限的典型使用案例包括檔案封鎖、配額管理及階層式儲存管理。您可以在原則中指定此原則的組態是使用FPolicy伺服器、還是使用內部的「原生」FPolicy伺服器。
+
++
+原則會指定是否必須篩選。如果篩選是強制性的、且所有FPolicy伺服器都關閉、或在定義的逾時期間內、未從FPolicy伺服器收到任何回應、則檔案存取將遭拒。
+
++
+原則的界限是SVM。原則無法套用至多個SVM。不過、特定SVM可以有多個FPolicy原則、每個原則的範圍、事件和外部伺服器組態組合相同或不同。
+
+. 設定原則範圍。
++
+FPolicy範圍決定原則在哪些磁碟區、共享區或匯出原則上執行、或排除在監控範圍之外。範圍也會決定哪些副檔名應納入或排除在FPolicy監控範圍之外。
+
++
+[NOTE]
+====
+排除清單優先於包含清單。
+
+====
+. 啟用FPolicy原則。
++
+啟用原則時、會連接控制通道和（可選）特殊權限資料通道。SVM參與之節點上的FPolicy程序會開始監控檔案和資料夾存取、若事件符合設定的條件、則會將通知傳送至FPolicy伺服器（若未設定FPolicy伺服器、則會傳送至原生引擎）。
+
+
+
+[NOTE]
+====
+如果原則使用原生檔案封鎖、則不會設定外部引擎、也不會與原則建立關聯。
+
+====

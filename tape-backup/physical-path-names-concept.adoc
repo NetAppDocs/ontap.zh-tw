@@ -1,0 +1,33 @@
+---
+permalink: tape-backup/physical-path-names-concept.html 
+sidebar: sidebar 
+keywords: physical, path, names, ppn, numerical, address, tape, drive, electrical 
+summary: 實體路徑名稱（PPN）是ONTAP 根據連接至儲存系統的SCSI-2/3介面卡或交換器（特定位置）、將資料指派給磁帶機和磁帶庫的數字位址順序。PPNS也稱為電子名稱。 
+---
+= 什麼是實體路徑名稱
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+實體路徑名稱（PPN）是ONTAP 根據連接至儲存系統的SCSI-2/3介面卡或交換器（特定位置）、將資料指派給磁帶機和磁帶庫的數字位址順序。PPNS也稱為電子名稱。
+
+直接附加裝置的PPNS使用下列格式：「host_Adapter」。"Device_id_LUN"
+
+[NOTE]
+====
+LUN值僅會顯示於LUN值不是零的磁帶和媒體交換器裝置、也就是如果LUN值為零、則不會顯示PPN的「LUN」部分。
+
+====
+例如、PPN 8.6表示主機介面卡編號為8、裝置ID為6、邏輯單元編號（LUN）為0。
+
+SAS磁帶設備也是直接附加的設備。例如、PPN 5c-4表示在儲存系統中、SAS HBA連接至插槽5、SAS磁帶連接至SAS HBA的連接埠C、且裝置ID為4。
+
+光纖通道交換器附加裝置的PPNS使用下列格式：「切換：port_id」。"Device_id_LUN"
+
+例如、PPN my_switch:5.3L2表示連接至名為my_switch3之交換器連接埠5的磁帶機已設定裝置ID 3、且具有LUN 2。
+
+LUN（邏輯單元編號）由磁碟機決定。Fibre Channel、SCSI磁帶機和程式庫、以及磁碟均具有PPN。
+
+除非交換器名稱變更、磁帶機或磁帶庫移動、或磁帶機或磁帶庫重新設定、否則磁帶機和磁帶庫的PPNS不會變更。PPNS在重新開機後維持不變。例如、如果移除名為my_switch:5.3L2的磁帶機、並將具有相同裝置ID和LUN的新磁帶機連接至交換器my_switch5的連接埠、則可使用my_switch:5.3L2存取新的磁帶機。

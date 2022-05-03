@@ -1,0 +1,29 @@
+---
+permalink: peering/enable-cluster-peering-encryption-existing-task.html 
+sidebar: sidebar 
+keywords: enable, cluster, peering, encryption, existing, peer, relationship 
+summary: 從ONTAP 推出支援支援功能的9.6開始、所有新建立的叢集對等關係、預設都會啟用叢集對等加密。叢集對等加密使用預先共用金鑰（PSK）和傳輸安全層（TLS）來保護跨叢集對等通訊。這會在連接叢集之間增加一層安全性。 
+---
+= 在現有的對等關係上啟用叢集對等加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 推出支援支援功能的9.6開始、所有新建立的叢集對等關係、預設都會啟用叢集對等加密。叢集對等加密使用預先共用金鑰（PSK）和傳輸安全層（TLS）來保護跨叢集對等通訊。這會在連接叢集之間增加一層安全性。
+
+如果您要將對等叢集升級至ONTAP 支援的9.6或更新版本、而且對等關係是在ONTAP 更新版本的版本為32、9.5或更早版本時建立、則必須在升級後手動啟用叢集對等加密。對等關係中的兩個叢集都必須執行ONTAP 不支援的9.6或更新版本、才能啟用叢集對等加密。
+
+.步驟
+. 在目的地叢集上、啟用與來源叢集通訊的加密：
++
+「叢集對等端點修改_SOUR_叢 集_-auth-stue-admin USe-AUTIFY -AUTUST加密 傳輸協定建議的TLS-PSK'
+
+. 出現提示時、請輸入通關密碼。
+. 在資料保護來源叢集上、啟用與資料保護目的地叢集通訊的加密：
++
+「叢集對等端點修改_data_protection denture_cluster _-auth-station-admin USe-AUTHERY -AUTUSTAUTHERY -AUT加密 傳輸協定建議的TLS-PSK'
+
+. 出現提示時、請輸入在目的地叢集上輸入的相同通關密碼。
+

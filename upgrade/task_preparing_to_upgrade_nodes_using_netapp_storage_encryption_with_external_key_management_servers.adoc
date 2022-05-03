@@ -1,0 +1,38 @@
+---
+permalink: upgrade/task_preparing_to_upgrade_nodes_using_netapp_storage_encryption_with_external_key_management_servers.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, prepare, preparing, nodes, netapp, storage, encryption, nse, external, key management, servers 
+summary: 如果您在ONTAP 使用NetApp Storage Encryption（NSE）on the Ex9.2或更早版本、並升級ONTAP 至版本9.3或更新版本、則在執行升級之前、必須使用命令列介面（CLI）刪除任何現有的外部金鑰管理（KMIP）伺服器連線。 
+---
+= 在升級之前刪除現有的外部金鑰管理伺服器連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在ONTAP 更新版本之前使用NetApp Storage Encryption（NSE）、並升級ONTAP 至版本資訊畫面9.3或更新版本、則在執行升級之前、必須使用命令列介面（CLI）刪除任何現有的外部金鑰管理（KMIP）伺服器連線。
+
+. 確認NSE磁碟機已解除鎖定、開啟並設定為預設製造商安全ID 0x0：
++
+「torage加密磁碟show -disk*」
+
+. 進入進階權限模式：
++
+"進階權限"
+
+. 使用預設製造商安全ID 0x0、將FIPS金鑰指派給自我加密磁碟（SED）：「torage加密磁碟modify -fIPS-key-id x0 -disk *」
+. 確認已完成將FIPS金鑰指派給所有磁碟：「torage加密磁碟顯示狀態」
+. 驗證所有磁碟的*模式*是否設定為資料：「torage加密磁碟show」
+. 查看已設定的KMIP伺服器：「安全金鑰管理程式顯示」
+. 刪除已設定的KMIP伺服器：「安全金鑰管理程式刪除-位址kmip_ip_address'」
+. 刪除外部金鑰管理程式組態：「安全金鑰管理程式刪除kmip-config」
++
+
+NOTE: 此步驟不會移除NSE憑證。
+
+
+
+升級完成後、您必須重新設定KMIP伺服器連線。
+
+xref:task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.adoc[升級ONTAP 至更新版本的更新版本後、重新設定KMIP伺服器連線]

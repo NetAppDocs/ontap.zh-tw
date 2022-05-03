@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: networking/create_svms.html 
+keywords: create, creation, creating, add, adding, svm, storage, virtual, machine, create svms, create storage virtual machines, create an svm to serve data to clients 
+summary: 建立SVM以將資料提供給用戶端 
+---
+= 建立SVM
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您必須建立SVM、才能將資料提供給用戶端。
+
+.開始之前
+* 您必須是叢集管理員才能執行此工作。
+* 您必須知道SVM根磁碟區的安全樣式。
++
+如果您計畫在此SVM上實作Hyper-V或SQL Server over SMB解決方案、則根磁碟區應該使用NTFS安全樣式。包含Hyper-V檔案或SQL資料庫檔案的磁碟區在建立時必須設定為NTFS安全性。將根磁碟區安全樣式設定為NTFS、可確保您不會不慎建立UNIX或混合式安全型資料磁碟區。
+
+
+
+.步驟
+. 判斷哪些Aggregate是包含SVM根磁碟區的候選集合體。
++
+「torage Aggregate show -ge-mroot false」
+
++
+您必須選擇至少有1 GB可用空間的集合體、才能包含根磁碟區。如果您打算在SVM上設定NAS稽核、則必須在根Aggregate上至少有3 GB的額外可用空間、並在啟用稽核功能時、使用額外空間來建立稽核接移磁碟區。
+
++
+
+NOTE: 如果已在現有SVM上啟用NAS稽核、則會在成功完成集合建立之後、立即建立Aggregate的接移Volume。
+
+. 記錄您要在其上建立SVM根Volume的集合體名稱。
+. 如果您打算在建立SVM時指定語言、但不知道要使用的值、請識別並記錄您要指定的語言值：
++
+《vserver create -Language？》（Vserver create -Language？）
+
+. 如果您打算在建立SVM時指定Snapshot原則、但不知道原則名稱、請列出可用的原則、並識別並記錄您要使用的Snapshot原則名稱：
++
+「Volume snapshot policy show -vserver <vserver_name>」（Volume snapshot原則顯示-vserver <vserver_name>）
+
+. 如果您打算在建立SVM時指定配額原則、但不知道原則名稱、請列出可用的原則、並識別並記錄您要使用的配額原則名稱：
++
+「Volume quota policy show -vserver <vserver_name>」
+
+. 建立SVM：
++
+「vserver create -vserver <vserver_name>-Aggregate <Aggregate名稱>-rootvolume <root_volume名稱>-rootvolume安全樣式{unix | ntfs | mixed｝[-IPspace <ipspace_name>][-Language <language>][-snapshot原則<snapshot policy名稱>][-quota原則<quota原則<quota註釋_policy_space>_comment
+
++
+....
+vserver create -vserver vs1 -aggregate aggr3 -rootvolume vs1_root ‑rootvolume-security-style ntfs -ipspace ipspace1 -language en_US.UTF-8
+....
++
+作業成功：虛擬伺服器建立完成
+
+. 驗證SVM組態是否正確。
++
+「vserver show -vserver VS1」
+
++
+....
+Vserver: vs1
+Vserver Type: data
+Vserver Subtype: default
+Vserver UUID: 11111111-1111-1111-1111-111111111111
+Root Volume: vs1_root
+Aggregate: aggr3
+NIS Domain: -
+Root Volume Security Style: ntfs
+LDAP Client: -
+Default Volume Language Code: en_US.UTF-8
+Snapshot Policy: default
+Comment:
+Quota Policy: default
+List of Aggregates Assigned: -
+Limit on Maximum Number of Volumes allowed: unlimited
+Vserver Admin State: running
+Vserver Operational State: running
+Vserver Operational State Stopped Reason: -
+Allowed Protocols: nfs, cifs, ndmp
+Disallowed Protocols: fcp, iscsi
+QoS Policy Group: -
+Config Lock: false
+IPspace Name: ipspace1
+Is Vserver Protected: false
+....
++
+在此範例中、命令會在IPspace「ipspace1」中建立名為「VS1」的SVM。根磁碟區的名稱為「VS1_root」、建立於具有NTFS安全樣式的aggr3上。
+
+

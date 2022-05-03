@@ -1,0 +1,120 @@
+---
+permalink: revert/task_identifying_current_cluster_activity.html 
+sidebar: sidebar 
+keywords: ontap, downgrade, dowgrading, cluster, activity, running, jobs, stop, shutdown, active, SMB, sessions 
+summary: 在執行不中斷營運的降級之前、您應該先識別並順利終止任何無法持續使用的CIFS工作階段。 
+---
+= 在降級之前、請先確認目前的叢集活動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+降級前、不應執行任何工作、任何無法持續使用的SMB工作階段都應終止。
+
+
+
+== 確認沒有工作正在執行
+
+降級ONTAP 此非功能性軟體之前、您必須先確認叢集工作的狀態。如果有任何Aggregate、Volume、NDMP（傾印或還原）或Snapshot工作（例如建立、刪除、移動、修改、複寫、 和掛載工作）正在執行或排入佇列、您必須允許工作成功完成或停止佇列的項目。
+
+. 檢閱任何執行中或佇列的Aggregate、Volume或Snapshot工作清單：「jobshow」
++
+[listing]
+----
+cluster1::> job show
+                            Owning
+Job ID Name                 Vserver    Node           State
+------ -------------------- ---------- -------------- ----------
+8629   Vol Reaper           cluster1   -              Queued
+       Description: Vol Reaper Job
+8630   Certificate Expiry Check
+                            cluster1   -              Queued
+       Description: Certificate Expiry Check
+.
+.
+.
+----
+. 刪除任何執行中或佇列的Aggregate、Volume或Snapshot複本工作：「jobdelete -id job_id」
++
+[listing]
+----
+cluster1::> job delete -id 8629
+----
+. 確認沒有正在執行或排入佇列的Aggregate、Volume或Snapshot工作：「jobshow」
++
+在此範例中、所有執行中和佇列中的工作都已刪除：
+
++
+[listing]
+----
+cluster1::> job show
+                            Owning
+Job ID Name                 Vserver    Node           State
+------ -------------------- ---------- -------------- ----------
+9944   SnapMirrorDaemon_7_2147484678
+                            cluster1   node1          Dormant
+       Description: Snapmirror Daemon for 7_2147484678
+18377  SnapMirror Service Job
+                            cluster1   node0          Dormant
+       Description: SnapMirror Service Job
+2 entries were displayed
+----
+
+
+
+
+== 找出應終止的作用中SMB工作階段
+
+在執行不中斷營運的降級之前、您應該先識別並順利終止任何無法持續使用的SMB工作階段。
+
+使用SMB 3.0傳輸協定的Hyper-V或Microsoft SQL Server用戶端可存取持續可用的SMB共用區、不需要在升級或降級之前終止。
+
+. 識別任何無法持續使用的既有SMB工作階段：「vserver CIFS工作階段顯示-持續可用的是執行個體」
++
+此命令會顯示任何未持續可用的SMB工作階段的詳細資訊。您應該先終止這些程式、再繼續ONTAP 執行「停止降級」。
+
++
+[listing]
+----
+cluster1::> vserver cifs session show -continuously-available Yes -instance
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 4160072788
+Incoming Data LIF IP Address: 198.51.100.5
+      Workstation IP address: 203.0.113.20
+    Authentication Mechanism: NTLMv2
+                Windows User: CIFSLAB\user1
+                   UNIX User: nobody
+                 Open Shares: 1
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 8m 39s
+                   Idle Time: 7m 45s
+            Protocol Version: SMB2_1
+      Continuously Available: No
+1 entry was displayed.
+----
+. 如有必要、請找出您所識別之每個SMB工作階段所開啟的檔案：「vserver CIFS工作階段檔案show -session-id _session_ID_」
++
+[listing]
+----
+cluster1::> vserver cifs session file show -session-id 1
+
+Node:       node1
+Vserver:    vs1
+Connection: 4160072788
+Session:    1
+File    File      Open Hosting                               Continuously
+ID      Type      Mode Volume          Share                 Available
+------- --------- ---- --------------- --------------------- ------------
+1       Regular   rw   vol10           homedirshare          No
+Path: \TestDocument.docx
+2       Regular   rw   vol10           homedirshare          No
+Path: \file1.txt
+2 entries were displayed.
+----
+

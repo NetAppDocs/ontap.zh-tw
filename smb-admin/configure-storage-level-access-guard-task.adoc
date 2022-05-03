@@ -1,0 +1,253 @@
+---
+permalink: smb-admin/configure-storage-level-access-guard-task.html 
+sidebar: sidebar 
+keywords: level, storage, access, security, provide, guard, applies, access, apply, object, protocol, volume, qtree 
+summary: 在Volume或qtree上設定儲存層級存取保護時、您需要遵循許多步驟。儲存層級的存取保護可提供在儲存層級設定的存取安全性層級。它提供的安全性適用於從所有NAS傳輸協定到套用它的儲存物件的所有存取。 
+---
+= 設定儲存層級存取保護
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在Volume或qtree上設定儲存層級存取保護時、您需要遵循許多步驟。儲存層級的存取保護可提供在儲存層級設定的存取安全性層級。它提供的安全性適用於從所有NAS傳輸協定到套用它的儲存物件的所有存取。
+
+.步驟
+. 使用「vserver安全性檔案目錄NTFS create」命令建立安全性描述元。
++
+「Vserver安全性檔案目錄NTFS create -vserver VS1 -nts-SD SD1」「vserver安全性檔案目錄NTFS show -vserver VS1」
+
++
+[listing]
+----
+
+Vserver: vs1
+
+   NTFS Security    Owner Name
+   Descriptor Name
+   ------------     --------------
+   sd1              -
+----
++
+安全性描述元會以下列四個預設DACL存取控制項目（ACE）建立：
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    BUILTIN\Administrators
+                     allow    full-control   this-folder, sub-folders, files
+    BUILTIN\Users    allow    full-control   this-folder, sub-folders, files
+    CREATOR OWNER    allow    full-control   this-folder, sub-folders, files
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
++
+如果您不想在設定儲存層級存取保護時使用預設項目、可以在建立及新增自己的ACE至安全性描述元之前將其移除。
+
+. 從安全性描述元中移除任何您不想設定儲存層級存取保護安全性的預設DACL ACE：
++
+.. 使用「vserver安全性檔案目錄NTFS DACL移除」命令移除任何不想要的DACL ACE。
++
+在此範例中、安全性描述元中會移除三個預設的DACL ACE：BUILTIN\Administrator、BUILTIN\Users和Creator Owners。
+
++
+「vserver安全性檔案目錄NTFS DACL移除-vserver VS1 -ntfs-SD SD1 -access-ttype allow -Account builtin\users'「vserver安全性檔案目錄NTFS DACL移除-vserver VS1 -ntfs-SD SD1 -access-type允許-Account builtin\管理員'「vserver安全性檔案目錄NTFS DACL移除-vserver s1」-vserver s1型s1允許存取s1
+
+.. 使用「vserver安全性檔案目錄NTFS DACL show」命令、確認您不想用於儲存層級存取保護安全性的DACL ACE已從安全性描述元中移除。
++
+在此範例中、命令的輸出會驗證安全性描述元中是否已移除三個預設的DACL ACE、只留下NT AUTORITY\SYSTEM預設的DACL ACE項目：
+
++
+「Vserver安全檔案目錄NTFS DACL show -vserver VS1」
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
+
+
+. 使用「vserver安全性檔案目錄NTFS DACL add」命令、將一或多個DACL項目新增至安全性描述元。
++
+在此範例中、安全性描述元中會新增兩個DACL ACE：
+
++
+「vserver安全性檔案目錄NTFS DACL add -vserver VS1 -ntfs-SD SD1 -access-ttype allow -account範例\Engineering -權限完整控制-套用至此資料夾、子資料夾、檔案」「vserver安全性檔案目錄NTFS DACL add -vserver VS1 -ntfs-SD SD1 -access-ttype允許-Account「範例\網域使用者」-套用此子資料夾的權限
+
+. 使用「vserver安全檔案目錄NTFS SACL add」命令、將一或多個SACL項目新增至安全性描述元。
++
+在此範例中、安全性描述元中會新增兩個SACL ACE：
+
++
+「vserver安全性檔案目錄NTFS SACL add -vserver VS1 -ntfs-SD SD1 -access-ttype故障-Account「範例\網域使用者」-rights read -apple-to this資料夾、子資料夾、檔案」「vserver安全性檔案目錄NTFS SACL add -vserver VS1 -ntfs-SD SD1 -access-ttype sum -account somep-fer-apply -f-trise -fer-fmuty文件夾、se-file、se-apply、se-file、se-fs-apply、se-file
+
+. 分別使用「vserver安全檔案目錄NTFS DACL show」和「vserver安全檔案目錄NTFS SACL show」命令、確認DACL和SACL ACE的設定正確。
++
+在此範例中、下列命令會顯示安全性描述元「'shd1」的DACL項目資訊：
+
++
+「Vserver安全性檔案目錄NTFS DACL show -vserver VS1 -NTFs-SD SD1」
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    EXAMPLE\Domain Users
+                     allow    read           this-folder, sub-folders, files
+    EXAMPLE\engineering
+                     allow    full-control   this-folder, sub-folders, files
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
++
+在此範例中、下列命令會顯示安全性描述元「'shd1'」的SACL項目相關資訊：
+
++
+「Vserver安全性檔案目錄NTFS SACL show -vserver VS1 -NTFs-SD SD1」
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    EXAMPLE\Domain Users
+                     failure  read           this-folder, sub-folders, files
+    EXAMPLE\engineering
+                     success  full-control   this-folder, sub-folders, files
+----
+. 使用「vserver安全性檔案目錄原則create」命令建立安全性原則。
++
+以下範例建立名為「policy1'」的原則：
+
++
+「vserver安全性檔案目錄原則create -vserver VS1 -police-name policy1」
+
+. 使用「vserver安全性檔案目錄原則show」命令、確認原則設定正確。
++
+「Vserver安全檔案目錄原則顯示」
+
++
+[listing]
+----
+
+   Vserver          Policy Name
+   ------------     --------------
+   vs1              policy1
+----
+. 使用「vserver安全性檔案目錄原則工作新增」命令、並將「存取控制」參數設為「延遲」、將具有相關安全性描述元的工作新增至安全性原則。
++
+即使原則可以包含多個儲存層級的存取保護工作、您也無法將原則設定為同時包含檔案目錄和儲存層級的存取保護工作。原則必須包含所有儲存層級的存取保護工作或所有檔案目錄工作。
+
++
+在此範例中、工作會新增至名為「policy1」的原則、該原則會指派給安全性描述元「shD1」。它會指派給「/datavol1」路徑、存取控制類型設為「shlag」。
+
++
+「Vserver安全性檔案目錄原則工作add -vserver VS1 -policy-name policy1 -path /datavol1 -access-controllag -security-type NTFS -ntfs-mode exp -ntfs-SD SD1」
+
+. 使用「vserver安全性檔案目錄原則工作show」命令、確認工作已正確設定。
++
+「vserver安全性檔案目錄原則工作show -vserver VS1 -policy-name policy1」
+
++
+[listing]
+----
+
+ Vserver: vs1
+  Policy: policy1
+
+   Index  File/Folder  Access           Security  NTFS       NTFS Security
+          Path         Control          Type      Mode       Descriptor Name
+   -----  -----------  ---------------  --------  ---------- ---------------
+   1      /datavol1    slag             ntfs      propagate  sd1
+----
+. 使用「vserver安全性檔案目錄原則套用」命令來套用儲存層級的存取保護安全性原則。
++
+「vserver安全性檔案目錄套用-vserver VS1 -police-name policy1」
+
++
+已排程要套用安全性原則的工作。
+
+. 使用「vserver安全檔案目錄show」命令、確認套用的儲存層級存取保護安全性設定正確無誤。
++
+在此範例中、命令的輸出顯示儲存層級存取保護安全性已套用至NTFS磁碟區「/datavol1」。即使預設的DACL允許「所有人」完全控制、儲存層級的存取保護安全性仍會限制（及稽核）存取儲存層級存取保護設定中定義的群組。
+
++
+「vserver安全性檔案目錄show -vserver VS1 -path /datavol1」
+
++
+[listing]
+----
+
+                Vserver: vs1
+              File Path: /datavol1
+      File Inode Number: 77
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0x8004
+                         Owner:BUILTIN\Administrators
+                         Group:BUILTIN\Administrators
+                         DACL - ACEs
+                           ALLOW-Everyone-0x1f01ff
+                           ALLOW-Everyone-0x10000000-OI|CI|IO
+
+
+                         Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+----
+
+
+xref:manage-ntfs-security-audit-policies-slag-concept.adoc[使用CLI在SVM上管理NTFS檔案安全性、NTFS稽核原則及儲存層級存取保護]
+
+xref:workflow-config-storage-level-access-guard-concept.adoc[設定儲存層級存取保護的工作流程]
+
+xref:display-storage-level-access-guard-task.adoc[顯示儲存層級存取保護的相關資訊]
+
+xref:remove-storage-level-access-guard-task.adoc[移除儲存層級存取保護]

@@ -1,0 +1,81 @@
+---
+permalink: flexgroup/increase-capacity-task.html 
+sidebar: sidebar 
+keywords: increase, size, flexgroup, volume, flex group 
+summary: 您可以FlexGroup 增加FlexGroup 更多容量至現有的部分內容、或是以FlexGroup 新的成分來擴充此功能、來增加一個現象區的大小。 
+---
+= 增加FlexGroup 一個現象區的大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以FlexGroup 增加FlexGroup 更多容量至現有的部分內容、或是以FlexGroup 新的成分來擴充此功能、來增加一個現象區的大小。
+
+集合體中必須有足夠的可用空間。
+
+如果您想要增加更多空間、可以增加FlexGroup 整個現象的整體大小。增加FlexGroup 一個大小的不確定性磁碟區會重新調整FlexGroup 現有的不確定大小。
+
+如果您想要提升效能、可以擴充FlexGroup 《不只是要用的功能、在FlexGroup 下列情況下、您可能想要擴充一個範圍、並新增新的成分：
+
+* 新節點已新增至叢集。
+* 已在現有節點上建立新的Aggregate。
+* 目前的資料不只是硬體的資料不全、而且無法調整資料不全。FlexGroup FlexVol FlexGroup
+
+
+在版本早於ONTAP 版本的版本中、FlexGroup 建立SnapMirror關係之後、您不得擴充任何版本的功能。如果FlexGroup 您在ONTAP 更新版本早於版本的SnapMirror關係之後擴充來源的來源的sels在於 版本9.3、則必須FlexGroup 再次執行基準傳輸至目的地的s0 Volume。從ONTAP 功能區9.3開始、您可以擴充FlexGroup SnapMirror關係中的功能區。
+
+.步驟
+. 視需要增加容量或效能以增加FlexGroup VMware FlexGroup Volume的大小：
++
+|===
+
+
+| 如果您想要增加... | 然後執行此動作... 
+
+
+ a| 
+功能FlexGroup
+ a| 
+重新調整FlexGroup 「聲音不全區塊的大小：
+
+「Volume modify -vserver vserver_name -volume fa_name -size new_size」
+
+
+
+ a| 
+效能提升FlexGroup 至整個過程
+ a| 
+加入新的成分來擴充FlexGroup 這個功能：
+
++volume expand -vserver vserver_name -volume fg_name -aggregate name、... [-agger-list-plier bizents_per _agggr]+'
+
+預設的「-agger-list-gulier」參數值為1。
+
+若要擴充FlexGroup 適用於FabricPool 功能不全的功能、ONTAP 只要使用FabricPool 任何新的集合體、就必須是無法使用的功能。
+
+|===
+
+
+只要可能、您就應該增加FlexGroup 一個現象區的容量。如果您必須擴充FlexGroup 一個Sof Volume、則應以現有FlexGroup 的該磁碟區的構成部分相同的倍數來新增構成部分、以確保效能一致。例如、如果現有FlexGroup 的流通量有16個成分、每個節點有八個成分、您可以將現有FlexGroup 的流通量擴充8或16個成分。
+
+*增加現有成員容量的範例*
+
+以下範例說明如何將20 TB空間新增至FlexGroup 一套功能不全的volX磁碟區：
+
+[listing]
+----
+cluster1::> volume modify -vserver svm1 -volume volX -size +20TB
+----
+如果FlexGroup 該等部分包含16個部分、則每個部分的空間會增加1.25 TB。
+
+*新增成員以提升效能的範例*
+
+以下範例說明如何在FlexGroup 《關於世界的世界》（《世界》）第volX版中新增兩個成分：
+
+[listing]
+----
+cluster1::> volume expand -vserver vs1 -volume volX -aggr-list aggr1,aggr2
+----
+新成員的規模與現有成員相同。

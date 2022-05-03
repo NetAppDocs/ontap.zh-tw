@@ -1,0 +1,71 @@
+---
+permalink: system-admin/methods-manage-sp-bmc-firmware-updates-concept.html 
+sidebar: sidebar 
+keywords: methods, manage, sp, bmc, firmware, update, image, baseline, download 
+summary: 包含一個稱為基礎映像的SP韌體映像。ONTAP如果隨後有新版的SP韌體可供使用、您可以選擇下載該韌體、並將SP韌體更新至下載的版本、而不需升級ONTAP 此版本的更新。 
+---
+= 管理SP/BMC韌體更新的方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+包含一個稱為「_baseline image_」的SP韌體映像。ONTAP如果隨後有新版的SP韌體可供使用、您可以選擇下載該韌體、並將SP韌體更新至下載的版本、而不需升級ONTAP 此版本的更新。
+
+[NOTE]
+====
+本主題同時適用於SP和BMC。
+
+====
+支援下列管理SP韌體更新的方法：ONTAP
+
+* SP自動更新功能預設為啟用、可在下列情況下自動更新SP韌體：
++
+** 當您升級ONTAP 至新版的更新版本時
++
+只要與之搭售的SP韌體版本比節點上執行的SP版本更新、即可自動包含SP韌體更新程序。ONTAP ONTAP
+
++
+[NOTE]
+====
+系統會偵測失敗的SP自動更新、並觸發修正行動、重試SP自動更新最多三次。ONTAP如果三次重試都失敗、請聯絡技術支援部門。
+
+====
+** 當您從NetApp支援網站下載SP韌體版本、且下載的版本比SP目前執行的版本新
+** 當您降級ONTAP 或回復至舊版的版本時
++
+SP韌體會自動更新為ONTAP 支援的最新相容版本、由還原或降級至的版本支援。不需要手動更新SP韌體。
+
+
+
++
+您可以使用「系統服務處理器映像修改」命令來停用SP自動更新功能。不過、建議您保留啟用此功能的狀態。停用此功能可能會導致ONTAP 不佳或不合格的結合、使不佳的影像與SP韌體映像無法搭配使用。
+
+* 使用「系統服務處理器映像更新」命令、即可手動觸發SP更新、並指定更新的執行方式。ONTAP
++
+您可以指定下列選項：
+
++
+** 要使用的SP韌體套件（`-package'）
++
+您可以指定套件檔案名稱、將SP韌體更新至下載的套件。進階「系統映像套件show」命令會顯示節點上所有可用的套件檔案（包括SP韌體套件的檔案）。
+
+** 是否將基礎SP韌體套件用於SP更新（`-baseline）
++
+您可以將SP韌體更新至目前執行版本ONTAP 的BIOS所隨附的基礎版本。
+
+
+
++
+[NOTE]
+====
+如果您使用一些更進階的更新選項或參數、則BMC的組態設定可能會暫時清除。重新開機後ONTAP 、恢復BMC組態最多可能需要10分鐘。
+
+====
+* 使用「系統服務處理器映像更新進度show」命令、即可顯示從BIOS觸發的最新SP韌體更新狀態。ONTAP ONTAP
+
+
+更新SP韌體時、任何現有的SP連線都會終止。無論是自動或手動觸發SP韌體更新、都會發生這種情況。
+
+https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["NetApp下載：系統韌體與診斷"]

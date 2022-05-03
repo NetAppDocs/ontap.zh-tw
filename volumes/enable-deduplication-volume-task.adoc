@@ -1,0 +1,53 @@
+---
+permalink: volumes/enable-deduplication-volume-task.html 
+sidebar: sidebar 
+keywords: enable, deduplication, volume 
+summary: 您可以在FlexVol 支援重複資料刪除技術的過程中、在一個支援重複資料刪除的磁碟區上啟用、您可以在所有磁碟區上啟用後處理重複資料刪除功能、並在AFF 駐留在NetApp或Flash Pool Aggregate上的磁碟區上啟用即時重複資料刪除功能。如果您想要在其他類型的磁碟區上啟用即時重複資料刪除、則必須聯絡技術支援部門。 
+---
+= 在磁碟區上啟用重複資料刪除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在FlexVol 支援重複資料刪除技術的過程中、在一個支援重複資料刪除的磁碟區上啟用、您可以在所有磁碟區上啟用後處理重複資料刪除功能、並在AFF 駐留在NetApp或Flash Pool Aggregate上的磁碟區上啟用即時重複資料刪除功能。如果您想要在其他類型的磁碟區上啟用即時重複資料刪除、則必須聯絡技術支援部門。
+
+對於某個Set功能 磁碟區、您必須已確認磁碟區和集合體中有足夠的可用空間可用於重複資料刪除中繼資料。FlexVol重複資料刪除中繼資料需要集合體中的最小可用空間量。此金額等於FlexVol 所有重複資料刪除的所有非重複資料的實體資料總量的3%、或是集合體內的資料成分。每FlexVol 個實體磁碟區或資料組成部份應佔實體資料總可用空間的4%、總計應佔7%。
+
+[NOTE]
+====
+從功能支援功能支援功能支援功能9.2開始ONTAP 、AFF 預設會在支援功能的支援系統上啟用即時重複資料刪除功能。
+
+====
+.選擇
+* 使用「Volume Eff效率on」命令來啟用後置處理重複資料刪除。
++
+下列命令可在Volume Vola上啟用後處理重複資料刪除：
+
++
+「-vserver VS1 -volume Vola」上的Volume效率
+
+* 使用「Volume Eff效率on」命令、接著使用「Volume Eff高效 修改」命令、並將「即時重複資料刪除」選項設為「true」、以啟用後置處理重複資料刪除和即時重複資料刪除。
++
+下列命令可在Volume Vola上同時啟用後處理重複資料刪除和即時重複資料刪除：
+
++
+「-vserver VS1 -volume Vola」上的Volume效率
+
++
+「Volume Effiv更 有效率修改-vserver VS1 -volume Vola -inite-dedupe true」
+
+* 使用「Volume Eff效率on」命令、接著使用「Volume Eff高效modify」命令、將「即時重複資料刪除」選項設為「true」、「-policy」選項設為「僅限即時」、僅啟用即時重複資料刪除功能。
++
+下列命令僅在Volume Vola上啟用即時重複資料刪除：
+
++
+「-vserver VS1 -volume Vola」上的Volume效率
+
++
+「Volume Effiveive-modify -vserver VS1 -volume Vola -policy inite-only -inite-dedupe true」（Volume效率修改-vserver VS1 -volume Vola -原則僅限內嵌
+
+
+
+檢視Volume Eff效率 設定：「Volume Eff效率show -instance」（Volume Eff效率 顯示-instance）、確認設定已變更

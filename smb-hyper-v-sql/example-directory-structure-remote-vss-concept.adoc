@@ -1,0 +1,29 @@
+---
+permalink: smb-hyper-v-sql/example-directory-structure-remote-vss-concept.html 
+sidebar: sidebar 
+keywords: directory, structure, remote, vss, hyper, v, virutal, machine, file, shadow, copy, backup 
+summary: 遠端VSS會在建立陰影複製時、遍歷儲存Hyper-V虛擬機器檔案的目錄結構。請務必瞭解適當的目錄結構、以便成功建立虛擬機器檔案的備份。 
+---
+= 遠端VSS使用的目錄結構範例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+遠端VSS會在建立陰影複製時、遍歷儲存Hyper-V虛擬機器檔案的目錄結構。請務必瞭解適當的目錄結構、以便成功建立虛擬機器檔案的備份。
+
+成功建立陰影複製所支援的目錄結構符合下列需求：
+
+* 只有目錄和一般檔案存在於用來儲存虛擬機器檔案的目錄結構中。
++
+目錄結構不包含交會、連結或非一般檔案。
+
+* 虛擬機器的所有檔案都位於單一共用區內。
+* 用於儲存虛擬機器檔案的目錄結構不會超過陰影複製目錄的設定深度。
+* 共用區的根目錄僅包含虛擬機器檔案或目錄。
+
+
+在下圖中、名為VM_vol1的磁碟區是以儲存虛擬機器（SVM）VS1上的「/HyperV/vm1」交會點建立。包含虛擬機器檔案的子目錄會建立在交會點之下。Hyper-V伺服器的虛擬機器檔案可透過路徑為「/HyperV/vm1/dir1/vmdir」的共享區1存取。陰影複製服務會建立所有虛擬機器檔案的陰影複製、這些檔案都包含在共享區1（直到陰影複製目錄設定的深度）下的目錄結構中。
+
+image::../media/directory-structure-used-by-remote-vss.gif[遠端VSS使用的目錄結構]

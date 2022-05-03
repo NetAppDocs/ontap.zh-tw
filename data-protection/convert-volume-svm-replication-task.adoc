@@ -1,0 +1,82 @@
+---
+permalink: data-protection/convert-volume-svm-replication-task.html 
+sidebar: sidebar 
+keywords: convert, volume, replication, relationships, svm 
+summary: 您可以將磁碟區之間的複寫關係、轉換成擁有磁碟區的儲存虛擬機器（SVM）之間的複寫關係、前提是來源（根磁碟區除外）上的每個磁碟區都要複寫、 而且來源（包括根磁碟區）上的每個磁碟區都與目的地上的磁碟區名稱相同。 
+---
+= 將Volume複寫關係轉換成SVM複寫關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將磁碟區之間的複寫關係、轉換成擁有磁碟區的儲存虛擬機器（SVM）之間的複寫關係、前提是來源（根磁碟區除外）上的每個磁碟區都要複寫、 而且來源（包括根磁碟區）上的每個磁碟區都與目的地上的磁碟區名稱相同。
+
+當SnapMirror關係閒置時、請使用「Volume rame」命令、視需要重新命名目的地磁碟區。
+
+.步驟
+. 從目的地SVM或目的地叢集執行下列命令、重新同步來源與目的地磁碟區：
++
+「napmirror resSync -source-path _svm:volume _-dite-path _svm:volume _-type dp | xDP -schedule _-policy _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+
+====
++
+以下範例重新同步來源磁碟區「Vola」與目的地磁碟區「Vola」在「shvm_backup」上的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA
+----
+. 如所述、在來源和目的地SVM之間建立SVM複寫關係 link:replicate-entire-svm-config-task.html["複寫SVM組態"]。
++
+建立複寫關係時、您必須使用「napmirror create」命令的「-identite-preserve true」選項。
+
+. 停止目的地SVM：
++
+「Vserver stop -vserver _svm_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例會停止目的地SVM「shvm_backup」：
+
++
+[listing]
+----
+cluster_dst::> vserver stop svm_backup
+----
+. 從目的地SVM或目的地叢集執行下列命令、重新同步來源和目的地SVM：
++
+「napmirror resSync -source-path _svm_：-dite-path _svm_：-type dp | xDP - schedule _schedul__-policy _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+
+雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+
+====
++
+以下範例重新同步來源SVM「svm1」與目的地SVM「shvm_backup」之間的關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1: -destination-path svm_backup:
+----
+

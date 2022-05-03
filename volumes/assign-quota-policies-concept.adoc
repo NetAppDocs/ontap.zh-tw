@@ -1,0 +1,28 @@
+---
+permalink: volumes/assign-quota-policies-concept.html 
+sidebar: sidebar 
+keywords: considerations for, assigning, quota, policies 
+summary: 配額原則是FlexVol SVM所有的SVM等磁碟區的配額規則群組。指派配額原則時、您必須注意某些考量事項。 
+---
+= 指派配額原則的考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配額原則是FlexVol SVM所有的SVM等磁碟區的配額規則群組。指派配額原則時、您必須注意某些考量事項。
+
+* SVM在任何指定時間都有一個指派的配額原則。建立SVM時、會建立空白配額原則並指派給SVM。除非在建立SVM時指定不同的名稱、否則此預設配額原則的名稱為「預設」。
+* SVM最多可有五個配額原則。如果SVM有五個配額原則、則在刪除現有的配額原則之前、您無法為SVM建立新的配額原則。
+* 當您需要建立配額規則或變更配額原則的配額規則時、可以選擇下列任一種方法：
++
+** 如果您使用指派給SVM的配額原則、則不需要將配額原則指派給SVM。
+** 如果您使用未指派的配額原則、然後將配額原則指派給SVM、則必須備份配額原則、以便在必要時還原為。
++
+例如、您可以複製指派的配額原則、變更複本、將複本指派給SVM、以及重新命名原始配額原則。
+
+
+
+* 您可以重新命名配額原則、即使配額原則已指派給SVM。
+

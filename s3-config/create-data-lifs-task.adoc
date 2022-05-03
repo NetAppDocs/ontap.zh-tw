@@ -1,0 +1,122 @@
+---
+permalink: s3-config/create-data-lifs-task.html 
+sidebar: sidebar 
+keywords: create, data, lifs 
+summary: 如果您建立新的SVM、您為S3存取所建立的專屬lifs應該是資料lifs。 
+---
+= 建立資料生命量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您建立新的SVM、您為S3存取所建立的專屬lifs應該是資料lifs。
+
+.您需要的是 #8217 ；需要的是什麼
+* 基礎實體或邏輯網路連接埠必須設定為管理「up」狀態。
+* 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。
++
+子網路包含屬於同一第3層子網路的IP位址集區。它們是使用「network subnet create」命令建立的。
+
+* LIF服務原則必須已經存在。
+
+
+.關於這項工作
+* 您可以在同一個網路連接埠上同時建立IPV4和IPv6 LIF。
+* 如果叢集內有大量的生命量、您可以使用「network interface cape流量show」命令來驗證叢集上支援的LIF容量、並使用「network interface cape流量 詳細資料show」命令來驗證每個節點上支援的LIF容量 （進階權限層級）。
+* 如果您要啟用遠端FabricPool 的靜態容量（雲端）分層、則也必須設定叢集間的LIF。
+
+
+.步驟
+. 建立LIF：
++
+「網路介面create -vserver Svm_name -lif_name -service-policy service_policy_names -home-node_name -home-port port_name｛-address ip_address -netmask ip_address |-subnet-name subnet_name｝-firewall-policy data -auto-f還原｛true|fals｝
+
++
+** 當LIF上執行「網路介面回復」命令時、LIF會傳回的節點為「主節點」。
++
+您也可以使用「-autom-revert」選項、指定LIF是否應自動還原為主節點和主連接埠。
+
+** 首頁連接埠是LIF在LIF上執行「網路介面回復」命令時、LIF傳回的實體或邏輯連接埠。
+** 您可以使用"-address"和"-netask"選項來指定IP位址、也可以使用"-subnet_name"選項從子網路進行分配。
+** 使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。
+** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。"network rout" creation"手冊頁包含有關在SVM中建立靜態路由的資訊。
+** 對於"-firewall-policy"選項、請使用與LIF角色相同的預設"data"。
++
+如果需要、您可以稍後建立並新增自訂防火牆原則。
+
+** 「自動還原」可讓您指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、是否將資料LIF自動還原至其主節點。預設設定為「假」、但您可以根據環境中的網路管理原則、將其設為「假」。
+** 「-service-policy（服務原則）」選項會指定您所建立的資料與管理服務原則、以及您所需的任何其他原則。
+
+
+. 如果您要在「-address'（地址）」選項中指派IPv6位址：
++
+.. 使用「network NDP prefix show」命令檢視在各種介面上學習到的RA前置詞清單。
++
+「network NDP prefix show」命令可在進階權限層級使用。
+
+.. 使用「prefix:id」格式手動建構IPv6位址。
++
+「prefix」是在各種介面上學習的前置詞。
+
++
+若要導出「id」、請選擇隨機的64位元十六進位數字。
+
+
+
+. 使用「network interface show」命令確認LIF已成功建立。
+. 確認已設定的IP位址可連線：
++
+[cols="2*"]
+|===
+| 若要驗證... | 使用... 
+
+
+ a| 
+IPV4位址
+ a| 
+網路ping
+
+
+
+ a| 
+IPv6位址
+ a| 
+《網路ping6》
+
+|===
+
+
+下列命令說明如何建立以「my-s3-policy」服務原則指派的S3資料LIF：
+
+[listing]
+----
+network interface create -vserver svm1.example.com -lif lif2 -home-node node2 -homeport e0d -service-policy my-S3-policy -subnet-name ipspace1
+----
+下列命令顯示叢集1中的所有LIF。資料生命週期1和資料傳輸3均設定為使用IPv4位址、而資料傳輸4則設定為使用IPv6位址：
+
+[listing]
+----
+cluster-1::> network interface show
+
+            Logical    Status     Network          Current      Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node         Port    Home
+----------- ---------- ---------- ---------------- ------------ ------- ----
+cluster-1
+            cluster_mgmt up/up    192.0.2.3/24     node-1       e1a     true
+node-1
+            clus1        up/up    192.0.2.12/24    node-1       e0a     true
+            clus2        up/up    192.0.2.13/24    node-1       e0b     true
+            mgmt1        up/up    192.0.2.68/24    node-1       e1a     true
+node-2
+            clus1        up/up    192.0.2.14/24    node-2       e0a     true
+            clus2        up/up    192.0.2.15/24    node-2       e0b     true
+            mgmt1        up/up    192.0.2.69/24    node-2       e1a     true
+vs1.example.com
+            datalif1     up/down  192.0.2.145/30   node-1       e1c     true
+vs3.example.com
+            datalif3     up/up    192.0.2.146/30   node-2       e0c     true
+            datalif4     up/up    2001::2/64       node-2       e0c     true
+5 entries were displayed.
+----

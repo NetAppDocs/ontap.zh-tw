@@ -1,0 +1,93 @@
+---
+permalink: encryption-at-rest/sanitize-fips-drive-sed-task.html 
+sidebar: sidebar 
+keywords: sanitizing, fips, drive, sed 
+summary: 如果您想要使FIPS磁碟機或SED上的資料永久無法存取、並將磁碟機用於新資料、您可以使用儲存設備加密磁碟清理命令來清理磁碟機。 
+---
+= 清除FIPS磁碟機或SED
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要使FIPS磁碟機或SED上的資料永久無法存取、並將磁碟機用於新資料、您可以使用「儲存加密磁碟清理」命令來清理磁碟機。
+
+您必須是叢集管理員才能執行此工作。
+
+當您清理自我加密磁碟機時、系統會將磁碟加密金鑰變更為新的隨機值、將開機鎖定狀態重設為假、並將金鑰ID設為預設值、例如製造商安全ID 0x0（SAS磁碟機）或null金鑰（NVMe磁碟機）。這樣做會使磁碟上的資料無法存取、而且無法擷取。您可以將已消毒的磁碟重複使用為非零備援磁碟。
+
+.步驟
+. 將任何需要保留的資料移轉到另一個磁碟上的集合體。
+. 刪除FIPS磁碟機或SED上要消毒的Aggregate：
++
+'儲存Aggregate刪除-Aggregate _Aggregate名稱_'
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage aggregate delete -aggregate aggr1
+----
+. 識別要消毒的FIPS磁碟機或SED的磁碟ID：
++
+「torage加密磁碟顯示-欄位資料金鑰ID、fIPS-KEY-ID、擁有者」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+1.10.2  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+[...]
+----
+. 如果FIPS磁碟機以FIPS相容模式執行、請將節點的FIPS驗證金鑰ID設回預設的MSID 0x0：
++
+「torage加密磁碟修改磁碟_disk _id_-fIPS-key-id 0x0」
+
++
+您可以使用「安全金鑰管理程式查詢」命令來檢視金鑰ID。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 1.10.2 -fips-key-id 0x0
+
+Info: Starting modify on 1 disk.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
+. 為磁碟機消毒：
++
+'磁碟加密磁碟資料抹除-disk _disk_id_'
+
++
+您只能使用此命令來清除熱備援磁碟或中斷的磁碟。若要清除所有磁碟的資料、無論其類型為何、請使用「-force-all-state」選項。如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+系統會提示您輸入確認短句、然後再繼續。輸入完全如畫面所示的詞彙。
+
+====
++
+[listing]
+----
+cluster1::> storage encryption disk sanitize -disk 1.10.2
+
+Warning: This operation will cryptographically sanitize 1 spare or broken self-encrypting disk on 1 node.
+         To continue, enter sanitize disk: sanitize disk
+
+Info: Starting sanitize on 1 disk.
+      View the status of the operation using the
+      storage encryption disk show-status command.
+----
+

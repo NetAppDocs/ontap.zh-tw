@@ -1,0 +1,54 @@
+---
+permalink: smb-hyper-v-sql/create-ntfs-data-volumes-task.html 
+sidebar: sidebar 
+keywords: create, ntfs, data, volume, storage, virutal, machine, svm, smb, application, server, volume, configuration 
+summary: 您必須先在儲存虛擬機器（SVM）上建立NTFS資料磁碟區、然後才能透過SMB應用程式伺服器設定持續可用的共用區、以便搭配Hyper-V或SQL Server使用。使用Volume組態工作表建立資料磁碟區。 
+---
+= 建立NTFS資料磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先在儲存虛擬機器（SVM）上建立NTFS資料磁碟區、然後才能透過SMB應用程式伺服器設定持續可用的共用區、以便搭配Hyper-V或SQL Server使用。使用Volume組態工作表建立資料磁碟區。
+
+您可以使用選用參數來自訂資料Volume。如需自訂磁碟區的詳細資訊、請參閱 link:link:../volumes/index.html["邏輯儲存管理"]。
+
+建立資料磁碟區時、不應在包含下列項目的磁碟區內建立交會點：
+
+* Hyper-V檔案ONTAP 、用於製作陰影複製
+* 使用SQL Server備份的SQL Server資料庫檔案
+
+
+[NOTE]
+====
+如果您不慎建立使用混合式或UNIX安全性樣式的磁碟區、則無法將磁碟區變更為NTFS安全性樣式磁碟區、然後直接使用它來建立持續可用的共用區、以利不中斷營運。除非將組態中使用的磁碟區建立為NTFS安全型磁碟區、否則Hyper-V和SQL Server在SMB上的不中斷營運將無法正常運作。您必須刪除磁碟區並以NTFS安全型態重新建立磁碟區、 或者、您也可以在Windows主機上對應磁碟區、並在磁碟區頂端套用ACL、然後將ACL傳播到磁碟區中的所有檔案和資料夾。
+
+====
+.步驟
+. 輸入適當的命令來建立資料Volume：
++
+[cols="1, 4"]
+|===
+| 如果您想要在SVM中建立磁碟區、而根磁碟區的安全樣式是... | 輸入命令... 
+
+
+ a| 
+NTFS
+ a| 
+'磁碟區create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-size integer[KB｛vbar｝MB｛vbar｝GB｛vbar｝TB｛vbar｝PB]-jeter-path _path_*
+
+
+
+ a| 
+非NTFS
+ a| 
+磁碟區建立-vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-size integer[KB｛vbar｝MB｛vbar｝GB｛vbar｝TB｛vbar｝PB]安全型NTFS -交會路徑*
+
+|===
+. 驗證Volume組態是否正確：
++
+‘* volume show -vserver _vserver_name_-volume _volume _name_*
+
+

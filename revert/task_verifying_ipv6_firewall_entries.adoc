@@ -1,0 +1,61 @@
+---
+permalink: revert/task_verifying_ipv6_firewall_entries.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, ipv6, firewall, entries, verify 
+summary: 從ONTAP 任何版本的更新版本還原、可能會導致防火牆原則中的某些服務缺少預設IPv6防火牆項目。您必須確認所需的防火牆項目已還原至您的系統。 
+---
+= 驗證IPv6防火牆項目
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 任何版本的更新版本還原、可能會導致防火牆原則中的某些服務缺少預設IPv6防火牆項目。您必須確認所需的防火牆項目已還原至您的系統。
+
+. 將所有防火牆原則與預設原則進行比較、確認其正確無誤：「System services firewall policy show」（系統服務防火牆原則顯示）
++
+下列範例顯示預設原則：
+
++
+[listing]
+----
+cluster1::*> system services firewall policy show
+Policy           Service    Action IP-List
+---------------- ---------- ------ --------------------
+cluster
+                 dns        allow  0.0.0.0/0
+                 http       allow  0.0.0.0/0
+                 https      allow  0.0.0.0/0
+                 ndmp       allow  0.0.0.0/0
+                 ntp        allow  0.0.0.0/0
+                 rsh        allow  0.0.0.0/0
+                 snmp       allow  0.0.0.0/0
+                 ssh        allow  0.0.0.0/0
+                 telnet     allow  0.0.0.0/0
+data
+                 dns        allow  0.0.0.0/0, ::/0
+                 http       deny   0.0.0.0/0, ::/0
+                 https      deny   0.0.0.0/0, ::/0
+                 ndmp       allow  0.0.0.0/0, ::/0
+                 ntp        deny   0.0.0.0/0, ::/0
+                 rsh        deny   0.0.0.0/0, ::/0
+.
+.
+.
+----
+. 建立新的防火牆原則：「系統服務防火牆原則建立」、以手動新增任何遺失的預設IPv6防火牆項目
++
+[listing]
+----
+cluster1::*> system services firewall policy create -policy newIPv6
+-service ssh -action allow -ip-list ::/0
+----
+. 將新原則套用至LIF以允許存取網路服務：「網路介面修改」
++
+[listing]
+----
+cluster1::*> network interface modify -vserver VS1 -lif LIF1
+-firewall-policy newIPv6
+----
+

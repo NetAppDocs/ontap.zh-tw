@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/create-security-policies-audit-task.html 
+sidebar: sidebar 
+keywords: creating, create, audit, policy, storage, virtual, machine, svm, configuring, configure, apply, acl, file, folder, act, container, task, entry, applied, apply, security, create security policies 
+summary: 建立儲存虛擬機器（SVM）的稽核原則、是設定及套用ACL至檔案或資料夾的第三個步驟。原則可做為各種工作的容器、其中每項工作都是可套用至檔案或資料夾的單一項目。您可以稍後將工作新增至安全性原則。 
+---
+= 建立安全性原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立儲存虛擬機器（SVM）的稽核原則、是設定及套用ACL至檔案或資料夾的第三個步驟。原則可做為各種工作的容器、其中每項工作都是可套用至檔案或資料夾的單一項目。您可以稍後將工作新增至安全性原則。
+
+您新增至安全性原則的工作包含NTFS安全性描述元與檔案或資料夾路徑之間的關聯。因此、您應該將安全性原則與每個儲存虛擬機器（SVM）（包含NTFS安全型磁碟區或混合式安全型磁碟區）建立關聯。
+
+.步驟
+. 建立安全性原則：「vserver安全性檔案目錄原則create -vserver vserver_name -police-name policy_name'
++
+「vserver安全性檔案目錄原則create -policy-name policy1 -vserver VS1」
+
+. 驗證安全性原則：「vserver安全性檔案目錄原則show」
++
+[listing]
+----
+
+            vserver security file-directory policy show
+               Vserver          Policy Name
+             ------------     --------------
+                 vs1              policy1
+----
+

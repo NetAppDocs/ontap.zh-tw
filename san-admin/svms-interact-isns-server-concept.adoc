@@ -1,0 +1,28 @@
+---
+permalink: san-admin/svms-interact-isns-server-concept.html 
+sidebar: sidebar 
+keywords: how, svms, interact, isns, server 
+summary: 透過SVM管理LIF、iSNS伺服器可與每個儲存虛擬機器（SVM）進行通訊。管理LIF會將所有iSCSI目標節點名稱、別名及入口網站資訊登錄至特定SVM的iSNS服務。 
+---
+= SVM如何與iSNS伺服器互動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+透過SVM管理LIF、iSNS伺服器可與每個儲存虛擬機器（SVM）進行通訊。管理LIF會將所有iSCSI目標節點名稱、別名及入口網站資訊登錄至特定SVM的iSNS服務。
+
+在下列範例中、SVM VS1會使用SVM管理LIF VS1_mgmt_lIF來登錄到iSNS伺服器。在登錄到iSNS期間、SVM會透過SVM管理LIF將所有iSCSI LIF傳送到iSNS伺服器。在完成ISSs登錄之後、ISSs伺服器會列出VS1中所有供應iSCSI的生命體。如果叢集包含多個SVM、則每個SVM都必須分別向iSNS伺服器註冊、才能使用iSNS服務。
+
+image::../media/bsag_c-mode_iSNS_register.png[BSAG c模式ISSSNSRegister]
+
+在下一個範例中、當iSNS伺服器完成與目標的登錄之後、主機A可以透過步驟1所示的iSNS伺服器、探索VS1的所有生命週期。在主機A完成VS1的生命週期探索之後、主機A可建立與VS1中任何生命週期的連線、如步驟2所示。在VS2的管理LIF VS2_mgmt_LIF向iSNS伺服器登錄之前、主機A不會知道VS2中的任何生命段。
+
+image::../media/bsag_c-mode_iSNS_connect.png[BSAG c模式的SNSSNSConnect連線]
+
+不過、如果您定義介面存取清單、主機只能使用介面存取清單中定義的lifs來存取目標。
+
+初始設定完iSNS之後ONTAP 、當SVM組態設定變更時、Sesfe會自動更新iSNS伺服器。
+
+從您進行組態變更到ONTAP 將更新傳送至iSNS伺服器之間、可能會有幾分鐘的延遲。強制立即更新iSNS伺服器上的iSNS資訊：「vserver iSCSI SNSSCSI update」

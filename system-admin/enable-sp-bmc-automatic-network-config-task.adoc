@@ -1,0 +1,44 @@
+---
+permalink: system-admin/enable-sp-bmc-automatic-network-config-task.html 
+sidebar: sidebar 
+keywords: enable, sp, bmc, automatic, network, configuration 
+summary: 啟用SP以使用自動網路組態優先於手動設定SP網路。由於SP自動網路組態是整個叢集範圍、因此您不需要手動管理個別節點的SP網路。 
+---
+= 啟用SP/BMC自動網路組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟用SP以使用自動網路組態優先於手動設定SP網路。由於SP自動網路組態是整個叢集範圍、因此您不需要手動管理個別節點的SP網路。
+
+[NOTE]
+====
+此工作同時適用於SP和BMC。
+
+====
+* 您要用於SP自動網路組態的子網路必須已在叢集中定義、且與SP網路介面之間不得發生資源衝突。
++
+「network subnet show」命令會顯示叢集的子網路資訊。
+
++
+強制子網路關聯的參數（「network subnet」命令的「-force-update-lif-associations」參數）僅在網路lis上支援、而非在SP網路介面上支援。
+
+* 如果您想要使用SP的IPv6連線、則必須已設定並啟用IPv6 ONTAP 才能執行支援。
++
+「network options IPv6 show」命令會顯示IPv6設定ONTAP 的目前狀態、以供使用。
+
+
+
+.步驟
+. 使用「系統服務處理器網路自動組態啟用」命令、指定您要SP使用的子網路之IPv4或IPv6位址系列和名稱。
+. 使用「系統服務處理器網路自動組態show」命令來顯示SP自動網路組態。
+. 如果隨後想要對法定節點禁用或重新啓用SP IPV4或IPv6網路介面、請使用「系統服務處理器網路修改」命令搭配「-address-fulfite"['ipv4'|'ipv6']和「-enable」['true'|'fulfal]參數使用「系統服務處理器網路修改」命令。
++
+啟用SP自動網路組態時、您無法修改仲裁節點的SP IP位址。您只能啟用或停用SP IPv4或IPv6網路介面。
+
++
+如果節點超出仲裁範圍、您可以從節點執行「系統服務處理器網路修改」、並確認您要覆寫節點的SP自動網路組態、藉此修改節點的SP網路組態、包括SP IP位址。但是、當節點加入仲裁時、會根據指定的子網路、針對節點進行SP自動重新設定。
+
+

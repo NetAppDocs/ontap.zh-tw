@@ -1,0 +1,47 @@
+---
+permalink: nfs-admin/enable-disable-vmware-vstorage-over-nfs-task.html 
+sidebar: sidebar 
+keywords: enable, disable, vmware, vstorage, nfs 
+summary: 您可以使用vserver NFS modify命令、在儲存虛擬機器（SVM）上啟用或停用透過NFS的VMware vStorage支援。 
+---
+= 啟用或停用NFS上的VMware vStorage
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver NFS modify」命令、在儲存虛擬機器（SVM）上啟用或停用NFS上的VMware vStorage支援。
+
+預設會停用透過NFS支援VMware vStorage。
+
+.步驟
+. 顯示SVM目前的vStorage支援狀態：
++
+「vserver NFS show -vserver vserver_name -instance」
+
+. 執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要... | 輸入下列命令... 
+
+
+ a| 
+啟用VMware vStorage支援
+ a| 
+「vserver NFS modify -vserver vserver_name -vStorage enabl用」
+
+
+
+ a| 
+停用VMware vStorage支援
+ a| 
+「vserver NFS modify -vserver vserver_name -vStorage disabled'
+
+|===
+
+
+您必須先安裝適用於VMware VAAI的NFS外掛程式、才能使用此功能。如需詳細資訊、請參閱_安裝適用於VMware VAA__的NetApp NFS外掛程式。
+
+http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=61278["NetApp文件：適用於VMware VAAI的NetApp NFS外掛程式"]

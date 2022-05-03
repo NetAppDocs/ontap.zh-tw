@@ -1,0 +1,101 @@
+---
+sidebar: sidebar 
+permalink: networking/lif_roles95.html 
+keywords: lif, role, ontap 9.5, lif roles in ontap 9.5 and earlier, lifs with different roles have different characteristics, lif compatibility with port types, network interface modify -vserver _vserver name_ -lif _intercluster lif_ -status-admin up|down, lif security, lif failover, lif routing, lif rebalancing 
+summary: 角色不同的生命有不同的特性 
+---
+= LIF角色在ONTAP 更新版本的版本中
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+角色不同的生命有不同的特性。LIF角色會決定介面上支援的流量類型、以及套用的容錯移轉規則、已設定的防火牆限制、安全性、負載平衡、以及每個LIF的路由行為。LIF可以具有下列任一角色：叢集、叢集管理、資料、叢集間、節點管理、 和undef(未定義的)。Undef角色用於BGP LIF。
+
+從ONTAP 功能性的9.6開始、LIF角色已過時。您應該為l生命 而非角色指定服務原則。使用服務原則建立LIF時、不需要指定LIF角色。
+
+
+
+== LIF安全性
+
+|===
+
+
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| 需要私有IP子網路？ | 否 | 是的 | 否 | 否 | 否 
+
+
+| 需要安全的網路？ | 否 | 是的 | 否 | 否 | 是的 
+
+
+| 預設防火牆原則 | 非常嚴格 | 完全開放 | 中 | 中 | 非常嚴格 
+
+
+| 防火牆是否可自訂？ | 是的 | 否 | 是的 | 是的 | 是的 
+|===
+
+
+== LIF容錯移轉
+
+|===
+
+
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| 預設行為 | 只有在LIF主節點和非SFO合作夥伴節點上的相同容錯移轉群組中的連接埠 | 只有LIF主節點上相同容錯移轉群組中的連接埠 | 只有LIF主節點上相同容錯移轉群組中的連接埠 | 同一個容錯移轉群組中的任何連接埠 | 只有LIF主節點上相同容錯移轉群組中的連接埠 
+
+
+| 可自訂嗎？ | 是的 | 否 | 是的 | 是的 | 是的 
+|===
+
+
+== LIF路由
+
+|===
+
+
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| 何時需要預設路由？ | 當用戶端或網域控制器位於不同的IP子網路時 | 永不 | 當任何一種主要流量類型需要存取不同的IP子網路時 | 當系統管理員從其他IP子網路連線時 | 當其他叢集間生命體位於不同的IP子網路時 
+
+
+| 何時需要到特定IP子網路的靜態路由？ | 罕見 | 永不 | 罕見 | 罕見 | 當另一個叢集的節點在不同的IP子網路中擁有其叢集間生命體時 
+
+
+| 何時需要將靜態主機路由傳送至特定伺服器？ | 若要在節點管理LIF下列出其中一種流量類型、請瀏覽資料LIF、而非節點管理LIF。這需要相應的防火牆變更。 | 永不 | 罕見 | 罕見 | 罕見 
+|===
+
+
+== LIF重新平衡
+
+|===
+
+
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| DNS：用作DNS伺服器？ | 是的 | 否 | 否 | 否 | 否 
+
+
+| DNS：匯出為區域？ | 是的 | 否 | 否 | 否 | 否 
+|===
+
+
+== LIF主要流量類型
+
+|===
+
+
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| 主要流量類型 | NFS伺服器、CIFS伺服器、NIS用戶端、Active Directory、LDAP、 WINS、DNS用戶端和伺服器、iSCSI和FC伺服器 | 叢集內 | SSH伺服器、HTTPS伺服器、NTP用戶端、SNMP、AutoSupport 支援 DNS用戶端、正在載入軟體更新 | SSH伺服器、HTTPS伺服器 | 跨叢集複寫 
+|===

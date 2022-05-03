@@ -1,0 +1,55 @@
+---
+permalink: nfs-admin/display-ldap-statistics-task.html 
+sidebar: sidebar 
+keywords: display, ldap, statistics 
+summary: 從功能完善的9.2開始ONTAP 、您可以在儲存系統上顯示儲存虛擬機器（SVM）的LDAP統計資料、以監控效能並診斷問題。 
+---
+= 顯示LDAP統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能完善的9.2開始ONTAP 、您可以在儲存系統上顯示儲存虛擬機器（SVM）的LDAP統計資料、以監控效能並診斷問題。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須在SVM上設定LDAP用戶端。
+* 您必須已識別可從中檢視資料的LDAP物件。
+
+
+.步驟
+. 檢視計數器物件的效能資料：
++
+「統計資料」
+
+
+
+以下範例顯示物件「seCD_exter_service_op'」的效能資料：
+
+[listing]
+----
+cluster::*> statistics show -vserver vserverName -object secd_external_service_op -instance “vserverName:LDAP (NIS & Name Mapping):GetUserInfoFromName:1.1.1.1”
+
+Object: secd_external_service_op
+Instance: vserverName:LDAP (NIS & Name Mapping):GetUserInfoFromName:1.1.1.1
+Start-time: 4/13/2016 22:15:38
+End-time: 4/13/2016 22:15:38
+Scope: vserverName
+Counter                            Value
+-------------------------------- --------------------------------
+instance_name                      vserverName:LDAP (NIS & Name
+                                   Mapping):GetUserInfoFromName:
+                                   1.1.1.1
+last_modified_time                 1460610787
+node_name                          nodeName
+num_not_found_responses            1
+num_request_failures               1
+num_requests_sent                  1
+num_responses_received             1
+num_successful_responses           0
+num_timeouts                       0
+operation                          GetUserInfoFromName
+process_name                       secd
+request_latency                    52131us
+----

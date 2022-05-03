@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/configure-branchcache-enabled-shares-concept.html 
+sidebar: sidebar 
+keywords: configure, branchcache, smb server, office, enable, smb, share, content, client, configure branchache-enabled smb shares 
+summary: 在SMB伺服器和分公司設定了BranchCache之後、您可以在SMB共用區上啟用內含您要允許分公司用戶端快取內容的BranchCache。 
+---
+= 設定已啟用BranchCache的SMB共用區總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SMB伺服器和分公司設定了BranchCache之後、您可以在SMB共用區上啟用內含您要允許分公司用戶端快取內容的BranchCache。
+
+您可以在SMB伺服器上的所有SMB共用區上啟用「BranchCache快取」、或是以每個共用區為基礎來啟用「BranchCache快取」。
+
+* 如果您以每共用區為基礎來啟用BranchCache、您可以在建立共用區或修改現有共用區時啟用BranchCache。
++
+如果您啟用現有SMB共用區的快取、ONTAP 只要您在該共用區上啟用了「BranchCache」、就會立即開始運算雜湊、並將中繼資料傳送給要求內容的用戶端。
+
+* 如果隨後在該共用區上啟用了BranchCache、則任何與共用區有SMB連線的用戶端都不會獲得BranchCache支援。
++
+此版本可在SMB工作階段設定時、針對共用區通告BranchCache支援。ONTAP啟用了BranchCache之後、已建立工作階段的用戶端必須中斷連線並重新連線、才能使用此共用區的快取內容。
+
+
+
+[NOTE]
+====
+如果SMB共用區上的BranchCache後來停用、ONTAP 則停止傳送中繼資料給要求的用戶端。需要資料的用戶端會直接從內容伺服器（SMB伺服器）擷取資料。
+
+====

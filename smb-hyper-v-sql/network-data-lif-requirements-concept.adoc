@@ -1,0 +1,54 @@
+---
+permalink: smb-hyper-v-sql/network-data-lif-requirements-concept.html 
+sidebar: sidebar 
+keywords: network, data, lif, requirements, hyper, v, sql, server, protocol 
+summary: 在建立SQL Server或Hyper-V over SMB組態以進行不中斷營運時、您必須瞭解特定的網路和資料LIF需求）。 
+---
+= 網路與資料LIF需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立SQL Server或Hyper-V over SMB組態以進行不中斷營運時、您必須瞭解特定的網路和資料LIF需求）。
+
+
+
+== 網路傳輸協定需求
+
+* 支援IPV4和IPv6網路。
+* 需要SMB 3.0或更新版本。
++
+SMB 3.0提供所需的功能、可建立持續可用的SMB連線、以提供不中斷營運的必要功能。
+
+* DNS伺服器必須包含將CIFS伺服器名稱對應至指派給儲存虛擬機器（SVM）上資料LIF的IP位址的項目。
++
+在存取虛擬機器或資料庫檔案時、Hyper-V或SQL Server應用程式伺服器通常會透過多個資料生命體建立多個連線。為了正常運作、應用程式伺服器必須使用CIFS伺服器名稱來建立這類多個SMB連線、而非建立多個唯一IP位址的連線。
+
++
+見證也需要使用CIFS伺服器的DNS名稱、而非個別的LIF IP位址。
+
++
+從支援支援中小企業多通道技術的中小企業組態開始ONTAP 、您就能改善Hyper-V和SQL伺服器的處理量和容錯能力。若要這麼做、您必須在叢集和用戶端上部署多個1G、10G或更大的NIC。
+
+
+
+
+
+== 資料LIF需求
+
+* 透過SMB解決方案託管應用程式伺服器的SVM、必須在叢集中的每個節點上至少有一個作業資料LIF。
++
+SVM資料LIF可容錯移轉至叢集內的其他資料連接埠、包括目前未裝載應用程式伺服器所存取資料的節點。此外、由於見證節點永遠是應用程式伺服器所連接節點的SFO合作夥伴、因此叢集中的每個節點都是潛在的見證節點。
+
+* 資料生命期不得設定為自動還原。
++
+在接管或恢復事件之後、您應該手動將資料生命期還原至其主連接埠。
+
+* 所有資料LIF IP位址都必須在DNS中有一個項目、而且所有項目都必須解析為CIFS伺服器名稱。
++
+應用程式伺服器必須使用CIFS伺服器名稱連線至SMB共用區。您不得設定應用程式伺服器使用LIF IP位址進行連線。
+
+* 如果CIFS伺服器名稱與SVM名稱不同、則DNS項目必須解析為CIFS伺服器名稱。
+

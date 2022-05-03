@@ -1,0 +1,75 @@
+---
+permalink: upgrade/concept_upgrade_requirements_for_metrocluster_configurations.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, update, requirements, metrocluster, mcc, general, normal, operations, switchover 
+summary: 如果您必須升級MetroCluster 某個版本的架構、您應該注意一些重要的需求。 
+---
+= 升級需求MetroCluster
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您必須升級MetroCluster 某個版本的架構、您應該注意一些重要的需求。
+
+
+
+== 執行MetroCluster 主要和次要升級的必要方法
+
+可透過自動不中斷升級（NDU）程序、MetroCluster 升級至無法中斷運作的修補程式組態。
+
+從功能更新9.3開始ONTAP 、MetroCluster 可透過自動不中斷升級（NDU）程序、對功能更新至功能更新。在執行ONTAP 部分9.2或更早版本的系統上、MetroCluster 必須使用MetroCluster 特定於部分組態的NDU程序來執行大規模的升級至部分組態。
+
+
+
+== 一般要求
+
+* 兩個叢集都必須執行相同版本ONTAP 的支援。
++
+您ONTAP 可以使用version命令來驗證此版本。
+
+* 該組態必須處於正常或切換模式。MetroCluster
++
+
+NOTE: 只有在次要修補程式升級時才支援切換模式的升級。
+
+* 除了雙節點叢集之外、您可以在不中斷營運的情況下、同時升級兩個叢集。
++
+若要在雙節點叢集中進行不中斷升級、叢集必須一次升級一個節點。
+
+* 兩個叢集中的集合體不得處於重新同步RAID狀態。
++
+在還原過程MetroCluster 中、鏡射的集合體會重新同步。您MetroCluster 可以使用「shorage Aggregate plex show -in progress true」命令來驗證此狀態的資訊。如果有任何Aggregate正在同步、則在重新同步完成之前、不應執行升級。
+
+* 在升級進行期間、議定的切換作業將會失敗。
++
+為了避免升級或還原作業發生問題、請勿在升級或還原作業期間嘗試非計畫性的切換、除非兩個叢集上的所有節點都執行相同版本ONTAP 的故障恢復。
+
+
+
+
+
+== 正常作業的組態需求
+
+* 來源SVM LIF必須在其主節點上處於開啟狀態。
++
+目的地SVM的資料生命期不需要達到或位於其主節點上。
+
+* 本機站台上的所有集合體都必須在線上。
+* 本機叢集的SVM所擁有的所有根磁碟區和資料磁碟區都必須處於線上狀態。
+
+
+
+
+== 切換的組態需求
+
+* 所有生命都必須在其主節點上處於正常工作狀態。
+* 所有的集合體都必須在線上、但DR站台的根集合體除外。
++
+DR站台的根集合體在切換的特定階段處於離線狀態。
+
+* 所有磁碟區都必須處於線上狀態。
+
+
+link:task_verifying_the_networking_and_storage_status_for_metrocluster_cluster_is_ready.html["驗MetroCluster 證網路和儲存設備的資訊不完整組態狀態"]

@@ -1,0 +1,91 @@
+---
+permalink: encryption-at-rest/create-authentication-keys-96-later-task.html 
+sidebar: sidebar 
+keywords: creating, authentication keys, ontap 9.6, later 
+summary: 您可以使用安全金鑰管理程式金鑰create命令來建立節點的驗證金鑰、並將其儲存在設定的KMIP伺服器上。 
+---
+= 建立ONTAP 驗證金鑰、請使用32個以上版本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全金鑰管理程式金鑰建立」命令來建立節點的驗證金鑰、並將其儲存在設定的KMIP伺服器上。
+
+您必須是叢集管理員才能執行此工作。
+
+如果您的安全性設定要求您使用不同的金鑰進行資料驗證和FIPS 140-2驗證、您應該為每個金鑰建立個別的金鑰。如果情況並非如此、您可以使用與資料存取相同的FIPS法規遵循驗證金鑰。
+
+此功能可為叢集中的所有節點建立驗證金鑰。ONTAP
+
+* 啟用Onboard Key Manager時、不支援此命令。不過、啟用Onboard Key Manager時、會自動建立兩個驗證金鑰。您可以使用下列命令來檢視金鑰：
++
+「安全金鑰管理程式金鑰查詢-金鑰類型NSE-AK」
+
+* 如果設定的金鑰管理伺服器已儲存超過128個驗證金鑰、您會收到警告。
++
+您可以使用「安全金鑰管理程式金鑰刪除」命令來刪除任何未使用的金鑰。如果目前由支援的金鑰正在使用、則「安全金鑰管理程式金鑰刪除」命令會失敗ONTAP 。（您必須擁有大於「admin」的權限、才能使用此命令。）
+
+
+
+.步驟
+. 建立叢集節點的驗證金鑰：
++
+「安全金鑰管理程式金鑰create -key-tag密碼短語_label -prompt-for-key true|假」
+
++
+[NOTE]
+====
+設定「prompt-for key=true」會使系統在驗證加密磁碟機時、提示叢集管理員使用通關密碼。否則、系統會自動產生32位元組的通關密碼。「安全金鑰管理程式金鑰建立」命令會取代「安全金鑰管理程式cree-key」命令。如需完整的命令語法、請參閱手冊頁。
+
+====
++
+以下範例會建立「cluster1」的驗證金鑰、自動產生32位元組的通關密碼：
+
++
+[listing]
+----
+cluster1::> security key-manager key create
+Key ID: 000000000000000002000000000001006268333f870860128fbe17d393e5083b0000000000000000
+----
+. 確認已建立驗證金鑰：
++
+「安全金鑰管理程式金鑰查詢節點節點」
+
++
+[NOTE]
+====
+「安全金鑰管理程式金鑰查詢」命令會取代「安全金鑰管理程式查詢金鑰」命令。如需完整的命令語法、請參閱手冊頁。輸出中顯示的金鑰ID是用來參照驗證金鑰的識別碼。它不是實際的驗證金鑰或資料加密金鑰。
+
+====
++
+下列範例可驗證是否已為「cluster1（叢集1）”建立驗證金鑰：
+
++
+[listing]
+----
+cluster1::> security key-manager key query
+       Vserver: cluster1
+   Key Manager: external
+          Node: node1
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+
+       Vserver: cluster1
+   Key Manager: external
+          Node: node2
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node2                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node2                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+----
+

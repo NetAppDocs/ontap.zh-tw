@@ -1,0 +1,60 @@
+---
+permalink: element-replication/create-relationship-element-destination-task.html 
+sidebar: sidebar 
+keywords: create, relationship, ontap, source, element, destination, snapshot, snap shot, lun, migrate, data, snap mirror, snapmirror, replicate, replication 
+summary: 從ONTAP 推出支援支援功能的9.4開始、您可以使用SnapMirror將在ONTAP 支援功能來源上建立的LUN Snapshot複本複製回元素目的地。您可能會使用LUN將資料從ONTAP 功能不全的軟體移轉到元件軟體。 
+---
+= 建立ONTAP 從來源到元素目的地的關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 推出支援支援功能的9.4開始、您可以使用SnapMirror將在ONTAP 支援功能來源上建立的LUN Snapshot複本複製回元素目的地。您可能會使用LUN將資料從ONTAP 功能不全的軟體移轉到元件軟體。
+
+.開始之前
+* 元素目的地節點必須已可供ONTAP 不必要的人存取。
+* 必須已啟用元素Volume才能進行SnapMirror複寫。
+
+
+您必須以「_hostip：_/LUN/_name_」格式指定元素目的地路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+
+複寫規則如下：
+
+* 複寫關係必須具有「as同步 鏡射」類型的原則。
++
+您可以使用預設或自訂原則。
+
+* 僅支援iSCSI LUN。
+* 您無法將ONTAP 多個LUN從一個實體磁碟區複寫到一個元素磁碟區。
+* 您無法將LUN從ONTAP 一個實體磁碟區複寫到多個元素磁碟區。
+
+
+.步驟
+. 建立ONTAP 從來源到元素目的地的複寫關係：
++
+「napmirror create -source-path _svm:volume _」（napmirror create -source-path _svm:volume _）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_-type XDP -schedule排程-policy _policy _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例使用預設的「鏡像Latest（鏡像最新）原則建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy MirrorLatest
+----
++
+以下範例使用自訂的「my_mirror」原則建立SnapMirror DR關係：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy my_mirror
+----
+
+
+使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。

@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/determine-clients-connected-netbios-aliases-task.html 
+sidebar: sidebar 
+keywords: determine, smb, client, connect, netbios, alias, connection, troubleshoot, issue, determine whether smb clients are connected using netbios aliases 
+summary: 您可以判斷SMB用戶端是否使用NetBios別名進行連線、如果是、則會使用哪個NetBios別名進行連線。這在疑難排解連線問題時很有用。 
+---
+= 判斷SMB用戶端是否使用NetBios別名連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以判斷SMB用戶端是否使用NetBios別名進行連線、如果是、則會使用哪個NetBios別名進行連線。這在疑難排解連線問題時很有用。
+
+您必須使用「-instance」參數來顯示與SMB連線相關聯的NetBios別名（如果有）。如果使用CIFS伺服器名稱或IP位址進行SMB連線、則「NetBios Name」（NetBios名稱）欄位的輸出為「-」（連字號）。
+
+.步驟
+. 執行所需的動作：
++
+|===
+| 如果您要顯示下列項目的NetBios資訊... | 輸入... 
+
+
+ a| 
+SMB連線
+ a| 
+「vserver CIFS工作階段顯示-instance」
+
+
+
+ a| 
+使用指定的NetBios別名的連線：
+ a| 
+「Vserver CIFS工作階段顯示-instance -netbios-name _netbios_name_」
+
+|===
++
+下列範例顯示使用工作階段ID 1建立SMB連線所用的NetBios別名資訊：
+
++
+「vserver CIFS工作階段show -session-id 1 -instance」
+
++
+[listing]
+----
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 127834
+Incoming Data LIF IP Address: 10.1.1.25
+                 Workstation: 10.2.2.50
+    Authentication Mechanism: NTLMv2
+                Windows User: EXAMPLE\user1
+                   UNIX User: user1
+                 Open Shares: 2
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 1d 1h 10m 5s
+                   Idle Time: 22s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: true
+       User Authenticated as: domain-user
+                NetBIOS Name: ALIAS1
+       SMB Encryption Status: Unencrypted
+----
+

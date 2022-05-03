@@ -1,0 +1,60 @@
+---
+permalink: smb-hyper-v-sql/enable-disable-vss-shadow-copies-backups-task.html 
+sidebar: sidebar 
+keywords: enable, disable, vss, aware, backup, hyper, v, virtual, machine, files, smb, shares, shadow, copy 
+summary: 如果您使用支援VSS的備份應用程式來備份儲存在SMB共用區上的Hyper-V虛擬機器檔案、則必須啟用VSS陰影複製。如果您不使用支援VSS的備份應用程式、可以停用VSS陰影複製。預設為啟用VSS陰影複製。 
+---
+= 啟用或停用適用於SMB備份上Hyper-V的VSS陰影複製
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您使用支援VSS的備份應用程式來備份儲存在SMB共用區上的Hyper-V虛擬機器檔案、則必須啟用VSS陰影複製。如果您不使用支援VSS的備份應用程式、可以停用VSS陰影複製。預設為啟用VSS陰影複製。
+
+您可以隨時啟用或停用VSS陰影複製。
+
+.步驟
+. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+. 執行下列其中一項動作：
++
+|===
+| 如果您想要VSS陰影複製... | 輸入命令... 
+
+
+ a| 
+已啟用
+ a| 
+hy*vserver CIFS選項可修改-vserver _vserver_name_-ShadowCopy-enabled_true*
+
+
+
+ a| 
+已停用
+ a| 
+hy*vserver CIFS選項可修改-vserver _vserver_name_-ShadowCopy-enabled_fal*
+
+|===
+. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+
+
+下列命令可在SVM VS1上啟用VSS陰影複製：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -shadowcopy-enabled true
+
+cluster1::*> set -privilege admin
+----

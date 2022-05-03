@@ -1,0 +1,45 @@
+---
+permalink: revert/concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, requirements, snapmirror, snapvault, relationships 
+summary: 系統節點還原至命令會通知您任何SnapMirror和SnapVault SnapMirror關係、這些關係必須刪除或重新設定、才能完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。 
+---
+= SnapMirror和SnapVault 彼此之間的還原要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+系統節點還原至命令會通知您任何SnapMirror和SnapVault SnapMirror關係、這些關係必須刪除或重新設定、才能完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。
+
+* 所有SnapVault 的資料保護鏡射關係必須先靜止、然後再中斷。
++
+還原完成後、如果有通用的Snapshot複本存在、您可以重新同步並恢復這些關係。
+
+* 不應包含下列SnapMirror原則類型：SnapVault
++
+** 非同步鏡射
++
+您必須刪除使用此原則類型的任何關聯。
+
+** MirrorAndVault
++
+如果存在任何這些關係、您應該將SnapMirror原則變更為鏡射保存庫。
+
+
+
+* 必須刪除所有負載共用鏡射關係和目的地磁碟區。
+* 必須刪除與FlexClone目的地Volume的SnapMirror關係。
+* 必須針對每個SnapMirror原則停用網路壓縮。
+* 您必須從任何非同步鏡射類型的SnapMirror原則中移除all_source_snapshot規則。
++
+
+NOTE: 根磁碟區上的單一檔案Snapshot還原（SFSR）和部分檔案Snapshot還原（PFSR）作業已過時。
+
+* 任何目前執行的單一檔案與Snapshot還原作業都必須先完成、才能繼續還原。
++
+您可以等待還原作業完成、也可以中止還原作業。
+
+* 任何不完整的單一檔案與Snapshot還原作業、都必須使用SnapMirror還原命令加以移除。
+

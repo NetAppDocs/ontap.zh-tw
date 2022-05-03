@@ -1,0 +1,36 @@
+---
+permalink: nfs-admin/ontap-secures-file-directory-access-concept.html 
+sidebar: sidebar 
+keywords: file, restriction 
+summary: 此功能可評估三種安全層級、以判斷實體是否有權針對位於SVM上的檔案和目錄執行要求的動作。ONTAP存取權取決於評估三種安全層級後的有效權限。 
+---
+= 檔案型限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+此功能可評估三種安全層級、以判斷實體是否有權針對位於SVM上的檔案和目錄執行要求的動作。ONTAP存取權取決於評估三種安全層級後的有效權限。
+
+任何儲存物件最多可包含三種類型的安全層：
+
+* 匯出（NFS）和共用（SMB）安全性
++
+匯出及共用安全性適用於用戶端存取特定NFS匯出或SMB共用區。具有管理權限的使用者可以從SMB和NFS用戶端管理匯出和共用層級的安全性。
+
+* 儲存層級的存取保護檔案和目錄安全性
++
+儲存層級的存取保護安全性適用於存取SVM磁碟區的SMB和NFS用戶端。僅支援NTFS存取權限。為了對UNIX使用者執行安全性檢查、以存取已套用Storage Level Access Guard的磁碟區上的資料、UNIX使用者必須對應至擁有該磁碟區的SVM上的Windows使用者。ONTAP
+
++
+[NOTE]
+====
+如果您從NFS或SMB用戶端檢視檔案或目錄的安全性設定、就不會看到儲存層級的存取保護安全性。即使是系統（Windows或UNIX）管理員、也無法從用戶端撤銷儲存層級的存取保護安全性。
+
+====
+* NTFS、UNIX及NFSv4原生檔案層級安全性
++
+代表儲存物件的檔案或目錄中存在原生檔案層級安全性。您可以從用戶端設定檔案層級的安全性。無論使用SMB或NFS存取資料、檔案權限都有效。
+
+

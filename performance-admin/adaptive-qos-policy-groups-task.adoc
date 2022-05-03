@@ -1,0 +1,173 @@
+---
+permalink: performance-admin/adaptive-qos-policy-groups-task.html 
+sidebar: sidebar 
+keywords: use, adaptive, qos, policy, groups 
+summary: 您可以使用調適性QoS原則群組、自動將處理量上限或樓層調整為Volume大小、並在磁碟區大小變更時、維持IOPS與TBs的比率。當您在大型部署中管理數百或數千個工作負載時、這是一項重大優勢。 
+---
+= 使用調適性QoS原則群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用_Adaptive QoS_原則群組、自動調整處理量上限或樓層與磁碟區大小、並在磁碟區大小變更時、維持IOPS與TBs的比率。當您在大型部署中管理數百或數千個工作負載時、這是一項重大優勢。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須執行ONTAP 的是才能執行的功能。自ONTAP 功能性QoS原則群組開始提供、從功能性的9.3開始提供。
+* 您必須是叢集管理員、才能建立原則群組。
+
+
+儲存物件可以是調適性原則群組或非調適性原則群組的成員、但不能同時是兩者。儲存物件的SVM和原則必須相同。儲存物件必須處於線上狀態。
+
+調適性QoS原則群組永遠不會共用：定義的處理量上限或樓層會個別套用至每個成員的工作負載。
+
+處理量限制與儲存物件大小的比率、取決於下列欄位的互動：
+
+* 「Expute-IOPS」是每個已分配TB至GB的最低預期IOPS。
++
+[NOTE]
+====
+「預期IOPS」僅在AFF 不穩定的平台上保證。唯有當分層原則設定為「無」、而且雲端中沒有任何區塊時、才能保證FabricPool 「預期IOPS」。對於非SnapMirror同步關係的磁碟區、我們保證「預期IOPS」。
+
+====
+* 「尖峰IOPS」是每個已配置或已使用的TB|GB的最大可能IOPS。
+* 「Exp意料 之中的IOPS分配」指定是將已配置的空間（預設）或已用空間用於預期的IOPS。
++
+[NOTE]
+====
+《Expere-IOP-分配》可在ONTAP 版本9.5或更新版本中找到。不支援ONTAP 此功能。
+
+====
+* 「P峰IOPS分配」指定是將已分配空間或已用空間（預設）用於「尖峰IOPS」。
+* 「絕對最低IOPS」是IOPS的絕對最低值。您可以將此欄位用於非常小的儲存物件。當「絕對最低IOPS」大於計算的「預期IOPS」時、它會同時取代「尖峰IOPS」和/或「預期IOPS」。
++
+例如、如果您將「預期IOPS」設定為1、000 IOPS / TB、而且磁碟區大小低於1 GB、則計算得出的「預期IOPS」將為分數IOP。計算得出的「尖峰IOPS」將是更小的分數。您可以將「絕對-最小- IOPS」設定為實際值來避免這種情況。
+
+* 「區塊大小」指定應用程式I/O區塊大小。預設值為32K。有效值為8K、16K、32K、64K、any。任何表示不會強制執行區塊大小。
+
+
+有三個預設的調適性QoS原則群組可供使用、如下表所示。您可以將這些原則群組直接套用至磁碟區。
+
+|===
+
+
+| 預設原則群組 | 預期IOPS / TB | IOPS / TB尖峰 | 絕對最小IOPS 
+
+
+ a| 
+《極致》
+ a| 
+6 、 144
+ a| 
+12288/3
+ a| 
+1000
+
+
+
+ a| 
+效能
+ a| 
+2 、 048
+ a| 
+4 、 096
+ a| 
+500
+
+
+
+ a| 
+"價值"
+ a| 
+128/128
+ a| 
+512
+ a| 
+75
+
+|===
+如果儲存物件包含物件或其子物件屬於原則群組、則無法將其指派給原則群組。下表列出限制。
+
+|===
+| 如果您指派... | 然後您就無法指派... 
+
+
+ a| 
+SVM到原則群組
+ a| 
+SVM所包含的任何儲存物件至原則群組
+
+
+
+ a| 
+磁碟區至原則群組
+ a| 
+磁碟區包含SVM或任何子LUN至原則群組
+
+
+
+ a| 
+LUN至原則群組
+ a| 
+LUN包含磁碟區或SVM至原則群組
+
+
+
+ a| 
+檔案至原則群組
+ a| 
+檔案包含磁碟區或SVM至原則群組
+
+|===
+.步驟
+. 建立可調適的QoS原則群組：
++
+「QoS調適性原則群組create -policy群組_policy_group _-vserver _Svm_-Exposite-IOPS _number_of_IOPs_/TB|GB -Peak -IOPS _number_of_IOPs_/TB|GB -Exposite-ocation-space-use-space -Peak -IOPallocation-space-space-used空間| used空間-space -the-acity-acity-acity-for-th-min-min-KIOPON_64K大小（每個每個每個每個每個每個每個每個每個每
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+如需更多資訊ONTAP 、請參閱《預期IOPS分配》和《區塊大小》、更新版本請參閱《更新版本》。上述選項不受ONTAP 支援於支援的版本不包括在內。
+
+====
++
+下列命令會建立調適性QoS原則群組「adpg-app1」、其「預期IOPS」設定為300 IOPS / TB、「尖峰IOPS」設定為1、000 IOPS/TB、「尖峰IOPS分配」設定為「已用空間」、「絕對最低IOPS」設定為50 IOPS：
+
++
+[listing]
+----
+cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs2 -expected-iops 300iops/tb -peak-iops 1000iops/TB -peak-iops-allocation used-space -absolute-min-iops 50iops
+----
+. 將調適性QoS原則群組套用至磁碟區：
++
+「Volume create -vserver SVM -volume _volume _-Aggregate _aggregate _-size _number_of_TB|GB -qos-Adaptive策略群組_policy_group _」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列命令會將調適性QoS原則群組「adpg-app1」套用至Volume「app1」：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume app1 -aggregate aggr1 -size 2TB -qos-adaptive-policy-group adpg-app1
+----
++
+下列命令會將預設調適性QoS原則群組「Extreme」套用至新的Volume「app4」和現有的Volume「app5」。針對原則群組所定義的處理量上限、會分別套用至Volume「app4」和「app5」：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs4 -volume app4 -aggregate aggr4 -size 2TB -qos-adaptive-policy-group extreme
+----
++
+[listing]
+----
+cluster1::> volume modify -vserver vs5 -volume app5 -qos-adaptive-policy-group extreme
+----
+

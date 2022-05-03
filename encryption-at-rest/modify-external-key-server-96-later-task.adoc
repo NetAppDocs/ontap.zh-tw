@@ -1,0 +1,65 @@
+---
+permalink: encryption-at-rest/modify-external-key-server-96-later-task.html 
+sidebar: sidebar 
+keywords: modifying, external key management, server, properties 
+summary: 從ONTAP 功能更新至功能更新9.6開始、您可以使用安全金鑰管理程式外部modify-server命令來變更外部金鑰管理伺服器的I/O逾時和使用者名稱。 
+---
+= 修改外部金鑰管理伺服器內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能支援支援的9.6開始、您可以使用「安全金鑰管理程式外部修改伺服器」命令來變更外部金鑰管理伺服器的I/O逾時和使用者名稱。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集或SVM管理員、才能執行此工作。
+* 此工作需要進階權限。
+
+
+.步驟
+. 在儲存系統上、變更為進階權限層級：
++
+"進階權限"
+
+. 修改叢集的外部金鑰管理程式伺服器內容：
++
+「安全金鑰管理程式外部modify-server -vserver admin_SVM -key-server host_name | ip_address:連接埠、... -timeout 1...60 -user_name
+
++
+[NOTE]
+====
+超時值以秒表示。如果您修改使用者名稱、系統會提示您輸入新密碼。如果您在叢集登入提示字元中執行命令、則預設為目前叢集的管理SVM。您必須是叢集管理員、才能修改外部金鑰管理程式伺服器內容。
+
+====
++
+下列命令會將偵聽預設連接埠5696的「cluster1」外部金鑰管理伺服器的逾時值變更為45秒：
+
++
+[listing]
+----
+clusterl::> security key-manager external modify-server -vserver cluster1 -key-server ks1.local -timeout 45
+----
+. 修改SVM的外部金鑰管理程式伺服器內容（僅限NVE）：
++
+「安全金鑰管理程式外部modify-server -vserver SVM -key-server host_name | ip_address:連接埠、... -timeout 1...60 -user_name
+
++
+[NOTE]
+====
+超時值以秒表示。如果您修改使用者名稱、系統會提示您輸入新密碼。如果您在SVM登入提示字元中執行命令、則「_SVM_」預設為目前的SVM。您必須是叢集或SVM管理員、才能修改外部金鑰管理程式伺服器內容。
+
+====
++
+下列命令會變更接聽預設連接埠5696之「shvm1」外部金鑰管理伺服器的使用者名稱和密碼：
+
++
+[listing]
+----
+svml::> security key-manager external modify-server -vserver svm11 -key-server ks1.local -username svm1user
+Enter the password:
+Reenter the password:
+----
+. 針對任何其他SVM重複最後一個步驟。
+

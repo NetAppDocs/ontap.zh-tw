@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_sm_delete_fails_in_takeover_state.html 
+keywords: troubleshooting, SM-BC, SMBC, SnapMirror, delete, takeover, consistency group 
+summary: 當叢集上安裝了Snapshot 9.9.1時、當SM至BC一致性群組關係處於接管狀態時、執行「napmirror DELETE」命令會失敗。ONTAP 
+---
+= SnapMirror刪除作業在移轉狀態下失敗
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+當叢集上安裝了Snapshot 9.9.1時、當SM至BC一致性群組關係處於接管狀態時、執行「napmirror DELETE」命令會失敗。ONTAP
+
+....
+C2_cluster::> snapmirror delete  vs1:/cg/dd
+
+Error: command failed: RPC: Couldn't make connection
+....
+當SMBC關係中的節點處於接管狀態時、請執行SnapMirror刪除和釋放作業、並將「-force」選項設為true。
+
+....
+C2_cluster::> snapmirror delete  vs1:/cg/dd -force true
+
+Warning: The relationship between source "vs0:/cg/ss" and destination
+         "vs1:/cg/dd" will be deleted, however the items of the destination
+         Consistency Group might not be made writable, deletable, or modifiable
+         after the operation. Manual recovery might be required.
+Do you want to continue? {y|n}: y
+Operation succeeded: snapmirror delete for the relationship with destination "vs1:/cg/dd".
+....

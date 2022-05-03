@@ -1,0 +1,32 @@
+---
+permalink: nas-audit/display-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: display, information, security trace filters 
+summary: 您可以顯示儲存虛擬機器（SVM）上設定的安全追蹤篩選器相關資訊。這可讓您查看每個篩選器追蹤的存取事件類型。 
+---
+= 顯示安全追蹤篩選器的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示儲存虛擬機器（SVM）上設定的安全追蹤篩選器相關資訊。這可讓您查看每個篩選器追蹤的存取事件類型。
+
+.步驟
+. 使用「vserver安全性追蹤篩選器show」命令來顯示安全性追蹤篩選器項目的相關資訊。
++
+如需使用此命令的詳細資訊、請參閱手冊頁。
+
+
+
+下列命令會顯示SVM VS1上所有安全追蹤篩選器的相關資訊：
+
+[listing]
+----
+cluster1::> vserver security trace filter show -vserver vs1
+Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
+-------- -----  -----------  ----------------------   -----------  -------------
+vs1        1    -            /dir1/dir2/file.txt          yes      -
+vs1        2    -            /dir3/dir4/                  no       mydomain\joe
+----

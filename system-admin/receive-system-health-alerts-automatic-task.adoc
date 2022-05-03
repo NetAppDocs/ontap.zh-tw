@@ -1,0 +1,35 @@
+---
+permalink: system-admin/receive-system-health-alerts-automatic-task.html 
+sidebar: sidebar 
+keywords: receive, system, health, alert, automatically, system, show, command, ems, event, management, monito 
+summary: 您可以使用系統健全狀況警示show命令手動檢視系統健全狀況警示。不過、您應該訂閱特定的事件管理系統（EMS）訊息、以便在健全狀況監視器產生警示時自動接收通知。 
+---
+= 自動接收系統健全狀況警示
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「系統健全狀況警示show」命令手動檢視系統健全狀況警示。不過、您應該訂閱特定的事件管理系統（EMS）訊息、以便在健全狀況監視器產生警示時自動接收通知。
+
+下列程序說明如何設定所有hm.alert.malled訊息和所有hm.alert.Cleared訊息的通知。
+
+所有hm.alert.malled訊息和所有hm.alert.Cleared訊息均包含SNMP設陷。SNMP陷阱的名稱為「HealthMonitorAlertRaled」和「HealthMonitorAlertClered」。如需SNMP設陷的相關資訊、請參閱_網路管理指南_。
+
+.步驟
+. 使用「事件目的地create」命令來定義要傳送EMS訊息的目的地。
++
+[listing]
+----
+cluster1::> event destination create -name health_alerts -mail admin@example.com
+----
+. 使用「事件路由附加目的地」命令、將「hm.alert.med」訊息和「hm.alert.Cleared」訊息路由傳送到目的地。
++
+[listing]
+----
+cluster1::> event route add-destinations -messagename hm.alert* -destinations health_alerts
+----
+
+
+link:../networking/index.html["網路管理"]

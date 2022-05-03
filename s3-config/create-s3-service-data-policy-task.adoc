@@ -1,0 +1,34 @@
+---
+permalink: s3-config/create-s3-service-data-policy-task.html 
+sidebar: sidebar 
+keywords: create, s3, service, data, policy 
+summary: 您可以為S3資料和管理服務建立服務原則。需要S3服務資料原則、才能在LIF上啟用S3資料流量。 
+---
+= 建立S3服務資料原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以為S3資料和管理服務建立服務原則。需要S3服務資料原則、才能在LIF上啟用S3資料流量。
+
+如果您使用資料生命體和叢集間生命體、則需要S3服務資料原則。如果您使用叢集生命體來處理本機分層使用案例、則不需要使用此功能。
+
+當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。
+
+雖然可針對SVM和LIF設定多種傳輸協定、但在處理物件資料時、S3是唯一的傳輸協定、是最佳實務做法。
+
+.步驟
+. 將權限設定變更為進階：
++
+"進階權限"
+
+. 建立服務資料原則：
++
+「網路介面服務原則create -vserver Svm_name -policy policy_name -services data核心、data-s3-server」
+
++
+「data-core」和「data-s3-server」服務是唯一啟用ONTAP 該S3所需的服務、不過其他服務可視需要提供。
+
+

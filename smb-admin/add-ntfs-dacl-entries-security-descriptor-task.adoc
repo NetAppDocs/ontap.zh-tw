@@ -1,0 +1,57 @@
+---
+permalink: smb-admin/add-ntfs-dacl-entries-security-descriptor-task.html 
+sidebar: sidebar 
+keywords: add, dacl, discretionary, access, control, list, access, control, entries, aces, ntfs, security, descriptor, acls, add ntfs dacl access control entries to the ntfs security 
+summary: 將DACL（判別存取控制清單）存取控制項目（ACE）新增至NTFS安全性描述元、是設定及套用NTFS ACL至檔案或資料夾的第二步驟。每個項目都會識別允許或拒絕存取的物件、並定義物件可以或無法對ACE中定義的檔案或資料夾執行的操作。 
+---
+= 將NTFS DACL存取控制項目新增至NTFS安全性描述元
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+將DACL（判別存取控制清單）存取控制項目（ACE）新增至NTFS安全性描述元、是設定及套用NTFS ACL至檔案或資料夾的第二步驟。每個項目都會識別允許或拒絕存取的物件、並定義物件可以或無法對ACE中定義的檔案或資料夾執行的操作。
+
+您可以將一個或多個ACE新增至安全性描述元的DACL。
+
+如果安全性描述元包含具有現有ACE的DACL、則命令會將新的ACE新增至DACL。如果安全性描述元不包含DACL、則命令會建立DACL並新增新的ACE。
+
+您可以選擇自訂DACL項目、方法是針對在「-Account（帳戶）」參數中指定的帳戶、指定您要允許或拒絕的權限。有三種互不相容的方法可以指定權限：
+
+* 權利
+* 進階權限
+* 原始權限（進階權限）
+
+
+[NOTE]
+====
+如果您未指定DACL項目的權限、預設值是將權限設定為「完全控制」。
+
+====
+您可以指定如何套用繼承、以選擇性地自訂DACL項目。
+
+儲存層級存取保護會忽略任何選用參數的值。如需詳細資訊、請參閱手冊頁。
+
+.步驟
+. 將DACL項目新增至安全性描述元：「vserver安全性檔案目錄NTFS DACL add -vserver vserver_name -ntfs-SD sd_name -access-type｛allow|deny｝-Account name_or_SIDOptional參數」
++
+「Vserver安全性檔案目錄NTFS DACL add -ntfs-SD SD1 -access-ttype deny -Account domain\Joe -rights full控制權-apply-this資料夾-vserver VS1」
+
+. 確認DACL項目正確無誤：「vserver安全檔案目錄NTFS DACL show -vserver vserver_name -ntfs-SD sd_name -access-type｛allow|deny｝-Account name_or_sid'
++
+「Vserver安全性檔案目錄NTFS DACL show -vserver VS1 -ntfs-SD SD1 -access-ttype deny -account domain\joe'
+
++
+[listing]
+----
+                       Vserver: vs1
+             Security Descriptor Name: sd1
+                        Allow or Deny: deny
+                  Account Name or SID: DOMAIN\joe
+                        Access Rights: full-control
+               Advanced Access Rights: -
+                             Apply To: this-folder
+                        Access Rights: full-control
+----
+

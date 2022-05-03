@@ -1,0 +1,54 @@
+---
+permalink: authentication/setup-ssh-multifactor-authentication-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa 
+summary: 從功能表9.3開始ONTAP 、您可以使用安全性登入create命令來強化安全性、方法是要求系統管理員以SSH公開金鑰和使用者密碼登入管理或資料SVM。 
+---
+= 啟用SSH多因素驗證（MFA）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能表9.3開始ONTAP 、您可以使用「安全登入建立」命令、要求系統管理員以SSH公開金鑰和使用者密碼登入管理員或資料SVM、藉此強化安全性。
+
+您必須是叢集管理員才能執行此工作。
+
+.關於這項工作
+* 您必須先將公開金鑰與帳戶建立關聯、帳戶才能存取SVM。
++
+link:manage-public-key-authentication-concept.html["將公開金鑰與使用者帳戶建立關聯"]
+
++
+您可以在啟用帳戶存取之前或之後執行此工作。
+
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
++
+link:modify-role-assigned-administrator-task.html["修改指派給系統管理員的角色"]
+
+* 使用者一律會先經過公開金鑰驗證、再進行密碼驗證。
+
+
+.步驟
+. 需要本機系統管理員帳戶才能使用SSH MFA存取SVM：
++
+「安全性登入建立-vserver _svm_-user-or group名稱_user_name_-applicationssh -imize-method密碼| publickey -role admin -secute-ime-method密碼| publickey」
+
++
+以下命令要求SVM系統管理員帳戶「admin2」（具有預先定義的「admin」角色）、以SSH公開金鑰和使用者密碼登入SVM「engData1」：
+
++
+[listing]
+----
+cluster-1::> security login create -vserver engData1 -user-or-group-name admin2 -application ssh -authentication-method publickey -role admin -second-authentication-method password
+
+Please enter a password for user 'admin2':
+Please enter it again:
+Warning: To use public-key authentication, you must create a public key for user "admin2".
+----
+
+
+如果您尚未將公開金鑰與系統管理員帳戶建立關聯、則必須先建立公開金鑰、帳戶才能存取SVM。
+
+link:manage-public-key-authentication-concept.html["將公開金鑰與使用者帳戶建立關聯"]

@@ -1,0 +1,139 @@
+---
+permalink: smb-admin/configure-unix-symbolic-link-support-shares-task.html 
+sidebar: sidebar 
+keywords: configure, unix, symbol, link, support, smb, share, share-property, setting, create, modify, exist, configure unix symbolic link support, on smb shares 
+summary: 您可以在建立SMB共用時或隨時修改現有SMB共用時、指定符號連結共用屬性設定、以設定SMB共用上的UNIX符號連結支援。UNIX符號連結支援預設為啟用。您也可以停用共用區上的UNIX符號連結支援。 
+---
+= 在SMB共用區上設定UNIX符號連結支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在建立SMB共用時或隨時修改現有SMB共用時、指定符號連結共用屬性設定、以設定SMB共用上的UNIX符號連結支援。UNIX符號連結支援預設為啟用。您也可以停用共用區上的UNIX符號連結支援。
+
+設定SMB共用的UNIX符號連結支援時、您可以選擇下列其中一項設定：
+
+|===
+| 設定 | 說明 
+
+
+ a| 
+「enable」（已過時*）
+ a| 
+指定啟用符號連結以進行讀寫存取。
+
+
+
+ a| 
+「僅限讀取」（已過時*）
+ a| 
+指定啟用symlink進行唯讀存取。此設定不適用於無線連結。Wielink存取永遠是讀寫的。
+
+
+
+ a| 
+「hide」（已過時*）
+ a| 
+指定SMB用戶端無法看到symlink。
+
+
+
+ a| 
+「沒有嚴格的安全性」
+ a| 
+指定用戶端在共用邊界之外追蹤symlink。
+
+
+
+ a| 
+「symlinks」
+ a| 
+指定在本機啟用symlink以進行讀寫存取。即使CIFS選項「is-Advertis-DFS-enablated」設定為「true」、也不會產生DFS廣告。這是預設設定。
+
+
+
+ a| 
+《雙鏈接與無線連結》
+ a| 
+指定本機symlink和widelinks以進行讀寫存取。即使CIFS選項「is-Advertise-DFS-enabled」設定為「假」、也會針對本機symlink和widelink產生DFS-廣告。
+
+
+
+ a| 
+「禁用」
+ a| 
+指定停用symlink和widelinks。即使CIFS選項「is-Advertis-DFS-enablated」設定為「true」、也不會產生DFS廣告。
+
+
+
+ a| 
+「」（null、未設定）
+ a| 
+停用共用區上的符號連結。
+
+
+
+ a| 
+（未設定）
+ a| 
+停用共用區上的符號連結。
+
+|===
+[NOTE]
+====
+*啟用_、隱藏_和唯讀_參數已過時、未來發行ONTAP 版的更新版可能會移除。
+
+====
+.步驟
+. 設定或停用符號連結支援：
++
+|===
+| 如果是... | 輸入... 
+
+
+ a| 
+新的SMB共用區
+ a| 
++vserver CIFS共用create -vserver vserver_name -share-name share_name -path -symlink屬性｛enable | hid| read-only |"|-|symlinks | symlinks和-widelinks | disable｝、...+'
+
+
+
+ a| 
+現有的SMB共用區
+ a| 
+Check Alignment of PHs>+vserver CIFS共享modify -vserver vserver_name -share-name share_name -symlink屬性{enable | hid| read-only |"|-|symlinks | symlinks和-widelinks | disable}、...]+
+
+|===
+. 確認SMB共用組態正確：「vserver CIFS共用區show -vserver vserver_name -share-name share_name -instance」
+
+
+下列命令會建立名為「data1」的SMB共用區、並將UNIX符號連結組態設定設為「enable」：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name data1 -path /data1 -symlink-properties enable
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: -
+     Directory Mode Creation Mask: -
+                    Share Comment: -
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: manual
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+xref:create-symbolic-link-mappings-task.adoc[建立SMB共用的符號連結對應]

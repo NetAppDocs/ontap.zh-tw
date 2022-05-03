@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: networking/monitor_the_reachability_of_network_ports.html 
+keywords: monitor, monitoring, manage, managing, automatic, reachability, port, network, identify, determine, monitor the reachability of network ports in ontap 9.8 and later, ontap 9.8 and later, determine if the physical network topology does not match the ontap configuration 
+summary: 更新版本、判斷實體網路拓撲是否與該功能不相符ONTAP ONTAP 
+---
+= 監控ONTAP 連接埠在功能性方面的可達性（以更新版本為架構）
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+可到達性監控功能已內建ONTAP 於更新版本的更新版本中。使用此監控功能來識別實體網路拓撲與ONTAP 該功能組態不相符的情況。在某些情況下ONTAP 、無法連線的連接埠可修復。在其他情況下、需要採取其他步驟。
+
+使用這些命令來驗證、診斷及修復ONTAP 因不符合實體纜線或網路交換器組態的物件組態而產生的網路錯誤組態。
+
+.步驟
+. 檢視連接埠連線性：
++
+....
+network port reachability show
+....
+. 請使用下列決策樹狀結構和表格來判斷下一個步驟（如果有）。
+
+
+image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
+
+[cols="20,80"]
+|===
+
+
+| 連線狀態 | 說明 
+
+
+ a| 
+好的
+ a| 
+連接埠可連線至其指派的廣播網域的第2層。如果連線狀態為「正常」、但有「非預期的連接埠」、請考慮合併一或多個廣播網域。如需詳細資訊、請參閱下列_Unexpected連接埠_資料列。
+
+如果連線狀態為「正常」、但有「無法連線的連接埠」、請考慮分割一或多個廣播網域。如需詳細資訊、請參閱下列_Unreachable連接埠_資料列。
+
+如果連線狀態為「正常」、而且沒有非預期或無法連線的連接埠、表示您的組態正確。
+
+
+
+ a| 
+非預期的連接埠
+ a| 
+連接埠可到達其指派的廣播網域的第2層連通性、但它也可到達至少一個其他廣播網域的第2層連通性。
+
+檢查實體連線能力和交換器組態、判斷其是否不正確、或連接埠指派的廣播網域是否需要與一或多個廣播網域合併。
+
+如需詳細資訊、請參閱 link:merge_broadcast_domains.html["合併廣播網域"]。
+
+
+
+ a| 
+無法連線的連接埠
+ a| 
+如果單一廣播網域已分割成兩個不同的連線能力集、您可以分割廣播網域、將ONTAP 此功能與實體網路拓撲進行同步。
+
+一般而言、無法連線的連接埠清單會定義在您確認實體和交換器組態正確之後、應分割成另一個廣播網域的一組連接埠。
+
+如需詳細資訊、請參閱 link:split_broadcast_domains.html["分割廣播網域"]。
+
+
+
+ a| 
+設定錯誤的連線能力
+ a| 
+連接埠無法連線至其指派的廣播網域的第2層；不過連接埠確實可連線至不同的廣播網域的第2層。
+
+您可以修復連接埠連線能力。執行下列命令時、系統會將連接埠指派給可連線的廣播網域：
+
+「網路連接埠可連線性修復-節點-連接埠」如需詳細資訊、請參閱 link:repair_port_reachability.html["修復連接埠連線能力"]。
+
+
+
+ a| 
+不可到達性
+ a| 
+連接埠無法連線至任何現有廣播網域的第2層。
+
+您可以修復連接埠連線能力。執行下列命令時、系統會將連接埠指派給預設IPspace中自動建立的新廣播網域：
+
+「網路連接埠可連線性修復-節點-連接埠」如需詳細資訊、請參閱 link:repair_port_reachability.html["修復連接埠連線能力"]。
+
+
+
+ a| 
+多網域連線能力
+ a| 
+連接埠可到達其指派的廣播網域的第2層連通性、但它也可到達至少一個其他廣播網域的第2層連通性。
+
+檢查實體連線能力和交換器組態、判斷其是否不正確、或連接埠指派的廣播網域是否需要與一或多個廣播網域合併。
+
+如需詳細資訊、請參閱 link:merge_broadcast_domains.html["合併廣播網域"] 或 link:repair_port_reachability.html["修復連接埠連線能力"]。
+
+
+
+ a| 
+不明
+ a| 
+如果連線狀態為「未知」、請稍候幾分鐘、然後再試一次命令。
+
+|===
+修復連接埠之後、您需要檢查並解決已移轉的LIF和VLAN。如果連接埠是介面群組的一部分、您也需要瞭解該介面群組發生了什麼事。如需詳細資訊、請參閱 link:repair_port_reachability.html["修復連接埠連線能力"]。

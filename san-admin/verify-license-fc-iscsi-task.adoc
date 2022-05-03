@@ -1,0 +1,37 @@
+---
+permalink: san-admin/verify-license-fc-iscsi-task.html 
+sidebar: sidebar 
+keywords: verify, license, fc or iscsi 
+summary: 在使用FC或iSCSI啟用儲存虛擬機器（SVM）的區塊存取之前、您必須先取得授權。 
+---
+= 驗證FC或iSCSI的授權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用FC或iSCSI啟用儲存虛擬機器（SVM）的區塊存取之前、您必須先取得授權。
+
+.步驟
+. 使用「系統授權show」命令來驗證您是否擁有FC或iSCSI的授權。
++
+「系統授權展示」
+
++
+[listing]
+----
+
+Package           Type    Description           Expiration
+ ----------------- ------- --------------------- --------------------
+ Base              site    Cluster Base License  -
+ NFS               site    NFS License           -
+ CIFS              site    CIFS License          -
+ iSCSI             site    iSCSI License         -
+ FCP               site    FCP License           -
+----
+. 如果您沒有FC或iSCSI的授權、請使用「license add」命令。
++
+「license add -license code-code-_y_your less_code_」
+
+

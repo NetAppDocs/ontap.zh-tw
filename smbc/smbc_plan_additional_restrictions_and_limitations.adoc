@@ -1,0 +1,123 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_plan_additional_restrictions_and_limitations.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris 
+summary: 使用SnapMirror營運不中斷解決方案時、還有幾項額外的限制和限制。 
+---
+= 其他限制與限制
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用SnapMirror營運不中斷解決方案時、還有幾項額外的限制和限制。
+
+
+
+=== 一致性群組
+
+從0.9.8到9.9.1、叢集中的SMBC一致性群組關係最大數量為5、這是不受平台限制的。ONTAP從ONTAP 版本號《終9.10.1》開始、叢集中的最大SMBC一致性群組關係數為20。
+
+
+
+=== 每個一致性群組的磁碟區
+
+從0到9、9.1、每個SM到BC一致性群組關係所支援的最大磁碟區數量為12個、這是與平台無關的限制。ONTAP從ONTAP 《支援的磁碟區數》（從《支援的磁碟區數》9.10.1開始）、每個SM與BC的關係最多可支援16個磁碟區。
+
+
+
+=== 磁碟區
+
+SMBC中的限制是根據端點數量而非關係數量來計算。12個磁碟區的一致性群組可在來源和目的地上提供12個端點。SM與BC和SnapMirror同步關係都有助於增加端點的總數。
+
+下表列出每個平台的最大端點數。
+
+|===
+| 美國否 | 平台 2+| SMBC的每個HA端點 2+| 每個HA的整體同步和SMBC端點 
+
+
+|  |  | 部分9.89.9.1 ONTAP | 零點9.10.1 ONTAP | 部分9.89.9.1 ONTAP | 零點9.10.1 ONTAP 
+
+
+| 1. | AFF | 60 | 200 | 80 | 200 
+
+
+| 2. | ASA | 60 | 200 | 80 | 200 
+|===
+
+
+=== SAN物件限制
+
+下表包含下列SAN物件限制、無論平台為何、均適用。
+
+|===
+| SMBC關係中物件的限制 | 數 
+
+
+| 每個磁碟區的LUN數量 | 256 
+
+
+| 每個節點的LUN對應 | 2048 
+
+
+| 每個叢集的LUN對應 | 4096 
+
+
+| 每個Vserver的LIF（與SMBC關係中至少有一個Volume） | 256 
+
+
+| 每個節點的叢集間生命量 | 4. 
+
+
+| 每個叢集的叢集間生命量 | 8. 
+|===
+
+
+=== NTFS安全型態
+
+SMBC磁碟區不支援NTFS安全樣式。
+
+
+
+=== 建議使用適用於SM至BC組態的Solaris主機設定
+
+從功能支援的版本起、SM-BC支援Solaris 11.4。ONTAP為了確保在SM至BC環境中發生非計畫性站台容錯移轉切換時、Solaris用戶端應用程式不會中斷營運、必須在Solaris 11.4 Host上設定下列設定。此設定會覆寫容錯移轉模組–「f_tpgs」、以防止偵測到衝突的程式碼路徑被執行。
+
+請依照下列步驟設定置換參數：
+
+. 建立組態檔「/etc/driver/drv/scsi_vhc.conf（包含與主機所連接之NetApp儲存類型類似的項目）：
++
+[listing]
+----
+scsi-vhci-failover-override =
+"NETAPP  LUN","f_tpgs"
+----
+. 使用"devprop"和"mdb"命令來驗證是否已成功套用覆寫：
++
+[listing]
+----
+root@host-A:~# devprop -v -n /scsi_vhci scsi-vhci-failover-override scsi-vhci-failover-override=NETAPP  LUN + f_tpgs
+root@host-A:~# echo "*scsi_vhci_dip::print -x struct dev_info devi_child | ::list struct dev_info devi_sibling| ::print struct dev_info devi_mdi_client| ::print mdi_client_t ct_vprivate| ::print struct scsi_vhci_lun svl_lun_wwn svl_fops_name"| mdb -k`
+----
++
+[listing]
+----
+svl_lun_wwn = 0xa002a1c8960 "600a098038313477543f524539787938"
+svl_fops_name = 0xa00298d69e0 "conf f_tpgs"
+----
+
+
+
+NOTE: 套用「shcsciv-vhci容錯移轉置換」時、「conf」會新增至「vl_fOPs_name」。如需更多資訊及預設設定的建議變更、請參閱NetApp知識庫文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris主機支援SnapMirror營運不中斷（SMBC）組態中的建議設定"]。
+
+
+
+=== HP-UX已知的SMBC組態問題與限制
+
+從ONTAP 功能更新至功能更新至功能更新、支援適用於HP-UX的SMBC。如果在SM至BC組態的隔離主叢集上發生自動非計畫性容錯移轉（AUFO）事件、則在HP-UX主機上恢復I/O可能需要120秒以上的時間。視執行的應用程式而定、這可能不會導致任何I/O中斷或錯誤訊息。如果隔離的主叢集發生AUFO事件、您必須重新啟動HP-UX主機上的應用程式、使其中斷容錯能力低於120秒。
+
+當主要與次要叢集之間的連線中斷、且主要叢集與中介器之間的連線中斷時、隔離的主要叢集上的AUFO事件可能會導致雙事件故障。這是罕見的事件、與其他AUFO事件不同。

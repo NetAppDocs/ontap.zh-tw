@@ -1,0 +1,125 @@
+---
+permalink: data-protection/example-configure-vault-vault-cascade-task.html 
+sidebar: sidebar 
+keywords: example, configure, vault-vault, cascade 
+summary: 範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的保存庫資料保險箱串聯部署、來保留超過251個標示為「my-event」的Snapshot複本。 
+---
+= 範例：設定資料保險箱串聯
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的保存庫資料保險箱串聯部署、來保留超過251個標示為「每週一次」的Snapshot複本。
+
+.您需要的是 #8217 ；需要的是什麼
+* 來源與目的地叢集和SVM必須進行對等關係。
+* 您必須執行ONTAP 的是版本不含更新版本的版本。早期ONTAP 版本的不支援保存庫-保存庫串聯。
+
+
+範例假設如下：
+
+* 您已在來源叢集上設定Snapshot複本、其SnapMirror標籤為「每日」、「每週」和「每月」。
+* 您已在二線和三線目的地叢集上設定名為「Vola」的目的地Volume。
+* 您已在二線和三線目的地叢集上設定名為「my_SnapVault」的複寫工作排程。
+
+
+範例顯示如何根據兩個自訂原則建立複寫關係：
+
+* 「shnapVault_secondary」原則會在次要目的地叢集上保留每日7份、每週52份及每月180份Snapshot複本。
+* 「shnapVault_三 線原則」會在三線目的地叢集上保留250個每週Snapshot複本。
+
+
+.步驟
+. 在次要目的地叢集上、建立「snapVault_secondary」原則：
++
+「叢集輔助：」：> SnapMirror原則建立-policy SnapVault _次要類型vault -註釋「資料保險箱至資料保險箱串聯的次要原則」-vserver SVM_secondary
+
+. 在次要目的地叢集上、定義原則的「每日」規則：
++
+「叢集輔助：」：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-der-don-t；保留7-vserver SVM_secondary」
+
+. 在次要目的地叢集上、定義原則的「每週」規則：
++
+「叢集輔助：」：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-bedure_flex每 週-保留52個vserver SVM_secondary」
+
+. 在次要目的地叢集上、定義原則的「每月」規則：
++
+「叢集輔助：：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-bon月刊-ee樣180 -vserver SVM_secondary」
+
+. 在次要目的地叢集上、驗證原則：
++
+「叢集輔助：」：> SnapMirror原則顯示SnapVault次要執行個體
+
++
+[listing]
+----
+                     Vserver: svm_secondary
+      SnapMirror Policy Name: snapvault_secondary
+      SnapMirror Policy Type: vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: false
+                     Comment: Policy on secondary for vault to vault cascade
+       Total Number of Rules: 3
+                  Total Keep: 239
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              my-daily                7  false       0 -        -
+                              my-weekly              52  false       0 -        -
+                              my-monthly            180  false       0 -        -
+----
+. 在次要目的地叢集上、建立與來源叢集的關係：
++
+「叢集輔助：」：> SnapMirror create -source-path SVM_primary：Vola -dite-path SVM_secondary：Vola -type XDP -schedule my_SnapVault -policy SnapVault _secondary」
+
+. 在次要目的地叢集上、初始化與來源叢集的關係：
++
+「叢集輔助：」：> SnapMirror初始化-source-path Svm_primary：Vola -dite-path Svm_secondary：Vola
+
+. 在第三目的地叢集上、建立「snapVault_三 線」原則：
++
+「叢集_第三：：> SnapMirror原則建立-原則SnapVault -第三層-類型vault -註解「資料保險箱至資料保險箱串聯的第三層原則」-vserver SVM_第 三層
+
+. 在第三個目的地叢集上、定義原則的「每週」規則：
++
+「叢集_第三：：> SnapMirror原則附加規則-policy SnapVault原則-第三層-SnapMirror標籤my-flex每 週-保留250 -vserver SVM_第 三層」
+
+. 在第三目的地叢集上、確認原則：
++
+「叢集_第三：：> SnapMirror原則顯示SnapVault -第三執行個體」
+
++
+[listing]
+----
+                     Vserver: svm_tertiary
+      SnapMirror Policy Name: snapvault_tertiary
+      SnapMirror Policy Type: vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: false
+                     Comment: Policy on tertiary for vault to vault cascade
+       Total Number of Rules: 1
+                  Total Keep: 250
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              my-weekly             250  false       0 -        -
+----
+. 在第三個目的地叢集上、建立與第二個叢集的關係：
++
+「叢集_三線：」：> SnapMirror create -source-path SVM_secondary：Vola -dite-path SVM_三 線：Vola - type XDP -schedule my_SnapVault -policy SnapVault _三線」
+
+. 在第三個目的地叢集上、初始化與第二個叢集的關係：
++
+「叢集_第三：：> SnapMirror初始化-source-path Svm_secondary：Vola -dite-path Svm_tlited:Vola'
+
+

@@ -1,0 +1,90 @@
+---
+permalink: upgrade/task_verify_status.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, upgrade, verify, status, ha, ldap, dns, networking, storage, metrocluster 
+summary: 各種組態設定可能會影響叢集升級的準備程度。 
+---
+= 驗證狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級之前、您應確認下列事項：
+
+* HA配對狀態
+* LDAP狀態（ONTAP 適用於版本9.2或更新版本）
+* DNS伺服器狀態（ONTAP 適用於不含更新版本的版本）、
+* 網路與儲存狀態（MetroCluster 適用於各種組態）
+
+
+
+
+== 正在驗證HA狀態
+
+在執行不中斷升級之前、您應該先確認已針對每個HA配對啟用儲存容錯移轉。如果叢集僅包含兩個節點、您也應該確認叢集HA已啟用。
+
+如果您打算執行中斷升級、則不需要驗證HA狀態、因為此升級方法不需要儲存容錯移轉。
+
+. 驗證是否已針對每個HA配對啟用儲存容錯移轉：「儲存容錯移轉顯示」
++
+此範例顯示節點0和節點1上已啟用儲存容錯移轉、而且可能會發生：
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State
+-------------- -------------- -------- -------------------------------------
+node0          node1          true     Connected to node1
+node1          node0          true     Connected to node0
+2 entries were displayed.
+----
++
+如有必要、您可以使用儲存容錯移轉修改命令來啟用儲存容錯移轉。
+
+. 如果叢集僅包含兩個節點（單一HA配對）、請確認叢集HA已設定為「叢集HA show」
++
+此範例顯示叢集HA已設定：
+
++
+[listing]
+----
+cluster1::> cluster ha show
+High Availability Configured: true
+----
++
+如有必要、您可以使用cluster ha modify命令來啟用叢集HA。
+
+
+
+
+
+== 驗證LDAP狀態ONTAP （不含更新版本的版本）
+
+從ONTAP S9.2開始、如果您的儲存虛擬機器（SVM）使用LDAP、則必須建立LDAP連線、才能執行不中斷升級。您應該在開始升級之前驗證LDAP連線。
+
+如果您從ONTAP 更新版本的版本為更新版本的版本、則此工作不適用。
+
+. 檢查LDAP狀態：「LDAP Check -vserver vserver_name」
+. 如果LDAP狀態為停機、請修改：「LDAP用戶端修改-client-config LDAP_client-LDAP-servers ip_address'
+. 驗證LDAP狀態是否為「LDAP檢查-vserver vserver_name」
+
+
+
+
+== 驗證DNS伺服器狀態ONTAP （不含更新版本的版本）
+
+從ONTAP 版本號為2、9.2開始、您應該在執行不中斷升級之前和之後、確認網域名稱服務（DNS）伺服器的狀態。
+
+如果您從ONTAP 更新版本的版本為更新版本的版本、則此工作不適用。
+
+. 檢查DNS伺服器的狀態：「Dns Check -vserver vserver_name」
++
+「啟動」狀態表示服務正在執行中。當機狀態表示服務未執行。
+
+. 如果DNS伺服器當機、請修改它：「Dns modify -vserver vserver_name -domain_name -name-servers name_server_ipaddress'
+. 驗證DNS伺服器的狀態是否為「up」。
+

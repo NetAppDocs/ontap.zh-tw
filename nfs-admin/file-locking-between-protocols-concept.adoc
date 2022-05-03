@@ -1,0 +1,27 @@
+---
+permalink: nfs-admin/file-locking-between-protocols-concept.html 
+sidebar: sidebar 
+keywords: file, locking, protocol 
+summary: 檔案鎖定是用戶端應用程式用來防止使用者存取先前由其他使用者開啟的檔案的方法。如何鎖定檔案取決於用戶端的傳輸協定。ONTAP 
+---
+= 關於在傳輸協定之間鎖定檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+檔案鎖定是用戶端應用程式用來防止使用者存取先前由其他使用者開啟的檔案的方法。如何鎖定檔案取決於用戶端的傳輸協定。ONTAP
+
+如果用戶端是NFS用戶端、則鎖定為建議事項；如果用戶端是SMB用戶端、則鎖定為必要項目。
+
+由於NFS與SMB檔案鎖定之間的差異、NFS用戶端可能無法存取先前由SMB應用程式開啟的檔案。
+
+當NFS用戶端嘗試存取SMB應用程式鎖定的檔案時、會發生下列情況：
+
+* 在混合或NTFS磁碟區中、像是「rm」、「rmdir」和「mv」等檔案處理作業、可能會導致NFS應用程式失敗。
+* SMB拒絕讀取和拒絕寫入開啟模式會分別拒絕NFS讀取和寫入作業。
+* 當檔案的寫入範圍遭專屬SMB bytelock鎖定時、NFS寫入作業會失敗。
+
+
+在UNIX安全型磁碟區中、NFS取消連結和重新命名作業會忽略SMB鎖定狀態、並允許存取檔案。UNIX安全型磁碟區上的所有其他NFS作業都會遵守SMB鎖定狀態。

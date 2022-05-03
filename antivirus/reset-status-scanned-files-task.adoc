@@ -1,0 +1,36 @@
+---
+permalink: antivirus/reset-status-scanned-files-task.html 
+sidebar: sidebar 
+keywords: reset, status, scanned files 
+summary: 有時候、您可能會想要使用vserver vscan重設命令、捨棄檔案的快取資訊、以重設SVM上成功掃描檔案的掃描狀態。例如、您可能想要使用此命令、在錯誤設定的掃描時重新啟動掃毒掃描處理。 
+---
+= 重設掃描檔案的狀態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+有時候、您可能會想要使用「vserver vscan重設」命令、捨棄檔案的快取資訊、以重設SVM上成功掃描檔案的掃描狀態。例如、您可能想要使用此命令、在錯誤設定的掃描時重新啟動掃毒掃描處理。
+
+執行「vserver vscan重設」命令之後、所有符合資格的檔案將會在下次存取時進行掃描。
+
+[NOTE]
+====
+視要重新掃描的檔案數量和大小而定、此命令可能會對效能造成不良影響。
+
+====
+.步驟
+. 重設掃描檔案的狀態：
++
+「vserver vscan重設-vserver data_SVM」
+
++
+下列命令會重設「VS1」「SVM」上掃描檔案的狀態：
+
++
+[listing]
+----
+cluster1::> vserver vscan reset -vserver vs1
+----
+

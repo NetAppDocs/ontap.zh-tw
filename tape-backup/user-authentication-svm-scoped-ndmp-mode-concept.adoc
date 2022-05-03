@@ -1,0 +1,26 @@
+---
+permalink: tape-backup/user-authentication-svm-scoped-ndmp-mode-concept.html 
+sidebar: sidebar 
+keywords: user, authentication, svm, ndmp, node, vsadmin, backup, role, storage, virutal, machine, user 
+summary: 在儲存虛擬機器（SVM）範圍內的NDMP模式中、NDMP使用者驗證會與角色型存取控制整合。在SVM內容中、NDMP使用者必須具有「vsadmin」或「vsadmin-Backup」角色。在叢集內容中、NDMP使用者必須具有「admin」或「備份」角色。 
+---
+= SVM範圍NDMP模式中的使用者驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在儲存虛擬機器（SVM）範圍內的NDMP模式中、NDMP使用者驗證會與角色型存取控制整合。在SVM內容中、NDMP使用者必須具有「vsadmin'」或「vsadmin-Backup」角色。在叢集內容中、NDMP使用者必須具有「admin」或「Backup」角色。
+
+除了這些預先定義的角色之外、只要自訂角色的命令目錄中有「vserver services NDMP」資料夾、而且資料夾的存取層級不是「none"（無）、也可以使用與自訂角色相關的使用者帳戶進行NDMP驗證。在此模式中、您必須為指定的使用者帳戶產生NDMP密碼、此密碼是透過角色型存取控制所建立。管理員或備份角色中的叢集使用者可以存取節點管理LIF、叢集管理LIF或叢集間LIF。vsadmin-backup或vsadmin角色中的使用者只能存取該SVM的資料LIF。因此、視使用者角色而定、備份與還原作業的磁碟區和磁帶設備可用度會有所不同。
+
+此模式也支援NIS和LDAP使用者的使用者驗證。因此、NIS和LDAP使用者可以使用通用的使用者ID和密碼來存取多個SVM。但是、NDMP驗證不支援Active Directory使用者。
+
+在此模式中、使用者帳戶必須與SSH應用程式和「使用者密碼」驗證方法相關聯。
+
+xref:commands-manage-svm-scoped-ndmp-reference.adoc[管理SVM範圍NDMP模式的命令]
+
+link:../system-admin/index.html["系統管理"]
+
+link:../concepts/index.html["概念ONTAP"]

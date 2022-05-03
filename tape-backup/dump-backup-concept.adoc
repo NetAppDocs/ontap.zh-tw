@@ -1,0 +1,67 @@
+---
+permalink: tape-backup/dump-backup-concept.html 
+sidebar: sidebar 
+keywords: dump, backup, qtree, file, system, data 
+summary: 傾印備份會使用預先定義的程序、將檔案系統資料從磁碟寫入磁帶。您可以備份既不是整個Volume、也不是整個qtree的Volume、qtree或子樹。 
+---
+= 傾印備份的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+傾印備份會使用預先定義的程序、將檔案系統資料從磁碟寫入磁帶。您可以備份既不是整個Volume、也不是整個qtree的Volume、qtree或子樹。
+
+下表說明ONTAP 了使用哪些程序來備份傾印路徑所指示的物件：
+
+[cols="1,4"]
+|===
+| 階段 | 行動 
+
+
+ a| 
+1.
+ a| 
+對於容量低於完整磁碟區或完整qtree備份、ONTAP 支援使用者可遍歷目錄來識別要備份的檔案。如果您要備份整個Volume或qtree、ONTAP 則將此階段與第2階段結合在一起。
+
+
+
+ a| 
+2.
+ a| 
+對於完整Volume或完整qtree備份、ONTAP 支援使用者可在要備份的磁碟區或qtree中識別目錄。
+
+
+
+ a| 
+3.
+ a| 
+將目錄寫入磁帶。ONTAP
+
+
+
+ a| 
+4.
+ a| 
+將檔案寫入磁帶。ONTAP
+
+
+
+ a| 
+5.
+ a| 
+將ACL資訊（若適用）寫入磁帶。ONTAP
+
+|===
+傾印備份會使用資料的Snapshot複本進行備份。因此、您不需要在開始備份之前將磁碟區離線。
+
+傾印備份會將其建立的每個Snapshot複本命名為「snapshot_for_backup.n」、其中「n」是從0開始的整數。每當傾印備份建立Snapshot複本時、它會將整數增加1。在儲存系統重新開機後、會將整數重設為0。備份作業完成後、傾印引擎會刪除此Snapshot複本。
+
+當執行多個傾印備份時、傾印引擎會建立多個Snapshot複本。ONTAP例如ONTAP 、如果支援同時執行兩個傾印備份、您可以在要備份資料的磁碟區中找到下列Snapshot複本：「napshot_for_backup.0」和「snapshot_for_backup.1」。
+
+[NOTE]
+====
+從Snapshot複本備份時、傾印引擎不會建立額外的Snapshot複本。
+
+====

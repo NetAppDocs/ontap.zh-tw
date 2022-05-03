@@ -1,0 +1,39 @@
+---
+permalink: s3-audit/modify-config-task.html 
+sidebar: sidebar 
+keywords: s3 audit, modify 
+summary: 您可以修改個別儲存區的稽核參數、或是在SVM中選取要稽核的所有儲存區的稽核組態。 
+---
+= 修改S3稽核組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改個別儲存區的稽核參數、或是在SVM中選取要稽核的所有儲存區的稽核組態。
+
+[cols="2,4"]
+|===
+| 如果您想要修改稽核組態... | 輸入... 
+
+
+| 個別庫存箱 | 「vserver object-store-server稽核事件選取器modify -vserver _Svm_name_[-bucket _bucket_name_][_蔘 與修改的參數_]」 
+
+
+| SVM中的所有儲存區  a| 
+「vserver object-store-server稽核修改-vserver _Svm_name_[_parameters to modify_]」
+
+|===
+下列範例會修改個別的儲存區稽核組態、以僅稽核純寫入的存取事件：
+
+[listing]
+----
+cluster1::> vserver object-store-server audit event-selector modify -vserver vs1 -bucket test-bucket -access write-only
+----
+下列範例會修改SVM中所有儲存區的稽核組態、將記錄大小限制變更為10MB、並在旋轉前保留3個記錄檔。
+
+[listing]
+----
+cluster1::> vserver object-store-server audit modify -vserver vs1 -rotate-size 10MB -rotate-limit 3
+----

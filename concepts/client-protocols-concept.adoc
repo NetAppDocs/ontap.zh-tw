@@ -1,0 +1,58 @@
+---
+permalink: concepts/client-protocols-concept.html 
+sidebar: sidebar 
+keywords: client protocols 
+summary: 支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP 和NVMe / FC。 
+---
+= 用戶端傳輸協定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP 和NVMe / FC。
+
+
+
+== NFS
+
+NFS是UNIX和Linux系統的傳統檔案存取傳輸協定。用戶端可以ONTAP 使用NFSv3、NFSv4、NFSv4.1和pNFS傳輸協定來存取Superes Volume中的檔案。您可以使用UNIX型權限、NTFS型權限或兩者的組合來控制檔案存取。
+
+用戶端可以使用NFS和SMB傳輸協定存取相同的檔案。
+
+
+
+== 中小企業
+
+SMB是Windows系統的傳統檔案存取傳輸協定。用戶端可以ONTAP 使用SMB 2.0、SMB 2.1、SMB 3.0和SMB 3.1.1傳輸協定來存取位於支援區內的檔案。就像NFS一樣、支援各種權限樣式。
+
+SMB 1.0可在ONTAP 更新版本中使用、但依預設為停用。
+
+
+
+== FC
+
+Fibre Channel是原始的網路區塊傳輸協定。區塊傳輸協定會將整個虛擬磁碟呈現給用戶端、而非檔案。傳統FC傳輸協定使用專用FC網路搭配專用FC交換器、因此用戶端電腦必須具備FC網路介面。
+
+LUN代表虛擬磁碟、一個或多個LUN則儲存在ONTAP 一個實體磁碟區中。相同的LUN可透過FC、FCoE和iSCSI傳輸協定存取、但只有當多個用戶端是防止寫入衝突的叢集一部分時、才能存取相同的LUN。
+
+
+
+== FCoE
+
+FCoE基本上與FC相同、但使用資料中心等級的乙太網路來取代傳統的FC傳輸。用戶端仍需要FCoE專屬的網路介面。
+
+
+
+== iSCSI
+
+iSCSI是一種區塊傳輸協定、可在標準乙太網路上執行。大多數用戶端作業系統都提供軟體啟動器、可透過標準乙太網路連接埠執行。如果您需要特定應用程式的區塊傳輸協定、但沒有專屬的FC網路功能、iSCSI是很好的選擇。
+
+
+
+== NVMe / FC
+
+最新的區塊傳輸協定（NVMe / FC）是專為搭配Flash型儲存設備而設計。它提供可擴充的工作階段、大幅縮短延遲、並增加平行處理量、非常適合記憶體內的資料庫和分析等低延遲和高處理量的應用程式。
+
+與FC和iSCSI不同、NVMe不使用LUN。而是使用儲存在ONTAP 功能區中的命名空間。NVMe命名空間只能透過NVMe傳輸協定存取。

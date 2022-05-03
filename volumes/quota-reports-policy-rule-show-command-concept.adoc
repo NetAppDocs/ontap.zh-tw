@@ -1,0 +1,46 @@
+---
+permalink: volumes/quota-reports-policy-rule-show-command-concept.html 
+sidebar: sidebar 
+keywords: when to use, volume quota policy rule show, volume quota report, commands 
+summary: 雖然這兩個命令都顯示配額的相關資訊、但Volume配額原則規則會快速顯示已設定的配額規則、而Volume配額報告命令則會顯示強制配額和資源使用量、而該命令會耗用更多時間和資源。 
+---
+= 何時使用Volume配額原則規則show和Volume配額報告命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+雖然這兩個命令都顯示配額的相關資訊、但「Volume quota policy規則show」會快速顯示已設定的配額規則、而「Volume quota report」命令則會顯示強制配額和資源使用量。
+
+「Volume quota policy rRule show」命令適用於下列用途：
+
+* 在啟動配額規則之前、請先檢查配額規則的組態
++
+無論配額已初始化或調整大小、此命令都會顯示所有已設定的配額規則。
+
+* 快速檢視配額規則、而不影響系統資源
++
+由於此命令不會顯示磁碟和檔案使用量、因此不會像配額報告那樣耗用大量資源。
+
+* 在未指派給SVM的配額原則中顯示配額規則。
+
+
+「Volume quota report」命令適用於下列用途：
+
+* 檢視強制配額、包括衍生配額
+* 檢視每個有效配額所使用的磁碟空間和檔案數量、包括受衍生配額影響的目標
++
+（對於預設配額、使用量會顯示為「0」、因為系統會根據產生的衍生配額來追蹤使用量。）
+
+* 決定哪些配額限制會影響何時允許寫入檔案
++
+將「-path」參數新增至「volume quota report」命令。
+
+
+
+[NOTE]
+====
+配額報告是資源密集的作業。如果您在FlexVol 叢集中的許多個資料區上執行、可能需要很長時間才能完成。更有效率的方法是檢視SVM中特定磁碟區的配額報告。
+
+====

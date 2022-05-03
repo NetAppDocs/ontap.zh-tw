@@ -1,0 +1,164 @@
+---
+permalink: nas-audit/cli-change-events-concept.html 
+sidebar: sidebar 
+keywords: cli change events, audited 
+summary: 可稽核某些CLI變更事件、包括特定SMB共用事件、特定稽核原則事件、特定本機安全性群組事件、本機使用者群組事件、以及授權原則事件。ONTAP瞭解哪些變更事件可稽核、有助於解讀事件記錄的結果。 
+---
+= 可稽核的CLI變更事件總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+可稽核某些CLI變更事件、包括特定SMB共用事件、特定稽核原則事件、特定本機安全性群組事件、本機使用者群組事件、以及授權原則事件。ONTAP瞭解哪些變更事件可稽核、有助於解讀事件記錄的結果。
+
+您可以手動旋轉稽核記錄、啟用或停用稽核、顯示稽核變更事件的相關資訊、修改稽核變更事件、以及刪除稽核變更事件、藉此管理儲存虛擬機器（SVM）稽核CLI變更事件。
+
+身為系統管理員、如果您執行任何命令來變更SMB共用區、本機使用者群組、本機安全性群組、授權原則及稽核原則事件的相關組態、 產生記錄並稽核相應的事件：
+
+|===
+
+
+| 稽核類別 | 活動 | 事件ID | 執行此命令... 
+
+
+ a| 
+主機稽核
+ a| 
+原則變更
+ a| 
+[4719]稽核組態已變更
+ a| 
+「vserver稽核停用|啟用|修改」
+
+
+
+ a| 
+檔案共用
+ a| 
+已新增[5142]網路共用
+ a| 
+《Vserver CIFS共享創建》
+
+
+
+ a| 
+[5143]網路共用區已修改
+ a| 
+"vserver CIFS shares modify"（Vserver CIFS共享修改）"vserver CIFS shares crede|modify|delete"（vserver CIFS共享add|remove）
+
+
+
+ a| 
+[5144]網路共用區已刪除
+ a| 
+《Vserver CIFS共享刪除》
+
+
+
+ a| 
+稽核
+ a| 
+使用者帳戶
+ a| 
+[4720]本機使用者已建立
+ a| 
+「vserver CIFS使用者與群組本機使用者建立」「vserver服務名稱服務UNIX使用者建立」
+
+
+
+ a| 
+[4722]本機使用者已啟用
+ a| 
+「vserver CIFS使用者與群組本機使用者建立|修改」
+
+
+
+ a| 
+[4724]本機使用者密碼重設
+ a| 
+「Vserver CIFS使用者與群組本機使用者設定密碼」
+
+
+
+ a| 
+[4725]本機使用者已停用
+ a| 
+「vserver CIFS使用者與群組本機使用者建立|修改」
+
+
+
+ a| 
+[4726]本機使用者已刪除
+ a| 
+「vserver CIFS user-and Groups local-user-delete」「vserver services name-service unix-userdelete」
+
+
+
+ a| 
+[4738]本機使用者變更
+ a| 
+「vserver CIFS user-and Groups local-user-user modify」「vserver services name-service unix-usermodify」
+
+
+
+ a| 
+[4781]本機使用者重新命名
+ a| 
+「Vserver CIFS使用者與群組本機使用者重新命名」
+
+
+
+ a| 
+安全性群組
+ a| 
+[4731]已建立本機安全性群組
+ a| 
+「vserver CIFS user-and Groups local-group cre創作」（vserver服務名稱服務UNIX群組建立）
+
+
+
+ a| 
+[4734]本機安全性群組已刪除
+ a| 
+「Vserver CIFS user-and Groups local-group delete」（Vserver CIFS使用者與群組本機群組刪除）、「vserver services name-service unix-group delete」（Vserver服務名稱服務UNIX群組刪除）
+
+
+
+ a| 
+[4735]本機安全性群組已修改
+ a| 
+「vserver CIFS user-and -Groups local-group rename | modify」「vserver services name-service unix-group modify」
+
+
+
+ a| 
+[4732]使用者已新增至本機群組
+ a| 
+「vserver CIFS user-and Groups local-group add-s稍 事」（vserver服務名稱服務UNIX群組附加使用者）
+
+
+
+ a| 
+[4733]使用者已從本機群組中移除
+ a| 
+vserver CIFS使用者與群組本機群組移除成員的「vserver服務名稱服務UNIX群組刪除使用者」
+
+
+
+ a| 
+授權原則變更
+ a| 
+[4704]已指派使用者權限
+ a| 
+「Vserver CIFS使用者與群組權限附加權限」
+
+
+
+ a| 
+[4705]使用者權限已移除
+ a| 
+「Vserver CIFS使用者與群組權限移除權限|重設權限」
+
+|===

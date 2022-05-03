@@ -1,0 +1,57 @@
+---
+permalink: system-admin/display-nodeshell-commands-task.html 
+sidebar: sidebar 
+keywords: display, nodeshell, command, cli, list, help 
+summary: 您可以使用nodesdro解除 程序中的CLI說明、取得可用的nodesdro解除 命令清單。 
+---
+= 顯示可用的nodesdro解除 命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用nodesdro解除 程序中的CLI說明、取得可用的nodesdro解除 命令清單。
+
+.步驟
+. 若要存取nodesdell、請在clusterShell的系統提示字元中輸入下列命令：
++
+系統節點執行節點{_nodename_|local}*
+
++
+「本機」是您用來存取叢集的節點。
+
++
+[NOTE]
+====
+「系統節點執行」命令具有別名命令「run」。
+
+====
+. 在nodesdro解除 命令中輸入以下命令以查看可用的nodesl解除 命令列表：
++
+[_commandname_] help*
+
++
+"_commandname_"是您要顯示其可用度的命令名稱。如果不包含"_commandname_"、CLI會顯示所有可用的nodeshroued命令。
+
++
+輸入「exit」或按Ctrl-d返回叢集Shell CLI。
+
+
+
+以下範例可存取節點node2的nodesdrouate、並顯示nodesl解除 命令"information"的資訊：
+
+[listing]
+----
+cluster1::> system node run -node node2
+Type 'exit' or 'Ctrl-D' to return to the CLI
+
+node2> environment help
+Usage: environment status |
+     [status] [shelf [<adapter>[.<shelf-number>]]] |
+     [status] [shelf_log] |
+     [status] [shelf_stats] |
+     [status] [shelf_power_status] |
+     [status] [chassis [all | list-sensors | Temperature | PSU 1 |
+     PSU 2 | Voltage | SYS FAN | NVRAM6-temperature-3 | NVRAM6-battery-3]]
+----

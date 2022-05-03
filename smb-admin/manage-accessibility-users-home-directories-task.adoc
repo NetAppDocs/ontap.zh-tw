@@ -1,0 +1,63 @@
+---
+permalink: smb-admin/manage-accessibility-users-home-directories-task.html 
+sidebar: sidebar 
+keywords: 'default, user, home, directory, access, dynamic, name, share, precede, enable, disable, windows, administrator, public, access, manage accessibility to users" home directories' 
+summary: 依預設、使用者的主目錄只能由該使用者存取。如果共用區的動態名稱前面有一個波狀符號（｛cilde｝）、您可以啟用或停用Windows系統管理員或任何其他使用者對使用者主目錄的存取（公共存取）。 
+---
+= 管理使用者主目錄的存取能力
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設、使用者的主目錄只能由該使用者存取。如果共用區的動態名稱前面有一個波狀符號（｛cilde｝）、您可以啟用或停用Windows系統管理員或任何其他使用者對使用者主目錄的存取（公共存取）。
+
+儲存虛擬機器（SVM）上的主目錄共用必須以動態共用名稱進行設定、並在名稱前面加上一個波狀符號（｛波狀符號｝）。下列案例說明共用命名需求：
+
+|===
+| 主目錄共用名稱 | 連線至共用區的命令範例 
+
+
+ a| 
+｛tilde｝%d｛tilde｝%w
+ a| 
+「net use *｛反斜槓｝｛反斜槓｝IP位址｛反斜槓｝｛tilde｝網域｛tilde｝使用者/ u：認證」
+
+
+
+ a| 
+｛tilde｝%w
+ a| 
+「net use *｛反斜槓｝｛反斜槓｝IPaddress｛反斜槓｝｛tilde｝user/u:bonations'
+
+
+
+ a| 
+｛tilde｝abc｛tilde｝%w
+ a| 
+「net use *｛反斜槓｝｛反斜槓｝IPaddress｛反斜槓｝abc｛tilde｝user/u:bonations'
+
+|===
+.步驟
+. 執行適當的行動：
++
+|===
+| 如果您要啟用或停用存取使用者主目錄的權限、以便... | 輸入下列項目... 
+
+
+| Windows系統管理員 | 「vserver CIFS主目錄修改-vserver _vserver_name_-is主目錄存取-for-admin-enabled_{true｛vbar｝假｝」預設值為「true」。 
+
+
+| 任何使用者（公共存取）  a| 
+.. 將權限層級設為進階：+「Set -priv榮幸advanc進 階」
+.. 啟用或停用存取：「vserver CIFS主目錄修改-vserver _vserver_name_-is-home-dirs-access-for-public-enabled｛true|假｝」+預設值為「假」。
+.. 返回管理員權限等級：+「設置權限管理」
+
+
+|===
+
+
+下列範例可讓使用者公開存取其主目錄：+「設為進階權限」+「vserver CIFS主目錄修改-vserver VS1 -is主目錄-dirs-access-for public-enabledtrue」+「設為權限管理」
+
+xref:display-user-home-directory-path-task.adoc[顯示SMB使用者主目錄路徑的相關資訊]

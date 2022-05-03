@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/index.html 
+keywords: anti-ransomware overview, ransomware, security, introduce, protection, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
+summary: 從ONTAP 功能部件支援的支援範圍9.10.1開始、反勒索軟體功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測並警告可能表示勒索軟體攻擊的異常活動。 
+---
+= 勒索軟體總覽
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從ONTAP 功能部件支援的支援範圍9.10.1開始、反勒索軟體功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測並警告可能表示勒索軟體攻擊的異常活動。
+
+如果懷疑發生攻擊、除現有的Snapshot複本保護措施之外、反勒索軟體也會建立新的Snapshot備份。
+
+「多租戶金鑰管理」（MTKM）授權可啟用反勒索軟體功能。如果您已經取得授權、則只需升級ONTAP 至版本號為「支援功能」即可。如果您沒有多租戶金鑰管理（MTKM）授權、請聯絡您的銷售團隊以購買。
+
+您可以使用ONTAP VMware系統管理員或ONTAP VMware命令列介面（CLI）、針對每個Volume設定反勒索軟體保護。
+
+
+
+== 勒索軟體保護策略ONTAP
+
+有效的勒索軟體偵測策略應包含多個單一保護層。
+
+類似的例子是車輛的安全功能。您不想仰賴單一功能（例如座椅安全帶）來在意外事故中提供完整的保護。安全袋、防鎖定煞車和前方撞擊警示都是額外的安全功能、可帶來更好的結果。勒索軟體保護應以相同方式檢視。
+
+雖然包含FPolicy、Snapshot Copies、VMware及VMware數位顧問等功能、可協助防範勒索軟體、但下列資訊則著重於具備機器學習功能的「包含物件的防勒索軟體」內建功能。ONTAP SnapLock Active IQ ONTAP
+
+若要深入瞭解ONTAP的其他反勒索軟體功能、請參閱： https://www.netapp.com/media/7334-tr4572.pdf["TR-4572：NetApp勒索軟體解決方案。"^]
+
+
+
+== 什麼是反勒索軟體偵測到的ONTAP
+
+勒索軟體攻擊有兩種類型：
+
+. 加密資料、拒絕對檔案提供服務。除非支付贖金、否則攻擊者會保留對此資料的存取權。
+. 機密專屬資料遭竊。除非支付贖金、否則攻擊者有可能將此資料發佈至公有網域。
+
+
+利用反勒索軟體偵測機制、以下列各項為基礎、提供第一種類型的勒索軟體保護：ONTAP
+
+. 將傳入資料識別為加密或純文字。
+. 偵測到的分析
++
+** 高資料量_entrop__（評估檔案中的資料隨機性）
+** 使用資料加密技術的異常Volume活動激增
+** 不符合正常擴充類型的擴充
+
+
+
+
+
+NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體攻擊的安全性。雖然攻擊可能無法偵測、但如果防毒軟體無法偵測到入侵、NetApp勒索軟體保護功能就會成為重要的額外防禦層。反勒索軟體只要加密少數檔案、就能偵測大多數勒索軟體攻擊的傳播、並自動採取行動保護資料、並在發生可疑攻擊時發出警示。
+
+
+
+== 如何在ONTAP 勒索軟體攻擊後恢復資料
+
+如果懷疑有攻擊、系統會在該時間點製作Volume Snapshot複本、並鎖定該複本。如果稍後確認攻擊、則磁碟區可還原成主動拍攝的快照、將資料遺失降至最低。
+
+鎖定的Snapshot複本無法以正常方式刪除。不過、如果您稍後決定將攻擊標示為誤判、則鎖定的複本將會刪除。
+
+瞭解受影響的檔案和攻擊時間之後、就能選擇性地從各種Snapshot複本中還原受影響的檔案、而不只是將整個磁碟區還原成其中一個快照。
+
+如此一來、反勒索軟體就建置在獲證實ONTAP 的「不可靠資料保護」和災難恢復技術之上、以因應勒索軟體攻擊。如需恢復資料的詳細資訊、請參閱下列主題。
+
+* link:../task_dp_recover_snapshot.html["從Snapshot複本恢復（System Manager）"]
+* link:../data-protection/restore-contents-volume-snapshot-task.html["從Snapshot複本（CLI）還原檔案"]
+* link:https://www.netapp.com/blog/smart-ransomware-recovery["智慧型勒索軟體還原"^]
+

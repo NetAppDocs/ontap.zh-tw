@@ -1,0 +1,87 @@
+---
+permalink: flexgroup/create-svm-disaster-recovery-relationship-task.html 
+sidebar: sidebar 
+keywords: create, svm, disaster, recovery, relationship, flexgroup, volume, flex group, flexclone, flex clone 
+summary: 從ONTAP Sf19.9.1開始、您可以使用FlexGroup 支援的功能區建立SVM災難恢復（SVM DR）關係。SVM DR關係可在發生災難時、透過同步及複寫SVM組態及其資料、提供備援功能、並能在發生災難時恢復FlexGroups。SVM DR需要SnapMirror授權。 
+---
+= 建立SVM災難恢復關係FlexGroup 、以利支援SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP Sf19.9.1開始、您可以使用FlexGroup 支援的功能區建立SVM災難恢復（SVM DR）關係。SVM DR關係可在發生災難時、透過同步及複寫SVM組態及其資料、提供備援功能、並能在發生災難時恢復FlexGroups。SVM DR需要SnapMirror授權。
+
+您應該瞭解無法建立FlexGroup SVM DR關係的情況。
+
+* 存在FlexClone FlexGroup 功能組態
+* 包含一個不全的組態FlexGroup FabricPool
+* 此解決方法是由Fanout或串聯關係所組成FlexGroup
+
+
+.關於這項工作
+* 兩個叢集中的所有節點都必須執行與ONTAP 新增SVM DR支援的節點相同的版本（ONTAP 更新版本為《SVM DR》）。
+* 一線站台和二線站台之間的SVM DR關係應該健全、而且在一線和二線SVM上應有足夠的空間來支援FlexGroup 該等磁碟區。
+
+
+如需建立SVM DR關係的相關資訊、請參閱 https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-svm-replication-workflow-concept.html["管理SnapMirror SVM複寫"]。
+
+.步驟
+. 建立SVM DR關係、或使用現有關係。
++
+https://docs.netapp.com/us-en/ontap/data-protection/replicate-entire-svm-config-task.html["複寫整個SVM組態"]
+
+. 在FlexGroup 主站台建立包含所需數量成分的功能區。
++
+link:create-task.html["建立FlexGroup 一個功能不全的功能"]。
+
++
+請等到FlexGroup 建立完所有的成員後再繼續。
+
+. 若要複寫FlexGroup 此SVM磁碟區、請在次要站台更新SVM：「napmirror update -destination-path dite_Svm_name：-source-path svm_name：」+您也可以輸入「snapmirror show -Fields schedule」來檢查是否已有排程的SnapMirror更新
+. 從二線站台確認SnapMirror關係是否健全：「napmirror show」
++
+[listing]
+----
+cluster2::> snapmirror show
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+----
+. 從二線站台、確認新FlexGroup 版的「不一致」磁碟區及其構成部分存在：「napmirror show -expand」（napmirror show -expand）
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src  XDP  vs1_dst:fg_src
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0001
+            XDP  vs1_dst:fg_src__0001
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0002
+            XDP  vs1_dst:fg_src__0002
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0003
+            XDP  vs1_dst:fg_src__0003
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0004
+            XDP  vs1_dst:fg_src__0004
+                              Snapmirrored
+                                      Idle           -         true    -
+6 entries were displayed.
+----
+

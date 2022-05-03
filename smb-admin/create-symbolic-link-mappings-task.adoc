@@ -1,0 +1,49 @@
+---
+permalink: smb-admin/create-symbolic-link-mappings-task.html 
+sidebar: sidebar 
+keywords: create, mapping, unix, symbolic, link, smb, share, relative, symbol, refer, file, folder, relative, parent, absolute, create symbolic link mappings for smb shares 
+summary: 您可以建立SMB共用的UNIX符號連結對應。您可以建立相對符號連結、以參照檔案或資料夾與其父資料夾的相對位置、也可以建立絕對符號連結、以使用絕對路徑來參照檔案或資料夾。 
+---
+= 建立SMB共用的符號連結對應
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立SMB共用的UNIX符號連結對應。您可以建立相對符號連結、以參照檔案或資料夾與其父資料夾的相對位置、也可以建立絕對符號連結、以使用絕對路徑來參照檔案或資料夾。
+
+如果您使用SMB 2.x、就無法從Mac OS X用戶端存取Widgelinks當使用者嘗試從Mac OS X用戶端使用wideinks連線至共用時、嘗試會失敗。不過、如果您使用SMB 1、則可以將wideinks與Mac OS X用戶端搭配使用。
+
+.步驟
+. 若要建立SMB共用的符號連結對應：「vserver CIFS symlink create -vserver virtual_server_name -unix-path path -share-name share_name -CIFS路徑[-CIFS伺服器伺服器名稱][-locity {local| free | widelink}][-home-directory{true|假}]
++
+vserver的「virtual_server_name」指定儲存虛擬機器（SVM）名稱。
+
++
+unix-path'"path"指定UNIX路徑。UNIX路徑必須以斜槓（`/`）開頭、且結尾必須以斜槓（`/`）結尾。
+
++
+共享名"shhare名稱"指定要映射的SMB共享的名稱。
+
++
+"CIFS路徑"的"path"指定了CIFS路徑。CIFS路徑必須以斜槓（`/`）開頭、且必須以斜槓（`/`）結尾。
+
++
+CIFS伺服器的「伺服器名稱」指定CIFS伺服器名稱。CIFS伺服器名稱可以指定為DNS名稱（例如mynetwork.cifs.server.com）、IP位址或NetBios名稱。您可以使用「vserver CIFS show」命令來判斷NetBios名稱。如果未指定此選用參數、預設值為本機CIFS伺服器的NetBios名稱。
+
++
+"-location"{'locale'|'free '|'widelink'}指定是建立本機連結、免費連結或寬符號連結。本機符號連結會對應至本機SMB共用區。免費的符號連結可以對應到本機SMB伺服器上的任何位置。廣泛的符號連結會對應到網路上的任何SMB共用區。如果您未指定此選用參數、預設值為「本機」。
+
++
+首頁目錄{'true'|'假'}指定目標共用區是否為主目錄。即使此參數為選用參數、當目標共用區設定為主目錄時、您仍必須將此參數設為「true」。預設值為「假」。
+
+
+
+下列命令會在名為VS1的SVM上建立符號連結對應。它具有UNIX路徑「/src/」、SMB共用名稱「ourCE」、CIFS路徑「/mycompany / source/」、CIFS伺服器IP位址123.123.123、而且是一種無線連結。
+
+[listing]
+----
+cluster1::> vserver cifs symlink create -vserver vs1 -unix-path /src/ -share-name SOURCE -cifs-path "/mycompany/source/" -cifs-server 123.123.123.123 -locality widelink
+----
+xref:configure-unix-symbolic-link-support-shares-task.adoc[在SMB共用區上設定UNIX符號連結支援]

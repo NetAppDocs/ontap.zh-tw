@@ -1,0 +1,73 @@
+---
+permalink: smb-admin/add-home-directory-share-task.html 
+sidebar: sidebar 
+keywords: smb, home, directory, feature, add, property, share, properties, property, add a home directory share 
+summary: 如果您想要使用SMB主目錄功能、則必須將至少一個共用新增至共用內容中包含的主目錄內容。 
+---
+= 新增主目錄共用區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您想要使用SMB主目錄功能、則必須將至少一個共用新增至共用內容中包含的主目錄內容。
+
+您可以使用「vserver CIFS共用create」命令、在建立共用時建立主目錄共用區、也可以使用「vserver CIFS共用modify」命令、隨時將現有的共用區變更為主目錄共用區。
+
+若要建立主目錄共用區、您必須在建立或修改共用區時、在「-share-properties」選項中加入「HomeDirectory」值。您可以使用使用者連線至其主目錄時動態擴充的變數來指定共用名稱和共用路徑。您可以在路徑中使用的可用變數分別是對應於Windows使用者名稱、網域和對應UNIX使用者名稱的「%w'、「%d」和「%u」。
+
+.步驟
+. 新增主目錄共用：+「vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path _path_-share-properties HomeDirectory（、...）」
++
+vserver的「vserver」指定要新增搜尋路徑的CIFS型儲存虛擬機器（SVM）。
+
++
+共享名_share-name_`指定主目錄共享名。
+
++
+除了包含其中一個必要的變數之外、如果共用名稱包含文字字串「%w」、「%u」或「%d」、您必須在文字字串前面加上%（%）字元、以避免ONTAP 將文字字串視為變數（例如、「%w」）。
+
++
+** 共用名稱必須包含「%w」或「%u」變數。
+** 共享區名稱還可包含「%d」變數（例如、「%d」/「%w」）、或是共享區名稱中的靜態部分（例如、home1_`%w）。
+** 如果系統管理員使用該共用區來連線至其他使用者的主目錄、或是允許使用者連線至其他使用者的主目錄、則動態共用名稱模式的前面必須有一個字首符號（~）。
++
+使用「vserver CIFS主目錄修改」來啟用此存取、方法是將「-is home-dirs-access-for admin-enabl用量」選項設為「true」（真）、或是將進階選項「is home-dirs-access-for public-enabling」設為「true」。
+
+
+
++
+"path"（路徑）指定主目錄的相對路徑。
+
+
+
+共享屬性HomeDirectory（、...）指定該共享的共享屬性。您必須指定「HomeDirectory」值。您可以使用以逗號分隔的清單來指定其他共用屬性。
+
+. 使用「vserver CIFS shareshow」命令、確認您已成功新增主目錄共用。
+
+
+下列命令會建立名為「%w」的主目錄共用區。除了設定「HomeDirectory」共用屬性之外、還會設定「oplocks」、「可瀏覽的」和「changengeneifeing」共用屬性。
+
+[NOTE]
+====
+此範例不會顯示SVM上所有共用的輸出。輸出被截短。
+
+====
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name %w -path %w -share-properties oplocks,browsable,changenotify,homedirectory
+
+vs1::> vserver cifs share show -vserver vs1
+Vserver    Share    Path         Properties     Comment  ACL
+---------- -------- ------------ -------------- -------- -----------
+vs1        %w       %w           oplocks        -        Everyone / Full Control
+                                 browsable
+                                 changenotify
+                                 homedirectory
+----
+xref:add-home-directory-search-path-task.adoc[新增主目錄搜尋路徑]
+
+xref:requirements-automatic-node-referrals-concept.adoc[使用自動節點參照的需求與準則]
+
+xref:manage-accessibility-users-home-directories-task.adoc[管理使用者主目錄的存取能力]

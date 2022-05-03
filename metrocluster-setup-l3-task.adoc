@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: metrocluster-setup-l3-task.html 
+keywords: metrocluster, layer 3, edit, gateway, netmask, net mask, configuration, configure 
+summary: 從ONTAP 版本《E59.10.1》開始、您可以變更MetroCluster IP位址和遮罩、以及更新一個《E21 IP介面》的閘道。 
+---
+= 修改MetroCluster 位址、網路遮罩和閘道、使其成為一個靜態IP
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從ONTAP 版本號《E59.10.1》開始、您可以變更MetroCluster 下列功能：IP位址和遮罩、以及閘道。您可以使用任何參數組合來更新。
+
+例如、如果偵測到重複的IP位址、或是因為路由器組態變更而需要變更第3層網路的閘道、您可能需要更新這些內容。一次只能變更一個介面。在更新其他介面並重新建立連線之前、該介面會造成流量中斷。
+
+
+NOTE: 您必須在每個連接埠上進行變更。同樣地、網路交換器也需要更新其組態。例如、如果閘道已更新、則理想情況下會在HA配對的兩個節點上變更閘道、因為它們相同。此外、連接至這些節點的交換器也需要更新其閘道。
+
+更新每個節點和介面的IP位址、網路遮罩和閘道。

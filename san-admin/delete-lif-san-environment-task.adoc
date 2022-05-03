@@ -1,0 +1,48 @@
+---
+permalink: san-admin/delete-lif-san-environment-task.html 
+sidebar: sidebar 
+keywords: delete, lif, san, environment 
+summary: 在刪除LIF之前、您應確保連線至LIF的主機可以透過其他路徑存取LUN。 
+---
+= 刪除SAN環境中的LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在刪除LIF之前、您應確保連線至LIF的主機可以透過其他路徑存取LUN。
+
+如果您要刪除的LIF是連接埠集的成員、則必須先從連接埠集移除LIF、才能刪除LIF。
+
+.步驟
+. 確認要刪除的LIF和目前連接埠名稱：
++
+「網路介面show–vserver _vserver_name_」
+
+. 刪除LIF：
++
+網路介面刪除
+
++
+網路介面刪除-vserver VS1 -lIF lif1'
+
+. 確認您已刪除LIF：
++
+「網路介面展示」
+
++
+「網路介面show -vserver VS1」
+
++
+[listing]
+----
+
+Logical Status     Network                     Current   Current Is
+Vserver Interface  Admin/Oper Address/Mask     Node      Port    Home
+------- ---------- ---------- ---------------- --------- ------- ----
+vs1
+        lif2       up/up      192.168.2.72/24  node-01   e0b     true
+        lif3       up/up      192.168.2.73/24  node-01   e0b     true
+----
+

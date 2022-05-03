@@ -1,0 +1,22 @@
+---
+permalink: nas-audit/fpolicy-scope-config-native-engine-concept.html 
+sidebar: sidebar 
+keywords: requirement, fpolicy, scope, configurations, policy, native engine 
+summary: 如果您將FPolicy原則設定為使用原生引擎、則需要針對原則設定的FPolicy範圍進行定義。 
+---
+= 如果FPolicy原則使用原生引擎、則需要FPolicy範圍組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您將FPolicy原則設定為使用原生引擎、則需要針對原則設定的FPolicy範圍進行定義。
+
+FPolicy範圍會定義套用FPolicy原則的界限、例如FPolicy是否套用至指定的磁碟區或共用區。有許多參數會進一步限制FPolicy原則套用的範圍。其中一個參數是啟用「-is副檔名檢查目錄」、用於指定是否檢查目錄上的副檔名。預設值為「假」、表示不會檢查目錄上的副檔名。
+
+如果在共享區或磁碟區上啟用使用原生引擎的FPolicy原則、且原則範圍的「啟用檔案副檔名檢查目錄」參數設為「假」、則會拒絕目錄存取。使用此組態時、因為不會檢查目錄的副檔名、所以如果目錄作業屬於原則範圍、則會拒絕任何目錄作業。
+
+若要確保在使用原生引擎時能夠成功存取目錄、您必須在建立範圍時、將啟用「-is副檔名檢查目錄」的參數設為「true」。
+
+此參數設為「true」時、系統會檢查目錄作業的副檔名、並根據FPolicy範圍組態中包含或排除的副檔名來決定是否允許或拒絕存取。

@@ -1,0 +1,51 @@
+---
+permalink: nfs-admin/enable-disable-modification-nfsv4-acls-task.html 
+sidebar: sidebar 
+keywords: enable, disable, modification, nfsv4, acl 
+summary: 當使用ACL接收檔案或目錄的chmod命令時ONTAP 、預設會保留及修改ACL、以反映模式位元變更。您可以停用-v4.x acl-preserve參數、以變更您想要捨棄ACL的行為。 
+---
+= 啟用或停用NFSv4 ACL的修改
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當使用ACL接收檔案或目錄的「chmod」命令時ONTAP 、預設會保留並修改ACL、以反映模式位元的變更。您可以停用「-v4.x acl-preserve」參數、以變更要捨棄ACL的行為。
+
+使用統一化安全性樣式時、此參數也會指定當用戶端傳送檔案或目錄的chmod、chgroup或chown命令時、是否保留或捨棄NTFS檔案權限。
+
+此參數的預設值為啟用。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行下列其中一項動作：
++
+[cols="35,65"]
+|===
+
+
+| 如果您想要... | 輸入下列命令... 
+
+
+ a| 
+啟用現有NFSv4 ACL的保留與修改（預設）
+ a| 
+「vserver NFS modify -vserver vserver_name -v4.x ACL -preserve enabl用」
+
+
+
+ a| 
+變更模式位元時、請停用保留和丟棄NFSv4 ACL
+ a| 
+「vserver NFS modify -vserver vserver_name -v4.x ACL -preserve disabled'
+
+|===
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

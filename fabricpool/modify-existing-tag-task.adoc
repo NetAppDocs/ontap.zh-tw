@@ -1,0 +1,34 @@
+---
+permalink: fabricpool/modify-existing-tag-task.html 
+sidebar: sidebar 
+keywords: modifying, existing tag 
+summary: 您可以變更標記的名稱、取代物件存放區中現有物件上的標記、或是新增不同的標記至您打算稍後新增的新物件。 
+---
+= 修改現有標記
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以變更標記的名稱、取代物件存放區中現有物件上的標記、或是新增不同的標記至您打算稍後新增的新物件。
+
+使用「volume modify」命令搭配「分層物件標記」選項、以您提供的新值取代現有標記。
+
+.步驟
+. 使用「volume modify」命令搭配「分層物件標籤」選項、即可修改現有的標籤。
++
+[listing]
+----
+volume modify [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [ ,<key2=value2>,
+<key3=value3>,<key4=value4> ]
+----
++
+下列範例將現有標記類型=abc的名稱變更為類型=xyz。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
+----
+

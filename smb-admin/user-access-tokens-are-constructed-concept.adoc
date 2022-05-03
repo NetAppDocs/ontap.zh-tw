@@ -1,0 +1,36 @@
+---
+permalink: smb-admin/user-access-tokens-are-constructed-concept.html 
+sidebar: sidebar 
+keywords: user, map, share, authenticate, smb, session, establish, user, access, token, construct, contain, information, cumulative, privilege, map, unix, user, how user access tokens are constructed 
+summary: 當使用者對應共用時、系統會建立已驗證的SMB工作階段、並建構使用者存取權杖、其中包含使用者、使用者群組成員資格和累積權限、以及對應的UNIX使用者的相關資訊。 
+---
+= 如何建構使用者存取權杖
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當使用者對應共用時、會建立已驗證的SMB工作階段、並建構使用者存取權杖、其中包含使用者、使用者群組成員資格和累積權限、以及對應的UNIX使用者的相關資訊。
+
+除非停用此功能、否則本機使用者和群組資訊也會新增至使用者存取權杖。存取權杖的建構方式取決於登入是針對本機使用者還是Active Directory網域使用者：
+
+* 本機使用者登入
++
+雖然本機使用者可以是不同本機群組的成員、但本機群組不能是其他本機群組的成員。本機使用者存取權杖是由指派給特定本機使用者所屬群組的所有權限聯合所組成。
+
+* 網域使用者登入
++
+當網域使用者登入時ONTAP 、即可取得使用者存取權杖、其中包含使用者所屬之所有網域群組的使用者ID和SID。使用網域使用者存取權杖的聯合、搭配使用者網域群組的本機成員資格（若有）所提供的存取權杖、以及指派給網域使用者或其任何網域群組成員資格的任何直接權限。ONTAP
+
+
+
+對於本機和網域使用者登入、也會針對使用者存取權杖設定主要群組RID。預設RID為「Domain Users（刪除使用者）」（RID 513）。您無法變更預設值。
+
+Windows對UNIX和UNIX對Windows名稱對應程序、對本機和網域帳戶都遵循相同的規則。
+
+[NOTE]
+====
+從UNIX使用者到本機帳戶並無暗示的自動對應。如果需要、則必須使用現有的名稱對應命令來指定明確的對應規則。
+
+====

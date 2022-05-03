@@ -1,0 +1,30 @@
+---
+permalink: smb-hyper-v-sql/recommendations-config-concept.html 
+sidebar: sidebar 
+keywords: recommendations, sql, server, hyper, v, smb, configuration 
+summary: 為了確保SQL Server和Hyper-V over SMB組態健全且可運作、您必須熟悉建議的最佳實務做法、才能設定解決方案。 
+---
+= SQL Server與Hyper-V over SMB組態的建議
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了確保SQL Server和Hyper-V over SMB組態健全且可運作、您必須熟悉建議的最佳實務做法、才能設定解決方案。
+
+
+
+== 一般建議
+
+* 將應用程式伺服器檔案與一般使用者資料分開。
++
+如果可能、請將整個儲存虛擬機器（SVM）及其儲存設備用於應用程式伺服器的資料。
+
+* 為獲得最佳效能、請勿在用於儲存應用程式伺服器資料的SVM上啟用SMB簽署。
+* 為獲得最佳效能及改善容錯能力、SMB多通道可在ONTAP 單一SMB工作階段中、在VMware與用戶端之間提供多重連線。
+* 請勿在Hyper-V或SQL Server中使用的任何共享區上、透過SMB組態建立持續可用的共享區。
+* 停用用於持續可用性之共用的變更通知。
+* 請勿在執行Volume搬移的同時執行Aggregate重新配置（ARL）、因為ARL有會暫停某些作業的階段。
+* 對於Hyper-V over SMB解決方案、請在建立叢集式虛擬機器時、使用來賓iSCSI磁碟機。共享的「.VHDX」檔案不支援ONTAP 以SMB為基礎的Hyper-V、以利SMB共享。
+

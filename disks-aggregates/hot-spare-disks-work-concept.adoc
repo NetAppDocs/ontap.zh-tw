@@ -1,0 +1,18 @@
+---
+permalink: disks-aggregates/hot-spare-disks-work-concept.html 
+sidebar: sidebar 
+keywords: hot, spare disks, work 
+summary: 熱備援磁碟是指派給儲存系統的磁碟、已準備就緒可供使用、但未供RAID群組使用、且不保留任何資料。 
+---
+= 熱備援磁碟的運作方式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+熱備援磁碟是指派給儲存系統的磁碟、已準備就緒可供使用、但未供RAID群組使用、且不保留任何資料。
+
+如果RAID群組內發生磁碟故障、熱備援磁碟會自動指派給RAID群組、以取代故障磁碟。故障磁碟的資料會從RAID同位元檢查磁碟在背景的熱備援替換磁碟上重建。重建活動會記錄在「etc/message」檔案中、AutoSupport 並傳送一個資訊提示訊息。
+
+如果可用的熱備援磁碟與故障磁碟的大小不同、則會選擇大小較大的磁碟、然後再縮減大小以符合所更換磁碟的大小。

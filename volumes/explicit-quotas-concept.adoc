@@ -1,0 +1,49 @@
+---
+permalink: volumes/explicit-quotas-concept.html 
+sidebar: sidebar 
+keywords: how to, use, explicit, quotas 
+summary: 您可以使用明確配額來指定特定配額目標的配額、或覆寫特定目標的預設配額。 
+---
+= 如何使用明確配額
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用明確配額來指定特定配額目標的配額、或覆寫特定目標的預設配額。
+
+明確的配額會指定特定使用者、群組或qtree的限制。明確的配額會取代相同目標的任何預設配額。
+
+針對具有衍生使用者配額的使用者新增明確的使用者配額時、您必須使用與預設使用者配額相同的使用者對應設定。否則、當您調整配額大小時、明確的使用者配額會被拒絕、因為它被視為新的配額。
+
+明確配額只會影響相同層級（Volume或qtree）的預設配額。例如、qtree的明確使用者配額不會影響包含qtree之磁碟區的預設使用者配額。不過、qtree的明確使用者配額會覆寫（取代定義的限制）該qtree的預設使用者配額。
+
+下列配額檔案包含預設的使用者配額、將vol1中的所有使用者限制為50 MB空間。不過、由於明確的配額（以粗體顯示）、允許一個使用者jsmith擁有80 MB的空間：
+
+[listing]
+----
+#Quota target type            disk  files  thold  sdisk  sfile
+#-----------  ----            ----  -----  -----  -----  -----
+*             user@/vol/vol1  50M
+**jsmith      user@/vol/vol1  80M**
+----
+下列配額項目會將指定的使用者限制為500MB磁碟空間、以及vol1磁碟區中的10240個檔案：
+
+[listing]
+----
+jsmith,corp\jsmith,engineering\”john smith”,
+S-1-5-32-544   user@/vol/vol1         500M      10K
+----
+下列配額項目會將eng1群組限制為150 MB磁碟空間、且/vol/vol2/proj1 qtree中的檔案數量不限：
+
+[listing]
+----
+eng1        group@/vol/vol2/proj1  150M
+----
+下列配額項目會將vol2磁碟區中的proj1 qtree限制為750 MB磁碟空間和76、800個檔案：
+
+[listing]
+----
+/vol/vol2/proj1   tree                750M      75K
+----

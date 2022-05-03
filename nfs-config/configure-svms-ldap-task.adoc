@@ -1,0 +1,68 @@
+---
+permalink: nfs-config/configure-svms-ldap-task.html 
+sidebar: sidebar 
+keywords: verify, ldap, sources, name, service, switch, table 
+summary: 您必須驗證SVM的名稱服務交換器表中是否正確列出名稱服務的LDAP來源。 
+---
+= 驗證名稱服務交換器表中的LDAP來源
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須驗證SVM的名稱服務交換器表中是否正確列出名稱服務的LDAP來源。
+
+.步驟
+. 顯示目前名稱服務交換器表格內容：
++
+「Vserver服務名稱服務ns-switchshow -vserver _svm_name_」
+
++
+下列命令顯示SVM My_SVM的結果：
+
++
+[listing]
+----
+ie3220-a::> vserver services name-service ns-switch show -vserver My_SVM
+                               Source
+Vserver         Database       Order
+--------------- ------------   ---------
+My_SVM          hosts          files,
+                               dns
+My_SVM          group          files,ldap
+My_SVM          passwd         files,ldap
+My_SVM          netgroup       files
+My_SVM          namemap        files
+5 entries were displayed.
+----
++
+「namemap」指定搜尋名稱對應資訊的來源、以及搜尋順序。在純UNIX環境中、不需要輸入此項目。只有在同時使用UNIX和Windows的混合環境中才需要名稱對應。
+
+. 視需要更新「n-switch'」項目：
++
+|===
+| 如果您想要更新下列項目的ns交換器項目... | 輸入命令... 
+
+
+ a| 
+使用者資訊
+ a| 
+「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-database-passwd-sources LDAP、files"
+
+
+
+ a| 
+群組資訊
+ a| 
+「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-database-sources LDAP、files"
+
+
+
+ a| 
+網路群組資訊
+ a| 
+「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-databases netgroup -sources LDAP、files」
+
+|===
+

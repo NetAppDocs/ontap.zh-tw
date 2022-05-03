@@ -1,0 +1,266 @@
+---
+permalink: volumes/storage-limits-reference.html 
+sidebar: sidebar 
+keywords: storage limits 
+summary: 在規劃及管理儲存架構時、您應該考量儲存物件的限制。 
+---
+= 儲存限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在規劃及管理儲存架構時、您應該考量儲存物件的限制。
+
+限制通常取決於平台。請參閱 link:https://hwu.netapp.com/["Hardware Universe"^] 以瞭解特定組態的限制。
+
+限制列於下列各節：
+
+* <<vollimits>>
+* <<flexclone>>
+
+
+如需關於功能的儲存限制Cloud Volumes ONTAP 、請見 link:https://docs.netapp.com/us-en/cloud-volumes-ontap/["發行說明 Cloud Volumes ONTAP"^]。
+
+
+
+== Volume限制
+
+[cols="4*"]
+|===
+| 儲存物件 | 限制 | 原生儲存設備 | 儲存陣列 
+
+
+ a| 
+*陣列LUN*
+ a| 
+根Volume的最小大小：1^
+ a| 
+不適用
+ a| 
+模型相依
+
+
+
+ a| 
+*檔案*
+ a| 
+最大尺寸
+ a| 
+16 TB
+ a| 
+16 TB
+
+
+
+ a| 
+每個Volume最大值：立方
+ a| 
+磁碟區大小視情況而定、高達20億
+ a| 
+磁碟區大小視情況而定、高達20億
+
+
+
+ a| 
+* FlexClone Volumes *
+ a| 
+階層式複製深度
+ a| 
+499年
+ a| 
+499年
+
+
+
+ a| 
+*《*》卷* FlexVol
+ a| 
+每個節點的最大值：1^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+每個SVM^5^節點的最大數量
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+最小尺寸
+ a| 
+20 MB
+ a| 
+20 MB
+
+
+
+ a| 
+最大大小：1^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+* FlexVol 適用於主要工作負載的*
+ a| 
+每節點最大值
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+*《根磁碟區*》FlexVol
+ a| 
+最小尺寸：1^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+* LUN*
+ a| 
+每節點最大值：5^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+每個叢集的最大值：5^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+每個Volume最大值：5^
+ a| 
+模型相依
+ a| 
+模型相依
+
+
+
+ a| 
+最大尺寸
+ a| 
+16 TB
+ a| 
+16 TB
+
+
+
+ a| 
+* qtree *
+ a| 
+每FlexVol 個速度區塊的最大值
+ a| 
+4、995
+ a| 
+4、995
+
+
+
+ a| 
+* Snapshot複本*
+ a| 
+每個Volume的最大值：^6^
+ a| 
+255/1023
+ a| 
+255/1023
+
+
+
+ a| 
+*磁碟區*
+ a| 
+NAS的每個叢集上限
+ a| 
+12、000
+ a| 
+12、000
+
+
+
+ a| 
+已設定SAN傳輸協定的每個叢集上限
+ a| 
+模型相依
+ a| 
+模型相依
+
+|===
+* 附註： *
+
+. 在不含更新版本的版本中、Volume最多可包含255個Snapshot複本。ONTAP在NetApp 9.4及更新版本中、Volume最多可包含1023個Snapshot複本。ONTAP
+. 從支援的最大數量的支援到支援的支援數量、從使用支援至少128 GB記憶體的支援速度開始ONTAP 、FlexVol 每個節點的支援數量AFF 已增加至2、500 FlexVol 個、但是每個節點一次只能啟用1、000個磁碟區（主要工作負載）。
++
+如需平台專屬資訊及最新支援詳細資料、請參閱 https://hwu.netapp.com/["Hardware Universe"]。
+
+. 20億= 2 x 10^9^。
+. FlexClone Volume的巢狀階層架構的最大深度、可從單FlexVol 一的Sflexvolume建立。
+. 此限制僅適用於SAN環境。
++
+link:../san-config/index.html["SAN組態"]
+
+. 您可以使用SnapMirror串聯部署來增加此限制。
+
+
+
+
+== FlexClone檔案與FlexClone LUN限制
+
+[cols="3*"]
+|===
+| 限制 | 原生儲存設備 | 儲存陣列 
+
+
+ a| 
+*每個檔案或LUN的上限為1^
+ a| 
+3227、67
+ a| 
+3227、67
+
+
+
+ a| 
+*每FlexVol 個資料不完整的共享資料總數*
+ a| 
+640 TB
+ a| 
+640 TB
+
+|===
+*附註：*
+
+. 如果您嘗試建立32767個以上的實體複本、ONTAP 則會自動建立父檔案或LUN的新實體複本。
++
+對於使用重複資料刪除技術的非重複資料磁碟區、此限制可能會較低FlexVol 。
+
+
+
+https://www.netapp.com/cloud-services/cloud-manager/documentation/["尋找Cloud Volumes ONTAP 您的版本的更新說明"]

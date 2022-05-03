@@ -1,0 +1,71 @@
+---
+permalink: encryption-at-rest/enable-external-key-management-96-later-hw-task.html 
+sidebar: sidebar 
+keywords: enabling, external key management, ontap 9.6, later, hw-based 
+summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加密資料的金鑰。您最多可將四個KMIP伺服器連線至一個節點。建議至少使用兩部伺服器來進行備援和災難恢復。 
+---
+= 在ONTAP 支援外部金鑰管理的情況下、於支援內部金鑰（硬體型）9.6及更新版本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用一或多個KMIP伺服器來保護叢集用來存取加密資料的金鑰。您最多可將四個KMIP伺服器連線至一個節點。建議至少使用兩部伺服器來進行備援和災難恢復。
+
+.您需要的是 #8217 ；需要的是什麼
+* KMIP SSL用戶端和伺服器憑證必須已安裝。
+* 您必須是叢集管理員才能執行此工作。
+* 在設定外部金鑰管理程式之前、您必須先設定MetroCluster 此解決方案。
+
+
+.步驟
+. 設定叢集的金鑰管理程式連線：
++
+h+安全金鑰管理程式外部啟用-vserver admin_SVM -key-servers host_name | ip_address:連接埠、... -client-cert client_Certificate -server_cert server_ca_certificats+`
+
++
+[NOTE]
+====
+「安全金鑰管理程式外部啟用」命令取代了「安全金鑰管理程式設定」命令。您可以執行「安全金鑰管理程式外部修改」命令來變更外部金鑰管理組態。如需完整的命令語法、請參閱手冊頁。
+
+====
++
+下列命令可在三個外部金鑰伺服器上、為「cluster1」啟用外部金鑰管理。第一個金鑰伺服器是使用其主機名稱和連接埠來指定、第二個金鑰伺服器是使用IP位址和預設連接埠來指定、第三個金鑰伺服器則是使用IPv6位址和連接埠來指定：
+
++
+[listing]
+----
+clusterl::> security key-manager external enable -key-servers ks1.local:15696,10.0.0.10,[fd20:8b1e:b255:814e:32bd:f35c:832c:5a09]:1234 -client-cert AdminVserverClientCert -server-ca-certs AdminVserverServerCaCert
+----
+. 確認所有已設定的KMIP伺服器均已連線：
++
+「安全金鑰管理程式外部顯示狀態-node_name -vserver SVM -key-server host_name | ip_address: port -key-server狀態可用| not -responding| unknown]
+
++
+[NOTE]
+====
+Check Alignment of PHs>安全密鑰管理器external show-STATUS'命令取代了"安全 密鑰管理器show -STATUS"命令。如需完整的命令語法、請參閱手冊頁。
+
+====
++
+[listing]
+----
+cluster1::> security key-manager external show-status
+
+Node  Vserver  Key Server                                     Status
+----  -------  ---------------------------------------        -------------
+node1
+      cluster1
+               10.0.0.10:5696                                 available
+               fd20:8b1e:b255:814e:32bd:f35c:832c:5a09:1234   available
+               ks1.local:15696                                available
+node2
+      cluster1
+               10.0.0.10:5696                                 available
+               fd20:8b1e:b255:814e:32bd:f35c:832c:5a09:1234   available
+               ks1.local:15696                                available
+
+6 entries were displayed.
+----
+

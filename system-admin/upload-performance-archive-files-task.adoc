@@ -1,0 +1,49 @@
+---
+permalink: system-admin/upload-performance-archive-files-task.html 
+sidebar: sidebar 
+keywords: upload, performance, archive, files, autosupport, message, technical 
+summary: 您可以產生AutoSupport 並傳送包含效能歸檔的消息。根據預設、NetApp技術支援會收到AutoSupport 「不支援」訊息、效能歸檔會上傳至NetApp支援網站。您可以指定訊息和上傳的替代目的地。 
+---
+= 上傳效能歸檔檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以產生AutoSupport 並傳送包含效能歸檔的消息。根據預設、NetApp技術支援會收到AutoSupport 「不支援」訊息、效能歸檔會上傳至NetApp支援網站。您可以指定訊息和上傳的替代目的地。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須使用AutoSupport 下列設定來設定不必要功能：
++
+** 節點上啟用了支援。AutoSupport
+** 將支援功能設定為傳送訊息給技術支援。AutoSupport
+** 將支援使用HTTP或HTTPS傳輸傳輸傳輸傳輸協定。AutoSupport
++
+傳送包含大型檔案（例如效能歸檔檔案）的訊息時、不支援該SMTP傳輸傳輸傳輸傳輸傳輸協定。
+
+
+
+
+
+您必須為要上傳的效能歸檔資料指定開始日期。大多數儲存系統會將效能歸檔保留兩週、讓您指定兩週前的開始日期。例如、如果今天是1月15日、您可以指定1月2日的開始日期。如果您需要協助找出您要上傳之效能歸檔的開始日期、請聯絡技術支援部門。
+
+.步驟
+. 使用AutoSupport 「系統節點AutoSupport ‘系統節點‘叫用效能歸檔’命令來產生一則消息並上傳效能歸檔檔案。
++
+在下列範例中、2015年1月12日起的4小時效能歸檔檔案會新增至AutoSupport 一份消息、並上傳至預設位置（即NetApp支援網站）：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-performance-archive -node local -start-date 1/12/2015 13:42:09 -duration 4h
+----
++
+在下列範例中、2015年1月12日起的4小時效能歸檔檔案會新增至AutoSupport 一份消息、並上傳至URI指定的位置：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-performance-archive -node local -start-date 1/12/2015 13:42:09 -duration 4h -uri https://files.company.com
+----
+

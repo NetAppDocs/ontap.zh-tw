@@ -1,0 +1,27 @@
+---
+permalink: nfs-admin/how-name-mappings-used-concept.html 
+sidebar: sidebar 
+keywords: configure, name, mapping 
+summary: 利用名稱對應功能、將SMB身分識別對應至UNIX身分識別、將Kerberos身分識別對應至UNIX身分識別、並將UNIX身分識別對應至SMB身分識別。ONTAP無論是從NFS用戶端或SMB用戶端連線、IT都需要這些資訊來取得使用者認證並提供適當的檔案存取。 
+---
+= 設定名稱對應總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+利用名稱對應功能、將SMB身分識別對應至UNIX身分識別、將Kerberos身分識別對應至UNIX身分識別、並將UNIX身分識別對應至SMB身分識別。ONTAP無論是從NFS用戶端或SMB用戶端連線、IT都需要這些資訊來取得使用者認證並提供適當的檔案存取。
+
+您不需要使用名稱對應的情況有兩種例外：
+
+* 您可以設定純UNIX環境、但不打算在磁碟區上使用SMB存取或NTFS安全樣式。
+* 您可以設定要使用的預設使用者。
++
+在此案例中、不需要名稱對應、因為不會對應每個個別用戶端認證、而是將所有用戶端認證對應至相同的預設使用者。
+
+
+
+請注意、您只能針對使用者使用名稱對應、而不能針對群組使用名稱對應。
+
+不過、您可以將一組個別使用者對應至特定使用者。例如、您可以將開頭或結尾的所有AD使用者對應至特定UNIX使用者、以及使用者的UID。

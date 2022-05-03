@@ -1,0 +1,53 @@
+---
+permalink: smb-admin/multi-byte-file-directory-qtree-names-concept.html 
+sidebar: sidebar 
+keywords: ontap, suppot, byte, utf, encode, name, enable, creation, display, file, directory, tree, unicode, supplement, character, multilingual, plane, bmp, release, display, environment, how ontap handles multi-byte file, qtree 
+summary: 從支援4位元組的UTF-8編碼名稱開始、即可建立及顯示包含基本多語言平面（BMP）以外之統一碼輔助字元的檔案、目錄和樹狀名稱。ONTAP在早期版本中、這些補充字元無法在多重傳輸協定環境中正確顯示。 
+---
+= 如何處理多位元組檔案、目錄和qtree名稱ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從支援4位元組的UTF-8編碼名稱開始、即可建立及顯示包含基本多語言平面（BMP）以外之統一碼輔助字元的檔案、目錄和樹狀名稱。ONTAP在早期版本中、這些補充字元無法在多重傳輸協定環境中正確顯示。
+
+為了支援4位元組的utf-8編碼名稱、新的_utf8mb4_語言代碼可用於「vserver」和「volume」命令系列。
+
+* 您必須以下列其中一種方式建立新的Volume：
+* 明確設定Volume「-language」選項：「volume create -language utf8mb4｛…｝」
+* 從使用以下選項建立或修改的SVM繼承Volume '-language'選項：「vserver [creation| modify]-Language utf8mb4｛…｝'volume create｛…｝」
+* 您無法修改用於utf8mb4支援的現有磁碟區；您必須建立新的utf8mb4就緒磁碟區、然後使用用戶端型複製工具來移轉資料。
++
+您可以更新SVM以取得utf8mb4支援、但現有磁碟區仍保留其原始語言代碼。
+
++
+[NOTE]
+====
+目前不支援使用4位元組utf-8字元的LUN名稱。
+
+====
+* 在Windows檔案系統應用程式中、通常會使用16位元的統一碼轉換格式（UTF-16）來表示統一碼字元資料、在使用8位元的統一碼轉換格式（UTF-8）的NFS檔案系統中則代表統一碼字元資料。
++
+在發行版不含更新版本的版本中、Windows用戶端所建立的名稱（包括UTF-16輔助字元）會正確顯示給其他Windows用戶端、但不會正確轉譯為適用於NFS用戶端的UTF-8。ONTAP同樣地、已建立NFS用戶端的名稱若含有UTF-8補充字元、則無法正確轉譯為適用於Windows用戶端的UTF-16。
+
+* 當您在執行ONTAP 包含有效或無效補充字元的系統上建立檔案名稱時ONTAP 、不接受檔案名稱、並傳回無效的檔案名稱錯誤。
++
+若要避免此問題、請在檔案名稱中僅使用BMP字元、避免使用補充字元、或升級ONTAP 至版本號（或更新版本）。
+
+
+
+從ONTAP 功能表9開始、qtree名稱中允許使用統一碼字元。
+
+* 您可以使用「volume qtree」命令系列或「System Manager」來設定或修改qtree名稱。
+* qtree名稱可以包含多位元組的統一碼格式字元、例如日文和中文字元。
+* 在版本不含支援的版本中、僅支援使用BMP字元（也就是可以以3個位元組表示的字元）ONTAP 。
++
+[NOTE]
+====
+在發行版之前的版本中、qtree父磁碟區的交會路徑可以包含qtree和含有統一碼字元的目錄名稱。ONTAP當父Volume具有utf-8語言設定時、「volume show」命令會正確顯示這些名稱。不過、如果父Volume語言不是UTF-8語言設定之一、則會使用數值NFS替代名稱來顯示交會路徑的某些部分。
+
+====
+* 在9.5及更新版本中、如果qtree位於啟用utf8mb4的Volume中、則qtree名稱中支援4位元組字元。
+

@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_broadcast_domains_@cluster_administrators_only@_overview.html 
+keywords: broadcast, domain, overview, introduction, introducing, configure broadcast domains overview for ontap 9.8 and later, broadcast domains group network ports that belong to the same layer 2 network 
+summary: 廣播網域會將屬於同一個第2層網路的網路連接埠群組在一起 
+---
+= 關於ONTAP 廣播節目網域、以供更新版本使用
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+廣播網域的目的是將屬於同一層網路的網路連接埠分組。然後、儲存虛擬機器（SVM）便可使用群組中的連接埠來處理資料或管理流量。
+
+廣播網域位於IPspace中。在叢集初始化期間、系統會建立兩個預設廣播網域：
+
+* 「預設」廣播網域包含「預設」IPspace中的連接埠。
++
+這些連接埠主要用於提供資料。叢集管理和節點管理連接埠也位於此廣播網域中。
+
+* 「叢集」廣播網域包含「叢集」IPspace中的連接埠。
++
+這些連接埠用於叢集通訊、並包含叢集中所有節點的所有叢集連接埠。
+
++
+必要時、系統會在預設IPspace中建立額外的廣播網域。「預設」廣播網域包含管理LIF的主連接埠、以及任何其他連接埠具有該連接埠第2層可連線性的連接埠。其他廣播網域的名稱為「預設值-1」、「預設值-2」等。
+
+

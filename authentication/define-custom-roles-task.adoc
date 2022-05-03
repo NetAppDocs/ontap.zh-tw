@@ -1,0 +1,64 @@
+---
+permalink: authentication/define-custom-roles-task.html 
+sidebar: sidebar 
+keywords: define, custom roles 
+summary: 您可以使用安全登入角色create命令來定義自訂角色。您可以視需要多次執行命令、以取得想要與角色建立關聯的確切功能組合。 
+---
+= 定義自訂角色
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「安全登入角色create」命令來定義自訂角色。您可以視需要多次執行命令、以取得想要與角色建立關聯的確切功能組合。
+
+您必須是叢集管理員才能執行此工作。
+
+.關於這項工作
+* 無論是預先定義或自訂的角色、都會授予或拒絕ONTAP 存取各種指令或命令目錄。
++
+命令目錄（例如「volume」）是一組相關命令和命令子目錄。除非如本程序所述、否則授與或拒絕存取命令目錄會授與或拒絕存取目錄及其子目錄中的每個命令。
+
+* 特定命令存取或子目錄存取會覆寫父目錄存取。
++
+如果某個角色是以命令目錄定義、然後以不同的存取層級再次定義、以用於特定命令或父目錄的子目錄、則為該命令或子目錄指定的存取層級會覆寫父目錄的存取層級。
+
+
+
+[NOTE]
+====
+您無法為SVM系統管理員指派一個角色、讓其存取只有「admin」叢集系統管理員才能使用的命令或命令目錄、例如「安全性」命令目錄。
+
+====
+.步驟
+. 定義自訂角色：
++
+「安全登入角色create -vserver Svm_name -role role -cmd dirname command_or目錄名稱-access access_level -query query」
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+下列命令可讓「vol_role」角色完整存取「volume」命令目錄中的命令、並以唯讀方式存取「volume snapshot」子目錄中的命令。
+
++
+[listing]
+----
+cluster1::>security login role create -role vol_role -cmddirname "volume" -access all
+
+cluster1::>security login role create -role vol_role -cmddirname "volume snapshot" -access readonly
+----
++
+下列命令可將「vm_storage」角色的命令唯讀存取權授予「sorage」命令目錄中的命令、不存取「sorage encryption」子目錄中的命令、以及完整存取「sorage aggregate offline」非內在命令。
+
++
+[listing]
+----
+cluster1::>security login role create -role SVM_storage -cmddirname "storage" -access readonly
+
+cluster1::>security login role create -role SVM_storage -cmddirname "storage encryption" -access none
+
+cluster1::>security login role create -role SVM_storage -cmddirname "storage aggregate plex offline" -access all
+----
+

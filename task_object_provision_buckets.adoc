@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_buckets.html 
+keywords: netapp, ontap, S3 bucket, bucket, buckets, S3 object store, S3-enabled storage VM, S3, SVM, storage, object, object store, FabricPool, FabricPool tiering, tier, FQDN, Quality of Service, QoS 
+summary: 為新的S3物件存放區新增S3儲存區、或將其他儲存區新增至現有的物件存放區。 
+---
+= 資源配置桶
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+為新的S3物件存放區新增S3儲存區、或將其他儲存區新增至現有的物件存放區。
+
+若要進行遠端用戶端存取、您必須在啟用S3的儲存VM中設定儲存區。如果您在未啟用S3的儲存VM中建立儲存貯體、則只能用於本機分層。
+
+
+NOTE: 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
+
+.步驟
+. 在啟用S3的儲存VM上新增儲存區。
++
+.. 按一下「*儲存設備>桶*」、然後按一下「*新增*」。
+.. 輸入名稱、選取儲存VM、然後輸入大小。
++
+*** 如果您此時按一下*「儲存*」、就會以下列預設設定建立儲存區：
++
+**** 除非任何群組原則已經生效、否則不會授予使用者桶的存取權。
++
+
+NOTE: 您不應該使用S3 root使用者來管理ONTAP 物件儲存設備並分享其權限、因為它對物件儲存區的存取權限不受限制。而是使用您指派的管理權限來建立使用者或群組。
+
+**** 服務品質（效能）等級、是您系統可用的最高等級。
+
+
+*** 您可以按一下*更多選項*來設定使用者權限和效能層級、或是稍後再修改這些設定。
++
+**** 您必須先建立使用者和群組、才能使用*其他選項*來設定其權限。
+**** 如果您打算使用S3物件存放區FabricPool 來進行分層、請考慮選擇*用於分層*（使用低成本媒體、為階層式資料提供最佳效能）、而非效能服務層級。
+
+
+
+
+
+
+. 在S3用戶端應用程式（另一個ONTAP 支援系統或外部協力廠商應用程式）上、輸入下列命令來驗證新儲存庫的存取：
++
+** S3伺服器CA憑證。
+** 使用者的存取金鑰和秘密金鑰。
+** S3伺服器FQDN名稱和儲存區名稱。
+
+
+

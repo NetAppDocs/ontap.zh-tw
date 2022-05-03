@@ -1,0 +1,105 @@
+---
+permalink: concepts/encryption-concept.html 
+sidebar: sidebar 
+keywords: encryption 
+summary: 支援以軟體和硬體為基礎的加密技術、可確保儲存媒體在重新調整用途、退回、放錯地方或遭竊時、無法讀取閒置的資料。ONTAP 
+---
+= 加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援以軟體和硬體為基礎的加密技術、可確保儲存媒體在重新調整用途、退回、放錯地方或遭竊時、無法讀取閒置的資料。ONTAP
+
+所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2。ONTAP您可以使用下列加密解決方案：
+
+* 硬體解決方案：
++
+** NetApp儲存加密（NSE）
++
+NSE是使用自我加密磁碟機（SED）的硬體解決方案。
+
+** NVMe SED
++
+針對未獲得FIPS 140-2認證的NVMe SED、提供完整磁碟加密。ONTAP
+
+
+
+* 軟體解決方案：
++
+** NetApp Aggregate Encryption（NAE）
++
+Nae是一種軟體解決方案、可加密任何磁碟機類型上的任何資料磁碟區、並為每個Aggregate啟用唯一金鑰。
+
+** NetApp Volume Encryption（NVE）
++
+NVE是一種軟體解決方案、可加密任何磁碟機類型的任何資料磁碟區、每個磁碟區都有一個唯一的金鑰。
+
+
+
+
+
+同時使用軟體（NAE或NVE）和硬體（NSE或NVMe SED）加密解決方案、在閒置時實現雙重加密。儲存效率不受NAE或NVE加密影響。
+
+
+
+== NetApp儲存加密
+
+NetApp儲存加密（NSE）支援在寫入資料時加密資料的SED。如果沒有儲存在磁碟上的加密金鑰、就無法讀取資料。而加密金鑰則只能由驗證的節點存取。
+
+在I/O要求上、節點會使用從外部金鑰管理伺服器或Onboard Key Manager擷取的驗證金鑰、驗證自己是否為SED：
+
+* 外部金鑰管理伺服器是儲存環境中的第三方系統、使用金鑰管理互通性傳輸協定（KMIP）為節點提供驗證金鑰。
+* 內建金鑰管理程式是一項內建工具、可從與資料相同的儲存系統、為節點提供驗證金鑰。
+
+
+NSE支援自我加密HDD和SSD。您可以將NetApp Volume Encryption與NSE搭配使用、將NSE磁碟機上的資料加倍加密。
+
+
+
+== NVMe自我加密磁碟機
+
+NVMe SED不具備FIPS 140-2認證、但這些磁碟使用AES 256位元透明磁碟加密來保護閒置的資料。
+
+資料加密作業（例如產生驗證金鑰）會在內部執行。驗證金鑰是在儲存系統第一次存取磁碟時產生。之後、磁碟會在每次要求資料作業時要求儲存系統驗證、以保護閒置的資料。
+
+
+
+== NetApp Aggregate加密
+
+NetApp Aggregate Encryption（NAE）是一項軟體技術、用於加密Aggregate上的所有資料。NAE的優點是、磁碟區包含在集合層級的重複資料刪除中、而NVE磁碟區則排除在外。
+
+啟用NAE之後、即可使用Aggregate金鑰加密Aggregate內的磁碟區。
+
+從功能更新9.7開始ONTAP 、新建立的集合體和磁碟區會在您擁有NVE授權、以及內建或外部金鑰管理時、依預設進行加密。
+
+
+
+== NetApp Volume Encryption
+
+NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。只有儲存系統才能存取的加密金鑰可確保在基礎裝置與系統分離時、無法讀取磁碟區資料。
+
+包括Snapshot複本在內的資料和中繼資料都會加密。資料的存取權是由唯一的XTS-AES-256金鑰提供、每個磁碟區一個金鑰。內建的Onboard Key Manager可保護同一系統上的金鑰與您的資料。
+
+您可以在任何類型的Aggregate（HDD、SSD、混合式、陣列LUN）上使用NVE、搭配任何RAID類型、也可以在ONTAP 任何支援的支援功能中使用、包括ONTAP Select 用作支援的功能、包括用作支援的功能。您也可以使用NVE搭配NetApp儲存加密（NSE）、對NSE磁碟機上的資料進行雙重加密。
+
+|===
+
+
+ a| 
+*使用KMIP伺服器的時機*雖然成本較低、而且使用內建金鑰管理程式通常較為方便、但如果符合下列任一項條件、您應該設定KMIP伺服器：
+
+* 您的加密金鑰管理解決方案必須符合聯邦資訊處理標準（FIPS）140-2或OASIS KMIP標準。
+* 您需要多叢集解決方案。KMIP伺服器透過集中管理加密金鑰來支援多個叢集。
++
+KMIP伺服器透過集中管理加密金鑰來支援多個叢集。
+
+* 您的企業需要更高的安全性、將驗證金鑰儲存在系統或與資料不同的位置。
++
+KMIP伺服器會將驗證金鑰與資料分開儲存。
+
+
+
+|===

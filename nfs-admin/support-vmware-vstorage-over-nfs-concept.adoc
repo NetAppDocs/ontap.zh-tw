@@ -1,0 +1,53 @@
+---
+permalink: nfs-admin/support-vmware-vstorage-over-nfs-concept.html 
+sidebar: sidebar 
+keywords: support, vmware, vStorage, nfs 
+summary: 支援某些VMware vStorage API、以利在NFS環境中整合陣列（VAAI）功能。ONTAP 
+---
+= 支援VMware vStorage over NFS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援某些VMware vStorage API、以利在NFS環境中整合陣列（VAAI）功能。ONTAP
+
+
+
+== 支援的功能
+
+支援下列功能：
+
+* 複本卸載
++
+可讓ESXi主機直接在來源與目的地資料儲存區位置之間複製虛擬機器或虛擬機器磁碟（VMDK）、而不需涉及主機。這可節省ESXi主機CPU週期和網路頻寬。如果來源磁碟區很少、複本卸載可保留空間效率。
+
+* 保留空間
++
+保留空間以保證VMDK檔案的儲存空間。
+
+
+
+
+
+== 限制
+
+VMware vStorage over NFS具有下列限制：
+
+* 複本卸載作業可能會在下列情況下失敗：
++
+** 在來源或目的地Volume上執行wafliron時、因為它會暫時將Volume離線
+** 同時移動來源或目的地Volume
+** 同時移動來源或目的地LIF
+** 執行接管或恢復作業時
+** 執行切換或切換作業時
+
+
+* 伺服器端複製可能會因為下列案例中的檔案處理格式差異而失敗：
++
+您嘗試從目前或先前已將qtree匯出至從未匯出qtree的SVM複製資料。若要解決此限制、您可以在目的地SVM上匯出至少一個qtree。
+
+
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_VAAI_offloaded_operations_are_supported_by_Data_ONTAP%3F["哪些VAAI卸載作業受Data ONTAP 支援？"]

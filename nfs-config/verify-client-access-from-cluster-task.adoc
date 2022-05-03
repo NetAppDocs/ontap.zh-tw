@@ -1,0 +1,39 @@
+---
+permalink: nfs-config/verify-client-access-from-cluster-task.html 
+sidebar: sidebar 
+keywords: verify, nfs, client, access, cluster 
+summary: 您可以在UNIX管理主機上設定UNIX檔案權限、讓選取的用戶端存取共用區。您可以使用vserver匯出原則檢查存取命令來檢查用戶端存取、並視需要調整匯出規則。 
+---
+= 驗證NFS用戶端從叢集存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在UNIX管理主機上設定UNIX檔案權限、讓選取的用戶端存取共用區。您可以使用「vserver匯出原則檢查存取」命令來檢查用戶端存取、並視需要調整匯出規則。
+
+.步驟
+. 在叢集上、使用「vserver exports - policy檢查存取」命令檢查用戶端對匯出的存取。
++
+下列命令會檢查IP位址為1.2.3.4的NFSv3用戶端對Volume Home2的讀取/寫入存取。命令輸出顯示該Volume使用匯出原則「exp主目錄」、而且拒絕該存取。
+
++
+[listing]
+----
+cluster1::> vserver export-policy check-access -vserver vs1 -client-ip 1.2.3.4 -volume home2 -authentication-method sys -protocol nfs3 -access-type read-write
+                                      Policy    Policy     Rule
+Path                    Policy        Owner     Owner Type Index  Access
+----------------------- ------------- --------- ---------- ------ ----------
+/                       default       vs1_root  volume          1 read
+/eng                    default       vs1_root  volume          1 read
+/eng/home2              exp-home-dir  home2     volume          1 denied
+
+3 entries were displayed.
+----
+. 檢查輸出、判斷匯出原則是否如預期運作、以及用戶端存取行為是否如預期。
++
+具體而言、您應該確認磁碟區或qtree使用的匯出原則、以及用戶端因此而擁有的存取類型。
+
+. 如有必要、請重新設定匯出原則規則。
+

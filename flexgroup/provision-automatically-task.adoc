@@ -1,0 +1,129 @@
+---
+permalink: flexgroup/provision-automatically-task.html 
+sidebar: sidebar 
+keywords: provision, flexgroup, volume, automatic, create, flex group, aggregate, space 
+summary: 您可以自動配置FlexGroup 一個流通量。透過自動選取集合體、即可建立及設定一個聲音區。ONTAP FlexGroup根據最佳實務做法來選擇集合體、以獲得最佳效能。 
+---
+= 自動配置FlexGroup 一個功能不全的功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以自動配置FlexGroup 一個流通量。透過自動選取集合體、即可建立及設定一個聲音區。ONTAP FlexGroup根據最佳實務做法來選擇集合體、以獲得最佳效能。
+
+叢集中的每個節點必須至少有一個Aggregate。
+
+[NOTE]
+====
+若要建立FlexGroup 適用於FabricPool 支援支援的支援功能、ONTAP 每個節點必須至少有一個FabricPool 支援功能的Aggregate。
+
+====
+在每個節點上、利用最多可用空間選取兩個集合體、以建立此現象。ONTAP FlexGroup如果兩個集合體無法使用、ONTAP 則每個節點選擇一個集合體來建立FlexGroup 這個卷。
+
+.步驟
+. 配置FlexGroup 供應功能：
++
+|===
+
+
+| 如果您使用... | 使用此命令... 
+
+
+ a| 
+0 ： 2 或更新版本 ONTAP
+ a| 
+「Volume create -vserver Svm_name -volume fg_vol_name–自動資源配置-as FlexGroup fis-size fg_size [–加密true][-qos-police-group qos_policy_group名稱][-support-tiering true]」（Volume create -vserver Svm_name -volume fg_vol_name–自動資源配置-size fgfg_fg_size [–加密true]）ONTAP FlexGroup FabricPool 以若要自動在FlexGroup 支援上配置一個資料區、FabricPool 您必須將「支援分層」參數設為「true」。Volume保證必須永遠設定FabricPool 為「無」、才能用於顯示。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
+
+link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
+
+從ONTAP 功能表支援的9.3開始、您可以指定FlexGroup 一個適用於功能區的處理量上限（QoS Max）、這會限制FlexGroup 功能區使用的效能資源。從ONTAP S得9.4開始、您可以指定處理量層（QoS下限）和適用於FlexGroup 整個過程的調適QoS。
+
+link:../performance-admin/index.html["效能管理"]
+
+從ONTAP 支援支援支援功能的功能9.2開始、您可以將「-加密」參數設為「真」、以便在FlexGroup 支援功能的支援下對此功能進行加密。若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
+
+[NOTE]
+====
+您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
+
+====
+link:../encryption-at-rest/index.html["加密閒置的資料"]
+
+
+
+ a| 
+部分9.1 ONTAP
+ a| 
+「Volume FlexGroup Sideploy -vserver Svm_name -size Fa_Size'」
+
+|===
++
+「最小化」參數指定FlexGroup 以KB、MB、GB、TB或PB為單位的現象Volume大小。
+
++
+以下範例說明如何在FlexGroup 功能強大的功能中配置尺寸400 TB的等量磁碟區ONTAP ：
+
++
+[listing]
+----
+cluster-1::> volume create -vserver vs0 -volume fg –auto-provision-as flexgroup -size 400TB
+Warning: The FlexGroup "fg" will be created with the following number of constituents of size 25TB: 16.
+The constituents will be created on the following aggregates: aggr1,aggr2
+Do you want to continue? {y|n}: y
+[Job 34] Job succeeded: Successful
+----
++
+以下範例說明如何建立QoS原則群組、以利處理量上限、以及如何將其套用FlexGroup 至某個流通量：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy group pg-vs1 -vserver vs1 -max-throughput 5000iops
+----
++
+[listing]
+----
+cluster-1::> volume create -vserver vs0 -volume fg –auto-provision-as flexgroup -size 400TB -qos-policy-group pg-vs1
+Warning: The FlexGroup "fg" will be created with the following number of constituents of size 25TB: 16.
+The constituents will be created on the following aggregates: aggr1,aggr2
+Do you want to continue? {y|n}: y
+[Job 34] Job succeeded: Successful
+----
++
+以下範例說明如何將FlexGroup 尺寸400 TB的S25 Volume配置到FabricPool 位在畫面上的整個畫面ONTAP 上、以供參考。
+
++
+[listing]
+----
+cluster-1::> volume create -vserver vs0 -volume fg –auto-provision-as flexgroup -size 400TB -support-tiering true -tiering-policy auto
+Warning: The FlexGroup "fg" will be created with the following number of constituents of size 25TB: 16.
+The constituents will be created on the following aggregates: aggr1,aggr2
+Do you want to continue? {y|n}: y
+[Job 34] Job succeeded: Successful
+----
++
+建立此解決方案時、叢集中的每個節點都會有八個組成要素。FlexGroup這些成員會平均分散在每個節點上兩個最大的集合體之間。
+
++
+除了在功能上的不包括在內的各種系統上、本功能可提供「Volume」空間保證。FlexGroup AFF對於零件系統、利用「無」空間保證來建立「不」AFF FlexGroup 。
+
+. 使用FlexGroup 交會路徑「volume mount -vserver vserver_name -volume vol_name -jet-path jeting_path」來掛載此現象
++
+[listing]
+----
+cluster1::> volume mount -vserver vs0 -volume fg2 -junction-path /fg2
+----
+
+
+您應該從FlexGroup 用戶端掛載此功能。
+
+如果您執行ONTAP 的是32位或更早版本的版本、而且儲存虛擬機器（SVM）同時設定了NFSv3和NFSv4、FlexGroup 則從用戶端安裝此支援卷可能會失敗。在這種情況FlexGroup 下、您必須在從用戶端掛載完這個版本時、明確指定NFS版本。
+
+[listing]
+----
+# mount -t nfs -o vers=3 192.53.19.64:/fg2 /mnt/fg2
+# ls /mnt/fg2
+file1  file2
+----

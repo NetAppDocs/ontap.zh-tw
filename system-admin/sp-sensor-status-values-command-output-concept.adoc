@@ -1,0 +1,268 @@
+---
+permalink: system-admin/sp-sensor-status-values-command-output-concept.html 
+sidebar: sidebar 
+keywords: understand, discrete, sp, sensor, status, values, command, output, cli, hexedecimal, format 
+summary: 獨立感測器沒有臨界值。這些讀取值顯示在SP CLI系統感測器命令輸出的目前欄下、並不具有實際意義、因此SP會忽略這些讀取值。系統感測器命令輸出中的Status（狀態）欄會以十六進位格式顯示個別感測器的狀態值。 
+---
+= 關於系統感測器命令輸出的獨立SP感測器狀態值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+獨立感測器沒有臨界值。SP CLI的「系統感測器」命令輸出中「目前」欄下顯示的讀取值、並不具有實際意義、因此SP會忽略這些讀取值。系統感測器命令輸出中的「狀態」欄會以十六進位格式顯示個別感測器的狀態值。
+
+獨立感測器的範例包括風扇、電源供應器（PSU）故障和系統故障的感測器。獨立感測器的特定清單取決於平台。
+
+您可以使用SP CLI的「系統感測器Get」（系統感測器）「ensor名稱」命令、協助解讀大多數獨立感測器的狀態值。以下範例顯示在獨立感測器CPU0_Error和IO_Slot1_present中輸入「系統感測器Get'「ensor名稱」的結果：
+
+[listing]
+----
+SP node1> system sensors get CPU0_Error
+Locating sensor record...
+Sensor ID              : CPU0_Error (0x67)
+ Entity ID             : 7.97
+ Sensor Type (Discrete): Temperature
+ States Asserted       : Digital State
+                         [State Deasserted]
+----
+[listing]
+----
+SP node1> system sensors get IO_Slot1_Present
+Locating sensor record...
+Sensor ID              : IO_Slot1_Present (0x74)
+ Entity ID             : 11.97
+ Sensor Type (Discrete): Add-in Card
+ States Asserted       : Availability State
+                        [Device Present]
+----
+雖然「系統感測器」命令會顯示大多數獨立感測器的狀態資訊、但不會提供System_FW_Status、System_Watchdog、PSU1_Input_Type和PSU2_Input_Type獨立感測器的狀態資訊。您可以使用下列資訊來解譯這些感測器的狀態值。
+
+
+
+== System_FW_Status
+
+System_FW_Status感測器的狀況顯示為「0xAABB」。您可以合併「AA」和「BB」資訊、以判斷感應器的狀況。
+
+「AA」可以有下列其中一個值：
+
+|===
+| 價值 | 感測器的狀況 
+
+
+ a| 
+01
+ a| 
+系統韌體錯誤
+
+
+
+ a| 
+02
+ a| 
+系統韌體當機
+
+
+
+ a| 
+04
+ a| 
+系統韌體進度
+
+|===
+「bB」可以有下列其中一個值：
+
+|===
+| 價值 | 感測器的狀況 
+
+
+ a| 
+00
+ a| 
+系統軟體已正常關機
+
+
+
+ a| 
+01
+ a| 
+正在初始化記憶體
+
+
+
+ a| 
+02
+ a| 
+正在進行NVMEM初始化（當有NVMEM時）
+
+
+
+ a| 
+04
+ a| 
+還原記憶體控制器集線器（MCH）值（若有NVMEM）
+
+
+
+ a| 
+05
+ a| 
+使用者已進入設定
+
+
+
+ a| 
+13.
+ a| 
+開機作業系統或載入程式
+
+
+
+ a| 
+1F
+ a| 
+BIOS正在啟動
+
+
+
+ a| 
+20
+ a| 
+載入程式正在執行中
+
+
+
+ a| 
+21
+ a| 
+載入程式正在設定主要BIOS韌體。您不得關閉系統電源。
+
+
+
+ a| 
+22
+ a| 
+載入程式正在程式設定替代的BIOS韌體。您不得關閉系統電源。
+
+
+
+ a| 
+2F
+ a| 
+執行中ONTAP
+
+
+
+ a| 
+60
+ a| 
+SP已關閉系統電源
+
+
+
+ a| 
+61.
+ a| 
+SP已開啟系統電源
+
+
+
+ a| 
+62.
+ a| 
+SP已重設系統
+
+
+
+ a| 
+63.
+ a| 
+SP Watchdog關機週期
+
+
+
+ a| 
+64
+ a| 
+SP Watchdog冷重設
+
+|===
+例如、System_FW_Status sensor Status 0x042F表示「系統韌體進度（04）、ONTAP 而不執行更新（2F）」。
+
+
+
+== System_Watchdog
+
+System_Watchdog感應器可能有下列其中一種情況：
+
+* * 0X0080*
++
+此感測器的狀態尚未變更
+
+
+
+|===
+| 價值 | 感測器的狀況 
+
+
+ a| 
+0X0081
+ a| 
+定時器中斷
+
+
+
+ a| 
+0180
+ a| 
+定時器已過期
+
+
+
+ a| 
+0280
+ a| 
+硬重設
+
+
+
+ a| 
+0480
+ a| 
+關機
+
+
+
+ a| 
+0X0880
+ a| 
+關機再開機
+
+|===
+例如、System_Watchdog感應器狀態為0x0880、表示發生監督逾時、並導致系統關機後再開機。
+
+
+
+== PSU1_INU_Type和PSU2_INUD_Type
+
+若為直流電（DC）電源供應器、則不適用PSU1_INU_Type和PSU2_INPART_Type感測器。對於交流（AC）電源供應器、感測器的狀態可以有下列其中一個值：
+
+|===
+| 價值 | 感測器的狀況 
+
+
+ a| 
+0X01 xx
+ a| 
+220V PSU類型
+
+
+
+ a| 
+0x02 xx
+ a| 
+110 V PSU類型
+
+|===
+例如、PSU1_Input_Type感測器狀態為0x0280、表示感測器回報PSU類型為110V。

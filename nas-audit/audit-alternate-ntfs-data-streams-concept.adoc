@@ -1,0 +1,90 @@
+---
+permalink: nas-audit/audit-alternate-ntfs-data-streams-concept.html 
+sidebar: sidebar 
+keywords: considerations, audit, alternate, ntfs data streams 
+summary: 在使用NTFS替代資料流稽核檔案時、您必須謹記某些考量事項。 
+---
+= 稽核替代NTFS資料流時的考量事項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用NTFS替代資料流稽核檔案時、您必須謹記某些考量事項。
+
+要稽核的物件位置會使用兩個標記（「ObjectName」標記（路徑）和「HandleID」標記（句柄）記錄在事件記錄中。若要正確識別正在記錄的串流要求、您必須知道ONTAP 這些欄位中有哪些資料流是NTFS替代資料串流的佐證記錄：
+
+* evtxID：4656個事件（開啟並建立稽核事件）
++
+** 替代資料串流的路徑會記錄在「ObjectName」標記中。
+** 替代資料串流的處理方式會記錄在「HandleID」標記中。
+
+
+* evtxID：4663個事件（所有其他稽核事件、例如讀取、寫入、getattr等）
++
+** 基礎檔案的路徑（而非替代資料串流）會記錄在「ObjectName」標記中。
+** 替代資料串流的處理方式會記錄在「HandleID」標記中。
+
+
+
+
+以下範例說明如何識別evtxID：4663個事件、以「HandleID」標記作為替代資料串流的事件。即使讀取稽核事件中記錄的「ObjectName」標記（路徑）位於基礎檔案路徑、「HandleID」標記仍可用來識別事件、作為替代資料串流的稽核記錄。
+
+串流檔案名稱的格式為「base_file_name:stream _name」。在此範例中、「dIR1」目錄包含一個基礎檔案、其替代資料串流具有下列路徑：
+
+[listing]
+----
+
+/dir1/file1.txt
+/dir1/file1.txt:stream1
+----
+[NOTE]
+====
+下列事件範例中的輸出會如所示被刪減；輸出不會顯示事件的所有可用輸出標記。
+
+====
+對於evtxID 4656（開放式稽核事件）、替代資料串流的稽核記錄輸出會在「ObjectName」標記中記錄替代資料串流名稱：
+
+[listing]
+----
+
+- <Event>
+- <System>
+  <Provider Name="Netapp-Security-Auditing" />
+  <EventID>4656</EventID>
+  <EventName>Open Object</EventName>
+  [...]
+  </System>
+- <EventData>
+  [...]
+  **<Data Name="ObjectType"\>Stream</Data\>
+  <Data Name="HandleID"\>00000000000401;00;000001e4;00176767</Data\>
+  <Data Name="ObjectName"\>\(data1\);/dir1/file1.txt:stream1</Data\>          **
+  [...]
+  </EventData>
+  </Event>
+- <Event>
+----
+對於evtxID 4663（讀取稽核事件）、相同替代資料串流的稽核記錄輸出會將基礎檔案名稱記錄在「ObjectName」標記中； 不過、「HandleID」標記中的句柄是替代資料串流的句柄、可用來將此事件與替代資料串流建立關聯：
+
+[listing]
+----
+
+- <Event>
+- <System>
+  <Provider Name="Netapp-Security-Auditing" />
+  <EventID>4663</EventID>
+  <EventName>Read Object</EventName>
+  [...]
+  </System>
+- <EventData>
+  [...]
+  **<Data Name="ObjectType"\>Stream</Data\>
+  <Data Name="HandleID"\>00000000000401;00;000001e4;00176767</Data\>
+  <Data Name="ObjectName"\>\(data1\);/dir1/file1.txt</Data\> **
+  [...]
+  </EventData>
+  </Event>
+- <Event>
+----

@@ -1,0 +1,47 @@
+---
+permalink: nfs-admin/validate-qtree-ids-qtree-file-operations-task.html 
+sidebar: sidebar 
+keywords: validate, qtree, id, file, operation 
+summary: 可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保用戶端檔案作業要求使用有效的qtree ID、而且用戶端只能在同一個qtree內移動檔案。您可以修改-valide-qtree匯出參數來啟用或停用此驗證。此參數預設為啟用。 
+---
+= 驗證qtree檔案作業的qtree ID
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保用戶端檔案作業要求使用有效的qtree ID、而且用戶端只能在同一個qtree內移動檔案。您可以修改「-valide-qtree匯出」參數來啟用或停用此驗證。此參數預設為啟用。
+
+此參數僅在您已將匯出原則直接指派給儲存虛擬機器（SVM）上的一或多個qtree時有效。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要qtree ID驗證... | 輸入下列命令... 
+
+
+ a| 
+已啟用
+ a| 
+「vserver NFS modify -vserver vserver_name -valide-qtree匯出已啟用」
+
+
+
+ a| 
+已停用
+ a| 
+「vserver NFS modify -vserver vserver_name -valide-qtree匯出已停用」
+
+|===
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+

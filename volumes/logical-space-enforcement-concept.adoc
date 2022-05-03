@@ -1,0 +1,31 @@
+---
+permalink: volumes/logical-space-enforcement-concept.html 
+sidebar: sidebar 
+keywords: what, logical, space, enforcement, does 
+summary: 當您在ONTAP 更新版本的支援中啟用邏輯空間時、ONTAP 流通量區會計算磁碟區中邏輯使用的區塊、以判斷該磁碟區中仍有多少空間可用。如果磁碟區中沒有可用空間、系統會傳回ENOSPC（空間不足）錯誤訊息。 
+---
+= 邏輯空間強制的作用
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您在ONTAP 更新版本的支援中啟用邏輯空間時、ONTAP 流通量區會計算磁碟區中邏輯使用的區塊、以判斷該磁碟區中仍有多少空間可用。如果磁碟區中沒有可用空間、系統會傳回ENOSPC（空間不足）錯誤訊息。
+
+強制執行邏輯空間可確保在磁碟區已滿或即將滿時通知使用者。邏輯空間強制會傳回三種警示類型、通知您磁碟區中的可用空間：
+
+* 「onitor.vol.full.inc.sav`:這個警示會在磁碟區中98%的邏輯空間被使用時觸發。
+* 「onitor.vol.nearFull.inc.sav`:這個警示會在磁碟區中95%的邏輯空間被使用時觸發。
+* 「Vol.log.overalloc.inc.sav`:當磁碟區中使用的邏輯空間大於磁碟區的總大小時、就會觸發此警示。
++
+此警示會告訴您、新增至磁碟區大小可能無法建立可用空間、因為過度配置的邏輯區塊已佔用該空間。
+
+
+
+[NOTE]
+====
+總計（邏輯空間）應等於已配置空間、但不包括具有邏輯空間強制的磁碟區Snapshot保留區。
+
+====
+如需詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/configure-automatic-provide-space-when-full-task.html["設定磁碟區、以便在磁碟區已滿時自動提供更多空間"]

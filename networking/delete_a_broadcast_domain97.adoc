@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: networking/delete_a_broadcast_domain97.html 
+keywords: 'delete, deleting, remove, removing, broadcast, domain, delete a broadcast domain, delete unnecessary broadcast domains; this moves associated ports to the "default" IPspace' 
+summary: 刪除不必要的廣播網域；這會將相關連接埠移至「預設」IPspace 
+---
+= 刪除廣播網域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果不再需要廣播網域、您可以將其刪除。這會將與該廣播網域相關的連接埠移至「預設」IPspace。
+
+不得有任何子網路、網路介面或SVM與您要刪除的廣播網域相關聯。
+
+.關於這項工作
+* 無法刪除系統建立的「叢集」廣播網域。
+* 刪除廣播網域時、會移除與廣播網域相關的所有容錯移轉群組。
+
+
+刪除廣播網域：
+
+....
+network port broadcast-domain delete -broadcast-domain <broadcast_domain_name> [-ipspace <ipspace_name>]
+....
+下列命令會刪除IPspace ipspace1中的廣播網域bcast1：
+
+....
+network port broadcast-domain delete -broadcast-domain <bcast1> -ipspace <ipspace1>
+....

@@ -1,0 +1,34 @@
+---
+permalink: concepts/san-path-failover-concept.html 
+sidebar: sidebar 
+keywords: san path failover 
+summary: SAN主機使用ALUA（非對稱邏輯單元存取）和MPIO（多重路徑I/O）、在連結失敗後將流量重新路由至存續的LIF。預先定義的路徑會決定SVM服務的LUN可能路由。 
+---
+= SAN路徑容錯移轉
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SAN主機使用ALUA（非對稱邏輯單元存取）和MPIO（多重路徑I/O）、在連結失敗後將流量重新路由至存續的LIF。預先定義的路徑會決定SVM服務的LUN可能路由。
+
+在SAN環境中、主機會被視為向LUN _Target提出要求的_啟動器_。_ MPIO可啟用從啟動器到目標的多個路徑。ALUA會識別最直接的路徑、稱為_最佳化路徑。_
+
+您通常會在LUN所屬節點上設定多個最佳化的生命路徑、並在HA合作夥伴上設定多個未最佳化的生命路徑。如果擁有節點上的某個連接埠故障、主機會將流量路由傳送至正常運作的連接埠。如果所有連接埠都失敗、主機會透過未最佳化的路徑路由流量。
+
+根據預設、「選擇性LUN對應」（SLM）會限制從主機到LUN的路徑數量。ONTAP新建立的LUN只能透過通往擁有LUN或其HA合作夥伴之節點的路徑存取。您也可以在啟動器的連接埠集_中設定lifs、以限制對LUN的存取。
+
+image::../media/san-host-rerouting.gif[SAN主機重新路由]
+
+|===
+
+
+ a| 
+在SAN環境中移動磁碟區_*
+
+根據預設、ONTAP 將從SAN主機到LUN的路徑數量限制為由SURE_Selective LUN Map（SLM__）_。新建立的LUN只能透過通往擁有LUN或其HA合作夥伴（LUN的_報告節點_）節點的路徑存取。
+
+這表示當您將磁碟區移至另一個HA配對上的節點時、您需要將目的地HA配對的報告節點新增至LUN對應。然後您可以在MPIO設定中指定新的路徑。磁碟區移動完成後、您可以從對應中刪除來源HA配對的報告節點。
+
+|===

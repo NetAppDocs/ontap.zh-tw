@@ -1,0 +1,32 @@
+---
+permalink: data-protection/modify-snapshot-copy-reserve-task.html 
+sidebar: sidebar 
+keywords: modify, snapshot, copy, reserve 
+summary: 您可能想要設定較大的Snapshot複本保留區、以防止Snapshot複本使用保留給作用中檔案系統的空間。當您不再需要大量的Snapshot複本空間時、可以減少Snapshot複本保留空間。 
+---
+= 修改Snapshot複本保留
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能想要設定較大的Snapshot複本保留區、以防止Snapshot複本使用保留給作用中檔案系統的空間。當您不再需要大量的Snapshot複本空間時、可以減少Snapshot複本保留空間。
+
+.步驟
+. 修改Snapshot複本保留：
++
+「Volume modify -vserver _svm_-volume _volume -百分 點-snapshot空間_snap_reserve_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例將Snapshot複本保留設定為「vol1（vol1）”、設定為10%：
+
++
+[listing]
+----
+cluster1::> volume modify -vserver vs0 -volume vol1 -percent-snapshot-space 10
+----
+

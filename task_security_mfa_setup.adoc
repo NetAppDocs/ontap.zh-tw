@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: task_security_mfa_setup.html 
+keywords: netapp, ontap, mfa, multifactor authentication, multi-factor, saml, security, Security Assertion Markup Language, authentication, identity provider, IdP, authorization, enable SAML, disable SAML 
+summary: 安全聲明標記語言（SAML）驗證可讓使用者使用安全的身分識別供應商（IDP）登入應用程式。 
+---
+= 設定多因素驗證
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+安全聲明標記語言（SAML）驗證可讓使用者使用安全的身分識別供應商（IDP）登入應用程式。
+
+在System Manager中、ONTAP 除了標準的支援驗證功能之外、也提供SAML驗證作為多因素驗證的選項。
+
+安全聲明標記語言（SAML）是XML架構、可在服務供應商和身分識別供應商這兩個實體之間進行驗證與授權。
+
+
+
+== 啟用SAML驗證
+
+image:workflow_security_mfa_setup.gif["使用SAML設定多因素驗證的工作流程圖"]
+
+若要啟用SAML驗證、請執行下列步驟：
+
+.步驟
+. 按一下*叢集>設定*。
+. 在「* SAML驗證*」旁、按一下 image:icon_gear.gif["齒輪圖示"]。
+. 請確認「*啟用SAML驗證*」核取方塊已勾選。
+. 輸入IDP URI的URL（包括 "https://")[]。
+. 如有需要、請修改主機系統位址。
+. 確保使用正確的憑證：
++
+** 如果您的系統只對應一個類型為「server」的憑證、則該憑證會被視為預設憑證、不會顯示出來。
+** 如果您的系統已對應多個憑證做為「server」類型、則會顯示其中一個憑證。若要選取不同的憑證、請按一下*變更*。
+
+
+. 按一下「 * 儲存 * 」。確認視窗會顯示已自動複製到剪貼簿的中繼資料資訊。
+. 移至您指定的IDP系統、然後從剪貼簿複製中繼資料、以更新系統中繼資料。
+. 返回確認視窗（在System Manager中）、然後勾選「I have configured the IDP with the host URI or medetid*（我已使用主機URI或中繼資料*設定IDP）」核取方塊。
+. 按一下*登出*以啟用SAML型驗證。IDP系統會顯示驗證畫面。
+. 在IDP系統中、輸入您的SAML型認證資料。驗證認證之後、系統會將您導向至System Manager首頁。
+
+
+
+
+== 停用SAML驗證
+
+若要停用SAML驗證、請執行下列步驟：
+
+.步驟
+. 按一下*叢集>設定*。
+. 在「* SAML驗證*」下、按一下「*已啟用*」切換按鈕。
+. _Optional _：您也可以按一下 image:icon_gear.gif["齒輪圖示"] 在「* SAML驗證*」旁、然後取消核取「*啟用SAML驗證*」核取方塊。
+

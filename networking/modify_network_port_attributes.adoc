@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_network_port_attributes.html 
+keywords: change, changing, modify, modifying, network, port, attributes, modify network port attributes, change the autonegotiation, duplex, flow control, speed, and health settings of a physical network port 
+summary: 變更實體網路連接埠的自動協商、雙工、流程控制、速度和健全狀況設定 
+---
+= 修改網路連接埠屬性
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以修改實體網路連接埠的自動協商、雙工、流程控制、速度和健全狀況設定。
+
+您要修改的連接埠不得裝載任何LIF。
+
+.關於這項工作
+* 您不應修改100 GbE、40 GbE、10 GbE或1 GbE網路介面的管理設定。
++
+您可以為雙工模式和連接埠速度設定的值稱為管理設定。視網路限制而定、管理設定可能會與操作設定有所不同（亦即、雙工模式和連接埠實際使用的速度）。
+
+* 您不應該修改介面群組中基礎實體連接埠的管理設定。
++
+「up -admin」參數（可在進階權限層級使用）會修改連接埠的管理設定。
+
+* 對於節點上的所有連接埠、或是節點上裝載最後一個作業叢集LIF的連接埠、「-up管理」管理設定不應設為「假」。
+* 您不應該修改管理連接埠「e0M」的MTU大小。
+* 廣播網域中連接埠的MTU大小無法從為廣播網域設定的MTU值變更。
+* VLAN的MTU大小不得超過其基礎連接埠的MTU大小值。
+
+
+.步驟
+. 修改網路連接埠的屬性：
++
+網路連接埠修改
+
+. 您可以將「-ignore、health、Status」欄位設定為true、以指定系統可以忽略指定連接埠的網路連接埠健全狀況狀態。
++
+網路連接埠健全狀況狀態會自動從降級變更為健全狀態、而此連接埠現在可用於裝載lifs。您應該將叢集連接埠的流量控制設定為「無」。依預設、流程控制設為「完整」。
+
+
+
+下列命令會將流程控制項設定為「無」、以停用連接埠e0b上的流程控制：
+
+....
+network port modify -node cluster-1-01 -port e0b -flowcontrol-admin none
+....

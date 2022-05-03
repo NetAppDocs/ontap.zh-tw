@@ -1,0 +1,131 @@
+---
+permalink: snaplock/mirror-worm-files-task.html 
+sidebar: sidebar 
+keywords: mirror, worm, file, snapmirror, replicate, volume, compliance, enterprise, snaplock 
+summary: 您可以使用SnapMirror將WORM檔案複寫到其他地理位置、以進行災難恢復及其他用途。來源Volume和目的地Volume都必須設定SnapLock 為供使用、而且這兩個Volume必須具有相同SnapLock 的功能、即相同的功能、法規遵循或企業。複寫磁碟區和檔案的SnapLock 所有關鍵功能。 
+---
+= 鏡射WORM檔案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用SnapMirror將WORM檔案複寫到其他地理位置、以進行災難恢復及其他用途。來源Volume和目的地Volume都必須設定SnapLock 為供使用、而且這兩個Volume必須具有相同SnapLock 的功能、即相同的功能、法規遵循或企業。複寫磁碟區和檔案的SnapLock 所有關鍵功能。
+
+來源與目的地磁碟區必須在具有連接程序的SVM的連接叢集中建立。如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]。
+
+.關於這項工作
+* 從ONTAP 功能完善的9.5開始、您可以使用XDP（延伸資料保護）類型的SnapMirror關係來複寫WORM檔案、而非DP（資料保護）類型關係。XDP模式ONTAP 與版本無關、能夠區分儲存在同一個區塊中的檔案、讓重新同步複寫的法規遵循模式磁碟區變得更加容易。如需如何將現有DP類型關係轉換成XDP類型關係的相關資訊、請參閱 link:../data-protection/index.html["資料保護"]。
+* 若由SnapMirror判斷會SnapLock 導致資料遺失、則針對法規遵循模式磁碟區、對DP類型SnapMirror關係進行重新同步作業將會失敗。如果重新同步作業失敗、您可以使用「volume clone create」命令來複製目的地Volume。然後、您可以重新同步來源磁碟區與實體複本。
+* 支援不同步磁碟區之間XDP類型的SnapMirror關係SnapLock 、即使目的地上的資料與中斷後的來源資料有所不同、也能在中斷後支援重新同步。
++
+在重新同步時、如果偵測到來源與目的地之間的資料差異、而非一般快照、則會在目的地上剪下新的快照、以擷取此差異。新的快照和通用快照都會以下列保留時間鎖定：
+
++
+** 目的地的Volume過期時間
+** 如果磁碟區過期時間過去或尚未設定、則快照會鎖定30天
+** 如果目的地具有合法保留、實際的Volume過期期間會被遮罩並顯示為「無限期」、但在實際Volume過期期間內、快照會被鎖定。
+
+
+
+
+如果目的地Volume的到期期間晚於來源、則目的地到期期間會保留、且不會在來源Volume重新同步後的到期期間覆寫。
+
+如果目的地擁有與來源不同的合法保留、則不允許重新同步。來源與目的地必須具有相同的合法持有、或在嘗試重新同步之前、必須釋出目的地上的所有合法持有。
+
+您可以執行「snapmirror update -s snapshot」命令、將建立來擷取分散資料的目的地磁碟區上鎖定的快照複製到來源。複製一次的快照也會繼續鎖定來源。
+
+* 不支援SVM資料保護關係。
+* 不支援負載共用資料保護關係。
+
+
+下圖顯示初始化SnapMirror關係的程序：
+
+image::../media/snapmirror_steps_clustered.png[此圖顯示初始化SnapMirror關係的程序：識別目的地叢集,creating a destination volume,creating a SnapMirror relationship between the volumes]
+
+.步驟
+. 識別目的地叢集。
+. 在目的地叢集上、安裝SnapLock 該資訊技術授權、初始化「完成時鐘」、然後建立SnapLock 一個「不中斷彙總」。
+. 在目的地叢集上、建立SnapLock 大小等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
++
+‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-type DP -size _size_*
+
++
+[NOTE]
+====
+這個功能是從Aggregate繼承而來的、亦即「法規遵循」或「企業」SnapLock 。不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
+
+====
++
+下列命令會在SnapLock Aggregate「node01_aggr」上的「VM2」中、建立一個名為「dstvolB」的2 GB「Compliance」磁碟區：
+
++
+[listing]
+----
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+----
+. 在目的地SVM上、建立SnapMirror原則：
++
+’* SnapMirror原則建立-vserver _Svm_name_-policy _policy_name_*
+
++
+下列命令會建立SVM整體原則「VM1-mirror」：
+
++
+[listing]
+----
+SVM2::> snapmirror policy create -vserver SVM2 -policy SVM1-mirror
+----
+. 在目的地SVM上、建立SnapMirror排程：
++
+hy*工作排程cron create -name _schedule_name_-dayofWeek _Day_of_Week _-hour _hour _-minute _minute_*
+
++
+下列命令會建立名為「weekendcron」的SnapMirror排程：
+
++
+[listing]
+----
+SVM2::> job schedule cron create -name weekendcron -dayofweek "Saturday, Sunday" -hour 3 -minute 0
+----
+. 在目的地SVM上、建立SnapMirror關係：
++
+Check Alignment of PHs>* SnapMirror create -source-path _source_path_-dite-path _dentite_path_-type XDP| DP -policy _policy_name_-schedule_schedule_name_*
+
++
+下列命令可在來源磁碟區「VM1」上的「rcvolA」和「VM2」上的目的地磁碟區「dstvolB」之間建立SnapMirror關係、並指派「VM1-mirror」原則和排程「weekendcron」：
+
++
+[listing]
+----
+SVM2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -type XDP -policy SVM1-mirror -schedule weekendcron
+----
++
+[NOTE]
+====
+XDP類型ONTAP 可在SHD9.5或更新版本中找到。您必須使用ONTAP 更新版本的DP類型。
+
+====
+. 在目的地SVM上、初始化SnapMirror關係：
++
+’* SnapMirror初始化-destination-path _destination_path_*
+
++
+初始化程序會將_基準線傳輸_傳送到目的地Volume。SnapMirror會製作來源Volume的Snapshot複本、然後將複本及其參照的所有資料區塊傳輸到目的地Volume。它也會將來源磁碟區上的任何其他Snapshot複本傳輸到目的地磁碟區。
+
++
+下列命令可初始化來源Volume "srcvola" on "VM1"與目的地Volume "dstvolB" on "VM2"之間的關係：
+
++
+[listing]
+----
+SVM2::> snapmirror initialize -destination-path SVM2:dstvolB
+----
+
+
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+https://docs.netapp.com/us-en/ontap-sm-classic/volume-disaster-prep/index.html["Volume災難恢復準備"]
+
+link:../data-protection/index.html["資料保護"]

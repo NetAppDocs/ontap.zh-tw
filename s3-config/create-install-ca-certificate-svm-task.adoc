@@ -1,0 +1,139 @@
+---
+permalink: s3-config/create-install-ca-certificate-svm-task.html 
+sidebar: sidebar 
+keywords: create, install, ca certificate, svm 
+summary: 需要憑證授權單位（CA）憑證、才能啟用從S3用戶端到啟用S3的SVM的HTTPS流量。 
+---
+= 在SVM上建立並安裝CA憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+需要憑證授權單位（CA）憑證、才能啟用從S3用戶端到啟用S3的SVM的HTTPS流量。
+
+雖然可以將S3伺服器設定為僅使用HTTP、而且雖然可以設定不需CA憑證的用戶端、但最佳做法是使用ONTAP CA憑證來保護HTTPS流量。
+
+本機分層使用案例不需要CA憑證、因為IP流量只會流經叢集生命體。
+
+本程序中的指示將建立並安裝ONTAP 一個自我簽署的驗證書。也支援協力廠商提供的CA憑證；如需詳細資訊、請參閱系統管理員驗證文件。
+
+link:../authentication/index.html["系統管理員驗證與RBAC"]
+
+請參閱「安全性憑證」手冊頁、以取得其他組態選項。
+
+.步驟
+. 建立自我簽署的數位憑證：
++
+「安全憑證create -vserver Svm_name -type root-ca -common名稱ca_cert名稱」
+
++
+「type root-ca」選項會建立並安裝自我簽署的數位憑證、以做為憑證授權單位（CA）來簽署其他憑證。
+
++
+「-commate-name」選項會建立SVM的憑證授權單位（CA）名稱、並在產生憑證的完整名稱時使用。
+
++
+預設的憑證大小為2048位元。
+
++
+範例
+
++
+[listing]
+----
+cluster-1::> security certificate create -vserver svm1.example.com -type root-ca -common-name svm1_ca
+
+The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
+----
++
+顯示憑證產生的名稱時、請務必儲存以供此程序的後續步驟使用。
+
+. 產生憑證簽署要求：
++
+「安全性憑證genere-csr -common-name s1_server_name [addent_options]」
+
++
+簽署要求的「通用名稱」參數必須是S3伺服器名稱（FQDN）。
+
++
+如有需要、您可以提供SVM的位置和其他詳細資訊。
+
++
+系統會提示您保留一份憑證要求和私密金鑰、以供日後參考。
+
+. 使用SVM_CA簽署CSR以產生S3伺服器的憑證：
++
+「安全性憑證符號-vserver Svm_name -ca_ca_cert名稱-ca-serial ca_cert _serial編號[addent_options]」
+
++
+輸入您在先前步驟中使用的命令選項：
+
++
+** 「-ca」-您在步驟1中輸入的CA一般名稱。
+** 「-ca序號」-步驟1中的CA序號。例如、如果CA憑證名稱為svm1_ca _159D1587CE21E9D4_svm1_ca、序號為159D1587CE21E9D4。
+
+
++
+根據預設、簽署的憑證將於365天內到期。您可以選取其他值、並指定其他簽署詳細資料。
+
++
+出現提示時、複製並輸入您在步驟2中儲存的憑證要求字串。
+
++
+隨即顯示已簽署的憑證、請儲存以供日後使用。
+
+. 在啟用S3的SVM上安裝簽署的憑證：
++
+「安全憑證安裝-類型server -vserver Svm_name」
+
++
+出現提示時、請輸入憑證和私密金鑰。
+
++
+如果需要憑證鏈結、您可以選擇輸入中繼憑證。
+
++
+顯示私密金鑰和CA簽署的數位憑證時、請將其儲存以供日後參考。
+
+. 取得公開金鑰憑證：
++
+「安全證書show -vserver Svm_name -common名稱ca_cert名稱-type root-ca -instance」
+
++
+儲存公開金鑰憑證以供稍後的用戶端組態使用。
+
++
+範例
+
++
+[listing]
+----
+cluster-1::> security certificate show -vserver svm1.example.com -common-name svm1_ca -type root-ca  -instance
+
+                      Name of Vserver: svm1.example.com
+           FQDN or Custom Common Name: svm1_ca
+         Serial Number of Certificate: 159D1587CE21E9D4
+                Certificate Authority: svm1_ca
+                  Type of Certificate: root-ca
+     (DEPRECATED)-Certificate Subtype: -
+              Unique Certificate Name: svm1_ca_159D1587CE21E9D4_svm1_ca
+Size of Requested Certificate in Bits: 2048
+               Certificate Start Date: Thu May 09 10:58:39 2020
+          Certificate Expiration Date: Fri May 08 10:58:39 2021
+               Public Key Certificate: -----BEGIN CERTIFICATE-----
+MIIDZ ...==
+-----END CERTIFICATE-----
+                         Country Name: US
+               State or Province Name:
+                        Locality Name:
+                    Organization Name:
+                    Organization Unit:
+Contact Administrator's Email Address:
+                             Protocol: SSL
+                     Hashing Function: SHA256
+              Self-Signed Certificate: true
+       Is System Internal Certificate: false
+----
+

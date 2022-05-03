@@ -1,0 +1,50 @@
+---
+permalink: nas-audit/synchronous-asynchronous-notifications-concept.html 
+sidebar: sidebar 
+keywords: synchronous, asynchronous, notifications 
+summary: FPolicy會透過FPolicy介面將通知傳送至外部FPolicy伺服器。通知會以同步或非同步模式傳送。通知模式會決定ONTAP 將通知傳送至FPolicy伺服器後的功能。 
+---
+= 什麼是同步和非同步通知
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FPolicy會透過FPolicy介面將通知傳送至外部FPolicy伺服器。通知會以同步或非同步模式傳送。通知模式會決定ONTAP 將通知傳送至FPolicy伺服器後的功能。
+
+* *非同步通知*
++
+藉由非同步通知、節點不會等待FPolicy伺服器的回應、進而提升系統的整體處理量。這類通知適用於FPolicy伺服器不需要在通知評估後採取任何行動的應用程式。例如、當儲存虛擬機器（SVM）管理員想要監控和稽核檔案存取活動時、就會使用非同步通知。
+
++
+如果以非同步模式運作的FPolicy伺服器發生網路中斷、則中斷期間產生的FPolicy通知會儲存在儲存節點上。當FPolicy伺服器重新連線時、系統會警示已儲存的通知、並從儲存節點擷取通知。在停機期間可儲存通知的時間長度可設定為10分鐘。
+
+* *同步通知*
++
+設定為以同步模式執行時、FPolicy伺服器必須先確認每個通知、才能繼續執行用戶端作業。此類型的通知會在根據通知評估結果需要採取行動時使用。例如、當SVM管理員想要根據外部FPolicy伺服器上指定的條件來允許或拒絕要求時、就會使用同步通知。
+
+
+
+
+
+== 同步與非同步應用程式
+
+FPolicy應用程式有許多可能的用途、包括非同步和同步。
+
+非同步應用程式是指外部FPolicy伺服器不會改變存取儲存虛擬機器（SVM）上檔案或目錄或修改資料的方式。例如：
+
+* 檔案存取與稽核記錄
+* 儲存資源管理
+
+
+同步應用程式是指資料存取遭竄改或資料遭外部FPolicy伺服器修改的應用程式。例如：
+
+* 配額管理
+* 檔案存取封鎖
+* 檔案歸檔與階層式儲存管理
+* 加密與解密服務
+* 壓縮與解壓縮服務
+
+
+您也可以使用SDK for FPolicy來識別及實作其他應用程式。

@@ -1,0 +1,225 @@
+---
+permalink: flexgroup/supported-unsupported-config-concept.html 
+sidebar: sidebar 
+keywords: support, unsupported, configuration, flexgroup, volumes 
+summary: 您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、這些功能可在支援的地方使用、而且不能在支援的地方使用。 
+---
+= 支援且不支援FlexGroup 的功能組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、這些功能可在支援的地方使用、而且不能在支援的地方使用。
+
+
+
+== 支援功能、從ONTAP 功能部件支援的版本從功能部件支援的版本
+
+* 將SVM-DR來源中的供應區轉換FlexVol 為FlexGroup 供應區
++
+xref:convert-flexvol-svm-dr-relationship-task.adoc[在FlexVol SVM-DR關係中、將一個SSDVolume轉換為FlexGroup 一個SSDVolume]
+
+* SVM-DR FlexClone支援FlexGroup 以支援SflexVolume
++
+xref:../volumes/create-flexclone-task.adoc[深入瞭解如何建立FlexClone Volume。]
+
+
+
+
+
+== 支援功能、從ONTAP 支援的功能僅從支援的功能
+
+* SVM 災難恢復
++
+不FlexGroup 支援複製SVM-DR關係中的某個實體磁碟區。
+
+* SnapMirror可將2個以上的關係（A到B、A到C）展開、最多可有8個扇出式分支。
++
+xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirror串聯和展開關係的考量]
+
+* SnapMirror將關係串聯至兩個層級（A至B至C）
++
+xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirror串聯和展開關係的考量]
+
+
+
+
+
+== 支援功能、從ONTAP 功能介紹到功能介紹
+
+* 從FlexGroup SnapMirror資料庫或從udp目的地還原單一檔案
++
+** 還原作業可從FlexGroup 任何幾何的不還原量、到FlexGroup 任何幾何的不還原量
+** 每個還原作業只支援一個檔案
+
+
+* 將磁碟區從7-mode系統轉換為FlexGroup 支援功能的功能區
++
+若要將轉換的Volume轉換成FlexGroup 「不支援」Volume、必須使用「診斷」模式、而且只能在NetApp支援監督下執行。強烈建議您先聯絡NetApp支援部門、再繼續進行轉換程序。
+
+* NFSv4.2
+* 非同步刪除檔案和目錄
+* 檔案系統分析（FSA）
+* VMware vSphere資料存放區FlexGroup
+* 其他支援使用NDMP備份及還原磁帶、包括下列功能：
++
+** NDMP可重新設定的備份擴充（RBE）和Snapshot Management Extension（SSME）
+** 環境變數exclude、而多重樹狀結構名稱支援FlexGroup 還原備份
+** 引進ignore _CTIM_mtime環境變數以FlexGroup 進行還原備份
+** 在升級或還原期間、會中止以NDMP快照復原訊息作為FlexGroup 功能的個別檔案還原、此訊息為副檔名0x2050傾印和還原工作階段的一部分。
+
+
+
+
+
+
+== 支援功能、從ONTAP 支援的功能從支援的功能
+
+* FlexClone Volume
+* NFSv4和NFSv4.1
+* pNFS
+* 使用NDMP進行磁帶備份與還原
++
+您必須注意FlexGroup 下列事項、才能在支援的情況下支援支援有關的功能：
+
++
+** 副檔名類別0x2050中的NDMP快照恢復訊息僅可用於恢復整個FlexGroup 整個整個版本。
++
+無法恢復使用無法恢復的個別檔案。FlexGroup
+
+** 不支援FlexGroup NDMP可重新啓動備份擴充（RBE）以供支援。
+** 不支援FlexGroup 環境變數exclude、也不支援多重樹狀結構名稱。
+** 支援「ndmpcopy」命令、可在FlexVol 支援的情況下在支援的範FlexGroup 圍內傳輸資料至各個版本。
++
+如果您從Data ONTAP 還原9.7回復至舊版、先前傳輸的遞增傳輸資訊將不會保留、因此您必須在還原後執行基礎複本。
+
+
+
+* 適用於陣列整合的VMware vStorage API（VAAI）
+* 將一個不只是一個的功能、更能將一個功能性的功能轉化FlexVol 為FlexGroup 一個功能
+* 以作爲來源的來源卷的功能FlexGroup FlexCache
+
+
+
+
+== 支援功能、從ONTAP 支援的功能僅從支援的功能
+
+* 持續可用的SMB共用
+* 內部組態MetroCluster
+* 重新命名FlexGroup 流通區（「volume rename」命令）
+* 縮小FlexGroup 或縮小一個現象（「Volume Size'命令」）
+* 彈性調整規模
+* NetApp Aggregate加密（NAE）
+* Cloud Volumes ONTAP
+
+
+
+
+== 支援功能、從ONTAP 支援的功能從支援的版本起算
+
+* ODX複本卸載
+* 儲存層級存取保護
+* 增強功能、可變更SMB共用的通知
++
+變更通知會傳送至設定「changedgengenerge」屬性的父目錄變更、以及該父目錄中所有子目錄的變更。
+
+* FabricPool
+* 配額強制執行
+* qtree統計資料
+* 適用於包含在Sfor文件的Adaptive QoS FlexGroup
+* 僅快取；支援來源於支援的來源於支援的來源於支援的來源於支援的來源FlexCache FlexGroup ONTAP
+
+
+
+
+== 支援功能、從ONTAP 支援的功能僅從支援的功能
+
+* FPolicy
+* 檔案稽核
+* 適用於FlexGroup 整個過程的處理量層（QoS下限）和調適性QoS
+* 處理量上限（QoS上限）和處理量層（QoS下限）、用於FlexGroup 支援包含在內的檔案
++
+您可以使用「Volume file modify」命令來管理與檔案相關聯的QoS原則群組。
+
+* 放寬SnapMirror限制
+* SMB 3.x多通道
+
+
+
+
+== 支援功能、從ONTAP 功能介紹的功能
+
+* 防毒組態
+* 變更SMB共用的通知
++
+只有在設定「changgengengengenotify"屬性的父目錄變更時、才會傳送通知。變更通知不會針對父目錄中子目錄的變更傳送。
+
+* qtree
+* 處理量上限（QoS上限）
+* 在FlexGroup SnapMirror關係中、擴充來源的不只是資料來源的部分和目的地FlexGroup 的不只是資料
+* 支援備份與還原SnapVault
+* 統一化資料保護關係
+* 自動擴充選項和自動縮小選項
+* 擷取時納入的inode數
+
+
+
+
+== 功能支援、從ONTAP 功能支援的功能從功能9.2開始
+
+* Volume加密
+* Aggregate即時重複資料刪除技術（跨Volume重複資料刪除技術）
+* NetApp Volume加密（NVE）
+
+
+
+
+== 支援功能、從ONTAP 支援的功能僅從支援的功能
+
+支援多項功能的支援功能、在支援的情況下、將支援的資料包含在NetApp的支援中。FlexGroup ONTAP ONTAP
+
+* SnapMirror技術
+* Snapshot複本
+* Active IQ
+* 即時調適壓縮
+* 即時重複資料刪除技術
+* 即時資料精簡
+* AFF
+* 配額報告
+* NetApp Snapshot技術
+* 軟件（僅限部分）SnapRestore FlexGroup
+* 混合式Aggregate
+* 成員磁碟區移動
+* 後處理重複資料刪除
+* NetApp RAID-TEC 技術
+* 每個Aggregate一致性點
+* 在FlexGroup 同一個SVM中使用FlexVol SVM共享這個功能
+
+
+
+
+== 不支援ONTAP 的組態。9.
+
+|===
+
+
+| 不支援的傳輸協定 | 不支援的資料保護功能 | 其他不受支援ONTAP 的功能 
+
+
+ a| 
+* pNFS（ONTAP 從9.0到9.6）
+* SMB 1.0
+* SMB透明容錯移轉（ONTAP 支援從9.0到9.5）
+* SAN
+
+ a| 
+* 資料量SnapLock
+* SM磁帶
+
+ a| 
+遠端Volume陰影複製服務（VSS）
+
+|===
+https://docs.netapp.com/ontap-9/index.jsp["供應說明文件中心 ONTAP"]

@@ -1,0 +1,55 @@
+---
+permalink: upgrade/task_reviewing_pre_update_resources.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, resources, review, before 
+summary: 在更新ONTAP 支援功能之前、您應該先檢閱相關資源、瞭解您必須解決的問題、瞭解目標版本中的新系統行為、並確認硬體支援。 
+---
+= 升級前需要閱讀的資源
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不使用 link:https://aiq.netapp.com/["Active IQ"^] 升級顧問、您需要先檢閱許多NetApp資源、才能升級ONTAP 您的支援軟體。這些資源可協助您瞭解必須解決的問題、目標版本中的新系統行為、以及確認硬體支援。
+
+. 檢閱目標版本的_Release Notes_。
++
+https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["發行說明ONTAP"]
+
++
+「重要注意事項」一節說明在升級至新版本之前、您應注意的潛在問題。「新功能與變更功能」和「已知問題與限制」章節說明升級至新版本後的新系統行為。
+
+. 確認目標版本支援您的硬體平台。
++
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+. 確認目標版本支援您的叢集和管理交換器。
++
+您可以在過渡狀態下升級、但最終NX-OS（叢集網路交換器）、IOS（管理網路交換器）和參考組態檔（RCF）軟體版本應與ONTAP 您要升級的版本不一致。
+
++
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+. 如果叢集和管理交換器沒有目標ONTAP 版本的最低軟體版本、請升級至支援的軟體版本。
++
+http://mysupport.netapp.com/NOW/download/software/cm_switches/["NetApp下載：Cisco乙太網路交換器"]
+
++
+http://mysupport.netapp.com/NOW/download/software/cm_switches_ntap/["NetApp下載：NetApp乙太網路交換器"]
+
+. 如果您的叢集已設定為SAN、請確認SAN組態已完全受支援。
++
+應支援所有SAN元件、包括目標ONTAP 版的整套軟體、主機作業系統和修補程式、必要的主機公用程式軟體、多重路徑軟體、以及介面卡驅動程式和韌體。
+
++
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+. 如果您使用7-Mode Transition Tool從7-Mode轉換、請確認此工具支援轉換至ONTAP 您要升級的VMware版本。
++
+在您升級支援ONTAP 您要升級的支援VMware版本的7-Mode轉換工具之前、工具中的所有專案都必須處於「已完成」或「已中止」狀態。
+
++
+link:https://docs.netapp.com/us-en/ontap-7mode-transition/install-admin/index.html["7-Mode Transition Tool安裝與管理"]
+
+

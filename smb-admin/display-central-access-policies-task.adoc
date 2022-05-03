@@ -1,0 +1,100 @@
+---
+permalink: smb-admin/display-central-access-policies-task.html 
+sidebar: sidebar 
+keywords: display, detail, information, central, access, policies, policy, define, active, directory, display, central, access, cifs, server, group, policy, objects, gpo, display information about central access policies 
+summary: 您可以顯示Active Directory中定義的中央存取原則詳細資訊。您也可以顯示透過群組原則物件（GPO）套用至CIFS伺服器的中央存取原則相關資訊。 
+---
+= 顯示有關集中存取原則的資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示Active Directory中定義的中央存取原則詳細資訊。您也可以顯示透過群組原則物件（GPO）套用至CIFS伺服器的中央存取原則相關資訊。
+
+依預設、會顯示下列資訊：
+
+* SVM名稱
+* 中央存取原則的名稱
+* SID
+* 說明
+* 建立時間
+* 修改時間
+* 成員規則
+
+
+[NOTE]
+====
+工作群組模式中的CIFS伺服器不會顯示、因為它們不支援GPO。
+
+====
+.步驟
+. 執行下列其中一項動作、以顯示有關中央存取原則的資訊：
++
+|===
+| 如果您想要顯示所有集中存取原則的相關資訊... | 輸入命令... 
+
+
+ a| 
+在Active Directory中定義
+ a| 
+「Vserver CIFS群組原則集中存取原則顯示定義的-vserver _vserver_name_」
+
+
+
+ a| 
+套用至CIFS伺服器
+ a| 
+「Vserver CIFS群組原則集中存取原則套用的-vserver _vserver_name_」
+
+|===
+
+
+下列範例顯示Active Directory中定義的所有集中存取原則資訊：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-policy show-defined
+
+Vserver  Name                 SID
+-------- -------------------- -----------------------------------------------
+vs1      p1                   S-1-17-3386172923-1132988875-3044489393-3993546205
+       Description: policy #1
+     Creation Time: Tue Oct 22 09:34:13 2013
+ Modification Time: Wed Oct 23 08:59:15 2013
+      Member Rules: r1
+
+vs1      p2                   S-1-17-1885229282-1100162114-134354072-822349040
+       Description: policy #2
+     Creation Time: Tue Oct 22 10:28:20 2013
+ Modification Time: Thu Oct 31 10:25:32 2013
+      Member Rules: r1
+                    r2
+----
+下列範例顯示套用至叢集上儲存虛擬機器（SVM）的所有集中存取原則資訊：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-policy show-applied
+
+Vserver    Name                 SID
+-------- -------------------- -----------------------------------------------
+vs1      p1                   S-1-17-3386172923-1132988875-3044489393-3993546205
+       Description: policy #1
+     Creation Time: Tue Oct 22 09:34:13 2013
+ Modification Time: Wed Oct 23 08:59:15 2013
+      Member Rules: r1
+
+vs1      p2                   S-1-17-1885229282-1100162114-134354072-822349040
+       Description: policy #2
+     Creation Time: Tue Oct 22 10:28:20 2013
+ Modification Time: Thu Oct 31 10:25:32 2013
+      Member Rules: r1
+                    r2
+----
+xref:secure-file-access-dynamic-access-control-concept.adoc[使用動態存取控制（DAC）保護檔案存取]
+
+xref:display-gpo-config-task.adoc[顯示有關GPO組態的資訊]
+
+xref:display-central-access-policy-rules-task.adoc[顯示中央存取原則規則的相關資訊]

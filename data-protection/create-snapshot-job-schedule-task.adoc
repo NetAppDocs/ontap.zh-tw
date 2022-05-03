@@ -1,0 +1,50 @@
+---
+permalink: data-protection/create-snapshot-job-schedule-task.html 
+sidebar: sidebar 
+keywords: create, snapshot, job, schedule 
+summary: Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用工作排程cron create命令來建立工作排程。 
+---
+= 建立Snapshot工作排程
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用「jobschedule cron create」命令來建立工作排程。
+
+根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱。
+
+如果您同時指定日期和星期的值、則會將這些值視為獨立的值。例如、每天都會執行一次cron排程、日期規格為「星期五」、月份規格為「13」、而不是每週五、第13天執行一次。
+
+.步驟
+. 建立工作排程：
++
+作業排程cron create -name _job_name_-month -dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_'
+
++
+如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+
++
+從功能性的9.10.1開始ONTAP 、您可以在工作排程中加入Vserver：
+
++
+作業排程cron create -name _job_name_-vserver _vserver_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+
++
+以下範例建立名為「每週一次」的工作排程、於週六上午3：00執行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name myweekly -dayofweek "Saturday" -hour 3 -minute 0
+----
++
+以下範例建立名為「myweeklymulti」的排程、指定多天、小時和分鐘：
+
++
+[listing]
+----
+job schedule cron create -name myweeklymulti -dayofweek "Monday,Wednesday,Sunday" -hour 3,9,12 -minute 0,20,50
+----
+

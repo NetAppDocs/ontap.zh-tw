@@ -1,0 +1,48 @@
+---
+permalink: nas-audit/determine-complete-path-audited-object-task.html 
+sidebar: sidebar 
+keywords: determine, complete path, audited object 
+summary: 稽核記錄的<ObjectName>標記中所列印的物件路徑、包含磁碟區名稱（以括弧表示）、以及包含磁碟區根目錄的相對路徑。如果您想要判斷稽核物件的完整路徑（包括交會路徑）、您必須採取某些步驟。 
+---
+= 判斷稽核物件的完整路徑
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+稽核記錄的「<ObjectName>」標記中所列印的物件路徑、包含磁碟區名稱（以括弧表示）、以及包含磁碟區根目錄的相對路徑。如果您想要判斷稽核物件的完整路徑（包括交會路徑）、您必須採取某些步驟。
+
+.步驟
+. 查看稽核事件中的「<ObjectName>」標記、判斷已稽核物件的磁碟區名稱和相對路徑。
++
+在此範例中、磁碟區名稱為「data1」、檔案的相對路徑為「/dir1/file.txt」：
+
++
+「<Data Name="ObjectName">」（資料1）；/dir1/file.txt'（資料）
+
+. 使用上一步驟所決定的磁碟區名稱、判斷包含稽核物件之磁碟區的交會路徑：
++
+在此範例中、磁碟區名稱為「data1」、而包含稽核物件之磁碟區的交會路徑為「/data/data1」：
+
++
+「Volume show -jet-volume data1」
+
++
+[listing]
+----
+
+                                Junction                    Junction
+Vserver   Volume       Language Active    Junction Path     Path Source
+--------- ------------ -------- --------  ----------------- -----------
+vs1       data1        en_US.UTF-8
+                                true      /data/data1       RW_volume
+----
+. 將「<ObjectName>」標籤中的相對路徑附加至磁碟區的交會路徑、以決定稽核物件的完整路徑。
++
+在此範例中、磁碟區的交會路徑為：
+
++
+資料/資料a1/dir1/file.text
+
+

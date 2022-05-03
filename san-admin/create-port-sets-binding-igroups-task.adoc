@@ -1,0 +1,45 @@
+---
+permalink: san-admin/create-port-sets-binding-igroups-task.html 
+sidebar: sidebar 
+keywords: create, port, sets, binding, igroups, port sets 
+summary: 除了使用選擇性LUN對應（SLM）之外、您也可以建立連接埠集、並將連接埠集繫結至igroup、進一步限制啟動器可用來存取LUN的LIF。如果未將連接埠集繫結至igroup、則igroup中的所有啟動器都可以透過擁有LUN的節點上的所有LIF及所屬節點的HA合作夥伴來存取對應的LUN。 
+---
+= 建立連接埠集、並將igroup繫結至連接埠集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了使用選擇性LUN對應（SLM）之外、您也可以建立連接埠集、並將連接埠集繫結至igroup、進一步限制啟動器可用來存取LUN的LIF。如果您未將連接埠集繫結至igroup、則igroup中的所有啟動器都可以透過擁有LUN的節點上的所有LIF及所屬節點的HA合作夥伴來存取對應的LUN。
+
+您必須至少有一個LIF和一個igroup。
+
+除非您使用介面群組、否則建議將兩個生命段用於iSCSI和FC的備援。建議介面群組只使用一個LIF。
+
+當節點上有兩個以上的生命期、而且您想將特定啟動器限制在某個生命期的子集時、搭配使用連接埠集與SLMs是很有利的。如果沒有連接埠集、則所有擁有LUN的節點和擁有節點HA合作夥伴、可透過擁有LUN的節點存取LUN的啟動器、即可存取節點上的所有目標。
+
+.步驟
+. 建立包含適當lifs的連接埠集：
++
+「portset create -vserver _vserver_name_-portset _portset_name_-protocol _port-name _port_name_」
+
++
+如果您使用FC、請將「傳輸協定」參數指定為「FCP」。如果您使用iSCSI、請將「傳輸協定」參數指定為「iSCSI」。
+
+. 將igroup繫結至連接埠集：
++
+「LUN igroup bind-vserver _vserver_name_-igroup _igroup_name_-portset _portSet_name_」
+
+. 驗證連接埠集和LIF是否正確：
++
+「portset show -vserver _vserver_name_」
+
++
+[listing]
+----
+Vserver   Portset   Protocol Port Names    Igroups
+--------- --------- -------- ------------- --------
+vs3       portset0  iscsi    lif0,lif1     igroup1
+----
+

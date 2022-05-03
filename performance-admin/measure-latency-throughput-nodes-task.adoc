@@ -1,0 +1,105 @@
+---
+permalink: performance-admin/measure-latency-throughput-nodes-task.html 
+sidebar: sidebar 
+keywords: check, throughput, latency, between, nodes 
+summary: 您可以使用network test-path命令來識別網路瓶頸、或預先驗證節點之間的網路路徑。您可以在叢集間節點或叢集內節點之間執行命令。 
+---
+= 檢查節點之間的處理量和延遲
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「network test-path」命令來識別網路瓶頸、或預先驗證節點之間的網路路徑。您可以在叢集間節點或叢集內節點之間執行命令。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 此工作需要進階權限層級命令。
+* 對於叢集間路徑、必須對來源與目的地叢集進行對等處理。
+
+
+有時候、節點之間的網路效能可能無法滿足您對路徑組態的期望。例如、SnapMirror複寫作業所見的大型資料傳輸傳輸傳輸速率為1 Gbps、與來源叢集和目的地叢集之間的10 GbE連結不一致。
+
+您可以使用「network test-path」命令來測量節點之間的處理量和延遲。您可以在叢集間節點或叢集內節點之間執行命令。
+
+[NOTE]
+====
+測試會將網路路徑與資料一起飽和、因此當系統不忙碌、節點之間的網路流量不多時、您應該執行命令。測試會在十秒後逾時。此命令只能在ONTAP flex9節點之間執行。
+
+====
+「工作階段類型」選項可識別您透過網路路徑執行的作業類型、例如、SnapMirror複寫到遠端目的地的「非同步鏡射遠端」。類型會指定測試中使用的資料量。下表定義工作階段類型：
+
+|===
+| 工作階段類型 | 說明 
+
+
+ a| 
+預設
+ a| 
+在不同叢集的節點之間進行SnapMirror複寫
+
+
+
+ a| 
+同步鏡射位置
+ a| 
+在同一個叢集中的節點之間進行SnapMirror複寫
+
+
+
+ a| 
+同步鏡射遠端
+ a| 
+在不同叢集的節點之間進行SnapMirror複寫
+
+
+
+ a| 
+SyncMirrorRemote
+ a| 
+在不同叢集的節點之間進行擴充SyncMirror
+
+
+
+ a| 
+RemoteDataTransfer
+ a| 
+在同一個叢集中的節點之間傳輸資料（例如、針對儲存在不同節點上磁碟區中的檔案、向節點提出NFS要求）
+
+|===
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 測量節點之間的處理量和延遲：
++
+「network test-path -source-node_source_nodename_| local -dite-cluster _dite_clustername_-dite-node_dite_nodename_-site-type default|「非同步鏡像」|「非同步鏡像遠端」|「SyncMirrorRemote」|「遠端資料傳輸」
+
++
+來源節點必須位於本機叢集內。目的地節點可以位於本機叢集或是連接叢集。"local" for '-source-node"的值指定要在其上執行命令的節點。
+
++
+以下命令可測量SnapMirror類型複寫作業的處理量和延遲、這些作業是在本機叢集上的「node1（節點1）”和「cluster2（叢集2）上的「node3（節點3））：
+
++
+[listing]
+----
+cluster1::> network test-path -source-node node1 -destination-cluster cluster2 -destination-node node3 -session-type AsyncMirrorRemote
+Test Duration:      10.88 secs
+Send Throughput:    18.23 MB/sec
+Receive Throughput: 18.23 MB/sec
+MB sent:            198.31
+MB received:        198.31
+Avg latency in ms:  2301.47
+Min latency in ms:  61.14
+Max latency in ms:  3056.86
+----
+. 返回管理權限：
++
+「et -priv. admin」
+
+
+
+如果效能不符合對路徑組態的期望、您應該檢查節點效能統計資料、使用可用的工具來隔離網路中的問題、檢查交換器設定等。

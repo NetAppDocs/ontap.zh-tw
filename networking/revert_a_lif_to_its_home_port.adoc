@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: networking/revert_a_lif_to_its_home_port.html 
+keywords: revert, home, port, home port, lif, logical, interface, migrate, migration, migrating, reverting, reversion, manual, manually, automatic, automatically, auto-revert, revert a lif to its home port, revert a lif to its home port after it fails over or is migrated, network interface revert, network interface modify 
+summary: LIF容錯移轉或移轉後、會將其還原至主連接埠 
+---
+= 將LIF還原至其主連接埠
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在LIF容錯移轉或手動或自動移轉至其他連接埠之後、將其還原至主連接埠。如果特定LIF的主連接埠無法使用、則LIF會保留在目前的連接埠、不會還原。
+
+.關於這項工作
+* 如果您在設定自動還原選項之前、以管理方式將LIF的主連接埠移至「UP」狀態、則LIF不會傳回主連接埠。
+* 除非「自動回復」選項的值設為true、否則LIF不會自動回復。
+* 您必須確保已啟用「自動還原」選項、以便讓l生命 回復到主連接埠。
+
+
+手動或自動將LIF還原至主連接埠：
+
+[cols="30,70"]
+|===
+
+
+| 如果您想要將LIF還原至其主連接埠... | 然後輸入下列命令... 
+
+
+| 手動 | 網路介面還原-vserver vserver_name -lIF lif_name 
+
+
+| 自動 | 網路介面修改-vserver vserver_name -liflif_name -auta-revert true 
+|===

@@ -1,0 +1,92 @@
+---
+permalink: ndmp/configure-lifs-node-scoped-task.html 
+sidebar: sidebar 
+keywords: configure, lif 
+summary: 您必須識別LIF、用於建立節點與備份應用程式之間的資料連線和控制連線。識別LIF之後、您必須確認是否已針對LIF設定防火牆和容錯移轉原則。 
+---
+= 設定LIF
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須識別LIF、用於建立節點與備份應用程式之間的資料連線和控制連線。識別LIF之後、您必須確認是否已針對LIF設定防火牆和容錯移轉原則。
+
+.步驟
+. 使用帶有「-role」參數的「network interface show」命令、識別節點上託管的叢集間LIF。
++
+[listing]
+----
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
+----
+. 確保在叢集間的LIF上啟用NDMP的防火牆原則：
++
+.. 使用「系統服務防火牆原則show」命令來驗證是否已啟用NDMP的防火牆原則。
++
+下列命令會顯示叢集間LIF的防火牆原則：
+
++
+[listing]
+----
+cluster1::> system services firewall policy show -policy intercluster
+
+Vserver     Policy       Service    Allowed
+-------     ------------ ---------- -------------------
+cluster1    intercluster dns        -
+                         http       -
+                         https      -
+                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmps      -
+                         ntp        -
+                         rsh        -
+                         ssh        -
+                         telnet     -
+9 entries were displayed.
+----
+.. 如果未啟用防火牆原則、請使用「系統服務防火牆原則修改」命令搭配「-service」參數來啟用防火牆原則。
++
+下列命令可啟用叢集間LIF的防火牆原則：
+
++
+[listing]
+----
+cluster1::> system services firewall policy modify -vserver cluster1 -policy intercluster -service ndmp 0.0.0.0/0
+----
+
+
+. 確保已針對叢集間的生命體設定適當的容錯移轉原則：
++
+.. 使用「network interface show -fover」命令、確認叢集間LIF的容錯移轉原則設定為「僅限本機」。
++
+[listing]
+----
+cluster1::> network interface show -failover
+            Logical          Home              Failover     Failover
+Vserver     Interface        Node:Port         Policy       Group
+--------    ---------------  ----------------- ------------ --------
+cluster1    **IC1               cluster1-1:e0a    local-only   Default**
+                                                    Failover Targets:
+                                                    .......
+            **IC2               cluster1-2:e0b    local-only   Default**
+                                                    Failover Targets:
+                                                    .......
+cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
+                                                    Failover Targets:
+                                                    .......
+----
+.. 如果容錯移轉原則設定不當、請使用「network interface modify」命令搭配「-容 錯移轉原則」參數來修改容錯移轉原則。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+

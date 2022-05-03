@@ -1,0 +1,55 @@
+---
+permalink: snaplock/initialize-complianceclock-task.html 
+sidebar: sidebar 
+keywords: snaplock, complianceclock, initialize, worm, retention, period, node 
+summary: 《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載SnapLock 一個Eslaggregate的每個節點上初始化系統的「Compliance時鐘」。在節點上初始化「完成時鐘」之後、就無法再次初始化。 
+---
+= 初始化「Compliance時鐘」
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載SnapLock 一個Singgregate的每個節點上初始化_system ComplianceClock_。在節點上初始化「完成時鐘」之後、就無法再次初始化。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集管理員才能執行此工作。
+* 必須在節點上安裝此功能的不必要授權。SnapLock
+
+
+系統完成時鐘的時間由_volume完成時鐘_繼承、此模式可控制磁碟區上WORM檔案的保留期間。當您建立新SnapLock 的功能區時、Volume Compliance時鐘 會自動初始化。
+
+[NOTE]
+====
+「完成時鐘」的初始設定是根據目前的系統時鐘而定。因此、您應該先確認系統時間和時區是否正確、再初始化「完成時鐘」。在節點上初始化「完成時鐘」之後、就無法再次初始化。
+
+====
+.步驟
+. 初始化系統符合時鐘：
++
+`* SnapLock 不符合法規的時鐘初始化-node_node_name_*
+
++
+下列命令可初始化「node1」上的系統執行時鐘：
+
++
+[listing]
+----
+cluster1::> snaplock compliance-clock initialize -node node1
+----
+. 出現提示時、請確認系統時鐘是否正確、以及您要初始化「ComplianceClock:
++
+[listing]
+----
+Warning: You are about to initialize the secure ComplianceClock of
+the node "node1" to the current value of the node's system clock.
+This procedure can be performed only once on a given node, so you
+should ensure that the system time is set correctly before proceeding.
+
+The current node's system clock is: Mon Apr 25 06:04:10 GMT 2016
+
+Do you want to continue? (y|n): y
+----
+. 針對裝載SnapLock 一個Eregate的每個節點、重複此程序。
+

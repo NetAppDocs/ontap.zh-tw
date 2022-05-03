@@ -1,0 +1,89 @@
+---
+permalink: encryption-at-rest/return-seds-unprotected-mode-task.html 
+sidebar: sidebar 
+keywords: returning, fips, drive, unprotected, mode 
+summary: 僅當節點的驗證金鑰ID設為預設值以外的值時、FIPS磁碟機或SED才會受到保護、不受未獲授權的存取。您可以使用儲存加密磁碟修改命令、將金鑰ID設為預設值、將FIPS磁碟機或SED恢復為未受保護模式。 
+---
+= 將FIPS磁碟機或SED恢復為無保護模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+僅當節點的驗證金鑰ID設為預設值以外的值時、FIPS磁碟機或SED才會受到保護、不受未獲授權的存取。您可以使用「儲存加密磁碟修改」命令將金鑰ID設為預設值、將FIPS磁碟機或SED恢復為未受保護模式。
+
+如果HA配對使用加密SAS或NVMe磁碟機（SED、NSE、FIPS）、則在初始化系統之前、您必須針對HA配對內的所有磁碟機（開機選項4或9）執行此程序。如果未這麼做、可能會在磁碟機重新調整用途時、導致未來的資料遺失。
+
+您必須是叢集管理員才能執行此工作。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 如果FIPS磁碟機以FIPS相容模式執行、請將節點的FIPS驗證金鑰ID設回預設的MSID 0x0：
++
+「torage加密磁碟修改磁碟_disk _id_-fIPS-key-id 0x0」
+
++
+您可以使用「安全金鑰管理程式查詢」命令來檢視金鑰ID。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 2.10.11 -fips-key-id 0x0
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
++
+使用以下命令確認作業成功：
+
++
+「torage加密磁碟顯示狀態」
+
++
+重複執行show-STATUS命令、直到數字相同為止。當「磁碟已開始」和「磁碟已完成」中的數字相同時、即表示作業已完成。
+
++
+[listing]
+----
+cluster1:: storage encryption disk show-status
+
+            FIPS    Latest   Start               Execution   Disks   Disks Disks
+Node        Support Request  Timestamp           Time (sec)  Begun   Done  Successful
+-------     ------- -------- ------------------  ---------- ------ ------  ----------
+cluster1    true    modify   1/18/2022 15:29:38    3           14     5         5
+1 entry was displayed.
+----
+. 將節點的資料驗證金鑰ID設回預設的MSID 0x0：
++
+「torage加密磁碟修改-disk _disk_id_-data-key-id x0」
+
++
+無論您要將SAS或NVMe磁碟機恢復為無保護模式、「-data-key-id」的值都應該設為「0x0」。
+
++
+您可以使用「安全金鑰管理程式查詢」命令來檢視金鑰ID。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 2.10.11 -data-key-id 0x0
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
++
+使用以下命令確認作業成功：
+
++
+「torage加密磁碟顯示狀態」
+
++
+重複執行show-STATUS命令、直到數字相同為止。當「磁碟已開始」和「磁碟已完成」中的數字相同時、即表示作業已完成。
+
+

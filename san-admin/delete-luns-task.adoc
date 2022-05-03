@@ -1,0 +1,48 @@
+---
+permalink: san-admin/delete-luns-task.html 
+sidebar: sidebar 
+keywords: delete, luns 
+summary: 如果不再需要LUN、您可以從儲存虛擬機器（SVM）刪除LUN。 
+---
+= 刪除LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要LUN、您可以從儲存虛擬機器（SVM）刪除LUN。
+
+必須先從其igroup取消對應LUN、才能將其刪除。
+
+.步驟
+. 確認應用程式或主機未使用LUN。
+. 從igroup取消對應LUN：
++
+"LUN對應刪除"
+
++
+LUN對應刪除-vserver vs5 -volume VO5 -LUN lun5 -igroup ig5
+
+. 刪除LUN：
++
+LUN刪除
+
++
+"LUN DELETE -vserver vs5 -volume vol5 -LUN lun5"
+
+. 確認您已刪除LUN：
++
+「LUN show」
+
++
+「LUN show -vserver vs5」
+
++
+[listing]
+----
+Vserver   Path              State    Mapped  Type     Size
+--------- ----------------- -------- ------- -------- ------
+vs5       /vol/vol16/lun8   online   mapped  windows  10.00GB
+----
+

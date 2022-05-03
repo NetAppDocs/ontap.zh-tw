@@ -1,0 +1,48 @@
+---
+permalink: smb-admin/remove-privileges-local-domain-users-groups-task.html 
+sidebar: sidebar 
+keywords: manage, user, right, local, domain, group, removing, remove, privilege, enhance, security, allow, customize, maximum, remove privileges from local or domain users or groups 
+summary: 您可以移除權限、來管理本機或網域使用者或群組的使用者權限。這可讓您自訂使用者和群組擁有的最大權限、進而增強安全性。 
+---
+= 移除本機或網域使用者或群組的權限
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以移除權限、來管理本機或網域使用者或群組的使用者權限。這可讓您自訂使用者和群組擁有的最大權限、進而增強安全性。
+
+將從中移除權限的本機或網域使用者或群組必須已經存在。
+
+在移除本機或網域使用者或群組的權限時、您必須謹記下列事項：
+
+* 您可以移除一或多個權限。
+* 當移除網域使用者或群組的權限時、ONTAP 可能會聯絡網域控制器來驗證網域使用者或群組。
++
+如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
+
+
+
+.步驟
+. 從本機或網域使用者或群組移除一或多個權限：「+ vserver CIFS user-and Groups」權限移除權限-vserver _vserver_name_-user-or group名稱_name_-priv家 權限_private_[,...]+」
+. 確認已從物件移除所需的權限：「vserver CIFS user-and -Groups priv榮幸show -vserver _vserver_name_- user-or -group name _name_」
+
+
+下列範例移除儲存虛擬機器（SVM、前身為Vserver）VS1上使用者「'CIFs_Server\sue」的「'eTcbprivre'」和「'eTakeOwnershipprivatef'」權限：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- ---------------
+vs1       CIFS_SERVER\sue       SeTcbPrivilege
+                                SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege remove-privilege -vserver vs1 -user-or-group-name CIFS_SERVER\sue -privileges SeTcbPrivilege,SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- -------------------
+vs1       CIFS_SERVER\sue       -
+----

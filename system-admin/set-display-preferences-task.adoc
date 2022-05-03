@@ -1,0 +1,47 @@
+---
+permalink: system-admin/set-display-preferences-task.html 
+sidebar: sidebar 
+keywords: set, display, preferences, cli, session, set, rows 
+summary: 您可以使用set命令和ROWS命令來設定CLI工作階段的顯示喜好設定。您設定的偏好設定僅適用於您所在的工作階段。它們不會持續存在於各工作階段之間。 
+---
+= 在CLI中設定顯示偏好設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「Set」命令和「ROWS」命令來設定CLI工作階段的顯示喜好設定。您設定的偏好設定僅適用於您所在的工作階段。它們不會持續存在於各工作階段之間。
+
+您可以設定下列CLI顯示喜好設定：
+
+* 命令工作階段的權限層級
+* 是否針對可能造成中斷的命令發出確認
+* 「show」命令是否會顯示所有欄位
+* 用來做為欄位分隔符號的字元
+* 報告資料大小的預設單位
+* 在介面暫停輸出之前、螢幕在目前CLI工作階段中顯示的列數
++
+如果未指定偏好的列數、則會根據終端機的實際高度自動調整。如果未定義實際高度、則預設的列數為24。
+
+* 預設的儲存虛擬機器（SVM）或節點
+* 如果持續命令遇到錯誤、是否應停止
+
+
+.步驟
+. 若要設定CLI顯示偏好設定、請使用「Set」命令。
++
+若要設定螢幕在目前CLI工作階段中顯示的列數、您也可以使用「ROWS」命令。
+
++
+如需詳細資訊、請參閱手冊頁中的「show」命令和「rows」命令。
+
+
+
+下列範例會將一個逗號設為欄位分隔符號、將「GB」設為預設的資料大小單位、並將列數設為50：
+
+[listing]
+----
+cluster1::> set -showseparator "," -units GB
+cluster1::> rows 50
+----

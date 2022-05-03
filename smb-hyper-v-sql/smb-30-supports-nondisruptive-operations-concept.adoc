@@ -1,0 +1,20 @@
+---
+permalink: smb-hyper-v-sql/smb-30-supports-nondisruptive-operations-concept.html 
+sidebar: sidebar 
+keywords: smb, functionality, support, nondisruptive, operations, shares, clients, hyper, v, sql, server 
+summary: SMB 3.0提供關鍵功能、可支援透過SMB共用區執行Hyper-V和SQL Server不中斷營運。這包括持續可用的共用內容和一種稱為持續處理的檔案處理方式、可讓SMB用戶端回收檔案開啟狀態、並以透明方式重新建立SMB連線。 
+---
+= SMB 3.0功能如何支援透過SMB共用進行不中斷營運
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB 3.0提供關鍵功能、可支援透過SMB共用區執行Hyper-V和SQL Server不中斷營運。這包括「持續可用」的共用內容、以及一種稱為「持續處理」的檔案處理方式、可讓SMB用戶端回收檔案開啟狀態、並以透明方式重新建立SMB連線。
+
+可將持續處理權授予具有SMB 3.0功能的用戶端、這些用戶端會使用持續可用的共用內容集連線至共用區。如果SMB工作階段中斷連線、CIFS伺服器會保留持續處理狀態的相關資訊。CIFS伺服器會在允許用戶端重新連線的60秒期間、封鎖其他用戶端要求、讓具有持續控制代碼的用戶端在網路中斷連線後、得以回收處理代碼。具有持續控點的用戶端可以使用儲存虛擬機器（SVM）上的其中一個資料LIF來重新連線、方法是透過相同的LIF或不同的LIF來重新連線。
+
+集合重新定位、接管和恢復都會發生在SFO配對之間。為了無縫管理中斷連線和重新連線工作階段與具有持續處理程序的檔案、合作夥伴節點會保留一份所有持續處理鎖定資訊的複本。無論活動是計畫性或非計畫性的、SFO合作夥伴都能不中斷地管理持續處理重新連線。有了這項新功能、連接到CIFS伺服器的SMB 3.0連線、就能以透明且不中斷營運的方式、容錯移轉到另一個指派給SVM的資料LIF、而這是過去發生的破壞性事件。
+
+雖然使用持續性控點可讓CIFS伺服器以透明方式容錯移轉SMB 3.0連線、但如果故障導致Hyper-V應用程式容錯移轉至Windows Server叢集中的另一個節點、用戶端就無法回收這些中斷連線控點的檔案控點。在此案例中、如果在不同節點上重新啟動Hyper-V應用程式、處於中斷連線狀態的檔案處理程序可能會封鎖其存取。「容錯移轉叢集」是SMB 3.0的一部分、可提供機制來使過時且相互衝突的處理程序失效。使用此機制、Hyper-V叢集可在Hyper-V叢集節點故障時快速恢復。

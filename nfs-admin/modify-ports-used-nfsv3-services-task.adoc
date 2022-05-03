@@ -1,0 +1,119 @@
+---
+permalink: nfs-admin/modify-ports-used-nfsv3-services-task.html 
+sidebar: sidebar 
+keywords: modify, port, nfsv3, service 
+summary: 儲存系統上的NFS伺服器會使用掛載精靈和網路鎖定管理程式等服務、透過特定的預設網路連接埠與NFS用戶端進行通訊。在大多數NFS環境中、預設連接埠都能正常運作、不需要修改、但如果您想在NFSv3環境中使用不同的NFS網路連接埠、您可以這麼做。 
+---
+= 修改用於NFSv3服務的連接埠
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+儲存系統上的NFS伺服器會使用掛載精靈和網路鎖定管理程式等服務、透過特定的預設網路連接埠與NFS用戶端進行通訊。在大多數NFS環境中、預設連接埠都能正常運作、不需要修改、但如果您想在NFSv3環境中使用不同的NFS網路連接埠、您可以這麼做。
+
+變更儲存系統上的NFS連接埠需要所有NFS用戶端重新連線至系統、因此您應該在變更前先將此資訊傳達給使用者。
+
+您可以為每個儲存虛擬機器（SVM）設定NFS掛載精靈、網路鎖定管理程式、網路狀態監視器和NFS配額精靈服務所使用的連接埠。連接埠號碼變更會影響透過TCP和udp存取資料的NFS用戶端。
+
+NFSv4和NFSv4.1的連接埠無法變更。
+
+.步驟
+. 將權限層級設為進階：
++
+"進階權限"
+
+. 停用NFS存取：
++
+「vserver NFS modify -vserver vserver_name -access fals'
+
+. 設定特定NFS服務的NFS連接埠：
++
+「vserver NFS modify -vserver vserver_namenfs_port_parameterport_number'
+
++
+[cols="3*"]
+|===
+| NFS連接埠參數 | 說明 | 預設連接埠 
+
+
+ a| 
+mountd連接埠
+ a| 
+NFS掛載精靈
+ a| 
+635
+
+
+
+ a| 
+NLM-port
+ a| 
+網路鎖定管理程式
+ a| 
+4045
+
+
+
+ a| 
+NSM連接埠
+ a| 
+網路狀態監視器
+ a| 
+4046
+
+
+
+ a| 
+'-rquotad連接埠'
+ a| 
+NFS配額精靈
+ a| 
+4049
+
+|===
++
+除了預設連接埠之外、允許的連接埠號碼範圍為1024到65535.每個NFS服務都必須使用唯一的連接埠。
+
+. 啟用NFS存取：
++
+"Vserver NFS modify -vserver vserver_name -access true"
+
+. 使用「network connections偵聽show」命令來驗證連接埠號碼變更。
+. 返回管理權限層級：
++
+「et -priv. admin」
+
+
+
+下列命令會將SVM上名為VS1的NFS掛載Daemon連接埠設為1113：
+
+[listing]
+----
+vs1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use
+         them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+
+vs1::*> vserver nfs modify -vserver vs1 -access false
+
+vs1::*> vserver nfs modify -vserver vs1 -mountd-port 1113
+
+vs1::*> vserver nfs modify -vserver vs1 -access true
+
+vs1::*> network connections listening show
+Vserver Name     Interface Name:Local Port        Protocol/Service
+---------------- -------------------------------  ----------------
+Node: cluster1-01
+Cluster          cluster1-01_clus_1:7700          TCP/ctlopcp
+vs1              data1:4046                       TCP/sm
+vs1              data1:4046                       UDP/sm
+vs1              data1:4045                       TCP/nlm-v4
+vs1              data1:4045                       UDP/nlm-v4
+vs1              data1:1113                       TCP/mount
+vs1              data1:1113                       UDP/mount
+....
+
+vs1::*> set -privilege admin
+----

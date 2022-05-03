@@ -1,0 +1,76 @@
+---
+permalink: smb-config/create-share-access-control-lists-task.html 
+sidebar: sidebar 
+keywords: configure, configuring, share, permission, create, access, control, list, acl, smb, enable, level, access, user, group, create smb share access control lists 
+summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限、可讓您控制使用者和群組對共用區的存取層級。 
+---
+= 建立SMB共用存取控制清單
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立SMB共用區的存取控制清單（ACL）來設定共用權限、可讓您控制使用者和群組對共用區的存取層級。
+
+您必須決定要授予哪些使用者或群組存取該共用區的權限。
+
+您可以使用本機或網域Windows使用者或群組名稱來設定共用層級ACL。
+
+在建立新的ACL之前、您應該刪除預設的共用ACL「任何人/完全控制」、這會造成安全風險。
+
+在工作群組模式中、本機網域名稱是SMB伺服器名稱。
+
+.步驟
+. 刪除預設的共用ACL：`'vserver CIFS共用存取控制刪除-vserver _vserver_name_-share_share_name_-user-or group eapeuse任何人'
+. 設定新ACL：
++
+|===
+| 如果您想要使用...來設定ACL | 輸入命令... 
+
+
+ a| 
+Windows使用者
+ a| 
+「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group型windows -user-or group _windows_windows_domain_name\user_name_-permission access_Right」
+
+
+
+ a| 
+Windows群組
+ a| 
+「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group型windows -user-or group _windows_windows_group name_-permission access_Right」
+
+|===
+. 使用「vserver CIFS共用存取控制show」命令、確認套用至共用區的ACL正確無誤。
+
+
+以下命令賦予「Change（變更）」權限給「'Sales Team（銷售團隊）」Windows群組、以取得「vs1.example.com`"SVM:」上的「shes（銷售）」共用區
+
+[listing]
+----
+cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "Sales Team" -permission Change
+
+cluster1::> vserver cifs share access-control show
+                 Share       User/Group              User/Group  Access
+Vserver          Name        Name                    Type        Permission
+---------------- ----------- --------------------    ---------   -----------
+vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
+vs1.example.com  sales       DOMAIN\"Sales Team"     windows     Change
+----
+下列命令會將本機Windows群組的「Change（變更）」權限授予名為「老虎團隊（tigerTeam）」的本機Windows使用者「Full_Control（完整控制）」權限、以「'VS1'"SVM上的「datavol5（datavol5）」共用區的「Shue Chang'（英文）」使用者：
+
+[listing]
+----
+cluster1::> vserver cifs share access-control create -vserver vs1 -share datavol5 -user-group-type windows -user-or-group "Tiger Team" -permission Change
+
+cluster1::> vserver cifs share access-control create -vserver vs1 -share datavol5 -user-group-type windows -user-or-group "Sue Chang" -permission Full_Control
+
+cluster1::> vserver cifs share access-control show -vserver vs1
+               Share       User/Group                  User/Group  Access
+Vserver        Name        Name                        Type        Permission
+-------------- ----------- --------------------------- ----------- -----------
+vs1            c$          BUILTIN\Administrators      windows     Full_Control
+vs1            datavol5    DOMAIN\"Tiger Team"         windows     Change
+vs1            datavol5    DOMAIN\"Sue Chang"          windows     Full_Control
+----

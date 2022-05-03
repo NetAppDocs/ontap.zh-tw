@@ -1,0 +1,85 @@
+---
+permalink: smb-admin/enable-disable-oplocks-existing-shares-task.html 
+sidebar: sidebar 
+keywords: oplock, enable, smb, share, storage, virtual, machine, svm, default, circumstance, disable, alternative, enable or disable oplocks on existing smb shares 
+summary: 預設會在儲存虛擬機器（SVM）上的SMB共用上啟用oplocks。在某些情況下、您可能想要停用oplocks；或者、如果您先前已停用共用區上的oplocks、則可能需要重新啟用oplocks。 
+---
+= 啟用或停用現有SMB共用區上的oplocks
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+預設會在儲存虛擬機器（SVM）上的SMB共用上啟用oplocks。在某些情況下、您可能想要停用oplocks；或者、如果您先前已停用共用區上的oplocks、則可能需要重新啟用oplocks。
+
+如果在包含共用區的磁碟區上啟用oplock、但該共用區的oplock共用內容已停用、則該共用區的oplocks會停用。停用共用區上的oplocks優先於在磁碟區上啟用oplocks。停用共用區上的oplocks、停用機會和租用oplock。您可以隨時在現有共用區上啟用或停用oplocks。
+
+.步驟
+. 執行適用的行動：
++
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+修改現有的共用區、在共用區上啟用oplocks
+ a| 
+輸入下列命令：「vserver CIFS共用內容add -vserver _vserver_name_-share-name share_name -share-properties oplocks」
+
+[NOTE]
+====
+您可以使用以逗號分隔的清單來指定要新增的其他共用屬性。
+
+====
+新增的內容會附加到現有的共用內容清單中。您先前指定的任何共用內容都會維持有效。
+
+
+
+ a| 
+透過修改現有的共用區來停用共用區上的oplocks
+ a| 
+輸入下列命令：「vserver CIFS共用內容移除-vserver _vserver_name_-share-name _share_name_-share-properties oplocks」
+
+[NOTE]
+====
+您可以使用以逗號分隔的清單來指定要移除的其他共用屬性。
+
+====
+您移除的共用內容會從現有的共用內容清單中刪除、不過您先前設定的共用內容若未移除、則仍會維持有效。
+
+|===
+
+
+下列命令可在儲存虛擬機器（SVM、先前稱為Vserver）VS1上、針對名為「Engineering」的共用區啟用oplocks：
+
+[listing]
+----
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name Engineering -share-properties oplocks
+
+cluster1::> vserver cifs share properties show
+Vserver          Share            Properties
+---------------- ---------------- -----------------
+vs1              Engineering      oplocks
+                                  browsable
+                                  changenotify
+                                  showsnapshot
+----
+下列命令會停用SVM VS1上名為「Engineering」的共用區oplocks：
+
+[listing]
+----
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name Engineering -share-properties oplocks
+
+cluster1::> vserver cifs share properties show
+Vserver          Share            Properties
+---------------- ---------------- -----------------
+vs1              Engineering      browsable
+                                  changenotify
+                                  showsnapshot
+----
+xref:enable-disable-oplocks-when-creating-shares-task.adoc[建立SMB共用時啟用或停用oplocks]
+
+xref:monitor-oplock-status-task.adoc[監控oplock狀態]
+
+xref:add-remove-share-properties-eexisting-share-task.adoc[新增或移除現有SMB共用區上的共用內容]

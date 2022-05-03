@@ -1,0 +1,76 @@
+---
+permalink: smb-admin/configure-default-unix-user-task.html 
+sidebar: sidebar 
+keywords: configure, unix, user, map, fail, individual, windows, authentication, non-mapped, configure the default unix user 
+summary: 您可以將預設UNIX使用者設定為在使用者的所有其他對應嘗試失敗時使用、或是不想在UNIX和Windows之間對應個別使用者時使用。或者、如果您想要驗證未對應的使用者失敗、則不應設定預設的UNIX使用者。 
+---
+= 設定預設UNIX使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將預設UNIX使用者設定為在使用者的所有其他對應嘗試失敗時使用、或是不想在UNIX和Windows之間對應個別使用者時使用。或者、如果您想要驗證未對應的使用者失敗、則不應設定預設的UNIX使用者。
+
+根據預設、預設UNIX使用者的名稱為「'pcuser'」、這表示預設會啟用使用者對應至預設UNIX使用者的功能。您可以指定其他名稱作為預設UNIX使用者。您指定的名稱必須存在於為儲存虛擬機器（SVM）設定的名稱服務資料庫中。如果此選項設為null字串、則無人能以UNIX預設使用者的身分存取CIFS伺服器。也就是、每位使用者必須在密碼資料庫中擁有帳戶、才能存取CIFS伺服器。
+
+使用者若要使用預設UNIX使用者帳戶連線至CIFS伺服器、必須符合下列先決條件：
+
+* 使用者已通過驗證。
+* 使用者位於CIFS伺服器的本機Windows使用者資料庫、CIFS伺服器的主網域或信任的網域（如果CIFS伺服器上已啟用多網域名稱對應搜尋）中。
+* 使用者名稱未明確對應至null字串。
+
+
+.步驟
+. 設定預設UNIX使用者：
++
+|===
+| 如果您想... | 輸入... 
+
+
+ a| 
+使用預設的UNIX使用者「'pcuser'」
+ a| 
+「Vserver CIFS選項修改-default-unix-userpcuser'
+
+
+
+ a| 
+使用另一個UNIX使用者帳戶做為預設使用者
+ a| 
+「Vserver CIFS選項修改-default-unix-user_user_name_」
+
+
+
+ a| 
+停用預設UNIX使用者
+ a| 
+「Vserver CIFS選項修改-default-unix-user」
+
+|===
++
+「Vserver CIFS選項修改-default-unix-userpcuser'
+
+. 確認預設UNIX使用者設定正確：「vserver CIFS選項顯示-vserver _vserver_name_」
++
+在下列範例中、SVM VS1上的預設UNIX使用者和來賓UNIX使用者均設定為使用UNIX使用者「'pcuser'」：
+
++
+「Vserver CIFS選項顯示-vserver VS1」
+
++
+[listing]
+----
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : pcuser
+  Guest Unix User        : pcuser
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+----
+

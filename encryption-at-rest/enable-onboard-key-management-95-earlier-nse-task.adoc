@@ -1,0 +1,110 @@
+---
+permalink: encryption-at-rest/enable-onboard-key-management-95-earlier-nse-task.html 
+sidebar: sidebar 
+keywords: enabling, onboard key management, ontap 9.5, earlier 
+summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。 
+---
+= 啟用更新版本的更新版本ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用Onboard Key Manager驗證FIPS磁碟機或SED的叢集節點。內建金鑰管理程式是一項內建工具、可從與資料相同的儲存系統、為節點提供驗證金鑰。Onboard Key Manager符合FIPS-140-2第1級標準。
+
+您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。
+
+.您需要的是 #8217 ；需要的是什麼
+* 如果您使用NSE搭配外部金鑰管理（KMIP）伺服器、則必須刪除外部金鑰管理程式資料庫。
++
+link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
+
+* 您必須是叢集管理員才能執行此工作。
+* 設定Onboard Key Manager之前、您必須先設定MetroCluster 這個靜態環境。
+
+
+每次將節點新增至叢集時、都必須執行「安全金鑰管理程式設定」命令。
+
+如果您使用MetroCluster 的是「不確定」組態、請參閱下列準則：
+
+* 在支援功能9.5中ONTAP 、您必須在本機叢集上執行「安全金鑰管理程式設定」、在遠端叢集上執行「安全金鑰管理程式設定-同步- MetroCluster組態設定是」、並在每個叢集上使用相同的密碼。
+* 在發行版發行版發行版之前、您必須在本機叢集上執行「安全金鑰管理程式設定」、等待約20秒、然後在遠端叢集上執行「安全金鑰管理程式設定」、並在每個叢集上使用相同的密碼。ONTAP
+
+
+根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。從ONTAP 使用支援功能9.4開始、您可以使用「-enable cc-mode yes」（啟用cc-mode yes）選項、要求使用者在重新開機後輸入通關密碼。
+
+對於NVE、如果您設定為「啟用cc-mode yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。對於「Volume create」、您不需要指定「-加密true」。對於「Volume Move start」（磁碟區移動開始）、您不需要指定「-加密-目的地true」。
+
+[NOTE]
+====
+密碼嘗試失敗後、您必須重新啟動節點。
+
+====
+.步驟
+. 啟動金鑰管理程式設定：
++
+「安全金鑰管理程式設定-啟用cc-mode yes | no」
+
++
+[NOTE]
+====
+從ONTAP 《支援功能》9.4開始、您可以使用「啟用cc-mode yes」（啟用cc-mode yes）選項、要求使用者在重新開機後輸入金鑰管理程式密碼。對於NVE、如果您設定為「啟用cc-mode yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。
+
+====
++
+下列範例會在叢集1上開始設定金鑰管理程式、而不要求在每次重新開機後輸入通關密碼：
+
++
+[listing]
+----
+cluster1::> security key-manager setup
+Welcome to the key manager setup wizard, which will lead you through
+the steps to add boot information.
+
+...
+
+Would you like to use onboard key-management? {yes, no} [yes]:
+Enter the cluster-wide passphrase:    <32..256 ASCII characters long text>
+Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
+----
+. 在提示符下輸入「yes」以設定機載金鑰管理。
+. 在通關密碼提示字元中、輸入32到256個字元之間的通關密碼、或輸入「'cc-mode'」（64到256個字元之間的通關密碼）。
++
+[NOTE]
+====
+如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管理程式設定作業再次顯示通關密碼提示之前、會有五秒鐘的延遲。
+
+====
+. 在通關密碼確認提示下、重新輸入通關密碼。
+. 驗證是否已為所有節點設定金鑰：
++
+「安全金鑰管理程式的關鍵展示」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[listing]
+----
+cluster1::> security key-manager key show
+
+Node: node1
+Key Store: onboard
+Key ID                                                           Used By
+---------------------------------------------------------------- --------
+0000000000000000020000000000010059851742AF2703FC91369B7DB47C4722 NSE-AK
+000000000000000002000000000001008C07CC0AF1EF49E0105300EFC83004BF NSE-AK
+
+Node: node2
+Key Store: onboard
+Key ID                                                           Used By
+---------------------------------------------------------------- --------
+0000000000000000020000000000010059851742AF2703FC91369B7DB47C4722 NSE-AK
+000000000000000002000000000001008C07CC0AF1EF49E0105300EFC83004BF NSE-AK
+----
+
+
+所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。
+
+每當您設定Onboard Key Manager複雜密碼時、也應該手動將資訊備份到儲存系統外部的安全位置、以便在發生災難時使用。請參閱 link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。

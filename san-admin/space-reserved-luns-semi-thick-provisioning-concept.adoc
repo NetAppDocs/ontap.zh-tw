@@ -1,0 +1,92 @@
+---
+permalink: san-admin/space-reserved-luns-semi-thick-provisioning-concept.html 
+sidebar: sidebar 
+keywords: configuration, settings, space-reserved files, luns, semi-thick, volume, provisioning 
+summary: 這個支援實體磁碟區和檔案或LUN的組態組合、需要較少的儲存設備、而不需要預先配置完整的組合、但會限制您可用於該磁碟區的效率技術。FlexVol此組態組合會盡力執行覆寫。 
+---
+= 空間保留檔案或LUN的組態設定、含半厚磁碟區資源配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+這個支援實體磁碟區和檔案或LUN的組態組合、需要較少的儲存設備、而不需要預先配置完整的組合、但會限制您可用於該磁碟區的效率技術。FlexVol此組態組合會盡力執行覆寫。
+
+若要使用半厚資源配置、在磁碟區中設定空間保留LUN、必須執行下列設定：
+
+[cols="2*"]
+|===
+| Volume設定 | 價值 
+
+
+ a| 
+保證
+ a| 
+Volume
+
+
+
+ a| 
+部分保留
+ a| 
+0
+
+
+
+ a| 
+Snapshot保留
+ a| 
+0
+
+
+
+ a| 
+Snapshot自動刪除
+ a| 
+在上、只要承諾銷毀層級、就會顯示一個銷毀清單、其中包含所有物件、設定為Volume的觸發程序、以及所有啟用自動刪除的FlexClone LUN和FlexClone檔案。
+
+
+
+ a| 
+自動擴充
+ a| 
+選用；如果啟用、則必須主動監控Aggregate可用空間。
+
+|===
+[cols="2*"]
+|===
+| 檔案或LUN設定 | 價值 
+
+
+ a| 
+保留空間
+ a| 
+已啟用
+
+|===
+
+
+== 技術限制
+
+您無法將下列Volume儲存效率技術用於此組態組合：
+
+* 壓縮
+* 重複資料刪除
+* ODX與FlexClone複製卸載
+* FlexClone LUN和FlexClone檔案未標示為自動刪除（作用中複本）
+* FlexClone子檔案
+* ODX/Copy卸載
+
+
+
+
+== 其他考量
+
+使用此組態組合時、必須考量下列事實：
+
+* 當支援該LUN的磁碟區空間不足時、保護資料（FlexClone LUN和檔案、Snapshot複本）就會遭到銷毀。
+* 當磁碟區的可用空間不足時、寫入作業可能會逾時並失敗。
+
+
+根據預設AFF 、對不支援的平台啟用壓縮。您必須明確停用壓縮任何想要在AFF 某個平台上使用半厚資源配置的Volume。

@@ -1,0 +1,42 @@
+---
+permalink: nas-audit/create-fpolicy-scope-task.html 
+sidebar: sidebar 
+keywords: create, fpolicy scope 
+summary: 建立FPolicy原則之後、您需要建立FPolicy範圍。建立範圍時、您會將範圍與FPolicy原則建立關聯。範圍會定義套用FPolicy原則的界限。範圍可以根據共用、匯出原則、磁碟區和副檔名來包含或排除檔案。 
+---
+= 建立FPolicy範圍
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+建立FPolicy原則之後、您需要建立FPolicy範圍。建立範圍時、您會將範圍與FPolicy原則建立關聯。範圍會定義套用FPolicy原則的界限。範圍可以根據共用、匯出原則、磁碟區和副檔名來包含或排除檔案。
+
+必須填寫FPolicy範圍工作表。FPolicy原則必須與關聯的外部引擎一起存在（如果原則設定為使用外部FPolicy伺服器）、且必須至少有一個關聯的FPolicy事件。
+
+.步驟
+. 使用「vserver fpolicy policy policy範圍create」命令建立FPolicy範圍。
++
+「vserver fpolicy原則範圍create -vserver-name vs1.example.com -policy-name policy1 -Volume-to include-includes datavol1、datavol2」
+
+. 使用「vserver fpolicy policy policy範圍show」命令來驗證FPolicy範圍組態。
++
+「vserver fpolicy原則範圍show -vserver vs1.example.com -instance」
+
++
+[listing]
+----
+
+                   Vserver: vs1.example.com
+                    Policy: policy1
+         Shares to Include: -
+         Shares to Exclude: -
+        Volumes to Include: datavol1, datavol2
+        Volumes to Exclude: -
+Export Policies to Include: -
+Export Policies to Exclude: -
+File Extensions to Include: -
+File Extensions to Exclude: -
+----
+

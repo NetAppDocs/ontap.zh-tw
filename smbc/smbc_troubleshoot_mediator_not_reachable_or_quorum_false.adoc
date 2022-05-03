@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_mediator_not_reachable_or_quorum_false.html 
+keywords: troubleshooting, SM-BC, SMBC, Mediator, quorum, quorum status, failover, network 
+summary: 執行SnapMirror容錯移轉啟動命令之後、SnapMirror容錯移轉show命令的輸出會顯示訊息、指出「媒體器」尚未設定。 
+---
+= 無法連線中介器或協調器仲裁狀態為假
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+執行「napmirror容錯移轉開始」命令之後、「shnapmirror容錯移轉show」命令的輸出會顯示訊息、指出沒有設定「媒體」。
+
+請參閱 link:smbc_install_initialize_the_ontap_mediator.html#["初始ONTAP 化此功能"]。
+
+....
+Cluster1::> snapmirror failover show
+Source Destination Error
+Path Path Type Status start-time end-time Reason
+-------- ----------- -------- --------- ---------- ---------- ----------
+vs0:/cg/cg vs1:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror failover cannot start because the source-side precheck failed. reason: Mediator not configured.
+05:50:42 05:50:43
+....
+中介器尚未設定、或網路連線問題。
+
+如果沒有設定「促成者」、您必須先設定「促成者」、才能建立「SM - BC」關係。修正任何網路連線問題。使用SnapMirror中介程序show命令、確認來源站台和目的地站台上的協調器已連線且仲裁狀態為true。
+
+....
+cluster::> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+10.234.10.143    cluster2         connected         true
+....

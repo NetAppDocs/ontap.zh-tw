@@ -1,0 +1,49 @@
+---
+permalink: smb-admin/delete-local-user-accounts-task.html 
+sidebar: sidebar 
+keywords: delete, local, user, account, storage, virtual, machine, svm, smb, authentication, cifs, determining, determine, data, contain, delete local user accounts 
+summary: 如果不再需要本機SMB驗證CIFS伺服器、或決定SVM所含資料的存取權限、您可以從儲存虛擬機器（SVM）刪除本機使用者帳戶。 
+---
+= 刪除本機使用者帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要本機SMB驗證CIFS伺服器、或決定SVM所含資料的存取權限、您可以從儲存虛擬機器（SVM）刪除本機使用者帳戶。
+
+刪除本機使用者時、請謹記下列事項：
+
+* 檔案系統不會變更。
++
+不會調整參照此使用者之檔案和目錄上的Windows安全性描述元。
+
+* 所有對本機使用者的參照都會從成員資格和權限資料庫中移除。
+* 標準且知名的使用者（例如Administrator）無法刪除。
+
+
+.步驟
+. 確定要刪除的本機使用者帳戶名稱：「vserver CIFS user-and -Groups local-user show -vserver _vserver_name_」
+. 刪除本機使用者：「vserver CIFS user-and -Groups local-user-delete -vserver _vserver_name_‑user-name _username_」
+. 確認使用者帳戶已刪除：「vserver CIFS user-and -Groups local-user show -vserver _vserver_name_」
+
+
+下列範例會刪除與SVM VS1相關聯的本機使用者「'CIFS/Server\sue」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver  User Name                   Full Name      Description
+-------- --------------------------- -------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith    Built-in administrator account
+vs1      CIFS_SERVER\sue             Sue   Jones
+
+
+cluster1::> vserver cifs users-and-groups local-user delete -vserver vs1 -user-name CIFS_SERVER\sue
+
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver      User Name                   Full Name      Description
+-------- --------------------------- -------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith    Built-in administrator account
+----

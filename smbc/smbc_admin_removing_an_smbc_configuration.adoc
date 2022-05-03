@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_removing_an_smbc_configuration.html 
+keywords: SM-BC, SMBC, removing, protection relationship 
+summary: 您可以移除零RTO同步SnapMirror保護、並刪除SMBC關係組態。 
+---
+= 移除SM至BC組態
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以移除零RTO同步SnapMirror保護、並刪除SMBC關係組態。
+
+在刪除SM與BC關係之前、必須先取消對應目的地叢集中的所有LUN。在LUN未對應且重新掃描主機之後、SCSI目標會通知主機LUN資源清冊已變更。零RTO次要磁碟區上的現有LUN會在零RTO關係刪除後變更、以反映新的身分識別。主機會將次要Volume LUN視為與來源Volume LUN無關的新LUN。在刪除關聯之後、次要磁碟區仍會保留DP磁碟區。您可以發出SnapMirror中斷命令、將其轉換為讀取/寫入。當關係未反轉時、在容錯移轉狀態中不允許刪除關係。
+
+.步驟
+. 刪除來源端點與目的地端點之間的SM至BC一致性群組關係：
++
+「目的地：」：>SnapMirror刪除-dite-path VS1_dst../cg / Cg _dst
+
+. 從來源叢集釋放一致性群組關係、以及為關係建立的Snapshot複本：
++
+「來源：：>SnapMirror版本-dite-path VS1_dst../cc/CG、dst」
+
+. 執行主機重新掃描以更新LUN庫存。
+. 從ONTAP 功能性的9.10.1開始、刪除SnapMirror關係並不會刪除一致性群組。如果您要刪除一致性群組、則必須使用System Manager或ONTAP REST API。請參閱 xref:../consistency-groups/delete-task.adoc[刪除一致性群組] 以取得更多資訊。
+

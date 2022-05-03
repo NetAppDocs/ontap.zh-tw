@@ -1,0 +1,38 @@
+---
+permalink: authentication/create-name-service-switch-task.html 
+sidebar: sidebar 
+keywords: create, name, service, switch 
+summary: 名稱服務交換器功能可讓您使用LDAP或NIS做為替代名稱服務來源。您可以使用vserver services name-service ns-switchmodify命令來指定名稱服務來源的查詢順序。 
+---
+= 建立名稱服務交換器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+名稱服務交換器功能可讓您使用LDAP或NIS做為替代名稱服務來源。您可以使用「vserver services name-service ns-switchmodify」命令來指定名稱服務來源的查詢順序。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須已設定LDAP和NIS伺服器存取。
+* 您必須是叢集管理員或SVM管理員、才能執行此工作。
+
+
+.步驟
+. 指定名稱服務來源的查詢順序：
++
+「Vserver services name-service ns-switchmodify -vserver Svm_name -database_service_switch_database-sources name_service_source_order」
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令指定"engData'SVM上"passwd"資料庫的LDAP和NIS名稱服務來源的查詢順序。
+
++
+[listing]
+----
+cluster1::>vserver services name-service ns-switch
+modify -vserver engData -database passwd -source files ldap,nis
+----
+

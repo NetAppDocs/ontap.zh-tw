@@ -1,0 +1,42 @@
+---
+permalink: performance-admin/check-iscsi-tcp-read-write-size-task.html 
+sidebar: sidebar 
+keywords: check, iscsi, tcp, read, write, size 
+summary: 對於iSCSI、您可以檢查TCP讀取或寫入大小、以判斷大小設定是否造成效能問題。如果大小是問題的根源、您可以加以修正。 
+---
+= 檢查iSCSI TCP讀寫大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於iSCSI、您可以檢查TCP讀寫大小、以判斷大小設定是否造成效能問題。如果大小是問題的根源、您可以加以修正。
+
+此工作需要進階權限層級命令。
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 檢查TCP視窗大小設定：
++
+「vserver iSCSI show -vserv,er _vserver_name_-instance」
+
+. 修改TCP視窗大小設定：
++
+「vserver iSCSI modify -vserver _vserver_name_-tcp-window-size _integer_」
+
+. 返回管理權限：
++
+「et -priv. admin」
+
+
+
+以下範例將TCP視窗大小「VM1」變更為131,400位元組：
+
+[listing]
+----
+cluster1::*> vserver iscsi modify -vserver vs1 -tcp-window-size 131400
+----

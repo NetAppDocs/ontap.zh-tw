@@ -1,0 +1,103 @@
+---
+permalink: system-admin/create-banner-task.html 
+sidebar: sidebar 
+keywords: create, banner, svm, access, cluster, ssh, session 
+summary: 您可以建立橫幅、向嘗試存取叢集或SVM的人顯示訊息。橫幅會顯示在主控台工作階段（僅限叢集存取）或SSH工作階段（用於叢集或SVM存取）中、然後才會提示使用者進行驗證。 
+---
+= 建立橫幅
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立橫幅、向嘗試存取叢集或SVM的人顯示訊息。橫幅會顯示在主控台工作階段（僅限叢集存取）或SSH工作階段（用於叢集或SVM存取）中、然後才會提示使用者進行驗證。
+
+.步驟
+. 使用「安全登入橫幅修改」命令、為叢集或SVM建立橫幅：
++
+|===
+| 如果您想要... | 然後... 
+
+
+ a| 
+指定單一行的訊息
+ a| 
+使用「-mESTESE」「[.code]'text」參數來指定文字。
+
+
+
+ a| 
+在訊息中加入新行（也稱為行尾）
+ a| 
+使用不含「-message'」或「-uri」參數的命令來啟動互動模式來編輯橫幅。
+
+
+
+ a| 
+從橫幅使用的位置上傳內容
+ a| 
+使用「-Uri'」參數指定內容的FTP或HTTP位置。
+
+|===
++
+橫幅的大小上限為2、048位元組、包括換行字元。
+
++
+使用「-uri」參數建立的橫幅是靜態的。系統不會自動重新整理以反映來源內容的後續變更。
+
++
+針對叢集建立的橫幅也會針對所有沒有現有橫幅的SVM顯示。任何後續建立的SVM橫幅都會覆寫該SVM的叢集層級橫幅。在SVM的雙引號內以連字號（「-」）指定「-Message」參數、會將SVM重設為使用叢集層級橫幅。
+
+. 使用「安全登入標語show」命令顯示橫幅、以確認橫幅是否已建立。
++
+使用空白字串（「」）指定「-Message」參數時、會顯示沒有內容的橫幅。
+
++
+使用「-」指定「-Message」參數會顯示所有未設定橫幅的（管理或資料）SVM。
+
+
+
+以下範例使用非互動模式來建立「叢集1」叢集的橫幅：
+
+[listing]
+----
+cluster1::> security login banner modify -message "Authorized users only!"
+
+cluster1::>
+----
+以下範例使用互動模式來建立「sVM」的橫幅：
+
+[listing]
+----
+cluster1::> security login banner modify -vserver svm1
+
+Enter the message of the day for Vserver "svm1".
+Max size: 2048. Enter a blank line to terminate input. Press Ctrl-C to abort.
+0        1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+The svm1 SVM is reserved for authorized users only!
+
+
+cluster1::>
+----
+下列範例顯示已建立的橫幅廣告：
+
+[listing]
+----
+cluster1::> security login banner show
+Vserver: cluster1
+Message
+-----------------------------------------------------------------------------
+Authorized users only!
+
+Vserver: svm1
+Message
+-----------------------------------------------------------------------------
+The svm1 SVM is reserved for authorized users only!
+
+2 entries were displayed.
+
+cluster1::>
+----
+xref:manage-banner-reference.adoc[管理橫幅]

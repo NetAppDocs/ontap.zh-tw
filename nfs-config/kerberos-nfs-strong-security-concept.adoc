@@ -1,0 +1,47 @@
+---
+permalink: nfs-config/kerberos-nfs-strong-security-concept.html 
+sidebar: sidebar 
+keywords: use, kerberos, nfs, strong, security 
+summary: 如果您的環境使用Kerberos進行強式驗證、您必須與Kerberos管理員合作、以判斷需求和適當的儲存系統組態、然後將SVM啟用為Kerberos用戶端。 
+---
+= 將Kerberos與NFS搭配使用以獲得強大安全性的總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的環境使用Kerberos進行強式驗證、您必須與Kerberos管理員合作、以判斷需求和適當的儲存系統組態、然後將SVM啟用為Kerberos用戶端。
+
+您的環境應符合下列準則：
+
+* 您的站台部署應遵循Kerberos伺服器和用戶端組態的最佳實務做法、才能設定Kerberos ONTAP 以供執行效能。
+* 如果可能、請使用NFSv4或更新版本（如果需要Kerberos驗證）。
++
+NFSv3可與Kerberos搭配使用。不過、Kerberos的完整安全效益只能在ONTAP NFSv4或更新版本的部署中實現。
+
+* 若要提升備援伺服器存取、應在叢集中多個節點上使用相同的SPN-啟用 多個資料LIF上的Kerberos。
+* 在SVM上啟用Kerberos時、必須根據NFS用戶端組態、在Volume或qtree的匯出規則中指定下列其中一種安全性方法。
++
+** KRB5（Kerberos v5傳輸協定）
+** 「krb5i」（使用Checksum進行完整性檢查的Kerberos v5傳輸協定）
+** 「krb5p」（具有隱私權服務的Kerberos v5傳輸協定）
+
+
+
+
+除了Kerberos伺服器和用戶端之外、還必須設定下列外部服務ONTAP 以支援Kerberos：
+
+* 目錄服務
++
+您應該在環境中使用安全目錄服務、例如Active Directory或OpenLDAP、這類服務設定為使用LDAP over SSL/TLS。請勿使用NIS、因為NIS的要求會以純文字傳送、因此不安全。
+
+* NTP
++
+您必須有執行NTP的工作時間伺服器。這是防止Kerberos驗證因時間偏移而失敗的必要步驟。
+
+* 網域名稱解析（DNS）
++
+每個UNIX用戶端和每個SVM LIF都必須在Kdc的正向和反向對應區域下註冊適當的服務記錄（SRF）。所有參與者都必須透過DNS正確解析。
+
+

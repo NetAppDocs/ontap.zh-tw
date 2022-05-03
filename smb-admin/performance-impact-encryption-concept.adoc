@@ -1,0 +1,26 @@
+---
+permalink: smb-admin/performance-impact-encryption-concept.html 
+sidebar: sidebar 
+keywords: smb, session, encryption, communication, windows, client, experience, performance, impact, affect, server, node, svm, performance impact of smb encryption 
+summary: 當SMB工作階段使用SMB加密時、所有往返Windows用戶端的SMB通訊都會受到效能影響、影響用戶端和伺服器（亦即叢集上執行SVM的節點、其中包含SMB伺服器）。 
+---
+= SMB加密對效能的影響
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當SMB工作階段使用SMB加密時、所有往返Windows用戶端的SMB通訊都會受到效能影響、影響用戶端和伺服器（亦即叢集上執行SVM的節點、其中包含SMB伺服器）。
+
+效能影響顯示用戶端和伺服器的CPU使用量增加、不過網路流量並未改變。
+
+效能影響的程度取決於ONTAP 您所執行的版本的VMware®。從推出全新的加密卸載演算法、即可在ONTAP 加密的SMB流量中提供更好的效能。啟用SMB加密時、預設會啟用SMB加密卸載。
+
+增強的SMB加密效能需要AES-NI卸載功能。請參閱Hardware Universe 《支援資料》（HWU）、確認您的平台是否支援AES-NI卸載。
+
+如果您能夠使用SMB版本3.11（Windows 10和Windows Server 2016均支援）、則也能進一步提升效能、以支援速度更快的GCM演算法。
+
+視您的網路ONTAP 、支援的版本為VMware、SMB版本及SVM實作而定、SMB加密的效能影響可能會有很大差異、您只能在網路環境中進行測試來驗證。
+
+SMB加密在SMB伺服器上預設為停用。您只能在需要加密的SMB共用區或SMB伺服器上啟用SMB加密。藉由SMB加密、ONTAP 支援進一步處理解密要求、並加密每個要求的回應。因此、只有在必要時才應啟用SMB加密。

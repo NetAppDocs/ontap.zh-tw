@@ -1,0 +1,80 @@
+---
+permalink: encryption-at-rest/change-key-management-passphrase-task.html 
+sidebar: sidebar 
+keywords: changing, onboard, key, management, passphrase 
+summary: 定期變更內建金鑰管理通關密碼、是安全性最佳實務做法。您應該將新的內建金鑰管理通關密碼複製到儲存系統外部的安全位置、以供未來使用。 
+---
+= 變更內建金鑰管理通關密碼
+:allow-uri-read: 
+
+
+[role="lead"]
+定期變更內建金鑰管理通關密碼、是安全性最佳實務做法。您應該將新的內建金鑰管理通關密碼複製到儲存系統外部的安全位置、以供未來使用。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須是叢集或SVM管理員、才能執行此工作。
+* 此工作需要進階權限。
+
+
+.步驟
+. 變更為進階權限層級：
++
+"進階權限"
+
+. 變更內建金鑰管理通關密碼：
++
+[cols="25,75"]
+|===
+
+
+| 此版本... ONTAP | 使用此命令... 
+
+
+ a| 
+更新版本ONTAP
+ a| 
+「安全金鑰管理程式內建更新密碼」
+
+
+
+ a| 
+不含更新版本ONTAP
+ a| 
+「安全金鑰管理程式更新密碼」
+
+|===
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列ONTAP 支援功能的支援功能9.6可讓您變更「cluster1」的機載金鑰管理密碼：
+
++
+[listing]
+----
+clusterl::> security key-manager onboard update-passphrase
+Warning: This command will reconfigure the cluster passphrase for onboard key management for Vserver "cluster1".
+Do you want to continue? {y|n}: y
+Enter current passphrase:
+Enter new passphrase:
+----
+. 在提示符下輸入「y」、以變更內建金鑰管理通關密碼。
+. 在目前的通關密碼提示字元中輸入目前的通關密碼。
+. 在新的通關密碼提示字元中、輸入介於32到256個字元之間的通關密碼、或輸入介於64到256個字元之間的通關密碼「'cc-mode'」。
++
+如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管理程式設定作業再次顯示通關密碼提示之前、會有五秒鐘的延遲。
+
+. 在通關密碼確認提示下、重新輸入通關密碼。
+
+
+在這個環境中、您必須更新合作夥伴叢集上的通關密碼：MetroCluster
+
+* 在BIOS 9.5或更早版本中、您必須在合作夥伴叢集上以相同的通關密碼執行「安全金鑰管理程式更新通關密碼」ONTAP 。
+* 在Section9.6及更新版本中、系統會提示您在合作夥伴叢集上使用相同密碼執行「安全金鑰管理程式內建同步」ONTAP 。
+
+
+您應該將內建金鑰管理通關密碼複製到儲存系統外部的安全位置、以供未來使用。
+
+每當您變更內建金鑰管理通關密碼時、都應該手動備份金鑰管理資訊。
+
+link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]

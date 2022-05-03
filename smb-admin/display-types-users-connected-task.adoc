@@ -1,0 +1,66 @@
+---
+permalink: smb-admin/display-types-users-connected-task.html 
+sidebar: sidebar 
+keywords: display, information, type, connect, smb, session, appropriate, type, storage, virtual, machine, svm 
+summary: 您可以顯示透過SMB工作階段連線的使用者類型資訊。這有助於確保只有適當類型的使用者透過儲存虛擬機器（SVM）上的SMB工作階段進行連線。 
+---
+= 顯示透過SMB工作階段連線的使用者類型資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示透過SMB工作階段連線的使用者類型資訊。這有助於確保只有適當類型的使用者透過儲存虛擬機器（SVM）上的SMB工作階段進行連線。
+
+下列類型的使用者可透過SMB工作階段連線：
+
+* 「本機使用者」
++
+已驗證為本機CIFS使用者
+
+* 「主要使用者」
++
+驗證為網域使用者（可從CIFS伺服器的主網域或信任的網域）
+
+* 「來賓使用者」
++
+驗證為來賓使用者
+
+* 「匿名使用者」
++
+驗證為匿名或null使用者
+
+
+
+.步驟
+. 判斷透過SMB工作階段連線的使用者類型：「vserver CIFS工作階段show -vserver _vserver_name_-windows-user_windows_user_name_-功能變數windows-user,address,lif-address,user-type'
++
+|===
+| 如果您要顯示已建立工作階段的使用者類型資訊... | 輸入下列命令... 
+
+
+ a| 
+適用於具有指定使用者類型的所有工作階段
+ a| 
+「Vserver CIFS工作階段show -vserver _vserver_name_-user-type｛local-user| domain-user| guest-user| anone-user｝」
+
+
+
+ a| 
+適用於特定使用者
+ a| 
+「vserver CIFS工作階段show -vserver _vserver_name_-windows-user_windows_user_name_-功能 變數windows-user,address,lif-address,user-type」
+
+|===
+
+
+下列命令會顯示使用者「eubs\user1'」在SVM VS1上建立之工作階段的使用者類型工作階段資訊：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver pub1 -windows-user iepubs\user1 -fields windows-user,address,lif-address,user-type
+node      vserver session-id connection-id lif-address  address       windows-user         user-type
+--------- ------- ---------- ------------- ------------ ------------- -------------------- -----------
+pub1node1 pub1    1          3439441860    10.0.0.1     10.1.1.1      IEPUBS\user1         domain-user
+----

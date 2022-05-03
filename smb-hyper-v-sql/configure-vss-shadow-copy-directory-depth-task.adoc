@@ -1,0 +1,41 @@
+---
+permalink: smb-hyper-v-sql/configure-vss-shadow-copy-directory-depth-task.html 
+sidebar: sidebar 
+keywords: configure, vss, shadow, copy, directory, depth, hyper, v, smb, share 
+summary: 您也可以在SMB共用區內設定最大目錄深度、以便建立陰影複製。如果您想要手動控制ONTAP 子目錄的最大層級、以便在其中建立陰影複製、則此參數非常實用。 
+---
+= 設定VSS陰影複製目錄深度（適用於SMB共用上的Hyper-V）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您也可以在SMB共用區內設定最大目錄深度、以便建立陰影複製。如果您想要手動控制ONTAP 子目錄的最大層級、以便在其中建立陰影複製、則此參數非常實用。
+
+必須啟用VSS陰影複製功能。
+
+預設為建立最多五個子目錄的陰影複本。如果該值設為「0」、ONTAP 則會為所有子目錄建立陰影複製。
+
+[NOTE]
+====
+雖然您可以指定陰影複製集目錄深度包含五個子目錄或所有子目錄、但Microsoft要求陰影複製集建立必須在60秒內完成。如果目前無法完成陰影複製集建立、則陰影複製集會失敗。您選擇的陰影複製目錄深度不得導致建立時間超過時間限制。
+
+====
+.步驟
+. 將權限層級設為進階：
++
+「*設定-權限進階*」
+
+. 將VSS陰影複製目錄深度設定為所需的層級：
++
+hy*vserver CIFS選項可修改-vserver _vserver_name_-ShadowCopy-dir-depth integer*
+
++
+"* vserver CIFS選項修改-vserver VS1 -ShadowCopy-dir-depth 6*"
+
+. 返回管理權限層級：
++
+「*設定-權限管理*」
+
+

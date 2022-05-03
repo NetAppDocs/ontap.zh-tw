@@ -1,0 +1,172 @@
+---
+permalink: upgrade/task_download_and_install_ontap_software_image.html 
+sidebar: sidebar 
+keywords: ontap, software, image, download, downloading, install, installing 
+summary: 您必須先從ONTAP NetApp支援網站下載此解決方案軟體、然後使用自動不中斷升級（andu）或手動升級程序來安裝。 
+---
+= 下載並安裝ONTAP 更新版的軟體映像
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先從ONTAP NetApp支援網站下載此解決方案軟體、然後使用自動不中斷升級（andu）或手動升級程序來安裝。
+
+
+
+== 下載軟體映像
+
+視ONTAP 您的版本而定、您可以將ONTAP NetApp支援網站上的支援影像複製到下列其中一個位置：網路上的HTTP、HTTPS或FTP伺服器、或是本機資料夾。
+
+請注意下列重要資訊：
+
+* 軟體映像是特定於平台機型。
++
+您必須取得適用於叢集的正確映像。NetApp支援網站上提供適用於您平台機型的軟體映像、韌體版本資訊及最新韌體。
+
+* 軟體映像包含ONTAP 系統韌體的最新版本、在發佈特定版本的資訊時、即可取得此版本。
+* 如果您要將採用NetApp Volume Encryption的系統升級ONTAP 為版本9.5或更新版本、則必須下載ONTAP 非受限國家/地區的版本、包括NetApp Volume Encryption。
++
+如果您使用ONTAP 受限國家/地區的「更新版」軟體映像來升級採用NetApp Volume Encryption的系統、系統就會出現問題、而且您無法存取磁碟區。
+
+* 如果您要從ONTAP 更新版的版本從更新版的版本9.5升級至9.9.1、則必須複製ONTAP 更新版的軟體影像以供使用。
+* 如果您要從ONTAP Image9.3升級至9.7、則必須複製ONTAP 適用於Image9.5和9.7的軟體映像。
+
+
+.步驟
+. 在中找到目標ONTAP 的Software link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"] NetApp支援網站的區域。
+. 將軟體映像（例如97_q_image.tgz）複製到適當的位置。
++
+視ONTAP 您的版本而定、此位置將是HTTP、HTTPS或FTP伺服器的目錄、映像將從該目錄提供給本機系統、或是儲存系統上的本機資料夾。
+
++
+[cols="2"]
+|===
+| 您可以將映像複製到此位置... | 如果您執行這些ONTAP 版本... 
+
+
+| HTTP或FTP伺服器 | 不含更新版本ONTAP 
+
+
+| 本機資料夾 | 更新版本ONTAP 
+
+
+| HTTPS伺服器+伺服器的CA憑證必須安裝在本機系統上。 | 更新版本ONTAP 
+|===
+
+
+
+
+== 安裝軟體映像
+
+您必須在叢集節點上安裝目標軟體映像。
+
+* 如果您要將採用NetApp Volume Encryption的系統升級ONTAP 為版本9.5或更新版本、您必須為ONTAP 非受限國家/地區下載此版軟體映像、其中包括NetApp Volume Encryption。
++
+如果您使用ONTAP 受限國家/地區的「更新版」軟體映像來升級採用NetApp Volume Encryption的系統、系統就會出現問題、而且您無法存取磁碟區。
+
+* 如果您要從ONTAP Se.9.5直接升級至9.9.1、則必須下載ONTAP 適用於Se.9.7和9.9.1的軟體映像。如果您直接從ONTAP Image9.3升級至9.7、則必須下載ONTAP 適用於Image9.5和9.7的軟體映像。
++
+自動升級程序會在背景中使用這兩個映像來完成升級。
+
+
+
+
+
+=== 自動不中斷升級（andu）
+
+. 檢查映像儲存庫並刪除任何先前的映像。
++
+「叢集映像套件show-repository」
+
++
+[listing]
+----
+cluster image package show-repository\
+<<name_of_vsim|There are no packages in the repository.\r\n
+----
+. 下載映像。
++
+「叢集映像套件請取得-URL url_to_image_on_nss'
+
++
+“叢集映像套件Get -URL http://10.60.132.98/x/eng/rlse/DOT/9.7P13X2/promo/9.7P13X2/x86_64.optimize/image.tgz`[]
+
+. 確認已下載套件。
++
+「叢集映像套件show-repository」
+
++
+.範例
+[listing]
+----
+cluster image package show-repository -fields download-ver\
+<<name_of_vsim| download-verX;X\r\n
+<<name_of_vsim| Downloaded VersionX;X\r\n
+<<name_of_vsim| ONTAP 9.10.1.X;X\r\n
+----
+
+
+
+
+=== 手動升級
+
+. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
++
+出現進階提示（「*>」）。
+
+. 下載映像。
++
+.. 如果您要升級的叢集沒有MetroCluster 使用的是功能性的組態或雙節點MetroCluster 的功能、請使用下列命令來下載映像：
++
+「系統節點映像更新-Node *-package_st地理位置_-replace套件true -setDefault true -background true」
+
++
+_locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。有關詳細信息，請參見"shystem nodE image updates"手冊頁。
+
++
+此命令可同時下載並安裝所有節點上的軟體映像。若要在每個節點上一次下載及安裝映像、請勿指定「-background」參數。
+
+.. 如果您要升級四節點MetroCluster 或八節點的版本、則必須在兩個叢集上發出下列命令：
++
+「ystem節點映像更新-Node *-package-replace -packagetrue -background true -setDefault false」
+
++
+此命令會使用延伸查詢來變更目標軟體映像、此映像會安裝為每個節點的替代映像。
+
+
+
+. 出現提示時、請輸入「y」繼續。
+. 確認軟體映像已下載並安裝在每個節點上。
++
+「系統節點映像show-update-progress -Node *」
+
++
+此命令會顯示軟體映像下載與安裝的目前狀態。您應該繼續執行此命令、直到所有節點回報*執行狀態***退出*、*退出狀態***成功*為止。
+
++
+系統節點映像更新命令可能會失敗、並顯示錯誤或警告訊息。解決任何錯誤或警告之後、您可以再次執行命令。
+
++
+此範例顯示兩個節點的叢集、其中軟體映像會下載並成功安裝在兩個節點上：
+
++
+[listing]
+----
+cluster1::*> system node image show-update-progress -node *
+There is no update/install in progress
+Status of most recent operation:
+        Run Status:     Exited
+        Exit Status:    Success
+        Phase:          Run Script
+        Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node0.
+There is no update/install in progress
+Status of most recent operation:
+        Run Status:     Exited
+        Exit Status:    Success
+        Phase:          Run Script
+        Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node1.
+2 entries were acted on.
+----
+

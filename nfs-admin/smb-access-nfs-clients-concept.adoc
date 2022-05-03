@@ -1,0 +1,18 @@
+---
+permalink: nfs-admin/smb-access-nfs-clients-concept.html 
+sidebar: sidebar 
+keywords: ontap, grant, smb, file, access, nfs, client 
+summary: 使用Windows NT檔案系統（NTFS）安全性語意、判斷UNIX使用者是否能在NFS用戶端上存取具有NTFS權限的檔案。ONTAP 
+---
+= 如何使用此功能、從NFS用戶端授予SMB檔案存取權限ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用Windows NT檔案系統（NTFS）安全性語意、判斷UNIX使用者是否能在NFS用戶端上存取具有NTFS權限的檔案。ONTAP
+
+為達成此目的、可將使用者的UNIX使用者ID（UID）轉換成SMB認證、然後使用SMB認證來驗證使用者是否擁有檔案的存取權限。ONTAPSMB認證包含主要安全性識別碼（SID）、通常是使用者的Windows使用者名稱、以及對應於使用者所屬Windows群組的一或多個群組SID。
+
+將UNIX UID轉換為SMB認證所需的時間ONTAP 可從數十毫秒轉換為數百毫秒、因為此程序涉及連絡網域控制器。此功能可將UID對應至SMB認證、並在認證快取中輸入對應、以縮短轉換所造成的驗證時間。ONTAP

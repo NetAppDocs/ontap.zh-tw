@@ -1,0 +1,79 @@
+---
+permalink: nfs-admin/display-dns-statistics-task.html 
+sidebar: sidebar 
+keywords: display, dns, statistics 
+summary: 您可以在儲存系統上顯示儲存虛擬機器（SVM）的DNS統計資料、以監控效能並診斷問題。 
+---
+= 顯示DNS統計資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在儲存系統上顯示儲存虛擬機器（SVM）的DNS統計資料、以監控效能並診斷問題。
+
+.步驟
+. 使用「統計資料目錄物件show」命令來識別可從中檢視資料的DNS物件。
++
+「統計資料目錄物件」顯示-object exter_service_op*
+
+. 使用「統計資料開始」和「統計資料停止」命令、從一或多個物件收集資料樣本。
+. 使用「統計資料顯示」命令來檢視範例資料。
+
+
+
+
+== 監控DNS統計資料
+
+下列範例顯示DNS查詢的效能資料。下列命令會開始收集新範例的資料：
+
+[listing]
+----
+vs1::*> statistics start -object external_service_op -sample-id dns_sample1
+vs1::*> statistics start -object external_service_op_error -sample-id dns_sample2
+----
+下列命令會指定計數器來顯示範例中的資料、這些計數器會顯示所傳送的DNS查詢數、以及所接收、失敗或逾時的DNS查詢數：
+
+[listing]
+----
+vs1::*> statistics show -sample-id dns_sample1 -counter num_requests_sent|num_responses_received|num_successful_responses|num_timeouts|num_request_failures|num_not_found_responses
+
+Object: external_service_op
+Instance: vs1:DNS:Query:10.72.219.109
+Start-time: 3/8/2016 11:15:21
+End-time: 3/8/2016 11:16:52
+Elapsed-time: 91s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    num_not_found_responses                                         0
+    num_request_failures                                            0
+    num_requests_sent                                               1
+    num_responses_received                                          1
+    num_successful_responses                                        1
+    num_timeouts                                                    0
+6 entries were displayed.
+----
+下列命令會指定計數器顯示特定伺服器上DNS查詢收到特定錯誤的次數、以顯示範例中的資料：
+
+[listing]
+----
+vs1::*> statistics show -sample-id dns_sample2 -counter server_ip_address|error_string|count
+
+Object: external_service_op_error
+Instance: vs1:DNS:Query:NXDOMAIN:10.72.219.109
+Start-time: 3/8/2016 11:23:21
+End-time: 3/8/2016 11:24:25
+Elapsed-time: 64s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    count                                                           1
+    error_string                                             NXDOMAIN
+    server_ip_address                                   10.72.219.109
+3 entries were displayed.
+----
+link:../performance-config/index.html["效能監控設定"]

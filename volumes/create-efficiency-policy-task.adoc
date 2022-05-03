@@ -1,0 +1,35 @@
+---
+permalink: volumes/create-efficiency-policy-task.html 
+sidebar: sidebar 
+keywords: create, volume efficiency policy, run, efficiency, operations 
+summary: 您可以建立磁碟區效率原則、在特定期間內於磁碟區上執行重複資料刪除或資料壓縮、然後再執行重複資料刪除、並使用Volume Eff效率 原則create命令來指定工作排程。 
+---
+= 建立Volume效率原則以執行效率作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立磁碟區效率原則、以便在特定時間內在磁碟區上執行重複資料刪除或資料壓縮、然後再執行重複資料刪除、並使用「Volume Eff效率 原則create」命令來指定工作排程。
+
+您必須使用「jobschedule cron create」命令建立cron排程。如需管理cron排程的詳細資訊、請參閱 link:../system-admin/index.html["系統管理參考資料"]。
+
+具有預設預先定義角色的SVM管理員無法管理重複資料刪除原則。不過、叢集管理員可以使用任何自訂角色、修改指派給SVM管理員的權限。如需SVM管理員功能的詳細資訊、請參閱 link:../authentication/index.html["系統管理員驗證與RBAC"]。
+
+[NOTE]
+====
+您可以在排定的時間執行重複資料刪除或資料壓縮作業、或建立具有特定持續時間的排程、或指定臨界值百分比、以等待新資料超過指定百分比、然後觸發重複資料刪除或資料壓縮作業。此臨界值是磁碟區中使用之區塊總數的百分比。您可以從「df」命令輸出取得使用的區塊總數。
+
+====
+.步驟
+. 使用「Volume Eff效率 原則create」命令來建立Volume Eff效率 原則。
+
+
+下列命令會建立名為pol1的Volume Eff效率 原則、每天觸發效率作業：
+
+磁碟區效率原則會建立-vserver VS1 -policy pol1 -schedule日報
+
+下列命令會建立名為pol2的Volume Effency原則、在臨界值百分比達到20%時觸發效率作業：
+
+「Volume Effency policy create -vserver VS1 -policy pol2 -type threshold -start-threshold-%20%」

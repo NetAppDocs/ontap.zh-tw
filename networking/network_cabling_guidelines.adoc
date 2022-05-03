@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: networking/network_cabling_guidelines.html 
+keywords: network, cable, wire, cabling, wiring, best practice, best practices, intracluster, interconnect, traffic, network cabling guidelines, management, data, network cabling, network cabling best practices, network cabling diagram 
+summary: 網路佈線最佳實務做法 
+---
+= 網路佈線原則
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+網路佈線最佳實務做法可將流量分隔至下列網路：叢集、管理和資料。
+
+您應該連接叢集、使叢集流量與所有其他流量位於不同的網路上。這是一種選擇性做法、但建議您將網路管理流量與資料和叢集內流量分開。藉由維護個別的網路、您可以獲得更好的效能、更容易管理、並改善節點的安全性與管理存取。
+
+下圖說明包含三個獨立網路的四節點HA叢集的網路佈線：
+
+image:Network_Cabling_Guidelines.png["網路佈線圖"]
+
+在佈線網路連線時、您應遵循特定準則：
+
+* 每個節點都應連線至三個不同的網路。
++
+一個網路用於管理、一個用於資料存取、一個用於叢集內通訊。管理和資料網路可以邏輯分隔。
+
+* 您可以將多個資料網路連線至每個節點、以改善用戶端（資料）流量傳輸。
+* 建立叢集時無需資料網路連線、但必須包含叢集互連連連線。
+* 每個節點應永遠有兩個以上的叢集連線、但FAS22xx系統上的節點可以設定為單一10-GbE叢集連接埠。
+
+
+如需網路纜線的詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap-systems/index.html["系統文件中心AFF FAS"^] 和 https://hwu.netapp.com/Home/Index["Hardware Universe"^]。

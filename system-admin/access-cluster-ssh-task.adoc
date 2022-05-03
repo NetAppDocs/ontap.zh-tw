@@ -1,0 +1,130 @@
+---
+permalink: system-admin/access-cluster-ssh-task.html 
+sidebar: sidebar 
+keywords: access, ssh, cluster, administrative, task 
+summary: 您可以向叢集發出SSH要求、以執行管理工作。SSH預設為啟用。 
+---
+= 使用SSH存取叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以向叢集發出SSH要求、以執行管理工作。SSH預設為啟用。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您必須擁有設定為使用「shh」作為存取方法的使用者帳戶。
++
+「安全登入」命令的「-application」參數會指定使用者帳戶的存取方法。「安全登入」手冊頁包含其他資訊。
+
+* 如果您使用Active Directory（AD）網域使用者帳戶來存取叢集、則必須透過啟用CIFS的儲存虛擬機器（SVM）設定叢集驗證通道、 此外、您的AD網域使用者帳戶也必須以「sh」存取方法新增至叢集、並以「domain」驗證方法新增至叢集。
+* 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
++
+「network options IPv6 show」命令會顯示是否啟用IPv6。「系統服務防火牆原則show」命令會顯示防火牆原則。
+
+
+
+.關於這項工作
+* 您必須使用OpenSSH 5.7或更新版本的用戶端。
+* 僅支援SSH v2傳輸協定；不支援SSH v1。
+* 支援每個節點最多64個並行SSH工作階段。ONTAP
++
+如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
+
++
+如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
+
+* 支援SSH的AES和3DES加密演算法（也稱為_ciphers_）ONTAP 。
++
+AES支援128、192和256位元金鑰長度。3DES的金鑰長度為56位元、與原始的DES相同、但會重複三次。
+
+* 當FIPS模式開啟時、SSH用戶端應與省略曲線數位簽章演算法（ECDSA）公開金鑰演算法協商、以使連線成功。
+* 如果您想ONTAP 要從Windows主機存取此功能、可以使用第三方公用程式、例如Putty。
+* 如果您使用Windows AD使用者名稱登入ONTAP 到功能表、則應該使用在ONTAP 功能表中建立AD使用者名稱和網域名稱時所用的大小寫字母。
++
+AD使用者名稱和網域名稱不區分大小寫。不過ONTAP 、不區分使用者名稱大小寫。使用者名稱ONTAP 若不相符、而使用者名稱與在AD中建立的使用者名稱不相符、將導致登入失敗。
+
+* 從功能支援的9.3開始ONTAP 、您可以為本機系統管理員帳戶啟用SSH多因素驗證。
++
+啟用SSH多因素驗證時、使用者會使用公開金鑰和密碼進行驗證。
+
+* 從S得9.4開始ONTAP 、您可以為LDAP和NIS遠端使用者啟用SSH多因素驗證。
+
+
+.步驟
+. 在管理主機上、以下列其中一種格式輸入「sh」命令：
++
+** hes* ssh _username@hostname_or_ip_[_command_]*
+** "* ssh -l _usernamehostname_or_ip_[_command_]*
+
+
+
+
+如果您使用的是AD網域使用者帳戶、則必須以「_domainname\AD_accountName_」格式指定「_username_」（網域名稱後加上雙反斜槓）或「_domainname\AD_accountName_」（在網域名稱後加上雙引號和單一反斜槓）。
+
+「主機名稱」或「IP」是叢集管理LIF或節點管理LIF的主機名稱或IP位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+
+SSH互動工作階段不需要「_command_」。
+
+下列範例顯示名為「'joe'」的使用者帳戶如何發出SSH要求、以存取叢集管理LIF為10.72.137.28的叢集：
+
+[listing]
+----
+$ ssh joe@10.72.137.28
+Password:
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+----
+[listing]
+----
+$ ssh -l joe 10.72.137.28 cluster show
+Password:
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+----
+下列範例顯示、名為「DOMAIN1」之網域中的「'John」使用者帳戶如何發出SSH要求、以存取叢集管理LIF為10.72.137.28的叢集：
+
+[listing]
+----
+$ ssh DOMAIN1\\john@10.72.137.28
+Password:
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+----
+[listing]
+----
+$ ssh -l "DOMAIN1\john" 10.72.137.28 cluster show
+Password:
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+----
+下列範例顯示名為「'joe'」的使用者帳戶如何發出SSH MFA要求、以存取叢集管理LIF為10.72.137.32的叢集：
+
+[listing]
+----
+$ ssh joe@10.72.137.32
+Authenticated with partial success.
+Password:
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+----
+link:../authentication/index.html["系統管理員驗證與RBAC"]

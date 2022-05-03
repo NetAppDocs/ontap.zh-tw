@@ -1,0 +1,70 @@
+---
+permalink: smb-admin/dynamic-home-directories-concept.html 
+sidebar: sidebar 
+keywords: ontap, home, directories, directory, configure, smb, share, map, base, connect, set, variable, creating, create, separate, share, user, define, home, relationship, entry, point, svm, how ontap enables dynamic home directories 
+summary: 利用支援支援的主目錄、您可以根據連線的使用者及一組變數、設定對應至不同目錄的SMB共用區。ONTAP您可以使用幾個主目錄參數來設定一個共用區、以定義使用者在入口點（共用區）和主目錄（SVM上的目錄）之間的關係、而非為每個使用者建立個別的共用區。 
+---
+= 如何啟用動態主目錄ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+利用支援支援的主目錄、您可以根據連線的使用者及一組變數、設定對應至不同目錄的SMB共用區。ONTAP您可以使用幾個主目錄參數來設定一個共用區、以定義使用者在入口點（共享區）和主目錄（SVM上的目錄）之間的關係、而非為每個使用者建立個別的共用區。
+
+以訪客使用者身分登入的使用者沒有主目錄、也無法存取其他使用者的主目錄。有四個變數可決定使用者如何對應至目錄：
+
+* *共享名稱*
++
+這是您建立的共用名稱、使用者可連線至該共用。您必須設定此共用的主目錄屬性。
+
++
+共用名稱可以使用下列動態名稱：
+
++
+** 「%w」（使用者的Windows使用者名稱）
+** 「%d」（使用者的Windows網域名稱）
+** 「%u」（使用者對應的UNIX使用者名稱）若要使所有主目錄的共用名稱都是唯一的、共用名稱必須包含「%w」或「%u」變數。共享區名稱可以同時包含「%d」和「%w」變數（例如、「%d」/「%w」）、或是共享區名稱可以包含靜態部分和變數部分（例如、home_`%w）。
+
+
+* *共享路徑*
++
+這是由共用定義的相對路徑、因此會與其中一個共用名稱相關聯、並附加到每個搜尋路徑、以從SVM根目錄產生使用者的完整主目錄路徑。它可以是靜態的（例如「主頁」）、動態的（例如「%w」）、或是兩者的組合（例如「eng/%w」）。
+
+* *搜尋路徑*
++
+這是從SVM根目錄開始的一組絕對路徑、您可以指定這些路徑來引導ONTAP 針對主目錄進行搜尋。您可以使用「vserver CIFS主目錄search-path add」命令來指定一或多個搜尋路徑。如果您指定多個搜尋路徑、ONTAP 則在找到有效路徑之前、將會依照指定的順序嘗試這些路徑。
+
+* *目錄*
++
+這是您為使用者建立的使用者主目錄。目錄名稱通常是使用者的名稱。您必須在搜尋路徑所定義的其中一個目錄中建立主目錄。
+
+
+
+舉例來說、請考慮下列設定：
+
+* 使用者：John Smith
+* 使用者網域：Acme
+* 使用者名稱：jsmith
+* SVM名稱：VS1
+* 主目錄共用名稱#1：home_``%w`-共用路徑：`%w'
+* 主目錄共用名稱#2：`%w'-共用路徑：`%d/%w'
+* 搜尋路徑1：「/vol0home/home/home/」
+* 搜尋路徑2：「/vol1home/home/home/」
+* 搜尋路徑3：「/vol2home/home/」
+* 主目錄：「/vol1home/home/jsmith」
+
+
+案例1：使用者連線至「\VS1\home_jsmith」。這會比對第一個主目錄共用名稱、並產生相對路徑「jsmith」。目前，通過按順序檢查每個搜索路徑來搜索名爲"jsmith"的目錄：ONTAP
+
+* 不存在/vol0home/home/jsmith；請移至搜尋路徑#2。
+* 由於存在/vol1home/home/jsmith、因此不會檢查搜尋路徑#3、使用者現在已連線至他的主目錄。
+
+
+案例2：使用者連線至「\VS1\jsmith」。這會比對第二個主目錄共用名稱、並產生相對路徑「Acme/jsmith」。現在，通過按順序檢查每個查找路徑來搜索名爲"Acme/jsmith"的目錄：ONTAP
+
+* 不存在/vol0home/home/Acme/jsmith；請移至搜尋路徑#2。
+* 不存在vol1home/home/Acme/jsmith；請移至搜尋路徑#3。
+* 不存在/vol2home/home/Acme/jsmith；主目錄不存在；因此連線失敗。
+

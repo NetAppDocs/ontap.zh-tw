@@ -1,0 +1,108 @@
+---
+permalink: data-protection/convert-type-snapmirror-task.html 
+sidebar: sidebar 
+keywords: convert, snapmirror, relationship, asynchronous, synchronous, baseline, convert 
+summary: 從ONTAP 支援SnapMirror同步的版本起、就支援從支援S25開始的SnapMirror同步。您可以將非同步SnapMirror關係轉換為SnapMirror同步關係、也可以將非同步SnapMirror關係轉換成SnapMirror同步關係、而無需執行基礎傳輸。 
+---
+= 轉換SnapMirror關係類型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 支援SnapMirror同步的版本起、就支援從支援S25開始的SnapMirror同步。您可以將非同步SnapMirror關係轉換為SnapMirror同步關係、也可以將非同步SnapMirror關係轉換成SnapMirror同步關係、而無需執行基礎傳輸。
+
+您無法透過變更SnapMirror原則、將非同步SnapMirror關係轉換為SnapMirror同步關係、反之亦然
+
+.步驟
+* *將非同步SnapMirror關係轉換成SnapMirror同步關係*
++
+.. 從目的地叢集刪除非同步SnapMirror關係：
++
+「napmirror DELETE -destination-path _svm:volume」
+
++
+[listing]
+----
+cluster2::>snapmirror delete -destination-path vs1_dr:vol1
+----
+.. 從來源叢集發佈SnapMirror關係、而不刪除常見的Snapshot複本：
++
+「napmirror release -nationality-info-only true -destination-path _dest_svm:dest_volume」
+
++
+[listing]
+----
+cluster1::>snapmirror release -relationship-info-only true -destination-path vs1_dr:vol1
+----
+.. 從目的地叢集建立SnapMirror同步關係：
++
+「napmirror create -source-path _svm:sr_volume _-destination-path _dest_svm:dest_volume _-policy sync-mirror」
+
++
+[listing]
+----
+cluster2::>snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol1 -policy sync
+----
+.. 重新同步SnapMirror同步關係：
++
+「napmirror resync -dest-path _dest_svm:dest_volume」
+
++
+[listing]
+----
+cluster2::>snapmirror resync -destination-path vs1_dr:vol1
+----
+
+
+* *將SnapMirror同步關係轉換成非同步SnapMirror關係*
++
+.. 從目的地叢集、靜止現有的SnapMirror同步關係：
++
+「napmirror quiesce -dest-path dest_svm:dest_volume」
+
++
+[listing]
+----
+cluster2::> snapmirror quiesce -destination-path vs1_dr:vol1
+----
+.. 從目的地叢集刪除非同步SnapMirror關係：
++
+「napmirror DELETE -destination-path _svm:volume」
+
++
+[listing]
+----
+cluster2::>snapmirror delete -destination-path vs1_dr:vol1
+----
+.. 從來源叢集發佈SnapMirror關係、而不刪除常見的Snapshot複本：
++
+「napmirror release -nationality-info-only true -destination-path _dest_svm:dest_volume」
+
++
+[listing]
+----
+cluster1::>snapmirror release -relationship-info-only true -destination-path vs1_dr:vol1
+----
+.. 從目的地叢集建立非同步SnapMirror關係：
++
+「napmirror create -source-path _svm:src/volume _-destination-path _dest_svm:dest_volume _-policy MirrorAllSnapshots」
+
++
+[listing]
+----
+cluster2::>snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol1 -policy sync
+----
+.. 重新同步SnapMirror同步關係：
++
+「napmirror resync -dest-path _dest_svm:dest_volume」
+
++
+[listing]
+----
+cluster2::>snapmirror resync -destination-path vs1_dr:vol1
+----
+
+
+

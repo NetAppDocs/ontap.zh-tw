@@ -1,0 +1,50 @@
+---
+permalink: volumes/user-ids-mixed-environment-concept.html 
+sidebar: sidebar 
+keywords: how, ontap, determines, user ids, in mixed environment 
+summary: 如果您有使用者同時從ONTAP Windows和UNIX用戶端存取您的支援資料儲存設備、則Windows和UNIX的安全性都會用來判斷檔案擁有權。套用使用者配額時、有幾個因素決定ONTAP 了哪些因素是使用UNIX或Windows ID。 
+---
+= 如何在混合式環境中判斷使用者ID ONTAP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您有使用者同時從ONTAP Windows和UNIX用戶端存取您的支援資料儲存設備、則Windows和UNIX的安全性都會用來判斷檔案擁有權。套用使用者配額時、有幾個因素決定ONTAP 了哪些因素是使用UNIX或Windows ID。
+
+如果FlexVol 包含檔案的qtree或fidscale Volume的安全樣式只是NTFS或UNIX、則安全樣式會決定套用使用者配額時所使用的ID類型。對於具有混合安全性樣式的qtree、所使用的ID類型取決於檔案是否具有ACL。
+
+下表摘要說明使用的ID類型：
+
+[cols="3*"]
+|===
+| 安全風格 | ACL | 無ACL 
+
+
+ a| 
+UNIX
+ a| 
+UNIX ID
+ a| 
+UNIX ID
+
+
+
+ a| 
+混合
+ a| 
+Windows ID
+ a| 
+UNIX ID
+
+
+
+ a| 
+NTFS
+ a| 
+Windows ID
+ a| 
+Windows ID
+
+|===

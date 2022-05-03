@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/pause-task.html 
+keywords: anti-ransomware, ransomware, pause anti-ransomware, pause anti-ransomware to exclude workload events 
+summary: 如果您預期會發生異常的工作負載事件、可以隨時暫停並恢復反勒索軟體分析。 
+---
+= 暫停勒索軟體、將工作負載事件排除在分析之外
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+如果您預期會發生異常的工作負載事件、可以隨時暫停並恢復反勒索軟體分析。
+
+.您的需求
+* 反勒索軟體是以學習或主動模式執行。
+
+
+在勒索軟體暫停期間、不會記錄任何事件、也不會針對新的寫入動作進行任何動作。不過、分析作業會在背景中繼續進行、以處理較早的記錄。
+
+
+NOTE: 請勿使用勒索軟體停用功能來暫停分析。這樣做會停用磁碟區上的勒索軟體、並遺失所有有關所學工作負載行為的現有資訊。這需要重新啟動學習期間。
+
+
+
+== System Manager程序
+
+. 按一下「*儲存設備>磁碟區*」、然後選取您要暫停勒索軟體的磁碟區。
+. 在「Volumes（磁碟區）」總覽的「Security（安全性）」索引標籤中、按一下「反勒索軟體」方塊中的*「Pause anti-勒索 軟體」*。
+
+
+
+
+== CLI程序
+
+暫停磁碟區上的勒索軟體保護：
+
+「安全性防勒索軟體磁碟區暫停-vserver _Svm_name_-volume _vol_name_」
+
+若要繼續處理、請使用RESUME參數。
+
+「安全性防勒索軟體磁碟區恢復- vserver _Svm_name_-volume _vol_name_」

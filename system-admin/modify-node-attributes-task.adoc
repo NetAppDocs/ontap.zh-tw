@@ -1,0 +1,37 @@
+---
+permalink: system-admin/modify-node-attributes-task.html 
+sidebar: sidebar 
+keywords: modify, node, attributes, owner, information, location, asset, tag, eligibility, cluster 
+summary: 您可以視需要修改節點的屬性。您可以修改的屬性包括節點的擁有者資訊、位置資訊、資產標籤、以及參與叢集的資格。 
+---
+= 修改節點屬性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以視需要修改節點的屬性。您可以修改的屬性包括節點的擁有者資訊、位置資訊、資產標籤、以及參與叢集的資格。
+
+使用「系統節點修改」或「叢集修改」命令的「資格」參數、即可在進階權限層級修改節點參與叢集的資格。如果您將節點的資格設為「假」、則叢集中的節點將會變成非作用中狀態。
+
+[NOTE]
+====
+您無法在本機修改節點資格。必須從不同的節點進行修改。也無法使用叢集HA組態來修改節點資格。
+
+====
+[NOTE]
+====
+除了還原節點組態或延長節點維護等情況、您應該避免將節點的資格設定為「假」。當節點不符合資格時、SAN和NAS對節點的資料存取可能會受到影響。
+
+====
+.步驟
+. 使用「系統節點修改」命令來修改節點的屬性。
+
+
+下列命令會修改「'node1'」節點的屬性。節點的擁有者設定為「'Joe Smith」、其資產標籤設定為「js1234'」：
+
+[listing]
+----
+cluster1::> system node modify -node node1 -owner "Joe Smith" -assettag js1234
+----

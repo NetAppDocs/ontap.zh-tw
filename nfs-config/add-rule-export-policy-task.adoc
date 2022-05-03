@@ -1,0 +1,307 @@
+---
+permalink: nfs-config/add-rule-export-policy-task.html 
+sidebar: sidebar 
+keywords: add, rule, export, policy 
+summary: 如果沒有規則、匯出原則就無法讓用戶端存取資料。若要建立新的匯出規則、您必須識別用戶端並選取用戶端比對格式、選取存取和安全性類型、指定匿名使用者ID對應、選取規則索引編號、然後選取存取傳輸協定。然後您可以使用vserver匯出原則規則create命令、將新規則新增至匯出原則。 
+---
+= 新增規則至匯出原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果沒有規則、匯出原則就無法讓用戶端存取資料。若要建立新的匯出規則、您必須識別用戶端並選取用戶端比對格式、選取存取和安全性類型、指定匿名使用者ID對應、選取規則索引編號、然後選取存取傳輸協定。然後您可以使用「vserver匯出原則規則create」命令、將新規則新增至匯出原則。
+
+.您需要的是 #8217 ；需要的是什麼
+* 您要新增匯出規則的匯出原則必須已經存在。
+* 必須在資料SVM上正確設定DNS、而且DNS伺服器必須為NFS用戶端設定正確的項目。
++
+這是因為ONTAP 針對某些用戶端比對格式、使用資料SVM的DNS組態執行DNS查詢、而匯出原則規則比對失敗則會妨礙用戶端資料存取。
+
+* 如果您使用Kerberos進行驗證、則必須確定NFS用戶端使用下列哪些安全性方法：
++
+** KRB5（Kerberos V5傳輸協定）
+** KRB5i（Kerberos V5傳輸協定、使用Checksum進行完整性檢查）
+** KRB5p（Kerberos V5傳輸協定、含隱私權服務）
+
+
+
+
+如果匯出原則中的現有規則涵蓋了用戶端的相符和存取需求、則不需要建立新規則。
+
+如果您使用Kerberos進行驗證、而且SVM的所有磁碟區都是透過Kerberos存取、您可以將根磁碟區的匯出規則選項「-rorule」、「-rwrRule」和「-超級 使用者」設為「krb5」、「krb5i」或「krb5p」。
+
+.步驟
+. 識別新規則的用戶端和用戶端比對格式。
++
+"-clientmatch"選項指定規則適用的用戶端。可以指定單一或多個用戶端符合值；多個值的規格必須以逗號分隔。您可以指定下列任一格式的相符項目：
+
++
+|===
+| 用戶端比對格式 | 範例 
+
+
+ a| 
+網域名稱前面加上「.」字元
+ a| 
+「.example.com」或「+.example.com,.example.net,...+`」
+
+
+
+ a| 
+主機名稱
+ a| 
+「host1」或「+host1、host2、...+」
+
+
+
+ a| 
+IPV4位址
+ a| 
+「10.12.24」或「+10.12.24、10.12.25、...+」
+
+
+
+ a| 
+以多位元表示子網路遮罩的IPv4位址
+ a| 
+「10.12.10/4」或「+10.1.12.10/4、10.1.12.11/4、...+」
+
+
+
+ a| 
+具有網路遮罩的IPV4位址
+ a| 
+「10.1.16.0/255．255．255．0」或「+10．10．16.0/255．255．255．1．17.0/255．255．0、...+」
+
+
+
+ a| 
+以點分格式提供IPv6位址
+ a| 
+：「1.2.3.4」或「+」：1.2.3.4、：1.2.3.5、...+」
+
+
+
+ a| 
+以多位元表示子網路遮罩的IPv6位址
+ a| 
+「ff：00/32」或「+ff：00/32、ff：：01/32、...+」
+
+
+
+ a| 
+以@字元開頭的netgroup名稱為單一netgroup
+ a| 
+「@netgroup 1」或「+@netgroup 1、@netgroup 2、...+」
+
+|===
++
+您也可以合併用戶端定義類型、例如「.example.com,@netgroup1`」。
+
++
+指定IP位址時、請注意下列事項：
+
++
+** 不允許輸入IP位址範圍、例如10.12.10-10.12.70。
++
+此格式的項目會解譯為文字字串、並視為主機名稱。
+
+** 在匯出規則中指定個別IP位址以精細管理用戶端存取時、請勿指定動態（例如DHCP）或暫時（例如IPv6）指派的IP位址。
++
+否則、當用戶端的IP位址變更時、就會失去存取權。
+
+** 不允許使用網路遮罩輸入IPv6位址、例如ff:12/ff:00。
+
+
+. 選取用戶端相符項目的存取和安全性類型。
++
+您可以指定下列一或多種存取模式、以驗證具有指定安全性類型的用戶端：
+
++
+** 「-rorrule」（唯讀存取）
+** -rwrRule（讀寫存取）
+** 超級用戶（root存取權）
++
+[NOTE]
+====
+如果匯出規則也允許該安全性類型的唯讀存取權、則用戶端只能取得特定安全性類型的讀寫存取權。如果安全性類型的唯讀參數比讀寫參數的限制更多、用戶端可能無法取得讀寫存取權。超級使用者存取也是如此。
+
+====
++
+您可以為規則指定多種安全性類型的以逗號分隔的清單。如果您將安全類型指定為「any」或「Never」、請勿指定任何其他安全類型。從下列有效的安全類型中選擇：
+
++
+|===
+| 當安全性類型設定為... | 相符的用戶端可以存取匯出的資料... 
+
+
+ a| 
+「任何」
+ a| 
+無論傳入的安全類型為何、
+
+
+
+ a| 
+無
+ a| 
+如果單獨列出、則會將具有任何安全類型的用戶端授予匿名存取權。如果列出其他安全性類型、則會授與具有指定安全性類型的用戶端存取權、而具有任何其他安全性類型的用戶端則會以匿名存取權。
+
+
+
+ a| 
+《永不》
+ a| 
+永不、無論傳入的安全類型為何。
+
+
+
+ a| 
+《KRB5》
+ a| 
+如果是由Kerberos 5驗證。僅驗證：簽署每個要求和回應的標頭。
+
+
+
+ a| 
+《KRB5i》
+ a| 
+如果通過Kerberos 5i驗證。驗證與完整性：簽署每個要求與回應的標頭與實體。
+
+
+
+ a| 
+《krb5p》
+ a| 
+如果通過Kerberos 5p驗證。驗證、完整性和隱私：簽署每個要求和回應的標頭和實體、並加密NFS資料有效負載。
+
+
+
+ a| 
+"NTLM"
+ a| 
+如果通過CIFS的NTLM驗證。
+
+
+
+ a| 
+《時代》
+ a| 
+如果是由NFS AUTH_SYS驗證的。
+
+|===
++
+建議使用的安全類型是"shys"、如果使用Kerberos、則為"krb5"、"krb5i"或"krb5p"。
+
+
+
++
+如果您使用Kerberos搭配NFSv3、匯出原則規則除了允許「krb5」之外、還必須允許「-rorule」和「-rwrRule」存取「sys」。這是因為需要允許網路鎖定管理程式（NLM）存取匯出。
+
+. 指定匿名使用者ID對應。
++
+「-anon'」選項會指定對應至用戶端要求的UNIX使用者ID或使用者名稱、該用戶ID通常與使用者名稱root相關聯、且會以0（零）的使用者ID送達。預設值為「65534」。NFS用戶端通常會將使用者ID 65534與使用者名稱nobody建立關聯（也稱為根系統衝突_）。在本功能中、此使用者ID與使用者pcuser相關聯。ONTAP若要停用使用者ID為0的任何用戶端存取、請指定值「65535"。
+
+. 選取規則索引順序。
++
+"-rueindex"選項指定規則的索引編號。規則會根據索引編號清單中的順序來評估；索引編號較低的規則會先評估。例如、索引編號為1的規則會在索引編號為2的規則之前進行評估。
+
++
+|===
+| 如果您要新增... | 然後... 
+
+
+ a| 
+匯出原則的第一條規則
+ a| 
+輸入「1」。
+
+
+
+ a| 
+匯出原則的其他規則
+ a| 
+.. 在原則中顯示現有規則：+「vserver匯出原則規則show -instance -policyname _ying_policy_」
+.. 根據新規則的評估順序、為新規則選取索引編號。
+
+
+|===
+. 選取適用的NFS存取值：｛'NFS'|'nfs3'|'nfs4'｝。
++
+NFS與任何版本（nfs3）和nfs4（nfs4）相匹配，只能與這些特定版本相匹配。
+
+. 建立匯出規則並將其新增至現有的匯出原則：
++
+「vserver匯出原則規則create -vserver _vserver_name_-policyname _policy_name_-rueindex _integer_-protocol {nfs_nfs3|nfs4}-clientm比 對{ text |_"text、..."_｝-rorrorme_security_type_-rwrwrwrid_time_type _-super_tim_s_-/site_use_user__-time_user_ners_use_an_time_use_n_an__
+
+. 顯示匯出原則的規則、以驗證是否存在新規則：
++
+「vserver匯出原則規則show -policyname _policy_name_」
+
++
+命令會顯示該匯出原則的摘要、包括套用至該原則的規則清單。此功能會為每個規則指派一個規則索引編號。ONTAP知道規則索引編號之後、您可以使用它來顯示指定匯出規則的詳細資訊。
+
+. 確認已正確設定套用至匯出原則的規則：
++
+「vserver匯出原則規則show -policyname _policy_name_-vserver _vserver_name_-rueindex _integer_」
+
+
+
+下列命令會在名為RSR1的匯出原則中、在名為VS1的SVM上建立匯出規則、並驗證其建立。規則的索引編號為1。規則會比對網域eng.company.com和netgroup @netGroup1中的任何用戶端。此規則可啟用所有NFS存取。它可對驗證了AUTH_SYS的使用者啟用唯讀和讀寫存取權。除非透過Kerberos驗證、否則使用UNIX使用者ID 0（零）的用戶端會匿名。
+
+[listing]
+----
+vs1::> vserver export-policy rule create -vserver vs1 -policyname exp1 -ruleindex 1 -protocol nfs
+-clientmatch eng.company.com,@netgoup1 -rorule sys -rwrule sys -anon 65534 -superuser krb5
+
+vs1::> vserver export-policy rule show -policyname nfs_policy
+Virtual      Policy         Rule    Access    Client           RO
+Server       Name           Index   Protocol  Match            Rule
+------------ -------------- ------  --------  ---------------- ------
+vs1          exp1           1       nfs       eng.company.com, sys
+                                              @netgroup1
+
+vs1::> vserver export-policy rule show -policyname exp1 -vserver vs1 -ruleindex 1
+
+                                    Vserver: vs1
+                                Policy Name: exp1
+                                 Rule Index: 1
+                            Access Protocol: nfs
+Client Match Hostname, IP Address, Netgroup, or Domain: eng.company.com,@netgroup1
+                             RO Access Rule: sys
+                             RW Access Rule: sys
+User ID To Which Anonymous Users Are Mapped: 65534
+                   Superuser Security Types: krb5
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----
+下列命令會在名為expol2的匯出原則中、在名為VS2的SVM上建立匯出規則、並加以驗證。此規則的索引編號為21。此規則會將用戶端與netgroup dev_netgroup_main.此規則可啟用所有NFS存取。此功能可為使用AUTH_SYS驗證的使用者啟用唯讀存取、並需要Kerberos驗證才能進行讀寫和root存取。除非透過Kerberos進行驗證、否則使用UNIX使用者ID 0（零）的用戶端會被拒絕root存取。
+
+[listing]
+----
+vs2::> vserver export-policy rule create -vserver vs2 -policyname expol2 -ruleindex 21 -protocol nfs
+-clientmatch @dev_netgroup_main -rorule sys -rwrule krb5 -anon 65535 -superuser krb5
+
+vs2::> vserver export-policy rule show -policyname nfs_policy
+Virtual  Policy       Rule    Access    Client              RO
+Server   Name         Index   Protocol  Match               Rule
+-------- ------------ ------  --------  ------------------  ------
+vs2      expol2       21       nfs      @dev_netgroup_main  sys
+
+vs2::> vserver export-policy rule show -policyname expol2 -vserver vs1 -ruleindex 21
+
+                                    Vserver: vs2
+                                Policy Name: expol2
+                                 Rule Index: 21
+                            Access Protocol: nfs
+Client Match Hostname, IP Address, Netgroup, or Domain:
+                                             @dev_netgroup_main
+                             RO Access Rule: sys
+                             RW Access Rule: krb5
+User ID To Which Anonymous Users Are Mapped: 65535
+                   Superuser Security Types: krb5
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----

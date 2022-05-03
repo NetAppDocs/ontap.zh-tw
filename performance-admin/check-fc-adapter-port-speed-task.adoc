@@ -1,0 +1,46 @@
+---
+permalink: performance-admin/check-fc-adapter-port-speed-task.html 
+sidebar: sidebar 
+keywords: check, fc, adapter, port, speed 
+summary: 介面卡目標連接埠速度應符合其所連接裝置的速度、以最佳化效能。如果連接埠設為自動協商、則在接管與恢復或其他中斷之後、重新連線可能需要較長的時間。 
+---
+= 檢查FC介面卡連接埠速度
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+介面卡目標連接埠速度應符合其所連接裝置的速度、以最佳化效能。如果連接埠設為自動協商、則在接管與恢復或其他中斷之後、重新連線可能需要較長的時間。
+
+使用此介面卡做為其主連接埠的所有LIF都必須離線。
+
+.步驟
+. 使介面卡離線：
++
+「網路FCP介面卡修改-node"節點_nodename_-介 面卡介面卡_-st態_drod_」
+
+. 檢查連接埠介面卡的最大速度：
++
+「FCP介面卡顯示-instance」
+
+. 如有必要、請變更連接埠速度：
++
+「網路FCP介面卡修改-nodeename_-介 面卡_介 面卡_-speed｛1 | 2 | 4 | 8 | 10 | 16 | auto｝」
+
+. 將介面卡上線：
++
+"network FCP介面卡修改-node"節點_nodename_-介 面卡介面卡_-state up
+
+. 將介面卡上的所有生命都上線：
++
+「網路介面修改-vserver *-lif*｛-home-node1 -home-port e0c｝-STATUS-admin up」
+
+
+
+以下範例將節點1上介面卡「0d（0d））的連接埠速度變更為2 Gbps：
+
+[listing]
+----
+cluster1::> network fcp adapter modify -node node1 -adapter 0d -speed 2
+----

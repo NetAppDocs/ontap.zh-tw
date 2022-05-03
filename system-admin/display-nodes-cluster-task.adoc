@@ -1,0 +1,52 @@
+---
+permalink: system-admin/display-nodes-cluster-task.html 
+sidebar: sidebar 
+keywords: display, information, node, cluster, name, healthy, epsilon 
+summary: 您可以顯示節點名稱、節點是否正常、以及節點是否符合參加叢集的資格。在進階權限層級、您也可以顯示節點是否保留epsilon。 
+---
+= 顯示叢集中節點的相關資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示節點名稱、節點是否正常、以及節點是否符合參加叢集的資格。在進階權限層級、您也可以顯示節點是否保留epsilon。
+
+.步驟
+. 若要顯示叢集中節點的相關資訊、請使用「cluster show」命令。
++
+如果您希望輸出顯示某個節點是否保留epsilon、請在進階權限層級執行命令。
+
+
+
+以下範例顯示四節點叢集中所有節點的相關資訊：
+
+[listing]
+----
+
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+node3                 true    true
+node4                 true    true
+----
+以下範例顯示進階權限層級中名稱為「'node1'」之節點的詳細資訊：
+
+[listing]
+----
+
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+
+cluster1::*> cluster show -node node1
+
+       Node: node1
+  Node UUID: a67f9f34-9d8f-11da-b484-000423b6f094
+    Epsilon: false
+Eligibility: true
+     Health: true
+----

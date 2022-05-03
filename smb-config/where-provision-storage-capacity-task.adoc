@@ -1,0 +1,45 @@
+---
+permalink: smb-config/where-provision-storage-capacity-task.html 
+sidebar: sidebar 
+keywords: create, smb, volume, qtree, exist, configuration, svm, decision, workflow, decide where to provision new SMB storage capacity 
+summary: 在建立新的SMB Volume或qtree之前、您必須先決定要將其放入新的或現有的SVM、以及SVM所需的組態量。此決定決定決定您的工作流程。 
+---
+= 決定要在何處配置新的SMB儲存容量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在建立新的SMB Volume或qtree之前、您必須先決定要將其放入新的或現有的SVM、以及SVM所需的組態量。此決定決定決定您的工作流程。
+
+.選擇
+* 如果您想要在新的SVM上配置磁碟區或qtree、或是在已啟用SMB但尚未設定的現有SVM上配置、請完成「設定SMB存取SVM」和「將儲存容量新增至啟用SMB的SVM」中的步驟。
++
+xref:configure-access-svm-task.adoc[設定SMB存取SVM]
+
++
+xref:configure-client-access-shared-storage-concept.adoc[設定SMB用戶端存取共享儲存設備]
+
++
+如果符合下列任一項條件、您可以選擇建立新的SVM：
+
++
+** 您是第一次在叢集上啟用SMB。
+** 您在不想啟用SMB支援的叢集中有現有的SVM。
+** 叢集中有一個或多個啟用SMB的SVM、您需要下列其中一個連線：
++
+*** 至不同的Active Directory樹系或工作群組。
+*** 至隔離命名空間中的SMB伺服器（多租戶案例）。您也應該選擇此選項、以便在已啟用SMB但尚未設定的現有SVM上配置儲存設備。如果您為SAN存取建立SVM、或是在建立SVM時未啟用任何傳輸協定、則可能會發生這種情況。
+
+
+
+
++
+在SVM上啟用SMB之後、請繼續配置磁碟區或qtree。
+
+* 如果您想要在完全設定為SMB存取的現有SVM上配置磁碟區或qtree、請完成「將儲存容量新增至啟用SMB的SVM」中的步驟。
++
+xref:configure-client-access-shared-storage-concept.adoc[設定SMB用戶端存取共享儲存設備]
+
+

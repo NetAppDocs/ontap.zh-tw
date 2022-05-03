@@ -1,0 +1,97 @@
+---
+permalink: system-admin/example-responding-degraded-system-health-concept.html 
+sidebar: sidebar 
+keywords: respond, degraded, system, health, node, cli 
+summary: 藉由檢閱缺少兩條節點路徑的機櫃所造成的降級系統健全狀況的特定範例、您可以查看當回應警示時CLI顯示的內容。 
+---
+= 回應降級系統健全狀況的範例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+藉由檢閱缺少兩條節點路徑的機櫃所造成的降級系統健全狀況的特定範例、您可以查看當回應警示時CLI顯示的內容。
+
+啟動ONTAP 功能後、您會檢查系統健全狀況、發現狀態已降級：
+
+[listing]
+----
+
+      cluster1::>system health status show
+        Status
+        ---------------
+        degraded
+----
+您會顯示警示、以瞭解問題所在位置、並看到機櫃2沒有兩個節點1路徑：
+
+[listing]
+----
+
+      cluster1::>system health alert show
+               Node: node1
+           Resource: Shelf ID 2
+           Severity: Major
+	   Indication Time: Mon Nov 10 16:48:12 2013
+     Probable Cause: Disk shelf 2 does not have two paths to controller
+                     node1.
+    Possible Effect: Access to disk shelf 2 via controller node1 will be
+                     lost with a single hardware component failure (e.g.
+                     cable, HBA, or IOM failure).
+ Corrective Actions: 1. Halt controller node1 and all controllers attached to disk shelf 2.
+                     2. Connect disk shelf 2 to controller node1 via two paths following the rules in the Universal SAS and ACP Cabling Guide.
+                     3. Reboot the halted controllers.
+                     4. Contact support personnel if the alert persists.
+----
+您可以顯示警示的詳細資料、以取得更多資訊、包括警示ID：
+
+[listing]
+----
+
+      cluster1::>system health alert show -monitor node-connect -alert-id DualPathToDiskShelf_Alert -instance
+                  Node: node1
+               Monitor: node-connect
+              Alert ID: DualPathToDiskShelf_Alert
+     Alerting Resource: 50:05:0c:c1:02:00:0f:02
+             Subsystem: SAS-connect
+       Indication Time: Mon Mar 21 10:26:38 2011
+    Perceived Severity: Major
+        Probable Cause: Connection_establishment_error
+           Description: Disk shelf 2 does not have two paths to controller node1.
+    Corrective Actions: 1. Halt controller node1 and all controllers attached to disk shelf 2.
+                        2. Connect disk shelf 2 to controller node1 via two paths following the rules in the Universal SAS and ACP Cabling Guide.
+                        3. Reboot the halted controllers.
+                        4. Contact support personnel if the alert persists.
+       Possible Effect: Access to disk shelf 2 via controller node1 will be lost with a single
+ hardware component failure (e.g. cable, HBA, or IOM failure).
+           Acknowledge: false
+              Suppress: false
+                Policy: DualPathToDiskShelf_Policy
+          Acknowledger: -
+            Suppressor: -
+Additional Information: Shelf uuid: 50:05:0c:c1:02:00:0f:02
+                        Shelf id: 2
+                        Shelf Name: 4d.shelf2
+                        Number of Paths: 1
+                        Number of Disks: 6
+                        Adapter connected to IOMA:
+                        Adapter connected to IOMB: 4d
+Alerting Resource Name: Shelf ID 2
+----
+您認可警示、表示您正在處理警示。
+
+[listing]
+----
+
+      cluster1::>system health alert modify -node node1 -alert-id DualPathToDiskShelf_Alert -acknowledge true
+----
+您可以修復機櫃2和節點1之間的纜線、然後重新啟動系統。然後再次檢查系統健全狀況、並查看狀態為「OK（正常）」：
+
+[listing]
+----
+
+      cluster1::>system health status show
+        Status
+        ---------------
+        OK
+----

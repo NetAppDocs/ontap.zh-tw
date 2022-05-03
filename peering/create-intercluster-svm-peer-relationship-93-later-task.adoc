@@ -1,0 +1,70 @@
+---
+permalink: peering/create-intercluster-svm-peer-relationship-93-later-task.html 
+sidebar: sidebar 
+keywords: create, intercluster, svm, peer, relationship 
+summary: 您可以使用vserver對等點create命令、在本機和遠端叢集上的SVM之間建立對等關係。 
+---
+= 建立叢集間SVM對等關係
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver對等點create」命令、在本機和遠端叢集上的SVM之間建立對等關係。
+
+.開始之前
+* 來源叢集和目的地叢集必須執行對等關係。
+* 叢集必須執行ONTAP 的是功能不正常的（如果叢集執行ONTAP 的是版本號為2或更早的版本、請參閱中的程序 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2494079["此歸檔文件"^]）
+* 您必須擁有遠端叢集上SVM的「預先授權」對等關係。
++
+如需詳細資訊、請參閱 link:create-cluster-relationship-93-later-task.html["建立叢集對等關係"]。
+
+
+
+舊版ONTAP 的《不限用》可讓您一次只授權一部SVM建立對等關係。每次授權擱置的SVM對等關係時、您都需要執行「vserver對等端點接受」命令。
+
+從功能支援的9.3開始ONTAP 、您可以在建立叢集對等關係時、將SVM列在「初始允許的vserver」選項中、以「預先授權」多個SVM的對等關係。如需詳細資訊、請參閱 link:create-cluster-relationship-93-later-task.html["建立叢集對等關係"]。
+
+.步驟
+. 在資料保護目的地叢集上、顯示預先授權用於對等的SVM：
++
+「Vserver對等權限顯示」
+
++
+[listing]
+----
+cluster02::> vserver peer permission show
+Peer Cluster         Vserver               Applications
+-------------------  --------------------  --------------------
+cluster02            vs1,vs2               snapmirror
+----
+. 在資料保護來源叢集上、建立與資料保護目的地叢集上預先授權SVM的對等關係：
++
+「vserver對等端點建立-vserver _local_svm_-對等 虛擬伺服器_remente_svm_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例在本機SVM「pvs1」和預先授權的遠端SVM「VS1」之間建立對等關係：
+
++
+[listing]
+----
+cluster01::> vserver peer create -vserver pvs1 -peer-vserver vs1
+----
+. 驗證SVM對等關係：
++
+「Vserver對等展示」
+
++
+[listing]
+----
+cluster01::> vserver peer show
+            Peer        Peer                           Peering        Remote
+Vserver     Vserver     State        Peer Cluster      Applications   Vserver
+----------- ----------- ------------ ----------------- -------------- ---------
+pvs1        vs1         peered       cluster02         snapmirror     vs1
+----
+

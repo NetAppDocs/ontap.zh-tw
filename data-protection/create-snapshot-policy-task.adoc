@@ -1,0 +1,41 @@
+---
+permalink: data-protection/create-snapshot-policy-task.html 
+sidebar: sidebar 
+keywords: create, snapshot, policy 
+summary: Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能每天在上午12：10建立一個Snapshot複本、保留兩個最近的複本、並將其命名為「每日時間戳記」。 Snapshot原則最多可包含五個工作排程。 
+---
+= 建立Snapshot原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能會每天在上午12：10建立一個Snapshot複本、保留兩個最新的複本、並將其命名為「daily.`_timestamp_'」。 Snapshot原則最多可包含五個工作排程。
+
+根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱：
+
+[listing]
+----
+daily.2017-05-14_0013/              hourly.2017-05-15_1106/
+daily.2017-05-15_0012/              hourly.2017-05-15_1206/
+hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
+----
+您可以視需要以首碼取代工作排程名稱。
+
+「napmirror標籤」選項適用於SnapMirror複寫。如需詳細資訊、請參閱 link:define-rule-policy-task.html["定義原則規則"]。
+
+.步驟
+. 建立Snapshot原則：
++
+「Volume Snapshot原則create -vserver _SVM_-policy _policy_name_-enabled true|假-schedul1 _schedule_name_-count1 _copies to _sthet_-prefied 1 _snapshot _prefix_-SnapMirror標籤1 _snapshot標籤_...」 -schedul1 _schedule5_name_-count5 _copies to _stef_-prefied5 _snapshot前置碼_-SnapMirror標籤5 _snapshot標籤_
+
++
+以下範例建立名為「午睡原則每日」的Snapshot原則、該原則會在「每日」排程上執行。此原則最多可有五個Snapshot複本、每個複本的名稱為「每日」。
+
++
+[listing]
+----
+cluster1::> volume snapshot policy create -vserver vs0 -policy snap_policy_daily -schedule1 daily -count1 5 -snapmirror-label1 daily
+----
+

@@ -1,0 +1,61 @@
+---
+permalink: nfs-config/configure-kerberos-permitted-encryption-types-task.html 
+sidebar: sidebar 
+keywords: configure, nfs, kerberos, permitted, encryption, types 
+summary: 根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES、AES-128和AES-256。您可以使用vserver NFS modify命令搭配-en-enc類型參數、為每個SVM設定允許的加密類型、以符合特定環境的安全需求。 
+---
+= 設定NFS Kerberos允許的加密類型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES、AES-128和AES-256。您可以使用「vserver NFS modify」命令搭配「允許的enc類型」參數、為每個SVM設定允許的加密類型、以符合特定環境的安全需求。
+
+為了達到最大的用戶端相容性、ONTAP 根據預設、支援弱的Des和強式AES加密。例如、如果您想要提高安全性、而且環境支援、可以使用此程序來停用Des和3DES、並要求用戶端僅使用AES加密。
+
+您應該使用目前最強大的加密功能。對於支援支援、也就是AES-256。ONTAP您應該向您的kdc管理員確認您的環境支援此加密層級。
+
+* 在SVM上完全啟用或停用AES（AES-128和AES-256）會造成中斷、因為它會破壞原始的Des主體/索引標籤檔案、因此需要在SVM的所有生命體上停用Kerberos組態。
++
+在進行此變更之前、您應該確認NFS用戶端不依賴SVM上的AES加密。
+
+* 啟用或停用Des或3DES不需要變更lifs上的Kerberos組態。
+
+
+.步驟
+. 啟用或停用所需的允許加密類型：
++
+|===
+| 如果您要啟用或停用... | 請遵循下列步驟... 
+
+
+ a| 
+DE或3DES
+ a| 
+.. 設定SVM的NFS Kerberos允許加密類型：+「vserver NFS modify -vserver _vserver_name_-apid-enc類型_加密 類型_」
++
+以逗號分隔多種加密類型。
+
+.. 確認變更是否成功：+「vserver NFS show -vserver _vserver_name_-Fields apid-enc類型」
+
+
+
+
+ a| 
+AES-128或AES-256
+ a| 
+.. 識別啟用SVM和LIF Kerberos的項目：+「vserver NFS Kerberos介面show」
+.. 在SVM上的所有LIF上停用Kerberos（NFS Kerberos允許您修改其加密類型）：+「vserver NFS Kerberos介面停用-lif_lif_name_」
+.. 設定SVM的NFS Kerberos允許加密類型：+「vserver NFS modify -vserver _vserver_name_-apid-enc類型_加密 類型_」
++
+以逗號分隔多種加密類型。
+
+.. 確認變更是否成功：+「vserver NFS show -vserver _vserver_name_-Fields apid-enc類型」
+.. 在SVM上的所有LIF上重新啟用Kerberos：+「vserver NFS Kerberos介面啟用-lif_lif_name_-SPN_service_principal_name_」
+.. 驗證是否已在所有lifs上啟用Kerberos：+「vserver NFS Kerberos介面show」
+
+
+|===
+

@@ -1,0 +1,36 @@
+---
+permalink: nfs-config/work-netgroups-task.html 
+sidebar: sidebar 
+keywords: work, netgroups 
+summary: 您可以使用netGroups進行使用者驗證、並在匯出原則規則中比對用戶端。您可以從外部名稱伺服器（LDAP或NIS）存取netgroup、也可以使用vserver services name-service netgroup load命令、從統一資源識別元（URI）將netgroup載入到SVM。 
+---
+= 使用網路群組總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用netGroups進行使用者驗證、並在匯出原則規則中比對用戶端。您可以從外部名稱伺服器（LDAP或NIS）存取netgroup、也可以使用「vserver services name-service netgroup load」命令、從統一資源識別元（URI）將netgroup載入SVM。
+
+在使用netGroups之前、您必須確保符合下列條件：
+
+* 不論來源（NIS、LDAP或本機檔案）為何、網路群組中的所有主機都必須同時擁有轉送（A）和反向（PTr）DNS記錄、才能提供一致的轉送和反向DNS查詢。
++
+此外、如果用戶端的IP位址有多筆PTr記錄、則所有這些主機名稱都必須是netgroup的成員、並具有對應的A記錄。
+
+* 不論來源（NIS、LDAP或本機檔案）為何、netGroups中所有主機的名稱都必須正確拼寫、並使用正確的大小寫。在netGroups中使用的主機名稱若不一致、可能會導致非預期的行為、例如匯出檢查失敗。
+* 在netGroups中指定的所有IPv6位址都必須依照RFC 5952中的指定來縮短和壓縮。
++
+例如、2011：hu9：0：0：0：0：3：1必須縮短為2011：hu9：3：1。
+
+
+
+使用netGroups時、您可以執行下列作業：
+
+* 您可以使用「vserver匯出原則netgroup檢查成員資格」命令來判斷用戶端IP是否為特定netgroup的成員。
+* 您可以使用「vserver services name-service getxxbyyy netgrp」命令來檢查用戶端是否屬於netgroup。
++
+執行查詢的基礎服務是根據設定的名稱服務交換器順序來選取。
+
+

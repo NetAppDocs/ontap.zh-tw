@@ -1,0 +1,66 @@
+---
+permalink: software_setup/task_create_the_cluster_on_the_first_node.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, create, cluster, first, node, autosupport, CLI 
+summary: 您可以使用叢集設定精靈在第一個節點上建立叢集。精靈可協助您設定連接節點的叢集網路（如果叢集由兩個或多個節點組成）、建立叢集管理儲存虛擬機器（SVM）、新增功能授權金鑰、以及建立第一個節點的節點管理介面。 
+---
+= 在第一個節點上建立叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用叢集設定精靈在第一個節點上建立叢集。精靈可協助您設定叢集網路、以連接節點、建立叢集管理儲存虛擬機器（SVM）、新增功能授權金鑰、以及為第一個節點建立節點管理介面。
+
+. 開啟要新增至叢集的所有節點。這是啟用叢集設定探索所需的功能。
+. 連線至第一個節點的主控台。
++
+節點會開機、然後從主控台啟動叢集設定精靈。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+. 認可AutoSupport 此聲明。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+
+NOTE: 根據預設會啟用支援。AutoSupport
+
+. 請依照畫面上的指示、將IP位址指派給節點。
+. 如果您使用GUI精靈執行設定、請依照指示在網頁瀏覽器中完成設定。如果您使用CLI精靈執行設定、請按Enter繼續。
++
+[listing]
+----
+Use your web browser to complete cluster setup by accessing
+https://10.63.11.29
+
+Otherwise, press Enter to complete cluster setup using the
+command line interface:
+
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+. 建立新的叢集：「create」
+. 接受系統預設值或輸入您自己的值。
+. 完成設定後、請登入叢集、輸入ONTAP 「叢集顯示」命令、確認叢集處於作用中狀態、且第一個節點正常運作
++
+以下範例顯示第一個節點（cluster1-01）健全且符合參與資格的叢集：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+----
++
+您可以使用「叢集設定」命令存取叢集設定精靈、以變更您為管理SVM或節點SVM所輸入的任何值。
+
+

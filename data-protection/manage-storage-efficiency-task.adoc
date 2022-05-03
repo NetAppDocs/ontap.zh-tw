@@ -1,0 +1,75 @@
+---
+permalink: data-protection/manage-storage-efficiency-task.html 
+sidebar: sidebar 
+keywords: manage, storage, efficiency, snapmirror, snap mirror, compression, compress, postporcess, update relationship, volume 
+summary: SnapMirror可在來源與目的地磁碟區上維持儲存效率、但在目的地上啟用後處理資料壓縮時、則有一項例外。在這種情況下、所有的儲存效率都會在目的地遺失。若要修正此問題、您必須停用目的地的後處理壓縮、手動更新關係、並重新啟用儲存效率。 
+---
+= 管理儲存效率
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror可在來源與目的地磁碟區上維持儲存效率、但在目的地上啟用後處理資料壓縮時、則有一項例外。在這種情況下、所有的儲存效率都會在目的地遺失。若要修正此問題、您必須停用目的地的後處理壓縮、手動更新關係、並重新啟用儲存效率。
+
+.您需要的是 #8217 ；需要的是什麼
+* 來源與目的地叢集和SVM必須進行對等關係。
++
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
+
+* 您必須停用目的地的後處理壓縮。
+
+
+您可以使用「Volume Eff效率show」命令來判斷磁碟區是否已啟用效率。如需詳細資訊、請參閱手冊頁。
+
+您可以查看SnapMirror稽核記錄並找出傳輸說明、藉此檢查SnapMirror是否維持儲存效率。如果傳輸說明顯示「Transfer_desc=邏輯 傳輸」、則SnapMirror無法維持儲存效率。如果傳輸說明顯示「Transfer_desc=邏輯 傳輸與儲存效率」、SnapMirror將維持儲存效率。例如：
+
+[listing]
+----
+Fri May 22 02:13:02 CDT 2020 ScheduledUpdate[May 22 02:12:00]:cc0fbc29-b665-11e5-a626-00a09860c273 Operation-Uuid=39fbcf48-550a-4282-a906-df35632c73a1 Group=none Operation-Cookie=0 action=End source=<sourcepath> destination=<destpath> status=Success bytes_transferred=117080571 network_compression_ratio=1.0:1 transfer_desc=Logical Transfer - Optimized Directory Mode
+----
+使用儲存設備進行邏輯傳輸
+
+從功能更新9.3開始ONTAP 、不再需要手動更新、即可重新啟用儲存效率。如果SnapMirror偵測到後處理壓縮已停用、則會在下次排程更新時自動重新啟用儲存效率。來源和目的地都必須執行ONTAP 不支援的9.3。
+
+從功能性的9.3開始ONTAP 、AFF 在FAS 目的地Volume可寫入後、系統會以不同於功能性的方式管理儲存效率設定：
+
+* 使用「napmirror Break」命令將目的地Volume設為可寫入後、磁碟區上的快取原則會自動設為「'auto'（預設）。
++
+[NOTE]
+====
+這種行為FlexVol 僅適用於不適用於FlexGroup 功能區、不適用於功能區。
+
+====
+* 重新同步時、快取原則會自動設定為「none"（無）、重複資料刪除和即時壓縮會自動停用、無論您的原始設定為何。您必須視需要手動修改設定。
+
+
+[NOTE]
+====
+啟用儲存效率的手動更新可能相當耗時。您可能想要在非尖峰時間執行作業。
+
+====
+.步驟
+. 更新複寫關係並重新啟用儲存效率：
++
+"napmirror update -source-path _svm:volume（napmirror更新-source-path _svm:volume）_cluster（叢集）：//Svm/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... -enable儲存效率true
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+[NOTE]
+====
+您必須從目的地SVM或目的地叢集執行此命令。如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+
+====
++
+以下範例更新了「svm1」上的來源磁碟區「Vola」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係、並重新啟用儲存效率：
+
++
+[listing]
+----
+cluster_dst::> snapmirror update -source-path svm1:volA -destination-path svm_backup:volA_dst -enable-storage-efficiency true
+----
+

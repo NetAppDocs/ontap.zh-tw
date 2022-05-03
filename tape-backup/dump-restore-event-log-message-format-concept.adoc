@@ -1,0 +1,50 @@
+---
+permalink: tape-backup/dump-restore-event-log-message-format-concept.html 
+sidebar: sidebar 
+keywords: event, dump, restore, log, message, 
+summary: 針對每個傾印與還原事件、會有一則訊息寫入備份記錄檔。 
+---
+= 傾印與還原事件記錄訊息格式總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+針對每個傾印與還原事件、會有一則訊息寫入備份記錄檔。
+
+傾印與還原事件記錄訊息的格式如下：
+
+「類型時間戳記識別碼事件（EVAT_info）_」
+
+下列清單說明事件記錄訊息格式的欄位：
+
+* 每則記錄訊息都會以下表所述的其中一種類型指標開頭：
++
+|===
+| 類型 | 說明 
+
+
+ a| 
+記錄
+ a| 
+記錄事件
+
+
+
+ a| 
+DMP
+ a| 
+傾印事件
+
+
+
+ a| 
+RST
+ a| 
+還原事件
+
+|===
+* 時間戳記顯示事件的日期和時間。
+* dump事件的「identifier」欄位包含傾印路徑和傾印的唯一ID。還原事件的「識別碼」欄位僅使用還原目的地路徑名稱做為唯一識別碼。與記錄相關的事件訊息不包含「識別碼」欄位。
+

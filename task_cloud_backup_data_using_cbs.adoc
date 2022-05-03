@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: task_cloud_backup_data_using_cbs.html 
+keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
+summary: 從推出《支援服務》9.9.1開始ONTAP 、您可以使用System Manager使用Cloud Backup備份雲端中的資料。 
+---
+= 使用Cloud Backup備份資料
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從推出《支援服務》9.9.1開始ONTAP 、您可以使用System Manager使用Cloud Backup備份雲端中的資料。
+
+
+NOTE: Cloud Backup支援FlexVol 以邊讀寫磁碟區和資料保護（DP）磁碟區。不支援使用各種資料量和資料。FlexGroup SnapLock
+
+您應執行下列程序、在Cloud Manager中建立帳戶。對於服務帳戶、您需要建立「帳戶管理員」角色。（其他服務帳戶角色不具備從System Manager建立連線所需的權限。）
+
+. link:https://docs.netapp.com/us-en/occm/task_logging_in.html["在Cloud Manager中建立帳戶"^]。
+. link:https://docs.netapp.com/us-en/occm/concept_connectors.html["在Cloud Manager中建立連接器"^] 與下列其中一家雲端供應商合作：
++
+** Microsoft Azure
+** Amazon Web Services（AWS）
+** Google Cloud Platform（GCP）
+** 《》（《》）StorageGRID ONTAP
++
+
+NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功能支援的方式使用功能支援功能、但只有在內部部署Cloud Manager時、才能使用功能支援功能。Cloud Manager連接器必須安裝在內部部署、並可透過Cloud Manager軟體即服務（SaaS）應用程式使用。
+
+
+
+. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在Cloud Backup Service Cloud Manager中訂閱功能"^] （需要適當的授權）。
+. link:https://docs.netapp.com/us-en/occm/task_managing_cloud_central_accounts.html#creating-and-managing-service-accounts["使用Cloud Manager產生存取金鑰和秘密金鑰"^]。
+
+
+
+
+== 使用Cloud Manager登錄叢集
+
+您可以使用Cloud Manager或System Manager向Cloud Manager註冊叢集。
+
+.步驟
+. 在System Manager中、前往* Protection Overview *。
+. 在* Cloud Backup Service 《*》下、提供下列詳細資料：
++
+** 用戶端ID
+** 用戶端秘密金鑰
+
+
+. 選擇*註冊並繼續*。
+
+
+
+
+== 啟用雲端備份
+
+在Cloud Manager註冊叢集之後、您需要啟用Cloud Backup並開始第一次備份至雲端。
+
+.步驟
+. 在System Manager中、按一下* Protection（保護）> Overview（概覽）*、然後捲動至* Cloud Backup Service 《*》*區段。
+. 輸入* Client ID*和* Client Secret *。
++
+
+NOTE: 從《Sof the S21》（英文）9.10.1開始ONTAP 、按一下*深入瞭解雲端使用成本*、即可瞭解雲端的使用成本。
+
+. 按一下「*連線並啟用Cloud Backup Service Sext*」。
+. 視您所選的供應商而定、在*啟用Cloud Backup Service S仰賴*頁面上提供下列詳細資料。
++
+[cols="35,65"]
+|===
+
+
+| 對於這家雲端供應商... | 輸入下列資料... 
+
+
+ a| 
+Azure
+ a| 
+** Azure訂閱ID
+** 區域
+** 資源群組名稱（現有或新）
+
+
+
+
+ a| 
+AWS
+ a| 
+** AWS帳戶ID
+** 存取金鑰
+** 秘密金鑰
+** 區域
+
+
+
+
+ a| 
+Google Cloud Project（GCP）
+ a| 
+** Google Cloud專案名稱
+** Google Cloud Access金鑰
+** Google Cloud秘密金鑰
+** 區域
+
+
+
+
+ a| 
+僅適用於內部部署Cloud Manager的候用版本StorageGRID ONTAP
+ a| 
+** 伺服器
+** SG存取金鑰
+** SG秘密金鑰
+
+
+|===
+. 選擇*保護原則*：
++
+** *現有原則*：選擇現有原則。
+** *新政策*：指定名稱並設定傳輸排程。
++
+
+NOTE: 從ONTAP 功能支援的版本起、您可以指定是否要使用Azure或AWS進行歸檔。
+
++
+
+IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用歸檔。
+
++
+如果您啟用Azure或AWS的歸檔、請指定下列項目：
+
++
+*** 磁碟區歸檔的天數。
+*** 要保留在歸檔中的備份數。指定「0」（零）以歸檔至最新的備份。
+*** 對於AWS、請選取歸檔儲存類別。
+
+
+
+
+. 選取您要備份的磁碟區。
+. 選擇*保存*。
+
+
+
+
+== 編輯用於雲端備份的保護原則
+
+您可以變更雲端備份所使用的保護原則。
+
+.步驟
+. 在System Manager中、按一下* Protection（保護）> Overview（概覽）*、然後捲動至* Cloud Backup Service 《*》*區段。
+. 按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後*編輯*。
+. 選擇*保護原則*：
++
+** *現有原則*：選擇現有原則。
+** *新政策*：指定名稱並設定傳輸排程。
++
+
+NOTE: 從ONTAP 功能支援的版本起、您可以指定是否要使用Azure或AWS進行歸檔。
+
++
+
+IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用歸檔。
+
++
+如果您啟用Azure或AWS的歸檔、請指定下列項目：
+
++
+*** 磁碟區歸檔的天數。
+*** 要保留在歸檔中的備份數。指定「0」（零）以歸檔至最新的備份。
+*** 對於AWS、請選取歸檔儲存類別。
+
+
+
+
+. 選擇*保存*。
+
+
+
+
+== 保護雲端上的新磁碟區或LUN
+
+當您建立新的Volume或LUN時、可以建立SnapMirror保護關係、以便備份至磁碟區或LUN的雲端。
+
+.開始之前
+* 您應該擁有SnapMirror授權。
+* 應設定叢集間的LIF。
+* 應設定NTP。
+* 叢集必須執行ONTAP 的是無法支援的
+
+
+下列叢集組態無法保護雲端上的新磁碟區或LUN：
+
+* 叢集不能位於MetroCluster 一個不符合需求的環境中。
+* 不支援SVM-DR。
+* 無法使用Cloud Backup備份FlexGroups。
+
+
+.步驟
+. 配置磁碟區或LUN時、請在System Manager的* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
+. 選取Cloud Backup原則類型。
+. 如果未啟用Cloud Backup、請選取*啟用Cloud Backup Service 還原*。
+
+
+
+
+== 保護雲端上現有的磁碟區或LUN
+
+您可以為現有的磁碟區和LUN建立SnapMirror保護關係。
+
+.步驟
+. 選取現有的磁碟區或LUN、然後按一下*保護*。
+. 在「*保護磁碟區*」頁面上、針對Cloud Backup Service 保護原則指定*使用S還原*備份。
+. 按一下*保護*。
+. 在* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
+. 選取*啟用Cloud Backup Service S編*。
+
+
+
+
+== 從備份檔案還原資料
+
+您只能在使用Cloud Manager介面時執行備份管理作業、例如還原資料、更新關係及刪除關係。請參閱 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["從備份檔案還原資料"] 以取得更多資訊。

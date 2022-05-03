@@ -1,0 +1,66 @@
+---
+permalink: smb-admin/secure-file-access-dynamic-access-control-concept.html 
+sidebar: sidebar 
+keywords: secure, access, dynamic, control, creating, create, central, policies, policy, active, directory, apply, file, folder, group, policy, object, gpo, staging, stage, change, secure file access by using dynamic access control, dac 
+summary: 您可以使用動態存取控制、並在Active Directory中建立集中存取原則、並透過套用的群組原則物件（GPO）將其套用至SVM上的檔案和資料夾、以確保存取安全。您可以將稽核設定為使用集中式存取原則暫存事件、以便在套用變更之前查看中央存取原則的影響。 
+---
+= 使用動態存取控制（DAC）總覽來保護檔案存取安全
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用動態存取控制、並在Active Directory中建立集中存取原則、並透過套用的群組原則物件（GPO）將其套用至SVM上的檔案和資料夾、以確保存取安全。您可以將稽核設定為使用集中式存取原則暫存事件、以便在套用變更之前查看中央存取原則的影響。
+
+
+
+== CIFS認證新增功能
+
+在動態存取控制之前、CIFS認證會包含安全主體（使用者）的身分識別和Windows群組成員資格。有了動態存取控制、憑證中還會新增三種類型的資訊：裝置身分識別、裝置宣告及使用者宣告：
+
+* 裝置識別
++
+使用者身分識別資訊的類比、但使用者登入裝置的身分識別和群組成員資格除外。
+
+* 裝置聲明
++
+關於裝置安全主體的說法。例如、裝置宣告可能是特定OU的成員。
+
+* 使用者聲明
++
+關於使用者安全性主體的說法。例如、使用者聲稱其AD帳戶可能是特定OU的成員。
+
+
+
+
+
+== 集中存取原則
+
+檔案的集中存取原則可讓組織集中部署及管理授權原則、這些原則包括使用者群組、使用者宣告、裝置宣告及資源內容的條件式運算式。
+
+例如、若要存取高商業影響資料、使用者必須是全職員工、而且只能從受管理裝置存取資料。集中存取原則是在Active Directory中定義、並透過GPO機制散佈到檔案伺服器。
+
+
+
+== 使用進階稽核進行集中式存取原則登臺
+
+中央存取原則可以是「年齡」、在這種情況下、會在檔案存取檢查期間以「假設」的方式進行評估。原則生效時會發生的結果、以及與目前設定的不同之處、會記錄為稽核事件。如此一來、系統管理員就能在實際執行原則之前、先使用稽核事件記錄來研究存取原則變更的影響。評估存取原則變更的影響之後、即可透過GPO將原則部署至所需的SVM。
+
+xref:supported-gpos-concept.adoc[支援的GPO]
+
+xref:applying-group-policy-objects-concept.adoc[將群組原則物件套用至CIFS伺服器]
+
+xref:enable-disable-gpo-support-task.adoc[在CIFS伺服器上啟用或停用GPO支援]
+
+xref:display-gpo-config-task.adoc[顯示有關GPO組態的資訊]
+
+xref:display-central-access-policies-task.adoc[顯示中央存取原則的相關資訊]
+
+xref:display-central-access-policy-rules-task.adoc[顯示中央存取原則規則的相關資訊]
+
+xref:configure-central-access-policies-secure-data-task.adoc[設定集中存取原則以保護CIFS伺服器上的資料安全]
+
+xref:display-dynamic-access-control-security-task.adoc[顯示動態存取控制安全性的相關資訊]
+
+link:../nas-audit/index.html["SMB與NFS稽核與安全性追蹤"]

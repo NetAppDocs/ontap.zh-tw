@@ -1,0 +1,38 @@
+---
+permalink: nfs-config/create-local-unix-user-task.html 
+sidebar: sidebar 
+keywords: create, local, unix, user 
+summary: 您可以使用vserver services name-service unix-user create命令來建立本機UNIX使用者。本機UNIX使用者是您在SVM上建立的UNIX使用者、是UNIX名稱服務選項、用於處理名稱對應。 
+---
+= 建立本機UNIX使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver services name-service unix-usercreate」命令來建立本機UNIX使用者。本機UNIX使用者是您在SVM上建立的UNIX使用者、是UNIX名稱服務選項、用於處理名稱對應。
+
+.步驟
+. 建立本機UNIX使用者：
++
+「Vserver服務名稱服務UNIX使用者create -vserver _vserver_name_-user_user_name_-id _integer_-prime-gid _integer_-full名稱_`s」
+
++
+-user-user_name_'指定使用者名稱。使用者名稱長度必須少於64個字元。
+
++
+-id _integer__指定您指派的使用者ID。
+
++
+-`prime-gid _integer__指定主群組ID。這會將使用者新增至主要群組。建立使用者之後、您可以手動將使用者新增至任何想要的其他群組。
+
+
+
+下列命令會在名為VS1的SVM上建立名為johnm（全名「John Miller」）的本機UNIX使用者。使用者的ID為123、主要群組ID為100。
+
+[listing]
+----
+node::> vserver services name-service unix-user create -vserver vs1 -user johnm -id 123
+-primary-gid 100 -full-name "John Miller"
+----

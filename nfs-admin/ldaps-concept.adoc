@@ -1,0 +1,79 @@
+---
+permalink: nfs-admin/ldaps-concept.html 
+sidebar: sidebar 
+keywords: ldaps, concept 
+summary: 您必須瞭ONTAP 解有關如何保護LDAP通訊的某些詞彙與概念。支援使用start TLS或LDAPS、在Active Directory整合式LDAP伺服器或UNIX型LDAP伺服器之間設定驗證工作階段。ONTAP 
+---
+= LDAPS概念
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須瞭ONTAP 解有關如何保護LDAP通訊的某些詞彙與概念。支援使用start TLS或LDAPS、在Active Directory整合式LDAP伺服器或UNIX型LDAP伺服器之間設定驗證工作階段。ONTAP
+
+
+
+== 術語
+
+您應該瞭ONTAP 解某些詞彙、瞭解如何使用LDAPS來保護LDAP通訊安全。
+
+* * LDAP *
++
+（輕量型目錄存取傳輸協定）一種用於存取和管理資訊目錄的傳輸協定。LDAP是用來儲存使用者、群組和網路群組等物件的資訊目錄。LDAP也提供目錄服務、可管理這些物件並滿足LDAP用戶端的LDAP要求。
+
+* * SSL *
++
+（安全通訊端層）一種通訊協定、專為透過網際網路安全傳送資訊而開發。它已過時、改用TLS。不支援SSL。ONTAP
+
+* * TLS *
++
+（傳輸層安全性）一種根據舊版SSL規格追蹤傳輸協定的IETF標準。這是SSL的後續版本。
+
+* * LDAPS（LDAP over SSL或TLS）*
++
+一種傳輸協定、使用TLS或SSL來保護LDAP用戶端與LDAP伺服器之間的通訊安全。術語_LDAP over SSL_和_LDAP over TLS_有時會互換使用；ONTAP TLS由支援版本9及更新版本、ONTAP 而SSL則由支援版本2、5及更新版本。
+
++
+** 在S69.5 - 9.8中ONTAP 、LDAPS只能在連接埠636上啟用。若要這麼做、請使用「use、LDAPS for ad-LDAP」參數搭配「vserver CIFS安全性修改」命令。
+** 從ONTAP 推出《支援支援支援支援服務的支援服務：支援服務器支援服務」、從功能支援服務的支援服務開始、您可以在任何連接埠上啟用LDAPS、但連接埠636仍為預設若要這麼做、請將啟用「LDAPS」的參數設為「true」、然後指定所需的「-port」參數。如需詳細資訊、請參閱「vserver services name-service LDAP用戶端cred'」手冊頁
+
+
++
+[NOTE]
+====
+使用Start TLS而非LDAPS是NetApp最佳實務做法。
+
+====
+* *啟動TLS*
++
+（也稱為_start_tls_、_startTLs_和_StartTLS）一種機制、可透過TLS傳輸協定提供安全的通訊。
+
++
+支援使用STARTTLS來保護LDAP通訊安全、並使用預設的LDAP連接埠（389）與LDAP伺服器通訊。ONTAPLDAP伺服器必須設定為允許透過LDAP連接埠389進行連線、否則SVM與LDAP伺服器之間的LDAP TLS連線將會失敗。
+
+
+
+
+
+== 如何使用LDAPS ONTAP
+
+支援TLS伺服器驗證、可讓SVM LDAP用戶端在連結作業期間確認LDAP伺服器的身分。ONTAP啟用TLS的LDAP用戶端可使用公開金鑰密碼編譯的標準技術、檢查伺服器的憑證和公開ID是否有效、以及是否已由用戶端信任CA清單中所列的憑證授權單位（CA）核發。
+
+LDAP支援使用TLS加密通訊的ARTTLS。StartTLS會以純文字連線形式透過標準LDAP連接埠（389）開始、然後將該連線升級為TLS。
+
+支援下列項目：ONTAP
+
+* LDAPS用於Active Directory整合式LDAP伺服器與SVM之間的SMB相關流量
+* LDAP流量的LDAPS、用於名稱對應和其他UNIX資訊
++
+Active Directory整合式LDAP伺服器或UNIX型LDAP伺服器均可用來儲存LDAP名稱對應和其他UNIX資訊的資訊、例如使用者、群組和網路群組。
+
+* 自我簽署的根CA憑證
++
+使用Active Directory整合式LDAP時、會在網域中安裝Windows Server憑證服務時產生自我簽署的根憑證。使用UNIX LDAP伺服器進行LDAP名稱對應時、會使用適合該LDAP應用程式的方法、產生並儲存自我簽署的根憑證。
+
+
+
+根據預設、LDAPS會停用。

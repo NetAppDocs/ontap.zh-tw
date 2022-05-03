@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: networking/add_or_remove_a_lif_from_a_load_balancing_zone.html 
+keywords: lif, adding, add, create, creating, remove, removing, delete, deleting, load, balancing, zone, dns, svm, storage, virtual, add or remove a LIF from a load balancing zone, machine, add a lif, remove a single lif, remove all lifs 
+summary: 從儲存虛擬機器（SVM）的DNS負載平衡區域新增或移除LIF 
+---
+= 從負載平衡區域新增或移除LIF
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以從虛擬機器（SVM）的DNS負載平衡區域新增或移除LIF。您也可以從負載平衡區域同時移除所有的LIF。
+
+.開始之前
+* 負載平衡區域中的所有LIF都應該屬於同一個SVM。
+* LIF只能是一個DNS負載平衡區域的一部分。
+* 如果生命體屬於不同的子網路、則必須設定每個子網路的容錯移轉群組。
+
+
+處於管理中斷狀態的LIF會從DNS負載平衡區域中暫時移除。當LIF返回管理UP狀態時、LIF會自動新增至DNS負載平衡區域。
+
+在負載平衡區域中新增LIF或移除LIF：
+
+[cols="30,70"]
+|===
+
+
+| 如果您想要... | 輸入... 
+
+
+ a| 
+新增LIF
+ a| 
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-DNSS-ZONE _ZON_name_」範例：「網路介面修改-vserver VS1 -lIF data1 -DNSS-ZONE cifs.company.com`」
+
+
+
+ a| 
+移除單一LIF
+ a| 
+「網路介面修改-vserver _vserver_name_-lif_lif_name_-dns區域無」範例：「網路介面修改-vserver VS1 -lIF data1 -dns區域無」
+
+
+
+ a| 
+移除所有生命
+ a| 
+「網路介面修改-vserver _vserver_name_-lIF *-DNS-Zone none"範例：「網路介面修改-vserver vs0 -lIF *-DNS-Zone non」您可以從負載平衡區域移除SVM中的所有lifs、從該區域移除SVM。
+
+|===

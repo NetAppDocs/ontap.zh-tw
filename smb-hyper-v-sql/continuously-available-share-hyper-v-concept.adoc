@@ -1,0 +1,63 @@
+---
+permalink: smb-hyper-v-sql/continuously-available-share-hyper-v-concept.html 
+sidebar: sidebar 
+keywords: share, requirements, continuously, share, consideration, hyper, v, smb, nondiruptive, operation 
+summary: 在設定支援不中斷營運的Hyper-V over SMB組態的持續可用共用時、您必須瞭解特定的需求與考量。 
+---
+= 持續可用的SMB Hyper-V共用需求與考量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在設定支援不中斷營運的Hyper-V over SMB組態的持續可用共用時、您必須瞭解特定的需求與考量。
+
+
+
+== 共用需求
+
+* 應用程式伺服器使用的共用必須設定為持續可用的內容集。
++
+連線至持續可用共用區的應用程式伺服器會接收持續的處理常式、以便在發生中斷事件（例如接管、恢復和集合重新配置）之後、不中斷地重新連線至SMB共用區、並回收檔案鎖定。
+
+* 如果您想要使用啟用遠端VSS的備份服務、就無法將Hyper-V檔案放入包含連接的共用中。
++
+在自動還原案例中、如果在瀏覽共用區時遇到交會、陰影複製建立就會失敗。在非自動還原案例中、陰影複製建立並不會失敗、但交會不會指向任何內容。
+
+* 如果您想要使用啟用遠端VSS的備份服務進行自動還原、就無法將Hyper-V檔案放入包含下列項目的共用區：
++
+** symlinks、hardlink或widelinks
+** 非一般檔案
++
+如果要陰影複製的共用區中有任何連結或非一般檔案、陰影複製建立就會失敗。此需求僅適用於具有自動還原功能的陰影複製。
+
+** 若要成功執行陰影複製作業、您必須在磁碟區上有足夠的可用空間（僅適用於SMB上的Hyper-V）。
++
+可用空間必須至少與陰影複製備份集中所含共用區內的所有檔案、目錄及子目錄所使用的總空間相同。此需求僅適用於具有自動還原功能的陰影複製。
+
+
+
+* 應用程式伺服器所使用的持續可用共用區不得設定下列共用內容：
++
+** 主目錄
+** 屬性快取
+** BranchCache
+** 存取型列舉
+
+
+
+
+
+
+== 考量
+
+* 持續可用的共用支援配額。
+* Hyper-V over SMB組態不支援下列功能：
++
+** 稽核
+** FPolicy
+
+
+* 將「持續可用度」參數設為「是」時、不會在SMB共用區上執行掃毒。
+

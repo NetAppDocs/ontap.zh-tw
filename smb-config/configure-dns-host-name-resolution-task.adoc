@@ -1,0 +1,82 @@
+---
+permalink: smb-config/configure-dns-host-name-resolution-task.html 
+sidebar: sidebar 
+keywords: vserver, name-service, service, dns, command, enable, svm, host-name, resolution, host, name, resolve, external, enable dns for host-name resolution 
+summary: 您可以使用vserver services name-service DNS命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。 
+---
+= 啟用DNS進行主機名稱解析
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用「vserver services name-service DNS」命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。
+
+站台範圍的DNS伺服器必須可供主機名稱查詢。
+
+您應該設定多個DNS伺服器、以避免單點故障。如果您只輸入一個DNS伺服器名稱、「vserver services name-service DNS create」命令會發出警告。
+
+網路管理指南_包含在SVM上設定動態DNS的相關資訊。
+
+.步驟
+. 在SVM上啟用DNS：「vserver services name-service DNS create -vserver vserver_name -domain_name -name-servers ip_addresses -state enabled_s
++
+下列命令可啟用SVM VS1上的外部DNS伺服器：
+
++
+[listing]
+----
+vserver services name-service dns create -vserver vs1.example.com -domains example.com -name-servers 192.0.2.201,192.0.2.202 -state enabled
+----
++
+[NOTE]
+====
+從ONTAP 功能組態9.2開始、「vserver services name-service DNS creation」命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時回報錯誤訊息。
+
+====
+. 使用「vserver services name-service DNS show」命令來顯示DNS網域組態。」
++
+下列命令會顯示叢集中所有SVM的DNS組態：
+
++
+[listing]
+----
+vserver services name-service dns show
+                                             Name
+Vserver           State     Domains             Servers
+----------------- --------- ------------------- -------------
+cluster1          enabled   example.com         192.0.2.201,
+                                                192.0.2.202
+vs1.example.com   enabled   example.com         192.0.2.201,
+                                                192.0.2.202
+----
++
+下列命令會顯示SVM VS1的詳細DNS組態資訊：
+
++
+[listing]
+----
+vserver services name-service dns show -vserver vs1.example.com
+               Vserver: vs1.example.com
+               Domains: example.com
+          Name Servers: 192.0.2.201, 192.0.2.202
+    Enable/Disable DNS: enabled
+        Timeout (secs): 2
+      Maximum Attempts: 1
+----
+. 使用「vserver services name-service DNS check」命令來驗證名稱伺服器的狀態。
++
+「vserver services name-service DNS Check」命令可從ONTAP 版本號為2開始使用。
+
++
+[listing]
+----
+vserver services name-service dns check -vserver vs1.example.com
+
+Vserver           Name Server     Status       Status Details
+----------------  -------------   ----------   --------------------------
+vs1.example.com   10.0.0.50         up         Response time (msec): 2
+vs1.example.com   10.0.0.51         up         Response time (msec): 2
+----
+
