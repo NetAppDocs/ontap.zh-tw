@@ -1,0 +1,52 @@
+---
+permalink: system-admin/audit-display-log-contents-task.html 
+sidebar: sidebar 
+keywords: audit, log, cluster, display 
+summary: 您可以使用ONTAP CLI、System Manager或網路瀏覽器來顯示/mroot/etc/log/mlog/audit.log檔案的內容。 
+---
+= 顯示稽核記錄內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用ONTAP CLI、System Manager或網頁瀏覽器來顯示叢集的「/mroot/etc/log/mlog/Audit .log」檔案內容。
+
+叢集的記錄檔項目包括：
+
+時間:: 記錄項目時間戳記。
+應用程式:: 用於連線至叢集的應用程式。可能值的範例包括「interial/Console、ssh、http、ontapi、 SNMP、rsh、telnet和「服務處理器」。
+使用者:: 遠端使用者的使用者名稱。
+州/省:: 目前的稽核要求狀態、可能是「處理中、擱置中」或「錯誤」。
+訊息:: 可選欄位、其中可能包含錯誤或命令狀態的其他資訊。
+工作階段ID:: 接收要求的工作階段ID。每個SSH _S階段 作業_都會指派一個工作階段ID、而每個HTTP、ONTAPI或SNMP _REQUER__都會指派一個唯一的工作階段ID。
+儲存VM:: 使用者連線的SVM。
+範圍:: 當要求位於資料儲存虛擬機器上時、顯示「shVM」；否則會顯示「cluster」。
+命令ID:: 在CLI工作階段中收到的每個命令的ID。這可讓您建立要求與回應的關聯。ZAPI、HTTP和SNMP要求沒有命令ID。
+
+
+您可以從ONTAP 「系統ONTAP 管理員」的「系統管理程式」中、從「系統瀏覽器」、以「版本9.11.1」開頭、從「版本資訊」CLI顯示叢集的記錄項目。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+* 若要顯示詳細目錄、請選取*事件與工作>稽核記錄*。+每個欄都有篩選、排序、搜尋、顯示和庫存類別的控制項。詳細目錄可下載為Excel活頁簿。
+* 若要設定篩選條件、請按一下右上角的*篩選條件*按鈕、然後選取所需的欄位。+您也可以按一下工作階段ID連結、檢視在工作階段中發生故障的所有命令。
+
+
+--
+.CLI
+--
+若要顯示從叢集中多個節點合併的稽核項目、請輸入：+「安全性稽核記錄顯示_[參數]_」
+
+您可以使用「安全稽核記錄show」命令來顯示個別節點的稽核項目、或是從叢集中的多個節點合併。您也可以使用網頁瀏覽器、在單一節點上顯示「/mroot/etc/log/mlog」目錄的內容。如需詳細資料、請參閱手冊頁。
+
+--
+.網頁瀏覽器
+--
+您可以使用網頁瀏覽器、在單一節點上顯示「/mroot/etc/log/mlog」目錄的內容。 link:accessg-node-log-core-dump-mib-files-task.html["瞭解如何使用網頁瀏覽器存取節點的記錄檔、核心傾印檔和MIBA檔案"]。
+
+--
+====

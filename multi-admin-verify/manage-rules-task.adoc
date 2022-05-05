@@ -1,0 +1,158 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/manage-rules-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, protected, operation, rules, manage 
+summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核准的作業。只要啟動作業、就會攔截受保護的作業、並產生核准要求 
+---
+= 管理受保護的作業規則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以建立多管理員驗證（MAV）規則、以指定需要核准的作業。只要啟動作業、就會攔截受保護的作業、並產生核准要求。
+
+任何具備適當RBAC功能的系統管理員都可以在啟用MAV之前建立規則、但一旦啟用MAV、對規則集的任何修改都需要MAV核准。
+
+您可以在ONTAP 《》中建立下列命令的規則。
+
+[cols="2*"]
+|===
+
+
+ a| 
+"叢集對等刪除"
+
+"Event config modif修改"
+
+《安全登入建立》
+
+'安全登入刪除'
+
+"ecurity登入修改"
+
+'系統節點執行'
+
+系統節點系統Shell
+
+磁碟區刪除
+
+Volume FlexCache 不刪除
+ a| 
+Volume Snapshot自動刪除修改
+
+磁碟區快照刪除
+
+「Volume Snapshot原則附加排程」
+
+磁碟區快照原則建立
+
+磁碟區快照原則刪除
+
+磁碟區快照原則修改
+
+「Volume Snapshot原則modify-schedule」
+
+「Volume Snapshot原則移除排程」
+
+磁碟區快照還原
+
+"vserver對等刪除"
+
+|===
+此外、在啟用MAV時、下列命令預設會受到保護、但您可以修改規則、以移除這些命令的保護。
+
+* "ecurity登入密碼"
+* 《安全登入解除鎖定》
+* 《設定》
+
+
+MAV系統預設命令的規則（即「安全的多管理員驗證」命令）無法變更。
+
+建立規則時、您可以選擇性地指定「-query」選項、將要求限制為命令功能的子集。例如、在預設的set命令中、「-query」設為「-priv.」、表示只有在指定-priv.時、才會針對set命令產生要求。
+
+[listing]
+----
+smci-vsim20::> security multi-admin-verify rule show
+                                               Required  Approval
+Vserver Operation                              Approvers Groups
+------- -------------------------------------- --------- -------------
+vs01    set                                    -         -
+          Query: -privilege diagnostic
+----
+根據預設、規則會指定在輸入受保護的作業時、自動產生對應的「安全性多管理員驗證要求create _「protected_operation」_」命令。您可以修改此預設值、以要求分別輸入「REquest create」命令。
+
+根據預設、規則會繼承下列全域MAV設定、不過您可以指定規則特定的例外狀況：
+
+* 所需核准者人數
+* 核准群組
+* 核准到期日
+* 執行到期期間
+
+
+
+
+== System Manager程序
+
+如果您想要第一次新增受保護的作業規則、請參閱的系統管理員程序 link:enable-disable-task.html#system-manager-procedure["啟用多管理員驗證。"]
+
+若要修改現有的規則集：
+
+. 按一下*叢集>設定*。
+. 按一下 image:icon_gear.gif["齒輪圖示"] 在「*安全性*」區段的「*多管理員核准*」旁邊。
+. 按一下 image:icon_add.gif["新增圖示"] 若要新增至少一個規則、您也可以修改或刪除現有的規則。
++
+** 作業–從清單中選取支援的命令。
+** 查詢–輸入任何所需的命令選項和值。
+** 選用參數–保留空白以套用全域設定、或為特定規則指派不同的值以覆寫全域設定。
++
+*** 必要的核准人數–L
+*** 核准群組
+
+
+
+
+
+
+
+
+== CLI程序
+
+
+NOTE: 所有的「安全性多管理員驗證規則」命令在執行之前、都必須取得MAV系統管理員核准、但「安全性多管理員驗證規則顯示」除外。
+
+[cols="50,50"]
+|===
+| 如果您想… | 輸入此命令 
+
+
+| 建立規則  a| 
+「安全性多管理驗證規則」會建立作業_「protected_operation」_[-query _operation_Subset_][_parameters_]
+
+
+
+| 修改目前系統管理員的認證資料  a| 
+「安全登入修改_」
+
+*範例*：下列規則需要核准才能刪除根Volume。
+
+「安全性多管理驗證規則」建立作業「Volume DELETE」查詢「-vserver vs0」
+
+
+
+| 修改規則  a| 
+「安全性多管理驗證規則修改作業_「protected_operation」_[_parameters_]」
+
+
+
+| 刪除規則  a| 
+「安全性多管理驗證規則刪除作業_「protected_operation」_」
+
+
+
+| 顯示規則  a| 
+「安全的多管理員驗證規則顯示」
+
+|===
+如需命令語法的詳細資料、請參閱「安全性多管理員驗證規則」手冊頁。

@@ -1,0 +1,164 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/manage-groups-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, approval groups, manage, system, manager, cli, approvers, access, protected, operation 
+summary: 在啟用多管理員驗證（MAV）之前、您必須先建立管理員核准群組、其中包含一或多位系統管理員、以便獲得核准或否決權限。 
+---
+= 管理系統管理員核准群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在啟用多管理員驗證（MAV）之前、您必須先建立管理員核准群組、其中包含一或多位系統管理員、以便獲得核准或否決權限。啟用多管理員驗證之後、任何對核准群組成員資格的修改都必須取得現有合格管理員的核准。
+
+您可以將現有的系統管理員新增至MAV群組、或建立新的系統管理員。
+
+MAV功能可執行現有的角色型存取控制（RBAC）設定。潛在的MAV系統管理員必須擁有足夠的權限、才能執行受保護的作業、才能將其新增至MAV系統管理員群組。 link:../authentication/create-svm-user-accounts-task.html["深入瞭解RBAC。"]
+
+您可以設定MAV來警示MAV系統管理員核准要求已擱置。若要這麼做、您必須設定電子郵件通知、尤其是「郵件寄件者」和「郵件伺服器」參數、或者清除這些參數以停用通知。沒有電子郵件警示、MAV管理員必須手動檢查核准佇列。
+
+
+
+== System Manager程序
+
+如果您想第一次建立MAV核准群組、請參閱的系統管理員程序 link:enable-disable-task.html#system-manager-procedure["啟用多管理員驗證。"]
+
+若要修改現有的核准群組或建立其他核准群組：
+
+. 識別要接收多管理員驗證的系統管理員。
++
+.. 按一下*叢集>設定。*
+.. 按一下 image:icon_arrow.gif["藍色箭頭圖示"] 緊鄰*使用者與角色*
+.. 按一下 image:icon_add.gif["新增圖示"] 在*使用者*下
+.. 視需要修改名單。
++
+如需詳細資訊、請參閱 link:../task_security_administrator_access.html["控制系統管理員存取權。"]
+
+
+
+. 建立或修改MAV核准群組：
++
+.. 按一下*叢集>設定。*
+.. 按一下 image:icon_arrow.gif["藍色箭頭圖示"] 在「*安全性*」區段的「*多管理員核准*」旁邊。（您會看到 image:icon_gear.gif["齒輪圖示"] 圖示（若尚未設定MAV）。
++
+*** 名稱：輸入群組名稱。
+*** 核准者：從使用者清單中選取核准者。
+*** 電子郵件地址：輸入電子郵件地址。
+*** 預設群組：選取群組。
+
+
+
+
+
+
+啟用MAV後、必須取得MAV核准才能編輯現有的組態。
+
+
+
+== CLI程序
+
+. 驗證是否已針對「郵件寄件者」和「郵件伺服器」參數設定值。輸入：
++
+「事件組態顯示」
+
++
+顯示器應類似於下列內容：
+
++
+[listing]
+----
+cluster01::> event config show
+                           Mail From:  admin@localhost
+                         Mail Server:  localhost
+                           Proxy URL:  -
+                          Proxy User:  -
+ Publish/Subscribe Messaging Enabled:  true
+----
++
+若要設定這些參數、請輸入：
+
++
+「事件組態修改-mail-from _email_address_-mail-server _server_name_」
+
+. 識別要接收多管理員驗證的系統管理員
++
+[cols="50,50"]
+|===
+| 如果您想… | 輸入此命令 
+
+
+| 顯示目前的系統管理員  a| 
+「安全登入秀」
+
+
+
+| 修改目前系統管理員的認證資料  a| 
+「安全登入修改_」
+
+
+
+| 建立新的系統管理員帳戶  a| 
+「安全性登入建立-user-or group名稱_admin_name_-applications ssh -imize-method密碼」
+
+|===
+. 建立MAV核准群組：
++
+「安全性多管理員驗證核准群組建立」[-vserver _svm_name_]-name _group名稱_-approvers _approver1_[,_approver2_…] [-email_address1_]、_address1_...]
+
++
+** -`-vserver'-本版本僅支援管理SVM。
+** 名稱- MAV群組名稱、最多64個字元。
+** 「核准者」-一或多個核准者的清單。
+** 電子郵件：一或多個電子郵件地址、會在建立、核准、否決或執行申請時收到通知。
++
+*範例：*下列命令會建立一個MAV群組、其中包含兩個成員及相關的電子郵件地址。
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify approval-group create -name mav-grp1 -approvers pavan,julia -email pavan@myfirm.com,julia@myfirm.com
+----
+
+
+. 驗證群組建立與成員資格：
++
+「安全的多管理員驗證核准群組顯示[-instance]」
+
++
+*範例：*
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify approval-group show -instance
+Vserver  Name        Approvers        Email
+-------  ---------------- ------------------  ------------------------------------------------------------
+svm-1    mav-grp1   pavan,julia      email pavan@myfirm.com,julia@myfirm.com
+----
+
+
+使用這些命令來修改初始MAV群組組組態。
+
+*附註：*所有項目都需要MAV系統管理員核准才能執行。
+
+[cols="50,50"]
+|===
+| 如果您想… | 輸入此命令 
+
+
+| 修改群組特性或修改現有的成員資訊  a| 
+「安全性多管理員驗證核准群組修改（_parameters_]）」
+
+
+
+| 新增或移除成員  a| 
+「安全性多管理員驗證核准群組取代[-vserver _Svm_name_]-name _group_name_[-approvers-to add _approver1_[,_approvert2_…]][-approvers-to -remove _approver1_[,_approvers2_…]]」]
+
+
+
+| 刪除群組  a| 
+「安全性多管理員驗證核准群組刪除（-vserver _svm_name_]-name _group name_）」
+
+|===

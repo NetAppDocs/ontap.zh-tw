@@ -17,13 +17,13 @@ summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括�
 
 一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的任何SESE Volume、並可透過ONTAP 「靜態API」或「系統管理程式」的「*儲存>一致性群組*」功能表項目進行管理。
 
-一致性群組可以獨立存在、也可以是階層關係。個別一致性群組是一個磁碟區集合。除了從一致性群組繼承的Snapshot原則之外、磁碟區也可以擁有個別的本機Snapshot原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
+一致性群組可以獨立存在、也可以是階層關係。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
 
 image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
 
 較大的應用程式工作負載可能需要多個一致性群組。在這些情況下、可以將多個一致性群組置於階層關係中。在此組態中、單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端的SM至BC保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
 
-image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其環境磁碟區的圖表"]
+image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其相關磁碟區的圖表"]
 
 
 
@@ -34,6 +34,26 @@ image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與
 
 NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
+從功能支援部門支援的版本僅為支援一致性群組ONTAP link:protect-task.html#two-phase-CG-snapshot-creation["建立雙階段一致性群組快照"]。
+
+
+
+== 一致性群組的MetroCluster 不一致性
+
+從ONTAP 功能更新9.11.1開始、您可以在MetroCluster 叢集上以全新的Volume配置一致性群組、並以功能更新的方式進行配置。這些磁碟區會配置在鏡射的集合體上。
+
+配置好磁碟區之後、您可以在鏡射與無鏡射的集合體之間移動與一致性群組相關的磁碟區。因此、它們可以位於鏡射Aggregate、無鏡射Aggregate或兩者上。您可以修改包含與一致性群組相關聯之磁碟區的鏡射Aggregate、使其變成無鏡射。同樣地、您也可以修改包含與一致性群組相關之磁碟區的無鏡射Aggregate、以啟用鏡射功能。
+
+與位於鏡射集合體及其Snapshot上的一致性群組相關聯的磁碟區（包括任何一致性群組Snapshot）、會複寫到遠端站台（站台B）。站台B上的磁碟區內容符合一致性群組語義標準。您可以使用一致性群組Snapshot REST API和System Manager、在執行ONTAP 版本更新版本的叢集上存取複寫一致性群組Snapshot。
+
+如果與一致性群組相關聯的部分或全部磁碟區位於目前無法存取的無鏡射集合體上、則一致性群組上的Get或Delete作業會如同本機磁碟區或託管集合體離線一樣運作。
+
+
+
+=== 一致性群組組態複寫
+
+如果站台B執行ONTAP 的是版本號為NetApp 9.10.1或更新版本、則只有與鏡射集合體上的一致性群組相關聯的磁碟區會複寫到站台B如果兩個站台都執行ONTAP 的是版本號為「版本資訊」、則一致性群組組組態只會複寫到站台B。站台B升級到ONTAP 版本號為「版本資訊」9.11.1之後、站台A上的一致性群組資料若將其所有相關的磁碟區放在鏡射集合體上、則會複寫到站台B
+
 
 
 == 升級考量
@@ -42,7 +62,7 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
 使用ONTAP REST API建立的一致性群組快照可透過System Manager的一致性群組介面及一致性群組API端點來管理。
 
-使用ONTAPI命令「Cg－start」和「Cg－commit」建立的快照將無法識別為一致性群組快照、因此無法透過System Manager的一致性群組介面或ONTAP 透過NetApp API中的一致性群組端點進行管理。
+使用ONTAPI命令「Cg - start」和「Cg - commit」建立的快照、將無法識別為一致性群組快照、因此無法透過System Manager的一致性群組介面或ONTAP 透過該API中的一致性群組端點進行管理。
 
 
 

@@ -1,0 +1,142 @@
+---
+sidebar: sidebar 
+permalink: add-create-local-tier-task.html 
+keywords: add, create, local tier, aggregate, lun 
+summary: 您可以使用System Manager建立本機層級、以新增至儲存解決方案。 
+---
+= 使用System Manager新增（建立）本機層
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以使用System Manager建立本機層級、以新增至儲存解決方案。
+
+System Manager會根據建議的最佳實務做法來建立本機層級、以供設定本機層級。
+
+從ONTAP 《銷售指南9.11.1：自動程序中建議的組態不同於新增本機層的組態、您可以決定手動設定本機層。
+
+--
+* <<add-local-tier-auto>>
+* <<add-local-tier-manually>>
+
+
+--
+
+
+== 新增本機層的工作流程
+
+image:../media/workflow-add-create-local-tier.png[""]
+
+
+
+== 自動新增本機層
+
+.步驟
+. 在 System Manager 中、按一下 * Storage > Tiers* 。
+. 在* Tiers*頁面中、按一下 image:icon-add-local-tier.png[""] 若要建立新的本機層：
++
+「*新增本機層級*」頁面顯示可在節點上建立的建議本機層數、以及可用的儲存設備。
+
+. 按一下*建議詳細資料*以檢視System Manager建議的組態。
++
+System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
+
++
+--
+** *本機層名稱*（您可以編輯以ONTAP 版本S59.10.1開頭的本機層名稱）
+** *節點名稱*
+** *可用大小*
+** *儲存設備類型*
+
+
+--
++
+從版本號《2019年9月10日》開始ONTAP 、將會顯示其他資訊：
+
++
+** *磁碟*：顯示磁碟的數量、大小和類型
+** *配置*：顯示RAID群組配置、包括哪些磁碟為同位元檢查或資料、以及哪些插槽未使用。
+** *備用磁碟*：顯示節點名稱、備用磁碟的數量和大小、以及儲存設備的類型。
+
+
+. 請執行下列其中一個步驟：
++
+|===
+
+
+| 如果您想… | 然後執行此操作… 
+
+
+ a| 
+接受System Manager的建議
+ a| 
+請前往 <<step5,步驟5.>>。
+
+
+
+ a| 
+手動設定本機層級、並*非*使用System Manager的建議
+ a| 
+** 如需ONTAP 使用版本的版本、請使用CLI手動新增本機層級。
+** 從ONTAP 《2019年9月11日」開始、請完成中的步驟 <<add-local-tier-manually>>
+
+
+|===
+. [[step5]（選用）：如果已安裝Onboard Key Manager、您可以將其設定為加密。選中* Configure Onboard Key Manager for加密*複選框。
++
+.. 輸入通關密碼。
+.. 再次輸入密碼以確認密碼。
+.. 請儲存密碼以供日後使用、以便在系統需要恢復時使用。
+.. 備份金鑰資料庫以供未來使用。
+
+
+. 按一下「*儲存*」以建立本機層級、並將其新增至您的儲存解決方案。
+
+
+
+
+== 使用System Manager手動新增本機層
+
+從ONTAP 《銷售資訊》9.11.1開始、如果您不想使用System Manager建議的組態來建立本機層、您可以指定所需的組態。
+
+.步驟
+. 完成中的步驟1至3 <<add-local-tier-auto>>。
+. 當System Manager顯示本機層的儲存建議時、請按一下「* Spare Disks*（*備用磁碟*）」區段中的*「Switch to Manual local Tier creation *（切換至手動建立本機層*）」。
++
+「*新增本機層*」頁面會顯示您用來設定本機層的欄位。
+
+. 在「*新增本機層級*」頁面的第一節中、完成下列步驟：
++
+.. 輸入本機層的名稱。
+.. （選用）：如果您要鏡射本機層、請勾選*鏡射此本機層*核取方塊。
+.. 選取磁碟類型。
+.. 選取磁碟數量。
+
+
+. 在「* RAID組態*」區段中、完成下列步驟：
++
+.. 選取RAID類型。
+.. 選取RAID群組大小。
+.. 按一下「RAID分配」以檢視磁碟在群組中的配置方式。
+
+
+. （選用）：如果已安裝Onboard Key Manager、您可以在頁面的「* Encryption*」（*加密*）區段中進行加密設定。選中* Configure Onboard Key Manager for加密*複選框。
++
+.. 輸入通關密碼。
+.. 再次輸入密碼以確認密碼。
+.. 請儲存密碼以供日後使用、以便在系統需要恢復時使用。
+.. 備份金鑰資料庫以供未來使用。
+
+
+. 按一下「*儲存*」以建立本機層級、並將其新增至您的儲存解決方案。
+

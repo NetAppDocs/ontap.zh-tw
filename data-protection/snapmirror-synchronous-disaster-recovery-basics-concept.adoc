@@ -5,6 +5,7 @@ keywords: snapmirror, synchronous, disaster, recovery
 summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB記憶體的SnapMirror同步（SM-S）技術、都能在所有ONTAP Select 的SnapMirror平台和支援所有的不穩定平台上運作。SnapMirror同步技術是一種每節點授權功能、可在磁碟區層級提供同步資料複寫。 
 ---
 = SnapMirror同步災難恢復基礎知識
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -20,7 +21,7 @@ summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB�
 |===
 
 
-| 平台 | 早於發行版本的SnapMirror 9.9.1、每個HA配對所允許的SnapMirror同步作業數ONTAP | 在SnapMirror 9.9.1中、每個HA配對允許的SnapMirror同步作業數ONTAP | SnapMirror同步作業的數量ONTAP 、可在版本號為9、10.1的每個HA配對中執行 
+| 平台 | 早於發行版本的SnapMirror 9.9.1、每個HA配對所允許的SnapMirror同步作業數ONTAP | 在SnapMirror 9.9.1中、每個HA配對允許的SnapMirror同步作業數ONTAP | SnapMirror同步作業的數量ONTAP 、可在版本號為9、10.1的每個HA配對中執行 | SnapMirror同步作業的數量ONTAP 、每個HA配對均可在版本號之間執行 
 
 
  a| 
@@ -31,6 +32,8 @@ AFF
 160
  a| 
 200
+ a| 
+400
 
 
 
@@ -42,6 +45,8 @@ FAS
 80
  a| 
 80
+ a| 
+80
 
 
 
@@ -49,6 +54,8 @@ FAS
 ONTAP Select
  a| 
 20
+ a| 
+40
  a| 
 40
  a| 
@@ -68,15 +75,9 @@ ONTAP Select
 
 下列功能支援ONTAP SnapMirror同步技術（位於NetApp上）：
 
-* 複寫應用程式建立的Snapshot複本
-+
-只有Snapshot複本具有SnapMirror標籤、符合與同步或嚴格同步原則相關的規則。使用Snapshot原則建立的排程Snapshot複本不會複寫。
-
+* 複寫應用程式建立的Snapshot只會複本Snapshot複本、其SnapMirror標籤符合與Sync或Strict Sync原則相關的規則。使用Snapshot原則建立的排程Snapshot複本不會複寫。
 * FC-NVMe
-* LUN複製與NVMe命名空間複製
-+
-也支援以應用程式建立的Snapshot複本做為後盾的LUN複本。
-
+* 也支援LUN複製和NVMe命名空間複製LUN複本、以應用程式建立的Snapshot複本為後盾。
 
 
 下列功能支援ONTAP SnapMirror同步技術（位於32個資料中心）、但前提是來源和目的地叢集中的所有節點都執行ONTAP 的是32個資料中心。9.6：
@@ -84,33 +85,18 @@ ONTAP Select
 * SVM DR
 +
 ** SnapMirror同步來源也可以是SVM DR來源、例如以SM-S作為單一連線的連出組態、以及以SVM DR作為另一個連線。
-** SnapMirror同步來源不能是SVM DR目的地、因為SM-S不支援串聯DP來源。
-+
-在目的地叢集中執行SVM DR反轉重新同步之前、您必須先釋出同步關係。
-
-** SnapMirror同步目的地不能是SVM DR來源、因為SVM DR不支援複寫DP磁碟區。
-+
-反轉同步來源的同步會導致SVM DR排除目的地叢集中的DP磁碟區。
-
+** SnapMirror同步來源不能是SVM DR目的地、因為SM-S不支援串聯DP來源。在目的地叢集中執行SVM DR反轉重新同步之前、您必須先釋出同步關係。
+** SnapMirror同步目的地不能是SVM DR來源、因為SVM DR不支援複寫DP磁碟區。反轉同步來源的同步會導致SVM DR排除目的地叢集中的DP磁碟區。
 
 
 * NFSv4.0和NFSv4.1
 * SMB 2.0或更新版本
 * 混合式傳輸協定存取（NFSv3和SMB）
 * SnapMirror同步關係的主要磁碟區上的防毒軟體
-* SnapMirror同步關係的主磁碟區硬式或軟式配額
-+
-配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。
-
+* SnapMirror同步關係的主磁碟區硬式或軟式配額配額不會將配額規則複寫到目的地、因此配額資料庫不會複寫到目的地。
 * SnapMirror同步關係主要磁碟區的FPolicy
-* SnapMirror同步鏡射鏡射串聯
-+
-SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係。
-
-* NAS的來源與目的地磁碟區之間的時間戳記同位元
-+
-如果您已從ONTAP 還原9.5升級ONTAP 為還原9.6、則時間戳記只會複寫到來源Volume中的任何新檔案和修改的檔案。來源Volume中現有檔案的時間戳記不會同步。
-
+* SnapMirror同步鏡射鏡射會從SnapMirror同步關係的目的地Volume串聯關係、必須是非同步SnapMirror關係。
+* NAS的來源與目的地Volume之間的時間戳記同位元如果您已從ONTAP S還原9.5升級ONTAP 至還原9.6、則時間戳記只會複寫至來源Volume中的任何新檔案和修改檔案。來源Volume中現有檔案的時間戳記不會同步。
 * 移除高中繼資料作業頻率限制
 * 使用TLS 1.2加密技術、確保傳輸中的敏感資料安全無虞
 * 複製自動刪除
@@ -126,14 +112,8 @@ SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係
 * SFMoD
 * SFCoD
 * VVOL
-* 混合式SAN與NAS存取
-+
-SnapMirror同步關係的主要磁碟區可以提供NAS資料或SAN資料。不支援從SnapMirror同步關係的主要磁碟區存取SAN和NAS。
-
-* 混合式SAN與NVMe存取
-+
-LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
-
+* 混合式SAN與NAS存取SnapMirror同步關係的主要磁碟區、可用於NAS資料或SAN資料。不支援從SnapMirror同步關係的主要磁碟區存取SAN和NAS。
+* 同一個Volume或SVM不支援混合SAN和NVMe存取LUN和NVMe命名空間。
 * 資料量SnapLock
 * 資料量FlexGroup
 * 資料量FlexCache
@@ -152,20 +132,8 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
 
 SnapMirror Synchronous有兩種作業模式、分別取決於所使用的SnapMirror原則類型：
 
-* *同步模式*
-+
-在同步模式中、會先將I/O複寫至主要儲存設備、然後再複寫至次要儲存設備。然後將I/O寫入主儲存設備、並將確認函傳送至發出I/O的應用程式如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤情況得到修正時、SnapMirror同步技術會自動與二線儲存設備重新同步、並以同步模式從一線儲存設備恢復複寫至二線儲存設備。
-
-+
-在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
-
-* * StrictSync模式*
-+
-SnapMirror Synchronous可選擇性地在StrictSync模式中運作。如果由於任何原因未完成對二線儲存設備的寫入、應用程式I/O就會失敗、因此可確保一線與二線儲存設備完全相同。只有在SnapMirror關係恢復為「不同步」狀態之後、應用程式I/O才會繼續進行。如果主儲存設備故障、則可在容錯移轉後、在二線儲存設備上恢復應用程式I/O、而不會遺失資料。
-
-+
-在StrictSync模式中、RPO永遠為零、RTO極低。
-
+* *同步模式*在同步模式下、將I/O複寫至主要儲存設備、然後再複寫至次要儲存設備。然後將I/O寫入主儲存設備、並將確認函傳送至發出I/O的應用程式如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤情況得到修正時、SnapMirror同步技術會自動與二線儲存設備重新同步、並以同步模式從一線儲存設備恢復複寫至二線儲存設備。在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
+* * StrictSync模式* SnapMirror Synchronous可選擇性地在StrictSync模式中運作。如果由於任何原因未完成對二線儲存設備的寫入、應用程式I/O就會失敗、因此可確保一線與二線儲存設備完全相同。只有在SnapMirror關係恢復為「不同步」狀態之後、應用程式I/O才會繼續進行。如果主儲存設備故障、則可在容錯移轉後、在二線儲存設備上恢復應用程式I/O、而不會遺失資料。在StrictSync模式中、RPO永遠為零、RTO極低。
 
 
 

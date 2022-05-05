@@ -1,0 +1,63 @@
+---
+permalink: flexcache/enable-file-access-time-updates-task.html 
+sidebar: sidebar 
+keywords: atime, atime-update, flexcache, flex cache, access time 
+summary: 您可以啟用FlexCache 「-atime-update」欄位、以允許檔案存取時間更新。您也可以使用「-atime-update-period」屬性來設定存取時間更新期間。atime-update-period可控制atime更新的發生頻率、以及何時可傳播至原始磁碟區。 
+---
+= 啟用檔案存取時間更新
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能更新9.11.1開始、您可以啟用FlexCache 此功能區上的「-atime-update」欄位、以允許檔案存取時間更新。您也可以使用「-atime-update-period」屬性來設定存取時間更新期間。「-atime-update-period」屬性可控制存取時間更新的發生頻率、以及何時可以傳播到來源磁碟區。
+
+
+
+== 總覽
+
+提供名為「-atime-update」的Volume層級欄位、可管理使用讀取、讀取連結及readDIR讀取之檔案和目錄的存取時間更新。ONTAPatime用於不常存取的檔案和目錄的資料生命週期決策。不常存取的檔案最終會移轉至歸檔儲存設備、之後通常會移至磁帶。
+
+在現有和新建立FlexCache 的版本中、預設會停用atim-update欄位。如果您使用FlexCache 的是含有ONTAP 早於9.11.1版本的版本的版本的支援功能、則應停用atime-update欄位、以便在原始磁碟區上執行讀取作業時、不會不必要地清除快取。然而、有了大量FlexCache 的支援資料的快取、系統管理員可以使用特殊工具來管理資料、並確保熱資料保留在快取中、並清除冷資料。停用atime-update時無法執行此動作。不過ONTAP 、從功能性的9.11.1開始、您可以啟用「-atim-update」和「-atime-update-period」、並使用管理快取資料所需的工具。
+
+
+
+== 開始之前
+
+所有FlexCache 的不完整資料區都必須執行ONTAP 更新版本的更新版本。
+
+
+
+== 關於這項工作
+
+將「-atime-update-period」設為86400秒、無論檔案執行的類似讀取作業次數為何、每24小時期間都不允許更新一次以上的存取時間。
+
+將「-atime-update-period」設定為0、會將訊息傳送至來源、以供每個讀取存取。然後、來源會通知每FlexCache 個VMware Volume、該atime已經過時、影響效能。
+
+.步驟
+. 啟用檔案存取時間更新並設定更新頻率：
++
+「Volume modify -volume vol_name -vserver _svm_name_-atime-update true -atime-update-period _seconds_」
+
++
+以下範例可啟用「-atime-update」、並將「-atime-update-period」設為86400秒或24小時：
+
++
+[listing]
+----
+c1: volume modify -volume origin1 vs1_c1 -atime-update true -atime-update-period 86400
+----
+. 驗證是否已啟用「-atime-update」：
++
+「Volume show -volume _vol_name_-Fields atime-update、atime-update-period」（Volume show -volume _vol_name_-Fields atime-update、atime-update-period）
+
++
+[listing]
+----
+c1::*> volume show -volume cache1_origin1 -fields atime-update,atime-update-period
+vserver volume         atime-update atime-update-period
+------- -------------- ------------ -------------------
+vs2_c1  cache1_origin1 true         86400
+----
+

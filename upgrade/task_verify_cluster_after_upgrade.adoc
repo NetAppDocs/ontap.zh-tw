@@ -62,7 +62,9 @@ node1                 true    true
 +
 "進階權限"
 
-. 輸入「y」以繼續。
++
+輸入「y」以繼續。
+
 . 驗證每個RDB程序的組態詳細資料。
 +
 ** 每個節點的關聯式資料庫時期和資料庫時期應相符。
@@ -121,26 +123,19 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：
-+
-「事件記錄檔show -messagename scsimblag.*」
-
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：「事件記錄檔顯示嚴重性資訊-message-name scsimble.*」
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 
 +
 [listing]
 ----
-cluster1::*> event log show -messagename scsiblade.*
-Time                Node             Severity      Event
-------------------- ---------------- ------------- ---------------------------
-MM/DD/YYYY TIME  node0            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
-MM/DD/YYYY TIME  node1            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+cluster1::*> event log show  -severity informational -message-name scsiblade.*
+Time             Node       Severity       Event
+---------------  ---------- -------------- ---------------------------
+MM/DD/YYYY TIME  node0      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
+MM/DD/YYYY TIME  node1      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
 ----
-. 返回管理權限層級：
-+
-「et -priv. admin」
-
 
 
 link:../system-admin/index.html["系統管理"]

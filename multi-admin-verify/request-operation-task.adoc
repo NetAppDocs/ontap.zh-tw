@@ -1,0 +1,159 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/request-operation-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, protected, operation, rules, request, cluster, approve, rbac 
+summary: 當您在啟用多管理員驗證（MAV）的叢集上啟動受保護作業時ONTAP 、多方面的管理員（MAV系統管理員）會自動攔截作業、並要求產生要求、而該要求必須經過一或多位MAV核准群組管理員（MAV系統管理員）的核准。 
+---
+= 要求執行受保護的作業
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您在啟用多管理員驗證（MAV）的叢集上啟動受保護的作業或命令時ONTAP 、多方面的操作或命令都會自動攔截、並要求產生要求、而該要求必須獲得一或多位MAV核准群組（MAV系統管理員）中的系統管理員核准。或者、您也可以建立不含對話方塊的MAV要求。
+
+如果核准、您必須回應查詢、才能在申請到期期間內完成作業。如果被否決、或是超過申請或過期期間、您必須刪除申請並重新提交。
+
+MAV功能會遵守現有的RBAC設定。也就是您的系統管理員角色必須擁有足夠的權限、才能在不考慮MAV設定的情況下執行受保護的作業。 link:https://docs.netapp.com/us-en/ontap/authentication/create-svm-user-accounts-task.html["深入瞭解RBAC"]。
+
+如果您是MAV管理員、則執行受保護作業的要求也必須獲得MAV管理員核准。
+
+
+
+== System Manager程序
+
+當使用者按一下功能表項目以啟動作業且作業受到保護時、系統會產生核准要求、且使用者會收到類似下列內容的通知：
+
+[listing]
+----
+Approval request to delete the volume was sent.
+Track the request ID 356 from Events & Jobs > Multi-Admin Requests.
+----
+啟用MAV時、可使用*多管理員要求*視窗、顯示根據使用者登入ID和MAV角色（核准者或非核准者）而擱置的要求。針對每個擱置的要求、會顯示下列欄位：
+
+* 營運
+* 索引（數字）
+* 狀態（「Pending（擱置）」、「Approved（已核准）」、「Rejected（已拒絕）
++
+如果某個申請被一位核准者拒絕、則不可能採取進一步行動。
+
+* 查詢（所要求作業的任何參數或值）
+* 正在申請使用者
+* 申請截止日期
+* （數量）待核准者
+* （數量）潛在核准者
+
+
+申請核准後、申請使用者可在到期期間內重試該作業。
+
+如果使用者在未經核准的情況下重試作業、則會顯示類似下列的通知：
+
+[listing]
+----
+Request to perform delete operation is pending approval.
+Retry the operation after request is approved.
+----
+
+
+== CLI程序
+
+. 直接輸入受保護的作業、或使用MAV REQUEST命令輸入。
++
+*範例：若要刪除磁碟區、請輸入下列其中一個命令：*
+
++
+** 磁碟區刪除
++
+[listing]
+----
+cluster-1::*> volume delete -volume vol1 -vserver vs0
+
+Warning: This operation requires multi-admin verification. To create a
+         verification request use "security multi-admin-verify request
+         create".
+
+         Would you like to create a request for this operation?
+          {y|n}: y
+
+Error: command failed: The security multi-admin-verify request (index 3) is
+       auto-generated and requires approval.
+----
+** 「安全的多管理員驗證要求會建立「Volume Delete」（磁碟區刪除）
++
+[listing]
+----
+Error: command failed: The security multi-admin-verify request (index 3)
+       requires approval.
+----
+
+
+. 檢查申請狀態、並回應MAV通知。
++
+.. 如果申請獲得核准、請回應CLI訊息以完成作業。
++
+*範例：*
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify request show 3
+
+     Request Index: 3
+         Operation: volume delete
+             Query: -vserver vs0 -volume vol1
+             State: approved
+Required Approvers: 1
+ Pending Approvers: 0
+   Approval Expiry: 2/25/2022 14:32:03
+  Execution Expiry: 2/25/2022 14:35:36
+         Approvals: admin2
+       User Vetoed: -
+           Vserver: cluster-1
+    User Requested: admin
+      Time Created: 2/25/2022 13:32:03
+     Time Approved: 2/25/2022 13:35:36
+           Comment: -
+   Users Permitted: -
+
+cluster-1::*> volume delete -volume vol1 -vserver vs0
+
+Info: Volume "vol1" in Vserver "vs0" will be marked as deleted and placed in the volume recovery queue. The space used by the volume will be recovered only after the retention period of 12 hours has completed. To recover the space immediately, get the volume name using (privilege:advanced) "volume recovery-queue show vol1_*" and then "volume recovery-queue purge -vserver vs0 -volume <volume_name>" command. To recover the volume use the (privilege:advanced) "volume recovery-queue recover -vserver vs0       -volume <volume_name>" command.
+
+Warning: Are you sure you want to delete volume "vol1" in Vserver "vs0" ?
+{y|n}: y
+----
+.. 如果申請遭否決或過期、請刪除申請、然後重新提交或聯絡MAV管理員。
++
+*範例：*
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify request show 3
+
+     Request Index: 3
+         Operation: volume delete
+             Query: -vserver vs0 -volume vol1
+             State: vetoed
+Required Approvers: 1
+ Pending Approvers: 1
+   Approval Expiry: 2/25/2022 14:38:47
+  Execution Expiry: -
+         Approvals: -
+       User Vetoed: admin2
+           Vserver: cluster-1
+    User Requested: admin
+      Time Created: 2/25/2022 13:38:47
+     Time Approved: -
+           Comment: -
+   Users Permitted: -
+
+cluster-1::*> volume delete -volume vol1 -vserver vs0
+
+Error: command failed: The security multi-admin-verify request (index 3) hasbeen vetoed. You must delete it and create a new verification request.
+To delete, run "security multi-admin-verify request delete 3".
+----
+
+
+

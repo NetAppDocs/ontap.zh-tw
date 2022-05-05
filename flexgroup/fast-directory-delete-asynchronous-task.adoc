@@ -1,23 +1,29 @@
 ---
 permalink: flexgroup/fast-directory-delete-asynchronous-task.html 
 sidebar: sidebar 
-keywords: perform, directory, delete, files, asynchronous, share, flexvol, flex vol, flexgroup, flex group 
-summary: 您應該使用REST API來刪除目錄。從ONTAP 功能表9.8開始、您也可以使用Volume檔案as同步 刪除命令、從Linux和Windows用戶端共用的背景中刪除檔案和目錄。您可以在FlexVol 支援的功能區和FlexGroup 功能區上執行非同步刪除。 
+keywords: perform, directory, delete, files, asynchronous, share, flexvol, flex vol, flexgroup, flex group, cancel 
+summary: 從ONTAP 功能表9.8開始、您可以使用Volume檔案as同步 刪除命令、從Linux和Windows用戶端共用的背景中刪除檔案和目錄。您可以在FlexVol 支援的功能區和FlexGroup 功能區上執行非同步刪除。 
 ---
-= 以非同步方式刪除檔案和目錄、以執行快速目錄刪除
+= 快速刪除叢集上的檔案和目錄
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您應該使用REST API來刪除目錄。從ONTAP 功能表9.8開始、您也可以使用「Volume file as同步 刪除」命令、刪除背景中Linux和Windows用戶端共用的檔案和目錄。您可以在FlexVol 支援的功能區和FlexGroup 功能區上執行非同步刪除。
+從功能介紹到功能介紹、您可以使用低延遲的_fast目錄刪除_功能、從Linux和Windows用戶端非同步刪除檔案和目錄（亦即在背景中）ONTAP 。叢集與SVM管理員可以在FlexVol 支援的功能區執行非同步刪除作業FlexGroup 、包括在內。
 
-您必須是使用進階權限模式的叢集管理員或SVM管理員。
+如果您使用ONTAP 的是版本早於ONTAP 《Sf2 9.11.1》的版本、則必須是叢集管理員或使用進階權限模式的SVM管理員。
 
-從功能支援的9.9開始ONTAP 、您也可以使用System Manager來執行快速目錄刪除。如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
+從功能更新9.11.1開始ONTAP 、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端執行非同步刪除作業。如需詳細資訊、請參閱 xref:manage-client-async-dir-delete-task.adoc[管理用戶端權限以快速刪除目錄]。
 
-.步驟
+從功能介紹9.8開始ONTAP 、您可以使用ONTAP 功能介紹的功能就是使用功能介紹的功能。從功能支援的9.9開始ONTAP 、您可以搭配System Manager使用此功能。如需此程序的詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
+
+[role="tabbed-block"]
+====
+.CLI
+--
+.使用CLI執行快速目錄刪除：
 . 進入進階權限模式：「權限進階」
 . 刪除FlexVol 位於Isfor FlexGroup 現象區的檔案或目錄：「Volume file as同步 刪除start -vserver vserver_name -volume volume volume volume _name -path file_path -c調節 節流」
 +
@@ -44,3 +50,29 @@ Time                 Node             Severity      Event
 MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed.
 ----
 
+
+.取消目錄刪除工作
+. 進入進階權限模式：
++
+「權限進階」
+
+. 確認正在刪除目錄：
++
+「Volume file as同步 刪除show」
+
++
+如果顯示SVM、Volume、JobID和目錄路徑、您可以取消工作。
+
+. 取消目錄刪除：
++
+「Volume file as同步 刪除cancel -vserver svm_name -volume volume volume volume volume名稱-jobid job_id」
+
+
+
+--
+.系統管理員
+--
+如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
+
+--
+====

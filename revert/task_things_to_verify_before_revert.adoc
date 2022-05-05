@@ -32,8 +32,10 @@ node1                 true    true
 +
 如果有任何節點不健全或不符合資格、請檢查EMS記錄是否有錯誤、並採取修正行動。
 
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 輸入「y」繼續。
+. 將權限層級設為進階：+「Set -priv榮幸advanc進 階」
++
+輸入「y」繼續。
+
 . 驗證每個RDB程序的組態詳細資料。
 +
 ** 每個節點的關聯式資料庫時期和資料庫時期應相符。
@@ -41,10 +43,7 @@ node1                 true    true
 +
 請注意、每個振鈴都可能有不同的仲裁主機。
 
-
-
-
-
++
 [cols="2*"]
 |===
 | 若要顯示此RDB程序... | 輸入此命令... 
@@ -77,8 +76,10 @@ SAN管理精靈
 「叢集環show -unitname bcomd」
 
 |===
++
 此範例顯示Volume位置資料庫程序：
 
++
 [listing]
 ----
 cluster1::*> cluster ring show -unitname vldb
@@ -90,20 +91,22 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您是在SAN環境中操作、請確認每個節點都位於SAN仲裁中：「Event log show -messagename scsimble.*」
+
+
+. 返回管理員權限等級：+「設置權限管理」
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：「事件記錄檔顯示嚴重性資訊-message-name scsimble.*」
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 
 +
 [listing]
 ----
-cluster1::*> event log show -messagename scsiblade.*
-Time                Node             Severity      Event
-------------------- ---------------- ------------- ---------------------------
-MM/DD/YYYY TIME  node0            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
-MM/DD/YYYY TIME  node1            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+cluster1::*> event log show  -severity informational -message-name scsiblade.*
+Time             Node       Severity       Event
+---------------  ---------- -------------- ---------------------------
+MM/DD/YYYY TIME  node0      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
+MM/DD/YYYY TIME  node1      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
 ----
-. 返回管理員權限等級：「et -priv. admin」
 
 
 link:../system-admin/index.html["系統管理"]

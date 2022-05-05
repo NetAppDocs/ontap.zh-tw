@@ -1,7 +1,7 @@
 ---
 permalink: smbc/resume-protection-fan-out-configuration.html 
 sidebar: sidebar 
-keywords: fan out, asynchronous, restore, third site 
+keywords: fan out, asynchronous, restore, third site, MirrorAllSnapshots, MirrorAndVault 
 summary: SM - BC支援連出組態。在SMBC端點上進行容錯移轉之後、您必須恢復與非同步連線的連線。 
 ---
 = 使用SM到BC、在連出組態中恢復保護
@@ -12,7 +12,9 @@ summary: SM - BC支援連出組態。在SMBC端點上進行容錯移轉之後、
 
 
 [role="lead"]
-SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態]。使用「鏡射AllSnapshots」原則、您的來源磁碟區可以鏡射到SM到BC目的地端點、以及一個或多個非同步SnapMirror關係。
+SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態]。您的來源磁碟區可以鏡射至SMBC目的地端點、以及一或多個非同步SnapMirror關係。
+
+使用「鏡像AllSnapshots」原則支援連出組態、並從ONTAP 《鏡像9.11.1》開始使用「鏡像AndVault」原則。從ONTAP 《支援範本》9.11.1開始、《XDPDefault》（XDPDefault）原則不支援SMBC的連出組態。
 
 如果您在SMBC目的地上遇到容錯移轉、非同步SnapMirror目的地將會變得不正常、您必須刪除並重新建立與非同步SnapMirror端點的關係、以手動方式還原保護。
 

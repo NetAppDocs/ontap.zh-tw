@@ -19,7 +19,7 @@ summary: 在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭�
 
 外部引擎組態定義FPolicy建立及管理外部FPolicy伺服器（FPolicy伺服器）連線所需的資訊、包括下列資訊：
 
-* 儲存虛擬機器（SVM）名稱
+* SVM名稱
 * 引擎名稱
 * 主要和次要FPolicy伺服器的IP位址、以及連接至FPolicy伺服器時要使用的TCP連接埠號碼
 * 引擎類型為非同步或同步
@@ -31,6 +31,7 @@ summary: 在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭�
 +
 這包括定義逾時值、重試值、保持活動值、最大要求值、傳送和接收緩衝區大小值、以及工作階段逾時值等項目的參數。
 
+* 傳送至外部引擎的Fpolicy通知訊息格式
 
 
 使用「vserver fpolicy policy exter-engine create」命令來建立FPolicy外部引擎。
@@ -180,9 +181,20 @@ _憑證授權單位_
 
 指定在SVM與FPolicy伺服器之間設定SSL驗證時、用於驗證的憑證CA名稱。
 
-如果將"mutual驗證"指定為"-SSL選項"參數、則必須指定"-certcate -ca"參數的值。
+如果您為「-SSL-option」參數指定「mutual驗證」、則必須為「-Certificate -ca」參數指定一個值。
  a| 
-——認證書——ca'、text………………………………
+證書- CA的「text」
+
+
+
+ a| 
+外部引擎格式_
+
+指定傳送至外部引擎的Fpolicy通知訊息格式。此參數的預設值為「XML」。
+
+從ONTAP 《支援資訊》9.11.1開始、當指定「原型」時、可使用Google Prototbuf以二進位格式編碼通知訊息。在設定「protobuf」之前、請確定Fpolicy伺服器也支援「原型轉序列化」。
+ a| 
+[-extern-enginer-format {XML | protobuf}]]
 
 |===
 

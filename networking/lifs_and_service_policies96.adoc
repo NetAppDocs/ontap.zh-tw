@@ -24,7 +24,7 @@ summary: 將服務原則指派給LIF以指定支援的流量
 
 管理SVM和任何系統SVM都包含可用於該SVM中的LIF的服務原則、包括管理和叢集間LIF。系統會在建立IPspace時自動建立這些原則。
 
-下表列出截至ONTAP 資訊版SVM中的LIF內建政策（截至資訊版SVMS9.10.1）。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+下表列出截至ONTAP 資訊版SVM中的LIF內建政策、截至資訊版9.11.1為止。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
 
 「網路介面服務原則展示」
 
@@ -60,14 +60,14 @@ default-route-聲明
  a| 
 預設管理
  a| 
-管理核心、管理https、管理http、管理-ssh管理自動支援、管理-EMS、 管理層NTP用戶端、管理SNMP伺服器、管理層NTP伺服器、備份NDMP控制
+管理核心、管理https、管理http、管理ssh、管理自動支援、 管理- EMS、管理- DNS用戶端、管理- ad用戶端、管理- LDAP用戶端、管理- NIS用戶端、 管理- NTP用戶端
  a| 
 節點管理或叢集管理
  a| 
-用於處理系統範圍內的管理要求。管理- EMS可控制哪些LIF可以發佈EMS內容。系統範圍的管理原則是用來建立系統SVM擁有的節點範圍和叢集範圍管理生命期。這些LIF可用於連往NTP或DNS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。
+使用此系統範圍內的管理原則、建立系統SVM擁有的節點和叢集範圍管理生命期。這些LIF可用於連往DNS、AD、LDAP或NIS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。
 
 |===
-下表列出截至ONTAP 資訊版SVM上的LIF服務（截至資訊版SVM）9.10.1：
+下表列出截至ONTAP 資訊版SVM上的LIF服務、以及截至資訊版9.11.1的可用服務：
 
 [cols="25,25,50"]
 |===
@@ -162,16 +162,16 @@ NDMP備份控制服務
  a| 
 -
  a| 
-NTP用戶端存取服務。
+推出於本文件的版本。ONTAPNTP用戶端存取服務。
 
 
 
  a| 
 管理- NTP伺服器
  a| 
-僅限系統
+-
  a| 
-NTP伺服器管理存取服務
+推出於版本169.11.1。ONTAPNTP伺服器管理存取服務
 
 
 
@@ -187,7 +187,7 @@ portmap管理服務
  a| 
 管理伺服器
  a| 
-僅限系統
+-
  a| 
 rsh伺服器管理服務
 
@@ -205,7 +205,7 @@ SNMP伺服器管理服務
  a| 
 管理- Telnet-server
  a| 
-僅限系統
+-
  a| 
 用於Telnet伺服器管理的服務
 
@@ -216,7 +216,7 @@ SNMP伺服器管理服務
 
 所有資料SVM都包含服務原則、可供該SVM中的LIF使用。
 
-下表列出截至ONTAP 資訊SVM中的LIF內建政策、截至資訊版S209.10.1為止。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+下表列出截至ONTAP 資訊SVM中的LIF內建原則、截至資訊版9.11.1為止。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
 
 「網路介面服務原則展示」
 
@@ -230,11 +230,11 @@ SNMP伺服器管理服務
  a| 
 預設管理
  a| 
-資料核心、management、management、ssh、management、management、https、data-dns伺服器、management、管理http、 備份NDMP控制、管理SNMP伺服器
+管理-https、管理-http、管理-ssh、管理-DNS"用戶端、管理-ad-client、 管理- LDAP用戶端、管理- NIS用戶端
  a| 
 無
  a| 
-用於處理SVM範圍內管理的LIF、以建立資料SVM擁有的SVM管理LIF。這些LIF可用於提供SSH或HTTPS存取給SVM管理員。
+使用此SVM範圍內的管理原則來建立資料SVM擁有的SVM管理生命期。這些LIF可用於提供SSH或HTTPS存取給SVM管理員。必要時、這些LIF可用於連往外部DNS、AD、LDAP或NIS伺服器的傳出連線。
 
 
 
@@ -245,21 +245,43 @@ SNMP伺服器管理服務
  a| 
 iSCSI
  a| 
-用於傳輸區塊導向SAN資料流量的生命體
+用於傳輸區塊導向SAN資料流量的生命體。從版本隆9.10.1開始ONTAP 、「預設資料區塊」原則已過時。改用「預設資料iSCSI」服務原則。
 
 
 
  a| 
 預設資料檔案
  a| 
-資料核心、資料NFS、資料CIFS、資料FlexCache、資料fpolice-Client
+資料fpolice-client, data-dns伺服器, data-FlexCache、data-CIFS、data-nfs、 管理- DNS用戶端、管理- ad用戶端、管理- LDAP用戶端、管理- NIS用戶端
  a| 
 NFS、CIFS、fcache
  a| 
-使用預設資料檔案原則來建立支援檔案型資料傳輸協定的NAS lifs。
+使用預設資料檔案原則來建立支援檔案型資料傳輸協定的NAS lifs。有時SVM中只有一個LIF、因此此原則允許LIF用於外部DNS、AD、LDAP或NIS伺服器的傳出連線。如果您偏好這些連線只使用管理生命期、可以從此原則中移除這些服務。
+
+
+
+ a| 
+預設資料iSCSI
+ a| 
+資料核心、資料iSCSI
+ a| 
+iSCSI
+ a| 
+用於傳輸iSCSI資料流量的LIF。
+
+
+
+ a| 
+預設資料-NVMe-TCP
+ a| 
+資料核心、資料-NVMe-TCP
+ a| 
+NVMe TCP
+ a| 
+用於傳輸NVMe/TCP資料流量的生命生命量。
 
 |===
-下表列出可用於資料SVM的服務、以及從ONTAP 《SVM》9.10.1起、LIF容錯移轉原則所受到的任何限制：
+下表列出可用於資料SVM的服務、以及截至ONTAP 《支援資訊》的容錯移轉原則所受到的任何限制（如《支援資訊安全規範》）。
 
 [cols="25,25,50"]
 |===
@@ -282,7 +304,7 @@ SSH管理存取服務
  a| 
 -
  a| 
-HTTP管理存取服務
+介紹於《適用於HTTP管理存取的服務部》（英文）ONTAP 9.10.1
 
 
 
@@ -309,7 +331,7 @@ portmap管理存取服務
  a| 
 -
  a| 
-SNMP伺服器管理存取服務
+介紹於《S59.10.1 Services for SNMP server management access.》（ONTAP 英文）
 
 
 
@@ -363,7 +385,7 @@ iSCSI資料服務
  a| 
 -
  a| 
-備份NDMP可控制資料服務
+推出於本文件中的功能為：Data Service ONTAP
 
 
 
@@ -372,7 +394,7 @@ iSCSI資料服務
  a| 
 -
  a| 
-DNS伺服器資料服務
+推出於功能介紹的功能為ONTAP
 
 
 
@@ -390,7 +412,7 @@ DNS伺服器資料服務
  a| 
 僅限主連接埠
  a| 
-NVMe TCP資料服務
+介紹於NVM9.10.1 NVMe TCP資料服務ONTAP
 
 
 
@@ -407,12 +429,10 @@ NVMe TCP資料服務
 * 如果使用資料服務清單建立資料SVM、則會使用指定的服務來建立該SVM中的內建「預設資料檔案」和「預設資料區塊」服務原則。
 * 如果在建立資料SVM時未指定資料服務清單、則會使用預設的資料服務清單來建立該SVM中的內建「預設資料檔案」和「預設資料區塊」服務原則。
 +
-預設的資料服務清單包括iSCSI、NFS、SMB及FlexCache 支援服務。
+預設的資料服務清單包括iSCSI、NFS、NVMe、SMB及FlexCache 支援服務。
 
 * 如果LIF是以資料傳輸協定清單建立、則會將相當於指定資料傳輸協定的服務原則指派給LIF。
-+
-如果不存在等效的服務原則、則會建立自訂服務原則。
-
+* 如果不存在等效的服務原則、則會建立自訂服務原則。
 * 如果在沒有服務原則或資料傳輸協定清單的情況下建立LIF、預設會將預設資料檔案服務原則指派給LIF。
 
 
@@ -445,6 +465,36 @@ NVMe TCP資料服務
 
 
 | 服務 | SVM限制 | 說明 
+
+
+ a| 
+管理-廣告用戶端
+ a| 
+-
+ a| 
+從《支援支援》9.11.1開始ONTAP 、ONTAP 支援Active Directory用戶端服務、以進行外部AD伺服器的傳出連線。
+
+
+
+| 管理DNS用戶端  a| 
+-
+ a| 
+從功能支援的版本起、功能支援DNS用戶端服務、以便連線至外部DNS伺服器。ONTAP ONTAP
+
+
+
+| 管理- LDAP用戶端  a| 
+-
+ a| 
+從功能支援的版本起、支援LDAP用戶端服務、以進行外部LDAP伺服器的傳出連線。ONTAP ONTAP
+
+
+
+| 管理NIS用戶端  a| 
+-
+ a| 
+從功能支援的版本起、功能支援NIS用戶端服務、以進行外部NIS伺服器的傳出連線。ONTAP ONTAP
+
 
 
  a| 

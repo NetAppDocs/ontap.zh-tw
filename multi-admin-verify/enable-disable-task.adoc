@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/enable-disable-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, enable, disable, approval, groups, cli, system manager 
+summary: 必須明確啟用多管理員驗證（MAV）。啟用多管理員驗證後、必須取得MAV核准群組（MAV系統管理員）的系統管理員核准、才能將其刪除。 
+---
+= 啟用及停用多管理員驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必須明確啟用多管理員驗證（MAV）。啟用多管理員驗證後、必須取得MAV核准群組（MAV系統管理員）的系統管理員核准、才能將其刪除。
+
+啟用MAV之後、修改或停用MAV需要MAV管理員核准。
+
+
+NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員驗證功能、請聯絡NetApp支援部門、並提及下列知識庫文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在無法使用MAV管理時停用多管理員驗證"^]。
+
+啟用MAV時、您可以全域指定下列參數。
+
+核准群組:: 全域核准群組清單。至少需要一個群組才能啟用MAV功能。
+必要的核准者:: 執行受保護作業所需的核准者數量。預設和最小數字為1。
++
+--
+*附註：*必要的核准者人數必須少於預設核准群組中唯一核准者的總數。
+
+--
+核准過期（小時、分鐘、秒）:: MAV管理員必須回應核准要求的期間。預設值為1小時（1小時）、支援的最小值為1秒、支援的最大值為14天（14d）。
+執行過期（小時、分鐘、秒）:: 要求系統管理員必須完成以下作業的期間：預設值為1小時（1小時）、支援的最小值為1秒、支援的最大值為14天（14d）。
+
+
+您也可以針對特定項目覆寫任何這些參數 link:manage-rules-task.html["營運規則。"]
+
+
+
+== System Manager程序
+
+. 識別要接收多管理員驗證的系統管理員。
++
+.. 按一下*叢集>設定。*
+.. 按一下 image:icon_arrow.gif["藍色箭頭圖示"] 緊鄰*使用者與角色*
+.. 按一下 image:icon_add.gif["新增圖示"] 在*使用者*下
+.. 視需要修改名單。
++
+如需詳細資訊、請參閱 link:../task_security_administrator_access.html["控制系統管理員存取權。"]
+
+
+
+. 建立至少一個核准群組並新增至少一個規則、以啟用多管理員驗證。
++
+.. 按一下*叢集>設定。*
+.. 按一下 image:icon_gear.gif["齒輪圖示"] 在「*安全性*」區段的「*多管理員核准*」旁邊。
+.. 按一下 image:icon_add.gif["新增圖示"] 新增至少一個核准群組。
++
+*** 名稱–輸入群組名稱。
+*** 核准者：從使用者清單中選取核准者。
+*** 電子郵件地址–輸入電子郵件地址。
+*** 預設群組–選取群組。
+
+
+.. 至少新增一個規則。
++
+*** 作業–從清單中選取支援的命令。
+*** 查詢–輸入任何所需的命令選項和值。
+*** 選用參數；保留空白以套用全域設定、或為特定規則指派不同的值以覆寫全域設定。
++
+**** 必要的核准人數
+**** 核准群組
+
+
+
+
+.. 按一下*進階設定*以檢視或修改預設值。
++
+*** 必要的核准人數（預設：1）
+*** 執行要求過期（預設：1小時）
+*** 核准要求過期（預設：1小時）
+*** 郵件伺服器*
+*** 寄件者電子郵件地址*
++
+*這些更新在「通知管理」下管理的電子郵件設定。如果尚未設定、系統會提示您進行設定。
+
+
+
+.. 按一下「*啟用*」以完成MAV初始組態。
+
+
+
+
+初始組態之後、目前的MAV狀態會顯示在*多管理員核准*方塊中。
+
+* 狀態（已啟用或未啟用）
+* 需要核准的作用中作業
+* 處於擱置狀態的未處理要求數
+
+
+您可以按一下以顯示現有的組態 image:icon_arrow.gif["藍色箭頭圖示"]。需要MAV核准才能編輯現有的組態。
+
+若要停用多管理員驗證：
+
+. 按一下*叢集>設定。*
+. 按一下 image:icon_gear.gif["齒輪圖示"] 在「*安全性*」區段的「*多管理員核准*」旁邊。
+. 按一下「已啟用」切換按鈕。
++
+必須取得MAV核准才能完成此作業。
+
+
+
+
+
+== CLI程序
+
+在CLI中啟用MAV功能之前、請先至少啟用一項 link:manage-groups-task.html["MAV系統管理員群組"] 必須已建立。
+
+[cols="50,50"]
+|===
+| 如果您想… | 輸入此命令 
+
+
+ a| 
+啟用MAV功能
+ a| 
+「安全性多管理驗證修改-approvid-Groups _Group1_[,_group2_...] [-required核准人_n__]-啟用true [-execution -f過期[_n_h_h][_n_m_m][_n_s_s_s]][-approvid-過期[_n_h][_n_m_m][_n_s_s]]
+
+*範例*：下列命令可啟用具有1個核准群組、2個必要核准者及預設到期期間的MAV。
+
+[listing]
+----
+cluster-1::> security multi-admin-verify modify -approval-groups mav-grp1 -required-approvers 2 -enabled true
+----
+至少新增一組、以完成初始組態 link:manage-rules-task.html["營運規則："]
+
+
+
+ a| 
+修改MAV組態（需要MAV核准）
+ a| 
+「安全性多管理員驗證核准群組修改[-approving-Groups _Group1_[,_group2_...]」 [-required核准者_n__][-execution -f過期[__nd_h][__nd_m_m][_n_s_s]][-approvid-過期[_n_h][_n_m_m][_n_s_s]]
+
+
+
+ a| 
+驗證MAV功能
+ a| 
+「安全的多管理員驗證顯示」
+
+*範例：*
+
+....
+cluster-1::> security multi-admin-verify show
+Is      Required  Execution Approval Approval
+Enabled Approvers Expiry    Expiry   Groups
+------- --------- --------- -------- ----------
+true    2         1h        1h       mav-grp1
+....
+
+
+ a| 
+停用MAV功能（需要MAV核准）
+ a| 
+「安全性多管理驗證修改-啟用假」
+
+|===

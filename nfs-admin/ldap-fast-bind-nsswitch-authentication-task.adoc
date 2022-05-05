@@ -1,0 +1,66 @@
+---
+permalink: /nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html 
+sidebar: sidebar 
+keywords: use, ldap, fast, bind, authentication, configure 
+summary: 從SURF9.11.1開始ONTAP 、您可以利用LDAP _fast bind_Functionality（也稱為_並行 連結）、以更快、更簡單的用戶端驗證要求。若要使用此功能、LDAP伺服器必須支援快速連結功能 
+---
+= 使用LDAP快速連結進行Nsswitch驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從SURF9.11.1開始ONTAP 、您可以利用LDAP _fast bind_Functionality（也稱為_並行 連結）、以更快、更簡單的用戶端驗證要求。若要使用此功能、LDAP伺服器必須支援快速連結功能。
+
+如果沒有快速連結、ONTAP 則使用LDAP Simple Bind來驗證LDAP伺服器的管理使用者。利用這種驗證方法、ONTAP 將使用者或群組名稱傳送至LDAP伺服器、接收儲存的雜湊密碼、並將伺服器雜湊代碼與本機使用者密碼產生的雜湊密碼進行比較。如果完全相同、ONTAP 則此功能會授予登入權限。
+
+利用快速連結功能、ONTAP 透過安全連線、僅將使用者認證（使用者名稱和密碼）傳送至LDAP伺服器。然後LDAP伺服器會驗證這些認證資料、並指示ONTAP 資訊技術授予登入權限。
+
+快速連結的優點之一是ONTAP 、不需要支援LDAP伺服器所支援的每一種新雜湊演算法、因為密碼雜湊是由LDAP伺服器執行。
+
+link:https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/dc4eb502-fb94-470c-9ab8-ad09fa720ea6["深入瞭解如何使用快速連結。"^]
+
+您可以使用現有的LDAP用戶端組態進行LDAP快速連結。不過、強烈建議將LDAP用戶端設定為TLS或LDAPS、否則密碼會以純文字透過線路傳送。
+
+若要在ONTAP 整個環境中啟用LDAP快速連結、您必須滿足下列需求：
+
+* 必須在支援快速連結的LDAP伺服器上設定支援使用者的支援。ONTAP
+* 必須在名稱服務交換器（nsswitch）資料庫中設定LDAP的支援功能。ONTAP
+* 必須使用FAST Bind設定NS交換 器驗證的使用者和群組帳戶。ONTAP
+
+
+.步驟
+. 請向LDAP管理員確認LDAP伺服器支援LDAP快速連結。
+. 確保ONTAP LDAP伺服器上已設定了這個使用者認證資料。
+. 確認已針對LDAP快速連結正確設定管理或資料SVM。
++
+.. 若要確認LDAP FAST Bind伺服器已列在LDAP用戶端組態中、請輸入：
++
+「Vserver服務名稱服務LDAP用戶端展示」
+
++
+link:https://docs.netapp.com/us-en/ontap/nfs-config/create-ldap-client-config-task.html["瞭解LDAP用戶端組態。"]
+
+.. 若要確認「LDAP」是nsswitch「passwd」資料庫的設定來源之一、請輸入：
++
+「Vserver服務名稱服務n-switchshow」
+
++
+link:https://docs.netapp.com/us-en/ontap/nfs-config/configure-name-service-switch-table-task.html["深入瞭解nsswitch組態。"]
+
+
+
+. 確保管理使用者正在使用nsswitch進行驗證、且其帳戶中已啟用LDAP快速連結驗證。
++
+** 對於現有使用者、請輸入「安全登入修改」、並確認下列參數設定：
++
+nsswitch驗證方法
+
++
+「is、LDAP、fastbind true」
+
+** 如需新的管理使用者、請參閱 link:https://docs.netapp.com/us-en/ontap/authentication/grant-access-nis-ldap-user-accounts-task.html["啟用LDAP或NIS帳戶存取。"]
+
+
+

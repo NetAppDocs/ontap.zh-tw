@@ -28,10 +28,32 @@ xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者�
 
 如果您想要在系統管理員帳戶使用SSH公開金鑰驗證的叢集上啟用SSL FIPS模式、則在存取SVM之前、必須先確認主機金鑰演算法受到支援、然後再啟用FIPS。
 
-* 支援的金鑰類型：ECDSA-SHA2-nistp256、ssh - ed25519
-* 不支援的金鑰類型：SSH-RSA、SSH-DSS
+*附註：* ONTAP 主機金鑰演算法支援已在更新版本的版本中變更。
+
+[cols="30,30,30"]
+|===
 
 
+| 發行版ONTAP | 支援的金鑰類型 | 不支援的金鑰類型 
+
+
+ a| 
+9.11.1及更新版本
+ a| 
+ECDSA-SHA2-nistp256
+ a| 
+RSA-SHA2-512 + RSA-SHA2-256 + ssh - ed25519 + ssh - DSS + ssh - RSA
+
+
+
+ a| 
+9.10.1及更早版本
+ a| 
+ECDSA-SHA2-nistp256 + ssh編輯25519
+ a| 
+SSH-DSS + SSH-RSA
+
+|===
 沒有支援金鑰演算法的現有SSH公開金鑰帳戶、必須先以支援的金鑰類型重新設定、才能啟用FIPS、否則系統管理員驗證將會失敗。
 
 如需詳細資訊、請參閱 link:../networking/configure_network_security_using_federal_information_processing_standards_@fips@.html["使用FIPS設定網路安全性"]。

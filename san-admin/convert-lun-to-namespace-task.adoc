@@ -1,0 +1,29 @@
+---
+permalink: san-admin/convert-lun-to-namespace.html 
+sidebar: sidebar 
+keywords: lun, convert, namespace, nvme 
+summary: 從ONTAP 《支援支援支援支援服務的支援服務之初、您可以使用ONTAP 「支援服務」CLI、將現有的LUN移轉至單一NVMe命名空間、而不會遺失任何資料 
+---
+= 將LUN轉換成命名空間
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 《支援支援支援支援服務的支援服務：支援支援ONTAP 服務」的功能、從功能性的9.11.1開始、您可以使用支援服務器的CLI、將現有的LUN就地轉換為NVMe命名空間。
+
+.您需要的是 #8217 ；需要的是什麼
+* 指定的LUN不應有任何現有的igroup對應。
+* LUN不應位於MetroCluster 以實體為基礎的虛擬伺服器或SMBC關係中。
+* LUN不應是傳輸協定端點或繫結至傳輸協定端點。
+* LUN不應具有非零前置碼和/或後置串流。
+* LUN不應是Snapshot的一部分、也不應是SnapMirror關係的目的地端、做為唯讀LUN。
+
+
+.步驟
+. 您可以輸入下列命令、將LUN轉換成NVMe命名空間：
++
+「vserver NVMe命名空間convert-from LUN -vserver -lun-path」
+
+

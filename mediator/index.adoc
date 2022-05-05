@@ -23,9 +23,18 @@ summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所�
 
 
  a| 
+1.4
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS：7.6、7.7、7.8、7.9
+
+
+
+
+ a| 
 1.3
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1、8.2、8.3
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
 * CentOS：7.6、7.7、7.8、7.9
 
 
@@ -34,7 +43,7 @@ summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所�
  a| 
 1.2
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、8.0、8.1
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
 * CentOS：7.6、7.7、7.8%
 
 
@@ -61,7 +70,7 @@ NOTE: 核心版本必須符合作業系統版本。
 
 
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、8.0、8.1
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
 * CentOS：7.6、7.7、7.8%
 
  a| 
@@ -90,7 +99,7 @@ NOTE: 核心版本必須符合作業系統版本。
 
 
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1、8.2、8.3
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
 * CentOS：7.6、7.7、7.8、7.9
 
  a| 
@@ -101,10 +110,24 @@ NOTE: 核心版本必須符合作業系統版本。
 . 將媒體器從先前的版本升級至目前的版本。
 
 
+
+
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4
+* CentOS：7.6、7.7、7.8、7.9
+
+ a| 
+1.4
+ a| 
+. 從RHEL/CentOS版本升級作業系統。
+. 重新啟動主機以套用核心模組變更。
+. 將媒體器從先前的版本升級至目前的版本。
+
+
 |===
 以下列出安裝Red Hat Enterprise Linux或CentOS以及系統上相關儲存庫的最佳實務做法。安裝或設定不同的系統可能需要額外的步驟。
 
-* 您必須根據Red Hat最佳實務做法來安裝Red Hat Enterprise Linux或CentOS。由於CentOS 8.x版本的生命週期終止支援、建議您不要使用RHEL或CentOS 7.x的相容版本
+* 您必須根據Red Hat最佳實務做法來安裝Red Hat Enterprise Linux或CentOS。由於CentOS 8.x版本的生命週期結束支援、因此不建議使用CentOS 8.x的相容版本。
 * 在ONTAP Red Hat Enterprise Linux或CentOS上安裝支援程式服務時、系統必須能夠存取適當的儲存庫、以便安裝程式存取及安裝所有必要的軟體相依性。
 * 為了讓yum安裝程式在Red Hat Enterprise Linux儲存庫中找到相依軟體、您必須在Red Hat Enterprise Linux安裝期間或之後使用有效的Red Hat訂閱來註冊系統。
 +
@@ -117,7 +140,7 @@ NOTE: 核心版本必須符合作業系統版本。
 
 
 * 如果使用協力廠商防火牆：請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["防火牆需求ONTAP"^]
-* 如果Linux主機位於無法存取網際網路的位置、您可以手動安裝套件、或是必須確保所需套件可在本機儲存庫中使用。
+* 如果Linux主機位於無法存取網際網路的位置、您必須確保所需的套件可在本機儲存庫中使用。
 +
 您可以使用下列連結取得設定儲存庫的相關資訊。
 
@@ -161,22 +184,6 @@ NOTE: 核心版本必須符合作業系統版本。
 
 
 |===
-* 如果已設定簽名驗證、則必須停用該驗證。您可以透過下列兩種方式之一來完成此作業：
-+
-** 如果已設定UEFI SecureBoot機制、請將其停用。
-** 更新並重新產生grub.cfg檔案、以停用簽章驗證機制：
-+
-... 開啟/etc/default/grub檔案。
-... 將字串module.SIG_enable=0新增至Grub _CMDLINK_Linux陳述式結尾。
-... 重新產生grub.cfg檔案以實作變更：
-+
-「update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub．cfg」
-
-... 重新啟動主機。
-
-
-
-
 
 
 該媒體夾安裝套件是一個自我解壓縮的tar檔案、其中包括：
@@ -305,6 +312,9 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 
 如果您的作業系統是* CentOS 7.x*：
 
+
+NOTE: 下列範例顯示CentOS 7.6的儲存庫、可能無法用於其他CentOS版本。將基礎儲存庫用於您的CentOS版本。
+
 .步驟
 . 新增C7.6.1810 -基礎儲存庫。C7.6.1810 - Base Vault儲存庫包含ONTAP 資訊中心所需的kernel-devel套件。
 . 將下列行新增至/etc/yum、repos.d/CentOS、Vault.repo。
@@ -360,7 +370,7 @@ https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-
 [listing]
 ----
 [root@mediator-host ~]#ls
-./ontap-mediator_1.3
+ontap-mediator
 ----
 +
 如果您所在的位置無法存取網際網路、則必須確保安裝程式能夠存取所需的套件。
@@ -372,89 +382,133 @@ https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-
 
 == 安裝ONTAP 《不知道如何安裝》套件
 
+.關於這項工作
+* 從ONTAP 推出支援程式1.4開始、安全開機機制就會在UEFI系統上啟用。啟用「安全開機」時、您必須在安裝後採取其他步驟來登錄安全金鑰：
++
+** 請遵循README檔案中的指示：「/opt/netapp/lib/ontap中介器/ontap中介器/SCST_mod_keys/README、module-Signing」來簽署SCST核心模組。
+** 找到所需的金鑰：「/opt/netapp/lib/ontapp_moder_keys」
+
+
++
+
+NOTE: 安裝後、系統輸出也會提供README檔案和主要位置。
+
+
+
 .步驟
 . 安裝媒體器安裝套件、並視需要回應提示：
 +
-「/ONTAP-PROIDER_1.3」
+「/ONTAP-中介 者」
 
 +
 安裝程序會繼續建立所需的帳戶、並安裝所需的套件。如果主機上已安裝舊版的「媒體資訊器」、系統會提示您確認是否要升級。
 
 
 
-link:../media/console_output_mediator_installation.txt["安裝示例（主控台輸出）ONTAP"^]
+.安裝過程範例ONTAP ：安裝過程（主控台輸出）
+====
+[listing]
+----
+[root@scs000065018 ~]# ./ontap-mediator
+ONTAP Mediator: Self Extracting Installer
+ONTAP Mediator requires two user accounts. One for the service (netapp), and one for use by ONTAP to the mediator API (mediatoradmin).
+Would you like to use the default account names: netapp + mediatoradmin? (Y(es)/n(o)): y
+Enter ONTAP Mediator user account (mediatoradmin) password:
+Re-Enter ONTAP Mediator user account (mediatoradmin) password:
+Checking if SELinux is in enforcing mode
+Checking for default Linux firewall
+Linux firewall is running. Open ports 31784 and 3260? y(es)/n(o): y
+success
+success
 
+
+
+Preparing for installation of ONTAP Mediator packages.
+Do you wish to continue? Y(es)/n(o): y
++ Installing required packages.
+Last metadata expiration check: 1:56:17 ago on Thu 07 Apr 2022 11:35:42 AM EDT.
+Package openssl-1:1.1.1k-6.el8_5.x86_64 is already installed.
+Package openssl-devel-1:1.1.1k-6.el8_5.x86_64 is already installed.
+
+.
+.
+.
+.
+
+Dependencies resolved.
+Nothing to do.
+Complete!
+OS package installations finished
++ Installing ONTAP Mediator. (Log: /tmp/ontap_mediator.5gmxnI/ontap-mediator/install_20220407133105.log)
+    This step will take several minutes. Use the log file to view progress.
+Sudo include verified
+ONTAP Mediator logging enabled
++ Install successful. (Moving log to /opt/netapp/lib/ontap_mediator/log/install_20220407133105.log)
++ WARNING: This system supports UEFI
+           Secure Boot (SB) is currently enabled on this system.
+           The following action need be taken:
+           Using the keys in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys follow
+           instructions in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing
+           to sign the SCST kernel module. Note that reboot will be needed.
+     SCST will not start automatically when Secure Boot is enabled and not configured properly.
++ Note: ONTAP Mediator uses a kernel module compiled specifically for the current
+        system OS. Using 'yum update' to upgrade the kernel may cause a service
+        interruption.
+    For more information, see /opt/netapp/lib/ontap_mediator/README
+[root@scs000065018 ~]#
+----
+====
 
 
 == 驗證安裝
 
 .步驟
-. 執行下列命令以檢視ONTAP 「畫面資訊中心」服務的狀態：
+. 執行下列命令以檢視ONTAP 「資訊不全」服務的狀態：
 +
-《stystemctl》
-
-+
-[listing]
-----
- [root@scspr1915530002 ~]# systemctl status ontap_mediator mediator-scst
-
-        ∙ ontap_mediator.service - ONTAP Mediator
-            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/ontap_mediator.service; enabled; vendor preset: disabled)
-
-            Active: active (running) since Thu 2020-06-18 09:55:02 EDT; 3 days ago
-
-         Main PID: 3559 (uwsgi)
-
-            Status: "uWSGI is ready"
-
-            CGroup: /system.slice/ontap_mediator.service
-
-                    \u251c\u25003559 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-                    \u251c\u25004510 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-                    \u2514\u25004512 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-
-
-         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting ONTAP Mediator...
-
-         Jun 18 09:54:45 scspr1915530002 ontap_mediator[3559]: [uWSGI] getting INI configuration from /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-         Jun 18 09:55:02 scspr1915530002 systemd[1]: Started ONTAP Mediator.
-
-
-
-         ∙ mediator-scst.service
-            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/mediator-scst.service; enabled; vendor preset: disabled)
-
-            Active: active (running) since Thu 2020-06-18 09:54:51 EDT; 3 days ago
-
-           Process: 3564 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
-
-         Main PID: 4202 (iscsi-scstd)
-
-            CGroup: /system.slice/mediator-scst.service
-
-                    \u2514\u25004202 /usr/local/sbin/iscsi-scstd
-
-
-
-         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting mediator-scst.service...
-
-         Jun 18 09:54:48 scspr1915530002 iscsi-scstd[4200]: max_data_seg_len 1048576, max_queued_cmds 2048
-
-         Jun 18 09:54:51 scspr1915530002 scst[3564]: Loading and configuring SCST[  OK  ]
-
-         Jun 18 09:54:51 scspr1915530002 systemd[1]: Started mediator-scst.service.
-
-         [root@scspr1915530002 ~]#
-----
-. 確認ONTAP 使用的連接埠：Netstat
+.. RUN：「ystemctl STATUS ONTAP_ONI者」
 +
 [listing]
 ----
-         [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
+[root@scspr1915530002 ~]# systemctl status ontap_mediator
+
+ ontap_mediator.service - ONTAP Mediator
+Loaded: loaded (/etc/systemd/system/ontap_mediator.service; enabled; vendor preset: disabled)
+Active: active (running) since Mon 2022-04-18 10:41:49 EDT; 1 weeks 0 days ago
+Process: 286710 ExecStop=/bin/kill -s INT $MAINPID (code=exited, status=0/SUCCESS)
+Main PID: 286712 (uwsgi)
+Status: "uWSGI is ready"
+Tasks: 3 (limit: 49473)
+Memory: 139.2M
+CGroup: /system.slice/ontap_mediator.service
+      ├─286712 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      ├─286716 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      └─286717 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+[root@scspr1915530002 ~]#
+----
+.. RUN：「ystemctl STATUS SCIer-scst」
++
+[listing]
+----
+[root@scspr1915530002 ~]# systemctl status mediator-scst
+   Loaded: loaded (/etc/systemd/system/mediator-scst.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2022-04-18 10:41:47 EDT; 1 weeks 0 days ago
+  Process: 286595 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
+ Main PID: 286662 (iscsi-scstd)
+    Tasks: 1 (limit: 49473)
+   Memory: 1.2M
+   CGroup: /system.slice/mediator-scst.service
+           └─286662 /usr/local/sbin/iscsi-scstd
+
+[root@scspr1915530002 ~]#
+----
+
+
+. 確認ONTAP 使用的連接埠：「Netstat」
++
+[listing]
+----
+[root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
 
          tcp   0   0 0.0.0.0:31784   0.0.0.0:*      LISTEN
 
@@ -471,5 +525,5 @@ link:../media/console_output_mediator_installation.txt["安裝示例（主控台
 現在已安裝並執行此功能。ONTAP必須在ONTAP 不完整的儲存系統中執行進一步的組態、才能使用「內化器」功能：
 
 * 若要在ONTAP 不實的IP組態中使用此功能、MetroCluster 請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["從ONTAP 一套不實的IP組態設定「不實不作」MetroCluster 服務"^]
-* 若要使用SnapMirror營運不中斷、請參閱 xref:../smbc/smbc_install_confirm_ontap_cluster.html[安裝ONTAP 「支援中心服務」並確認ONTAP 「支援中心」組態]
+* 若要使用SnapMirror營運不中斷、請參閱 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html["安裝ONTAP 「支援中心服務」並確認ONTAP 「支援中心」組態"^]
 

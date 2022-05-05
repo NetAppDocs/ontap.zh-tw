@@ -1,0 +1,107 @@
+---
+permalink: flexgroup/manage-client-async-dir-delete-task.html 
+sidebar: sidebar 
+keywords: perform, directory, enable, delete, files, asynchronous, client rights, SMB, NFS, share, flexvol, flex vol, flexgroup, flex group 
+summary: 從ONTAP SURF9.11.1開始、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端執行低延遲的_fast目錄刪除_作業。啟用非同步刪除時、NFS用戶端可以使用「mv」命令、SMB用戶端可以使用「rename」命令刪除指定磁碟區上的目錄、並將目錄移至預設名為.ontaptrashbin的隱藏目錄。 
+---
+= 管理用戶端權限以快速刪除目錄
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP SURF9.11.1開始、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端自行執行低延遲的_fast目錄刪除_作業。在叢集上啟用非同步刪除時、Linux用戶端使用者可以使用「mv」命令、Windows用戶端使用者可以使用「rename」命令、將目錄移至預設名為.ontaptrashbin的隱藏目錄、以快速刪除指定磁碟區上的目錄。
+
+
+
+== 啟用用戶端非同步目錄刪除
+
+.步驟
+. 在叢集CLI中、進入進階權限模式：「權限進階」
+. 啟用用戶端非同步刪除、並視需要提供trashbin目錄的替代名稱：
++
+「Volume file asal同步 刪除用戶端可啟用volume _volname_ vserver _vserverName_ trashbinname _name_」
+
++
+使用預設垃圾桶名稱的範例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client enable -volume v1 -vserver  vs0
+
+Info: Async directory delete from the client has been enabled on volume "v1" in
+      Vserver "vs0".
+----
++
+指定替代垃圾桶名稱的範例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client enable -volume test -trashbin ntaptrash -vserver vs1
+
+Success: Async directory delete from the client is enabled on volume "v1" in
+      Vserver "vs0".
+----
+. 確認已啟用用戶端非同步刪除：
++
+「Volume file as同步 刪除用戶端show」
+
++
+範例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client show
+
+Vserver Volume      async-delete client TrashBinName
+------------ ------------ ----------------------- -------------
+vs1          vol1         Enabled          .ntaptrash
+vs2          vol2         Disabled          -
+
+2 entries were displayed.
+----
+
+
+
+
+== 停用用戶端非同步目錄刪除
+
+.步驟
+. 在叢集CLI中、停用用戶端非同步目錄刪除：
++
+「Volume file asal同步 刪除用戶端停用Volume _volname_ vserver _vserverName_」
+
++
+範例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client disable -volume vol1 -vserver vs1
+
+       Success: Asynchronous directory delete client disabled successfully on volume.
+----
+. 確認用戶端非同步刪除已停用：
++
+「Volume file as同步 刪除用戶端show」
+
++
+範例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client show
+
+Vserver      Volume      async-delete client      TrashBinName
+------------ ------------ ----------------------- -------------
+vs1          vol1         Disabled                -
+vs2          vol2         Disabled                -
+
+2 entries were displayed.
+----
+

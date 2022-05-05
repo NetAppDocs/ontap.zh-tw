@@ -96,6 +96,53 @@ summary: 對於使用WORM儲存設備、以未經修改的形式保留檔案以�
  a| 
 是的、從ONTAP SES9.5開始
 
+|===
+
+
+== 支援且不支援SnapLock 的功能
+
+下表顯示SnapLock 支援的功能、包括「不符合需求」模式SnapLock 、「不符合需求」模式或「不符合需求」模式、或兩者：
+
+|===
+
+
+| 功能 | 支援SnapLock 不受支援的功能 | 支援SnapLock 支援不受支援的企業 
+
+
+ a| 
+一致性群組
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SAN
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror同步
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror營運不中斷
+ a| 
+否
+ a| 
+否
+
 
 
  a| 
@@ -154,7 +201,7 @@ SM磁帶
 
 所有MetroCluster 的支援鏡射Aggregate的組態。請參閱ONTAP 《支援非MetroCluster 鏡射的集合體發行說明」、以判斷您的支援不支援鏡射的組態。
 
-https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["發行說明ONTAP"]
+https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["發行說明ONTAP"^]
  a| 
 否
 
@@ -172,6 +219,37 @@ https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["發行說明
 您應該注意FabricPool 、任何資料若不再受到SnapLock 任何資料的保護、而將其納入公有雲或私有雲、則可由雲端管理員刪除。
 
 ====
+
+
+ a| 
+資料量FlexGroup
+ a| 
+是的、從ONTAP 功能性的問題9.11.1開始、但不支援下列功能：
+
+* 合法持有
+* 以事件為基礎的保留
+* 適用於LockVault SnapLock
+
+
+您也應該瞭解下列行為：
+
+* 一個現象區的Volume法規遵循時鐘（VCC）FlexGroup 由根部的VCC決定。所有非根成員的VCC都會與根VCC密切同步。
+* 僅能在整個的整個過程中設定組態屬性。SnapLock FlexGroup個別成員不能具有不同的組態內容、例如預設保留時間和自動提交期間。
+
+ a| 
+是的、從ONTAP 功能性的問題9.11.1開始、但不支援下列功能：
+
+* 合法持有
+* 以事件為基礎的保留
+* 適用於LockVault SnapLock
+
+
+您也應該瞭解下列行為：
+
+* 一個現象區的Volume法規遵循時鐘（VCC）FlexGroup 由根部的VCC決定。所有非根成員的VCC都會與根VCC密切同步。
+* 僅能在整個的整個過程中設定組態屬性。SnapLock FlexGroup個別成員不能具有不同的組態內容、例如預設保留時間和自動提交期間。
+
+
 |===
 
 

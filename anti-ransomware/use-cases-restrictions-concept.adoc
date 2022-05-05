@@ -21,6 +21,47 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 [role="lead"]
 在目前的版本中、勒索軟體保護最適合NAS環境。未來版本將提供對其他環境的支援。
 
+支援的平台：ONTAP
+
+[cols="2*"]
+|===
+| 平台 | 可用的開頭... 
+
+
+ a| 
+內部部署ONTAP
+ a| 
+零點9.10.1 ONTAP
+
+
+
+ a| 
+Cloud Volumes ONTAP
+ a| 
+零點9.11.1. ONTAP
+
+
+
+ a| 
+適用於AWS和Google Cloud的Cloud Volume Services
+ a| 
+不支援
+
+
+
+ a| 
+Azure NetApp Files
+ a| 
+不支援
+
+
+
+ a| 
+ONTAP Select
+ a| 
+不支援
+
+|===
 適合的工作負載：
 
 * NFS儲存設備上的資料庫
@@ -46,11 +87,6 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 * SAN環境
 * 不支援的S3環境ONTAP
 * NFS上的VMDK
-* Cloud Volumes ONTAP
-* 適用於AWS和Google Cloud的Cloud Volume Services
-* Azure NetApp Files
-* Amazon FSX for ONTAP Sf
-* ONTAP Select
 
 
 Volume需求：
@@ -90,3 +126,5 @@ Volume需求：
 == 偵測到勒索軟體時、自動Snapshot複本的運作方式
 
 為了取得最佳的還原點、反勒索軟體功能會在偵測到異常檔案活動時、立即建立自動Snapshot複本。不過、反勒索軟體功能並不會立即標示警示、而是需要執行分析、確認可疑活動符合勒索軟體設定檔、然後才產生警示。此程序可能需要60分鐘。如果分析判斷活動並不可疑、則不會產生警示、但自動建立的Snapshot複本會在檔案系統上保留至少兩天。
+
+從VMware 9.11.1開始ONTAP 、您可以控制反勒索軟體Snapshot複本的數量和保留期間、這些複本會自動產生以因應可疑的勒索軟體攻擊。瞭解操作方法 link:modify-automatic-shapshot-options-task.html["修改自動Snapshot複本的選項"]。
