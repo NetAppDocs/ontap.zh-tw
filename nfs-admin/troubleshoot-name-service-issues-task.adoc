@@ -5,6 +5,7 @@ keywords: troubleshoot, name, service, issue
 summary: 當用戶端因為名稱服務問題而遭遇存取失敗時、您可以使用vserver服務名稱服務getxxbyyy命令系列手動執行各種名稱服務查詢、並檢查查詢的詳細資料和結果、以協助疑難排解。 
 ---
 = 疑難排解名稱服務問題
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -32,53 +33,79 @@ summary: 當用戶端因為名稱服務問題而遭遇存取失敗時、您可�
 
 .步驟
 . 執行下列其中一項動作：
-+
-....
-[cols="2*",options="header"]
+
+
 |===
-| To retrieve the...| Use the command...
-a|
-IP address of a host name
-a|
-`vserver services name-service getxxbyyy getaddrinfo`     `vserver services name-service getxxbyyy gethostbyname` (IPv4 addresses only)
-a|
-Members of a group by group ID
-a|
-`vserver services name-service getxxbyyy getgrbygid`
-a|
-Members of a group by group name
-a|
-`vserver services name-service getxxbyyy getgrbyname`
-a|
-List of groups a user belongs to
-a|
-`vserver services name-service getxxbyyy getgrlist`
-a|
-Host name of an IP address
-a|
-`vserver services name-service getxxbyyy getnameinfo`     `vserver services name-service getxxbyyy gethostbyaddr` (IPv4 addresses only)
-a|
-User information by user name
-a|
-`vserver services name-service getxxbyyy getpwbyname`     You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
-a|
-User information by user ID
-a|
-`vserver services name-service getxxbyyy getpwbyuid`
-....
-+
-....
-You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
-a|
-Netgroup membership of a client
-a|
-`vserver services name-service getxxbyyy netgrp`
-a|
-Netgroup membership of a client using netgroup-by-host search
-a|
-`vserver services name-service getxxbyyy netgrpbyhost`
+
+
+| 若要擷取... | 使用命令... 
+
+
+ a| 
+主機名稱的IP位址
+ a| 
+「Vserver services name-service getxxbyyyy getaddrinfo'「vserver services name-service getxxbyyyy gethostbyname」（僅限IPv4位址）
+
+
+
+ a| 
+依群組ID的群組成員
+ a| 
+「vserver服務名稱服務getxxbyyyy getgrbygid」
+
+
+
+ a| 
+群組成員（依群組名稱）
+ a| 
+「vserver服務名稱服務getxxbyyyy getgrbyname」
+
+
+
+ a| 
+使用者所屬的群組清單
+ a| 
+「vserver服務名稱服務getxxbyyyy getgrlist」
+
+
+
+ a| 
+IP位址的主機名稱
+ a| 
+「Vserver services name-service getxxbyyyy getnameinfo'「vserver services name-service getxxbyyyy gethostbyaddr」（僅限IPv4位址）
+
+
+
+ a| 
+使用者名稱的使用者資訊
+ a| 
+「vserver services name-service getxxbyyyy getpwbyname」您可以將「-use-RBAC」參數指定為「true」、藉此測試RBAC使用者的名稱解析。
+
+
+
+ a| 
+使用者ID的使用者資訊
+ a| 
+「vserver services name-service getxxbyyyy getpwbyuid」您可以將「-use-RBAC」參數指定為「true」來測試RBAC使用者的名稱解析。
+
+
+
+ a| 
+用戶端的網路群組成員資格
+ a| 
+「vserver services name-service getxxbyyy netgrp」
+
+
+
+ a| 
+使用netgroup by host搜尋的用戶端網路群組成員資格
+ a| 
+「vserver services name-service getxxbyyy netgrpbyhost」
+
 |===
-The following example shows a DNS lookup test for the SVM vs1 by attempting to obtain the IP address for the host acast1.eng.example.com:
+下列範例顯示SVM VS1的DNS查詢測試、嘗試取得主機acast1.eng.example.com的IP位址：
+
+[listing]
 ----
 cluster1::*> vserver services name-service getxxbyyy getaddrinfo -vserver vs1 -hostname acast1.eng.example.com -address-family all -show-source true
 Source used for lookup: DNS
@@ -86,10 +113,9 @@ Host name: acast1.eng.example.com
 Canonical Name: acast1.eng.example.com
 IPv4: 10.72.8.29
 ----
-....
-+
-....
-The following example shows a NIS lookup test for the SVM vs1 by attempting to retrieve user information for a user with the UID 501768:
+下列範例顯示SVM VS1的NIS查詢測試、嘗試擷取使用者的UID 501768使用者資訊：
+
+[listing]
 ----
 cluster1::*> vserver services name-service getxxbyyy getpwbyuid -vserver vs1 -userID 501768 -show-source true
 Source used for lookup: NIS
@@ -101,10 +127,9 @@ pw_gecos:
 pw_dir: /home/jsmith
 pw_shell: /bin/bash
 ----
-The following example shows an LDAP lookup test for the SVM vs1 by attempting to retrieve user information for a user with the name ldap1:
-....
-+
-....
+下列範例顯示SVM VS1的LDAP查詢測試、嘗試擷取名稱為LDAP1之使用者的使用者資訊：
+
+[listing]
 ----
 cluster1::*> vserver services name-service getxxbyyy getpwbyname -vserver vs1 -username ldap1 -use-rbac false -show-source true
 Source used for lookup: LDAP
@@ -116,21 +141,20 @@ pw_gecos: ldap1 user
 pw_dir: /u/ldap1
 pw_shell: /bin/csh
 ----
-....
-+
- The following example shows a netgroup lookup test for the SVM vs1 by attempting to find out whether the client dnshost0 is a member of the netgroup lnetgroup136:
-+
-....
+下列範例顯示SVM VS1的網路群組查詢測試、嘗試找出用戶端dnshost0是否為netgroup lnetgroup 136的成員：
+
+[listing]
 ----
 cluster1::*> vserver services name-service getxxbyyy netgrp -vserver vs1 -netgroup lnetgroup136 -client dnshost0 -show-source true
 Source used for lookup: LDAP
 dnshost0 is a member of lnetgroup136
 ----
-....
 . 分析您執行的測試結果、並採取必要行動。
-+
-[cols="2*"]
+
+
 |===
+
+
 | 如果... | 請查看... 
 
 
@@ -160,9 +184,7 @@ DNS組態
  a| 
 主機名稱查詢失敗或逾時、而且DNS伺服器不會解析DNS短名稱（例如host1）
  a| 
-頂層網域（頂層網域）查詢的DNS組態您可以使用「vserver services name-service DNS modify」命令的「is tld-query-enabled假」選項來停用頂層網域（頂層網域）查詢。
+頂層網域（頂級域）查詢的DNS組態。您可以使用「vserver services name-service DNS modify」命令的「is tld-query-enabled假」選項來停用TLD查詢。
 
 |===
-
-
-https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf["NetApp技術報告4668：名稱服務最佳實務做法指南"]
+https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf["NetApp技術報告4668：名稱服務最佳實務做法指南"^]
