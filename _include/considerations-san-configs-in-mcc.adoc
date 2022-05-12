@@ -9,11 +9,18 @@
 * 不支援前端NVMe主機連線的支援組態。MetroCluster
 * 其他SAN傳輸協定也支援MetroCluster 在支援的支援範本上。
 * 使用SAN用戶端組態時、您必須檢查MetroCluster 「互通性對照表工具IMT 」（簡稱「互通性對照表工具」）中的附註中是否包含任何有關「支援」組態的特殊考量。
+* 作業系統和應用程式必須提供120秒的I/O恢復能力、才能支援MetroCluster 非計畫性自動切換、以及斷路器或調解器啟動的切換。
 * 該支援區在前端SAN的兩側使用相同的WWPN。MetroCluster
 
 
 
 NOTE: 在切換期間、在Fabric偵測到災難站台上的FC連接埠離線且已從名稱和目錄服務中移除此連接埠之前、仍在運作中的站台上的FC連接埠可能會登入Fabric。如果災難上的FC連接埠尚未移除、則在正常運作站台上、FC連接埠的Fabric登入嘗試可能會因為WWPN重複而遭到拒絕。FC交換器的這種行為可以變更、以認可先前裝置的登入、而非現有裝置的登入。您應該驗證此行為對其他Fabric裝置的影響。如需詳細資訊、請聯絡交換器廠商。
+
+若要深入瞭解、請參閱：
+
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html["瞭MetroCluster 解資料保護與災難恢復"]
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/task_perform_switchover_for_tests_or_maintenance.html["執行測試或維護的切換"]
+
 
 若要避免舊連接埠離線且新連接埠上線時發生重疊、請使用下列步驟來設定前端交換器：
 

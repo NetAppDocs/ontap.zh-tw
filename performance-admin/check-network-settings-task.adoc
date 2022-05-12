@@ -26,15 +26,15 @@ summary: 如果儲存系統上的網路設定與用戶端或其他網路端點�
 +
 「網路連接埠show -instance」
 
-. 將MTU連接埠設定變更為9000：
+. 變更連接埠所使用之廣播網域上的MTU：
 +
-"network port modify -node"節點_nodename_-port _port_-MTU 9000"（網路連接埠修改-nodename_-port _port_-MTU 9000）
+「網路連接埠廣播網域修改-IPSpace _IPspace_-broadcast網域_broadcast網域_-MTU _new _MTU _」
 
 
 
-以下範例將「e0a」的MTU連接埠設定變更為9000：
+下列範例將MTU連接埠設定變更為9000：
 
 [listing]
 ----
-cluster1::*> network port modify -node node0 -port e0a -mtu 9000
+network port broadcast-domain modify -ipspace Cluster -broadcast-domain Cluster -mtu 9000
 ----
