@@ -13,12 +13,12 @@ summary: 本文說明如何將LIF設定為具有RDMA功能。
 [role="lead"]
 若要透過RDMA使用NFS、您必須將LIF設定為與RDMA相容。LIF及其容錯移轉配對都必須具備RDMA功能。
 
-從ONTAP 《支援》9.10.1開始、您可以在網路介面命令上設定新的RDMA傳輸協定參數、並設定適當的服務原則。
+從《支援》9.10.1開始ONTAP 、您可以在網路介面命令上設定新的「-RDMA傳輸協定」參數、並設定適當的服務原則。
 
 .建立新LIF的程序
 . 建立LIF：
 +
-「網路介面create -vserver _vserver_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy _rose_true_true
+「網路介面create -vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy _rose_true_true
 
 +
 .. 服務原則必須是預設資料檔案或包含資料NFS網路介面服務的自訂原則。
@@ -31,12 +31,11 @@ summary: 本文說明如何將LIF設定為具有RDMA功能。
 . 您可以使用「network interface show」命令來檢查您的lifs狀態。服務原則必須包含資料NFS網路介面服務。RDMA傳輸協定清單應包含「roce」。如果上述任一條件不正確、請修改LIF。
 . 若要修改LIF、請執行：
 +
-「網路介面修改vserver _vserver_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy_policy_rewall-name -rue_rue_true_rce｛-name -true_true
+「網路介面修改Vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy_policy_rewall_name_rue_true_true
 
 
 
-如果將LIF修改為需要特定卸載傳輸協定、但目前未將LIF指派給支援該傳輸協定的連接埠、將會產生錯誤。
 
-link:../networking/create_a_lif.html["建立LIF"]
+NOTE: 如果將LIF修改為需要特定卸載傳輸協定、但目前未將LIF指派給支援該傳輸協定的連接埠、將會產生錯誤。
 
-link:../networking/what_lifs_are.html["生命是什麼"]
+xref:../networking/create_a_lif.html[建立LIF]
