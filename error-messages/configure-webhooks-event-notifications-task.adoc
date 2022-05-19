@@ -2,42 +2,93 @@
 permalink: error-messages/configure-webhooks-event-notifications-task.html 
 sidebar: sidebar 
 keywords: configure, important, ems, events, receive, email, notifications, forward, rest, api, webhook 
-summary: 若要在REST API伺服器上接收事件通知、您必須設定REST API Webhook支援。 
+summary: 您可以設定ONTAP 將重要事件通知轉送至Webhook應用程式。所需的組態步驟取決於您選擇的安全性層級。 
 ---
-= 設定重要的EMS事件、將通知轉送至REST API伺服器
+= 設定重要的EMS事件、將通知轉送到Webhook應用程式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-若要在REST API伺服器上接收事件通知、您必須設定REST API Webhook支援。
-
-.開始之前
-* 您需要支援REST API/Webhook的伺服器、才能接收EMS事件。
-* REST API伺服器可以使用伺服器端或用戶端的安全性憑證。
-* 憑證的組態由目的地決定。請參閱下列內容、以瞭解根據目的地的憑證組態總覽：
-+
-** * http *：-不含憑證
-** * https *：-伺服器憑證已由ONTAP 整個系統驗證。或者、也可以設定用戶端憑證、由ONTAP 作業系統傳送、讓伺服器進行驗證。
-
-
-* 用戶端憑證需要在來源ONTAP 版系統上安裝可用的私密金鑰和憑證。
+您可以設定ONTAP 將重要事件通知轉送至Webhook應用程式。所需的組態步驟取決於您選擇的安全性層級。
 
 
 
-NOTE: 如果您同時設定用戶端和伺服器憑證REST API轉送、則需要伺服器端憑證才能使用用戶端憑證。因此、您必須遵循用戶端指示、才能使用這兩種驗證方法。
+== 準備設定EMS事件轉送
+
+在設定ONTAP 將事件通知轉送到Webhook應用程式之前、您應該考慮幾個概念和要求。
 
 
 
-== 設定HTTP REST API轉送
+=== Webhook應用程式
 
-您可以在ONTAP 叢集執行時、在指令行輸入命令來執行此工作。
+您需要能夠接收ONTAP 不必要事件通知的Webhook應用程式。Webhook是使用者定義的回撥例行工作、可延伸執行遠端應用程式或伺服器的功能。Webhooks是由用戶端呼叫或啟動（本例ONTAP 為示例）、方法是將HTTP要求傳送至目的地URL。具體而言ONTAP 、將HTTP POST要求傳送至裝載Webhook應用程式的伺服器、以及以XML格式設定的事件通知詳細資料。
+
+
+
+=== 安全選項
+
+視傳輸層安全性（TLS）傳輸協定的使用方式而定、有多種安全選項可供選擇。您選擇的選項會決定所需ONTAP 的功能組態。
+
+
+NOTE: TLS是一種在網際網路上廣泛使用的密碼編譯傳輸協定。它使用一或多個公開金鑰憑證來提供隱私、資料完整性和驗證。這些憑證由信任的憑證授權單位核發。
+
+HTTP:: 您可以使用HTTP來傳輸事件通知。使用此組態時、連線不安全。不驗證不驗證ONTAP 客戶端和Webhook應用程式的身分。此外、網路流量並未加密或受到保護。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http["設定Webhook目的地以使用HTTP"] 以取得組態詳細資料。
+HTTPS:: 為了提高安全性、您可以在裝載Webhook例行工作的伺服器上安裝憑證。驗證Webhook應用程式伺服器及雙方身分的HTTPS傳輸協定、ONTAP 以確保網路流量的隱私性和完整性。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定Webhook目的地以使用HTTPS"] 以取得組態詳細資料。
+HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安裝用戶端憑證、進一步強化HTTPS安全性。除了驗證Webhook應用程式伺服器的身分、並保護網路流量之外、Webhook應用程式還會驗證該客戶端的身分。ONTAP ONTAP這種雙向對等驗證稱為「相互TLS」。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication["設定Webhook目的地使用HTTPS進行相互驗證"] 以取得組態詳細資料。
+
+
+.相關資訊
+* https://www.rfc-editor.org/info/rfc8446["傳輸層安全性（TLS）傳輸協定1.3版"^]
+
+
+
+
+== 設定Webhook目的地以使用HTTP
+
+您可以設定ONTAP 使用HTTP將事件通知轉送至Webhook應用程式。這是最不安全的選項、但設定起來最簡單。
 
 .步驟
-. 為篩選器「重要事件（Importation-events）：
+. 建立一個新的目的地「REstapi-EMS（REstapi-EMS））來接收事件：
 +
-「事件通知目的地create -name restapi-EMS -REST -API-URL \http://<url_to_rest_api_server>`」
+「事件通知目的地create -name restapi-EMS -REST -API-URL \http://<webhook-application>`」
+
++
+在上述命令中、您必須使用* HTTP配置作為目的地。
+
+. 建立一個通知、將「重要事件（Important）”篩選器連結至「REstapi-EMS（REstapi-EMS）目的地：
++
+「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
+
+
+
+
+
+== 設定Webhook目的地以使用HTTPS
+
+您可以設定ONTAP 使用HTTPS將事件通知轉送至Webhook應用程式。使用伺服器憑證來確認Webhook應用程式的身分識別、以及保護網路流量。ONTAP
+
+.開始之前
+* 為Webhook應用程式伺服器產生私密金鑰和憑證
+* 讓root憑證可安裝在ONTAP 整個過程中
+
+
+.步驟
+. 在裝載Webhook應用程式的伺服器上安裝適當的伺服器私密金鑰和憑證。具體的組態步驟取決於伺服器。
+. 將伺服器根憑證安裝在ONTAP
++
+「安全憑證安裝類型：server、ca」
+
++
+命令會要求提供憑證。
+
+. 建立「REstapi-EMS（接收事件）目的地：
++
+「事件通知目的地create -name restapi-EMS -REST -API-URL \https://<webhook-application>`」
+
++
+在上述命令中、您必須使用* HTTPS *配置作為目的地。
 
 . 建立通知、將「重要事件（Important）”篩選器連結至新的「REstapi-EMS（REstapi-EMS）目的地：
 +
@@ -47,56 +98,35 @@ NOTE: 如果您同時設定用戶端和伺服器憑證REST API轉送、則需要
 
 
 
-== 設定伺服器憑證HTTPS REST API轉送
+== 設定Webhook目的地使用HTTPS進行相互驗證
 
-此程序假設您先前已產生伺服器端的私密金鑰和公開憑證。它也假設您有根憑證可供安裝在ONTAP 整個過程中。
+您可以設定ONTAP 將事件通知轉送至Webhook應用程式、使用HTTPS搭配相互驗證。使用此組態有兩個憑證。使用伺服器憑證來確認Webhook應用程式的身分、並保護網路流量。ONTAP此外、裝載Webhook的應用程式會使用用戶端憑證來確認ONTAP 該客戶端的身分。
+
+您必須先執行下列步驟、才能設定ONTAP 使用功能：
+
+* 為Webhook應用程式伺服器產生私密金鑰和憑證
+* 讓root憑證可安裝在ONTAP 整個過程中
+* 為ONTAP 該驗證用戶端產生私密金鑰和憑證
+
 
 .步驟
-. 在REST API伺服器中安裝適當的伺服器私密金鑰和公開憑證。
-+
-
-NOTE: 具體指示取決於伺服器。
-
-. 將伺服器根憑證安裝在ONTAP
-+
-「安全憑證安裝類型：server、ca」
-
-+
-命令會查詢公用憑證。
-
-. 為篩選器「重要事件」建立「REstapi-EMS」目的地。
-+
-您必須使用HTTPS配置才能使用伺服器端憑證。
-
-+
-「事件通知目的地create -name restapi-EMS -REST -API-URL \https://<url_to_rest_api_server>`」
-
-. 建立通知、將「重要事件》篩選器連結至新的「REstapi-EMS（回條路徑）目的地：
-+
-「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
-
-
-
-
-
-== 設定用戶端憑證HTTPS REST API轉送
-
-用戶端憑證的使用是選用的、只有在需要伺服器進行用戶端驗證時才需要。此程序假設您先前已產生用戶端私密金鑰和公開憑證。
-
-.步驟
-. 在REST API伺服器中安裝適當的根和中繼憑證、以驗證您的用戶端憑證。
-. 將用戶端憑證安裝在ONTAP
+. 執行工作的前兩個步驟 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定Webhook目的地以使用HTTPS"] 安裝伺服器憑證、ONTAP 以便驗證伺服器的身分。
+. 在Webhook應用程式中安裝適當的根和中繼憑證、以驗證用戶端憑證。
+. 將用戶端憑證安裝ONTAP 在下列項目中：
 +
 「安全憑證安裝類型用戶端」
 
 +
-命令會查詢私密金鑰和公開憑證。
+命令會要求提供私密金鑰和憑證。
 
-. 為篩選器「重要事件」建立「REstapi-EMS」目的地。
+. 建立「REstapi-EMS（接收事件）目的地：
 +
-「事件通知目的地create -name restapi-EMS -REST -API-URL」 https://<url_to_rest_api_server>[] -Certificate -authority <用戶端憑證的發行者>-Certificate serial <用戶端憑證的序列>'
+「事件通知目的地create -name restapi-EMS -rit-api-URL \https://<webhook-application>-credite-authority <用戶端憑證的發行者>-credite-serial <用戶端憑證的序列>」
 
-. 建立通知、將「重要事件」篩選器連結至新的「REstapi-EMS」目的地。
++
+在上述命令中、您必須使用* HTTPS *配置作為目的地。
+
+. 建立通知、將「重要事件（Important）”篩選器連結至新的「REstapi-EMS（REstapi-EMS）目的地：
 +
 「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
 
