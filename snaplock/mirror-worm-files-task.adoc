@@ -46,15 +46,15 @@ image::../media/snapmirror_steps_clustered.png[此圖顯示初始化SnapMirror�
 
 .步驟
 . 識別目的地叢集。
-. 在目的地叢集上、安裝SnapLock 該資訊技術授權、初始化「完成時鐘」、然後建立SnapLock 一個「不中斷彙總」。
+. 在目的地叢集上、安裝SnapLock 該資訊安全許可證、初始化「完成時鐘」、如果您使用ONTAP 的是早於9.10.1的版本、請建立SnapLock 一個「不實」集合體。
 . 在目的地叢集上、建立SnapLock 大小等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
 +
-‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-type DP -size _size_*
+‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-SnapLock-type Compliance |企業類型DP -size _size_*
 
 +
 [NOTE]
 ====
-這個功能是從Aggregate繼承而來的、亦即「法規遵循」或「企業」SnapLock 。不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
+在不早於版本的發行版中、從Aggregate繼承而來的是「不符合要求」（即「企業」）的「不符合要求」模式。ONTAP ONTAP SnapLock不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
 
 ====
 +
@@ -63,7 +63,7 @@ image::../media/snapmirror_steps_clustered.png[此圖顯示初始化SnapMirror�
 +
 [listing]
 ----
-cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB
 ----
 . 在目的地SVM上、建立SnapMirror原則：
 +

@@ -47,15 +47,15 @@ image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「
 
 .步驟
 . 識別目的地叢集。
-. 在目的地叢集上、如SnapLock 所述、安裝不含資訊的授權、初始化「完成時鐘」、並建立SnapLock 一個不含資訊的Aggregate xref:workflow-concept.html[流程SnapLock]。
+. 在目的地叢集上、安裝SnapLock 該資訊安全許可證、初始化「完成時鐘」、如果您使用ONTAP 的是早於9.10.1的版本、請建立SnapLock 一個如所述的「不中斷彙總」 xref:workflow-concept.html[流程SnapLock]。
 . 在目的地叢集上、建立SnapLock 一個尺寸等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
 +
-‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-type DP -size _size_*
+‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-SnapLock-type Compliance |企業類型DP -size _size_*
 
 +
 [NOTE]
 ====
-從Aggregate繼承而來的是「法規遵循」或「企業」等功能。SnapLock不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
+在不早於版本的發行版中、從Aggregate繼承了「不更新版本」、「不更新版本」或「企業版本」ONTAP ONTAP SnapLock 。不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
 
 ====
 +
@@ -64,7 +64,7 @@ image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「
 +
 [listing]
 ----
-cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB
 ----
 . 在目的地叢集上、設定預設保留期間、如所述 xref:set-default-retention-period-task.adoc[設定預設保留期間]。
 +
