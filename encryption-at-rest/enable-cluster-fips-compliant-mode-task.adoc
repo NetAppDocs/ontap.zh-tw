@@ -22,6 +22,22 @@ summary: 您可以使用安全性組態修改命令搭配啟用-is FIPS的選項
 
 您必須在修改整個叢集的安全性組態之後、手動重新開機叢集節點。
 
+
+
+== 零點9.11.1RC1考量ONTAP
+
+由於修訂版9.11.1RC1、FIPS 140-2法規遵循管理模式不再使用FIPS 140-2驗證的軟體模組。ONTAP
+
+適用於HTTPS的管理與控制面板連線的OpenSSL版本升級為《The OpenSSL version for Management and Control Plane connections for HTTPS（ONTAP此版本的OpenSSL（OpenSSL 3.x FIPS Provider）尚未完成FIPS 140-2密碼模組驗證方案（CMVP）驗證程序。
+
+啟用FIPS相容模式時、用於HTTPS連線的加密演算法會與在密碼編譯演算法驗證方案（CA1938）憑證中發行的OpenSSL Project OpenSSL 3.x FIPS Provider演算法相同。*此變更僅影響ONTAP FIPS相容模式下設定的所有系統。*
+
+一旦更新版的OpenSSL模組ONTAP 在更新版的更新版本中、完成FIPS 140-2與NIST的驗證、就能解決此問題。如果您的環境需要ONTAP 以FIPS 140-2 CMVP驗證模組執行叢集管理控制面板、則建議您不要升級至9.11.1RC1。
+
+這並不會影響NetApp在REST時的加密技術、例如NSE、NVE和NAE、因為這些功能使用的密碼編譯模組與在ONTAP 還原中由OpenSSL提供的模組不同。
+
+如需詳細資訊、請參閱 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Upgrading_to_ONTAP_9.11.1RC1_results_in_FIPS_140-2_compliance_management_configuration_that_is_not_validated["升級ONTAP 至RC1RC1會產生FIPS 140-2法規遵循管理組態、但尚未驗證"^]
+
 .步驟
 . 將權限層級設為進階：
 +
