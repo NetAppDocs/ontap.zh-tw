@@ -17233,8 +17233,6 @@
 
 
 
-
-
           
         </li>
       </ul>
@@ -23519,8 +23517,6 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/error-messages/config-workflow-task.html">
         工作流程
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/error-messages/decide-send-event-notifications-task.html">
-        決定要傳送事件通知的位置
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/error-messages/configure-ems-events-send-email-task.html">
         設定EMS事件以傳送電子郵件通知
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/error-messages/configure-ems-events-notifications-syslog-task.html">
@@ -23599,7 +23595,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-05 05:30:48 +0000">05/05/2022</time>
+    <time datetime="2022-05-25 03:51:58 +0000">05/25/2022</time>
     
   
 
@@ -23683,6 +23679,29 @@
 </div>
 <div class="paragraph">
 <p>如需SSL FIPS模式組態的詳細資訊、請參閱「安全性組態修改」手冊頁。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="零點9-11-1rc1考量ontap">零點9.11.1RC1考量ONTAP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>由於修訂版9.11.1RC1、FIPS 140-2法規遵循管理模式不再使用FIPS 140-2驗證的軟體模組。ONTAP</p>
+</div>
+<div class="paragraph">
+<p>適用於HTTPS的管理與控制面板連線的OpenSSL版本升級為《The OpenSSL version for Management and Control Plane connections for HTTPS（ONTAP此版本的OpenSSL（OpenSSL 3.x FIPS Provider）尚未完成FIPS 140-2密碼模組驗證方案（CMVP）驗證程序。</p>
+</div>
+<div class="paragraph">
+<p>啟用FIPS相容模式時、用於HTTPS連線的加密演算法會與在密碼編譯演算法驗證方案（CA1938）憑證中發行的OpenSSL Project OpenSSL 3.x FIPS Provider演算法相同。<strong>此變更僅影響ONTAP FIPS相容模式下設定的所有系統。</strong></p>
+</div>
+<div class="paragraph">
+<p>一旦更新版的OpenSSL模組ONTAP 在更新版的更新版本中、完成FIPS 140-2與NIST的驗證、就能解決此問題。如果您的環境需要ONTAP 以FIPS 140-2 CMVP驗證模組執行叢集管理控制面板、則建議您不要升級至9.11.1RC1。</p>
+</div>
+<div class="paragraph">
+<p>這並不會影響NetApp在REST時的加密技術、例如NSE、NVE和NAE、因為這些功能使用的密碼編譯模組與在ONTAP 還原中由OpenSSL提供的模組不同。</p>
+</div>
+<div class="paragraph">
+<p>如需詳細資訊、請參閱 <a href="https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Upgrading_to_ONTAP_9.11.1RC1_results_in_FIPS_140-2_compliance_management_configuration_that_is_not_validated" target="_blank" rel="noopener">"升級ONTAP 至RC1RC1會產生FIPS 140-2法規遵循管理組態、但尚未驗證"</a></p>
 </div>
 </div>
 </div>
