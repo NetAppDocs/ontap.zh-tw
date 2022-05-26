@@ -22,6 +22,8 @@ summary: 建立及指派LIF的服務原則
 
 您可以為lifs建立服務原則。您可以將服務原則指派給一或多個LIF、讓LIF能夠傳輸單一服務或服務清單的流量。
 
+您需要進階權限才能執行「網路介面服務原則建立」命令。
+
 內建的服務和服務原則可用於管理資料和系統SVM上的資料和管理流量。大部分的使用案例都是使用內建服務原則而非建立自訂服務原則來滿足。
 
 您可以視需要修改這些內建服務原則。
@@ -40,7 +42,8 @@ network interface service show
 
 +
 ....
-network interface service show
+cluster1::> network interface service show
+
 Service                     Protocol:Ports
 -------                     --------------
 cluster-core                -
@@ -57,41 +60,11 @@ management-https            tcp:443
 management-ssh              tcp:22
 12 entries were displayed.
 ....
-. 建立服務原則：
+. 檢視叢集中的服務原則：
 +
 ....
-network interface service-policy create -vserver <svm_name> -policy <service_policy_name> -services <service_name> -allowed-addresses <IP_address/mask,...>
-....
-+
-** 「service_name」指定應包含在原則中的服務清單。
-** "ip_address/mask"指定允許存取服務原則中服務之位址的子網路遮罩清單。根據預設、所有指定的服務都會新增預設允許位址清單0.00.0.0/0、以允許來自所有子網路的流量。如果提供了非預設允許的位址清單、則使用該原則的LIF會設定為封鎖所有來源位址不符合任何指定遮罩的要求。
-+
-下列範例說明如何針對包含NFS和SMB服務的SVM建立svm1_data_policy資料服務原則：
+cluster1::> network interface service-policy show
 
-+
-....
-network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core -allowed-addresses 10.1.0.0/16
-....
-+
-下列範例顯示如何建立叢集間服務原則：
-
-+
-....
-network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core -allowed-addresses 10.1.0.0/16
-....
-
-
-. 確認已建立服務原則。
-+
-....
-network interface service-policy show
-....
-+
-下列輸出顯示可用的服務原則：
-
-+
-....
-network interface service-policy show
 Vserver   Policy                     Service: Allowed Addresses
 --------- -------------------------- ----------------------------------------
 cluster1
@@ -122,6 +95,91 @@ vs0
                                      management-https: 0.0.0.0/0
 
 7 entries were displayed.
+....
+. 建立服務原則：
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver <svm_name> -policy <service_policy_name> -services <service_name> -allowed-addresses <IP_address/mask,...>
+....
++
+** 「service_name」指定應包含在原則中的服務清單。
+** "ip_address/mask"指定允許存取服務原則中服務之位址的子網路遮罩清單。根據預設、所有指定的服務都會新增預設允許位址清單0.00.0.0/0、以允許來自所有子網路的流量。如果提供了非預設允許的位址清單、則使用該原則的LIF會設定為封鎖所有來源位址不符合任何指定遮罩的要求。
++
+下列範例說明如何針對包含_NFS_和_SMB_服務的SVM建立資料服務原則（_svm1_data_policy__）：
+
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core
+....
++
+下列範例顯示如何建立叢集間服務原則：
+
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core
+....
+
+
+. 確認已建立服務原則。
++
+....
+cluster1::> network interface service-policy show
+....
++
+下列輸出顯示可用的服務原則：
+
++
+....
+cluster1::> network interface service-policy show
+
+Vserver   Policy                     Service: Allowed Addresses
+--------- -------------------------- ----------------------------------------
+cluster1
+          default-intercluster       intercluster-core: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          intercluster1              intercluster-core: 0.0.0.0/0
+
+          default-management         management-core: 0.0.0.0/0
+                                     management-autosupport: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          default-route-announce     management-bgp: 0.0.0.0/0
+
+Cluster
+          default-cluster            cluster-core: 0.0.0.0/0
+
+vs0
+          default-data-blocks        data-core: 0.0.0.0/0
+                                     data-iscsi: 0.0.0.0/0
+
+          default-data-files         data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+                                     data-flexcache: 0.0.0.0/0
+
+          default-management         data-core: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          svm1_data_policy           data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+
+9 entries were displayed.
 ....
 
 
@@ -159,7 +217,7 @@ NOTE: 服務原則只能由建立服務原則時所指定之相同SVM中的LIF�
 下列範例說明如何修改LIF的服務原則、以使用預設管理服務原則：
 
 ....
-network interface modify -vserver cluster1 -lif lif1 -service-policy default-management
+cluster1::> network interface modify -vserver cluster1 -lif lif1 -service-policy default-management
 ....
 
 
@@ -174,56 +232,56 @@ network interface modify -vserver cluster1 -lif lif1 -service-policy default-man
 
 
  a| 
-建立服務原則
+建立服務原則（需要進階權限）
  a| 
 「網路介面服務原則建立」
 
 
 
  a| 
-新增其他服務項目至現有的服務原則
+新增其他服務項目至現有的服務原則（需要進階權限）
  a| 
 「網路介面服務原則附加服務」
 
 
 
  a| 
-複製現有的服務原則
+複製現有的服務原則（需要進階權限）
  a| 
 「網路介面服務原則複製」
 
 
 
  a| 
-修改現有服務原則中的服務項目
+修改現有服務原則中的服務項目（需要進階權限）
  a| 
 「網路介面服務原則修改服務」
 
 
 
  a| 
-從現有的服務原則中移除服務項目
+從現有的服務原則移除服務項目（需要進階權限）
  a| 
 「網路介面服務原則移除服務」
 
 
 
  a| 
-重新命名現有的服務原則
+重新命名現有的服務原則（需要進階權限）
  a| 
 「網路介面服務原則重新命名」
 
 
 
  a| 
-刪除現有的服務原則
+刪除現有的服務原則（需要進階權限）
  a| 
 「網路介面服務原則刪除」
 
 
 
  a| 
-將內建的服務原則還原為原始狀態
+將內建服務原則還原為原始狀態（需要進階權限）
  a| 
 「網路介面服務原則還原預設值」
 

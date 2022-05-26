@@ -26,7 +26,7 @@ link:../authentication/index.html["系統管理員驗證與RBAC"]
 .步驟
 . 建立自我簽署的數位憑證：
 +
-「安全憑證create -vserver Svm_name -type root-ca -common名稱ca_cert名稱」
+「安全性憑證建立-vserver _Svm_name_-type root-ca -common-name _ca_cert名稱_」
 
 +
 「type root-ca」選項會建立並安裝自我簽署的數位憑證、以做為憑證授權單位（CA）來簽署其他憑證。
@@ -52,7 +52,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 產生憑證簽署要求：
 +
-「安全性憑證genere-csr -common-name s1_server_name [addent_options]」
+「安全性憑證genere-csr -common-name _s2_server_name_[addent_options]」
 
 +
 簽署要求的「通用名稱」參數必須是S3伺服器名稱（FQDN）。
@@ -65,7 +65,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 使用SVM_CA簽署CSR以產生S3伺服器的憑證：
 +
-「安全性憑證符號-vserver Svm_name -ca_ca_cert名稱-ca-serial ca_cert _serial編號[addent_options]」
+「安全性憑證符號-vserver _Svm_name_-ca _ca_cert名稱_-ca-serial _ca_cert _sSerial_number_[addent_options]」
 
 +
 輸入您在先前步驟中使用的命令選項：
@@ -86,7 +86,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 在啟用S3的SVM上安裝簽署的憑證：
 +
-「安全憑證安裝-類型server -vserver Svm_name」
+「安全性憑證安裝-類型server -vserver _Svm_name_」
 
 +
 出現提示時、請輸入憑證和私密金鑰。
@@ -99,7 +99,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 取得公開金鑰憑證：
 +
-「安全證書show -vserver Svm_name -common名稱ca_cert名稱-type root-ca -instance」
+「安全證書show -vserver _svm_name_-common-name _ca_cert名稱_-type root-ca -instance」
 
 +
 儲存公開金鑰憑證以供稍後的用戶端組態使用。

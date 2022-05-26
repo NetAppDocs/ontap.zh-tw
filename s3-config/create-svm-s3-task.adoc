@@ -15,7 +15,17 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 
 如果您只是從此SVM提供S3物件儲存設備、則S3伺服器不需要任何DNS組態。不過、如果使用其他通訊協定、您可能會想要在SVM上設定DNS。
 
+當您使用System Manager設定S3存取新的或現有的儲存VM時、系統會提示您輸入憑證和網路資訊、S3物件儲存伺服器會在單一作業中建立。
+
+您應準備好輸入S3伺服器名稱（FQDN）和IP位址、以供介面角色資料使用。
+
+如果您使用的是外部CA簽署的憑證、系統會在此程序期間提示您輸入；您也可以選擇使用系統產生的憑證。
+
+[role="tabbed-block"]
 .步驟
+====
+.CLI
+--
 . 確認叢集上的S3已獲得授權：
 +
 「系統授權顯示-套件S3」
@@ -25,7 +35,7 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 
 . 建立SVM：
 +
-「vserver create -vserver Svm_name -rootvolume root_volume名稱-Aggregate Aggregate名稱-rootvolume安全型UNIX語言C。utf-8 -IPSpace IPspace_name'
+「vserver create -vserver _Svm_name_-rootvolume _root_volume名稱_-Aggregate _Aggregate名稱_-rootvolume安全型UNIX -語言C。utf-8 -IPSpace _IPspace_name_」
 
 +
 ** 將UNIX設定用於「-rootvolume安全樣式」選項。
@@ -35,7 +45,7 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 
 . 驗證新建立的SVM的組態和狀態：
 +
-「vserver show -vserver Svm_name」
+「vserver show -vserver _svm_name_」
 
 +
 「Vserver運作狀態」欄位必須顯示「執行中」狀態。如果顯示「初始化」狀態、表示根磁碟區建立等中介作業失敗、您必須刪除SVM並重新建立它。
@@ -80,3 +90,36 @@ cluster-1::> vserver show -vserver svm1.example.com
                                 Config Lock: false
                                IPspace Name: ipspaceA
 ----
+--
+.系統管理員
+--
+. 在儲存VM上啟用S3。
++
+.. 新增儲存VM：按一下「*儲存設備>儲存VM*」、然後按一下「*新增*」。
++
+如果這是沒有現有儲存VM的新系統：請按一下*儀表板>設定傳輸協定*。
+
++
+如果您要將S3伺服器新增至現有的儲存VM：請按一下「*儲存設備>儲存VM*」、選取儲存VM、按一下「*設定*」、然後按一下 image:icon_gear.gif["設定圖示"] 低於* S3 *。
+
+.. 按一下「*啟用S2*」、然後輸入「S3伺服器名稱」。
++
+這是用戶端將使用的完整網域名稱（FQDN）。
+
+.. 選取憑證類型。
++
+無論您是選擇系統產生的憑證、或是自己的憑證、用戶端存取都必須使用此憑證。
+
+.. 輸入網路介面。
+
+
+. 如果您選取系統產生的憑證、則在確認建立新的儲存VM時、會看到憑證資訊。按一下「*下載*」並儲存以供用戶端存取。
++
+** 不會再顯示秘密金鑰。
+** 如果您再次需要憑證資訊：按一下*儲存設備>儲存設備VM*、選取儲存設備VM、然後按一下*設定*。
+
+
+
+
+--
+====

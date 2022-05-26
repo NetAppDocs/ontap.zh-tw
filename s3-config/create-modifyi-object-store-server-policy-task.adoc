@@ -17,11 +17,9 @@ summary: 您可以建立可套用至物件存放區中一或多個儲存區的�
 
 您可以在物件儲存伺服器群組中指定預設或自訂原則、以在SVM層級啟用存取原則。原則只有在群組定義中指定之後才會生效。
 
-[NOTE]
-====
-使用物件儲存伺服器原則時、您可以在群組定義中指定主體（即使用者和群組）、而非在原則本身中指定主體。
 
-====
+NOTE: 使用物件儲存伺服器原則時、您可以在群組定義中指定主體（即使用者和群組）、而非在原則本身中指定主體。
+
 有三種唯讀的預設原則可供存取ONTAP 不完整的S3資源：
 
 * FullAccess
@@ -29,16 +27,22 @@ summary: 您可以建立可套用至物件存放區中一或多個儲存區的�
 * ReadOnlyAccess
 
 
-您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱「vserver object-store-server policy」手冊頁。
+您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱「vserver object-store-server policy」 link:https://docs.netapp.com/us-en/ontap-cli-9111/index.html["命令參考資料"^]。
 
+從發行版S19.1及更新版本開始ONTAP 、如果您打算支援AWS用戶端物件標記功能搭配ONTAP 使用支援版SS3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。
+
+[role="tabbed-block"]
+====
+.CLI
+--
 .步驟
 . 建立物件儲存伺服器原則：
 +
-「vserver object-store-server原則create -vserver Svm_name -policy policy_name（-註釋文字）」
+「Vserver object-store-server原則create -vserver _Svm_name_-policy _name_[-comment _text_]」
 
 . 建立原則聲明：
 +
-「vserver object-store-server policy陳述式create -vserver Svm_name」-policy policy_name -effect｛allow|deny｝-action object_store_actions -resource [-sID text]」
+「vserver object-store-server原則聲明create -vserver _svm_name_-policy _policy_name_-effect｛allow| deny｝-action _object_store_actions_-resource_store_resources_[-sID text]」
 
 +
 下列參數定義存取權限：
@@ -75,3 +79,36 @@ summary: 您可以建立可套用至物件存放區中一或多個儲存區的�
 根據預設、新的對帳單會新增至對帳單清單的結尾、並依順序處理。稍後新增或修改陳述式時、您可以選擇修改陳述式的「索引」設定、以變更處理順序。
 
 
+
+--
+.系統管理員
+--
+.步驟
+. 編輯儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下儲存虛擬機器、按一下*設定*、然後按一下 image:icon_pencil.gif["鉛筆圖示"] 在S3下。
+. 新增使用者：按一下*原則*、然後按一下*新增*。
++
+.. 輸入原則名稱、然後從群組清單中選取。
+.. 選取現有的預設原則或新增原則。
++
+新增或修改群組原則時、您可以指定下列參數：
+
++
+*** 群組：授予存取權的群組。
+*** 效果：允許或拒絕存取一或多個群組。
+*** 行動：特定群組的一個或多個儲存桶中允許的行動。
+*** 資源：一或多個儲存區內的物件路徑和名稱、這些儲存區已授予或拒絕存取權限。例如：
++
+**** ***授予對儲存VM中所有儲存區的存取權。
+**** * Bucketname*與* Bucketname/*可授予特定儲存區中所有物件的存取權。
+**** * Bucketname/readme.txt*可讓您存取特定儲存區中的物件。
+
+
+
+
+.. 如有需要、請在現有原則中新增陳述式。
+
+
+
+
+--
+====

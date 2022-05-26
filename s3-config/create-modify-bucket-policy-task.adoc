@@ -15,18 +15,28 @@ summary: 您可以將存取規則新增至預設的儲存區原則。其存取�
 
 已啟用S3的SVM必須已存在S3伺服器和儲存區。
 
+在授予權限之前、您必須先建立使用者或群組。
+
 您可以為新使用者和群組新增聲明、也可以修改現有聲明的屬性。如需更多選項、請參閱「vserver object-store-server Bucket policy」手冊頁。
 
+使用者和群組權限可在建立儲存區時或稍後視需要授予。您也可以修改儲存區容量和QoS原則群組指派。
+
+從發行版S19.1及更新版本開始ONTAP 、如果您打算支援AWS用戶端物件標記功能搭配ONTAP 使用支援版SS3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。
+
+[role="tabbed-block"]
+====
+.CLI
+--
 .步驟
 . 在庫位政策中加入聲明：
 +
-「Vserver object-store-server bucket policy add-statement -vserver Svm_name -bucket bucket_name -effect｛allow | deny｝-action object_store_actions -principiple user_and _group _name -RESERY object_store_resources[-sID text][-index integer]"
+「Vserver object-store-server Bucket policy add-statement -vserver _Svm_name_-Bucket _bucket_name_-effect｛allow| deny｝-action _object_store_actions _-principe_user_and _group_names_-resource_[-sID text][-index integer]。
 
 +
 下列參數定義存取權限：
 
 +
-[cols="2*"]
+[cols="1,3"]
 |===
 
 
@@ -80,3 +90,23 @@ cluster1::> vserver object-store-server bucket policy statement create -vserver 
 ----
 cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
 ----
+--
+.系統管理員
+--
+.步驟
+. 編輯儲存桶：按一下「*儲存設備>儲存桶*」、按一下所需的儲存桶、然後按一下「*編輯*」。新增或修改權限時、您可以指定下列參數：
++
+** 主體：授予存取權的使用者或群組。
+** 效果：允許或拒絕存取使用者或群組。
+** 行動：特定使用者或群組在儲存庫中的允許行動。
+** 資源：儲存區內已授予或拒絕存取的物件路徑和名稱。
++
+預設值*_bucketname*和*_bucketname/*會授予儲存區中所有物件的存取權。您也可以授與單一物件的存取權、例如*_Bucketname/_* readme.txt*。
+
+** 條件（選用）：嘗試存取時會評估的運算式。例如、您可以指定允許或拒絕存取的IP位址清單。
+
+
+
+
+--
+====
