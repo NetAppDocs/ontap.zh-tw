@@ -11942,48 +11942,11 @@
           
           <a target="_blank" 
             
-              href="/zh-tw/ontap/pdfs/sidebar/使用System_Manager進行S3組態設定.pdf" 
+              href="/zh-tw/ontap/pdfs/sidebar/S3組態.pdf" 
             
           >
             <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用System Manager進行S3組態設定
-          </a>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          
-          
-          
-          <a target="_blank" 
-            
-              href="/zh-tw/ontap/pdfs/sidebar/使用CLI進行S3組態.pdf" 
-            
-          >
-            <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用CLI進行S3組態
+            S3組態
           </a>
           
 
@@ -21606,22 +21569,7 @@
         <div class="na-navbar-padding"> S3物件儲存管理</div>
       </a>
       <ul><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用System Manager進行S3組態設定</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/concept_object_provision_overview.html">
-        物件儲存設備總覽
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_enable_s3_server.html">
-        啟用S3伺服器
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_buckets.html">
-        資源配置桶
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_add_s3_users_groups.html">
-        新增S3使用者和群組
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_bucket_access.html">
-        管理庫位存取
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_svm_access.html">
-        管理儲存VM存取
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用CLI進行S3組態</div>
+        <div class="na-navbar-padding"> S3組態</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/s3-config/index.html">
         總覽
@@ -23595,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-05-27 00:13:33 +0000">05/27/2022</time>
     
   
 
@@ -23626,7 +23574,7 @@
 <li>
 <p>建立自我簽署的數位憑證：</p>
 <div class="paragraph">
-<p>「安全憑證create -vserver Svm_name -type root-ca -common名稱ca_cert名稱」</p>
+<p>「安全性憑證建立-vserver <em>Svm_name</em>-type root-ca -common-name <em>ca_cert名稱</em>」</p>
 </div>
 <div class="paragraph">
 <p>「type root-ca」選項會建立並安裝自我簽署的數位憑證、以做為憑證授權單位（CA）來簽署其他憑證。</p>
@@ -23654,7 +23602,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 <li>
 <p>產生憑證簽署要求：</p>
 <div class="paragraph">
-<p>「安全性憑證genere-csr -common-name s1_server_name [addent_options]」</p>
+<p>「安全性憑證genere-csr -common-name <em>s2_server_name</em>[addent_options]」</p>
 </div>
 <div class="paragraph">
 <p>簽署要求的「通用名稱」參數必須是S3伺服器名稱（FQDN）。</p>
@@ -23669,7 +23617,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 <li>
 <p>使用SVM_CA簽署CSR以產生S3伺服器的憑證：</p>
 <div class="paragraph">
-<p>「安全性憑證符號-vserver Svm_name -ca_ca_cert名稱-ca-serial ca_cert _serial編號[addent_options]」</p>
+<p>「安全性憑證符號-vserver <em>Svm_name</em>-ca <em>ca_cert名稱</em>-ca-serial <em>ca_cert _sSerial_number</em>[addent_options]」</p>
 </div>
 <div class="paragraph">
 <p>輸入您在先前步驟中使用的命令選項：</p>
@@ -23697,7 +23645,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 <li>
 <p>在啟用S3的SVM上安裝簽署的憑證：</p>
 <div class="paragraph">
-<p>「安全憑證安裝-類型server -vserver Svm_name」</p>
+<p>「安全性憑證安裝-類型server -vserver <em>Svm_name</em>」</p>
 </div>
 <div class="paragraph">
 <p>出現提示時、請輸入憑證和私密金鑰。</p>
@@ -23712,7 +23660,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 <li>
 <p>取得公開金鑰憑證：</p>
 <div class="paragraph">
-<p>「安全證書show -vserver Svm_name -common名稱ca_cert名稱-type root-ca -instance」</p>
+<p>「安全證書show -vserver <em>svm_name</em>-common-name <em>ca_cert名稱</em>-type root-ca -instance」</p>
 </div>
 <div class="paragraph">
 <p>儲存公開金鑰憑證以供稍後的用戶端組態使用。</p>

@@ -11942,48 +11942,11 @@
           
           <a target="_blank" 
             
-              href="/zh-tw/ontap/pdfs/sidebar/使用System_Manager進行S3組態設定.pdf" 
+              href="/zh-tw/ontap/pdfs/sidebar/S3組態.pdf" 
             
           >
             <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用System Manager進行S3組態設定
-          </a>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          
-          
-          
-          <a target="_blank" 
-            
-              href="/zh-tw/ontap/pdfs/sidebar/使用CLI進行S3組態.pdf" 
-            
-          >
-            <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用CLI進行S3組態
+            S3組態
           </a>
           
 
@@ -21606,22 +21569,7 @@
         <div class="na-navbar-padding"> S3物件儲存管理</div>
       </a>
       <ul><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用System Manager進行S3組態設定</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/concept_object_provision_overview.html">
-        物件儲存設備總覽
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_enable_s3_server.html">
-        啟用S3伺服器
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_buckets.html">
-        資源配置桶
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_add_s3_users_groups.html">
-        新增S3使用者和群組
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_bucket_access.html">
-        管理庫位存取
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_svm_access.html">
-        管理儲存VM存取
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用CLI進行S3組態</div>
+        <div class="na-navbar-padding"> S3組態</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/s3-config/index.html">
         總覽
@@ -23595,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-05-27 00:13:33 +0000">05/27/2022</time>
     
   
 
@@ -23618,9 +23566,7 @@
 <img src="/us-en/ontap/images/note.svg" alt="附註">
 </td>
 <td class="content">
-<div class="paragraph">
-<p>使用物件儲存伺服器原則時、您可以在群組定義中指定主體（即使用者和群組）、而非在原則本身中指定主體。</p>
-</div>
+使用物件儲存伺服器原則時、您可以在群組定義中指定主體（即使用者和群組）、而非在原則本身中指定主體。
 </td>
 </tr>
 </table>
@@ -23642,21 +23588,29 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱「vserver object-store-server policy」手冊頁。</p>
+<p>您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱「vserver object-store-server policy」 <a href="https://docs.netapp.com/us-en/ontap-cli-9111/index.html" target="_blank" rel="noopener">"命令參考資料"</a>。</p>
 </div>
+<div class="paragraph">
+<p>從發行版S19.1及更新版本開始ONTAP 、如果您打算支援AWS用戶端物件標記功能搭配ONTAP 使用支援版SS3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。</p>
+</div>
+<div class="exampleblock tabbed-block">
+<div class="content">
+<div class="openblock">
+<div class="title">CLI</div>
+<div class="content">
 <div class="olist arabic">
 <div class="title">步驟</div>
 <ol class="arabic">
 <li>
 <p>建立物件儲存伺服器原則：</p>
 <div class="paragraph">
-<p>「vserver object-store-server原則create -vserver Svm_name -policy policy_name（-註釋文字）」</p>
+<p>「Vserver object-store-server原則create -vserver <em>Svm_name</em>-policy <em>name</em>[-comment <em>text</em>]」</p>
 </div>
 </li>
 <li>
 <p>建立原則聲明：</p>
 <div class="paragraph">
-<p>「vserver object-store-server policy陳述式create -vserver Svm_name」-policy policy_name -effect｛allow|deny｝-action object_store_actions -resource [-sID text]」</p>
+<p>「vserver object-store-server原則聲明create -vserver <em>svm_name</em>-policy <em>policy_name</em>-effect｛allow| deny｝-action <em>object_store_actions</em>-resource_store_resources_[-sID text]」</p>
 </div>
 <div class="paragraph">
 <p>下列參數定義存取權限：</p>
@@ -23701,6 +23655,71 @@
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">系統管理員</div>
+<div class="content">
+<div class="olist arabic">
+<div class="title">步驟</div>
+<ol class="arabic">
+<li>
+<p>編輯儲存虛擬機器：按一下*儲存設備&gt;儲存虛擬機器*、按一下儲存虛擬機器、按一下*設定*、然後按一下 <span class="image"><img src="../media/icon_pencil.gif" alt="鉛筆圖示"></span> 在S3下。</p>
+</li>
+<li>
+<p>新增使用者：按一下*原則*、然後按一下*新增*。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>輸入原則名稱、然後從群組清單中選取。</p>
+</li>
+<li>
+<p>選取現有的預設原則或新增原則。</p>
+<div class="paragraph">
+<p>新增或修改群組原則時、您可以指定下列參數：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>群組：授予存取權的群組。</p>
+</li>
+<li>
+<p>效果：允許或拒絕存取一或多個群組。</p>
+</li>
+<li>
+<p>行動：特定群組的一個或多個儲存桶中允許的行動。</p>
+</li>
+<li>
+<p>資源：一或多個儲存區內的物件路徑和名稱、這些儲存區已授予或拒絕存取權限。例如：</p>
+<div class="ulist">
+<ul>
+<li>
+<p>***授予對儲存VM中所有儲存區的存取權。</p>
+</li>
+<li>
+<p>* Bucketname*與* Bucketname/*可授予特定儲存區中所有物件的存取權。</p>
+</li>
+<li>
+<p>* Bucketname/readme.txt*可讓您存取特定儲存區中的物件。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>如有需要、請在現有原則中新增陳述式。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 </div>
 
     </article>

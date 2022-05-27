@@ -11951,48 +11951,11 @@
           
           <a target="_blank" 
             
-              href="/zh-tw/ontap/pdfs/sidebar/使用System_Manager進行S3組態設定.pdf" 
+              href="/zh-tw/ontap/pdfs/sidebar/S3組態.pdf" 
             
           >
             <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用System Manager進行S3組態設定
-          </a>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          
-          
-          
-          <a target="_blank" 
-            
-              href="/zh-tw/ontap/pdfs/sidebar/使用CLI進行S3組態.pdf" 
-            
-          >
-            <img src="/zh-tw/ontap/images/pdf.png" width="16" height="16"/>
-            使用CLI進行S3組態
+            S3組態
           </a>
           
 
@@ -21606,22 +21569,7 @@
         <div class="na-navbar-padding"> S3物件儲存管理</div>
       </a>
       <ul><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用System Manager進行S3組態設定</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/concept_object_provision_overview.html">
-        物件儲存設備總覽
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_enable_s3_server.html">
-        啟用S3伺服器
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_buckets.html">
-        資源配置桶
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_add_s3_users_groups.html">
-        新增S3使用者和群組
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_bucket_access.html">
-        管理庫位存取
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_object_provision_manage_svm_access.html">
-        管理儲存VM存取
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用CLI進行S3組態</div>
+        <div class="na-navbar-padding"> S3組態</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/s3-config/index.html">
         總覽
@@ -23595,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-05-27 00:13:33 +0000">05/27/2022</time>
     
   
 
@@ -23614,6 +23562,9 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>您可以為lifs建立服務原則。您可以將服務原則指派給一或多個LIF、讓LIF能夠傳輸單一服務或服務清單的流量。</p>
+</div>
+<div class="paragraph">
+<p>您需要進階權限才能執行「網路介面服務原則建立」命令。</p>
 </div>
 <div class="paragraph">
 <p>內建的服務和服務原則可用於管理資料和系統SVM上的資料和管理流量。大部分的使用案例都是使用內建服務原則而非建立自訂服務原則來滿足。</p>
@@ -23639,7 +23590,8 @@
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>network interface service show
+<pre>cluster1::&gt; network interface service show
+
 Service                     Protocol:Ports
 -------                     --------------
 cluster-core                -
@@ -23659,52 +23611,11 @@ management-ssh              tcp:22
 </div>
 </li>
 <li>
-<p>建立服務原則：</p>
+<p>檢視叢集中的服務原則：</p>
 <div class="literalblock">
 <div class="content">
-<pre>network interface service-policy create -vserver &lt;svm_name&gt; -policy &lt;service_policy_name&gt; -services &lt;service_name&gt; -allowed-addresses &lt;IP_address/mask,...&gt;</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>「service_name」指定應包含在原則中的服務清單。</p>
-</li>
-<li>
-<p>"ip_address/mask"指定允許存取服務原則中服務之位址的子網路遮罩清單。根據預設、所有指定的服務都會新增預設允許位址清單0.00.0.0/0、以允許來自所有子網路的流量。如果提供了非預設允許的位址清單、則使用該原則的LIF會設定為封鎖所有來源位址不符合任何指定遮罩的要求。</p>
-<div class="paragraph">
-<p>下列範例說明如何針對包含NFS和SMB服務的SVM建立svm1_data_policy資料服務原則：</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core -allowed-addresses 10.1.0.0/16</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>下列範例顯示如何建立叢集間服務原則：</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core -allowed-addresses 10.1.0.0/16</pre>
-</div>
-</div>
-</li>
-<li>
-<p>確認已建立服務原則。</p>
-<div class="literalblock">
-<div class="content">
-<pre>network interface service-policy show</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>下列輸出顯示可用的服務原則：</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>network interface service-policy show
+<pre>cluster1::&gt; network interface service-policy show
+
 Vserver   Policy                     Service: Allowed Addresses
 --------- -------------------------- ----------------------------------------
 cluster1
@@ -23735,6 +23646,105 @@ vs0
                                      management-https: 0.0.0.0/0
 
 7 entries were displayed.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>建立服務原則：</p>
+<div class="literalblock">
+<div class="content">
+<pre>cluster1::&gt; set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::&gt; network interface service-policy create -vserver &lt;svm_name&gt; -policy &lt;service_policy_name&gt; -services &lt;service_name&gt; -allowed-addresses &lt;IP_address/mask,...&gt;</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「service_name」指定應包含在原則中的服務清單。</p>
+</li>
+<li>
+<p>"ip_address/mask"指定允許存取服務原則中服務之位址的子網路遮罩清單。根據預設、所有指定的服務都會新增預設允許位址清單0.00.0.0/0、以允許來自所有子網路的流量。如果提供了非預設允許的位址清單、則使用該原則的LIF會設定為封鎖所有來源位址不符合任何指定遮罩的要求。</p>
+<div class="paragraph">
+<p>下列範例說明如何針對包含_NFS_和_SMB_服務的SVM建立資料服務原則（<em>svm1_data_policy_</em>）：</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cluster1::&gt; set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::&gt; network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下列範例顯示如何建立叢集間服務原則：</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cluster1::&gt; set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::&gt; network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core</pre>
+</div>
+</div>
+</li>
+<li>
+<p>確認已建立服務原則。</p>
+<div class="literalblock">
+<div class="content">
+<pre>cluster1::&gt; network interface service-policy show</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下列輸出顯示可用的服務原則：</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cluster1::&gt; network interface service-policy show
+
+Vserver   Policy                     Service: Allowed Addresses
+--------- -------------------------- ----------------------------------------
+cluster1
+          default-intercluster       intercluster-core: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          intercluster1              intercluster-core: 0.0.0.0/0
+
+          default-management         management-core: 0.0.0.0/0
+                                     management-autosupport: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          default-route-announce     management-bgp: 0.0.0.0/0
+
+Cluster
+          default-cluster            cluster-core: 0.0.0.0/0
+
+vs0
+          default-data-blocks        data-core: 0.0.0.0/0
+                                     data-iscsi: 0.0.0.0/0
+
+          default-data-files         data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+                                     data-flexcache: 0.0.0.0/0
+
+          default-management         data-core: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          svm1_data_policy           data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+
+9 entries were displayed.</pre>
 </div>
 </div>
 </li>
@@ -23801,7 +23811,7 @@ vs0
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>network interface modify -vserver cluster1 -lif lif1 -service-policy default-management</pre>
+<pre>cluster1::&gt; network interface modify -vserver cluster1 -lif lif1 -service-policy default-management</pre>
 </div>
 </div>
 </div>
@@ -23825,7 +23835,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>建立服務原則</p>
+<p>建立服務原則（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則建立」</p>
@@ -23833,7 +23843,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>新增其他服務項目至現有的服務原則</p>
+<p>新增其他服務項目至現有的服務原則（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則附加服務」</p>
@@ -23841,7 +23851,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>複製現有的服務原則</p>
+<p>複製現有的服務原則（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則複製」</p>
@@ -23849,7 +23859,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>修改現有服務原則中的服務項目</p>
+<p>修改現有服務原則中的服務項目（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則修改服務」</p>
@@ -23857,7 +23867,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>從現有的服務原則中移除服務項目</p>
+<p>從現有的服務原則移除服務項目（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則移除服務」</p>
@@ -23865,7 +23875,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>重新命名現有的服務原則</p>
+<p>重新命名現有的服務原則（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則重新命名」</p>
@@ -23873,7 +23883,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>刪除現有的服務原則</p>
+<p>刪除現有的服務原則（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則刪除」</p>
@@ -23881,7 +23891,7 @@ vs0
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>將內建的服務原則還原為原始狀態</p>
+<p>將內建服務原則還原為原始狀態（需要進階權限）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>「網路介面服務原則還原預設值」</p>
