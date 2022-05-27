@@ -2,7 +2,7 @@
 permalink: concepts/client-protocols-concept.html 
 sidebar: sidebar 
 keywords: client protocols 
-summary: 支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP 和NVMe / FC。 
+summary: 支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP NVMe / FC和S3。 
 ---
 = 用戶端傳輸協定
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC
 
 
 [role="lead"]
-支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP 和NVMe / FC。
+支援所有主要的產業標準用戶端傳輸協定：NFS、SMB、FC、FCoE、iSCSI、ONTAP NVMe / FC和S3。
 
 
 
@@ -56,3 +56,21 @@ iSCSI是一種區塊傳輸協定、可在標準乙太網路上執行。大多數
 最新的區塊傳輸協定（NVMe / FC）是專為搭配Flash型儲存設備而設計。它提供可擴充的工作階段、大幅縮短延遲、並增加平行處理量、非常適合記憶體內的資料庫和分析等低延遲和高處理量的應用程式。
 
 與FC和iSCSI不同、NVMe不使用LUN。而是使用儲存在ONTAP 功能區中的命名空間。NVMe命名空間只能透過NVMe傳輸協定存取。
+
+
+
+== S3
+
+從功能支援的S9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟用一個功能不穩定的儲存服務（S3）伺服器ONTAP 、讓您使用S3儲存桶在物件儲存設備中提供資料。
+
+支援兩種內部部署使用案例情境、以提供S3物件儲存服務：ONTAP
+
+* 將資料層移至本機叢集（層級移至本機資源庫）或遠端叢集（雲端層）上的資源桶。FabricPool
+* S3用戶端應用程式可存取本機叢集或遠端叢集上的儲存區。
+
+
+[NOTE]
+====
+如果您想要在現有叢集上使用S3功能、而不需要額外的硬體和管理、那麼支援該功能就很合適。ONTAP對於超過300TB的部署、NetApp StorageGRID 產品技術仍是NetApp物件儲存的旗艦解決方案。深入瞭解 link:https://docs.netapp.com/sgws-114/index.jsp["StorageGRID"^]。
+
+====

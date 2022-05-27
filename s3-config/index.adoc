@@ -2,7 +2,7 @@
 permalink: s3-config/index.html 
 sidebar: sidebar 
 keywords: decide, s3, configuration, client, access, configure, object, bucket, svm 
-summary: 您可以使用ONTAP 支援功能支援功能支援功能支援功能、以設定S3用戶端存取SVM儲存區中的物件。 
+summary: 從功能不只9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟用一個功能不易用的儲存服務（S3）物件儲存伺服器ONTAP 。 
 ---
 = S3組態總覽
 :allow-uri-read: 
@@ -11,7 +11,13 @@ summary: 您可以使用ONTAP 支援功能支援功能支援功能支援功能�
 
 
 [role="lead"]
-從功能不只9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟用一個功能不易用的儲存服務（S3）物件儲存伺服器ONTAP 。如需詳細資訊、請參閱 xref:s3-support-concept.html[S3支援ONTAP 支援支援功能。9.]。
+從功能不只9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟用一個功能不易用的儲存服務（S3）物件儲存伺服器ONTAP 。
+
+支援兩種內部部署使用案例情境、以提供S3物件儲存服務：ONTAP
+
+* 將資料層移至本機叢集（層級移至本機資源庫）或遠端叢集（雲端層）上的資源桶。FabricPool
+* S3用戶端應用程式可存取本機叢集或遠端叢集上的儲存區。
+
 
 如果您想要以下列方式設定S3物件儲存設備、請使用這些程序：
 
@@ -28,15 +34,7 @@ summary: 您可以使用ONTAP 支援功能支援功能支援功能支援功能�
 
 您可以使用ONTAP System Manager和ONTAP SURE CLI來設定及管理SS3。當您使用System Manager啟用S3並建立貯體時、ONTAP 會選擇最佳實務預設值以簡化組態。如果您需要指定組態參數、可能需要使用ONTAP CLI。如果您從CLI設定S3伺服器和儲存區、仍可視需要使用System Manager進行管理、反之亦然。
 
-System Manager支援兩種內部部署使用案例情境、可為S3物件儲存提供服務：
-
-* 將資料層移至本機叢集（層級移至本機資源庫）或遠端叢集（雲端層）上的資源桶。FabricPool
-* S3用戶端應用程式可存取本機叢集或遠端叢集上的儲存區。
-
-
 當您使用System Manager建立S3儲存區時ONTAP 、即可設定系統可用的最高預設效能服務層級。例如AFF 、在某個不完善的系統上、預設設定為*極致*。效能服務層級是預先定義的可調整服務品質（QoS）原則群組。您可以指定自訂QoS原則群組或無原則群組、而非其中一個預設服務層級。
-
-如需FabricPool 有關資料分層的詳細資訊、請參閱 xref:../concept_cloud_overview.html[系統管理程式的架構管理總覽FabricPool]。
 
 預先定義的調適性QoS原則群組包括：
 
@@ -52,8 +50,7 @@ System Manager支援兩種內部部署使用案例情境、可為S3物件儲存�
 
 嘗試將此儲存庫配置到具有最適當磁碟的本機層、以符合所選的服務層級。ONTAP不過、如果您需要指定要包含在儲存區中的磁碟、請考慮從CLI設定S3物件儲存、方法是指定本機層（Aggregate）。如果您從CLI設定S3伺服器、仍可視需要使用System Manager來管理。
 
-* 如果您想要指定要用於儲存區的集合體、只能使用CLI來執行此作業。
-
+如果您想要指定要用於儲存區的集合體、只能使用CLI來執行此作業。
 
 
 
