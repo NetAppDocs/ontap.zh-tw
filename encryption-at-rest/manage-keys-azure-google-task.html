@@ -23543,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-06-01 21:23:00 +0000">06/01/2022</time>
     
   
 
@@ -23556,13 +23556,13 @@
 <p>從功能性的9.10.1開始ONTAP 、您就可以開始使用 <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts" target="_blank" rel="noopener">"Azure Key Vault（AKV）"</a> 和 <a href="https://cloud.google.com/kms/docs" target="_blank" rel="noopener">"Google Cloud Platform的金鑰管理服務（雲端KMS）"</a> 在ONTAP Azure或Google Cloud Platform部署的應用程式中保護您的不加密金鑰。</p>
 </div>
 <div class="paragraph">
-<p>AKV和Cloud KMS可用於保護 <a href="configure-netapp-volume-encryption-concept.html">"NetApp Volume Encryption（NVE）金鑰"</a> 僅適用於資料Vserver。</p>
+<p>AKV和Cloud KMS可用於保護 <a href="configure-netapp-volume-encryption-concept.html">"NetApp Volume Encryption（NVE）金鑰"</a> 僅適用於資料SVM。</p>
 </div>
 <div class="paragraph">
 <p>使用AKV或Cloud KMS的金鑰管理可透過CLI或ONTAP REST API啟用。</p>
 </div>
 <div class="paragraph">
-<p>使用AKV或Cloud KMS時、請注意、預設會使用資料Vserver LIF與雲端金鑰管理端點進行通訊。節點管理網路用於與雲端供應商的驗證服務（login.microsoftonline.com for Azure；oauth2.googleapis.com for Cloud KMS）進行通訊。如果叢集網路設定不正確、叢集將無法正確使用金鑰管理服務。</p>
+<p>使用AKV或Cloud KMS時、請注意、預設會使用資料SVM LIF與雲端金鑰管理端點進行通訊。節點管理網路用於與雲端供應商的驗證服務（login.microsoftonline.com for Azure；oauth2.googleapis.com for Cloud KMS）進行通訊。如果叢集網路設定不正確、叢集將無法正確使用金鑰管理服務。</p>
 </div>
 <div class="ulist">
 <div class="title">先決條件</div>
@@ -23577,7 +23577,7 @@
 <p>已安裝多租戶加密金鑰管理（MTEKM）授權</p>
 </li>
 <li>
-<p>您必須是叢集或Vserver管理員</p>
+<p>您必須是叢集或SVM管理員</p>
 </li>
 </ul>
 </div>
@@ -23591,7 +23591,7 @@
 <p>AKV和Cloud KMS不適用於MetroCluster 不完整的組態設定。</p>
 </li>
 <li>
-<p>AKV和Cloud KMS只能在資料Vserver上設定</p>
+<p>AKV和Cloud KMS只能在資料SVM上設定</p>
 </li>
 </ul>
 </div>
@@ -23606,7 +23606,7 @@
 <div class="exampleblock tabbed-block">
 <div class="content">
 <div class="openblock">
-<div class="title">Azure for ONTAP</div>
+<div class="title">Azure</div>
 <div class="content">
 <div class="olist arabic">
 <div class="title">啟用ONTAP Azure Key Vault for功能</div>
@@ -23621,47 +23621,14 @@
 <p>在SVM上啟用AKV「安全金鑰管理程式外部azure enable -client-id <em>client_id</em>-租 戶ID <em>租 戶id</em>-name -key-id <em>key_id</em>-imite-method｛Certificate | client-secret｝」。出現提示時、請輸入Azure帳戶的用戶端憑證或用戶端機密。</p>
 </li>
 <li>
-<p>驗證是否已正確啟用AKV：「安全金鑰管理程式外部azure show vserver <em>vserver_name</em>」如果服務連線能力不正常、請透過Data Vserver LIF建立與AKV金鑰管理服務的連線。</p>
+<p>驗證是否已正確啟用AKV：「安全金鑰管理程式外部azure show vserver <em>svm_name</em>」如果服務連線能力不正常、請透過資料SVM LIF建立與AKV金鑰管理服務的連線。</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
 <div class="openblock">
-<div class="title">Azure for Cloud Volumes ONTAP</div>
-<div class="content">
-<div class="olist arabic">
-<div class="title">啟用Cloud Volumes ONTAP Azure Key Vault for功能</div>
-<ol class="arabic">
-<li>
-<p>開始之前、您必須先從Azure帳戶取得適當的驗證認證資料、包括用戶端機密或憑證。您也必須確保叢集中的所有節點都正常運作。您可以使用命令「cluster show」來檢查。</p>
-</li>
-<li>
-<p>將權限層級設為進階的「套用-priv進階」</p>
-</li>
-<li>
-<p>在SVM上啟用AKV「安全金鑰管理程式外部azure enable -client-id <em>client_id</em>-租 戶ID <em>租 戶id</em>-name -key-id <em>key_id</em>-imite-method｛Certificate | client-secret｝」。出現提示時、請輸入Azure帳戶的用戶端憑證或用戶端機密。</p>
-</li>
-<li>
-<p>設定資料SVM的DNS：「建立網域_網域名稱_-name-servers <em>server_address</em>-vserver <em>vserver_name</em>」</p>
-</li>
-<li>
-<p>請前往Azure入口網站、以取得包含金鑰庫的訂閱內容。選取「**存取原則」功能表。提供應用程式金鑰權限、機密權限及憑證權限、然後儲存。</p>
-<div class="imageblock">
-<div class="content">
-<img src="../media/azure-key-vault-access-policies.png" alt="Azure存取原則功能表、顯示必須提供的權限欄位">
-</div>
-</div>
-</li>
-<li>
-<p>驗證是否已正確啟用AKV：「安全金鑰管理程式外部azure show vserver <em>vserver_name</em>」如果服務連線能力不正常、請透過Data Vserver LIF建立與AKV金鑰管理服務的連線。</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="openblock">
-<div class="title">Google Cloud ONTAP for解決方案</div>
+<div class="title">Google Cloud</div>
 <div class="content">
 <div class="olist arabic">
 <div class="title">使用CLI啟用Cloud KMS ONTAP 以利實現效益</div>
@@ -23676,7 +23643,7 @@
 <p>在SVM上啟用Cloud KMS「安全金鑰管理程式外部GCP啟用-vserver <em>data_Svm_name</em>-project -id <em>project _id</em>-key-ring_name <em>key_ring_name</em>-key-ring_location <em>key_ring_stite</em>-key-name <em>key_name</em>」當出現提示時、輸入Json帳戶的內容</p>
 </li>
 <li>
-<p>驗證Cloud KMS是否設定正確的參數：「安全金鑰管理程式外部GCP顯示vserver <em>vserver_name</em>」。如果未建立加密磁碟區、則「kms」換行的狀態為「unkms」。如果服務連線能力不正常、請透過Data Vserver LIF建立與GCP金鑰管理服務的連線。</p>
+<p>驗證Cloud KMS是否設定正確的參數：「安全金鑰管理程式外部GCP顯示Vserver <em>Svm_name</em>」。如果未建立加密磁碟區、則「kms」換行的狀態為「unkms」。如果服務連線能力不正常、請透過資料SVM LIF建立與GCP金鑰管理服務的連線。</p>
 </li>
 </ol>
 </div>
@@ -23685,7 +23652,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>如果已為資料Vserver設定一或多個加密磁碟區、且對應的NVE金鑰由管理Vserver內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用CLI執行此作業、請執行：「安全金鑰管理程式金鑰移轉-從vserver <em>admin_vserver</em>-到vserver <em>data_vserver</em>」。在成功移轉資料Vserver的所有NVE金鑰之前、無法為租戶的資料Vserver建立新的加密磁碟區。</p>
+<p>如果已為資料SVM設定一或多個加密磁碟區、且對應的NVE金鑰由管理SVM內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用CLI執行此動作、請執行命令：「安全金鑰管理程式金鑰移轉-從vserver <em>admin_Svm</em>-到vserver <em>data_Svm</em>」。在成功移轉資料SVM的所有NVE金鑰之前、無法為租戶的資料Vserver建立新的加密磁碟區。</p>
 </div>
 </div>
 </div>
