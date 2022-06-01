@@ -1,7 +1,7 @@
 ---
 permalink: smb-hyper-v-sql/server-volume-requirements-sql-serve-concept.html 
 sidebar: sidebar 
-keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation 
+keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation, snapcenter plug-in 
 summary: 在透過SMB組態建立SQL Server以進行不中斷營運時、您必須瞭解特定的SMB伺服器和磁碟區需求。 
 ---
 = SMB伺服器和磁碟區需求、適用於SMB以上的SQL Server
@@ -47,7 +47,7 @@ summary: 在透過SMB組態建立SQL Server以進行不中斷營運時、您必�
 若要使用持續可用的SMB連線、為應用程式伺服器提供NDOS、包含共用區的磁碟區必須是NTFS磁碟區。此外、它必須永遠是NTFS磁碟區。您無法將混合式安全型磁碟區或UNIX安全型磁碟區變更為NTFS安全型磁碟區、並透過SMB共用區直接用於NDOS。如果您將混合式安全型磁碟區變更為NTFS安全型磁碟區、並打算在SMB共用區的NDOS中使用、則必須手動將ACL放在磁碟區頂端、並將該ACL傳播至所有內含的檔案和資料夾。否則、如果來源或目的地磁碟區最初建立為混合或UNIX安全型磁碟區、之後改為NTFS安全型態、則將檔案移至另一個磁碟區的虛擬機器移轉或資料庫檔案匯出及匯入可能會失敗。
 
 * 雖然包含資料庫檔案的磁碟區可以包含連接點、但在建立資料庫目錄結構時、SQL Server不會交叉連接點。
-* 為了讓Microsoft SQL Server備份作業成功、您必須在磁碟區上有足夠的可用空間。SnapManager
+* 為了讓Microsoft SQL Server備份作業順利完成、您必須在磁碟區上有足夠的可用空間。SnapCenter
 +
 SQL Server資料庫檔案所在的磁碟區必須夠大、足以容納資料庫目錄結構、以及位於共用區內的所有內含檔案。
 
