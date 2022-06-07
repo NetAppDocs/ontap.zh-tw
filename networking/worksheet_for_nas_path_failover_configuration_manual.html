@@ -277,35 +277,27 @@
     </div>
   </div>
   <div class="n-property-bar__toolbar">
-    <!-- Start Language Selector --><div id="ie-i18n" class="n-property-bar__lang-selector">
-      <div id="ie-i18n-menu">
-      <span class="ie-i18n-lang">繁體中文</span>
-        <button class="ie-i18n-icon-container" type="button">
+    <!-- Start Language Selector --><div id="language-dropdown" class="custom-dropdown custom-dropdown-lang">
+      <div class="custom-dropdown-select custom-dropdown-select-lang">
+      <span class="lang-name">繁體中文</span>
           <svg class="n-globe__icon" aria-labelledby="title">
             <title>globe</title>
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-tw/ontap/common/svg/sprite.svg#globe"></use>
           </svg>
         </button>
       </div>
-      <div id="n-property-navigation-bar__menu--language-selector" class="ie-i18n-results-container n-menu n-menu--v3 n-menu--is-active" style="display: none;">
-        <div class="n-language-selector-menu">
-          <ul class="n-menu__list">
-            <li class="n-menu__list-column">
-              <ul class="n-menu__list"><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/us-en/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
-                </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ja-jp/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
-                </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ko-kr/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
-                </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/zh-cn/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
-                </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/zh-tw/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" class="n-menu__header-text"><span translate="no" class="notranslate">繁體中文</span></a>
-                </li></ul>
-            </li>
-          </ul>
-        </div>
-      </div>
+
+      <ul class="custom-dropdown-menu"><li>
+          <a href="https://docs.netapp.com/zh-tw/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" target="_self"><span translate="no" class="notranslate">繁體中文</span></a>
+        </li><li>
+          <a href="https://docs.netapp.com/us-en/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" target="_self"><span translate="no" class="notranslate">English</span></a>
+        </li><li>
+          <a href="https://docs.netapp.com/ja-jp/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" target="_self"><span translate="no" class="notranslate">日本語</span></a>
+        </li><li>
+          <a href="https://docs.netapp.com/zh-cn/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" target="_self"><span translate="no" class="notranslate">简体中文</span></a>
+        </li><li>
+          <a href="https://docs.netapp.com/ko-kr/ontap/networking/worksheet_for_nas_path_failover_configuration_manual.html" target="_self"><span translate="no" class="notranslate">한국어</span></a>
+        </li></ul>
     </div><!-- End Language Selector -->
 
     <div class="n-property-bar__cta"></div>
@@ -17289,7 +17281,7 @@
     $("#toggleContainerPdf").toggle('display');
     $(".n-pdf-body-container .zip-pdf-link-container").toggle('display');
   });
-</script><div class="sidebar-nav-container">
+</script><div class="sidebar-nav-container" id="mysidebardiv">
   <ul id="mysidebar" class="nav"><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/index.html">
         文件ONTAP
       </a></li><li class=" "><a class="na-navbar-padding" href="https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508">
@@ -23543,7 +23535,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-06-07 00:46:54 +0000">06/07/2022</time>
     
   
 
@@ -23673,7 +23665,7 @@ LIF容錯移轉的連接埠必須是LIF的容錯移轉群組成員。當您建�
 <p>廣播網域的MTU。</p>
 </li>
 <li>
-<p>您可以指定* 1500 <strong>或</strong> 9000 *。</p>
+<p>通常設定為* 1500 <strong>或</strong> 9000 *。</p>
 </li>
 <li>
 <p>MTU值會套用至廣播網域中的所有連接埠、以及稍後新增至廣播網域的任何連接埠。</p>
@@ -23687,7 +23679,7 @@ LIF容錯移轉的連接埠必須是LIF的容錯移轉群組成員。當您建�
 <img src="/us-en/ontap/images/note.svg" alt="附註">
 </td>
 <td class="content">
-MTU值必須符合連接至該網路的所有裝置、但e0M連接埠處理管理流量除外。
+MTU值應與連接至該網路的所有裝置相符。請注意、e0M連接埠處理管理和服務處理器流量應將MTU設定為不超過1500位元組。
 </td>
 </tr>
 </table>
@@ -24467,4 +24459,5 @@ MTU值必須符合連接至該網路的所有裝置、但e0M連接埠處理管�
     </script>
     <script src='/zh-tw/ontap/js/www-ntap.js'></script>
     <script src='/zh-tw/ontap/js/tabbed-blocks.js'></script>
+    <script src='/zh-tw/ontap/js/sidebar.js'></script>
   </body></html>
