@@ -23535,7 +23535,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-06-08 17:15:07 +0000">06/08/2022</time>
     
   
 
@@ -23587,6 +23587,18 @@
 <div class="paragraph">
 <p>在這兩種情況下、正常監控會在更新及清除通知後恢復；反勒索軟體會記錄您的評估、以新檔案類型更新記錄、並使用這些記錄進行未來分析。不過、若發生可疑的攻擊、您必須先判斷是否為攻擊、如果是攻擊、請加以回應、然後在清除通知之前還原受保護的資料。如需詳細資訊、請參閱 <a href="index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack">"如何從勒索軟體攻擊中恢復"</a>。</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="附註">
+</td>
+<td class="content">
+如果您還原整個Volume、則不會有任何通知需要清除。
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -23627,7 +23639,7 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">可能的勒索軟體攻擊</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、以記錄您的決策、並恢復正常的勒索軟體監控。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、以記錄您的決策、並恢復正常的勒索軟體監控。+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。</p></td>
 </tr>
 </tbody>
 </table>
@@ -23708,11 +23720,14 @@ Number of Attacks: 1</pre>
 <div class="paragraph">
 <p>「反勒索軟體磁碟區攻擊清除可疑的-vserver <em>Svm_name</em>-volume <em>vol_name</em>[<em>extension identids</em>]-假 正假」</p>
 </div>
+<div class="paragraph">
+<p>使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no <em>integer</em>]順序編號「[-extension_text_、…」 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、「開始時間_date時間_-結束時間_date時間_」、格式為「mm/DD/YYYY hh：MM：SS」。</p>
+</div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no <em>integer</em>]順序編號「[-extension_text_、…」 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、「開始時間_date時間_-結束時間_date時間_」、格式為「mm/DD/YYYY hh：MM：SS」。</p>
+<p>如果還原整個磁碟區、則沒有可疑的檔案類型可清除。</p>
 </div>
 </li>
 </ol>
