@@ -1,8 +1,75 @@
 ---
 permalink: san-admin/asa-iscsi-lif-fo-task.html 
-redirect: ontap/san-admin/index.html 
+sidebar: sidebar 
+keywords: failover, iscsi, all san array, cli, system manager, auto-revert, revert network interface 
+summary: iSCSI LIF容錯移轉功能可從ONTAP 所有SAN陣列平台上的版本資訊僅供使用、並可讓iSCSI LIF從主節點停機之前、即將停機的節點移轉至HA合作夥伴。 
 ---
-= 
+= 適用於ASA 各種平台的iSCSI LIF容錯移轉
 :allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
 
 
+[role="lead"]
+iSCSI邏輯介面（LIF）容錯移轉功能可從ONTAP 所有SAN陣列ASA （NetApp）平台上的版本資訊中取得、並可讓iSCSI LIF從主節點停機之前的下移至HA合作夥伴的節點進行移轉。iSCSI LIF容錯移轉功能只能在整個ONTAP 支援範圍內的整個支援叢集位於ONTAP 支援範圍內的支援範圍內、才能啟用。
+
+下列清單說明此功能的運作方式：
+
+* 對於使用「data-iSCSI」服務原則的LIF、容錯移轉原則僅限於「僅限合作夥伴」、「僅限本機」及「停用」
+* iSCSI LIF只能在容錯移轉原則設定為「僅限合作夥伴使用」時、才容錯移轉至HA合作夥伴
+* 當恢復原則設定為「自動還原為true」、節點回到仲裁中時、就會發生GiveBack
+* 當發生計畫性或非計畫性節點接管時、接管之節點上的iSCSI LIF會容錯移轉至HA合作夥伴、而LIF容錯移轉所在的連接埠則由VIF Manager決定
+* 一旦完成容錯移轉、iSCSI LIF就會正常運作
+* 啟動還原時、iSCSI LIF會還原回其主節點和連接埠
+
+
+
+
+== System Manager程序
+
+從ONTAP 《支援範ASA 本》第9.11.1節開始、您可以使用System Manager從一個將iSCSI LIF移轉至HA合作夥伴的支援平台、之後主節點就會停機。根據預設ASA 、可在支援的支援平台上啟用移轉和還原功能。
+
+
+
+=== 容錯移轉
+
+.步驟
+. 在System Manager中、按一下*網路>總覽>網路介面*
+. 選取您要移轉的LIF、然後按一下 image:icon_kabob.gif["kabob圖示"]，然後單擊*移轉*。
+. 在*移轉介面*對話方塊中、選取HA合作夥伴的目的地節點和連接埠。
+. 按一下*移轉*。
+
+
+
+
+=== GiveBack
+
+.步驟
+. 在System Manager中、按一下*網路>總覽>網路介面*。
+. 選取您要回復的LIF、然後按一下 image:icon_kabob.gif["kabob圖示"] 然後按一下*恢復網路介面*。
+. 在*恢復網路介面*對話方塊中、按一下*恢復*。
+
+
+
+
+== CLI程序
+
+從《Sof the S21：11.11（支援）：在支援的支援平台上使用下列命令來建立及管理iSCSI生命期。ONTAP ASA預設會啟用容錯移轉和自動還原的功能。_
+
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+| 建立iSCSI LIF | 「網路介面create -vserver _svm_name_-lif_iscsiSCSI_lif_-service-policy default-data-blocks -data-protocol iscsiSCSI-home-node_node_name_-home-port _port_name_」 
+
+
+| 確認LIF已成功建立 | 「網路介面show -vserver _svm_name_-Fields容錯移轉原則、容錯移轉群組、自動還原、is主頁」 
+
+
+| 確認您是否可以覆寫iSCSI LIF上的自動還原預設值 | 「網路介面修改-vserver _Svm_name_-lifiscsi_lif-auto-revert假」您會收到錯誤訊息：「錯誤：命令失敗：無法在SAN lifs上停用自動還原。 
+
+
+| 在iSCSI LIF上執行儲存容錯移轉 | 「torage容錯移轉接管-ofnode_node_name_-option normal」、您將會收到一則警告：「將會啟動接管。合作夥伴節點重新開機後、系統會自動啟動恢復功能。您要繼續嗎？｛y/n｝：「y」回應會顯示HA合作夥伴的接管訊息。 
+|===
