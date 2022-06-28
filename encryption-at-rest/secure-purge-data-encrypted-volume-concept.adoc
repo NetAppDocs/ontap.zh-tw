@@ -15,39 +15,53 @@ summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 
 安全清除僅適用於已啟用NVE的磁碟區上先前刪除的檔案。您無法清理未加密的Volume。您必須使用KMIP伺服器來提供金鑰、而非內建金鑰管理程式。
 
+
+
+== 使用安全清除的考量事項
+
+* 在啟用NetApp Aggregate Encryption（NAE）的Aggregate中建立的磁碟區不支援安全清除。
+* 安全清除僅適用於已啟用NVE的磁碟區上先前刪除的檔案。
+* 您無法清理未加密的Volume。
+* 您必須使用KMIP伺服器來提供金鑰、而非內建金鑰管理程式。
+
+
 視ONTAP 您的版本而定、安全清除功能會有所不同。
 
-* 在更新版本的版本中：ONTAP
+[role="tabbed-block"]
+====
+.更新版本ONTAP
+--
+* 支援安全清除MetroCluster 功能的不受支援。FlexGroup
+* 如果要清除的磁碟區是SnapMirror關係的來源、您就不需要中斷SnapMirror關係、就能執行安全的清除。
+* 對於使用SnapMirror資料保護的磁碟區而言、重新加密方法不同於未使用SnapMirror資料保護（DP）或使用SnapMirror延伸資料保護的磁碟區。
 +
-** 支援安全清除MetroCluster 功能的不受支援。FlexGroup
-** 如果要清除的磁碟區是SnapMirror關係的來源、您就不需要中斷SnapMirror關係、就能執行安全的清除。
-** 對於使用SnapMirror資料保護的磁碟區而言、重新加密方法不同於未使用SnapMirror資料保護（DP）或使用SnapMirror延伸資料保護的磁碟區。
+** 根據預設、使用SnapMirror資料保護（DP）模式的磁碟區會使用Volume Move Re-Encryption方法重新加密資料。
+** 根據預設、未使用SnapMirror資料保護的磁碟區或使用SnapMirror延伸資料保護（XDP）模式的磁碟區、會使用就地重新加密方法。
+** 您可以使用「sure Purge re-encryption方法[volume－move|in－place－rekey]」命令來變更這些預設值。
+
+
+* 根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用「sure Purge delete-all-snapshots [true|fal]」命令來變更這些預設值。
+
+
+--
+.更新版本：ONTAP
+--
+* 安全清除不支援下列項目：
 +
-*** 根據預設、使用SnapMirror資料保護（DP）模式的磁碟區會使用Volume Move Re-Encryption方法重新加密資料。
-*** 根據預設、未使用SnapMirror資料保護的磁碟區或使用SnapMirror延伸資料保護（XDP）模式的磁碟區、會使用就地重新加密方法。
-*** 您可以使用「sure Purge re-encryption方法[volume－move|in－place－rekey]」命令來變更這些預設值。
+** FlexClone
+** SnapVault
+** FabricPool
 
 
-** 根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用「ure Purge delete-all-snapshots [true|假]」來變更這些預設值。命令。
-
-
-* 在更新版本的產品中：ONTAP
-+
-** 安全清除不支援下列項目：
-+
-*** FlexClone
-*** SnapVault
-*** FabricPool
-
-
-** 如果要清除的磁碟區是SnapMirror關係的來源、您必須先中斷SnapMirror關係、才能清除該磁碟區。
+* 如果要清除的磁碟區是SnapMirror關係的來源、您必須先中斷SnapMirror關係、才能清除該磁碟區。
 +
 如果磁碟區中有使用中的Snapshot複本、您必須先釋出Snapshot複本、才能清除該磁碟區。例如、您可能需要從其父磁碟區分割FlexClone磁碟區。
-
-
 
 * 成功叫用安全清除功能會觸發磁碟區移動、以新金鑰重新加密其餘未清除的資料。
 +
 移動的磁碟區會保留在目前的Aggregate上。舊金鑰會自動銷毀、確保清除的資料無法從儲存媒體中恢復。
 
 
+
+--
+====
