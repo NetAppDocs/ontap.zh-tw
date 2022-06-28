@@ -1853,6 +1853,8 @@
 
 
 
+
+
         </li>
       </ul>
     
@@ -16800,7 +16802,7 @@
         <div class="na-navbar-padding"> 關於CLI命令的不同Shell（僅限叢集管理員）</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/different-shells-cli-commands-concept.html">
-        關於
+        總覽
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
         存取叢集Shell中的nodesdell命令和選項
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/display-nodeshell-commands-task.html">
@@ -16846,10 +16848,12 @@
       </a></li></ul></li></ul></li><li class="subfolders "><a href="/zh-tw/ontap/system-admin/command-line-interface-concept.html">
         <div class="na-navbar-padding"> 使用ONTAP 指令行介面</div>
       </a>
-      <ul><li class="subfolders "><a href="/zh-tw/ontap/system-admin/different-shells-cli-commands-concept.html">
+      <ul><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 關於CLI命令的不同Shell（僅限叢集管理員）</div>
       </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
+      <ul><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/different-shells-cli-commands-concept-cluster-admin.html">
+        總覽
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
         存取叢集Shell中的nodesdell命令和選項
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/system-admin/display-nodeshell-commands-task.html">
         顯示可用的nodesdro解除 命令
@@ -22559,26 +22563,50 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-06-28 21:06:20 +0000">06/28/2022</time>
     
   
 
 
 </p>
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
 <p>從支援NVE的磁碟區開始、您可以使用安全清除功能、在不中斷營運的情況下清除資料。ONTAP加密磁碟區上的資料清理功能可確保資料無法從實體媒體中恢復、例如在「資源回收」的情況下、資料追蹤可能會在區塊遭到覆寫時留下、或是安全地刪除租戶的資料。</p>
 </div>
 <div class="paragraph">
 <p>安全清除僅適用於已啟用NVE的磁碟區上先前刪除的檔案。您無法清理未加密的Volume。您必須使用KMIP伺服器來提供金鑰、而非內建金鑰管理程式。</p>
 </div>
-<div class="paragraph">
-<p>視ONTAP 您的版本而定、安全清除功能會有所不同。</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="使用安全清除的考量事項">使用安全清除的考量事項</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>在更新版本的版本中：ONTAP</p>
+<p>在啟用NetApp Aggregate Encryption（NAE）的Aggregate中建立的磁碟區不支援安全清除。</p>
+</li>
+<li>
+<p>安全清除僅適用於已啟用NVE的磁碟區上先前刪除的檔案。</p>
+</li>
+<li>
+<p>您無法清理未加密的Volume。</p>
+</li>
+<li>
+<p>您必須使用KMIP伺服器來提供金鑰、而非內建金鑰管理程式。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>視ONTAP 您的版本而定、安全清除功能會有所不同。</p>
+</div>
+<div class="exampleblock tabbed-block">
+<div class="content">
+<div class="openblock">
+<div class="title">更新版本ONTAP</div>
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -22604,13 +22632,15 @@
 </div>
 </li>
 <li>
-<p>根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用「ure Purge delete-all-snapshots [true|假]」來變更這些預設值。命令。</p>
+<p>根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用「sure Purge delete-all-snapshots [true|fal]」命令來變更這些預設值。</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>在更新版本的產品中：ONTAP</p>
+</div>
+</div>
+<div class="openblock">
+<div class="title">更新版本：ONTAP</div>
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -22635,9 +22665,6 @@
 <p>如果磁碟區中有使用中的Snapshot複本、您必須先釋出Snapshot複本、才能清除該磁碟區。例如、您可能需要從其父磁碟區分割FlexClone磁碟區。</p>
 </div>
 </li>
-</ul>
-</div>
-</li>
 <li>
 <p>成功叫用安全清除功能會觸發磁碟區移動、以新金鑰重新加密其餘未清除的資料。</p>
 <div class="paragraph">
@@ -22645,6 +22672,12 @@
 </div>
 </li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
     </article>
