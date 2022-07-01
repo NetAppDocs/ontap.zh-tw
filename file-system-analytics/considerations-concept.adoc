@@ -37,8 +37,6 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 
 如果您是System Manager或ONTAP Rusrest API的使用者 xref:../concepts/administrator-authentication-rbac-concept.html[RBAC] 在您的《支援需求》設定中ONTAP 、您需要建立專屬角色、以便在檔案系統分析中適度存取「活動追蹤」。
 
-高層級1：建立可存取All的角色、接受「volume file show-disk-usage」命令目錄2。為新角色建立網路存取3.建立具有新角色的使用者4.登入System Manager或使用新使用者撥打REST電話
-
 .控制活動追蹤的存取權
 . 建立預設角色以存取所有功能。在建立限制角色之前、必須先完成這項作業、以確保「活動追蹤」上的角色僅受到限制：
 +
@@ -64,4 +62,5 @@ Vserver服務網路存取create -vserver _svm-name_-name rest -role storageAdmin
 +
 「安全登入create -user-or group名稱storageUser -authentation-method password -applicationhttp -role storageAdmin」
 
+. 有了新的使用者認證資料、您現在可以登入System Manager、或使用ONTAP REST API來存取檔案系統分析資料。
 

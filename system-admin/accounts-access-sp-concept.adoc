@@ -2,7 +2,7 @@
 permalink: system-admin/accounts-access-sp-concept.html 
 sidebar: sidebar 
 keywords: account, access, sp, cluster, user, cli, node 
-summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。 
+summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備管理員角色。 
 ---
 = 可存取SP的帳戶
 :allow-uri-read: 
@@ -11,9 +11,20 @@ summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用
 
 
 [role="lead"]
-當您嘗試存取SP時、系統會提示您提供認證資料。使用「服務處理器」應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。
+當您嘗試存取SP時、系統會提示您提供認證資料。使用「服務處理器」應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備「admin」角色。
 
-存取SP的使用者帳戶是透過ONTAP 不使用SP CLI的功能來管理、任何角色的叢集使用者帳戶、如果是使用「安全性登入建立」命令設定為「服務處理器」的「應用程式」參數、而將「驗證方法」參數設定為「密碼」、則可以存取SP。SP僅支援密碼驗證。
+存取SP的使用者帳戶是透過ONTAP 不使用SP CLI的功能來管理、如果叢集使用者帳戶是使用「安全登入create」命令設定為「service處理器」的「-application」參數、而「-authmethod」參數設定為「password」、則叢集使用者帳戶可以存取SP。SP僅支援密碼驗證。
+
+建立SP使用者帳戶時、必須指定「-role」參數。
+
+* 在發行版的版本中、您必須指定「admin」作為「-role」參數、任何對帳戶的修改都必須使用「admin」角色。ONTAP基於安全考量、不再允許其他角色。
++
+** 如果您要升級ONTAP 至版本不含更新版本的版本、請參閱 link:../upgrade/sp-user-accounts-change-concept.html["可存取服務處理器的使用者帳戶變更"]。
+** 如果您要回復ONTAP 到版本不含更新版本的版本、請參閱 link:../revert/verify-sp-user-accounts-task.html["驗證可存取服務處理器的使用者帳戶"]。
+
+
+* 在更新版本的版本中、任何角色都可以存取SP、但建議使用「admin」ONTAP 。
+
 
 根據預設、名為「admin」的叢集使用者帳戶會包含「service-處理器」應用程式類型、並可存取SP。
 

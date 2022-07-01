@@ -20,8 +20,14 @@ summary: 您可以FlexGroup 轉換現有FlexGroup 的SnapMirror磁碟區關係�
 
 .步驟
 . 從SnapMirror目的地、重新同步FlexGroup 化「SnapMirror層級」關係：「napmirror resSync」（快照鏡射重新同步）
-. 建立FlexGroup SVM DR SnapMirror關係：「napmirror create -policy dpdefault -idente-preserve true -dest-path dest_svm:dest_flexgroup -source-path sr_svm:src-flexgroup」
-. 驗證關係是否已中斷：「napmirror show -dest-path dest_svm:dest_flexgroup -source-path sr_svm:sr_flexgroup」
+. 建立FlexGroup SVM DR SnapMirror關係。使用FlexGroup 在《SfestVolume SnapMirror關係》中設定的相同SnapMirror原則：「napmirror create -dest-path dest_svm:-source-path src-Svm:-idente-preserve true -policy MirrorAllSnapshots」
+
+
+====
+建立複寫關係時、您必須使用「napmirror create」命令的「-identite-preserve true」選項。
+
+====
+. 驗證關係是否已中斷：「napmirror show -dest-path dest_svm:-source-path sr_svm:」
 +
 [listing]
 ----
@@ -42,7 +48,7 @@ vserver stop -vserver fg_vs_renamed
 [Job 245] Job is queued: Vserver Stop fg_vs_renamed.
 [Job 245] Done
 ----
-. 重新同步SVM SnapMirror關係：「napmirror resSync -dest-path dest_svm:dest_flexgroup -source-path src-svm:src-flexgroup」
+. 重新同步SVM SnapMirror關係：「napmirror resync -dest-path dest_svm:-source-path sr_svm:」
 +
 [listing]
 ----
