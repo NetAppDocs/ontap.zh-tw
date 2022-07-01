@@ -9,14 +9,14 @@
   <meta property="og:title" content="可存取SP的帳戶" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-tw/ontap/system-admin/accounts-access-sp-concept.html" />
-	<meta property="og:description" content="當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。" />
+	<meta property="og:description" content="當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備管理員角色。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-tw/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。">
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備管理員角色。">
   <meta name="keywords" content=" account, access, sp, cluster, user, cli, node"><!-- Icons -->
   <link rel="icon" href="/zh-tw/ontap/images/favicon.ico" type="image/x-icon">
 
@@ -1287,6 +1287,8 @@
 
 
 
+
+
         </li>
       </ul>
     
@@ -1453,6 +1455,8 @@
             還原叢集後該怎麼辦？
           </a>
           
+
+
 
 
 
@@ -10411,8 +10415,6 @@
 
 
 
-
-
         </li>
       </ul>
     
@@ -16649,6 +16651,8 @@
         設定NFS用戶端所需的NT ACL權限顯示層級
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/upgrade/task_enforcing_sha_2_on_user_account_passwords_dot_9_0_upgrade_guide.html">
         在系統管理員密碼上強制執行SHA-2
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/upgrade/sp-user-accounts-change-concept.html">
+        可存取服務處理器的使用者帳戶變更
       </a></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/upgrade/concept_when_you_need_to_update_the_disk_qualification_package.html">
         更新「DQP」
       </a></li></ul></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/task_admin_update_firmware.html">
@@ -16724,6 +16728,8 @@
         還原密碼雜湊功能
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/revert/concept_support_of_sp_firmware_automatic_revert.html">
         自動更新SP韌體
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/revert/verify-sp-user-accounts-task.html">
+        驗證可存取服務處理器的使用者帳戶
       </a></li></ul></li></ul></li></ul></li><li class="subfolders "><a href="/zh-tw/ontap/cluster-admin/index.html">
         <div class="na-navbar-padding"> 叢集管理</div>
       </a>
@@ -20264,8 +20270,6 @@
         解決儲存系統上的iSCSI錯誤訊息
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/san-admin/troubleshoot-iscsi-luns-not-visible-reference.html">
         疑難排解主機上看不到的iSCSI LUN
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/san-admin/asa-iscsi-lif-fo-task.html">
-        適用於ASA 各種平台的iSCSI LIF容錯移轉
       </a></li></ul></li><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 管理FC傳輸協定</div>
       </a>
@@ -22563,7 +22567,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-07-01 01:46:51 +0000">07/01/2022</time>
     
   
 
@@ -22571,10 +22575,33 @@
 </p>
 
 <div class="paragraph lead">
-<p>當您嘗試存取SP時、系統會提示您提供認證資料。使用「服務處理器」應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。</p>
+<p>當您嘗試存取SP時、系統會提示您提供認證資料。使用「服務處理器」應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備「admin」角色。</p>
 </div>
 <div class="paragraph">
-<p>存取SP的使用者帳戶是透過ONTAP 不使用SP CLI的功能來管理、任何角色的叢集使用者帳戶、如果是使用「安全性登入建立」命令設定為「服務處理器」的「應用程式」參數、而將「驗證方法」參數設定為「密碼」、則可以存取SP。SP僅支援密碼驗證。</p>
+<p>存取SP的使用者帳戶是透過ONTAP 不使用SP CLI的功能來管理、如果叢集使用者帳戶是使用「安全登入create」命令設定為「service處理器」的「-application」參數、而「-authmethod」參數設定為「password」、則叢集使用者帳戶可以存取SP。SP僅支援密碼驗證。</p>
+</div>
+<div class="paragraph">
+<p>建立SP使用者帳戶時、必須指定「-role」參數。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>在發行版的版本中、您必須指定「admin」作為「-role」參數、任何對帳戶的修改都必須使用「admin」角色。ONTAP基於安全考量、不再允許其他角色。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>如果您要升級ONTAP 至版本不含更新版本的版本、請參閱 <a href="../upgrade/sp-user-accounts-change-concept.html">"可存取服務處理器的使用者帳戶變更"</a>。</p>
+</li>
+<li>
+<p>如果您要回復ONTAP 到版本不含更新版本的版本、請參閱 <a href="../revert/verify-sp-user-accounts-task.html">"驗證可存取服務處理器的使用者帳戶"</a>。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>在更新版本的版本中、任何角色都可以存取SP、但建議使用「admin」ONTAP 。</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>根據預設、名為「admin」的叢集使用者帳戶會包含「service-處理器」應用程式類型、並可存取SP。</p>
