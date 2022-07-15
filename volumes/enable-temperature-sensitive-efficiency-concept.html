@@ -9,14 +9,14 @@
   <meta property="og:title" content="對溫度敏感的儲存效率總覽" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-tw/ontap/volumes/enable-temperature-sensitive-efficiency-concept.html" />
-	<meta property="og:description" content="對溫度敏感的儲存效率是ONTAP 在更新建立的精簡配置AFF 的功能區上、於更新的功能區上自動啟用。從功能支援的支援範圍ONTAP 起、您可以在新建立AFF 的功能區、AFF 以及現有的功能區上、實現對溫度敏感的儲存效率。此外、還引進兩種儲存效率模式：預設模式、預設模式為效能模式、預設模式為啟用模式、以及必須啟用..." />
+	<meta property="og:description" content="對溫度敏感的儲存效率是ONTAP 在更新建立的精簡配置AFF 的功能區上、於更新的功能區上自動啟用。從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新AFF 至功能更新至功能更新至功能更新、預設模式為8k調適性壓縮（預設模式）。如果需要對溫度敏感的儲存效率、則必須明確設定、以便在磁碟區上啟用自動調適性..." />
   <meta property="og:image" content="https://docs.netapp.com/zh-tw/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="對溫度敏感的儲存效率是ONTAP 在更新建立的精簡配置AFF 的功能區上、於更新的功能區上自動啟用。從功能支援的支援範圍ONTAP 起、您可以在新建立AFF 的功能區、AFF 以及現有的功能區上、實現對溫度敏感的儲存效率。此外、還引進兩種儲存效率模式：預設模式、預設模式為效能模式、預設模式為啟用模式、以及必須啟用...">
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="對溫度敏感的儲存效率是ONTAP 在更新建立的精簡配置AFF 的功能區上、於更新的功能區上自動啟用。從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新AFF 至功能更新至功能更新至功能更新、預設模式為8k調適性壓縮（預設模式）。如果需要對溫度敏感的儲存效率、則必須明確設定、以便在磁碟區上啟用自動調適性...">
   <meta name="keywords" content=" enable, temperature, sensitive, storage, efficiency"><!-- Icons -->
   <link rel="icon" href="/zh-tw/ontap/images/favicon.ico" type="image/x-icon">
 
@@ -4415,6 +4415,8 @@
 
     <ul class="subfolders" id="pdf-remove" style="display:none;"><li class="active"></li></ul>
   
+
+
 
 
 
@@ -17918,6 +17920,8 @@
         檢查Volume Eff效率 模式
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/volumes/change-efficiency-mode-task.html">
         變更Volume Eff效率 模式
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/volumes/view-footprint-savings-task.html">
+        檢視對溫度敏感的儲存效率實體佔用空間節約效益
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/volumes/enable-data-compression-volume-task.html">
         在磁碟區上啟用資料壓縮
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-tw/ontap/volumes/move-between-secondary-adaptive-compression-task.html">
@@ -22569,7 +22573,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-03 07:37:41 +0000">05/03/2022</time>
+    <time datetime="2022-07-15 16:23:54 +0000">07/15/2022</time>
     
   
 
@@ -22579,7 +22583,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>對溫度敏感的儲存效率已在ONTAP 更新建立的自動精簡配置AFF 的功能區上推出、並在更新的功能區上自動啟用。從功能支援的版本起、您可以在新建立的功能區、以及現有的功能區上、實現對溫度敏感的儲存效率。ONTAP AFF AFF此外、也引進兩種模式：預設模式、預設模式為效能模式、預設模式為啟用模式、以及必須啟用的高效模式。</p>
+<p>對溫度敏感的儲存效率已在ONTAP 更新建立的自動精簡配置AFF 的功能區上推出、並在更新的功能區上自動啟用。從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新AFF 至功能更新至功能更新至功能更新、預設模式為8k調適性壓縮（預設模式）。如果需要對溫度敏感的儲存效率、則必須明確設定、以便在磁碟區上啟用自動調適性壓縮和即時重複資料刪除、跨磁碟區即時重複資料刪除、以及跨磁碟區背景重複資料刪除（高效模式）。</p>
 </div>
 <div class="paragraph">
 <p>要達到儲存效率、必須正確評估資料的「溫度」、也就是資料存取頻率。溫度敏感的儲存效率取決於磁碟區資料的溫度。對於冷資料而言、較大的資料區塊會被壓縮、而熱資料會被覆寫的頻率較高、較小的資料區塊會被壓縮、使程序更有效率。</p>
