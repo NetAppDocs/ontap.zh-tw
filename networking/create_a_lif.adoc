@@ -48,6 +48,16 @@ LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障
 * NVMe LIF和命名空間必須裝載在同一個節點上。
 * 每個SVM只能設定一個處理資料流量的NVMe LIF。
 * 當您建立具有子網路的網路介面時ONTAP 、ENetApp會自動從所選子網路選取可用的IP位址、並將其指派給網路介面。如果有多個子網路、您可以變更子網路、但無法變更IP位址。
+* 從ONTAP 《Sf9.11.1》開始、iSCSI LIF容錯移轉功能可在所有SAN Array ASA （簡稱「ESCSI」）平台上使用。
++
+iSCSI LIF容錯移轉會自動啟用（容錯移轉原則設為「僅限合作夥伴」、自動還原值設為「true」） 在新建立的iSCSI LIF上、如果指定的儲存VM中不存在iSCSI LIF、或指定儲存VM中的所有現有iSCSI LIF已啟用iSCSI LIF容錯移轉。
+
++
+如果在升級至ONTAP 版本更新至版本的版本時、您的儲存VM中已有iSCSI LIF LIF容錯移轉功能尚未啟用的現有iSCSI LIF、而且您在相同的儲存VM中建立新的iSCSI LIF、 新的iSCSI生命體採用與儲存VM中現有iSCSI生命體相同的容錯移轉原則（「停用」）。
+
++
+link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
+
 
 
 .步驟
