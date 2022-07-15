@@ -22573,7 +22573,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-27 00:13:33 +0000">05/27/2022</time>
+    <time datetime="2022-07-15 21:51:35 +0000">07/15/2022</time>
     
   
 
@@ -22582,6 +22582,9 @@
 
 <div class="paragraph lead">
 <p>與由NAS和SAN伺服器提供的檔案或區塊儲存設備相比、物件儲存伺服ONTAP 器可將資料管理為S3物件ONTAP 。</p>
+</div>
+<div class="paragraph">
+<p>您應準備好將S3伺服器名稱輸入為完整網域名稱（FQDN）、用戶端將使用此名稱來存取S3。FQDN不得以儲存區名稱開頭。</p>
 </div>
 <div class="paragraph">
 <p>您應該擁有自我簽署的CA憑證（在先前步驟中建立）或由外部CA廠商簽署的憑證。本機分層使用案例不需要CA憑證、因為IP流量只會流經叢集生命體。</p>
@@ -22606,13 +22609,18 @@
 <div class="paragraph">
 <p>請參閱「vserver object-store-server」手冊頁、以取得其他組態和顯示選項。</p>
 </div>
+<div class="exampleblock tabbed-block">
+<div class="title">範例 1. 步驟</div>
+<div class="content">
+<div class="openblock">
+<div class="title">CLI</div>
+<div class="content">
 <div class="olist arabic">
-<div class="title">步驟</div>
 <ol class="arabic">
 <li>
 <p>建立S3伺服器：</p>
 <div class="paragraph">
-<p>「vserver object-store-server create -vserver <em>Svm_name</em>-object-store-server <em>s3_server_name</em>-cert-name <em>ca_cert名稱</em>-comment <em>text</em>[addent_options]"</p>
+<p>「vserver object-store-server create -vserver <em>Svm_name</em>-object-store-server <em>s2_server_fqd</em>-cert-name <em>ca_cert _name</em>-comment <em>text</em>[addent_options]"</p>
 </div>
 <div class="paragraph">
 <p>您可以在建立S3伺服器時或稍後隨時指定其他選項。</p>
@@ -22662,6 +22670,60 @@
                                  HTTPS Enabled: true
              Certificate for HTTPS Connections: svm1_ca
                                        Comment: Server comment</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">系統管理員</div>
+<div class="content">
+<div class="paragraph">
+<p>如果您要將S3伺服器新增至現有的儲存VM、請使用此程序。若要將S3伺服器新增至新的儲存VM、請參閱 <a href="create-svm-s3-task.html">"為S3建立儲存SVM"</a>。</p>
+</div>
+<div class="paragraph">
+<p>您應準備好輸入介面角色資料的IP位址。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在現有的儲存VM上啟用S3。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>選取儲存VM：按一下*儲存設備&gt;儲存VM*、選取儲存VM、按一下*設定*、然後按一下 <span class="image"><img src="../media/icon_gear.gif" alt="設定圖示"></span> 低於* S3 *。</p>
+</li>
+<li>
+<p>按一下「<strong>啟用S2</strong>」、然後輸入「S3伺服器名稱」。</p>
+</li>
+<li>
+<p>選取憑證類型。</p>
+<div class="paragraph">
+<p>無論您是選擇系統產生的憑證、或是自己的憑證、用戶端存取都必須使用此憑證。</p>
+</div>
+</li>
+<li>
+<p>輸入網路介面。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>如果您選取系統產生的憑證、則在確認建立新的儲存VM時、會看到憑證資訊。按一下「<strong>下載</strong>」並儲存以供用戶端存取。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>不會再顯示秘密金鑰。</p>
+</li>
+<li>
+<p>如果您再次需要憑證資訊：按一下*儲存設備&gt;儲存設備VM*、選取儲存設備VM、然後按一下*設定*。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </div>
 
