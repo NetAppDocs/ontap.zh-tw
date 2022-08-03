@@ -19,15 +19,39 @@ summary: 修改儲存VM、讓NFS和SMB伺服器能夠為Linux和Windows用戶端
 
 
 [role="lead"]
-修改儲存VM、讓NFS和SMB伺服器能夠為Linux和Windows用戶端提供資料。
+建立或修改儲存VM、以啟用NFS和SMB伺服器、將資料提供給Linux和Windows用戶端。
 
-此程序可啟用現有的儲存VM。假設您的環境中所需的任何驗證或安全服務都有組態詳細資料可供使用。
+此程序可讓新的或現有的儲存VM同時提供NFS和SMB傳輸協定。假設您的環境中所需的任何網路、驗證或安全服務都有組態詳細資料可供使用。
 
 image:workflow_nas_enable_nfs_and_smb.gif["使用NFS和SMB為Linux和Windows伺服器啟用NAS的工作流程圖"]
 
 .步驟
-. 在現有VM上啟用NFS：按一下*儲存設備>儲存VM*、選取儲存VM、按一下*設定*、然後按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
-. 在現有VM上啟用SMB：按一下 image:icon_gear.gif["設定圖示"] 低於* SMB *。
+. 在儲存VM上啟用NFS和SMB。
++
+.. 對於新的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下*新增*、輸入儲存虛擬機器名稱、然後在* SMB/CIFS、NFS、S2*索引標籤中、選取*啟用SMB/CIFS/CIFS *和*啟用NFS*。
++
+*** 輸入下列資訊：
++
+**** 系統管理員名稱與密碼
+**** 伺服器名稱
+**** Active Directory網域
+
+
+*** 確認組織單位。
+*** 確認DNS值。
+*** 確認預設語言。
+*** 新增網路介面。
+*** 更新儲存VM管理員帳戶資訊（選用）。
+
+
+.. 對於現有的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、選取儲存虛擬機器、然後按一下*設定*。如果尚未啟用NFS或SMB、請完成下列子步驟。
++
+*** 按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
+*** 按一下 image:icon_gear.gif["設定圖示"] 低於* SMB *。
+
+
+
+
 . 開啟儲存VM根磁碟區的匯出原則：
 +
 .. 按一下「*儲存設備>磁碟區*」、選取儲存VM的根磁碟區（預設為_volume名稱_root_）、然後按一下「*匯出原則*」下顯示的原則。

@@ -135,7 +135,7 @@ ONTAP Select
 
 SnapMirror Synchronous有兩種作業模式、分別取決於所使用的SnapMirror原則類型：
 
-* *同步模式*在同步模式下、將I/O複寫至主要儲存設備、然後再複寫至次要儲存設備。然後將I/O寫入主儲存設備、並將確認函傳送至發出I/O的應用程式如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤情況得到修正時、SnapMirror同步技術會自動與二線儲存設備重新同步、並以同步模式從一線儲存設備恢復複寫至二線儲存設備。在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
+* *同步模式*在同步模式下、應用程式I/O作業會平行傳送至主要和次要儲存系統。如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤情況得到修正時、SnapMirror同步技術會自動與二線儲存設備重新同步、並以同步模式從一線儲存設備恢復複寫至二線儲存設備。在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
 * * StrictSync模式* SnapMirror Synchronous可選擇性地在StrictSync模式中運作。如果由於任何原因未完成對二線儲存設備的寫入、應用程式I/O就會失敗、因此可確保一線與二線儲存設備完全相同。只有在SnapMirror關係恢復為「不同步」狀態之後、應用程式I/O才會繼續進行。如果主儲存設備故障、則可在容錯移轉後、在二線儲存設備上恢復應用程式I/O、而不會遺失資料。在StrictSync模式中、RPO永遠為零、RTO極低。
 
 
@@ -149,4 +149,4 @@ SnapMirror同步關係的狀態在正常操作期間始終處於「不同步」�
 
 如果StrictSync模式中SnapMirror同步關係的關係狀態變成「OutofSync」、則會停止對主要磁碟區的所有I/O作業。在同步模式中、SnapMirror同步關係的「OutofSync」狀態不會中斷主要磁碟區的作業、而主要磁碟區的I/O作業則是允許的。
 
-http://www.netapp.com/us/media/tr-4733.pdf["NetApp技術報告4733：SnapMirror Synchronous for ONTAP NetApp 9.6"^]
+http://www.netapp.com/us/media/tr-4733.pdf["NetApp技術報告4733：SnapMirror Synchronous for ONTAP NetApp 9.11.1"^]

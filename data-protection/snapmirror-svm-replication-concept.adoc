@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/snapmirror-svm-replication-concept.html 
 sidebar: sidebar 
-keywords: understand, snapmirror, svm, replication 
+keywords: understand, snapmirror, svm, replication, SVM DR storage limits 
 summary: 您可以使用SnapMirror在SVM之間建立資料保護關係。在此類型的資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM擁有的磁碟區中的資料。 
 ---
 = 關於SnapMirror SVM複寫
@@ -824,5 +824,38 @@ v3使用者
 是的
  a| 
 否
+
+|===
+
+
+== SVM DR儲存限制
+
+下表顯示每個儲存物件所支援的建議最大磁碟區數和SVM DR關係數。您應該注意、限制通常取決於平台。請參閱 link:https://hwu.netapp.com/["Hardware Universe"^] 以瞭解特定組態的限制。
+
+[cols="2*"]
+|===
+
+
+| 儲存物件 | 限制 
+
+
+ a| 
+SVM
+ a| 
+300個彈性磁碟區
+
+
+
+ a| 
+HA配對
+ a| 
+1、000個彈性磁碟區
+
+
+
+ a| 
+叢集
+ a| 
+128個SVM DR關係
 
 |===

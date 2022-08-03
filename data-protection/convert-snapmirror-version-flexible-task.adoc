@@ -24,7 +24,90 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 
 ====
 .步驟
-. 靜止現有的DP類型關係：
+. 從目的地叢集、確定SnapMirror關係為DP類型、鏡射狀態為Snapmirror、關係狀態為閒置、關係健全：
++
+「napmirror show -dite-path _svm:volume（napmirror show -dite-path _svm:volume）」|「叢集：//Svm/volume（叢集）」
+
++
+以下範例顯示「shnapmirror show」命令的輸出：
+
++
+[listing]
+----
+cluster_dst::>snapmirror show -destination-path svm_backup:volA_dst
+
+Source Path: svm1:volA
+Destination Path: svm_backup:volA_dst
+Relationship Type: DP
+SnapMirror Schedule: -
+Tries Limit: -
+Throttle (KB/sec): unlimited
+Mirror State: Snapmirrored
+Relationship Status: Idle
+Transfer Snapshot: -
+Snapshot Progress: -
+Total Progress: -
+Snapshot Checkpoint: -
+Newest Snapshot: snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
+Newest Snapshot Timestamp: 06/27 10:00:55
+Exported Snapshot: snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
+Exported Snapshot Timestamp: 06/27 10:00:55
+Healthy: true
+----
++
+[NOTE]
+====
+您可能會發現保留一份「napmirror show」命令輸出的複本、以便追蹤現有的關係設定、這點很有幫助。
+
+====
+. 從來源和目的地磁碟區、確保兩個磁碟區都有一個通用的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume _volume _」
+
++
+以下範例顯示了souce和目的地磁碟區的「Volume Snapshot show」輸出：
+
++
+[listing]
+----
+cluster_src:> volume snapshot show -vserver vsm1 -volume volA
+---Blocks---
+Vserver Volume Snapshot State Size Total% Used%
+-------- ------- ------------------------------- -------- -------- ------ -----
+svm1 volA
+weekly.2014-06-09_0736 valid 76KB 0% 28%
+weekly.2014-06-16_1305 valid 80KB 0% 29%
+daily.2014-06-26_0842 valid 76KB 0% 28%
+hourly.2014-06-26_1205 valid 72KB 0% 27%
+hourly.2014-06-26_1305 valid 72KB 0% 27%
+hourly.2014-06-26_1405 valid 76KB 0% 28%
+hourly.2014-06-26_1505 valid 72KB 0% 27%
+hourly.2014-06-26_1605 valid 72KB 0% 27%
+daily.2014-06-27_0921 valid 60KB 0% 24%
+hourly.2014-06-27_0921 valid 76KB 0% 28%
+snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
+valid 44KB 0% 19%
+11 entries were displayed.
+
+
+cluster_dest:> volume snapshot show -vserver svm_backup -volume volA_dst
+---Blocks---
+Vserver Volume Snapshot State Size Total% Used%
+-------- ------- ------------------------------- -------- -------- ------ -----
+svm_backup volA_dst
+weekly.2014-06-09_0736 valid 76KB 0% 30%
+weekly.2014-06-16_1305 valid 80KB 0% 31%
+daily.2014-06-26_0842 valid 76KB 0% 30%
+hourly.2014-06-26_1205 valid 72KB 0% 29%
+hourly.2014-06-26_1305 valid 72KB 0% 29%
+hourly.2014-06-26_1405 valid 76KB 0% 30%
+hourly.2014-06-26_1505 valid 72KB 0% 29%
+hourly.2014-06-26_1605 valid 72KB 0% 29%
+daily.2014-06-27_0921 valid 60KB 0% 25%
+hourly.2014-06-27_0921 valid 76KB 0% 30%
+snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
+----
+. 若要確保在轉換期間不會執行排程的更新、請停止現有的DP類型關係：
 +
 "napmirror quiesce -path _svm:volume（napmirror靜止-source-path _svm:volume）_cluster：//svm/volume（虛擬磁碟區/磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 
@@ -43,11 +126,11 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 +
 [listing]
 ----
-cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_backup:volA_dst
+cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 打破現有的DP類型關係：
 +
-"napmirror中斷-source-path _svm:volume（磁碟區）_cluster：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+"napmirror中斷-destination-path _svm:volume？|叢集：//Svm/volume、...
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -64,9 +147,9 @@ cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_b
 +
 [listing]
 ----
-cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+cluster_dst::> snapmirror break -destination-path svm_backup:volA_dst
 ----
-. 停用在目的地Volume上自動刪除Snapshot複本：
+. 如果在目的地磁碟區上啟用了自動刪除Snapshot複本、請停用它：
 +
 「Volume Snapshot autodete modify -vserver _Svm_-volume _volume _-enablete」
 
@@ -80,7 +163,7 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 ----
 . 刪除現有的DP類型關係：
 +
-"napmirror DELETE -source-path _Svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+「napmirror DELETE -destination-path _svm:volume」（napmirror刪除- dite-path _svm:volume）|「叢集」：//Svm/volume、...」
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -97,9 +180,9 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 +
 [listing]
 ----
-cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
+cluster_dst::> snapmirror delete -destination-path svm_backup:volA_dst
 ----
-. 建立新的XDP類型關係：
+. 您可以使用從「shnapmirror show（快照鏡像顯示）命令中保留的輸出來建立新的XDP類型關係：
 +
 "napmirror create -source-path _svm:volume（napmirror create -source-path _svm:volume）_cluster（叢集）：//SVM/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... 鍵入XDP -schedule _schedule_-policy _policy
 
@@ -142,6 +225,13 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
+. 如果停用自動刪除Snapshot複本、請重新啟用：
++
+「Volume Snapshot autod刪除modify -vserver _Svm_-volume _volume _-enabl用量true」
 
 
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+
+.完成後
+. 使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+. SnapMirror XDP目的地磁碟區開始更新SnapMirror原則所定義的Snapshot複本之後、您就可以使用來源叢集的「快照鏡射list-destinations」命令輸出來顯示新的SnapMirror XDP關係。
+
