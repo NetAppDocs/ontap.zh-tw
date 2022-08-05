@@ -16,15 +16,34 @@ summary: 移除不需要的子網路、並取消分配相關的IP位址
 [role="lead"]
 如果您不再需要子網路、而想要取消分配指派給子網路的IP位址、您可以將其刪除。
 
+您所遵循的程序取決於您使用的介面：System Manager或CLI：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*從ONTAP 版本S59.12.0開始、您可以使用System Manager刪除子網路*
+
+.步驟
+. 選擇*網路>總覽>子網路*。
+. 選取 image:icon_kabob.gif["「kebob」圖示"] 您要移除的子網路旁邊的*>刪除*。
+. 儲存您的變更。
+
+
+--
+.CLI
+--
+*使用CLI刪除子網路*
+
 如果任何服務處理器或網路介面目前使用指定範圍內的IP位址、您將會收到錯誤訊息。如果希望介面在刪除子網路之後仍繼續使用IP位址、您可以將-force-update-lif-associations-true選項設定為true、以移除子網路與lifs的關聯。
 
 刪除子網路：
 
-....
-network subnet delete -subnet-name subnet_name [-ipspace ipspace_name] [-force-update-lif- associations true]
-....
+「network subnet delete -subnet-name subnet_name subnet_name [-IPspace IPspace_name][-force-update-lif-關聯true]」
+
 下列命令會刪除IPspace ipspace1中的子網路子網路1：
 
-....
-network subnet delete -subnet-name sub1 -ipspace ipspace1
-....
+「network subnet delete -subnet-name sub1 -IPSpace ipspace1」
+
+--
+====

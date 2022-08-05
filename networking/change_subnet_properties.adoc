@@ -21,6 +21,31 @@ summary: 變更子網路位址、遮罩值、閘道位址或IP位址範圍
 * 如果您新增或變更閘道IP位址、當使用子網路在新的SVM中建立LIF時、修改的閘道會套用至新的SVM。如果路由尚未存在、則會為SVM建立通往閘道的預設路由。變更閘道IP位址時、您可能需要手動新增新路由至SVM。
 
 
+您所遵循的程序取決於您使用的介面：System Manager或CLI：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*從ONTAP 版本S59.12.0開始、您可以使用System Manager來變更子網路內容*
+
+.步驟
+. 選擇*網路>總覽>子網路*。
+. 選取 image:icon_kabob.gif["kabob圖示"]您要變更的子網路旁邊的*>編輯*。
+. 進行變更。
+. 儲存您的變更。
++
+.. 如果輸入的IP位址或範圍已被介面使用、則會顯示下列訊息：「LIF已在使用此範圍內的IP位址。將LIF與此子網路建立關聯
+.. 當您按一下「*確定*」時、現有的LIF將會與子網路相關聯。
+
+
+
+
+--
+.CLI
+--
+*使用CLI變更子網路內容*
+
 修改子網路內容：
 
 ....
@@ -39,3 +64,5 @@ network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-sub
 ....
 network subnet modify -subnet-name <sub3> -gateway <192.0.3.1>
 ....
+--
+====

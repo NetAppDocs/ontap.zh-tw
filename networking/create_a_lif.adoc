@@ -20,7 +20,7 @@ LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障
 * 基礎實體或邏輯網路連接埠必須設定為管理UP狀態。
 * 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。
 +
-子網路包含屬於同一第3層子網路的IP位址集區。它們是使用「network subnet create」命令建立的。
+子網路包含屬於同一第3層子網路的IP位址集區。它們是使用System Manager或「network subnet create」命令建立的。
 
 * 指定LIF處理之流量類型的機制已變更。對於僅適用於更新版本的版本、LIF會使用角色來指定其處理的流量類型。ONTAP從ONTAP Sf6開始、l生命 就會使用服務原則來指定處理的流量類型。
 
@@ -34,7 +34,12 @@ LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障
 * SVM使用的所有名稱對應和主機名稱解析服務、例如DNS、NIS、LDAP和Active Directory、 必須至少有一個LIF處理SVM的資料流量。
 * 處理節點之間叢集內流量的LIF、不應與處理管理流量的LIF或處理資料流量的LIF位於相同的子網路上。
 * 建立沒有有效容錯移轉目標的LIF會產生警告訊息。
-* 如果叢集內有大量的生命量、您可以使用「network interface cape流量show」命令來驗證叢集上支援的LIF容量、並使用「network interface cape流量 詳細資料show」命令來驗證每個節點上支援的LIF容量 （進階權限層級）。
+* 如果叢集中有大量的生命量、您可以驗證叢集上支援的LIF容量：
++
+** System Manager：從ONTAP 功能完善的9.12.0,開始檢視網路介面網格的處理量。
+** CLI：使用「network interface cape流量show」命令、以及在每個節點上支援的LIF容量、方法是使用「network interface capeat details show」命令（進階權限層級）。
+
+
 * 從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP
 +
 從ONTAP 支援FFC-NVMe的支援功能到支援的功能表9.4開始。如果您要建立FC-NVMe LIF、應該注意下列事項：
@@ -48,17 +53,67 @@ LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障
 * NVMe LIF和命名空間必須裝載在同一個節點上。
 * 每個SVM只能設定一個處理資料流量的NVMe LIF。
 * 當您建立具有子網路的網路介面時ONTAP 、ENetApp會自動從所選子網路選取可用的IP位址、並將其指派給網路介面。如果有多個子網路、您可以變更子網路、但無法變更IP位址。
+* 建立（新增）SVM時、您無法為網路介面指定位於現有子網路範圍內的IP位址。您會收到子網路衝突錯誤。此問題發生在網路介面的其他工作流程中、例如在SVM設定或叢集設定中建立或修改叢集間網路介面。
 * 從ONTAP 《Sf9.11.1》開始、iSCSI LIF容錯移轉功能可在所有SAN Array ASA （簡稱「ESCSI」）平台上使用。
 +
-iSCSI LIF容錯移轉會自動啟用（容錯移轉原則設為「僅限合作夥伴」、自動還原值設為「true」） 在新建立的iSCSI LIF上、如果指定的儲存VM中不存在iSCSI LIF、或指定儲存VM中的所有現有iSCSI LIF已啟用iSCSI LIF容錯移轉。
+iSCSI LIF容錯移轉會自動啟用（容錯移轉原則設為「僅限合作夥伴」、自動還原值設為「true」） 在新建立的iSCSI LIF上、如果指定的SVM中不存在iSCSI LIF、或指定SVM中的所有現有iSCSI LIF已啟用iSCSI LIF容錯移轉。
 
 +
-如果在升級至ONTAP 版本更新至版本的版本時、您的儲存VM中已有iSCSI LIF LIF容錯移轉功能尚未啟用的現有iSCSI LIF、而且您在相同的儲存VM中建立新的iSCSI LIF、 新的iSCSI生命體採用與儲存VM中現有iSCSI生命體相同的容錯移轉原則（「停用」）。
+如果在升級ONTAP 至版本S209.11.1或更新版本之後、SVM中的現有iSCSI LIF已啟用iSCSI LIF容錯移轉功能、而且您在相同SVM中建立新的iSCSI LIF、 新的iSCSI生命體採用與SVM中現有iSCSI生命體相同的容錯移轉原則（「停用」）。
 
 +
 link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
 
 
+
+從ONTAP 版本號《支援》9.12.0開始、您所遵循的程序取決於您所使用的介面（System Manager或CLI）：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*使用System Manager新增網路介面*
+
+.步驟
+. 選擇*網路>總覽>網路介面*。
+. 選取 image:icon_add.gif["新增圖示"]。
+. 選取下列其中一個介面角色：
++
+.. 資料
+.. 叢集間
+.. SVM管理
+
+
+. 選取傳輸協定：
++
+.. SMB/CIFS與NFS
+.. iSCSI
+.. FC
+.. NVMe / FC
+.. NVMe / TCP
+
+
+. 命名LIF或接受先前選擇所產生的名稱。
+. 接受主節點、或使用下拉式選單選取一個節點。
+. 如果在所選SVM的IPspace中至少設定一個子網路、則會顯示子網路下拉式清單。
++
+.. 如果您選取子網路、請從下拉式清單中選擇該子網路。
+.. 如果您在沒有子網路的情況下繼續、則會顯示「廣播網域」下拉式清單：
++
+... 指定IP位址。如果IP位址正在使用中、則會顯示警告訊息。
+... 指定子網路遮罩。
+
+
+
+
+. 從廣播網域中選取主連接埠、可以是自動（建議）、也可以從下拉式功能表中選取一個。主連接埠控制項會根據廣播網域或子網路選擇來顯示。
+. 儲存網路介面。
+
+
+--
+.CLI
+--
+*使用CLI建立LIF*
 
 .步驟
 . 建立LIF：
@@ -77,10 +132,10 @@ network interface create -vserver vserver_name -lif lif_name -service-policy ser
 ** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。"network rout" creation"手冊頁包含有關在SVM中建立靜態路由的資訊。
 ** 「自動還原」可讓您指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、是否將資料LIF自動還原至其主節點。預設設定為「假」、但您可以根據環境中的網路管理原則、將其設定為「真」。
 ** 從功能介紹9.5開始、您ONTAP 可以使用「服務原則」選項來指派LIF的服務原則。當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
-** 「資料傳輸協定」可讓您建立支援光纖通道傳輸協定（FCP）或NVMe / FC傳輸協定的LIF。建立IP LIF時不需要此選項。
+** 「資料傳輸協定」可讓您建立支援FCP或NVMe/FC傳輸協定的LIF。建立IP LIF時不需要此選項。
 
 
-. *選用*：如果您要在-address選項中指派IPv6位址：
+. *選用*：在-address選項中指派IPv6位址：
 +
 .. 使用network NDP prefix show命令查看在各種介面上學習到的RA前置詞清單。
 +
@@ -95,7 +150,7 @@ network interface create -vserver vserver_name -lif lif_name -service-policy ser
 
 
 
-. 使用「network interface show」命令確認LIF已成功建立。
+. 使用「network interface show」命令確認是否已建立LIF。
 . 確認已設定的IP位址可連線：
 
 
@@ -110,10 +165,6 @@ network interface create -vserver vserver_name -lif lif_name -service-policy ser
 
 | IPv6位址 | 網路ping6. 
 |===
-
-
-== 範例
-
 下列命令會建立LIF、並使用「-address'（位址）」和「-netmask'（網路遮罩）」參數來指定IP位址和網路遮罩值：
 
 ....
@@ -129,3 +180,5 @@ network interface create -vserver vs3.example.com -lif datalif3 -service-policy 
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -data-protocol nvme-fc -home-node node-4 -home-port 1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
 ....
+--
+====

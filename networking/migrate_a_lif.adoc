@@ -44,6 +44,25 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
 * 當您移轉來源或目的地LIF時、VMware VAAI複製卸載作業會失敗。如需VMware VAAI的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS參考資料"^] 或 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D97EE182-9068-4BD8-A3BF-F5C458303740.html["SAN管理"^]。
 
 
+您所遵循的程序取決於您使用的介面：System Manager或CLI：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*使用System Manager移轉網路介面*
+
+.步驟
+. 選擇*網路>總覽>網路介面*。
+. 選取 image:icon_kabob.gif["「kebob」圖示"] 您要變更的網路介面旁的*>移轉*。
+. 儲存您的變更。
+
+
+--
+.CLI
+--
+*使用CLI移轉LIF*
+
 視您要移轉特定LIF或所有LIF而定、請執行適當的動作：
 
 [cols="30,70"]
@@ -83,3 +102,5 @@ network interface migrate -vserver vs0 -lif datalif1 -dest-node node0b -dest-por
 ....
 network interface migrate-all -node local
 ....
+--
+====

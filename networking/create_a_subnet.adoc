@@ -14,19 +14,47 @@ summary: 建立子網路
 
 
 [role="lead"]
-建立廣播網域之後、您可以建立子網路、以便在稍後為SVM建立生命區段時、配置特定的IPV4或IPv6位址區塊、以供日後使用。
+您可以建立子網路、以配置稍後為SVM建立LIF時所使用的特定IPv4或IPv6位址區塊。
 
 這可讓您更輕鬆地建立lifs、方法是指定子網路名稱、而非為每個LIF指定IP位址和網路遮罩值。
 
 您必須是叢集管理員才能執行此工作。
 
+您所遵循的程序取決於您使用的介面：System Manager或CLI：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*從ONTAP 版本S59.12.0開始、您可以使用System Manager建立子網路*
+
+.步驟
+. 選擇*網路>總覽>子網路*。
+. 按一下 image:icon_add.gif["新增圖示"] 以建立子網路。
+. 命名子網路。
+. 指定子網路IP位址。
+. 設定子網路遮罩。
+. 定義組成子網路的IP位址範圍。
+. 如果有用、請指定閘道。
+. 選取子網路所屬的廣播網域。
+. 儲存您的變更。
++
+.. 如果輸入的IP位址或範圍已被介面使用、則會顯示下列訊息：「LIF已在使用此範圍內的IP位址。將LIF與此子網路建立關聯
+.. 當您按一下「*確定*」時、現有的LIF將會與子網路相關聯。
+
+
+
+
+--
+.CLI
+--
+*使用CLI建立子網路*
+
 .步驟
 . 建立子網路。
 +
-[listing]
-----
-network subnet create -broadcast-domain ipspace1 -ipspace ipspace1 -subnet-name ipspace1 -subnet 10.0.0.0/24 -gateway 10.0.0.1 -ip-ranges "10.0.0.128-10.0.0.130,10.0.0.132"
-----
+「網路子網路create -space-domain_ipspace1_-IPspace _ipspace1_-subnet-name _ipspace1_-subnet _10.0.0.0/24_-gateway _10.0.0.1_-ip-ranges _"10.0.128.0.130,10.0.132__」
+
 +
 子網路名稱可以是子網路IP值、例如「192.0/24」、也可以是像本範例所用的字串「ipspace1」。
 
@@ -35,6 +63,9 @@ network subnet create -broadcast-domain ipspace1 -ipspace ipspace1 -subnet-name 
 此範例的輸出顯示了有關ipspace1 IPspace中名為ipspace1的子網路資訊。子網路屬於廣播網域名稱ipspace1。您可以將此子網路中的IP位址指派給在ipspace1 IPspace中所建立之SVM的資料LIF。
 
 +
-「network subnet show -IPspace ipspace1」
+「network subnet show -IPspace _ipspace1_」
 
 
+
+--
+====

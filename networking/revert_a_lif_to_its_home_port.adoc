@@ -22,6 +22,25 @@ summary: LIF容錯移轉或移轉後、會將其還原至主連接埠
 * 您必須確保已啟用「自動還原」選項、以便讓l生命 回復到主連接埠。
 
 
+您所遵循的程序取決於您使用的介面：System Manager或CLI：
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*使用System Manager將網路介面還原為其主連接埠*
+
+.步驟
+. 選擇*網路>總覽>網路介面*。
+. 選取 image:icon_kabob.gif["「kebob」圖示"] 您要變更的網路介面旁的*>還原*。
+. 儲存您的變更。
+
+
+--
+.CLI
+--
+*使用CLI將LIF還原為其主連接埠*
+
 手動或自動將LIF還原至主連接埠：
 
 [cols="30,70"]
@@ -31,8 +50,10 @@ summary: LIF容錯移轉或移轉後、會將其還原至主連接埠
 | 如果您想要將LIF還原至其主連接埠... | 然後輸入下列命令... 
 
 
-| 手動 | 網路介面還原-vserver vserver_name -lIF lif_name 
+| 手動 | "network interface revert -vserver vserver_name -lIF lif_name"（網路介面回復-vserver vserver_name -liflif_name） 
 
 
-| 自動 | 網路介面修改-vserver vserver_name -liflif_name -auta-revert true 
+| 自動 | 「網路介面modify -vserver vserver_name -lif_name -auta-revert true」 
 |===
+--
+====
