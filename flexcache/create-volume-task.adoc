@@ -20,7 +20,7 @@ summary: 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以�
 .步驟
 . 如果FlexCache 要建立的實體磁碟區位於不同的叢集、請建立叢集對等關係：
 +
-.. 在目的地叢集上、建立與資料保護來源叢集的對等關係：+「叢集對等端點建立-產生密碼-提供到期日：月/日/西元年份：月：月：月：SS| 1 ... 7天1 ...168hours-對等 端點對等端點_LIF_IP -initial-allowed-vserver_peers SVM_name、.|*-IPspace_name_space'
+.. 在目的地叢集上、建立與資料保護來源叢集的對等關係：+「叢集對等端點建立-產生密碼-提供到期日：月/日/年：月：月：月：月1日...7天1 ...168hours-對等 端點_對等 端點_Peer_LIF_IP_-initial-allowed-vserver_Peers _svm_name_、.|IP_space*-name_
 +
 從ONTAP 功能支援的9.6開始、建立叢集對等關係時、預設會啟用TLS加密。支援TLS加密、以便在來源FlexCache 與實體磁碟區之間進行叢集間通訊。您也可以視需要停用叢集對等關係的TLS加密。
 
@@ -37,7 +37,7 @@ cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -i
 
 Warning: make a note of the passphrase - it cannot be displayed again.
 ----
-.. 在來源叢集上、將來源叢集驗證至目的地叢集：+「叢集對等實體create -對等 端點addrs Peer_LIF_IPs -IPSpace IPSpace」
+.. 在來源叢集上、將來源叢集驗證至目的地叢集：+「叢集對等實體create -對等 實體_Peer_LIF_IPS_-IPSpace _IPspace_」
 +
 [listing]
 ----
@@ -55,7 +55,7 @@ Clusters cluster02 and cluster01 are peered.
 
 . 如果FlexCache 將SVM磁碟區放在不同於原始磁碟區的SVM中、請建立SVM對等關係、並使用「FlexCache S動說」作為應用程式：
 +
-.. 如果SVM位於不同的叢集中、請為對等SVM建立SVM權限：+「vserver對等權限create -對等 叢集叢集名稱-vserver Svm-name -application_sinf2 FlexCache 」
+.. 如果SVM位於不同的叢集中、請為對等SVM建立SVM權限：+「vserver對等權限create -對等 叢集_cluster name_-vserver _Svm-name_-applics FlexCache finu32」
 +
 下列範例說明如何建立適用於所有本機SVM的SVM對等權限：
 
@@ -68,12 +68,12 @@ Warning: This Vserver peer permission applies to all local Vservers. After that 
 "vserver peer accept" command required for Vserver peer relationship creation request
 from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
 ----
-.. 建立SVM對等關係：+「vserver對等端點create -vserver local_SVM -對等 虛擬伺服器remonte_SVM -對等 叢集叢集名稱-application_sinf2 FlexCache 」
+.. 建立SVM對等關係：+「vserver對等端點create -vserver local_SVM -對等 虛擬伺服器_svm_-對等 叢集_cluster name_-applics FlexCache 才能實現。
 
 
 . 建立FlexCache 一個流通量：
 +
-「Volume FlexCache flexcreate -vserver cache_SVM -volume cache vol_name -autore-Prove-as FlexGroup fors-大小vol_size -orige-vserver orige_SVM -orige-volume orige_vol_name」
+「Volume FlexCache flexcreate -vserver _cache _Svm_-volume _cache vol_name_-autoProve-as FlexGroup flex-size _vol_size_-orige-vserver _origine_Svm_-origore-volume _origor_v_name_」
 
 +
 以下範例建立FlexCache 一個現象區、並自動選取現有的集合體進行資源配置：
