@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/respond-abnormal-task.html 
-keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack 
-summary: 當反勒索軟體偵測到受保護Volume中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。 
+keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, autonomous, ransomware, protection, arp 
+summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。 
 ---
 = 回應異常活動。
 :toc: macro
@@ -19,13 +19,13 @@ summary: 當反勒索軟體偵測到受保護Volume中的異常活動時、就�
 
 
 [role="lead"]
-當反勒索軟體偵測到受保護Volume中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。
+當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。
 
 .您的需求
-* 反勒索軟體正在作用中模式中執行。
+* 以作用中模式執行的是ARP。
 
 
-當反勒索軟體偵測到高資料Entropy、異常Volume活動與資料加密、以及異常檔案副檔名的任何組合時、會顯示可疑檔案的清單。
+當Arp偵測到高資料Entropy、異常Volume活動與資料加密、以及異常檔案副檔名的任何組合時、會顯示可疑檔案的清單。
 
 發出警告時、您可以透過下列兩種方式之一來標記檔案活動：
 
@@ -39,15 +39,16 @@ summary: 當反勒索軟體偵測到受保護Volume中的異常活動時、就�
 
 
 
-在這兩種情況下、正常監控會在更新及清除通知後恢復；反勒索軟體會記錄您的評估、以新檔案類型更新記錄、並使用這些記錄進行未來分析。不過、若發生可疑的攻擊、您必須先判斷是否為攻擊、如果是攻擊、請加以回應、然後在清除通知之前還原受保護的資料。如需詳細資訊、請參閱 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["如何從勒索軟體攻擊中恢復"]。
+在這兩種情況下、正常監控會在更新及清除通知後繼續進行；您的評估會由Arp記錄、使用新的檔案類型更新記錄、並用於未來的分析。不過、若發生可疑的攻擊、您必須先判斷是否為攻擊、如果是攻擊、請加以回應、然後在清除通知之前還原受保護的資料。 link:index.html#how-to-recover-hdata-in-ontap-after-a-ransomware-attack["深入瞭解如何從勒索軟體攻擊中恢復"]。
 
 
 NOTE: 如果您還原整個Volume、則不會有任何通知需要清除。
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+.步驟
+====
+.系統管理員
+--
 . 當您收到「異常活動」通知時、請按一下連結、或瀏覽至* Volumes *總覽的* Security（安全性）*標籤。
 +
 警告會顯示在「事件」視窗的「總覽」窗格中。
@@ -69,12 +70,11 @@ NOTE: 如果您還原整個Volume、則不會有任何通知需要清除。
 | 誤判 | 按一下「*更新*」和「*清除可疑的檔案類型*」以記錄您的決策、並恢復正常的勒索軟體監控。 
 
 
-| 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、以記錄您的決策、並恢復正常的勒索軟體監控。+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
+| 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、記錄您的決策並恢復正常的ARP監控。+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
 |===
-
-
-== CLI程序
-
+--
+.CLI
+--
 . 當您收到可疑勒索軟體攻擊的通知時、請確認攻擊的時間和嚴重性：
 +
 「安全性防勒索軟體Volume show -vserver _svm_name_-volume _vol_name_」
@@ -127,7 +127,7 @@ Number of Attacks: 1
 
 ** 可能的勒索軟體攻擊
 +
-回應攻擊並還原資料。然後輸入下列命令、記錄您的決定並恢復正常的勒索軟體監控：
+回應攻擊並還原資料。然後輸入下列命令、記錄您的決定並恢復正常的ARP監控：
 
 +
 「反勒索軟體磁碟區攻擊清除可疑的-vserver _Svm_name_-volume _vol_name_[_extension identids_]-假 正假」
@@ -141,3 +141,6 @@ Number of Attacks: 1
 
 
 
+
+--
+====

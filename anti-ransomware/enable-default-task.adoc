@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/enable-default-task.html 
-keywords: system manager, cli, enable, anti-ransomware, anti ransomware, antiransom, antiransomware, default, volumes, configure, storage volumes, enable anti-ransomware in system manager, modify, storage VM, SVM, create 
+keywords: system manager, cli, enable, anti-ransomware, anti ransomware, antiransom, antiransomware, autonomous, ransomware, protection, arp, default, volumes, configure, storage volumes, enable anti-ransomware in system manager, modify, storage VM, SVM, create 
 summary: 從ONTAP 功能更新至功能更新至功能更新、您可以設定儲存虛擬機器（SVM）、以便在學習模式中預設啟用新磁碟區來執行防勒索軟體。 
 ---
-= 在新磁碟區中預設啟用反勒索軟體
+= 在新磁碟區中預設啟用「自動勒索軟體保護」
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,7 +19,7 @@ summary: 從ONTAP 功能更新至功能更新至功能更新、您可以設定�
 
 
 [role="lead"]
-從ONTAP 功能更新至功能更新至功能更新、您可以設定儲存虛擬機器（SVM）、以便在學習模式中預設啟用新磁碟區來執行防勒索軟體。
+從ONTAP S廳9.10.1開始、您可以設定儲存VM（SVM）、以便在學習模式中預設啟用新磁碟區、以進行自發勒索軟體保護（Arp）。
 
 .您的需求
 * 已針對ONTAP 您的版本安裝正確的授權。
@@ -44,22 +44,25 @@ Mt_E_Mgmt（多租戶金鑰管理）
 |===
 
 
-預設會以停用模式的勒索軟體建立新的Volume、但您可以在System Manager和CLI中變更此設定。在學習模式中、預設啟用的Volume會設為反勒索軟體。
+預設會以停用模式建立新磁碟區、但您可以在System Manager和CLI中變更此設定。在學習模式中、預設啟用的磁碟區會設為「ARP」。
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+.步驟
+====
+.系統管理員
+--
 . 按一下「*儲存設備>儲存設備VM*」、然後選取預設防毒的儲存VM。
-. 在*設定*索引標籤中、[在*安全性*區段]、按一下 image:icon_pencil.gif["筆圖示"] 在「*防勒索軟體*」方塊中、勾選此方塊以啟用NAS磁碟區的防勒索軟體。
+. 在*設定*索引標籤中、[在*安全性*區段]、按一下 image:icon_pencil.gif["筆圖示"] 在*反勒索軟體*方塊中、勾選此方塊以啟用NAS磁碟區的ARP。
 
 
-
-
-== CLI程序
-
-. 修改現有的SVM、在新磁碟區中預設啟用反勒索軟體：「vserver modify -vserver _svm_name_-anti-勒索 軟體-default-volume狀態dle-run」
+--
+.CLI
+--
+. 修改現有的SVM以在新磁碟區中預設啟用Arp：「vserver modify -vserver _svm_name_-anti-勒索 軟體-default-volume狀態dle-run」
 +
-在CLI中、您也可以針對新磁碟區建立新的SVM、並預設啟用反勒索軟體。「vserver create -vserver Svm_name -anti-勒索 軟體-default-volume狀態dreme-run [_other parameters as ed_]」
+在CLI中、您也可以針對新磁碟區建立新的SVM、並在預設情況下啟用Arp。「vserver create -vserver Svm_name -anti-勒索 軟體-default-volume狀態dreme-run [_other parameters as ed_]」
 
 
+
+--
+====

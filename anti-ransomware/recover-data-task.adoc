@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/recover-data-task.html 
-keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshot copies, potential ransomware attack, ransomware attack, recovery snapshot copies are deleted, recover deleted snapshot copies 
+keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshot copies, potential ransomware attack, ransomware attack, recovery snapshot copies are deleted, recover deleted snapshot copies, autonomous, ransomware, protection, arp 
 summary: 當勒索軟體偵測到潛在攻擊時、就會建立名為「反勒索軟體備份」的Snapshot複本。您可以從這些勒索軟體複本或其他Snapshot複本還原資料。 
 ---
-= 攻擊後還原資料
+= 勒索軟體攻擊後還原資料
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,28 +19,31 @@ summary: 當勒索軟體偵測到潛在攻擊時、就會建立名為「反勒�
 
 
 [role="lead"]
-當勒索軟體偵測到可能的攻擊時、就會建立名為「anti-勒索 軟體備份」的Snapshot複本。您可以從這些勒索軟體複本或其他Snapshot複本還原資料。
+當自發勒索軟體保護（Arp）偵測到可能的攻擊時、就會建立名為「Anti-勒索 軟體備份」的Snapshot複本。您可以從這些ARP複本或其他Snapshot複本還原資料。
 
 
 NOTE: 如果發生勒索軟體攻擊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["勒索軟體在ONTAP VMware中的預防與恢復"^] 以取得更多有關恢復與未來緩解的資訊。
 
 .您的需求
-* 啟用反勒索軟體
+* 已啟用ARP
 * 潛在勒索軟體攻擊的報告
 
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+.步驟
+====
+.系統管理員
+--
 . 在潛在攻擊中識別的磁碟區中顯示Snapshot複本：按一下* Storage > Volumes *、選取該磁碟區、然後按一下Snapshot Copies（快照複本）索引標籤。
 . 依照下列指示還原所需的複本：link:../task_dp_recover_snapshot.html["從Snapshot複本恢復"]
 
 
-
-
-== CLI程序
-
+--
+.CLI
+--
 . 在潛在攻擊中識別的磁碟區中顯示Snapshot複本：「Volume Snapshot show -vserver _Svm_name_-volume _vol_name_」
 . 依照下列指示還原所需的複本：link:../data-protection/restore-contents-volume-snapshot-task.html["從Snapshot複本還原檔案"]
 
+
+--
+====

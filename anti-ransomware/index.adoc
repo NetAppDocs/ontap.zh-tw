@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
-keywords: anti-ransomware overview, ransomware, security, introduce, protection, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
-summary: 從ONTAP 功能部件支援的支援範圍9.10.1開始、反勒索軟體功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測並警告可能表示勒索軟體攻擊的異常活動。 
+keywords: anti-ransomware overview, ransomware, security, introduce, autonomous, protection, arp, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
+summary: 從功能性的S廳9.10.1開始ONTAP 、自發勒索軟體保護（Arp）功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測可能表示勒索軟體攻擊的異常活動、並提出警示。 
 ---
-= 勒索軟體總覽
+= 自主勒索軟體保護總覽
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,11 +19,11 @@ summary: 從ONTAP 功能部件支援的支援範圍9.10.1開始、反勒索軟�
 
 
 [role="lead"]
-從ONTAP 功能部件支援的支援範圍9.10.1開始、反勒索軟體功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測並警告可能表示勒索軟體攻擊的異常活動。
+從功能性的S廳9.10.1開始ONTAP 、自發勒索軟體保護（Arp）功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測可能表示勒索軟體攻擊的異常活動、並提出警示。
 
-如果懷疑發生攻擊、除現有的Snapshot複本保護措施之外、反勒索軟體也會建立新的Snapshot複本。
+當懷疑有攻擊時、除了現有的Snapshot複本保護措施之外、Arp也會建立新的Snapshot複本。
 
-反勒索軟體功能會以下列授權啟用。
+使用下列授權即可啟用「ARP」功能。
 
 [cols="2*"]
 |===
@@ -43,11 +43,11 @@ anti-勒索 軟體
 Mt_E_Mgmt（多租戶金鑰管理）
 
 |===
-* 如果您要升級ONTAP 至VMware版本9.11.1或更新版本、且系統上已設定防勒索軟體保護功能、則不需要購買新的防勒索軟體授權。對於新的勒索軟體組態、需要新的授權。
-* 如果您從ONTAP VMware版本9.11.1或更新版本還原ONTAP 至VMware版本9.10.1、且已使用勒索軟體授權啟用反勒索軟體保護、您將會看到一則警告訊息、可能需要重新設定反勒索軟體。 link:../revert/anti-ransomware-license-task.html["深入瞭解還原勒索軟體保護"]。
+* 如果您要升級ONTAP 至VMware 9.11.1或更新版本、且系統上已設定了Arp、則不需要購買新的勒索軟體授權。對於新的ARP組態、需要新的授權。
+* 如果您要從ONTAP VMware版本9.11.1或更新版本還原ONTAP 至VMware版本9.10.1、且已啟用具有反勒索軟體授權的Arp、您將會看到一則警告訊息、可能需要重新設定Arp。 link:../revert/anti-ransomware-license-task.html["瞭解如何還原Arp"]。
 
 
-您可以使用ONTAP VMware系統管理員或ONTAP VMware命令列介面（CLI）、針對每個Volume設定反勒索軟體保護。
+您可以使用ONTAP 「靜態系統管理員」或ONTAP 「靜態命令列介面」（CLI）、根據每個磁碟區來設定ARP。
 
 
 
@@ -57,13 +57,13 @@ Mt_E_Mgmt（多租戶金鑰管理）
 
 類似的例子是車輛的安全功能。您不想仰賴單一功能（例如座椅安全帶）來在意外事故中提供完整的保護。安全袋、防鎖定煞車和前方撞擊警示都是額外的安全功能、可帶來更好的結果。勒索軟體保護應以相同方式檢視。
 
-雖然包含FPolicy、Snapshot Copies、VMware及VMware數位顧問等功能、可協助防範勒索軟體、但下列資訊則著重於具備機器學習功能的「包含物件的防勒索軟體」內建功能。ONTAP SnapLock Active IQ ONTAP
+雖然包含FPolicy、Snapshot Copies、VMware及VMware等功能、可協助防範勒索軟體、但下列資訊則著重於具備機器學習功能的「隨裝即用即用即用即用即用」功能。ONTAP SnapLock Active IQ Digital Advisor ONTAP
 
 若要深入瞭解ONTAP的其他反勒索軟體功能、請參閱： https://www.netapp.com/media/7334-tr4572.pdf["TR-4572：NetApp勒索軟體解決方案。"^]
 
 
 
-== 什麼是反勒索軟體偵測到的ONTAP
+== 什麼是Arp偵測到的ONTAP
 
 勒索軟體攻擊有兩種類型：
 
@@ -71,7 +71,7 @@ Mt_E_Mgmt（多租戶金鑰管理）
 . 機密專屬資料遭竊。除非支付贖金、否則攻擊者有可能將此資料發佈至公有網域。
 
 
-利用反勒索軟體偵測機制、以下列各項為基礎、提供第一種類型的勒索軟體保護：ONTAP
+利用反勒索軟體偵測機制、即可解決第一種類型的問題、此機制的基礎為：ONTAP
 
 . 將傳入資料識別為加密或純文字。
 . 偵測到的分析
@@ -84,7 +84,7 @@ Mt_E_Mgmt（多租戶金鑰管理）
 
 
 
-NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體攻擊的安全性。雖然攻擊可能無法偵測、但如果防毒軟體無法偵測到入侵、NetApp勒索軟體保護功能就會成為重要的額外防禦層。反勒索軟體只要加密少數檔案、就能偵測大多數勒索軟體攻擊的傳播、並自動採取行動保護資料、並在發生可疑攻擊時發出警示。
+NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體攻擊的安全性。雖然攻擊可能無法偵測、但如果防毒軟體無法偵測到入侵、NetApp Arp將成為重要的額外防禦層。在僅加密少數檔案、自動採取行動保護資料、並在發生可疑攻擊時發出警示、因此、ARP可以偵測大多數勒索軟體攻擊的擴散。
 
 
 
@@ -96,7 +96,7 @@ NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體�
 
 瞭解受影響的檔案和攻擊時間之後、就能選擇性地從各種Snapshot複本中還原受影響的檔案、而不只是將整個磁碟區還原成其中一個快照。
 
-如此一來、反勒索軟體就建置在獲證實ONTAP 的「不可靠資料保護」和災難恢復技術之上、以因應勒索軟體攻擊。如需恢復資料的詳細資訊、請參閱下列主題。
+因此、Arp建置在獲證實ONTAP 的資料保護和災難恢復技術之上、以因應勒索軟體攻擊。如需恢復資料的詳細資訊、請參閱下列主題。
 
 * link:../task_dp_recover_snapshot.html["從Snapshot複本恢復（System Manager）"]
 * link:../data-protection/restore-contents-volume-snapshot-task.html["從Snapshot複本（CLI）還原檔案"]
