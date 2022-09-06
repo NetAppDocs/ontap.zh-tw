@@ -27,15 +27,17 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 
 支援的系統管理程式ONTAP xref:../concept_cluster_performance_overview.adoc[效能監控工具] 管理叢集健全狀況和指標。
 
+如果延遲明顯增加、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["開啟NetApp ONTAP 功能的「NetApp功能性檔案系統分析」後、延遲時間會大幅或波動"^]。
+
 * SVM保護關係*
 
 如果您已在包含SVM的磁碟區上啟用檔案系統分析功能、則分析資料不會複寫到目的地SVM。如果來源SVM必須在還原作業中重新同步、則您必須在還原後手動重新啟用所需磁碟區的分析功能。
 
 
 
-== RBAC
+== 角色型存取控制（RBAC）
 
-如果您是System Manager或ONTAP Rusrest API的使用者 xref:../concepts/administrator-authentication-rbac-concept.html[RBAC] 在您的《支援需求》設定中ONTAP 、您需要建立專屬角色、以便在檔案系統分析中適度存取「活動追蹤」。
+如果您使用 xref:../concepts/administrator-authentication-rbac-concept.html[角色型存取控制] （RBAC）ONTAP 在System Manager或R靜止API中、您需要建立專屬角色、以便在檔案系統分析中適度存取「活動追蹤」。
 
 .控制活動追蹤的存取權
 . 建立預設角色以存取所有功能。在建立限制角色之前、必須先完成這項作業、以確保「活動追蹤」上的角色僅受到限制：
@@ -53,7 +55,7 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 ** 「ysmgr"」存取系統管理程式
 +
 ====
-Vserver服務網路存取create -vserver _svm-name_-name rest -role storageAdmin + vserver服務網路存取create -vserver _svm-name_-name安全性-role storageAdmin + vserver服務網路存取create -vserver _svm-name_-name sysmgr -role storageAdmin
+Vserver服務網路存取create -vserver _svm-name_-name rest -role storageAdmin vserver服務網路存取create -vserver _svm-name_-name安全性-role storageAdmin vserver服務網路存取create -vserver _svm-name_-name sysmgr -role storageAdmin
 
 ====
 
