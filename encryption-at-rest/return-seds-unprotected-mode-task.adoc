@@ -45,7 +45,7 @@ Info: Starting modify on 14 disks.
 「torage加密磁碟顯示狀態」
 
 +
-重複執行show-STATUS命令、直到數字相同為止。當「磁碟已開始」和「磁碟已完成」中的數字相同時、即表示作業已完成。
+重複執行show-STATUS命令、直到「磁碟已開始」和「磁碟已完成」中的數字相同為止。
 
 +
 [listing]
@@ -85,5 +85,30 @@ Info: Starting modify on 14 disks.
 
 +
 重複執行show-STATUS命令、直到數字相同為止。當「磁碟已開始」和「磁碟已完成」中的數字相同時、即表示作業已完成。
+
+
+
+
+
+== 維護模式
+
+從支援功能9.7開始ONTAP 、您可以從維護模式重新輸入FIPS磁碟機的金鑰。只有在ONTAP 無法使用上一節中的指令時、才應使用維護模式。
+
+.步驟
+. 將節點的FIPS驗證金鑰ID設回預設的MSID 0x0：
++
+"Disk加密rekey_FIPS 0x0 _disklist_"
+
+. 將節點的資料驗證金鑰ID設回預設的MSID 0x0：
++
+"Disk加密rekey x0 _disklist_"
+
+. 確認FIPS驗證金鑰已成功重新輸入：
++
+「磁碟加密show_FIPS」
+
+. 確認資料驗證金鑰已成功重新輸入：
++
+「磁碟加密展示」
 
 
