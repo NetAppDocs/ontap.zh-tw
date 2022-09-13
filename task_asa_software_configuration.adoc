@@ -45,18 +45,13 @@ System Manager會引導您完成初始化叢集、建立本機層級、設定通
 
 
 
-== 不受限制ASA
+== 部分組態限制ASA
 
-您必須瞭解AFF 使用ASA 不符合ONTAP 《支援還原所有SAN陣列》（簡稱「還原」）控制器的限制與限制、才能順利執行到《支援還原》（版本號：1.9.1）之前的版本。
+您應該使用AFF 針對「完整的SAN陣列ASA （ESCSI）」控制器所建立的已測試及支援的最大組態限制。為確保可靠作業、您不應超過中所列的目前已測試及支援限制 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-ASA不支援NVMe傳輸協定。
+從推出支援非MetroCluster IP組態的ONTAP 版本起、最多AFF ASA 可支援12個節點、MetroCluster 而支援多達8個節點、以利進行支援。
 
-
-NOTE: 藉助ONTAP 於供應支援的支援功能、NVMe的傳輸協定支援現已隨AFF ASA 附於一個支援的系統上。
-
-您應該使用AFF 針對「完整的SAN陣列ASA 」（簡稱「支援」）控制器所建立的已測試及支援的最大組態限制。為確保可靠作業、您不應超過中所列的目前已測試及支援限制 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
-
-附註：ONTAP 有了FAS9.9.1、客戶現在可以擴充AFF ASA 多達12個節點的支援功能。現在、客戶也可以在AFF 支援ASA 支援靜態的各個平台上部署8節點MCC IP組態。
+此外ONTAP 、從支援支援NVM9.9.1開始、所有AFF ASA 的支援都支援NVMe傳輸協定、但不支援MetroCluster 針對功能進行設定的控制器。不支援NVMe組態。MetroCluster
 
 
 
@@ -96,4 +91,4 @@ NOTE: 藉助ONTAP 於供應支援的支援功能、NVMe的傳輸協定支援現�
 
 在System Manager儀表板中、按一下*叢集>總覽*、然後選取系統節點。*特性*顯示為*所有SAN陣列*。
 
-在CLI中、您可以使用SAN config show命令。「All SAN Array（所有SAN陣列）」的值會傳回ASA 為「true（真實）」的不實。
+在CLI中、您可以使用「shan config show」命令。「All SAN Array（所有SAN陣列）」的值會傳回ASA 為「true（真實）」的不實。
