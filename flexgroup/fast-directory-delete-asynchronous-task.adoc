@@ -15,17 +15,29 @@ summary: 從ONTAP 功能表9.8開始、您可以使用Volume檔案as同步 刪�
 
 如果您使用ONTAP 的是版本早於ONTAP 《Sf2 9.11.1》的版本、則必須是叢集管理員或使用進階權限模式的SVM管理員。
 
-從功能更新9.11.1開始ONTAP 、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端執行非同步刪除作業。如需詳細資訊、請參閱 xref:manage-client-async-dir-delete-task.adoc[管理用戶端權限以快速刪除目錄]。
+從功能更新9.11.1開始ONTAP 、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端執行非同步刪除作業。如需詳細資訊、請參閱 link:manage-client-async-dir-delete-task.html["管理用戶端權限以快速刪除目錄"]。
 
 從功能介紹9.8開始ONTAP 、您可以使用ONTAP 功能介紹的功能就是使用功能介紹的功能。從功能支援的9.9開始ONTAP 、您可以搭配System Manager使用此功能。如需此程序的詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
 
 [role="tabbed-block"]
 ====
+.系統管理員
+--
+如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
+
+--
 .CLI
 --
-.使用CLI執行快速目錄刪除：
-. 進入進階權限模式：「et -priv
-. 刪除FlexVol 位於Isfor FlexGroup Sfidvolume上的檔案或目錄：「Volume file asal同步 刪除start -vserver _Svm_name_-volume _volume _name_-path _file_path_-cath_cid_value_'
+*使用CLI執行快速目錄刪除*
+
+. 進入進階權限模式：
++
+「權限提升」
+
+. 刪除FlexVol 關於一個或FlexGroup 多個文件名的文件或目錄：
++
+「Volume file as同步 刪除start -vserver vserver_name -volume volume volume volume Volume name -path file_path -節 流」
+
 +
 最小節流值為10、最大值為100、000、預設值為5000。
 
@@ -33,25 +45,27 @@ summary: 從ONTAP 功能表9.8開始、您可以使用Volume檔案as同步 刪�
 下列範例會刪除名為D2的目錄、該目錄位於名為D1的目錄中。
 
 +
-[listing]
-----
+....
 cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
-----
-. 確認目錄已刪除：「EVENT log show」（事件記錄顯示）
+....
+. 確認目錄已刪除：
++
+「事件記錄顯示」
+
 +
 下列範例顯示成功刪除目錄時事件記錄的輸出。
 
 +
-[listing]
-----
+....
 cluster-cli::*> event log show
 Time                 Node             Severity      Event
 -------------------  ---------------- ------------- --------------------
 MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed.
-----
+....
 
 
-.取消目錄刪除工作
+*取消目錄刪除工作*
+
 . 進入進階權限模式：
 +
 "進階權限"
@@ -70,9 +84,7 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 
 --
-.系統管理員
 --
-如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根據分析採取修正行動"]。
 
 --
 ====

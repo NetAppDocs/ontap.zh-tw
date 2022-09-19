@@ -1,21 +1,55 @@
 ---
 permalink: disks-aggregates/index.html 
 sidebar: sidebar 
-keywords: decide, overview, disks, aggregates, manage, physical, storage, aggregates, flash pool, disks, raid, policies 
-summary: 您可以ONTAP 使用CLI管理實體儲存設備。 
+keywords: decide, overview, disk, aggregate, local tier, manage, physical, storage, flash pool, raid, policies, policy 
+summary: 您可以ONTAP 使用System Manager和CLI來管理實體儲存設備。您可以建立、擴充及管理本機層（Aggregate）、使用Flash Pool本機層（Aggregate）、管理磁碟及管理RAID原則。 
 ---
-= 磁碟與集合體總覽
+= 磁碟與本機層（Aggregate）總覽
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以ONTAP 使用CLI管理實體儲存設備。您可以建立、擴充及管理集合體、使用Flash Pool Aggregate、管理磁碟及管理RAID原則。
+您可以ONTAP 使用System Manager和CLI來管理實體儲存設備。您可以建立、擴充及管理本機層（Aggregate）、使用Flash Pool本機層（Aggregate）、管理磁碟及管理RAID原則。
+
+
+
+== 什麼是本機層級（集合體）
+
+_本機層_（也稱為_aggregate）是節點管理之磁碟的容器。您可以使用本機層來隔離具有不同效能需求的工作負載、以不同存取模式分層資料、或將資料隔離以符合法規要求。
+
+* 對於需要最低延遲和最高效能的業務關鍵應用程式、您可以建立一個完全由SSD組成的本機層。
+* 若要以不同的存取模式來分層資料、您可以建立_混合式本機層_、將Flash部署為高效能快取、以供工作資料集使用、同時使用成本較低的HDD或物件儲存設備來儲存較少存取的資料。
++
+** Flash Pool _包含SSD和HDD。
+** _SUR__包含一個全SSD本機層、並附有物件存放區。FabricPool
+
+
+* 如果您需要將已歸檔的資料與作用中資料隔離、以供法規遵循之用、您可以使用由容量HDD所組成的本機層級、或是結合效能與容量HDD。
+
+
+image::../media/data-tiering.gif[資料分層]
+
+
+
+== 使用本機層（集合體）
+
+您可以執行下列工作：
+
+* link:manage-local-tiers-overview-concept.html["管理本機層（集合體）"]
+* link:manage-disks-overview-concept.html["管理磁碟"]
+* link:manage-raid-configs-overview-concept.html["管理RAID組態"]
+* link:manage-flash-pool-tiers-overview-concept.html["管理Flash Pool階層"]
+
 
 如果符合下列條件、請執行這些工作：
 
-* 您想要使用命令列介面（CLI）、而非System Manager或自動化指令碼工具。
+* 您不想使用自動化指令碼工具。
 * 您想要使用最佳實務做法、而非探索每個可用選項。
-* 您有MetroCluster 一個不完全組態、而且您正在執行中的程序 link:https://docs.netapp.com/us-en/ontap-metrocluster["MetroCluster"^] 集合體與磁碟管理的初始組態與準則文件。
+* 您有MetroCluster 一個不完全組態、而且您正在執行中的程序 link:https://docs.netapp.com/us-en/ontap-metrocluster["MetroCluster"^] 本地層（Aggregate）與磁碟管理的初始組態與準則文件。
+
+
+.相關資訊
+* link:../fabricpool/index.html["管理FabricPool 各種雲端階層"]
 

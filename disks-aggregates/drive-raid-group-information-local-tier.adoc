@@ -1,0 +1,57 @@
+---
+permalink: disks-aggregates/drive-raid-group-information-local-tier-task.html 
+sidebar: sidebar 
+keywords: determine, drive, raid group, information, aggregate, local tier 
+summary: 有些本機層（Aggregate）管理工作需要您知道哪些磁碟機類型構成本機層、其大小、總和檢查碼和狀態、是否與其他集合體共用、以及RAID群組的大小和組成。 
+---
+= 本機層的磁碟機和RAID群組資訊（Aggregate）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+有些本機層（Aggregate）管理工作需要您知道哪些磁碟機類型構成本機層、它們的大小、總和檢查碼和狀態、它們是否與其他本機層共享、以及RAID群組的大小和組成。
+
+.步驟
+. 依RAID群組顯示集合體的磁碟機：
++
+「torage Aggregate show-STATUS _agger_name_」
+
++
+會顯示集合體中每個RAID群組的磁碟機。
+
++
+您可以在「位置」欄中看到磁碟機的RAID類型（資料、同位元檢查、同位元檢查）。如果「位置」欄顯示「共享」、則磁碟機會共用：如果是HDD、則為分割磁碟；如果是SSD、則為儲存資源池的一部分。
+
+
+
+....
+cluster1::> storage aggregate show-status nodeA_fp_1
+
+Owner Node: cluster1-a
+ Aggregate: nodeA_fp_1 (online, mixed_raid_type, hybrid) (block checksums)
+  Plex: /nodeA_fp_1/plex0 (online, normal, active, pool0)
+   RAID Group /nodeA_fp_1/plex0/rg0 (normal, block checksums, raid_dp)
+
+                                             Usable Physical
+     Position Disk       Pool Type     RPM     Size     Size Status
+     -------- ---------- ---- ----- ------ -------- -------- -------
+     shared   2.0.1       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.3       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.5       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.7       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.9       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.11      0   SAS    10000  472.9GB  547.1GB (normal)
+
+   RAID Group /nodeA_flashpool_1/plex0/rg1
+   (normal, block checksums, raid4) (Storage Pool: SmallSP)
+
+                                             Usable Physical
+     Position Disk       Pool Type     RPM     Size     Size Status
+     -------- ---------- ---- ----- ------ -------- -------- -------
+     shared   2.0.13      0   SSD        -  186.2GB  745.2GB (normal)
+     shared   2.0.12      0   SSD        -  186.2GB  745.2GB (normal)
+
+8 entries were displayed.
+....

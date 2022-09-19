@@ -75,11 +75,9 @@ UNIX群組名稱UNIX Gid
  a| 
 群組配額可套用至特定磁碟區或qtree。
 
-[NOTE]
-====
-不適用以Windows ID為基礎的群組配額。ONTAP
 
-====
+NOTE: 不適用以Windows ID為基礎的群組配額。ONTAP
+
 
 
  a| 
@@ -94,6 +92,7 @@ qtree名稱
 
 
  a| 
+」
  a| 
 使用者配額
 
@@ -122,7 +121,10 @@ qtree名稱
 * 配額目標上的作業、例如重新命名檔案或目錄、或在qtree之間移動檔案、而配額目標上已設定配額硬限制、相較FlexVol 於類似的功能、可能需要更長的時間。
 
 
-[role="lead"]
+
+
+== 執行配額的範例FlexGroup
+
 您可以使用範例來瞭解如何在ONTAP 更新版本的版本中設定限制配額。
 
 .範例1：以磁碟限制強制執行配額規則
@@ -329,15 +331,14 @@ cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
 +
 .. 您可以使用配額報告來檢視FlexGroup 有關此問題的磁碟使用量和檔案使用資訊。
 +
-[listing]
-----
+....
 cluster1::> quota report -vserver vs0
 Vserver: vs0
 ----Disk---- ----Files----- Quota
 Volume Tree Type ID Used Limit Used Limit Specifier
 ------- -------- ------ ------- ----- ----- ------ ------ ---------
 FG tree_4118314302 tree 1 30.35GB 48GB 14 20 tree_4118314302
-----
+....
 +
 配額限制會在配額目標中所列的使用者與其對應的Windows或UNIX使用者之間共用。
 
@@ -436,8 +437,7 @@ vs0        vol1          off                   -
 以下範例顯示FlexGroup 使用者配額、以供使用支援Refvolume fg1：
 
 +
-[listing]
-----
+....
 cluster1::> volume quota report -vserver vs0 -volume fg1
   Vserver: vs0
                                       ----Disk----  ----Files-----   Quota
@@ -446,7 +446,7 @@ cluster1::> volume quota report -vserver vs0 -volume fg1
   fg1                user    *           0B      -       0       -   *
   fg1                user    root       1GB      -       1       -   *
   2 entries were displayed.
-----
+....
 +
 以下範例顯示FlexGroup 適用於Refvolume fg1的樹狀結構配額：
 
@@ -469,4 +469,4 @@ fg1              tree      *           0B      -       0       -   *
 
 使用量可能會比設定的硬限制高出5%、ONTAP 而在執行此配額之前、會拒絕更多流量。
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]

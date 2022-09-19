@@ -2,7 +2,7 @@
 permalink: disks-aggregates/customize-size-raid-groups-task.html 
 sidebar: sidebar 
 keywords: raidsize, customize, raid groups 
-summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入集合體的儲存容量。 
+summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入本機層（Aggregate）的儲存容量。 
 ---
 = 自訂RAID群組的大小
 :allow-uri-read: 
@@ -11,17 +11,17 @@ summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您
 
 
 [role="lead"]
-您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入集合體的儲存容量。
+您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入本機層（Aggregate）的儲存容量。
 
-對於標準Aggregate、您可以根據個別Aggregate來變更RAID群組的大小。對於Flash Pool Aggregate、您可以獨立變更SSD RAID群組和HDD RAID群組的RAID群組大小。
+對於標準本機層（Aggregate）、您可以分別變更每個本機層的RAID群組大小。對於Flash Pool本機層級、您可以獨立變更SSD RAID群組和HDD RAID群組的RAID群組大小。
 
 下列清單概述變更RAID群組大小的一些事實：
 
 * 根據預設、如果最近建立的RAID群組中的磁碟或陣列LUN數量少於新的RAID群組大小、磁碟或陣列LUN將會新增至最近建立的RAID群組、直到達到新的大小為止。
-* 除非您明確新增磁碟至該集合體、否則該集合體中的所有其他現有RAID群組仍會維持相同大小。
-* 您絕不能讓RAID群組大於目前最大的集合體RAID群組大小。
+* 除非您明確新增磁碟到該本機層中的所有其他現有RAID群組、否則它們的大小都會維持不變。
+* 您絕不能讓RAID群組大於本機層目前的最大RAID群組大小。
 * 您無法減少已建立的RAID群組大小。
-* 新的大小會套用至該集合體中的所有RAID群組（若為Flash Pool Aggregate、則適用於受影響RAID群組類型的所有RAID群組、例如SSD或HDD）。
+* 新的大小適用於該本機層中的所有RAID群組（若為Flash Pool本機層、則適用於受影響RAID群組類型（SSD或HDD）的所有RAID群組）。
 
 
 .步驟

@@ -1,8 +1,8 @@
 ---
 permalink: disks-aggregates/correct-misaligned-spare-partitions-task.html 
 sidebar: sidebar 
-keywords: correct, misaligned, partition 
-summary: 當您將分割磁碟新增至Aggregate時、必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。 
+keywords: correct, misaligned, partition, disk 
+summary: 當您將分割磁碟新增至本機層（Aggregate）時、您必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。 
 ---
 = 修正未對齊的備用分割區
 :allow-uri-read: 
@@ -11,12 +11,12 @@ summary: 當您將分割磁碟新增至Aggregate時、必須將根磁碟和資�
 
 
 [role="lead"]
-當您將分割磁碟新增至Aggregate時、必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。
+當您將分割磁碟新增至本機層（Aggregate）時、您必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。
 
 您必須在同一節點擁有的相同磁碟類型上、同時擁有備用資料分割區和備用根分割區。
 
 .步驟
-. 顯示節點的備用磁碟分割：
+. 使用CLI顯示節點的備用磁碟分割：
 +
 「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
 
@@ -39,7 +39,7 @@ summary: 當您將分割磁碟新增至Aggregate時、必須將根磁碟和資�
 「torage Aggregate show-spare磁碟-orent-Owner_node_name_」
 
 +
-您應該在「本機資料可用」和「本機根可用」下、看到可用空間的備用磁碟。
+您應該在「本地資料可用」和「本機根可用」下、看到可用空間的備用磁碟。
 
 
 
@@ -52,12 +52,12 @@ c1::> storage aggregate show-spare-disks -original-owner c1-01
 Original Owner: c1-01
  Pool0
   Shared HDD Spares
-                                                            Local    Local
-                                                             Data     Root Physical
- Disk                        Type     RPM Checksum         Usable   Usable     Size
- --------------------------- ----- ------ -------------- -------- -------- --------
- 1.0.1                       BSAS    7200 block           753.8GB       0B  828.0GB
- 1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB
+                              Local    Local
+                               Data     Root  Physical
+ Disk    Type   RPM Checksum Usable   Usable      Size
+ ------- ----- ---- -------- ------- ------- --------
+ 1.0.1   BSAS  7200 block    753.8GB     0B   828.0GB
+ 1.0.10  BSAS  7200 block         0B 73.89GB  828.0GB
 ----
 您可以開始磁碟更換工作：
 
@@ -75,17 +75,17 @@ Owner Node: c1-01
  Aggregate: aggr0_1 (online, raid_dp) (block checksums)
   Plex: /aggr0_1/plex0 (online, normal, active, pool0)
    RAID Group /aggr0_1/plex0/rg0 (normal, block checksums)
-                                                              Usable Physical
-     Position Disk                        Pool Type     RPM     Size     Size Status
-     -------- --------------------------- ---- ----- ------ -------- -------- ----------
-     shared   1.0.1                        0   BSAS    7200  73.89GB  828.0GB (replacing, copy in progress)
-     shared   1.0.10                       0   BSAS    7200  73.89GB  828.0GB (copy 63% completed)
-     shared   1.0.0                        0   BSAS    7200  73.89GB  828.0GB (normal)
-     shared   1.0.11                       0   BSAS    7200  73.89GB  828.0GB (normal)
-     shared   1.0.6                        0   BSAS    7200  73.89GB  828.0GB (normal)
-     shared   1.0.5                        0   BSAS    7200  73.89GB  828.0GB (normal)
+                                    Usable Physical
+ Position Disk    Pool Type   RPM     Size     Size Status
+ -------- ------- ---- ---- ----- -------- -------- ----------
+ shared   1.0.1    0   BSAS  7200  73.89GB  828.0GB (replacing,copy in progress)
+ shared   1.0.10   0   BSAS  7200  73.89GB  828.0GB (copy 63% completed)
+ shared   1.0.0    0   BSAS  7200  73.89GB  828.0GB (normal)
+ shared   1.0.11   0   BSAS  7200  73.89GB  828.0GB (normal)
+ shared   1.0.6    0   BSAS  7200  73.89GB  828.0GB (normal)
+ shared   1.0.5    0   BSAS  7200  73.89GB  828.0GB (normal)
 ----
-更換作業完成後、您將確認您擁有完整的備援磁碟：
+更換作業完成後、請確認您擁有完整的備用磁碟：
 
 [listing]
 ----
@@ -94,9 +94,9 @@ ie2220::> storage aggregate show-spare-disks -original-owner c1-01
 Original Owner: c1-01
  Pool0
   Shared HDD Spares
-                                                            Local    Local
-                                                             Data     Root Physical
- Disk                        Type     RPM Checksum         Usable   Usable     Size
- --------------------------- ----- ------ -------------- -------- -------- --------
- 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+                             Local    Local
+                              Data     Root  Physical
+ Disk   Type   RPM Checksum Usable   Usable      Size
+ ------ ----- ---- -------- -------- ------- --------
+ 1.0.1  BSAS  7200 block    753.8GB  73.89GB  828.0GB
 ----

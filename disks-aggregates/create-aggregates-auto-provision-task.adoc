@@ -1,17 +1,94 @@
 ---
 permalink: disks-aggregates/create-aggregates-auto-provision-task.html 
 sidebar: sidebar 
-keywords: ontap 9, create, aggregates, auto-provision 
-summary: 如果自動資源配置方法適用於您的環境、您可以執行儲存Aggregate自動資源配置、以產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。 
+keywords: ontap 9, create, aggregates, auto-provision, add, local tier, automatic, automatically 
+summary: 如果ONTAP 您的環境適合使用由NetApp提供的自動新增本機層的最佳實務建議（使用自動資源配置建立集合體）、您可以接受建議、並讓ONTAP 它加入本機層。 
 ---
-= 使用自動資源配置來建立集合體
+= 自動新增本機層（使用自動資源配置建立集合體）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果自動資源配置方法適合您的環境、您可以執行「儲存Aggregate自動資源配置」來產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
+如果ONTAP 您的環境適合使用由NetApp提供的自動新增本機層（使用自動資源配置建立集合體）的最佳實務建議、您可以接受建議、並讓ONTAP 它加入本機層。
+
+您遵循的程序取決於您使用的介面、系統管理員或CLI。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*使用System Manager自動新增本機層*
+
+.步驟
+. 在 System Manager 中、按一下 * Storage > Tiers* 。
+. 在* Tiers*頁面中、按一下 image:icon-add-local-tier.png["新增本機層圖示"] 若要建立新的本機層：
++
+「*新增本機層級*」頁面顯示可在節點上建立的建議本機層數、以及可用的儲存設備。
+
+. 按一下*建議詳細資料*以檢視System Manager建議的組態。
++
+System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
+
++
+** *本機層名稱*（您可以編輯以ONTAP 版本S59.10.1開頭的本機層名稱）
+** *節點名稱*
+** *可用大小*
+** *儲存設備類型*
+
+
++
+從版本號《2019年9月10日》開始ONTAP 、將會顯示其他資訊：
+
++
+** *磁碟*：顯示磁碟的數量、大小和類型
+** *配置*：顯示RAID群組配置、包括哪些磁碟為同位元檢查或資料、以及哪些插槽未使用。
+** *備用磁碟*：顯示節點名稱、備用磁碟的數量和大小、以及儲存設備的類型。
+
+
+. 請執行下列其中一個步驟：
++
+|===
+
+
+| 如果您想… | 然後執行此操作… 
+
+
+ a| 
+接受System Manager的建議。
+ a| 
+請前往 ,設定Onboard Key Manager進行加密的步驟。
+
+
+
+ a| 
+手動設定本機層級、並*非*使用System Manager的建議。
+ a| 
+請前往 link:create-aggregates-manual-task.html["手動新增本機層（建立Aggregate）"]：
+
+** 如需ONTAP 使用版本的版本資訊、請依照下列步驟使用CLI。
+** 從ONTAP 《2019年9月11日》開始、請依照步驟使用System Manager。
+
+
+|===
+. [[step5-okm-加密]（選用）：如果已安裝Onboard Key Manager、您可以將其設定為加密。選中* Configure Onboard Key Manager for加密*複選框。
++
+.. 輸入通關密碼。
+.. 再次輸入密碼以確認密碼。
+.. 請儲存密碼以供日後使用、以便在系統需要恢復時使用。
+.. 備份金鑰資料庫以供未來使用。
+
+
+. 按一下「*儲存*」以建立本機層級、並將其新增至您的儲存解決方案。
+
+
+--
+.CLI
+--
+*使用CLI建立具有自動資源配置的Aggregate *
+
+您可以執行「儲存Aggregate自動資源配置」命令來產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
 
 叢集上必須執行部分為9.2或更新版本。ONTAP
 
@@ -37,8 +114,20 @@ summary: 如果自動資源配置方法適用於您的環境、您可以執行�
 ** 「SKIP確認」選項：建立建議的集合體、不需顯示或確認
 
 
-. 檢閱建議的Aggregate顯示之後、請回應提示以建立建議的Aggregate。
+. 請執行下列其中一個步驟：
 +
+[cols="35,65"]
+|===
+
+
+| 如果您想… | 然後執行此操作… 
+
+
+ a| 
+接受ONTAP 來自本系統的建議。
+ a| 
+檢閱建議的Aggregate顯示、然後回應提示以建立建議的Aggregate。
+
 [listing]
 ----
 Do you want to create recommended aggregates? {y|n}:y
@@ -48,4 +137,14 @@ Info: Creating node1_SSD_1 ...
 ----
 
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]
+ a| 
+手動設定本機層級、*非*使用ONTAP 來自各地的建議。
+ a| 
+請前往 link:create-aggregates-manual-task.html["手動新增本機層（建立Aggregate）"]。
+
+|===
+
+
+--
+====
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]

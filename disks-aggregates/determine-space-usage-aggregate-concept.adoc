@@ -1,43 +1,45 @@
 ---
 permalink: disks-aggregates/determine-space-usage-aggregate-concept.html 
 sidebar: sidebar 
-keywords: determine, space, usage, aggregate 
-summary: 您可以使用Aggregate show-space命令、檢視一或多個集合體中所有磁碟區的空間使用量。這有助於您查看哪些磁碟區在其內含的集合體中佔用的空間最大、以便您採取行動來釋出更多空間。 
+keywords: space, usage, aggregate, local tier, volume 
+summary: 您可以檢視一或多個本機層（Aggregate）中所有磁碟區所使用的空間量、以便採取行動來釋出更多空間。 
 ---
-= 判斷Aggregate中的空間使用量
+= 判斷本機層中的空間使用量（Aggregate）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
+您可以檢視一或多個本機層（Aggregate）中所有磁碟區所使用的空間量、以便採取行動來釋出更多空間。
+
 您可以使用「Aggregate show-spaces」命令、檢視一或多個集合體中所有磁碟區的空間使用量。這有助於您查看哪些磁碟區在其內含的集合體中佔用的空間最大、以便您採取行動來釋出更多空間。
 
 Aggregate中已用空間會直接受FlexVol 其包含的各種空間所影響。您為了增加磁碟區空間而採取的措施、也會影響集合體中的空間。
 
 以下行包含在命令輸出"Aggregate show-space"中：
 
-* 「Volume Footprints」
+* * Volume Footprints *
 +
 集合體內所有Volume佔用空間的總計。其中包含所有資料所使用或保留的空間、以及包含Aggregate中所有磁碟區的中繼資料。
 
-* 《Aggregate中繼資料》
+* * Aggregate中繼資料*
 +
 Aggregate所需的檔案系統中繼資料總數、例如分配點陣圖和inode檔案。
 
-* 《napshot Reserve》
+* * Snapshot保留*
 +
 根據磁碟區大小、保留給Aggregate Snapshot複本的空間量。它被視為已用空間、無法用於磁碟區或集合體資料或中繼資料。
 
-* 「無法使用快照保留區」
+* * Snapshot保留不可用*
 +
 最初分配給Aggregate Snapshot保留的空間量、由於與Aggregate相關聯的磁碟區正在使用此空間、因此無法用於Aggregate Snapshot複本。僅適用於具有非零集合體Snapshot保留的集合體。
 
-* 「使用總額」
+* *使用總數*
 +
 集合體中所有已用或保留空間的總和（依磁碟區、中繼資料或Snapshot複本）。
 
-* 「實際使用總量」
+* *實際使用總量*
 +
 目前用於資料的空間量（而非保留供未來使用）。包括Aggregate Snapshot複本所使用的空間。
 
@@ -45,8 +47,7 @@ Aggregate所需的檔案系統中繼資料總數、例如分配點陣圖和inode
 
 以下範例顯示Snapshot保留為5%之Aggregate的「Aggregate show-space"命令輸出。如果Snapshot保留為0、則不會顯示該列。
 
-[listing]
-----
+....
 cluster1::> storage aggregate show-space
 
 						Aggregate : wqa_gx106_aggr1
@@ -59,4 +60,4 @@ cluster1::> storage aggregate show-space
 
       Total Used                              6.07GB         5%
       Total Physical Used                    34.82KB         0%
-----
+....

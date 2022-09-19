@@ -2,7 +2,7 @@
 permalink: disks-aggregates/sizing-raid-groups-concept.html 
 sidebar: sidebar 
 keywords: consideration, size, raid groups 
-summary: 若要設定最佳的RAID群組大小、必須權衡各種因素。您必須決定哪些因素（RAID重建速度、保證不會因磁碟機故障而導致資料遺失、最佳化I/O效能、以及最大化資料儲存空間）、對於您正在設定的集合體而言最為重要。 
+summary: 若要設定最佳的RAID群組大小、必須權衡各種因素。您必須決定哪些因素（RAID重建速度、保證不會因磁碟機故障而導致資料遺失的風險、最佳化I/O效能、以及最大化資料儲存空間）對於您所設定的本機層（Aggregate）最重要。 
 ---
 = 調整RAID群組規模的考量
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 若要設定最佳的RAID群組大小、必須權衡各種因素。您�
 
 
 [role="lead"]
-若要設定最佳的RAID群組大小、必須權衡各種因素。您必須決定哪些因素（RAID重建速度、保證不會因磁碟機故障而導致資料遺失、最佳化I/O效能、以及最大化資料儲存空間）、對於您正在設定的Aggregate而言最為重要。
+若要設定最佳的RAID群組大小、必須權衡各種因素。您必須決定哪些因素（例如RAID重建速度、保證不會因磁碟機故障而導致資料遺失、最佳化I/O效能、以及最大化資料儲存空間）、對於您正在設定的（本機層）集合體而言最為重要。
 
 當您建立較大的RAID群組時、您可以將資料儲存空間最大化、使用於同位元檢查的相同儲存容量（也稱為「同位元稅金」）。另一方面、當磁碟在較大的RAID群組中故障時、重建時間會增加、影響效能的時間會延長。此外、在RAID群組中擁有更多磁碟、也會增加同一個RAID群組中多個磁碟故障的可能性。
 
@@ -21,9 +21,9 @@ summary: 若要設定最佳的RAID群組大小、必須權衡各種因素。您�
 
 當您調整由HDD或陣列LUN組成的RAID群組時、應遵循下列準則：
 
-* 集合體中的所有RAID群組應有相同數量的磁碟。
+* 本機層（Aggregate）中的所有RAID群組應有相同數量的磁碟。
 +
-雖然一個集合體上的不同RAID群組磁碟數量最多可少於或多出50%、但在某些情況下、這可能會導致效能瓶頸、因此最好避免。
+雖然您在一個本機層上的磁碟數量最多可比不同RAID群組中的磁碟數量少50%或以上、但在某些情況下、這可能會導致效能瓶頸、因此最好避免。
 
 * 建議的RAID群組磁碟編號範圍介於12到20之間。
 +
@@ -34,19 +34,19 @@ summary: 若要設定最佳的RAID群組大小、必須權衡各種因素。您�
 
 
 
-== Flash Pool Aggregate中的SSD RAID群組
+== Flash Pool本機層（Aggregate）中的SSD RAID群組
 
-SSD RAID群組大小可以不同於Flash Pool Aggregate中HDD RAID群組的RAID群組大小。通常、您應該確保Flash Pool Aggregate只有一個SSD RAID群組、以將同位元檢查所需的SSD數量降至最低。
+SSD RAID群組大小可以不同於Flash Pool本機層（Aggregate）中HDD RAID群組的RAID群組大小。通常、您應該確保Flash Pool本機層只有一個SSD RAID群組、以盡量減少同位元檢查所需的SSD數量。
 
 
 
-== SSD集合體中的SSD RAID群組
+== SSD本機層（Aggregate）中的SSD RAID群組
 
 在調整由SSD組成的RAID群組規模時、您應該遵循下列準則：
 
-* 集合體中的所有RAID群組應有類似數量的磁碟機。
+* 本機層（Aggregate）中的所有RAID群組應有類似數量的磁碟機。
 +
-RAID群組的大小不一定完全相同、但您應該避免在相同的集合體中、將任何小於其他RAID群組大小一半的RAID群組放在同一個集合體中。
+RAID群組的大小不一定完全相同、但您應該避免在相同的本機層中、有任何RAID群組大小小於其他RAID群組大小的一半。
 
 * 對於RAID-DP、建議的RAID群組大小範圍介於20到28之間。
 

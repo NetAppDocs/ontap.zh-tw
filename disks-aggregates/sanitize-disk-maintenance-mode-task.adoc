@@ -1,7 +1,7 @@
 ---
 permalink: disks-aggregates/sanitize-disk-maintenance-mode-task.html 
 sidebar: sidebar 
-keywords: sanitize, disk, maintenance mode, nodeshell 
+keywords: sanitize, disk, maintenance mode, nodeshell, node shell, sanitization 
 summary: 從功能支援支援的9.6開始ONTAP 、您可以在維護模式下執行磁碟資料抹除。這可讓您從已停用或無法運作的系統上的磁碟或磁碟集移除資料、使資料永遠無法恢復。 
 ---
 = 清理磁碟
@@ -13,16 +13,10 @@ summary: 從功能支援支援的9.6開始ONTAP 、您可以在維護模式下�
 [role="lead"]
 清理磁碟可讓您從已停用或無法運作的系統上的磁碟或磁碟集移除資料、使資料永遠無法恢復。
 
-有兩種方法可用於清理磁碟：
+有兩種方法可以使用CLI對磁碟進行資料抹除：
 
-* 使用支援功能命令ONTAP 執行支援功能。
-* 在ONTAP 所有的版本中使用nodesdro解除 命令。
-
-
-
-
-== 維護模式方法
-
+.使用&#8220為磁碟消毒；維護模式&#8221；命令（ONTAP 版本號為9.6及更新版本）
+====
 從功能支援支援的9.6開始ONTAP 、您可以在維護模式下執行磁碟資料抹除。
 
 .開始之前
@@ -39,13 +33,9 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 . 開機進入維護模式。
 . 如果您要清理的磁碟已分割、請取消分割每個磁碟：
 +
-[NOTE]
-====
-取消磁碟分割的命令只能在診斷層級使用、而且只能在NetApp支援監督下執行。*強烈建議您在繼續之前聯絡NetApp支援部門。*
 
-您也可以參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 支援的情況下取消磁碟分割"^]。
+NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在NetApp支援監督下執行。強烈建議您先聯絡NetApp支援部門、再繼續進行。您也可以參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 支援的情況下取消磁碟分割"^]
 
-====
 +
 "Disk Unpartition_disk_name_"（打開分區_disk_name_'）
 
@@ -80,16 +70,15 @@ NOTE: 切勿關閉節點的電源、中斷儲存連線、或是在清理時移�
 . 結束維護模式。
 
 
-
-
-== Nodesd地獄 方法
-
-使用nodesdro解除 命令啟用磁碟資料抹除功能時、會停用一些低層ONTAP 級的支援指令。在節點上啟用磁碟資料抹除之後、就無法停用。
+====
+.使用&#8220清理磁碟；節點和#8221；命令（所有ONTAP 版本均為9）
+====
+對於ONTAP 所有版本的支援功能、當使用nodesl解除 命令啟用磁碟資料抹除功能時、部分低階ONTAP 的支援功能會停用。在節點上啟用磁碟資料抹除之後、就無法停用。
 
 .開始之前
-* 磁碟必須是備用磁碟、它們必須由節點擁有、但不能用於集合體。
+* 磁碟必須是備用磁碟；磁碟必須由節點擁有、但不能用於本機層（Aggregate）。
 +
-如果磁碟已分割、則兩個分割區都無法在集合體中使用。
+如果磁碟已分割、則兩個分割區都無法在本機層（Aggregate）中使用。
 
 * 磁碟不能是自我加密磁碟（SED）。
 +
@@ -104,13 +93,11 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 .步驟
 . 如果您要清理的磁碟已分割、請取消分割每個磁碟：
 +
-[NOTE]
-====
-取消磁碟分割的命令只能在診斷層級使用、而且只能在NetApp支援監督下執行。*強烈建議您在繼續之前聯絡NetApp支援部門。*
+--
 
-您也可以參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 支援的情況下取消磁碟分割"^]。
+NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在NetApp支援監督下執行。*強烈建議您在繼續之前聯絡NetApp支援部門。*您也可以參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 支援的情況下取消磁碟分割"^]。
 
-====
+--
 +
 "Disk Unpartition_disk_name_"（打開分區_disk_name_'）
 
@@ -134,13 +121,9 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 「清理開始[-p Pattern1|-r [-p Pattern2|-r [-p Pattern3|-r]][-c ccycle _count] disk_list]
 
 +
-[NOTE]
-====
-切勿關閉節點的電源、中斷儲存連線、或是在清理時移除目標磁碟。如果在格式化階段中斷掃毒、則必須重新啟動格式化階段、並允許在磁碟經過消毒並準備好返回備用集區之前完成。
 
-如果您需要中止消毒程序、可以使用磁碟清理中止命令來執行此作業。如果指定的磁碟正在進行資料抹除的格式化階段、則在該階段完成之前不會發生中止。
+NOTE: 切勿關閉節點的電源、中斷儲存連線、或是在清理時移除目標磁碟。如果在格式化階段中斷掃毒、則必須重新啟動格式化階段、並允許在磁碟經過消毒並準備好返回備用集區之前完成。如果您需要中止消毒程序、可以使用磁碟清理中止命令來執行此作業。如果指定的磁碟正在進行資料抹除的格式化階段、則在該階段完成之前不會發生中止。
 
-====
 +
 -p Pattern1 -p Pattern2 -p Pattern3（p Pattern1 -p模式2 -p模式3）指定一個週期、週期為一到三個使用者定義的六位元組覆寫模式、可連續套用至正在消毒的磁碟。預設模式為三次通過、第一次使用的是0x55、第二次使用的是0xAA、第三次使用的是0x3c。
 
@@ -176,8 +159,7 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 +
 「torage Aggregate show-spare磁碟」
 
-
-
++
 [cols="1,2"]
 |===
 
@@ -191,20 +173,26 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 | 部分已消毒的磁碟並未列為備援磁碟  a| 
 完成下列步驟：
 
-. 進入進階權限模式：
+.. 進入進階權限模式：
 +
 "進階權限"
 
-. 將未指派的已消毒磁碟指派給每個磁碟的適當節點：
+.. 將未指派的已消毒磁碟指派給每個磁碟的適當節點：
 +
 '磁碟指派磁碟磁碟_磁碟名稱_-Oner_node_name_'
 
-. 將每個磁碟的磁碟恢復為備援狀態：
+.. 將每個磁碟的磁碟恢復為備援狀態：
 +
 '磁碟容錯移轉-磁碟_disk_name_-s -q'
 
-. 返回管理模式：+"show -priv. admin"
+.. 返回管理模式：
++
+「et -priv. admin」
+
 
 
 |===
+
+
+====
 指定的磁碟會經過消毒並指定為熱備援磁碟。已消毒磁碟的序號會寫入「/etc/log/disksized_disks」。

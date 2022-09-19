@@ -1,32 +1,25 @@
 ---
 permalink: disks-aggregates/decide-aggregate-creation-method-concept.html 
 sidebar: sidebar 
-keywords: ontap 9, decide, aggregate, create, method, use 
-summary: 雖然使用自動資源配置建立Aggregate是ONTAP 功能更新版本的最佳實務做法、但您必須判斷環境是否支援此功能。如果不是、您必須決定RAID原則和磁碟組態、然後手動建立集合體。 
+keywords: decide, aggregate, create, add, method, local tier 
+summary: 雖然供應最佳實務建議、可自動建立本機層（集合體）（使用自動資源配置）、但您必須判斷環境是否支援建議的組態。ONTAP如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。 
 ---
-= 決定要使用哪種Aggregate建立方法
+= 決定要使用何種方法來建立本機層級（集合體）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-雖然使用自動資源配置建立Aggregate是ONTAP 功能更新版本的最佳實務做法、但您必須判斷環境是否支援此功能。如果不是、您必須決定RAID原則和磁碟組態、然後手動建立集合體。
+雖然此解決方案提供自動新增本機層級的最佳實務建議（使用自動資源配置建立集合體）、但您必須判斷環境是否支援建議的組態。ONTAP如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。
 
-當您使用「儲存Aggregate自動資源配置」命令建立Aggregate時、ONTAP 會分析叢集中可用的備用磁碟、並根據最佳實務做法、產生如何使用備用磁碟來建立Aggregate的建議。顯示建議集合體的摘要、包括其名稱和可用大小、然後提示您決定是否應依照建議建立集合體。ONTAP
-
-在許多情況下、自動資源配置顯示中建議的Aggregate配置將最適合您的環境。不過、如果叢集執行ONTAP 的是更新版本的版本、或您的環境包含下列組態、則必須使用手動Aggregate組態方法。
-
-* 使用協力廠商陣列LUN進行集合體
-* 虛擬磁碟Cloud Volumes ONTAP 搭配不一樣或ONTAP Select 不一樣的功能
-* MetroCluster
-* SyncMirror
-* MSATA磁碟
-* FlashPool Aggregate
-* 多種磁碟類型或大小會連接至節點
+自動建立本機層時ONTAP 、即可分析叢集中可用的備用磁碟、並根據最佳實務做法、提出如何使用備用磁碟來新增本機層的建議。顯示建議的組態。ONTAP您可以接受建議、或手動新增本機層級。
 
 
-此外、如果存在下列任一磁碟條件、則必須在使用自動資源配置方法之前先解決這些問題：
+
+== 在您接受ONTAP 不推薦的功能之前
+
+如果出現下列任一磁碟情況、則必須先解決這些問題、再接受ONTAP 來自下列的建議：
 
 * 遺失磁碟
 * 備用磁碟編號的波動
@@ -37,4 +30,32 @@ summary: 雖然使用自動資源配置建立Aggregate是ONTAP 功能更新版�
 
 "shorage Aggregate autology/Provin"手冊頁包含有關這些要求的更多信息。
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"]
+
+
+== 當您必須使用手動方法時
+
+在許多情況下、建議的本機層配置最適合您的環境。不過、如果叢集執行ONTAP 的是更新版本的版本、或您的環境包含下列組態、則必須使用手動方法來建立本機層。
+
+
+NOTE: 從《局部9.11.1》開始ONTAP 、您可以使用System Manager手動新增本機層級。
+
+* 使用協力廠商陣列LUN進行集合體
+* 虛擬磁碟Cloud Volumes ONTAP 搭配不一樣或ONTAP Select 不一樣的功能
+* 系統MetroCluster
+* SyncMirror
+* MSATA磁碟
+* FlashPool階層（Aggregate）
+* 多種磁碟類型或大小會連接至節點
+
+
+
+
+== 選取建立本機階層（集合體）的方法
+
+選擇您要使用的方法：
+
+* link:create-aggregates-auto-provision-task.html["自動新增（建立）本機層級（集合體）"]
+* link:create-aggregates-manual-task.html["手動新增（建立）本機層級（集合體）"]
+
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]

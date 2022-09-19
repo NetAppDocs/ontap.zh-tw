@@ -1,17 +1,19 @@
 ---
 permalink: disks-aggregates/create-ssd-storage-pool-task.html 
 sidebar: sidebar 
-keywords: create, ssd storage pool 
-summary: 您可以建立固態硬碟（SSD）儲存資源池、為二到四個Flash資源池集合體提供SSD快取。 
+keywords: create, provision, ssd, storage, flash, pool, add, cache, local tier, aggregate 
+summary: 您可以建立固態硬碟（SSD）儲存資源池、為兩到四個Flash Pool本機層（Aggregate）提供SSD快取。 
 ---
-= 建立SSD儲存資源池
+= 建立SSD儲存池、將快取新增至本機層（Aggregate）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以建立固態硬碟（SSD）儲存資源池、為二到四個Flash資源池集合體提供SSD快取。
+您可以透過新增固態硬碟（SSD）、將現有的本機層（Aggregate）轉換成Flash Pool本機層（Aggregate）來配置快取。
+
+您可以建立固態硬碟（SSD）儲存資源池、為兩到四個Flash Pool本機層（Aggregate）提供SSD快取。Flash Pool Aggregate可讓您將Flash部署為工作資料集的高效能快取、同時使用成本較低的HDD來減少存取資料的頻率。
 
 .關於這項工作
 * 在建立磁碟或將磁碟新增至儲存資源池時、您必須提供磁碟清單。
@@ -20,6 +22,31 @@ summary: 您可以建立固態硬碟（SSD）儲存資源池、為二到四個Fl
 
 * 儲存資源池中使用的SSD大小應相同。
 
+
+您遵循的程序取決於您使用的介面、系統管理員或CLI。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+*使用系統管理程式新增SSD快取（ONTAP 僅限版本僅限版本僅限更新版本）*
+
+
+NOTE: 如果您使用ONTAP 的不是9.7版的版本、請使用CLI程序
+
+.步驟
+. 按一下*（返回傳統版本）*。
+. 按一下「 * 儲存設備 > 集合體與磁碟 > Aggregate * 」。
+. 選取本機層（Aggregate）、然後按一下*「Actions」（動作）>「Add Cache」（新增快取）*。
+. 選取快取來源為「儲存資源池」或「專用SSD」。
+. 按一下*（切換至新體驗）*。
+. 按一下*儲存設備> Tiers*以驗證新Aggregate的大小。
+
+
+--
+.CLI
+--
+*使用CLI建立SSD儲存資源池*
 
 .步驟
 . 判斷可用的備用SSD名稱：
@@ -39,4 +66,6 @@ summary: 您可以建立固態硬碟（SSD）儲存資源池、為二到四個Fl
 
 
 
+--
+====
 將SSD放入儲存資源池之後、即使儲存資源池所提供的儲存設備尚未分配給任何Flash資源池快取、SSD仍不會在叢集上顯示為備援磁碟。您無法將SSD新增至RAID群組做為獨立磁碟機；只能使用SSD所屬儲存資源池的配置單元來配置其儲存設備。

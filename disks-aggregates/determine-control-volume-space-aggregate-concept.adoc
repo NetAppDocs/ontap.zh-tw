@@ -2,23 +2,24 @@
 permalink: disks-aggregates/determine-control-volume-space-aggregate-concept.html 
 sidebar: sidebar 
 keywords: determine, control. volume, space usage, aggregate 
-summary: 您可以判斷哪些FlexVol 資料區使用的是集合體中最大的空間、特別是磁碟區內的哪些功能。Volume show-finage命令提供磁碟區佔用空間或包含Aggregate內空間使用量的相關資訊。 
+summary: 您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Aggregate）中最大的空間、以及磁碟區內的哪些功能。 
 ---
-= 如何判斷及控制磁碟區在集合體中的空間使用量
+= 判斷及控制本機層中的磁碟區空間使用量（Aggregate）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以判斷哪些FlexVol 資料區使用的是集合體中最大的空間、特別是磁碟區內的哪些功能。「Volume show-finage」命令提供磁碟區佔用空間或其在包含Aggregate內的空間使用量資訊。
+您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Aggregate）中最大的空間、以及磁碟區內的哪些功能。
+
+「Volume show-finage」命令提供磁碟區佔用空間或其在包含Aggregate內的空間使用量資訊。
 
 「Volume show-f足跡」命令會顯示集合體中每個磁碟區的空間使用量詳細資料、包括離線磁碟區。此命令可彌補「Volume show-space"和「Aggregate show-space"命令的輸出之間的落差。所有百分比均以Aggregate大小的百分比計算。
 
 以下範例顯示名為testvol.的Volume「Volume show-fout跡」命令輸出：
 
-[listing]
-----
+....
 cluster1::> volume show-footprint testvol
 
       Vserver : thevs
@@ -31,7 +32,7 @@ cluster1::> volume show-footprint testvol
       Flexible Volume Metadata               11.38MB       0%
       Delayed Frees                           1.36MB       0%
       Total Footprint                         2.01GB      76%
-----
+....
 下表說明「Volume show-famage」命令輸出的一些關鍵列、以及您可以採取哪些行動來降低該功能的空間使用量：
 
 |===
@@ -95,4 +96,4 @@ cluster1::> volume show-footprint testvol
 用於減少磁碟區所用空間的任何方法。
 
 |===
-http://www.netapp.com/us/media/tr-3483.pdf["NetApp技術報告3483：NetApp SAN或IP SAN企業環境中的精簡配置"]
+http://www.netapp.com/us/media/tr-3483.pdf["NetApp技術報告3483：NetApp SAN或IP SAN企業環境中的精簡配置"^]

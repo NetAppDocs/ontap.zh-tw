@@ -31,9 +31,11 @@ summary: 您可以設定ONTAP 將重要事件通知轉送至Webhook應用程式�
 
 視傳輸層安全性（TLS）傳輸協定的使用方式而定、有多種安全選項可供選擇。您選擇的選項會決定所需ONTAP 的功能組態。
 
+[NOTE]
+====
+TLS是一種在網際網路上廣泛使用的密碼編譯傳輸協定。它使用一或多個公開金鑰憑證來提供隱私、資料完整性和驗證。這些憑證由信任的憑證授權單位核發。
 
-NOTE: TLS是一種在網際網路上廣泛使用的密碼編譯傳輸協定。它使用一或多個公開金鑰憑證來提供隱私、資料完整性和驗證。這些憑證由信任的憑證授權單位核發。
-
+====
 HTTP:: 您可以使用HTTP來傳輸事件通知。使用此組態時、連線不安全。不驗證不驗證ONTAP 客戶端和Webhook應用程式的身分。此外、網路流量並未加密或受到保護。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http["設定Webhook目的地以使用HTTP"] 以取得組態詳細資料。
 HTTPS:: 為了提高安全性、您可以在裝載Webhook例行工作的伺服器上安裝憑證。驗證Webhook應用程式伺服器及雙方身分的HTTPS傳輸協定、ONTAP 以確保網路流量的隱私性和完整性。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定Webhook目的地以使用HTTPS"] 以取得組態詳細資料。
 HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安裝用戶端憑證、進一步強化HTTPS安全性。除了驗證Webhook應用程式伺服器的身分、並保護網路流量之外、Webhook應用程式還會驗證該客戶端的身分。ONTAP ONTAP這種雙向對等驗證稱為「相互TLS」。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication["設定Webhook目的地使用HTTPS進行相互驗證"] 以取得組態詳細資料。

@@ -1,125 +1,111 @@
 ---
 section: disks-aggregates
-title: 使用CLI進行磁碟與Aggregate管理
+title: 磁碟與層（Aggregate）管理
 entries:
 - title: 總覽
   url: "/disks-aggregates/index.html"
-- title: 建立Aggregate
+- title: 管理本機層（集合體）
   entries:
-  - title: 工作流程
-    url: "/disks-aggregates/aggregate-creation-workflow-concept.html"
-  - title: 決定要使用哪種Aggregate建立方法
-    url: "/disks-aggregates/decide-aggregate-creation-method-concept.html"
-  - title: 使用自動資源配置來建立集合體
-    url: "/disks-aggregates/create-aggregates-auto-provision-task.html"
-  - title: 集合體的預設RAID原則
-    url: "/disks-aggregates/default-raid-policies-aggregates-concept.html"
-  - title: 判斷Aggregate所需的磁碟或磁碟分割數目
-    url: "/disks-aggregates/determine-number-disks-partitions-aggregate-concept.html"
-  - title: 手動建立Aggregate
-    url: "/disks-aggregates/create-aggregates-manual-task.html"
-- title: Aggregate擴充
-  entries:
-  - title: 工作流程
-    url: "/disks-aggregates/aggregate-expansion-workflow-concept.html"
-  - title: 將磁碟機新增至節點或機櫃
-    url: "/disks-aggregates/add-disks-node-task.html"
-  - title: 手動指派磁碟擁有權
-    url: "/disks-aggregates/manual-assign-disks-ownership-task.html"
-  - title: 磁碟機快速歸零
-    url: "/disks-aggregates/fast-zeroing-drives-concept.html"
-  - title: 展開Aggregate
-    url: "/disks-aggregates/expand-aggregates-task.html"
-- title: 管理Aggregate
-  entries:
-  - title: 磁碟的RAID保護層級
-    url: "/disks-aggregates/raid-protection-levels-disks-concept.html"
-  - title: 判斷Aggregate所需的磁碟或磁碟分割數目
-    url: "/disks-aggregates/determine-number-disks-partitions-concept.html"
-  - title: 修正未對齊的備用分割區
-    url: "/disks-aggregates/correct-misaligned-spare-partitions-task.html"
-  - title: 判斷Aggregate的磁碟機和RAID群組資訊
-    url: "/disks-aggregates/determine-drive-raid-group-info-aggregate-task.html"
-  - title: 在HA配對內重新配置Aggregate所有權
-    entries:
-    - title: 重新配置Aggregate所有權
-      url: "/disks-aggregates/relocate-aggregate-ownership-task.html"
-    - title: 用於集合體重新配置的命令
-      url: "/disks-aggregates/commands-aggregate-relocation-reference.html"
-  - title: 將集合體指派給SVM
-    url: "/disks-aggregates/assign-aggregates-svms-task.html"
-  - title: 判斷Aggregate中的空間使用量
-    url: "/disks-aggregates/determine-space-usage-aggregate-concept.html"
-  - title: 判斷哪些磁碟區位於集合體上
-    url: "/disks-aggregates/determine-volumes-reside-aggregate-task.html"
-  - title: 如何判斷及控制磁碟區在集合體中的空間使用量
-    url: "/disks-aggregates/determine-control-volume-space-aggregate-concept.html"
-  - title: 在Aggregate中建立空間的方法
-    url: "/disks-aggregates/methods-create-space-aggregate-concept.html"
-  - title: 管理Aggregate的命令
-    url: "/disks-aggregates/commands-manage-aggregates-reference.html"
-- title: 使用Flash Pool Aggregate
-  entries:
-  - title: Flash Pool快取原則和SSD分割區
-    entries:
-    - title: Flash Pool Aggregate快取原則的運作方式
-      url: "/disks-aggregates/flash-pool-aggregate-caching-policies-concept.html"
-    - title: Flash Pool SSD分割區如何使用儲存資源池、用於Flash Pool Aggregate
-      url: "/disks-aggregates/flash-pool-ssd-partitioning-aggregates-concept.html"
-  - title: 判斷Flash Pool候選資格和最佳快取大小
-    url: "/disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html"
-  - title: 使用實體SSD建立Flash Pool Aggregate
-    url: "/disks-aggregates/create-flash-pool-aggregate-physical-ssds-task.html"
-  - title: 使用SSD儲存資源池建立Flash Pool Aggregate
-    entries:
-    - title: 判斷Flash Pool Aggregate是否使用SSD儲存資源池
-      url: "/disks-aggregates/determine-flash-pool-aggregate-ssd-storage-task.html"
-    - title: 建立SSD儲存資源池
-      url: "/disks-aggregates/create-ssd-storage-pool-task.html"
-    - title: 使用SSD儲存資源池配置單元建立Flash Pool Aggregate
-      url: "/disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html"
-    - title: 判斷將SSD新增至SSD儲存池對快取大小的影響
-      url: "/disks-aggregates/determine-impact-cache-size-adding-ssds-task.html"
-    - title: 將SSD新增至SSD儲存資源池
-      url: "/disks-aggregates/add-storage-ssd-pool-task.html"
-    - title: 管理SSD儲存資源池的命令
-      url: "/disks-aggregates/commands-manage-ssd-storage-pools-reference.html"
-  - title: 判斷是否要修改Flash Pool Aggregate的快取原則
+  - title: 總覽
+    url: "/disks-aggregates/manage-local-tiers-overview-concept.html"
+  - title: 準備新增本機層（Aggregate）
     entries:
     - title: 總覽
-      url: "/disks-aggregates/determine-modify-caching-policy-flash-pool-task.html"
-    - title: 修改Flash Pool Aggregate的快取原則
-      url: "/disks-aggregates/modify-caching-policies-flash-pool-aggregates-task.html"
-    - title: 設定Flash Pool Aggregate的快取保留原則
-      url: "/disks-aggregates/set-cache-data-retention-policy-flash-pool-task.html"
+      url: "/disks-aggregates/prepare-add-local-tier-overview-task.html"
+    - title: 本機階層（集合體）和RAID群組
+      url: "/concepts/aggregates-raid-groups-concept.html"
+    - title: 鏡射與無鏡射本機層（Aggregate）
+      url: "/disks-aggregates/mirrored-unmirrored-aggregates-concept.html"
+    - title: 磁碟機快速歸零
+      url: "/disks-aggregates/fast-zeroing-drives-concept.html"
+    - title: 手動指派磁碟擁有權
+      url: "/disks-aggregates/manual-assign-disks-ownership-prep-task.html"
+  - title: 新增（建立）本機層（Aggregate）
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/add-local-tier-overview-task.html"
+    - title: 新增本機層（Aggregate）的工作流程
+      url: "/disks-aggregates/aggregate-creation-workflow-concept.html"
+    - title: 判斷本機層（Aggregate）所需的磁碟或磁碟分割數目
+      url: "/disks-aggregates/determine-number-disks-partitions-concept.html"
+    - title: 決定要使用的本機層（Aggregate）建立方法
+      url: "/disks-aggregates/decide-aggregate-creation-method-concept.html"
+    - title: 自動新增（建立）本機層級（集合體）
+      url: "/disks-aggregates/create-aggregates-auto-provision-task.html"
+    - title: 手動新增（建立）本機層級（集合體）
+      url: "/disks-aggregates/create-aggregates-manual-task.html"
+  - title: 管理本機層（集合體）的使用
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/manage-use-local-tiers-overview-task.html"
+    - title: 重新命名本機層（Aggregate）
+      url: "/disks-aggregates/rename-local-tier-task.html"
+    - title: 設定本機層的媒體成本（Aggregate）
+      url: "/disks-aggregates/set-media-cost-local-tier-task.html"
+    - title: 判斷本機層的磁碟機和RAID群組資訊（Aggregate）
+      url: "/disks-aggregates/determine-drive-raid-group-info-aggregate-task.html"
+    - title: 將本機層級（集合體）指派給儲存VM（SVM）
+      url: "/disks-aggregates/assign-aggregates-svms-task.html"
+    - title: 判斷哪些磁碟區位於本機層（Aggregate）
+      url: "/disks-aggregates/determine-volumes-reside-aggregate-task.html"
+    - title: 判斷及控制本機層中的磁碟區空間使用量（Aggregate）
+      url: "/disks-aggregates/determine-control-volume-space-aggregate-concept.html"
+    - title: 判斷本機層中的空間使用量（Aggregate）
+      url: "/disks-aggregates/determine-space-usage-aggregate-concept.html"
+    - title: 在HA配對內重新配置本機層（Aggregate）所有權
+      url: "/disks-aggregates/relocate-aggregate-ownership-task.html"
+    - title: 刪除本機層（Aggregate）
+      url: "/disks-aggregates/delete-local-tier-task.html"
+    - title: 重新部署本機層級（集合體）的命令
+      url: "/disks-aggregates/commands-aggregate-relocation-reference.html"
+    - title: 管理本機層（集合體）的命令
+      url: "/disks-aggregates/commands-manage-aggregates-reference.html"
+  - title: 新增容量（磁碟）至本機層（Aggregate）
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/add-capacity-local-tier-overview-task.html"
+    - title: 新增容量至本機層的工作流程（擴充Aggregate）
+      url: "/disks-aggregates/aggregate-expansion-workflow-concept.html"
+    - title: 在本機層中建立空間的方法（Aggregate）
+      url: "/disks-aggregates/methods-create-space-aggregate-concept.html"
+    - title: 新增磁碟至本機層（Aggregate）
+      url: "/disks-aggregates/add-disks-local-tier-aggr-task.html"
+    - title: 將磁碟機新增至節點或機櫃
+      url: "/disks-aggregates/add-disks-node-task.html"
+    - title: 修正未對齊的備用分割區
+      url: "/disks-aggregates/correct-misaligned-spare-partitions-task.html"
 - title: 管理磁碟
   entries:
-  - title: 當您需要更新磁碟認證套件時
-    url: "/disks-aggregates/update-disk-qualification-package-concept.html"
+  - title: 總覽
+    url: "/disks-aggregates/manage-disks-overview-concept.html"
   - title: 熱備援磁碟的運作方式
     url: "/disks-aggregates/hot-spare-disks-work-concept.html"
   - title: 備援警示的不足程度可協助您管理備用磁碟
     url: "/disks-aggregates/low-spare-warnings-manage-spare-disks-concept.html"
-  - title: 顯示磁碟和分割區擁有權
-    url: "/disks-aggregates/display-partition-ownership-task.html"
-  - title: 手動指派分割磁碟的擁有權
-    entries:
-    - title: 總覽
-      url: "/disks-aggregates/manual-assign-ownership-partitioned-disks-task.html"
-    - title: 使用根資料分割區手動指派磁碟
-      url: "/disks-aggregates/manual-assign-ownership-root-data-task.html"
-    - title: 使用root資料資料分割區手動指派磁碟
-      url: "/disks-aggregates/manual-assign-ownership-root-data-data-task.html"
   - title: 其他根資料分割管理選項
     url: "/disks-aggregates/root-data-partitioning-management-concept.html"
-  - title: 設定磁碟擁有權的自動指派
-    url: "/disks-aggregates/configure-auto-assignment-disk-ownership-task.html"
-  - title: 要使用的磁碟自動指派原則
-    url: "/disks-aggregates/disk-autoassignment-policy-concept.html"
+  - title: 當您需要更新磁碟認證套件時
+    url: "/disks-aggregates/update-disk-qualification-package-concept.html"
+  - title: 磁碟與分割擁有權
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/disk-partition-ownership-overview-concept.html"
+    - title: 顯示磁碟和分割區擁有權
+      url: "/disks-aggregates/display-partition-ownership-task.html"
+    - title: 手動指派磁碟的擁有權
+      url: "/disks-aggregates/manual-assign-disks-ownership-manage-task.html"
+    - title: 手動指派分割磁碟的擁有權
+      url: "/disks-aggregates/manual-assign-ownership-partitioned-disks-task.html"
+    - title: 設定磁碟擁有權的自動指派
+      url: "/disks-aggregates/configure-auto-assignment-disk-ownership-task.html"
+    - title: 使用根資料分割功能、在節點上設定主動-被動式組態
+      url: "/disks-aggregates/setup-active-passive-config-root-data-task.html"
+    - title: 使用root資料資料分割功能、在節點上設定主動-被動式組態
+      url: "/disks-aggregates/setup-active-passive-config-root-data-data-task.html"
+    - title: 移除磁碟的擁有權
+      url: "/disks-aggregates/remove-ownership-disk-task.html"
   - title: 移除故障磁碟
     url: "/disks-aggregates/remove-failed-disk-task.html"
-  - title: 移除磁碟的擁有權
-    url: "/disks-aggregates/remove-ownership-disk-task.html"
   - title: 磁碟資料抹除
     entries:
     - title: 總覽
@@ -128,22 +114,26 @@ entries:
       url: "/disks-aggregates/sanitization-not-performed-concept.html"
     - title: 如果消毒中斷會發生什麼事
       url: "/disks-aggregates/sanitization-interrupted-concept.html"
-    - title: 管理要清理之資料的集合體的秘訣
+    - title: 管理含有要清理資料的本機層（集合體）的秘訣
       url: "/disks-aggregates/sanitization-tips-concept.html"
     - title: 清理磁碟
       url: "/disks-aggregates/sanitize-disk-maintenance-mode-task.html"
-  - title: 使用根資料分割功能、在節點上設定主動-被動式組態
-    url: "/disks-aggregates/setup-active-passive-config-root-data-task.html"
-  - title: 使用root資料資料分割功能、在節點上設定主動-被動式組態
-    url: "/disks-aggregates/setup-active-passive-config-root-data-data-task.html"
   - title: 用於管理磁碟的命令
     url: "/disks-aggregates/commands-manage-disks-reference.html"
   - title: 用於顯示空間使用資訊的命令
     url: "/disks-aggregates/commands-display-space-usage-reference.html"
   - title: 用於顯示儲存磁碟櫃資訊的命令
     url: "/disks-aggregates/commands-display-storage-shelves-reference.html"
-- title: 管理RAID群組
+- title: 管理RAID組態
   entries:
+  - title: 總覽
+    url: "/disks-aggregates/manage-raid-configs-overview-concept.html"
+  - title: 本機層級（Aggregate）的預設RAID原則
+    url: "/disks-aggregates/default-raid-policies-aggregates-concept.html"
+  - title: 磁碟的RAID保護層級
+    url: "/disks-aggregates/raid-protection-levels-disks-concept.html"
+  - title: 本機層的磁碟機和RAID群組資訊（Aggregate）
+    url: "/disks-aggregates/drive-raid-group-information-local-tier-task.html"
   - title: 從RAID-DP轉換為RAID-TEC
     url: "/disks-aggregates/convert-raid-dp-tec-task.html"
   - title: 將支援功能轉換為RAID-DP RAID-TEC
@@ -152,11 +142,41 @@ entries:
     url: "/disks-aggregates/sizing-raid-groups-concept.html"
   - title: 自訂RAID群組的大小
     url: "/disks-aggregates/customize-size-raid-groups-task.html"
-- title: 鏡射與無鏡射的Aggregate
+- title: 管理Flash Pool本機層（Aggregate）
   entries:
   - title: 總覽
-    url: "/disks-aggregates/mirrored-unmirrored-aggregates-concept.html"
-  - title: 無鏡射Aggregate的運作方式
-    url: "/disks-aggregates/unmirrored-aggregates-work-concept.html"
-  - title: 鏡射Aggregate的運作方式
-    url: "/disks-aggregates/mirrored-aggregates-work-concept.html"
+    url: "/disks-aggregates/manage-flash-pool-tiers-overview-concept.html"
+  - title: Flash Pool本機層（Aggregate）快取原則
+    url: "/disks-aggregates/flash-pool-aggregate-caching-policies-concept.html"
+  - title: 管理Flash Pool快取原則
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/manage-flash-pool-caching-policies-overview-concept.html"
+    - title: 判斷是否要修改Flash Pool本機層（Aggregate）的快取原則
+      url: "/disks-aggregates/determine-modify-caching-policy-flash-pool-task.html"
+    - title: 修改Flash Pool本機層（Aggregate）的快取原則
+      url: "/disks-aggregates/modify-caching-policies-flash-pool-aggregates-task.html"
+    - title: 設定Flash Pool本機層（Aggregate）的快取保留原則
+      url: "/disks-aggregates/set-cache-data-retention-policy-flash-pool-task.html"
+  - title: Flash Pool SSD分割區適用於使用儲存資源池的Flash Pool本機層（Aggregate）
+    url: "/disks-aggregates/flash-pool-ssd-partitioning-aggregates-concept.html"
+  - title: Flash Pool候選資格和最佳快取大小
+    url: "/disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html"
+  - title: 使用實體SSD建立Flash Pool本機層（Aggregate）
+    url: "/disks-aggregates/create-flash-pool-aggregate-physical-ssds-task.html"
+  - title: 使用SSD儲存資源池建立Flash Pool本機層（Aggregate）
+    entries:
+    - title: 總覽
+      url: "/disks-aggregates/create-flash-pool-ssds-storage-pools-overview-concept.html"
+    - title: 判斷Flash Pool本機層（Aggregate）是否使用SSD儲存資源池
+      url: "/disks-aggregates/determine-flash-pool-aggregate-ssd-storage-task.html"
+    - title: 新增SSD儲存資源池以新增快取
+      url: "/disks-aggregates/create-ssd-storage-pool-task.html"
+    - title: 使用SSD儲存資源池配置單元建立Flash資源池
+      url: "/disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html"
+    - title: 判斷將SSD新增至SSD儲存池對快取大小的影響
+      url: "/disks-aggregates/determine-impact-cache-size-adding-ssds-task.html"
+    - title: 將SSD新增至SSD儲存資源池
+      url: "/disks-aggregates/add-storage-ssd-pool-task.html"
+    - title: 管理SSD儲存資源池的命令
+      url: "/disks-aggregates/commands-manage-ssd-storage-pools-reference.html"
