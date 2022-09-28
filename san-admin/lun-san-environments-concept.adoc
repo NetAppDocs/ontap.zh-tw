@@ -1,17 +1,25 @@
 ---
 permalink: san-admin/lun-san-environments-concept.html 
 sidebar: sidebar 
-keywords: lun, guidelines 
+keywords: lun, guidelines, assigning, assign, ids, mapping, map, igroups 
 summary: 在叢集上開始設定LUN之前、您必須先檢閱LUN準則。 
 ---
-= LUN準則
+= 建立LUN之前的須知事項
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
-[role="lead"]
-FC傳輸協定和iSCSI傳輸協定都是透過使用LUN來配置儲存設備。設定LUN之後、您可以執行各種管理工作、例如增加或減少LUN的大小。設定磁碟區並設定適當的作業系統類型之後、您必須完成設定LUN所需的步驟。
+
+
+== 為何實際LUN大小會稍有不同
+
+您應該注意下列有關LUN大小的資訊。
+
+* 當您建立LUN時、LUN的實際大小可能會因LUN的作業系統類型而稍有不同。LUN建立後、無法修改LUN OS類型。
+* 如果您建立的LUN大小上限為16 TB、請注意LUN的實際大小可能會略小一些。將限制捨位至稍低的值。ONTAP
+* 每個LUN的中繼資料在包含的Aggregate中需要約64 KB的空間。建立LUN時、您必須確保包含的Aggregate有足夠的空間來容納LUN的中繼資料。如果Aggregate沒有足夠的空間來容納LUN的中繼資料、則部分主機可能無法存取LUN。
+
 
 
 

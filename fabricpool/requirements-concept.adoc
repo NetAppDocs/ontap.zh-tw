@@ -25,7 +25,7 @@ summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
 
 ** 指定分層的最低冷卻週期
-** 非作用中資料報告
+** 非作用中資料報告（印尼盾）
 ** 使用Microsoft Azure Blob Storage for the Cloud做為FabricPool 適用於NetApp的雲端層
 ** 搭配使用FabricPool ONTAP Select
 
@@ -109,7 +109,7 @@ HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、B
 +
 ** 在支援的系統上、您只能使用All Flash（All SSD）Aggregate來執行支援。AFF FabricPool
 +
-您無法使用Flash Pool Aggregate（同時包含SSD和HDD）。
+您無法使用Flash Pool Aggregate、其中包含SSD和HDD。
 
 ** 在支援的系統上、您可以使用All Flash（All SSD）或HDD Aggregate來支援FAS FabricPool
 ** 在本產品的不只是部分、您也可以使用SSD或HDD Aggregate來執行功能。Cloud Volumes ONTAP ONTAP Select FabricPool
@@ -147,136 +147,6 @@ http://www.netapp.com/us/media/tr-4598.pdf["NetApp技術報告4598：FabricPool 
 == 使用Cloud Volumes ONTAP 方面的其他考量
 
 無論您使用的物件存放區供應商為何、均不需要使用「不含任何資訊」授權。Cloud Volumes ONTAP FabricPool
-
-
-
-== 搭配使用時的StorageGRID 其他考FabricPool 量事項
-
-* 除非您明確停用憑證檢查、否則您必須安裝CA認證StorageGRID 以供使用。
-* 您不得在 StorageGRID 物件存放區上啟用物件版本管理功能。
-* 不需要使用此功能。FabricPool
-* 如果StorageGRID 將某個節點部署在虛AFF 擬機器上、且該虛擬機器的儲存設備已從NetApp支援系統指派、請確認該磁碟區FabricPool 並未啟用「分層原則」。
-+
-停用FabricPool 與物件節點搭配使用的磁碟區的分層StorageGRID 功能、可簡化疑難排解和儲存作業。
-
-+
-[NOTE]
-====
-切勿使用FabricPool 無法將StorageGRID 任何與還原StorageGRID 本身相關的資料分層。將StorageGRID 資料分層還原StorageGRID 至物件、可增加疑難排解和作業複雜度。
-
-====
-
-
-
-
-== 搭配FabricPool 使用Alibaba Cloud Object Storage的其他考量事項
-
-* 您可能需要FabricPool 一個不必要的授權。
-+
-新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個系統、如果您在非AFF系統上使用Alibaba Cloud Object Storage、或是從現有的叢集升級、則需要FabricPool 使用一套不中斷的授權。
-
-* 在支援下列Alibaba物件儲存服務課程的支援對象系統和功能區上：AFF FAS ONTAP Select FabricPool
-+
-** Alibaba物件儲存服務標準
-** Alibaba物件儲存服務不常存取
-+
-https://www.alibabacloud.com/help/doc-detail/51374.htm["Alibaba Cloud：儲存課程簡介"]
-
-
-
-
-
-請聯絡您的NetApp銷售代表、以取得未列出的儲存類別相關資訊。
-
-
-
-== 搭配FabricPool 使用AWS S3搭配使用的其他考量
-
-* 您可能需要FabricPool 一個不必要的授權。
-+
-** 新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。
-+
-如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用AWS S3、或是從現有叢集升級、則需要FabricPool 一份「不支援」授權。
-
-+
-如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
-
-
-
-* 用來連接AWS S3物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
-* 在支援下列Amazon S3儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
-+
-** Amazon S3 Standard
-** Amazon S3 Standard -非常用存取（標準- IA）
-** Amazon S3 One Zone -不常用存取（單一區域- IA）
-** Amazon S3智慧分層
-** Amazon商業雲端服務
-+
-https://aws.amazon.com/s3/storage-classes/["Amazon Web Services（AWS）文件：Amazon S3儲存類別"]
-
-
-
-+
-如需未列出的儲存類別資訊、請聯絡您的銷售代表。
-
-* 在支援的基礎上、支援從通用SSD（gp2）和Amazon Elastic Block Store（EBS）的Througs Optimized HDD（ST1）Volume進行分層。Cloud Volumes ONTAP FabricPool
-
-
-
-
-== 搭配FabricPool 使用Google Cloud Storage的其他考量事項
-
-* 您可能需要FabricPool 一個不必要的授權。
-+
-新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用Google Cloud Storage、或是從現有叢集升級、則需要FabricPool 使用支援功能。
-
-* 用來連線Google Cloud Storage物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
-* 在支援下列Google Cloud Object儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
-+
-** Google Cloud Multi-Regional
-** Google Cloud區域
-** Google Cloud Nearline
-** Google Cloud Coldline
-+
-https://cloud.google.com/storage/docs/storage-classes["Google Cloud：儲存類別"]
-
-
-
-
-
-
-
-== 搭配FabricPool 使用IBM Cloud Object Storage搭配使用的其他考量事項
-
-* 您可能需要FabricPool 一個不必要的授權。
-+
-新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用IBM Cloud Object Storage、或是從現有叢集升級、則需要FabricPool 一個不含任何功能的授權。
-
-+
-如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
-
-* 用來連接IBM Cloud物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
-
-
-
-
-== 搭配FabricPool 使用Microsoft Azure Blob Storage搭配使用的其他考量事項
-
-* 您可能需要FabricPool 一個不必要的授權。
-+
-新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個系統、如果您在非AFF系統上使用Azure Blob Storage、或是從現有的叢集升級、則需要FabricPool 一份不含任何功能的授權。
-
-+
-如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
-
-* 如果您搭配使用Azure Blob Storage搭配使用、則不需要取得此功能的證書。FabricPool Cloud Volumes ONTAP
-* 用來連接Azure Blob儲存物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
-* 目前不支援Azure Stack（內部部署Azure服務）FabricPool 。
-* 在Microsoft Azure Blob Storage的帳戶層級、FabricPool 不支援熱儲存層和冷儲存層。
-+
-不支援Blob層級分層。FabricPool也不支援分層至Azure的歸檔儲存層。
-
-
 
 
 

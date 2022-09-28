@@ -1,8 +1,8 @@
 ---
 permalink: san-admin/limit-lun-access-portsets-igroups-concept.html 
 sidebar: sidebar 
-keywords: ways, limit, lun access,  port sets, igroups 
-summary: 除了使用選擇性LUN對應（SLM）之外、您也可以透過igroup和連接埠集來限制對LUN的存取。 
+keywords: ways, limit, lun access,  port, sets, igroups, portset, portsets 
+summary: 除了使用選擇性LUN對應（SLM）之外、您也可以透過igroup和portSet來限制對LUN的存取。 
 ---
 = 使用連接埠集和igroup來限制LUN存取的方法
 :allow-uri-read: 
@@ -11,19 +11,19 @@ summary: 除了使用選擇性LUN對應（SLM）之外、您也可以透過igrou
 
 
 [role="lead"]
-除了使用選擇性LUN對應（SLM）之外、您也可以透過igroup和連接埠集來限制對LUN的存取。
+除了使用選擇性LUN對應（SLM）之外、您也可以透過igroup和portSet來限制對LUN的存取。
 
-連接埠集可與SLA搭配使用、進一步限制特定目標對特定啟動器的存取。當使用具有連接埠集的SLM, LUN將可在擁有LUN的節點上所設定的連接埠集合中存取、並可在該節點的HA合作夥伴上存取。
+PortSet可與SLA搭配使用、進一步限制特定目標對特定啟動器的存取。當使用具有連接埠集的SLM, LUN將可在擁有LUN的節點及該節點的HA合作夥伴的連接埠集中的一組lifs上存取。
 
-在以下範例中、初始化器1沒有連接埠集。如果沒有連接埠集、則初始化器1可透過LIF1和LIF2存取LUN1。
+在以下範例中、初始化器1沒有連接埠集。如果沒有連接埠集、則初始器1可透過LIF1和LIF2存取LUN1。
 
-image::../media/bsag-c-mode-no-portset.gif[此影像說明未設定連接埠集的LUN存取]
+image::../media/bsag-c-mode-no-portset.gif[此影像說明無需連接埠集即可存取LUN]
 
-您可以使用連接埠集來限制對LUN1的存取。在以下範例中、initator1只能透過LIF1存取LUN1。不過、由於先入者1不在連接埠集1中、因此無法透過LIF2存取LUN1。
+您可以使用連接埠集來限制對LUN1的存取。在以下範例中、initator1只能透過LIF1存取LUN1。不過、由於LIF2不在portset1中、因此初始化器1無法透過LIF2存取LUN1。
 
-image::../media/bsag-c-mode-portset.gif[影像說明使用連接埠集進行LUN存取]
+image::../media/bsag-c-mode-portset.gif[此影像說明使用連接埠集進行LUN存取]
 
 .相關資訊
 * xref:selective-lun-map-concept.adoc[選擇性LUN對應]
-* xref:create-port-sets-binding-igroups-task.adoc[建立連接埠集、並將igroup繫結至連接埠集]
+* xref:create-port-sets-binding-igroups-task.adoc[建立連接埠集並繫結至igroup]
 

@@ -13,6 +13,37 @@ summary: 如果您執行ONTAP 的是版本2、9.2或更新版本、您可以將A
 [role="lead"]
 如果您執行ONTAP 的是版本2、9.2或更新版本、您可以將AWS S3設定為FabricPool 適用的雲端層。如果您執行ONTAP 的是更新版本的版本、則可以設定AWS商業雲端服務（C2S）FabricPool 以供使用。
 
+.搭配FabricPool 使用AWS S3搭配使用的考量
+* 您可能需要FabricPool 一個不必要的授權。
++
+** 新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。
++
+如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用AWS S3、或是從現有叢集升級、則需要FabricPool 一份「不支援」授權。
+
++
+如果FabricPool 您是第一次為現有叢集訂購供應功能、FabricPool 則可取得10 TB可用容量的不含指令碼授權。
+
+
+
+* 用來連接AWS S3物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+* 在支援下列Amazon S3儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
++
+** Amazon S3 Standard
+** Amazon S3 Standard -非常用存取（標準- IA）
+** Amazon S3 One Zone -不常用存取（單一區域- IA）
+** Amazon S3智慧分層
+** Amazon商業雲端服務
++
+https://aws.amazon.com/s3/storage-classes/["Amazon Web Services（AWS）文件：Amazon S3儲存類別"]
+
+
+
++
+如需未列出的儲存類別資訊、請聯絡您的銷售代表。
+
+* 在支援的基礎上、支援從通用SSD（gp2）和Amazon Elastic Block Store（EBS）的Througs Optimized HDD（ST1）Volume進行分層。Cloud Volumes ONTAP FabricPool
+
+
 .步驟
 . 使用「sorage Aggregate object-store config create」命令搭配「-provider-type」「AWs_S3」參數、指定AWS S3組態資訊。
 +

@@ -15,7 +15,39 @@ summary: 若要設定iSCSI的儲存虛擬機器（SVM）、您必須為SVM建立
 
 每個使用iSCSI傳輸協定處理資料的SVM、每個節點至少需要一個iSCSI LIF。為了提供備援、您應該在每個節點上建立至少兩個生命期。
 
+[role="tabbed-block"]
 .步驟
+====
+.系統管理員
+--
+使用ONTAP NetApp System Manager（9.7及更新版本）設定iSCSI儲存VM。
+
+[cols="2"]
+|===
+| 在新的儲存VM上設定iSCSI | 在現有儲存VM上設定iSCSI 
+
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*、然後按一下* Add*。
+. 輸入儲存VM的名稱。
+. 選擇* iSCSI *作為*存取傳輸協定*。
+. 按一下「*啟用iSCSI*」、然後輸入網路介面的IP位址和子網路遮罩。+每個節點至少應有兩個網路介面。
+. 按一下「 * 儲存 * 」。
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*。
+. 按一下您要設定的儲存VM。
+. 按一下*設定*索引標籤、然後按一下 image:icon_gear.gif[""] iSCSI傳輸協定旁邊。
+. 按一下「*啟用iSCSI*」、然後輸入網路介面的IP位址和子網路遮罩。+每個節點至少應有兩個網路介面。
+. 按一下「 * 儲存 * 」。
+
+
+|===
+--
+.CLI
+--
+使用ONTAP CLI設定iSCSI的儲存VM。
+
 . 讓SVM聆聽iSCSI流量：
 +
 「vserver iSCSI create -vserver _vserver_name_-target別名_vserver_name_」
@@ -35,4 +67,6 @@ summary: 若要設定iSCSI的儲存虛擬機器（SVM）、您必須為SVM建立
 . 從您的主機建立iSCSI工作階段至您的生命期。
 
 
+--
+====
 https://www.netapp.com/media/10680-tr4080.pdf["NetApp技術報告4080：現代SAN的最佳實務做法"]

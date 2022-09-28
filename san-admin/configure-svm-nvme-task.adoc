@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: configure, svm, nvme 
 summary: 如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專門設定SVM。 
 ---
-= 設定NVMe的SVM
+= 設定NVMe的儲存VM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,7 +15,37 @@ summary: 如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專
 
 您的FC或乙太網路介面卡必須支援NVMe。支援的介面卡列於 https://hwu.netapp.com["NetApp Hardware Universe"^]。
 
+[role="tabbed-block"]
 .步驟
+====
+.系統管理員
+--
+使用ONTAP 「支援NVMe的儲存虛擬機器」（9.7及更新版本）。
+
+[cols="2"]
+|===
+| 在新的儲存VM上設定NVMe | 在現有儲存VM上設定NVMe 
+
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*、然後按一下* Add*。
+. 輸入儲存VM的名稱。
+. 選擇* NVMe *作為*存取傳輸協定*。
+. 按一下*啟用FC*和*儲存*。
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*。
+. 按一下您要設定的儲存VM。
+. 按一下*設定*索引標籤、然後按一下 image:icon_gear.gif["設定圖示"] 在NVMe傳輸協定旁。
+. 按一下*啟用FC*和*儲存*。
+
+
+|===
+--
+.CLI
+--
+使用ONTAP 支援NVMe的CLI設定儲存VM。
+
 . 如果您不想使用現有的SVM、請建立一個：
 +
 「vserver create -vserver _svm_name_'
@@ -123,3 +153,6 @@ FC或TCP
 如果顯示有關自動效率原則的警告訊息、則可以安全地忽略該訊息。
 
 
+
+--
+====

@@ -13,6 +13,28 @@ summary: 如果您執行ONTAP 的是32個以上版本的版本、您可以將Goo
 [role="lead"]
 如果您執行ONTAP 的是32個以上版本的版本、您可以將Google Cloud Storage設定為FabricPool 適用的雲端層。
 
+
+
+== 搭配FabricPool 使用Google Cloud Storage的其他考量事項
+
+* 您可能需要FabricPool 一個不必要的授權。
++
+新訂購AFF 的功能不只提供10 TB的可用容量、FabricPool 更能使用功能。如果AFF 您需要更多的功能來支援整個作業系統、如果您在非AFF系統上使用Google Cloud Storage、或是從現有叢集升級、則需要FabricPool 使用支援功能。
+
+* 用來連線Google Cloud Storage物件伺服器的LIF ONTAP 必須位於10 Gbps連接埠上。
+* 在支援下列Google Cloud Object儲存課程的支援對象包括：AFF FAS ONTAP Select FabricPool
++
+** Google Cloud Multi-Regional
+** Google Cloud區域
+** Google Cloud Nearline
+** Google Cloud Coldline
++
+https://cloud.google.com/storage/docs/storage-classes["Google Cloud：儲存類別"]
+
+
+
+
+
 .步驟
 . 使用帶有「-provider-type」「GoogleCloud」參數的「儲存Aggregate object-store config create」命令、指定Google Cloud儲存組態資訊。
 +

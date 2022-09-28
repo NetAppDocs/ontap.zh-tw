@@ -1,0 +1,96 @@
+---
+permalink: san-admin/resize-lun-task.html 
+sidebar: sidebar 
+keywords: decrease, increase, resize, size, modify, change, lun 
+summary: 您可以增加或減少LUN的大小。 
+---
+= 調整LUN大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以增加或減少LUN的大小。
+
+[NOTE]
+====
+無法調整Solaris LUN的大小。
+
+====
+
+
+== 增加LUN的大小
+
+LUN的大小取決ONTAP 於您的版本。
+
+[cols="2"]
+|===
+| 版本ONTAP | 最大LUN大小 
+
+
+| 更新版本ONTAP  a| 
+* 所有SAN陣列（ASA）為128 TB
+* 16 TB（用於非ASA）
+
+
+
+
+| S69.5、9.6、ONTAP 9.7 | 16TB 
+
+
+| 更新版本ONTAP | 原始LUN大小的10倍、但不超過16TB、即最大LUN大小。例如、如果您建立100 GB LUN、則只能將其擴充至1、000 GB。LUN的實際最大大小可能不恰好為16TB。將限制捨位至稍低的值。ONTAP 
+|===
+您不需要將LUN離線以增加大小。不過、增加大小之後、您必須重新掃描主機上的LUN、讓主機識別大小的變更。
+
+如需調整LUN大小的詳細資訊、請參閱命令參考頁面上的「LUN resize（LUN大小調整）」命令。
+
+[role="tabbed-block"]
+.步驟
+====
+.系統管理員
+--
+利用ONTAP 《不含更新版本的系統管理程式》（9.7及更新版本）來增加LUN的大小。
+
+. 在System Manager中、按一下* Storage > LUN*。
+. 按一下 image:icon_kabob.gif["kabob圖示"] 然後選取*編輯*。
+. 在*儲存與最佳化*之下、增加LUN的大小並*儲存*。
+
+
+--
+.CLI
+--
+利用NetApp CLI增加LUN的大小ONTAP 。
+
+. 增加LUN的大小：
++
+"LUN resize -vserver _vserver_name_-volume _volume_name_-LUN _LUN_name_-size _LUN_Size_
+
+. 驗證LUN大小是否增加：
++
+「LUN show -vserver _vserver_name_」
+
++
+[NOTE]
+====
+將LUN的實際最大大小捨去執行的作業系統、使其稍微低於預期值。ONTAP此外、實際LUN大小可能會因LUN的作業系統類型而稍有不同。若要取得正確的調整大小值、請在進階模式中執行下列命令：
+
++"it -unit" B
+
++「LUN show -Fields max-resize-size -volume _volume_name_-LUN _lun_name_'」
+
+====
+. 重新掃描主機上的LUN。
+. 遵循主機文件、讓主機檔案系統能夠看到新建立的LUN大小。
+
+
+--
+====
+
+
+== 減少LUN的大小
+
+[role="lead"]
+在減少LUN大小之前、主機必須先將包含LUN資料的區塊移轉到較小LUN大小的邊界。您應該使用SnapDrive 諸如Windows版的工具、確保LUN能夠正確減少、而不會刪減包含LUN資料的區塊。不建議手動減少LUN大小。
+
+當您減少LUN的大小後、ONTAP 即可自動通知啟動器LUN大小已減少。不過、主機可能需要採取其他步驟、才能辨識新的LUN大小。如需減少主機檔案結構大小的特定資訊、請參閱主機文件。

@@ -11,16 +11,33 @@ summary: 使用NVMe時、您必須將命名空間對應至子系統。
 
 
 [role="lead"]
-使用NVMe時、您必須將命名空間對應至子系統。
+對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe命名空間和子系統。然後、每個命名空間都可以對應至NVMe子系統、以便從主機系統存取資料。
 
-.您需要的是 #8217 ；需要的是什麼
-* 您必須為NVMe設定SVM。
-* 您必須已建立NVMe命名空間和子系統。
-
-
-命名空間只能對應至單一子系統。
+SVM必須已針對NVMe進行設定。
 
 .步驟
+. 確認SVM已設定為NVMe：
++
+「vserver show -vserver _svm_name_-Fields allowed-protocols」
+
++
+「NVMe」應顯示在「允許的傳輸協定」欄下。
+
+. 建立NVMe命名空間：
++
+「Vserver NVMe命名空間create -vserver _Svm_name_-path _path_-size _size__of_namest_-ostype_os_type_」
+
+. 建立NVMe子系統：
++
+「Vserver NVMe子系統會建立-vserver _svm_name_-subsystem _name_of_subsystem_-osttype _os_type_」
+
+. 驗證子系統是否已建立：
++
+「Vserver NVMe子系統顯示-vserver _Svm_name_」
+
++
+「NVMe」子系統應顯示在「Subsystem」（子系統）欄下。
+
 . 從主機取得NQN。
 . 將主機NQN新增至子系統：
 +
@@ -29,6 +46,9 @@ summary: 使用NVMe時、您必須將命名空間對應至子系統。
 . 將命名空間對應至子系統：
 +
 「Vserver NVMe子系統對應add -vserver _svm_name_-subsystem _subsystem_name_-path _path_」
+
++
+命名空間只能對應至單一子系統。
 
 . 確認命名空間已對應至子系統：
 +

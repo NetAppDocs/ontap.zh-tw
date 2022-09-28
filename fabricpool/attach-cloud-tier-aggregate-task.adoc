@@ -4,23 +4,43 @@ sidebar: sidebar
 keywords: attaching, cloud, tier, aggregate 
 summary: 將物件存放區設定為雲端層之後、您可以將其附加FabricPool 至物件存放區、以指定要使用的集合體。在更新版本的版本中、您也可以附加包含合格的等量組成物的集合體。ONTAP FlexGroup 
 ---
-= 將雲端層附加至集合體
+= 將雲端層附加至本機層（Aggregate）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-將物件存放區設定為雲端層之後、您可以將其附加FabricPool 至物件存放區、以指定要使用的集合體。在更新版本的版本中、您也可以附加包含合格的等量組成物的集合體。ONTAP FlexGroup
+將物件存放區設定為雲端層之後、您可以將其附加FabricPool 至物件庫、以指定要使用的本機層（Aggregate）。在《銷售資料》9.5及更新版本中、您也可以附加含有合格的銷售資料成分的本地層（Aggregate）ONTAP FlexGroup 。
 
 當您使用ONTAP CLI來設定用於FabricPool 執行效能提升的Aggregate時、Aggregate必須已經存在。
 
 [NOTE]
 ====
-當您使用System Manager來設定適用於FabricPool 整個過程的Aggregate時、您可以建立Aggregate並將其設定FabricPool 為同時用於整個過程。
+當您使用System Manager設定本地層FabricPool 以供執行效能分析時、您可以建立本機層、並將其設定FabricPool 為同時用於執行效能分析。
 
 ====
-.步驟
+
+
+== 程序
+
+您可以FabricPool 使用ONTAP Sytr系統 管理程式或ONTAP CLI、將本機層（Aggregate）附加至物件存放區。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至*儲存設備> Tiers*、選取雲端層、然後按一下 image:icon_kabob.gif["kabob圖示"]。
+. 選取*「附加本機層級」*。
+. 在「*新增為主要*」下、確認磁碟區符合附加條件。
+. 如有必要、請選取*將磁碟區轉換成精簡配置*。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
+.若要使用CLI將物件存放區附加至Aggregate：
 . *選用*：若要查看磁碟區中有多少資料處於非使用中狀態、請依照中的步驟進行 link:determine-data-inactive-reporting-task.html["使用非作用中資料報告來判斷Volume中有多少資料處於非作用中狀態"]。
 +
 查看某個Volume中有多少資料處於非作用中狀態、有助於決定哪些Aggregate可用於FabricPool 哪些用途。
@@ -49,3 +69,6 @@ Aggregate    Object Store Name    Availability State
 myaggr       Amazon01B1           available
 ----
 
+
+--
+====

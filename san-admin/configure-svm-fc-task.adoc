@@ -17,7 +17,37 @@ summary: 若要設定FC的儲存虛擬機器（SVM）、您必須為SVM建立生
 
 NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一個FC LIF。每個節點必須使用兩個LIF和兩個Fabric、每個節點必須附加一個LIF。這可在節點層和網路上提供備援功能。
 
+[role="tabbed-block"]
 .步驟
+====
+.系統管理員
+--
+使用ONTAP NetApp System Manager（9.7及更新版本）設定iSCSI儲存VM。
+
+[cols="2"]
+|===
+| 在新的儲存VM上設定FC | 在現有的儲存VM上設定FC 
+
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*、然後按一下* Add*。
+. 輸入儲存VM的名稱。
+. 選擇* FC*作為*存取傳輸協定*。
+. 按一下*啟用FC*。+ FC連接埠會自動指派。
+. 按一下「 * 儲存 * 」。
+
+ a| 
+. 在System Manager中、按一下* Storage > Storage VM*。
+. 按一下您要設定的儲存VM。
+. 按一下*設定*索引標籤、然後按一下 image:icon_gear.gif[""] FC傳輸協定旁邊。
+. 按一下「*啟用FC*」、然後輸入網路介面的IP位址和子網路遮罩。+ FC連接埠會自動指派。
+. 按一下「 * 儲存 * 」。
+
+
+|===
+--
+.CLI
+--
 . 在SVM上啟用FC服務：
 +
 「vserver FCP create -vserver _vserver_name_-stue-admin up」
@@ -35,6 +65,8 @@ NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一
 
 
 
+--
+====
 https://mysupport.netapp.com/site/global/dashboard["NetApp支援"]
 
 https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]

@@ -23,17 +23,18 @@ summary: 建立命名空間、以使用NVMe傳輸協定為SUSE Linux伺服器提
 
 此程序會在現有的儲存VM上建立新的命名空間。您的儲存VM必須設定為NVMe、而且您的FC或TCP傳輸應該已經設定完成。
 
-image:workflow_nvme_provision_suse_linux_update.png["工作流程圖、以配置適用於SUSE Linux的NVMe"]
+從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
 
-
-NOTE: 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
-
+[role="tabbed-block"]
 .步驟
+====
+.系統管理員
+--
+建立命名空間、以搭配ONTAP 使用NVMe傳輸協定與《支援不支援的系統管理程式》（9.7及更新版本）來提供儲存設備。
+
 . 在系統管理員中、按一下*儲存設備> NVMe命名空間*、然後按一下*新增*。
 +
-如果您需要建立新的子系統、請按一下*「更多選項」*。
-
-+
+.. 如果您需要建立新的子系統、請按一下*「更多選項」*。
 .. 如果您執行ONTAP 的是支援功能的9.8或更新版本、而您想要停用QoS或選擇自訂QoS原則、請按一下*更多選項*、然後在*儲存與最佳化*下選取*效能服務層級*。
 
 
@@ -44,3 +45,59 @@ NOTE: 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資�
 . 初始化命名空間並使用檔案系統進行格式化。
 . 確認Linux伺服器可以在命名空間上寫入和讀取資料。
 
+
+--
+.CLI
+--
+使用NVMe傳輸協定搭配ONTAP 使用支援功能的CLI建立命名空間、以提供儲存設備。
+
+對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe命名空間和子系統。然後、每個命名空間都可以對應至NVMe子系統、以便從主機系統存取資料。
+
+SVM必須已針對NVMe進行設定。
+
+.步驟
+. 確認SVM已設定為NVMe：
++
+「vserver show -vserver _svm_name_-Fields allowed-protocols」
+
++
+「NVMe」應顯示在「允許的傳輸協定」欄下。
+
+. 建立NVMe命名空間：
++
+「Vserver NVMe命名空間create -vserver _Svm_name_-path _path_-size _size__of_namest_-ostype_os_type_」
+
+. 建立NVMe子系統：
++
+「Vserver NVMe子系統會建立-vserver _svm_name_-subsystem _name_of_subsystem_-osttype _os_type_」
+
+. 驗證子系統是否已建立：
++
+「Vserver NVMe子系統顯示-vserver _Svm_name_」
+
++
+「NVMe」子系統應顯示在「Subsystem」（子系統）欄下。
+
+. 從主機取得NQN。
+. 將主機NQN新增至子系統：
++
+「Vserver NVMe子系統主機add -vserver _Svm_name_-subsystem _subsystem_name_-host-nqn _Host_NQN_：subsystem._subsystem_name_」
+
+. 將命名空間對應至子系統：
++
+「Vserver NVMe子系統對應add -vserver _svm_name_-subsystem _subsystem_name_-path _path_」
+
++
+命名空間只能對應至單一子系統。
+
+. 確認命名空間已對應至子系統：
++
+「Vserver NVMe命名空間show -vserver _svm_name_-instance」
+
++
+子系統應列為「附加子系統」。
+
+
+
+--
+====
