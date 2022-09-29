@@ -14,19 +14,22 @@ summary: 在透過網路資料管理傳輸協定（NDMP）設定磁帶備份存�
 在透過網路資料管理傳輸協定（NDMP）設定磁帶備份存取之前、您必須先確認是否支援所規劃的組態、確認每個節點上的磁帶機均列為合格的磁碟機、確認所有節點都具有叢集間的LIF、 並識別備份應用程式是否支援叢集感知備份（Cab）擴充功能。
 
 .步驟
-. 使用互通性對照表IMT （Interoperability Matrix、簡稱「互通性對照表」）來驗證是否支援規劃的組態。
+. 請參閱備份應用程式供應商的ONTAP 支援資訊表以取得支援功能（NetApp不符合ONTAP 使用支援功能的協力廠商備份應用程式要求）。
 +
-https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+您應該確認下列NetApp元件是否相容：
 
 +
-您應該確認下列元件是否相容：
-
-+
+--
 ** 叢集上執行的版本。ONTAP
-** 備份應用程式廠商與應用程式版本：例如Symantec NetBackup 7.6或CommVault Simpana 10 SP8。
-** 磁帶設備的詳細資料、例如磁帶機的製造商、機型和介面：例如IBM ultrium-TD4 FC或HP ultrium-5 SAS。
-** 叢集中節點的平台：例如FAS3260或FAS6280。
+** 備份應用程式廠商與版本：例如Veritas NetBackup 8.2或CommVault。
+** 磁帶設備的詳細資料、例如磁帶機的製造商、機型和介面：例如IBM ultrium8或HPE StoreEver ultrium30750 LTO-8。
+** 叢集中節點的平台：例如FAS8700或A400。
 
+
+--
++
+
+NOTE: 您可以在中找到ONTAP 舊版的支援資料、以供備份應用程式使用 https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]。
 
 . 驗證您的磁帶機是否在每個節點的內建磁帶組態檔中列為合格的磁碟機：
 +
