@@ -1,0 +1,74 @@
+---
+permalink: nvme/support-limitations.html 
+sidebar: sidebar 
+keywords: nvme, namespaces, considerations, provisioning 
+summary: NVMe支援會因ONTAP 您的版本的支援、平台和組態而異。 
+---
+= NVMe支援與限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NVMe支援與限制會因ONTAP 您的版本的支援、平台和組態而異。
+
+
+
+== 命名空間限制與支援
+
+若要在SAN環境中設定NVMe傳輸協定、您必須設定NVMe的SVM、建立命名空間和子系統、設定NVMe/FC LIF、然後將命名空間對應至子系統。使用NVMe命名空間時、您應該注意下列事項：
+
+* 從功能升級到功能升級到ONTAP 功能升級 xref:../nvme/resize-namespace-task.html[調整命名空間大小]。不支援ONTAP 在發行版不支援重新調整命名空間大小。
+* 從ONTAP 功能區9.6開始、命名空間支援512位元組區塊和96位元組區塊。
++
+預設值為4096。只有當主機作業系統不支援4096位元組區塊時、才應使用512。
+
+* 如果LUN中的資料遺失、則無法從命名空間還原資料、反之亦然。
+* 命名空間的空間保證與所含磁碟區的空間保證相同。
+* 命名空間不支援下列項目：
++
+** 重新命名
++
+您無法重新命名命名命名空間。
+
+** 跨Volume移動
+** 跨Volume複本
+
+
+
+
+
+
+== 傳輸協定支援
+
+[cols="3*"]
+|===
+
+
+| 傳輸協定 | 開始於... | 允許者... 
+
+
+| TCP | 零點9.10.1 ONTAP | 預設 
+
+
+| FCP | 部分9.4 ONTAP | 預設 
+|===
+
+
+== 平台與組態支援與限制
+
+支援NVMe傳輸協定會因平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
+
+[cols="3*"]
+|===
+
+
+| 從ONATP開始... | 平台 | 支援的組態 
+
+
+| 9.9.1 | 支援各種SAN Array（簡稱「支援」）AFF ASA 平台 | 僅限非MetroCluster組態 
+
+
+| 9.4 | 僅適用於平台AFF | 僅限非MetroCluster組態 
+|===

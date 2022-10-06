@@ -11,37 +11,13 @@ summary: 支援從支援的是NVMe/FC、從支援的問題開始ONTAP 就是支�
 
 
 [role="lead"]
-從ONTAP 推出支援NVM9.4的NVMe/FC開始、支援非MetroCluster AFF 的各種組態。所有非MetroCluster支援所有非MetroCluster完整SAN陣列（簡稱「支援」）組態、也ONTAP 支援從《支援使用支援的支援範本》（以《支援使用支援的支援範本》為開頭）AFF ASA
+從ONTAP 推出支援NVM9.4的NVMe/FC開始、支援非MetroCluster AFF 的各種組態。所有非MetroCluster All SAN Array（簡稱「支援」）組態、也ONTAP 支援以《支援使用支援使用支援的支援範本》（從《支援使用支援的支援範本》（從《支援使用支援的支援）為起點ASA
 
 您可以使用非揮發性記憶體Express（NVMe）傳輸協定、在SAN環境中提供儲存設備。NVMe傳輸協定已針對固態儲存設備的效能最佳化。
 
 對於NVMe、儲存目標稱為命名空間。NVMe命名空間是一組非揮發性儲存設備、可格式化為邏輯區塊、並以標準區塊裝置呈現給主機。您可以建立命名空間和子系統、然後將命名空間對應至子系統、就像是將LUN配置及對應至FC和iSCSI的igroup一樣。
 
 NVMe目標是透過使用FC交換器的標準FC基礎架構、或使用乙太網路交換器和主機端介面卡的標準TCP基礎架構、連線至網路。
-
-支援下列NVMe傳輸協定：
-
-[cols="3*"]
-|===
-
-
-| 傳輸協定 | 開始於... | 允許者... 
-
-
-| TCP | 零點9.10.1 ONTAP | 預設 
-
-
-| FCP | 部分9.4 ONTAP | 預設 
-|===
-
-
-== NVMe授權需求
-
-從支援NVMe 9.5開始ONTAP 需要授權。如果ONTAP NVMe是在更新至ONTAP 版本號9.5之後啟用、系統會給予90天的寬限期以取得授權。
-
-您可以使用下列命令來啟用授權：
-
-「系統授權新增-授權碼_nvm_less_key_」
 
 
 
@@ -65,10 +41,29 @@ NVMe的優點包括提升資料傳輸的速度、生產力、處理量和容量�
 +
 NVMe解碼「資源要求」所需的時間較短、而且不需要在多執行緒程式中鎖定執行緒。
 
-* NVMe支援的功能可防止CPU層級出現瓶頸、並可在系統擴充時提供大幅擴充性
+* NVMe支援的功能可防止CPU層級出現瓶頸、並可在系統擴充時提供大幅擴充性。
 
+
+
+
+== 關於NVMe命名空間
+
+NVMe命名空間是一組可格式化為邏輯區塊的非揮發性記憶體（NVM）。當儲存虛擬機器設定為使用NVMe傳輸協定、且相當於FC和iSCSI傳輸協定的LUN時、就會使用命名空間。
+
+一個或多個命名空間已配置並連線至NVMe主機。每個命名空間都可支援不同的區塊大小。
+
+NVMe傳輸協定可透過多個控制器存取命名空間。使用大多數作業系統都支援的NVMe驅動程式、固態磁碟機（SSD）命名空間會顯示為標準區塊裝置、可在不做任何修改的情況下部署檔案系統和應用程式。
+
+命名空間ID（NSID）是控制器用來提供命名空間存取權的識別碼。設定主機或主機群組的NSID時、您也可以設定主機存取磁碟區的功能。邏輯區塊一次只能對應至單一主機群組、而指定的主機群組沒有任何重複的NSs。
+
+
+
+== 關於NVMe子系統
+
+NVMe子系統包含一或多個NVMe控制器、命名空間、NVM子系統連接埠、NVM儲存媒體、以及控制器與NVM儲存媒體之間的介面。建立NVMe命名空間時、預設不會對應至子系統。您也可以選擇將其對應為新的或現有的子系統。
 
 .相關資訊
 * link:../task_nvme_provision_suse_linux.html["為SUSE Linux配置NVMe儲存設備"]
-* link:san-admin/configure-svm-nvme-task.html["設定NVMe的儲存VM"]
+* link:../create-nvme-namespace-subsystem-task.html["為其他主機提供NVMe儲存資源"]
+* link:san-admin/map-nvme-namespace-subsystem-task.html["將NVMe命名空間對應至子系統"]
 
