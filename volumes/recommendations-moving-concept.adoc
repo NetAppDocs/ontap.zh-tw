@@ -45,7 +45,10 @@ summary: 移動磁碟區有許多考量因素和建議、會受到您正在移�
 == FlexClone Volume考量與建議
 
 * FlexClone Volume在移動時無法離線。
-* 您可以將FlexClone磁碟區從同一個Aggregate移至同一個節點或同一個SVM中的另一個節點上的另一個Aggregate、而不需分割。
+* 您可以將FlexClone磁碟區從同一個Aggregate移至同一個節點或同一個SVM中的另一個節點上的另一個Aggregate、而無需啟動「vol clone sap start」命令。
++
+藉由在FlexClone Volume上啟動Volume Move作業、複製磁碟區會在移轉過程中分割至不同的Aggregate。在複製磁碟區上移動磁碟區完成之後、移動的磁碟區不再顯示為複製、而是顯示為獨立磁碟區、而不會與先前的父磁碟區建立任何複製關係。
+
 * FlexClone Volume Snapshot複本在移動複本之後不會遺失。
 * 您可以將FlexClone父磁碟區從一個Aggregate移至另一個Aggregate。
 +
