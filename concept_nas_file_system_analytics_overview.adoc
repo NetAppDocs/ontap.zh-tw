@@ -19,31 +19,45 @@ summary: 檔案系統分析是收集和顯示FlexGroup 有關某個畫面的內�
 
 
 [role="lead"]
-檔案系統分析（FSA）是ONTAP 從功能性問題9.8開始提供的架構、可用來收集和視覺化ONTAP FlexGroup 有關功能性問題或FlexVol 功能性問題的關鍵資料點。FSA可協助解決組織在資料位置、儲存使用量、儲存最佳化及資料保護方面的資料挑戰。FSA能即時洞悉資料使用量、協助您做出有效資料管理與作業的決策、例如處理量的服務品質變更、以及將磁碟區移至不同的控制器或集合體。
+檔案系統分析（FSA）是ONTAP 在更新版本9.8中首次推出、可即時查看ONTAP FlexGroup 檔案使用率及內部的儲存容量趨勢、包括更新版本。FlexVol這項原生功能可免除外部工具的需求、並提供關鍵見解、讓您瞭解如何運用儲存設備、以及是否有機會針對您的業務需求最佳化儲存設備。
 
-FSA會在磁碟區檔案系統階層的每個層級上提供詳細資訊、讓您能夠：
+有了FSA、您就能在NAS的Volume檔案系統階層中的所有層級都能清楚看到。例如、您可以在儲存VM（SVM）、Volume、目錄和檔案層級取得使用量和容量洞見。您可以使用FSA來回答下列問題：
 
-* link:task_nas_file_system_analytics_view.html["評估容量使用量與趨勢"]
-* link:task_nas_file_system_analytics_view.html["監控檔案和目錄計數"]
-* link:./file-system-analytics/activity-tracking-task.html["評估檔案活動和歷程記錄"]
-* link:task_nas_file_system_analytics_view.html["擷取非作用中資料的資訊"]
-* link:task_nas_file_system_analytics_take_corrective_action.html["根據洞見採取修正行動（從ONTAP 0到9：9.1開始）"]
-* link:./file-system-analytics/activity-tracking-task.html["分析並下載有關高流量和高處理量活動的資訊（從ONTAP 版本號9.10.1開始）"]
+* 我的儲存設備中有哪些空間、還有哪些大型檔案可以移至其他儲存位置？
+* 哪些是我最活躍的磁碟區、目錄和檔案？我的儲存效能是否已針對使用者的需求最佳化？
+* 上個月新增了多少資料？
+* 誰是我最活躍或最不活躍的儲存使用者？
+* 我的主要儲存設備上有多少閒置或靜止資料？我可以將資料移至成本較低的冷層嗎？
+* 我的計畫性服務品質變更是否會對存取經常存取的重要檔案造成負面影響？
 
 
-檔案系統分析提供您資料的清單和圖形檢視。在圖形檢視中、大小可變的區塊和色彩陰影可提供目錄的圖形化呈現。在下方的清單檢視中、您可以查看每個目錄使用多少空間、以及如何以數字形式和互動式圖表來修改和存取每個目錄的歷程記錄。
+檔案系統分析已整合至ONTAP 《Sytricity System Manager》。System Manager中的檢視可提供：
 
-image::fsa-listview.png[FSA清單檢視的螢幕擷取。四個目錄會依資料使用量的遞減順序顯示。每個目錄都會以兩個折線圖動畫、顯示其各自的存取和修改記錄。]
+* 即時可見度、有效管理及營運資料
+* 即時資料收集與集合體
+* 子目錄和檔案大小與數量、以及相關的效能設定檔
+* 修改及存取歷程記錄的檔案保存時間分佈圖
 
-檔案系統分析資料會使用ONTAP 《系統管理程式》顯示。您也可以使用ONTAP REST API以程式設計方式存取資料。
 
-*功能可用度（依版本*）
+image:flexgroup1.png["資料分析FlexGroup"]
+
+
+
+== 支援的Volume類型
+
+檔案系統分析的設計旨在提供使用中NAS資料的磁碟區可見度、FlexCache 但不包括SnapMirror快取和SnapMirror目的地磁碟區。
+
+
+
+== 檔案系統分析功能可用度
+
+每ONTAP 個版本的更新都會擴大檔案系統分析的分析範圍。
 
 [cols="3,1,1,1,1"]
 |===
 
 
-|  | 部分9.8 ONTAP | 部分9.9.1 ONTAP | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP 
+|  | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP | 部分9.8 ONTAP 
 
 
 | 系統管理程式中的視覺化功能 | x | x | x | x 
@@ -55,25 +69,22 @@ image::fsa-listview.png[FSA清單檢視的螢幕擷取。四個目錄會依資�
 | 非作用中資料資訊 | x | x | x | x 
 
 
-| 從7-mode系統轉換的磁碟區可用度 |  | x | x | x 
+| 支援Data ONTAP 從VMware 7-Mode轉換的Volume | x | x | x |  
 
 
-| 在System Manager中變更非作用中期間的選項 |  | x | x | x 
+| 能夠在System Manager中自訂非作用中期間 | x | x | x |  
 
 
-| 活動追蹤（Volume層級） |  |  | x | x 
+| Volume層級活動追蹤 | x | x |  |  
 
 
-| 下載至CSV（活動追蹤、Volume層級） |  |  | x | x 
+| 將活動追蹤資料下載至CSV | x | x |  |  
 
 
-| 活動追蹤（SVM層級） |  |  |  | x 
+| SVM層級的活動追蹤 | x |  |  |  
 
 
-| 下載至CSV（活動追蹤、SVM層級） |  |  |  | x 
-
-
-| 時間表 |  |  |  | x 
+| 時間表 | x |  |  |  
 |===
 
 
@@ -82,5 +93,5 @@ image::fsa-listview.png[FSA清單檢視的螢幕擷取。四個目錄會依資�
 video::0oRHfZIYurk[youtube,width=848,height=480]
 .進一步閱讀
 * link:https://www.netapp.com/media/20707-tr-4867.pdf["TR 4687：ONTAP 《關於分析檔案系統的最佳實務準則》"^]
-* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["知識庫：開啟NetApp ONTAP 功能的NetApp功能檔系統分析後、延遲時間會大幅或波動"^]。
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["知識庫：開啟NetApp ONTAP 功能的NetApp功能檔系統分析後、延遲時間會大幅或波動"^]
 
