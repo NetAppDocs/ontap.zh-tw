@@ -15,7 +15,7 @@ summary: 您可以預先填入FlexCache 一個現象區、以縮短存取快取�
 
 .您需要的是 #8217 ；需要的是什麼
 * 您必須是進階權限層級的叢集管理員
-* 預先填入的路徑必須有效、否則預先填入作業將失敗。
+* 預先填入的路徑必須存在、否則預先填入作業將會失敗。
 
 
 .關於這項工作
@@ -47,6 +47,18 @@ cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cac
 cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1,/dir2,/dir3,/dir4
   (volume flexcache prepopulate start)
 [JobId 208]: FlexCache prepopulate job queued.
+----
++
+此範例包含預先填入的無效路徑：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-volume vol_cache2_vs3_c2_vol_origin1_vs1_c1 -cache-vserver vs3_c2 -path-list /dir1, dir5, dir6
+  (volume flexcache prepopulate start)
+
+Error: command failed: Path(s) "dir5, dir6" does not exist in origin volume
+       "vol_origin1_vs1_c1" in Vserver "vs1_c1".
 ----
 . 顯示讀取的檔案數：
 +

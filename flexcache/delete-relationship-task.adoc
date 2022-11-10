@@ -25,33 +25,4 @@ summary: 如果不再需要使用此功能、您可以刪除FlexCache 一個「�
 +
 從原始Volume和《不知如何使用的功能」中移除「不使用的功能」的相關詳細資料。FlexCache FlexCache
 
-+
-[NOTE]
-====
-如果「Volume FlexCache flex止 刪除」命令無法清除來源端組態、系統會提示您執行「Volume FlexCache f2 origin cleanup-cache－re長 關係」命令。在此案例中、請前往步驟3。
-
-====
-. 從來源叢集清除FlexCache 來源磁碟區的「不完整」關係詳細資料：
-+
-「Volume FlexCache flexorigin cleanup-cache關係-orige-volume ore_volume -orige-vserver orige_SVM -cache vserver FlexCache _SVM -cache Volume FlexCache _vol」
-
-+
-[NOTE]
-====
-如果您執行「Volume FlexCache 不一致來源清理快取關係」命令、FlexCache 就會刪除此「不一致」關係、而且無法重新建立。
-
-====
-+
-[listing]
-----
-cluster1::> volume flexcache origin cleanup-cache-relationship -origin-volume origin1 -origin-vserver vs34 -cache-vserver vs56 -cache-volume fc1
-
-Warning: This command only needs to be run if "volume flexcache delete" fails on
-         the FlexCache cluster and prompts you to run this command. The cache
-         configuration will be deleted and cannot be reestablished for the
-         cache relationship between origin of a FlexCache volume
-         "origin1" in Vserver "vs34" and FlexCache volume
-         "fc1" in Vserver "vs56".
-Do you want to continue? {y|n}: y
-----
 

@@ -16,6 +16,10 @@ summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空�
 「最快分配」選項預設為「停用」、您必須將LUN離線才能啟用空間分配。啟用空間分配之後、您必須在主機上執行探索、主機才能辨識已啟用空間分配。
 
 .步驟
+. 使LUN離線。
++
+`lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline`
+
 . 將「空間分配」參數設為「已啟用」：
 +
 「LUN modify -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-space-allocation enabl用」
