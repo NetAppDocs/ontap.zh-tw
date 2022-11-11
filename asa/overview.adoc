@@ -1,0 +1,53 @@
+---
+permalink: asa/overview.html 
+sidebar: sidebar 
+keywords: all san array, asa, san, array, software, configuration, configure, configuring, setup, set up, limitations, restrictions, nvme, mcc ip, persistent ports, host, settings, utilities, ways to identify 
+summary: 請使用下列程序、使用System Manager來設定All SAN Array。 
+---
+= 所有SAN Array軟體組態概觀
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+NetApp All SAN Array（ASA）可從ONTAP 支援的版本更新至支援的版本號。ASA是純Flash SAN解決方案、以獲證實AFF 的NetApp平台為建置基礎。
+
+此功能可在雙節點交換式或無交換式叢集上使用、也可針對FC或iSCSI進行設定、並可針對多重路徑使用對稱雙主動式。ASA所有路徑都是主動/最佳化的、因此在發生儲存容錯移轉時、主機不需要等待容錯移轉路徑的ALUA轉換、即可恢復I/O如此可縮短容錯移轉的時間。
+
+link:http://www.netapp.com/us/media/tr-4515.pdf["NetApp技術報告4515：ONTAP AFF 《全SAN陣列系統》"^]
+ link:http://www.netapp.com/us/media/tr-4080.pdf["NetApp技術報告4080：可擴充SAN ONTAP 的最佳實務做法9"^]
+
+
+
+== 設定ASA 一個功能完善的
+
+所有SAN陣列（ASA）的設定程序與非ASA系統相同。
+
+System Manager會引導您完成初始化叢集、建立本機層級、設定通訊協定、以及為ASA 您的支援資源配置儲存設備所需的程序。請參閱的步驟 xref:task_configure_ontap.html[設定ONTAP 功能]。
+
+
+
+== 支援主機設定與公用程式ASA
+
+設定所有SAN陣列（ASA）的主機設定與所有其他SAN主機的設定相同。
+
+您可以下載 link:https://mysupport.netapp.com/NOW/cgi-bin/software["NetApp主機公用程式軟體"^] 支援網站上的特定主機。
+
+
+
+== 辨ASA 識出一套系統的方法
+
+您可以ASA 使用System Manager或ONTAP 使用指令行介面（CLI）來識別出一個無法辨識的系統。
+
+在System Manager儀表板中、按一下*叢集>總覽*、然後選取系統節點。*特性*顯示為*所有SAN陣列*。
+
+在CLI中、您可以使用「shan config show」命令。「All SAN Array（所有SAN陣列）」的值會傳回ASA 為「true（真實）」的不實。

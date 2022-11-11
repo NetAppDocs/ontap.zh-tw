@@ -1,0 +1,64 @@
+---
+permalink: s3-multiprotocol/create-nas-bucket-task.html 
+sidebar: sidebar 
+keywords: s3, svm, bucket, object, server, versioning, protocol, filesystems, nas, directories 
+summary: S3 NAS儲存區是S3儲存區名稱與NAS路徑之間的對應。 
+---
+= 建立S3 NAS儲存區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+S3 NAS儲存區是S3儲存區名稱與NAS路徑之間的對應。S3 NAS儲存區可讓您將S3存取權提供給現有磁碟區和目錄結構的SVM命名空間的任何部分。
+
+.開始之前
+* S3物件伺服器是在包含NAS資料的SVM中設定。
+* NAS資料符合 link:nas-data-requirements-client-access-reference.html["S3用戶端存取需求"]。
+
+
+您可以設定S3 NAS儲存區、以指定SVM根目錄中的任何一組檔案和目錄。
+
+您也可以根據下列任一參數組合、設定允許或禁止存取NAS資料的儲存區原則：
+
+* 檔案與目錄
+* 使用者與群組權限
+* S3作業
+
+
+例如、您可能需要個別的資源庫原則、將唯讀資料存取權限授予一大群使用者、而另一個原則則允許受限群組針對該資料的子集執行作業。
+
+由於S3 NAS「桶」是對應而非S3桶、因此下列標準S3桶內容不適用於S3 NAS桶。
+
+* * agggr-list \ agger-list-gulier \儲存服務層級\ volume \ size \ exclexcle-agger-list \ qos-policy-tome-group *+設定S3 NAS時不會建立Volume或qtree。
+* *角色\受到保護\ is -protected on ONTAP \ is -protected on Cloud *+ S3 NAS桶沒有使用S3 SnapMirror進行保護或鏡射、而是使用定期SnapMirror保護、以磁碟區精細度提供。
+* *版本管理狀態*+ NAS磁碟區通常採用Snapshot技術來儲存不同版本。不過、S3 NAS儲存區目前無法使用版本管理功能。
+* *邏輯使用的\ object-count*+等效統計資料可透過Volume命令用於NAS磁碟區。
+
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+在採用NAS的儲存VM上新增S3 NAS儲存區。
+
+. 按一下「*儲存設備>桶*」、然後按一下「*新增*」。
+. 輸入S3 NAS儲存區的名稱、然後選取儲存VM、不要輸入大小、然後按一下*其他選項*。
+. 輸入有效的路徑名稱、或按一下「瀏覽」從有效路徑名稱清單中選取。+輸入有效的路徑名稱時、與S3 NAS組態無關的選項將會隱藏。
+. 如果您已將S3使用者對應至NAS使用者和建立的群組、您可以設定其權限、然後按一下*「儲存*」。+在此步驟中設定權限之前、您必須先將S3使用者對應至NAS使用者。
+
+
+否則、請按一下*「Save（儲存）」*完成S3 NAS儲存區組態。
+
+--
+.CLI
+--
+在包含NAS檔案系統的SVM中建立S3 NAS儲存區。+
+`vserver object-store-server bucket create -vserver _svm_name_ -bucket _bucket_name_ -type nas -nas-path _junction_path_ [-comment _text_]`
+
+範例：+
+`cluster1::> vserver object-store-server bucket create -bucket testbucket -type nas -path /vol1`
+
+--
+====

@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
-permalink: smbc/smbc_plan_additional_restrictions_and_limitations.html 
+permalink: smbc/considerations-limits.html 
 keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix 
 summary: 使用SnapMirror營運不中斷解決方案時、還有幾項額外的限制和限制。 
 ---
-= 其他限制與限制
+= 考量與限制
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,11 +14,15 @@ summary: 使用SnapMirror營運不中斷解決方案時、還有幾項額外的�
 
 
 [role="lead"]
-使用SnapMirror營運不中斷解決方案時、還有幾項額外的限制和限制。
+使用SnapMirror營運不中斷解決方案時、需要考量幾項考量、限制和限制。
 
 
 
-== 叢集中的一致性群組
+== 物件限制
+
+
+
+=== 叢集中的一致性群組
 
 採用SM至BC的叢集的一致性群組限制是根據關係來計算、並取決ONTAP 於使用的版本。限制與平台無關。
 
@@ -36,13 +40,13 @@ summary: 使用SnapMirror營運不中斷解決方案時、還有幾項額外的�
 |===
 
 
-== 每個一致性群組的磁碟區
+=== 每個一致性群組的磁碟區
 
 從0到9、9.1、每個SM到BC一致性群組關係所支援的最大磁碟區數量為12個、這是與平台無關的限制。ONTAP從ONTAP 《支援的磁碟區數》（從《支援的磁碟區數》9.10.1開始）、每個SM與BC的關係最多可支援16個磁碟區。
 
 
 
-== 磁碟區
+=== 磁碟區
 
 SMBC中的限制是根據端點數量而非關係數量來計算。12個磁碟區的一致性群組可在來源和目的地上提供12個端點。SM與BC和SnapMirror同步關係都有助於增加端點的總數。
 
@@ -62,7 +66,7 @@ SMBC中的限制是根據端點數量而非關係數量來計算。12個磁碟�
 |===
 
 
-== SAN物件限制
+=== SAN物件限制
 
 下表包含下列SAN物件限制、無論平台為何、均適用。
 
@@ -89,21 +93,25 @@ SMBC中的限制是根據端點數量而非關係數量來計算。12個磁碟�
 |===
 
 
-== NTFS安全型態
-
-SMBC磁碟區不支援NTFS安全樣式。
+== 支援的組態與功能
 
 
 
-== 連出組態
+=== 部分檔案還原
 
-SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態] 根據「MarirorAllSnapshots」原則、從ONTAP 《MarrorAndVault》原則開始、「XDPDefault」原則不支援連出組態。
+從《支援部分LUN還原的ONTAP 功能（從《支援部分LUN還原功能的功能（《支援SMBC Volume：如需此程序的相關資訊、請參閱 link:../data-protection/restore-part-file-snapshot-task.html["從Snapshot複本還原部分檔案"]。
+
+
+
+=== 連出組態
+
+SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態] 使用 `MirrorAllSnapshots` 政策、從ONTAP 功能9.11.1開始 `MirrorAndVault` 原則。搭配的SM至BC不支援連出組態 `XDPDefault` 原則。
 
 如果在扇出組態的SM至BC目的地上發生容錯移轉、您必須手動進行 xref:resume-protection-fan-out-configuration.html[在連出組態中恢復保護]。
 
 
 
-== AIX
+=== AIX
 
 從ONTAP 《支援》版本的《支援》（從《支援》版本的版本起）開始、《支援AIX》（SMBC）在AIX組態下、主要叢集是「作用中」叢集。
 
@@ -113,7 +121,7 @@ SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[�
 
 
 
-== 建議使用適用於SM至BC組態的Solaris主機設定
+=== 建議使用適用於SM至BC組態的Solaris主機設定
 
 從功能支援的版本起、SM-BC支援Solaris 11.4。ONTAP為了確保在SM至BC環境中發生非計畫性站台容錯移轉切換時、Solaris用戶端應用程式不會中斷營運、您必須使用「f_tpgs」參數來設定Solaris 11.4主機。
 
@@ -146,7 +154,7 @@ NOTE: 套用「shcsciv-vhci容錯移轉置換」時、「conf」會新增至「v
 
 
 
-== HP-UX已知的SMBC組態問題與限制
+=== HP-UX已知的SMBC組態問題與限制
 
 從ONTAP 功能更新至功能更新至功能更新、支援適用於HP-UX的SMBC。如果在SM至BC組態的隔離主叢集上發生自動非計畫性容錯移轉（AUFO）事件、則在HP-UX主機上恢復I/O可能需要120秒以上的時間。視執行的應用程式而定、這可能不會導致任何I/O中斷或錯誤訊息。如果隔離的主叢集發生AUFO事件、您必須重新啟動HP-UX主機上的應用程式、使其中斷容錯能力低於120秒。
 

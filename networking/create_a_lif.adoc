@@ -54,6 +54,7 @@ LIF是與實體或邏輯連接埠相關聯的IP位址。如果元件發生故障
 * 每個SVM只能設定一個處理資料流量的NVMe LIF。
 * 當您建立具有子網路的網路介面時ONTAP 、ENetApp會自動從所選子網路選取可用的IP位址、並將其指派給網路介面。如果有多個子網路、您可以變更子網路、但無法變更IP位址。
 * 建立（新增）SVM時、您無法為網路介面指定位於現有子網路範圍內的IP位址。您會收到子網路衝突錯誤。此問題發生在網路介面的其他工作流程中、例如在SVM設定或叢集設定中建立或修改叢集間網路介面。
+* 從ONTAP 《》的《》（ `network interface` CLI命令包括 `-rdma-protocols` NFS over RDMA組態的參數。從ONTAP 版本S9.12.1開始、System Manager支援透過RDMA組態建立NFS的網路介面。如需詳細資訊、請參閱 xref:..nfs-rdma/configure-lifs-task.html[透過RDMA設定NFS的LIF]。
 * 從ONTAP 《Sf9.11.1》開始、iSCSI LIF容錯移轉功能可在所有SAN Array ASA （簡稱「ESCSI」）平台上使用。
 +
 iSCSI LIF容錯移轉會自動啟用（容錯移轉原則設為「僅限合作夥伴」、自動還原值設為「true」） 在新建立的iSCSI LIF上、如果指定的SVM中不存在iSCSI LIF、或指定SVM中的所有現有iSCSI LIF已啟用iSCSI LIF容錯移轉。
@@ -119,7 +120,7 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI 
 . 建立LIF：
 +
 ....
-network interface create -vserver vserver_name -lif lif_name -service-policy service_policy_name -home-node node_name -home-port port_name {-address IP_address - netmask Netmask_value | -subnet-name subnet_name} -firewall- policy policy -auto-revert {true|false}
+network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
 ....
 +
 ** 當LIF上執行「網路介面回復」命令時、LIF會傳回的節點為「主節點」。
@@ -182,3 +183,5 @@ network interface create -vserver vs1.example.com -lif datalif1 -data-protocol n
 ....
 --
 ====
+xref:modify_a_lif.html[修改LIF]
+xref:../nfs-rdma/configure-lifs-task.html[透過RDMA設定NFS的LIF]

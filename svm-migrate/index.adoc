@@ -2,7 +2,7 @@
 permalink: svm-migrate/index.html 
 sidebar: sidebar 
 keywords: svm, migrate, workflow, relocate, prerequisites, data mobility 
-summary: 叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。此功能僅支援AFF 在不支援的情況下使用。 
+summary: 叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。從功能支援的版本起、可從功能支援到功能性的支援、包括在功能性的支援平台上、以及混合式集合體上。ONTAP FAS AFF 
 ---
 = SVM資料移動性總覽
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的
 
 
 [role="lead"]
-叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。此功能僅支援AFF 在不支援的情況下使用。
+叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。從功能支援的版本起、可從功能支援到功能性的支援、包括在功能性的支援平台上、以及混合式集合體上。ONTAP FAS AFF
 
 SVM的名稱和UUID在移轉之後會維持不變、以及資料LIF名稱、IP位址和物件名稱（例如Volume名稱）。SVM中物件的UUID會有所不同。
 
@@ -21,7 +21,7 @@ SVM的名稱和UUID在移轉之後會維持不變、以及資料LIF名稱、IP�
 
 此圖說明SVM移轉的典型工作流程。您可以從目的地叢集開始SVM移轉。您可以監控從來源或目的地的移轉作業。您可以執行手動轉換或自動轉換。預設會執行自動轉換。
 
-image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
+image::../media/workflow_svm_migrate.gif[SVM移轉工作流程]
 
 
 
@@ -29,20 +29,23 @@ image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
 
 下表顯示支援的組態及ONTAP 支援的支援功能的版本。
 
-[cols="3,2*"]
+[cols="3,1,1,1"]
 |===
 
 
-| 組態支援於... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP 
+| 組態支援於... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP | 零點9.12.1. ONTAP 
 
 
-| 僅限部分陣列AFF | 是的 | 是的 
+| 僅限部分陣列AFF | 是的 | 是的 | 否 
 
 
-| 陣列/節點配對總數 | 1. | 3. 
+| 混合式平台（AFF-FAS、FAS-AFF、AFF-FAS搭配混合式Aggregate） | 否 | 否 | 是的 
 
 
-| 使用資料中心進行移轉、最大網路延遲為2毫秒 | 是的 | 是的 
+| 陣列/節點配對總數 | 1. | 3. | 3. 
+
+
+| 使用資料中心進行移轉、最大網路延遲為2毫秒 | 是的 | 是的 | 是的 
 |===
 
 
@@ -55,9 +58,11 @@ image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
 * 來源叢集中的所有節點都必須執行相同ONTAP 的版本
 * 目的地叢集與來源叢集的有效叢集版本（ECV）相同或更新
 * 來源與目的地叢集位於相同的資料網路中
-* 來源SVM所包含的資料磁碟區數量少於發行版本所支援的資料磁碟區數量上限。
+* 來源SVM所包含的資料磁碟區數量少於發行版本所支援的資料磁碟區數量上限。支援的資料磁碟區數目上限如下：
 +
-支援的資料磁碟區數目上限為100。
+** 資訊陣列：AFF 100
+** 支援平台：FAS 80
+
 
 * 目的地上有足夠的磁碟區放置空間
 * 如果來源SVM有加密磁碟區、則必須在目的地上設定「內建金鑰管理程式」
@@ -81,20 +86,20 @@ image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
 
 下表顯示支援的功能和ONTAP 支援的支援功能的版本。
 
-[cols="3,1,1,4"]
+[cols="3,1,1,1,4"]
 |===
 
 
-| 支援的功能... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP | 其他資訊 
+| 支援的功能... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP | 零點9.12.1. ONTAP | 其他資訊 
 
 
-| NFS v3、NFS v4.1及NFS v4.2傳輸協定 | 是的 | 是的 |  
+| 非同步SnapMirror複製到雲端關係 | 否 | 否 | 是的 | 從ONTAP S209.12開始、當您使用SnapMirror複製移轉至雲端關係的SVM時、移轉目的地叢集必須安裝複本至雲端授權、而且必須有足夠的可用容量來支援將鏡射至雲端的磁碟區中的容量移轉。 
 
 
-| NetApp Volume Encryption | 是的 | 是的 |  
+| 非同步SnapMirror目的地 | 否 | 否 | 是的 |  
 
 
-| 非同步SnapMirror來源 | 否 | 是的  a| 
+| 非同步SnapMirror來源 | 否 | 是的 | 是的  a| 
 * 在FlexVol 大多數移轉期間、傳輸作業仍可正常繼續進行有關SnapMirror關係的作業。
 * 任何進行中的傳輸都會在轉換期間取消、而新傳輸會在轉換期間失敗、而且在移轉完成之前、無法重新啟動傳輸。
 * 移轉完成後、在移轉期間取消或錯過的排程傳輸不會自動啟動。
@@ -108,16 +113,31 @@ image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
 
 
 
-| SnapMirror應用程式的SVM對等關係 | 否 | 是的 |  
+| 自主勒索軟體保護 | 否 | 否 | 是的 |  
 
 
-| 外部金鑰管理程式 | 否 | 是的 |  
+| 外部金鑰管理程式 | 否 | 是的 | 是的 |  
 
 
-| 展開關係（移轉來源具有一個SnapMirror來源磁碟區、具有多個目的地） | 否 | 是的 |  
+| 展開關係（移轉來源具有一個SnapMirror來源磁碟區、具有多個目的地） | 否 | 是的 | 是的 |  
 
 
-| 工作排程複寫 | 否 | 是的 | 在《銷售指南》9.10.1中ONTAP 、工作排程不會在移轉期間複寫、而且必須在目的地手動建立。從ONTAP 版本號《銷售資料9.11.1（更新版本）：移轉期間、來源使用的工作排程會自動複寫。 
+| 工作排程複寫 | 否 | 是的 | 是的 | 在《銷售指南》9.10.1中ONTAP 、工作排程不會在移轉期間複寫、而且必須在目的地手動建立。從ONTAP 版本號《銷售資料9.11.1（更新版本）：移轉期間、來源使用的工作排程會自動複寫。 
+
+
+| NetApp Volume Encryption | 是的 | 是的 | 是的 |  
+
+
+| NFS v3、NFS v4.1及NFS v4.2傳輸協定 | 是的 | 是的 | 是的 |  
+
+
+| SMB傳輸協定 | 否 | 否 | 是的  a| 
+* 從SVM移轉開始、SVM移轉包括使用SMB進行中斷移轉。ONTAP
+
+
+
+
+| SnapMirror應用程式的SVM對等關係 | 否 | 是的 | 是的 |  
 |===
 
 
@@ -125,13 +145,10 @@ image::../media/workflow_svm_migrate.gif[工作流程SVM移轉]
 
 SVM移轉不支援下列功能：
 
-* 反勒索軟體
-* 非同步SnapMirror目的地
 * 稽核
 * Cloud Volumes ONTAP
 * 資料保護磁碟區
 * FabricPools
-* 個陣列FAS
 * Flash Pool Aggregate
 * 資料量FlexCache
 * 資料量FlexGroup
@@ -141,7 +158,7 @@ SVM移轉不支援下列功能：
 * 負載共享鏡像
 * MetroCluster
 * NDMP
-* SAN、NVMe over Fibre、CIFS、VScan、NFS v4.0、vStorage、S3複寫
+* SAN、NVMe over Fibre、VScan、NFS v4.0、vStorage、 S3複寫
 * SM磁帶
 * SnapLock
 * SVM-DR

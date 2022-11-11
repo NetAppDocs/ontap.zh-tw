@@ -1,8 +1,8 @@
 ---
 permalink: nfs-rdma/configure-lifs-task.html 
 sidebar: sidebar 
-keywords: networking, LIF, NFS over RDMA, NVIDIA, NFS, RDMA, ROCE 
-summary: 本文說明如何將LIF設定為具有RDMA功能。 
+keywords: networking, LIF, NFS over RDMA, NVIDIA, NFS, RDMA, ROCE, network interface, system manager 
+summary: 本文說明如何設定LIF（網路介面）以支援RDMA。 
 ---
 = 透過RDMA設定NFS的LIF
 :allow-uri-read: 
@@ -11,11 +11,31 @@ summary: 本文說明如何將LIF設定為具有RDMA功能。
 
 
 [role="lead"]
-若要透過RDMA使用NFS、您必須將LIF設定為與RDMA相容。LIF及其容錯移轉配對都必須具備RDMA功能。
+若要透過RDMA使用NFS、您必須將LIF（網路介面）設定為與RDMA相容。LIF及其容錯移轉配對都必須能夠支援RDMA。
 
-從《支援》9.10.1開始ONTAP 、您可以在網路介面命令上設定新的「-RDMA傳輸協定」參數、並設定適當的服務原則。
 
-.建立新LIF的程序
+
+== 建立新的LIF
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA建立NFS的網路介面。
+
+.步驟
+. 選擇*網路>總覽>網路介面*。
+. 選取 image:icon_add.gif["新增圖示"]。
+. 當您選取* NFS、SMB/CIFS、S3 *時、您可以選擇*使用roce連接埠*。選取「*使用roce連接埠*」核取方塊。
+. 選取儲存VM和主節點。指派名稱。輸入IP位址和子網路遮罩。
+. 輸入IP位址和子網路遮罩後、System Manager會將廣播網域清單篩選為具有資源相容連接埠的網域。選取廣播網域。您可以選擇性地新增閘道。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+.步驟
 . 建立LIF：
 +
 「網路介面create -vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy _rose_true_true
@@ -27,7 +47,21 @@ summary: 本文說明如何將LIF設定為具有RDMA功能。
 
 
 
-.修改LIF的程序
+--
+====
+
+
+== 修改LIF
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA建立NFS的網路介面。步驟.選擇*網路>總覽>網路介面*。。選取 image:icon_kabob.gif["kabob圖示"] 您要變更的網路介面旁的*>編輯*。。選中*使用roce Ports*以通過RDMA啓用NFS或取消選中此框以禁用NFS。如果網路介面位於具備RoCE功能的連接埠、您會看到*使用roce連接埠*旁邊的核取方塊。。視需要修改其他設定。。選取*「Save（儲存）」*以確認您的變更。
+
+--
+.CLI
+--
 . 您可以使用「network interface show」命令來檢查您的lifs狀態。服務原則必須包含資料NFS網路介面服務。RDMA傳輸協定清單應包含「roce」。如果上述任一條件不正確、請修改LIF。
 . 若要修改LIF、請執行：
 +
@@ -38,4 +72,26 @@ summary: 本文說明如何將LIF設定為具有RDMA功能。
 
 NOTE: 如果將LIF修改為需要特定卸載傳輸協定、但目前未將LIF指派給支援該傳輸協定的連接埠、將會產生錯誤。
 
-xref:../networking/create_a_lif.html[建立LIF]
+--
+====
+
+
+== 移轉LIF
+
+此外、您也可以移轉網路介面（LIF）、以便透過RDMA使用NFS。ONTAP執行此移轉時、您必須確保目的地連接埠具備RoCE功能。從ONTAP 《系統管理程式》（System Manager）開始、您可以完成此程序。選取網路介面的目的地連接埠時、System Manager會指定連接埠是否具備RoCE功能。
+
+只有在下列情況下、才能透過RDMA組態將LIF移轉至NFS：
+
+* 它是NFS RDMA網路介面（LIF）、裝載於具備RoCE功能的連接埠上。
+* 它是NFS TCP網路介面（LIF）、裝載於具備RoCE功能的連接埠上。
+* 它是NFS TCP網路介面（LIF）、裝載於不具備資源處理能力的連接埠上。
+
+
+如需移轉網路介面的詳細資訊、請參閱 xref:../networking/migrate_a_lif.html[移轉LIF]。
+
+.更多資訊
+* xref:../networking/create_a_lif.html[建立LIF]
+* xref:../networking/create_a_lif.html[建立LIF]
+* xref:../networking/modify_a_lif.html[修改LIF]
+* xref:../networking/migrate_a_lif.html[移轉LIF]
+

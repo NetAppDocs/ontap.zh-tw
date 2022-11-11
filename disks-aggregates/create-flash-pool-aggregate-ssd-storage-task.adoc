@@ -13,6 +13,8 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 [role="lead"]
 您可以將一個或多個配置單元從SSD儲存資源池新增至現有HDD本機層、以設定Flash資源池本機層（Aggregate）。
 
+從功能更新至功能更新版本9.12.1開始ONTAP 、您可以使用重新設計的System Manager、使用儲存資源池配置單元來建立Flash Pool本機層。
+
 .您需要的是 #8217 ；需要的是什麼
 * 您必須識別由HDD組成的有效本機層、才能轉換成Flash Pool本機層。
 * 您必須確定與本機層相關之磁碟區的寫入快取資格、並完成所有必要步驟以解決資格問題。
@@ -39,6 +41,26 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 
 將SSD快取新增至本機層以建立Flash Pool本機層之後、您就無法移除SSD快取、將本機層級轉換回原始組態。
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從《發揮作用》9.12.1開始ONTAP 、您可以使用System Manager將SSD新增至SSD儲存資源池。
+
+.步驟
+. 按一下*儲存設備> Tiers*、然後選取現有的本機HDD儲存層。
+. 按一下 image:icon_kabob.gif["kabob圖示"] 並選擇* Add Flash Pool Cache（添加Flash Pool快取）*。
+. 選擇*使用儲存資源池*。
+. 選取儲存資源池。
+. 選取快取大小和RAID組態。
+. 按一下「 * 儲存 * 」。
+. 再次找到儲存層、然後按一下 image:icon_kabob.gif["kabob圖示"]。
+. 選取*更多詳細資料*、然後確認Flash Pool顯示為*已啟用*。
+
+
+--
+.CLI
+--
 .步驟
 . 將Aggregate標示為符合資格可成為Flash Pool Aggregate：
 +
@@ -76,4 +98,6 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 
 
 
+--
+====
 http://www.netapp.com/us/media/tr-4070.pdf["NetApp技術報告4070：Flash Pool設計與實作指南"^]

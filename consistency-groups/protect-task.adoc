@@ -37,25 +37,6 @@ summary: 為一致性群組設定保護原則、以啟用應用程式備份、�
 
 
 
-== 設定遠端SMBC原則
-
-.步驟
-. 請確定您已符合使用SM至BC的先決條件。請參閱 link:../smbc/smbc_plan_prerequisites.html["SM至BC的先決條件"]
-
-
-
-NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
-
-. 從一致性群組功能表中選取您所建立的一致性群組。
-. 在總覽頁面右上角、選取*更多*、然後選取*保護*。
-. 來源端資訊應自動填入頁面左側。
-. 為目的地選取適當的叢集和儲存VM。選取保護原則。確保選中*初始化關係*。
-. 按一下「 * 儲存 * 」。
-. 一致性群組必須初始化及同步處理。完成後、在* SnapMirror（遠端）*下、狀態應在旁邊顯示「受保護」 image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
-
-
-
-
 == 建立雙階段CG Snapshot
 
 從功能表9.11.1開始ONTAP 、一致性群組支援建立一致性群組（CG）Snapshot的兩階段認可。此功能只能搭配ONTAP 使用靜態API。建立階段為兩階段的CG Snapshot僅適用於建立Snapshot、而非配置一致性群組或還原一致性群組。
@@ -75,10 +56,10 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 ----
 curl -k -X POST 'https://<IP_address>/application/consistency-groups/<cg-uuid>/snapshots?action=start&action_timeout=7' -H "accept: application/hal+json" -H "content-type: application/json" -d '
 {
-  "name": "name_of_this_snapshot",
+  "name": "<snapshot_name>",
   "consistency_type": "crash",
   "comment": "<comment>",
-  "snapmirror_label": "<snap_mirror label>"
+  "snapmirror_label": "<SnapMirror_label>"
 }'
 ----
 . 如果POST要求成功、您的輸出將包含快照uuid。使用該資訊、提交修補程式要求以提交Snapshot。
@@ -89,7 +70,30 @@ curl -k -X PATCH 'https://<IP_address>/application/consistency-groups/<cg_uuid>/
 ----
 
 
+
+
+== 設定遠端SMBC原則
+
+.步驟
+. 請確定您已符合使用SM至BC的先決條件。請參閱 link:../smbc/smbc_plan_prerequisites.html["SM至BC的先決條件"]
+
+
+
+NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
+
+. 從一致性群組功能表中選取您所建立的一致性群組。
+. 在總覽頁面右上角、選取*更多*、然後選取*保護*。
+. 來源端資訊應自動填入頁面左側。
+. 為目的地選取適當的叢集和儲存VM。選取保護原則。確保選中*初始化關係*。
+. 按一下「 * 儲存 * 」。
+. 一致性群組必須初始化及同步處理。完成後、在* SnapMirror（遠端）*下、狀態應在旁邊顯示「受保護」 image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
+
+
+如需SM-BC的詳細資訊、請參閱 link:../smbc/index.html["SM - BC總覽"]。
+
+link:clone-task.html["複製一致性群組"]
 link:../task_dp_configure_snapshot.html["設定Snapshot複本"]
 link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]
 link:../task_dp_recover_snapshot.html["從Snapshot複本恢復"]
 link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]
+link:../smbc/index.html["SM - BC總覽"]

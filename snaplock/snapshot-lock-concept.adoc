@@ -1,0 +1,68 @@
+---
+permalink: snaplock/snapshot-lock-concept.html 
+sidebar: sidebar 
+keywords: snaplock, snapshot copy, lock, tamperproof 
+summary: 從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定Snapshot複本、以防止勒索軟體攻擊。鎖定Snapshot複本可確保它們不會意外或惡意刪除。 
+---
+= 防竄改Snapshot複本鎖定概述
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定Snapshot複本、以防止勒索軟體攻擊。鎖定Snapshot複本可確保不會意外或惡意刪除。
+
+您可以使用SnapLock 「不符法規時鐘」功能、將Snapshot複本鎖定一段特定期間、以便在達到到期時間之前將其刪除。鎖定Snapshot複本可防止資料竄改、避免受到勒索軟體威脅。如果磁碟區受到勒索軟體攻擊、您可以使用鎖定的Snapshot複本來恢復資料。
+
+
+
+== 防竄改Snapshot複本要求與考量
+
+* 叢集中的所有節點都必須執行ONTAP 不完整的9.12.1或更新版本。
+* 必須在叢集上安裝此功能的不必要授權。SnapLock
++
+如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/install-license-task.html["安裝SnapLock 不含更新授權的"]
+
+* 叢集上的法規遵循時鐘必須初始化。
++
+如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["初始化法規遵循時鐘"]
+
+* 在磁碟區上啟用Snapshot鎖定功能時、您可以將叢集升級至ONTAP 更新於ONTAP 版本更新至版本更新於版本更新至版本更新的版本。 不過ONTAP 、在所有鎖定的Snapshot複本都達到到期日並刪除、且Snapshot複本鎖定功能已停用之前、您無法還原至舊版的功能。
+* 鎖定Snapshot時、磁碟區過期時間會設定為Snapshot複本的過期時間。如果鎖定多個Snapshot複本、則磁碟區過期時間會反映所有Snapshot複本中最長的過期時間。
+* 鎖定Snapshot複本的保留期間優先於Snapshot複本保留數、也就是說、如果鎖定Snapshot複本的Snapshot複本保留期間尚未過期、則不會保留保留保留數限制。
+* 在SnapMirror關係中、您可以在鏡射儲存庫原則規則上設定保留期間、如果目的地磁碟區已啟用Snapshot複本鎖定功能、則保留期間會套用至複寫至目的地的Snapshot複本。保留期間優先於保留數；例如、即使超過保留數、仍會保留未超過到期日的Snapshot複本。
+* 您可以在非SnapLock Volume上重新命名Snapshot複本。僅當原則為MirrorAllSnapshots時、SnapMirror關係的主要磁碟區上的Snapshot重新命名作業才會反映在次要磁碟區上。對於其他原則類型、重新命名的Snapshot複本不會在更新期間傳播。
+* 您可以使用還原鎖定的Snapshot複本 `volume snapshot restore` 僅當鎖定的Snapshot複本是最新的時、才會執行命令。如果有任何未過期的Snapshot複本比要還原的複本晚、則Snapshot複本還原作業將會失敗。
+
+
+
+
+== 防竄改Snapshot複本支援的功能
+
+* 資料量FlexGroup
++
+支援將Snapshot複本鎖定在FlexGroup 不支援的情況下。Snapshot鎖定僅發生在根組成Snapshot複本上。只有在根組成的到期時間已過時、才FlexGroup 允許刪除此功能。
+
+* 從系統轉換為FlexVol FlexGroup
++
+您可以使用FlexVol 鎖定的Snapshot複本、將某個不符合需求的Volume轉換成FlexGroup 一個不符合需求的Volume。轉換後、Snapshot複本仍會保持鎖定狀態。
+
+* FabricPool
++
+唯有當磁碟區沒有任何階層區塊分層至雲端、而且分層原則設定為「無」時、才能在FabricPool 支援Snapshot Volume上支援Snapshot複製鎖定。啟用Snapshot複本鎖定功能時、不允許將磁碟區上的分層原則設定為「無」以外的原則。
+
+
+
+
+
+== 不支援的功能
+
+下列功能目前不支援防竄改Snapshot複本：
+
+* 一致性群組
+* 資料量FlexCache
+* SMtape
+* SnapMirror營運不中斷（SMBC）
+* SnapMirror同步
+

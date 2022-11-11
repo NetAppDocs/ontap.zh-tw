@@ -1,0 +1,257 @@
+---
+permalink: flexgroup/manage-flexgroup-rebalance-task.html 
+sidebar: sidebar 
+keywords: enable, storage, rebalance, modify, stop, status, flexgroup, volume 
+summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷營運的情況下、將檔案從FlexGroup 某個部分的一個部分移至另一個部分、藉此重新平衡功能。 
+---
+= 重新平衡FlexGroup 功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷營運的情況下、將檔案從FlexGroup 某個部分的一個部分移至另一個部分、藉此重新平衡功能。
+
+由於新增檔案和檔案增長、導致長期不平衡時、可利用此功能重新平衡功能來重新分配容量。FlexGroup手動啟動重新平衡作業之後ONTAP 、即可選擇檔案、並在不中斷營運的情況下自動移動。
+
+只有當叢集中的所有節點執行ONTAP 的是版本不含更新版本的版本時、才能使用自動重新平衡功能。您必須在FlexGroup 執行重新平衡作業的任何一個VMware磁碟區上、啟用多個部分的inode精細資料功能。啟用該功能後、ONTAP 除非您刪除FlexGroup 了還原功能並還原先前的版本、否則您將無法還原至先前的版本。
+
+
+
+== 重新平衡考量FlexGroup
+
+您應該瞭FlexGroup 解到如何使用還原功能、以及它如何與ONTAP 其他的功能進行互動。
+
+* 從系統轉換為FlexVol FlexGroup
++
+建議FlexGroup 您在FlexVol 執行從功能到FlexGroup 功能的轉變後、不要使用自動的功能來重新平衡功能。您ONTAP 可以輸入、改用功能中斷的回溯檔案移動功能、如需更多資訊、請參閱《》（更新版本） `volume rebalance file-move` 命令。如需命令語法、請參閱 `volume rebalance file-move start` 手冊頁。
+
+* 最小和最大檔案大小
++
+自動重新平衡的檔案選擇是根據已儲存的區塊而來。重新平衡所需的檔案大小下限預設為100 MB（使用下方所示的min-file-size參數可設定為低至4KB）、檔案大小上限為100 GB。
+
+* Snapshot複本中的檔案
++
+您可以設定FlexGroup 靜態重新平衡、僅考慮要移動的檔案、而這些檔案目前並未出現在任何Snapshot複本中。當重新平衡開始時、如果在重新平衡作業期間隨時排程Snapshot複本作業、則會顯示通知。
+
++
+如果檔案正在移動、而且正在目的地進行架構、則會限制Snapshot複本。在進行檔案重新平衡時、不允許執行Snapshot複本還原作業。
+
+* SnapMirror作業
++
+應在排定的SnapMirror作業之間進行資訊重新平衡。FlexGroup如果在SnapMirror操作開始之前重新定位某個檔案、如果該檔案移動在24分鐘SnapMirror重試期間內未完成、SnapMirror作業可能會失敗。在SnapMirror傳輸開始之後開始的任何新檔案重新配置都不會失敗。
+
+* 檔案型壓縮儲存效率
++
+使用檔案型壓縮儲存效率時、檔案會在移至目的地之前解壓縮、因此壓縮節約效益會遺失。手動啟動的背景掃描儀FlexGroup 在重新平衡後、在該磁碟區上執行後、便可重新獲得壓縮節約效益。不過、如果任何檔案與任何磁碟區上的Snapshot複本相關聯、則會忽略該檔案進行壓縮。
+
+* 重複資料刪除
++
+移動刪除重複資料的檔案可能會增加FlexGroup 整個使用率。在檔案重新平衡期間、只會將唯一的區塊移至目的地、以釋放來源上的該容量。共享區塊會保留在來源上、並複製到目的地。雖然如此一來、我們的目標是在接近完整的來源中減少已用容量、但FlexGroup 由於新目的地上的共享區塊複本、也可能導致整個使用率增加。當屬於Snapshot複本一部分的檔案被移動時、也可能發生這種情況。只有在Snapshot複本排程能夠回收、而且Snapshot複本中不再有檔案複本時、空間節約才會完全被辨識。
+
+* FlexClone Volume
++
+如果在建立FlexClone磁碟區時正在進行檔案重新平衡、則不會在FlexClone磁碟區上執行重新平衡。FlexClone磁碟區的重新平衡應在建立之後執行。
+
+* 檔案搬移
++
+當檔案在FlexGroup 重新平衡作業期間移動時、檔案大小會在來源和目的地構成區塊上報告為配額會計的一部分。完成移動後、配額會計會恢復正常、而且只會在新目的地上報告檔案大小。
+
+
+
+
+
+== 啟用FlexGroup 支援功能重新平衡
+
+從ONTAP 功能更新9.12.1開始、您可以啟用自動不中斷FlexGroup 的功能更新功能、在FlexGroup 各個功能區之間重新分配檔案。
+
+您必須已啟用 `granular-data` 在啟用功能不均衡之前、請先在FlexGroup 支援FlexGroup 功能不均衡的情況下、選擇使用支援功能。您可以使用下列其中一種方法來啟用：
+
+* 當您FlexGroup 使用建立完這個功能時 `volume create` 命令
+* 藉由修改現有FlexGroup 的支援功能、以啟用使用的設定 `volume modify` 命令
+* 使用初始化還原平衡時、會自動設定此功能FlexGroup `volume rebalance` 命令
+
+
+您可以FlexGroup 使用ONTAP VMware System Manager或ONTAP VMware CLI來管理不均衡的功能。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
+. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 按一下*重新平衡*。
+
+
+--
+.CLI
+--
+.步驟
+. 開始自動重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
++
+或者、您可以指定下列選項：[-max-r時間]<時間間隔>]最大執行時間[-max-threshold <%]每個組成單位的最大不平衡臨界值[-min-threshold <%]每個組成單位的最小不均衡臨界值[-max-file-m搬 移數<integer>[kb|pb大小]每個組成單位的快照數大小不超過並行檔案移數[-tb]｛-time-file-size {<-tb]
+
++
+範例：
+
++
+[listing]
+----
+volume rebalance start -vserver vs0 -volume fg1
+----
+. 在*重新平衡Volume *視窗中、視需要變更預設設定。
+. 按一下「*儲存*」接受預設設定。
+
+
+--
+====
+
+
+== 修改FlexGroup 重新平衡組態
+
+您可以變更FlexGroup 還原重新平衡組態、以更新不均衡臨界值、並行檔案數目會移動最小檔案大小、最大執行時間、以及包含或排除Snapshot複本。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
+. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 按一下*重新平衡*。
+. 在*重新平衡Volume *視窗中、視需要變更預設設定。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
+.步驟
+. 修改自動重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
++
+您可以指定下列一或多個選項：[-max-r時間]<時間間隔>]最大執行時間[-max-threshold <百分 點>]每個組成單位的最大不均衡臨界值[-min-threshold <-max-file-m搬 移數<integer>]每個組成單位的最大並行檔案搬移數[-min-file-size-file-size {<integer>[KB Snapshot>[KB快照數>[TB|最小TB快照數大小]檔案大小[TB|最小值PB大小]
+
+
+
+--
+====
+
+
+== 停止FlexGroup 重新平衡
+
+啟用完循環重新平衡之後FlexGroup 、您可以隨時停止重新平衡。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
+. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 按一下*停止重新平衡*。
+
+
+--
+.CLI
+--
+.步驟
+. 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
+
+
+--
+====
+
+
+== 檢視FlexGroup 重新平衡狀態
+
+您可以顯示FlexGroup 有關以下項目的狀態：重新平衡作業、FlexGroup 重新平衡組態、重新平衡作業時間、以及重新平衡執行個體詳細資料。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
+. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 以檢視FlexGroup 詳細資訊。
+. *此「平衡狀態」*會顯示在詳細資料窗格底部附近。FlexGroup
+. 若要檢視上次重新平衡作業的相關資訊、請按一下*上次Volume重新平衡狀態*。
+
+
+--
+.CLI
+--
+.步驟
+. 檢視FlexGroup 畫面重新平衡作業的狀態： `volume rebalance show`
++
+重新平衡狀態範例：
+
++
+[listing]
+----
+> volume rebalance show
+Vserver: vs0
+                                                        Target     Imbalance
+Volume       State                  Total      Used     Used       Size     %
+------------ ------------------ --------- --------- --------- --------- -----
+fg1          idle                     4GB   115.3MB         -       8KB    0%
+----
++
+重新平衡組態詳細資料的範例：
+
++
+[listing]
+----
+> volume rebalance show -config
+Vserver: vs0
+                    Max            Threshold         Max          Min          Exclude
+Volume              Runtime        Min     Max       File Moves   File Size    Snapshot
+---------------     ------------   -----   -----     ----------   ---------    ---------
+fg1                 6h0m0s         5%      20%          25          4KB          true
+----
++
+重新平衡時間詳細資料範例：
+
++
+[listing]
+----
+> volume rebalance show -time
+Vserver: vs0
+Volume               Start Time                    Runtime        Max Runtime
+----------------     -------------------------     -----------    -----------
+fg1                  Wed Jul 20 16:06:11 2022      0h1m16s        6h0m0s
+----
++
+重新平衡執行個體詳細資料範例：
+
++
+[listing]
+----
+    > volume rebalance show -instance
+    Vserver Name: vs0
+    Volume Name: fg1
+    Is Constituent: false
+    Rebalance State: idle
+    Rebalance Notice Messages: -
+    Total Size: 4GB
+    AFS Used Size: 115.3MB
+    Constituent Target Used Size: -
+    Imbalance Size: 8KB
+    Imbalance Percentage: 0%
+    Moved Data Size: -
+    Maximum Constituent Imbalance Percentage: 1%
+    Rebalance Start Time: Wed Jul 20 16:06:11 2022
+    Rebalance Stop Time: -
+    Rebalance Runtime: 0h1m32s
+    Rebalance Maximum Runtime: 6h0m0s
+    Maximum Imbalance Threshold per Constituent: 20%
+    Minimum Imbalance Threshold per Constituent: 5%
+    Maximum Concurrent File Moves per Constituent: 25
+    Minimum File Size: 4KB
+    Exclude Files Stuck in Snapshot Copies: true
+----
+
+
+--
+====

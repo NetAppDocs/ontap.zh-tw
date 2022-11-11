@@ -1,0 +1,78 @@
+---
+permalink: snaplock/create-locked-snapshot-task.html 
+sidebar: sidebar 
+keywords: snaplock, snapshot copy, lock, tamperproof, enable, retention, policy 
+summary: 從ONTAP 功能表9.12開始、您可以建立Snapshot複本原則、以套用Snapshot複本保留期間、並將原則套用至磁碟區、以便在指定期間鎖定Snapshot複本。您也可以手動設定保留期間、以鎖定Snapshot複本。 
+---
+= 建立鎖定的Snapshot複本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 功能表9.12開始、您可以建立Snapshot複本原則、以套用Snapshot複本保留期間、並將原則套用至磁碟區、以便在指定期間鎖定Snapshot複本。您也可以手動設定保留期間、以鎖定Snapshot複本。
+
+
+
+== 建立Snapshot複本鎖定原則
+
+. 若要建立Snapshot複本原則、請輸入下列命令：
++
+`volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
+
++
+下列命令會建立Snapshot複本鎖定原則：
+
++
+[listing]
+----
+cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 5min -count1 5 -retention-period1 "1 months"
+----
+
+
+
+
+== 將鎖定原則套用至磁碟區
+
+. 若要將Snapshot複本鎖定原則套用至現有磁碟區、請輸入下列命令：
++
+`volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
+
+
+
+
+
+== 在手動建立Snapshot複本期間套用保留期間
+
+. 若要手動建立Snapshot複本並套用鎖定保留期間、請輸入下列命令：
++
+`volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+下列命令會建立新的Snapshot複本並設定保留期間：
+
++
+[listing]
+----
+cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snaplock-expiry-time "11/10/2022 09:00:00"
+----
+
+
+
+
+== 將保留期間套用至現有的Snapshot複本
+
+. 若要手動將保留期間套用至現有的Snapshot複本、請輸入下列命令：
++
+`volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+以下範例將保留期間套用至現有的Snapshot複本：
+
++
+[listing]
+----
+cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -expiry-time "11/10/2022 09:00:00"
+----
+

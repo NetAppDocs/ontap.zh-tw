@@ -1,7 +1,7 @@
 ---
 permalink: nfs-rdma/configure-nics-task.html 
 sidebar: sidebar 
-keywords: networking, NICs, NFS over RDMA, NVIDIA, NFS 
+keywords: networking, NICs, NFS over RDMA, NVIDIA, NFS, system manager, ports, ethernet ports 
 summary: 本文說明用戶端系統和儲存平台組態程序、以及NIC在ONTAP 使用NFS over RDMA的過程中、如何在整個過程中使用NFS。 
 ---
 = 透過RDMA設定NFS的NIC
@@ -31,25 +31,42 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 
 一旦確認此組態、您就可以掛載NFS。
 
-.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA設定網路介面與NFS。步驟.檢查是否支援RDMA。瀏覽至*「網路」>「乙太網路連接埠」*、然後在群組檢視中選取適當的節點。展開節點時、請查看指定連接埠的* RDMA傳輸協定*欄位：* roce*值表示支援RDMA；破折號（*-*）表示不支援RDMA。。若要新增VLAN、請選取*+ VLAN*。選取適當的節點。在*連接埠*下拉式功能表中、如果可用的連接埠支援RDMA、則會顯示* roce Enabled*文字；如果不支援RDMA、則不會顯示任何文字。。遵循中的工作流程 xref:../task_nas_enable_linux_nfs.html[使用NFS為Linux伺服器啟用NAS儲存設備] 設定新的NFS伺服器。
+
++新增網路介面時、您可以選擇*使用roce連接埠*。對於任何想要透過RDMA使用NFS的網路介面、請選取此選項。
+
+--
+.CLI
+--
 . 使用下列命令檢查NFS伺服器上是否已啟用RDMA存取：
 +
-「vserver NFS show-vserver _vserver_name_」
+`vserver nfs show-vserver _SVM_name_`
 
 +
 根據預設、應該啟用「-RDMA」。如果不是、請在NFS伺服器上啟用RDMA存取：
 
 +
-「vserver NFS modify -vserver _vserver_name_-RDMA enabled.
+`vserver nfs modify -vserver _SVM_name_ -rdma enabled`
 
 . 透過NFSv4.0透過RDMA掛載用戶端：
 +
-.. proto參數的輸入取決於伺服器IP傳輸協定版本。如果是v4、請使用「proto=RDMA」。如果是v6、請使用「proto=rdma6」。
-.. 將NFS目標連接埠指定為「port=20049」、而非標準連接埠2049：
+.. proto參數的輸入取決於伺服器IP傳輸協定版本。如果是IPV4、請使用 `proto=rdma`。如果是IPv6、請使用 `proto=rdma6`。
+.. 將NFS目標連接埠指定為 `port=20049` 而非標準連接埠2049：
 +
 「安裝-o ves=4、minorversion=0、proto=RDMA、port=20049 _Server_ip_address_//_volume路徑__mount_point_」
 
 
 
 . *選用*：如果您需要卸載用戶端、請執行命令「unmount _mount_path_」
+
+
+--
+====
+.更多資訊
+* xref:../nfs-config/create-server-task.html[建立NFS伺服器]
+* xref:../task_nas_enable_linux_nfs.html[使用NFS為Linux伺服器啟用NAS儲存設備]
 

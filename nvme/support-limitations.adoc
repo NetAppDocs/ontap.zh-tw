@@ -15,7 +15,7 @@ NVMe支援與限制會因ONTAP 您的版本的支援、平台和組態而異。
 
 
 
-== 命名空間限制與支援
+== 命名空間支援與限制
 
 若要在SAN環境中設定NVMe傳輸協定、您必須設定NVMe的SVM、建立命名空間和子系統、設定NVMe/FC LIF、然後將命名空間對應至子系統。使用NVMe命名空間時、您應該注意下列事項：
 
@@ -60,15 +60,30 @@ NVMe支援與限制會因ONTAP 您的版本的支援、平台和組態而異。
 
 支援NVMe傳輸協定會因平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
 
-[cols="3*"]
+
+NOTE: 從版本號為209.12.1開始ONTAP 、MetroCluster NVMe / FC支援4節點的「靜態IP」組態。NVMe不支援9.12.1之前的版本。MetroCluster
+
+[cols="2*"]
 |===
 
 
-| 從ONATP開始... | 平台 | 支援的組態 
+| 從ONATP開始... | 平台 
 
 
-| 9.9.1 | 支援各種SAN Array（簡稱「支援」）AFF ASA 平台 | 僅限非MetroCluster組態 
+| 9.12.1%  a| 
+* FAS
+* All Flash FAS 更新（AFF 僅限英文）
+* 所有SAN陣列ASA （E地）平台
 
 
-| 9.4 | 僅適用於平台AFF | 僅限非MetroCluster組態 
+
+
+| 9.9.1  a| 
+* AFF
+* ASA
+
+
+
+
+| 9.4 | 僅適用於平台AFF 
 |===

@@ -1,0 +1,108 @@
+---
+permalink: s3-multiprotocol/enable-access-nas-data-task.html 
+sidebar: sidebar 
+keywords: s3, svm, nfs, smb, dns, authentication, protocol, configuration, nas, certificate, authority, installation, lifs 
+summary: 啟用S3傳輸協定存取、包括確保啟用NAS的SVM符合與啟用S3的伺服器相同的需求、包括新增物件存放區伺服器、以及驗證網路和驗證需求。 
+---
+= 啟用S3傳輸協定存取NAS資料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+啟用S3傳輸協定存取、包括確保啟用NAS的SVM符合與啟用S3的伺服器相同的需求、包括新增物件存放區伺服器、以及驗證網路和驗證需求。
+
+對於新ONTAP 的版本、建議您在將SVM設定為將NAS資料提供給用戶端之後、啟用SVM的S3傳輸協定存取。若要深入瞭解NAS傳輸協定組態、請參閱：
+
+* link:../nfs-config/index.html["NFS組態"]
+* link:../smb-config/index.html["SMB組態"]
+
+
+啟用S3傳輸協定之前、必須先設定下列項目：
+
+* S3傳輸協定和所需的NAS傳輸協定（NFS、SMB或兩者）均已獲得授權。
+* SVM是針對所需的NAS傳輸協定進行設定。
+* NFS和/或SMB伺服器存在。
+* 已設定DNS及任何其他必要服務。
+* NAS資料正在匯出或共享至用戶端系統。
+
+
+需要憑證授權單位（CA）憑證、才能啟用從S3用戶端到啟用S3的SVM的HTTPS流量。可以使用三種來源的CA憑證：
+
+* SVM上的全新ONTAP 自我簽署憑證。
+* SVM上現有ONTAP 的自我簽署憑證。
+* 第三方憑證。
+
+
+您可以將相同的資料生命量用於S3/NAS儲存區、以用於處理NAS資料。如果需要特定IP位址、請參閱 link:../s3-config/create-data-lifs-task.html["建立資料生命量"]。需要S3服務資料原則才能在LIF上啟用S3資料流量；您可以修改SVM的現有服務原則以納入S3。
+
+當您建立S3物件伺服器時、應準備好將S3伺服器名稱輸入為完整網域名稱（FQDN）、用戶端將用於S3存取。S3伺服器FQDN不得以儲存區名稱開頭。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在已設定NAS傳輸協定的儲存VM上啟用S3。
++
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取NAS就緒的儲存虛擬機器、按一下「設定」、然後按一下 image:icon_gear.gif["圖樣裝備"] 在S3下。
+.. 選取憑證類型。無論您是選擇系統產生的憑證、或是自己的憑證、用戶端存取都必須使用此憑證。
+.. 輸入網路介面。
+
+
+. 如果您選取系統產生的憑證、則在確認建立新的儲存VM時、會看到憑證資訊。按一下「*下載*」並儲存以供用戶端存取。
++
+** 不會再顯示秘密金鑰。
+** 如果您再次需要憑證資訊：按一下*儲存設備>儲存設備VM*、選取儲存設備VM、然後按一下*設定*。
+
+
+
+
+--
+.CLI
+--
+. 驗證SVM是否允許S3傳輸協定：+
+`vserver show -fields allowed-protocols`
+. 記錄此SVM的公開金鑰憑證。+如果ONTAP 需要全新的自我簽署憑證、請參閱 link:../s3-config/create-install-ca-certificate-svm-task.html["在SVM上建立並安裝CA憑證"]。
+. 更新服務資料原則
++
+.. 顯示SVM +的服務資料原則
+`network interface service-policy show -vserver _svm_name_`
+.. 新增 `data-core` 和 `data-s3-server services` 如果不存在。+
+`network interface service-policy add-service -vserver _svm_name_ -policy _policy_name_ -services data-core,data-s3-server`
+
+
+. 確認SVM上的資料生命量符合您的需求：+
+`network interface show -vserver _svm_name_`
+. 建立S3伺服器：+
+`vserver object-store-server create -vserver _svm_name_ -object-store-server _s3_server_fqdn_ -certificate-name _ca_cert_name_ -comment text [additional_options]`
+
+
+您可以在建立S3伺服器時或稍後隨時指定其他選項。
+
+* 預設會在連接埠443上啟用HTTPS。您可以使用-secure-listener-port選項來變更連接埠號碼。+啟用HTTPS時、需要CA憑證才能與SSL/TLS適當整合。
+* HTTP預設為停用；啟用時、伺服器會偵聽連接埠80。您可以使用-is啟用http的選項來啟用它、或使用-listener-port選項來變更連接埠編號。+啟用HTTP時、所有的要求和回應都會以純文字透過網路傳送。
+
+
+. 驗證是否已根據需要配置S3：+
+`vserver object-store-server show`
+
+
+*範例*+下列命令可驗證所有物件儲存伺服器的組態值：+
+`cluster1::> vserver object-store-server show`
+
+[listing]
+----
+Vserver: vs1
+
+                      Object Store Server Name: s3.example.com
+                          Administrative State: up
+                        Listener Port For HTTP: 80
+                Secure Listener Port For HTTPS: 443
+                                  HTTP Enabled: false
+                                 HTTPS Enabled: true
+             Certificate for HTTPS Connections: svm1_ca
+                                       Comment: Server comment
+----
+--
+====

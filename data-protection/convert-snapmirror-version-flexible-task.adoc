@@ -14,6 +14,7 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。
 
 .關於這項工作
+* 如果您要升級ONTAP 至更新版本的版本、則必須先將DP類型的關係轉換成XDP、然後再升級。不支援DP類型的關係。ONTAP
 * SnapMirror不會自動將現有的DP類型關係轉換為XDP。若要轉換關係、您必須中斷並刪除現有的關係、建立新的XDP關係、然後重新同步關係。如需背景資訊、請參閱 link:version-flexible-snapmirror-default-concept.html["XDP取代DP做為SnapMirror預設值"]。
 * 規劃轉換時、您應該注意、XDP SnapMirror關係的背景準備和資料倉儲階段可能需要很長時間。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
 
@@ -209,7 +210,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 "napmirror resSync -source-path _Svm:Volume _|_cluster：//SVM/Volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 
 +
-如需完整的命令語法、請參閱手冊頁。
+若要改善重新同步時間、您可以使用 `-quick-resync` 選項、但您應該注意儲存效率節約可能會損失。如需完整的命令語法、請參閱手冊頁： link:https://docs.netapp.com/us-en/ontap-cli-9111/snapmirror-resync.html#parameters.html["SnapMirror重新同步命令"]。
 
 +
 [NOTE]

@@ -1,0 +1,45 @@
+---
+permalink: snaplock/enable-snapshot-lock-task.html 
+sidebar: sidebar 
+keywords: snaplock, snapshot copy, lock, tamperproof, enable 
+summary: '從ONTAP 《支援資料9.12.1：建立新磁碟區或使用修改現有磁碟區時、您可以啟用Snapshot複本鎖定功能 `-snapshot-locking-enabled` 選項 `volume create` 和 `volume modify` 命令。' 
+---
+= 啟用Snapshot複本鎖定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 《支援資料9.12.1：建立新磁碟區或使用修改現有磁碟區時、您可以啟用Snapshot複本鎖定功能 `-snapshot-locking-enabled` 選項 `volume create` 和 `volume modify` 命令。
+
+
+
+== 建立磁碟區時啟用Snapshot複本鎖定
+
+. 若要建立新磁碟區並啟用Snapshot複本鎖定、請輸入下列命令：
++
+`volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+
++
+下列命令可在名為vol1的新磁碟區上啟用Snapshot複本鎖定：
+
++
+[listing]
+----
+> volume create -volume vol1 -aggregate aggr1 -size 100m -snapshot-locking-enabled true
+Warning: Snapshot copy locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked Snapshot copies are past their expiry time. A volume with unexpired locked Snapshot copies cannot be deleted.
+Do you want to continue: {yes|no}: y
+[Job 32] Job succeeded: Successful
+----
+
+
+
+
+== 在現有磁碟區上啟用Snapshot複本鎖定
+
+. 若要修改現有磁碟區以啟用Snapshot複本鎖定、請輸入下列命令：
++
+`volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+
+

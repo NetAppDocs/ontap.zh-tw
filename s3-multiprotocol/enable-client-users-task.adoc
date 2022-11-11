@@ -1,0 +1,92 @@
+---
+permalink: s3-multiprotocol/enable-client-users-task.html 
+sidebar: sidebar 
+keywords: s3, nas, vserver, configuration, nas, certificate, linux, unix, installation 
+summary: 若要讓S3用戶端使用者能夠存取NAS資料、您必須將S3使用者名稱對應至對應的NAS使用者、然後使用儲存庫服務原則授予他們存取NAS資料的權限。 
+---
+= 啟用S3用戶端使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要讓S3用戶端使用者能夠存取NAS資料、您必須將S3使用者名稱對應至對應的NAS使用者、然後使用儲存庫服務原則授予他們存取NAS資料的權限。
+
+用戶端存取的使用者名稱（Linux/UNIX、Windows和S3用戶端使用者）必須已經存在。
+
+將S3使用者名稱對應至對應的Linux/UNIX或Windows使用者、可在S3用戶端存取NAS檔案時、對這些檔案進行授權檢查。S3到NAS的對應是透過提供S3使用者名稱_Pattern_來指定、此名稱可以用單一名稱或POSIX規則運算式來表示、也可以用Linux/UNIX或Windows使用者名稱_Replacement來表示。
+
+如果不存在名稱對應、則會使用預設名稱對應、其中S3使用者名稱本身將做為UNIX使用者名稱和Windows使用者名稱。您可以使用修改UNIX和Windows的預設使用者名稱對應 `vserver object-store-server modify` 命令。
+
+僅支援本機名稱對應組態、不支援LDAP。
+
+S3使用者對應至NAS使用者之後、您可以將權限授予使用者、以指定他們有權存取的資源（目錄和檔案）、以及允許或不允許他們在其中執行的動作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 為UNIX或Windows用戶端（或兩者）建立本機名稱對應。
++
+.. 按一下「*儲存設備>桶*」、然後選取啟用S3/NAS的儲存VM。
+.. 選擇*設定*、然後按一下 image:../media/icon_arrow.gif["向右鍵"] 在*名稱對應*中（在*主機使用者與群組*下）。
+.. 在「* S3至Windows *」或「* S3至UNIX*」方塊（或兩者）中、按一下「* Add *」（*新增*）、然後輸入所需的* Pattern*（S3）和*置換*（NAS）使用者名稱。
+
+
+. 建立庫位原則以提供用戶端存取。
++
+.. 按一下「*儲存設備>桶*」、然後按一下 image:../media/icon_kabob.gif["烤串圖示"] 在所需的S3儲存區旁、然後按一下*編輯*。
+.. 按一下「*新增*」並提供所需的值。
++
+*** *主體*：提供S3使用者名稱或使用預設值（所有使用者）
+*** *效果*-選擇*允許*或*拒絕/*
+*** *動作*-輸入這些使用者和資源的動作。物件存放區伺服器目前支援S3 NAS儲存區的一組資源作業包括：GetObject、PuttObject、Delete Object、ListBucket、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PuttObjectTagging、刪除ObjectTagging、GetBucketLocation、 GetBuckettions版本管理、PuttBucket版本 管理和ListBucketVerions。此參數可接受萬用字元。
+*** *資源*：輸入允許或拒絕動作的資料夾或檔案路徑、或使用預設值（儲存庫的根目錄）。
+
+
+
+
+
+
+--
+.CLI
+--
+. 為UNIX或Windows用戶端（或兩者）建立本機名稱對應。+
+`vserver name-mapping create -vserver svm_name> -direction {s3-win|s3-unix} -position _integer_ -pattern _s3_user_name_ -replacement _nas_user_name_`
++
+** `-position` -對應評估的優先順序編號；請輸入1或2。
+** `-pattern` - S3使用者名稱或規則運算式
+** `-replacement` - Windows或UNIX使用者名稱
+
+
+
+
+範例+
+`vserver name-mapping create -direction s3-win -position 1 -pattern s3_user_1 -replacement win_user_1
+vserver name-mapping create -direction s3-unix -position 2 -pattern s3_user_1 -replacement unix_user_1`
+
+. 建立庫位原則以提供用戶端存取。+
+`vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -effect {deny|allow}  -action list_of_actions -principal list_of_users_or_groups -resource [-sid alphanumeric_text]`
++
+** `-effect {deny|allow}` -指定當使用者要求採取行動時、是否允許或拒絕存取。
+** `-action <Action>, ...` -指定允許或拒絕的資源作業。物件存放區伺服器目前支援S3 NAS儲存區的一組資源作業包括：GetObject、PuttObject、Delete Object、ListBucket、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PuttObjectTagging、刪除ObjectTagging、GetBucketLocation、 GetBuckettions版本管理、PuttBucket版本 管理和ListBucketVerions。此參數可接受萬用字元。
+** `-principal <Objectstore Principal>, ...` -根據此參數中指定的物件存放區伺服器使用者或群組、驗證要求存取的使用者。
++
+*** 將字首群組/新增至群組名稱、即可指定物件存放區伺服器群組。
+*** `-principal` -（連字號字元）可授予所有使用者存取權。
+
+
+** `-resource <text>, ...` -指定已設定允許/拒絕權限的儲存區、資料夾或物件。此參數可接受萬用字元。
+** `[-sid <SID>]` -為物件存放區伺服器區段原則聲明指定選用的文字註解。
+
+
+
+
+範例+
+`cluster1::> vserver object-store-server bucket policy add-statement -bucket testbucket -effect allow -action  GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl, GetBucketLocation,GetBucketPolicy,PutBucketPolicy,DeleteBucketPolicy -principal user1 -resource testbucket,testbucket/* sid "FullAccessForUser1"`
+
+`cluster1::> vserver object-store-server bucket policy statement create -vserver vs1 -bucket bucket1 -effect allow -action GetObject -principal - -resource bucket1/readme/* -sid "ReadAccessToReadmeForAllUsers"`
+
+--
+====

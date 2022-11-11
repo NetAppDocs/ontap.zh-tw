@@ -17,15 +17,35 @@ summary: 若要在syslog伺服器上記錄最嚴重事件的通知、您必須�
 
 如果您的環境尚未包含用於事件通知的syslog伺服器、您必須先建立一個。如果您的環境中已包含用於記錄其他系統事件的syslog伺服器、您可能會想要使用該伺服器來處理重要的事件通知。
 
-您可以在ONTAP 叢集執行時、在指令行輸入命令來執行此工作。
+您可以在ONTAP 叢集執行時、在CLI輸入命令來執行此工作。
+
+從S廳9.12.1開始ONTAP 、可透過傳輸層安全（TLS）傳輸協定、將EMS事件傳送至遠端syslog伺服器上的指定連接埠。有兩個新參數可供使用：
+
+`tcp-encrypted`:: 何時 `tcp-encrypted` 為指定 `syslog-transport`、ONTAP 驗證目的地主機的憑證來驗證其身分。預設值為 `udp-unencrypted`。
+`syslog-port`:: 預設值 `syslog-port` 參數取決於的設定 `syslog-transport` 參數。如果 `syslog-transport` 設為 `tcp-encrypted`、 `syslog-port` 預設值為6514。
+
+
+如需詳細資訊、請參閱 `event notification destination create` 手冊頁。
 
 .步驟
 . 建立重要事件的syslog伺服器目的地：
 +
-「事件通知目的地」會建立名稱為「Syssyslog - EMS - syslog syslog - server -位址」
+`event notification destination create -name _syslog-ems_ -syslog _syslog-server-address_ -syslog-transport {udp-unencrypted|tcp-unencrypted|tcp-encrypted}`
+
++
+從ONTAP 功能變數9.12.1開始、可以指定下列值 `syslog-transport`：
+
++
+** `udp-unencrypted` 無安全性的使用者資料包傳輸協定
+** `tcp-unencrypted` 無安全性的傳輸控制傳輸協定
+** `tcp-encrypted` -傳輸層安全性（TLS）的傳輸控制傳輸協定
+
+
++
+預設傳輸協定為 `udp-unencrypted``。
 
 . 設定重要事件以將通知轉送到syslog伺服器：
 +
-「事件通知會建立-filter名稱Important事件-destinations syslog、EMS」
+`event notification create -filter-name _important-events_ -destinations _syslog-ems_`
 
 

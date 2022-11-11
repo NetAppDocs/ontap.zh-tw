@@ -10,21 +10,48 @@ summary: 支援的動作。ONTAP
 :imagesdir: ../media/
 
 
+除以下所示者外、支援標準S3 REST API的S3動作。ONTAP如需詳細資訊、請參閱 link:https://docs.aws.amazon.com/AmazonS3/latest/API/Type_API_Reference.html["Amazon S3 API參考"^]。
+
 
 
 == 鏟斗作業
 
-以星號標示的動作會受到ONTAP 支援、而非S3 REST API
+下列作業可在ONTAP 無法支援AWS S3 REST API的更新版本中使用支援的靜態API：ONTAP
 
-* CreBucket（以ONTAP 版本9.11.1開始）
-* 刪除Bucket*（支援S3 REST API、從ONTAP 版本S9.11.1開始）
-* 刪除BucketPolicy*
-* GetBucketAcl
-* 標題庫
-* 列表桶
-* 推桿*
+* 儲存區建立與刪除
+* 儲存區原則建立、修改及刪除
 
 
+|===
+| 鏟斗作業 | 支援從開始ONTAP 
+
+
+| 建立庫位 | 零點9.11.1. ONTAP 
+
+
+| 刪除Bucket | 零點9.11.1. ONTAP 
+
+
+| 刪除BucketPolicy | 零點9.12.1. ONTAP 
+
+
+| GetBucketAcl | 部分9.8 ONTAP 
+
+
+| GetBucketPolicy | 零點9.12.1. ONTAP 
+
+
+| 標題庫 | 部分9.8 ONTAP 
+
+
+| 列表桶 | 部分9.8 ONTAP 
+
+
+| 推桿* | 僅支援使用靜態API的支援資料9.8+* ONTAP ONTAP 
+
+
+| PuttBucketPolicy | 零點9.12.1. ONTAP 
+|===
 
 
 == 物件作業
@@ -47,35 +74,80 @@ summary: 支援的動作。ONTAP
 
 從推出支援物件版本管理和相關動作的《S21：ONTAP ONTAP ONTAP
 
-* PuttBucketVersion
 * GetBucketVersion
 * listBucketVerions
+* PuttBucketVersion
 
 
-支援的物件動作：
-
-* AbortMultiPart上 傳
-* 完成多個部分上傳
-* 建立多個部分上傳
-* 刪除物件
-* 刪除物件（支援S3 REST API、從ONTAP 版本S2.9.11.1開始）
-* 刪除ObjectTagging(從ONTAP 0型9.9.1開始)
-* GetBucket版本 管理（從ONTAP 功能9.11.1開始）
-* GetObject
-* GetObjectAcl
-* GetObjectTaggingTM（以ONTAP e.9.9.1開頭）
-* 標題物件
-* 清單多個部分上傳
-* 清單物件
-* 清單對象V2.
-* listBucketVerions（以ONTAP 版本號9.11.1開始）
-* 清單零件
-* PuttBucket版本 管理（從ONTAP 版本9.11.1開始）
-* PuttObject
-* PuttObjectTagging(從ONTAP f19.9.1開始)
-* 上傳零件
+|===
+| 物件作業 | 支援從開始ONTAP 
 
 
+| AbortMultiPart上 傳 | 部分9.8 ONTAP 
+
+
+| 完成多個部分上傳 | 部分9.8 ONTAP 
+
+
+| CopyObject | 零點9.12.1. ONTAP 
+
+
+| 建立多個部分上傳 | 部分9.8 ONTAP 
+
+
+| 刪除物件 | 部分9.8 ONTAP 
+
+
+| 刪除物件 | 零點9.11.1. ONTAP 
+
+
+| 刪除ObjectTagging | 部分9.9.1 ONTAP 
+
+
+| GetBucketVersion | 零點9.11.1. ONTAP 
+
+
+| GetObject | 部分9.8 ONTAP 
+
+
+| GetObjectAcl | 部分9.8 ONTAP 
+
+
+| GetObjectTagging | 部分9.9.1 ONTAP 
+
+
+| 標題物件 | 部分9.8 ONTAP 
+
+
+| 清單多個部分上傳 | 部分9.8 ONTAP 
+
+
+| 清單物件 | 部分9.8 ONTAP 
+
+
+| 清單對象V2. | 部分9.8 ONTAP 
+
+
+| listBucketVerions | 零點9.11.1. ONTAP 
+
+
+| 清單零件 | 部分9.8 ONTAP 
+
+
+| PuttBucketVersion | 零點9.11.1. ONTAP 
+
+
+| PuttObject | 部分9.8 ONTAP 
+
+
+| PuttObjectTagging | 部分9.9.1 ONTAP 
+
+
+| 上傳零件 | 部分9.8 ONTAP 
+
+
+| 上傳PartCopy | 零點9.12.1. ONTAP 
+|===
 
 
 == 群組原則

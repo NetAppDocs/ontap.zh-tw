@@ -15,7 +15,7 @@ summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括�
 
 一致性群組可協助管理應用程式工作負載、輕鬆管理本機和遠端保護原則、並在一段時間內為一組磁碟區提供一致的當機或應用程式一致的Snapshot複本。一致性群組中的快照可還原整個應用程式工作負載。
 
-一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的任何SESE Volume、並可透過ONTAP 「靜態API」或「系統管理程式」的「*儲存>一致性群組*」功能表項目進行管理。
+一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的SESSESE Volume、並可透過ONTAP 「RESSREST API」或「System Manager」（系統管理程式）的「* Storage（儲存設備）> Consistency Groups（一致性群組）*」功能表項目
 
 一致性群組可以獨立存在、也可以是階層關係。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
 
@@ -25,16 +25,36 @@ image:../media/consistency-group-single-diagram.gif["單一一致性群組與其
 
 image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其相關磁碟區的圖表"]
 
+從功能支援的版本起、一致性群組即為支援ONTAP xref:clone-task.html[複製] 並修改一致性的成員 xref:modify-task.html[新增或移除磁碟區] 在System Manager和ONTAP the靜止API中。從功能支援的版本號為《支援使用者的應用程式與應用程式的使用者介面」（英語）ONTAP ONTAP 、
+
+* 使用新的NFS或SMB磁碟區或NVMe命名空間建立一致性群組。
+* 將新的或現有的NFS或SMB磁碟區或NVMe命名空間新增至現有的一致性群組。
+
+
+如需ONTAP 更多有關靜態API的資訊、請參閱《ONTAP 靜態API參考文件》。(https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-a-copy-of-the-ontap-rest-api-reference-documentation)[]。
+
 
 
 == 保護
 
-一致性群組透過SnapMirror營運持續性（SMBC）提供遠端保護、並透過Snapshot原則提供本機保護。若要使用遠端保護、您必須符合的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror營運不中斷部署]。根據預設、一致性群組不會設定保護原則、除非選取原則、否則將無法保護您的資料。請參閱 link:protect-task.html["「保護一致性群組」"] 以取得更多資訊。
+一致性群組透過Snapshot原則提供本機保護、並透過SnapMirror營運不中斷（SMBC）提供遠端保護。建立一致性群組不會自動啟用保護。建立一致性群組或建立一致性群組之後、可以設定本機和/或遠端保護原則。
+
+若要使用一致性群組設定本機保護、請參閱 link:protect-task.html["保護一致性群組"]。從功能性的9.11.1開始ONTAP 、一致性群組即提供 link:protect-task.html#two-phase-CG-snapshot-creation["建立雙階段一致性群組快照"]。
+
+若要使用遠端保護、您必須符合的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror營運不中斷部署]。
 
 
 NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
-從功能支援部門支援的版本僅為支援一致性群組ONTAP link:protect-task.html#two-phase-CG-snapshot-creation["建立雙階段一致性群組快照"]。
+
+
+== 應用程式與元件標籤
+
+從功能完整的9.12.1開始ONTAP 、一致性群組支援元件和應用程式標記。應用程式與元件標籤是一種管理工具、可讓您篩選及識別一致性群組中的不同工作負載。
+
+應用程式標籤適用於個別和父一致性群組。應用程式標籤提供工作負載標記、例如MongoDB、Oracle或SQL Server。一致性群組的預設應用程式標記為「其他」。階層一致性群組中的子群組具有元件標記、而非應用程式標記。元件標籤的選項包括「data」（資料）、「logs」（記錄）或「other」（其他）。預設值為「其他」。
+
+您可以在建立一致性群組或建立一致性群組之後套用標記。如果一致性群組具有SMBC關係、您必須使用*其他*做為應用程式或元件標記。
 
 
 

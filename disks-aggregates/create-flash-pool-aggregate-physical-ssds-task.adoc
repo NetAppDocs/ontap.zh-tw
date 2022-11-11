@@ -31,6 +31,26 @@ summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能
 
 根據預設、SSD快取的RAID層級與HDD RAID群組的RAID層級相同。您可以在新增第一個SSD RAID群組時、指定「raidtype」選項來覆寫此預設選項。
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從《物件9.12.1》開始ONTAP 、您可以使用System Manager使用實體SSD來建立Flash Pool本機層。
+
+.步驟
+. 按一下*儲存設備> Tiers*、然後選取現有的本機HDD儲存層。
+. 按一下 image:icon_kabob.gif["kabob圖示"] 並選擇* Add Flash Pool Cache（添加Flash Pool快取）*。
+. 選取「Use Dedicated SSD as cache（使用專用SSD做為
+. 選取磁碟類型和磁碟數目。
+. 選擇RAID類型。
+. 按一下「 * 儲存 * 」。
+. 找到儲存層、然後按一下 image:icon_kabob.gif["kabob圖示"]。
+. 選取*更多詳細資料*、然後確認Flash Pool顯示為*已啟用*。
+
+
+--
+.CLI
+--
 .步驟
 . 將本機層（Aggregate）標示為符合資格、可成為Flash Pool Aggregate：
 +
@@ -48,3 +68,6 @@ summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能
 
 
 
+
+--
+====

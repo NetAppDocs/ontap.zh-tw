@@ -19,7 +19,14 @@ summary: 您可以使用System Manager來設定事件管理系統（EMS）傳送
 
 
  a| 
-零點9.10.1 ONTAP
+更新版本ONTAP
+ a| 
+將事件傳送至遠端syslog伺服器時、請指定傳輸層安全性（TLS）傳輸協定。
+
+
+
+ a| 
+更新版本ONTAP
  a| 
 設定電子郵件地址、syslog伺服器、Webhook應用程式、以及SNMP traphosts。
 
@@ -51,6 +58,8 @@ summary: 您可以使用System Manager來設定事件管理系統（EMS）傳送
 == 新增EMS事件通知目的地
 
 您可以使用System Manager來指定要將EMS訊息傳送到何處。
+
+從S廳9.12.1開始ONTAP 、可透過傳輸層安全（TLS）傳輸協定、將EMS事件傳送至遠端syslog伺服器上的指定連接埠。如需詳細資訊、請參閱 `event notification destination create` 手冊頁。
 
 .步驟
 . 按一下*叢集>設定*。
@@ -98,6 +107,11 @@ SNMP traphost
 （從9.10.1開始）
  a| 
 * 伺服器的主機名稱或IP位址
+* 系統記錄連接埠（從9.12.1開始）
+* 系統記錄傳輸（從9.12.1開始）
++
+選取「* TCP Encrypted *（* TCP加密*）」可啟用傳輸層安全性（TLS）傳輸協定。如果未輸入* Syslog連接埠*的值、則會根據* Syslog transport*選項使用預設值。
+
 
 
 

@@ -23,7 +23,7 @@ summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB�
 |===
 
 
-| 平台 | 發行版本早於2009年9月9日ONTAP | 部分9.9.1 ONTAP | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP 
+| 平台 | 發行版本早於2009年9月9日ONTAP | 部分9.9.1 ONTAP | 零點9.10.1 ONTAP | 版本9.11.2\ONTAP 9.12.1. ONTAP 
 
 
  a| 
@@ -68,6 +68,8 @@ ONTAP Select
 
 == 支援的功能
 
+僅在AFF/ASA平台上支援不中斷營運的SnapMirror同步作業（Nn）ONTAP 。支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。
+
 下列功能支援ONTAP SnapMirror同步技術（位於景點叢集中的所有節點均執行ONTAP 《支援》）：
 
 * NFSv4.2
@@ -111,6 +113,8 @@ ONTAP Select
 
 下列功能不支援同步SnapMirror關係：
 
+* 可防竄改的Snapshot複本
+* 一致性群組
 * 內部組態MetroCluster
 * SFMoD
 * SFCoD
@@ -149,4 +153,4 @@ SnapMirror同步關係的狀態在正常操作期間始終處於「不同步」�
 
 如果StrictSync模式中SnapMirror同步關係的關係狀態變成「OutofSync」、則會停止對主要磁碟區的所有I/O作業。在同步模式中、SnapMirror同步關係的「OutofSync」狀態不會中斷主要磁碟區的作業、而主要磁碟區的I/O作業則是允許的。
 
-http://www.netapp.com/us/media/tr-4733.pdf["NetApp技術報告4733：SnapMirror Synchronous for ONTAP NetApp 9.11.1"^]
+http://www.netapp.com/us/media/tr-4733.pdf["NetApp技術報告4733：SnapMirror同步設定與最佳實務做法"^]
