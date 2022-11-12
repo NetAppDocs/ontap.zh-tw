@@ -41,8 +41,8 @@ summary: 本文說明如何設定LIF（網路介面）以支援RDMA。
 「網路介面create -vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy _rose_true_true
 
 +
-.. 服務原則必須是預設資料檔案或包含資料NFS網路介面服務的自訂原則。
-.. 「-RDMA傳輸協定」參數會接受預設為空白的清單。當「RoCE」新增為值時、LIF只能設定在支援RoCE卸載的連接埠上、進而影響機器人程式LIF移轉和容錯移轉。
+** 服務原則必須是預設資料檔案或包含資料NFS網路介面服務的自訂原則。
+** 「-RDMA傳輸協定」參數會接受預設為空白的清單。當「RoCE」新增為值時、LIF只能設定在支援RoCE卸載的連接埠上、進而影響機器人程式LIF移轉和容錯移轉。
 
 
 
@@ -57,7 +57,15 @@ summary: 本文說明如何設定LIF（網路介面）以支援RDMA。
 ====
 .系統管理員
 --
-您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA建立NFS的網路介面。步驟.選擇*網路>總覽>網路介面*。。選取 image:icon_kabob.gif["kabob圖示"] 您要變更的網路介面旁的*>編輯*。。選中*使用roce Ports*以通過RDMA啓用NFS或取消選中此框以禁用NFS。如果網路介面位於具備RoCE功能的連接埠、您會看到*使用roce連接埠*旁邊的核取方塊。。視需要修改其他設定。。選取*「Save（儲存）」*以確認您的變更。
+您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA建立NFS的網路介面。
+
+.步驟
+. 選擇*網路>總覽>網路介面*。
+. 選取 image:icon_kabob.gif["kabob圖示"] 您要變更的網路介面旁的*>編輯*。
+. 選中*使用roce Ports*以通過RDMA啓用NFS或取消選中此框以禁用NFS。如果網路介面位於具備RoCE功能的連接埠、您會看到*使用roce連接埠*旁邊的核取方塊。
+. 視需要修改其他設定。
+. 選取*「Save（儲存）」*以確認您的變更。
+
 
 --
 .CLI

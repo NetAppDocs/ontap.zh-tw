@@ -35,9 +35,16 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 ====
 .系統管理員
 --
-您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA設定網路介面與NFS。步驟.檢查是否支援RDMA。瀏覽至*「網路」>「乙太網路連接埠」*、然後在群組檢視中選取適當的節點。展開節點時、請查看指定連接埠的* RDMA傳輸協定*欄位：* roce*值表示支援RDMA；破折號（*-*）表示不支援RDMA。。若要新增VLAN、請選取*+ VLAN*。選取適當的節點。在*連接埠*下拉式功能表中、如果可用的連接埠支援RDMA、則會顯示* roce Enabled*文字；如果不支援RDMA、則不會顯示任何文字。。遵循中的工作流程 xref:../task_nas_enable_linux_nfs.html[使用NFS為Linux伺服器啟用NAS儲存設備] 設定新的NFS伺服器。
+您必須使用ONTAP S廳9.12.1或更新版本、才能使用System Manager透過RDMA設定網路介面與NFS。
 
-+新增網路介面時、您可以選擇*使用roce連接埠*。對於任何想要透過RDMA使用NFS的網路介面、請選取此選項。
+.步驟
+. 檢查是否支援RDMA。瀏覽至*「網路」>「乙太網路連接埠」*、然後在群組檢視中選取適當的節點。展開節點時、請查看指定連接埠的* RDMA傳輸協定*欄位：* roce*值表示支援RDMA；破折號（*-*）表示不支援RDMA。
+. 若要新增VLAN、請選取*+ VLAN*。選取適當的節點。在*連接埠*下拉式功能表中、如果可用的連接埠支援RDMA、則會顯示* roce Enabled*文字；如果不支援RDMA、則不會顯示任何文字。
+. 遵循中的工作流程 xref:../task_nas_enable_linux_nfs.html[使用NFS為Linux伺服器啟用NAS儲存設備] 設定新的NFS伺服器。
++
+新增網路介面時、您可以選擇*使用roce連接埠*。對於任何想要透過RDMA使用NFS的網路介面、請選取此選項。
+
+
 
 --
 .CLI
