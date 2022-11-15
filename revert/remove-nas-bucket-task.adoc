@@ -1,0 +1,49 @@
+---
+permalink: revert/remove-nas-bucket-task.html 
+sidebar: sidebar 
+keywords: s3, svm, bucket, object, server, filesystems, nas, directories, revert 
+summary: 如果您已將S3用戶端存取設定為NAS資料、並將ONTAP 其從還原9.12.1或更新版本還原ONTAP 為更新版本的版本9.11.1或更新版本、則必須移除NAS儲存區組態、而且在還原之前、必須先移除任何S3使用者至Windows / Unix使用者名稱對應。 
+---
+= 從ONTAP 還原至更新版本之前、請先移除S3 NAS儲存區組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已將S3用戶端存取設定為NAS資料、並將ONTAP 其從還原9.12.1或更新版本還原ONTAP 為更新版本的版本、則必須移除NAS儲存區組態、而且必須先移除任何名稱對應（S3使用者至Windows或Unix使用者）、才能還原。
+
+下列工作會在還原程序的背景中完成。
+
+* 移除所有部分完成的單一物件建立（亦即隱藏目錄中的所有項目）。
+* 移除所有隱藏的目錄；每個磁碟區上可能有一個、可從從S3 NAS儲存區對應的匯出根目錄存取。
+* 移除上傳表。
+* 刪除所有已設定S3伺服器的任何預設UNIX使用者和預設Windows使用者值。
+
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 移除S3 NAS儲存區組態。+按一下「*儲存設備>桶*」、然後按一下 image:../media/icon_kabob.gif["烤串圖示"] 針對每個已設定的S3 NAS儲存區、按一下*刪除*。
+. 移除UNIX或Windows用戶端（或兩者）的本機名稱對應。
++
+.. 按一下「*儲存設備>桶*」、然後選取啟用S3/NAS的儲存VM。
+.. 選擇*設定*、然後按一下 image:../media/icon_arrow.gif["向右鍵"] 在*名稱對應*中（在*主機使用者與群組*下）。
+.. 在「* S3到Windows *」或「* S3到UNIX Tile *」（或兩者）中、按一下 image:../media/icon_kabob.gif["烤串圖示"] 對於每個已設定的對應、然後按一下*刪除*。
+
+
+
+
+--
+.CLI
+--
+. 移除S3 NAS儲存區組態。+
+`vserver object-store-server bucket delete -vserver _svm_name_ -bucket _s3_nas_bucket_name_`
+. 移除名稱對應。+
+`vserver name-mapping delete -vserver _svm_name_ -direction s3-unix` +
+`vserver name-mapping delete -vserver _svm_name_ -direction s3-win`
+
+
+--
+====
