@@ -54,10 +54,15 @@ NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一
 
 . 在每個服務FC的節點上為SVM建立兩個生命期：
 +
+** 適用於32、9.6及更新版本：ONTAP
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -data-protocol fcp -service-policy default-data-fcp -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+** 適用於更新版本的版本：ONTAP
++
 「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定FCP -home-node_node_name_-home-port _port_」
 
-+
-「-role」參數應為「dATA」、「data-傳輸協定」參數應為「FCP」。
+
 
 . 確認您的生命已建立、且其作業狀態為「線上」：
 +

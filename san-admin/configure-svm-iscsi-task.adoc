@@ -54,7 +54,15 @@ summary: 若要設定iSCSI的儲存虛擬機器（SVM）、您必須為SVM建立
 
 . 在每個節點上建立要用於iSCSI的SVM LIF：
 +
-「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定iSCSI -home-node_node_name_-home-port _port_name_-address_ip_address_-netask_kap
+** 適用於32、9.6及更新版本：ONTAP
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -data-protocol iscsi -service-policy default-data-iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+** 適用於更新版本的版本：ONTAP
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+
 
 . 請確認您已正確設定lifs：
 +
