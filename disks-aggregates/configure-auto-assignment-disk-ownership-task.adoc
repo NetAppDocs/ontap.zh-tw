@@ -1,85 +1,37 @@
 ---
 permalink: disks-aggregates/configure-auto-assignment-disk-ownership-task.html 
 sidebar: sidebar 
-keywords: configure, automatic, assignment, disk ownership 
-summary: 您可以設定ONTAP 使用此功能、根據磁碟的堆疊、磁碟櫃或磁碟櫃來自動指派磁碟擁有權。如果已設定、系統初始化10分鐘後會自動指派磁碟擁有權、正常系統作業期間則每五分鐘指派一次磁碟擁有權。 
+keywords: change, modify, automatic, assignment, disk ownership 
+summary: 您可以使用儲存磁碟選項MODIFY命令來選取非預設原則、以自動指派磁碟擁有權或停用自動指派磁碟擁有權。 
 ---
-= 設定磁碟擁有權的自動指派
+= 變更自動指派磁碟擁有權的設定
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用CLI來設定ONTAP 、以便根據磁碟的堆疊、機櫃或磁碟櫃自動指派磁碟擁有權。如果已設定、系統初始化10分鐘後會自動指派磁碟擁有權、正常系統作業期間則每五分鐘指派一次磁碟擁有權。
+您可以使用 `storage disk option modify` 命令以選取非預設原則、以自動指派磁碟擁有權或停用自動指派磁碟擁有權。
 
-.您需要的是 #8217 ；需要的是什麼
-* 您的系統必須符合自動磁碟擁有權的要求。
-* 如果您有多個堆疊或磁碟櫃必須擁有不同的擁有權、則必須在每個堆疊或磁碟櫃上手動指派一個磁碟、才能在每個堆疊或磁碟櫃上自動指派擁有權。
-
-
-.要使用的磁碟自動指派原則
---
-
-NOTE: 僅在入門級平台上使用「海灣自動指派原則」。如果您嘗試將「海灣自動指派原則」用於非入門級平台、就會失敗。
-
---
-您通常可以使用預設的自動指派原則、這相當於大多數系統的「最新」原則、以及入門級系統AFF 的「Bay」原則（例如：Ef22xx、FAS2xxx）。不過、對於某些組態、您可能需要變更自動指派原則。
-
-您必須根據組態選擇適當的自動指派：
-
-[cols="70,30"]
-|===
-
-
-| 如果您使用... | 然後使用此自動指派原則... 
-
-
- a| 
-獨立的入門級系統
- a| 
-堆疊
-
-
-
- a| 
-HA組態中的入門級系統、搭配單一共享機櫃
- a| 
-Bay
-
-
-
- a| 
-HA組態中的入門級系統、其中一堆是兩個或多個機櫃
- a| 
-機櫃
-
-
-
- a| 
-每個節點有一個堆疊、兩個以上磁碟櫃的組態MetroCluster
- a| 
-機櫃
-
-
-
- a| 
-所有其他組態
- a| 
-堆疊
-
-|===
-「預設」自動指派原則的行為取決於系統模式。對於入門級機型、「預設」原則相當於「Bay」原則。對於所有其他系統、這相當於「最大」原則。
+深入瞭解 link:disk-autoassignment-policy-concept.html["自動指派磁碟擁有權"]。
 
 .步驟
-. 設定自動磁碟指派：
+. 修改自動磁碟指派：
++
+.. 如果您要選取非預設原則、請輸入：
 +
 「儲存磁碟選項修改-autodassign-policy _autodassign_policy_-node_node_name_」
 
 +
-** 使用「stack」做為「_autodassign_policy_」、在堆疊或迴圈層級設定自動擁有權。
-** 使用「shelf」作為「_autodassign_policy_」、在機櫃層級設定自動擁有權。
-** 使用「bay」作為「_autodassign_policy_」、在Bay層級設定自動擁有權。
+*** 使用「stack」做為「_autodassign_policy_」、在堆疊或迴圈層級設定自動擁有權。
+*** 使用「shelf」作為「_autodassign_policy_」、在機櫃層級設定自動擁有權。
+*** 使用「bay」作為「_autodassign_policy_」、在Bay層級設定自動擁有權。
+
+
+.. 如果您要停用自動磁碟擁有權指派、請輸入：
++
+`storage disk option modify -autoassign off -node _node_name_`
+
 
 
 . 驗證磁碟的自動指派設定：
