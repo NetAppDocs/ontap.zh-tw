@@ -249,14 +249,14 @@ Job ID Name                 Vserver    Node           State
 
 使用SMB 3.0傳輸協定的Hyper-V或Microsoft SQL Server用戶端可存取持續可用的SMB共用區、不需要在升級或降級之前終止。
 
-. 識別任何無法持續使用的既有SMB工作階段：「vserver CIFS工作階段顯示-持續可用的是執行個體」
+. 找出任何無法持續使用的既有SMB工作階段： `vserver cifs session show -continuously-available No -instance`
 +
 此命令會顯示任何未持續可用的SMB工作階段的詳細資訊。您應該先終止這些程式、再繼續ONTAP 執行「停止降級」。
 
 +
 [listing]
 ----
-cluster1::> vserver cifs session show -continuously-available Yes -instance
+cluster1::> vserver cifs session show -continuously-available No -instance
 
                         Node: node1
                      Vserver: vs1

@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/enable-encryption-new-volume-task.html 
 sidebar: sidebar 
-keywords: enabling, encryption, new, volume 
+keywords: encryption, new volume, NAE, NVE, volume create 
 summary: 您可以使用volume create命令、在新的Volume上啟用加密功能。 
 ---
 = 在新磁碟區上啟用加密
@@ -13,15 +13,22 @@ summary: 您可以使用volume create命令、在新的Volume上啟用加密功�
 [role="lead"]
 您可以使用「volume create」命令、在新的Volume上啟用加密功能。
 
-從功能支援的9.2開始ONTAP 、您可以在SnapLock 功能區上啟用加密功能。
+您可以使用NetApp Volume Encryption（NVE）加密磁碟區、從ONTAP NetApp Aggregate Encryption（NAE）開始加密磁碟區。若要深入瞭解NAE和NVE、請參閱 xref:configure-netapp-volume-encryption-concept[Volume加密總覽]。
 
-從ONTAP 功能表9.4開始、如果您在設定Onboard Key Manager時啟用「cc-mode」、無論您是否指定「-Encrypting true」、都會自動加密您使用「volume create」命令建立的磁碟區。
+在支援的過程會因您使用的版本和您的特定組態而有所不同ONTAP ONTAP ：
 
-從ONTAP 功能區9.6開始、您可以使用Aggregate層級加密、將金鑰指派給內含的Aggregate、以便加密磁碟區。您在Aggregate中建立的磁碟區預設會加密。您可以使用「-加密」選項、在建立磁碟區時覆寫預設值。
+* 如果ONTAP 啟用、請從支援的問題9.4開始 `cc-mode` 設定Onboard Key Manager時、您可以使用建立的磁碟區 `volume create` 無論您是否指定、命令都會自動加密 `-encrypt true`。
+* 在更新版本的版本中、您必須使用ONTAP `-encrypt true` 與 `volume create` 啟用加密的命令（前提是您未啟用 `cc-mode`）。
+* 如果您使用ONTAP 的是NAE、則必須在Aggregate層級啟用NAE。請參閱 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE授權啟用Aggregate層級加密] 以取得此工作的詳細資料。
+* 從功能更新至功能更新9.7開始ONTAP 、新建立的磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。
++
+** 若您使用、請參閱ONTAP 更新版本的 `-encrypt true` 若要在NAE Aggregate中建立磁碟區、該磁碟區將採用NVE加密、而非NAE。NAE Aggregate中的所有磁碟區都必須使用NVE或NAE進行加密。
 
-從功能更新至功能更新9.7開始ONTAP 、新建立的磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。
 
-使用唯一金鑰加密的Volume稱為_NVE Volume。使用Aggregate層級金鑰加密的Volume稱為_NAE Aggregate（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
+
+
+
+NOTE: NAE集合體不支援純文字磁碟區。
 
 .步驟
 . 建立新磁碟區、並指定是否在磁碟區上啟用加密：
@@ -34,101 +41,41 @@ summary: 您可以使用volume create命令、在新的Volume上啟用加密功�
 
 
  a| 
-更新版本的NAE Volume ONTAP
+NAE Volume
  a| 
-「Volume create -vserver Svm_name -volume volume volume volume名稱-Aggregate aggregate名稱」
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
 
 
-
- a| 
-一個支援實體9.6 NAE的Volume（假設已啟用Aggregate層級加密）ONTAP
- a| 
-「Volume create -vserver Svm_name -volume volume volume volume名稱-Aggregate aggregate名稱」
+NOTE: 在32：9.6中ONTAP 、您必須在Aggregate層級啟用NAE、才能建立NAE Volume。
 
 
 
  a| 
-一個支援NetApp的VTE 9.7或更新版本ONTAP
+NVE Volume
  a| 
-「Volume create -vserver Svm_name -volume volume volume volume名稱-Aggregate aggregate名稱」
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
 
 
-
- a| 
-支援某個版本的ONTAP
- a| 
-「Volume create -vserver Svm_name -volume volume volume volume名稱-Aggregate aggregate名稱-加密true」
+NOTE: 如果您使用ONTAP 的是版本不只是版本的問題、請新增 `-encrypt true` 命令。將此參數用於ONTAP 支援NAE加密的更新版本（適用於更新版本）、磁碟區將使用NVE。
 
 
 
  a| 
 純文字Volume
  a| 
-「Volume create -vserver Svm_name -volume volume volume volume名稱-Aggregate aggregate名稱-加密 假」
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -encrypt false`
 
 |===
 +
-如需完整的命令語法、請參閱命令的手冊頁。
+如需完整的命令語法、請參閱連結：https://docs.netapp.com/us-en/ontap-cli-9121/volume-create.html的命令參考頁面[`volume create`^]。
 
-+
-從ONTAP 使用支援升級版本的支援版本開始、下列命令會在「aggr1」上建立名為「vol1」的NAE磁碟區：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
-----
-+
-如果使用支援Aggregate層級加密的支援功能、下列命令會在「aggr1」上建立名為「vol1」的NAE磁碟區：ONTAP
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
-----
-+
-從ONTAP 使用支援支援的9.7或更新版本開始、下列命令會在「aggr1」上建立名為「vol2」的NVE Volume：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1
-----
-+
-使用支援支援支援的支援功能9.6或更早版本、下列命令可在「aggr1」上建立名為「vol2」的NVE Volume：ONTAP
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1 -encrypt true
-----
-+
-下列命令會在「aggr1」上建立名為「vol3」的純文字磁碟區：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol3 -aggregate aggr1 -encrypt false
-----
 . 確認已啟用磁碟區進行加密：
 +
 「Volume show -is加密true」
 
 +
-如需完整的命令語法、請參閱命令的手冊頁。
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9121/volume-show.html["命令參考資料"^]。
 
-+
-下列命令會顯示「cluster2」上的加密磁碟區：
-
-+
-[listing]
-----
-cluster2::> volume show -is-encrypted true
-
-Vserver  Volume  Aggregate  State  Type  Size  Available  Used
--------  ------  ---------  -----  ----  -----  --------- ----
-vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
-----
 
 
 如果您使用KMIP伺服器來儲存節點的加密金鑰、ONTAP 則當您加密磁碟區時、會自動將加密金鑰「推送」至伺服器。
