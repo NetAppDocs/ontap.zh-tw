@@ -21,6 +21,17 @@ summary: 從功能支援的問題9.8開始ONTAP 、您可以在災難發生後�
 [role="lead"]
 從功能支援的問題9.8開始ONTAP 、您可以在災難發生後、使用System Manager重新啟動來源儲存VM。重新啟動來源儲存VM會停止目的地儲存VM、並重新啟用來源到目的地的複寫。
 
+當您重新啟動來源儲存VM時、System Manager會在背景執行下列作業：
+
+* 使用SnapMirror重新同步、建立從原始目的地到原始來源的反向SVM DR關係
+* 停止目的地SVM
+* 更新SnapMirror關係
+* 打破SnapMirror關係
+* 重新啟動原始SVM
+* 將原始來源的SnapMirror重新同步回原始目的地
+* 清除SnapMirror關係
+
+
 .步驟
 . 選取所需的保護關係：按一下*保護>關係*。
 . 按一下 image:icon_kabob.gif["kabob圖示"] 然後按一下*重新啟動來源儲存VM*。
