@@ -13,10 +13,12 @@ summary: 如果您的環境中使用網路資訊服務（NIS）來提供名稱�
 [role="lead"]
 如果您的環境中使用網路資訊服務（NIS）來提供名稱服務、則必須使用「vserver services name-service NIS網域create」命令來建立SVM的NIS網域組態。
 
+.您需要的產品
 在SVM上設定NIS網域之前、所有已設定的NIS伺服器都必須可供使用且可連線。
 
 如果您打算使用NIS進行目錄搜尋、則NIS伺服器中的對應每個項目不得超過1,024個字元。請勿指定不符合此限制的NIS伺服器。否則、用戶端存取相依於NIS項目可能會失敗。
 
+.關於這項工作
 您可以建立多個NIS網域。不過、您只能使用設為「Active」的選項。
 
 如果您的NIS資料庫包含「netgroup .byhost」對應、ONTAP 則可以使用它來加快搜尋速度。目錄中的「netgroup.byhost」和「netgroup」對應必須隨時保持同步、以避免用戶端存取問題。從ONTAP 功能更新到功能更新階段、可以使用「vserver services name-service netse-domain netgroup資料庫」命令快取NIS「netgroup .byhost」項目。
@@ -43,6 +45,7 @@ summary: 如果您的環境中使用網路資訊服務（NIS）來提供名稱�
 
 
 
+.範例
 下列命令會在SVM上建立名為nisDomain的NIS網域、並將其設為作用中NIS網域組態、該SVM名稱為VS1、其中NIS伺服器的IP位址為192.0.2.180：
 
 [listing]

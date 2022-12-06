@@ -39,7 +39,7 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
 
 
 .接下來該怎麼做
-* 您可以從*憑證*頁面  a certificate signing request。
+* 您可以從*憑證*頁面 <<產生憑證簽署要求>>。
 * 憑證資訊分成三個索引標籤、每個類別各一個。您可以從每個索引標籤執行下列工作：
 
 
@@ -53,9 +53,9 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
  a| 
 *受信任的憑證授權單位*
  a| 
-* 
-*  a trusted certificate authority
-*  a trusted certificate authority
+* <<install-trusted-cert>>
+* <<刪除信任的憑證授權單位>>
+* <<續約信任的憑證授權單位>>
 
 
 
@@ -63,10 +63,10 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
  a| 
 *用戶端/伺服器憑證*
  a| 
-* 
-* 
-* 
-* 
+* <<install-cs-cert>>
+* <<gen-cs-cert>>
+* <<delete-cs-cert>>
+* <<renew-cs-cert>>
 
 
 
@@ -74,10 +74,10 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
  a| 
 *當地證書管理機構*
  a| 
-*  a new local certificate authority
-*  a certificate using a local certificate authority
-*  a local certificate authority
-*  a local certificate authority
+* <<建立新的本機憑證授權單位>>
+* <<使用本機憑證授權單位簽署憑證>>
+* <<刪除本機憑證授權單位>>
+* <<更新本機憑證授權單位>>
 
 
 |===
@@ -88,7 +88,7 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
 您可以從「*憑證*」頁面的任何索引標籤、使用System Manager產生憑證簽署要求（CSR）。系統會產生私密金鑰和對應的CSR、您可以使用憑證授權單位來簽署以產生公開憑證。
 
 .步驟
-. 查看*憑證*頁面。請參閱  certificate information。
+. 查看*憑證*頁面。請參閱 <<檢視憑證資訊>>。
 . 按一下「*+產生CSR *」。
 . 填寫主旨名稱的資訊：
 +
@@ -108,7 +108,7 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
 您可以在System Manager中安裝其他信任的憑證授權單位。
 
 .步驟
-. 檢視*信任的憑證授權單位*索引標籤。請參閱  certificate information。
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
 . 在「*新增信任的憑證授權單位*」面板上、執行下列步驟：
 +
@@ -131,7 +131,7 @@ summary: 從ONTAP 版本號《21：10.1》開始、您可以使用System Manager
 NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單位。
 
 .步驟
-. 檢視*信任的憑證授權單位*索引標籤。請參閱  certificate information。
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下信任的憑證授權單位名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
 
@@ -143,7 +143,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您可以續約已過期或即將過期的信任憑證授權單位。
 
 .步驟
-. 檢視*信任的憑證授權單位*索引標籤。請參閱  certificate information。
+. 檢視*信任的憑證授權單位*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下信任的憑證授權單位名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
 
@@ -155,7 +155,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您可以安裝其他用戶端/伺服器憑證。
 
 .步驟
-. 檢視*用戶端/伺服器憑證*索引標籤。請參閱  certificate information。
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
 . 在「*新增用戶端/伺服器憑證*」面板上、執行下列步驟：
 +
@@ -176,7 +176,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您可以產生額外的自我簽署用戶端/伺服器憑證。
 
 .步驟
-. 檢視*用戶端/伺服器憑證*索引標籤。請參閱  certificate information。
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下「*+產生自我簽署的憑證*」。
 . 在「*產生自我簽署的憑證*」面板上、執行下列步驟：
 +
@@ -198,7 +198,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 使用System Manager、您可以刪除用戶端/伺服器憑證。
 
 .步驟
-. 檢視*用戶端/伺服器憑證*索引標籤。請參閱  certificate information。
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下用戶端/伺服器憑證的名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
 
@@ -210,7 +210,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您可以續約已過期或即將過期的用戶端/伺服器憑證。
 
 .步驟
-. 檢視*用戶端/伺服器憑證*索引標籤。請參閱  certificate information。
+. 檢視*用戶端/伺服器憑證*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下用戶端/伺服器憑證的名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
 
@@ -222,7 +222,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您就能建立新的本機憑證授權單位。
 
 .步驟
-. 查看*本地證書頒發機構*選項卡。請參閱  certificate information。
+. 查看*本地證書頒發機構*選項卡。請參閱 <<檢視憑證資訊>>。
 . 按一下 image:icon_add_blue_bg.gif["新增圖示"]。
 . 在「*新增本機憑證授權單位*」面板上、執行下列步驟：
 +
@@ -241,7 +241,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 在System Manager中、您可以使用本機憑證授權單位來簽署憑證。
 
 .步驟
-. 查看*本地證書頒發機構*選項卡。請參閱  certificate information。
+. 查看*本地證書頒發機構*選項卡。請參閱 <<檢視憑證資訊>>。
 . 按一下本機憑證授權單位名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*簽署憑證*。
 . 填寫*簽署憑證簽署要求*表單。
@@ -259,7 +259,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 使用System Manager、您可以刪除本機憑證授權單位。
 
 .步驟
-. 檢視*本機憑證授權單位*索引標籤。請參閱  certificate information。
+. 檢視*本機憑證授權單位*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下本機憑證授權單位名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*刪除*。
 
@@ -271,7 +271,7 @@ NOTE: 您無法刪除預先安裝ONTAP 了此功能的受信任憑證授權單�
 有了System Manager、您可以續約已過期或即將過期的本機憑證授權單位。
 
 .步驟
-. 檢視*本機憑證授權單位*索引標籤。請參閱  certificate information。
+. 檢視*本機憑證授權單位*索引標籤。請參閱 <<檢視憑證資訊>>。
 . 按一下本機憑證授權單位名稱。
 . 按一下 image:icon_kabob.gif["烤串圖示"] 在名稱旁邊、然後按一下*更新*。
 

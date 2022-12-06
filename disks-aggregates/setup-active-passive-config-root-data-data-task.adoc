@@ -13,17 +13,19 @@ summary: 當HA配對設定為由原廠使用根資料資料分割時、資料分
 [role="lead"]
 當HA配對設定為由原廠使用根資料資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想要在主動-被動組態中使用HA配對、則必須先更新磁碟分割擁有權、才能建立資料本機層（Aggregate）。
 
-.您需要的是 #8217 ；需要的是什麼
+.您需要的產品
 * 您應該已經決定要將哪個節點做為主動節點、以及哪個節點將做為被動節點。
 * 必須在HA配對上設定儲存容錯移轉。
 
 
+.關於這項工作
 此工作會在兩個節點上執行：節點A和節點B
 
 此程序是針對未從分割磁碟建立資料本機層（Aggregate）的節點所設計。
 
 深入瞭解 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_the_rules_for_Advanced_Disk_Partitioning%3F["進階磁碟分割"^]。
 
+.步驟
 所有命令都是在叢集Shell輸入。
 
 . 檢視資料分割區的目前擁有權：

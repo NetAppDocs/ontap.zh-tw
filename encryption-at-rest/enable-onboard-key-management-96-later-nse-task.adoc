@@ -15,7 +15,7 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。
 
-.您需要的是 #8217 ；需要的是什麼
+.您需要的產品
 * 如果您使用NSE搭配外部金鑰管理（KMIP）伺服器、則必須刪除外部金鑰管理程式資料庫。
 +
 link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
@@ -24,6 +24,7 @@ link:delete-key-management-database-task.html["從外部金鑰管理移轉至內
 * 設定Onboard Key Manager之前、您必須先設定MetroCluster 此功能。
 
 
+.關於這項工作
 每次將節點新增至叢集時、您都必須執行「安全金鑰管理程式內建啟用」命令。在支援的組態中MetroCluster 、您必須先在本機叢集上執行「安全金鑰管理程式內建啟用」、然後在遠端叢集上執行「安全金鑰管理程式內建同步」、並在每個叢集上使用相同的密碼。
 
 根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。除了MetroCluster 支援的功能之外、您可以使用「cc-mode-enabled=yes」選項、要求使用者在重新開機後輸入通關密碼。
@@ -119,6 +120,7 @@ node2                                 NSE-AK    yes
 ----
 
 
+.完成後
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
 
 所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。您也應該手動備份資訊、以便在發生災難時使用。

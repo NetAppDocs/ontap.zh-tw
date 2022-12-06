@@ -126,12 +126,15 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 
 對於預先共用金鑰驗證方法、除非IPsec用戶端（例如Libreswan）要求、否則身分識別為選用項目。對於公開密碼匙基礎建設/憑證驗證方法、本機和遠端身分識別都是必要的。身分識別會指定在每一方的憑證中認證的身分識別、並用於驗證程序中。如果遠端識別身分不明、或是可能有許多不同的身分識別、請使用特殊的「任何」身分識別。
 
+.關於這項工作
 在不受限的情況下、可透過修改SPD項目或在SPD原則建立期間來指定身分識別。ONTAPSPD可以是IP位址或字串格式身分識別名稱。
 
+.步驟
 若要修改現有SPD的身分識別設定、請使用下列命令：
 
 《安全性IPsec原則修改》
 
+.命令範例
 「安全性IPsec原則修改-vserver _VS1_-name _test34_-local-identity _192.168.1.34_-reme-identity _client.fooboo.com_`」
 
 
@@ -140,6 +143,7 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 
 當少數用戶端需要使用IPsec時、每個用戶端只需使用一個SPD項目就足夠了。但是、當數百甚至數千個用戶端需要使用IPsec時、NetApp建議使用IPsec多重用戶端組態。
 
+.關於這項工作
 支援將多個網路上的多個用戶端連線至單一SVM IP位址、並啟用IPsec。ONTAP您可以使用下列其中一種方法來達成此目的：
 
 * *子網路組態*
@@ -170,6 +174,7 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 「安全性」IPsec原則建立-vserver _vserver_name_-name _policy_name_-local-ip-subnets_ipSEC_ip_address/32_-reme-ip-subnets_ip_address/subnet_-local-identity _local_id_-reme-identity _reme_id_`
 
 +
+.命令範例
 「安全性」IPsec原則建立-vserver _VS1_-name _subnet134_-local-ip-subnets_192.168.1.34 /32_-reme-ip-subnets_192.168.1.0/24_-local-identity _ontap_side identity_-reme-identity _client_side identity_
 
 ... 如果您使用*允許所有用戶端組態*來支援多個IPsec用戶端：
@@ -177,6 +182,7 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 「安全性」IPsec原則建立-vserver _vserver_name_-name _policy_name_-local-ip-Subnets_ipSEC_ip_address/32_-remite-ip子 網路_0.00.0.0/0_-local-ports_number_-local-identity _local_id_-remite-identity _remite_id_`
 
 +
+.命令範例
 「安全性」IPsec原則建立-vserver _VS1_-name _test35_-local-ip-Subnets_ipec_ip_address/32_-remite-ip子 網路_0.00.0.0/0_-local-port _2049_-local-identity _ontap_side identity_-remite-identity _client_identity_
 
 
@@ -193,6 +199,7 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 
 您可以使用統計資料命令來檢查IPsec SAS和IKE SAS的狀態。
 
+.命令範例
 IKE SA命令範例：
 
 「安全性IPsec show-ikesasa -node_hosting_node_name_for_Svm_ip_」

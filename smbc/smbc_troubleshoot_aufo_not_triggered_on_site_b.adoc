@@ -13,9 +13,11 @@ summary: 站台A故障不會觸發站台B上的非計畫性容錯移轉
 :imagesdir: ../media/
 
 
+.問題：
 [role="lead"]
 站台A故障不會觸發站台B上的非計畫性容錯移轉
 
+.可能原因#1：
 未設定中介器。要確定這是否是原因、請在站台B叢集上發出「napmirror中介show」命令。
 
 ....
@@ -24,8 +26,10 @@ This table is currently empty.
 ....
 此範例指出、「資訊管理器」並未在站台B上設定
 
+.解決方案：
 請確定已在兩個叢集上設定「訊務員」、狀態為「已連線」、仲裁設定為「真」。
 
+.可能原因#2：
 SnapMirror一致性群組不同步。若要判斷原因是否為此、請檢視事件記錄、以檢視一致性群組在站台發生故障期間是否同步。
 
 ....
@@ -35,6 +39,7 @@ Time                Node             Severity      Event
 ------------------- ---------------- ------------- ---------------------------
 10/1/2020 23:26:12  sti42-vsim-ucs511w ERROR       sms.status.out.of.sync: Source volume "vs0:zrto_cg_556844_511u_RW1" and destination volume "vs1:zrto_cg_556881_511w_DP1" with relationship UUID "55ab7942-03e5-11eb-ba5a-005056a7dc14" is in "out-of-sync" status due to the following reason: "Transfer failed."
 ....
+.解決方案：
 請完成下列步驟、在站台B上執行強制容錯移轉
 
 . 從站台B取消對應屬於一致性群組的所有LUN

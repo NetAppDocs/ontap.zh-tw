@@ -13,10 +13,12 @@ summary: 當您將Volume移至FabricPool 物件時、您可以選擇透過移動
 [role="lead"]
 當您將Volume移至FabricPool 物件時、您可以選擇透過移動來指定或變更Volume的分層原則。從功能不活動的資料報告功能開始、當您移動非FabricPool Volume時、會使用熱圖來讀取可分層區塊、並將冷資料移至該目的地的容量層。ONTAP FabricPool FabricPool
 
+.您需要的產品
 您必須瞭解變更分層原則、可能會影響資料冷卻及移至雲端層所需的時間。
 
 link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-move-a-volume["當您移動磁碟區時、分層原則會發生什麼事"]
 
+.關於這項工作
 如果非FabricPool磁碟區已啟用非作用中的資料報告功能、則當您將具有分層原則「自動」或「僅限快照」的磁碟區移至FabricPool 某個資料中心時、 從熱圖檔案讀取可調溫度的區塊、並使用該溫度將冷資料直接移至該目的地的容量層。FabricPool FabricPool
 
 如果您使用ONTAP 的是《ebricPools》（資料管理工具）、而您希望FabricPools使用非作用中的資料報告資訊、將資料直接移至容量層、則不應在Volume Move中使用「分層原則」（）選項。使用此選項會導致FabricPools忽略溫度資料、改為遵循ONTAP 發行版本更新至版本更新版本的動作。
@@ -38,6 +40,7 @@ link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-m
 
 
 
+.將Volume移至FabricPool 不全的範例
 下列範例將名為「VS1」SVM的「myvol2」磁碟區移至啟用FabricPool的「dest_FabricPool」Aggregate。磁碟區已明確設定為使用「無」分層原則：
 
 [listing]

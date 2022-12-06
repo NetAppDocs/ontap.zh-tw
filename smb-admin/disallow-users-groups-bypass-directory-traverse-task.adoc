@@ -13,8 +13,10 @@ summary: 如果您不希望使用者周遊檔案路徑中的所有目錄、因�
 [role="lead"]
 如果您不想讓使用者周遊檔案路徑中的所有目錄、因為使用者對周遊目錄沒有權限、您可以從儲存虛擬機器（SVM）上的本機SMB使用者或群組中移除「eChangeleNotifyPrivilege」權限。
 
+.開始之前
 將從中移除權限的本機或網域使用者或群組必須已經存在。
 
+.關於這項工作
 當移除網域使用者或群組的權限時、ONTAP 可能會聯絡網域控制器來驗證網域使用者或群組。如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
 
 .步驟
@@ -25,6 +27,7 @@ summary: 如果您不希望使用者周遊檔案路徑中的所有目錄、因�
 . 確認指定的使用者或群組已停用略過周遊檢查：「vserver CIFS user-and Groups priv榮幸 地顯示-vserver _vserver_name_（vserver CIFS使用者與群組權限）」
 
 
+.範例
 下列命令會禁止屬於「'example\eng'」群組的使用者略過目錄周遊檢查：
 
 [listing]
@@ -41,4 +44,5 @@ Vserver   User or Group Name    Privileges
 --------- --------------------- -----------------------
 vs1       EXAMPLE\eng           -
 ----
+.相關資訊
 xref:allow-users-groups-bypass-directory-traverse-task.adoc[允許使用者或群組略過目錄周遊檢查]

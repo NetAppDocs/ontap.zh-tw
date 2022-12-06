@@ -26,10 +26,12 @@ summary: 使用DNS存取本機或遠端來源以取得主機資訊
 
 您可以使用「vserver services name-service DNS」命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。
 
+.開始之前
 站台範圍的DNS伺服器必須可供主機名稱查詢。
 
 您應該設定多個DNS伺服器、以避免單點故障。如果您只輸入一個DNS伺服器名稱、「vserver services name-service DNS create」命令會發出警告。
 
+.關於這項工作
 請參閱 xref:configure_dynamic_dns_services.html[設定動態DNS服務] 如需在SVM上設定動態DNS的詳細資訊、
 
 .步驟
@@ -91,6 +93,7 @@ vs1.example.com   10.0.0.51  up        Response time (msec): 2
 
 您必須正確設定名稱服務交換器表、才能啟用ONTAP 支援功能、以參考本機或外部名稱服務來擷取主機資訊。
 
+.開始之前
 您必須決定要在環境中使用哪種名稱服務來進行主機對應。
 
 .步驟
@@ -106,6 +109,7 @@ vserver services name-service <ns-switch> show -vserver <vserver_name>
 ....
 
 
+.範例
 下列範例會在名稱服務交換器表中建立一個項目、讓SVM VS1先使用本機hosts檔案、然後再使用外部DNS伺服器來解析主機名稱：
 
 ....

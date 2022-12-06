@@ -16,6 +16,7 @@ summary: 廣播網域會將叢集中屬於同一個第2層網路的網路連接�
 [role="lead"]
 建立廣播網域、將叢集中屬於同一層2網路的網路連接埠分組。然後、SVM便可使用這些連接埠。
 
+.開始之前
 您打算新增至廣播網域的連接埠不得屬於其他廣播網域。
 
 .關於這項工作
@@ -60,10 +61,12 @@ summary: 廣播網域會將叢集中屬於同一個第2層網路的網路連接�
 . 驗證是否根據需要創建了廣播域："network port show -instance -dis廣播 域_new_ddomain_"
 
 
+.範例
 下列命令會在預設IPspace中建立廣播網域bcast1、將MTU設為1500、並新增四個連接埠：
 
 「網路連接埠廣播網域create -broadcast網域_bcast1_-MTU _151500 -連接埠_cluster1-01:e0e、cluster1-01:e0f、cluster1-02：e0e、cluster1-02：e0f_」
 
+.完成後
 您可以透過建立子網路來定義廣播網域中可用的IP位址集區、或是現在可以將SVM和介面指派給IPspace。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]。
 
 如果您需要變更現有廣播網域的名稱、請使用「network port廣播網域重新命名」命令。

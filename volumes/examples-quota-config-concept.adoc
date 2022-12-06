@@ -25,6 +25,7 @@ cluster1::>volume quota policy create -vserver vs1 -policy-name quota_policy_vs1
 ----
 cluster1::>vserver modify -vserver vs1 -quota-policy quota_policy_vs1_1
 ----
+.範例1：預設使用者配額
 您決定在vol1中對每個使用者設定50 MB的硬限制：
 
 [listing]
@@ -59,6 +60,7 @@ vol1               user    root        0B      -       1       -
 
 如果系統上的任何使用者（root使用者除外）嘗試執行在vol1中使用超過50 MB的動作（例如從編輯器寫入檔案）、則動作會失敗。
 
+.範例2：明確的使用者配額會覆寫預設的使用者配額
 如果您需要在Volume vol1中為使用者jsmith提供更多空間、請輸入下列命令：
 
 [listing]
@@ -95,6 +97,7 @@ vol1               user    root        0B      -       1       -
 
 因此、即使所有其他使用者仍限制為50 MB、jsmith仍可在vol1上使用高達80 MB的空間。
 
+.範例3：臨界值
 假設您想要在使用者達到其磁碟限制的5 MB以內時收到通知。若要為所有使用者建立45 MB的臨界值、以及為jsmith建立75 MB的臨界值、請變更現有的配額規則：
 
 [listing]
@@ -124,6 +127,7 @@ vol1               user    root        0B      -       1       -
 ----
 臨界值會顯示在「磁碟限制」欄的括弧中。
 
+.範例4：qtree上的配額
 假設您需要分割兩個專案的空間。您可以建立兩個名為proj1和proj2的qtree、以容納vol1中的專案。
 
 目前、使用者可以在qtree中使用與分配給整個Volume相同的空間（前提是使用root或其他qtree中的空間不會超過Volume的限制）。此外、每個qtree都可以擴充以使用整個Volume。如果您想要確保兩個qtree的成長都超過20 GB、您可以在磁碟區上建立預設的樹狀結構配額：
@@ -185,6 +189,7 @@ vol1     proj2     user    root        0B      -       1       -
 
 由於root使用者是檔案的擁有者、因此在為每個qtree建立預設使用者配額時、也會針對每個qtree上的root使用者建立特殊的追蹤配額。這些資訊會顯示在ID為root的行中。
 
+.範例5：qtree上的使用者配額
 您決定將使用者限制在proj1 qtree中的空間、比整個Volume中的空間要小。您想要避免在proj1 qtree中使用超過10 MB的資源。因此、您可以為qtree建立預設的使用者配額：
 
 [listing]

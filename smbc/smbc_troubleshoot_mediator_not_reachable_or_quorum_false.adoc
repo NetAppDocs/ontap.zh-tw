@@ -13,6 +13,7 @@ summary: 執行SnapMirror容錯移轉啟動命令之後、SnapMirror容錯移轉
 :imagesdir: ../media/
 
 
+.問題：
 [role="lead"]
 執行「napmirror容錯移轉開始」命令之後、「shnapmirror容錯移轉show」命令的輸出會顯示訊息、指出沒有設定「媒體」。
 
@@ -26,8 +27,10 @@ Path Path Type Status start-time end-time Reason
 vs0:/cg/cg vs1:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror failover cannot start because the source-side precheck failed. reason: Mediator not configured.
 05:50:42 05:50:43
 ....
+.原因：
 中介器尚未設定、或網路連線問題。
 
+.解決方案：
 如果沒有設定「促成者」、您必須先設定「促成者」、才能建立「SM - BC」關係。修正任何網路連線問題。使用SnapMirror中介程序show命令、確認來源站台和目的地站台上的協調器已連線且仲裁狀態為true。
 
 ....

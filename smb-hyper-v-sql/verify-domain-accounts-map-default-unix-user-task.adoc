@@ -13,6 +13,7 @@ summary: Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持
 [role="lead"]
 Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用的共用區。若要成功建立連線、電腦帳戶必須成功對應至UNIX使用者。完成此作業最方便的方法是將電腦帳戶對應至預設UNIX使用者。
 
+.關於這項工作
 Hyper-V和SQL Server使用網域電腦帳戶建立SMB連線。此外、SQL Server也會使用網域使用者帳戶做為進行SMB連線的服務帳戶。
 
 建立儲存虛擬機器（SVM）時ONTAP 、會自動建立名為「'pcuser'」（UID為「65534」）的預設使用者、以及名為「'pcuser'（gid為「65534」）的群組、並將預設使用者新增至「'pcuser'」群組。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
@@ -54,6 +55,7 @@ hy*vserver CIFS選項可修改-vserver * vserver_name*-default-unix-user-pcuser*
 
 
 
+.範例
 下列命令會判斷CIFS伺服器的預設使用者尚未設定、但會判斷「'pcuser'」使用者和「'pcuser'」群組是否存在。在SVM VS1上、「'pcuser'」使用者會被指派為CIFS伺服器的預設使用者。
 
 [listing]

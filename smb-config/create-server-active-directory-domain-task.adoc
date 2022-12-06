@@ -13,12 +13,14 @@ summary: 您可以使用vserver CIFS create命令在SVM上建立SMB伺服器、�
 [role="lead"]
 您可以使用「vserver CIFS create」命令在SVM上建立SMB伺服器、並指定其所屬的Active Directory（AD）網域。
 
+.開始之前
 您用來提供資料的SVM和LIF必須設定為允許SMB傳輸協定。生命期必須能夠連線到SVM上設定的DNS伺服器、以及要加入SMB伺服器之網域的AD網域控制器。
 
 任何有權在您要加入SMB伺服器的AD網域中建立機器帳戶的使用者、都可以在SVM上建立SMB伺服器。這可能包括來自其他網域的使用者。
 
 從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到URI時、請在「-keytab-uri」參數中加入「vserver CIFS」命令。
 
+.關於這項工作
 在活動目錄網域中建立SMB伺服器時：
 
 * 指定網域時、您必須使用完整網域名稱（FQDN）。
@@ -91,6 +93,7 @@ Default Site Used by LIFs Without Site Membership:
 . 如有需要、請啟用與網域控制器的加密通訊ONTAP （更新版本：《Vserver CIFS安全性修改-vserver Svm_name -Encryption-required for DC-connection true》）
 
 
+.範例
 下列命令會在「example.com`"網域」的SVM vs2.example.com上建立名為「shmb_server02」的SMB伺服器。機器帳戶是在「'ou=eng,ou=corp,d=exam,dc=exam,d=com'」容器中建立。SMB伺服器會被指派一個NetBios別名。
 
 [listing]

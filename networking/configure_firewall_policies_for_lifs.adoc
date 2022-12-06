@@ -124,6 +124,7 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 
 視組態而定、您可能無法在特定類型的生命期（通常是管理生命期和叢集間生命期）上存取服務。在某些情況下、您甚至可能無法存取資料生命期。
 
+.您可以期望的行為
 從版本9.4到版本9.6的功能設計、可在升級時提供無縫轉換。ONTAP ONTAP如果已透過特定類型的lifs存取portmap服務、則可透過這些類型的lifs繼續存取。如同先前ONTAP 的版本、您可以在LIF類型的防火牆原則中、指定防火牆內可存取的服務。
 
 叢集中的所有節點都必須執行ONTAP 從功能上到ONTAP 功能上的從功能上的資訊、才能使行為生效。只有傳入流量會受到影響。
@@ -135,6 +136,7 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 * 您可以視需要將portmap服務新增至預設或自訂原則、並視需要移除服務。
 
 
+.如何新增或移除portmap服務
 若要將portmap服務新增至SVM或叢集防火牆原則（可在防火牆內存取）、請輸入：
 
 「系統服務防火牆原則create -vserver SVM -policy mgmt| intercluster | data| custom -service portmap」
@@ -191,6 +193,7 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 . 使用「network interface show -Fields firewall-policy」命令、確認原則已正確新增至LIF。
 
 
+.建立防火牆原則並將其套用至LIF的範例
 下列命令會建立名為data_http的防火牆原則、以啟用從10.10子網路IP位址存取HTTP和HTTPS傳輸協定、將該原則套用至SVM VS1上名為data1的LIF、然後顯示叢集上的所有防火牆原則：
 
 ....

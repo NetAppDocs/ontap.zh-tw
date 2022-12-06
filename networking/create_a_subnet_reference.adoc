@@ -16,6 +16,7 @@ summary: 建立子網路來配置或保留特定的IP位址區塊、以供ONTAP 
 [role="lead"]
 您可以建立子網路來配置或保留特定的IPv4或IPv6位址區塊、以供ONTAP 進行各種網路組態。這可讓您更輕鬆地建立介面、方法是指定子網路名稱、而非為每個新介面指定IP位址和網路遮罩值。
 
+.開始之前
 您要新增子網路的廣播網域和IPspace必須已經存在。
 
 .關於這項工作
@@ -24,6 +25,7 @@ summary: 建立子網路來配置或保留特定的IP位址區塊、以供ONTAP 
 * 如果您在定義子網路時指定閘道、則當使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。如果您不使用子網路、或在定義子網路時未指定閘道、則需要使用「Route create」命令手動新增至SVM的路由。
 
 
+.步驟
 建立子網路：
 
 ....
@@ -60,6 +62,7 @@ network subnet create -subnet-name sub1 -broadcast-domain Default-1 -subnet 192.
 ....
 network subnet create -subnet-name sub2 -broadcast-domain Default -subnet 3FFE::/64 - gateway 3FFE::1 -ip-ranges "3FFE::10-3FFE::20"
 ....
+.完成後
 您可以使用子網路中的位址、將SVM和介面指派給IPspace。
 
 如果您需要變更現有子網路的名稱、請使用「network subnet rame」命令。

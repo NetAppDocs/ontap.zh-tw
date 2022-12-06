@@ -13,6 +13,7 @@ summary: 當叢集上安裝了Snapshot 9.9.1時、當SM至BC一致性群組關�
 :imagesdir: ../media/
 
 
+.問題：
 [role="lead"]
 當叢集上安裝了Snapshot 9.9.1時、當SM至BC一致性群組關係處於接管狀態時、執行「napmirror DELETE」命令會失敗。ONTAP
 
@@ -21,6 +22,7 @@ C2_cluster::> snapmirror delete  vs1:/cg/dd
 
 Error: command failed: RPC: Couldn't make connection
 ....
+.解決方案
 當SMBC關係中的節點處於接管狀態時、請執行SnapMirror刪除和釋放作業、並將「-force」選項設為true。
 
 ....

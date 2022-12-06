@@ -16,6 +16,7 @@ summary: 您可以移除零RTO同步SnapMirror保護、並刪除SMBC關係組態
 [role="lead"]
 您可以移除零RTO同步SnapMirror保護、並刪除SMBC關係組態。
 
+.關於這項工作
 在刪除SM與BC關係之前、必須先取消對應目的地叢集中的所有LUN。在LUN未對應且重新掃描主機之後、SCSI目標會通知主機LUN資源清冊已變更。零RTO次要磁碟區上的現有LUN會在零RTO關係刪除後變更、以反映新的身分識別。主機會將次要Volume LUN視為與來源Volume LUN無關的新LUN。在刪除關聯之後、次要磁碟區仍會保留DP磁碟區。您可以發出SnapMirror中斷命令、將其轉換為讀取/寫入。當關係未反轉時、在容錯移轉狀態中不允許刪除關係。
 
 .步驟

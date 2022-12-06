@@ -31,6 +31,7 @@ NOTE: 您不應該在網路介面上建立與交換器原生VLAN相同識別碼�
 
 您可以使用System Manager或「network port vlan create」命令、建立一個VLAN、以維護同一個網路網域內的個別廣播網域。
 
+.開始之前
 確認已符合下列要求：
 
 * 部署在網路中的交換器必須符合IEEE 802.1Q標準、或是具有廠商專屬的VLAN實作。
@@ -40,6 +41,7 @@ NOTE: 您不應該在網路介面上建立與交換器原生VLAN相同識別碼�
 * VLAN並非在不含成員連接埠的介面群組連接埠上建立。
 
 
+.關於這項工作
 建立VLAN會將VLAN附加至叢集中指定節點上的網路連接埠。
 
 當您第一次透過連接埠設定VLAN時、連接埠可能會關閉、導致網路暫時中斷連線。後續新增至相同連接埠的VLAN不會影響連接埠狀態。
@@ -100,6 +102,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 
 您可以變更廣播網域或停用VLAN。
 
+.使用System Manager編輯VLAN
 從ONTAP 功能更新9.12.0開始、您可以自動選取廣播網域、或從清單中手動選取。先前的廣播網域一律會根據第2層連線功能自動選取。如果您手動選取廣播網域、會出現一則警告訊息、指出手動選取廣播網域可能會導致連線中斷。
 
 .步驟
@@ -120,8 +123,10 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 
 從插槽中移除NIC之前、您可能必須先刪除VLAN。當您刪除VLAN時、它會自動從所有使用它的容錯移轉規則和群組中移除。
 
+.開始之前
 請確定沒有任何與VLAN相關的生命里數。
 
+.關於這項工作
 從連接埠刪除最後一個VLAN可能會導致網路暫時中斷與連接埠的連線。
 
 您遵循的程序取決於您使用的介面- System Manager或CLI：
@@ -143,6 +148,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 --
 *使用CLI刪除VLAN*
 
+.步驟
 使用「network port vlan DELETE」命令刪除VLAN。
 
 以下範例說明如何從節點「叢集-1-01」上的網路連接埠「e1c」刪除VLAN「e1c-80」：

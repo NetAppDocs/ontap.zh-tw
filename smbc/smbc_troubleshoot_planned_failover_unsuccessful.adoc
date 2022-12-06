@@ -13,6 +13,7 @@ summary: 執行「napmirror容錯移轉開始」命令之後、「napmirror容�
 :imagesdir: ../media/
 
 
+.問題：
 [role="lead"]
 執行「napmirror容錯移轉開始」命令之後、「napmirror容錯移轉show」命令的輸出會顯示一則訊息、指出正在進行不中斷營運。
 
@@ -24,6 +25,8 @@ Path Path Type Status start-time end-time Reason
 vs1:/cg/cg vs0:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror Failover cannot start because a volume move is running. Retry the command once volume move has finished.
                                                           08:35:04 08:35:04
 ....
+.原因：
 在進行不中斷營運（包括磁碟區移動、集合體重新配置及儲存容錯移轉）時、無法開始計畫性的容錯移轉。
 
+.解決方案：
 等待不中斷營運完成、然後再次嘗試容錯移轉作業。

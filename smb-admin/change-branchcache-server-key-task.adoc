@@ -13,6 +13,7 @@ summary: 您可以修改儲存虛擬機器（SVM）上的BranchCache組態、並
 [role="lead"]
 您可以修改儲存虛擬機器（SVM）上的BranchCache組態、並指定不同的伺服器金鑰、藉此變更BranchCache伺服器金鑰。
 
+.關於這項工作
 您可以將伺服器金鑰設定為特定值、以便在多個伺服器為相同檔案提供BranchCache資料時、用戶端可以使用相同伺服器金鑰來自任何伺服器的雜湊。
 
 變更伺服器金鑰時、您也必須清除雜湊快取。在清除雜湊之後、ONTAP 當啟用了BranchCache的用戶端發出新要求時、會建立新的雜湊。
@@ -25,6 +26,7 @@ summary: 您可以修改儲存虛擬機器（SVM）上的BranchCache組態、並
 . 使用「vserver CIFS BranchCache show」命令來驗證BranchCache組態是否正確。
 
 
+.範例
 下列範例設定新的伺服器金鑰、其中包含空格並清除SVM VS1上的雜湊快取：
 
 [listing]
@@ -40,4 +42,5 @@ cluster1::> vserver cifs branchcache show -vserver vs1
 Encryption Key Used to Secure the Hashes: -
         CIFS BranchCache Operating Modes: per_share
 ----
+.相關資訊
 xref:reasons-invalidates-branchcache-hashes-concept.adoc[理由ONTAP 不驗證BranchCache雜湊]

@@ -13,6 +13,7 @@ summary: 透過DNS自動探索網域控制器。ONTAP或者、您可以將一個
 [role="lead"]
 透過DNS自動探索網域控制器。ONTAP或者、您可以將一個或多個網域控制器新增至特定網域的慣用網域控制器清單。
 
+.關於這項工作
 如果指定網域的慣用網域控制器清單已經存在、則新清單會與現有清單合併。
 
 .步驟
@@ -28,10 +29,12 @@ summary: 透過DNS自動探索網域控制器。ONTAP或者、您可以將一個
 
 
 
+.範例
 下列命令會將網域控制器172.17.102.25和172.17.102.24新增至SVM VS1上的SMB伺服器用來管理cifs.lab.example.com網域外部存取的慣用網域控制器清單。
 
 [listing]
 ----
 cluster1::> vserver cifs domain preferred-dc add -vserver vs1 -domain cifs.lab.example.com -preferred-dc 172.17.102.25,172.17.102.24
 ----
+.相關資訊
 xref:commands-manage-preferred-domain-controllers-reference.adoc[管理慣用網域控制器的命令]

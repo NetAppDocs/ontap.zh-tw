@@ -13,6 +13,7 @@ summary: 根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使�
 [role="lead"]
 根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使用者認證時、支援最多32個群組ID。使用AUTH_SYS驗證時、預設的群組ID最大數量為16、如RFC 5531所定義。如果您的使用者成員超過預設群組數、則最多可增加1,024個。
 
+.關於這項工作
 如果使用者的認證中有超過預設的群組ID數目、則其餘的群組ID會被刪減、而且使用者在嘗試從儲存系統存取檔案時可能會收到錯誤訊息。您應該將每個SVM的最大群組數設定為代表環境中最大群組數的數字。
 
 下表顯示「vserver NFS modify」命令的兩個參數、可決定三個範例組態中的群組ID數目上限：
@@ -108,6 +109,7 @@ Check Alignment of PHs>+vserver NFS modify -vserver vserver_name -extended Group
 
 
 
+.範例
 下列範例可啟用AUTH_SYS驗證的延伸群組、並將AUTH_SYS和RPCSEC_GSS驗證的延伸群組數目上限設為512。這些變更僅適用於存取名為VS1的SVM的用戶端：
 
 [listing]

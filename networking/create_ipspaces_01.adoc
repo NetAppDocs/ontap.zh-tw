@@ -16,6 +16,7 @@ summary: IPspaces是SVM所在的不同IP位址空間
 [role="lead"]
 IPspaces是儲存虛擬機器（SVM）所在的不同IP位址空間。當您需要SVM擁有自己的安全儲存、管理和路由時、可以建立IPspaces。
 
+.關於這項工作
 整個叢集的IP空間上限為512個。叢集範圍的限制可減少至256個IPspace、適用於FAS2220或FAS2240等平台、其中包含6 GB RAM或更少RAM的節點。請參閱Hardware Universe 《參考資訊（英文）：判斷您的平台是否有其他限制。
 
 https://hwu.netapp.com/["NetApp Hardware Universe"^]
@@ -23,6 +24,7 @@ https://hwu.netapp.com/["NetApp Hardware Universe"^]
 
 NOTE: IPspace名稱不能為「ALL」、因為「ALL」是系統保留的名稱。
 
+.步驟
 建立IPspace：
 
 ....
@@ -33,6 +35,7 @@ network ipspace create -ipspace ipspace_name
 ....
 network ipspace create -ipspace ipspace1
 ....
+.完成後
 如果您在MetroCluster 具有不含任何組態的叢集中建立IPspace、則必須手動將IPspace物件複寫到合作夥伴叢集。在IPspace複寫之前建立並指派給IPspace的任何SVM、將不會複寫到合作夥伴叢集。
 
 廣播網域會自動在「預設」IPspace中建立、並可使用下列命令在IPspaces之間移動：
