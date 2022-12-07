@@ -16,14 +16,14 @@ summary: 您可以使用volume create命令、在新的Volume上啟用加密功�
 .關於這項工作
 您可以使用NetApp Volume Encryption（NVE）加密磁碟區、從ONTAP NetApp Aggregate Encryption（NAE）開始加密磁碟區。若要深入瞭解NAE和NVE、請參閱 xref:configure-netapp-volume-encryption-concept[Volume加密總覽]。
 
-在支援的過程會因您使用的版本和您的特定組態而有所不同ONTAP ONTAP ：
+啟用更新版本的加密程序ONTAP 會因ONTAP 您使用的版本和您的特定組態而有所不同：
 
 * 如果ONTAP 啟用、請從支援的問題9.4開始 `cc-mode` 設定Onboard Key Manager時、您可以使用建立的磁碟區 `volume create` 無論您是否指定、命令都會自動加密 `-encrypt true`。
 * 在更新版本的版本中、您必須使用ONTAP `-encrypt true` 與 `volume create` 啟用加密的命令（前提是您未啟用 `cc-mode`）。
-* 如果您使用ONTAP 的是NAE、則必須在Aggregate層級啟用NAE。請參閱 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE授權啟用Aggregate層級加密] 以取得此工作的詳細資料。
-* 從功能更新至功能更新9.7開始ONTAP 、新建立的磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。
+* 如果您想要在ONTAP 32位址9.6中建立NAE Volume、則必須在Aggregate層級啟用NAE。請參閱 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE授權啟用Aggregate層級加密] 以取得此工作的詳細資料。
+* 從功能更新至功能更新9.7開始ONTAP 、新建立的磁碟區會在您擁有VE授權、以及內建或外部金鑰管理時、依預設進行加密。根據預設、在NAE Aggregate中建立的新磁碟區將為NAE類型、而非NVE。
 +
-** 若您使用、請參閱ONTAP 更新版本的 `-encrypt true` 若要在NAE Aggregate中建立磁碟區、該磁碟區將採用NVE加密、而非NAE。NAE Aggregate中的所有磁碟區都必須使用NVE或NAE進行加密。
+** 如有新增、請參閱ONTAP 更新版本的 `-encrypt true` 至 `volume create` 命令若要在NAE Aggregate中建立磁碟區、該磁碟區將採用NVE加密、而非NAE。NAE Aggregate中的所有磁碟區都必須使用NVE或NAE進行加密。
 
 
 
@@ -32,7 +32,7 @@ summary: 您可以使用volume create命令、在新的Volume上啟用加密功�
 NOTE: NAE集合體不支援純文字磁碟區。
 
 .步驟
-. 建立新磁碟區、並指定是否在磁碟區上啟用加密：
+. 建立新磁碟區、並指定是否在磁碟區上啟用加密。如果新磁碟區位於NAE Aggregate中、則根據預設、該磁碟區將是NAE磁碟區：
 +
 [cols="25,75"]
 |===
@@ -44,20 +44,17 @@ NOTE: NAE集合體不支援純文字磁碟區。
  a| 
 NAE Volume
  a| 
-`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
-
-
-NOTE: 在32：9.6中ONTAP 、您必須在Aggregate層級啟用NAE、才能建立NAE Volume。
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_`
 
 
 
  a| 
 NVE Volume
  a| 
-`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -encrypt true` +
 
 
-NOTE: 如果您使用ONTAP 的是版本不只是版本的問題、請新增 `-encrypt true` 命令。將此參數用於ONTAP 支援NAE加密的更新版本（適用於更新版本）、磁碟區將使用NVE。
+NOTE: 在不支援NAE的情況下、使用支援的版本為ONTAP `-encrypt true` 指定應使用NVE加密磁碟區。在以NAE集合體建立Volume的版本中ONTAP 、 `-encrypt true` 取代預設的NAE加密類型、改為建立NVE Volume。
 
 
 
