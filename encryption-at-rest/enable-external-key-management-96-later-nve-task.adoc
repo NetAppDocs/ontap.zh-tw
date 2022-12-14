@@ -11,7 +11,7 @@ summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加�
 
 
 [role="lead"]
-您可以使用一或多個KMIP伺服器來保護叢集用來存取加密資料的金鑰。從ONTAP Sesk9.6開始、您可以使用一或多個KMIP伺服器來保護特定SVM用來存取加密資料的金鑰。
+您可以使用一或多個KMIP伺服器來保護叢集用來存取加密資料的金鑰。從功能支援支援的9.6開始ONTAP 、您可以選擇設定獨立的外部金鑰管理程式、以保護資料SVM用來存取加密資料的金鑰。
 
 從ONTAP 功能性的9.11.1開始、您可以在每個主金鑰伺服器上新增最多3個次要金鑰伺服器、以建立叢集式金鑰伺服器。如需詳細資訊、請參閱 xref:configure-cluster-key-server-task.html[設定叢集式外部金鑰伺服器]。
 
@@ -19,6 +19,7 @@ summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加�
 * KMIP SSL用戶端和伺服器憑證必須已安裝。
 * 您必須是叢集或SVM管理員、才能執行此工作。
 * 如果您想要啟用MetroCluster 外部金鑰管理功能來管理整個環境、MetroCluster 則必須先完整設定好、才能啟用外部金鑰管理。
+* 在這個不支援的環境中、您必須在兩個叢集上安裝KMIP SSL憑證MetroCluster 。
 
 
 .關於這項工作
@@ -49,7 +50,9 @@ summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加�
 +
 [NOTE]
 ====
-「安全金鑰管理程式外部啟用」命令取代了「安全金鑰管理程式設定」命令。如果您在叢集登入提示字元中執行命令、則預設為目前叢集的管理SVM。您必須是叢集管理員、才能設定叢集範圍。您可以執行「安全金鑰管理程式外部修改」命令來變更外部金鑰管理組態。
+** 。 `security key-manager external enable` 命令會取代 `security key-manager setup` 命令。如果您在叢集登入提示字元中執行命令、 `_admin_SVM_` 預設為目前叢集的管理SVM。您必須是叢集管理員、才能設定叢集範圍。您可以執行 `security key-manager external modify` 命令以變更外部金鑰管理組態。
+** 在支援管理SVM的環境中、如果您要設定外部金鑰管理、則必須重複執行MetroCluster `security key-manager external enable` 合作夥伴叢集上的命令。
+
 
 ====
 +
@@ -67,7 +70,9 @@ clusterl::> security key-manager external enable -vserver cluster1 -key-servers 
 +
 [NOTE]
 ====
-如果您在SVM登入提示字元中執行命令、則「VM」預設為目前的SVM。您必須是叢集或SVM管理員、才能設定SVM範圍。您可以執行「安全金鑰管理程式外部修改」命令來變更外部金鑰管理組態。
+** 如果您在SVM登入提示字元中執行命令、則「VM」預設為目前的SVM。您必須是叢集或SVM管理員、才能設定SVM範圍。您可以執行「安全金鑰管理程式外部修改」命令來變更外部金鑰管理組態。
+** 在支援資料SVM的環境中、如果您要設定外部金鑰管理、就不需要重複執行MetroCluster `security key-manager external enable` 合作夥伴叢集上的命令。
+
 
 ====
 +

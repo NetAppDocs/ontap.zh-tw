@@ -51,23 +51,21 @@ summary: 您可以監控SMB加密統計資料、並判斷哪些已建立的工�
 
 * CIFS可讓您監控所有SMB 3.0工作階段的SMB加密。
 +
-[NOTE]
-====
 SMB 3.0統計資料會包含在「CIFS」物件的輸出中。如果您想要比較加密工作階段的數量與工作階段總數、可以比較「Encrypted_sessions」計數器的輸出與「etided_sessions」計數器的輸出。
 
- If you want to compare the number of encrypted share connections to the total number of share connections, you can compare output for the `encrypted_share_connections` counter with the output for the `connected_shares` counter.
-====
++
+如果您要比較加密共用連線的數目與共用連線的總數、可以比較的輸出 `encrypted_share_connections` 以的輸出進行計數 `connected_shares` 計數器。
+
 * 「拒絕的未加密工作階段」提供嘗試建立SMB工作階段的次數、此工作階段需要從不支援SMB加密的用戶端進行加密。
 * 「拒絕的_未加密的共享區」提供嘗試連線至SMB共用區的次數、此SMB共用區需要從不支援SMB加密的用戶端進行加密。
 
 
 您必須先開始收集統計資料樣本、才能檢視結果資料。如果不停止資料收集、您可以檢視範例中的資料。停止資料收集可提供固定的範例。不停止資料收集可讓您取得更新的資料、以便與先前的查詢進行比較。這項比較可協助您識別趨勢。
 
-link:../performance-admin/index.html["效能管理"]
-
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 開始資料收集：「統計資料起始物件｛CIFS | SMB1| smb2｝-instance _instance_-same-id _sample _ID_[-node_node_name_]」
+. 將權限層級設為進階：+「Set -priv榮幸advanc進 階」
+. 開始資料收集：+
+`statistics start -object {cifs|smb1|smb2} -instance _instance_ -sample-id _sample_ID_ [-node _node_name_]`
 +
 如果未指定"-same-id"參數、命令會為您產生範例識別碼、並將此範例定義為CLI工作階段的預設範例。「-sample-id」的值是一個字串。如果您在相同的CLI工作階段中執行此命令、但未指定「-same-id」參數、則命令會覆寫先前的預設範例。
 
@@ -125,10 +123,12 @@ link:../performance-admin/index.html["效能管理"]
 +
 如果您只想顯示單一節點的資訊、請指定選用的「節點」參數。
 
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理員權限等級：+「設置權限管理」
 
 
 .範例
+[%collapsible]
+====
 以下範例說明如何監控儲存虛擬機器（SVM）VS1上的SMB 3.0加密統計資料。
 
 下列命令會移至進階權限層級：
@@ -228,7 +228,8 @@ Scope: vsim2
 
 1 entry was displayed.
 ----
+====
 .相關資訊
 xref:determine-statistics-objects-counters-available-task.adoc[判斷可用的統計資料物件和計數器]
 
-link:../performance-config/index.html["效能監控快速設定"]
+link:../performance-admin/index.html["效能監控與管理總覽"]

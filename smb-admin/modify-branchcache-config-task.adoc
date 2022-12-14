@@ -32,7 +32,7 @@ summary: 您可以修改SVM上的BranchCache服務組態、包括變更雜湊存
  a| 
 「Volume size -vserver vserver_name -volume volume volume volume名稱-new-size new_size[k| m|g|t]」如果包含雜湊存放區的磁碟區已滿、您可能可以增加磁碟區的大小。您可以將新的Volume大小指定為數字、然後再指定單位。
 
-請參閱 link:../volumes/index.html["邏輯儲存管理"] 以取得有關增加磁碟區大小的詳細資訊。
+深入瞭解 link:../volumes/commands-manage-flexvol-volumes-reference.html["管理FlexVol 功能"]
 
 
 
@@ -59,11 +59,12 @@ BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
  a| 
 「Vserver CIFS BranchCache modify -vserver vserver_name -operation-tMode｛per共享區| all-shares|停用｝」
 
-[NOTE]
-====
-修改操作模式時、您應該注意下列事項：- ONTAP 當SMB工作階段設定完成時、就會向您宣傳支援某個共用區的BranchCache。-啟用了BranchCache之後、已建立工作階段的用戶端必須中斷連線並重新連線、才能使用此共用區的快取內容。
+修改操作模式時、請注意下列事項：
 
-====
+** 設定SMB工作階段時、會針對共用區通告BranchCache支援ONTAP 。
+** 啟用了BranchCache之後、已建立工作階段的用戶端必須中斷連線並重新連線、才能使用此共用區的快取內容。
+
+
 
 
  a| 
@@ -74,6 +75,3 @@ BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
 |===
 . 使用「vserver CIFS BranchCache show」命令來驗證組態變更。
 
-
-.相關資訊
-link:../volumes/index.html["邏輯儲存管理指南"]

@@ -39,10 +39,15 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
 
 * 如果您的平台並非ASA 執行ONTAP 版本9.11.1或更新版本的All SAN Array（更新版本）平台、您就無法將iSCSI LIF從一個節點移轉至另一個節點。
 +
-若要解決此限制、您必須在目的地節點上建立iSCSI LIF。如需建立iSCSI LIF的準則相關資訊、請參閱 link:../san-admin/index.html["SAN管理"^]。
+若要解決此限制、您必須在目的地節點上建立iSCSI LIF。深入瞭解 link:../san-admin/asa-iscsi-lif-fo-task.html#manage-iscsi-lifs-using-the-ontap-cli["建立iSCSI LIF"]。
 
-* 如果您想要透過RDMA移轉LIF（網路介面）for NFS、則必須確保目的地連接埠具有RoCE功能。您必須執行ONTAP 版本S廳9.10.1或更新版本、才能使用CLI移轉LIF、ONTAP 或使用System Manager移轉版本。在System Manager中、一旦您選取了具備RoCE功能的目的地連接埠、就必須勾選*使用roce連接埠*旁的方塊、才能成功完成移轉。如需詳細資訊、請參閱 xref:../nfs-rdma/configure-lifs-task.html[透過RDMA設定NFS的LIF]。
-* 當您移轉來源或目的地LIF時、VMware VAAI複製卸載作業會失敗。如需VMware VAAI的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS參考資料"^] 或 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D97EE182-9068-4BD8-A3BF-F5C458303740.html["SAN管理"^]。
+* 如果您想要透過RDMA移轉LIF（網路介面）for NFS、則必須確保目的地連接埠具有RoCE功能。您必須執行ONTAP 版本S廳9.10.1或更新版本、才能使用CLI移轉LIF、ONTAP 或使用System Manager移轉版本。在System Manager中、一旦您選取了具備RoCE功能的目的地連接埠、就必須勾選*使用roce連接埠*旁的方塊、才能成功完成移轉。深入瞭解 link:../nfs-rdma/configure-lifs-task.html["透過RDMA設定NFS的LIF"]。
+* 當您移轉來源或目的地LIF時、VMware VAAI複製卸載作業會失敗。深入瞭解卸載複本：
++
+** link:../nfs-admin/support-vmware-vstorage-over-nfs-concept.html["NFS環境"]
+** link:../san-admin/storage-virtualization-vmware-copy-offload-concept.html["SAN環境"]
+
+
 
 
 您遵循的程序取決於您使用的介面- System Manager或CLI：
