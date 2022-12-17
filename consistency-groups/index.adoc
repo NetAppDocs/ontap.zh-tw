@@ -17,7 +17,7 @@ summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括�
 
 一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的SESSESE Volume、並可透過ONTAP 「RESSREST API」或「System Manager」（系統管理程式）的「* Storage（儲存設備）> Consistency Groups（一致性群組）*」功能表項目
 
-一致性群組可以獨立存在、也可以是階層關係。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
+一致性群組可作為個別實體或階層關係存在。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
 
 image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
 
@@ -83,38 +83,6 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 使用ONTAP REST API建立的一致性群組快照可透過System Manager的一致性群組介面及一致性群組API端點來管理。
 
 使用ONTAPI命令「Cg - start」和「Cg - commit」建立的快照、將無法識別為一致性群組快照、因此無法透過System Manager的一致性群組介面或ONTAP 透過該API中的一致性群組端點進行管理。
-
-
-
-== 一致性群組物件限制
-
-|===
-
-
-| 一致性群組 | 範圍 | 最低 | 最大值 
-
-
-| 一致性群組數 | 叢集 | 0 | 與叢集中的最大Volume數相同 
-
-
-| 父一致性群組數 | 叢集 | 0 | 與叢集中的最大Volume數相同 
-
-
-| 個別與父一致性群組的數量 | 叢集 | 0 | 與叢集中的最大Volume數相同 
-
-
-| 一致性群組 | 與叢集中的最大Volume數相同 | 1. | 80 
-
-
-| 父一致性群組子系中的磁碟區數目 | 父一致性群組 | 1. | 80 
-
-
-| 子一致性群組中的磁碟區數目 | 子一致性群組 | 1. | 80 
-
-
-| 父一致性群組中的子一致性群組數 | 父一致性群組 | 1. | 5. 
-|===
-如果您使用的是SM - BC、請參閱 link:../smbc/smbc_plan_additional_restrictions_and_limitations.html#volumes["SM - BC限制與限制"]。
 
 
 
