@@ -2,7 +2,7 @@
 permalink: smb-admin/configure-kerberos-aes-encryption-concept.html 
 sidebar: sidebar 
 keywords: security, kerberos-based, communication, enable, aes-256, aes-128, aes, encryption, smb, server, default, svm, advanced encryption standard, configure, configure strong security for kerberos-based communication by using aes encryption 
-summary: 為了以Kerberos為基礎的通訊提供最強大的安全性、您可以在SMB伺服器上啟用AES-256和AES-128加密。根據預設、當您在SVM上建立SMB伺服器時、AES加密會停用。您必須讓IT充分利用進階加密標準（AES）加密所提供的強大安全功能。 
+summary: 為了以Kerberos為基礎的通訊提供最強大的安全性、您可以在SMB伺服器上啟用AES-256和AES-128加密。根據預設、當您在SVM上建立SMB伺服器時、會停用進階加密標準（AES）加密。您必須讓IT能夠充分利用AES加密所提供的強大安全性。 
 ---
 = 使用AES加密來設定Kerberos通訊的強大安全性
 :allow-uri-read: 
@@ -11,24 +11,26 @@ summary: 為了以Kerberos為基礎的通訊提供最強大的安全性、您可
 
 
 [role="lead"]
-為了以Kerberos為基礎的通訊提供最強大的安全性、您可以在SMB伺服器上啟用AES-256和AES-128加密。根據預設、當您在SVM上建立SMB伺服器時、AES加密會停用。您必須讓IT充分利用進階加密標準（AES）加密所提供的強大安全功能。
+為了以Kerberos為基礎的通訊提供最強大的安全性、您可以在SMB伺服器上啟用AES-256和AES-128加密。根據預設、當您在SVM上建立SMB伺服器時、會停用進階加密標準（AES）加密。您必須讓IT能夠充分利用AES加密所提供的強大安全性。
 
 SMB的Kerberos相關通訊是在SVM上建立SMB伺服器期間、以及SMB工作階段設定階段期間使用。SMB伺服器支援下列Kerberos通訊加密類型：
 
-* RC4-HMAC
-* 第
-* AES 128
 * AES 256
+* AES 128
+* 第
+* RC4-HMAC
 
 
 如果您想要使用最高的安全性加密類型進行Kerberos通訊、您應該在SVM上啟用AES加密來進行Kerberos通訊。
+
+建立SMB伺服器時、網域控制器會在Active Directory中建立電腦帳戶。此時、Kdc會得知特定機器帳戶的加密功能。之後、會選取特定的加密類型來加密用戶端在驗證期間向伺服器顯示的服務票證。
+
+從ONTAP 《支援資料》9.12.1開始、您可以指定要向Active Directory（AD）kdc通告的加密類型。您可以使用 `-advertised-enc-types` 可啟用建議加密類型的選項、您也可以使用此選項來停用較弱的加密類型。瞭解操作方法 link:enable-disable-aes-encryption-kerberos-task.html["啟用和停用Kerberos型通訊的加密類型"]。
 
 [NOTE]
 ====
 SMB 3.0提供Intel AES新指令（Intel AES NI）、可改善AES演算法、並以支援的處理器系列產品加速資料加密。從SMB 3.3.1開始、AES-120-GCM取代AES-120-CCMs做為SMB加密所使用的雜湊演算法。
 
 ====
-建立SMB伺服器時、網域控制器會在Active Directory中建立電腦帳戶。此時、Kdc會得知特定機器帳戶的加密功能。之後、會選取特定的加密類型來加密用戶端在驗證期間向伺服器顯示的服務票證。
-
 .相關資訊
 xref:modify-server-kerberos-security-settings-task.adoc[修改CIFS伺服器Kerberos安全性設定]
