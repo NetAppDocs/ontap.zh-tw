@@ -22,6 +22,7 @@ summary: 從ONTAP SVM-DR FlexVol 來源開始、您可以將一個Svm-DR Volume�
 
 
 .步驟
+. 使用進階權限模式登入： `set -privilege advanced`
 . 從目的地更新SVM-DR關係：
 +
 h.* SnapMirror更新-destination-path destination_Svm_name：-source-path svm_name:*
@@ -33,6 +34,9 @@ SnapMirror SHOGAL*
 . 從目的地SVM、確認FlexVol 支援的不只是支援轉換的功能：
 +
 ‘* Volume conversion start -vserver Svm_name -volume vol_name -clCheck only true*’（'磁碟區轉換開始- vserver Svm_name -磁碟區vol_name -僅檢查true *）
+
++
+如果此命令產生「這是目的地SVMDR Volume」以外的任何錯誤、您可以採取適當的修正行動、再次執行命令、然後繼續轉換。
 
 . 從目的地停用SVM-DR關係上的傳輸：
 +
