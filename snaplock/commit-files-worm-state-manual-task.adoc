@@ -1,16 +1,22 @@
 ---
 permalink: snaplock/commit-files-worm-state-manual-task.html 
 sidebar: sidebar 
-keywords: commit, file, worm, manually, nfs, cifs, read, only 
-summary: 您可以將檔案變成唯讀、以手動方式將檔案提交至WORM。您可以透過NFS或CIFS使用任何適當的命令或程式、將檔案的讀寫屬性變更為唯讀。 
+keywords: commit, file, worm, manually, nfs, cifs, read, only, automatically, program, appendable, nfs, cifs, chunk, vam 
+summary: 您可以手動或自動提交檔案至WORM（一次寫入、多次讀取）。您也可以建立WORM可應用檔案。 
 ---
-= 手動將檔案提交至WORM
+= 將檔案提交至WORM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
+您可以手動或自動提交檔案至WORM（一次寫入、多次讀取）。您也可以建立WORM可應用檔案。
+
+
+
+== 手動將檔案提交至WORM
+
 您可以將檔案變成唯讀、以手動方式將檔案提交至WORM。您可以透過NFS或CIFS使用任何適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
 
 .您需要的產品
@@ -39,4 +45,218 @@ chmod -w document.txt
 ----
 attrib +r document.txt
 ----
+
+
+
+
+== 自動將檔案提交至WORM
+
+利用此功能、您可以自動將檔案提交至WORM。SnapLock
+
+.您需要的產品
+* 您想要自動提交的檔案必須位於SnapLock 一個流通於一個不流通的資料冊上。
+* 此版本必須在線上。SnapLock
+* 此數據區必須是讀寫磁碟區。SnapLock
+
+
+[NOTE]
+====
+「自動提交」功能會掃描磁碟區中的所有檔案、並在符合自動提交需求時提交檔案。SnapLock檔案準備好自動提交、到SnapLock 實際由該程式執行自動提交之間可能有一段時間間隔。不過、只要檔案系統符合自動提交的資格、仍可保護檔案免遭修改和刪除。
+
+====
+.關於這項工作
+_autodit句點_指定檔案在自動提交之前必須保持不變的時間量。在自動提交期間結束之前變更檔案、會重新啟動檔案的自動提交期間。
+
+下表顯示自動提交期間的可能值：
+
+|===
+| 價值 | 單位 | 附註 
+
+
+ a| 
+無
+ a| 
+-
+ a| 
+預設值。
+
+
+
+ a| 
+5 - 4256000
+ a| 
+分鐘
+ a| 
+-
+
+
+
+ a| 
+1 - 87600
+ a| 
+時數
+ a| 
+-
+
+
+
+ a| 
+1 - 3650
+ a| 
+天
+ a| 
+-
+
+
+
+ a| 
+1 - 120
+ a| 
+數月
+ a| 
+-
+
+
+
+ a| 
+1 - 10
+ a| 
+年
+ a| 
+-
+
+|===
+[NOTE]
+====
+最小值為5分鐘、最大值為10年。
+
+====
+.步驟
+. 將SidVolume上的所有檔案自動複製到SnapLock WORM：
++
+‘* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-autocomplet-period _autody_p段_*
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+下列命令會自動提交SVM VS1磁碟區「vol1」上的檔案、只要這些檔案在5小時內維持不變：
+
++
+[listing]
+----
+cluster1::>volume snaplock modify -vserver vs1 -volume vol1 -autocommit-period 5hours
+----
+
+
+
+
+== 建立WORM可應用檔案
+
+WORM可應用檔案會保留以遞增方式寫入的資料、例如記錄項目。您可以使用任何適當的命令或程式來建立WORM可應用檔案、或是使用SnapLock 「以次磁碟區附加模式_」功能來建立WORM可應用檔案。
+
+
+
+== 使用命令或程式建立WORM可應用檔案
+
+您可以透過NFS或CIFS使用任何適當的命令或程式來建立WORM應用檔案。WORM可應用檔案會保留以遞增方式寫入的資料、例如記錄項目。資料會以256 KB區塊附加至檔案。寫入每個區塊時、先前的區塊會受到WORM保護。在保留期間結束之前、您無法刪除檔案。
+
+.您需要的產品
+WORM可應用檔案必須位在SnapLock 一個流通不全的磁碟區上。
+
+.關於這項工作
+資料不需要依序寫入作用中的256 KB區塊。當資料寫入檔案的位元組n x 256kb+1時、先前的256 KB區段會受到WORM保護。
+
+.步驟
+. 使用適當的命令或程式、以所需的保留時間建立零長度檔案。
++
+在UNIX Shell中、使用下列命令將保留時間設定為2020年11月21日上午6：00在零長度檔案「document.txt」上：
+
++
+[listing]
+----
+touch -a -t 202011210600 document.txt
+----
+. 使用適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
++
+在UNIX Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+
++
+[listing]
+----
+chmod 444 document.txt
+----
+. 使用適當的命令或程式、將檔案的讀寫屬性變更回可寫入。
++
+[NOTE]
+====
+此步驟不視為法規遵循風險、因為檔案中沒有資料。
+
+====
++
+在UNIX Shell中、使用下列命令可讓名為「document.txt"的檔案寫入：
+
++
+[listing]
+----
+chmod 777 document.txt
+----
+. 使用適當的命令或程式開始將資料寫入檔案。
++
+在UNIX Shell中、使用下列命令將資料寫入「document.txt」：
+
++
+[listing]
+----
+echo test data >> document.txt
+----
++
+[NOTE]
+====
+當您不再需要將資料附加至檔案時、請將檔案權限改回唯讀。
+
+====
+
+
+
+
+== 使用Volume附加模式建立WORM可應用檔案
+
+從ONTAP 功能介紹的功能中、您可以使用SnapLock 「不只是功能、也就是功能」（VAM）來建立WORM可應用檔案、這是預設的功能。WORM可應用檔案會保留以遞增方式寫入的資料、例如記錄項目。資料會以256 KB區塊附加至檔案。寫入每個區塊時、先前的區塊會受到WORM保護。在保留期間結束之前、您無法刪除檔案。
+
+.您需要的產品
+* WORM可應用檔案必須位在SnapLock 一個流通不全的磁碟區上。
+* 必須卸載此實體磁碟區、並清空Snapshot複本和使用者建立的檔案。SnapLock
+
+
+.關於這項工作
+資料不需要依序寫入作用中的256 KB區塊。當資料寫入檔案的位元組n x 256kb+1時、先前的256 KB區段會受到WORM保護。
+
+如果您為磁碟區指定自動提交期間、則不會修改超過自動提交期間的WORM可應用檔案將會提交至WORM。
+
+[NOTE]
+====
+VAM不支援SnapLock 在不支援的稽核記錄磁碟區上。
+
+====
+.步驟
+. 啟用VAM：
++
+「* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-is-volume、append-mode enabled true、假*」
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+以下命令可在SVM的vol1（VS1）上啟用VAM：
+
++
+[listing]
+----
+cluster1::>volume snaplock modify -vserver vs1 -volume vol1 -is-volume-append-mode-enabled true
+----
+. 使用適當的命令或程式來建立具有寫入權限的檔案。
++
+檔案預設為可應用WORM。
+
 

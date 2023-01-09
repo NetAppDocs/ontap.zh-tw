@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/initialize-complianceclock-task.html 
 sidebar: sidebar 
-keywords: snaplock, complianceclock, initialize, worm, retention, period, node 
+keywords: snaplock, complianceclock, initialize, worm, retention, period, node, ntp, reset, resynchronize 
 summary: 《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載SnapLock 一個Eslaggregate的每個節點上初始化系統的「Compliance時鐘」。在節點上初始化「完成時鐘」之後、就無法再次初始化。 
 ---
 = 初始化「Compliance時鐘」
@@ -71,3 +71,50 @@ Do you want to continue? (y|n): y
 
 --
 ====
+
+
+== 為NTP組態的系統啟用「完成時鐘重新同步」
+
+設定NTP伺服器SnapLock 時、您可以啟用「支援不同步時鐘時間」同步功能。
+
+.您需要的產品
+* 此功能僅適用於進階權限層級。
+* 您必須是叢集管理員才能執行此工作。
+* 必須在節點上安裝此功能的不必要授權。SnapLock
+* 此功能僅適用於Cloud Volumes ONTAP Sf/、ONTAP Select Sf/及VSim平台。
+
+
+.關於這項工作
+當支援不安全的時鐘精靈偵測到超出臨界值的偏移時、則會使用系統時間來重設系統和Volume ComplianceClocks ONTAP SnapLock 。24小時的時間會設為偏移臨界值。這表示只有在系統時鐘的偏差超過一天時、系統的「完成時鐘」才會同步處理至系統時鐘。
+
+此功能可偵測到不穩定的時鐘、並將「Compliance時鐘」變更為系統時間。SnapLock任何修改系統時間以強制「完成時鐘」同步至系統時間的嘗試都會失敗、因為只有在系統時間與NTP時間同步時、「完成時鐘」才會同步至系統時間。
+
+.步驟
+. 設定NTP伺服器時啟用SnapLock 「支援時鐘時間同步」功能：
++
+「* SnapLock 不符合法規要求的時鐘NTP*」
+
++
+下列命令可啟用系統的「同步時鐘時間」同步功能：
+
++
+[listing]
+----
+cluster1::*> snaplock compliance-clock ntp modify -is-sync-enabled true
+----
+. 出現提示時、請確認已設定的NTP伺服器是受信任的、而且通訊通道是安全的、以啟用此功能：
+. 檢查功能是否已啟用：
++
+「* SnapLock 不符合法規要求的時鐘NTP節目*」
+
++
+下列命令會檢查系統是否已啟用「符合時鐘時間同步」功能：
+
++
+[listing]
+----
+cluster1::*> snaplock compliance-clock ntp show
+
+Enable clock sync to NTP system time: true
+----
+

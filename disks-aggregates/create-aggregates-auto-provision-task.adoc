@@ -106,7 +106,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 
 如果您熟悉自動資源配置方法、而且環境已正確準備好、您可以使用「跳過確認」選項建立建議的集合體、而不需顯示和確認。「儲存Aggregate自動資源配置」命令不受CLI工作階段「確認」設定影響。
 
-"shorage Aggregate autology/Provin"手冊頁包含有關集合體配置建議的詳細資訊。
+。[`storage aggregate auto-provision` 手冊頁^]包含更多有關Aggregate配置建議的資訊。
 
 .步驟
 . 使用所需的顯示選項來執行「儲存Aggregate自動資源配置」命令。
@@ -132,10 +132,21 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 
 [listing]
 ----
-Do you want to create recommended aggregates? {y|n}:y
+myA400-44556677::> storage aggregate auto-provision
+Node               New Data Aggregate            Usable Size
+------------------ ---------------------------- ------------
+myA400-364        myA400_364_SSD_1                    3.29TB
+myA400-363        myA400_363_SSD_1                    1.46TB
+------------------ ---------------------------- ------------
+Total:             2   new data aggregates            4.75TB
 
-Info: Creating node1_SSD_1 ...
-      Creating node2_SSD_1 ...
+Do you want to create recommended aggregates? {y|n}: y
+
+Info: Aggregate auto provision has started. Use the "storage aggregate
+      show-auto-provision-progress" command to track the progress.
+
+myA400-44556677::>
+
 ----
 
 

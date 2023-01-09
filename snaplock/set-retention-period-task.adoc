@@ -1,10 +1,10 @@
 ---
 permalink: snaplock/set-retention-period-task.html 
 sidebar: sidebar 
-keywords: snaplock, set, retention, time, default, file, volume, period 
+keywords: snaplock, set, retention, time, default, explicit, file, modify, volume, period 
 summary: 您可以明確設定檔案的保留時間、也可以使用磁碟區的預設保留期間來導出保留時間。除非您明確設定保留時間、SnapLock 否則使用預設保留期間來計算保留時間。 
 ---
-= 設定保留時間總覽
+= 設定保留時間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,10 +13,7 @@ summary: 您可以明確設定檔案的保留時間、也可以使用磁碟區�
 [role="lead"]
 您可以明確設定檔案的保留時間、也可以使用磁碟區的預設保留期間來導出保留時間。除非您明確設定保留時間、SnapLock 否則使用預設保留期間來計算保留時間。
 
-
-
-== 關於保留期間與保留時間
-
+.關於保留期間與保留時間
 WORM檔案的_ret課程 期間_指定了將檔案提交至WORM狀態之後、必須保留的時間長度。WORM檔案的_保留時間_是指不再需要保留檔案的時間。以2020年11月10日上午6：00提交至WORM狀態的檔案保留期間為20年、保留時間為2040年11月10日上午6：00
 
 image::../media/retention.gif[保留]
@@ -26,22 +23,13 @@ image::../media/retention.gif[保留]
 從《支援資料》9.10.1開始ONTAP 、您可以設定保留時間至10月26日、3058日、保留期限最長可達100年。當您延長保留日期時、舊版原則會自動轉換。在《支援更新版本》中、除非您將預設保留期間設為無限、否則支援的保留時間上限為2071年1月19日（GMT）。ONTAP
 
 ====
-
-
-== 重要的複寫考量
-
+.重要的複寫考量
 使用2071年1月19日（GMT）之後的保留日期、與SnapLock 某個來源磁碟區建立SnapMirror關係時、目的地叢集必須執行ONTAP 版本號為「更新版本」、否則SnapMirror傳輸將會失敗。
 
-
-
-== 重要的還原考量
-
+.重要的還原考量
 如果有任何檔案保留期間晚於「2071年1月19日上午8：44：07」、則無法將叢集從《21：10.1》還原至舊版的版。ONTAP ONTAP ONTAP
 
-
-
-== 瞭解預設保留期間
-
+.瞭解預設保留期間
 「不符合法規遵循」或「企業」Volume有四個保留期間：SnapLock
 
 * 最短保留期間（「min」）、預設值為0
@@ -62,3 +50,198 @@ image::../media/retention.gif[保留]
 
 
 因此、如果您在將Compliance模式檔案提交至WORM狀態之前未明確設定保留時間、而且未修改預設值、則檔案將保留30年。同樣地、如果您在將企業模式檔案提交至WORM狀態之前未明確設定保留時間、而且未修改預設值、則檔案將保留0年、或實際上完全不會保留。
+
+
+
+== 設定預設保留期間
+
+您可以使用「volume SnapLock flexmodify」命令、為SnapLock 位於某個現象區的檔案設定預設保留期間。
+
+.您需要的產品
+此版本必須在線上。SnapLock
+
+.關於這項工作
+下表顯示預設保留期間選項的可能值：
+
+[NOTE]
+====
+預設保留期間必須大於或等於（>=）最短保留期間、且小於或等於（\<=）最長保留期間。
+
+====
+|===
+| 價值 | 單位 | 附註 
+
+
+ a| 
+0 - 65535
+ a| 
+秒
+ a| 
+
+
+
+ a| 
+0 - 24
+ a| 
+時數
+ a| 
+
+
+
+ a| 
+0 - 365
+ a| 
+天
+ a| 
+
+
+
+ a| 
+0 - 12
+ a| 
+數月
+ a| 
+
+
+
+ a| 
+0 - 100
+ a| 
+年
+ a| 
+從ONTAP 功能升級到功能升級到功能升級。對於早期ONTAP 版本的版本、此值為0 - 70。
+
+
+
+ a| 
+最大
+ a| 
+-
+ a| 
+使用最長保留期間。
+
+
+
+ a| 
+最小
+ a| 
+-
+ a| 
+使用最短保留期間。
+
+
+
+ a| 
+無限
+ a| 
+-
+ a| 
+永遠保留檔案。
+
+
+
+ a| 
+未指定
+ a| 
+-
+ a| 
+保留檔案、直到設定絕對保留期間為止。
+
+|===
+最大和最小保留期間的值和範圍相同、但不適用的「max」和「min」除外。如需此工作的詳細資訊、請參閱 link:set-retention-period-task.html["設定保留時間總覽"]。
+
+您可以使用「volume SnapLock flexshow」命令來檢視Volume的保留期間設定。如需詳細資訊、請參閱命令的手冊頁。
+
+[NOTE]
+====
+將檔案提交至WORM狀態之後、您可以延長但不能縮短保留期間。
+
+====
+.步驟
+. 設定SnapLock 適用於現象區上檔案的預設保留期間：
++
+「* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-default-retention-period _default_retenture_p段_-min-retention_period _min_retent_p段_-max-retent_p段_*」
+
++
+如需選項的完整清單、請參閱命令的手冊頁。
+
++
+[NOTE]
+====
+下列範例假設先前尚未修改最小和最大保留期間。
+
+====
++
+下列命令會將規範或企業Volume的預設保留期間設為20天：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period 20days
+----
++
+下列命令會將Compliance Volume的預設保留期間設為70年：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -maximum-retention-period 70years
+----
++
+下列命令會將Enterprise Volume的預設保留期間設為10年：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period max -maximum-retention-period 10years
+----
++
+下列命令會將Enterprise Volume的預設保留期間設為10天：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -minimum-retention-period 10days
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period min
+----
++
+下列命令會將Compliance Volume的預設保留期間設為無限：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period infinite -maximum-retention-period infinite
+----
+
+
+
+
+== 明確設定檔案的保留時間
+
+您可以修改檔案的上次存取時間、明確設定檔案的保留時間。您可以透過NFS或CIFS使用任何適當的命令或程式來修改上次存取時間。
+
+.關於這項工作
+將檔案提交至WORM之後、您可以延長但不能縮短保留時間。保留時間儲存在檔案的「atime」欄位中。
+
+[NOTE]
+====
+您無法將檔案的保留時間明確設定為「無限」。只有在使用預設保留期間來計算保留時間時、才能使用該值。
+
+====
+.步驟
+. 使用適當的命令或程式來修改您要設定其保留時間的檔案上次存取時間。
++
+在UNIX Shell中、使用下列命令將保留時間設定為2020年11月21日上午6：00在名為「document.txt」的檔案上：
+
++
+[listing]
+----
+touch -a -t 202011210600 document.txt
+----
++
+[NOTE]
+====
+您可以使用任何適當的命令或程式來修改Windows中的上次存取時間。
+
+====
+

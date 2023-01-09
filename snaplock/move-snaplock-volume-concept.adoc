@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/move-snaplock-volume-concept.html 
 sidebar: sidebar 
-keywords: move, snaplock, volume, aggregate, security, role, enterprise, compliance 
+keywords: move, snaplock, volume, aggregate, security, role, enterprise, compliance, create, administrator, support, user, cluster, destination, command 
 summary: 從ONTAP 功能不全的9.8開始、您可以將SnapLock 一個功能不全的磁碟區移到同一類型的目的地集合體、無論是企業或法規遵循。您必須被指派SnapLock 「不穩定」安全角色、才能移動SnapLock 一個「不穩定」的Volume。 
 ---
 = 移動SnapLock 一個流通量的資料
@@ -12,3 +12,62 @@ summary: 從ONTAP 功能不全的9.8開始、您可以將SnapLock 一個功能�
 
 [role="lead"]
 從ONTAP 功能不全的9.8開始、您可以將SnapLock 一個功能不全的磁碟區移到同一類型的目的地集合體、無論是企業或法規遵循。您必須被指派SnapLock 「不穩定」安全角色、才能移動SnapLock 一個「不穩定」的Volume。
+
+
+
+== 建立SnapLock 一個不穩定的系統管理員帳戶
+
+您必須擁有SnapLock 執行SnapLock 「不穩定」Volume搬移的「不安全」管理員權限。這項權限是以「_SURE_ SnapLock 」角色授予您、此角色於ONTAP 《SURE9.8（介紹於本文件）」中介紹。如果您尚未被指派該角色、您可以要求叢集管理員建立SnapLock 一個具備SnapLock 此功能的可靠安全使用者。
+
+.您需要的產品
+* 您必須是叢集管理員才能執行此工作。
+* 您必須登入安全連線（SSH、主控台或ZAPI）。
+
+
+.關於這項工作
+與與管理SVM相關的vsadmin-SnapLock角色不同、這個角色與資料SVM相關聯。SnapLock
+
+.步驟
+. 建立SnapLock 具備管理員角色的SVM系統管理員帳戶：
++
+hy*安全性登入可建立-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _imization_method_-role _role_-comment _comment _*
+
++
+下列命令可讓SVM系統管理員帳戶「napLockAdmin」使用預先定義的「SnapLock Sfor」角色、使用密碼存取管理SVM「cluster1」：
+
++
+[listing]
+----
+cluster1::> security login create -vserver cluster1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock
+----
+
+
+
+
+== 移動SnapLock 一個流通量的資料
+
+您可以使用「volume move」命令、將SnapLock 一個現象區移到目的地Aggregate。
+
+.您需要的產品
+* 您必須先建立受SnapLock保護的稽核記錄、才能執行SnapLock 循環Volume移動。
++
+link:create-audit-log-task.html["建立稽核記錄"]。
+
+* 如果您使用ONTAP 的是版本早於ONTAP 《不符合指令》9.10.1的版本、則目的地Aggregate必須與SnapLock 您想要移動的《不符合法規》或《企業對企業》的《不符合指令》（Compliance to Compliance）相同的《不SnapLock 符合指令》（Enterprise to Enterprise）。從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新至功能更新至功能更新SnapLock 的版本。從功能更新至功能更新至功能更新至功能更新至功能更新至功能更新的版本。
+* 您必須是SnapLock 具備「非安全性」角色的使用者。
+
+
+.步驟
+. 使用安全連線、登入ONTAP 到「叢集管理LIF」：
++
+hes* ssh SnapLock用戶@cluster管理_ip*
+
+. 移動SnapLock 一個流通量：
++
+'磁碟區移轉開始- vserver _svm_name_-volume _SnapLock Volume名稱_-destination-Aggregate _dgregate名稱_*
+
+. 檢查Volume Move作業的狀態：
++
+「* Volume Move show -volume _SnapLock Volume name_-vserver _Svm_name_-Fields volume、PHASE、vserver*」
+
+
