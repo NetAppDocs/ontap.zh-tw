@@ -45,17 +45,20 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 如需完整的命令語法、請參閱手冊頁。
 
 +
-您必須從目的地SVM或目的地叢集執行此命令。雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
+[NOTE]
+====
+您必須從原始來源SVM或原始來源叢集執行此命令。雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用 `snapmirror initialize` 以重新初始化關係。
 
+====
 +
 以下範例反轉了原始來源磁碟區、「svm1」上的「Vola」與您提供資料的磁碟區之間的關係、「svm_backup」上的「Vola_dst」：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止來源SVM以取得反向關係：
+. 當您準備重新建立對原始來源的資料存取時、請停止對原始目的地Volume的存取。其中一種方法是停止原始目的地SVM：
 +
 「Vserver stop -vserver _svm_」
 
@@ -63,12 +66,18 @@ cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 如需完整的命令語法、請參閱手冊頁。
 
 +
-下列範例會停止來源SVM的反向關係：
+[NOTE]
+====
+您必須從原始目的地SVM或原始目的地叢集執行此命令。此命令會停止使用者對整個原始目的地SVM的存取。您可能想要使用其他方法停止存取原始目的地Volume。
+
+====
++
+下列範例會停止原始目的地SVM：
 
 +
 [listing]
 ----
-cluster_src::> vserver stop svm_backup
+cluster_dst::> vserver stop svm_backup
 ----
 . 更新反轉的關係：
 +
@@ -80,7 +89,7 @@ cluster_src::> vserver stop svm_backup
 +
 [NOTE]
 ====
-您必須從目的地SVM或目的地叢集執行此命令。如果來源與目的地上不存在通用Snapshot複本、則此命令會失敗。使用「napmirror initialize」重新初始化關係。
+您必須從原始來源SVM或原始來源叢集執行此命令。
 
 ====
 +
@@ -89,9 +98,9 @@ cluster_src::> vserver stop svm_backup
 +
 [listing]
 ----
-cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止針對反向關係進行排程的轉帳：
+. 從原始來源SVM或原始來源叢集、停止針對反向關係進行排程傳輸：
 +
 "napmirror quiesce -path _svm:volume（napmirror靜止-source-path _svm:volume）_cluster：//svm/volume（虛擬磁碟區/磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 
@@ -101,39 +110,18 @@ cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 +
 [NOTE]
 ====
-您必須從目的地SVM或目的地叢集執行此命令。
+您必須從原始來源SVM或原始來源叢集執行此命令。
 
 ====
 +
-以下範例會停止在您提供資料的磁碟區之間進行排程傳輸、在「shvm_backup」上停止「Vola_dst」、以及在「svm1」上停止原始來源磁碟區「Vola」：
+下列範例會停止在原始目的地Volume之間的排程傳輸、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `volA` 開啟 `svm1`：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止針對反向關係進行中的轉帳：
-+
-"napmirror abort-source-path _svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
-
-+
-如需完整的命令語法、請參閱手冊頁。
-
-+
-[NOTE]
-====
-您必須從目的地SVM或目的地叢集執行此命令。
-
-====
-+
-以下範例會停止在您提供資料的磁碟區之間進行傳輸、在「shvm_backup」上停止「Vola_dst」、以及在「svm1」上停止原始來源磁碟區「Vola」：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-path svm1:volA
-----
-. 打破反向關係：
+. 當完成最後的更新、且關係指出關係狀態為「靜止」時、請從原始來源SVM或原始來源叢集執行下列命令、以中斷反向關係：
 +
 "napmirror中斷-source-path _svm:volume（磁碟區）_cluster：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 
@@ -143,33 +131,18 @@ cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-pa
 +
 [NOTE]
 ====
-您必須從目的地SVM或目的地叢集執行此命令。
+您必須從原始來源SVM或來源叢集執行此命令。
 
 ====
 +
-以下範例打破了您提供資料的磁碟區、「svm_backup」上的「Vola_dst」、以及「svm1」上的「Vola」原始來源磁碟區之間的關係：
+下列範例打破了原始目的地Volume之間的關係、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `volA` 開啟 `svm1`：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror break -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 啟動原始來源SVM：
-+
-「vserver start -vserver _svm_」
-
-+
-如需完整的命令語法、請參閱手冊頁。
-
-+
-下列範例會啟動原始來源SVM：
-
-+
-[listing]
-----
-cluster_dst::> vserver start svm1
-----
-. 刪除反轉的資料保護關係：
+. 從原始來源SVM或原始來源叢集刪除反向的資料保護關係：
 +
 "napmirror DELETE -source-path _Svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 
@@ -177,8 +150,11 @@ cluster_dst::> vserver start svm1
 如需完整的命令語法、請參閱手冊頁。
 
 +
-您必須從來源SVM或來源叢集執行此命令、才能建立反向關係。
+[NOTE]
+====
+您必須從原始來源SVM或原始來源叢集執行此命令。
 
+====
 +
 以下範例刪除了原始來源磁碟區、「svm1」上的「Vola」與您提供資料的磁碟區之間的反向關係、以及「shvm_backup」上的「Vola_dst」：
 
@@ -187,7 +163,41 @@ cluster_dst::> vserver start svm1
 ----
 cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 重新建立原始資料保護關係：
+. 從原始目的地SVM或原始目的地叢集釋放反向關係。
++
+"napmirror發行版-source-path _svm:volume（磁碟區）_cluster（叢集）：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+
++
+[NOTE]
+====
+您必須從原始目的地SVM或原始目的地叢集執行此命令。
+
+====
++
+下列範例會在原始目的地Volume之間釋出相反的關係、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `volA` 開啟 `svm1`：
+
+
+
+[listing]
+----
+cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-path svm1:volA
+----
+. 如有需要、請啟動原始目的地SVM：
++
+「vserver start -vserver _svm_」
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+下列範例會啟動原始目的地SVM：
+
++
+[listing]
+----
+cluster_dst::> vserver start svm_backup
+----
+. 從原始目的地重新建立原始資料保護關係：
 +
 "napmirror resSync -source-path _Svm:Volume _|_cluster：//SVM/Volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
 

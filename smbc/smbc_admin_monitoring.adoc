@@ -20,50 +20,8 @@ summary: 您可以監控數個SM至BC元件和作業。
 
 == 中間器ONTAP
 
-在正常操作期間、應連接「中保」狀態。如果處於任何其他狀態、可能表示發生錯誤。您可以檢閱事件管理系統（EMS）訊息、以判斷錯誤及適當的修正行動。
+在正常操作期間、應連接「中保」狀態。如果處於任何其他狀態、可能表示發生錯誤。您可以檢閱 link:https://docs.netapp.com/us-en/ontap-ems-9121/sm-mediator-events.html["事件管理系統（EMS）訊息"^] 以判斷錯誤及適當的修正行動。
 
-|===
-| EMS名稱 | 說明 
-
-
-| SM.中介 者已新增 | 成功新增中介器 
-
-
-| SM.中介 器。已移除 | 成功移除中介器 
-
-
-| SM.中介 器無法使用 | 中介器因損壞的中介器伺服器而無法使用 
-
-
-| SM.中介 程序設定錯誤 | 中介器會重新調整用途、或是不再將媒體器套件安裝在媒體伺服器上 
-
-
-| SM.中介 者無法連線 | 無法連線到中介器 
-
-
-| SM.中介 者。移除.force | 使用「force」選項從叢集移除中介器 
-
-
-| sm.mediator.cacert.expiring | 中介憑證授權單位（CA）憑證將於30天內到期 
-
-
-| sm.mediator.serverc.expiring | 中介伺服器憑證即將在30天內到期 
-
-
-| SM.中介 程序.clientc.即將 到期 | 中介用戶端憑證將於30天內到期 
-
-
-| sm.mediator.cacert.expired | 中介憑證授權單位（CA）憑證已過期 
-
-
-| sm.mediator.serverc.expired | 中介伺服器憑證已過期 
-
-
-| SM.中介 程序.clientc.Expired | 中介用戶端憑證已過期 
-
-
-| sm.mediator.in.quorum | 所有的SM至BC記錄都會與「資訊管理器」重新同步 
-|===
 
 
 == 計畫性容錯移轉作業
@@ -78,17 +36,8 @@ ClusterB::> snapmirror failover start -destination-path vs1:/cg/dcg1
 ....
 ClusterA::> snapmirror show
 ....
-您也可以檢閱下列訊息、判斷是否有錯誤、並採取適當的修正行動。
+請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9121/smbc-pfo-events.html["EMS參考資料"^] 以瞭解事件訊息和修正行動。
 
-|===
-| EMS名稱 | 說明 
-
-
-| SMBC。PFo.failed. | SMBC規劃的容錯移轉作業失敗。目的地路徑： 
-
-
-| SMBC、PFo.start。目的地路徑： | SMBC已開始規劃容錯移轉作業 
-|===
 
 
 == 自動非計畫性容錯移轉作業
@@ -108,23 +57,8 @@ Last Progress Update: -
        Failover Type: unplanned
   Error Reason codes: -
 ....
-您也可以檢閱下列訊息、判斷是否有錯誤、並採取適當的修正行動。
+請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9121/smbc-aufo-events.html["EMS參考資料"^] 以瞭解事件訊息及修正行動。
 
-|===
-| EMS名稱 | 說明 
-
-
-| smbc.aufo.failed | SnapMirror自動規劃容錯移轉作業失敗。目的地路徑： 
-
-
-| smbc.aufo.start | SMBC已開始規劃容錯移轉作業。目的地路徑： 
-
-
-| smbc.aufo.completed: | SnapMirror自動規劃的容錯移轉作業已完成。目的地路徑： 
-
-
-| smbc.aufo.failover.incapable | block.giveback.during.aufo 
-|===
 
 
 == SM至BC可用度
