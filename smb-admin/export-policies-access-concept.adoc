@@ -2,7 +2,7 @@
 permalink: smb-admin/export-policies-access-concept.html 
 sidebar: sidebar 
 keywords: export, policies, policy, smb, access, enable, cifs, server, control, svm, volume, client, data, associate, how export policies are used with smb access 
-summary: 如果在CIFS伺服器上啟用SMB存取的匯出原則、則會在控制SMB用戶端對SVM磁碟區的存取時使用匯出原則。若要存取資料、您可以建立允許SMB存取的匯出原則、然後將原則與包含SMB共用的磁碟區建立關聯。 
+summary: 如果SMB伺服器上已啟用SMB存取的匯出原則、則會在控制SMB用戶端對SVM磁碟區的存取時使用匯出原則。若要存取資料、您可以建立允許SMB存取的匯出原則、然後將原則與包含SMB共用的磁碟區建立關聯。 
 ---
 = 如何將匯出原則用於SMB存取
 :allow-uri-read: 
@@ -11,15 +11,11 @@ summary: 如果在CIFS伺服器上啟用SMB存取的匯出原則、則會在控�
 
 
 [role="lead"]
-如果在CIFS伺服器上啟用SMB存取的匯出原則、則會在控制SMB用戶端對SVM磁碟區的存取時使用匯出原則。若要存取資料、您可以建立允許SMB存取的匯出原則、然後將原則與包含SMB共用的磁碟區建立關聯。
+如果SMB伺服器上已啟用SMB存取的匯出原則、則會在控制SMB用戶端對SVM磁碟區的存取時使用匯出原則。若要存取資料、您可以建立允許SMB存取的匯出原則、然後將原則與包含SMB共用的磁碟區建立關聯。
 
 匯出原則會套用一或多個規則、指定允許哪些用戶端存取資料、以及哪些驗證傳輸協定支援唯讀和讀寫存取。您可以設定匯出原則、允許透過SMB存取所有用戶端、用戶端子網路或特定用戶端、並在決定資料的唯讀和讀寫存取時、允許使用Kerberos驗證、NTLM驗證或Kerberos和NTLM驗證進行驗證。
 
-在處理所有套用至匯出原則的匯出規則之後ONTAP 、即可判斷用戶端是否已獲授予存取權限、以及授予何種存取層級。匯出規則適用於用戶端機器、而非Windows使用者和群組。匯出規則不會取代Windows使用者和群組型驗證與授權。匯出規則除了提供共用和檔案存取權限之外、還提供另一層存取安全性。您只需將一個匯出原則與每個磁碟區建立關聯、即可設定用戶端對磁碟區的存取。每個SVM可包含多個匯出原則。這可讓您針對具有多個磁碟區的SVM執行下列作業：
-
-* 為SVM的每個Volume指派不同的匯出原則、以便個別用戶端存取控制到SVM中的每個Volume。
-* 將相同的匯出原則指派給SVM的多個磁碟區、以獲得相同的用戶端存取控制權、而無需為每個磁碟區建立新的匯出原則。
-
+在處理所有套用至匯出原則的匯出規則之後ONTAP 、即可判斷用戶端是否已獲授予存取權限、以及授予何種存取層級。匯出規則適用於用戶端機器、而非Windows使用者和群組。匯出規則不會取代Windows使用者和群組型驗證與授權。匯出規則除了提供共用和檔案存取權限之外、還提供另一層存取安全性。
 
 您只需將一個匯出原則與每個磁碟區建立關聯、即可設定用戶端對磁碟區的存取。每個SVM可包含多個匯出原則。這可讓您針對具有多個磁碟區的SVM執行下列作業：
 
@@ -38,4 +34,4 @@ summary: 如果在CIFS伺服器上啟用SMB存取的匯出原則、則會在控�
 * 使用Kerberos或NTLM驗證（或兩者）、允許適當的唯讀和寫入存取
 
 
-如需設定及管理匯出原則的相關資訊、請參閱 link:../nfs-admin/index.html["NFS管理"]。
+深入瞭解 link:../nfs-config/export-policies-concept.html["設定及管理匯出原則"]。
