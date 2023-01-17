@@ -2,7 +2,7 @@
 permalink: snaplock/delete-worm-files-concept.html 
 sidebar: sidebar 
 keywords: delete, worm, file, privileged, delete, enterprise, mode, retention, period, overview 
-summary: 您可以使用權限刪除功能、在保留期間刪除企業模式WORM檔案。 
+summary: 您可以使用權限刪除功能、在保留期間刪除企業模式WORM檔案。使用此功能之前、您必須先建立SnapLock 一個支援系統管理員帳戶、然後再使用帳戶啟用此功能。 
 ---
 = 刪除WORM檔案總覽
 :allow-uri-read: 
@@ -13,7 +13,86 @@ summary: 您可以使用權限刪除功能、在保留期間刪除企業模式WO
 [role="lead"]
 您可以使用權限刪除功能、在保留期間刪除企業模式WORM檔案。使用此功能之前、您必須先建立SnapLock 一個支援系統管理員帳戶、然後再使用帳戶啟用此功能。
 
-* link:https://docs.netapp.com/us-en/ontap/snaplock/create-compliance-administrator-account-task.html["建立SnapLock 一個管理員帳戶"]
-* link:https://docs.netapp.com/us-en/ontap/snaplock/enable-privileged-delete-task.html["啟用特殊權限刪除功能"]
-* link:https://docs.netapp.com/us-en/ontap/snaplock/implement-privileged-delete-functionality-task.html["刪除WORM檔案"]
+
+
+== 建立SnapLock 一個管理員帳戶
+
+您必須擁有SnapLock 管理員權限才能執行特殊權限刪除。這些權限是在vsadmin-SnapLock角色中定義。如果您尚未被指派該角色、您可以要求叢集管理員建立一個SVM系統管理員帳戶SnapLock 、以執行此功能的管理員角色。
+
+.您需要的產品
+* 您必須是叢集管理員才能執行此工作。
+* 您必須登入安全連線（SSH、主控台或ZAPI）。
+
+
+.步驟
+. 建立SnapLock 具備管理員角色的SVM系統管理員帳戶：
++
+hy*安全性登入可建立-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _imization_method_-role _role_-comment _comment _*
+
++
+下列命令可讓SVM系統管理員帳戶「napLockAdmin」使用預先定義的「vsadmin-SnapLock」角色、使用密碼存取「VM1」：
+
++
+[listing]
+----
+cluster1::> security login create -vserver SVM1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role vsadmin-snaplock
+----
+
+
+
+
+== 啟用特殊權限刪除功能
+
+您必須在含有您要刪除的WORM檔案的Enterprise Volume上明確啟用特殊權限刪除功能。
+
+.關於這項工作
+「-特權 刪除」選項的值會決定是否啟用特殊權限刪除。可能的值包括「啟用」、「停用」和「永久停用」。
+
+[NOTE]
+====
+「永久停用」是終端狀態。將磁碟區的狀態設為「永久停用」後、您就無法在磁碟區上啟用特殊權限刪除功能。
+
+====
+.步驟
+. 啟用SnapLock 適用於某個《不支援的企業級」Volume的特殊權限刪除功能：
++
+「* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-特權 刪除disabled| enabled| permanently -disabled*」
+
++
+下列命令可啟用Enterprise Volume「VM1」上的「dataVol」的特殊權限刪除功能：
+
++
+[listing]
+----
+SVM1::> volume snaplock modify -vserver SVM1 -volume dataVol -privileged-delete enabled
+----
+
+
+
+
+== 刪除企業模式WORM檔案
+
+您可以使用權限刪除功能、在保留期間刪除企業模式WORM檔案。
+
+.您需要的產品
+* 您必須SnapLock 是管理員才能執行此工作。
+* 您必須已建立SnapLock 一套不必要的稽核記錄、並在Enterprise Volume上啟用特殊權限刪除功能。
+
+
+.關於這項工作
+您無法使用權限刪除作業來刪除過期的WORM檔案。您可以使用「Volume file retuse show」命令來檢視您要刪除的WORM檔案的保留時間。如需詳細資訊、請參閱命令的手冊頁。
+
+.步驟
+. 刪除企業Volume上的WORM檔案：
++
+h.*磁碟區檔案特權刪除-vserver _Svm_name_-file _file_path_*
+
++
+下列命令會刪除SVM「'VM1'」上的檔案「/vol/dataVol / F1」：
+
++
+[listing]
+----
+SVM1::> volume file privileged-delete -file /vol/dataVol/f1
+----
 
