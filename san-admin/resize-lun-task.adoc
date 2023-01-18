@@ -24,8 +24,9 @@ summary: 您可以增加或減少LUN的大小。
 
 LUN的大小取決ONTAP 於您的版本。
 
-[cols="2"]
 |===
+
+
 | 版本ONTAP | 最大LUN大小 
 
 
@@ -75,9 +76,9 @@ LUN的大小取決ONTAP 於您的版本。
 ====
 將LUN的實際最大大小捨去執行的作業系統、使其稍微低於預期值。ONTAP此外、實際LUN大小可能會因LUN的作業系統類型而稍有不同。若要取得正確的調整大小值、請在進階模式中執行下列命令：
 
-+"it -unit" B
+`set -unit B`
 
-+「LUN show -Fields max-resize-size -volume _volume_name_-LUN _lun_name_'」
+`lun show -fields max-resize-size -volume _volume_name_ -lun _lun_name_`
 
 ====
 . 重新掃描主機上的LUN。
@@ -90,7 +91,6 @@ LUN的大小取決ONTAP 於您的版本。
 
 == 減少LUN的大小
 
-[role="lead"]
 在減少LUN大小之前、主機必須先將包含LUN資料的區塊移轉到較小LUN大小的邊界。您應該使用SnapDrive 諸如Windows版的工具、確保LUN能夠正確減少、而不會刪減包含LUN資料的區塊。不建議手動減少LUN大小。
 
 當您減少LUN的大小後、ONTAP 即可自動通知啟動器LUN大小已減少。不過、主機可能需要採取其他步驟、才能辨識新的LUN大小。如需減少主機檔案結構大小的特定資訊、請參閱主機文件。
