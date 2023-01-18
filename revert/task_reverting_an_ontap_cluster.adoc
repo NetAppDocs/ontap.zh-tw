@@ -41,12 +41,12 @@ node1
 4 entries were displayed.
 ----
 . 停用叢集中的所有資料LIF：「網路介面修改｛-role data｝-STATUS-admin down」
-. [[ste-5]]如果叢集僅包含兩個節點、請停用叢集HA：「叢集HA modify -configured假」
-. [[dro步驟6]]停用HA配對中任一節點的儲存容錯移轉：「torage容錯移轉修改節點節點節點節點名稱-啟用假」
+. 如果叢集僅包含兩個節點、請停用叢集HA： `cluster ha modify -configured false`
+. [[ST階-5]停用HA配對中任一節點的儲存容錯移轉： `storage failover modify -node nodename -enabled false`
 +
 HA配對只需停用一次儲存容錯移轉。當您停用節點的儲存容錯移轉時、節點的合作夥伴也會停用儲存容錯移轉。
 
-. 登入您要還原的節點。
+. [[step：6]]登入您要回復的節點。
 +
 若要還原節點、您必須透過節點的節點管理LIF登入叢集。
 
@@ -146,12 +146,12 @@ node1
          image2  false   true    Y.Y.Y      MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 驗證每個節點的還原狀態是否完整：「System Node Upgrade（系統節點升級）- f還原show -nodename（還原顯示節點節點節點名稱）」
+. [[step -16]驗證每個節點的還原狀態是否完整： `system node upgrade-revert show -node nodename`
 +
 狀態應列示為「完成」。
 
-. 重複 <<step-5>> 透過 <<step-17>> 在HA配對的其他節點上。
+. 重複 <<step-6>> 透過 <<step-16>> 在HA配對的其他節點上。
 . 如果叢集僅包含兩個節點、請重新啟用叢集HA：「叢集HA modify -configured true」
-. [[step -18]如果先前停用、請在兩個節點上重新啟用儲存容錯移轉：「torage容錯移轉修改節點節點節點節點名稱-啟用true」
-. 重複 <<step-6>> 透過 <<step-18>> 針對MetroCluster 每個額外的HA配對和兩組叢集進行支援。
+. [[step -19]如果兩個節點先前已停用、請重新啟用其上的儲存容錯移轉： `storage failover modify -node nodename -enabled true`
+. 重複 <<step-5>> 透過 <<step-19>> 針對MetroCluster 每個額外的HA配對和兩組叢集進行支援。
 
