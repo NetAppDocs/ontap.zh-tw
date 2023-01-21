@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: task_admin_update_firmware.html 
 keywords: system manager, netapp, ontap, upgrade, nondisruptive, firmware,  disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc, software patch, upgrade, recommendation, recommended, storage firmware, storage devices, disks, shelves, service processors, modules 
-summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如磁碟、磁碟櫃、磁碟認證套件（DQP）、服務處理器（SP）或基礎板管理控制器（BMC）。 
+summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如磁碟、磁碟櫃、服務處理器（SP）或基礎板管理控制器（BMC）。 
 ---
 = 更新韌體
 :toc: macro
@@ -19,7 +19,7 @@ summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如�
 
 
 [role="lead"]
-有了System Manager、您可以將韌體更新套用至叢集中的支援裝置、例如磁碟、磁碟櫃、磁碟認證套件（DQP）、服務處理器（SP）或基礎板管理控制器（BMC）。
+有了System Manager、您可以將韌體更新套用至叢集中的支援裝置、例如磁碟、磁碟櫃、服務處理器（SP）或基礎板管理控制器（BMC）。
 
 您可以手動或自動套用韌體更新。選擇任一程序：
 
@@ -33,16 +33,6 @@ summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如�
 
 .關於這項工作
 從更新版本的支援升級到更新版本的更新版本、從更新版本開始、您就能收到來自於叢集的警示、通知您叢集上的韌體更新何時仍在進行中。ONTAP Active IQ然後、您可以下載韌體映像、並使用System Manager上傳。
-
-.開始之前
-您必須擁有下列其中一項權利：
-
-* AIQEXPERT
-* AIQADVISOR
-* AIQUPGRADE
-
-
-您可以深入瞭解授權及您擁有的權利 link:/system-admin/manage-licenses-concept.html["管理授權總覽（僅限叢集管理員）"]。
 
 image:workflow_admin_update_firmware.gif["更新韌體工作的工作流程圖"]
 
@@ -91,7 +81,7 @@ NOTE: 若為《支援》9.8、ONTAP 您必須瀏覽至NetApp支援網站、下�
 . 將檔案複製到網路上的HTTP或FTP伺服器、或複製到本機資料夾。
 
  a| 
-. 在*更新*頁面上、如需您要執行的韌體更新、請按一下「從NetApp支援網站下載」連結。
+. 在*更新*頁面上、如需您要執行的韌體更新、請按一下*從NetApp 支援網站 *下載*。
 +
 隨即顯示NetApp支援網站。
 
@@ -121,7 +111,7 @@ NOTE: 若為《支援》9.8、ONTAP 您必須瀏覽至NetApp支援網站、下�
 
 
  a| 
-包含以上版本的更新版本ONTAP
+例如：9.8、9.9.x或9.10.0 ONTAP
  a| 
 . 選擇*從伺服器*或*本機用戶端*
 . 提供伺服器URL或檔案位置。
@@ -130,7 +120,7 @@ NOTE: 若為《支援》9.8、ONTAP 您必須瀏覽至NetApp支援網站、下�
 
 
  a| 
-零點9.10.1 ONTAP
+更新版本ONTAP
  a| 
 *附註：*若要排程自動執行修正與更新、並接收有關更新的建議、請參閱 <<update-firmware-automatically>>。
 
@@ -168,12 +158,21 @@ NOTE: 您可以在*韌體更新摘要*下監控或驗證更新。您可以在Sys
 從功能更新9.10.1開始ONTAP 、您可以使用System Manager來啟用「自動更新」功能、ONTAP 讓Update能夠自動下載並安裝NetApp提供的建議韌體修補程式、升級和更新（預設行為）。
 
 .開始之前
+您必須擁有下列其中一項權利：
+
+* AIQEXPERT
+* AIQADVISOR
+* AIQUPGRADE
+
+
+您可以深入瞭解授權及您擁有的權利 link:/system-admin/manage-licenses-concept.html["管理授權總覽（僅限叢集管理員）"]。
+
 自動更新功能需要AutoSupport 透過HTTPS進行不中斷連線。若要疑難排解連線問題、請參閱 link:./system-admin/troubleshoot-autosupport-http-https-task.html["疑難排解AutoSupport 透過HTTP或HTTPS傳送的資訊"]。
 
 .關於這項工作
 更新內容包括下列類別的韌體修補程式、升級和更新：
 
-* *儲存韌體*：儲存設備、磁碟認證套件（DQP）、磁碟和磁碟櫃
+* *儲存韌體*：儲存設備、磁碟和磁碟櫃
 * * SP/BMC韌體*：服務處理器與BMC模組
 
 
@@ -215,7 +214,7 @@ image:../media/sm-firmware-auto-update.gif["自動更新工作流程"]
 
 .步驟
 . 在System Manager中、按一下*叢集>設定*。
-. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"] 可查看操作列表。
+. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["做出選擇"] 可查看操作列表。
 . 按一下*編輯自動更新設定*。
 . 選取兩種更新類別的預設動作。
 
@@ -238,13 +237,13 @@ image:../media/sm-firmware-auto-update.gif["自動更新工作流程"]
 
  a| 
 .. 按一下*叢集>總覽*。
-.. 在「*總覽*」區段中、按一下「*更多*」 image:../media/icon_kabob.gif["烤串圖示"]、然後按一下* ONTAP 《更新*》。
+.. 在「*總覽*」區段中、按一下「*更多*」 image:../media/icon_kabob.gif["做出選擇"]、然後按一下* ONTAP 《更新*》。
 .. 選取*韌體更新*索引標籤。
-.. 在*韌體更新*索引標籤上、按一下*更多* image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看所有自動更新*。
+.. 在*韌體更新*索引標籤上、按一下*更多* image:../media/icon_kabob.gif["做出選擇"]，然後單擊*查看所有自動更新*。
 
  a| 
 .. 按一下*叢集>設定*。
-.. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["烤串圖示"]，然後單擊*查看所有自動更新*。
+.. 在*自動更新*區段中、按一下 image:../media/icon_kabob.gif["做出選擇"]，然後單擊*查看所有自動更新*。
 
 
 |===
@@ -252,7 +251,7 @@ image:../media/sm-firmware-auto-update.gif["自動更新工作流程"]
 +
 「自動更新記錄」會顯示各項建議與詳細資料、包括說明、類別、排程安裝時間、狀態及任何錯誤。
 
-. 按一下 image:../media/icon_kabob.gif["烤串圖示"] 在說明旁、檢視您可以根據建議執行的行動清單。
+. 按一下 image:../media/icon_kabob.gif["做出選擇"] 在說明旁、檢視您可以根據建議執行的行動清單。
 +
 視建議狀態而定、您可以執行下列其中一項動作：
 
