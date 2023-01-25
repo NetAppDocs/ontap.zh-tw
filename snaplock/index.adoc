@@ -17,9 +17,27 @@ summary: 您可以使用NetApp SnapLock 的支援技術、以未經修改的形�
 
 使用支援功能、您可以將檔案和Snapshot複本提交至WORM儲存設備、並設定WORM保護資料的保留期間SnapLock 。
 
-有兩SnapLock 個版本：SnapLock 《不遵守法規及SnapLock 不遵守要求企業版：這兩種版本均可在所有儲存類型的NetApp系統上執行。這種靈活度可讓您購買符合SnapLock 企業需求的類型與儲存容量、以利實現WORM儲存。
+支援的開放式SnapLock 檔案傳輸協定為NFS（版本2、3和4）和CIFS（SMB 1.0、2.0和3.0）。
 
-WORM儲存設備使用NetApp Snapshot™技術、並可運用NetApp SnapMirror®複寫軟體和NetApp還原®備份功能作為基礎技術、為資料提供備份恢復保護SnapVault SnapLock 。
+不需要任何特殊硬體SnapLock 。支援所有的支援功能、包括所有的不全系統和不全系統ONTAP Select FAS AFF SnapLock 。不只是軟體解決方案、而是整合式硬體與軟體解決方案SnapLock 。這項差異對於嚴格的WORM法規而言非常重要、例如需要整合式硬體與軟體解決方案的SEC 17A-4。如需詳細資訊、請參閱SEC Interpretation：電子儲存經紀商/代理商記錄。
+
+您可以使用應用程式、透過NFS或CIFS將檔案提交至WORM、或使用SnapLock 「更新」功能、自動將檔案提交至WORM。您可以使用_WORM可應用檔案_來保留遞增寫入的資料、例如記錄資訊。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/volume-append-mode-create-worm-appendable-files-task.html["使用Volume附加模式建立WORM可應用檔案"]。
+
+支援資料保護方法、可滿足大部分的法規遵循需求：SnapLock
+
+* 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/commit-snapshot-copies-worm-concept.html["將Snapshot複本提交至WORM"]。
+* 您可以使用SnapMirror將WORM檔案複寫到另一個地理位置、以便進行災難恢復。請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/mirror-worm-files-task.html["鏡射WORM檔案"]。
+
+
+支援以授權為基礎的NetApp功能ONTAP SnapLock 。單一授權可讓您SnapLock 在嚴格法規遵循模式下使用SESS庫、以符合SEC Rule 17a-4及較寬鬆的企業模式等外部規定、以符合內部規定的數位資產保護法規。《安全性與法規遵循》套裝組合中包含了各種不合格的產品SnapLock 。
+
+支援範圍SnapLock 已隨著ONTAP 更新版本的推出而演進。最重要的擴充包括：
+
+儲存效率：ONTAP 從0型9.9開始、SnapLock 支援儲存效率功能、例如資料壓實、跨Volume重複資料刪除、SnapLock 以及針對0型磁碟區和集合體的調適性壓縮。如需儲存效率的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/volumes/index.html["使用CLI進行邏輯儲存管理總覽"]。
+
+支援各種不同的功能：從功能性的9.11.1開始、除了使用「合法保留」、「事件型保留」和「用作支援」功能以外、其他功能均可支援各種功能SnapVault SnapLock FlexGroup SnapLock ONTAP FlexGroup 。從功能完整的支援功能支援功能到功能完整的支援功能、從功能完整的支援功能到功能完整的功能FlexGroup SnapVault SnapLock ONTAP 。
+
+WORM儲存設備使用NetApp Snapshot™技術、並可運用SnapMirror®複寫及還原®備份技術、為資料提供備份恢復保護SnapVault SnapLock 。
 
 [NOTE]
 ====
@@ -28,69 +46,13 @@ WORM儲存設備使用NetApp Snapshot™技術、並可運用NetApp SnapMirror®
 ====
 
 
-== 支援的檔案存取傳輸協定
-
-支援的開放式SnapLock 檔案傳輸協定為NFS（版本2、3和4）和CIFS（SMB 1.0、2.0和3.0）。
-
-
-
-== 授權
-
-支援以授權為基礎的NetApp功能ONTAP SnapLock 。單一授權可讓您SnapLock 在嚴格法規遵循模式下使用SESS庫、以符合SEC Rule 17a-4及較寬鬆的企業模式等外部規定、以符合內部規定的數位資產保護法規。《安全性與法規遵循》套裝組合中包含了各種不合格的產品SnapLock 。
-
-
-
-== 當SnapLock 您可以使用時
-
-您應該在SnapLock 下列情況下使用這個功能：
-
-* 您想要建立法規遵循或企業集合體、以便在SnapLock 支援各種功能的支援基礎上裝載各種功能的稽核記錄磁碟區MetroCluster 、但有下列限制：
-+
-** 支援鏡射與無鏡射Aggregate上的支援。SnapLock
-** 不鏡射的集合體僅支援「符合性」SnapLock 。
-+
-所有MetroCluster 的支援鏡射Aggregate的組態。請參閱 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"] 判斷MetroCluster 您的支援無鏡射的Aggregate組態是否支援。
-
-
-
-* 您想要搭配SnapLock 使用功能FabricPool 不全的功能。
-+
-從ONTAP 功能支援的支援功能為支援功能的支援功能、從功能表9.8開始SnapLock link:https://docs.netapp.com/us-en/ontap/fabricpool/index.html["FabricPool"]。
-
-
-
-
-
-== 當您不應該使用SnapLock 此功能時
-
-如果下列情況適用、您不應使用SnapLock 無法使用的功能：
-
-* 您使用的是SAN LUN。不支援SnapLock 在支援SAN LUN的功能上執行。雖然可以SnapLock 使用舊有技術將SAN LUN移至某個支援的功能、但這並不支援、SnapLock 也不支援任何涉及位於某個故障區上的SAN LUN的其他作業。
-* 您使用的是SMTape。
-* 您正在為陣列LUN建立法規遵循集合體。不支援陣列LUN的符合性集合體。SnapLock
-* 您正在使用SyncMirror 「支援」選項來建立「法規遵循」集合體。不支援不支援部門的支援。SnapLock SyncMirror
-
-
-[NOTE]
-====
-SSD和Flash Pool Aggregate由SnapLock 支援、從ONTAP 功能更新至功能更新至功能更新至功能更新。
-
-====
-
-
-== 整合式硬體與軟體
-
-不需要任何特殊硬體SnapLock 。支援的所有支援供應功能均支援使用支援支援功能的所有功能ONTAP FAS AFF Data ONTAP SnapLock 。它也在ONTAP Select 支援方面。不只是軟體解決方案、而是整合式硬體與軟體解決方案SnapLock 。這項差異對於嚴格的WORM法規而言非常重要、例如需要整合式硬體與軟體解決方案的SEC 17A-4。如需詳細資訊、請參閱SEC Interpretation：電子儲存經紀商/代理商記錄。
-
-
-
 == 您可以使用SnapLock 什麼功能
 
 您可以完成下列工作：
 
 * 設定SnapLock 功能
 * 管理WORM檔案以進行災難恢復
-* 將檔案提交至WORM for XYZ
+* 將檔案提交至WORM
 * 將Snapshot複本提交至WORM以供二線儲存設備使用
 * 鏡射WORM檔案以進行災難恢復
 * 在訴訟期間使用「合法持有」來保留WORM檔案
@@ -104,7 +66,7 @@ SSD和Flash Pool Aggregate由SnapLock 支援、從ONTAP 功能更新至功能更
 
 
 
-== 法規遵循與企業模式之間的差異
+== 符合法規及企業模式SnapLock
 
 不一致性與企業模式的差異主要在於每種模式保護WORM檔案的層級：SnapLock
 
@@ -218,98 +180,7 @@ SSD和Flash Pool Aggregate由SnapLock 支援、從ONTAP 功能更新至功能更
 
 
  a| 
-SAN
- a| 
-否
- a| 
-否
-
-
-
- a| 
-SnapMirror同步
- a| 
-否
- a| 
-否
-
-
-
- a| 
-SnapMirror營運不中斷
- a| 
-否
- a| 
-否
-
-
-
- a| 
-單一檔案SnapRestore 的功能
- a| 
-否
- a| 
-是的
-
-
-
- a| 
-SnapRestore
- a| 
-否
- a| 
-是的
-
-
-
- a| 
-FlexClone
- a| 
-您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。
- a| 
-您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。
-
-
-
- a| 
-LUN
- a| 
-否
- a| 
-否
-
-
-
- a| 
-SM磁帶
- a| 
-否
- a| 
-否
-
-
-
- a| 
-內部組態MetroCluster
- a| 
-是、在下列情況下：
-
-* 從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新SnapLock 至功能MetroCluster 更新。
-* 從ONTAP 支援《支援SnapLock 不符合要求》的功能、開始時、鏡射集合體支援《支援不符合要求》、但前提是集合體只能用於裝載SnapLock 不符合要求的稽核記錄磁碟區。
-* SVM特有SnapLock 的功能區組態可透過MetroCluster 以下功能複製到主要和次要站台：
-
- a| 
-是、在下列情況下：
-
-* 從ONTAP 支援支援的功能為支援從支援的功能為支援的功能為支援的SnapLock 功能為支援。
-* 從ONTAP 支援使用支援功能支援使用SnapLock 權限刪除功能的支援功能、以支援使用支援功能的支援功能。
-* SVM特有SnapLock 的支援功能、可透過MetroCluster 使用支援功能複製到這兩個站台。
-
-
-
-
- a| 
-支援FabricPools on SnapLock Faggregate
+FabricPools on SnapLock
  a| 
 否
  a| 
@@ -320,6 +191,24 @@ SM磁帶
 您應該注意FabricPool 、任何資料若不再受到SnapLock 任何資料的保護、而將其納入公有雲或私有雲、則可由雲端管理員刪除。
 
 ====
+
+
+ a| 
+Flash Pool Aggregate
+ a| 
+是的、從ONTAP 功能性的支援到功能性的支援、
+ a| 
+是的、從ONTAP 功能性的支援到功能性的支援、
+
+
+
+ a| 
+FlexClone
+ a| 
+您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。
+ a| 
+您可以複製SnapLock 不全的資料、但無法複製SnapLock 到一個實體磁碟區上的檔案。
+
 
 
  a| 
@@ -351,6 +240,97 @@ SM磁帶
 * 僅能在整個的整個過程中設定組態屬性。SnapLock FlexGroup個別成員不能具有不同的組態內容、例如預設保留時間和自動提交期間。
 
 
+
+
+ a| 
+LUN
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+內部組態MetroCluster
+ a| 
+是、在下列情況下：
+
+* 從ONTAP 功能更新至功能更新至功能更新至功能更新至功能更新SnapLock 至功能MetroCluster 更新。
+* 從ONTAP 支援《支援SnapLock 不符合要求》的功能、開始時、鏡射集合體支援《支援不符合要求》、但前提是集合體只能用於裝載SnapLock 不符合要求的稽核記錄磁碟區。
+* SVM特有SnapLock 的功能區組態可透過MetroCluster 以下功能複製到主要和次要站台：
+
+ a| 
+是、在下列情況下：
+
+* 從ONTAP 支援支援的功能為支援從支援的功能為支援的功能為支援的SnapLock 功能為支援。
+* 從ONTAP 支援使用支援功能支援使用SnapLock 權限刪除功能的支援功能、以支援使用支援功能的支援功能。
+* SVM特有SnapLock 的支援功能、可透過MetroCluster 使用支援功能複製到這兩個站台。
+
+
+
+
+ a| 
+SAN
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+單一檔案SnapRestore 的功能
+ a| 
+否
+ a| 
+是的
+
+
+
+ a| 
+SnapMirror營運不中斷
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapRestore
+ a| 
+否
+ a| 
+是的
+
+
+
+ a| 
+SM磁帶
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror同步
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SSD
+ a| 
+是的、從ONTAP 功能性的支援到功能性的支援、
+ a| 
+是的、從ONTAP 功能性的支援到功能性的支援、
+
 |===
 
 
@@ -361,28 +341,6 @@ SM磁帶
 當磁碟區複寫到另一個站台時、其VCC也會複寫。當發生磁碟區切換時、例如從站台A切換至站台B、VCC會在站台B上繼續更新、而站台A上的SCC會在站台A離線時停止。
 
 當站台A重新上線且執行磁碟區切換時、站台A SCC時鐘會重新啟動、而Volume的VCC則會繼續更新。由於VCC會持續更新、無論切換和切換作業為何、檔案保留時間不取決於SCC時鐘、也不會延展。
-
-
-
-== 將檔案提交至WORM
-
-您可以使用應用程式、透過NFS或CIFS將檔案提交至WORM、或使用SnapLock 「更新」功能、自動將檔案提交至WORM。您可以使用_WORM可應用檔案_來保留遞增寫入的資料、例如記錄資訊。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/volume-append-mode-create-worm-appendable-files-task.html["使用Volume附加模式建立WORM可應用檔案"]。
-
-
-
-== 資料保護
-
-支援資料保護方法、可滿足大部分的法規遵循需求：SnapLock
-
-* 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/commit-snapshot-copies-worm-concept.html["將Snapshot複本提交至WORM"]。
-* 您可以使用SnapMirror將WORM檔案複寫到另一個地理位置、以便進行災難恢復。請參閱 link:https://docs.netapp.com/us-en/ontap/snaplock/mirror-worm-files-task.html["鏡射WORM檔案"]。
-
-
-
-
-== 儲存效率
-
-從功能支援的支援範圍ONTAP 從支援支援儲存SnapLock 效率的9.9到9.9.1、例如資料壓縮、跨Volume重複資料刪除、SnapLock 以及針對功能區和集合體的調適性壓縮。如需儲存效率的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/volumes/index.html["使用CLI進行邏輯儲存管理總覽"]。
 
 
 

@@ -18,9 +18,11 @@ SnapMirror全域節流可限制傳入和/或傳出SnapMirror和SnapVault SnapMir
 
 例如、如果傳出節流設定為100 Mbps、叢集中的每個節點都會將傳出頻寬設為100 Mbps。如果停用全域節流、則會在所有節點上停用此功能。
 
+雖然資料傳輸率通常以每秒位元數（bps）表示、但節流值必須以每秒千位元組（KB）為單位輸入。
+
 [NOTE]
 ====
-節流對「Volume Move」（Volume Move）傳輸或負載共享鏡像傳輸沒有影響。雖然資料傳輸率通常以每秒位元數（bps）表示、但節流值必須以每秒千位元組（KB）為單位輸入。
+在版本更新的版本中、節流器不會影響ONTAP `volume move` 傳輸或負載共享鏡像傳輸。從ONTAP 功能升級到功能升級版、您可以指定選項來調節Volume Move作業的節流。如需詳細資訊、請參閱 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 更新版本的更新版本中調節體積移動。"]
 
 ====
 全域節流可搭配SnapMirror和SnapVault SnapMirror傳輸的個別關係節流功能。在每個關係傳輸的總頻寬超過全域節流的值之前、會強制執行每個關係節流、之後會強制執行全域節流。節流值「0」表示停用全域節流。
