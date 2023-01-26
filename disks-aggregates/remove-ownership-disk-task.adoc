@@ -53,30 +53,23 @@ storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 ....
 . 如果磁碟已分割以進行根資料分割、請移除分割區的擁有權：
 +
-|===
+--
+.. 若為ONTAP 版本9.10.1及更新版本、請輸入：
++
+`storage disk removeowner -disk _disk_name_`
 
-
-| 適用對象ONTAP | 適用對象ONTAP 
-
-
- a| 
-輸入兩個命令：
- a| 
+.. 若為ONTAP 版本號9.9.1或更早版本、請輸入兩個命令：
++
 '磁碟移除擁有者-磁碟_磁碟名稱_-root true '
 
++
 '磁碟移除擁有者-磁碟_磁碟_名稱_-data true '
 
 
 
- a| 
-輸入下列命令：
- a| 
-`storage disk removeowner -disk _disk_name_`
-
-|===
-+
 這兩個分割區不再由任何節點擁有。
 
+--
 . 如果您先前關閉磁碟擁有權的自動指派、請在磁碟移除或重新指派之後將其開啟：
 +
 「torage disk option modify -node_node_name_-autodassign on」
