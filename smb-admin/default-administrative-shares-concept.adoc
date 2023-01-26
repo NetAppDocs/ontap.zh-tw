@@ -2,7 +2,7 @@
 permalink: smb-admin/default-administrative-shares-concept.html 
 sidebar: sidebar 
 keywords: create, cifs, server, storage, virtual, machine, svm, default, administrative, share, automatic, what the default administrative shares are 
-summary: 當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立三個預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。 
+summary: 當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。 
 ---
 = 預設的管理共用是什麼
 :allow-uri-read: 
@@ -11,12 +11,15 @@ summary: 當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統�
 
 
 [role="lead"]
-當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立三個預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。
+當您在儲存虛擬機器（SVM）上建立CIFS伺服器時、系統會自動建立預設的管理共用區。您應該瞭解這些預設共用是什麼、以及它們的使用方式。
 
 建立CIFS伺服器時、會建立下列預設管理共用：ONTAP
 
+
+NOTE: 從功能支援的9.8開始ONTAP 、系統將不再預設建立admin$共用區。
+
 * IPC$
-* 管理$
+* admin$（ONTAP 僅限用作更新版本的版本）
 * C$
 
 
@@ -32,7 +35,11 @@ IPC$和admin$共用是ONTAP 由Windows管理員使用、無法用來存取位於
 +
 IPC$共用資源可共用具名管道、這些管道對於程式之間的通訊非常重要。IPC$共用區用於遠端管理電腦、以及檢視電腦的共用資源。您無法變更IPC$共用區的共用設定、共用內容或ACL。您也無法重新命名或刪除IPC$共用區。
 
-* 管理$共用區
+* admin$共享區（ONTAP 僅限用作更新版本的版本）
++
+
+NOTE: 從功能支援的9.8開始ONTAP 、系統將不再預設建立admin$共用區。
+
 +
 admin$共用區是在遠端管理SVM期間使用。此資源的路徑永遠是SVM根目錄的路徑。您無法變更admin$共用區的共用設定、共用內容或ACL。您也無法重新命名或刪除admin$共用區。
 
