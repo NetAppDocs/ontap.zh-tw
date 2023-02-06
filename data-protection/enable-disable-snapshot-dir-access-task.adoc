@@ -16,7 +16,8 @@ summary: 若要判斷NFS和SMB用戶端是否可以看到Snapshot複本目錄、
 .步驟
 . 檢查Snapshot目錄存取狀態：
 +
- `volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
+`volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
+
 +
 範例：
 
@@ -31,7 +32,7 @@ vs0     vol1   false
 ----
 . 啟用或停用Snapshot複本目錄存取：
 +
-「Volume modify -volume _vol_name_-snapdir-access true|fals'
+`volume modify -vserver _SVM_name_ -volume _vol_name_ -snapdir-access true|false`
 
 +
 下列範例可在vol1上啟用Snapshot複本目錄存取：
@@ -40,7 +41,7 @@ vs0     vol1   false
 [listing]
 ----
 
-clus1::> volume modify -volume vol1 -snapdir-access true
+clus1::> volume modify -vserver vs0 -volume vol1 -snapdir-access true
 Volume modify successful on volume vol1 of Vserver vs0.
 ----
 
