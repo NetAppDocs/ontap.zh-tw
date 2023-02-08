@@ -1,0 +1,86 @@
+---
+permalink: san-admin/prevent_port_overlap_between_switchover.html 
+sidebar: sidebar 
+keywords: metrocluster environments, considerations, san configuration, metrocluster, environments, san, configurations, cisco switch, brocade switch, 
+summary: 為了避免舊連接埠離線且新連接埠上線時發生重疊、您可以設定前端交換器。 
+---
+= 避免切換和切換之間的連接埠重疊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在SAN環境中、您可以設定前端交換器、以避免舊連接埠離線且新連接埠上線時發生重疊。
+
+在切換期間、在Fabric偵測到災難站台上的FC連接埠離線且已從名稱和目錄服務中移除此連接埠之前、仍在運作中的站台上的FC連接埠可能會登入Fabric。
+
+如果災難上的FC連接埠尚未移除、則在正常運作站台上、FC連接埠的Fabric登入嘗試可能會因為WWPN重複而遭到拒絕。FC交換器的這種行為可以變更、以認可先前裝置的登入、而非現有裝置的登入。您應該驗證此行為對其他Fabric裝置的影響。如需詳細資訊、請聯絡交換器廠商。
+
+根據交換器類型選擇正確的程序。
+
+.步驟
+[role="tabbed-block"]
+====
+.Cisco交換器
+--
+. 連線至交換器並登入。
+. 進入組態模式：
++
+....
+switch# config t
+switch(config)#
+....
+. 使用新裝置覆寫名稱伺服器資料庫中的第一個裝置項目：
++
+[listing]
+----
+switch(config)# no fcns reject-duplicate-pwwn vsan 1
+----
+. 在執行NX-OS 8.x的交換器中、確認FLOGI靜止逾時設定為零：
++
+.. 顯示靜止時間服務：
++
+`switch(config)# show flogi interval info \| i quiesce`
+
++
+....
+ Stats:  fs flogi quiesce timerval:  0
+....
+.. 如果上一個步驟的輸出並未指出timerval為零、請將其設為零：
++
+「Switch(config)# FLOGI scale enable」
+
++
+"Switch(config)$ FLOGi quiesce timeout 0"
+
+
+
+
+
+--
+.Brocade交換器
+--
+. 連線至交換器並登入。
+. 輸入「shwitch停 用」命令。
+. 輸入「configure」命令、然後在提示字元按「y」。
++
+....
+ F-Port login parameters (yes, y, no, n): [no] y
+....
+. 選擇設定1：
++
+....
+- 0: First login take precedence over the second login (default)
+- 1: Second login overrides first login.
+- 2: the port type determines the behavior
+Enforce FLOGI/FDISC login: (0..2) [0] 1
+....
+. 回應其餘的提示、或按* Ctrl + D*。
+. 輸入「shwitchEnable」命令。
+
+
+--
+====
+.相關資訊
+link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/task_perform_switchover_for_tests_or_maintenance.html["執行測試或維護的切換"^]

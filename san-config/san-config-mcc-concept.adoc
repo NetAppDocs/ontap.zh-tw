@@ -11,99 +11,18 @@ summary: 在MetroCluster 使用SAN組態時、您必須注意某些考量因素�
 
 
 * 支援的不支援前端FC架構「'route'」vSAN組態。MetroCluster
-* 不支援前端NVMe主機連線的支援組態。MetroCluster
-* 其他SAN傳輸協定也支援MetroCluster 在支援的支援範本上。
-* 使用SAN用戶端組態時、您必須檢查MetroCluster 「互通性對照表工具IMT 」（簡稱「互通性對照表工具」）中的附註中是否包含任何有關「支援」組態的特殊考量。
+* 從版本號為209.12.1開始ONTAP 、MetroCluster NVMe / FC支援四節點的「靜態IP」組態。不支援使用不支援不支援使用支援的NVMe組態ONTAP MetroCluster 。
+* 其他SAN傳輸協定、例如iSCSI、FC和FCoE、均支援MetroCluster 在各種組態上。
+* 使用SAN用戶端組態時、您必須檢查MetroCluster 中所提供的附註中是否包含任何關於功能組態的特殊考量 link:https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^] （僅限部分）IMT 。
 * 作業系統和應用程式必須提供120秒的I/O恢復能力、才能支援MetroCluster 非計畫性自動切換、以及斷路器或調解器啟動的切換。
 * 該支援區在前端SAN的兩側使用相同的WWPN。MetroCluster
 
 
+.相關資訊
+link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html["瞭MetroCluster 解資料保護與災難恢復"^]
 
-NOTE: 在切換期間、在Fabric偵測到災難站台上的FC連接埠離線且已從名稱和目錄服務中移除此連接埠之前、仍在運作中的站台上的FC連接埠可能會登入Fabric。如果災難上的FC連接埠尚未移除、則在正常運作站台上、FC連接埠的Fabric登入嘗試可能會因為WWPN重複而遭到拒絕。FC交換器的這種行為可以變更、以認可先前裝置的登入、而非現有裝置的登入。您應該驗證此行為對其他Fabric裝置的影響。如需詳細資訊、請聯絡交換器廠商。
-
-若要深入瞭解、請參閱：
-
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html["瞭MetroCluster 解資料保護與災難恢復"]
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/task_perform_switchover_for_tests_or_maintenance.html["執行測試或維護的切換"]
-
-
-.步驟
-若要避免舊連接埠離線且新連接埠上線時發生重疊、請使用下列步驟來設定前端交換器：
-
-[cols="20,80"]
-|===
-
-
-| 適用於... | 請使用下列步驟： 
-
-
- a| 
-Cisco交換器
- a| 
-. 連線至交換器並登入。
-. 進入組態模式：
-+
-....
-switch# config t
-switch(config)#
-....
-. 使用新裝置覆寫名稱伺服器資料庫中的第一個裝置項目：
-+
-[listing]
-----
-switch(config)# no fcns reject-duplicate-pwwn vsan 1
-----
-. 在執行NX-OS 8.x的交換器中、確認FLOGI靜止逾時設定為零：
-+
-.. 顯示靜止時間服務：
-+
-「切換（組態）#顯示FLOGI時間間隔資訊| I quiesce」（靜止）
-
-+
-....
- Stats:  fs flogi quiesce timerval:  0
-....
-.. 如果上一個步驟的輸出並未指出timerval為零、請將其設為零：
-+
-「Switch(config)# FLOGI scale enable」
-
-+
-"Switch(config)$ FLOGi quiesce timeout 0"
-
-
-
-
-
-
-
- a| 
-Brocade交換器
- a| 
-. 連線至交換器並登入。
-. 輸入「shwitch停 用」命令。
-. 輸入「configure」命令、然後在提示字元按「y」。
-+
-....
- F-Port login parameters (yes, y, no, n): [no] y
-....
-. 選擇設定1：
-+
-....
-- 0: First login take precedence over the second login (default)
-- 1: Second login overrides first login.
-- 2: the port type determines the behavior
-Enforce FLOGI/FDISC login: (0..2) [0] 1
-....
-. 回應其餘的提示、或按* Ctrl + D*。
-. 輸入「shwitchEnable」命令。
-
-
-|===
 如需MetroCluster特定主機的詳細資訊、請參閱下列NetApp知識庫文章：
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/What_are_AIX_Host_support_considerations_in_a_MetroCluster_configuration%3F["什麼是MetroCluster AIX主機支援考量事項？"]
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/What_are_AIX_Host_support_considerations_in_a_MetroCluster_configuration%3F["什麼是MetroCluster AIX主機支援考量事項？"^]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/Solaris_host_support_considerations_in_a_MetroCluster_configuration["Solaris主機支援MetroCluster 考量的功能"]
-
-.相關資訊
-https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/Solaris_host_support_considerations_in_a_MetroCluster_configuration["Solaris主機支援MetroCluster 考量的功能"^]

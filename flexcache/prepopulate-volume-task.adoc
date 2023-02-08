@@ -20,16 +20,19 @@ summary: 您可以預先填入FlexCache 一個現象區、以縮短存取快取�
 
 .關於這項工作
 * 預先填入只讀取檔案、並在目錄中搜尋
-* 「是遞迴」旗標會套用至傳遞給預先填入的整個目錄清單
+* 。 `-isRecursion` 此旗標會套用至傳遞給預先填入的目錄的完整清單
 
 
 .步驟
 . 預先填入FlexCache 一個資料流通量：
 +
-「Volume FlexCache 回填預先填入-cache-vserver vserver_name -cache磁碟區-path-list path_list -is-recursion true|假」
+`volume flexcache prepopulate -cache-vserver vserver_name -cache-volume -path-list _path_list_ -isRecursion true|false`
 
 +
-此範例包含預先填入的單一目錄路徑：
+** 。 `-path-list` 參數指出您要從來源根目錄開始預先填入的相對目錄路徑。例如、如果來源根目錄命名為/origin、其中包含目錄/orige/dir1和/orige/dir2、您可以如下指定路徑清單： `-path-list dir1, dir2` 或 `-path-list /dir1, /dir2`。
+** 的預設值 `-isRecursion` 參數為True。
++
+此範例預先填入單一目錄路徑：
 
 +
 [listing]
@@ -39,7 +42,7 @@ cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cac
 [JobId 207]: FlexCache prepopulate job queued.
 ----
 +
-此範例包含預先填入的數個路徑清單：
+此範例預先填入多個目錄中的檔案：
 
 +
 [listing]
@@ -47,6 +50,26 @@ cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cac
 cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1,/dir2,/dir3,/dir4
   (volume flexcache prepopulate start)
 [JobId 208]: FlexCache prepopulate job queued.
+----
++
+此範例預先填入單一檔案：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1/file1.txt
+  (volume flexcache prepopulate start)
+[JobId 209]: FlexCache prepopulate job queued.
+----
++
+此範例預先填入來源的所有檔案：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list / -isRecursion true
+  (volume flexcache prepopulate start)
+[JobId 210]: FlexCache prepopulate job queued.
 ----
 +
 此範例包含預先填入的無效路徑：
@@ -60,6 +83,8 @@ cluster1::*> flexcache prepopulate start -cache-volume vol_cache2_vs3_c2_vol_ori
 Error: command failed: Path(s) "dir5, dir6" does not exist in origin volume
        "vol_origin1_vs1_c1" in Vserver "vs1_c1".
 ----
+
+
 . 顯示讀取的檔案數：
 +
 「jobshow -id job_ID -ins」
