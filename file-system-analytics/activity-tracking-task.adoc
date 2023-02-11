@@ -2,7 +2,7 @@
 permalink: file-system-analytics/activity-tracking-task.html 
 sidebar: sidebar 
 keywords: monitor, volume, ontap, FSA, File System Analytics, 
-summary: 活動追蹤：檢視指定Volume中的常用檔案、目錄、用戶端和使用者、以進行即時效能疑難排解 
+summary: 「活動追蹤」功能可讓您識別常用物件、並將其下載為CSV檔案。 
 ---
 = 啟用「活動追蹤」
 :allow-uri-read: 
@@ -36,7 +36,7 @@ summary: 活動追蹤：檢視指定Volume中的常用檔案、目錄、用戶�
 您可以使用ONTAP 支援「活動追蹤」功能的支援功能、以支援使用「支援系統管理程式」或ONTAP 「支援CLI」功能。
 
 .關於這項工作
-如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 <<角色型存取控制（RBAC）和活動追蹤>> 此程序。
+如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 xref:role-based-access-control-task.html[角色型存取控制] 此程序。
 
 [role="tabbed-block"]
 ====
@@ -72,7 +72,7 @@ summary: 活動追蹤：檢視指定Volume中的常用檔案、目錄、用戶�
 您可以使用System Manager一次啟用多個磁碟區的「活動追蹤」。
 
 .關於這項工作
-如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 <<角色型存取控制（RBAC）和活動追蹤>> 此程序。
+如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 <<Role-based access control (RBAC) and Activity Tracking>> 此程序。
 
 [role="tabbed-block"]
 ====
@@ -94,48 +94,3 @@ summary: 活動追蹤：檢視指定Volume中的常用檔案、目錄、用戶�
 
 --
 ====
-
-
-== 角色型存取控制（RBAC）和活動追蹤
-
-如果您使用 xref:../concepts/administrator-authentication-rbac-concept.html[角色型存取控制] （RBAC）ONTAP 在System Manager或R靜止API中、您需要建立專屬角色、以便在檔案系統分析中適度存取「活動追蹤」。
-
-.步驟
-. 建立預設角色以存取所有功能。
-+
-在建立限制角色之前、必須先完成這項作業、以確保「活動追蹤」上的角色僅受到限制：
-
-+
-「安全登入角色create -cmd目錄名稱預設-access all -role storageAdmin」
-
-. 建立限制角色：
-+
-「安全性登入角色create -cmd目錄名稱"volume file show-disk-usage"-access nONE -role storageadmin"
-
-. 授權角色存取SVM的Web服務：
-+
-** 用於REST API呼叫的"REst"
-** 密碼保護的安全性
-** 「ysmgr"」存取系統管理程式
-+
-「vserver services web存取create -vserver _svm-name_-name_-name rest -role storageAdmin」
-
-+
-「Vserver服務網路存取create -vserver _svm-name_-name安全性-role storageAdmin」
-
-+
-「vserver services web存取create -vserver _svm-name_-name sysmgr -role storageAdmin」
-
-
-
-. 建立使用者。
-+
-您必須針對要套用至使用者的每個應用程式、發出不同的create命令。在同一位使用者上多次呼叫建立、只會將所有應用程式套用至該位使用者、而不會每次都建立新的使用者。應用程式類型的「http」參數適用於ONTAP 「靜態API」和「系統管理程式」。
-
-+
-「安全登入create -user-or group名稱storageUser -authentation-method password -applicationhttp -role storageAdmin」
-
-. 有了新的使用者認證資料、您現在可以登入System Manager、或使用ONTAP REST API來存取檔案系統分析資料。
-
-
-link:https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html["深入瞭解RBAC角色和ONTAP REST API"^]

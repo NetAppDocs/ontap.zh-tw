@@ -1,0 +1,114 @@
+---
+permalink: file-system-analytics/role-based-access-control-task.html 
+sidebar: sidebar 
+keywords: rbac, file system analytics, control, pre-defined, admin-no-fsa 
+summary: 視ONTAP 您使用的版本而定、您可能必須建立自訂的RBAC角色、才能使用檔案系統分析功能。 
+---
+= 以角色為基礎的存取控制：檔案系統分析
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從《銷售資訊》9.12開始ONTAP 、ONTAP 這個功能包括預先定義的角色型存取控制（RBAC）角色、稱為 `admin-no-fsa`。。 `admin-no-fsa` 角色會授予系統管理員層級的權限、但會防止使用者執行與相關的作業 `files` 端點（例如檔案系統分析）、位於ONTAP Rest CLI、REST API和System Manager中。
+
+如需的詳細資訊、請參閱 `admin-no-fsa` 角色、請參閱 xref:../authentication/predefined-roles-cluster-administrators-concept.html[叢集管理員的預先定義角色]。
+
+如果您使用ONTAP 的是ONTAP 發行版本不低於《支援資訊》9.12.1的版本、則需要建立專屬角色來控制檔案系統分析的存取。在ONTAP 版本的不含ONTAP 更新版本《R129.12.1.1》中、您必須透過ONTAP 《The R1221》或ONTAP 《The R1221 API》來設定RBAC權限。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從ONTAP 《支援資料》9.12.1開始、您可以使用System Manager設定檔案系統分析的RBAC權限。
+
+.步驟
+. 選擇*叢集>設定*。在「*安全性*」下、瀏覽至*使用者與角色*、然後選取 image:icon_arrow.gif["箭頭圖示"]。
+. 在*角色*下、選取 image:icon_add.gif["新增圖示"]。
+. 提供角色名稱。在「角色屬性」下、提供適當的權限來設定使用者角色的存取或限制 link:https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-the-ontap-api-documentation-page["API端點"^]。請參閱下表、瞭解設定檔案系統分析存取或限制的主要路徑和次要路徑。
++
+|===
+| 限制 | 主要路徑 | 次要路徑 
+
+
+| Volume活動追蹤 | `/api/storage/volumes`  a| 
+** `/_:uuid_/top-metrics/directories`
+** `/_:uuid_/top-metrics/files`
+** `/_:uuid_/top-metrics/clients`
+** `/_:uuid_/top-metrics/users`
+
+
+
+
+| SVM上的活動追蹤 | `/api/svm/svms`  a| 
+** `/_:uuid_/top-metrics/directories`
+** `/_:uuid_/top-metrics/files`
+** `/_:uuid_/top-metrics/clients`
+** `/_:uuid_/top-metrics/users`
+
+
+
+
+| 所有檔案系統分析作業 | `/api/storage/volumes` | `/_:uuid_/files` 
+|===
++
+您可以使用 `/{asterisk}/` 而非UUID、可在端點設定所有磁碟區或SVM的原則。
+
++
+選擇每個端點的存取權限。
+
+. 選擇*保存*。
+. 若要將角色指派給使用者、請參閱 xref:../task_security_administrator_access.html[控制系統管理員存取權]。
+
+
+--
+.CLI
+--
+如果您使用ONTAP 的是ONTAP 版本不低於《21》的《21》、請使用ONTAP 《21》的《21》CLI建立自訂角色。
+
+.步驟
+. 建立預設角色以存取所有功能。
++
+在建立限制角色之前、必須先完成這項作業、以確保「活動追蹤」上的角色僅受到限制：
+
++
+「安全登入角色create -cmd目錄名稱預設-access all -role storageAdmin」
+
+. 建立限制角色：
++
+「安全性登入角色create -cmd目錄名稱"volume file show-disk-usage"-access nONE -role storageadmin"
+
+. 授權角色存取SVM的Web服務：
++
+** 用於REST API呼叫的"REst"
+** 密碼保護的安全性
+** 「ysmgr"」存取系統管理程式
++
+「vserver services web存取create -vserver _svm-name_-name_-name rest -role storageAdmin」
+
++
+「Vserver服務網路存取create -vserver _svm-name_-name安全性-role storageAdmin」
+
++
+「vserver services web存取create -vserver _svm-name_-name sysmgr -role storageAdmin」
+
+
+
+. 建立使用者。
++
+您必須針對要套用至使用者的每個應用程式、發出不同的create命令。在同一位使用者上多次呼叫建立、只會將所有應用程式套用至該位使用者、而不會每次都建立新的使用者。應用程式類型的「http」參數適用於ONTAP 「靜態API」和「系統管理程式」。
+
++
+「安全登入create -user-or group名稱storageUser -authentation-method password -applicationhttp -role storageAdmin」
+
+. 有了新的使用者認證資料、您現在可以登入System Manager、或使用ONTAP REST API來存取檔案系統分析資料。
+
+
+--
+====
+.更多資訊
+* xref:../authentication/predefined-roles-cluster-administrators-concept.html[叢集管理員的預先定義角色]
+* xref:../task_security_administrator_access.html[使用System Manager控制系統管理員存取權限]
+* link:https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html["深入瞭解RBAC角色和ONTAP REST API"^]
+

@@ -39,10 +39,12 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 * 您必須符合升級準備要求。
 * 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
 +
-批次升級期間、當一組節點升級時、生命體即會移轉至HA合作夥伴節點。如果合作夥伴在同一個廣播網域中沒有任何連接埠、則LIF移轉會失敗。
+如果您有8個以上的節點、批次升級方法將用於自動不中斷升級。在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP如果合作夥伴在同一個廣播網域中沒有任何連接埠、則LIF移轉會失敗。
 
-* 如果您要從ONTAP Sing 9.3升級至9.7、您必須已取得9.5和9.7的軟體映像。
-* 如果您要從ONTAP 更新版的版本從更新版的版本9.5升級至9.9.1、則必須取得9.7和9.9.1的軟體映像。
++
+在更新的版本中、如果使用批次方法、則會將lifs移轉至其他批次群組。ONTAP
+
+* 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您必須同時取得ONTAP 您所需的兩個正確的資訊影像 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升級途徑"]。
 
 
 .關於這項工作

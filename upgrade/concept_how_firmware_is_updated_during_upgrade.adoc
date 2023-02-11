@@ -2,16 +2,16 @@
 permalink: upgrade/concept_how_firmware_is_updated_during_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, how, firmware, updated, during 
-summary: 由於ONTAP 升級功能包括升級韌體、因此您不需要手動更新韌體。 
+summary: 您不需要在ONTAP 進行升級之前手動更新韌體。叢集的韌體隨附ONTAP 於更新套件中、並複製到每個節點的開機裝置。新韌體隨後會在升級程序中安裝。 
 ---
-= 韌體ONTAP 如何在升級過程中更新
+= 準備韌體更新
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-由於ONTAP 升級功能包括升級韌體、因此您不需要手動更新韌體。當您執行ONTAP 還原升級時、ONTAP 會將包含在升級套件中的叢集韌體複製到每個節點的開機裝置、並自動安裝新的韌體。
+您不需要在ONTAP 進行升級之前手動更新韌體。叢集的韌體隨附ONTAP 於更新套件中、並複製到每個節點的開機裝置。新韌體隨後會在升級程序中安裝。
 
 如果叢集中的韌體版本比ONTAP 隨附於此版更新套件的韌體版本舊、則會自動更新下列元件的韌體：
 
@@ -22,4 +22,17 @@ summary: 由於ONTAP 升級功能包括升級韌體、因此您不需要手動�
 * Flash 快取
 
 
-如有需要、您也可以在ONTAP 各個版本之間手動更新韌體。
+若要準備順利更新、您應該在升級開始之前重新啟動SP或BMC。
+
+.步驟
+. 在升級之前重新啟動SP或BMC： `system service-processor reboot-sp -node node_name`
+
+
+如果需要、您也可以 link:https://docs.netapp.com/us-en/ontap/task_admin_update_firmware.html#update-firmware-manually["手動更新韌體"] 在ONTAP 兩次升級之間。如果您有Active IQ 任何問題、您可以 link:https://activeiq.netapp.com/system-firmware/["檢視ONTAP 目前包含在您的ImageImage中的韌體版本清單"]。
+
+更新的韌體版本如下所示：
+
+* link:https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["系統韌體（BIOS、BMC、SP）"]
+* link:https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware["機櫃韌體"]
+* link:https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware["磁碟與快閃快取韌體"]
+
