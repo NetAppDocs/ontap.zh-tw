@@ -14,11 +14,11 @@ summary: 為一致性群組設定保護原則、以啟用應用程式備份、�
 [role="lead"]
 一致性群組可輕鬆管理跨多個磁碟區的SAN、NAS和NVMe應用程式的本機和遠端保護。
 
-建立一致性群組不會自動啟用保護。本機和/或遠端保護原則可在建立時或建立一致性群組之後加以設定。保護原則可包含本機Snapshot複本、或是SnapMirror遠端SnapMirror保護、並具備SnapMirror營運不中斷（SMBC）功能。如果您使用的是巢狀一致性群組、則可以針對個別磁碟區設定不同的保護原則。從功能性的9.11.1開始ONTAP 、一致性群組即提供 <<two-phase,建立雙階段一致性群組Snapshot>>。
+建立一致性群組不會自動啟用保護。本機和/或遠端保護原則可在建立時或建立一致性群組之後加以設定。保護原則可包含本機Snapshot複本、或是SnapMirror遠端SnapMirror保護、並具備SnapMirror營運不中斷（SMBC）功能。如果您使用的是巢狀一致性群組、則可以針對個別磁碟區設定不同的保護原則。
 
-如果您使用遠端SMBC保護、為了確保一致性群組上所建立之一致性群組的Snapshot複本複本會複製到目的地、來源與目的地叢集中的原則標籤必須相符。除非預先定義的AutomatedFailOver原則中新增了具有SnapMirror標籤的規則、而且使用該標籤建立了Snapshot複本、否則在預設情況下、SM - BC不會複寫Snapshot複本。若要深入瞭解此程序、請參閱 link:../task_san_configure_protection_for_business_continuity.html["設定保護以確保營運不中斷"]。
+從功能性的9.11.1開始ONTAP 、一致性群組即提供 <<two-phase,建立雙階段一致性群組Snapshot>>。兩階段Snapshot會執行預先檢查、確保快照能夠成功擷取。
 
-可以針對整個一致性群組、階層式組態中的單一一致性群組、或是一致性群組中的個別磁碟區進行還原。您可以選取想要恢復的一致性群組、選取Snapshot複本類型、然後識別特定的Snapshot複本、以作為還原基礎、藉此達成恢復。如需此程序的詳細資訊、請參閱 link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]。
+可以針對整個一致性群組、階層式組態中的單一一致性群組、或是一致性群組中的個別磁碟區進行還原。您可以選取想要恢復的一致性群組、選取Snapshot複本類型、然後識別Snapshot複本、以建立還原基礎、藉此達成恢復。如需此程序的詳細資訊、請參閱 link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]。
 
 從S廳9.10.1開始ONTAP 、System Manager會在* Protection（保護）> Relationationationationation*（關係）功能表下顯示LUN對應。當您選取來源關係時、System Manager會顯示來源關係的視覺化。選取磁碟區之後、您可以深入瞭解這些關係、以查看包含的LUN清單和啟動器群組關係。此資訊可從個別Volume檢視下載為Excel活頁簿。工作將在背景執行。
 
@@ -26,30 +26,42 @@ summary: 為一致性群組設定保護原則、以啟用應用程式備份、�
 
 == 設定本機Snapshot保護原則
 
+設定本機快照保護原則可讓您建立橫跨一致性群組中所有磁碟區的原則。
+
 .步驟
+. 選擇*儲存>一致性群組*。
 . 從一致性群組功能表中選取您所建立的一致性群組。
 . 在一致性群組的總覽頁面右上角、選取*編輯*。
 . 選中*排程Snapshot複本（本機）*旁的方塊。
 . 選取Snapshot原則。若要設定新的自訂原則、請參閱 link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]。
 . 選擇*保存*。
-. 返回一致性群組總覽功能表。在* Snapshot Copies（local）*下的左欄中、狀態應顯示為「protected」（已保護） image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
+. 返回一致性群組總覽功能表。在* Snapshot Copies（local）*下的左欄中、狀態會顯示為「protected」（已保護） image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
 
 
 
 
-== 建立雙階段CG Snapshot
+== 建立雙階段一致性群組快照
 
-從功能表9.11.1開始ONTAP 、一致性群組支援建立一致性群組（CG）Snapshot的兩階段認可。此功能只能搭配ONTAP 使用靜態API。建立階段為兩階段的CG Snapshot僅適用於建立Snapshot、而非配置一致性群組或還原一致性群組。
+從功能表9.11.1開始ONTAP 、一致性群組支援建立一致性群組（CG）Snapshot的兩階段提交、在提交Snapshot之前先執行預先檢查。此功能只能搭配ONTAP 使用靜態API。建立階段為兩階段的CG Snapshot僅適用於建立Snapshot、而非配置一致性群組或還原一致性群組。
 
-建立雙階段的CG Snapshot會將以POST要求所叫用的Snapshot建立程序、中斷至「/應用程式/一致性群組/｛consister_Group_uuid｝/快照」端點、分為兩個階段。在以POST要求初始化的第一個階段中、API會執行預先檢查、觸發Snapshot建立、並在指定的時間間隔內啟動定時器。如果階段一中的POST要求以201狀態代碼完成、您可以從第一階段開始、在指定的時間間隔內叫用第二階段、並將Snapshot提交至適當的端點。
+建立雙階段的CG Snapshot會中斷以POST要求所叫用的Snapshot建立程序 `/application/consistency-groups/{consistency_group_uuid}/snapshots` 端點分為兩個階段：
 
-若要使用建立雙階段CG Snapshot、叢集中的所有節點都必須執行ONTAP 《資訊與技術資訊：建立雙階段的CG Snapshot時、可以使用「action = start」參數來叫用。您也可以使用「action _timeout」參數來指定Snapshot建立程序所需的最大秒數。「ACAT_Timeout」參數可以設定為介於5到120之間的整數。預設值「action _timeout」為7。
+. 在以POST要求初始化的第一個階段中、API會執行預先檢查、觸發Snapshot建立、並在指定的時間間隔內啟動定時器。
+. 如果階段一中的POST要求以201狀態代碼完成、您可以從第一階段開始、在指定的時間間隔內叫用第二階段、並將Snapshot提交至適當的端點。
 
-一致性群組執行個體一次只支援一個一致性群組Snapshot建立作業的作用中呼叫、無論是單一階段或雙階段。嘗試在另一個Snapshot建立作業正在進行時叫用、將會導致故障。
 
 如需ONTAP 更多有關靜態API的資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API 參考"^] 或造訪 link:https://devnet.netapp.com/restapi.php["靜態API頁面ONTAP"^] 請至NetApp開發人員網路取得API端點的完整清單。
 
-.建立兩階段提交
+.兩階段一致性群組快照的考量事項
+* 若要使用建立雙階段CG Snapshot、叢集中的所有節點都必須執行ONTAP 更新版本的版本資訊。
+* 一致性群組執行個體一次只支援一個一致性群組Snapshot建立作業的作用中呼叫、無論是單一階段或雙階段。嘗試在另一個Snapshot建立作業正在進行時叫用、將會導致故障。
+* 您可以使用來叫用雙階段一致性群組Snapshot建立 `action=start` 參數。
++
+您也可以使用 `action_timeout` 此參數可指定Snapshot建立程序所需的最大秒數。。 `action_timeout` 參數可以設定為5到120之間的整數。的預設值 `action_timeout` 是7。
+
+
+
+.建立雙階段一致性群組快照
 . 使用「action = start」參數、以POST要求將Snapshot建立叫用至一致性群組端點。
 +
 [source, curl]
@@ -74,27 +86,28 @@ curl -k -X PATCH 'https://<IP_address>/application/consistency-groups/<cg_uuid>/
 
 == 設定遠端SMBC原則
 
+如果您使用遠端SMBC保護、為了確保一致性群組上所建立之一致性群組的Snapshot複本複本會複製到目的地、來源與目的地叢集中的原則標籤必須相符。除非預先定義的規則中加入SnapMirror標籤、否則在預設情況下、SMBC不會複寫Snapshot複本 `AutomatedFailOver` 原則和Snapshot複本是以該標籤建立。若要深入瞭解此程序、請參閱 link:../task_san_configure_protection_for_business_continuity.html["設定保護以確保營運不中斷"]。
+
 .步驟
 . 請確定您已符合使用SM至BC的先決條件。請參閱 link:../smbc/smbc_plan_prerequisites.html["SM至BC的先決條件"]
-
-
++
 
 NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
+. 選擇*儲存>一致性群組*。
 . 從一致性群組功能表中選取您所建立的一致性群組。
 . 在總覽頁面右上角、選取*更多*、然後選取*保護*。
-. 來源端資訊應自動填入頁面左側。
-. 為目的地選取適當的叢集和儲存VM。選取保護原則。確保選中*初始化關係*。
-. 按一下「 * 儲存 * 」。
-. 一致性群組必須初始化及同步處理。完成後、在* SnapMirror（遠端）*下、狀態應在旁邊顯示「受保護」 image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
+. 來源端資訊將會自動填入。為目的地選取適當的叢集和儲存VM。選取保護原則。確保選中*初始化關係*。
+. 選擇*保存*。
+. 一致性群組必須初始化及同步處理。完成後、在* SnapMirror（遠端）*下、旁邊會顯示「受保護」狀態 image:../media/icon_shield.png["Alt=綠色遮蔽圖示"]。
 
-
-如需SM-BC的詳細資訊、請參閱 link:../smbc/index.html["SM - BC總覽"]。
 
 .後續步驟
-link:clone-task.html["複製一致性群組"]
-link:../task_dp_configure_snapshot.html["設定Snapshot複本"]
-link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]
+* link:clone-task.html["複製一致性群組"]
+* link:../task_dp_configure_snapshot.html["設定Snapshot複本"]
+* link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]
 link:../task_dp_recover_snapshot.html["從Snapshot複本恢復"]
-link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]
-link:../smbc/index.html["SM - BC總覽"]
+* link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]
+* link:../smbc/index.html["SM - BC總覽"]
+* link:https://docs.netapp.com/us-en/ontap-automation/["自動化文件ONTAP"^]
+

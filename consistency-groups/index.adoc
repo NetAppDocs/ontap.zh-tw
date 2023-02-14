@@ -1,8 +1,8 @@
 ---
 permalink: consistency-groups/index.html 
 sidebar: sidebar 
-keywords: consistency groups, consistency group protection, application protection 
-summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括階層式和單一一致性群組、保護原則和升級考量。 
+keywords: consistency group protection, application protection, metrocluster, write-order, application management, workload 
+summary: 一致性群組是以單一單元形式組織的磁碟區集合、有助於輕鬆管理及保護橫跨多個磁碟區或LUN的工作負載。 
 ---
 = 一致性群組總覽
 :allow-uri-read: 
@@ -11,23 +11,33 @@ summary: 您可以在ONTAP 不一致的情況下使用一致性群組、包括�
 
 
 [role="lead"]
-一致性群組是一組磁碟區、可為橫跨多個磁碟區的應用程式工作負載提供寫入順序一致性保證。
+一致性群組是以單一單位管理的磁碟區集合。在支援功能方面ONTAP 、一致性群組可為橫跨多個磁碟區的應用程式工作負載提供簡易的管理和保護保證。
+
+您可以使用一致性群組來簡化儲存管理。想像您擁有一個橫跨20個LUN的重要資料庫。您可以個別管理LUN、或將LUN視為單獨的資料集、將其分組為單一一致性群組。
 
 一致性群組可協助管理應用程式工作負載、輕鬆管理本機和遠端保護原則、並在一段時間內為一組磁碟區提供一致的當機或應用程式一致的Snapshot複本。一致性群組中的快照可還原整個應用程式工作負載。
 
+
+
+== 功能
+
 一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的SESSESE Volume、並可透過ONTAP 「RESSREST API」或「System Manager」（系統管理程式）的「* Storage（儲存設備）> Consistency Groups（一致性群組）*」功能表項目
 
-一致性群組可作為個別實體或階層關係存在。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SM至BC關係和共用的SM至BC原則、可用來恢復整個一致性群組。
+一致性群組可作為個別實體或階層關係存在。個別一致性群組是一個磁碟區集合。磁碟區可以擁有自己的Volume精細Snapshot原則。此外、與磁碟區相關聯的一致性群組也可以擁有自己的快照原則。一致性群組只能有一個SnapMirror營運不中斷（SM至BC）關係和共享的SM至BC原則、可用來恢復整個一致性群組。
+
+下圖說明如何使用個別一致性群組。託管的應用程式資料 `SVM1` 橫跨兩個磁碟區： `vol1` 和 `vol2`。一致性群組的Snapshot原則每15分鐘擷取一次資料快照。
 
 image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
 
-較大的應用程式工作負載可能需要多個一致性群組。在這些情況下、可以將多個一致性群組置於階層關係中。在此組態中、單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端的SM至BC保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
+較大的應用程式工作負載可能需要多個一致性群組。在這種情況下、您可以建立階層式一致性群組、讓單一一致性群組成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端的SM至BC保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
+
+在下列範例中、應用程式裝載於 `SVM1`。系統管理員已建立父一致性群組、 `SVM1_app`包括兩個子一致性群組： `SVM1appDataCG` 的資料和 `SVM1app_logCG` 記錄。每個子一致性群組都有自己的快照原則。中磁碟區的快照 `SVM1appDataCG` 每15分鐘進行一次。的快照 `SVM1app_logCG` 每小時進行一次。父一致性群組 `SVM1_app` 具有SM至BC原則、可複寫資料、確保在發生災難時仍能繼續提供服務。
 
 image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其相關磁碟區的圖表"]
 
-從功能支援的版本起、一致性群組即為支援ONTAP xref:clone-task.html[複製] 並修改一致性的成員 xref:modify-task.html[新增或移除磁碟區] 在System Manager和ONTAP the靜止API中。從功能支援的版本號為《支援使用者的應用程式與應用程式的使用者介面」（英語）ONTAP ONTAP 、
+從功能支援的版本起、一致性群組即為支援ONTAP xref:clone-task.html[複製] 並修改一致性的成員 xref:modify-task.html[新增或移除磁碟區] 在System Manager和ONTAP the靜止API中。從功能支援的版本號為《支援使用者的應用程式與應用程式的使用者介面」（英語）ONTAP ONTAP 、
 
-* 使用新的NFS或SMB磁碟區或NVMe命名空間建立一致性群組。
+* 使用新的NFS或SMB磁碟區或NVMe命名空間來建立一致性群組。
 * 將新的或現有的NFS或SMB磁碟區或NVMe命名空間新增至現有的一致性群組。
 
 
@@ -37,14 +47,22 @@ image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與
 
 == 保護
 
-一致性群組透過Snapshot原則提供本機保護、並透過SnapMirror營運不中斷（SMBC）提供遠端保護。建立一致性群組不會自動啟用保護。建立一致性群組或建立一致性群組之後、可以設定本機和/或遠端保護原則。
+一致性群組提供：
 
-若要使用一致性群組設定本機保護、請參閱 link:protect-task.html["保護一致性群組"]。從功能性的9.11.1開始ONTAP 、一致性群組即提供 link:protect-task.html#two-phase-CG-snapshot-creation["建立雙階段一致性群組快照"]。
+* 透過Snapshot原則提供本機保護
+* 遠端保護 xref:../smbc/index.html[SnapMirror營運不中斷（SMBC）] 或 <<mcc>>
+
+
+建立一致性群組不會自動啟用保護。建立一致性群組或建立一致性群組之後、可以設定本機和/或遠端保護原則。
+
+若要在一致性群組上設定本機保護、請參閱 link:protect-task.html["保護一致性群組"]。
 
 若要使用遠端保護、您必須符合的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror營運不中斷部署]。
 
 
 NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
+
+從功能性的9.11.1開始ONTAP 、一致性群組也支援 link:protect-task.html#two-phase-CG-snapshot-creation["建立雙階段一致性群組快照"]。
 
 
 
@@ -52,7 +70,11 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
 從功能完整的9.12.1開始ONTAP 、一致性群組支援元件和應用程式標記。應用程式與元件標籤是一種管理工具、可讓您篩選及識別一致性群組中的不同工作負載。
 
-應用程式標籤適用於個別和父一致性群組。應用程式標籤提供工作負載標記、例如MongoDB、Oracle或SQL Server。一致性群組的預設應用程式標記為「其他」。階層一致性群組中的子群組具有元件標記、而非應用程式標記。元件標籤的選項包括「data」（資料）、「logs」（記錄）或「other」（其他）。預設值為「其他」。
+標籤有兩種類型：
+
+* **應用程式標籤*：這些標籤適用於個別與父一致性群組。應用程式標籤提供工作負載標記、例如MongoDB、Oracle或SQL Server。一致性群組的預設應用程式標記為「其他」。
+* **元件標籤*：階層式一致性群組中的子項目具有元件標籤、而非應用程式標籤。元件標籤的選項包括「data」（資料）、「logs」（記錄）或「other」（其他）。預設值為「其他」。
+
 
 您可以在建立一致性群組或建立一致性群組之後套用標記。如果一致性群組具有SMBC關係、您必須使用*其他*做為應用程式或元件標記。
 
@@ -62,17 +84,17 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
 從ONTAP 功能更新9.11.1開始、您可以在MetroCluster 叢集上以全新的Volume配置一致性群組、並以功能更新的方式進行配置。這些磁碟區會配置在鏡射的集合體上。
 
-配置好磁碟區之後、您可以在鏡射與無鏡射的集合體之間移動與一致性群組相關的磁碟區。因此、它們可以位於鏡射Aggregate、無鏡射Aggregate或兩者上。您可以修改包含與一致性群組相關聯之磁碟區的鏡射Aggregate、使其變成無鏡射。同樣地、您也可以修改包含與一致性群組相關之磁碟區的無鏡射Aggregate、以啟用鏡射功能。
+配置好磁碟區之後、您可以在鏡射與無鏡射的集合體之間移動與一致性群組相關的磁碟區。因此、與一致性群組相關聯的磁碟區可位於鏡射Aggregate、無鏡射Aggregate或兩者上。您可以修改包含與一致性群組相關聯之磁碟區的鏡射Aggregate、使其變成無鏡射。同樣地、您也可以修改包含與一致性群組相關之磁碟區的無鏡射Aggregate、以啟用鏡射功能。
 
 與位於鏡射集合體及其Snapshot上的一致性群組相關聯的磁碟區（包括任何一致性群組Snapshot）、會複寫到遠端站台（站台B）。站台B上的磁碟區內容符合一致性群組語義標準。您可以使用一致性群組Snapshot REST API和System Manager、在執行ONTAP 版本更新版本的叢集上存取複寫一致性群組Snapshot。
 
-如果與一致性群組相關聯的部分或全部磁碟區位於目前無法存取的無鏡射集合體上、則一致性群組上的Get或Delete作業會如同本機磁碟區或託管集合體離線一樣運作。
+如果與一致性群組相關聯的部分或所有磁碟區位於目前無法存取的無鏡射集合體上、則一致性群組上的Get或Delete作業會如同本機磁碟區或託管集合體離線一樣運作。
 
 
 
 === 一致性群組組態複寫
 
-如果站台B執行ONTAP 的是版本號為NetApp 9.10.1或更新版本、則只有與鏡射集合體上的一致性群組相關聯的磁碟區會複寫到站台B如果兩個站台都執行ONTAP 的是版本號為「版本資訊」、則一致性群組組組態只會複寫到站台B。站台B升級到ONTAP 版本號為「版本資訊」9.11.1之後、站台A上的一致性群組資料若將其所有相關的磁碟區放在鏡射集合體上、則會複寫到站台B
+如果站台B執行ONTAP 的是版本號為NetApp 9.10.1或更新版本、則只有與鏡射集合體上的一致性群組相關聯的磁碟區會複寫到站台B如果兩個站台都執行ONTAP 的是版本號為「更新版本」、則一致性群組組組態只會複寫到站台B。將站台B升級ONTAP 至支援版9.11.1之後、站台A上的一致性群組資料若將其所有相關的磁碟區放在鏡射集合體上、則會複寫至站台B
 
 
 
@@ -82,10 +104,14 @@ NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
 
 使用ONTAP REST API建立的一致性群組快照可透過System Manager的一致性群組介面及一致性群組API端點來管理。
 
-使用ONTAPI命令「Cg - start」和「Cg - commit」建立的快照、將無法識別為一致性群組快照、因此無法透過System Manager的一致性群組介面或ONTAP 透過該API中的一致性群組端點進行管理。
+
+NOTE: 使用ONTAPI命令建立的快照 `cg-start` 和 `cg-commit` 將無法辨識為一致性群組快照、因此無法透過ONTAP System Manager的一致性群組介面或是透過該API中的一致性群組端點進行管理。
 
 
 
 == 深入瞭解一致性群組
 
 video::j0jfXDcdyzE[youtube,width=848,height=480]
+.更多資訊
+* link:https://docs.netapp.com/us-en/ontap-automation/["自動化文件ONTAP"^]
+
