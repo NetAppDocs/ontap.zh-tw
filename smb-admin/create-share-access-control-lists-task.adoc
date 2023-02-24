@@ -21,7 +21,7 @@ summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限�
 在工作群組模式中、本機網域名稱是SMB伺服器名稱。
 
 .步驟
-. 刪除預設的共用ACL：`'vserver CIFS共用存取控制刪除-vserver _vserver_name_-share_share_name_-user-or group eapeuse任何人'
+. 刪除預設的共用ACL：'vserver CIFS共用存取控制刪除-vserver _vserver_name_-share_share_name_-user-or group eapeuse任何人'
 . 設定新ACL：
 +
 |===
@@ -31,14 +31,14 @@ summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限�
  a| 
 Windows使用者
  a| 
-「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group類型的windows -user-or群組_windows_windows_domain_name\user_name_-permission _access_Right _」
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\user_name_ -permission _access_right_`
 
 
 
  a| 
 Windows群組
  a| 
-「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group型windows -user-or group _windows_windows_group name_-permission _access_Right _」
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\group_name_ -permission _access_right_`
 
 
 
@@ -59,33 +59,33 @@ UNIX群組
 
 
 .範例
-以下命令賦予「Change（變更）」權限給「'Sales Team（銷售團隊）」Windows群組、以取得「vs1.example.com`"SVM:」上的「shes（銷售）」共用區
+下列命令提供 `Change` 在「vs1.example.com」「SVM：
 
 [listing]
 ----
-cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "Sales Team" -permission Change
+cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "DOMAIN\Sales Team" -permission Change
 
-cluster1::> vserver cifs share access-control show
+cluster1::> vserver cifs share access-control show -vserver vs1.example.com
                  Share       User/Group              User/Group  Access
 Vserver          Name        Name                    Type        Permission
 ---------------- ----------- --------------------    ---------   -----------
 vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
-vs1.example.com  sales       DOMAIN\"Sales Team"     windows     Change
+vs1.example.com  sales       DOMAIN\Sales Team     windows     Change
 ----
-下列命令會針對「vs2.example.com`"SVM:」上的「'eng'」共用區、授予「'eng'」UNIX群組「讀取」權限
+下列命令提供 `Read` 「vs2.example.com」「SVM：
 
 [listing]
 ----
-cluster1::> vserver cifs share access-control create -vserver vs2.example.com -share eng -user-group-type unix-group -user-or-group  eng -permission Read
+cluster1::> vserver cifs share access-control create -vserver vs2.example.com -share eng -user-group-type unix-group -user-or-group  engineering -permission Read
 
-cluster1::> vserver cifs share access-control show
+cluster1::> vserver cifs share access-control show -vserver vs2.example.com
                  Share       User/Group               User/Group  Access
 Vserver          Name        Name                     Type        Permission
 ---------------- ----------- -------------------      ----------- -----------
 vs2.example.com  c$          BUILTIN\Administrators   windows     Full_Control
 vs2.example.com  eng         engineering              unix-group  Read
 ----
-下列命令會將本機Windows群組的「Change（變更）」權限授予名為「老虎團隊（tigerTeam）」的本機Windows使用者「Full_Control（完整控制）」權限、以「'VS1'"SVM上的「datavol5（datavol5）」共用區的「Shue Chang'（英文）」使用者：
+下列命令會提供 `Change` 允許本機Windows群組名為「老虎團隊」和 `Full_Control` 本機Windows使用者在「VS1」「SVM：
 
 [listing]
 ----
@@ -98,6 +98,6 @@ cluster1::> vserver cifs share access-control show -vserver vs1
 Vserver        Name        Name                        Type        Permission
 -------------- ----------- --------------------------- ----------- -----------
 vs1            c$          BUILTIN\Administrators      windows     Full_Control
-vs1            datavol5    DOMAIN\"Tiger Team"         windows     Change
-vs1            datavol5    DOMAIN\"Sue Chang"          windows     Full_Control
+vs1            datavol5    Tiger Team         windows     Change
+vs1            datavol5    Sue Chang          windows     Full_Control
 ----
