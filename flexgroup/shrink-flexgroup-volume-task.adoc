@@ -14,9 +14,10 @@ summary: 從ONTAP 功能性的9.6開始、FlexGroup 您可以將一個不符合�
 從ONTAP 功能性的9.6開始、FlexGroup 您可以將一個不符合目前大小的值重新調整成低於目前大小的值、以便從磁碟區中釋出未使用的空間。當您縮小FlexGroup 一個等量資料量時ONTAP 、系統會自動重新調整FlexGroup 所有的候數資料。
 
 .步驟
-. 縮小FlexGroup 不完整的資料區大小：「Volume size -vserver vserver_name -volume fa_name -size new_size」
+. 檢查目前FlexGroup 的動態區大小：「Volume size -vserver _vserver_name_-volume _fa_name_」
+. 縮小FlexGroup 不必要的資料量： `volume size -vserver _vserver_name_ -volume _fg_name_ _new_size_`
 +
-「new_size」是FlexGroup 指不只是一個大小的現象。您可以指定低於目前大小的值、也可以指定一個負值FlexGroup 來減少目前的縮放。
+當您指定新的大小時、可以使用減號（-）來指定低於目前大小的值、或使用減號（-）來減少FlexGroup 目前的大小。
 
 +
 [NOTE]
@@ -25,13 +26,31 @@ summary: 從ONTAP 功能性的9.6開始、FlexGroup 您可以將一個不符合�
 
 ====
 +
-[listing]
-----
-cluster1::> volume size -vserver svm1 -volume volX -size 10TB
-----
+下列範例顯示FlexGroup 名為volX的目前流通量大小、並將磁碟區大小重新調整為10TB：
+
 +
 [listing]
 ----
-cluster1::> volume size -vserver svm1 -volume volX -size -5TB
+cluster1::> volume size -vserver svm1 -volume volX
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' has size 15TB.
+
+cluster1::> volume size -vserver svm1 -volume volX 10TB
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' size set to 10TB.
+----
++
+下列範例顯示FlexGroup 名為volX的目前流通量大小、並將此磁碟區的大小減少5TB：
+
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' has size 15TB.
+
+cluster1::> volume size -vserver svm1 -volume volX -5TB
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' size set to 10TB.
 ----
 
