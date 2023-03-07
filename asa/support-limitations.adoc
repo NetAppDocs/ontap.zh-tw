@@ -19,18 +19,23 @@ summary: 請使用下列程序、使用System Manager來設定All SAN Array。
 
 
 [role="lead"]
-您應該使用AFF 針對「完整的SAN陣列ASA （ESCSI）」控制器所建立的已測試及支援的最大組態限制。
+支援的組態限制與支援因版本而異ONTAP ASA 。如需支援組態限制的最新詳細資料、請參閱 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-為確保可靠作業、您不應超過中所列的目前已測試及支援限制 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
+[cols="2"]
+|===
+| 開始於... | 支援的支援對象AFF ASA ... 
 
 
+| 9.12.1% | 4節點MetroCluster 之間的NVMe / FC傳輸協定、不支援靜態IP組態 
 
-== 部分組態限制ASA
 
-從推出支援非MetroCluster IP組態的ONTAP 版本起、最多AFF ASA 可支援12個節點、MetroCluster 而支援多達8個節點、以利進行支援。
+| 9.9.1  a| 
+* 非MetroCluster使用者IP組態最多可有12個節點
+* 多達8個節點、可進行MetroCluster 各種不完整的IP組態
+* NVMe傳輸協定、MetroCluster 但不適用於支援不支援的傳輸協定
 
-此外ONTAP 、從支援支援NVM9.9.1開始、所有AFF ASA 的支援都支援NVMe傳輸協定、但不支援MetroCluster 針對功能進行設定的控制器。不支援NVMe組態。MetroCluster
 
+|===
 
 
 == 支援持續連接埠
@@ -52,11 +57,3 @@ summary: 請使用下列程序、使用System Manager來設定All SAN Array。
 《EMS：scsiblade.lif.persistent.ports.fcp.init.error`》
 
 如需持續連接埠的詳細資訊、請參閱 link:http://www.netapp.com/us/media/tr-4080.pdf["NetApp技術報告4080：可擴充SAN ONTAP 的最佳實務做法9"^]。
-
-
-
-== 支援NVMe傳輸協定
-
-從支援支援NVMe.9.9.1開始ONTAP 、所有SAN陣列都支援NVMe傳輸協定。
-
-從功能完整的支援支援支援NVMe/FC的4節點之「靜態IP」組態、從ONTAP 功能完整的版本9.12.1開始MetroCluster 。NVMe不支援9.12.1之前的版本。MetroCluster
