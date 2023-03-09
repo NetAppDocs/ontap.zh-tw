@@ -17,9 +17,9 @@ summary: 若要讓叢集離線以恢復至先前ONTAP 版本的版本、您必�
 
 還原叢集需要在還原期間讓叢集離線。
 
-. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級設為進階：「et -priv榮幸advanc進 階」
 +
-出現進階提示（「*>」）。
+系統提示您繼續時、請輸入* y*。
 
 . 驗證是否ONTAP 安裝目標版的圖形軟體：「System image show」（系統映像顯示）
 +
@@ -41,6 +41,8 @@ node1
 4 entries were displayed.
 ----
 . 停用叢集中的所有資料LIF：「網路介面修改｛-role data｝-STATUS-admin down」
+. 判斷您是否有叢集間FlexCache 的相依關係： `flexcache origin show-caches -relationship-type inter-cluster`
+. 如果存在叢集間的快閃資源包、請停用快取叢集上的資料資源包： `network interface modify -vserver vserver_name -lif lif_name -status-admin down`
 . 如果叢集僅包含兩個節點、請停用叢集HA： `cluster ha modify -configured false`
 . [[ST階-5]停用HA配對中任一節點的儲存容錯移轉： `storage failover modify -node nodename -enabled false`
 +

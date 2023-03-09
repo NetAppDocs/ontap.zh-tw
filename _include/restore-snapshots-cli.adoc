@@ -1,0 +1,42 @@
+= 
+:allow-uri-read: 
+
+
+. 列出Volume中的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume _volume _」
+
++
+以下範例顯示「vol1」中的Snapshot複本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 從Snapshot複本還原磁碟區內容：
++
+「Volume Snapshot還原-vserver _svm_-volume _volume _-snapshot _snapshot _」
+
++
+以下範例還原「vol1（vol1）”的內容：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
+----
+

@@ -14,7 +14,7 @@ summary: 當勒索軟體偵測到潛在攻擊時、就會建立名為「反勒�
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
@@ -24,25 +24,111 @@ summary: 當勒索軟體偵測到潛在攻擊時、就會建立名為「反勒�
 
 NOTE: 如果發生勒索軟體攻擊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["勒索軟體在ONTAP VMware中的預防與恢復"^] 以取得更多有關恢復與未來緩解的資訊。
 
+.關於這項工作
+如果磁碟區具有SnapMirror關係、請在從Snapshot複本還原之後、立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
+
 .您的需求
 * 已啟用ARP
 * 潛在勒索軟體攻擊的報告
 
 
 .步驟
+您可以使用System Manager或ONTAP NetApp CLI來還原資料。
+
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-. 在潛在攻擊中識別的磁碟區中顯示Snapshot複本：按一下* Storage > Volumes *、選取該磁碟區、然後按一下Snapshot Copies（快照複本）索引標籤。
-. 依照下列指示還原所需的複本：link:../task_dp_recover_snapshot.html["從Snapshot複本恢復"]
+. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
++
+[cols="2"]
+|===
+| 如果發現系統攻擊、請執行此動作... | 如果系統攻擊未被識別、請執行此動作... 
+
+
+ a| 
+.. 按一下「*儲存設備>磁碟區*」。
+.. 選取*安全*、然後按一下*檢視可疑的檔案類型*
+.. 將檔案標示為「誤判」。
+.. 按一下「*更新*」和「*清除可疑的檔案類型*」
+
+ a| 
+若要釋放Snapshot鎖定、您必須先從ARP複本還原、才能從先前的Snapshot複本還原。
+
+請依照步驟2-3從ARP複本還原資料、然後重複此程序、從先前的Snapshot複本還原資料。
+
+|===
+. 在磁碟區中顯示Snapshot複本：
++
+按一下「*儲存設備>磁碟區*」、選取磁碟區、然後按一下「* Snapshot copies *」。
+
+. 按一下 image:icon_kabob.gif["功能表選項"] 在您要還原的Snapshot複本旁邊、然後選取*還原*。
 
 
 --
 .CLI
 --
-. 在潛在攻擊中識別的磁碟區中顯示Snapshot複本：「Volume Snapshot show -vserver _Svm_name_-volume _vol_name_」
-. 依照下列指示還原所需的複本：link:../data-protection/restore-contents-volume-snapshot-task.html["從Snapshot複本還原檔案"]
+. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
++
+[NOTE]
+----
+It is only necessary to release the anti-ransomware Snaplock before restoring from earlier Snapshot copies if you are using the `volume snap restore`` command as outline below.  If you are restoring data using Flex Clone, Single File Snap Restore or other methods, this is not necessary.
+----
++
+[cols="2"]
+|===
+| 如果發現系統攻擊、請執行此動作... | 如果系統攻擊未被識別、請執行此動作... 
+
+
+ a| 
+將攻擊標示為「假正面」和「明確可疑」。
+
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
+
+使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]」序號。[`-exte_text_,… 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、格式為「-start-time_time_-tend-time_]、檔案範圍的開始和結束時間。
+ a| 
+若要釋放Snapshot鎖定、您必須先從ARP複本還原、才能從先前的Snapshot複本還原。
+
+請依照步驟2-3從ARP複本還原資料、然後重複此程序、從先前的Snapshot複本還原資料。
+
+|===
+. 列出Volume中的Snapshot複本：
++
+「Volume Snapshot show -vserver _svm_-volume _volume _」
+
++
+以下範例顯示「vol1」中的Snapshot複本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 從Snapshot複本還原磁碟區內容：
++
+「Volume Snapshot還原-vserver _svm_-volume _volume _-snapshot _snapshot _」
+
++
+以下範例還原「vol1（vol1）”的內容：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
+----
 
 
 --
