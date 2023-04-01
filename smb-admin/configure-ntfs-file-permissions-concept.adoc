@@ -16,3 +16,18 @@ summary: 您可以使用ONTAP CLI在檔案和目錄上設定NTFS檔案權限。�
 您可以將項目新增至與NTFS安全性描述元相關聯的NTFS判別存取控制清單（DACL）、以設定NTFS檔案權限。然後將安全性描述元套用至NTFS檔案和目錄。
 
 您只能使用命令列設定NTFS檔案權限。您無法使用CLI來設定NFSv4 ACL。
+
+.步驟
+. 建立NTFS安全性描述元。
++
+`vserver security file-directory ntfs create -vserver _svm_name_ -ntfs-sd _ntfs_security_descriptor_name_ -owner _owner_name_ -group _primary_group_name_ -control-flags-raw _raw_control_flags_`
+
+. 將DACL新增至NTFS安全性描述元。
++
+`vserver security file-directory ntfs dacl add -vserver _svm_name_ -ntfs-sd _ntfs_security_descriptor_name_ -access-type {deny|allow} -account _account_name_ -rights {no-access|full-control|modify|read-and-execute|read|write} -apply-to {this-folder|sub-folders|files}`
+
+. 建立檔案/目錄安全性原則。
++
+`vserver security file-directory policy create -vserver _svm_name_ -policy-name _policy_name_`
+
+
