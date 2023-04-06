@@ -26,3 +26,36 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 在某些情況下、啟用檔案系統分析可能會對初始中繼資料收集期間的效能造成負面影響。這是最常出現在使用率最大的系統上。為了避免在這類系統上啟用分析功能、您可以使用ONTAP 《支援系統管理程式》的效能監控工具。
 
 如果延遲明顯增加、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["開啟NetApp ONTAP 功能的「NetApp功能性檔案系統分析」後、延遲時間會大幅或波動"^]。
+
+
+
+== 掃描考量
+
+啟用容量分析時、 ONTAP 會執行初始化掃描。掃描會存取已啟用容量分析之 Volume 中所有檔案的中繼資料。掃描期間不會讀取檔案資料。
+
+掃描完成後、檔案系統分析會隨著檔案系統變更而即時更新、無需再次執行掃描。
+
+掃描所需時間與磁碟區上的目錄和檔案數量成比例。由於掃描會收集中繼資料、因此檔案大小不會影響掃描時間。
+
+
+
+=== 最佳實務做法
+
+您應該在不共用集合體的磁碟區上開始掃描。您可以使用命令查看目前裝載哪些磁碟區的集合體：
+
+`volume show -volume _comma-separated-list_of_volumes_ -fields aggr-list`
+
+掃描執行時、磁碟區會繼續處理用戶端流量。建議您在預期用戶端流量較低的期間開始掃描。
+
+如果用戶端流量增加、就會消耗系統資源、導致掃描所需時間較長。
+
+從 ONTAP 9.12.1 開始、您可以在系統管理員和 ONTAP CLI 中暫停資料收集。
+
+* 如果您使用的是 ONTAP CLI ：
++
+** 您可以使用命令暫停資料收集： `volume analytics initialization pause -vserver _svm_name_ -volume _volume_name_`
+** 一旦用戶端流量變慢、您就可以使用命令繼續資料收集： `volume analytics initialization resume -vserver _svm_name_ -volume _volume_name_`
+
+
+* 如果您使用的是 System Manager 、請在 Volume 功能表的 * 檔案總管 * 檢視中、使用 * 暫停資料收集 * 和 * 恢復資料收集 * 按鈕來管理掃描。
+
