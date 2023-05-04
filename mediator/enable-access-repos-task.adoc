@@ -1,0 +1,234 @@
+---
+permalink: mediator/enable-access-repos-task.html 
+sidebar: sidebar 
+keywords: mediator, new, release, update, install, 
+summary: 啟用儲存庫存取、以便 ONTAP Mediator 在安裝過程中存取所需的套件。 
+---
+= 啟用儲存庫存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該啟用儲存庫的存取、以便 ONTAP Mediator 在安裝過程中存取所需的套件
+
+.步驟
+. 確定必須存取的儲存庫、如下表所示：
++
+[cols="35,65"]
+|===
+
+
+| 如果您的作業系統是... | 您必須提供這些儲存庫的存取權限... 
+
+
+ a| 
+RHEL 7.x
+ a| 
+** RHEL-7-server選用-rpms
+
+
+
+
+ a| 
+RHEL 8.x
+ a| 
+** RHEL-8-for-x86_64：basos-rpms
+** RHEL-8-for-x86_64：AppStream：rpms
+
+
+
+
+ a| 
+CentOS 7.x
+ a| 
+** C7.6.1810 -基礎儲存庫
+
+
+
+
+ a| 
+Rocky Linux 8
+ a| 
+** AppStream
+** 基礎
+
+
+
+
+ a| 
+洛基Linux 9
+ a| 
+** AppStream
+** 基礎
+
+
+|===
+. 請使用下列其中一個程序來啟用對上述儲存庫的存取、以便 ONTAP Mediator 在安裝過程中存取所需的套件。
+
+
+.RHEL 7.x作業系統的程序
+[#rhel7x%collapsible]
+====
+如果您的作業系統是 * RHEL 7.x * 、請使用此程序來存取儲存庫：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+「Subscape-manager reposs -啟用RHEL-7-server選用-rpms」
+
++
+下列範例顯示此命令的執行：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
+Repository 'rhel-7-server-optional-rpms' is enabled for this system.
+----
+. 執行「yum repolist」命令。
++
+下列範例顯示此命令的執行。清單中應會顯示「RHEL-7-server選擇性-rpms」儲存庫。
+
++
+[listing]
+----
+[root@localhost ~]# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+rhel-7-server-optional-rpms | 3.2 kB  00:00:00
+rhel-7-server-rpms | 3.5 kB  00:00:00
+(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group              |  26 kB  00:00:00
+(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo         | 2.5 MB  00:00:00
+(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db         | 8.3 MB  00:00:01
+repo id                                      repo name                                             status
+rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
+rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
+repolist: 46,205
+[root@localhost ~]#
+----
+
+
+====
+.RHEL 8.x作業系統的程序
+[#rhel8x%collapsible]
+====
+如果您的作業系統是 * RHEL 8.x 、請使用此程序來存取儲存庫：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+「Substime-manager reposs -啟用RHEL-8-for-x86_64、basos-rpms」
+
++
+「Substime-manager reposs -啟用RHEL-8-for-x86_64：AppStream：rpms」
+
++
+下列範例顯示此命令的執行：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
+Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
+----
+. 執行「yum repolist」命令。
++
+新訂閱的儲存庫應會出現在清單中。
+
+
+
+====
+.CentOS 7.x作業系統的程序
+[#centos7x%collapsible]
+====
+如果您的作業系統為 * CentOS 7.x * 、請使用此程序來啟用儲存庫的存取：
+
+
+NOTE: 下列範例顯示 CentOS 7.6 的儲存庫、可能無法用於其他 CentOS 版本。將基礎儲存庫用於您的CentOS版本。
+
+.步驟
+. 新增C7.6.1810 -基礎儲存庫。C7.6.1810 - 基礎資料保險箱儲存庫包含 ONTAP Mediator 所需的「 kernel-devel 」套件。
+. 將下列行新增至/etc/yum、repos.d/CentOS、Vault.repo。
++
+[listing]
+----
+[C7.6.1810-base]
+name=CentOS-7.6.1810 - Base
+baseurl=http://vault.centos.org/7.6.1810/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+----
+. 執行「yum repolist」命令。
++
+下列範例顯示此命令的執行。Centos-7.6.1810 -基礎儲存庫應出現在清單中。
+
++
+[listing]
+----
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: distro.ibiblio.org
+ * extras: distro.ibiblio.org
+ * updates: ewr.edge.kernel.org
+C7.6.1810-base                                 | 3.6 kB  00:00:00
+(1/2): C7.6.1810-base/x86_64/group_gz          | 166 kB  00:00:00
+(2/2): C7.6.1810-base/x86_64/primary_db        | 6.0 MB  00:00:04
+repo id                      repo name               status
+C7.6.1810-base/x86_64        CentOS-7.6.1810 - Base  10,019
+base/7/x86_64                CentOS-7 - Base         10,097
+extras/7/x86_64              CentOS-7 - Extras       307
+updates/7/x86_64             CentOS-7 - Updates      1,010
+repolist: 21,433
+[root@localhost ~]#
+----
+
+
+====
+.落基 Linux 8 或 9 作業系統的程序
+[#rocky-linux-8-9%collapsible]
+====
+如果您的作業系統是 * Rocky Linux 8* 或 * Rocky Linux 9* 、請使用此程序來存取儲存庫：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+`dnf config-manager --set-enabled baseos`
+
++
+`dnf config-manager --set-enabled appstream`
+
+. 執行 `clean` 營運：
++
+`dnf clean all`
+
+. 確認儲存庫清單：
++
+`dnf repolist`
+
+
+
+....
+[root@localhost ~]# dnf config-manager --set-enabled baseos
+[root@localhost ~]# dnf config-manager --set-enabled appstream
+[root@localhost ~]# dnf clean all
+[root@localhost ~]# dnf repolist
+repo id                        repo name
+appstream                      Rocky Linux 8 - AppStream
+baseos                         Rocky Linux 8 - BaseOS
+[root@localhost ~]#
+....
+....
+[root@localhost ~]# dnf config-manager --set-enabled baseos
+[root@localhost ~]# dnf config-manager --set-enabled appstream
+[root@localhost ~]# dnf clean all
+[root@localhost ~]# dnf repolist
+repo id                        repo name
+appstream                      Rocky Linux 9 - AppStream
+baseos                         Rocky Linux 9 - BaseOS
+[root@localhost ~]#
+....
+====

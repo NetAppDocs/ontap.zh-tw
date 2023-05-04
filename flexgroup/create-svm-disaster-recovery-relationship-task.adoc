@@ -1,7 +1,7 @@
 ---
 permalink: flexgroup/create-svm-disaster-recovery-relationship-task.html 
 sidebar: sidebar 
-keywords: create, svm, disaster, recovery, relationship, flexgroup, volume, flex group, flexclone, flex clone 
+keywords: create, svm, disaster, recovery, svm dr, svm-dr, relationship, flexgroup, volume, flex group, flexclone, flex clone 
 summary: 從ONTAP Sf19.9.1開始、您可以使用FlexGroup 支援的功能區建立SVM災難恢復（SVM DR）關係。SVM DR關係可在發生災難時、透過同步及複寫SVM組態及其資料、提供備援功能、並能在發生災難時恢復FlexGroups。SVM DR需要SnapMirror授權。 
 ---
 = 建立SVM災難恢復關係FlexGroup 、以利支援SVM
@@ -14,16 +14,23 @@ summary: 從ONTAP Sf19.9.1開始、您可以使用FlexGroup 支援的功能區�
 從ONTAP Sf19.9.1開始、您可以使用FlexGroup 支援的功能區建立SVM災難恢復（SVM DR）關係。SVM DR關係可在發生災難時、透過同步及複寫SVM組態及其資料、提供備援功能、並能在發生災難時恢復FlexGroups。SVM DR需要SnapMirror授權。
 
 .開始之前
-您應該瞭解無法建立FlexGroup SVM DR關係的情況。
+您 _ 無法 _ 建立符合下列條件的 FlexGroup SVM DR 關係。
 
 * 存在FlexClone FlexGroup 功能組態
 * 包含一個不全的組態FlexGroup FabricPool
-* 此解決方法是由Fanout或串聯關係所組成FlexGroup
+* FlexGroup Volume 是串聯關係的一部分
+* FlexGroup Volume 是扇出關係的一部分、您的叢集執行的 ONTAP 版本早於 ONTAP 9.12.1 。（從 ONTAP 9.13.1 開始、支援展開關係。）
 
 
 .關於這項工作
 * 兩個叢集中的所有節點都必須執行與ONTAP 新增SVM DR支援的節點相同的版本（ONTAP 更新版本為《SVM DR》）。
 * 一線站台和二線站台之間的SVM DR關係應該健全、而且在一線和二線SVM上應有足夠的空間來支援FlexGroup 該等磁碟區。
+* 當您建立 FlexGroup SVM DR 關係、其中 FlexGroup Volume 是扇出關係的一部分時、您應該瞭解下列需求：
++
+** 來源叢集和目的地叢集必須執行 ONTAP 9.13.1 或更新版本。
+** SVM DR 搭配 FlexGroup 磁碟區、可支援與八個站台的 SnapMirror 扇出關係。
+
+
 
 
 如需建立SVM DR關係的相關資訊、請參閱 https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-svm-replication-workflow-concept.html["管理SnapMirror SVM複寫"]。
@@ -40,7 +47,10 @@ link:create-task.html["建立FlexGroup 一個功能不全的功能"]。
 +
 請等到FlexGroup 建立完所有的成員後再繼續。
 
-. 若要複寫FlexGroup 此SVM磁碟區、請在次要站台更新SVM：「napmirror update -destination-path dite_Svm_name：-source-path svm_name：」+您也可以輸入「snapmirror show -Fields schedule」來檢查是否已有排程的SnapMirror更新
+. 若要複寫 FlexGroup Volume 、請在次要站台更新 SVM ： `snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:`
++
+您也可以輸入以下命令來檢查排程的 SnapMirror 更新是否已存在 `snapmirror show -fields schedule`
+
 . 從二線站台確認SnapMirror關係是否健全：「napmirror show」
 +
 [listing]

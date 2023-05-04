@@ -1,20 +1,25 @@
 ---
 sidebar: sidebar 
 permalink: task_admin_monitor_capacity_in_sm.html 
-keywords: system manager, monitor, capacity, view, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, add capacity, volume, used capacity, available capacity, total capacity, snapshot copy, snapshot copies, inactive data, overprovision, over provision, overflows, snapshot copy reserves, reserves, clone 
-summary: 使用System Manager、您可以監控已使用的儲存容量、以及叢集或本機層的可用容量。 
+keywords: used storage, local tier capacity, aggregate capacity, add capacity, used capacity, available capacity, total capacity, inactive data, overprovision, overflows, snapshot copy reserves, reserves, clone, maximum capacity limit, storage VM, allocated 
+summary: 使用 System Manager 、您可以監控已使用的儲存容量、以及叢集、本機層或儲存 VM 的可用容量。 
 ---
 = 監控System Manager中的容量
 :allow-uri-read: 
 
 
 [role="lead"]
-使用System Manager、您可以監控已使用的儲存容量、以及叢集或本機層的可用容量。
+使用 System Manager 、您可以監控已使用的儲存容量、以及叢集、本機層或儲存 VM 的可用容量。
 
-此外、從ONTAP 功能完整的版本9.10.1開始、您可以使用System Manager來檢視叢集容量的歷史資料、以及未來將使用或可用容量的預測。您也可以監控本機層級和磁碟區的容量。此外ONTAP 、從《系統管理程式》（Syf9.12.1）開始、系統管理程式也會顯示本機層的已認可容量。
+每個 ONTAP 版本的系統管理員都能提供更強大的容量監控資訊：
+
+* 從 ONTAP 9.10.1 開始、系統管理員可讓您檢視叢集容量的歷史資料、以及未來使用或可用容量的預測。您也可以監控本機層級和磁碟區的容量。
+* 從 ONTAP 9.12.1 開始、系統管理員會顯示本機層的已認可容量。
+* 從 ONTAP 9.13.1 開始、您可以為儲存 VM 啟用最大容量限制、並設定臨界值、以便在使用的儲存設備達到最大容量的特定百分比時觸發警示。
 
 
-NOTE: 根據您使用的System Manager版本、已用容量的測量顯示方式會有所不同、如中所述 link:concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]。
+
+NOTE: 根據您的 ONTAP 版本、使用容量的測量顯示方式會有所不同。如需詳細資訊、請參閱 link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]。
 
 
 
@@ -44,14 +49,36 @@ NOTE: 根據您使用的System Manager版本、已用容量的測量顯示方式
 
 NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregate）容量。
 
-. 按一下 image:../media/icon_arrow.gif["向右鍵"] 可查看有關叢集容量的更多詳細資料。
+. 按一下圖表以檢視叢集容量的詳細資料。
++
+容量測量顯示在兩個橫條圖中：
 
++
+--
+** 上方圖表會顯示實體容量：實體使用空間、保留空間和可用空間的大小。
+** 下圖顯示邏輯容量：用戶端資料的大小、 Snapshot 複本和複本、以及總邏輯使用空間。
+
+
+--
++
+橫條圖下方是資料減量的測量：
+
++
+--
+** 僅用戶端資料的資料減量比率（不含Snapshot複本和複本）。
+** 整體資料減量比率。
+
+
+--
+
+
+如需詳細資訊、請參閱 link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]。
 
 
 
 == 檢視本機層的容量
 
-您可以檢視本機層級容量的詳細資料。此外、從ONTAP 《支援資料》9.12.1開始、您可以檢視本機層的已認可容量、以判斷是否需要新增容量至本機層、以容納已認可的容量、並避免可用空間不足。
+您可以檢視本機層級容量的詳細資料。從 ONTAP 9.12.1 開始、 * 容量 * 檢視也包含本機層的已承諾容量、可讓您判斷是否需要新增容量至本機層、以容納已承諾的容量、並避免可用空間不足。
 
 .步驟
 . 按一下*儲存設備> Tiers*。
@@ -79,14 +106,66 @@ NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregat
 
 +
 --
-** 整體資料減量比率。
 ** 僅用戶端資料的資料減量比率（不含Snapshot複本和複本）。
+** 整體資料減量比率。
 
 
 --
 
 
+如需詳細資訊、請參閱 link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]。
+
 .選用動作
 * 如果已提交的容量大於本機層的容量、您可以考慮在本機層用盡可用空間之前、先將容量新增至該層。請參閱 link:./disks-aggregates/add-disks-local-tier-aggr-task.html["新增容量至本機層（新增磁碟至集合體）"]。
-* 您也可以選取* Volumes（磁碟區）*索引標籤、以檢視特定磁碟區在本機層中使用的容量。
+* 您也可以選取 *Volumes * 標籤、來檢視特定磁碟區在本機層中使用的儲存設備。
+
+
+
+
+== 檢視儲存 VM 中磁碟區的容量
+
+您可以檢視儲存 VM 中的磁碟區所使用的儲存容量、以及可用的容量。已用與可用儲存設備的總測量值稱為「跨磁碟區的容量」。
+
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
+. 按一下儲存 VM 的名稱。
+. 捲動至 * 容量 * 區段、其中顯示含有下列測量值的長條圖：
++
+--
+** * 實體使用 * ：此儲存 VM 中所有磁碟區的實體使用儲存設備總和。
+** * 可用 * ：此儲存 VM 中所有磁碟區的可用容量總和。
+** * 已用邏輯 * ：此儲存 VM 中所有磁碟區的邏輯已用儲存設備總和。
+
+
+--
+
+
+如需測量的詳細資訊、請參閱 link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]。
+
+
+
+== 檢視儲存 VM 的最大容量限制
+
+從 ONTAP 9.13.1 開始、您可以檢視儲存 VM 的最大容量限制。
+
+.開始之前
+您必須 link:manage-max-cap-limit-svm-in-sm-task.html["啟用儲存 VM 的最大容量限制"] 在您檢視之前。
+
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
++
+您可以透過兩種方式檢視最大容量測量：
+
++
+--
+** 在儲存 VM 的列中、檢視 * 最大容量 * 欄、其中包含一個長條圖、顯示已用容量、可用容量和最大容量。
+** 按一下儲存 VM 的名稱。在 * 總覽 * 索引標籤上、捲動以檢視左欄中的最大容量、分配容量和容量警示臨界值。
+
+
+--
+
+
+.相關資訊
+* link:manage-max-cap-limit-svm-in-sm-task.html#edit-max-cap-limit-svm["編輯儲存 VM 的最大容量限制"]
+* link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]
 

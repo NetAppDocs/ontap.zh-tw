@@ -1,0 +1,42 @@
+---
+permalink: authentication/configure-local-account-mfa-totp-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
+summary: 若要透過多因素驗證（ MFA ）和時間型一次性密碼（ TOTP ）來利用更高的帳戶安全性、您必須設定本機使用者帳戶以供 TOTP 使用。 
+---
+= 使用 TOTP 設定 MFA 的本機使用者帳戶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、使用者帳戶可以使用時間型一次性密碼（ TOTP ）來設定多因素驗證（ MFA ）。
+
+.開始之前
+* 儲存管理員必須 link:setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp["使用 TOTP 啟用 MFA"] 作為使用者帳戶的第二種驗證方法。
+* 您的主要使用者帳戶驗證方法應為使用者密碼或公開 SSH 金鑰。
+* 您必須將 TOTP 應用程式設定為與智慧型手機搭配使用、並建立 TOTP 秘密金鑰。
++
+TOTP 受到各種驗證者應用程式的支援、例如 Google Authenticator 。
+
+
+
+.步驟
+. 使用目前的驗證方法登入您的使用者帳戶。
++
+您目前的驗證方法應該是使用者密碼或 SSH 公開金鑰。
+
+. 在您的帳戶上建立 TOTP 組態：
++
+[source, cli]
+----
+security login totp create -vserver "<svm_name>" -username "<account_username >"
+----
+. 確認您的帳戶已啟用 TOTP 組態：
++
+[source, cli]
+----
+security login totp show -vserver "<svm_name>" -username "<account_username>"
+----
+

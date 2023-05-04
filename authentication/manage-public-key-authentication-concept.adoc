@@ -27,21 +27,19 @@ summary: 若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系�
 「安全登入publickey create -vserver _svm_name_-username_usernam_-index _index_-publickey _cred_-comment _comment」
 
 +
-如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+如需完整的命令語法、請參閱的工作表參照 link:config-worksheets-reference.html["將公開金鑰與使用者帳戶建立關聯"^]。
 
+. 檢視公開金鑰以驗證變更：
 +
-link:config-worksheets-reference.html["將公開金鑰與使用者帳戶建立關聯"]
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
 
-+
-下列命令會將公開金鑰與SVM系統管理員帳戶「svmadmin1」建立關聯、以供SVM 'engData1'使用。公開金鑰已指派索引編號5。
 
-+
+
+.範例
+下列命令會將公開金鑰與 SVM 管理員帳戶建立關聯 `svmadmin1` 適用於 SVM `engData1`。公開金鑰已指派索引編號5。
+
 [listing]
 ----
-cluster1::>security login publickey create -vserver engData1 -username svmadmin1 -index 5 -publickey
-"ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAspH64CYbUsDQCdW22JnK6J
-/vU9upnKzd2zAk9C1f7YaWRUAFNs2Qe5lUmQ3ldi8AD0Vfbr5T6HZPCixNAIza
-FciDy7hgnmdj9eNGedGr/JNrftQbLD1hZybX+72DpQB0tYWBhe6eDJ1oPLob
-ZBGfMlPXh8VjeU44i7W4+s0hG0E=tsmith@publickey.example.com"
+cluster1::> security login publickey create -vserver engData1 -username svmadmin1 -index 5 -publickey
+"<key text>"
 ----
-

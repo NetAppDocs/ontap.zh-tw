@@ -22,14 +22,7 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 支援的平台：ONTAP
 
 * 所有內部部署ONTAP 的VMware系統從ONTAP 版本號9.10.1開始、都可使用「自發勒索軟體保護（Arp）」功能。
-* Arp目前不適用於ONTAP Select 不支援的對象。
-* Amazon FSX或下列Cloud Volumes ONTAP 支援環境目前無法使用Arp：
-+
-** AWS
-** Azure
-** Google Cloud
-
-
+* 從 ONTAP Select 9.13.1 開始、 ONTAP Select 可使用 ARP 。
 
 
 適合的工作負載：
@@ -37,7 +30,7 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 * NFS儲存設備上的資料庫
 * Windows或Linux主目錄
 +
-因為使用者可以建立在學習期間未偵測到副檔名的檔案、因此這項工作負載可能會有更多誤判的可能性。
+由於使用者可以建立在學習期間未偵測到的副檔名檔案、因此此工作負載更有可能發生誤報。
 
 * 影像與影片
 +
@@ -55,8 +48,8 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 不適當的工作負載：
 
 * 檔案建立或刪除頻率高的工作負載（數秒內有數十萬個檔案、例如測試/開發工作負載）
-* ARP取決於辨識檔案建立或刪除活動中異常激增的能力。如果應用程式本身是檔案活動的來源、就無法有效區分它與勒索軟體活動
-* 應用程式或主機加密資料Arp的工作負載、取決於將傳入資料區分為加密或未加密。如果應用程式本身正在加密資料、則此功能的有效性將會降低。不過、此功能仍可根據檔案活動（建立、刪除及覆寫）和檔案類型來運作。
+* ARP 取決於辨識檔案建立、重新命名或刪除活動中異常激增的能力。如果應用程式本身是檔案活動的來源、就無法有效區分它與勒索軟體活動
+* 應用程式或主機加密資料Arp的工作負載、取決於將傳入資料區分為加密或未加密。如果應用程式本身正在加密資料、則此功能的有效性將會降低。不過、此功能仍可根據檔案活動（刪除、覆寫或建立、或以新副檔名建立或重新命名）和檔案類型運作。
 
 
 不支援的系統組態：
@@ -77,8 +70,8 @@ Volume需求：
 * 離線磁碟區
 * 受限磁碟區
 * 資料量SnapLock
-* 資料量FlexGroup
-* 支援的資料區（來源地的不支援勒索軟體功能、但不支援快取磁碟區）FlexCache FlexVol
+* FlexGroup Volume （從 ONTAP 9.13.1 開始、支援 FlexGroup Volume ）
+* FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
 * 純SAN磁碟區
 * 已停止儲存VM的磁碟區
 * 儲存VM的根磁碟區
@@ -98,7 +91,7 @@ Volume需求：
 
 == ARP效能和頻率考量
 
-以處理量和尖峰IOPS來衡量、ARP功能對系統效能的影響最小。反勒索軟體功能的影響、高度取決於Volume工作負載。對於大多數一般或一般工作負載、建議使用下列組態限制：
+以處理量和尖峰IOPS來衡量、ARP功能對系統效能的影響最小。ARP 功能的影響與 Volume 工作負載有很大的影響。對於大多數一般或一般工作負載、建議使用下列組態限制：
 
 [cols="30,20,30"]
 |===
@@ -121,3 +114,9 @@ Volume需求：
 為了獲得最佳的恢復點、當發現異常檔案活動時、Arp會盡快建立自動Snapshot複本。不過、Arp並不會立即標記警示、而是需要執行分析、確認可疑活動符合勒索軟體設定檔、才能產生警示。此程序可能需要60分鐘。如果分析判斷活動並不可疑、則不會產生警示、但自動建立的Snapshot複本會在檔案系統上保留至少兩天。
 
 從ONTAP VMware 9.11.1開始、您可以控制因應可疑勒索軟體攻擊而自動產生的「ARP Snapshot複本」數量和保留期間。瞭解操作方法 link:modify-automatic-shapshot-options-task.html["修改自動Snapshot複本的選項"]。
+
+
+
+== 使用受自動勒索軟體保護（ ARP ）保護的磁碟區進行多重管理驗證
+
+從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解操作方法 link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"^]。您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。

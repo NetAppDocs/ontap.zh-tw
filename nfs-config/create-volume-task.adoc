@@ -13,16 +13,22 @@ summary: 您可以使用volume create命令來建立磁碟區、並指定其交�
 [role="lead"]
 您可以使用「volume create」命令來建立磁碟區、並指定其交會點和其他屬性。
 
-.您需要的產品
-SVM的安全樣式必須是UNIX、NFS應設定並執行。
-
 .關於這項工作
 磁碟區必須包含_交會路徑_、才能讓用戶端使用其資料。您可以在建立新磁碟區時指定交會路徑。如果您在建立磁碟區時未指定交會路徑、則必須使用「volume mount」命令、在SVM命名空間中掛載磁碟區。
+
+.開始之前
+* NFS 應設定並執行。
+* SVM 安全樣式必須是 UNIX 。
+* 從 ONTAP 9.13.1 開始、您可以使用容量分析和活動追蹤功能來建立 Volume 。若要啟用容量或活動追蹤、請核發 `volume create` 命令 `-analytics-state` 或 `-activity-tracking-state` 設定為 `on`。
++
+若要深入瞭解容量分析和活動追蹤、請參閱 xref:../task_nas_file_system_analytics_enable.html[啟用檔案系統分析]。
+
+
 
 .步驟
 . 建立具有交會點的Volume：
 +
-「Volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-size｛_integer__[KB | MB | GB | TB | PB ]｝-SECURITY風格UNIX -使用者_user_name_or_number_-group _name_or_number_-juse-path _juse_path_[原則匯出_
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {_integer_[KB|MB|GB|TB|PB]} -security-style unix -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ [-policy _export_policy_name_]`
 
 +
 可以選擇以下選項：
@@ -46,7 +52,7 @@ SVM的安全樣式必須是UNIX、NFS應設定並執行。
 
 . 確認已使用所需的交會點建立磁碟區：
 +
-「Volume show -vserver _vserver_name_-volume _volume _name_-jetion」
+`volume show -vserver _svm_name_ -volume _volume_name_ -junction`
 
 
 

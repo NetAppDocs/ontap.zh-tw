@@ -33,7 +33,7 @@ summary: 「活動追蹤」功能可讓您識別常用物件、並將其下載�
 
 == 針對單一Volume啟用「活動追蹤」
 
-您可以使用ONTAP 支援「活動追蹤」功能的支援功能、以支援使用「支援系統管理程式」或ONTAP 「支援CLI」功能。
+您可以使用 ONTAP 系統管理員或 CLI 啟用活動追蹤。
 
 .關於這項工作
 如果您搭配ONTAP 使用RBAC搭配使用REST API或System Manager、則必須建立自訂角色、才能管理「活動追蹤」的存取權限。請參閱 xref:role-based-access-control-task.html[角色型存取控制] 此程序。
@@ -56,7 +56,7 @@ summary: 「活動追蹤」功能可讓您識別常用物件、並將其下載�
 +
 「Volume activity追蹤：-vsver_Svm_name_-volume _volume _name_」
 
-. 您可以使用下列命令來檢查磁碟區的「活動追蹤」狀態是開啟還是關閉：
+. 使用命令檢查磁碟區的「活動追蹤」狀態是否為開啟或關閉：
 +
 「Volume activity追蹤show -vsver_Svm_name_-volume _volume名稱_-stu態」
 
@@ -76,20 +76,40 @@ summary: 「活動追蹤」功能可讓您識別常用物件、並將其下載�
 
 [role="tabbed-block"]
 ====
-.適用於特定磁碟區
+.系統管理員
 --
-.步驟
+.針對特定磁碟區啟用
 . 選擇*儲存>磁碟區*。選取所需的Volume。從個別Volume功能表中、選取File System（檔案系統）、然後選取「活動」索引標籤。
 . 選取您要啟用「活動追蹤」的磁碟區。在Volume清單頂端、選取*更多選項*按鈕。選取*啟用活動追蹤*。
 . 若要在SVM層級檢視「活動追蹤」、請從*儲存設備> Volumes *選取您要檢視的特定SVM。導覽至「檔案系統」索引標籤、接著是「活動」、您會看到已啟用「活動追蹤」的磁碟區資料。
 
 
---
-.適用於SVM中的所有Volume
---
-.步驟
+.為所有磁碟區啟用
 . 選擇*儲存>磁碟區*。從功能表中選取SVM。
 . 瀏覽至*檔案系統*索引標籤、選擇*更多*索引標籤、即可在SVM中的所有磁碟區上啟用「活動追蹤」。
+
+
+--
+.CLI
+--
+從 ONTAP 9.13.1 開始、您可以使用 ONTAP CLI 為多個磁碟區啟用「活動追蹤」。
+
+.步驟
+. 啟用活動追蹤：
++
+`volume activity-tracking on -vserver _svm_name_ -volume [*|!_volume_names_]`
+
++
+使用 `*` 為指定儲存 VM 上的所有磁碟區啟用「活動追蹤」。
+
++
+使用 `!` 接著是 Volume 名稱、以啟用 SVM 上所有磁碟區的「活動追蹤」、但命名磁碟區除外。
+
+. 確認作業成功：
++
+`volume show -fields activity-tracking-state`
+
+. 啟用後、請使用ONTAP 「靜態系統管理程式」或ONTAP 「靜態API」來顯示「活動追蹤」資料。
 
 
 --

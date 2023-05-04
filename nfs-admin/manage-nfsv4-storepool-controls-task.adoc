@@ -1,0 +1,117 @@
+---
+permalink: nfs-admin/manage-nfsv4-storepool-controls-task.html 
+sidebar: sidebar 
+keywords: enable, disable, nfsv4, storepool, controls, limit, client, resource, blocked, 
+summary: 從 ONTAP 9.13 開始、系統管理員可以讓 NFS 伺服器在達到每個用戶端儲存資源限制時、拒絕 NFS 用戶端的資源。 
+---
+= 管理 NFSv4 儲存工具限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13 開始、系統管理員可以讓 NFSv4 伺服器在達到每個用戶端儲存資源限制時、拒絕資源給 NFSv4 用戶端。當用戶端使用過多的 NFSv4 儲存工具資源時、這可能會導致其他 NFSv4 用戶端因為 NFSv4 儲存工具資源無法使用而遭到封鎖。
+
+啟用此功能也可讓客戶檢視每個用戶端的作用中 storepool 資源使用量。如此一來、就能更輕鬆地識別耗盡系統資源的用戶端、並使每個用戶端的資源限制得以實施。
+
+
+
+== 檢視已使用的 storepool 資源
+
+。 `vserver nfs storepool show` 命令會顯示使用的 storepool 資源數量。storepool 是 NFSv4 用戶端所使用的資源池。
+
+.步驟
+. 以系統管理員身分執行 `vserver nfs storepool show` 命令顯示 NFSv4 用戶端的 storepool 資訊。
+
+
+.範例
+此範例顯示 NFSv4 用戶端的 storepool 資訊。
+
+[listing]
+----
+cluster1::*> vserver nfs storepool show
+
+Node: node1
+
+Vserver: vs1
+
+Data-Ip: 10.0.1.1
+
+Client-Ip Protocol IsTrunked OwnerCount OpenCount DelegCount LockCount
+
+-------------- --------- --------- ---------- ---------- ---------- ---------
+
+10.0.2.1          nfs4.1     true    2 1 0 4
+
+10.0.2.2          nfs4.2     true    2 1 0 4
+
+2 entries were displayed.
+----
+
+
+== 啟用或停用 storepool 限制控制項
+
+系統管理員可以使用下列命令來啟用或停用 storepool 限制控制項。
+
+.步驟
+. 身為管理員、請執行下列其中一項動作：
++
+[cols="2*"]
+|===
+| 如果您想要... | 輸入下列命令... 
+
+
+ a| 
+啟用 storepool 限制控制
+ a| 
+`vserver nfs storepool config modify -limit-enforce enabled`
+
+
+
+ a| 
+停用 storepool 限制控制項
+ a| 
+`vserver nfs storepool config modify -limit-enforce disabled`
+
+|===
+
+
+
+
+== 檢視封鎖的用戶端清單
+
+如果已啟用 storepool 限制、則系統管理員可以查看哪些用戶端在達到其每個用戶端資源臨界值時遭到封鎖。系統管理員可以使用下列命令來查看哪些用戶端已標示為封鎖用戶端。
+
+.步驟
+. 使用 `vserver nfs storepool blocked-client show` 顯示 NFSv4 封鎖用戶端清單的命令。
+
+
+
+
+== 從封鎖的用戶端清單中移除用戶端
+
+達到其每個用戶端臨界值的用戶端將會中斷連線、並新增至區塊用戶端快取。系統管理員可以使用下列命令、從區塊用戶端快取中移除用戶端。這將允許用戶端連線至 ONTAP NFSv4 伺服器。
+
+.步驟
+. 使用 `vserver nfs storepool blocked-client flush -client-ip <ip address>` 用於清除 storepool 封鎖用戶端快取的命令。
+. 使用 `vserver nfs storepool blocked-client show` 用於驗證用戶端已從區塊用戶端快取移除的命令。
+
+
+.範例
+此範例顯示封鎖的用戶端、其 IP 位址為 "10.2.1.1 " 、正在從所有節點中清除。
+
+[listing]
+----
+cluster1::*>vserver nfs storepool blocked-client flush -client-ip 10.2.1.1
+
+cluster1::*>vserver nfs storepool blocked-client show
+
+Node: node1
+
+Client IP
+----------
+10.1.1.1
+
+1 entries were displayed.
+----

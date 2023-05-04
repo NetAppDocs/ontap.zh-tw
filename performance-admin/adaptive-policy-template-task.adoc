@@ -1,0 +1,32 @@
+---
+permalink: performance-admin/adaptive-policy-template-task.html 
+sidebar: sidebar 
+keywords: qos, throughput floor, throughput ceiling, adaptive policy group template 
+summary: 使用調適性原則群組範本、在 SVM 層級強制執行處理量層級和上限。 
+---
+= 設定調適性原則群組範本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、您可以使用調適性原則群組範本、在 SVM 層級強制執行處理量樓層和天花板。
+
+.關於這項工作
+* 調適性原則群組範本是預設原則 `apg1`。您可以隨時修改原則。只能使用 CLI 或 ONTAP REST API 設定、而且只能套用至現有的 SVM 。
+* 調適性原則群組範本只會影響在設定原則之後、在 SVM 上建立或移轉到 SVM 的磁碟區。SVM 上的現有磁碟區會保留其現有狀態。
++
+如果停用調適性原則群組範本、 SVM 上的磁碟區會保留其現有原則。只有後續在 SVM 上建立或移轉到 SVM 的磁碟區、才會受到停用影響。
+
+* 您無法在具有 QoS 原則群組的 SVM 上設定調適性原則群組範本。
+* 調適性原則群組範本是專為 AFF 平台所設計。可在其他平台上設定調適性原則群組範本、但原則可能無法強制執行最低處理量。同樣地、您也可以將調適性原則群組範本新增至 FabricPool Aggregate 中的 SVM 、或是新增至不支援最低處理量的 Aggregate 、但不會強制執行處理量區。
+* 如果 SVM 是在 MetroCluster 組態或 SnapMirror 關係中、則會在鏡射 SVM 上強制執行調適性原則群組範本。
+
+
+.步驟
+. 修改 SVM 以套用調適性原則群組範本：
+`vserver modify -qos-adaptive-policy-group-template apg1`
+. 確認已設定原則：
+`vserver show -fields qos-adaptive-policy-group`
+

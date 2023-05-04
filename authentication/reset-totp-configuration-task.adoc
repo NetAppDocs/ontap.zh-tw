@@ -1,0 +1,66 @@
+---
+permalink: authentication/reset-totp-configuration-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
+summary: 為了保護您的帳戶安全、如果 TOTP 秘密金鑰遭到洩漏或遺失、您應該停用該金鑰並建立新的金鑰。 
+---
+= 重設 TOTP 秘密金鑰
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了保護您的帳戶安全、如果 TOTP 秘密金鑰遭到洩漏或遺失、您應該停用該金鑰並建立新的金鑰。
+
+
+
+== 如果金鑰遭到入侵、請重設 TOTP
+
+如果您的 TOTP 秘密金鑰已洩漏、但您仍有權存取、您可以移除洩漏的金鑰並建立新的金鑰。
+
+. 使用您的使用者密碼或 SSH 公開金鑰、以及您遭入侵的 TOTP 秘密金鑰、登入您的使用者帳戶。
+. 移除遭入侵的 TOTP 秘密金鑰：
++
+[source, cli]
+----
+security login totp delete -vserver <svm_name> -username <account_username>
+----
+. 建立新的 TOTP 秘密金鑰：
++
+[source, cli]
+----
+security login totp create -vserver <svm_name> -username <account_username>
+----
+. 確認您的帳戶已啟用 TOTP 組態：
++
+[source, cli]
+----
+security login totp show -vserver <svm_name> -username <account_username>
+----
+
+
+
+
+== 如果金鑰遺失、請重設 TOTP
+
+如果 TOTP 秘密金鑰遺失、請聯絡您的儲存管理員 link:disable-totp-secret-key-task.html["停用金鑰"]。停用金鑰後、您可以使用第一種驗證方法登入並設定新的 TOTP 。
+
+.開始之前：
+TOTP 秘密金鑰必須由儲存管理員停用。如果您沒有儲存管理員帳戶、請聯絡您的儲存管理員以停用金鑰。
+
+.步驟
+. 儲存管理員停用 TOTP 密碼後、請使用主要驗證方法登入您的本機帳戶。
+. 建立新的 TOTP 秘密金鑰：
++
+[source, cli]
+----
+security login totp create -vserver <svm_name> -username <account_username >
+----
+. 確認您的帳戶已啟用 TOTP 組態：
++
+[source, cli]
+----
+security login totp show -vserver <svm_name> -username <account_username>
+----
+

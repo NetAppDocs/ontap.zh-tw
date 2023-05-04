@@ -11,12 +11,16 @@ summary: 建立FlexClone Volume。
 
 
 [role="lead"]
-您可以從SnapMirror目的地Volume或FlexVol 從父實體的父實體磁碟區（SnapVault 即次磁碟區）建立資料保護FlexClone磁碟區。建立FlexClone Volume之後、您無法在FlexClone Volume存在時刪除父Volume。
+您可以從SnapMirror目的地Volume或FlexVol 從父實體的父實體磁碟區（SnapVault 即次磁碟區）建立資料保護FlexClone磁碟區。從 ONTAP 9.7 開始、您可以從 FlexGroup Volume 建立 FlexClone Volume 。建立FlexClone Volume之後、您無法在FlexClone Volume存在時刪除父Volume。
 
 .您需要的產品
 * FlexClone授權必須安裝在叢集上。
 * 您要複製的磁碟區必須在線上。
 
+
+
+
+== 建立 FlexVol 或 FlexGroup 的 FlexClone Volume
 
 .步驟
 . 建立FlexClone Volume：
@@ -40,4 +44,37 @@ summary: 建立FlexClone Volume。
 +
 「Volume Clone create -vserver VS1 -FlexClone vol_dP_clone -type DP -父 磁碟區dp vol-父 快照snap1」
 
+
+
+
+
+== 建立任何 SnapLock 類型的 FlexClone
+
+從 ONTAP 9.13.1 開始、您可以指定三種 SnapLock 類型之一、 `compliance`、 `enterprise`、 `non-snaplock`（創建 RW 卷的 FlexClone 時）。根據預設、 FlexClone Volume 是以與父磁碟區相同的 SnapLock 類型建立。不過、您可以使用來覆寫預設值 `snaplock-type` FlexClone Volume 建立期間的選項。
+
+使用 `non-snaplock` 參數 `snaplock-type` 選項：您可以從 SnapLock 父磁碟區建立非 SnapLock 類型的 FlexClone Volume 、以便在必要時提供更快速的資料恢復線上的方法。
+
+深入瞭解 link:https://docs.netapp.com/us-en/ontap/snaplock/index.html["SnapLock"]。
+
+.開始之前
+當 FlexClone Volume 的 SnapLock 類型與父 Volume 不同時、您應該瞭解下列 FlexClone Volume 限制。
+
+* 僅支援 RW 類型的複本。不支援 SnapLock 類型與父磁碟區不同的 DP 型複本。
+* 無法使用 SnapLock 類型選項複製具有 LUN 的磁碟區、因為 SnapLock 磁碟區不支援 LUN 。
+* MetroCluster 鏡射 Aggregate 上的 Volume 無法以 Compliance SnapLock 類型複製、因為 MetroCluster 鏡射 Aggregate 不支援 SnapLock Compliance Volume 。
+* 無法以不同的 SnapLock 類型複製具有保留法的 SnapLock 規範磁碟區。僅 SnapLock Compliance Volume 支援合法保留。
+* SVM DR 不支援 SnapLock Volume 。嘗試從 SVM 中屬於 SVM DR 關係一部分的磁碟區建立 SnapLock 複本將會失敗。
+* FabricPool 最佳實務做法建議複本保留與父實體相同的分層原則。不過、啟用 FabricPool 的磁碟區的 SnapLock Compliance 複本、不能與父磁碟區具有相同的分層原則。分層原則必須設為 `none`。嘗試從父實體建立 SnapLock 規範複本、但其分層原則並非如此 `none` 將會失敗。
+
+
+.步驟
+. 使用 SnapLock 類型建立 FlexClone Volume ： `volume clone create -vserver _svm_name_ -flexclone _flexclone_name_ -type RW [ -snaplock-type {non-snaplock|compliance|enterprise} ]`
++
+範例：
+
++
+[listing]
+----
+> volume clone create -vserver vs0 -flexclone vol1_clone -type RW -snaplock-type enterprise -parent-volume vol1
+----
 

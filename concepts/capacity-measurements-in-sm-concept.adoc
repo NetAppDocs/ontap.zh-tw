@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: concepts/capacity-measurements-in-sm-concept.html 
 keywords: capacity, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, capacity concern, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
-summary: 系統容量可以測量為實體空間或邏輯空間。最近版本的System Manager會同時測量實體和邏輯容量。 
+summary: 系統容量可測量為實體空間或邏輯空間。從 ONTAP 9.7 開始、系統管理員提供實體和邏輯容量的測量。 
 ---
 = System Manager中的容量測量
 :allow-uri-read: 
 
 
 [role="lead"]
-系統容量可以測量為實體空間或邏輯空間。最近版本的System Manager會同時測量實體和邏輯容量。
+系統容量可測量為實體空間或邏輯空間。從 ONTAP 9.7 開始、系統管理員提供實體和邏輯容量的測量。
 
 以下說明說明兩種測量結果之間的差異：
 
@@ -19,13 +19,6 @@ summary: 系統容量可以測量為實體空間或邏輯空間。最近版本�
 
 
 NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregate）容量。
-
-<<measurements-used-cap>>
-<<cap-measurement-terms>>
-<<cap-measurement-units>>
-
-.其他資訊
-您可以在System Manager中監控叢集、本機層級和磁碟區的容量。請參閱 link:../task_admin_monitor_capacity_in_sm.html["監控System Manager中的容量"]。
 
 
 
@@ -72,7 +65,9 @@ NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregat
 
 以下術語用於說明容量：
 
-* *可用*：本機層中可用的實體空間量、可用於配置磁碟區。
+* * 分配容量 * ：已分配給儲存 VM 中磁碟區的空間量。
+* * 可用 * ：儲存資料或在儲存 VM 或本機層中配置磁碟區的可用實體空間量。
+* * 跨磁碟區容量 * ：儲存 VM 上所有磁碟區的已用儲存設備和可用儲存空間總和。
 * *用戶端資料*：用戶端資料（實體或邏輯）所使用的空間量。
 * *已提交*：本機層的已提交容量。
 * *資料減量*：
@@ -83,11 +78,34 @@ NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregat
 
 * *使用邏輯*：使用空間量、不考慮儲存效率功能所節省的空間。
 * *邏輯使用量%*：目前已用邏輯容量與已配置容量的百分比、不含Snapshot保留量。此值可以大於100%、因為其中包含了Volume的效率節約效益。
+* * 最大容量 * ：為儲存 VM 上的磁碟區分配的最大空間量。
 * *實體已用*：磁碟區或本機層實體區塊所使用的容量。
 * *實體已用%*：與已配置的容量相比、磁碟區實體區塊所使用的容量百分比。
 * *保留*：保留給本機層中已配置磁碟區的空間量。
+* * 已使用 * ：包含資料的空間量。
 * *已用及保留*：實體已用空間與保留空間的總和。
 
+
+
+
+== 儲存 VM 的容量
+
+儲存 VM 的最大容量取決於磁碟區的總分配空間加上剩餘的未分配空間。
+
+* Volume 的分配空間是 FlexVol Volume 、 FlexGroup Volume 和 FlexCache Volume 的已用容量和可用容量的總和。
+* 磁碟區的容量會包含在總和中、即使在磁碟區受到限制、離線或刪除之後也會包含在恢復佇列中。
+* 如果磁碟區設定為自動擴充、則會以總和來使用磁碟區的最大自動調整大小值。如果沒有自動擴充、則會以總和來使用 Volume 的實際容量。
+
+
+下表說明各體積容量的測量與最大容量限制之間的關係。
+
+image:max-cap-limit-cap-x-volumes.gif["最大容量限制包含分配的空間和可用空間、而跨磁碟區的容量僅佔用分配的空間。"]
+
+從 ONTAP 9.13.1 開始、叢集管理員就可以 link:../manage-max-cap-limit-svm-in-sm-task.html["為儲存 VM 啟用最大容量限制"]。但是、儲存 VM 若包含用於資料保護、 SnapMirror 關係或 MetroCluster 組態的磁碟區、則無法設定儲存限制。此外、配額也無法設定為超過儲存 VM 的最大容量。
+
+設定最大容量限制後、就無法將其變更為小於目前分配容量的大小。
+
+當儲存 VM 達到其最大容量限制時、就無法執行某些作業。System Manager 提供中後續步驟的建議 link:../insights-system-optimization-task.html["* 洞見 *"]。
 
 
 
@@ -156,8 +174,10 @@ PIB
  a| 
 1010* 10大於10* 10大於10大於10大於10大於10大於10大於10大於
  a| 
-1、125、8988、010、8348、824位元組
+1 、 125,899,906,842,624 位元組
 
 |===
-.其他資訊：
+.相關資訊
+link:../task_admin_monitor_capacity_in_sm.html["監控System Manager中的容量"]
+
 link:../volumes/logical-space-reporting-enforcement-concept.html["磁碟區的邏輯空間報告與強制"]

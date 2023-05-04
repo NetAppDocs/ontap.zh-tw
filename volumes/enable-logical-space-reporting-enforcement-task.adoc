@@ -16,32 +16,34 @@ summary: 從功能區9.4開始ONTAP 、您可以啟用邏輯空間報告功能�
 .關於這項工作
 除了在個別磁碟區層級啟用邏輯空間報告和強制、您也可以在SVM層級為每個支援該功能的磁碟區啟用這些功能。如果您為整個SVM啟用邏輯空間功能、也可以針對個別Volume停用這些功能。
 
-從9.8開始、如果您在SnapMirror來源磁碟區上啟用邏輯空間報告、則會在傳輸後自動在目的地磁碟區上啟用邏輯空間報告。
+從 ONTAP 9.8 開始、如果您在 SnapMirror 來源磁碟區上啟用邏輯空間報告功能、則傳輸後會自動在目的地磁碟區上啟用。
 
-[NOTE]
-====
-如果在SnapMirror來源Volume上啟用強制選項、則強制設定會傳輸到目的地Volume。但是、由於目的地Volume不支援強制、目的地會報告邏輯空間使用量、但不會遵守其強制規定。
+從 ONTAP 9.13.1 開始、如果在 SnapMirror 來源磁碟區上啟用強制選項、目的地將會報告邏輯空間使用量、並遵守其實施規定、進而實現更好的容量規劃。
 
-====
+
+NOTE: 如果您執行的 ONTAP 版本早於 ONTAP 9.13.1 、您應該瞭解、雖然強制設定會傳輸至 SnapMirror 目的地 Volume 、但目的地 Volume 不支援強制。因此、目的地會報告邏輯空間使用量、但不會遵守其執行規定。
+
+深入瞭解 link:https://docs.netapp.com/us-en/ontap/volumes/logical-space-reporting-enforcement-concept.html["ONTAP 版本支援邏輯空間報告"]。
+
 .選擇
 * 啟用磁碟區的邏輯空間報告：
 +
-「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume－size -is空間報告邏輯真」
+`volume modify -vserver _svm_name_ -volume _volume_name_ -size _volume_size_ -is-space-reporting-logical true`
 
 * 啟用磁碟區的邏輯空間強制：
 +
-「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume－size -is空間強制邏輯true」
+`volume modify -vserver _svm_name_ -volume _volume_name_ -size _volume_size_ -is-space-enforcement-logical true`
 
 * 為磁碟區同時提供邏輯空間報告與強制：
 +
-「Volume modify -vserver Svm-name -volume volume volume名稱-size volume volume size -is空間報告邏輯真-is空間強制邏輯真」
+`volume modify -vserver _svm_name_ -volume _volume_name_ -size _volume_size_ -is-space-reporting-logical true -is-space-enforcement-logical true`
 
 * 啟用新SVM的邏輯空間報告或強制：
 +
-Check Alignment of PHs>+vserver create -vserver Svm-name -rootvolume root-volume名稱-rootvolume安全型UNIX -data-services｛所需的-data-services｝[-is空間報告邏輯真][-is空間強制邏輯真]+]
+`+vserver create -vserver _svm_name_ -rootvolume root-_volume_name_ -rootvolume-security-style unix -data-services {desired-data-services} [-is-space-reporting-logical true] [-is-space-enforcement-logical true]+`
 
 * 啟用現有SVM的邏輯空間報告或強制：
 +
-+vserver modify -vserver Svm-name｛wed理想 的-data-services｝[-is空間報告邏輯true][-is空間強制邏輯true]+]
+`+vserver modify -vserver _svm_name_ {desired-data-services} [-is-space-reporting-logical true] [-is-space-enforcement-logical true]+`
 
 

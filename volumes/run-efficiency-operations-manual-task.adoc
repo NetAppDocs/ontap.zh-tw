@@ -1,7 +1,7 @@
 ---
 permalink: volumes/run-efficiency-operations-manual-task.html 
 sidebar: sidebar 
-keywords: starting deduplication manually, starting data compression manually, efficiency, run 
+keywords: starting deduplication manually, starting data compression manually, efficiency, run, sequential packing 
 summary: 您可以使用Volume Eff效率start命令、在磁碟區上手動執行效率作業。 
 ---
 = 手動執行效率作業
@@ -17,17 +17,44 @@ summary: 您可以使用Volume Eff效率start命令、在磁碟區上手動執�
 視您想要手動執行的效率作業而定、您必須在磁碟區上啟用重複資料刪除、或同時啟用資料壓縮和重複資料刪除。
 
 .關於這項工作
-如果在磁碟區上啟用重複資料刪除和資料壓縮、則資料壓縮會先執行、然後再執行重複資料刪除。
+當磁碟區上的溫度敏感儲存效率已啟用時、重複資料刪除功能會先執行、然後再執行資料壓縮。
 
 重複資料刪除是一種背景程序、會在系統資源執行時耗用資源。如果磁碟區中的資料不經常變更、最好是減少重複資料刪除的執行頻率。在儲存系統上執行多項並行重複資料刪除作業、可提高系統資源的使用量。
 
 每個節點最多可執行八個並行重複資料刪除或資料壓縮作業。如果排定更多效率作業、則會排入作業佇列。
 
+從 ONTAP 9.13.1 開始、如果在磁碟區上啟用了對溫度敏感的儲存效率、您就可以對現有資料執行 Volume 效率、以利用連續包裝來進一步改善儲存效率。
+
+
+
+== 手動執行效率
+
 .步驟
-. 使用「Volume Eff高效 入門」命令、在磁碟區上啟動效率作業。
-
-
+. 在磁碟區上啟動效率作業： `volume efficiency start`
++
 .範例
-下列命令可讓您在Volume Vola上手動啟動重複資料刪除或資料壓縮、然後再執行重複資料刪除：
+下列命令可讓您手動啟動重複資料刪除或重複資料刪除、然後在 Volume Vola 上執行邏輯壓縮和容器壓縮
 
-「Volume Effiv更 有效率、請從vserver VS1 -volume Vola開始。
++
+[listing]
+----
+volume efficiency start -vserver vs1 -volume VolA
+----
+
+
+
+
+== 重新入侵現有資料
+
+若要利用 ONTAP 9.13.1 中針對已啟用溫度敏感儲存效率的磁碟區所推出的連續資料打包功能、您可以重新封裝現有資料。您必須處於進階權限模式才能使用此命令。
+
+.步驟
+. 設定權限等級： `set -privilege advanced`
+. 重新包裝現有資料： `volume efficiency inactive-data-compression start -vserver _vserver_name_ -volume _volume_name_ -scan-mode extended_recompression`
++
+.範例
+[listing]
+----
+volume efficiency inactive-data-compression start -vserver vs1 -volume vol1 -scan-mode extended_recompression
+----
+

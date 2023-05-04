@@ -61,6 +61,10 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 +
 當檔案在FlexGroup 重新平衡作業期間移動時、檔案大小會在來源和目的地構成區塊上報告為配額會計的一部分。完成移動後、配額會計會恢復正常、而且只會在新目的地上報告檔案大小。
 
+* 自主勒索軟體保護
++
+從 ONTAP 9.13.1 開始、可在 inode 之間複製自發勒索軟體保護、以進行破壞性與不中斷營運的重新平衡作業。
+
 
 
 
@@ -68,6 +72,8 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 == 啟用FlexGroup 支援功能重新平衡
 
 從ONTAP 功能更新9.12.1開始、您可以啟用自動不中斷FlexGroup 的功能更新功能、在FlexGroup 各個功能區之間重新分配檔案。
+
+從 ONTAP 9.13.1 開始、您可以排程單一 FlexGroup 重新平衡作業、以在未來的日期和時間開始。
 
 .開始之前
 您必須已啟用 `granular-data` 在啟用功能不均衡之前、請先在FlexGroup 支援FlexGroup 功能不均衡的情況下、選擇使用支援功能。您可以使用下列其中一種方法來啟用：
@@ -85,8 +91,10 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 --
 .步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
-. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
-. 按一下*重新平衡*。
+. 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 選擇 * 重新平衡 * 。
+. 在*重新平衡Volume *視窗中、視需要變更預設設定。
+. 若要排程重新平衡作業、請選取 * 稍後重新平衡 * 、然後輸入日期和時間。
 
 
 --
@@ -95,7 +103,28 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 .步驟
 . 開始自動重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
 +
-或者、您可以指定下列選項：[-max-r時間]<時間間隔>]最大執行時間[-max-threshold <%]每個組成單位的最大不平衡臨界值[-min-threshold <%]每個組成單位的最小不均衡臨界值[-max-file-m搬 移數<integer>[kb|pb大小]每個組成單位的快照數大小不超過並行檔案移數[-tb]｛-time-file-size {<-tb]
+您也可以指定下列選項：
+
++
+[[-max-runtime] <time interval> ] 最大執行時間
+
++
+[-max-threshold <percent> ] 每個組成單位的最大不平衡臨界值
+
++
+[-min-threshold <percent> ] 每個組成單位的最小不平衡臨界值
+
++
+[-max-file-Moves <integer> （最大檔案移動量） ] 每個組成單位的最大並行檔案移動量
+
++
+[-min-file-size ｛ <integer> [kb|MB|GB|TB|PB]}] 最小檔案大小
+
++
+[- 開始時間 <mm/dd/yyyy-00:00:00> ] 排程重新平衡開始日期和時間
+
++
+[-excluse-snapshots {true|FALSE}] 排除快照複本中卡住的檔案
 
 +
 範例：
@@ -105,8 +134,6 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 ----
 volume rebalance start -vserver vs0 -volume fg1
 ----
-. 在*重新平衡Volume *視窗中、視需要變更預設設定。
-. 按一下「*儲存*」接受預設設定。
 
 
 --
@@ -115,7 +142,7 @@ volume rebalance start -vserver vs0 -volume fg1
 
 == 修改FlexGroup 重新平衡組態
 
-您可以變更FlexGroup 還原重新平衡組態、以更新不均衡臨界值、並行檔案數目會移動最小檔案大小、最大執行時間、以及包含或排除Snapshot複本。
+您可以變更FlexGroup 還原重新平衡組態、以更新不均衡臨界值、並行檔案數目會移動最小檔案大小、最大執行時間、以及包含或排除Snapshot複本。從 ONTAP 9.13.1 開始、您可以選擇修改 FlexGroup 重新平衡排程。
 
 [role="tabbed-block"]
 ====
@@ -123,10 +150,9 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
-. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
-. 按一下*重新平衡*。
+. 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 選擇 * 重新平衡 * 。
 . 在*重新平衡Volume *視窗中、視需要變更預設設定。
-. 按一下「 * 儲存 * 」。
 
 
 --
@@ -135,7 +161,28 @@ volume rebalance start -vserver vs0 -volume fg1
 .步驟
 . 修改自動重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
 +
-您可以指定下列一或多個選項：[-max-r時間]<時間間隔>]最大執行時間[-max-threshold <百分 點>]每個組成單位的最大不均衡臨界值[-min-threshold <-max-file-m搬 移數<integer>]每個組成單位的最大並行檔案搬移數[-min-file-size-file-size {<integer>[KB Snapshot>[KB快照數>[TB|最小TB快照數大小]檔案大小[TB|最小值PB大小]
+您可以指定下列一或多個選項：
+
++
+[[-max-runtime] <time interval> ] 最大執行時間
+
++
+[-max-threshold <percent> ] 每個組成單位的最大不平衡臨界值
+
++
+[-min-threshold <percent> ] 每個組成單位的最小不平衡臨界值
+
++
+[-max-file-Moves <integer> （最大檔案移動量） ] 每個組成單位的最大並行檔案移動量
+
++
+[-min-file-size ｛ <integer> [kb|MB|GB|TB|PB]}] 最小檔案大小
+
++
+[- 開始時間 <mm/dd/yyyy-00:00:00> ] 排程重新平衡開始日期和時間
+
++
+[-excluse-snapshots {true|FALSE}] 排除快照複本中卡住的檔案
 
 
 
@@ -145,7 +192,7 @@ volume rebalance start -vserver vs0 -volume fg1
 
 == 停止FlexGroup 重新平衡
 
-啟用完循環重新平衡之後FlexGroup 、您可以隨時停止重新平衡。
+啟用或排程 FlexGroup 重新平衡之後、您可以隨時停止。
 
 [role="tabbed-block"]
 ====
@@ -153,8 +200,8 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
-. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
-. 按一下*停止重新平衡*。
+. 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
+. 選取 * 停止重新平衡 * 。
 
 
 --
@@ -178,9 +225,9 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
-. 按一下 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 以檢視FlexGroup 詳細資訊。
+. 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 以檢視FlexGroup 詳細資訊。
 . *此「平衡狀態」*會顯示在詳細資料窗格底部附近。FlexGroup
-. 若要檢視上次重新平衡作業的相關資訊、請按一下*上次Volume重新平衡狀態*。
+. 若要檢視上次重新平衡作業的相關資訊、請選取 * 上次 Volume 重新平衡狀態 * 。
 
 
 --

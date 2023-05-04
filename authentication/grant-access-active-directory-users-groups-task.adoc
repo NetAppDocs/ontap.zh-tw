@@ -26,6 +26,7 @@ xref:enable-ad-users-groups-access-cluster-svm-task.adoc[設定Active Directory�
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
+* 從 ONTAP 9.13.1 開始、您可以使用 SSH 公開金鑰做為主要或次要驗證方法、並提供 AD 使用者密碼。
 * 從功能性的版本起、您就可以開始使用ONTAP link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["用於nsswitch驗證的LDAP快速連結"] 如果AD LDAP伺服器支援此功能、
 * 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
 +
@@ -35,36 +36,66 @@ xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員
 
 [NOTE]
 ====
-只有「SHU」和「ontapi」應用程式才支援AD群組帳戶存取。
+僅支援 AD 群組帳戶存取 `SSH` 和 `ontapi` 應用程式：SSH 公開金鑰驗證通常用於多因素驗證、因此不支援 AD 群組。
 
 ====
 .步驟
 . 啟用AD使用者或群組管理員帳戶以存取SVM：
 +
-「安全性登入建立-vserver Svm_name -user-or group名稱user_or group名稱-applicationer -authmethod網域-role role -comment comment（安全性登入建立-vserver Svm_name -user-or group名稱-applicationer應用程式-authmethod網域-role role）」
+* 針對 AD 使用者： *
 
 +
-如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+[cols="1,1,1,4"]
+|===
+| 版本ONTAP | 主要驗證 | 次要驗證 | 命令 
 
-+
-link:config-worksheets-reference.html["建立或修改登入帳戶"]
 
-+
-下列命令可讓AD叢集管理員帳戶「DOMAIN1\guest1」（具有預先定義的「備份」角色）存取管理SVM「engCluster」（管理SVM）。
-
-+
+| 9.13.1 及更新版本 | 公開金鑰 | 無  a| 
 [listing]
 ----
-cluster1::>security login create -vserver engCluster -user-or-group-name DOMAIN1\guest1 -application ssh -authmethod domain -role backup
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method publickey -role <role>
 ----
-+
-下列命令可讓AD群組帳戶「DOMAIN1\adgroup」中的SVM系統管理員帳戶、使用預先定義的「vsadmin-volume」角色來存取SVM「engData」。
 
-+
+
+| 9.13.1 及更新版本 | 網域 | 公開金鑰  a| 
+* 適用於新使用者 *
+
 [listing]
 ----
-cluster1::>security login create -vserver engData -user-or-group-name DOMAIN1\adgroup -application ssh -authmethod domain -role vsadmin-volume
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method domain -second-authentication-method publickey -role <role>
 ----
+* 適用於現有使用者 *
+
+[listing]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method domain -second-authentication-method publickey -role <role>
+----
+
+
+| 9.0 及更新版本 | 網域 | 無  a| 
+[listing]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application <application> -authentication-method domain -role <role> -comment <comment> [-is-ldap-fastbind true]
+----
+|===
++
+* 對於 AD 群組： *
+
++
+[cols="1,1,1,4"]
+|===
+| 版本ONTAP | 主要驗證 | 次要驗證 | 命令 
+
+
+| 9.0 及更新版本 | 網域 | 無  a| 
+[listing]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application <application> -authentication-method domain -role <role> -comment <comment> [-is-ldap-fastbind true]
+----
+|===
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["系統管理員驗證和 RBAC 組態工作表"]
+
 
 
 .完成後

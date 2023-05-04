@@ -39,6 +39,15 @@ NOTE: 根據預設會啟用支援。AutoSupport
 Type yes to confirm and continue {yes}: yes
 ----
 . 請依照畫面上的指示、將IP位址指派給節點。
++
+從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
+
+. 按* Enter鍵*繼續。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
 . 將節點加入叢集：「join」
 . 依照畫面上的指示設定節點、並將其加入叢集。
 . 完成設定後、請確認節點正常且符合參加叢集的資格：「叢集展示」
@@ -59,3 +68,6 @@ cluster1-02           true    true
 
 . 對其餘每個節點重複此工作。
 
+
+.完成後
+如有需要、 link:convert-ipv4-to-ipv6-task.html["從 IPv4 轉換為 IPv6"]。

@@ -1,0 +1,74 @@
+---
+permalink: software_setup/convert-ipv4-to-ipv6-task.html 
+sidebar: sidebar 
+keywords: software, setup, ontap, covert, converting, ipv4, ipv6 
+summary: 從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、在其他平台上為 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換 IPv6 位址。 
+---
+= 將管理階層的生命從 IPv4 轉換為 IPv6
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、您可以在初始叢集設定期間、將 IPv6 位址指派給 A800 和 FAS8700 平台上的管理階層。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須先將 IPv4 位址指派給管理階層的生命負載、然後在完成叢集設定後轉換成 IPv6 位址。
+
+.步驟
+. 為叢集啟用 IPv6 ：
++
+[source, cli]
+----
+network options ipv6 modify -enable true
+----
+. 將權限設為進階：
++
+[source, cli]
+----
+set priv advanced
+----
+. 檢視在各種介面上學習到的 RA 前置詞清單：
++
+[source, cli]
+----
+network ndp prefix show
+----
+. 建立 IPv6 管理 LIF ：
++
+使用格式 `prefix::id` 在位址參數中、手動建構 IPv6 位址。
+
++
+[source, cli]
+----
+network interface create -vserver <svm_name> -lif <LIF> -home-node <home_node> -home-port <home_port> -address <IPv6prefix::id> -netmask-length <netmask_length> -failover-policy <policy> -service-policy <service_policy> -auto-revert true
+----
+. 確認LIF已建立：
++
+[source, cli]
+----
+network interface show
+----
+. 確認已設定的IP位址可連線：
++
+[source, cli]
+----
+network ping6
+----
+. 將 IPv4 LIF 標記為管理性關閉：
++
+[source, cli]
+----
+network interface modify -vserver <svm_name> -lif <lif_name> -status-admin down
+----
+. 刪除 IPv4 管理 LIF ：
++
+[source, cli]
+----
+network interface delete -vserver <svm_name> -lif <lif_name>
+----
+. 確認刪除了 IPv4 管理 LIF ：
++
+[source, cli]
+----
+network interface show
+----
+

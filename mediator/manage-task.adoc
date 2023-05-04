@@ -93,6 +93,251 @@ usr/local/bin/cider_change_password
 
 
 
+== 停止 ONTAP Mediator 服務
+
+若要停止 ONTAP Mediator 服務、請執行下列步驟：
+
+.步驟
+. 停止 ONTAP Mediator 。
++
+`systemctl stop ontap_mediator`
+
+. 停止 SCST 。
++
+`systemctl stop mediator-scst`
+
+. 停用 ONTAP Mediator 和 SCST 。
++
+`systemctl diable ontap_mediator mediator-scst`
+
+
+
+
+
+== 重新啟用 ONTAP Mediator 服務
+
+若要重新啟用 ONTAP Mediator 服務、請執行下列步驟：
+
+.步驟
+. 啟用 ONTAP Mediator 和 SCST 。
++
+`systemctl enable ontap_mediator mediator-scst`
+
+. 啟動 SCST 。
++
+`systemctl start mediator-scst`
+
+. 啟動 ONTAP Mediator 。
++
+`systemctl start ontap_mediator`
+
+
+
+
+
+== 驗證 ONTAP Mediator 是否正常運作
+
+安裝 ONTAP Mediator 之後、您應該確認 ONTAP Mediator 服務正在執行中。
+
+.步驟
+. 檢視 ONTAP Mediator 服務的狀態：
++
+.. `systemctl status ontap_mediator`
++
+[listing]
+----
+[root@scspr1915530002 ~]# systemctl status ontap_mediator
+
+ ontap_mediator.service - ONTAP Mediator
+Loaded: loaded (/etc/systemd/system/ontap_mediator.service; enabled; vendor preset: disabled)
+Active: active (running) since Mon 2022-04-18 10:41:49 EDT; 1 weeks 0 days ago
+Process: 286710 ExecStop=/bin/kill -s INT $MAINPID (code=exited, status=0/SUCCESS)
+Main PID: 286712 (uwsgi)
+Status: "uWSGI is ready"
+Tasks: 3 (limit: 49473)
+Memory: 139.2M
+CGroup: /system.slice/ontap_mediator.service
+      ├─286712 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      ├─286716 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      └─286717 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+[root@scspr1915530002 ~]#
+----
+.. `systemctl status mediator-scst`
++
+[listing]
+----
+[root@scspr1915530002 ~]# systemctl status mediator-scst
+   Loaded: loaded (/etc/systemd/system/mediator-scst.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2022-04-18 10:41:47 EDT; 1 weeks 0 days ago
+  Process: 286595 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
+ Main PID: 286662 (iscsi-scstd)
+    Tasks: 1 (limit: 49473)
+   Memory: 1.2M
+   CGroup: /system.slice/mediator-scst.service
+           └─286662 /usr/local/sbin/iscsi-scstd
+
+[root@scspr1915530002 ~]#
+----
+
+
+. 確認 ONTAP Mediator 服務使用的連接埠：
++
+`netstat`
+
++
+[listing]
+----
+[root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
+
+         tcp   0   0 0.0.0.0:31784   0.0.0.0:*      LISTEN
+
+         tcp   0   0 0.0.0.0:3260    0.0.0.0:*      LISTEN
+
+         tcp6  0   0 :::3260         :::*           LISTEN
+----
+
+
+
+
+== 手動解除安裝 SCST 以執行主機維護
+
+若要解除安裝 SCST 、您需要用於已安裝 ONTAP Mediator 版本的 SCST tar 套件。
+
+.步驟
+. 下載適當的 SCST 套裝組合（如下表所示）並將其解壓縮。
++
+[cols="50,50"]
+|===
+
+
+| 對於此版本 ... | 使用此 tar 套裝組合 ... 
+
+
+ a| 
+ONTAP Mediator 1.0
+ a| 
+scst-3.3.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.1
+ a| 
+scst-3.4.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.2
+ a| 
+scst-3.4.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.3
+ a| 
+scst-3.5.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.4
+ a| 
+scst-3.6.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.5
+ a| 
+scst-3.6.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.6
+ a| 
+scst-3.7.0.tar.bz2
+
+|===
+. 在 "scst" 目錄中輸入下列命令：
++
+.. `systemctl stop mediator-scst`
+.. `make scstadm_uninstall`
+.. `make iscsi_uninstall`
+.. `make usr_uninstall`
+.. `make scst_uninstall`
+.. `depmod`
+
+
+
+
+
+
+== 手動安裝 SCST 以執行主機維護
+
+若要手動安裝 SCST 、您需要用於已安裝 ONTAP Mediator 版本的 SCST tar 套件（請參閱 <<scst-bundle-table,上表>>）。
+
+. 在 "scst" 目錄中輸入下列命令：
++
+.. `make 2release`
+.. `make scst_install`
+.. `make usr_install`
+.. `make iscsi_install`
+.. `make scstadm_install`
+.. `depmod`
+.. `cp scst/src/certs/scst_module_key.der /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/.`
+.. `cp scst/src/certs/scst_module_key.der /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/.`
+.. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
+
+
+. （選用）如果已啟用安全開機、請在重新開機之前執行下列步驟：
++
+.. 決定「 scst_vdisk 」、「 scst 」和「 iscsim_scst 」模組的每個檔案名稱。
++
+....
+`[root@localhost ~]# modinfo -n scst_vdisk`
+`[root@localhost ~]# modinfo -n scst`
+`[root@localhost ~]# modinfo -n iscst_scst_vdisk`
+....
+.. 決定核心版本。
++
+....
+[root@localhost ~]# uname -r
+....
+.. 使用核心簽署每個檔案。
++
+....
+[root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
+/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.priv \
+/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der \
+_module-filename_
+....
+.. 使用 UEFI 韌體安裝正確的金鑰。
++
+有關安裝 UEFI 金鑰的說明、請參閱：
+
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing`
+
++
+產生的 UEFI 金鑰位於：
+
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
+
+
+
+. 執行重新開機。
++
+`reboot`
+
+
+
+
+
 == 解除安裝ONTAP 「BMC Service」
 
 .開始之前

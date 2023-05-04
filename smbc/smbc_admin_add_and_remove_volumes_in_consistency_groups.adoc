@@ -14,18 +14,27 @@ summary: 如果您想要新增或移除磁碟區來變更一致性群組的組�
 
 
 [role="lead"]
-如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
-
-
-NOTE: 此工作流程適用於ONTAP FAS9.8和9.9.1。從功能性的9.10.1開始ONTAP 、建議您自行管理 link:../consistency-groups/index.html["一致性群組"] 透過System Manager或ONTAP 透過靜止API。從ONTAP 功能完整的版本9.12.1開始、您可以使用System Manager或ONTAP the靜止API、將磁碟區新增或移除至一致性群組。您必須中斷SMBC關係、才能修改一致性群組、然後還原SMBC保護。如需此程序的詳細資訊、請參閱 xref:../consistency-groups/modify-task.html[修改一致性群組]。
+在作用中的 SM-BC 關係中新增和移除磁碟區、取決於您使用的 ONTAP 版本。
 
 .關於這項工作
+在 ONTAP 9.8 到 9.9.1 中、您可以使用 ONTAP CLI 將磁碟區新增或移除至一致性群組。
+
+從功能性的9.10.1開始ONTAP 、建議您自行管理 link:../consistency-groups/index.html["一致性群組"] 透過System Manager或ONTAP 透過靜止API。如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
+
+從 ONTAP 9.13.1 開始、您可以不中斷地將磁碟區新增至一致性群組、並從來源或目的地建立有效的 SM-BC 關係。
+
+
+NOTE: 從具有 SM-BC 關係的一致性群組中移除磁碟區會造成中斷、您必須先中斷 SnapMirror 關係、才能繼續此作業。
+
+[role="tabbed-block"]
+====
+.ONTAP 9.8% 至 9.13.0
+--
+.開始之前
 * 當一致性群組處於「不同步」狀態時、不允許變更成分。
 * 目的地Volume應為DP類型。
+* 您新增以擴充一致性群組的新磁碟區必須在來源與目的地磁碟區之間有一對通用的Snapshot複本。
 
-
-
-NOTE: 您新增以擴充一致性群組的新磁碟區必須在來源與目的地磁碟區之間有一對通用的Snapshot複本。
 
 .步驟
 此程序假設有兩個磁碟區對應：Vol_src1 <-> vol_dst1和vol_src2 <-> vol_dst2、在端點VS1_src：/cg/cs_src和VS1_dst../cg/c_dst之間的一致性群組關係中。
@@ -63,7 +72,7 @@ NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主�
 +
 「來源：：>SnapMirror版本-dite-path VS1_dst../cc/CG_dst -nation-info-only true」
 
-. *如果您使用ONTAP 的是更新版本的版本、請*刪除並重新建立來源上的一致性群組、並以正確的格式建立。請依照中的步驟進行 xref:../consistency-groups/delete-task.html[刪除一致性群組] 然後 xref:../consistency-groups/configure-task.html[設定單一一致性群組]。在版本更新的版本中、您必須在System Manager或使用REST API執行刪除和建立作業、而無需執行CLI程序。ONTAP ONTAP
+. ** 如果您使用的是 ONTAP 9.10.1 至 9.13.0 ，則 ** 刪除並重新建立來源上的一致性群組，並使用正確的組合。請依照中的步驟進行 xref:../consistency-groups/delete-task.html[刪除一致性群組] 然後 xref:../consistency-groups/configure-task.html[設定單一一致性群組]。在版本更新的版本中、您必須在System Manager或使用REST API執行刪除和建立作業、而無需執行CLI程序。ONTAP ONTAP
 +
 *如果您使用ONTAP 的是Sfat9、9.0或9.9.1、請跳至下一步。*
 
@@ -77,7 +86,24 @@ NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主�
 
 . 重新對應您在步驟5中未對應的LUN：
 +
-「目的地：：> LUN對應-vserver VS1_dst -path <LUN_path>-igroup <igroup_name>'
+`destination::> lun map -vserver vs1_dst -path _lun_path_ -igroup _igroup_name_`
 
 . 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
 
+
+--
+.ONTAP 9.13.1 及更新版本
+--
+從 ONTAP 9.13.1 開始、您可以在不中斷營運的情況下、將磁碟區新增至一致性群組、並建立有效的 SM-BC 關係。SM-BC 支援從來源或目的地新增磁碟區。
+
+如需從來源一致性群組新增磁碟區的詳細資訊、請參閱 xref:../consistency-groups/modify-task.html[修改一致性群組]。
+
+.從目的地叢集新增磁碟區
+. 在目標叢集上、選取「 ** 保護 ** 」 > 「 ** 關係」。
+. 找出您要新增磁碟區的 SM-BC 關係。選取 image:icon_kabob.gif["烤串圖示"] 然後 ** 展開 ** 。
+. 選取要將其磁碟區新增至一致性群組的磁碟區關係
+. 選擇 ** 展開 ** 。
+
+
+--
+====

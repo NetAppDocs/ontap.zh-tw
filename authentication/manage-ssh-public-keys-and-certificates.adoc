@@ -1,0 +1,115 @@
+---
+permalink: authentication/manage-ssh-public-keys-and-certificates.html 
+sidebar: sidebar 
+keywords: associate, public key, administrator account 
+summary: 對於 SSH 公開金鑰驗證、您可以管理系統管理員帳戶的公開金鑰及其與 X.509 憑證的關聯、您可以使用安全登入公開金鑰命令來管理系統管理員帳戶的公開金鑰和憑證。 
+---
+= 管理管理員帳戶的 SSH 公開金鑰和 X.509 憑證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了提高使用系統管理員帳戶的 SSH 驗證安全性、您可以使用 `security login publickey` 管理 SSH 公開金鑰及其與 X.509 憑證關聯的命令集。
+
+
+
+== 將公開金鑰和 X.509 憑證與系統管理員帳戶建立關聯
+
+從 ONTAP 9.13.1 開始、您可以將 X.509 憑證與您與系統管理員帳戶相關聯的公開金鑰建立關聯。這可讓您在登入該帳戶的 SSH 時、更安全地進行憑證過期或撤銷檢查。
+
+.開始之前
+* 您必須是叢集或SVM管理員、才能執行此工作。
+* 您必須已產生SSH金鑰。
+* 如果您只需要檢查 X.509 憑證是否過期、您可以使用自我簽署的憑證。
+* 如果您需要檢查 X.509 憑證是否過期及撤銷：
++
+** 您必須已從憑證授權單位（ CA ）收到憑證。
+** 您必須使用安裝憑證鏈結（中繼和根 CA 憑證） `security certificate install` 命令。
+** 您需要啟用 SSH 的 OCSP 。請參閱 link:../system-admin/verify-digital-certificates-valid-ocsp-task.html["使用OCSP驗證數位憑證是否有效"^] 以取得相關指示。
+
+
+
+
+.關於這項工作
+如果您透過 SSH 同時使用 SSH 公開金鑰和 X.509 憑證來驗證帳戶、 ONTAP 會在使用 SSH 公開金鑰進行驗證之前、先檢查 X.509 憑證的有效性。如果該憑證過期或撤銷、 SSH 登入將會被拒絕、而且會自動停用公開金鑰。
+
+.步驟
+. 將公開金鑰和 X.509 憑證與系統管理員帳戶建立關聯：
++
+`security login publickey create -vserver _SVM_name_ -username _user_name_ -index _index_ -publickey _certificate_ -x509-certificate install`
+
++
+如需完整的命令語法、請參閱的工作表參照 link:config-worksheets-reference.html#associate-a-public-key-with-a-user-account["將公開金鑰與使用者帳戶建立關聯"^]。
+
+. 檢視公開金鑰以驗證變更：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.範例
+下列命令會將公開金鑰和 X.509 憑證與 SVM 系統管理員帳戶建立關聯 `svmadmin2` 適用於 SVM `engData2`。公開金鑰會被指派索引編號 6 。
+
+[listing]
+----
+cluster1::> security login publickey create -vserver engData2 -username svmadmin2 -index 6 -publickey
+"<key text>" -x509-certificate install
+Please enter Certificate: Press <Enter> when done
+<certificate text>
+----
+
+
+== 從系統管理員帳戶的 SSH 公開金鑰中移除憑證關聯
+
+您可以從帳戶的 SSH 公開金鑰中移除目前的憑證關聯、同時保留公開金鑰。
+
+.開始之前
+您必須是叢集或SVM管理員、才能執行此工作。
+
+.步驟
+. 從系統管理員帳戶移除 X.509 憑證關聯、並保留現有的 SSH 公開金鑰：
++
+`security login publickey modify -vserver SVM_name -username user_name -index index -x509-certificate delete`
+
+. 檢視公開金鑰以驗證變更：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.範例
+下列命令會從 SVM 系統管理員帳戶移除 X.509 憑證關聯 `svmadmin2` 適用於 SVM `engData2` 索引編號 6 。
+
+[listing]
+----
+cluster1::> security login publickey modify -vserver engData2 -username svmadmin2 -index 6 -x509-certificate delete
+----
+
+
+== 從系統管理員帳戶移除公開金鑰和憑證關聯
+
+您可以從帳戶移除目前的公開金鑰和憑證組態。
+
+.開始之前
+您必須是叢集或SVM管理員、才能執行此工作。
+
+.步驟
+. 從系統管理員帳戶移除公開金鑰和 X.509 憑證關聯：
++
+`security login publickey delete -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+. 檢視公開金鑰以驗證變更：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.範例
+下列命令會從 SVM 系統管理員帳戶移除公開金鑰和 X.509 憑證 `svmadmin3` 適用於 SVM `engData3` 索引編號 7 。
+
+[listing]
+----
+cluster1::> security login publickey delete -vserver engData3 -username svmadmin3 -index 7
+----

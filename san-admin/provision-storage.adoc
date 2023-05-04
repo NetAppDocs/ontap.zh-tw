@@ -19,8 +19,6 @@ summary: 建立LUN、以使用FC或iSCSI SAN傳輸協定為主機提供儲存設
 
 
 [role="lead"]
-如果特定主機的程序無法使用、您可以使用這些步驟來為任何支援的SAN主機配置儲存設備。
-
 此程序會在已設定FC或iSCSI傳輸協定的現有儲存VM上建立新的LUN。
 
 如果您需要建立新的儲存VM並設定FC或iSCSI傳輸協定、請參閱 link:configure-svm-fc-task.html["設定SVM for FC"] 或 link:configure-svm-iscsi-task.html["設定SVM for iSCSI"]。
@@ -131,6 +129,10 @@ NOTE: 在LUN建立期間、一律會啟用非對稱邏輯單元存取（ALUA）�
 
 . 對於FC、請根據WWPN對FC交換器進行分區。每個啟動器使用一個區域、並在每個區域中包含所有目標連接埠。
 . 探索主機上的LUN。
++
+對於 VMware vSphere 、請使用虛擬儲存主控台（ VSC ）來探索及初始化 LUN 。
+
+. 初始化 LUN 並選擇性建立檔案系統。
 . 確認主機可以在LUN上寫入和讀取資料。
 
 
@@ -139,10 +141,12 @@ NOTE: 在LUN建立期間、一律會啟用非對稱邏輯單元存取（ALUA）�
 --
 使用FC或iSCSI傳輸協定搭配ONTAP 使用CLI建立LUN、為SAN主機提供儲存空間。
 
-. 使用「系統授權show」命令來驗證您是否擁有FC或iSCSI的授權。
+. 確認您擁有 FC 或 iSCSI 的授權。
 +
-「系統授權展示」
-
+[source, cli]
+----
+system license show
+----
 +
 [listing]
 ----
@@ -157,30 +161,48 @@ Package           Type    Description           Expiration
 ----
 . 如果您沒有FC或iSCSI的授權、請使用「license add」命令。
 +
-「license add -license code-code-_y_your less_code_」
-
+[source, cli]
+----
+license add -license-code <your_license_code>
+----
 . 在SVM上啟用您的傳輸協定服務：
 +
-*對於iSCSI：*「vserver iSCSI create -vserver _vserver_name_-target別名_vserver_name_」
+* iSCSI ： *
 
 +
-*對於FC：*「vserver FCP create -vserver _vserver_name_-stue-admin up」
+[source, cli]
+----
+vserver iscsi create -vserver <svm_name> -target-alias <svm_name>
+----
++
+* 代表 FC ： *
 
++
+[source, cli]
+----
+vserver fcp create -vserver <svm_name> -status-admin up
+----
 . 在每個節點上為SVM建立兩個生命期：
 +
-「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定iscsiSCSI|fc-home-node_node_name_-home-port _port_name_-address_ip_address_-netmask_`
-
+[source, cli]
+----
+network interface create -vserver <svm_name> -lif <lif_name> -role data -data-protocol <iscsi|fc> -home-node <node_name> -home-port <port_name> -address <ip_address> -netmask <netmask>
+----
 +
 NetApp為每個SVM服務資料的每個節點至少支援一個iSCSI或FC LIF。不過、備援需要每個節點兩個生命期。
 
 . 確認您的生命已建立、且其作業狀態為「線上」：
 +
-「網路介面show -vserver _vserver_name__lif_name_」
-
+[source, cli]
+----
+network interface show -vserver <svm_name> <lif_name>
+----
 . 建立LUN：
 +
-「LUN create -vserver vserver_name -volume _volume _name_-LUN _lun_name_-size _lun_size_-osttype Linux -space-Reserve enabled| disabled'
-
+[source, cli]
+----
+lun create -vserver <svm_name> -volume <volume_name> -lun <lun_name> -size <lun_size> -ostype linux -space-reserve <enabled|disabled>
+----
 +
 您的LUN名稱不得超過255個字元、且不得包含空格。
 
@@ -190,19 +212,28 @@ NOTE: 在磁碟區中建立LUN時、NVFIL選項會自動啟用。
 
 . 建立您的igroup：
 +
-"igroup create -vserver _vserver_name_-igroup _igroup_name_-protocol FCP | iscs|混合類型Linux -initiator _name_"
-
+[source, cli]
+----
+igroup create -vserver <svm_name> -igroup <igroup_name> -protocol <fcp|iscsi|mixed> -ostype linux -initiator <initiator_name>
+----
 . 將LUN對應至igroup：
 +
-"LUN對應會建立-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
-
+[source, cli]
+----
+lun mapping create -vserver <svm__name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 驗證LUN的設定是否正確：
 +
-「LUN show -vserver _vserver_name_」
+[source, cli]
+----
+lun show -vserver <svm_name>
 
-. link:create-port-sets-binding-igroups-task.html["建立連接埠集並繫結至igroup"] （選用）。
-. 請遵循主機文件中的步驟、在特定主機上啟用區塊存取。
-. 使用主機公用程式完成FC或iSCSI對應、並探索主機上的LUN。
+. Optionally, link:create-port-sets-binding-igroups-task.html[Create a port set and bind to an igroup].
+
+. Follow steps in your host documentation for enabling block access on your specific hosts.
+
+. Use the Host Utilities to complete the FC or iSCSI mapping and to discover your LUNs on the host.
+----
 
 
 --

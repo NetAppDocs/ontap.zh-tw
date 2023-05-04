@@ -1,0 +1,96 @@
+---
+permalink: s3-config/create-bucket-lifecycle-rule-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, cli, lifecycle, rule 
+summary: 從 ONTAP 9.13.1 開始、您可以實作 S3 物件過期。 
+---
+= 建立貯體生命週期管理規則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、您可以實作 S3 物件過期。到期動作可定義貯體中的物件何時到期。這項功能可讓您管理物件版本、以符合保留要求、並有效管理整個 S3 物件儲存。
+
+.開始之前
+已啟用S3的SVM必須已存在S3伺服器和儲存區。請參閱 link:create-svm-s3-task.html["為S3建立SVM"] 以取得更多資訊。
+
+.關於這項工作
+建立貯體生命週期管理規則時、您必須選擇下列三種到期動作類型之一：
+
+* `Expiration` –過期動作會使規則所識別的物件過期。如果在貯體上啟用案例版本設定、 S3 會使所有過期的物件無法使用。如果未啟用版本設定、則此規則會永久刪除物件。
+* `NoncurrentVersionExpiration` –此動作用於指定 S3 何時永久移除非目前物件。這些刪除的物件無法還原。
+* `AbortIncompleteMultipartUpload` –管理員可以使用此元素來設定允許多個部分上傳保持進行中的最長時間（以天為單位）
+
+
+建立貯體生命週期管理規則時、您必須為每個到期動作類型定義必要欄位。這些欄位可在初始建立後修改。下表顯示每種行動類型的唯一欄位。
+
+[cols="30,70"]
+|===
+
+
+| 行動類型 | 唯一欄位 
+
+
+ a| 
+NonCurrentVersionExpiration
+ a| 
+* `-non-curr-days` 刪除非目前版本的天數
+* `-new-non-curr-versions` - 要保留的最新非最新版本數
+
+
+
+
+ a| 
+過期
+ a| 
+* `-obj-age-days` - 建立後的天數、之後可刪除物件的目前版本
+* `-obj-exp-date` 物件到期的特定日期
+* `-expired-obj-del-markers` - 清理物件刪除標記
+
+
+
+
+ a| 
+AbortIncompleteMultiPart上 傳
+ a| 
+* `-after-initiation-days` - 初始化的天數、之後可中止上傳
+
+
+|===
+若要將貯體生命週期管理規則僅套用至特定物件子集、管理員必須在建立規則時設定每個篩選。如果在建立規則時未設定這些篩選條件、則規則會套用至貯體內的所有物件。
+
+所有篩選器都可以在初始建立後修改、但下列項目除外： +
+
+* `-prefix`
+* `-tags`
+* `-obj-size-greater-than`
+* `-obj-size-less-than`
+
+
+.步驟
+. 使用 `vserver object-store-server bucket lifecycle-management-rule create` 命令及到期動作類型的必填欄位、以建立您的貯體生命週期管理規則。
+
+
+.範例
+下列命令會建立 NonCurrentVersionExpiration Bucket 生命週期管理規則：
+
+[listing]
+----
+vserver object-store-server bucket lifecycle-management-rule create -vserver <svm_name> -bucket <bucket_name> -rule-id <rule_name> -action NonCurrentVersionExpiration -index <lifecycle_rule_index_integer> -is-enabled {true|false} -prefix <object_name> -tags <text> -obj-size-greater-than {<integer>[KB|MB|GB|TB|PB]} -obj-size-less-than {<integer>[KB|MB|GB|TB|PB]} -new-non-curr-versions <integer> -non-curr-days <integer>
+----
+.範例
+下列命令會建立到期庫位生命週期管理規則：
+
+[listing]
+----
+vserver object-store-server bucket lifecycle-management-rule create -vserver <svm_name> -bucket <bucket_name> -rule-id <rule_name> -action Expiration -index <lifecycle_rule_index_integer> -is-enabled {true|false} -prefix <object_name> -tags <text> -obj-size-greater-than {<integer>[KB|MB|GB|TB|PB]} -obj-size-less-than {<integer>[KB|MB|GB|TB|PB]} -obj-age-days <integer> -obj-exp-date <"MM/DD/YYYY HH:MM:SS"> -expired-obj-del-marker {true|false}
+----
+.範例
+下列命令會建立一個 AbortIncompleteMultpartUpload 貯體生命週期管理規則：
+
+[listing]
+----
+vserver object-store-server bucket lifecycle-management-rule create -vserver <svm_name> -bucket <bucket_name> -rule-id <rule_name> -action AbortIncompleteMultipartUpload -index <lifecycle_rule_index_integer> -is-enabled {true|false} -prefix <object_name> -tags <text> -obj-size-greater-than {<integer>[KB|MB|GB|TB|PB]} -obj-size-less-than {<integer>[KB|MB|GB|TB|PB]} -after-initiation-days <integer>
+----

@@ -14,12 +14,15 @@ summary: 在建立FPolicy原則組態時、您需要建立FPolicy事件。您可
 在建立FPolicy原則組態時、您需要建立FPolicy事件。您可以在建立事件時、將其與FPolicy原則建立關聯。事件會定義要監控的傳輸協定、以及要監控和篩選的檔案存取事件。
 
 .開始之前
-您應該填寫FPolicy活動工作表。
+您應該完成 FPolicy 活動 link:https://docs.netapp.com/us-en/ontap/nas-audit/fpolicy-event-config-worksheet-reference.html["工作表"]。
 
-.步驟
+
+
+== 建立FPolicy事件
+
 . 使用「vserver fpolicy policy事件create」命令建立FPolicy事件。
 +
-「vserver fpolicy原則事件create -vserver-name vs1.example.com -EVENT1 -protocol CIFS -file-operations open, close、read, write」
+`vserver fpolicy policy event create -vserver vs1.example.com -event-name event1 -protocol cifs -file-operations open,close,read,write`
 
 . 使用「vserver fpolicy policy EVENT show」命令來驗證FPolicy事件組態。
 +
@@ -35,4 +38,16 @@ Vserver           Name      Protocols Operations    Filters   Operation
 vs1.example.com   event1    cifs      open, close,  -         false
                                       read, write
 ----
+
+
+
+
+== 建立 FPolicy 存取遭拒事件
+
+從 ONTAP 9.13.1 開始、使用者可以收到因權限不足而導致檔案作業失敗的通知。這些通知對於安全性、勒索軟體保護和治理來說非常重要。
+
+. 使用「vserver fpolicy policy事件create」命令建立FPolicy事件。
++
+`vserver fpolicy policy event create -vserver vs1.example.com -event-name event1 -protocol cifs -monitor-fileop-failure true -file-operations open`
+
 

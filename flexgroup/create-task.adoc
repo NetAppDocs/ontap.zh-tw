@@ -18,8 +18,6 @@ summary: 您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁
 
 link:aggregate-space-requirements-concept.html["配置FlexGroup 完一個供應不全的磁碟區時的集合體空間準則"]
 
-您也應該瞭解選擇集合體來配置FlexGroup 一個現象區的考量和要求。
-
 建立FlexGroup 一套用於FlexGroup 實現最佳效能結果的功能集區時、您必須考量下列準則：
 
 * 僅能跨越相同硬體系統上的集合體。FlexGroup
@@ -42,6 +40,13 @@ link:aggregate-space-requirements-concept.html["配置FlexGroup 完一個供應�
 
 * 對於僅供使用的系統、最好是每個節點有兩個Aggregate、而對於僅供使用的系統、則每個節點必須有一個Aggregate才能使用此功能。FAS AFF FlexGroup
 * 對於每FlexGroup 個支援區塊、您至少應該建立八個分佈在FAS 兩個以上的支援區塊上的支援區塊、以及AFF 在一個或多個支援區塊上的支援區塊上的支援區塊。
+
+
+.開始之前
+* 從 ONTAP 9.13.1 開始、您可以使用容量分析和活動追蹤功能來建立 Volume 。若要啟用容量或活動追蹤、請核發 `volume create` 命令 `-analytics-state` 或 `-activity-tracking-state` 設定為 `on`。
++
+若要深入瞭解容量分析和活動追蹤、請參閱 xref:../task_nas_file_system_analytics_enable.html[啟用檔案系統分析]。
+
 
 
 .步驟
@@ -98,7 +103,7 @@ Do you want to continue? {y|n}: y
 ----
 
 
-在前一個範例中、如果您想要建立FlexGroup 適用於Oracle的支援區、FabricPool 則所有的集合體（aggr1、aggr2和aggr3）都必須在FabricPool 支援區內集合體。。使用FlexGroup 交會路徑「volume mount -vserver vserver_name -volume vol_name -jet-path jeting_path」來掛載此現象
+在前一個範例中、如果您想要建立FlexGroup 適用於Oracle的支援區、FabricPool 則所有的集合體（aggr1、aggr2和aggr3）都必須在FabricPool 支援區內集合體。使用連接路徑掛載 FlexGroup Volume ： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
 
 [listing]
 ----

@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: update/firmware-task.html 
+keywords: system manager, netapp, ontap, upgrade, nondisruptive, firmware,  disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc, software patch, upgrade, recommendation, recommended, storage firmware, storage devices, disks, shelves, service processors, modules 
+summary: 您可以將更新的韌體套用至叢集中的支援裝置、例如磁碟、磁碟櫃、服務處理器（SP）或基礎板管理控制器（BMC）。 
+---
+= 手動更新韌體
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+從 ONTAP 9.9.1 開始、如果您已向註冊 link:https://netapp.com/support-and-training/documentation/active-iq-unified-manager["Active IQ Unified Manager"^]、您可以在 System Manager 中接收警示、通知您叢集上支援的裝置（例如磁碟、磁碟櫃、服務處理器（ SP ）或基礎板管理控制器（ BMC ）的韌體更新擱置中的時間。
+
+如果您執行的是 ONTAP 9.8 、或是未向 Active IQ Unified Manager 註冊、您可以瀏覽至 NetApp 支援網站 下載韌體更新。
+
+.開始之前
+若要準備順暢的韌體更新、您應該在更新開始之前重新啟動SP或BMC。您可以使用 `system service-processor reboot-sp -node node_name` 命令重新開機。
+
+.步驟
+請根據您的 ONTAP 版本以及您已向 Active IQ Unified Manager 註冊的情況、遵循適當的程序。
+
+[role="tabbed-block"]
+====
+.ONTAP 9.9.1 及更新版本搭配 Active IQ
+--
+. 在 System Manager 中、前往 * 儀表板 * 。
++
+在「*健全狀況*」區段中、如果叢集有任何建議的韌體更新、就會顯示一則訊息。
+
+. 按一下警示訊息。
++
+「*韌體更新*」標籤會顯示在「*更新*」頁面中。
+
+. 點擊 * 從 NetApp 支援網站 下載 * 以獲得您要執行的韌體更新。
++
+隨即顯示NetApp支援網站。
+
+. 登入 NetApp 支援網站 並下載更新所需的韌體映像套件。
+. 將檔案複製到網路上的HTTP或FTP伺服器、或複製到本機資料夾。
+. 在System Manager中、按一下*叢集>總覽*。
+. 在「*總覽*」窗格的右角、按一下「*更多*」 image:icon_kabob.gif["更多選擇"] 並選擇* ONTAP 《Update》*。
+. 按一下*韌體更新*。
+. 視您的 ONTAP 版本而定、請執行下列步驟：
++
+[cols="2"]
+|===
+| ONTAP 9.9.1 和 9.10.0 | 更新版本ONTAP 
+
+
+ a| 
+.. 選擇*從伺服器*或*本機用戶端*
+.. 提供伺服器URL或檔案位置。
+
+ a| 
+.. 在建議的更新清單中、選取 * 動作 * 。
+.. 按一下 * 更新 * 立即安裝更新、或按 * 排程 * 排程稍後更新。
++
+如果已排程更新、您可以 * 編輯 * 或 * 取消 * 。
+
+.. 選擇 * 更新韌體 * 按鈕。
+
+
+|===
+
+
+--
+--
+.ONTAP 9.8 及更新版本、不含 Active IQ
+. 瀏覽至NetApp支援網站。
+. 登入NetApp支援網站。
+. 選取您要用來更新叢集韌體的韌體套件。
+. 將檔案複製到網路上的HTTP或FTP伺服器、或複製到本機資料夾。
+. 在System Manager中、按一下*叢集>總覽*。
+. 在「*總覽*」窗格的右角、按一下「*更多*」 image:icon_kabob.gif["功能表圖示"] 並選擇* ONTAP 《Update》*。
+. 按一下*韌體更新*。
+. 視您的 ONTAP 版本而定、請執行下列步驟：
+
+
+[cols="2"]
+|===
+| ONTAP 9.8 、 9.9.1 和 9.10.0 | 更新版本ONTAP 
+
+
+ a| 
+. 選擇*從伺服器*或*本機用戶端*
+. 提供伺服器URL或檔案位置。
+
+ a| 
+. 在建議的更新清單中、選取 * 動作 * 。
+. 按一下 * 更新 * 立即安裝更新、或按 * 排程 * 排程稍後更新。
++
+如果已排程更新、您可以 * 編輯 * 或 * 取消 * 。
+
+. 選擇 * 更新韌體 * 按鈕。
+
+
+|===
+--
+====
+.完成後
+您可以在*韌體更新摘要*下監控或驗證更新。若要檢視已關閉或安裝失敗的更新、請按一下 * 叢集 > 設定 > 自動更新 > 檢視所有自動更新 * 。

@@ -13,8 +13,6 @@ summary: 對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe
 [role="lead"]
 如果您的特定主機程序無法使用、您可以使用這些步驟來建立命名空間、並為任何NVMe支援的主機配置儲存設備。
 
-Linux的命名空間似乎是SCSI磁碟裝置。
-
 此程序會在現有的儲存VM上建立新的命名空間。您的儲存VM必須設定為NVMe、而且您的FC或TCP傳輸應該已經設定完成。
 
 從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
@@ -31,8 +29,6 @@ Linux的命名空間似乎是SCSI磁碟裝置。
 如果您需要建立新的子系統、請按一下*「更多選項」*。
 
 . 如果您執行ONTAP 的是支援功能的9.8或更新版本、而您想要停用QoS或選擇自訂QoS原則、請按一下*更多選項*、然後在*儲存與最佳化*下選取*效能服務層級*。
-
-
 . 將FC交換器分區至WWPN。每個啟動器使用一個區域、並在每個區域中包含所有目標連接埠。
 . 在主機上探索新命名空間。
 . 初始化命名空間並使用檔案系統進行格式化。
@@ -51,45 +47,59 @@ Linux的命名空間似乎是SCSI磁碟裝置。
 .步驟
 . 確認SVM已設定為NVMe：
 +
-「vserver show -vserver _svm_name_-Fields allowed-protocols」
-
+[source, cli]
+----
+vserver show -vserver <svm_name> -fields allowed-protocols
+----
 +
 「NVMe」應顯示在「允許的傳輸協定」欄下。
 
 . 建立NVMe命名空間：
 +
-「Vserver NVMe命名空間create -vserver _Svm_name_-path _path_-size _size__of_namest_-ostype_os_type_」
-
+[source, cli]
+----
+vserver nvme namespace create -vserver <svm_name> -path <path> -size <size_of_namespace> -ostype <OS_type>
+----
 . 建立NVMe子系統：
 +
-「Vserver NVMe子系統會建立-vserver _svm_name_-subsystem _name_of_subsystem_-osttype _os_type_」
-
+[source, cli]
+----
+vserver nvme subsystem create -vserver <svm_name> -subsystem <name_of_subsystem> -ostype <OS_type>
+----
 +
 NVMe子系統名稱區分大小寫。必須包含1到96個字元。允許使用特殊字元。
 
 . 驗證子系統是否已建立：
 +
-「Vserver NVMe子系統顯示-vserver _Svm_name_」
-
+[source, cli]
+----
+vserver nvme subsystem show -vserver <svm_name>
+----
 +
 「NVMe」子系統應顯示在「Subsystem」（子系統）欄下。
 
 . 從主機取得NQN。
 . 將主機NQN新增至子系統：
 +
-「Vserver NVMe子系統主機add -vserver _Svm_name_-subsystem _subsystem_name_-host-nqn _Host_NQN_：subsystem._subsystem_name_」
-
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem_name> -host-nqn <Host_NQN>
+----
 . 將命名空間對應至子系統：
 +
-「Vserver NVMe子系統對應add -vserver _svm_name_-subsystem _subsystem_name_-path _path_」
-
+[source, cli]
+----
+vserver nvme subsystem map add -vserver <svm_name> -subsystem <subsystem_name> -path <path>
+----
 +
 命名空間只能對應至單一子系統。
 
 . 確認命名空間已對應至子系統：
 +
-「Vserver NVMe命名空間show -vserver _svm_name_-instance」
-
+[source, cli]
+----
+vserver nvme namespace show -vserver <svm_name> -instance
+----
 +
 子系統應列為「附加子系統」。
 

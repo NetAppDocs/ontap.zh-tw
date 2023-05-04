@@ -15,18 +15,27 @@ summary: 您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、�
 
 
 
+== ONTAP 9.13.1 開始支援的功能
+
+* FlexGroup 磁碟區的自主勒索軟體保護（ ARP ）、包括下列支援的功能：
++
+** FlexGroup 擴充作業：新成員繼承了自主勒索軟體保護屬性。
+** FlexVol 轉 FlexGroup 轉換：使用主動式勒索軟體保護的 FlexVols 可轉換。
+** FlexGroup 重新平衡：在破壞性和不中斷的重新平衡作業期間、會在 inode 之間複製自主勒索軟體保護。
+
+
+* 排程單一 FlexGroup 重新平衡作業。
+* SnapMirror 與 FlexGroup 磁碟區上的 SVM DR 展開關係。支援展開至八個站台。
+
+
+
+
 == 支援功能、從ONTAP 功能部件支援的版本起、從功能部件支援的版本
 
 * 重新平衡FlexGroup
 * 適用於本產品的SnapLock SnapVault
 * SVM移轉
-* 與SVM、DR搭配運作FlexGroup FabricPool 。
-+
-[NOTE]
-====
-在版本早於ONTAP 《支援》9.12.1的版本中、這兩項功能可以搭配使用、但三項功能不能同時搭配使用。
-
-====
+* FabricPool 、 FlexGroup 和 SVM DR 搭配運作。（在早於 ONTAP 9.12.1 的版本中、其中任何兩項功能都能一起運作、但並非全部三項功能都能一起運作。）
 
 
 
@@ -63,7 +72,7 @@ xref:manage-client-async-dir-delete-task.adoc[管理用戶端權限以快速刪�
 +
 xref:convert-flexvol-svm-dr-relationship-task.adoc[在FlexVol SVM-DR關係中、將一個SSDVolume轉換為FlexGroup 一個SSDVolume]
 
-* SVM-DR FlexClone支援FlexGroup 以支援SflexVolume
+* SVM DR FlexClone 支援 FlexGroup Volume
 +
 xref:../volumes/create-flexclone-task.adoc[深入瞭解如何建立FlexClone Volume。]
 

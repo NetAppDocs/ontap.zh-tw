@@ -13,18 +13,22 @@ summary: 您可以使用volume create命令來建立磁碟區、並指定其交�
 [role="lead"]
 您可以使用「volume create」命令來建立磁碟區、並指定其交會點和其他屬性。
 
-.您需要的產品
-新磁碟區的SVM和將儲存設備供應給磁碟區的Aggregate必須已經存在。
-
-如果SVM有相關聯的集合體清單、則該集合體必須包含在清單中。
-
 .關於這項工作
 磁碟區必須包含_交會路徑_、才能讓用戶端使用其資料。您可以在建立新磁碟區時指定交會路徑。如果您在建立磁碟區時未指定交會路徑、則必須使用「volume mount」命令、在SVM命名空間中掛載磁碟區。
+
+.開始之前
+* 新磁碟區的SVM和將儲存設備供應給磁碟區的Aggregate必須已經存在。
+* 如果SVM有相關聯的集合體清單、則該集合體必須包含在清單中。
+* 從 ONTAP 9.13.1 開始、您可以使用容量分析和活動追蹤功能來建立 Volume 。若要啟用容量或活動追蹤、請核發 `volume create` 命令 `-analytics-state` 或 `-activity-tracking-state` 設定為 `on`。
++
+若要深入瞭解容量分析和活動追蹤、請參閱 xref:../task_nas_file_system_analytics_enable.html[啟用檔案系統分析]。
+
+
 
 .步驟
 . 建立Volume：
 +
-「Volume create -vserver vserver_name -volume volume volume volume名稱-Aggregate aggregate名稱-size｛integer[kb| MB| GB | TB| PB ]｝-security-風格｛ntfs|unix | mixed｝-user_name_or_Number -group group group name_or _number-jeter-path [-ppolicy EXport_policy_name]。
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ [-policy _export_policy_name_]`
 
 +
 「安全樣式」、「使用者」、「群組」、「交會路徑」及「原則」選項僅適用於NAS命名空間。
@@ -48,12 +52,12 @@ summary: 您可以使用volume create命令來建立磁碟區、並指定其交�
 
 . 確認已使用所需的交會點建立磁碟區：
 +
-「Volume show -vserver vserver_name -volume volume volume volume _name -jetion」
+`volume show -vserver _svm_name_ -volume _volume_name_ -junction`
 
 
 
 .範例
-下列命令會在SVM vs1.example.com和Aggr1上建立名為user1的新磁碟區。新的Volume可從「/使用者」取得。磁碟區大小為750 GB、磁碟區保證為磁碟區類型（預設）。
+下列命令會在 SVM 上建立名為 users1 的新磁碟區 `vs1.example.com` 和 Aggregate `aggr1`。新的 Volume 可在取得 `/users`。磁碟區大小為750 GB、磁碟區保證為磁碟區類型（預設）。
 
 [listing]
 ----

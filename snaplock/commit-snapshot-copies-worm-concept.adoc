@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/commit-snapshot-copies-worm-concept.html 
 sidebar: sidebar 
-keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror 
+keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror, clone, snaplock type 
 summary: 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。您可以在SnapLock 這個景點執行所有的基本功能。SnapVault目的地磁碟區會自動以唯讀方式掛載、因此不需要明確將Snapshot複本提交至WORM、因此不支援使用SnapMirror原則在目的地磁碟區上建立排程的Snapshot複本。 
 ---
 = 將Snapshot複本提交至保存目的地上的WORM
@@ -34,6 +34,8 @@ NOTE: 您無法重新命名已提交至WORM狀態的Snapshot複本。
 
 
 NOTE: 不支援SnapLock 在支援LUN的功能上使用。雖然可以SnapLock 使用舊有技術將LUN移至某個不穩定的磁碟區、但這並不受支援、SnapLock 也不涉及任何涉及位於某個穩定區上LUN的其他作業。從ONTAP 供應到支援支援的版本號為《僅SnapLock 支援》、從供應到SnapLock 支援的版本號為《SnapVault 僅支援》、適用於非SnapLock來源磁碟區的Snapshot複本會複寫並鎖定SnapLock 在目的地上的各種情況。這些Snapshot複本可以包含LUN。
+
+從 ONTAP 9.13.1 開始、您可以使用建立 FlexClone 、立即在 SnapLock for SnapVault 關係的目的地 SnapLock 磁碟區上還原鎖定的 Snapshot 複本 `snaplock-type` 選項設為「 non-SnapLock 」、並在執行磁碟區複本建立作業時、將 Snapshot 複本指定為「父快照」。深入瞭解 link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["使用 SnapLock 類型建立 FlexClone Volume"]。
 
 對於部分組態、您應該注意下列事項：MetroCluster
 

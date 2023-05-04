@@ -1,10 +1,10 @@
 ---
 permalink: volumes/view-status-efficiency-operations-task.html 
 sidebar: sidebar 
-keywords: efficiency, operation, status, view 
+keywords: efficiency, operation, status, view, sequential packing 
 summary: 您可以檢視磁碟區是否啟用重複資料刪除或資料壓縮。您也可以使用Volume Eff效率show命令來檢視磁碟區上效率作業的狀態、狀態、壓縮類型及進度。 
 ---
-= 檢視效率作業的狀態
+= 檢視效率作業和狀態
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,8 +13,12 @@ summary: 您可以檢視磁碟區是否啟用重複資料刪除或資料壓縮�
 [role="lead"]
 您可以檢視磁碟區是否啟用重複資料刪除或資料壓縮。您也可以使用「Volume Eff效率show」命令、檢視磁碟區上效率作業的狀態、狀態、壓縮類型及進度。
 
+
+
+== 檢視效率狀態
+
 .步驟
-. 使用「Volume Eff效率show」命令來檢視磁碟區上效率作業的狀態。
+. 檢視磁碟區上效率作業的狀態： `volume efficiency show`
 +
 下列命令會顯示指派自適性壓縮類型之Volume Vola的效率作業狀態：
 
@@ -36,4 +40,15 @@ cluster1::> volume efficiency show -vserver vs1 -volume VolA
         Status: Idle
       Progress: Idle for 00:03:20
 ----
+
+
+
+
+== 判斷磁碟區是否包含依序打包的資料
+
+您可以顯示已啟用連續封裝的磁碟區清單、例如當您需要還原至早於 9.13.1 的 ONTAP 版本時。您必須處於進階權限模式才能使用此命令。
+
+.步驟
+. 設定權限等級： `set -privilege advanced`
+. 列出已啟用連續封裝的磁碟區：「 Volume Effen該 圖示 - extended 自動調適式壓縮 true 」
 

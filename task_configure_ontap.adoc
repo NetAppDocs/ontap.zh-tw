@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: task_configure_ontap.html 
 keywords: install, installing, cluster, set up, setup, configure, disk, data ports, guided setup, local tiers, aggregate, vserver, volume, configuring ONTAP on a new cluster, configuring a new cluster, assign a node-management IP address, node, DNS server, host name, hostname, NTP server, synchronize time, create a local tier, configure protocol, SSD, provision storage, add LUN, add volume, add namespace, volume, vserver, configure ONTAP on a new cluster, configuration 
-summary: 您可以快速建立叢集、並為ONTAP 叢集設定適用的功能。System Manager提供簡單易用的工作流程、可設定叢集及設定儲存設備。 
+summary: System Manager提供簡單易用的工作流程、可設定叢集及設定儲存設備。 
 ---
-= 在ONTAP 新叢集上設定
+= 使用系統管理員在新叢集上設定 ONTAP
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -23,7 +23,23 @@ System Manager提供簡單易用的工作流程、可設定新叢集及設定儲
 
 在某些情況MetroCluster 下、例如某些需要IPv6網路定址的支援功能部署或叢集、您可能需要使用ONTAP 支援功能的CLI來設定新的叢集。按一下 link:./software_setup/concept_set_up_the_cluster.html["請按這裡"] 如需這些需求的詳細資訊、以及使用ONTAP CLI進行叢集設定的步驟。
 
-無論您是使用System Manager或CLI進行設定、系統都應該已依照安裝及纜線連接 https://docs.netapp.com/us-en/ontap-systems/index.html["安裝與設定指示"^] 系統隨附的。此外、叢集內的每個節點也應設定叢集網路介面、以進行叢集內通訊。
+.開始之前
+* 您應該已根據平台機型的安裝與設定指示、安裝、連接新的儲存系統並開啟電源。請參閱 https://docs.netapp.com/us-en/ontap-systems/index.html["不再需要使用本技術AFF FAS"]。
+* 叢集網路介面應在叢集的每個節點上設定、以進行叢集內通訊。
+* 您應該瞭解下列System Manager支援要求：
++
+** 叢集設定僅支援單一節點和HA配對
+** 使用CLI手動設定節點管理時、System Manager僅支援IPV4、不支援IPv6。不過、如果您在使用DHCP完成硬體設定後、使用自動指派的IP位址和Windows探索來啟動System Manager、System Manager就能設定IPv6管理位址。
++
+在支援支援支援IPv6網路的部署中、System Manager不ONTAP 支援使用支援。
+
+** 支援的支援範本適用於每個站台有兩個節點的不完整IP組態。MetroCluster MetroCluster
++
+在更新版本的版本中、System Manager不支援針對各種版本的更新叢集設定。ONTAP MetroCluster
+
+
+
+
 
 image:workflow_configure_ontap_on_new_cluster.gif["在ONTAP 新叢集上設定功能的工作流程"]
 

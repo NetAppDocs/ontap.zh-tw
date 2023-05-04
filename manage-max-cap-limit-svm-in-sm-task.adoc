@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: manage-max-cap-limit-svm-in-sm-task.html 
+keywords: system manager, monitor, capacity, measurement, maximum capacity limit, storage VM, allocated, threshold alert, alert 
+summary: 從 ONTAP 9.13.1 開始、您可以使用系統管理員來啟用儲存 VM 的最大容量限制、並設定臨界值、在使用的儲存設備達到最大容量的特定百分比時觸發警示。 
+---
+= 在 System Manager 中管理儲存 VM 的最大容量限制
+:allow-uri-read: 
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、您可以使用系統管理員來啟用儲存 VM 的最大容量限制、並設定臨界值、在使用的儲存設備達到最大容量的特定百分比時觸發警示。
+
+
+
+== 為儲存 VM 啟用最大容量限制
+
+從 ONTAP 9.13.1 開始、您可以指定儲存 VM 中所有磁碟區可配置的最大容量。您可以在新增儲存 VM 或編輯現有儲存 VM 時啟用最大容量。
+
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
+. 執行下列其中一項：
++
+--
+** 若要新增儲存 VM 、請按一下 image:icon_add_blue_bg.gif["新增圖示"]。
+** 若要編輯儲存 VM 、請按一下 image:icon_kabob.gif["烤串圖示"] 在儲存 VM 名稱旁邊、然後按一下 * 編輯 * 。
+
+
+--
+. 輸入或修改儲存 VM 的設定、然後選取標有「啟用最大容量限制」的核取方塊。
+. 指定最大容量大小。
+. 指定您要用來做為觸發警示臨界值的最大容量百分比。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+== 編輯儲存 VM 的最大容量限制
+
+從 ONTAP 9.13.1 開始、您可以編輯現有儲存 VM 的最大容量限制（如果有） <<enable-max-cap,已啟用最大容量限制>> 已有。
+
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
+. 按一下 image:icon_kabob.gif["烤串圖示"] 在儲存 VM 名稱旁邊、然後按一下 * 編輯 * 。
++
+已勾選標有「啟用最大容量限制」的核取方塊。
+
+. 請執行下列其中一個步驟：
+
+
+[cols="35,65"]
+|===
+
+
+| 行動 | 步驟 
+
+
+ a| 
+取消啟用最大容量限制
+ a| 
+. 取消勾選核取方塊。
+. 按一下「 * 儲存 * 」。
+
+
+
+
+ a| 
+修改最大容量限制
+ a| 
+. 指定新的最大容量大小。（您無法指定小於儲存 VM 中已分配空間的大小。）
+. 指定要用作觸發警示臨界值的最大容量百分比。
+. 按一下「 * 儲存 * 」。
+
+
+|===
+.相關資訊
+* link:./task_admin_monitor_capacity_in_sm.html#view-max-cap-limit-svm["檢視儲存 VM 的最大容量限制"]
+* link:./concepts/capacity-measurements-in-sm-concept.html["System Manager中的容量測量"]
+* link:./volumes/manage-svm-capacity.html["使用 ONTAP CLI 管理 SVM 容量限制"]
+

@@ -4,7 +4,7 @@ permalink: anti-ransomware/respond-abnormal-task.html
 keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, autonomous, ransomware, protection, arp 
 summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。 
 ---
-= 回應異常活動。
+= 回應異常活動
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -21,7 +21,7 @@ summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的�
 [role="lead"]
 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。
 
-.您的需求
+.您需要的產品
 * 以作用中模式執行的是ARP。
 
 
@@ -68,7 +68,12 @@ NOTE: 如果您還原整個Volume、則不會有任何通知需要清除。
 | 如果您選取此值... | 請採取此行動… 
 
 
-| 誤判 | 按一下「*更新*」和「*清除可疑的檔案類型*」以記錄您的決策、並恢復正常的勒索軟體監控。 
+| 誤判  a| 
+按一下 * 更新 * 和 * 清除可疑的檔案類型 * 來記錄您的決定並恢復正常的 ARP 監控。
+
+
+NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、則清除可疑的作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
+
 
 
 | 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、記錄您的決策並恢復正常的ARP監控。+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
@@ -121,14 +126,15 @@ Number of Attacks: 1
 +
 ** 誤判
 +
-輸入下列命令以記錄您的決定：將新的副檔名新增至允許的清單、並恢復正常的反勒索軟體監控：「反勒索軟體Volume攻擊清除可疑的-vserver _Svm_name_-volume _vol_name_[_exteNids__-falge-true]
+輸入下列命令以記錄您的決定、將新的副檔名新增至允許的項目清單、並恢復正常的反勒索軟體監控：
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
 +
 使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]」序號。[`-exte_text_,… 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、格式為「-start-time_time_-tend-time_]、檔案範圍的開始和結束時間。
 
 ** 可能的勒索軟體攻擊
 +
-回應攻擊並還原資料。然後輸入下列命令、記錄您的決定並恢復正常的ARP監控：
+回應攻擊和 link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。恢復資料後、輸入下列命令以記錄您的決定、並恢復正常的 ARP 監控：
 
 +
 「反勒索軟體磁碟區攻擊清除可疑的-vserver _Svm_name_-volume _vol_name_[_extension identids_]-假 正假」
@@ -137,9 +143,28 @@ Number of Attacks: 1
 使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]順序編號「[-extension_text_、…」 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、「開始時間_date時間_-結束時間_date時間_」、格式為「mm/DD/YYYY hh：MM：SS」。
 
 +
-如果還原整個磁碟區、則沒有可疑的檔案類型可清除。
+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。將移除 ARP 建立的備份快照、並清除攻擊報告。
 
 
+
+. 如果您使用的是 MAV 、而且是預期的 `clear-suspect` 作業需要額外核准、每位 MAV 群組核准者都會執行下列動作：
++
+.. 顯示要求：
++
+`security multi-admin-verify request show`
+
+.. 核准恢復正常反勒索軟體監控的要求：
++
+`security multi-admin-verify request approve -index[_number returned from show request_]`
+
++
+最後一個群組核准者的回應表示已修改磁碟區、並記錄誤報。
+
+
+
+. 如果您使用的是 MAV 、而您是 MAV 群組核准者、您也可以拒絕明確可疑的要求：
++
+`security multi-admin-verify request veto -index[_number returned from show request_]`
 
 
 

@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/index.html 
 sidebar: sidebar 
-keywords: decide, about, archive, compliance, snaplock, unmodified, file, worm, storage, snap lock, mirror, unmirror. license, compliance clock, regulatory, governance, rules, govern 
+keywords: decide, about, archive, compliance, snaplock, unmodified, file, worm, storage, snap lock, mirror, unmirror. license, compliance clock, regulatory, governance, rules, govern, MAV, multi-admin verification, supported, unsupported 
 summary: 您可以使用NetApp SnapLock 的支援技術、以未經修改的形式保留檔案、以利法規遵循與治理。 
 ---
 = 什麼是呢SnapLock
@@ -226,6 +226,15 @@ LUN
 
 
  a| 
+多重管理驗證（ MAV ）
+ a| 
+是、從 ONTAP 9.13.1 開始。深入瞭解 xref:Multi-admin verification (MAV) support[MAV 支援]。
+ a| 
+是、從 ONTAP 9.13.1 開始。深入瞭解 xref:Multi-admin verification (MAV) support[MAV 支援]。
+
+
+
+ a| 
 SAN
  a| 
 否
@@ -348,6 +357,12 @@ FabricPools支援SnapLock 以ONTAP 概念9.8開頭的支援於支援的功能不
 當磁碟區複寫到另一個站台時、其VCC也會複寫。當發生磁碟區切換時、例如從站台A切換至站台B、VCC會在站台B上繼續更新、而站台A上的SCC會在站台A離線時停止。
 
 當站台A重新上線且執行磁碟區切換時、站台A SCC時鐘會重新啟動、而Volume的VCC則會繼續更新。由於VCC會持續更新、無論切換和切換作業為何、檔案保留時間不取決於SCC時鐘、也不會延展。
+
+
+
+== 多重管理驗證（ MAV ）支援
+
+從 ONTAP 9.13.1 開始、叢集管理員可以在叢集上明確啟用多重管理驗證、以在執行某些 SnapLock 作業之前要求仲裁核准。啟用 MAV 時、 SnapLock Volume 內容（例如預設保留時間、最短保留時間、最長保留時間、磁碟區附加模式、自動認可期間和特權刪除）將需要仲裁核准。深入瞭解 link:https://docs.netapp.com/us-en/ontap/multi-admin-verify/index.html#how-multi-admin-verification-works["MAV"^]。
 
 
 

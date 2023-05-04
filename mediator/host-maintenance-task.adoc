@@ -1,0 +1,48 @@
+---
+permalink: mediator/host-maintenance-task.html 
+sidebar: sidebar 
+keywords: mediator, maintain, host, maintenance 
+summary: 為了達到最佳效能、您應該定期維護 ONTAP Mediator 的主機 OD 。 
+---
+= 維護 ONTAP Mediator 的作業系統主機
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了獲得最佳效能、您應該定期維護 ONTAP Mediator 的主機作業系統。
+
+
+
+== 重新啟動主機
+
+叢集正常運作時、請重新啟動主機。當 ONTAP Mediator 離線時、叢集仍有可能無法正確回應故障。如果需要重新開機、建議您使用服務時段。
+
+ONTAP Mediator 會在重新開機期間自動恢復、並重新輸入先前使用 ONTAP 叢集設定的關係。
+
+
+
+== 主機套件更新
+
+任何程式庫或 yum 套件（核心除外）均可安全更新、但可能需要重新開機才能生效。如果需要重新開機、建議您使用服務時段。
+
+如果您安裝 `yum-utils` 套件中、請使用 `needs-restarting` 偵測是否有任何套件變更需要重新開機的命令。
+
+如果更新了任何 ONTAP Mediator 相依性、您應該重新開機、因為它們不會立即影響執行中的程序。
+
+
+
+== 主機作業系統次要核心升級
+
+SCST 必須針對正在使用的核心進行編譯。若要更新作業系統、需要維護時間。
+
+.步驟
+請執行下列步驟來升級主機作業系統核心。
+
+. 停止 ONTAP Mediator
+. 解除安裝 SCST 套件。（ SCST 不提供升級機制。）
+. 升級作業系統、然後重新開機。
+. 重新安裝 SCST 套件。
+. 重新啟用 ONTAP Mediator 服務。
+

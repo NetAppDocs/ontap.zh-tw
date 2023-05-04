@@ -1,0 +1,151 @@
+---
+permalink: volumes/manage-svm-capacity.html 
+sidebar: sidebar 
+keywords: svm capacity, size, auto size, auto size alert 
+summary: 從 ONTAP 9.13.1 開始、您可以設定 SVM 的最大容量限制。 
+---
+= 管理 SVM 容量限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.13.1 開始、您可以設定儲存 VM （ SVM ）的最大容量。您也可以在 SVM 接近臨界值容量層級時設定警示。
+
+.關於這項工作
+SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCache Volume 的總和來計算。即使磁碟區在刪除後受到限制、離線或位於恢復佇列中、這些磁碟區也會影響容量計算。如果您已將 Volume 設定為自動擴充、則會根據 SVM 大小計算 Volume 的最大自動調整大小值；如果沒有自動增加、則會計算出 Volume 的實際大小。
+
+下表說明如何進行 `autosize-mode` 參數會影響容量計算。
+
+|===
+
+
+| `autosize-mode off` | Size 參數將用於計算 
+
+
+| `autosize-mode grow` | 。 `max-autosize` 參數將用於計算 
+
+
+| `autosize-mode grow-shrink` | 。 `max-autosize` 參數將用於計算 
+|===
+.開始之前
+* 您必須是叢集管理員才能設定 SVM 限制。
+* 儲存限制無法針對任何 SVM 進行設定、這些 SVM 包含資料保護磁碟區、 SnapMirror 關係中的磁碟區、或是 MetroCluster 組態中的磁碟區。
+* 當您移轉 SVM 時、來源 SVM 無法啟用儲存限制。若要完成移轉作業、請停用來源的儲存限制、然後完成移轉。
+* SVM 容量與不同 xref:../volumes/quotas-concept.html[配額]。配額不得超過最大大小。
+* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vservser _svm_name_` 查看現有工作的命令。當任何工作完成時、請再次嘗試執行命令。
+
+
+
+
+== 容量影響
+
+當您達到容量上限時、下列作業將會失敗：
+
+* 建立 LUN 、命名空間或磁碟區
+* 複製 LUN 、命名空間或磁碟區
+* 修改 LUN 、命名空間或磁碟區
+* 增加 LUN 、命名空間或磁碟區的大小
+* 擴充 LUN 、命名空間或磁碟區
+* 重新裝載 LUN 、命名空間或磁碟區
+
+
+
+
+== 設定新 SVM 的容量限制
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
+. 選取 image:icon_add_blue_bg.gif["新增圖示"] 以建立 SVM 。
+. 命名 SVM 並選取 * 存取通訊協定 * 。
+. 在 * 儲存 VM 設定 * 下、選取 * 啟用最大容量限制 * 。
++
+為 SVM 提供最大容量。
+
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+.步驟
+. 建立 SVM 。若要設定儲存限制、請提供 `storage-limit` 價值。若要設定儲存限制的臨界值警示、請提供的百分比值 `-storage-limit-threshold-alert`。
++
+`vserver create -vserver _vserver_name_ -aggregate _aggregate_name_ -rootvolume _root_volume_name_ -rootvolume-security-style {unix|ntfs|mixed} -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_ [-ipspace IPspace_name] [-language <language>] [-snapshot-policy _snapshot_policy_name_] [-quota-policy _quota_policy_name_] [-comment _comment_]`
+
++
+如果您未提供臨界值、預設會在 SVM 容量為 90% 時觸發警示。若要停用臨界值警示、請提供零值。
+
+. 確認 SVM 已成功建立：
++
+「vserver show -vserver _vserver_name_」
+
+. 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 參數設為零：
++
+`vserver modify -vserver _vserver_name_ -storage-limit 0`
+
+
+
+--
+====
+
+
+== 設定或修改現有 SVM 的容量限制
+
+您可以在現有的 SVM 上設定容量限制和臨界值警示、或停用容量限制。
+
+設定容量上限後、您就無法將限制修改為小於目前分配容量的值。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 選取 * 儲存 * > * 儲存 VMS* 。
+. 選取您要修改的 SVM 。在 SVM 名稱旁、選取 image:icon_kabob.gif["烤串圖示"] 然後 * 編輯 * 。
+. 若要啟用容量限制、請選取 * 啟用容量限制 * 旁的方塊。輸入 * 最大容量 * 的值、以及 * 警示臨界值 * 的百分比值。
++
+如果您想要停用容量限制、請取消勾選步驟 2 中的方塊。
+
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+.步驟
+. 在裝載 SVM 的叢集上、發出 `vserver modify` 命令。提供的數值 `-storage-limit` 以及百分比值 `-storage-limit-threshold-alert`。
++
+`vserver modify -vserver _vserver_name_ -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_`
+
++
+如果您未提供臨界值、則會有 90% 容量的預設警示。若要停用臨界值警示、請提供零值。
+
+. 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 設為零：
++
+`vserver modify -vserver _vserver_name_ -storage-limit 0`
+
+
+
+--
+====
+
+
+== 達到容量限制
+
+當您達到最大容量或警示臨界值時、可以參閱 `vserver.storage.threshold` EMS 訊息或使用 System Manager 中的 * Insights * 頁面來瞭解可能的行動。可能的解決方案包括：
+
+* 編輯 SVM 最大容量限制
+* 清除磁碟區恢復佇列以釋放空間
+* 刪除快照以提供磁碟區空間
+
+
+.其他資訊
+* xref:../concepts/capacity-measurements-in-sm-concept.adoc[System Manager中的容量測量]
+* xref:../task_admin_monitor_capacity_in_sm.html[監控System Manager中的容量]
+

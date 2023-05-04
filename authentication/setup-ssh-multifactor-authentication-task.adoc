@@ -2,44 +2,45 @@
 permalink: authentication/setup-ssh-multifactor-authentication-task.html 
 sidebar: sidebar 
 keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
-summary: 從功能表9.3開始ONTAP 、您可以使用安全性登入create命令來強化安全性、方法是要求系統管理員以SSH公開金鑰和使用者密碼登入管理或資料SVM。 
+summary: 多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方法來登入管理或資料 SVM 、以增強安全性。 
 ---
-= 啟用SSH多因素驗證（MFA）
+= 啟用多因素驗證
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從功能介紹9.3開始ONTAP 、您可以使用 `security login create` 命令、要求系統管理員以SSH公開金鑰和使用者密碼登入管理或資料SVM、藉此增強安全性。
-
-從S廳9.12.1開始ONTAP 、您可以使用FIDO2（Fast Identity Online）或個人身分驗證（PIV）驗證標準、將Yobikey硬體驗證裝置用於SSH用戶端MFA。
-
-深入瞭解 link:https://www.netapp.com/pdf.html?item=/media/17055-tr4647pdf.pdf["支援多因素驗證ONTAP 功能（TR-4647）"^]。
-
-.開始之前
-您必須是叢集管理員才能執行此工作。
+多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方法來登入管理或資料 SVM 、以增強安全性。
 
 .關於這項工作
-* 您必須先將公開金鑰與帳戶建立關聯、帳戶才能存取SVM。
+* 您必須是叢集管理員才能執行此工作。
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
++
+link:modify-role-assigned-administrator-task.html["修改指派給系統管理員的角色"]
+
+* 如果您使用公開金鑰進行驗證、則必須先將公開金鑰與帳戶建立關聯、帳戶才能存取 SVM 。
 +
 link:manage-public-key-authentication-concept.html["將公開金鑰與使用者帳戶建立關聯"]
 
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
+* 從S廳9.12.1開始ONTAP 、您可以使用FIDO2（Fast Identity Online）或個人身分驗證（PIV）驗證標準、將Yobikey硬體驗證裝置用於SSH用戶端MFA。
+
+
+
+
+== 使用 SSH 公開金鑰和使用者密碼來啟用 MFA
+
+從 ONTAP 9.3 開始、叢集管理員可以設定本機使用者帳戶、使用 SSH 公開金鑰和使用者密碼登入 MFA 。
+
+. 使用 SSH 公開金鑰和使用者密碼、在本機使用者帳戶上啟用 MFA ：
 +
-link:modify-role-assigned-administrator-task.html["修改指派給系統管理員的角色"]
-
-* 使用者一律會先經過公開金鑰驗證、再進行密碼驗證。
-
-
-.步驟
-. 需要本機系統管理員帳戶才能使用SSH MFA存取SVM：
-+
-「安全性登入建立-vserver _svm_-user-or group名稱_user_name_-applicationssh -imize-method密碼| publickey -role admin -secute-ime-method密碼| publickey」
-
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method <password|publickey> -role admin -second-authentication-method <password|publickey>
+----
 +
 以下命令要求SVM系統管理員帳戶「admin2」（具有預先定義的「admin」角色）、以SSH公開金鑰和使用者密碼登入SVM「engData1」：
 
@@ -54,7 +55,89 @@ Warning: To use public-key authentication, you must create a public key for user
 ----
 
 
-.完成後
-如果您尚未將公開金鑰與系統管理員帳戶建立關聯、則必須先建立公開金鑰、帳戶才能存取SVM。
 
+
+== 使用 TOTP 啟用 MFA
+
+從 ONTAP 9.13.1 開始、您可以要求本機使用者同時使用 SSH 公開金鑰或使用者密碼和時間型一次性密碼（ TOTP ）登入管理或資料 SVM 、以增強安全性。啟用 MFA 與 TOTP 的帳戶後、本機使用者必須登入 link:configure-local-account-mfa-totp-task.html["完成組態設定"]。
+
+TOTP 是一種電腦演算法、使用目前時間來產生一次性密碼。如果使用 TOTP 、它永遠是 SSH 公開金鑰或使用者密碼之後的第二種驗證形式。
+
+.開始之前
+您必須是儲存管理員才能執行這些工作。
+
+.步驟
+您可以將 MFA 設為使用者密碼或 SSH 公開金鑰做為第一種驗證方法、並將 TOTP 設為第二種驗證方法。
+
+[role="tabbed-block"]
+====
+.使用使用者密碼和 TOTP 啟用 MFA
+--
+. 使用使用者密碼和 TOTP 啟用多因素驗證的使用者帳戶。
++
+* 適用於新使用者帳戶 *
+
++
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method password -second-authentication-method totp -role <role> -comment <comment>
+----
++
+* 適用於現有使用者帳戶 *
+
++
+[source, cli]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method password -second-authentication-method totp -role <role> -comment <comment>
+----
+. 確認 MFA 已啟用 TOTP ：
++
+[listing]
+----
+security login show
+----
+
+
+--
+.使用 SSH 公開金鑰和 TOTP 啟用 MFA
+--
+. 使用 SSH 公開金鑰和 TOTP 啟用多因素驗證的使用者帳戶。
++
+* 適用於新使用者帳戶 *
+
++
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
+----
++
+* 適用於現有使用者帳戶 *
+
++
+[source, cli]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
+----
+. 確認 MFA 已啟用 TOTP ：
++
+[listing]
+----
+security login show
+----
+
+
+--
+====
+.完成後
+* 如果您尚未將公開金鑰與系統管理員帳戶建立關聯、則必須先建立公開金鑰、帳戶才能存取SVM。
++
 link:manage-public-key-authentication-concept.html["將公開金鑰與使用者帳戶建立關聯"]
+
+* 本機使用者必須登入才能使用 TOTP 完成 MFA 組態。
++
+link:configure-local-account-mfa-totp-task.html["使用 TOTP 設定 MFA 的本機使用者帳戶"]
+
+
+
+.相關資訊
+深入瞭解 link:https://www.netapp.com/pdf.html?item=/media/17055-tr4647pdf.pdf["支援多因素驗證ONTAP 功能（TR-4647）"^]。

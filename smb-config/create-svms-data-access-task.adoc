@@ -13,15 +13,19 @@ summary: 如果叢集中沒有至少一個SVM來提供SMB用戶端的資料存�
 [role="lead"]
 如果叢集中沒有至少一個SVM來提供SMB用戶端的資料存取、則必須建立一個SVM。
 
+.開始之前
+* 從 ONTAP 9.13.1 開始、您可以設定儲存 VM 的最大容量。您也可以在 SVM 接近臨界值容量層級時設定警示。如需詳細資訊、請參閱 xref:../system-admin/manage-svm-capacity.html[管理 SVM 容量]。
+
+
 .步驟
-. 建立SVM：「vserver create -vserver vserver_name -rootvolume root_volume名稱-Aggregate Aggregate名稱-rootvolume安全型NTFS -語言C。utf-8 -IPSpace IPspace_name'
+. 建立SVM： `vserver create -vserver _svm_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style ntfs -language C.UTF-8 -ipspace _ipspace_name_`
 +
 ** 將NTFS設定用於「-rootvolume安全樣式」選項。
 ** 使用預設的C.utf-8「-Language」選項。
 ** 「IPSpace」設定為選用設定。
 
 
-. 驗證新建立的SVM的組態和狀態：「vserver show -vserver vserver_name」
+. 驗證新建立的SVM的組態和狀態： `vserver show -vserver _vserver_name_`
 +
 「允許的傳輸協定」欄位必須包含CIFS。您可以稍後再編輯此清單。
 
@@ -31,7 +35,7 @@ summary: 如果叢集中沒有至少一個SVM來提供SMB用戶端的資料存�
 
 
 .範例
-下列命令會在IPspace ipspaceA中建立SVM以供資料存取：
+下列命令會建立 SVM 、以便在 IPspace 中存取資料 `ipspaceA`：
 
 [listing]
 ----
@@ -70,3 +74,5 @@ cluster1::> vserver show -vserver vs1.example.com
                                 Config Lock: false
                                IPspace Name: ipspaceA
 ----
+
+NOTE: 從 ONTAP 9.13.1 開始、您可以設定調適性 QoS 原則群組範本、將處理量下限套用至 SVM 中的磁碟區。您只能在建立 SVM 之後套用此原則。若要深入瞭解此程序、請參閱 xref:../performance-admin/adaptive-policy-template-task.html[設定調適性原則群組範本]。
