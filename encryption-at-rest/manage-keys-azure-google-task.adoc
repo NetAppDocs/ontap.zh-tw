@@ -2,9 +2,9 @@
 permalink: encryption-at-rest/manage-keys-azure-google-task.html 
 sidebar: sidebar 
 keywords: key management, Azure, AKV, key vault, NVE keys, third-party, GCP, google cloud, Cloud KMS 
-summary: 使用Azure Key Vault（AKV）來簡化ONTAP 對您的還原加密金鑰的保護。 
+summary: 使用 Azure 或 Google Cloud 來簡化 ONTAP 加密金鑰的保護。 
 ---
-= 使用Azure Key Vault或Google Cloud KMS管理金鑰
+= 使用雲端供應商管理金鑰
 :hardbreaks:
 :allow-uri-read: 
 :icons: font
@@ -62,4 +62,5 @@ AKV和Cloud KMS可用於保護 link:configure-netapp-volume-encryption-concept.h
 
 --
 ====
-如果已為資料SVM設定一或多個加密磁碟區、且對應的NVE金鑰由管理SVM內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用CLI執行此動作、請執行命令：「安全金鑰管理程式金鑰移轉-從vserver _admin_Svm_-到vserver _data_Svm_」。在成功移轉資料SVM的所有NVE金鑰之前、無法為租戶的資料Vserver建立新的加密磁碟區。
+如果已為資料SVM設定一或多個加密磁碟區、且對應的NVE金鑰由管理SVM內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用 CLI 執行此作業、請執行命令：
+`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`在成功移轉資料 SVM 的所有 NVE 金鑰之前、無法為租戶的資料 SVM 建立新的加密磁碟區。
