@@ -50,6 +50,9 @@ image::../media/workflow_svm_migrate.gif[SVM移轉工作流程]
 | 在資料中心內移轉、最大網路延遲為： | 2毫秒 | 2毫秒 | 10毫秒 | 10毫秒 
 |===
 
+NOTE: 當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自動磁碟區放置會嘗試執行類似 Aggregate Match 的作業。例如、如果來源叢集有 60 個磁碟區、則磁碟區放置位置會嘗試在目的地上尋找 AFF 集合體來放置磁碟區。當 AFF 集合體上沒有足夠的空間時、這些磁碟區將放置在具有非 Flash 磁碟的集合體上。
+
+
 
 == 先決條件
 
@@ -133,6 +136,9 @@ link:https://review.docs.netapp.com/us-en/ontap_main/peering/create-cluster-rela
 | 展開關係（移轉來源具有一個SnapMirror來源磁碟區、具有多個目的地） | 否 | 是的 | 是的 | 是的 |  
 
 
+| Flash Pool | 否 | 否 | 是的 | 是的 |  
+
+
 | 工作排程複寫 | 否 | 是的 | 是的 | 是的 | 在《銷售指南》9.10.1中ONTAP 、工作排程不會在移轉期間複寫、而且必須在目的地手動建立。從ONTAP 版本號《銷售資料9.11.1（更新版本）：移轉期間、來源使用的工作排程會自動複寫。 
 
 
@@ -195,6 +201,6 @@ SVM移轉不支援下列功能：
 * 同步SnapMirror、SnapMirror營運不中斷
 * qtree、配額
 * VIP/BGP LIF
-* 適用於VMware vSphere的虛擬儲存主控台（VSC是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從VSC 7.0開始。）
+* 適用於VMware vSphere的虛擬儲存主控台（VSC是的一部分 https://["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從VSC 7.0開始。）
 * Volume複製
 
