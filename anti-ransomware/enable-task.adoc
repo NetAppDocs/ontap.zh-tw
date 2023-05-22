@@ -19,71 +19,54 @@ summary: 您可以在新的或現有的磁碟區上啟用自動勒索軟體保�
 
 
 [role="lead"]
-從ONTAP S廳9.10.1開始、可在新的或現有的磁碟區上啟用自發勒索軟體保護（Arp）。您必須先在學習模式中啟用ARP、系統會分析工作負載以找出正常行為的特徵。然後切換至作用中模式、在該模式中會標示異常活動以供評估。您可以在現有的磁碟區上啟用Arp、也可以建立新的磁碟區、從頭開始啟用Arp。
-
-.您需要的產品
-* 啟用NFS或SMB（或兩者）的儲存VM。
-* 已針對ONTAP 您的版本安裝正確的授權。
-+
-[cols="2*"]
-|===
-| 發行版ONTAP | 授權 
-
-
- a| 
-零點9.10.1 ONTAP
- a| 
-Mt_E_Mgmt（多租戶金鑰管理）
-
-
-
- a| 
-更新版本ONTAP
- a| 
-anti-勒索 軟體
-
-|===
-* 已設定用戶端的NAS工作負載。
-* 要保護的磁碟區必須有作用中的 link:../concepts/namespaces-junction-points-concept.html["交會路徑"^]。
-* 選用但建議使用：EMS系統已設定為傳送電子郵件通知、其中會包含有關Arp活動的通知。如需詳細資訊、請參閱 link:../error-messages/configure-ems-events-send-email-task.html["設定EMS事件以傳送電子郵件通知"]。
-* 選用但建議使用：從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以便需要兩個或多個已驗證的使用者管理員才能進行自動勒索軟體保護（ ARP ）組態。 link:../multi-admin-verify/enable-disable-task.html["深入瞭解"^]。
-
+從ONTAP S廳9.10.1開始、可在新的或現有的磁碟區上啟用自發勒索軟體保護（Arp）。您必須先在學習模式中啟用ARP、系統會分析工作負載以找出正常行為的特徵。您可以在現有的磁碟區上啟用Arp、也可以建立新的磁碟區、從頭開始啟用Arp。
 
 .關於這項工作
-NetApp Arp包含一段初始學習期間（也稱為「模擬運行」）、ONTAP 其中一個由知識庫系統學習哪些副檔名有效、並使用分析的資料來開發警示設定檔。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。從 ONTAP 9.13.1 開始、調適性學習已新增至 ARP 分析、從學習模式切換至作用中模式即會自動完成。
+您應該一律在乾式執行（學習模式）狀態下、一開始就啟用 ARP 。從使用中狀態開始、可能會導致過多的誤報。
 
-雖然您可以隨時從學習模式切換至主動模式、但建議您使用30天的學習期間。提早切換可能導致誤報過多。ONTAP 9.13.1 中引進的調適性學習、可能會決定較短的學習週期已足夠。在這個功能的CLI中ONTAP 、您可以使用 `security anti-ransomware volume workload-behavior show` 命令以顯示迄今偵測到的副檔名。建議您不要使用此工具來縮短學習期間。
+建議您讓 ARP 以學習模式執行至少 30 天。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
 
-在作用中模式中、如果檔案副檔名標示為異常、但您會加以評估、並將其標示為誤判、則警示設定檔會更新、以便在未來警示中不會將副檔名標示為異常。
+如需詳細資訊、請參閱 link:index.html#learning-and-active-mode["學習和作用中模式"]。
 
 
 NOTE: 在現有磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中已存在的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
 
-若要在ONTAP 功能介紹的CLI中管理此功能、您可以使用 `security anti-ransomware volume` 命令。您也可以使用 `volume modify` 命令 `-anti-ransomware` 參數。
+.開始之前
+* 您必須為 NFS 或 SMB （或兩者）啟用儲存 VM 。
+* 。 xref:index.html[正確授權] 必須為您的 ONTAP 版本安裝。
+* 您必須設定具有 NAS 工作負載的用戶端。
+* 您要設定 ARP 的磁碟區必須有作用中的保護 link:../concepts/namespaces-junction-points-concept.html["交會路徑"^]。
+* 建議您將 EMS 系統設定為傳送電子郵件通知、其中包括 ARP 活動通知。如需詳細資訊、請參閱 link:../error-messages/configure-ems-events-send-email-task.html["設定EMS事件以傳送電子郵件通知"]。
+* 從 ONTAP 9.13.1 開始、我們建議您啟用多重管理驗證（ MAV ）、以便在進行自主勒索軟體保護（ ARP ）組態時、需要兩個或更多已驗證的使用者管理員。如需詳細資訊、請參閱 link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"^]。
+
 
 .步驟
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-. 按一下「*儲存設備>磁碟區*」、然後選取您要保護的磁碟區。
-. 在* Volumes *總覽*的* Security（*安全性*）索引標籤中、按一下* Status（*狀態*）、在「*防勒索軟體*」方塊的學習模式中、從「已停用」切換為「已啟用」。
+. 選取 * 儲存 > 磁碟區 * 、然後選取您要保護的磁碟區。
+. 在 * Volumes * （卷）總覽的 * Security （安全性） * 標籤中、在 * Anti-勒索 ware* （ * 反勒索軟體）方塊中、選取 * Status （狀態） * 以在學習模式中從 Disabled （已停用）切換為 Enabled （已啟用）。
 . 學習期間結束時、請將ARP切換至作用中模式。
 +
 
-NOTE: 如果您已升級至 ONTAP 9.13.1 、 ARP 會自動判斷最佳學習期間間隔、並自動執行交換器。您可以 link:../anti-ransomware/enable-default-task.html["在關聯的儲存 VM 上停用此設定"] 如果您想要手動將學習模式控制為使用中模式切換。
+NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化。您可以 link:../anti-ransomware/enable-default-task.html["在關聯的儲存 VM 上停用此設定"] 如果您想要手動將學習模式控制為使用中模式切換。
 
 +
-.. 按一下「*儲存設備>磁碟區*」、然後選取已準備好進入作用中模式的磁碟區。
-.. 在* Volumes（磁碟區）總覽*的* Security（安全性）*標籤中、按一下「反勒索軟體」方塊中的* Switch* to active mode（切換*至作用中模式）。
+.. 選取 * 儲存 > 磁碟區 * 、然後選取已準備好用於作用中模式的磁碟區。
+.. 在 * Volumes * （卷）總覽的 * Security （安全性） * 索引標籤中、在 Anti-勒索 ware 方塊中選取 * Switch* to active mode （ * 切換 * 至作用中模式）。
 
 
-. 您可以隨時在*反勒索軟體*方塊中驗證磁碟區的Arp狀態。若要顯示所有磁碟區的Arp狀態：在「* Volumes *（*磁碟區*）」窗格中、按一下「* Show/Hide*（顯示/隱藏*）」、然後確認已核取「*防勒索軟體*」狀態。
+. 您可以在 * 反勒索軟體 * 方塊中驗證磁碟區的 ARP 狀態。
++
+若要顯示所有磁碟區的 ARP 狀態：在 * Volumes （磁碟區） * 窗格中、選取 * Show （顯示） / Hide （隱藏） * 、然後確定已勾選 * Anti-勒索 ware* （反勒索軟體）狀態。
+
 
 
 --
 .CLI
 --
+.在現有磁碟區上啟用 ARP
 . 修改現有磁碟區以在學習模式中啟用勒索軟體保護：
 +
 「安全性防勒索軟體磁碟區乾式執行-volume _vol_name_-vserver _Svm_name_」
@@ -95,17 +78,34 @@ NOTE: 如果您已升級至 ONTAP 9.13.1 、 ARP 會自動判斷最佳學習期�
 「Volume modify -volume _vol_name_-vserver _svm_name_-anti-勒索 軟體狀態drain-run」
 
 +
-在CLI中、您也可以在資源配置資料之前、先建立啟用反勒索軟體保護的新磁碟區。
+如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
 
++
+`vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`
+
+. 學習期間結束時、如果尚未自動完成、請修改受保護的磁碟區以切換至作用中模式：
++
+「安全性防勒索軟體磁碟區可啟用-volume _vol_name_-vserver _svm_name_」
+
++
+您也可以使用modify volume命令切換至作用中模式：
+
++
+「Volume modify -volume _vol_name_-vserver _Svm_name_-anti-勒索 軟體狀態active」
+
+. 驗證磁碟區的ARP狀態。
++
+「安全性反勒索軟體量顯示」
+
+
+
+.在新磁碟區上啟用 ARP
+. 在資源配置資料之前、請先啟用反勒索軟體保護功能、建立新的 Volume 。
 +
 「Volume create -volume _vol_name_-vserver _Svm_name_-Aggregate _aggregate _name_-size _n_-anti-勒索 軟體狀態dle-run -jeter-path //path_name_`
 
 +
-
-NOTE: 您應該一律在乾式執行（學習模式）狀態下、一開始就啟用 ARP 。從使用中狀態開始、可能會導致過多的誤報。
-
-+
-如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 vserver 層級的設定：
+如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`

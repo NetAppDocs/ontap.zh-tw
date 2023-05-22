@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
-keywords: anti-ransomware use cases and restrictions, anti-ransomware performance and frequency considerations, anti-ransomware workloads, anti-ransomware volume requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, autonomous ransomware protection, arp 
+keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
 summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來版本將提供對其他環境的支援。 
 ---
 = 自主勒索軟體保護的使用案例和考量
@@ -19,6 +19,12 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 
 
 [role="lead"]
+自主勒索軟體保護功能的可用度取決於您使用的 ONTAP 版本。
+
+
+
+== 支援和不支援的組態
+
 支援的平台：ONTAP
 
 * 所有內部部署ONTAP 的VMware系統從ONTAP 版本號9.10.1開始、都可使用「自發勒索軟體保護（Arp）」功能。
@@ -108,14 +114,8 @@ Volume需求：
 
 
 
-== 偵測到勒索軟體時、自動Snapshot複本的運作方式
-
-為了獲得最佳的恢復點、當發現異常檔案活動時、Arp會盡快建立自動Snapshot複本。不過、Arp並不會立即標記警示、而是需要執行分析、確認可疑活動符合勒索軟體設定檔、才能產生警示。此程序可能需要60分鐘。如果分析判斷活動並不可疑、則不會產生警示、但自動建立的Snapshot複本會在檔案系統上保留至少兩天。
-
-從ONTAP VMware 9.11.1開始、您可以控制因應可疑勒索軟體攻擊而自動產生的「ARP Snapshot複本」數量和保留期間。瞭解操作方法 link:modify-automatic-shapshot-options-task.html["修改自動Snapshot複本的選項"]。
-
-
-
 == 使用受自動勒索軟體保護（ ARP ）保護的磁碟區進行多重管理驗證
 
-從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解操作方法 link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"^]。您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。
+從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解操作方法 link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"^]。
+
+您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。

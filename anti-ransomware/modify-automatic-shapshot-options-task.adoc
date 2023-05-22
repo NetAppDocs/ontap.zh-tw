@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/modify-automatic-shapshot-options-task.html 
-keywords: anti-ransomware, automatic Snapshot copy, suspected attack, vserver options command, autonomous, ransomware, protection, arp 
+keywords: anti-ransomware, automatic Snapshot copy, suspected attack, vserver options, autonomous ransomware protection, arp 
 summary: 從VMware 9.11.1開始ONTAP 、您可以控制自動產生的自動勒索軟體保護（Arp）Snapshot複本的數量和保留期間、以因應可疑的勒索軟體攻擊。 
 ---
 = 修改自動Snapshot複本的選項
@@ -21,7 +21,9 @@ summary: 從VMware 9.11.1開始ONTAP 、您可以控制自動產生的自動勒�
 [role="lead"]
 從VMware 9.11.1開始ONTAP 、您可以使用CLI來控制自動產生的自動勒索軟體保護（Arp）Snapshot複本的數量和保留期間、以因應可疑的勒索軟體攻擊。
 
-*附註*：「vserver options」命令為隱藏命令。若要檢視手冊頁、請在ONTAP CLI輸入「man vserver options」。
+
+
+== 可修改的 Snapshot 選項
 
 下列自動Snapshot複本選項可供修改：
 
@@ -33,7 +35,13 @@ arw.snap.create.interval.hours.post.max.count:: 指定當磁碟區已包含最�
 arw.surge.snap.interval.days:: 指定每個ARP突波Snapshot複本之間的時間間隔（以天為單位）。當IO流量激增、且上次建立的Arp Snapshot複本早於指定的時間間隔時、就會建立新的「Arp Snapshot突波複本」。此選項也會指定保留「ARP突波Snapshot複本」的持續時間（以天為單位）。
 
 
-.CLI程序
+
+
+== CLI命令
+
+
+NOTE: 。 `vserver options` 命令是隱藏的命令。若要檢視手冊頁、請輸入 `man vserver options` 在 ONTAP CLI 中。
+
 若要顯示所有目前的「ARP Snapshot複本」設定、請輸入：「vserver options -vserver _Svm_name_arw*」
 
 若要顯示選取的目前的「ARP Snapshot複本」設定、請輸入：「vserver options -vserver _Svm_name_-option-name _arw_setting_name_」

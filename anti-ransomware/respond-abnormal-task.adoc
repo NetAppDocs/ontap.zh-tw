@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/respond-abnormal-task.html 
-keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, autonomous, ransomware, protection, arp 
+keywords: abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, ransomware attack, abnormal activity notification, ransomware alert, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, ransomware ems 
 summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。 
 ---
 = 回應異常活動
@@ -21,10 +21,6 @@ summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的�
 [role="lead"]
 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷活動是否預期且可接受、或是攻擊是否正在進行。
 
-.您需要的產品
-* 以作用中模式執行的是ARP。
-
-
 .關於這項工作
 當Arp偵測到高資料Entropy、異常Volume活動與資料加密、以及異常檔案副檔名的任何組合時、會顯示可疑檔案的清單。
 
@@ -40,10 +36,16 @@ summary: 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的�
 
 
 
-在這兩種情況下、正常監控會在更新及清除通知後繼續進行；您的評估會由Arp記錄、使用新的檔案類型更新記錄、並用於未來的分析。不過、若發生可疑的攻擊、您必須先判斷是否為攻擊、如果是攻擊、請加以回應、然後在清除通知之前還原受保護的資料。 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["深入瞭解如何從勒索軟體攻擊中恢復"]。
+在這兩種情況下、更新和清除通知後、系統都會繼續正常監控。ARP 會記錄您對威脅評估的評估結果、並更新新檔案類型的記錄檔、並將其用於未來分析。
+
+如果是可疑的攻擊、您必須判斷它是否為攻擊、如果是攻擊、請回應、並在清除通知之前還原受保護的資料。 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["深入瞭解如何從勒索軟體攻擊中恢復"]。
 
 
 NOTE: 如果您還原整個Volume、則不會有任何通知需要清除。
+
+.開始之前
+* ARP 必須以作用中模式執行。
+
 
 .步驟
 [role="tabbed-block"]
@@ -170,3 +172,6 @@ Number of Attacks: 1
 
 --
 ====
+.更多資訊
+* link:https://kb.netapp.com/onprem%2Fontap%2Fda%2FNAS%2FUnderstanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot#["KB ：瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]。
+
