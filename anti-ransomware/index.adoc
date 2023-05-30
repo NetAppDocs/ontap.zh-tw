@@ -110,7 +110,7 @@ ARP 有兩種模式：
 
 
 
-== 威脅評估
+== 威脅評估和 ARP 快照
 
 在作用中模式中、 ARP 會根據從學習到的分析中測得的傳入資料來評估威脅可能性。當 ARP 偵測到威脅時、就會指派測量值：
 
@@ -122,9 +122,9 @@ ARP 有兩種模式：
 
 
 
-當攻擊可能性較低時、 ONTAP 會在背景中建立磁碟區的快照。例如、 APR Snapshot 可透過其名稱來識別 `Anti_ransomware_backup.2022-12-20_1248`，並使用標記 `anti-ransomware-backup`。會記錄低層級的威脅、但 ONTAP 不會傳送低威脅的警示。
+當攻擊可能性低時、表示 ONTAP 偵測到異常、並會在背景中建立磁碟區的快照、以建立可能的最佳恢復點。例如、 ARP Snapshot 可透過其名稱來識別 `Anti_ransomware_backup.2022-12-20_1248`，並使用標記 `anti-ransomware-backup`。
 
-當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
+ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。會記錄低層級的威脅、但 ONTAP 不會傳送低威脅的警示。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
 您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show -vserver _svm_name_` 命令。
 
