@@ -13,7 +13,28 @@ summary: 您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中�
 [role="lead"]
 您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中重新建立啟動器群組（igroup）之後、Volume rehost可以自動重新對應同一個SVM上的磁碟區。
 
-.您需要的產品
+.關於這項工作
+* 重新託管是一項顛覆性的作業。
+* 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
+* 從 ONTAP 9.8 開始、支援使用 NetApp Volume Encryption （ NVE ）重新裝載 Volume 。如果您使用內建金鑰管理程式、加密的中繼資料將會在重新主機作業期間修改。使用者資料不會變更。
++
+如果您使用的是 ONTAP 9.8 或更早版本、則必須在執行重新託管作業之前先取消對磁碟區的加密。
+
+
+
+* 重新裝載作業之後、下列Volume原則、原則規則和組態會從來源Volume遺失、必須在重新裝載的Volume上手動重新設定：
++
+** 防毒原則
+** Volume效率原則
+** 服務品質（QoS）原則
+** Snapshot原則
+** NS-SWITCH與名稱服務組態匯出原則與規則
+** 使用者和群組ID
+
+
+
+
+.開始之前
 * Volume必須處於線上狀態。
 * Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
 * 磁碟區或LUN上不得有作用中的I/O。
@@ -29,25 +50,10 @@ summary: 您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中�
 
 
 
-.關於這項工作
-* 重新託管是一項顛覆性的作業。
-* 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
-* 重新裝載作業之後、下列Volume原則、原則規則和組態會從來源Volume遺失、必須在重新裝載的Volume上手動重新設定：
-+
-** 防毒原則
-** Volume效率原則
-** 服務品質（QoS）原則
-** Snapshot原則
-** NS-SWITCH與名稱服務組態匯出原則與規則
-** 使用者和群組ID
-
-
-
-
 .步驟
 . 記錄目標Volume上的LUN對應資訊：
 +
-「LUN對應顯示要重新裝載的Volume：vserver來源vserver」
+`lun mapping show volume _volume_ vserver _source_svm_`
 
 +
 這是一個預防步驟、可避免在磁碟區重組失敗時遺失LUN對應的相關資訊。
@@ -55,7 +61,7 @@ summary: 您可以重新裝載具有對應LUN的磁碟區。在目的地SVM中�
 . 刪除與目標Volume相關的igroup。
 . 將目標磁碟區重新裝載至目的地SVM：
 +
-「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+`volume rehost -vserver _source_svm_ -volume _volume_name_ -destination-vserver _destination_svm_`
 
 . 將目標磁碟區上的LUN對應至適當的igroup。
 +

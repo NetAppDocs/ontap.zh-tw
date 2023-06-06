@@ -13,17 +13,15 @@ summary: 您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。�
 [role="lead"]
 您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。在重新裝載NFS磁碟區之後、若要繼續透過NFS傳輸協定存取資料、您必須將磁碟區與裝載SVM的匯出原則建立關聯、並手動設定原則和相關規則。
 
-.您需要的產品
-* Volume必須處於線上狀態。
-* Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
-* 必須停止對正在重新託管的磁碟區的資料存取。
-* 目標SVM的ns交換器和名稱服務組態必須設定為支援重新託管Volume的資料存取。
-* 磁碟區的使用者ID和群組ID必須在目標SVM中可用、或在託管Volume上變更。
-
-
 .關於這項工作
 * 重新託管是一項顛覆性的作業。
 * 如果重新託管作業失敗、您可能需要重新設定來源Volume上的Volume原則和相關規則。
+* 從 ONTAP 9.8 開始、支援使用 NetApp Volume Encryption （ NVE ）重新裝載 Volume 。如果您使用內建金鑰管理程式、加密的中繼資料將會在重新主機作業期間修改。使用者資料不會變更。
++
+如果您使用的是 ONTAP 9.8 或更早版本、則必須在執行重新託管作業之前先取消對磁碟區的加密。
+
+
+
 * 重新裝載作業之後、下列磁碟區原則、原則規則和組態會從來源磁碟區遺失、必須在重新裝載的磁碟區上手動重新設定：
 +
 ** Volume與qtree匯出原則
@@ -38,6 +36,14 @@ summary: 您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。�
 
 
 
+.開始之前
+* Volume必須處於線上狀態。
+* Volume管理作業（例如Volume搬移或LUN搬移）不得執行。
+* 必須停止對正在重新託管的磁碟區的資料存取。
+* 目標SVM的ns交換器和名稱服務組態必須設定為支援重新託管Volume的資料存取。
+* 磁碟區的使用者ID和群組ID必須在目標SVM中可用、或在託管Volume上變更。
+
+
 .步驟
 . 記錄NFS匯出原則的相關資訊、避免在磁碟區重新主機作業失敗時遺失NFS原則的相關資訊。
 . 從父Volume卸載磁碟區：
@@ -50,7 +56,7 @@ summary: 您可以重新裝載透過NFS傳輸協定提供資料的磁碟區。�
 
 . 在目的地SVM上重新裝載磁碟區：
 +
-「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+`volume rehost -vserver _source_svm_ -volume _volume_name_ -destination-vserver _destination_svm_`
 
 +
 目的地SVM的預設匯出原則會套用至重新裝載的Volume。
