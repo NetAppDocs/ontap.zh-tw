@@ -210,9 +210,9 @@ FlexClone
  a| 
 LUN
  a| 
-否
+不可以深入瞭解 xref:LUN support[LUN 支援] 使用 SnapLock 。
  a| 
-否
+不可以深入瞭解 xref:LUN support[LUN 支援] 使用 SnapLock 。
 
 
 
@@ -332,6 +332,12 @@ FabricPools支援SnapLock 以ONTAP 概念9.8開頭的支援於支援的功能不
 * 一個現象區的Volume法規遵循時鐘（VCC）FlexGroup 由根部的VCC決定。所有非根成員的VCC都會與根VCC密切同步。
 * 僅能在整個的整個過程中設定組態屬性。SnapLock FlexGroup個別成員不能具有不同的組態內容、例如預設保留時間和自動提交期間。
 
+
+
+
+== LUN 支援
+
+只有在非 SnapLock 磁碟區上建立的 Snapshot 複本會傳輸至 SnapLock 磁碟區、以作為 SnapLock 資料保險箱關係的一部分、才能在 SnapLock 磁碟區中支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過、 SnapMirror 來源磁碟區和包含 LUN 的目的地磁碟區都支援防竄改 Snapshot 複本。
 
 
 

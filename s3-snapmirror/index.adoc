@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: s3-snapmirror/index.html 
-keywords: s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror data protection, hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, s3 SnapMirror considerations and restrictions, Fan-in deployments, data protection relationships, s3 snapmirror policy, peering 
+keywords: s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror data protection, hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, Fan-in deployments, data protection, s3 snapmirror policy, peering 
 summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體 
 ---
 = S3 SnapMirror總覽
@@ -44,7 +44,16 @@ SS3 ONTAP
 | AWS S3 |  | image:status-enabled-perf-config.gif["核取符號"] 
 
 
-| 適用於 Azure Cloud Volumes ONTAP |  | image:status-enabled-perf-config.gif["核取符號"] 
+| 適用於 Azure Cloud Volumes ONTAP
+（從 ONTAP 9.0.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+
+
+| AWS 適用的 Cloud Volumes ONTAP
+（從 ONTAP 9.11.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+
+
+| 適用於 Google Cloud Cloud Volumes ONTAP
+（從 ONTAP 9.12.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
 |===
 您可以保護ONTAP 現有的SS3伺服器庫位、也可以立即啟用資料保護功能、建立新的庫位。
 
@@ -54,7 +63,8 @@ S3 SnapMirror支援連出和串聯關係。如需概觀、請參閱 link:../data
 
 == S3 SnapMirror需求
 
-* 無法執行更新版本的來源叢集和目的地叢集。ONTAP ONTAP
+* 版本ONTAP
+ONTAP 9.10.1 或更新版本必須在來源叢集和目的地叢集上執行。
 * 下列授權套裝組合必須在ONTAP 來源系統和目的地系統上取得授權：
 +
 ** 核心產品組合、適用於ONTAP SS3傳輸協定與儲存設備。
