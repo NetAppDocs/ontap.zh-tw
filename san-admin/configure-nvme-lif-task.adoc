@@ -40,13 +40,18 @@ https://hwu.netapp.com["NetApp Hardware Universe"^]
 .步驟
 . 建立LIF：
 +
-「網路介面create -vserver _svm_name_-lif_lif_name_-role _lif_role_-data傳輸協定fc-nvm-home-node_node_home-port'
-
+[source, cli]
+----
+network interface create -vserver <SVM_name> -lif <LIF_name> -role <LIF_role> -data-protocol {fc-nvme|nvme-tcp} -home-node <home_node> -home-port <home_port>
+----
 +
-首頁連接埠_
+
+NOTE: NVMe / TCP 可從 ONTAP 9.10.1 及更新版本開始使用。
 
 . 確認LIF已建立：
 +
-「網路介面show -vserver _svm_name_'
-
+[source, cli]
+----
+network interface show -vserver <SVM_name>
+----
 
