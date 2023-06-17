@@ -55,79 +55,90 @@ NOTE: 在開始自動不中斷升級（andu）之前、修改「儲存容錯移�
 
 . 刪除先前ONTAP 的版本：
 +
-叢集映像套件刪除-version pre_onta_Version
-
+[source, cli]
+----
+cluster image package delete -version previous_ONTAP_Version
+----
 . 下載目標ONTAP 版的更新軟體套件：
 +
-叢集映像套件Get -URL位置
-
-+
-
-NOTE: 如果您要從ONTAP 版本資訊9.3升級至9.7、請下載ONTAP 適用於版本資訊的軟體套件、然後使用相同的命令下載適用於9.7的軟體套件。如果您要從ONTAP 版本資訊9.5升級至9.9.1、請下載ONTAP 適用於版本資訊的軟體套件、然後使用相同的命令下載9.9.1的軟體套件。
-
+[source, cli]
+----
+cluster image package get -url location
+----
 +
 [listing]
 ----
-cluster1::> cluster image package get -url http://www.example.com/software/9.7/image.tgz
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
 
 Package download completed.
 Package processing completed.
 ----
++
+如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]下載用於升級所需 ONTAP 中間版本的軟體套件、然後使用相同的命令下載適用於目標 ONTAP 版本的軟體套件。  例如、如果您要從 9.8 升級至 9.13.1 、您應該下載 ONTAP 9.12.1 的軟體套件、然後使用相同的命令下載 9.13.1 的軟體套件。
+
 . 驗證叢集套件儲存庫中是否有可用的軟體套件：
 +
-「叢集映像套件show-repository」
-
+[source, cli]
+----
+cluster image package show-repository
+----
 +
 [listing]
 ----
 cluster1::> cluster image package show-repository
 Package Version  Package Build Time
 ---------------- ------------------
-9.7              MM/DD/YYYY 10:32:15
+9.13.1              MM/DD/YYYY 10:32:15
 ----
 . 確認叢集已準備好在不中斷營運的情況下升級：
 +
-叢集映像validate -version套件版本號碼
-
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
 +
+** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、使用目標 ONATP 套件進行驗證。  您不需要個別驗證中間升級映像。  例如、如果您要從 9.8 升級至 9.13.1 、則應使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
 ** 如果您要升級雙節點或四節點MetroCluster 的支援、則必須在兩個叢集上執行此命令、才能繼續進行。
-** 如果您要從ONTAP 0版9.3升級至9.7版、請使用9.7套件進行驗證。您不需要個別驗證9.5套件。
-** 如果您要從ONTAP S209.5升級至9.9.1、請使用9.9.1套件進行驗證。您不需要分別驗證9.7套件。
-
-
 +
 [listing]
 ----
-cluster1::> cluster image validate -version 9.7
+cluster1::> cluster image validate -version 9.13.1
 
 WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
 ----
+
+
 . 監控驗證進度：
 +
-「叢集映像顯示更新進度」
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 . 完成驗證所識別的所有必要行動。
 . 產生軟體升級預估：
 +
-「叢集映像更新-version套件版本編號-estim-only」
-
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
 +
 軟體升級預估會顯示每個要更新元件的詳細資料、以及預估的升級期間。
 
 . 執行軟體升級：
 +
-叢集映像更新-version套件版本編號
-
+[source, cli]
+----
+cluster image update -version package_version_number
+----
 +
-** 如果您要從ONTAP 版本資訊9.3升級至9.7、請使用上述命令中的9.7套件版本編號。
-** 如果您要從ONTAP Sets9.5升級至9.9.1、請使用上述命令中的9.9.1套件版本編號。
-** 對於MetroCluster 任何不含雙節點MetroCluster 的支援功能組態、ONTAP 在使用者啟動並在命令列上提供確認之後、即可在兩個站台（本機站台和災難恢復站台）的HA配對上同時開始執行升級程序。若為雙節點MetroCluster 的作業系統、更新會先在災難恢復站台（即未啟動升級的站台）上啟動。在災難恢復站點上完成更新後，升級將從本地站點開始。
+** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"] 使用 package_version_number 的目標 ONTAP 版本。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
 ** 如果叢集由2至6個節點組成、則會執行循環升級。如果叢集由8個以上的節點組成、預設會執行批次升級。如果需要、您可以使用「-force-rolling」參數來指定循環升級。
 ** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用「穩定分鐘數」參數來指定不同的穩定時間量。
+** 對於MetroCluster 任何不含雙節點MetroCluster 的支援功能組態、ONTAP 在使用者啟動並在命令列上提供確認之後、即可在兩個站台（本機站台和災難恢復站台）的HA配對上同時開始執行升級程序。若為雙節點MetroCluster 的作業系統、更新會先在災難恢復站台（即未啟動升級的站台）上啟動。在災難恢復站點上完成更新後，升級將從本地站點開始。
 +
 [listing]
 ----
-cluster1::> cluster image update -version 9.7
+cluster1::> cluster image update -version 9.13.1
 
 Starting validation for this update. Please wait..
 
@@ -149,13 +160,19 @@ cluster-1::>
 
 . 顯示叢集更新進度：
 +
-「叢集映像顯示更新進度」
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 +
-
-NOTE: 如果您要升級4節點或8節點MetroCluster 的BIOS組態、「cluster image show-update-progress」命令只會顯示執行命令之節點的進度。您必須在每個節點上執行命令、才能查看個別節點的進度。
+如果您要升級4節點或8節點MetroCluster 的BIOS組態、「cluster image show-update-progress」命令只會顯示執行命令之節點的進度。您必須在每個節點上執行命令、才能查看個別節點的進度。
 
 . 驗證是否已在每個節點上成功完成升級。
++
+[source, cli]
+----
+cluster image show-update-progress
+----
 +
 [listing]
 ----
@@ -170,26 +187,28 @@ Post-update checks   completed                00:10:00        00:02:00
 3 entries were displayed.
 
 Updated nodes: node0, node1.
-
-cluster1::>
 ----
 . 觸發AutoSupport 功能不支援通知：
 +
-「AutoSupport 叫用節點*-輸入all -messing_NDU」訊息
-
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_NDU"
+----
 +
 如果您的叢集未設定為傳送AutoSupport 功能性訊息、則會在本機儲存通知複本。
 
 . 確認叢集已啟用自動非計畫性切換：
 +
 
-NOTE: 此程序僅適用於MetroCluster 不含功能的FC組態。如果您使用MetroCluster 的是一套靜態IP組態、請跳過此程序。
+NOTE: 此步驟僅適用於 MetroCluster FC 組態。  如果您使用的是 MetroCluster IP 組態、則不需要執行此步驟。
 
 +
 .. 檢查是否已啟用自動非計畫性切換：
 +
-《不看》MetroCluster
-
+[source, cli]
+----
+metrocluster show
+----
 +
 如果啟用自動非計畫性切換、命令輸出中會出現下列陳述：
 
@@ -199,9 +218,16 @@ AUSO Failure Domain    auso-on-cluster-disaster
 ....
 .. 如果輸出中未顯示該陳述、請啟用自動非計畫性切換：
 +
-《MetroCluster 關於在叢集上發生auso-on叢集災難的迴轉自動切換失敗網域》
-
-.. 重複步驟1、確認已啟用自動非計畫性切換。
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+.. 確認已啟用自動非計畫性切換：
++
+[source, cli]
+----
+metrocluster show
+----
 
 
 
@@ -218,16 +244,20 @@ AUSO Failure Domain    auso-on-cluster-disaster
 .步驟
 . 檢視升級錯誤：
 +
-「叢集映像顯示更新進度」
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 . 解決錯誤。
 . 繼續更新：
 +
-「叢集映像恢復更新」
-
+[source, cli]
+----
+cluster image resume-update
+----
 
 
 .相關資訊
-https://aiq.netapp.com/["產品Active IQ 發表"]
+* https://aiq.netapp.com/["產品Active IQ 發表"]
+* https://docs.netapp.com/us-en/active-iq/["本文檔Active IQ"]
 
-https://docs.netapp.com/us-en/active-iq/["本文檔Active IQ"]
