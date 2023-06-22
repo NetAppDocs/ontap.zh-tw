@@ -2,7 +2,7 @@
 permalink: system-admin/requirements-autosupport-reference.html 
 sidebar: sidebar 
 keywords: requirements, autosupport, messages, http, smtp, https, configuration, support, protocols 
-summary: 您應該使用HTTPS來傳送AutoSupport 不完整的訊息、以提供最佳的安全性、並支援AutoSupport 所有最新的功能。雖然支援HTTP和SMTP來傳送不全訊息、但建議使用HTTPS。AutoSupport AutoSupport 
+summary: 您必須搭配使用 HTTPS 搭配 TLSv1.2 或安全 SMTP 、才能交付 AutoSupport 訊息、以提供最佳安全性、並支援所有最新的 AutoSupport 功能。 
 ---
 = 使用需求AutoSupport
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您應該使用HTTPS來傳送AutoSupport 不完整的訊息、以提供
 
 
 [role="lead"]
-您應該使用HTTPS來傳送AutoSupport 不完整的訊息、以提供最佳的安全性、並支援AutoSupport 所有最新的功能。雖然支援HTTP和SMTP來傳送不全訊息、但建議使用HTTPS。AutoSupport AutoSupport
+您必須搭配使用 HTTPS 搭配 TLSv1.2 或安全 SMTP 、才能交付 AutoSupport 訊息、以提供最佳安全性、並支援所有最新的 AutoSupport 功能。任何其他傳輸協定所傳送的 AutoSupport 訊息都會遭到拒絕。
 
 
 
@@ -32,7 +32,7 @@ summary: 您應該使用HTTPS來傳送AutoSupport 不完整的訊息、以提供
 
 除非停用驗證、否則遠端伺服器的憑證會根據根憑證進行驗證。
 
-交付使用HTTP PUT要求。使用PUT時、如果傳輸期間要求失敗、則要求會在停止處重新啟動。如果收到要求的伺服器不支援PUT、則會使用HTTP POST要求。
+交付使用 HTTPS Put 要求。使用PUT時、如果傳輸期間要求失敗、則要求會在停止處重新啟動。如果接收要求的伺服器不支援 Put 、則交付會使用 HTTPS POST 要求。
 
 
 
@@ -43,14 +43,14 @@ summary: 您應該使用HTTPS來傳送AutoSupport 不完整的訊息、以提供
 
 此傳輸協定支援上傳大型檔案、但AutoSupport 不支援不支援使用
 
-交付使用HTTP PUT要求。使用PUT時、如果傳輸期間要求失敗、則要求會在停止處重新啟動。如果收到要求的伺服器不支援PUT、則會使用HTTP POST要求。
+交付使用 HTTPS Put 要求。使用PUT時、如果傳輸期間要求失敗、則要求會在停止處重新啟動。如果接收要求的伺服器不支援 Put 、則交付會使用 HTTPS POST 要求。
 
 
 
  a| 
 連接埠25或其他連接埠上的SMTP
  a| 
-僅當網路連線不允許HTTPS或HTTP時、才應使用此傳輸協定。
+只有在網路連線不允許 HTTPS 時、才應使用此傳輸協定。
 
 預設的連接埠值為25、但AutoSupport 您可以設定使用不同的連接埠。
 
@@ -71,15 +71,13 @@ SMTP以純文字傳送資料、AutoSupport 讓您輕鬆攔截及讀取消息中�
 
 此功能可限制每個傳輸協定的最大檔案大小。AutoSupportHTTP和HTTPS傳輸的預設設定為25 MB。預設的SMTP傳輸設定為5 MB。如果AutoSupport 不符合設定限制的情況下顯示的訊息大小、AutoSupport 那麼就會盡可能傳達訊息內容。您可以透過修改AutoSupport 功能區組態來編輯最大大小。如AutoSupport 需詳細資訊、請參閱「系統節點更新」手冊頁。
 
-[NOTE]
-====
-當您產生並傳送將核心傾印或效能歸檔檔案上傳至NetApp支援網站或指定URI的資訊時、系統會自動覆寫HTTPS和HTTP傳輸協定的最大檔案大小限制。AutoSupport AutoSupport只有當您使用「系統節點AutoSupport 還原叫用核心上傳」AutoSupport 或「系統節點還原叫用效能歸檔」命令上傳檔案時、才會套用自動置換。
 
-====
+NOTE: 當您產生並傳送將核心傾印或效能歸檔檔案上傳至NetApp支援網站或指定URI的資訊時、系統會自動覆寫HTTPS和HTTP傳輸協定的最大檔案大小限制。AutoSupport AutoSupport只有當您使用「系統節點AutoSupport 還原叫用核心上傳」AutoSupport 或「系統節點還原叫用效能歸檔」命令上傳檔案時、才會套用自動置換。
+
 
 
 == 組態需求
 
-視您的網路組態而定、使用HTTP或HTTPS傳輸協定可能需要額外設定Proxy URL。如果您使用HTTP或HTTPS傳送AutoSupport 不全訊息給技術支援、而且您有代理、則必須識別該代理的URL。如果Proxy使用預設連接埠以外的連接埠（即3128）、您可以指定該Proxy的連接埠。您也可以指定Proxy驗證的使用者名稱和密碼。
+視您的網路組態而定、 HTTPS 傳輸協定可能需要額外的 Proxy URL 組態。如果 HTTPS 要傳送 AutoSupport 訊息給技術支援、而且您有代理伺服器、則必須識別該代理的 URL 。如果Proxy使用預設連接埠以外的連接埠（即3128）、您可以指定該Proxy的連接埠。您也可以指定Proxy驗證的使用者名稱和密碼。
 
 如果您使用SMTP傳送AutoSupport 不必要訊息給內部支援組織或技術支援部門、則必須設定外部郵件伺服器。儲存系統無法做為郵件伺服器運作、您的站台需要外部郵件伺服器才能傳送郵件。郵件伺服器必須是在SMTP連接埠（25）或其他連接埠上接聽的主機、而且必須設定為傳送和接收8位元的多用途網際網路郵件延伸（MIME）編碼。範例郵件主機包括執行SMTP伺服器的UNIX主機、例如：endmail程式和執行Microsoft Exchange伺服器的Windows伺服器。您可以擁有一或多個郵件主機。

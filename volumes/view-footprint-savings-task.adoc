@@ -2,48 +2,22 @@
 permalink: volumes/view-footprint-savings-task.html 
 sidebar: sidebar 
 keywords: view, temperature, sensitive, storage, efficiency, footprint, savings, volume 
-summary: 從《物件9.11.1：ONTAP 當對溫度敏感的儲存效率設定在磁碟區上時、您可以檢視實體佔用空間的節約效益。 
+summary: '視您的 ONTAP 版本而定、您可以使用 `volume show-footprint` 命令以檢視磁碟區的實體佔用空間節約效益。' 
 ---
-= 檢視對溫度敏感的儲存效率實體佔用空間節約效益
+= 檢視儲存容量的儲存效率、無論是否對溫度敏感、都能節省佔用空間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從《物件9.11.1：ONTAP 當對溫度敏感的儲存效率設定在磁碟區上時、您可以檢視實體佔用空間的節約效益。
+從 ONTAP 9.11.1 開始、您可以使用 `volume show-footprint` 命令以檢視磁碟區的實體佔用空間節約效益 link:set-efficiency-mode-task.html["具備對溫度敏感的儲存效率（ TSSE ）"]。從 ONTAP 9.13.1 開始、您可以使用相同的命令來檢視未啟用 TSSe 的磁碟區、實體佔用空間的節約效益。
 
 .步驟
-. 檢視對溫度敏感的儲存效率佔用空間：
+. 檢視大容量佔用空間的節約效益：
 +
-「Volume show-佔 地面積」
-
-+
-在下列範例中、當啟用溫度敏感的儲存效率時、「減量佔用空間資料」和「自動調整式壓縮」會顯示佔用空間減少或節省的情形。
-
-+
-[listing]
+[source, cli]
 ----
-*> volume show-footprint <vol>
-
-      Vserver : vs0
-      Volume  : vol1
-
-      Feature                                         Used       Used%
-      --------------------------------             ----------    -----
-      Volume Data Footprint                            4.61MB       0%
-      Volume Guarantee                                     0B       0%
-      Flexible Volume Metadata                          208KB       0%
-      Deduplication Metadata                            156KB       0%
-           Deduplication                                 80KB       0%
-           Temporary Deduplication                       72KB       0%
-           Cross Volume Deduplication                     4KB       0%
-      Delayed Frees                                     116KB       0%
-
-      Total Footprint                                  5.07MB       0%
-
-      Footprint Data Reduction                           40KB       0%
-           Auto Adaptive Compression                     40KB       0%
-      Effective Total Footprint                        5.04MB       0%
+volume show-footprint
 ----
 

@@ -20,10 +20,12 @@ summary: 您可以控制AutoSupport 是否及如何將資訊傳送至技術支�
 ====
 從使用Sf2 9.5開始ONTAP 、「系統節點AutoSupport fulmodify」命令的範圍是整個叢集範圍。即使指定了「-node-」選項、叢集中的所有節點上也會修改此組態。AutoSupport此選項會被忽略、但會保留此選項、以供CLI向後相容。
 
-在版本9.4和更早版本中、「系統節點修改」命令的範圍是節點專屬的。ONTAP AutoSupport應該在叢集中的每個節點上修改此組態。AutoSupport
+在 ONTAP 9.4 及更早版本中、的範圍是 `system node autosupport modify` 命令是特定於節點的。應該在叢集中的每個節點上修改此組態。AutoSupport
 
 ====
 根據預設、AutoSupport 每個節點上都會啟用支援功能、以便使用HTTPS傳輸傳輸傳輸協定將訊息傳送給技術支援。
+
+您必須搭配使用 HTTPS 搭配 TLSv1.2 或安全 SMTP 、才能交付 AutoSupport 訊息、以提供最佳安全性、並支援所有最新的 AutoSupport 功能。
 
 .步驟
 . 確保AutoSupport 啟用了功能：
@@ -57,15 +59,6 @@ system node autosupport modify -support enable
  a| 
 .. 將「-transport」設為「https」。
 .. 如果您使用Proxy、請將「-proxy-URL」設為您Proxy的URL。此組態可支援AutoSupport 透過不必要的功能進行通訊、以及上傳大型檔案。
-
-
-
-
- a| 
-使用優先於SMTP的HTTP
- a| 
-.. 將「transport」設為「http」。
-.. 如果您使用Proxy、請將「-proxy-URL」設為您Proxy的URL。此組態可支援上傳大型檔案、但AutoSupport 不支援不支援使用
 
 
 
@@ -124,7 +117,7 @@ system node autosupport modify -support enable
 
 
 . 設定DNS。
-. （選用）若要變更特定設定、請新增命令選項：
+. 或者、如果您想要變更特定設定、請新增命令選項：
 +
 |===
 
@@ -135,7 +128,7 @@ system node autosupport modify -support enable
  a| 
 移除、遮罩或編碼訊息中的敏感資料、以隱藏私有資料
  a| 
-將「移除私有資料」設為「真」。如果您從「假」變更為「真」、AutoSupport 則會刪除所有的還原歷史記錄和所有相關檔案。
+設定 `-remove-private-data` 至 `true`。如果您從變更 `false` 至 `true`，所有 AutoSupport 歷史記錄和所有相關文件都將被刪除。
 
 
 
@@ -165,7 +158,7 @@ cluster1::> system node autosupport invoke -type test -node node1
 +
 所有AutoSupport 適當的傳輸協定目的地、最新傳出的不完整資訊狀態最終應變更為「不成功」。
 
-.. （選用）AutoSupport 查看您為「系統節點AutoSupport 修改」命令的「收件者」、「附註To」或「合作夥伴地址」參數設定的任何地址、確認該資訊已傳送至您的內部支援組織或支援合作夥伴。
+.. 您也可以選擇檢查您為設定的任何地址的電子郵件、確定 AutoSupport 訊息已傳送至您的內部支援組織或支援合作夥伴 `-to`、 `-noteto`或 `-partner-address`  的參數 `system node autosupport modify` 命令。
 
 
 
