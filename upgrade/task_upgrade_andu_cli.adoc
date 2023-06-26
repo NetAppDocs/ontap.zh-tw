@@ -131,7 +131,7 @@ cluster image update -version package_version_number -estimate-only
 cluster image update -version package_version_number
 ----
 +
-** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"] 使用 package_version_number 的目標 ONTAP 版本。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
+** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
 ** 如果叢集由2至6個節點組成、則會執行循環升級。如果叢集由8個以上的節點組成、預設會執行批次升級。如果需要、您可以使用「-force-rolling」參數來指定循環升級。
 ** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用「穩定分鐘數」參數來指定不同的穩定時間量。
 ** 對於MetroCluster 任何不含雙節點MetroCluster 的支援功能組態、ONTAP 在使用者啟動並在命令列上提供確認之後、即可在兩個站台（本機站台和災難恢復站台）的HA配對上同時開始執行升級程序。若為雙節點MetroCluster 的作業系統、更新會先在災難恢復站台（即未啟動升級的站台）上啟動。在災難恢復站點上完成更新後，升級將從本地站點開始。

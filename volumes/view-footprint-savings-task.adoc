@@ -20,4 +20,46 @@ summary: '視您的 ONTAP 版本而定、您可以使用 `volume show-footprint`
 ----
 volume show-footprint
 ----
++
+.啟用 TSSE 的輸出範例
+[listing]
+----
+      Vserver : vs0
+      Volume  : vol_tsse_75_per_compress
+
+      Feature                                         Used       Used%
+      --------------------------------             ----------    -----
+      Volume Data Footprint                           10.15GB      13%
+      Volume Guarantee                                     0B       0%
+      Flexible Volume Metadata                        64.25MB       0%
+      Delayed Frees                                   235.0MB       0%
+      File Operation Metadata                             4KB       0%
+
+      Total Footprint                                 10.45GB      13%
+
+      Footprint Data Reduction                         6.85GB       9%
+           Auto Adaptive Compression                   6.85GB       9%
+      Effective Total Footprint                        3.59GB       5%
+----
++
+.未啟用 TSSE 的輸出範例
+[listing]
+----
+      Vserver : vs0
+      Volume  : vol_file_cg_75_per_compress
+
+      Feature                                         Used       Used%
+      --------------------------------             ----------    -----
+      Volume Data Footprint                            5.19GB       7%
+      Volume Guarantee                                     0B       0%
+      Flexible Volume Metadata                        32.12MB       0%
+      Delayed Frees                                   90.17MB       0%
+      File Operation Metadata                             4KB       0%
+
+      Total Footprint                                  5.31GB       7%
+
+      Footprint Data Reduction                         1.05GB       1%
+           Data Compaction                             1.05GB       1%
+      Effective Total Footprint                        4.26GB       5%
+----
 

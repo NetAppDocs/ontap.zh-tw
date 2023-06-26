@@ -11,70 +11,103 @@ summary: NVMe支援會因ONTAP 您的版本的支援、平台和組態而異。
 
 
 [role="lead"]
-NVMe支援與限制會因ONTAP 您的版本的支援、平台和組態而異。
+NVMe 支援和限制會因您的 ONTAP 版本、平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
 
-
-
-== 傳輸協定支援
+傳輸協定支援
 
 [cols="3*"]
 |===
 
 
-| 傳輸協定 | 開始於... | 允許者... 
+| 傳輸協定 | 從ONTAP 無到無...開始 | 允許者... 
 
 
-| TCP | 零點9.10.1 ONTAP | 預設 
+| TCP | 9.10.1 | 預設 
 
 
-| FC | 部分9.4 ONTAP | 預設 
+| FC | 9.4 | 預設 
 |===
+從 ONTAP 9.8 開始、您可以在同一個儲存虛擬機器（ SVM ）上設定 SCSI 、 NAS 和 NVMe 通訊協定。
+在 ONTAP 9.7 及更早版本中、 NVMe 可能是 SVM 上唯一的傳輸協定。
+
 
 
 == 平台與組態支援與限制
 
-支援NVMe傳輸協定會因平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
+NVMe / FC 和 NVMe / TCP 通訊協定支援如下。  下列平台僅支援使用 32GB FC HBA 的 NVMe / FC 。
 
-
-NOTE: 從版本號為209.12.1開始ONTAP 、MetroCluster NVMe / FC支援4節點的「靜態IP」組態。NVMe不支援9.12.1之前的版本。MetroCluster
-
-[cols="2*"]
+[cols="3*"]
 |===
 
 
-| 從ONTAP 無到無...開始 | 平台 
+| 從ONTAP 無到無...開始 | 平台 | 每個叢集的最大節點數 
 
 
 | 9.12.1%  a| 
-* FAS
-* All Flash FAS 更新（AFF 僅限英文）
-* 所有SAN陣列ASA （E地）平台
+* AFF
+* ASA
+* C 系列
+
+| 12. 
 
 
+| 9.10.1  a| 
+* AFF
+* ASA
+
+| 4. 
 
 
 | 9.9.1  a| 
 * AFF
 * ASA
 
+| 4. 
 
 
-
-| 9.4 | 僅適用於平台AFF 
+| 9.4 | 僅限 AFF | 4. 
 |===
+
+
+== 內部組態MetroCluster
+
+從版本號為209.12.1開始ONTAP 、MetroCluster NVMe / FC支援4節點的「靜態IP」組態。NVMe不支援9.12.1之前的版本。MetroCluster
+
 
 
 == 命名空間支援與限制
 
-若要在SAN環境中設定NVMe傳輸協定、您必須設定NVMe的SVM、建立命名空間和子系統、設定NVMe/FC LIF、然後將命名空間對應至子系統。使用NVMe命名空間時、您應該注意下列事項：
+NVMe 命名空間支援會因您的 ONTAP 版本而異。
 
-* 從功能升級到功能升級到ONTAP 功能升級 xref:../nvme/resize-namespace-task.html[調整命名空間大小]。不支援ONTAP 在發行版不支援重新調整命名空間大小。
-* 從ONTAP 功能區9.6開始、命名空間支援512位元組區塊和96位元組區塊。
+[cols="2*"]
+|===
+
+
+| 從ONTAP 無到無...開始 | NVMe 命名空間支援 ... 
+
+
+| 9.10.1 | xref:../nvme/resize-namespace-task.html[調整大小]
+
+不支援ONTAP 在發行版不支援重新調整命名空間大小。 
+
+
+| 9.8 | LUN 和命名空間可以混合在同一個磁碟區上。 
+
+
+| 9.6  a| 
+* 512 位元組區塊和 4096 位元組區塊
 +
 預設值為4096。只有當主機作業系統不支援4096位元組區塊時、才應使用512。
 
+* 使用對應命名空間來移動 Volume
+
+
+|===
+此外、在使用 NVMe 命名空間時、您應該注意下列事項：
+
 * 如果LUN中的資料遺失、則無法從命名空間還原資料、反之亦然。
 * 命名空間的空間保證與所含磁碟區的空間保證相同。
+* 您無法在磁碟區上建立命名空間、從以 7-mode 運作的 Data ONTAP 轉換。
 * 命名空間不支援下列項目：
 +
 ** 重新命名
@@ -83,6 +116,36 @@ NOTE: 從版本號為209.12.1開始ONTAP 、MetroCluster NVMe / FC支援4節點�
 
 ** 跨Volume移動
 ** 跨Volume複本
+** 隨需複製
 
 
 
+
+
+
+== 多重路徑HA配對容錯移轉/恢復
+
+從 ONTAP 9.5 開始、 NVMe 支援多重路徑 HA 配對容錯移轉 / 恢復。
+
+
+
+== 其他限制
+
+* NVMe組態不支援下列ONTAP 功能：
++
+** 同步
+** 虛擬儲存主控台
+
+
+* 下列項目僅適用於執行ONTAP 下列功能的節點：
++
+** NVMe LIF和命名空間必須裝載在同一個節點上。
+** NVMe服務必須在建立NVMe LIF之前建立。
+
+
+
+
+請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得NVMe限制的完整清單。
+
+.相關資訊
+link:https://www.netapp.com/pdf.html?item=/media/10680-tr4080.pdf["現代 SAN 的最佳實務做法"]
