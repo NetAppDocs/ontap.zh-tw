@@ -1,0 +1,33 @@
+---
+permalink: volumes/change-inactive-data-threshold-task.html 
+sidebar: sidebar 
+keywords: storage, efficiency, temperature, change, efficient, default, threshold, inactive, compression, cold data, frequency 
+summary: 您可以變更 ONTAP 執行冷資料掃描的頻率、方法是使用溫度敏感的儲存效率、修改磁碟區的冷度臨界值。 
+---
+= 變更 Volume 非使用中資料壓縮臨界值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以變更 ONTAP 執行冷資料掃描的頻率、方法是使用溫度敏感的儲存效率、修改磁碟區的冷度臨界值。
+
+.開始之前
+您必須是叢集或 SVM 管理員、並使用 ONTAP CLI 進階權限等級。
+
+.關於這項工作
+冷限值可以是 1 到 60 天。預設臨界值為 14 天。
+
+.步驟
+. 設定權限等級：
++
+"進階權限"
+
+. 修改磁碟區上的非作用中資料壓縮：
++
+`volume efficiency inactive-data-compression modify -vserver <vserver_name> -volume <volume_name> -threshold-days <integer>`
+
+
+
+有關的其他信息，請參見手冊頁 link:https://docs.netapp.com/us-en/ontap-cli-9131/volume-efficiency-inactive-data-compression-modify.html#description["修改非使用中的資料壓縮"]。
