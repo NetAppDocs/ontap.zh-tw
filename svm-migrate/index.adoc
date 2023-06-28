@@ -27,60 +27,102 @@ image::../media/workflow_svm_migrate.gif[SVM移轉工作流程]
 
 
 
-== 支援的組態
+== SVM 移轉平台支援
 
-下表顯示支援的組態及ONTAP 支援的支援功能的版本。
-
-[cols="3,1,1,1,1"]
+[cols="1,1"]
 |===
 
 
-| 組態支援於... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP | 零點9.12.1. ONTAP | ONTAP 9.13.1.12.9.11.9.11. 
+| 控制器系列 | 支援的 ONTAP 版本 
 
 
-| AFF 陣列 | 是的 | 是的 | 是的 | 是的 
+| AFF-A 系列 | 更新版本ONTAP 
 
 
-| FAS 平台與混合式平台（ AFF-Fas 、 FAS-AFF 、 AFF-Fas 搭配混合式集合體） | 否 | 否 | 是的 | 是的 
+| AFF-C 系列 | ONTAP 9.12.1 修補程式 4 及更新版本 
 
 
-| 陣列/節點配對總數 | 1. | 3. | 3. | 6. 
-
-
-| 在資料中心內移轉、最大網路延遲為： | 2毫秒 | 2毫秒 | 10毫秒 | 10毫秒 
+| FAS | 更新版本ONTAP 
 |===
 
 NOTE: 當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自動磁碟區放置會嘗試執行類似 Aggregate Match 的作業。例如、如果來源叢集有 60 個磁碟區、則磁碟區放置位置會嘗試在目的地上尋找 AFF 集合體來放置磁碟區。當 AFF 集合體上沒有足夠的空間時、這些磁碟區將放置在具有非 Flash 磁碟的集合體上。
 
 
 
+== ONTAP 版本支援擴充性
+
+[cols="1,1"]
+|===
+
+
+| 版本ONTAP | HA 在來源和目的地中配對 
+
+
+| 零點9.10.1 ONTAP | 1. 
+
+
+| 零點9.11.1. ONTAP | 3. 
+
+
+| ONTAP 9.13.1.12.9.11.9.11. | 6. 
+|===
+
+
+== TCP 往返時間（ RTT ）的網路基礎架構效能需求
+
+|===
+
+
+| 版本ONTAP | 最大 RTT 
+
+
+| 更新版本ONTAP | 2毫秒 
+
+
+| 更新版本ONTAP | 10毫秒 
+|===
+
+
+== 每個 SVM 支援的最大磁碟區數
+
+[cols="2,1,1"]
+|===
+
+
+| 版本ONTAP 2+| 每個 SVM 支援的最大磁碟區數 
+
+
+|  | * AFF * | * FAS * 
+
+
+| ONTAP 9.12.1 及更早版本 | 100 | 80 
+
+
+| ONTAP 9.13.1 及更新版本 | 200 | 80 
+|===
+
+
 == 先決條件
 
-* 您必須是叢集管理員
-* 來源叢集和目的地叢集必須相互對等
-+
-link:https://review.docs.netapp.com/us-en/ontap_main/peering/create-cluster-relationship-93-later-task.html["建立叢集對等關係"]
+在開始 SMV 移轉之前、您必須符合下列先決條件：
 
-* 來源叢集和目的地叢集必須安裝 Data Protection Bundle 授權
-* 來源叢集中的所有節點都必須執行ONTAP 不含更新版本的功能
-* 來源叢集中的所有節點都必須執行相同ONTAP 的版本
-* 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本
-* 目的地叢集必須與來源叢集處於相同或更新的有效叢集版本（ ECV ）
-* 來源叢集和目的地叢集必須支援相同的IP子網路才能存取資料LIF
-* 連接來源與目的地叢集的網路最大往返時間（RTT）必須少於10毫秒
-* 來源 SVM 必須包含少於版本支援的資料磁碟區數量上限。支援的資料磁碟區數目上限如下：
-+
-** AFF 陣列： 200 個資料磁碟區、叢集執行 ONTAP 9.13.1 及更新版本、 100 個資料磁碟區、叢集執行 ONTAP 9.12.1 及更早版本。
-** FAS 平台： 80 個資料磁碟區
-
-
+* 您必須是叢集管理員。
+* link:https://docs.netapp.com/us-en/ontap/peering/create-cluster-relationship-93-later-task.html["來源叢集和目的地叢集必須相互對等"^]。
+* 來源叢集和目的地叢集必須安裝 Data Protection Bundle 授權。
+* 來源叢集中的所有節點都必須執行 ONTAP 9.10.1 或更新版本。如需特定的 ONTAP 陣列控制器支援、請參閱
+* 來源叢集中的所有節點都必須執行相同的 ONTAP 版本。
+* 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本。
+* 目的地叢集必須與來源叢集相同或不超過兩個主要較新的有效叢集版本（ ECV ）。
+* 來源叢集和目的地叢集必須支援相同的 IP 子網路、才能進行資料 LIF 存取。
+* 連接來源叢集和目的地叢集的網路、其往返時間上限（ RTT ）不得超過 10 毫秒
+* 來源 SVM 必須包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
 * 目的地上必須有足夠的空間放置 Volume
 * 如果來源SVM有加密磁碟區、則必須在目的地上設定「內建金鑰管理程式」
 
 
 
 
-== 衝突的作業
+== SVM 作業
 
 您應該檢查是否有可能與SVM移轉發生衝突的作業：
 
@@ -92,24 +134,24 @@ link:https://review.docs.netapp.com/us-en/ontap_main/peering/create-cluster-rela
 
 
 
-== 支援的功能
+== 支援和不支援的功能
 
 下表顯示 SVM 資料移動性支援的 ONTAP 功能、以及提供支援的 ONTAP 版本。
 
-[cols="3,1,1,1,1,4"]
+[cols="3,1,4"]
 |===
 
 
-| 支援的功能... | 零點9.10.1 ONTAP | 零點9.11.1. ONTAP | 零點9.12.1. ONTAP | ONTAP 9.13.1.12.9.11.9.11. | 其他資訊 
+| 功能 | 第一版支援 | 註解 
 
 
-| 非同步SnapMirror複製到雲端關係 | 否 | 否 | 是的 | 是的 | 從ONTAP S209.12開始、當您使用SnapMirror複製移轉至雲端關係的SVM時、移轉目的地叢集必須安裝複本至雲端授權、而且必須有足夠的可用容量來支援將鏡射至雲端的磁碟區中的容量移轉。 
+| 非同步SnapMirror複製到雲端關係 | 零點9.12.1. ONTAP | 從ONTAP S209.12開始、當您使用SnapMirror複製移轉至雲端關係的SVM時、移轉目的地叢集必須安裝複本至雲端授權、而且必須有足夠的可用容量來支援將鏡射至雲端的磁碟區中的容量移轉。 
 
 
-| 非同步SnapMirror目的地 | 否 | 否 | 是的 | 是的 |  
+| 非同步SnapMirror目的地 | 零點9.12.1. ONTAP |  
 
 
-| 非同步SnapMirror來源 | 否 | 是的 | 是的 | 是的  a| 
+| 非同步SnapMirror來源 | 零點9.12.1. ONTAP  a| 
 * 在FlexVol 大多數移轉期間、傳輸作業仍可正常繼續進行有關SnapMirror關係的作業。
 * 任何進行中的傳輸都會在轉換期間取消、而新傳輸會在轉換期間失敗、而且在移轉完成之前、無法重新啟動傳輸。
 * 移轉完成後、在移轉期間取消或錯過的排程傳輸不會自動啟動。
@@ -123,30 +165,60 @@ link:https://review.docs.netapp.com/us-en/ontap_main/peering/create-cluster-rela
 
 
 
-| 自主勒索軟體保護 | 否 | 否 | 是的 | 是的 |  
+| 自主勒索軟體保護 | 零點9.12.1. ONTAP |  
 
 
-| 外部金鑰管理程式 | 否 | 是的 | 是的 | 是的 |  
+| Cloud Volumes ONTAP | 不支援 |  
 
 
-| FabricPool | 否 | 是的 | 是的 | 是的  a| 
+| 外部金鑰管理程式 | 零點9.11.1. ONTAP |  
+
+
+| FabricPool | 零點9.11.1. ONTAP  a| 
 深入瞭解 xref:FabricPool support[FabricPool 支援]。
 
 
 
-| 展開關係（移轉來源具有一個SnapMirror來源磁碟區、具有多個目的地） | 否 | 是的 | 是的 | 是的 |  
+| 展開關係（移轉來源具有一個SnapMirror來源磁碟區、具有多個目的地） | 零點9.11.1. ONTAP |  
 
 
-| Flash Pool | 否 | 否 | 是的 | 是的 |  
+| FC SAN | 不支援 |  
 
 
-| 工作排程複寫 | 否 | 是的 | 是的 | 是的 | 在《銷售指南》9.10.1中ONTAP 、工作排程不會在移轉期間複寫、而且必須在目的地手動建立。從ONTAP 版本號《銷售資料9.11.1（更新版本）：移轉期間、來源使用的工作排程會自動複寫。 
+| Flash Pool | 零點9.12.1. ONTAP |  
 
 
-| NetApp Volume Encryption | 是的 | 是的 | 是的 | 是的 |  
+| 資料量FlexCache | 不支援 |  
 
 
-| NFS 與 SMB 稽核記錄 | 否 | 否 | 否 | 是的  a| 
+| FlexGroup | 不支援 |  
+
+
+| IPsec 原則 | 不支援 |  
+
+
+| IPv6生命里數 | 不支援 |  
+
+
+| iSCI SAN | 不支援 |  
+
+
+| 工作排程複寫 | 零點9.11.1. ONTAP | 在《銷售指南》9.10.1中ONTAP 、工作排程不會在移轉期間複寫、而且必須在目的地手動建立。從ONTAP 版本號《銷售資料9.11.1（更新版本）：移轉期間、來源使用的工作排程會自動複寫。 
+
+
+| 負載共享鏡像 | 不支援 |  
+
+
+| SVM MetroCluster | 不支援 |  
+
+
+| NDMP 組態 | 不支援 |  
+
+
+| NetApp Volume Encryption | 零點9.10.1 ONTAP |  
+
+
+| NFS 和 SMB 稽核記錄 | ONTAP 9.13.1.12.9.11.9.11.  a| 
 在 SVM 移轉之前：
 
 * 必須在目的地叢集上啟用稽核記錄重新導向。
@@ -155,21 +227,60 @@ link:https://review.docs.netapp.com/us-en/ontap_main/peering/create-cluster-rela
 
 
 
-| NFS v3 、 NFS v4.1 和 NFS v4.2 | 是的 | 是的 | 是的 | 是的 |  
+| NFS v3 、 NFS v4.1 和 NFS v4.2 | 零點9.10.1 ONTAP |  
 
 
-| NFS v4.0 | 否 | 否 | 是的 | 是的 |  
+| NFS v4.0 | 零點9.12.1. ONTAP |  
 
 
-| NFS v4.0傳輸協定 | 否 | 否 | 是的 | 是的 |  
+| NVMe over Fabric | 不支援 |  
 
 
-| SMB傳輸協定 | 否 | 否 | 是的 | 是的  a| 
-從SVM移轉開始、SVM移轉包括使用SMB進行中斷移轉。ONTAP
+| 在來源叢集上啟用 Common Criteria 模式的 Onboard Key Manager （ OKM ） | 不支援 |  
+
+
+| qtree | 零點9.10.1 ONTAP |  
+
+
+| S3 | 不支援 |  
+
+
+| SMB傳輸協定 | 零點9.12.1. ONTAP  a| 
+SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 
 
 
-| SnapMirror應用程式的SVM對等關係 | 否 | 是的 | 是的 | 是的 |  
+| SMTape 設定 | 不支援 |  
+
+
+| SnapLock | 不支援 |  
+
+
+| SnapMirror營運不中斷 | 不支援 |  
+
+
+| SnapMirror SVM 對等關係 | 零點9.12.1. ONTAP |  
+
+
+| SnapMirror SVM 災難恢復 | 不支援 |  
+
+
+| SnapMirror同步 | 不支援 |  
+
+
+| Snapshot複本 | 零點9.10.1 ONTAP |  
+
+
+| 虛擬 IP 生命 / BGP | 不支援 |  
+
+
+| Virtual Storage Console 7.0 及更新版本 | 不支援 | VSC 是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從 VSC 7.0 開始。 
+
+
+| Volume複製 | 不支援 |  
+
+
+| vStorage | 不支援 |  
 |===
 
 
@@ -183,27 +294,90 @@ SVM 移轉支援使用 FabricPools 上的磁碟區進行、適用於下列平台
 
 
 
-== 不支援的功能
+== 移轉期間支援的作業
 
-SVM移轉不支援下列功能：
+下表根據移轉狀態指出 Volume 作業支援：
 
-* Cloud Volumes ONTAP
-* 資料量FlexCache
-* 資料量FlexGroup
-* IPsec原則
-* IPv6生命里數
-* iSCSI工作負載
-* 負載共享鏡像
-* MetroCluster
-* NDMP
-* SAN、NVMe over Fibre、VScan、vStorage、S3複寫
-* SM磁帶
-* SnapLock
-* SVM-DR
-* 當來源叢集的Onboard Key Manager（OKM）啟用Common Criteria（CC）模式時、SVM移轉
-* 同步SnapMirror、SnapMirror營運不中斷
-* qtree、配額
-* VIP/BGP LIF
-* 適用於VMware vSphere的虛擬儲存主控台（VSC是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從VSC 7.0開始。）
-* Volume複製
+[cols="2,1,1,1"]
+|===
 
+
+| Volume作業 3+| SVM 移轉狀態 
+
+
+|  | *正在進行中* | * 暫停 * | *轉換* 
+
+
+| 建立 | 允許 | 允許 | 不支援 
+
+
+| 刪除 | 不允許 | 允許 | 不支援 
+
+
+| 檔案系統分析 2+| 請參閱檔案系統分析 | 不支援 
+
+
+| 修改 | 允許 | 允許 | 不支援 
+
+
+| 離線 / 線上 | 不允許 | 允許 | 不支援 
+
+
+| 移動 / 重新裝載 | 不允許 | 允許 | 不支援 
+
+
+| Qtreecree/modify | 不允許 | 不允許 | 不支援 
+
+
+| 配額建立 / 修改 | 不允許 | 不允許 | 不支援 
+
+
+| 重新命名 | 不允許 | 允許 | 不支援 
+
+
+| 調整大小 | 允許 | 允許 | 不支援 
+
+
+| 限制 | 不允許 | 允許 | 不支援 
+
+
+| 快照複製屬性會修改 | 允許 | 允許 | 不支援 
+
+
+| Snapshot 複本自動刪除修改 | 允許 | 允許 | 不支援 
+
+
+| 建立 Snapshot 複本 | 允許 | 允許 | 不支援 
+
+
+| 刪除 Snapshot 複本 | 允許 | 允許 | 不支援 
+
+
+| 從 Snapshot 複本還原檔案 | 允許 | 允許 | 不支援 
+|===
+下表說明根據移轉狀態提供的檔案作業支援：
+
+[cols="2,1,1,1"]
+|===
+
+
+| 檔案作業 3+| SVM 移轉狀態 
+
+
+|  | *正在進行中* | * 暫停 * | *轉換* 
+
+
+| 非同步刪除 | 不允許 | 不允許 | 不支援 
+
+
+| 複製建立 / 刪除 / 分割 | 允許 | 允許 | 不支援 
+
+
+| 複本修改 / 銷毀 | 不允許 | 不允許 | 不支援 
+
+
+| 移動 | 不允許 | 不允許 | 不支援 
+
+
+| 保留 | 允許 | 允許 | 不支援 
+|===
