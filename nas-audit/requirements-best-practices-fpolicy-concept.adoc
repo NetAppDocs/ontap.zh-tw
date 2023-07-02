@@ -49,19 +49,166 @@ NOTE: 從Sf9.8開始ONTAP 、ONTAP 這個解決方案提供用戶端LIF服務、
 
 == 設定FPolicy時的最佳實務做法與建議
 
-在儲存虛擬機器（SVM）上設定FPolicy時、您必須熟悉組態最佳實務做法和建議、以確保FPolicy組態提供健全的監控效能和結果、以符合您的需求。
+在儲存虛擬機器（ SVM ）上設定 FPolicy 時、請熟悉一般組態最佳實務做法和建議、以確保 FPolicy 組態能提供強大的監控效能和符合您需求的結果。
 
-* 外部FPolicy伺服器（FPolicy伺服器）應置於靠近叢集的位置、並具備高頻寬連線能力、以提供最短的延遲和高頻寬連線能力。
-* FPolicy外部引擎應設定多個FPolicy伺服器、以提供FPolicy伺服器通知處理的恢復能力和高可用度、尤其是當原則設定為同步篩選時。
-* 建議您在進行任何組態變更之前、先停用FPolicy原則。
+如需效能、規模調整及組態的特定準則、請與 FPolicy 合作夥伴應用程式合作。
+
+
+
+=== 原則組態
+
+設定 FPolicy 外部引擎、事件和 SVM 範圍、可改善您的整體體驗和安全性。
+
+* 設定 SVM 的 FPolicy 外部引擎：
 +
-例如、如果您想要在針對啟用的原則設定的FPolicy外部引擎中新增或修改IP位址、您應該先停用該原則。
+** 提供額外的安全性需要付出效能成本。啟用安全通訊端層（ SSL ）通訊對存取共用具有效能影響。
+** FPolicy 外部引擎應設定多個 FPolicy 伺服器、以提供 FPolicy 伺服器通知處理的恢復能力和高可用度。
 
-* 叢集節點對FPolicy伺服器比率應最佳化、以確保FPolicy伺服器不會過載、這可能會在SVM回應用戶端要求時產生延遲。
+
+* 設定 SVM 的 FPolicy 事件：
 +
-最佳比率取決於使用FPolicy伺服器的應用程式。
+監控檔案作業會影響您的整體體驗。例如、在儲存端篩選不想要的檔案作業、可改善您的使用體驗。NetApp 建議設定下列組態：
+
++
+** 監控檔案作業的最小類型、並在不中斷使用案例的情況下啟用最大篩選器數量。
+** 使用篩選器執行 getattr 、讀取、寫入、開啟及關閉作業。SMB 和 NFS 主目錄環境在這些作業中所佔的比例很高。
 
 
+* SVM 的 FPolicy 範圍組態：
++
+將原則的範圍限制在相關的儲存物件上、例如共用、磁碟區和匯出、而非在整個 SVM 中啟用這些物件。NetApp 建議您檢查目錄副檔名。如果是 `is-file-extension-check-on-directories-enabled` 參數設定為 `true`，目錄物件會受到與一般檔案相同的副檔名檢查。
+
+
+
+
+
+=== 網路組態
+
+FPolicy 伺服器與控制器之間的網路連線應為低延遲。NetApp 建議使用私有網路來分隔 FPolicy 流量與用戶端流量。
+
+此外、您應該將外部 FPolicy 伺服器（ FPolicy 伺服器）放置在離具有高頻寬連線能力的叢集近的位置、以提供最小的延遲和高頻寬連線能力。
+
+
+NOTE: 如果將 FPolicy 流量的 LIF 設定在與 LIF 不同的連接埠上、以進行用戶端流量、則 FPolicy LIF 可能會因為連接埠故障而容錯移轉至其他節點。因此、 FPolicy 伺服器無法從節點連線、導致 FPolicy 通知節點上的檔案作業失敗。若要避免此問題、請確認可透過節點上至少一個 LIF 來連線 FPolicy 伺服器、以處理在該節點上執行檔案作業的 FPolicy 要求。
+
+
+
+=== 硬體組態
+
+您可以在實體伺服器或虛擬伺服器上使用 FPolicy 伺服器。如果 FPolicy 伺服器位於虛擬環境中、您應該將專用資源（ CPU 、網路和記憶體）分配給虛擬伺服器。
+
+叢集節點對FPolicy伺服器比率應最佳化、以確保FPolicy伺服器不會過載、這可能會在SVM回應用戶端要求時產生延遲。最佳比率取決於使用 FPolicy 伺服器的合作夥伴應用程式。NetApp 建議與合作夥伴合作、以確定適當的價值。
+
+
+
+=== 多原則組態
+
+無論序號為何、原生封鎖的 FPolicy 原則都具有最高優先順序、而變更決策原則的優先順序比其他原則高。原則優先順序取決於使用案例。NetApp 建議與合作夥伴合作、以決定適當的優先順序。
+
+
+
+=== 規模考量
+
+FPolicy 會執行 SMB 和 NFS 作業的即時監控、傳送通知給外部伺服器、並根據外部引擎通訊模式（同步或非同步）等待回應。此程序會影響 SMB 和 NFS 存取和 CPU 資源的效能。
+
+為了減輕任何問題、 NetApp 建議您在啟用 FPolicy 之前、先與合作夥伴合作、評估環境並調整其規模。效能受到多種因素影響、包括使用者數量、工作負載特性、例如每位使用者的作業次數和資料大小、網路延遲、故障或伺服器速度緩慢。
+
+
+
+== 監控效能
+
+FPolicy 是以通知為基礎的系統。通知會傳送至外部伺服器以進行處理、並產生回覆 ONTAP 的回應。此往返程序會增加用戶端存取的延遲。
+
+監控 FPolicy 伺服器和 ONTAP 中的效能計數器、可讓您識別解決方案中的瓶頸、並視需要調整參數、以獲得最佳解決方案。例如、 FPolicy 延遲增加會對 SMB 和 NFS 存取延遲造成串聯影響。因此、您應該同時監控工作負載（ SMB 和 NFS ）和 FPolicy 延遲。此外、您可以在 ONTAP 中使用服務品質原則、為每個啟用 FPolicy 的 Volume 或 SVM 設定工作負載。
+
+NetApp 建議您執行 `statistics show –object workload` 顯示工作負載統計資料的命令。此外、您應該監控下列參數：
+
+* 平均、讀取和寫入延遲
+* 作業總數
+* 讀寫計數器
+
+
+您可以使用下列 FPolicy 計數器來監控 FPolicy 子系統的效能。
+
+
+NOTE: 您必須處於診斷模式、才能收集與 FPolicy 相關的統計資料。
+
+.步驟
+. 收集 FPolicy 計數器：
++
+.. `statistics start -object fpolicy -instance _instance_name_ -sample-id _ID_`
+.. `statistics start -object fpolicy_policy -instance _instance_name_ -sample-id _ID_`
+
+
+. 顯示 FPolicy 計數器：
++
+.. `statistics show -object fpolicy –instance _instance_name_ -sample-id _ID_`
+.. `statistics show -object fpolicy_server –instance _instance_name_ -sample-id _ID_`
+
+
++
+--
+。 `fpolicy` 和 `fpolicy_server` Counters 提供下表所述數種效能參數的相關資訊。
+
+[cols="25,75"]
+|===
+| 計數器 | 說明 
+
+
+ a| 
+* 「 fpolicy 」計數器 *
+
+
+
+| max_requent_l滯 | 最大螢幕要求延遲時間 
+
+
+| 未處理的要求 | 處理中的畫面要求總數 
+
+
+| requy_histure_hist | 畫面要求延遲長條圖 
+
+
+| Requests_Dispatched_Rate | 每秒發出的畫面要求數 
+
+
+| Requests_receiped_rate | 每秒接收的畫面要求數 
+
+
+ a| 
+* 「 fpolicy_server 」計數器 *
+
+
+
+| max_requent_l滯 | 畫面要求的最大延遲 
+
+
+| 未處理的要求 | 等待回應的畫面要求總數 
+
+
+| requy_l滯 | 畫面要求的平均延遲 
+
+
+| requy_histure_hist | 畫面要求延遲長條圖 
+
+
+| requy_sent_rate | 每秒傳送至 FPolicy 伺服器的畫面要求數 
+
+
+| RESPONY_REATE_RATE | 每秒從 FPolicy 伺服器收到的畫面回應數 
+|===
+--
+
+
+
+
+=== 管理 FPolicy 工作流程、並仰賴其他技術
+
+NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如、如果您想要新增或修改為啟用原則設定的外部引擎中的 IP 位址、請先停用原則。
+
+如果您將 FPolicy 設定為監控 NetApp FlexCache 磁碟區、 NetApp 建議您不要設定 FPolicy 來監控讀取和 getattr 檔案作業。在 ONTAP 中監控這些作業需要擷取 inode 到路徑（ I2P ）資料。由於 I2P 資料無法從 FlexCache 磁碟區擷取、因此必須從原始磁碟區擷取。因此、監控這些作業可免除 FlexCache 所能提供的效能效益。
+
+當同時部署 FPolicy 和隨裝即用的防毒解決方案時、防毒解決方案會先收到通知。FPolicy 處理只會在防毒掃描完成後才會開始。請務必正確設定防毒解決方案的大小、因為慢速防毒掃描程式可能會影響整體效能。
 
 
 
@@ -79,8 +226,8 @@ NOTE: 從Sf9.8開始ONTAP 、ONTAP 這個解決方案提供用戶端LIF服務、
 
 === 還原
 
-在還原ONTAP 至不支援FPolicy Passthrough-read的版本之前、必須符合下列條件：
+還原至不支援 FPolicy Passthrough-read 的 ONTAP 版本之前、您必須符合下列條件：
 
-* 必須停用所有使用Passthrough-read的原則、然後修改受影響的組態、使其不使用passThrough讀取。
-* 必須停用叢集上的每個FPolicy原則、以停用叢集上的FPolicy功能。
+* 使用 Passthrough-read 停用所有原則、然後修改受影響的組態、使其不使用 passthrough Read 。
+* 停用叢集上的每個 FPolicy 原則、以停用叢集上的 FPolicy 功能。
 

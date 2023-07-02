@@ -1,46 +1,79 @@
 ---
 permalink: upgrade/concept_mixed_version_requirements.html 
 sidebar: sidebar 
-keywords: ontap, upgrade, mixed, version, requirements 
-summary: 從使用支援功能的版本9.3開始ONTAP 、您預設無法將執行ONTAP 版本不同於現有節點上執行版本的更新節點新增至叢集。 
+keywords: ontap, upgrade, mixed, version, clusters, mixed-version nodes, requirements 
+summary: 混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的節點所組成、例如 ONTAP 9.8 和 9.12.1 。NetApp 僅在特定案例中支援混合版本的 ONTAP 叢集。 
 ---
-= 混合版本需求
+= 混合版本 ONTAP 叢集
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從使用支援功能的版本9.3開始ONTAP 、您預設無法將執行ONTAP 版本不同於現有節點上執行版本的更新節點新增至叢集。
+混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的節點所組成、例如 ONTAP 9.8 和 9.12.1 、或 ONTAP 9.9.1 和 9.13.1 。NetApp 僅在特定案例中支援混合版本的 ONTAP 叢集。
 
-如果您計畫在叢集中新增比ONTAP 現有叢集中節點更快的執行版本的更新節點、則應先將叢集中的節點升級至較新版本、然後再新增節點。
+最常見的兩種情況是：
 
-不建議使用混合版本叢集、但在某些情況下、您可能需要暫時進入混合版本狀態。例如、如果您要升級至ONTAP 更新版本的、但現有叢集中的某些節點不支援的版本、則需要輸入混合版本狀態。在這種情況ONTAP 下、您應該升級支援更新版本之支援的節點、然後ONTAP 使用下列命令移除不支援升級至版本之更新版本的節點：
+* 大型叢集中的 ONTAP 軟體升級
+* 當您計畫將新控制器新增至叢集時、需要進行 ONTAP 軟體升級
 
-[cols="2"]
+
+本內容適用於支援 NetApp 平台系統的 ONTAP 版本、例如 AFF 、 ASA 、 FAS 和 C 系列系統。  此處的資訊不適用於 ONTAP 雲端版本（ 9.x ）、例如 9.12.0 。
+
+
+
+== 混合版本 ONTAP 叢集的需求
+
+在叢集需要進入混合式 ONTAP 版本狀態的任何情況下、您都必須注意重要的要求和限制。
+
+* 在任何指定時間、叢集中都不能有兩個以上不同的主要 ONTAP 版本。如果節點執行的是相同 ONTAP 版本的不同 P 或 D 修補層級、例如 ONTAP 9.9.9.1 和 9.9.9.1P5 、則叢集將不視為混合版本的 ONTAP 叢集。
+* 當叢集處於混合版本狀態時、您不應輸入任何會改變叢集作業或組態的命令、除非有必要滿足升級需求。為了協助控制器升級活動、支援在混合版本 ONTAP 叢集中進行 Volume Move 作業。
+* 為了達到最佳叢集作業、叢集處於混合版本狀態的時間長度應儘可能短。  叢集在混合版本狀態下的最大持續時間長度取決於叢集中最低的 ONTAP 版本。
++
+[cols="2*"]
 |===
-| 版本ONTAP | 命令 
+| 如果在混合版本叢集中執行的 ONTAP 最低版本為： | 然後您最多可以保持在混合版本狀態 
 
 
- a| 
-部分9.3 ONTAP
- a| 
-`cluster unjoin -skip-last-low-version-node-check`
+| ONTAP 9.8 或更高版本 | 90 天 
 
 
-
- a| 
-ONATP 9.4及更新版本
- a| 
-`cluster remove-node -skip-last-low-version-node-check`
-
+| ONTAP 9.7 或更低 | 7 天 
 |===
-您可能還需要輸入混合版本狀態、才能進行技術更新或中斷升級。在這種情況下、您可以覆寫ONTAP 「支援」的預設行為、並使用新增不同版本的節點 `cluster add-node -allow-mixed-version-join` 進階權限命令。
+* 從 ONTAP 9.8 開始、混合版本的 ONTAP 叢集最多可跨越 4 個主要版本。例如、混合版本的 ONTAP 叢集可能會有執行 ONTAP 9.8 和 9.12.1 的節點、或者可能有執行 ONTAP 9.9.1 和 9.13.1 的節點。但是不支援混合版本的 ONTAP 叢集、其中節點執行 ONTAP 9.8 和 9.13.1 、因為混合版本叢集涵蓋 5 個主要版本。
 
-當您必須進入混合版本狀態時、應該儘快完成升級。
 
-從 ONTAP 9.8 及更新版本開始、 HA 配對必須在超過 90 天內、從與叢集中其他 HA 配對不同的版本執行 ONTAP 版本。在 ONTAP 9.7 及更早版本中、 HA 配對不得在超過 7 天的時間內、從與叢集中其他 HA 配對不同的版本執行 ONTAP 版本。
 
-若要正確執行叢集作業、叢集處於混合版本狀態的期間應儘可能短。
 
-當叢集處於混合版本狀態時、除了必要時、您不應輸入任何變更叢集作業或組態的命令、以滿足升級需求。
+== 更新大型叢集的 ONTAP 版本
+
+每個版本的 ONTAP 都提供更強大的功能集。當您需要升級較大叢集的 ONTAP 版本以取得較新版本的 ONTAP 時、您必須在升級叢集中的每個節點時、輸入一段時間的混合版本叢集狀態。
+
+
+
+== 將新節點新增至叢集
+
+您可以將新節點新增至叢集以擴充其容量、或是完全取代控制器。無論是哪種情況、您都需要啟用資料從舊控制器移轉至新系統的功能。
+
+如果您打算將新節點新增至叢集、而這些節點需要比叢集中現有節點更高的 ONTAP 版本、則必須先將叢集中所有現有節點升級至較新的 ONTAP 版本、然後再新增節點。不過、如果由於部分現有節點不支援較新版本的 ONTAP 、因此無法執行此動作、則在升級程序中、您必須在有限的時間內輸入混合版本狀態。
+如果節點不支援新控制器所需的最低 ONTAP 版本、您應該執行下列動作：
+
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 叢集中支援新控制器 ONTAP 版本的節點。
+. 將新節點新增至叢集。
++
+在進階權限層級使用 ONTAP 命令 cluster add-node -allow-混合 版本 -join 來加入新節點。
+
+. 將資料從任何無法升級的節點移轉至執行較高 ONTAP 版本的節點。
+. link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["從叢集中移除不支援的節點"^]。
++
+使用 ONTAP 命令 cluster remove-node-sk跳 － last － low － version － node-check 刪除這些節點。（在 ONTAP 9.3 及更早版本中、請使用 cluster unjoin -ske-last 低版本節點檢查命令。）
+
+
+
+如需資料移轉的詳細資訊、請參閱：
+
+* link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["建立Aggregate並將磁碟區移至新節點"^]
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/task_move_linux_iscsi_hosts_from_mcc_fc_to_mcc_ip_nodes.html#setting-up-new-iscsi-connections["設定新的 iSCSI 連線以進行 SAN 磁碟區移動"^]
+* link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/encrypt-existing-volume-task.html["使用加密來移動磁碟區"^]
+
