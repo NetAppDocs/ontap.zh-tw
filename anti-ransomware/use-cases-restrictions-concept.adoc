@@ -77,16 +77,19 @@ Volume需求：
 * 資料量SnapLock
 * FlexGroup Volume （從 ONTAP 9.13.1 開始、支援 FlexGroup Volume ）
 * FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
+* 儲存VM的根磁碟區
+* SnapMirror同步
 * 純SAN磁碟區
 * 已停止儲存VM的磁碟區
-* 儲存VM的根磁碟區
 
 
 
 
 == SnapMirror與ARP互通性
 
-從ONTAP 功能支援的版本為2。9.12開始、SnapMirror目的地磁碟區支援使用Arp。如果SnapMirror來源磁碟區已啟用Arp、SnapMirror目的地磁碟區會自動取得來源磁碟區的Arp組態狀態（學習、啟用等）、Arp訓練資料、以及由Arp建立的Snapshot快照。不需要明確啟用。
+從 ONTAP 9.12.1 開始、非同步 SnapMirror 目的地磁碟區支援 ARP 。SnapMirror Synchronous 不支援 ARP 。
+
+如果SnapMirror來源磁碟區已啟用Arp、SnapMirror目的地磁碟區會自動取得來源磁碟區的Arp組態狀態（學習、啟用等）、Arp訓練資料、以及由Arp建立的Snapshot快照。不需要明確啟用。
 
 雖然目的地Volume是由唯讀（RO）Snapshot複本所組成、但不會對其資料進行任何ARP處理。不過、當SnapMirror目的地Volume轉換為讀寫（RW）時、會自動在RW-轉換的目的地Volume上啟用ARP。除了已記錄在來源Volume上的內容、目的地Volume不需要任何額外的學習程序。
 
@@ -96,7 +99,7 @@ Volume需求：
 
 == ARP效能和頻率考量
 
-以處理量和尖峰IOPS來衡量、ARP功能對系統效能的影響最小。ARP 功能的影響與 Volume 工作負載有很大的影響。對於大多數一般或一般工作負載、建議使用下列組態限制：
+根據處理量和尖峰 IOPS 的測量結果、 ARP 對系統效能的影響最小。ARP 功能的影響取決於特定的 Volume 工作負載。對於一般工作負載、建議使用下列組態限制：
 
 [cols="30,20,30"]
 |===
@@ -110,7 +113,7 @@ Volume需求：
 |===
 通過：[*]無論新增的磁碟區數量超過建議的限制、系統效能不會超過這些百分比。
 
-由於根據優先順序執行Arp分析、當受保護的磁碟區數量增加時、分析作業就會減少在每個磁碟區上執行的頻率。
+由於 ARP 分析會依優先順序執行、因此當受保護的磁碟區數量增加時、分析會在每個磁碟區上執行的頻率較低。
 
 
 
