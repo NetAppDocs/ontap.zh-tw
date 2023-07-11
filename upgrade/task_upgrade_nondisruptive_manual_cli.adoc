@@ -501,7 +501,13 @@ vs0
 cluster1::> system node run -node node1 -command uptime
   3:15pm up  0 days, 0:16 129 NFS ops, 0 CIFS ops, 0 HTTP ops, 0 FCP ops, 2 iSCSI ops
 ----
-. 如果這是叢集中的最後一個要更新的節點、請觸發AutoSupport 下列資訊：「AutoSupport /setoke -node*-type all -messing_NDU」
+. 如果這是要更新叢集中的最後一個節點、請觸發 AutoSupport 通知：
++
+"進階權限"
+
++
+`autosupport invoke -node * -type all -message "Finishing_NDU"`
+
 +
 本資訊通知包含更新前的系統狀態記錄。AutoSupport如果更新程序發生問題、它會儲存有用的疑難排解資訊。
 

@@ -13,13 +13,27 @@ summary: 從 ONTAP 9.10.1 開始、您可以在建立新的 AFF Volume 時設定
 [role="lead"]
 從 ONTAP 9.10.1 開始、您可以在建立新的 AFF Volume 時設定儲存效率模式。使用參數 `-storage-efficiency-mode`，您可以指定磁碟區是使用有效率模式還是預設效能模式。這兩種模式可在檔案壓縮（預設）之間選擇、這是建立新 AFF 磁碟區時的預設模式、或是對溫度敏感的儲存效率（效率）、以達到對溫度敏感的儲存效率。。 `-storage-efficiency-mode` 非 AFF 磁碟區或資料保護磁碟區不支援此參數。
 
-
-
-== 使用高效模式建立新的Volume
-
-若要設定效率模式以實現儲存效率、您可以使用「高效」值來設定「儲存效率模式」參數。
-
 .步驟
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 來執行此工作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從《支援範圍》9.10.1開始ONTAP 、您可以使用System Manager、利用對溫度敏感的儲存效率功能來提升儲存效率。效能型儲存效率預設為啟用。
+
+. 按一下「*儲存設備>磁碟區*」。
+. 找出您要啟用或停用儲存效率的磁碟區、然後按一下 image:icon_kabob.gif["功能表選項圖示"]。
+. 按一下*編輯*、然後捲動至*儲存效率*。
+. 選取*「啟用更高的儲存效率」*。
+
+
+--
+.CLI
+--
+.使用高效模式建立新的Volume
+若要在建立新磁碟區時設定溫度敏感的儲存效率模式、您可以使用 `-storage-efficiency-mode` 參數與值 `efficient`。
+
 . 建立啟用效率模式的新Volume：
 +
 「Volume create -vserver <vserver name>-volume <volume name>-Aggregate <gregate name>-size <volume size>-storage效率模式Efferive-mode Effiveriver'
@@ -31,14 +45,10 @@ volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-effici
 ----
 
 
+.使用效能模式建立新的 Volume
+當您以儲存效率建立新的 AFF Volume 時、預設會設定效能模式。雖然不是必要的、但您可以選擇性地使用 `default` 的價值 `-storage-efficiency-mode` 建立新 AFF Volume 時的參數。
 
-
-== 使用效能模式建立新的Volume
-
-當您以AFF 對溫度敏感的儲存效率建立新的功能時、預設會設定效能模式。您也可以選擇使用「預設」值搭配「儲存效率模式」參數。
-
-.步驟
-. 建立啟用效率模式的新Volume：
+. 使用效能儲存效率模式「預設」建立新的 Volume ：
 +
 「Volume create -vserver <vserver name>-volume <volume name>-Aggregate <gregate name>-size <volume Size>-storage效率模式預設值」
 
@@ -47,14 +57,5 @@ volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-effici
 
 
 
-
-
-== System Manager程序
-
-從《支援範圍》9.10.1開始ONTAP 、您可以使用System Manager、利用對溫度敏感的儲存效率功能來提升儲存效率。效能型儲存效率預設為啟用。
-
-. 按一下「*儲存設備>磁碟區*」。
-. 找出您要啟用或停用儲存效率的磁碟區、然後按一下 image:icon_kabob.gif["功能表選項圖示"]。
-. 按一下*編輯*、然後捲動至*儲存效率*。
-. 選取*「啟用更高的儲存效率」*。
-
+--
+====
