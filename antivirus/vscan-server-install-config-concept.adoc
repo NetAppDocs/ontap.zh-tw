@@ -2,7 +2,7 @@
 permalink: antivirus/vscan-server-install-config-concept.html 
 sidebar: sidebar 
 keywords: vscan, server installation, configuration 
-summary: 您必須設定一或多個VScan伺服器、以確保系統上的檔案已被掃瞄以查找病毒。請依照廠商提供的指示、在伺服器上安裝及設定防毒軟體。請遵循NetApp提供的讀我檔案中的指示、安裝及設定ONTAP 《防毒連接器》。 
+summary: 您必須設定及設定一或多個 VScan 伺服器、才能啟用防毒掃描。 
 ---
 = VScan伺服器安裝與組態
 :allow-uri-read: 
@@ -11,11 +11,16 @@ summary: 您必須設定一或多個VScan伺服器、以確保系統上的檔案
 
 
 [role="lead"]
-您必須設定一或多個VScan伺服器、以確保系統上的檔案已被掃瞄以查找病毒。請依照廠商提供的指示、在伺服器上安裝及設定防毒軟體。請遵循NetApp提供的讀我檔案中的指示、安裝及設定ONTAP 《防毒連接器》。
+您必須設定及設定一或多個 VScan 伺服器、才能啟用防毒掃描。
+
+* 若要在伺服器上安裝及設定防毒軟體、請遵循廠商提供的指示。
+* 若要安裝及設定 ONTAP 防毒連接器、請依照中的指示進行 `README.txt` 上提供的檔案
+https://mysupport.netapp.com/site/products/all/details/ontap-antivirus-connector/downloads-tab["NetApp 支援網站"]。
+
 
 [NOTE]
 ====
-若要進行災難恢復和MetroCluster 還原組態、您必須為本機和合作夥伴叢集分別設定VScan伺服器。
+對於災難恢復和 MetroCluster 組態、您必須為主要 / 本機和次要 / 合作夥伴 ONTAP 叢集分別設定和設定 VScan 伺服器。
 
 ====
 
@@ -23,27 +28,24 @@ summary: 您必須設定一或多個VScan伺服器、以確保系統上的檔案
 == 防毒軟體需求
 
 * 如需防毒軟體需求的相關資訊、請參閱廠商文件。
-* 如需VScan支援的廠商、軟體和版本的相關資訊、請參閱《NetAppInteroperability Matrix》（NetApp互通性對照表）。
-+
-http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
-
+* 如需 VScan 支援的廠商、軟體及版本資訊、請參閱
+https://imt.netapp.com/matrix/["NetApp互通性對照表工具IMT （不含）"]。
 
 
 
 
 == 防毒連接器需求ONTAP
 
-* 您可以ONTAP 從NetApp支援網站的「軟體下載」頁面下載《支援解決方案》。 http://mysupport.netapp.com/NOW/cgi-bin/software["NetApp下載：軟體"]
-* 如需ONTAP 有關支援的Windows版本的資訊、請參閱《NetAppInteroperability Matrix》（《NetApp互通 性對照表》）。
-+
-http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
+* 您可以從下載此軟體
+https://mysupport.netapp.com/site/products/all/details/ontap-antivirus-connector/downloads-tab/download/63048/1.0.6["NetApp 支援網站"] （需要登入）。
+* 如需軟體版本支援的相關資訊、請參閱
+https://imt.netapp.com/matrix/["NetApp互通性對照表工具IMT （不含）"]。
 
-+
-[NOTE]
-====
-您可以為叢集中的不同VScan伺服器安裝不同版本的Windows伺服器。
 
-====
-* Windows伺服器上必須安裝.NET 3.0或更新版本。
-* 必須在Windows伺服器上啟用SMB 2.0。
+
+
+== VScan 伺服器組態需求
+
+* 您必須安裝 .NET 3.0 或更新版本、且必須在 VScan 伺服器上啟用 SMB 2.0 。對於具有匯出原則的 SMB 伺服器、您必須將所有 VScan 伺服器新增至原則。
+* 您可以在叢集中的不同 VScan 伺服器上安裝不同版本的 Windows Server OS 。ONTAP 防毒連接器至少需要 Windows Server 2008 。
 

@@ -2,7 +2,7 @@
 permalink: antivirus/create-scanner-pool-single-cluster-task.html 
 sidebar: sidebar 
 keywords: create, scanner pool, single cluster 
-summary: 掃描器集區會定義VScan伺服器和可連線至SVM的授權使用者。您可以為個別SVM或叢集中的所有SVM建立掃描器集區。 
+summary: 掃描器集區會定義VScan伺服器和可連線至SVM的授權使用者。您可以為個別 SVM 或叢集中的所有 SVM 建立掃描器集區。 
 ---
 = 在單一叢集上建立掃描器集區
 :allow-uri-read: 
@@ -11,16 +11,15 @@ summary: 掃描器集區會定義VScan伺服器和可連線至SVM的授權使用
 
 
 [role="lead"]
-掃描器集區會定義VScan伺服器和可連線至SVM的授權使用者。您可以為個別SVM或叢集中的所有SVM建立掃描器集區。
+掃描器集區會定義VScan伺服器和可連線至SVM的授權使用者。您可以為個別 SVM 或叢集中的所有 SVM 建立掃描器集區。
 
 .您需要的產品
 * SVM和VScan伺服器必須位於同一個網域或信任的網域中。
-* 針對為個別SVM定義的掃瞄器資源池、您必須使用ONTAP SVM管理LIF或SVM資料LIF來設定SVM防毒連接器。
-* 針對為叢集中所有SVM定義的掃瞄器資源池、您必須使用ONTAP 叢集管理LIF來設定支援此功能的《支援Scorp防毒 連接器》。
+* 針對為個別 SVM 定義的掃描器集區、您必須使用 SVM 管理 LIF 或 SVM 資料 LIF 來設定 ONTAP 防毒連接器。
+* 針對叢集中所有 SVM 定義的掃描器集區、您必須使用叢集管理 LIF 來設定 ONTAP 防毒連接器。
+* 授權使用者清單必須包含VScan伺服器用來連線至SVM的網域使用者帳戶。
+* 設定掃描器集區後、請檢查伺服器的連線狀態。
 
-
-.關於這項工作
-授權使用者清單必須包含VScan伺服器用來連線至SVM的網域使用者帳戶。
 
 .步驟
 . 建立掃描器集區：
@@ -34,14 +33,17 @@ summary: 掃描器集區會定義VScan伺服器和可連線至SVM的授權使用
 
 
 +
-下列命令會在'VS1'SVM上建立一個名為「P」的掃描器資源池：
+下列命令會建立名為的掃描器集區 `SP` 在上 `vs1` SVM ：
 
 +
 [listing]
 ----
 cluster1::> vserver vscan scanner-pool create -vserver vs1 -scanner-pool SP -hostnames 1.1.1.1,vmwin204-27.fsct.nb -privileged-users cifs\u1,cifs\u2
 ----
-. 確認已建立掃描器集區：「vserver vscan Sciper-Pool show -vserver _data_svm|叢集管理_svm_-Sciper-Pool _Scaper_pool」
+. 確認已建立掃描器集區：
++
+`vserver vscan scanner-pool show -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_`
+
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 

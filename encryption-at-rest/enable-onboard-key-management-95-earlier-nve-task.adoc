@@ -14,7 +14,7 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 您可以使用Onboard Key Manager來保護叢集用來存取加密資料的金鑰。您必須在每個存取加密磁碟區或自我加密磁碟的叢集上啟用Onboard Key Manager。
 
 .您需要的產品
-* 如果您使用NSE搭配外部金鑰管理（KMIP）伺服器、則必須刪除外部金鑰管理程式資料庫。
+* 如果您使用 NSE 或 NVE 搭配外部金鑰管理（ KMIP ）伺服器、則必須刪除外部金鑰管理程式資料庫。
 +
 link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
 
@@ -102,11 +102,16 @@ Key ID                                                           Used By
 0000000000000000020000000000010059851742AF2703FC91369B7DB47C4722 NSE-AK
 000000000000000002000000000001008C07CC0AF1EF49E0105300EFC83004BF NSE-AK
 ----
+. 也可以將純文字磁碟區轉換為加密磁碟區。
++
+`volume encryption conversion start`
+
++
+在轉換磁碟區之前、必須先完整設定 Onboard Key Manager 。在 MetroCluster 環境中、兩個站台都必須設定內建金鑰管理員。
+
 
 
 .完成後
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
-
-所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。
 
 每當您設定Onboard Key Manager複雜密碼時、也應該手動將資訊備份到儲存系統外部的安全位置、以便在發生災難時使用。請參閱 link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。

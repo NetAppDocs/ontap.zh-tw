@@ -503,9 +503,6 @@ cluster1::> system node run -node node1 -command uptime
 ----
 . 如果這是要更新叢集中的最後一個節點、請觸發 AutoSupport 通知：
 +
-"進階權限"
-
-+
 `autosupport invoke -node * -type all -message "Finishing_NDU"`
 
 +
@@ -514,7 +511,13 @@ cluster1::> system node run -node node1 -command uptime
 +
 如果叢集未設定為傳送AutoSupport 功能性訊息、則會在本機儲存通知複本。
 
-. 確認HA ONTAP 配對的兩個節點都在執行新的支援功能：「System Node Image show」（系統節點映像顯示）
+. 確認新的 ONTAP 軟體正在 HA 配對的兩個節點上執行：
++
+"進階權限"
+
++
+`system node image show`
+
 +
 在下列範例中、image2是ONTAP 更新版的支援功能、是兩個節點上的預設版本：
 
