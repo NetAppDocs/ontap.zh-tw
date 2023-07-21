@@ -2,7 +2,7 @@
 permalink: flexgroup/move-constituents-task.html 
 sidebar: sidebar 
 keywords: constituents, flexgroup, volume, flex group, balancing, balance, traffic, free, space, aggregate, snapmirror, snap mirror, 
-summary: 當某些成員遇到更多流量時、您可以將FlexGroup 一個等量磁碟區的成員從一個集合體移到另一個集合體、以平衡負載。移動成員也有助於釋出集合體上的空間、以調整現有成員的大小。 
+summary: 您可以將 FlexGroup Volume 的組成要素從一個集合移到另一個集合、以便在某些組成要素遇到更多流量時、平衡負載。移動成員也有助於釋出集合體上的空間、以調整現有成員的大小。 
 ---
 = 移動FlexGroup 一個聲音區的組成部分
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 當某些成員遇到更多流量時、您可以將FlexGroup 一個等�
 
 
 [role="lead"]
-當某些成員遇到更多流量時、您可以將FlexGroup 一個等量磁碟區的成員從一個集合體移到另一個集合體、以平衡負載。移動成員也有助於釋出集合體上的空間、以調整現有成員的大小。
+您可以將 FlexGroup Volume 的組成要素從一個集合移到另一個集合、以便在某些組成要素遇到更多流量時、平衡負載。移動成員也有助於釋出集合體上的空間、以調整現有成員的大小。
 
 .您需要的產品
 若要移動FlexGroup SnapMirror關係中的某個部分、您必須已初始化SnapMirror關係。
@@ -20,11 +20,14 @@ summary: 當某些成員遇到更多流量時、您可以將FlexGroup 一個等�
 當擴充了整個過程的內容時、您無法執行Volume Move作業FlexGroup 。
 
 .步驟
-. 找出FlexGroup 您要移動的部分：「Volume show -vserver Svm_name -is組成*」
+. 識別您要移動的 FlexGroup Volume 組成：
++
+`volume show -vserver svm_name -is-constituent true`
+
 +
 [listing]
 ----
-cluster1::> volume show -vserver vs2 -is-constituent *
+cluster1::> volume show -vserver vs2 -is-constituent true
 Vserver   Volume       Aggregate    State      Type       Size  Available Used%
 --------- ------------ ------------ ---------- ---- ---------- ---------- -----
 vs2       fg1          -            online     RW        400TB    15.12TB   62%
@@ -32,7 +35,10 @@ vs2       fg1__0001    aggr1        online     RW         25TB     8.12MB   59%
 vs2       fg1__0002    aggr2        online     RW         25TB     2.50TB   90%
 ...
 ----
-. 找出可將FlexGroup 「流通量」組成要素移至其中的集合體：「Volume movove target aggr show -vserver Svm_name -volume vol_entional_name'
+. 識別可將 FlexGroup Volume 組成移至的集合體：
++
+`volume move target-aggr show -vserver svm_name -volume vol_constituent_name`
+
 +
 您選取的Aggregate中的可用空間必須大於FlexGroup 您正在移動的各個版本的大小。
 
@@ -49,14 +55,20 @@ node12a_aggr1    100.36TB         hdd
 node12a_aggr4    100.36TB         hdd
 5 entries were displayed.
 ----
-. 確認FlexGroup 可以將Sfidvolume組成元素移至所需的Aggregate：「Volume move start -vserver Svm_name -volume vol_entional_name -perform validation only true」
+. 驗證 FlexGroup Volume 組成是否可以移至預期的 Aggregate ：
++
+`volume move start -vserver svm_name -volume vol_constituent_name -destination-aggregate aggr_name -perform-validation-only true`
+
 +
 [listing]
 ----
 cluster1::> volume move start -vserver vs2 -volume fg1_0002 -destination-aggregate node12a_aggr3 -perform-validation-only true
 Validation succeeded.
 ----
-. 移動FlexGroup 「Volume move start -vserver Svm_name -volume vol_ention_name -destination-aggregate aggreg_name [-allow-mole-aggreg-tTypes｛true|fulse}]」
+. 移動 FlexGroup Volume 組成：
++
+`volume move start -vserver svm_name -volume vol_constituent_name -destination-aggregate aggr_name [-allow-mixed-aggr-types {true|false}]`
+
 +
 磁碟區移動作業會以背景程序的形式執行。
 
@@ -80,7 +92,10 @@ cluster1::> volume move start -vserver vs2 -volume fg1_002 -destination-aggregat
 如果磁碟區移動作業因為主動式SnapMirror作業而失敗、您應該使用「napmirror abort-h」命令來中止SnapMirror作業。在某些情況下、SnapMirror中止作業也可能失敗。在這種情況下、您應該中止Volume Move作業、然後稍後再試一次。
 
 ====
-. 驗證Volume Move作業的狀態：「Volume Move show -volume vol_entional_name」（Volume Move show -volume vol_entional_name）
+. 驗證Volume Move作業的狀態：
++
+`volume move show -volume vol_constituent_name`
+
 +
 以下範例顯示FlexGroup 完成複寫階段且處於Volume Move作業轉換階段的各個不完整磁碟區狀態：
 

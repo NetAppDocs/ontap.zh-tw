@@ -13,6 +13,7 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
 [role="lead"]
 您可以使用「系統授權」命令來管理叢集的功能授權。您可以使用「系統功能使用」命令來監控功能使用狀況。
 
+[cols="2,4"]
 |===
 | 如果您想要... | 使用此命令... 
 
@@ -22,6 +23,21 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
  a| 
 《系統授權新增》
 
+.範例
+下列範例將包含 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 和 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 金鑰的授權清單新增至叢集：
+
+[]
+====
+cluster1 ：： > 系統授權新增 - 授權代碼 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+====
+下列範例會從本機節點「 /mroot/etc/lic_file 」安裝授權：
+
+[]
+====
+cluster1 ：：： > 系統授權新增 - 使用許可 - 檔案為真
+
+====
 
 
  a| 
@@ -52,8 +68,43 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
 * 到期日（如果適用）
 
  a| 
-「系統授權狀態顯示」
+`system license show-status`
 
+.範例
+下列範例顯示叢集的授權狀態：
+
+[]
+====
+cluster1 ：： > 系統授權顯示狀態
+狀態授權 範圍 詳細狀態
+------- ----------- ------- -----------
+部分安裝
+          CIFS 節點 node2-Cluster1 上缺少許可證。
+          SnapRestore 節點 node2-Cluster1 上缺少許可證。
+有效
+          FCP 節點 -
+          FabricPool 叢集系統使用 1TB 、最多可使用 25TB 。
+未安裝
+          NFS - -
+          iSCSI - -
+          SnapMirror - -
+          FlexClone - -
+          SnapVault - -
+          SnapLock - -
+          SnapManagerSuite - -
+          SnapProtectApps - -
+          v_StorageAttach - -
+          INSIGHT 平衡 - -
+          OCShift - -
+          TPM - -
+          VE - -
+          DP_ 最佳化 - -
+不適用
+          雲端 - -
+          選取 - -
+顯示 20 個項目。
+
+====
 
 
  a| 
@@ -61,6 +112,21 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
  a| 
 刪除系統授權
 
+.範例
+下列範例從叢集刪除名為CIFS的授權、序號為1-81-81-00000000000000000000000000000000000123456：
+
+[]
+====
+cluster1 ：：： > 系統授權刪除 - 序號 1-81-00000000000123456 - 封裝 CIFS
+
+====
+下列範例會從叢集刪除已安裝授權核心產品組合下的所有授權、序號為123456789：
+
+[]
+====
+cluster1 ：：： > 系統授權刪除 { 序號 123456789-installed-license "Core Bundle " }
+
+====
 
 
  a| 
@@ -68,6 +134,47 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
  a| 
 「系統授權清理」
 
+.範例
+下列範例模擬並顯示可清理的授權：
+
+[]
+====
+叢集 1 ：： > 系統授權清理 - 過期 - 未使用
+
+已安全刪除下列授權：
+
+序號： 1-80-000011
+擁有者： cdrancluster 1
+套件 理由
+----------- -----------
+CIFS 授權已過期
+
+序號： 4067154888
+擁有者：無
+套件 理由
+----------- -----------
+雲端 授權已過期
+
+序號： 1-81-0000000000000004067154999
+擁有者：無
+套件 理由
+----------- -----------
+iSCSI 叢集中任何節點未使用的授權
+下列授權已過期或未使用、但無法安全刪除：
+
+序號： 4067154778
+擁有者： node1
+套件 理由
+----------- -----------
+雲端 移除時功能可能會受損
+
+序號： 4067154779
+擁有者： node2
+套件 理由
+----------- -----------
+雲端 系統產生的授權
+
+====
 
 
  a| 
@@ -97,3 +204,7 @@ summary: 您可以使用系統授權命令來管理叢集的功能授權。您�
 |===
 .相關資訊
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]
+
+https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["知識庫文章： ONTAP 9.10.1 及更新版本授權總覽"^]
+
+https://docs.netapp.com/us-en/ontap/task_admin_enable_new_features.html["使用系統管理員安裝 NetApp 授權檔案"^]
