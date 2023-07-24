@@ -1,0 +1,90 @@
+---
+permalink: antivirus/best-practices-configure-off-box-antivirus-functionality-concept.html 
+sidebar: sidebar 
+keywords: off-box, clustered ONTAP, antivirus, 
+summary: 請考慮下列建議、以在叢集式 ONTAP 中設定隨裝即用的防毒功能。 
+---
+= 在叢集式 ONTAP 中設定隨裝即用防毒功能的最佳實務做法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+請考慮下列建議、以設定叢集式 ONTAP 的隨裝即用功能。
+
+* 限制授權使用者執行掃毒作業。不鼓勵一般使用者使用
+使用授權使用者認證。若要達到此限制、請關閉的登入權限
+Active Directory 上的授權使用者。
+* 權限使用者不一定要是中擁有大量權限的任何使用者群組成員
+網域、例如系統管理員群組或備份操作員群組。授權使用者必須是
+僅由儲存系統驗證、以便允許他們建立 VScan 伺服器連線和
+存取檔案進行病毒掃描。
+* 請僅將執行 VScan 伺服器的電腦用於病毒掃描。以阻止一般人
+在這些機器上使用、停用 Windows 終端機服務和其他遠端存取規定
+並將在這些機器上安裝新軟體的權利僅授予系統管理員。
+* 將 VScan 伺服器專用於病毒掃描、而不要將其用於其他作業、例如備份。
+您可以決定將 VScan 伺服器當作虛擬機器（ VM ）來執行。如果是這種情況、請務必確認
+分配給虛擬機器的資源並未共用、足以執行病毒掃描。諮詢
+link:http://www.symantec.com/business/support/index?page=home["Symantec"^] 以取得防毒引擎需求的指引。
+* 為 VScan 伺服器提供足夠的 CPU 、記憶體和磁碟容量、以避免資源
+瓶頸。大多數 VScan 伺服器都是專為使用多個 CPU 核心伺服器和散佈而設計
+跨 CPU 負載。諮詢 link:http://www.symantec.com/business/support/index?page=home["Symantec"^] 以取得防毒引擎需求的指引。
+* NetApp 建議使用專用網路搭配私有 VLAN 、以便從 SVM 連線
+至 VScan 伺服器、使掃描流量不受其他用戶端網路流量影響。建立
+獨立 NIC 、專用於 VScan 伺服器上的防毒 VLAN 和上的資料 LIF
+SVM 。如果發生網路問題、此步驟可簡化管理和疑難排解。
+AV 流量應使用私有網路隔離。AV 伺服器應設定為
+以下列其中一種方式與網域控制站（ DC ）和叢集式 ONTAP 通訊：
++
+** DC 應透過用於隔離流量的私有網路與 AV 伺服器通訊。
+** DC 和 AV 伺服器應透過不同的網路（而非先前提到的私有網路）進行通訊、這與 CIFS 用戶端網路不同。
+
+
+
+
+若要讓 Kerberos 驗證適用於 AV 通訊、請為私有建立 DNS 項目
+DC 上的生命與服務主體名稱、對應於為私有建立的 DNS 項目
+LIF ：將 LIF 新增至 AV Connector 時、請使用此名稱。DNS 應該能夠傳回
+連接至 AV Connector 的每個私有 LIF 的唯一名稱。
+
+
+NOTE: 重要事項：如果 VScan 流量的 LIF 設定在與用戶端流量的 LIF 不同的連接埠上、則 VScan LIF 可能會
+在連接埠故障時、容錯移轉至另一個節點。此變更會使 VScan 伺服器無法從連線
+新節點和掃描通知將會失敗、無法在節點上執行檔案作業。
+確保 VScan 伺服器可透過節點上至少一個 LIF 來存取、以便處理掃描
+在該節點上執行檔案作業的要求。
+
+* 使用至少 1GbE 網路連接 NetApp 儲存系統和 VScan 伺服器。
+* 對於具有多個 VScan 伺服器的環境、請連接所有效能類似的伺服器
+網路連線。連接 VScan 伺服器可允許負載共用、進而改善效能。
+* 對於遠端站台和分公司、 NetApp 建議使用本機 VScan 伺服器、而非
+遠端 VScan 伺服器、因為前者是高延遲的最佳選擇。如果成本是因素、請使用
+適合中度防毒的筆記型電腦或電腦。您可以排程定期完成檔案系統掃描
+透過共用磁碟區或 qtree 、並從遠端站台的任何系統進行掃描。
+* 使用多部 VScan 伺服器掃描 SVM 上的資料、以進行負載平衡和備援
+目的。CIFS 工作負載量和產生的防毒流量會因 SVM 而異。監控 CIFS
+以及儲存控制器上的病毒掃描延遲。隨著時間推移、將結果呈現趨勢。如果 CIFS 延遲
+由於 VScan 伺服器上的 CPU 或應用程式瓶頸、病毒掃描延遲也會增加
+超過趨勢臨界值、 CIFS 用戶端可能會經歷漫長的等待時間。新增其他 VScan 伺服器
+以分散負載。
+* 安裝最新版本的防毒 Connector 。如需支援的詳細資訊、請參閱
+link:https://imt.netapp.com/matrix/#welcome["NetApp互通性對照表工具IMT （不含）"]。
+* 將防毒引擎和定義保持在最新狀態。諮詢 link:https://login.broadcom.com/["Symantec"^] 以取得更新建議
+頻率。
+* 在多租戶環境中、掃描器集區（ VScan 伺服器集區）可與多個共用
+SVM 假設 VScan 伺服器和 SVM 屬於同一個網域或信任的網域
+網域：
+* 受感染檔案的 AV 軟體原則應設為刪除或隔離、這是預設值
+由大多數 AV 廠商設定的價值。在情況下 `vscan-fileop-profile` 設為 `write_only`和 IF
+找到受感染的檔案、檔案會保留在共用區中、而且可以開啟、因為開啟檔案不會開啟
+觸發掃描。AV 掃描只會在檔案關閉後觸發。
+* 。 `scan-engine timeout` 值應小於 `scanner-pool request-timeout`。
+如果設定為較高的值、可能會延遲存取檔案、最終可能會逾時。
+若要避免這種情況、請設定 `scan-engine timeout` 少於 5 秒 `scanner-pool
+request-timeout` 價值。請參閱掃描引擎廠商的文件、以取得如何操作的指示
+變更 `scan-engine timeout` 設定：。 `scanner-pool timeout` 可由變更
+在進階模式中使用下列命令、並提供適當的值 `request-timeout` 參數：
+`vserver vscan scanner-pool modify`
+* 對於規模適合存取掃描工作負載、且需要使用隨選掃描的環境、建議您在非尖峰時間排程隨選掃描工作、以避免現有 AV 基礎架構承受額外負載。
+

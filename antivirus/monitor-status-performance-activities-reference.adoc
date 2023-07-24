@@ -1,0 +1,278 @@
+---
+permalink: antivirus/monitor-status-performance-activities-reference.html 
+sidebar: sidebar 
+keywords: monitoring, performance, status, connection, statistics 
+summary: 您可以監控重要的 VScan 伺服器問題。 
+---
+= 監控狀態和效能活動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以監控 VScan 模組的關鍵層面、例如 VScan 伺服器連線狀態、
+VScan 伺服器的健全狀況、以及已掃描的檔案數量。此資訊有助於您達成目標
+您可以診斷與 VScan 伺服器相關的問題。
+
+
+
+== 檢視 VScan 伺服器連線資訊
+
+您可以檢視 VScan 伺服器的連線狀態、以管理已在使用中的連線
+以及可供使用的連線。各種命令會顯示資訊
+關於 VScan 伺服器的連線狀態。
+
+|===
+
+
+| 命令 ... | 顯示的資訊 ... 
+
+
+ a| 
+「vserver vscan connection-Status show」
+ a| 
+連線狀態摘要
+
+
+
+ a| 
+「vserver vscan connection-Status show-all」
+ a| 
+連線狀態的詳細資訊
+
+
+
+ a| 
+「vserver vscan connection-Status show-not connected」（Vserver vscan連線狀態顯示-未連線）
+ a| 
+可用但未連線的連線狀態
+
+
+
+ a| 
+「vserver vscan connection-Status show-Connected」
+ a| 
+有關連線 VScan 伺服器的資訊
+
+|===
+如需這些命令的詳細資訊、請參閱手冊頁。
+
+
+
+== 檢視 VScan 伺服器統計資料
+
+您可以檢視 VScan 伺服器專屬的統計資料、以監控效能並診斷相關問題
+病毒掃描：您必須先收集資料範例、才能使用 `statistics show` 命令至
+顯示 VScan 伺服器統計資料。
+若要完成資料範例、請完成下列步驟：
+
+.步驟
+. 執行 `statistics start` 命令和 `optional statistics` 停止命令。
+
+
+
+
+=== 檢視 VScan 伺服器要求和延遲的統計資料
+
+您可以使用 ONTAP `offbox_vscan` 以每個 SVM 為基礎的計數器來監控 VScan 的速率
+每秒發送和接收的伺服器要求、以及所有 VScan 的伺服器延遲
+伺服器。若要檢視這些統計資料、請完成下列步驟：
+
+.步驟
+. 執行統計資料顯示 `object offbox_vscan –instance SVM` 命令
+下列計數器：
++
+|===
+
+
+| 計數器 ... | 顯示的資訊 ... 
+
+
+ a| 
+`scan_request_dispatched_rate`
+ a| 
+每秒從 ONTAP 傳送至 VScan 伺服器的掃毒要求數
+
+
+
+ a| 
+`scan_noti_received_rate`
+ a| 
+ONTAP 每秒從 VScan 伺服器收到的掃毒要求數
+
+
+
+ a| 
+`dispatch_latency`
+ a| 
+ONTAP 內的延遲、可識別可用的 VScan 伺服器、並將要求傳送至該 VScan 伺服器
+
+
+
+ a| 
+`scan_latency`
+ a| 
+從 ONTAP 到 VScan 伺服器的往返延遲、包括掃描的執行時間
+
+|===
+
+
+
+
+==== 從 ONTAP offbox vscan 計數器產生的統計資料範例
+
+[listing]
+----
+Object: offbox_vscan
+Instance: SVM
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 2 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scan_request_dispatched_rate 291
+scan_noti_received_rate 292
+dispatch_latency 43986us
+scan_latency 3433501us
+-----------------------------------------------------------------
+----
+
+
+=== 檢視個別 VScan 伺服器要求和延遲的統計資料
+
+您可以使用 ONTAP `offbox_vscan_server` 每個 SVM 上的計數器、每個隨裝即用 VScan 伺服器、
+以每個節點為基礎、監控已派遣 VScan 伺服器要求的速度和上的伺服器延遲
+每個 VScan 伺服器。若要收集此資訊、請完成下列步驟：
+
+.步驟
+. 執行 `statistics show –object offbox_vscan –instance
+SVM:servername:nodename` 具有下列計數器的命令：
++
+|===
+
+
+| 計數器 ... | 顯示的資訊 ... 
+
+
+ a| 
+`scan_request_dispatched_rate`
+ a| 
+從 ONTAP 傳送的掃毒要求數
+
+
+
+ a| 
+`scan_latency`
+ a| 
+從 ONTAP 到 VScan 伺服器的往返延遲、包括掃描的執行時間
+每秒至 VScan 伺服器
+
+|===
+
+
+
+
+==== 從 ONTAP offbox_vscan 伺服器計數器產生的統計資料範例
+
+[listing]
+----
+Object: offbox_vscan_server
+Instance: SVM:vscan_server:node
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 1 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scan_request_dispatched_rate 291
+scan_latency 3433830us
+------------------------------------------------------------------
+----
+
+
+=== 檢視 VScan 伺服器使用率的統計資料
+
+您也可以使用 ONTAP `offbox_vscan_server` 收集 VScan 伺服器端使用率的計數器
+統計資料。這些統計資料會以每個 SVM 、每個隨裝即用 VScan 伺服器和每個節點為基礎進行追蹤。他們
+包括 VScan 伺服器上的 CPU 使用率、 VScan 伺服器上掃描作業的佇列深度
+（目前和最大）、已用記憶體和已用網路。
+防毒連接器會將這些統計資料轉送到 ONTAP 中的統計資料計數器。他們
+以每 20 秒輪詢一次的資料為基礎、必須收集多次以確保準確度；
+否則、統計資料中所顯示的值只會反映上次輪詢。CPU 使用率和佇列為
+監控與分析尤其重要。平均佇列的高值可能表示
+VScan 伺服器有瓶頸。
+收集每個 SVM 、每個隨裝即用 VScan 伺服器和每個節點上的 VScan 伺服器使用率統計資料
+請完成下列步驟：
+
+.步驟
+. 收集 VScan 伺服器的使用率統計資料
++
+執行 `statistics show –object offbox_vscan_server –instance
+SVM:servername:nodename` 命令 `offbox_vscan_server` 計數器：
+
+
+
+|===
+
+
+| 計數器 ... | 顯示的資訊 ... 
+
+
+ a| 
+`scanner_stats_pct_cpu_used`
+ a| 
+VScan 伺服器上的 CPU 使用率
+
+
+
+ a| 
+`scanner_stats_pct_input_queue_avg`
+ a| 
+VScan 伺服器上掃描要求的平均佇列
+
+
+
+ a| 
+`scanner_stats_pct_input_queue_hiwatermark`
+ a| 
+VScan 伺服器上掃描要求的尖峰佇列
+
+
+
+ a| 
+`scanner_stats_pct_mem_used`
+ a| 
+VScan 伺服器上使用的記憶體
+
+
+
+ a| 
+`scanner_stats_pct_network_used`
+ a| 
+在 VScan 伺服器上使用的網路
+
+|===
+
+
+==== VScan 伺服器的使用率統計資料範例
+
+[listing]
+----
+Object: offbox_vscan_server
+Instance: SVM:vscan_server:node
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 1 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scanner_stats_pct_cpu_used 51
+scanner_stats_pct_dropped_requests 0
+scanner_stats_pct_input_queue_avg 91
+scanner_stats_pct_input_queue_hiwatermark 100
+scanner_stats_pct_mem_used 95
+scanner_stats_pct_network_used 4
+-----------------------------------------------------------------
+----

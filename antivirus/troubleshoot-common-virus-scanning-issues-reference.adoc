@@ -1,0 +1,70 @@
+---
+permalink: antivirus/troubleshoot-common-virus-scanning-issues-reference.html 
+sidebar: sidebar 
+keywords: troubleshooting, troubleshoot, virus scanning, vscan, monitoring, connection, connectivity 
+summary: 此表列出常見的病毒掃描問題、其可能原因及解決方法。 
+---
+= 疑難排解病毒掃描
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於常見的病毒掃描問題、有可能的原因和解決方法。病毒掃描也稱為 VScan 。
+
+|===
+
+
+| 問題 | 如何解決此問題 
+
+
+ a| 
+VScan 伺服器無法連線至
+叢集式 ONTAP 儲存系統。
+ a| 
+檢查掃描器集區組態是否指定
+VScan 伺服器 IP 位址。也請檢查是否允許
+掃瞄器集區清單中的授權使用者為作用中的使用者。若要檢查掃描器集區、請執行 `vserver vscan scanner-pool show` 儲存系統命令提示字元上的命令。
+如果 VScan 伺服器仍無法連線、則網路可能有問題。
+
+
+
+ a| 
+用戶端觀察到高延遲
+ a| 
+現在可能是新增更多 VScan 伺服器到的時候了
+掃描儀池。
+
+
+
+ a| 
+觸發的掃描過多
+ a| 
+修改的值 `vscan-fileop-profile`
+限制檔案作業數的參數
+監控病毒掃描。
+
+
+
+ a| 
+部分檔案未被掃描。
+ a| 
+檢查存取原則。可能是的路徑
+這些檔案已新增至路徑排除清單或該清單
+其大小超過設定的排除值。至
+檢查存取原則、執行 `vserver vscan
+on-access-policy show` 儲存設備上的命令
+系統命令提示字元。
+
+
+
+ a| 
+檔案存取遭拒。
+ a| 
+檢查是否指定掃描強制設定
+在原則組態中。此設定會拒絕資料存取
+如果沒有連接 VScan 伺服器。將設定修改為
+適當。
+
+|===
