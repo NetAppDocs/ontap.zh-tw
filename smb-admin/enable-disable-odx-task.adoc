@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: enable, disable, odx, storage, virtual, machine, svm, default, support, copy, offload, smb, enable, enable or disable odx 
 summary: 您可以在儲存虛擬機器（SVM）上啟用或停用ODX。預設為啟用支援ODX複本卸載（若同時啟用SMB 3.0）。 
 ---
-= 啟用或停用ODX
+= 啟用或停用 ODX
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -20,7 +20,7 @@ summary: 您可以在儲存虛擬機器（SVM）上啟用或停用ODX。預設�
 如果您停用SMB 3.0、ONTAP 則不支援SMB ODX。如果您重新啟用SMB 3.0、則必須手動重新啟用SMB ODX。
 
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 將權限層級設為進階： `set -privilege advanced`
 . 執行下列其中一項動作：
 +
 |===
@@ -30,17 +30,17 @@ summary: 您可以在儲存虛擬機器（SVM）上啟用或停用ODX。預設�
  a| 
 已啟用
  a| 
-「Vserver CIFS選項修改-vserver vserver_name -copy–v負 載啟用true」
+`vserver cifs options modify -vserver vserver_name -copy-offload-enabled true`
 
 
 
  a| 
 已停用
  a| 
-「Vserver CIFS選項修改-vserver vserver_name -copy–v負 載啟用的假」
+`vserver cifs options modify -vserver vserver_name -copy-offload-enabled false`
 
 |===
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理權限層級： `set -privilege admin`
 
 
 .範例

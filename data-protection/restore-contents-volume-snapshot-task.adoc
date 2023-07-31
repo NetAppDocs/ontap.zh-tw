@@ -11,17 +11,17 @@ summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原磁
 
 
 [role="lead"]
-您可以使用「Volume Snapshot還原」命令、從Snapshot複本還原磁碟區的內容。
+您可以使用 `volume snapshot restore` 從 Snapshot 複本還原 Volume 內容的命令。
 
 .關於這項工作
 如果磁碟區具有SnapMirror關係、請在從Snapshot複本還原之後、立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
 
 . 列出Volume中的Snapshot複本：
 +
-「Volume Snapshot show -vserver _svm_-volume _volume _」
+`volume snapshot show -vserver _SVM_ -volume _volume_`
 
 +
-以下範例顯示「vol1」中的Snapshot複本：
+下列範例顯示中的 Snapshot 複本 `vol1`：
 
 +
 [listing]
@@ -43,10 +43,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原磁碟區內容：
 +
-「Volume Snapshot還原-vserver _svm_-volume _volume _-snapshot _snapshot _」
+`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
 
 +
-以下範例還原「vol1（vol1）”的內容：
+下列範例還原的內容 `vol1`：
 
 +
 [listing]

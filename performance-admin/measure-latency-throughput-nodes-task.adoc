@@ -11,7 +11,7 @@ summary: 您可以使用network test-path命令來識別網路瓶頸、或預先
 
 
 [role="lead"]
-您可以使用「network test-path」命令來識別網路瓶頸、或預先驗證節點之間的網路路徑。您可以在叢集間節點或叢集內節點之間執行命令。
+您可以使用 `network test-path` 用於識別網路瓶頸或預先限定節點之間的網路路徑的命令。您可以在叢集間節點或叢集內節點之間執行命令。
 
 .您需要的產品
 * 您必須是叢集管理員才能執行此工作。
@@ -22,14 +22,14 @@ summary: 您可以使用network test-path命令來識別網路瓶頸、或預先
 .關於這項工作
 有時候、節點之間的網路效能可能無法滿足您對路徑組態的期望。例如、SnapMirror複寫作業所見的大型資料傳輸傳輸傳輸速率為1 Gbps、與來源叢集和目的地叢集之間的10 GbE連結不一致。
 
-您可以使用「network test-path」命令來測量節點之間的處理量和延遲。您可以在叢集間節點或叢集內節點之間執行命令。
+您可以使用 `network test-path` 用於測量節點之間的處理量和延遲的命令。您可以在叢集間節點或叢集內節點之間執行命令。
 
 [NOTE]
 ====
 測試會將網路路徑與資料一起飽和、因此當系統不忙碌、節點之間的網路流量不多時、您應該執行命令。測試會在十秒後逾時。此命令只能在ONTAP flex9節點之間執行。
 
 ====
-「工作階段類型」選項可識別您透過網路路徑執行的作業類型、例如、SnapMirror複寫到遠端目的地的「非同步鏡射遠端」。類型會指定測試中使用的資料量。下表定義工作階段類型：
+。 `session-type` 選項可識別您在網路路徑上執行的作業類型、例如、 SnapMirror 複寫至遠端目的地的「 SnapMirror 遠端」。類型會指定測試中使用的資料量。下表定義工作階段類型：
 
 |===
 
@@ -60,17 +60,17 @@ RemoteDataTransfer
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 測量節點之間的處理量和延遲：
 +
-「network test-path -source-node_source_nodename_| local -dite-cluster _dite_clustername_-dite-node_dite_nodename_-site-type default|「非同步鏡像」|「非同步鏡像遠端」|「SyncMirrorRemote」|「遠端資料傳輸」
+`network test-path -source-node _source_nodename_ |local -destination-cluster _destination_clustername_ -destination-node _destination_nodename_ -session-type Default|AsyncMirrorLocal|AsyncMirrorRemote|SyncMirrorRemote|RemoteDataTransfer`
 
 +
-來源節點必須位於本機叢集內。目的地節點可以位於本機叢集或是連接叢集。"local" for '-source-node"的值指定要在其上執行命令的節點。
+來源節點必須位於本機叢集內。目的地節點可以位於本機叢集或是連接叢集。的值為 "local" `-source-node` 指定執行命令的節點。
 
 +
-以下命令可測量SnapMirror類型複寫作業的處理量和延遲、這些作業是在本機叢集上的「node1（節點1）”和「cluster2（叢集2）上的「node3（節點3））：
+下列命令可測量之間 SnapMirror 類型複寫作業的處理量和延遲 `node1` 在本機叢集和上 `node3` 開啟 `cluster2`：
 
 +
 [listing]
@@ -87,7 +87,7 @@ Max latency in ms:  3056.86
 ----
 . 返回管理權限：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 
 

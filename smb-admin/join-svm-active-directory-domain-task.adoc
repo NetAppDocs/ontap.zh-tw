@@ -11,7 +11,7 @@ summary: 您可以使用vserver CIFS modify命令修改網域、將儲存虛擬�
 
 
 [role="lead"]
-您可以使用「vserver CIFS modify」命令修改網域、將儲存虛擬機器（SVM）加入Active Directory網域、而不需刪除現有的SMB伺服器。您可以重新加入目前的網域、或加入新的網域。
+您可以使用修改網域、將儲存虛擬機器（ SVM ）加入 Active Directory 網域、而無需刪除現有的 SMB 伺服器 `vserver cifs modify` 命令。您可以重新加入目前的網域、或加入新的網域。
 
 .開始之前
 * SVM必須已有DNS組態。
@@ -28,17 +28,17 @@ DNS伺服器必須包含網域LDAP和網域控制器伺服器的服務位置記�
 
 
 .步驟
-. 將SVM加入CIFS伺服器網域：「vserver CIFS modify -vserver _vserver_name_-domain_name_-stue-admin down」
+. 將 SVM 加入 CIFS 伺服器網域： `vserver cifs modify -vserver _vserver_name_ -domain _domain_name_ -status-admin down`
 +
-如需詳細資訊、請參閱「vserver CIFS modify」命令的手冊頁。如果您需要重新設定新網域的DNS、請參閱「vserver DNS modify」命令的手冊頁。
+如需詳細資訊、請參閱的手冊頁 `vserver cifs modify` 命令。如果您需要重新設定新網域的 DNS 、請參閱的手冊頁 `vserver dns modify` 命令。
 
 +
-若要建立SMB伺服器的Active Directory機器帳戶、您必須提供Windows帳戶的名稱和密碼、並具有足夠的權限、以便將電腦新增至「_example _」（範例_）.com網域內的「ou=_example _ ou」（範例_）容器。
+若要為 SMB 伺服器建立 Active Directory 機器帳戶、您必須提供具有足夠權限的 Windows 帳戶名稱和密碼、以便將電腦新增至 `ou= _example_ ou` 中的容器 `_example_`.com 網域。
 
 +
-從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到URI時、請在「-keytab-uri」參數中加入「vserver CIFS」命令。
+從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到 URI 時、請將其加入 `-keytab-uri` 參數 `vserver cifs` 命令。
 
-. 確認CIFS伺服器位於所需的Active Directory網域：「vserver CIFS show」
+. 確認 CIFS 伺服器位於所需的 Active Directory 網域： `vserver cifs show`
 
 
 .範例

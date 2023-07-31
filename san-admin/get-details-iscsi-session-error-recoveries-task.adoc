@@ -16,16 +16,16 @@ summary: 提高iSCSI工作階段錯誤還原層級可讓您接收更多有關iSC
 .關於這項工作
 根據預設、ONTAP 針對iSCSI工作階段設定使用錯誤恢復層級0。如果您使用的啟動器已符合錯誤恢復層級1或2的資格、您可以選擇增加錯誤恢復層級。修改後的工作階段錯誤還原層級只會影響新建立的工作階段、不會影響現有的工作階段。
 
-從ONTAP 功能部件9.4開始、「iSCSI show」和「iSCSI modify」命令不支援「ma-error-recovery level」選項。
+從 ONTAP 9.4 開始 `max-error-recovery-level` 中不支援選項 `iscsi show` 和 `iscsi modify` 命令。
 
 .步驟
 . 進入進階模式：
 +
-"進階權限"
+`set -privilege advanced`
 
-. 使用「iSCSI show」命令來驗證目前的設定。
+. 使用驗證目前的設定 `iscsi show` 命令。
 +
-「iSCSI show -vserver VS3 -Fields max-error-recovery level」
+`iscsi show -vserver vs3 -fields max-error-recovery-level`
 
 +
 [listing]
@@ -34,8 +34,8 @@ vserver max-error-recovery-level
 ------- ------------------------
 vs3     0
 ----
-. 使用「iSCSI modify」命令變更錯誤恢復層級。
+. 使用變更錯誤恢復層級 `iscsi modify` 命令。
 +
-「iSCSI modify -vserver VS3 -max-error-recovery level 2」
+`iscsi modify -vserver vs3 -max-error-recovery-level 2`
 
 

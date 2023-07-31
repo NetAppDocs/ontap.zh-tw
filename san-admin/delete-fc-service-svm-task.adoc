@@ -14,19 +14,19 @@ summary: 您可以刪除不再需要的儲存虛擬機器（SVM）FC服務。
 您可以刪除不再需要的儲存虛擬機器（SVM）FC服務。
 
 .您需要的產品
-在刪除SVM的FC服務之前、管理狀態必須為「直接」。您可以使用「vserver FCP modify」命令或「vserver FCP stop」命令、將管理狀態設為「down」。
+在刪除SVM的FC服務之前、管理狀態必須為「直接」。您可以使用將管理狀態設為「關閉」 `vserver fcp modify` 命令或 `vserver fcp stop` 命令。
 
 .步驟
-. 使用「vserver FCP stop」命令來停止對LUN的I/O。
+. 使用 `vserver fcp stop` 停止 I/O 至 LUN 的命令。
 +
-vserver FCP stop -vserver vvs 1
+`vserver fcp stop -vserver vs_1`
 
-. 使用「vserver FCP DELETE」命令從SVM移除服務。
+. 使用 `vserver fcp delete` 從 SVM 移除服務的命令。
 +
-vserver FCP DELETE -vserver vvs 1
+`vserver fcp delete -vserver vs_1`
 
-. 使用「vserver FCP show」來確認您已從SVM刪除FC服務：
+. 使用 `vserver fcp show` 若要確認您已從 SVM 刪除 FC 服務：
 +
-「vserver FCP show -vserver vvs 1」
+`vserver fcp show -vserver vs_1`
 
 

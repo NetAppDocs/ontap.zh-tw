@@ -2,7 +2,7 @@
 permalink: snaplock/create-snaplock-volume-task.html 
 sidebar: sidebar 
 keywords: snaplock, volume, shanpshot, copy, create, complianceclock, file, worm, compliance, enterprise 
-summary: 您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用「-SnapLock類型」選項、指定SnapLock 「Compliance」（符合性）SnapLock 或「Enterprise」（企業）做為該類型的資訊、以明確建立一個資訊區。根據預設、SnapLock 將此類型設為「非SnapLock」。 
+summary: '您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用 `-snaplock-type` 選項、可將 Compliance 或 Enterprise 指定為 SnapLock 類型、以明確建立 SnapLock Volume 。根據預設、 SnapLock 類型設為 `non-snaplock`。' 
 ---
 = 建立及掛載SnapLock 解決方法
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本�
 
 
 [role="lead"]
-您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用「-SnapLock類型」選項、指定SnapLock 「Compliance」（符合性）SnapLock 或「Enterprise」（企業）做為該類型的資訊、以明確建立一個資訊區。根據預設、SnapLock 將此類型設為「非SnapLock」。
+您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用 `-snaplock-type` 選項、可將 Compliance 或 Enterprise 指定為 SnapLock 類型、以明確建立 SnapLock Volume 。根據預設、 SnapLock 類型設為 `non-snaplock`。
 
 .您需要的產品
 * 此資訊必須在線上。SnapLock
@@ -54,13 +54,13 @@ SnapLock 磁碟區不支援 LUN 。只有在非 SnapLock 磁碟區上建立的 S
 --
 . 建立SnapLock 一個流通量：
 +
-'磁碟區create -vserver _svm_name_-volume _volume _name_-Aggregate _Aggregate name_*-SnapLock類型法規遵循|企業'
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_* -snaplock-type compliance|enterprise`
 
 +
-如需選項的完整清單、請參閱命令的手冊頁。下列選項不適用於SnapLock 整個流程：「-nvail」、「-atime-update」、「-is-autolance-資格」、「-space-mgmt-ter-first」和「vmalign」。
+如需選項的完整清單、請參閱命令的手冊頁。SnapLock Volume 無法使用下列選項： `-nvfail`、 `-atime-update`、 `-is-autobalance-eligible`、 `-space-mgmt-try-first`和 `vmalign`。
 
 +
-以下命令可在SnapLock 「VS1」上的「aggr1」上建立名為「vol1」的「符合法規」磁碟區：
+下列命令會建立 SnapLock `Compliance` Volume 命名 `vol1` 開啟 `aggr1` 開啟 `vs1`：
 
 +
 [listing]
@@ -88,13 +88,13 @@ cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1 -snaplock-t
 .步驟
 . 掛載SnapLock 一個流通量：
 +
-'磁碟區掛載-vserver _Svm_name_-volume _volume _name_-jet-path _path_*
+`*volume mount -vserver _SVM_name_ -volume _volume_name_ -junction-path _path_*`
 
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會將SnapLock 名為「vol1」的Sflexfvolume掛載到「VS1」命名空間中的交會路徑「/sales」：
+下列命令會掛載名為的 SnapLock Volume `vol1` 至交會路徑 `/sales` 在中 `vs1` 命名空間：
 
 +
 [listing]

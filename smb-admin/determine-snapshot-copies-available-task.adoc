@@ -14,12 +14,12 @@ summary: 只有在已啟用的Snapshot原則套用至包含該共用區的磁碟
 只有在已啟用的Snapshot原則套用至包含該共用區的磁碟區、且磁碟區組態允許存取Snapshot複本時、才能從「舊版」索引標籤檢視Snapshot複本。判斷Snapshot複本可用度有助於協助使用者存取舊版。
 
 .步驟
-. 判斷共用資料所在的磁碟區是否已啟用自動Snapshot複本、以及用戶端是否有權存取Snapshot目錄：「Volume show -vserver vserver-name -volume volume volume volume名稱-功能 變數vserver、volume、snapdir-access、snapsnapshot policy、snap-count'
+. 判斷共用資料所在的磁碟區是否已啟用自動 Snapshot 複本、以及用戶端是否可存取 Snapshot 目錄： `volume show -vserver vserver-name -volume volume-name -fields vserver,volume,snapdir-access,snapshot-policy,snapshot-count`
 +
 輸出會顯示與磁碟區相關聯的Snapshot原則、是否啟用用戶端Snapshot目錄存取、以及可用的Snapshot複本數量。
 
-. 確定是否已啟用相關的Snapshot原則：「Volume snapshot policy show -policy police-name」
-. 列出可用的Snapshot複本：「Volume Snapshot show -volume volume volume volume _name」
+. 判斷是否已啟用相關的 Snapshot 原則： `volume snapshot policy show -policy policy-name`
+. 列出可用的 Snapshot 複本： `volume snapshot show -volume volume_name`
 +
 如需設定及管理Snapshot原則與Snapshot排程的詳細資訊、請參閱 link:../data-protection/index.html["資料保護"]。
 

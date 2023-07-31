@@ -35,30 +35,30 @@ S3稽核組態會套用至您選取進行稽核的SVM中的所有儲存區。啟
 | 如果您想要以下列方式來旋轉稽核記錄... | 輸入... 
 
 
-| 記錄檔大小 | 「Vserver object-store-server稽核create -vserver _Svm_name_-dit目的地 路徑_[-events ]｛data｛vbar｝management｝、...」 ｛[-rote-limit _integer_]｛vbar｝[-retite-duration [_integer_d][_integer_h][_integer_m][_integers_]｝[-rote-size｛_integer__[KB｛vbar｝MB｛vbar｝GB｛vbar｝TB｛vbar｝PB｝] 
+| 記錄檔大小 | `vserver object-store-server audit create -vserver _svm_name_ -destination _path_ [[-events] {data{vbar}management}, ...] {[-rotate-limit _integer_] {vbar} [-retention-duration [_integer_d] [_integer_h][_integer_m][_integers_]]} [-rotate-size {_integer_[KB{vbar}MB{vbar}GB{vbar}TB{vbar}PB]}]` 
 
 
 | 排程  a| 
-「Vserver object-store-server稽核create -vserver _Svm_name_-destination path [-events ]｛data｛vbar｝management｝、...」 ｛[-rotation-limit _integer_]｛vbar｝[-retent-duration [_intergerd_][_intergerh_][_intergerm_][_intergerim_]｝[-rotation-schedule-dayofWeek _chron、day_][-chron、day-tay_schedule_minutychon_minuty'
+`vserver object-store-server audit create -vserver _svm_name_ -destination path [[-events] {data{vbar}management}, ...] {[-rotate-limit _integer_] {vbar} [-retention-duration [_integerd_][_integerh_] [_integerm_][_integers_]] } [-rotate-schedule-month _chron_month_] [-rotate-schedule-dayofweek _chron_dayofweek_] [-rotate-schedule-day _chron_dayofmonth_] [-rotate-schedule-hour _chron_hour_] -rotate-schedule-minute _chron_minute_`
 
-如果您要設定時間型稽核記錄輪調、則必須使用「-rote-schedule-minute-minute」參數。
+。 `-rotate-schedule-minute` 如果您正在設定時間型稽核記錄輪調、則需要參數。
 
 |===
 . 啟用S3稽核：
 +
-「vserver object-store-server稽核啟用-vserver _Svm_name_'
+`vserver object-store-server audit enable -vserver _svm_name_`
 
 
 
 .範例
 下列範例會建立稽核組態、使用大小型旋轉功能來稽核所有S3事件（預設值）。記錄儲存在/Audit記錄目錄中。記錄檔大小上限為200 MB。當記錄大小達到200 MB時、就會進行旋轉。
 
-「cluster1：：> vserver稽核建立-vserver VS1 -ditate /nap_log -volate-size 200MB」
+`cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200MB`
 
 下列範例會建立稽核組態、使用大小型旋轉功能來稽核所有S3事件（預設值）。記錄檔大小上限為100 MB（預設值）、而且記錄會保留5天、之後才會刪除。
 
-「cluster1：：> vserver稽核可建立-vserver VS1 -dite-diture_log -retitation-duration 5d0h0m」
+`cluster1::> vserver audit create -vserver vs1 -destination /audit_log -retention-duration 5d0h0m`
 
 下列範例會建立稽核組態、以稽核S3管理事件、以及使用時間型輪調的集中存取原則暫存事件。稽核記錄會每月於下午12：30循環一次一週中的所有天。記錄旋轉限制為5。
 
-「cluster1：：> vserver稽核create -vserver VS1 -ditate /nap_log -events management -volate-schedule-month all -volate-schedule-dayofWeek all -volate-schedule-hour 12 - volate-schedule-minute 30 - volate-limit 5」
+`cluster1::> vserver audit create -vserver vs1 -destination /audit_log -events management -rotate-schedule-month all -rotate-schedule-dayofweek all -rotate-schedule-hour 12 -rotate-schedule-minute 30 -rotate-limit 5`

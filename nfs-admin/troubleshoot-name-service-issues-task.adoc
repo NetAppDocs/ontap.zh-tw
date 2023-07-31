@@ -12,7 +12,7 @@ summary: 當用戶端因為名稱服務問題而遭遇存取失敗時、您可�
 
 
 [role="lead"]
-當用戶端因為名稱服務問題而遭遇存取失敗時、您可以使用「vserver services name-service getxxbyyyy'命令系列」手動執行各種名稱服務查詢、並檢查查詢的詳細資料和結果、以協助疑難排解。
+當用戶端因為名稱服務問題而發生存取失敗時、您可以使用 `vserver services name-service getxxbyyy` 命令系列可手動執行各種名稱服務查詢、並檢查查詢的詳細資料和結果、以協助進行疑難排解。
 
 .關於這項工作
 * 您可以針對每個命令指定下列項目：
@@ -44,63 +44,64 @@ summary: 當用戶端因為名稱服務問題而遭遇存取失敗時、您可�
  a| 
 主機名稱的IP位址
  a| 
-「Vserver services name-service getxxbyyyy getaddrinfo'「vserver services name-service getxxbyyyy gethostbyname」（僅限IPv4位址）
+`vserver services name-service getxxbyyy getaddrinfo`     `vserver services name-service getxxbyyy gethostbyname` （僅限 IPv4 位址）
 
 
 
  a| 
 依群組ID的群組成員
  a| 
-「vserver服務名稱服務getxxbyyyy getgrbygid」
+`vserver services name-service getxxbyyy getgrbygid`
 
 
 
  a| 
 群組成員（依群組名稱）
  a| 
-「vserver服務名稱服務getxxbyyyy getgrbyname」
+`vserver services name-service getxxbyyy getgrbyname`
 
 
 
  a| 
 使用者所屬的群組清單
  a| 
-「vserver服務名稱服務getxxbyyyy getgrlist」
+`vserver services name-service getxxbyyy getgrlist`
 
 
 
  a| 
 IP位址的主機名稱
  a| 
-「Vserver services name-service getxxbyyyy getnameinfo'「vserver services name-service getxxbyyyy gethostbyaddr」（僅限IPv4位址）
+`vserver services name-service getxxbyyy getnameinfo`     `vserver services name-service getxxbyyy gethostbyaddr` （僅限 IPv4 位址）
 
 
 
  a| 
 使用者名稱的使用者資訊
  a| 
-「vserver services name-service getxxbyyyy getpwbyname」您可以將「-use-RBAC」參數指定為「true」、藉此測試RBAC使用者的名稱解析。
+`vserver services name-service getxxbyyy getpwbyname`     您可以指定來測試 RBAC 使用者的名稱解析 `-use-rbac` 參數為 `true`。
 
 
 
  a| 
 使用者ID的使用者資訊
  a| 
-「vserver services name-service getxxbyyyy getpwbyuid」您可以將「-use-RBAC」參數指定為「true」來測試RBAC使用者的名稱解析。
+`vserver services name-service getxxbyyy getpwbyuid`
+您可以指定來測試 RBAC 使用者的名稱解析 `-use-rbac` 參數為 `true`。
 
 
 
  a| 
 用戶端的網路群組成員資格
  a| 
-「vserver services name-service getxxbyyy netgrp」
+`vserver services name-service getxxbyyy netgrp`
 
 
 
  a| 
 使用netgroup by host搜尋的用戶端網路群組成員資格
  a| 
-「vserver services name-service getxxbyyy netgrpbyhost」
+`vserver services name-service getxxbyyy netgrpbyhost`
 
 |===
 下列範例顯示SVM VS1的DNS查詢測試、嘗試取得主機acast1.eng.example.com的IP位址：
@@ -159,7 +160,7 @@ dnshost0 is a member of lnetgroup136
  a| 
 主機名稱或IP位址查詢失敗或產生不正確的結果
  a| 
-DNS組態
+DNS 組態
 
 
 
@@ -183,7 +184,7 @@ DNS組態
  a| 
 主機名稱查詢失敗或逾時、而且DNS伺服器不會解析DNS短名稱（例如host1）
  a| 
-頂層網域（頂級域）查詢的DNS組態。您可以使用「vserver services name-service DNS modify」命令的「is tld-query-enabled假」選項來停用TLD查詢。
+頂層網域（頂級域）查詢的DNS組態。您可以使用停用 TLD 查詢 `-is-tld-query-enabled false` 選項 `vserver services name-service dns modify` 命令。
 
 |===
 

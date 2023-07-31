@@ -19,11 +19,11 @@ summary: 在還原至先前ONTAP 版本的版本之前、您必須先停用所�
 * 任何資料保護鏡射資料關係、都是ONTAP 以穩健的資料保護方式建立
 * 如果叢集是ONTAP 在還原8.3.x中重新建立、則所有資料保護都會鏡射關係
 +
-.. 停用所有資料SVM的Snapshot複製原則：「Volume Snapshot policy modify -vserver *-enablED假」
+.. 停用所有資料 SVM 的 Snapshot 複製原則： `volume snapshot policy modify -vserver * -enabled false`
 .. 停用每個節點集合體的Snapshot複製原則：
 +
 ... 使用run節點odenameaggr狀態命令來識別節點的集合體。
-... 停用每個Aggregate的Snapshot複製原則：「run -nodNode nodename aggr options aggr_name nocap on」
+... 停用每個 Aggregate 的 Snapshot 複本原則： `run -node nodename aggr options aggr_name nosnap on`
 ... 對其餘每個節點重複此步驟。
 
 
@@ -42,15 +42,15 @@ vs1::> run -node node1 vol status
            vol0 online          raid_dp, flex     root, nvfail=on
                                 64-bit
 ----
-... 停用根磁碟區上的Snapshot複製原則：「run -nodNode nodename vol options root_volvole_name nocap on'
+... 停用根磁碟區上的 Snapshot 複本原則： `run -node nodename vol options root_volume_name nosnap on`
 ... 對其餘每個節點重複此步驟。
 
 
 .. 刪除升級至目前版本後所建立的所有Snapshot複本：
 +
-... 將權限等級設為進階：「et -priv榮幸advanc進 階」
-... 停用快照：「shapshot policy modify -vserver *-enablED'」
-... 刪除節點較新版本的Snapshot複本：「Volume snapshot preper-for -f還原-nodename」
+... 將權限層級設為進階： `set -privilege advanced`
+... 停用快照：``snapshot policy modify -vserver * -enabled false``
+... 刪除節點較新版本的 Snapshot 複本： `volume snapshot prepare-for-revert -node nodename`
 +
 此命令會刪除每個資料磁碟區、根Aggregate和根磁碟區上較新版本的Snapshot複本。
 
@@ -65,12 +65,12 @@ cluster1::*> volume snapshot prepare-for-revert -node node1
 Warning: This command will delete all Snapshot copies that have the format used by the current version of ONTAP. It will fail if any Snapshot copy polices are enabled, or
          if any Snapshot copies have an owner. Continue? {y|n}: y
 ----
-... 驗證Snapshot複本是否已刪除：「Volume Snapshot show -nodename」
+... 確認已刪除 Snapshot 複本： `volume snapshot show -node nodename`
 +
-如果仍有任何較新版本的Snapshot複本、請強制刪除：「Volume snapshot delete｛-fs-version 9.0 -Node nodename -is-foconment true｝-ignore -Owners -force」
+如果仍有任何較新版本的 Snapshot 複本、請強制將其刪除： `volume snapshot delete {-fs-version 9.0 -node nodename -is-constituent true} -ignore-owners -force`
 
 ... 對其餘每個節點重複此步驟c。
-... 返回管理員權限等級：「et -priv. admin」
+... 返回管理權限層級： `set -privilege admin`
 
 
 

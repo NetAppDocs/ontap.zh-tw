@@ -65,14 +65,14 @@ vs0                              sti96-vsim-ucs539h_data6_inet6 e0f e0f
 +
 如果任何生命週期出現狀態為「關閉」或「為主目錄」狀態為「假」的「狀態管理」、請繼續下一步。
 
-. 啟用資料LIF：「網路介面修改｛-role data｝-STATUS-admin up」
+. 啟用資料生命： `network interface modify {-role data} -status-admin up`
 +
 [listing]
 ----
 cluster1::> network interface modify {-role data} -status-admin up
 8 entries were modified.
 ----
-. 將LIF還原至其主連接埠：「網路介面回復*」
+. 將LIF還原至其主連接埠： `network interface revert *`
 +
 此命令會將所有LIF還原回其主連接埠。
 
@@ -82,7 +82,7 @@ cluster1::> network interface modify {-role data} -status-admin up
 cluster1::> network interface revert *
 8 entries were acted on.
 ----
-. 驗證所有生命設備是否都在其主端口上：「network interface show」（網路介面顯示）
+. 確認所有的生命都在其主連接埠中： `network interface show`
 +
 此範例顯示SVM vs0的所有lifs都位於其主連接埠上。
 

@@ -17,21 +17,27 @@ summary: 您可以FlexGroup 從SnapVault 位於還原次要Volume的Snapshot複�
 .開始之前
 當您從SnapVault 還原為FlexGroup 還原為還原為資料的功能時、必須注意某些考量事項。
 
-* 只有SnapVault 從某個版本的不完整Snapshot複本支援基礎還原。在拍攝Snapshot複本時、目的地Volume中的成員數量必須與來源Volume中的成員數量相符。
-* 如果還原作業失敗、則在還原作業完成之前、不允許執行其他作業。您可以重試還原作業、或使用「清理」參數執行還原作業。
-* 一個支援區只能是一個備份關係或還原關係的來源磁碟區。FlexGroup不能將一個資料區做為兩個相依關係的來源、兩個還原關係、或是一個相依關係與還原關係。FlexGroup SnapVault SnapVault
-* 無法並行執行還原與備份作業。SnapVault當正在執行基準還原作業或遞增還原作業時、您應該停止備份作業。
-* 您必須從目的地FlexGroup 的穩定區中止部分Snapshot複本的還原作業。您無法從來源磁碟區中止部分Snapshot複本的還原作業。
+* 只有SnapVault 從某個版本的不完整Snapshot複本支援基礎還原。
+在拍攝Snapshot複本時、目的地Volume中的成員數量必須與來源Volume中的成員數量相符。
+* 如果還原作業失敗、則在還原作業完成之前、不允許執行其他作業。
+您可以重試還原作業、或使用執行還原作業 `cleanup` 參數。
+* 一個支援區只能是一個備份關係或還原關係的來源磁碟區。FlexGroup
+不能將一個資料區做為兩個相依關係的來源、兩個還原關係、或是一個相依關係與還原關係。FlexGroup SnapVault SnapVault
+* 無法並行執行還原與備份作業。SnapVault
+當正在執行基準還原作業或遞增還原作業時、您應該停止備份作業。
+* 您必須從目的地FlexGroup 的穩定區中止部分Snapshot複本的還原作業。
+您無法從來源磁碟區中止部分Snapshot複本的還原作業。
 * 如果您中止還原作業、則必須以先前還原作業所使用的相同Snapshot複本重新啟動還原作業。
 
 
 .關於這項工作
 在執行FlexGroup 還原之前、會停用目的地聲音區上的任何作用中配額規則。
 
-還原作業完成後、您可以使用「Volume quota modify」命令重新啟動配額規則。
+您可以使用 `volume quota modify` 還原作業完成後重新啟動配額規則的命令。
 
 .步驟
-. 還原FlexGroup 此功能：「napmirror restore-source-path _svm:sr_flexgroup_-dite-path _dest_svm:dest_flexgroup_-snapshot _name_」「sfapshot_name」是要從來源Volume還原至目的地Volume的Snapshot複本。如果未指定Snapshot複本、則會從最新的Snapshot複本還原目的地Volume。
+. 還原 FlexGroup Volume ： `snapmirror restore -source-path _src_svm:src_flexgroup_ -destination-path _dest_svm:dest_flexgroup_ -snapshot _snapshot_name_`
+`snapshot_name` 是要從來源 Volume 還原至目的地 Volume 的 Snapshot 複本。如果未指定Snapshot複本、則會從最新的Snapshot複本還原目的地Volume。
 +
 [listing]
 ----

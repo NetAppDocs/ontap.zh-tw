@@ -20,19 +20,19 @@ summary: 您必須建立外部引擎、才能開始建立FPolicy組態。外部�
 如果外部引擎用於MetroCluster 整個功能表組態、您應該將來源站台的FPolicy伺服器IP位址指定為主要伺服器。目的地站台FPolicy伺服器的IP位址應指定為次要伺服器。
 
 .步驟
-. 使用「vserver fpolicy policy exter-engine create」命令建立FPolicy外部引擎。
+. 使用建立 FPolicy 外部引擎 `vserver fpolicy policy external-engine create` 命令。
 +
 下列命令會在儲存虛擬機器（SVM）vs1.example.com上建立外部引擎。與FPolicy伺服器的外部通訊不需要驗證。
 
 +
-「vserver fpolicy原則exter-engine create -vserver-name vs1.example.com -enginer-name enginers 1 - primary伺服器10.1.1.2、10.1.1.3 -連接埠6789 -SSL選項無驗證」
+`vserver fpolicy policy external-engine create -vserver-name vs1.example.com -engine-name engine1 -primary-servers 10.1.1.2,10.1.1.3 -port 6789 -ssl-option no-auth`
 
-. 使用「vserver fpolicy policy exter-engine show」命令來驗證FPolicy外部引擎組態。
+. 使用驗證 FPolicy 外部引擎組態 `vserver fpolicy policy external-engine show` 命令。
 +
 下列命令會顯示有關SVM vs1.example.com上設定的所有外部引擎資訊：
 
 +
-「vserver fpolicy policy exter-engine show -vserver vs1.example.com」
+`vserver fpolicy policy external-engine show -vserver vs1.example.com`
 
 +
 [listing]
@@ -48,7 +48,7 @@ vs1.example.com    engine1      10.1.1.2,      -             6789 synchronous
 下列命令會在SVM vs1.example.com上顯示名為「engin1」的外部引擎詳細資訊：
 
 +
-「vserver fpolicy原則exter-engine show -vserver vs1.example.com -enger-name engine 1」
+`vserver fpolicy policy external-engine show -vserver vs1.example.com -engine-name engine1`
 
 +
 [listing]

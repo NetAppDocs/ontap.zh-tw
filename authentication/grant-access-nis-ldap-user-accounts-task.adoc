@@ -11,7 +11,7 @@ summary: 您可以使用安全性登入create命令、讓LDAP或NIS使用者帳�
 
 
 [role="lead"]
-您可以使用「安全登入create」命令、讓LDAP或NIS使用者帳戶能夠存取管理或資料SVM。如果您尚未設定LDAP或NIS伺服器存取SVM、則必須先設定、帳戶才能存取SVM。
+您可以使用 `security login create` 命令、讓 LDAP 或 NIS 使用者帳戶存取管理或資料 SVM 。如果您尚未設定LDAP或NIS伺服器存取SVM、則必須先設定、帳戶才能存取SVM。
 
 .您需要的產品
 您必須是叢集管理員才能執行此工作。
@@ -25,19 +25,19 @@ xref:enable-nis-ldap-users-access-cluster-task.adoc[設定LDAP或NIS伺服器存
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用 `security login modify` 命令以稍後新增角色。
 +
 xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員的角色]
 
 * 從ONTAP 功能支援的版本為2、9.4開始、透過LDAP或NIS伺服器、遠端使用者可支援多因素驗證（MFA）。
 * 從功能性的版本起、您就可以開始使用ONTAP link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["用於nsswitch驗證的LDAP快速連結"] 如果LDAP伺服器支援。
-* 由於已知的LDAP問題、您不應在LDAP使用者帳戶資訊的任何欄位中使用「：」（結腸）字元（例如、「gecos」、「userPassword」等）。否則、該使用者的查詢作業將會失敗。
+* 由於已知的 LDAP 問題、您不應使用 `':'` （結腸） LDAP 使用者帳戶資訊任何欄位中的字元（例如、 `gecos`、 `userPassword`等）。否則、該使用者的查詢作業將會失敗。
 
 
 .步驟
 . 啟用LDAP或NIS使用者或群組帳戶以存取SVM：
 +
-「安全性登入建立-vserver Svm_name -user-or group名稱user_name -application-authmethod nsswitch -role角色-註解註解-is-ns/switch-group yes」不適用[-is-ldAP-fastbindtrue]
+`security login create -vserver SVM_name -user-or-group-name user_name -application application -authmethod nsswitch -role role -comment comment -is-ns-switch-group yes|no [-is-ldap-fastbind true]`
 
 +
 如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
@@ -46,7 +46,7 @@ xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員
 link:config-worksheets-reference.html["建立或修改登入帳戶"]
 
 +
-下列命令可讓LDAP或NIS叢集管理員帳戶「guest2」使用預先定義的「備份」角色來存取管理SVM「engCluster」。
+下列命令可啟用 LDAP 或 NIS 叢集管理員帳戶 `guest2` 使用預先定義的 `backup` 存取管理 SVM 的角色``engCluster``。
 
 +
 [listing]
@@ -55,10 +55,10 @@ cluster1::>security login create -vserver engCluster -user-or-group-name guest2 
 ----
 . 為LDAP或NIS使用者啟用MFA登入：
 +
-「安全登入修改-user-or group名稱rem_usr1 -applicationssh -imite-method nsswitch -role admin -ns/switch-group no -secret-imite-method publickey」
+``security login modify -user-or-group-name rem_usr1 -application ssh -authentication-method nsswitch -role admin -is-ns-switch-group no -second-authentication-method publickey``
 
 +
-驗證方法可指定為「publickey」、第二種驗證方法則指定為「nsswitch」。
+驗證方法可以指定為 `publickey` 和第二種驗證方法 `nsswitch`。
 
 +
 下列範例顯示正在啟用MFA驗證：

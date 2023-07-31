@@ -41,7 +41,8 @@ summary: 建立子網路
 . 選取子網路所屬的廣播網域。
 . 儲存您的變更。
 +
-.. 如果輸入的IP位址或範圍已被介面使用、則會顯示下列訊息：「LIF已在使用此範圍內的IP位址。將LIF與此子網路建立關聯
+.. 如果輸入的 IP 位址或範圍已被介面使用、則會顯示下列訊息：
+`An IP address in this range is already in use by a LIF. Associate the LIF with this subnet?`
 .. 當您按一下「*確定*」時、現有的LIF將會與子網路相關聯。
 
 
@@ -55,17 +56,17 @@ summary: 建立子網路
 .步驟
 . 建立子網路。
 +
-「網路子網路create -space-domain_ipspace1_-IPspace _ipspace1_-subnet-name _ipspace1_-subnet _10.0.0.0/24_-gateway _10.0.0.1_-ip-ranges _"10.0.128.0.130,10.0.132__」
+`network subnet create -broadcast-domain _ipspace1_ -ipspace _ipspace1_ -subnet-name _ipspace1_ -subnet _10.0.0.0/24_ -gateway _10.0.0.1_ -ip-ranges _"10.0.0.128-10.0.0.130,10.0.0.132"_`
 
 +
-子網路名稱可以是子網路IP值、例如「192.0/24」、也可以是像本範例所用的字串「ipspace1」。
+子網路名稱可以是子網路 IP 值、例如 `192.0.2.0/24` 或字串、例如 `ipspace1` 就像本範例所用的一樣。
 
 . 驗證子網路組態是否正確。
 +
 此範例的輸出顯示了有關ipspace1 IPspace中名為ipspace1的子網路資訊。子網路屬於廣播網域名稱ipspace1。您可以將此子網路中的IP位址指派給在ipspace1 IPspace中所建立之SVM的資料LIF。
 
 +
-「network subnet show -IPspace _ipspace1_」
+`network subnet show -ipspace _ipspace1_`
 
 
 

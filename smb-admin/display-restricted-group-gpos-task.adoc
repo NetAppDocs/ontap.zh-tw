@@ -23,11 +23,11 @@ summary: 您可以顯示Active Directory中定義為群組原則物件（GPO）�
 指定群組原則的設定層級。可能的輸出值包括：
 
 +
-** 當群組原則設定在ONTAP 不執行功能時、會顯示「本機」
-** 當在網域控制器的站台層級設定群組原則時、會出現「站台」
-** 當在網域控制器的網域層級設定群組原則時、會出現「Dain」
-** 當群組原則設定在網域控制器的組織單位（OU）層級時、會出現「organizationalUnit」（組織單位）
-** 「RSOP」、針對從各個層級定義的所有群組原則衍生而來的原則組合
+** `Local` 在 ONTAP 中設定群組原則時
+** `Site` 在網域控制站的站台層級設定群組原則時
+** `Domain` 當群組原則是在網域控制站的網域層級設定時
+** `OrganizationalUnit` 當群組原則在網域控制站的組織單位（ OU ）層級上設定時
+** `RSOP` 針對衍生自各個層級所定義之所有群組原則的結果原則集
 
 
 * 受限群組名稱
@@ -48,14 +48,14 @@ summary: 您可以顯示Active Directory中定義為群組原則物件（GPO）�
  a| 
 在Active Directory中定義
  a| 
-「Vserver CIFS群組原則受限群組、顯示定義的-vserver vserver_name」
+`vserver cifs group-policy restricted-group show-defined -vserver vserver_name`
 
 
 
  a| 
 套用至CIFS伺服器
  a| 
-「Vserver CIFS群組原則受限群組顯示套用的-vserver vserver_name」
+`vserver cifs group-policy restricted-group show-applied -vserver vserver_name`
 
 |===
 

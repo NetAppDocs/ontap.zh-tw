@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: smbc/smbc_troubleshoot_planned_failover_unsuccessful.html 
 keywords: troubleshooting, SM-BC, SMBC, SnapMirror, failover, planned failover, common Snapshot copy 
-summary: 執行「napmirror容錯移轉開始」命令之後、「napmirror容錯移轉show」命令的輸出會顯示一則訊息、指出正在進行不中斷營運。 
+summary: '執行之後 `snapmirror failover start` 命令、的輸出 `snapmirror failover show` 命令會顯示一則訊息、表示正在進行不中斷營運。' 
 ---
 = 計畫性容錯移轉失敗
 :hardbreaks:
@@ -15,7 +15,7 @@ summary: 執行「napmirror容錯移轉開始」命令之後、「napmirror容�
 
 .問題：
 [role="lead"]
-執行「napmirror容錯移轉開始」命令之後、「napmirror容錯移轉show」命令的輸出會顯示一則訊息、指出正在進行不中斷營運。
+執行之後 `snapmirror failover start` 命令、的輸出 `snapmirror failover show` 命令會顯示一則訊息、表示正在進行不中斷營運。
 
 ....
 Cluster1::> snapmirror failover show
@@ -26,7 +26,7 @@ vs1:/cg/cg vs0:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror Failover can
                                                           08:35:04 08:35:04
 ....
 .原因：
-在進行不中斷營運（包括磁碟區移動、集合體重新配置及儲存容錯移轉）時、無法開始計畫性的容錯移轉。
+在進行不中斷營運（包括磁碟區移動、集合體重新定位和儲存容錯移轉）時、無法開始計畫性的容錯移轉。
 
 .解決方案：
 等待不中斷營運完成、然後再次嘗試容錯移轉作業。

@@ -2,7 +2,7 @@
 permalink: disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html 
 sidebar: sidebar 
 keywords: create, flash pool, aggregate, local tier, ssd, storage pool, allocation units 
-summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至現有HDD本機層、以設定Flash資源池本機層（Aggregate）。 
+summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至現有HDD本機層、以設定Flash資源池本機層（Aggregate）。  
 ---
 = 使用SSD儲存資源池配置單元建立Flash資源池本機層（Aggregate）
 :allow-uri-read: 
@@ -32,7 +32,7 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 
 * 您必須確定系統的最大快取大小、並確定將SSD快取新增至本機層不會導致超出上限。
 +
-您可以使用「儲存池show」命令查看要新增至總快取大小的快取容量。
+您可以使用查看將新增至快取總大小的快取數量 `storage pool show` 命令。
 
 * 您必須熟悉Flash Pool本機層的組態需求。
 
@@ -65,21 +65,21 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 .步驟
 . 將Aggregate標示為符合資格可成為Flash Pool Aggregate：
 +
-「torage Aggregate modify -Aggregate _aggreg_name_-himge-enabled_true」
+`storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
 
 +
 如果此步驟失敗、請判斷目標Aggregate的寫入快取資格。
 
 . 顯示可用的SSD儲存池配置單元：
 +
-「torage Pool show-可用 容量」
+`storage pool show-available-capacity`
 
 . 將SSD容量新增至Aggregate：
 +
-「torage Aggregate add _aggreg_name_-storage資源池_sp_name_-all撥款 單位_number_of_units _」
+`storage aggregate add _aggr_name_ -storage-pool _sp_name_ -allocation-units _number_of_units_`
 
 +
-如果您希望快取的RAID類型與HDD RAID群組的RAID類型不同、則在輸入此命令時、必須使用「raidtype」參數加以變更。
+如果您想要快取的 RAID 類型與 HDD RAID 群組的 RAID 類型不同、則必須在使用輸入此命令時加以變更 `raidtype` 參數。
 
 +
 您不需要指定新的RAID群組；ONTAP 而無法自動將SSD快取放入不同於HDD RAID群組的RAID群組。
@@ -92,10 +92,10 @@ summary: 您可以將一個或多個配置單元從SSD儲存資源池新增至�
 
 . 確認SSD快取是否存在及大小：
 +
-「torage Aggregate show _Aggregate name_」
+`storage aggregate show _aggregate_name_`
 
 +
-快取大小列在「Total Hybrid Cache Sizing」（混合式快取大小總計）下。
+快取的大小列於下 `Total Hybrid Cache Size`。
 
 
 

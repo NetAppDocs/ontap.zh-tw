@@ -29,7 +29,7 @@ summary: 若要將FlexVol 位於FlexGroup SnapMirror中的SnapMirror與不景區
 僅支援非同步SnapMirror關係進行的支援。FlexGroup
 
 .步驟
-. 驗證SnapMirror關係是否健全：「napmirror show」
+. 驗證 SnapMirror 關係是否健全： `snapmirror show`
 +
 只能轉換XDP類型的鏡射關係。
 
@@ -48,8 +48,8 @@ vs0:src_xdp XDP  vs2:dst_xdp  Snapmirrored
 ----
 . 確認來源Volume是否相容於轉換：
 +
-.. 登入進階權限模式：「et -priv榮幸 進階」
-.. 驗證轉換程序：「Volume conversion start -vserver VS1 -volume rc/vol-Check only true」
+.. 登入進階權限模式： `set -privilege advanced`
+.. 驗證轉換程序： `volume conversion start -vserver vs1 -volume src_vol -check-only true`
 +
 在轉換磁碟區之前、您必須先修正所有錯誤。
 
@@ -57,13 +57,13 @@ vs0:src_xdp XDP  vs2:dst_xdp  Snapmirrored
 
 . 將目的地FlexVol 的聲音量轉換為FlexGroup 聲音量。
 +
-.. 靜止FlexVol 不動SnapMirror關係：「napmirror quiesce -dest-path dest_svm:dest_volume」
+.. 使 FlexVol SnapMirror 關係不再運作： `snapmirror quiesce -destination-path dest_svm:dest_volume`
 +
 [listing]
 ----
 cluster2::> snapmirror quiesce -destination-path vs2:dst_xdp
 ----
-.. 開始轉換：「Volume Conversion start -vserver dest_sVM -volume dest_volume」
+.. 開始轉換： `volume conversion start -vserver dest_svm -volume dest_volume`
 +
 [listing]
 ----
@@ -79,7 +79,7 @@ Then, re-establish the SnapMirror relationship using the "snapmirror resync" com
 ----
 
 
-. 將來源FlexVol 的Sfidvolume轉換為FlexGroup fidsvolume：「volume convert start -vserver sr_svm_name -volume rc/vol_name」
+. 將來源 FlexVol Volume 轉換為 FlexGroup Volume ： `volume conversion start -vserver src_svm_name -volume src_vol_name`
 +
 [listing]
 ----
@@ -92,7 +92,7 @@ Warning: Converting flexible volume "src_xdp" in Vserver "vs0" to a FlexGroup
 Do you want to continue? {y|n}: y
 [Job 57] Job succeeded: success
 ----
-. 重新同步關係：「napmirror resSync -destination-path dest_svm_name：dest_volume」
+. 重新同步關係： `snapmirror resync -destination-path dest_svm_name:dest_volume`
 +
 [listing]
 ----

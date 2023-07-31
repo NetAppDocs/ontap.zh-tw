@@ -19,7 +19,7 @@ summary: 從ONTAP 推出支援支援功能的9.4開始、您可以使用SnapMirr
 
 
 .關於這項工作
-您必須以「_hostip：_/LUN/_name_」格式指定元素目的地路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+您必須以格式指定元素目的地路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
 
 複寫規則如下：
 
@@ -35,13 +35,13 @@ summary: 從ONTAP 推出支援支援功能的9.4開始、您可以使用SnapMirr
 .步驟
 . 建立ONTAP 從來源到元素目的地的複寫關係：
 +
-「napmirror create -source-path _svm:volume _」（napmirror create -source-path _svm:volume _）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_-type XDP -schedule排程-policy _policy _」
+`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -type XDP -schedule schedule -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例使用預設的「鏡像Latest（鏡像最新）原則建立SnapMirror DR關係：
+以下範例使用預設值建立 SnapMirror DR 關係 `MirrorLatest` 原則：
 
 +
 [listing]
@@ -49,7 +49,7 @@ summary: 從ONTAP 推出支援支援功能的9.4開始、您可以使用SnapMirr
 cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy MirrorLatest
 ----
 +
-以下範例使用自訂的「my_mirror」原則建立SnapMirror DR關係：
+以下範例使用自訂建立 SnapMirror DR 關係 `my_mirror` 原則：
 
 +
 [listing]
@@ -59,4 +59,4 @@ cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 1
 
 
 .完成後
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。

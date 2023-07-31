@@ -20,59 +20,59 @@ summary: 您可以將本機使用者或網域使用者的成員資格指派給ON
 
 
  a| 
-「BUILTIN\Administrators」（RID 544）
+``BUILTIN\Administrators``RID 544
 
-第一次建立時、本機的「系統管理員」帳戶會自動成為此群組的成員、但不超過500個。當儲存虛擬機器（SVM）加入網域時、會將「domain\Domain Admins」群組新增至群組。如果SVM離開網域、則會從群組中移除「domain\Domain Admins」群組。
+第一次建立時、即為本機 `Administrator` 帳戶（ RID 為 500 ）會自動成為此群組的成員。當儲存虛擬機器（ SVM ）加入網域時 `domain\Domain Admins` 群組即會新增至群組。如果 SVM 離開網域、則為 `domain\Domain Admins` 群組即會從群組中移除。
  a| 
-* 「備份權限」
-* 「eRestorePrivilege」
-* 「安全性權限」
-* 《擁有者船權》
-* 「eChangeleNotifyPrivilege」
+* `SeBackupPrivilege`
+* `SeRestorePrivilege`
+* `SeSecurityPrivilege`
+* `SeTakeOwnershipPrivilege`
+* `SeChangeNotifyPrivilege`
 
 
 
 
  a| 
-「BUILTIN\Power Users」的RID 547
+``BUILTIN\Power Users``RID 547
 
 第一次建立時、此群組沒有任何成員。此群組成員具有下列特性：
 
 * 可建立及管理本機使用者和群組。
-* 無法將自己或任何其他物件新增至「BUILTIN\Administrators」群組。
+* 無法將自己或任何其他物件新增至 `BUILTIN\Administrators` 群組：
 
  a| 
-「eChangeleNotifyPrivilege」
+`SeChangeNotifyPrivilege`
 
 
 
  a| 
-「BUILTIN\Backup Operators」（RID 551）
+``BUILTIN\Backup Operators``RID 551.
 
 第一次建立時、此群組沒有任何成員。如果是以備份目的開啟檔案或資料夾、則此群組的成員可以覆寫其讀取和寫入權限。
  a| 
-* 「備份權限」
-* 「eRestorePrivilege」
-* 「eChangeleNotifyPrivilege」
+* `SeBackupPrivilege`
+* `SeRestorePrivilege`
+* `SeChangeNotifyPrivilege`
 
 
 
 
  a| 
-「BUILTIN\Users」RID 545
+``BUILTIN\Users``RID 545
 
-第一次建立時、此群組沒有任何成員（除了暗示的「驗證使用者」特殊群組之外）。當SVM加入網域時、會將「Domain Users」群組新增至此群組。如果SVM離開網域、則會從此群組中移除「領域/網域使用者」群組。
+第一次建立時、此群組沒有任何成員（隱含的除外） `Authenticated Users` 特殊群組）。當 SVM 加入網域時 `domain\Domain Users` 群組隨即新增至此群組。如果 SVM 離開網域、則為 `domain\Domain Users` 群組已從此群組中移除。
  a| 
-「eChangeleNotifyPrivilege」
+`SeChangeNotifyPrivilege`
 
 
 
  a| 
-他說：「每個人都是「S－1－0」
+``Everyone``SID S-1-1-0
 
 此群組包括所有使用者、包括來賓（但非匿名使用者）。這是暗示的群組、具有暗示的成員資格。
  a| 
-「eChangeleNotifyPrivilege」
+`SeChangeNotifyPrivilege`
 
 |===
 .相關資訊

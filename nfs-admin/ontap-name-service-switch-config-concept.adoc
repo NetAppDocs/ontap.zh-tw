@@ -11,7 +11,7 @@ summary: 將名稱服務組態資訊儲存在表格中、表格相當於UNIX系�
 
 
 [role="lead"]
-將名稱服務組態資訊儲存在表格中、表格相當於UNIX系統上的「/etc/nsswitch.conf」檔案。ONTAP您必須瞭解表格的功能及ONTAP 其使用方式、以便根據環境適當設定。
+ONTAP 會將名稱服務組態資訊儲存在相當於的表格中 `/etc/nsswitch.conf` UNIX 系統上的檔案。您必須瞭解表格的功能及ONTAP 其使用方式、以便根據環境適當設定。
 
 這個名稱服務交換器表決定哪些名稱服務來源可以查詢、以便擷取特定類型名稱服務資訊的資訊。ONTAP ONTAP針對每個SVM維護個別的名稱服務交換器表。ONTAP
 
@@ -86,11 +86,11 @@ summary: 將名稱服務組態資訊儲存在表格中、表格相當於UNIX系�
  a| 
 本機來源檔案
  a| 
-「vserver服務名稱服務UNIX使用者」「vserver服務名稱服務UNIX群組」
+`vserver services name-service unix-user` `vserver services name-service unix-group`
 
-「Vserver服務名稱服務netgroup」
+`vserver services name-service netgroup`
 
-「Vserver服務名稱服務DNS主機」
+`vserver services name-service dns hosts`
 
 
 
@@ -99,7 +99,7 @@ NIS
  a| 
 在SVM的NIS網域組態中指定的外部NIS伺服器
  a| 
-「Vserver服務名稱服務NIS網域」
+`vserver services name-service nis-domain`
 
 
 
@@ -108,7 +108,7 @@ LDAP
  a| 
 在SVM的LDAP用戶端組態中指定的外部LDAP伺服器
  a| 
-「Vserver服務名稱服務LDAP」
+`vserver services name-service ldap`
 
 
 
@@ -117,10 +117,10 @@ DNS
  a| 
 在SVM的DNS組態中指定的外部DNS伺服器
  a| 
-「Vserver服務名稱服務DNS」
+`vserver services name-service dns`
 
 |===
-即使您打算使用NIS或LDAP進行資料存取和SVM管理驗證、仍應納入「檔案」、並在NIS或LDAP驗證失敗時將本機使用者設定為後援。
+即使您計畫同時使用 NIS 或 LDAP 來進行資料存取和 SVM 管理驗證、您仍應納入 `files` 並將本機使用者設定為在 NIS 或 LDAP 驗證失敗時的後援。
 
 
 

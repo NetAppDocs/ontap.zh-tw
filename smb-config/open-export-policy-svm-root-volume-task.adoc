@@ -2,7 +2,7 @@
 permalink: smb-config/open-export-policy-svm-root-volume-task.html 
 sidebar: sidebar 
 keywords: default, export, policy, svm, root, volume, rule, client, smb, rule, open the export policy of the svm root volume 
-summary: SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過SMB開啟存取的規則。如果沒有這樣的規則、所有SMB用戶端都會被拒絕存取SVM及其磁碟區。 
+summary: SVM 根 Volume 的預設匯出原則必須包含一條規則、以允許所有用戶端透過 SMB 開啟存取。如果沒有這種規則、所有 SMB 用戶端都會被拒絕存取 SVM 及其磁碟區。 
 ---
 = 開啟SVM根磁碟區的匯出原則
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: SVM根磁碟區的預設匯出原則必須包含允許所有用戶端�
 
 
 [role="lead"]
-SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過SMB開啟存取的規則。如果沒有這樣的規則、所有SMB用戶端都會被拒絕存取SVM及其磁碟區。
+SVM 根 Volume 的預設匯出原則必須包含一條規則、以允許所有用戶端透過 SMB 開啟存取。如果沒有這種規則、所有 SMB 用戶端都會被拒絕存取 SVM 及其磁碟區。
 
 .關於這項工作
 建立新的SVM時、會自動為SVM的根Volume建立預設匯出原則（稱為預設）。您必須先為預設匯出原則建立一或多個規則、用戶端才能存取SVM上的資料。
@@ -19,7 +19,7 @@ SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過SMB�
 您應該確認所有SMB存取都是在預設匯出原則中開啟、之後再建立個別磁碟區或qtree的自訂匯出原則、以限制個別磁碟區的存取。
 
 .步驟
-. 如果您使用現有的SVM、請檢查預設的根Volume匯出原則：「vserver匯出原則規則show」
+. 如果您使用現有的SVM、請檢查預設的根Volume匯出原則： `vserver export-policy rule show`
 +
 命令輸出應類似下列內容：
 
@@ -44,9 +44,9 @@ User ID To Which Anonymous Users Are Mapped: 65534
 +
 如果存在允許開啟存取的規則、則此工作即告完成。如果沒有、請繼續下一步。
 
-. 建立SVM根磁碟區的匯出規則：「vserver匯出原則規則create -vserver vserver_name -policyname預設-rueindex 1 -protocol CIFS -clientmMATCH 0.00.0.0/rorrule any -rwrwrRule any -rooter'
-. 使用「vserver匯出原則規則show」命令來驗證規則建立。
+. 建立SVM根磁碟區的匯出規則： `vserver export-policy rule create -vserver vserver_name -policyname default -ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule any -rwrule any -superuser any`
+. 使用驗證規則建立 `vserver export-policy rule show` 命令。
 
 
 .結果
-任何SMB用戶端現在都可以存取在SVM上建立的任何Volume或qtree。
+任何 SMB 用戶端現在都可以存取 SVM 上建立的任何 Volume 或 qtree 。

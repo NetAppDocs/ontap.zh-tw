@@ -18,7 +18,7 @@ summary: 您可以使用SnapMirror將WORM檔案複寫到其他地理位置、以
 
 .關於這項工作
 * 從ONTAP 功能完善的9.5開始、您可以使用XDP（延伸資料保護）類型的SnapMirror關係來複寫WORM檔案、而非DP（資料保護）類型關係。XDP模式ONTAP 與版本無關、能夠區分儲存在同一個區塊中的檔案、讓重新同步複寫的法規遵循模式磁碟區變得更加容易。如需如何將現有DP類型關係轉換成XDP類型關係的相關資訊、請參閱 link:../data-protection/index.html["資料保護"]。
-* 若由SnapMirror判斷會SnapLock 導致資料遺失、則針對法規遵循模式磁碟區、對DP類型SnapMirror關係進行重新同步作業將會失敗。如果重新同步作業失敗、您可以使用「volume clone create」命令來複製目的地Volume。然後、您可以重新同步來源磁碟區與實體複本。
+* 若由SnapMirror判斷會SnapLock 導致資料遺失、則針對法規遵循模式磁碟區、對DP類型SnapMirror關係進行重新同步作業將會失敗。如果重新同步作業失敗、您可以使用 `volume clone create` 建立目的地 Volume 複本的命令。然後、您可以重新同步來源磁碟區與實體複本。
 * 支援不同步磁碟區之間XDP類型的SnapMirror關係SnapLock 、即使目的地上的資料與中斷後的來源資料有所不同、也能在中斷後支援重新同步。
 +
 在重新同步時、如果偵測到來源與目的地之間的資料差異、而非一般快照、則會在目的地上剪下新的快照、以擷取此差異。新的快照和通用快照都會以下列保留時間鎖定：
@@ -72,16 +72,16 @@ image::../media/snapmirror_steps_clustered.png[此圖顯示初始化SnapMirror�
 --
 . 識別目的地叢集。
 . 在目的地叢集上、安裝SnapLock 該資訊安全許可證、初始化「完成時鐘」、如果您使用ONTAP 的是早於9.10.1的版本、請建立SnapLock 一個「不實」集合體。
-. 在目的地叢集上、建立SnapLock 大小等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
+. 在目的地叢集上、建立類型為的 SnapLock 目的地 Volume `DP` 大小與來源 Volume 相同或大於：
 +
-‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-SnapLock-type Compliance |企業類型DP -size _size_*
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`
 
 +
 
 NOTE: 從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。您可以使用Volume -SnapLock類型選項來指定法規遵循或Enterprise SnapLock 版的Volume類型。在不早於版本的發行版中、從Aggregate繼承而來的是「不符合要求」（即「企業」）的「不符合要求」模式。ONTAP ONTAP SnapLock不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
 
 +
-下列命令會在SnapLock Aggregate「node01_aggr」上的「VM2」中、建立一個名為「dstvolB」的2 GB「Compliance」磁碟區：
+下列命令會建立 2 GB SnapLock `Compliance` Volume 命名 `dstvolB` 在中 `SVM2` 在 Aggregate 上 `node01_aggr`：
 
 +
 [listing]
@@ -90,10 +90,10 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ----
 . 在目的地SVM上、建立SnapMirror原則：
 +
-’* SnapMirror原則建立-vserver _Svm_name_-policy _policy_name_*
+`*snapmirror policy create -vserver _SVM_name_ -policy _policy_name_*`
 
 +
-下列命令會建立SVM整體原則「VM1-mirror」：
+下列命令會建立 SVM 範圍的原則 `SVM1-mirror`：
 
 +
 [listing]
@@ -102,10 +102,10 @@ SVM2::> snapmirror policy create -vserver SVM2 -policy SVM1-mirror
 ----
 . 在目的地SVM上、建立SnapMirror排程：
 +
-hy*工作排程cron create -name _schedule_name_-dayofWeek _Day_of_Week _-hour _hour _-minute _minute_*
+`*job schedule cron create -name _schedule_name_ -dayofweek _day_of_week_ -hour _hour_ -minute _minute_*`
 
 +
-下列命令會建立名為「weekendcron」的SnapMirror排程：
+下列命令會建立一個名為的 SnapMirror 排程 `weekendcron`：
 
 +
 [listing]
@@ -114,10 +114,10 @@ SVM2::> job schedule cron create -name weekendcron -dayofweek "Saturday, Sunday"
 ----
 . 在目的地SVM上、建立SnapMirror關係：
 +
-Check Alignment of PHs>* SnapMirror create -source-path _source_path_-dite-path _dentite_path_-type XDP| DP -policy _policy_name_-schedule_schedule_name_*
+`*snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_*`
 
 +
-下列命令可在來源磁碟區「VM1」上的「rcvolA」和「VM2」上的目的地磁碟區「dstvolB」之間建立SnapMirror關係、並指派「VM1-mirror」原則和排程「weekendcron」：
+以下命令可在來源磁碟區之間建立 SnapMirror 關係 `srcvolA` 開啟 `SVM1` 以及目的地Volume `dstvolB` 開啟 `SVM2`，然後指派原則 `SVM1-mirror` 和排程 `weekendcron`：
 
 +
 [listing]
@@ -130,13 +130,13 @@ NOTE: XDP類型ONTAP 可在SHD9.5或更新版本中找到。您必須使用ONTAP
 
 . 在目的地SVM上、初始化SnapMirror關係：
 +
-’* SnapMirror初始化-destination-path _destination_path_*
+`*snapmirror initialize -destination-path _destination_path_*`
 
 +
 初始化程序會將_基準線傳輸_傳送到目的地Volume。SnapMirror會製作來源Volume的Snapshot複本、然後將複本及其參照的所有資料區塊傳輸到目的地Volume。它也會將來源磁碟區上的任何其他Snapshot複本傳輸到目的地磁碟區。
 
 +
-下列命令可初始化來源Volume "srcvola" on "VM1"與目的地Volume "dstvolB" on "VM2"之間的關係：
+下列命令可初始化來源磁碟區之間的關係 `srcvolA` 開啟 `SVM1` 以及目的地Volume `dstvolB` 開啟 `SVM2`：
 
 +
 [listing]

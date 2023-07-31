@@ -21,20 +21,22 @@ summary: 如果在連結至LDAP伺服器時需要使用TLS進行LDAP驗證、您
 .步驟
 . 安裝自我簽署的根CA憑證：
 +
-.. 開始安裝憑證：+「安全性憑證安裝-vserver _vserver_name_-type server_ca」
+.. 開始安裝憑證：
+ +
+`security certificate install -vserver _vserver_name_ -type server-ca`
 +
 主控台輸出會顯示下列訊息：
 
 +
-「請輸入憑證：完成後按<Enter>鍵」
+`Please enter Certificate: Press <Enter> when done`
 
-.. 使用文字編輯器開啟憑證「.pem」檔案、複製憑證、包括以「--」開頭的行 開始認證 以"---"結尾 結束證書 然後在命令提示字元之後貼上憑證。
+.. 開啟憑證 `.pem` 使用文字編輯器檔案、複製憑證、包括開頭的行 `-----BEGIN CERTIFICATE-----` 並以結束 `-----END CERTIFICATE-----`，然後在命令提示字元之後貼上憑證。
 .. 確認已正確顯示憑證。
 .. 按Enter完成安裝。
 
 
 . 確認已安裝憑證：
 +
-「安全證書show -vserver _vserver_name_」
+`security certificate show -vserver _vserver_name_`
 
 

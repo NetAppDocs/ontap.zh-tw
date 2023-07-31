@@ -21,7 +21,7 @@ summary: 所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2
 * TLSv1.3（從ONTAP 功能9.11.1開始）
 * TLSv1.2
 * TLSv1.1
-* TLSv1
+* TLSv1.
 
 
 啟用SSL FIPS模式時、ONTAP 從靜止到外部用戶端或ONTAP 伺服器元件的SSL通訊、將使用FIPS相容的SSL加密。
@@ -38,31 +38,37 @@ summary: 所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2
 
 
  a| 
-9.11.1及更新版本
+9.11.1 及更新版本
  a| 
 ECDSA-SHA2-nistp256
  a| 
-RSA-SHA2-512 + RSA-SHA2-256 + ssh - ed25519 + ssh - DSS + ssh - RSA
+RSA-SHA2-512 +
+RSA-SHA2-256 +
+SSH-ed25519 +
+SSH-DSS +
+SSH-RSA
 
 
 
  a| 
 9.10.1及更早版本
  a| 
-ECDSA-SHA2-nistp256 + ssh編輯25519
+ECDSA-SHA2-nistp256 +
+SSH-ed25519.
  a| 
-SSH-DSS + SSH-RSA
+SSH-DSS +
+SSH-RSA
 
 |===
 沒有支援金鑰演算法的現有SSH公開金鑰帳戶、必須先以支援的金鑰類型重新設定、才能啟用FIPS、否則系統管理員驗證將會失敗。
 
 如需詳細資訊、請參閱 link:../authentication/enable-ssh-public-key-accounts-task.html["啟用SSH公開金鑰帳戶"]。
 
-如需SSL FIPS模式組態的詳細資訊、請參閱「安全性組態修改」手冊頁。
+如需 SSL FIPS 模式組態的詳細資訊、請參閱 `security config modify` 手冊頁。
 
 
 
-== 啟用FIPS
+== 啟用 FIPS
 
 建議所有安全的使用者在系統安裝或升級之後、立即調整其安全組態。啟用SSL FIPS模式時、ONTAP 從靜止到外部用戶端或ONTAP 伺服器元件的SSL通訊、將使用FIPS相容的SSL加密。
 
@@ -72,13 +78,13 @@ NOTE: 啟用FIPS時、您無法安裝或建立RSA金鑰長度為4096的憑證。
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
-. 啟用FIPS：
+. 啟用 FIPS ：
 +
-「安全性組態修改介面SSL -is - FIPS啟用true」
+`security config modify -interface SSL -is-fips-enabled true`
 
-. 當系統提示您繼續時、請輸入「y」
+. 當系統提示您繼續時、請輸入 `y`
 . 如果您執行ONTAP 的是效能不正常的9.8或更早版本、請逐一手動重新開機叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
 
 
@@ -103,13 +109,13 @@ Do you want to continue? {y|n}: y
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 輸入下列命令來停用FIPS：
 +
-「安全性組態修改介面SSL -is - FIPS -啟用假」
+`security config modify -interface SSL -is-fips-enabled false`
 
-. 當系統提示您繼續時、請輸入「y」。
+. 當系統提示您繼續時、請輸入 `y`。
 . 如果您執行ONTAP 的是更新版本的版本、請手動重新啟動叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
 
 
@@ -138,7 +144,7 @@ Do you want to continue? {y|n}: y
 
 . 檢視目前的法規遵循狀態：
 +
-「安全組態顯示」
+`security config show`
 
 
 

@@ -17,13 +17,13 @@ summary: 如何識別及修正設定錯誤的叢集
 叢集網路連線至交換器時、無法建立叢集、但叢集IPspace中設定的所有連接埠、都無法連線至叢集IPspace中設定的其他連接埠。
 
 .關於這項工作
-在交換式叢集中、如果將叢集網路介面（LIF）設定在錯誤的連接埠上、或是將叢集連接埠連線至錯誤的網路、則「cluster create」命令可能會失敗、並顯示下列錯誤：
+在交換式叢集中、如果叢集網路介面（ LIF ）設定在錯誤的連接埠上、或是叢集連接埠連接到錯誤的網路、則為 `cluster create` 命令可能會失敗、並出現下列錯誤：
 
 ....
 Not all local cluster ports have reachability to one another.
 Use the "network port reachability show -detail" command for more details.
 ....
-「network port show」命令的結果可能會顯示、叢集IPspace中會新增數個連接埠、因為這些連接埠是連接到使用叢集LIF設定的連接埠。不過、「網路連接埠」「可連線性show -detail」命令的結果顯示哪些連接埠無法彼此連線。
+的結果 `network port show` 命令可能會顯示數個連接埠已新增至叢集 IPspace 、因為這些連接埠已連線至已設定叢集 LIF 的連接埠。不過、的結果 `network port` `reachability show -detail` 命令會顯示哪些連接埠無法彼此連線。
 
 若要從連接埠上設定的叢集LIF還原、而該連接埠無法連線至使用叢集lifs設定的其他連接埠、請執行下列步驟：
 

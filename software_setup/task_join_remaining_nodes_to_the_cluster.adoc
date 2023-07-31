@@ -17,7 +17,8 @@ summary: 建立新叢集之後、您可以使用叢集設定精靈、一次將�
 
 您一次只能將一個節點加入叢集。當您開始將節點加入叢集時、必須完成該節點的加入作業、而且節點必須是叢集的一部分、才能開始加入下一個節點。
 
-*最佳實務做法：*如果您的FAS2720配備24個或更少NL-SAS磁碟機、您應該確認儲存組態預設值設定為主動/被動、以最佳化效能。如需詳細資訊、請參閱 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-4AC35094-4077-4F1E-8D6E-82BF111354B0.html?cp=4_5_5_11["使用根資料分割在節點上設定主動-被動式組態"]
+*最佳實務做法：*如果您的FAS2720配備24個或更少NL-SAS磁碟機、您應該確認儲存組態預設值設定為主動/被動、以最佳化效能。
+如需詳細資訊、請參閱 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-4AC35094-4077-4F1E-8D6E-82BF111354B0.html?cp=4_5_5_11["使用根資料分割在節點上設定主動-被動式組態"]
 
 . 登入您打算加入叢集的節點。
 +
@@ -40,7 +41,7 @@ Type yes to confirm and continue {yes}: yes
 ----
 . 請依照畫面上的指示、將IP位址指派給節點。
 +
-從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
+從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。  對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
 
 . 按* Enter鍵*繼續。
 +
@@ -48,9 +49,9 @@ Type yes to confirm and continue {yes}: yes
 ----
 Do you want to create a new cluster or join an existing cluster? {create, join}:
 ----
-. 將節點加入叢集：「join」
+. 將節點加入叢集： `join`
 . 依照畫面上的指示設定節點、並將其加入叢集。
-. 完成設定後、請確認節點正常且符合參加叢集的資格：「叢集展示」
+. 安裝完成後、請確認節點狀況良好、符合參加叢集的資格： `cluster show`
 +
 以下範例顯示第二個節點（cluster1-02）加入叢集之後的叢集：
 

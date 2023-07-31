@@ -11,12 +11,12 @@ summary: 您可以使用Volume檔案指紋啟動和Volume檔案指紋傾印命�
 
 
 [role="lead"]
-您可以使用「Volume file fingerprint start」和「volume file fingerprint dump」命令來檢視檔案和磁碟區的重要資訊、包括檔案類型（一般、WORM或WORM應用程式）、磁碟區到期日等。
+您可以使用 `volume file fingerprint start` 和 `volume file fingerprint dump` 用於檢視檔案與磁碟區的重要資訊的命令、包括檔案類型（一般、 WORM 或 WORM 可擴充）、磁碟區到期日等。
 
 .步驟
 . 產生檔案指紋：
 +
-h.* Volume檔案指紋start -vserver _Svm_name_-file _file_path_*
+`*volume file fingerprint start -vserver _SVM_name_ -file _file_path_*`
 
 +
 [listing]
@@ -25,17 +25,17 @@ svm1::> volume file fingerprint start -vserver svm1 -file /vol/sle/vol/f1
 File fingerprint operation is queued. Run "volume file fingerprint show -session-id 16842791" to view the fingerprint session status.
 ----
 +
-此命令會產生工作階段ID、您可以使用它來輸入「Volume file fingerprint dump」命令。
+此命令會產生一個工作階段 ID 、您可以將其用作輸入 `volume file fingerprint dump` 命令。
 
 +
 [NOTE]
 ====
-您可以使用「Volume file fingerprint show」命令搭配工作階段ID、來監控指紋操作的進度。在嘗試顯示指紋之前、請先確認作業已完成。
+您可以使用 `volume file fingerprint show` 使用工作階段 ID 來監控指紋操作的進度的命令。在嘗試顯示指紋之前、請先確認作業已完成。
 
 ====
 . 顯示檔案的指紋：
 +
-「* Volume file fingerprint dump -session-id _session_ID_*」
+`*volume file fingerprint dump -session-id _session_ID_*`
 
 +
 [listing]

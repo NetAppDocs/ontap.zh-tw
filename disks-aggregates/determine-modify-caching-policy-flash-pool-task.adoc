@@ -24,30 +24,30 @@ summary: 您可以將快取保留原則指派給Flash Pool本機層（Aggregate�
 
 . 使用CLI檢視工作負載Volume：
 +
-「開始統計資料-物件工作負載磁碟區」
+`statistics start -object workload_volume`
 
 . 判斷Volume的工作負載模式：
 +
-「tnetfitical show -object Workload Volume -instance _Volume -Workload _-counter連續讀取」
+`statistics show -object workload_volume -instance _volume-workload_ -counter sequential_reads`
 
 . 判斷Volume的命中率：
 +
-「tstatisticsshow -object WAFL_hya_VVOL -instance _volume _-counter read_ops_replace_pwer百分 點」
+`statistics show -object wafl_hya_vvol -instance _volume_ -counter read_ops_replaced_pwercent|wc_write_blks_overwritten_percent`
 
-. 確定磁碟區的「可快取讀取」和「專案快取分配」：
+. 確定 `Cacheable Read` 和 `Project Cache Alloc` 磁碟區數量：
 +
-'System節點執行節點node_name WAFL flexawa start _agger_name_'
+`system node run -node node_name wafl awa start _aggr_name_`
 
 . 顯示AWA摘要：
 +
-'System節點執行節點node_name WAFL flexawa print _agger_name_'
+`system node run -node node_name wafl awa print _aggr_name_`
 
-. 比較Volume的命中率與「可快取讀取」。
+. 將 Volume 的命中率與進行比較 `Cacheable Read`。
 +
-如果磁碟區的命中率大於「可快取的讀取」、則工作負載不會重新讀取快取到SSD中的隨機區塊。
+如果 Volume 的命中率大於 `Cacheable Read`然後、您的工作負載不會重新讀取 SSD 中快取的隨機區塊。
 
-. 將磁碟區目前的快取大小與「Project Cache Alloc'」進行比較。
+. 比較磁碟區目前的快取大小與 `Project Cache Alloc`。
 +
-如果磁碟區目前的快取大小大於「Project Cache Alloc」、則磁碟區快取的大小太小。
+如果磁碟區目前的快取大小大於 `Project Cache Alloc`，則您的磁碟區快取大小太小。
 
 

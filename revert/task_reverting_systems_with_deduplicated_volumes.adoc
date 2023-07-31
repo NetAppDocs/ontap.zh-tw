@@ -19,16 +19,16 @@ summary: 從ONTAP 任何版本的更新版本還原之前、您必須先確保�
 
 . 使用Volume Eff效率show命令搭配-Fields選項、即可檢視在磁碟區上執行的效率作業進度。
 +
-下列命令會顯示效率作業的進度：「Volume Eff期間 效率顯示-Fields vserver、volume、progress」
+下列命令會顯示效率作業的進度： `volume efficiency show -fields vserver,volume,progress`
 
 . 使用Volume Eff效率Stop命令搭配-all選項、即可停止所有作用中和佇列中的重複資料刪除作業。
 +
-下列命令會停止Volume Vola上的所有作用中和佇列的重複資料刪除作業：「Volume Effim兼 具停止功能-vserver VS1 -volume Vola -all」
+下列命令會停止 Volume Vola 上所有作用中和佇列中的重複資料刪除作業： `volume efficiency stop -vserver vs1 -volume VolA -all`
 
 . 使用set -priv榮幸 進階命令、以進階權限層級登入。
 . 使用Volume Eff效率Revete-to命令搭配-version選項、將Volume的效率中繼資料降級為ONTAP 特定版本的支援。
 +
-下列命令會將Volume Vola上的效率中繼資料還原ONTAP 為指令檔9.x：「Volume Effive-f還原 為-vserver VS1 -volume Vola -version 9.x」
+下列命令會將 Volume Vola 上的效率中繼資料還原為 ONTAP 9.x ： `volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x`
 
 +
 
@@ -36,13 +36,13 @@ NOTE: Volume Eff效率Rever-to命令會還原執行此命令之節點上的磁�
 
 . 使用Volume Eff效率show命令搭配-op-STATUS選項、即可監控降級進度。
 +
-下列命令會監控並顯示降級狀態：「Volume Eff期間 效率顯示-vserver VS1 -op-Status降級」
+下列命令會監控並顯示降級狀態： `volume efficiency show -vserver vs1 -op-status Downgrading`
 
 . 如果還原失敗、請使用Volume Eff效率show命令搭配-instance選項、瞭解還原失敗的原因。
 +
-下列命令會顯示所有欄位的詳細資訊：「Volume Eff高效show -vserver VS1 -volume vol1 - instance」
+下列命令會顯示所有欄位的詳細資訊： `volume efficiency show -vserver vs1 -volume vol1 - instance`
 
-. 還原作業完成後、請返回管理權限層級：「et -priv榮幸admin」
+. 還原作業完成後、返回管理權限層級： `set -privilege admin`
 +
 link:../volumes/index.html["邏輯儲存管理"]
 

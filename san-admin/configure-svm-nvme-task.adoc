@@ -49,50 +49,50 @@ summary: 如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專
 
 . 如果您不想使用現有的SVM、請建立一個：
 +
-「vserver create -vserver _svm_name_'
+`vserver create -vserver _SVM_name_`
 
 +
 .. 驗證是否已建立SVM：
 +
-「Vserver show」
+`vserver show`
 
 
 
 . 請確認叢集中已安裝支援NVMe或TCP的介面卡：
 +
-適用於NVMe：「網路FCP介面卡顯示資料傳輸協定支援的fc-NVMe」
+NVMe ： `network fcp adapter show -data-protocols-supported fc-nvme`
 
 +
-TCP：「網路連接埠show」
+對於 TCP ： `network port show`
 
 . 如果您執行ONTAP 的是SVM 9.7或更早版本、請移除SVM的所有傳輸協定：
 +
-「Vserver移除傳輸協定-vserver _svm_name_-傳輸協定iSCSI、FCP、NFS、CIFS、NDMP」
+`vserver remove-protocols -vserver _SVM_name_ -protocols iscsi,fcp,nfs,cifs,ndmp`
 
 +
 從ONTAP 功能支援的9.8開始、新增NVMe時不需要移除其他傳輸協定。
 
 . 將NVMe傳輸協定新增至SVM：
 +
-「Vserver附加傳輸協定-vserver _Svm_name_-protocols NVMe」
+`vserver add-protocols -vserver _SVM_name_ -protocols nvme`
 
 . 如果您執行ONTAP 的是SVM上的支援版本、請確認NVMe是SVM上唯一允許的傳輸協定：
 +
-「vserver show -vserver _svm_name_-Fields allowed-protocols」
+`vserver show -vserver _SVM_name_ -fields allowed-protocols`
 
 +
-NVMe應該是「允許的傳輸協定」欄下唯一顯示的傳輸協定。
+NVMe 應該是唯一顯示在下的傳輸協定 `allowed protocols` 欄位。
 
 . 建立NVMe服務：
 +
-「vserver NVMe create -vserver _Svm_name_」
+`vserver nvme create -vserver _SVM_name_`
 
 . 驗證NVMe服務是否已建立：
 +
-「vserver NVMe show -vserver _svm_name_'
+`vserver nvme show -vserver _SVM_name_`
 
 +
-SVM的「系統管理狀態」應列為「UP」。
+。 `Administrative Status` SVM 的清單應為 `up`。
 
 . 建立NVMe / FC LIF：
 +
@@ -106,7 +106,7 @@ SVM的「系統管理狀態」應列為「UP」。
  a| 
 FC
  a| 
-「網路介面create -vserver Svm_name -lIF lif_name -role data -data傳輸協定fc-nvm-home-nodes home_node-home-port home_port」
+`network interface create -vserver SVM_name -lif lif_name -role data -data-protocol fc-nvme -home-node home_node -home-port home_port`
 
 
 
@@ -115,7 +115,7 @@ FC
  a| 
 FC或TCP
  a| 
-「網路介面create -vserver Svm_name -lif_name -service-policy｛default-data-nvm-tcp | default-data-nvm-fc｝-home-Node home-port home-port home_port -STATUS admin up -fault-policy disabled-firewall-policy data -aut-f還原 假容錯移轉群組容錯移轉群組-is -dnas-dnak-f-fnas-fas-fnas-fals-false-
+`network interface create -vserver SVM_name -lif lif_name -service-policy {default-data-nvme-tcp | default-data-nvme-fc} -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group failover_group -is-dns-update-enabled false`
 
 |===
 . 在HA合作夥伴節點上建立NVMe / FC LIF：
@@ -130,7 +130,7 @@ FC或TCP
  a| 
 FC
  a| 
-「網路介面create -vserver _Svm_name_-lif_lif_name_-role data -data傳輸協定fc-nvm-home-node_home_node_-home-port _home_port_」
+`network interface create -vserver _SVM_name_ -lif _lif_name_ -role data -data-protocol fc-nvme -home-node _home_node_ -home-port _home_port_`
 
 
 
@@ -139,16 +139,16 @@ FC
  a| 
 FC或TCP
  a| 
-「網路介面create -vserver Svm_name -lif_name -service-policy｛default-data-nvm-tcp | default-data-nvm-fc｝-home-Node home-port home-port home_port -STATUS admin up -fault-policy disabled-firewall-policy data -aut-f還原 假容錯移轉群組容錯移轉群組-is -dnas-dnak-f-fnas-fas-fnas-fals-false-
+`network interface create -vserver SVM_name -lif lif_name -service-policy {default-data-nvme-tcp | default-data-nvme-fc} -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group failover_group -is-dns-update-enabled false`
 
 |===
 . 確認已建立NVMe / FC LIF：
 +
-「網路介面show -vserver _svm_name_'
+`network interface show -vserver _SVM_name_`
 
 . 在LIF所在的同一個節點上建立Volume：
 +
-「vol create -vserver _Svm_name_-volume _vol_name_-Aggregate _Aggregate name_-size _volVolume _Size_」
+`vol create -vserver _SVM_name_ -volume _vol_name_ -aggregate _aggregate_name_ -size _volume_size_`
 
 +
 如果顯示有關自動效率原則的警告訊息、則可以安全地忽略該訊息。

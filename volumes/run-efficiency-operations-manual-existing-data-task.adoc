@@ -11,10 +11,10 @@ summary: 您可以在非溫度敏感儲存效率磁碟區中的資料上手動�
 
 
 [role="lead"]
-您可以在非溫度敏感儲存效率磁碟區中的資料上手動執行效率作業、然後再啟用ONTAP 重複資料刪除、資料壓縮或使用ONTAP 低於版本號不超過版本號的資料壓縮功能。您可以使用「Volume Eff家 能入門-scan、old-data」命令來執行這些作業。
+您可以在非溫度敏感儲存效率磁碟區中的資料上手動執行效率作業、然後再啟用ONTAP 重複資料刪除、資料壓縮或使用ONTAP 低於版本號不超過版本號的資料壓縮功能。您可以使用執行這些作業 `volume efficiency start -scan-old-data` 命令。
 
 .關於這項工作
-「壓縮」選項無法與「掃描舊資料」一起使用、適用於對溫度敏感的儲存效率磁碟區。非作用中資料壓縮會自動在ONTAP 既有資料上執行、以利在支援溫度敏感的儲存效率磁碟區上執行、範圍包括在更新版本的資訊中。
+。 `-compression` 選項無法搭配使用 `-scan-old-data` 在對溫度敏感的儲存效率磁碟區上。非作用中資料壓縮會自動在ONTAP 既有資料上執行、以利在支援溫度敏感的儲存效率磁碟區上執行、範圍包括在更新版本的資訊中。
 
 如果您只在磁碟區上啟用重複資料刪除、則重複資料刪除功能會在資料上執行。如果您在磁碟區上啟用重複資料刪除、資料壓縮及資料壓縮、則資料壓縮會先執行、然後再執行重複資料刪除和資料壓縮。
 
@@ -28,11 +28,11 @@ summary: 您可以在非溫度敏感儲存效率磁碟區中的資料上手動�
 
 ====
 .步驟
-. 使用「Volume Eff高效start -scan -old-data」命令、在現有資料上手動執行重複資料刪除、資料壓縮或資料壓縮。
+. 使用 `volume efficiency start -scan-old-data` 可手動在現有資料上執行重複資料刪除、資料壓縮或資料壓縮的命令。
 +
 下列命令可讓您在Volume Vola中的現有資料上手動執行這些作業：
 
 +
-「Volume Effiveiv. start -vserver VS1 -volume Vola -scan -old-data true（Volume Effive-start -vserver VS1 -volume Vola -scan -old-data true）[-壓縮|-dedupe |-trated] true（
+`volume efficiency start -vserver vs1 -volume VolA -scan-old-data true [-compression | -dedupe | -compaction ] true`
 
 

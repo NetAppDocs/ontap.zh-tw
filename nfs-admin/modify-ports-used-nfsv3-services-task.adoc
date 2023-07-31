@@ -24,15 +24,15 @@ NFSv4和NFSv4.1的連接埠無法變更。
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 停用NFS存取：
 +
-「vserver NFS modify -vserver vserver_name -access fals'
+`vserver nfs modify -vserver vserver_name -access false`
 
 . 設定特定NFS服務的NFS連接埠：
 +
-「vserver NFS modify -vserver vserver_namenfs_port_parameterport_number'
+`vserver nfs modify -vserver vserver_namenfs_port_parameterport_number`
 
 +
 [cols="3*"]
@@ -41,7 +41,7 @@ NFSv4和NFSv4.1的連接埠無法變更。
 
 
  a| 
-mountd連接埠
+`-mountd-port`
  a| 
 NFS掛載精靈
  a| 
@@ -50,7 +50,7 @@ NFS掛載精靈
 
 
  a| 
-NLM-port
+`-nlm-port`
  a| 
 網路鎖定管理程式
  a| 
@@ -59,7 +59,7 @@ NLM-port
 
 
  a| 
-NSM連接埠
+`-nsm-port`
  a| 
 網路狀態監視器
  a| 
@@ -68,7 +68,7 @@ NSM連接埠
 
 
  a| 
-'-rquotad連接埠'
+`-rquotad-port`
  a| 
 NFS配額精靈
  a| 
@@ -80,12 +80,12 @@ NFS配額精靈
 
 . 啟用NFS存取：
 +
-"Vserver NFS modify -vserver vserver_name -access true"
+`vserver nfs modify -vserver vserver_name -access true`
 
-. 使用「network connections偵聽show」命令來驗證連接埠號碼變更。
+. 使用 `network connections listening show` 用於驗證連接埠號碼變更的命令。
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 
 

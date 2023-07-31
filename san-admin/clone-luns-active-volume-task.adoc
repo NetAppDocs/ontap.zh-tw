@@ -21,9 +21,9 @@ summary: 您可以透過複製作用中磁碟區中的LUN來建立LUN複本。�
 
 .步驟
 . 在製作實體複本之前、您必須先確認LUN未對應至igroup或寫入。
-. 使用「LUN show」命令來驗證LUN是否存在。
+. 使用 `lun show` 用於驗證 LUN 是否存在的命令。
 +
-「LUN show -vserver VS1」
+`lun show -vserver vs1`
 
 +
 [listing]
@@ -32,16 +32,16 @@ Vserver  Path              State     Mapped    Type     Size
 -------- ----------------- --------- --------- -------- -------
 vs1      /vol/vol1/lun1    online   unmapped  windows  47.07MB
 ----
-. 使用「volume file clone cre創作」命令來建立FlexClone LUN。
+. 使用 `volume file clone create` 建立 FlexClone LUN 的命令。
 +
-「Volume file clone create -vserver VS1 -volume vol1 -source-path lun1 -destination-path/lun1_clone」
+`volume file clone create -vserver vs1 -volume vol1 -source-path lun1 -destination-path/lun1_clone`
 
 +
-如果您需要FlexClone LUN可供自動刪除、請加入「-autodete true」。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+如果您需要 FlexClone LUN 才能自動刪除、請加入 `-autodelete true`。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
 
-. 使用「LUN show」命令來驗證您是否已建立LUN。
+. 使用 `lun show` 用於驗證是否已建立 LUN 的命令。
 +
-「LUN show -vserver VS1」
+`lun show -vserver vs1`
 
 +
 [listing]

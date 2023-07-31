@@ -23,15 +23,15 @@ summary: 掃描器原則會決定掃描器集區是否處於作用中狀態。�
 .步驟
 . 套用掃描器原則：
 +
-「vserver vscan ScANer-Pool apple-policy -vserver _data_svm_-staer-pool _staiper-policy primary| secondary | idle -cluster _the_apply_policy_on_」
+`vserver vscan scanner-pool apply-policy -vserver _data_SVM_ -scanner-pool _scanner_pool_ -scanner-policy primary|secondary|idle -cluster _cluster_to_apply_policy_on_`
 
 +
 掃描器原則可以具有下列其中一個值：
 
 +
-** 「主要」指定掃描器集區為作用中狀態。
-** 「次要」指定只有在主要掃描器集區中沒有任何VScan伺服器連線時、才會啟用掃描器集區。
-** 「閒置」表示掃描器資源池處於非使用中狀態。
+** `Primary` 指定掃描儀池處於活動狀態。
+** `Secondary` 指定只有在沒有連接主要掃描器集區中的 VScan 伺服器時、掃描器集區才為作用中。
+** `Idle` 指定掃描器集區為非作用中。
 +
 [NOTE]
 ====
@@ -60,13 +60,13 @@ cluster1::>vserver vscan scanner-pool apply-policy -vserver cifssvm1
 
 . 確認掃描器集區處於作用中狀態：
 +
-「vserver vscan ScANer-Pool show -vserver data_SVM |叢集管理SVM -ScANer-Pool ScAN_Pool」
+`vserver vscan scanner-pool show -vserver data_SVM|cluster_admin_SVM -scanner-pool scanner_pool`
 
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會顯示掃描器集區「Pool1」的詳細資料：
+下列命令會顯示掃描器集區的詳細資料 `pool1`：
 
 +
 [listing]
@@ -84,6 +84,6 @@ List of Host Names of Allowed Vscan Servers: scan1
                    List of Privileged Users: cifs\u1,cifs\u2
 ----
 +
-您可以使用「vserver vscan ScANer-Pool show-active」命令來檢視SVM上的作用中掃描器集區。如需完整的命令語法、請參閱命令的手冊頁。
+您可以使用 `vserver vscan scanner-pool show-active` 用於查看 SVM 上活動掃描儀池的命令。如需完整的命令語法、請參閱命令的手冊頁。
 
 

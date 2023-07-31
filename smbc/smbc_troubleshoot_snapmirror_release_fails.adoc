@@ -18,6 +18,7 @@ summary: 無法刪除Snapshot複本時、SnapMirror版本作業會失敗。
 無法刪除Snapshot複本時、SnapMirror版本作業會失敗。
 
 .解決方案：
-Snapshot複本包含暫時性標記。使用帶有「-ignore -Owners」（忽略擁有者）選項的「快照刪除」命令來移除暫時性Snapshot複本。「napshot DELETE -volume <volume名稱>-snapshot <snapshot_name>-ignore所有者true -force true」
+Snapshot複本包含暫時性標記。使用 `snapshot delete` 命令 `-ignore-owners` 移除暫態 Snapshot 複本的選項。
+`snapshot delete -volume <volume_name> -snapshot <snapshot_name> -ignore-owners true -force true`
 
-重試「napmirror release」命令。
+重試 `snapmirror release` 命令。

@@ -15,13 +15,13 @@ summary: 如果您已將網路群組載入儲存虛擬機器（SVMs）、則在�
 
 link:../nfs-admin/index.html["NFS管理"] 包含更多有關網路群組的資訊、並從URI載入這些群組。
 
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 顯示每個SVM的netgroup狀態：「vserver services netgroup Status」
-. 確認每個SVM的每個節點都顯示相同的netgroup檔案雜湊值：「vserver services name-service netgroup Status」
+. 將權限層級設為進階： `set -privilege advanced`
+. 顯示每個 SVM 的 netgroup 狀態： `vserver services netgroup status`
+. 確認每個 SVM 的每個節點都顯示相同的 netgroup 檔案雜湊值： `vserver services name-service netgroup status`
 +
 如果是這種情況、您可以跳過下一步、繼續升級或回復。否則、請繼續下一步。
 
-. 在叢集的任一節點上、手動載入netgroup檔案：「vserver services netgroup load -vserver vserver_name -SOURE Uri」
+. 在叢集的任何一個節點上、手動載入 netgroup 檔案： `vserver services netgroup load -vserver vserver_name -source uri`
 +
 此命令會在所有節點上下載netgroup檔案。如果某個節點上已存在netgroup檔案、則會將其覆寫。
 

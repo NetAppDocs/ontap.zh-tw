@@ -13,7 +13,7 @@ summary: 稽核symlink和硬式連結時、必須謹記某些考量事項。
 [role="lead"]
 稽核symlink和硬式連結時、必須謹記某些考量事項。
 
-稽核記錄包含所稽核物件的相關資訊、包括「ObjectName」標記中所識別的稽核物件路徑。您應該瞭解symlink和硬式連結的路徑如何記錄在「ObjectName」標記中。
+稽核記錄包含所稽核物件的相關資訊、包括中所識別的已稽核物件路徑 `ObjectName` 標記。您應該瞭解 symlinks 和硬式連結的路徑如何記錄在中 `ObjectName` 標記。
 
 
 
@@ -21,7 +21,7 @@ summary: 稽核symlink和硬式連結時、必須謹記某些考量事項。
 
 symlink是一個具有獨立inode的檔案、其中包含指向目的地物件（稱為目標）位置的指標。透過symlink存取物件時ONTAP 、流通會自動解譯symlink、並遵循實際規範的非規範傳輸協定路徑、前往磁碟區中的目標物件。
 
-在下列輸出範例中、有兩個symlink指向名為「target．txt」的檔案。其中一個symlink是相對symlink、一個是絕對symlink。如果稽核任一symlink、稽核事件中的「ObjectName」標記會包含檔案「target．txt」的路徑：
+在下列範例輸出中、有兩個 symlink 、兩者都指向一個名為的檔案 `target.txt`。其中一個symlink是相對symlink、一個是絕對symlink。如果稽核其中任一符號連結、則為 `ObjectName` 稽核事件中的標記包含檔案路徑 `target.txt`：
 
 [listing]
 ----
@@ -35,4 +35,4 @@ lrwxrwxrwx 1 user1 group1 10 Apr  2 09:54 softlink.txt -> target.txt
 
 == 硬式連結
 
-硬式連結是指將名稱與檔案系統上現有檔案相關聯的目錄項目。硬式連結指向原始檔案的inode位置。如同用什麼方式解譯symlinks、它會解譯硬式連結、並遵循實際規範路徑前往Volume中的目標物件。ONTAP ONTAP稽核硬式連結物件時、稽核事件會將此絕對規範路徑記錄在「ObjectName」標記中、而非硬式連結路徑中。
+硬式連結是指將名稱與檔案系統上現有檔案相關聯的目錄項目。硬式連結指向原始檔案的inode位置。如同用什麼方式解譯symlinks、它會解譯硬式連結、並遵循實際規範路徑前往Volume中的目標物件。ONTAP ONTAP稽核硬式連結物件的存取時、稽核事件會在中記錄這條絕對規範路徑 `ObjectName` 標記而非硬連結路徑。

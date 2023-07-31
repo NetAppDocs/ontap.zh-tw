@@ -2,7 +2,7 @@
 permalink: volumes/rehost-smb-task.html 
 sidebar: sidebar 
 keywords: rehost, cifs volumes, smb 
-summary: 您可以重新裝載透過SMB傳輸協定提供資料的磁碟區。重新託管CIFS Volume之後、若要繼續透過SMB傳輸協定存取資料、您必須手動設定原則及相關規則。 
+summary: 您可以重新託管透過 SMB 傳輸協定提供資料的磁碟區。重新託管CIFS Volume之後、若要繼續透過SMB傳輸協定存取資料、您必須手動設定原則及相關規則。 
 ---
 = 重新裝載 SMB Volume
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以重新裝載透過SMB傳輸協定提供資料的磁碟區。�
 
 
 [role="lead"]
-您可以重新裝載透過SMB傳輸協定提供資料的磁碟區。重新託管CIFS Volume之後、若要繼續透過SMB傳輸協定存取資料、您必須手動設定原則及相關規則。
+您可以重新託管透過 SMB 傳輸協定提供資料的磁碟區。重新託管CIFS Volume之後、若要繼續透過SMB傳輸協定存取資料、您必須手動設定原則及相關規則。
 
 .關於這項工作
 * 重新託管是一項顛覆性的作業。
@@ -58,11 +58,11 @@ NOTE: 如果已設定本機使用者和群組、而且該磁碟區上有檔案�
 . 記錄CIFS共用的相關資訊、以免在磁碟區重新主機作業失敗時遺失CIFS共用的資訊。
 . 從父Volume卸載磁碟區：
 +
-"Volume unmount（Volume卸載）"
+`volume unmount`
 
 . 切換至進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 在目的地SVM上重新裝載磁碟區：
 +
@@ -70,11 +70,11 @@ NOTE: 如果已設定本機使用者和群組、而且該磁碟區上有檔案�
 
 . 將磁碟區掛載到目的地SVM中適當的交會路徑下：
 +
-磁碟區掛載
+`volume mount`
 
 . 為重新託管的Volume建立CIFS共用：
 +
-《Vserver CIFS共享創建》
+`vserver cifs share create`
 
 . 如果來源SVM和目的地SVM之間的DNS網域不同、請建立新的使用者和群組。
 . 使用新的目的地SVM LIF及連線路徑、更新CIFS用戶端至重新裝載的Volume。
@@ -83,6 +83,6 @@ NOTE: 如果已設定本機使用者和群組、而且該磁碟區上有檔案�
 .完成後
 您必須手動重新設定重新裝載磁碟區上的原則和相關規則。
 
-https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB組態"]
+https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB 組態"]
 
 https://docs.netapp.com/us-en/ontap-sm-classic/nas-multiprotocol-config/index.html["SMB與NFS多重傳輸協定組態"]

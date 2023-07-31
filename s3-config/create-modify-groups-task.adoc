@@ -34,7 +34,10 @@ S3群組中的使用者可以被授予SVM中任何儲存區的存取權、但不
 ====
 .CLI
 --
-. 建立S3群組：「vserver object-store-server group create -vserver _Svm_name_-name _group name_-users_user_name\（s\）_[-policy _names_][-comment _text_]」。組態中只能在物件存放區中加入一個儲存區、但可新增群組原則名稱。在建立物件儲存伺服器原則之後、稍後可以使用「vserver object-store-server group modify」命令來新增「-policies」選項。
+. 建立S3群組：
+`vserver object-store-server group create -vserver _svm_name_ -name _group_name_ -users _user_name\(s\)_ [-policies _policy_names_] [-comment _text_\]`
+。 `-policies` 在物件存放區中只有一個儲存區的組態中、可以省略選項；群組名稱可以新增至儲存區原則。
+。 `-policies` 選項可在稍後隨一起新增 `vserver object-store-server group modify` 建立物件儲存伺服器原則之後的命令。
 
 
 --

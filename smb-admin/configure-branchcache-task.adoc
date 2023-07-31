@@ -75,32 +75,32 @@ _操作模式_
  a| 
 預設是以每個共用為基礎來啟用BranchCache。
 
-* 若要建立一個以每個共用區為基礎啟用BranchCache的BranchCache組態、您可以不指定此選用參數、也可以指定「每個共用區」。
-* 若要在所有共用區上自動啟用BranchCache、您必須將作業模式設定為「All共享區」。
+* 若要建立 BranchCache 組態，讓您以每個共用為基礎啟用 BranchCache ，您可以指定此選用參數，也可以指定 `per-share`。
+* 若要在所有共用上自動啟用 BranchCache 、您必須將作業模式設定為 `all-shares`。
 
 
 |===
 .步驟
 . 視需要啟用SMB 2.1和3.0：
 +
-.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-.. 檢查已設定的SVM SMB設定、以判斷是否已啟用所有必要的SMB版本：「vserver CIFS選項顯示-vserver _vserver_name_」
-.. 如有必要、請啟用SMB 2.1：「vserver CIFS選項修改-vserver _vserver_name_-smb2-enabled_true」
+.. 將權限層級設為進階： `set -privilege advanced`
+.. 檢查設定的 SVM SMB 設定、判斷是否已啟用所有必要的 SMB 版本： `vserver cifs options show -vserver _vserver_name_`
+.. 如有必要、請啟用 SMB 2.1 ： `vserver cifs options modify -vserver _vserver_name_ -smb2-enabled true`
 +
 命令可同時啟用SMB 2.0和SMB 2.1。
 
-.. 如有必要、請啟用SMB 3.0：「vserver CIFS選項修改-vserver _vserver_name_-smb3-enabled_true」
-.. 返回管理員權限等級：「et -priv. admin」
+.. 如有必要、請啟用 SMB 3.0 ： `vserver cifs options modify -vserver _vserver_name_ -smb3-enabled true`
+.. 返回管理權限層級： `set -privilege admin`
 
 
-. 設定BranchCache：「vserver CIFS BranchCache create -vserver _vserver_name_-hash-store-path path [-hash-store-max-size｛integer[kb| MB| GB| TB|PB]｝][-versions {v1-enable | v2-enable | enable -all][-server-key text]-operation-mode {per共享| all-}
+. 設定 BranchCache ： `vserver cifs branchcache create -vserver _vserver_name_ -hash-store-path path [-hash-store-max-size {integer[KB|MB|GB|TB|PB]}] [-versions {v1-enable|v2-enable|enable-all] [-server-key text] -operating-mode {per-share|all-shares}`
 +
 指定的雜湊儲存路徑必須存在、而且必須位於SVM管理的磁碟區上。路徑也必須位於可讀寫磁碟區上。如果路徑為唯讀或不存在、則命令會失敗。
 
 +
 如果您想在其他SVM BranchCache組態中使用相同的伺服器機碼、請記錄您輸入的伺服器機碼值。當您顯示有關BranchCache組態的資訊時、不會顯示伺服器機碼。
 
-. 驗證BranchCache組態是否正確：「Vserver CIFS BranchCache show -vserver _vserver_name_」
+. 驗證 BranchCache 組態是否正確： `vserver cifs branchcache show -vserver _vserver_name_`
 
 
 .範例

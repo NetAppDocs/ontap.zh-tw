@@ -11,26 +11,26 @@ summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除SVM複
 
 
 [role="lead"]
-您可以使用「napmirror DELETE」和「napmirror釋放」命令來刪除SVM複寫關係。然後您可以手動刪除不需要的目的地Volume。
+您可以使用 `snapmirror delete` 和 `snapmirror release` 刪除 SVM 複寫關係的命令。然後您可以手動刪除不需要的目的地Volume。
 
 .關於這項工作
-命令"shnapmirror版本"會從來源刪除任何SnapMirror建立的Snapshot複本。您可以使用「僅關係資訊」選項來保留Snapshot複本。
+。 `snapmirror release` 命令會從來源中刪除任何 SnapMirror 建立的 Snapshot 複本。您可以使用 `-relationship-info-only` 保留 Snapshot 複本的選項。
 
 如需命令的完整命令語法、請參閱手冊頁。
 
 .步驟
 . 從目的地SVM或目的地叢集執行下列命令、以中斷複寫關係：
 +
-「napmirror中斷-source-path _svm_：-destination-path _svm_：」
+`snapmirror break -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例打破了來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+以下範例打破來源 SVM 之間的關係 `svm1` 以及目的地 SVM `svm_backup`：
 
 +
 [listing]
@@ -39,16 +39,16 @@ cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
 ----
 . 從目的地SVM或目的地叢集執行下列命令、以刪除複寫關係：
 +
-「napmirror DELETE -source-path _svm_：-destination-path _svm_：」
+`snapmirror delete -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例刪除來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+以下範例刪除來源 SVM 之間的關係 `svm1` 以及目的地 SVM `svm_backup`：
 
 +
 [listing]
@@ -57,16 +57,16 @@ cluster_dst::> snapmirror delete -source-path svm1: -destination-path svm_backup
 ----
 . 從來源叢集或來源SVM執行下列命令、以從來源SVM釋出複寫關係資訊：
 +
-「napmirror release -source-path _svm_：-destination-path _svm_：」
+`snapmirror release -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-下列範例會從來源SVM「svm1」發佈指定複寫關係的資訊：
+下列範例會從來源 SVM 發佈指定複寫關係的資訊 `svm1`：
 
 +
 [listing]

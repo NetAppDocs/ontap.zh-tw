@@ -19,16 +19,16 @@ SnapMirror _統一化複寫_可讓您在同一個目的地磁碟區上設定災�
 
 與SnapMirror一樣、統一化資料保護會在您第一次叫用時執行基準傳輸。關係的SnapMirror原則定義了基礎的內容和任何更新。
 
-根據預設的統一化資料保護原則「鏡射AndVault」進行的基礎傳輸會建立來源磁碟區的Snapshot複本、然後將該複本及其參照的資料區塊傳輸到目的地磁碟區。如同保存庫歸檔、統一化資料保護功能不會在基準中包含舊的Snapshot複本。
+預設統一資料保護原則下的基準傳輸 `MirrorAndVault` 製作來源 Volume 的 Snapshot 複本、然後將該複本及其參照的資料區塊傳輸至目的地 Volume 。如同保存庫歸檔、統一化資料保護功能不會在基準中包含舊的Snapshot複本。
 
 
 
 == 如何更新統一化資料保護關係
 
-在「鏡射AndVault」原則下的每次更新中、SnapMirror都會建立來源Volume的Snapshot複本、並傳輸該Snapshot複本和自上次更新以來所建立的任何Snapshot複本、前提是這些複本的標籤符合Snapshot原則規則中所定義的標籤。在「鏡射原則show」命令的「鏡射原則show」命令針對「鏡射AndVault」原則所做的下列輸出中、請注意下列事項：
+在的每個更新中 `MirrorAndVault` 原則： SnapMirror 會建立來源 Volume 的 Snapshot 複本、並傳輸該 Snapshot 複本和自上次更新後所建立的任何 Snapshot 複本、前提是標籤必須符合 Snapshot 原則規則中定義的標籤。在的下列輸出中 `snapmirror policy show` 的命令 `MirrorAndVault` 原則請注意下列事項：
 
-* 「Create Snapshot」是「true」、表示SnapMirror更新關係時、「鏡像AndVault」會建立Snapshot複本。
-* 「鏡射AndVault」的規則為「shim_已 建立」、「每日」和「每週」、表示SnapMirror建立的Snapshot複本和來源上具有相符標籤的Snapshot複本、都會在SnapMirror更新關係時傳輸。
+* `Create Snapshot` 為「 'true' 」、表示這一點 `MirrorAndVault` 當 SnapMirror 更新關係時建立 Snapshot 複本。
+* `MirrorAndVault` 有 "`shm_Created （已建立） " 、 "daily" 和 "`eile" 等規則、表示 SnapMirror 建立的 Snapshot 複本和來源上具有相符標籤的 Snapshot 複本、都會在 SnapMirror 更新關係時傳輸。
 
 
 [listing]
@@ -59,7 +59,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 == Unified7年政策
 
-預先設定的「Unified7年」原則的運作方式與「鏡像AndVault」完全相同、但第四項規則是每月傳輸Snapshot複本並保留七年。
+預先設定的 `Unified7year` 原則的運作方式與完全相同 `MirrorAndVault`，但第四條規則會每月傳輸 Snapshot 複本並保留七年。
 
 [listing]
 ----

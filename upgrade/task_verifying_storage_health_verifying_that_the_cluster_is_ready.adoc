@@ -24,7 +24,8 @@ summary: 在升級叢集之前和之後、您應該確認磁碟、集合體和�
  a| 
 中斷的磁碟
  a| 
-.. 顯示任何中斷的磁碟：「磁碟顯示狀態中斷」
+.. 顯示任何毀損的磁碟：
+`storage disk show -state broken`
 .. 移除或更換任何損壞的磁碟。
 
 
@@ -33,26 +34,33 @@ summary: 在升級叢集之前和之後、您應該確認磁碟、集合體和�
  a| 
 正在進行維護或重建的磁碟
  a| 
-.. 顯示任何處於維護、擱置或重建狀態的磁碟：「torage disk show -st態maintenance |待發| remutage'
+.. 顯示任何處於維護、擱置或重建狀態的磁碟：
+`storage disk show -state maintenance|pending|reconstructing`
 .. 請等待維護或重建作業完成後再繼續。
 
 
 |===
-. 顯示狀態：「torage Aggregate show -state！online」、確認所有的Aggregate都在線上。此命令會顯示_not _ online的Aggregate。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
+. 顯示以下狀態、確認所有的集合體都在線上：
+`storage aggregate show -state !online`
+此命令會顯示_非_線上的集合體。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
 +
 [listing]
 ----
 cluster1::> storage aggregate show -state !online
 There are no entries matching your query.
 ----
-. 顯示任何非連線的磁碟區：「Volume show -st現 況！online」、確認所有磁碟區都在線上、執行重大升級或還原之前及之後、所有磁碟區都必須在線上。
+. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上：
+`volume show -state !online`
+執行重大升級或還原之前和之後、所有磁碟區都必須處於線上狀態。
 +
 [listing]
 ----
 cluster1::> volume show -state !online
 There are no entries matching your query.
 ----
-. 確認沒有不一致的磁碟區：「Volume show -is不一致true」、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
+. 確認沒有不一致的磁碟區：
+`volume show -is-inconsistent true`
+請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
 
 
 .相關資訊

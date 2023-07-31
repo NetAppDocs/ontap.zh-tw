@@ -19,11 +19,11 @@ summary: 在將現有的本機層（Aggregate）轉換成Flash Pool本機層之�
 .步驟
 . 進入進階模式：
 +
-《進階設定》
+`set advanced`
 
 . 如果您需要判斷現有的本機層（Aggregate）是否適合轉換成Flash Pool Aggregate、請判斷集合體中的磁碟在尖峰負載期間的忙碌程度、以及這會如何影響延遲：
 +
-「統計資料顯示週期性物件磁碟：RAID_group -instance _RAID_group名稱_-counter disk_busy | user_read_imeriods -interiodes 1 -迭 代60」
+`statistics show-periodic -object disk:raid_group -instance _raid_group_name_ -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 +
 您可以新增Flash Pool快取來決定是否要縮短延遲、以利此集合體。
@@ -32,39 +32,39 @@ summary: 在將現有的本機層（Aggregate）轉換成Flash Pool本機層之�
 以下命令顯示Agggr1'集合體第一個RAID群組的統計資料：
 
 +
-「統計資料顯示週期性物件磁碟：RAID_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_im滯 後時間間隔1 -迭代60」
+`statistics show-periodic -object disk:raid_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 . 啟動自動化工作負載分析程式（AWA）：
 +
-「torage automated－ter-set-analyster-analyst-node_node_name_-Aggregate _name_」
+`storage automated-working-set-analyzer start -node _node_name_ -aggregate _aggr_name_`
 
 +
 AWA開始收集與指定集合體相關聯之磁碟區的工作負載資料。
 
 . 結束進階模式：
 +
-「et admin」
+`set admin`
 
 +
 允許AWA執行、直到發生一或多個尖峰負載間隔為止。AWA會收集與指定集合體相關之磁碟區的工作負載統計資料、並分析資料持續最多一週。執行AWA超過一週、只會報告最近一週收集的資料。快取大小預估值是根據資料收集期間所見的最高負載而定；在整個資料收集期間、負載不需要太高。
 
 . 進入進階模式：
 +
-《進階設定》
+`set advanced`
 
 . 顯示工作負載分析：
 +
-「torage automated－ter-set-analyst-analyst-node_node_name_-instance」
+`storage automated-working-set-analyzer show -node _node_name_ -instance`
 
 . 停止AWA：
 +
-「自動化工作集分析程式停止節點名稱」
+`storage automated-working-set-analyzer stop _node_name_`
 
 +
 所有工作負載資料都會被清除、不再可供分析。
 
 . 結束進階模式：
 +
-「et admin」
+`set admin`
 
 

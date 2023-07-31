@@ -14,7 +14,7 @@ summary: 您可以將BranchCache服務設定為預先計算單一檔案、目錄
 您可以將BranchCache服務設定為預先計算單一檔案、目錄或目錄結構中所有檔案的雜湊。如果您想要在關閉非尖峰時段內、針對啟用了BranchCache的共用區中的資料運算雜湊、這項功能就很有幫助。
 
 .關於這項工作
-如果您想在顯示雜湊統計資料之前先收集資料樣本、則必須使用「統計資料開始」和選用的「統計資料停止」命令。
+如果您想在顯示雜湊統計資料之前收集資料範例、則必須使用 `statistics start` 和選用 `statistics stop` 命令。
 
 * 您必須指定要預先計算雜湊的儲存虛擬機器（SVM）和路徑。
 * 您也必須指定是否要以循環方式計算雜湊。
@@ -31,26 +31,26 @@ summary: 您可以將BranchCache服務設定為預先計算單一檔案、目錄
  a| 
 單一檔案或目錄
  a| 
-「Vserver CIFS BranchCache hash-create -vserver vserver_name -path path -recurse假」
+`vserver cifs branchcache hash-create -vserver vserver_name -path path -recurse false`
 
 
 
  a| 
 以循環方式處理目錄結構中的所有檔案
  a| 
-「Vserver CIFS BranchCache hash-create -vserver vserver_name -path falure_path -recurse true」
+`vserver cifs branchcache hash-create -vserver vserver_name -path absolute_path -recurse true`
 
 |===
-. 使用「統計資料」命令來驗證雜湊是否正在計算：
+. 使用驗證正在計算雜湊 `statistics` 命令：
 +
-.. 顯示所需SVM執行個體上「hashd」物件的統計資料：「統計資料show -object hashd -instance vserver_name」
+.. 顯示的統計資料 `hashd` 所需 SVM 執行個體上的物件： `statistics show -object hashd -instance vserver_name`
 .. 重複執行命令、確認所建立的雜湊數量增加。
 
 
 
 
 .範例
-以下範例會在路徑「/data」上建立雜湊、並在SVM VS1上的所有內含檔案和子目錄上建立雜湊：
+下列範例會在路徑上建立雜湊 `/data` 以及 SVM VS1 上所有包含的檔案和子目錄：
 
 [listing]
 ----

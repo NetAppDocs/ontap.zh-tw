@@ -23,7 +23,7 @@ summary: 如果一個磁碟區中的一個或多個LUN需要從SnapVault 還原�
 
 .步驟
 . 停止磁碟區中所有LUN的I/O。
-. 執行「shnapmirror show」命令、驗證包含SnapVault 次磁碟區的次磁碟區。
+. 執行 `snapmirror show` 用於驗證包含 SnapVault 次要 Volume 的次要 Volume 的命令。
 +
 [listing]
 ----
@@ -37,7 +37,7 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 執行「volume snapshot show」命令來識別要還原的Snapshot複本。
+. 執行 `volume snapshot show` 用於識別您要從其還原的 Snapshot 複本的命令。
 +
 [listing]
 ----
@@ -51,7 +51,7 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 執行「快照鏡像還原」命令、並指定「-source-snapshot」選項、以指定要使用的Snapshot複本。
+. 執行 `snapmirror restore` 命令並指定 `-source-snapshot` 用於指定要使用的 Snapshot 複本的選項。
 +
 您指定的還原目的地是您要還原的原始Volume。
 
@@ -76,7 +76,7 @@ Do you want to continue? {y|n}: y
 
 在下列範例中、在建立Snapshot複本之後、將LUN LUN_D新增至磁碟區。從Snapshot複本還原整個磁碟區之後、將不再顯示LUN_D。
 
-在「LUN show」命令輸出中、您可以看到主Volume srcvolA中的LUN、SnapVault 以及這些LUN的唯讀複本、這些複本均位於不穩定的dstvolB次要Volume中。在不支援支援的情況下、沒有LUN_D的複本SnapVault 。
+在中 `lun show` 命令輸出中、您可以在主磁碟區 srcvolA 中看到 LUN 、以及在 SnapVault 次要磁碟區 dstvolB 中看到這些 LUN 的唯讀複本。在不支援支援的情況下、沒有LUN_D的複本SnapVault 。
 
 [listing]
 ----

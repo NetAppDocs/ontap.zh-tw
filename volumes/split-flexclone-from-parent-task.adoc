@@ -45,17 +45,17 @@ vs1       clone1           40.73MB
 +
 .. 確定包含FlexClone磁碟區及其父磁碟區的集合體可用空間量：
 +
-《集合體展》
+`storage aggregate show`
 
 .. 如果包含的Aggregate沒有足夠的可用空間、請將儲存空間新增至Aggregate：
 +
-「torage Aggregate add-disks」
+`storage aggregate add-disks`
 
 
 
 . 開始分割作業：
 +
-磁碟區複製分割start -vserver _vserver_name_-FlexClone _clone_volume名稱_
+`volume clone split start -vserver _vserver_name_ -flexclone _clone_volume_name_`
 
 +
 以下範例說明如何啟動從父磁碟區「 'vol1' 」分割 FlexClone Volume 「 'clone1' 」的程序：
@@ -71,7 +71,7 @@ Warning: Are you sure you want to split clone volume clone1 in Vserver vs1 ?
 ----
 . 監控FlexClone分割作業的狀態：
 +
-「Volume clone sap show -vserver _vserver_name_-FlexClone _clone_volume名稱_」
+`volume clone split show -vserver _vserver_name_ -flexclone _clone_volume_name_`
 
 +
 以下範例顯示AFF 了FlexClone分割作業在整個系統上的狀態：
@@ -88,7 +88,7 @@ vs1       clone1        0         0       411247   153600         0        37
 ----
 . 確認分割磁碟區不再是FlexClone磁碟區：
 +
-「Volume show -volume _volume名稱_-Fields _clone-volume _」
+`volume show -volume _volume_name_ -fields clone-volume`
 
 +
 的值 `clone-volume` 對於非 FlexClone Volume 的 Volume 、選項為「 'FALSE' 」。

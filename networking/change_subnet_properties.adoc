@@ -35,7 +35,8 @@ summary: 變更子網路位址、遮罩值、閘道位址或IP位址範圍
 . 進行變更。
 . 儲存您的變更。
 +
-.. 如果輸入的IP位址或範圍已被介面使用、則會顯示下列訊息：「LIF已在使用此範圍內的IP位址。將LIF與此子網路建立關聯
+.. 如果輸入的 IP 位址或範圍已被介面使用、則會顯示下列訊息：
+`An IP address in this range is already in use by a LIF. Associate the LIF with this subnet?`
 .. 當您按一下「*確定*」時、現有的LIF將會與子網路相關聯。
 
 
@@ -52,12 +53,12 @@ summary: 變更子網路位址、遮罩值、閘道位址或IP位址範圍
 ....
 network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-subnet <subnet_address>] [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
 ....
-* 「ubnet_name」是您要修改的子網路名稱。
-* 「IPSpace」是子網路所在的IPspace名稱。
-* 「Subnet」是子網路的新位址和遮罩（如果適用）、例如192.0/24。
-* 「閘道」是子網路的新閘道（若適用）、例如192.0.2。輸入*「*」*會移除閘道項目。
-* 「ip_ranges」是新的IP位址清單或範圍、如果適用的話、將會分配給子網路。IP位址可以是個別位址、範圍或IP位址、或是以逗號分隔的清單組合。此處指定的範圍會取代現有的IP位址。
-* 變更IP位址範圍時、必須使用「force-update-lif-關聯」。修改IP位址範圍時、您可以將此選項的值設為* true*。如果任何服務處理器或網路介面使用指定範圍內的IP位址、則此命令會失敗。將此值設為* true*可將任何手動定址的介面與目前的子網路建立關聯、並允許命令成功執行。
+* `subnet_name` 是您要修改的子網路名稱。
+* `ipspace` 是子網路所在 IPspace 的名稱。
+* `subnet` 為子網路的新位址和遮罩（如果適用）、例如 192.0.2.0/24 。
+* `gateway` 是子網路的新閘道（如果適用）、例如 192.0.2.1 。輸入*「*」*會移除閘道項目。
+* `ip_ranges` 為 IP 位址的新清單或範圍、如果適用、將會分配給子網路。IP位址可以是個別位址、範圍或IP位址、或是以逗號分隔的清單組合。此處指定的範圍會取代現有的IP位址。
+* `force-update-lif-associations` 變更 IP 位址範圍時為必填。修改IP位址範圍時、您可以將此選項的值設為* true*。如果任何服務處理器或網路介面使用指定範圍內的IP位址、則此命令會失敗。將此值設為* true*可將任何手動定址的介面與目前的子網路建立關聯、並允許命令成功執行。
 
 
 下列命令會修改子網路子網路3的閘道IP位址：

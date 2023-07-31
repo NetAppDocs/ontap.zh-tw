@@ -11,9 +11,9 @@ summary: 從支援SVM 9.7開始ONTAP 、ONTAP 使用Keytab檔案、透過Active 
 
 
 [role="lead"]
-從支援SVM 9.7開始ONTAP 、ONTAP 使用Keytab檔案、透過Active Directory（AD）伺服器支援SVM驗證。AD系統管理員會產生Keytab檔案、ONTAP 並將其作為統一的資源識別元（URI）提供給各個管理員、當「Vserver CIFS」命令需要使用AD網域進行Kerberos驗證時、就會提供此檔案。
+從支援SVM 9.7開始ONTAP 、ONTAP 使用Keytab檔案、透過Active Directory（AD）伺服器支援SVM驗證。AD 系統管理員會產生 Keytab 檔案、並將其提供給 ONTAP 系統管理員、做為統一的資源識別元（ URI ） `vserver cifs` 命令需要使用 AD 網域進行 Kerberos 驗證。
 
-AD管理員可以使用標準的Windows Server「ktpass」命令來建立Keytab檔案。命令應在需要驗證的主要網域上執行。「ktpass」命令僅可用於為主要網域使用者產生Keytab檔案、不支援使用信任網域使用者所產生的金鑰。
+AD 管理員可以使用標準 Windows Server 建立 Keytab 檔案 `ktpass` 命令。命令應在需要驗證的主要網域上執行。。 `ktpass` 命令僅可用於為主要網域使用者產生 Keytab 檔案；不支援使用信任網域使用者所產生的金鑰。
 
 Keytab檔案是針對特定ONTAP 的資訊管理員使用者所產生。只要管理員使用者的密碼未變更、針對特定加密類型和網域所產生的金鑰就不會變更。因此、每當管理員使用者的密碼變更時、都需要新的Keytab檔案。
 

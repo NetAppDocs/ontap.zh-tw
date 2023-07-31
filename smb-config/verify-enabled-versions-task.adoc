@@ -20,7 +20,7 @@ summary: 您的版本支援的版本取決於預設啟用哪些SMB版本、以�
 
 * 從ONTAP SVM開始、即可停用SVM上的SMB 1.0。
 +
-vserver CIFS options modify'命令的「-SMB1-enabled」選項可啟用或停用SMB 1.0。
+。 `-smb1-enabled` 選項 `vserver cifs options modify` 命令可啟用或停用 SMB 1.0 。
 
 * 從功能更新9.3開始ONTAP 、它在新的SVM上預設為停用。
 
@@ -29,25 +29,27 @@ vserver CIFS options modify'命令的「-SMB1-enabled」選項可啟用或停用
 
 [NOTE]
 ====
-如果將「-SMB1-enabled for DC-connections」設為「假」、而「-SMB1-enabled」設為「真」、ONTAP 則不允許SMB 1.0連線做為用戶端、但仍接受傳入SMB 1.0連線做為伺服器。
+如果 `-smb1-enabled-for-dc-connections` 設為 `false` 而 `-smb1-enabled` 設為 `true`， ONTAP 拒絕 SMB 1.0 連線做為用戶端，但會繼續接受傳入 SMB 1.0 連線做為伺服器。
 
 ====
 link:../smb-admin/index.html["中小企業管理"] 包含支援的SMB版本和功能的詳細資料。
 
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 驗證啟用的SMB版本：「顯示Vserver CIFS選項」
+. 將權限層級設為進階： `set -privilege advanced`
+. 確認啟用哪些 SMB 版本： `vserver cifs options show`
 +
 您可以向下捲動清單、檢視啟用用戶端連線的SMB版本、如果您要在AD網域中設定SMB伺服器、以進行AD網域連線。
 
 . 視需要啟用或停用用戶端連線的SMB傳輸協定：
 +
-** 若要啟用SMB版本：「vserver CIFS選項修改-vserver vserver_name smb_version true」
-** 若要停用SMB版本：「vserver CIFS選項修改-vserver vserver_name smb_version假」、「shmb_version假」的可能值：
-** 「SMB1-enabled」（啟用SMB1-）
-** 「smb2-enabl」
-** 「smb3-enabl」
-** 啟用smb31的命令可在SVM vs1.example.com上啟用SMB 3.1：
+** 若要啟用 SMB 版本： `vserver cifs options modify -vserver vserver_name smb_version true`
+** 若要停用 SMB 版本： `vserver cifs options modify -vserver vserver_name smb_version false`
+的可能值 `smb_version`：
+** `-smb1-enabled`
+** `-smb2-enabled`
+** `-smb3-enabled`
+** `-smb31-enabled`
+下列命令可在 SVM vs1.example.com 上啟用 SMB 3.1 ：
 
 
 +
@@ -58,9 +60,9 @@ cluster1::*> vserver cifs options modify -vserver vs1.example.com -smb31-enabled
 ----
 . 如果SMB伺服器位於Active Directory網域中、請視需要啟用或停用SMB傳輸協定以進行DC連線：
 +
-** 若要啟用SMB版本：「vserver CIFS安全性修改-vserver vserver_name -smb2-enabled_for-DC-connections true」
-** 若要停用SMB版本：「vserver CIFS安全性修改-vserver vserver_name -smb2-enabled_for-DC-connections fals'
+** 若要啟用 SMB 版本： `vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections true`
+** 若要停用 SMB 版本： `vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections false`
 
 
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理權限層級： `set -privilege admin`
 

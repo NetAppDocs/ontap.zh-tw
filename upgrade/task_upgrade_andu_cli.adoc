@@ -29,17 +29,17 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 如果您不打算監控升級程序的進度、這是很好的做法 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["要求EMS通知可能需要手動介入的錯誤"]。
 
 .開始之前
-* 您應該啟動Active IQ 「We Digital Advisor」。
+* 您應該啟動 Active IQ Digital Advisor。
 +
-「升級顧問Active IQ 」元件可協助您規劃成功升級。
+Active IQ Digital Advisor 的 Upgrade Advisor 元件可協助您規劃成功的升級作業。
 
 +
-所有擁有有效*《*》*《*》*《*》*合約的NetApp客戶、均可從Active IQ 《支援資料》中獲得資料導向的洞見與建議SupportEdge （功能因產品與支援層而異）。
+所有擁有有效 *SupportEdge* 合約的 NetApp 客戶，均可從 Active IQ Digital Advisor 獲得由資料驅動的洞見與建議（功能因產品與支援層級而異）。
 
 * 您必須符合升級準備要求。
 * 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
 +
-如果您有8個以上的節點、批次升級方法將用於自動不中斷升級。在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP如果合作夥伴在同一個廣播網域中沒有任何連接埠、則LIF移轉會失敗。
+如果您有8個以上的節點、批次升級方法將用於自動不中斷升級。  在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP  如果合作夥伴在同一個廣播網域中沒有任何連接埠、則LIF移轉會失敗。
 
 +
 在更新的版本中、如果使用批次方法、則會將lifs移轉至其他批次群組。ONTAP
@@ -48,10 +48,10 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 
 
 .關於這項工作
-「叢集映像驗證」命令會檢查叢集元件、以驗證升級是否可在不中斷營運的情況下完成、然後提供每項檢查的狀態、以及執行軟體升級之前必須採取的任何必要行動。
+。 `cluster image validate` 命令會檢查叢集元件、以驗證升級是否可以不中斷地完成、然後提供每項檢查的狀態、以及執行軟體升級前必須採取的任何必要行動。
 
 
-NOTE: 在開始自動不中斷升級（andu）之前、修改「儲存容錯移轉modify-automatic f恢復」命令選項的設定、對升級程序沒有任何影響。在更新所需的接管/恢復期間、andu程序會忽略此選項的任何預設值。例如、在開始前將「自動恢復」設定為「假」、不會在還原之前中斷自動升級。
+NOTE: 修改的設定 `storage failover modify-auto-giveback` 在自動不中斷升級（ andu ）開始之前的命令選項、不會影響升級程序。在更新所需的接管/恢復期間、andu程序會忽略此選項的任何預設值。例如、設定 `-autogiveback` 如果在開始之前為 FALSE 、則不會在恢復之前中斷自動升級。
 
 . 刪除先前ONTAP 的版本：
 +
@@ -132,8 +132,8 @@ cluster image update -version package_version_number
 ----
 +
 ** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
-** 如果叢集由2至6個節點組成、則會執行循環升級。如果叢集由8個以上的節點組成、預設會執行批次升級。如果需要、您可以使用「-force-rolling」參數來指定循環升級。
-** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用「穩定分鐘數」參數來指定不同的穩定時間量。
+** 如果叢集由2至6個節點組成、則會執行循環升級。如果叢集由8個以上的節點組成、預設會執行批次升級。如有需要、您可以使用 `-force-rolling` 指定循環升級的參數。
+** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用 `-stabilize-minutes` 指定不同穩定時間量的參數。
 ** 對於MetroCluster 任何不含雙節點MetroCluster 的支援功能組態、ONTAP 在使用者啟動並在命令列上提供確認之後、即可在兩個站台（本機站台和災難恢復站台）的HA配對上同時開始執行升級程序。若為雙節點MetroCluster 的作業系統、更新會先在災難恢復站台（即未啟動升級的站台）上啟動。在災難恢復站點上完成更新後，升級將從本地站點開始。
 +
 [listing]
@@ -165,7 +165,7 @@ cluster-1::>
 cluster image show-update-progress
 ----
 +
-如果您要升級4節點或8節點MetroCluster 的BIOS組態、「cluster image show-update-progress」命令只會顯示執行命令之節點的進度。您必須在每個節點上執行命令、才能查看個別節點的進度。
+如果您要升級 4 節點或 8 節點 MetroCluster 組態、請使用 `cluster image show-update-progress` 命令只會顯示您執行命令所在節點的進度。您必須在每個節點上執行命令、才能查看個別節點的進度。
 
 . 驗證是否已在每個節點上成功完成升級。
 +
@@ -239,7 +239,7 @@ metrocluster show
 如果因為錯誤而導致自動升級暫停、您可以解決錯誤並恢復自動升級、也可以取消自動升級並手動完成程序。如果您選擇繼續自動升級、請勿手動執行任何升級步驟。
 
 .關於這項工作
-如果您想要手動完成升級、請使用「cluster image cance-update」命令取消自動化程序、然後手動繼續。如果您要繼續自動升級、請完成下列步驟。
+如果您想要手動完成升級、請使用 `cluster image cancel-update` 命令以取消自動化程序並手動繼續。如果您要繼續自動升級、請完成下列步驟。
 
 .步驟
 . 檢視升級錯誤：

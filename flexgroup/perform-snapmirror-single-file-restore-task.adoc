@@ -22,12 +22,12 @@ summary: 從ONTAP 功能不完整的9.8開始、您可以從FlexGroup SnapMirror
 如果來源檔案設有保護區、則單一檔案還原會失敗。
 
 * 您可以重新啟動或清除中止的單一檔案還原
-* 您應該使用「napmirror還原」命令的「清除故障」選項來清除單一檔案還原傳輸失敗
+* 您應該使用清除失敗的單一檔案還原傳輸 `clean-up-failure` 的選項 `snapmirror restore` 命令
 * 當進行還原單一檔案或處於中止狀態時、支援擴充FlexGroup 功能FlexGroup
 
 
 .步驟
-. 從FlexGroup 無法還原的磁碟區還原檔案：「快照鏡像還原- destination-path dite_path -source-path source_path -file-list /f1 -t節 流控制- source-snapshot snapshot快照」
+. 從 FlexGroup 磁碟區還原檔案：``snapmirror restore -destination-path destination_path -source-path source_path -file-list /f1 -throttle throttle -source-snapshot snapshot``
 +
 以下是FlexGroup 一個關於使用單一檔案還原功能的範例。
 

@@ -11,15 +11,15 @@ summary: 當SVM DR旗標設FlexGroup 為在Sf0 Volume上受保護時、您可以
 
 
 [role="lead"]
-當SVM DR旗標設定FlexGroup 為「protected」（受保護）時、您可以將旗標設為「protected」（未受保護）、以停用FlexGroup 位於現象區上的SVM DR「protection」（保護）。
+當 SVM DR 旗標設定為時 `protected` 在 FlexGroup 磁碟區上、您可以將旗標設為「未受保護」、以停用 SVM DR `protection` 在 FlexGroup 磁碟區上。
 
 .您需要的產品
 * 一線與二線之間的SVM DR關係是健全的。
-* SVM DR保護參數設為「protected」（受保護）。
+* SVM DR 保護參數設為 `protected`。
 
 
 .步驟
-. 使用「volume modify」命令停用保護功能、將FlexGroup 「vserver -dr-protection」參數的不受保護功能、以將此功能的整個過程變更為「未受保護」。
+. 使用停用保護 `volume modify` 變更的命令 `vserver-dr-protection` FlexGroup Volume 的參數 `unprotected`。
 +
 [listing]
 ----
@@ -28,7 +28,7 @@ cluster2::> volume modify -vserver vs1 -volume fg_src -vserver-dr-protection unp
 [Job 5384] Steps completed: 4 of 4.
 cluster2::>
 ----
-. 請在次要站台更新SVM：「napmirror update -destination-path destination_svm_name：-source-path svm_name：」
-. 驗證SnapMirror關係是否健全：「napmirror show」
-. 驗證FlexGroup 是否已移除「napmirror show -expand」（napmirror show -expand）關係
+. 更新次要站台的 SVM ： `snapmirror update -destination-path destination_svm_name: -source-path Source_svm_name:`
+. 驗證 SnapMirror 關係是否健全： `snapmirror show`
+. 驗證 FlexGroup SnapMirror 關係是否已移除： `snapmirror show -expand`
 

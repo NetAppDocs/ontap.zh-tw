@@ -11,7 +11,7 @@ summary: 您可以使用SnapMirror create命令的-identity-preserve假選項、
 
 
 [role="lead"]
-您可以使用「snapmirror create」命令的「-identity-preserve fal」選項、只複寫SVM的磁碟區和安全性組態。部分傳輸協定和名稱服務設定也會保留下來。
+您可以使用 `-identity-preserve false` 的選項 `snapmirror create` 僅複寫 SVM 的磁碟區和安全組態的命令。部分傳輸協定和名稱服務設定也會保留下來。
 
 .您需要的產品
 來源與目的地叢集和SVM必須進行對等關係。
@@ -26,29 +26,29 @@ summary: 您可以使用SnapMirror create命令的-identity-preserve假選項、
 .步驟
 . 建立目的地SVM：
 +
-「vserver create -vserver _Svm_-subtype dP-ditation...」
+`vserver create -vserver _SVM_ -subtype dp-destination`
 
 +
 SVM名稱在來源叢集和目的地叢集之間必須是唯一的。
 
 +
-以下範例建立名為「shvm_backup」的目的地SVM：
+下列範例建立名為的目的地 SVM `svm_backup`：
 
 +
 [listing]
 ----
 cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 ----
-. 從目的地叢集、使用「vserver對等點create」命令建立SVM對等關係。
+. 從目的地叢集、使用建立 SVM 對等關係 `vserver peer create` 命令。
 +
 如需詳細資訊、請參閱 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立SVM叢集間對等關係"]。
 
 . 建立複寫工作排程：
 +
-作業排程cron create -name _job_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
 +
 [NOTE]
@@ -57,7 +57,7 @@ SVM SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 15 �
 
 ====
 +
-以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]
@@ -66,16 +66,16 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 ----
 . 建立不含網路、名稱服務及其他組態設定的複寫關係：
 +
-「napmirror create -source-path _svm_：-dite-path _svm_：-type dp | xDP -排程排程-原則原則-identity-preserve假」
+`snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule schedule -policy policy -identity-preserve false`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱下列範例。您必須從目的地SVM或目的地叢集執行此命令。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱下列範例。    您必須從目的地SVM或目的地叢集執行此命令。
 
 ====
 +
-以下範例使用預設的「鏡像AllSnapshots」原則建立SnapMirror DR關係。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
+以下範例使用預設值建立 SnapMirror DR 關係 `MirrorAllSnapshots` 原則。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
 
 +
 [listing]
@@ -83,7 +83,7 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAllSnapshots -identity-preserve false
 ----
 +
-以下範例使用預設的「鏡像AndVault」原則建立統一化複寫關係。此關係不包括網路、名稱服務及其他組態設定：
+下列範例使用預設值建立統一化的複寫關係 `MirrorAndVault` 原則。此關係不包括網路、名稱服務及其他組態設定：
 
 +
 [listing]
@@ -91,7 +91,7 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 cluster_dst:> snapmirror create svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAndVault -identity-preserve false
 ----
 +
-假設您已建立原則類型為「非同步鏡射」的自訂原則、下列範例會建立SnapMirror DR關係。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
+假設您已建立具有原則類型的自訂原則 `async-mirror`下例建立 SnapMirror DR 關係。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
 
 +
 [listing]
@@ -99,7 +99,7 @@ cluster_dst:> snapmirror create svm1: -destination-path svm_backup: -type XDP -s
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_mirrored -identity-preserve false
 ----
 +
-假設您已建立原則類型為「mirror-Vault」的自訂原則、下列範例會建立統一化的複寫關係。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
+假設您已建立具有原則類型的自訂原則 `mirror-vault`下例建立統一的複寫關係。此關係不包括網路、名稱服務及其他組態設定、不包括SVM複寫：
 
 +
 [listing]
@@ -108,10 +108,10 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 . 停止目的地SVM：
 +
-"Vserver stop（Vserver停止）"
+`vserver stop`
 
 +
-「SVM名稱_」
+`_SVM name_`
 
 +
 下列範例會停止名為DV1的目的地SVM：
@@ -127,7 +127,7 @@ destination_cluster::> vserver stop -vserver dvs1
 
 . 從目的地SVM或目的地叢集、初始化SVM複寫關係：
 +
-「napmirror initialize -source-path _svm_name_：-destination-path _svm_name_:」
+`snapmirror initialize -source-path _SVM_name_: -destination-path _SVM_name_:`
 
 
 

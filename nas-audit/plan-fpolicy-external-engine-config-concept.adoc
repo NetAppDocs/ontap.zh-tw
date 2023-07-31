@@ -33,7 +33,7 @@ summary: 在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭�
 
 
 
-使用「vserver fpolicy policy exter-engine create」命令來建立FPolicy外部引擎。
+。 `vserver fpolicy policy external-engine create` 命令用於建立 FPolicy 外部引擎。
 
 
 
@@ -55,7 +55,7 @@ _SVM_
 
 每個FPolicy組態都是在單一SVM中定義。為了建立FPolicy原則組態、而將外部引擎、原則事件、原則範圍和原則結合在一起的原則、都必須與相同的SVM建立關聯。
  a| 
-vserver的「vserver_name」
+`-vserver` `vserver_name`
 
 
 
@@ -73,13 +73,13 @@ vserver的「vserver_name」
 ====
 名稱可以包含下列任何Ascii範圍字元的組合：
 
-* 從A到Z
-* 從「Z」到「A」
-* 從0到9
-* 「_」、「-」及「.」。
+* `a` 透過 `z`
+* `A` 透過 `Z`
+* `0` 透過 `9`
+* "`_`" 、 "`-`", and "`.`"
 
  a| 
-引擎名稱「engine_name」
+`-engine-name` `engine_name`
 
 
 
@@ -92,7 +92,7 @@ _主要FPolicy伺服器_
 
 如果外部引擎用於MetroCluster SVM災難恢復組態、您應該將來源站台FPolicy伺服器的IP位址指定為主要伺服器。目的地站台FPolicy伺服器的IP位址應指定為次要伺服器。
  a| 
-「主要伺服器」的「IP位址」、...
+`-primary-servers` `IP_address`、 ...
 
 
 
@@ -101,7 +101,7 @@ _主要FPolicy伺服器_
 
 指定FPolicy服務的連接埠號碼。
  a| 
-端口（integer...）
+`-port` `integer`
 
 
 
@@ -112,7 +112,7 @@ _主要FPolicy伺服器_
 
 次要伺服器只會在無法連線到任何一部主要伺服器時使用。當原則啟用時、就會建立次要伺服器的連線、但只有在所有主要伺服器都無法連線時、才會將通知傳送到次要伺服器。如果您設定多個次要伺服器、通知會以循環配置資源的方式傳送至FPolicy伺服器。
  a| 
-「次要伺服器」的「IP位址」、...
+`-secondary-servers` `IP_address`、 ...
 
 
 
@@ -121,14 +121,14 @@ _主要FPolicy伺服器_
 
 指定外部引擎是以同步或非同步模式運作。根據預設、FPolicy會以同步模式運作。
 
-設為「同步」時、檔案要求處理會傳送通知給FPolicy伺服器、但直到收到FPolicy伺服器的回應之後才會繼續。此時、視FPolicy伺服器的回應是否允許要求的動作而定、要求流程會繼續或處理會導致拒絕。
+設定為時 `synchronous`、檔案要求處理會傳送通知給 FPolicy 伺服器、但在收到 FPolicy 伺服器的回應之後才會繼續。此時、視FPolicy伺服器的回應是否允許要求的動作而定、要求流程會繼續或處理會導致拒絕。
 
-設為「非同步」時、檔案要求處理會傳送通知給FPolicy伺服器、然後繼續。
+設定為時 `asynchronous`、檔案要求處理會傳送通知給 FPolicy 伺服器、然後繼續。
  a| 
-「extern-enginer-type（external_engine_type）、此參數的值可以是下列其中一項：
+`-extern-engine-type` `external_engine_type` 此參數的值可以是下列其中一項：
 
-* "同步"
-* "非同步"
+* `synchronous`
+* `asynchronous`
 
 
 
@@ -138,18 +138,18 @@ _主要FPolicy伺服器_
 
 指定與FPolicy伺服器通訊的SSL選項。這是必要的參數。您可以根據下列資訊選擇其中一個選項：
 
-* 如果設定為「無驗證」、則不會進行驗證。
+* 設定為時 `no-auth`、不進行驗證。
 +
 通訊連結是透過TCP建立。
 
-* 當設定為「伺服器驗證」時、SVM會使用SSL伺服器驗證來驗證FPolicy伺服器。
-* 設為「虛擬驗證」時、SVM與FPolicy伺服器之間會進行相互驗證；SVM會驗證FPolicy伺服器、而FPolicy伺服器會驗證SVM。
+* 設定為時 `server-auth`， SVM 使用 SSL 伺服器驗證來驗證 FPolicy 伺服器。
+* 設定為時 `mutual-auth`、在 SVM 和 FPolicy 伺服器之間進行相互驗證； SVM 驗證 FPolicy 伺服器、 FPolicy 伺服器驗證 SVM 。
 +
-如果您選擇設定相互SSL驗證、則也必須設定「-certifical-common name」、「-certifical-serial」和「-certificate -ca」參數。
+如果您選擇設定相互 SSL 驗證、則也必須設定 `-certificate-common-name`、 `-certificate-serial`和 `-certifcate-ca` 參數。
 
 
  a| 
-'-'SSL選項'｛'no auth'|'sherver-auth'|'mutual驗證'｝
+`-ssl-option` {`no-auth`|`server-auth`|`mutual-auth`}
 
 
 
@@ -158,9 +158,9 @@ _憑證FQDN或自訂通用名稱_
 
 指定在SVM與FPolicy伺服器之間設定SSL驗證時所使用的憑證名稱。您可以將憑證名稱指定為FQDN或自訂通用名稱。
 
-如果您為「-SSL選項」參數指定「虛擬驗證」、則必須為「-Certificate common-name」參數指定一個值。
+如果您指定 `mutual-auth` 適用於 `-ssl-option` 參數、您必須指定的值 `-certificate-common-name` 參數。
  a| 
-證書-通用名稱（text）
+`-certificate-common-name` `text`
 
 
 
@@ -169,9 +169,9 @@ _憑證序號_
 
 指定在SVM與FPolicy伺服器之間設定SSL驗證時、用於驗證的憑證序號。
 
-如果您為「-SSL選項」參數指定「虛擬驗證」、則必須為「-Certificate -serial」參數指定一個值。
+如果您指定 `mutual-auth` 適用於 `-ssl-option` 參數、您必須指定的值 `-certificate-serial` 參數。
  a| 
-證書序列的「文字」
+`-certificate-serial` `text`
 
 
 
@@ -180,9 +180,9 @@ _憑證授權單位_
 
 指定在SVM與FPolicy伺服器之間設定SSL驗證時、用於驗證的憑證CA名稱。
 
-如果您為「-SSL-option」參數指定「mutual驗證」、則必須為「-Certificate -ca」參數指定一個值。
+如果您指定 `mutual-auth` 適用於 `-ssl-option` 參數、您必須指定的值 `-certificate-ca` 參數。
  a| 
-證書- CA的「text」
+`-certificate-ca` `text`
 
 |===
 
@@ -201,35 +201,35 @@ _憑證授權單位_
  a| 
 取消要求的逾時_
 
-指定節點等待FPolicy伺服器回應的時間間隔（小時）、分鐘（分鐘）或秒（秒）。
+指定時間間隔（小時） (`h`）、分鐘 (`m`）或秒 (`s`）節點等待 FPolicy 伺服器的回應。
 
 如果逾時時間間隔超過、節點會將取消要求傳送至FPolicy伺服器。然後、節點會將通知傳送至替代的FPolicy伺服器。此逾時有助於處理無回應的FPolicy伺服器、進而改善SMB/NFS用戶端回應。此外、在逾時期間之後取消要求、也有助於釋出系統資源、因為通知要求會從停機/不良的FPolicy伺服器移至替代的FPolicy伺服器。
 
-此值的範圍為「0」到「100」。如果值設為「0」、則選項會停用、取消要求訊息不會傳送至FPolicy伺服器。預設值為「20s」。
+此值的範圍為 `0` 透過 `100`。如果值設為 `0`，此選項已停用，取消要求訊息不會傳送至 FPolicy 伺服器。預設值為 `20s`。
  a| 
--`reqs-cance-timeout ' integere`[h|m/s]
+`-reqs-cancel-timeout` `integer`[h|m|s]
 
 
 
  a| 
 中止要求的逾時_
 
-指定中止要求的逾時時間（小時）、分鐘（分鐘）或秒（秒）。
+指定逾時（以小時為單位） (`h`）、分鐘 (`m`）或秒 (`s`）以中止要求。
 
-此值的範圍為「0」到「200」。
+此值的範圍為 `0` 透過 `200`。
  a| 
-"-reqs-abort-timeout"、"integere"[h|m/s]
+`-reqs-abort-timeout` `` `integer`[h|m|s]
 
 
 
  a| 
 _傳送狀態要求的時間間隔_
 
-指定狀態要求傳送至FPolicy伺服器的時間間隔（小時）、分鐘（分鐘）或秒（秒）。
+指定以小時為單位的時間間隔 (`h`）、分鐘 (`m`）或秒 (`s`）之後、狀態要求會傳送至 FPolicy 伺服器。
 
-此值的範圍為「0」到「50」。如果值設為「0」、則選項會停用、狀態要求訊息不會傳送至FPolicy伺服器。預設值為「10秒」。
+此值的範圍為 `0` 透過 `50`。如果值設為 `0`、選項已停用、狀態要求訊息不會傳送至 FPolicy 伺服器。預設值為 `10s`。
  a| 
-state-req-intre'「integereal'（整數）[h|m/s]
+`-status-req-interval` `integer`[h|m|s]
 
 
 
@@ -240,33 +240,33 @@ _FPolicy伺服器上未處理的要求上限_
 
 此值的範圍為 `1` 透過 `10000`。預設值為 `500`。
  a| 
-最大伺服器需求量的「整數」
+`-max-server-reqs` `integer`
 
 
 
  a| 
 _中斷無回應的FPolicy伺服器連線逾時_
 
-以小時（'h'）、分鐘（'m'）或秒（'s'）為單位指定終止FPolicy伺服器連線的時間間隔。
+指定時間間隔（小時） (`h`）、分鐘 (`m`）或秒 (`s`）之後、會終止與 FPolicy 伺服器的連線。
 
-只有FPolicy伺服器的佇列包含允許的最大要求數、且在逾時期間內未收到任何回應時、才會在逾時期間之後終止連線。允許的最大要求數為「50」（預設值）或「max-server-reqs-」參數指定的數字。
+只有FPolicy伺服器的佇列包含允許的最大要求數、且在逾時期間內未收到任何回應時、才會在逾時期間之後終止連線。允許的最大要求數為其中之一 `50` （預設）或指定的號碼 `max-server-reqs-` 參數。
 
-此值的範圍是「1」到「100」。預設值為「60年代」。
+此值的範圍為 `1` 透過 `100`。預設值為 `60s`。
  a| 
-「integereere`、伺服器進度逾時」、「integere'、h|m/s]
+`-server-progress-timeout` `integer`[h|m|s]
 
 
 
  a| 
 _將保持活動訊息傳送至FPolicy server_的時間間隔
 
-以小時（'h'）、分鐘（'m'）或秒（'s'）為單位、指定將持續訊息傳送至FPolicy伺服器的時間間隔。
+指定時間間隔（小時） (`h`）、分鐘 (`m`）或秒 (`s`）將保持活動的訊息傳送到 FPolicy 伺服器。
 
 「保持連線」訊息會偵測半開啟的連線。
 
-此值的範圍是「10」到「600」。如果該值設為「0」、則此選項會停用、並防止將「保持連線」訊息傳送至FPolicy伺服器。預設值為「120秒」。
+此值的範圍為 `10` 透過 `600`。如果值設為 `0`，此選項會停用，並防止將持續作用的訊息傳送至 FPolicy 伺服器。預設值為 `120s`。
  a| 
-「Keep-Alive-intere-intere'（保持活動時間間隔）」、「integere'（整數）[h|m/s]
+`-keep-alive-interval-` `integer`[h|m|s]
 
 
 
@@ -275,9 +275,9 @@ _將保持活動訊息傳送至FPolicy server_的時間間隔
 
 指定SVM在連線中斷後嘗試重新連線至FPolicy伺服器的最大次數。
 
-此值的範圍為「0」到「20」。預設值為「5」。
+此值的範圍為 `0` 透過 `20`。預設值為 `5`。
  a| 
-最大連線重試次數（integer...）
+`-max-connection-retries` `integer`
 
 
 
@@ -290,7 +290,7 @@ _將保持活動訊息傳送至FPolicy server_的時間間隔
 
 例如、如果套接字的預設接收緩衝區大小為65536位元組、將可調值設為0、則套接字緩衝區大小會設為65536位元組。您可以使用任何非預設值來設定接收緩衝區的大小（以位元組為單位）。
  a| 
-"-recv-緩 衝區大小"的"integer"
+`-recv-buffer-size` `integer`
 
 
 
@@ -303,19 +303,19 @@ _傳送緩衝區大小_
 
 例如、如果套接字的預設傳送緩衝區大小設為65536位元組、將可調值設為0、則套接字緩衝區大小會設為65536位元組。您可以使用任何非預設值來設定傳送緩衝區的大小（以位元組為單位）。
  a| 
-"integer"（整數）
+`-send-buffer-size` `integer`
 
 
 
  a| 
 _重新連線期間清除工作階段ID逾時_
 
-指定重新連線嘗試期間、新工作階段ID傳送至FPolicy伺服器的時間間隔（小時）、分鐘（分鐘）或秒（秒）。
+指定以小時為單位的時間間隔 (`h`）、分鐘 (`m`）或秒 (`s`）之後、新的工作階段 ID 會在重新連線嘗試期間傳送至 FPolicy 伺服器。
 
-如果儲存控制器與FPolicy伺服器之間的連線終止、且重新連線是在「工作階段逾時」時間間隔內進行、則舊的工作階段ID會傳送至FPolicy伺服器、以便傳送舊通知的回應。
+如果儲存控制器與FPolicy伺服器之間的連線終止、並在中進行重新連線 `-session-timeout` 時間間隔時、舊的工作階段ID會傳送至FPolicy伺服器、以便傳送舊通知的回應。
 
-預設值設為10秒。
+預設值設為 10 秒。
  a| 
-session-timeout（session-timeout）[`integere'h][`integer'm（m）[`integer's]
+`-session-timeout` [``integer``h][``integer``M][``integer``s]
 
 |===

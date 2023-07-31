@@ -60,7 +60,7 @@ SnapMirror提供兩種類型的資料保護關係。對於每種類型、SnapMir
 
 您可以在建立資料保護關係時使用預設或自訂原則。_policy類型_決定要包含哪些Snapshot複本、以及要保留的複本數量。
 
-下表顯示預設原則。使用「最新」原則建立傳統的DR關係。使用「鏡像AndVault」或「Unified7年」原則來建立統一化的複寫關係、在同一個目的地磁碟區上設定DR和長期保留。
+下表顯示預設原則。使用 `MirrorLatest` 建立傳統 DR 關係的原則。使用 `MirrorAndVault` 或 `Unified7year` 建立統一化複寫關係的原則、在同一個目的地磁碟區上設定 DR 和長期保留。
 
 [cols="25,25,50"]
 |===
@@ -179,12 +179,12 @@ Unified7年
 SnapMirror
  a| 
 * 不支援SnapMirror還原功能。
-* 不支援「AllSnapshots」和「XDPDefault」原則。
+* 。 `MirrorAllSnapshots` 和 `XDPDefault` 不支援原則。
 * 不支援「'Vault'」原則類型。
 * 不支援系統定義的規則「'all_source_snapshots'」。
 * 「鏡射-保存庫」原則類型僅支援從Element軟體複寫至ONTAP使用「as同步 鏡射」來複寫ONTAP 從現象複寫至元素軟體。
-* 不支援「napmirror policy add-rule」的「排程」和「首碼」選項。
-* 不支援「快照鏡射重新同步」的「-preserve」和「-que-resSync」選項。
+* 。 `-schedule` 和 `-prefix` 選項 `snapmirror policy add-rule` 不受支援。
+* 。 `-preserve` 和 `-quick-resync` 選項 `snapmirror resync` 不受支援。
 * 儲存效率不會保留下來。
 * 不支援連出和串聯資料保護部署。
 

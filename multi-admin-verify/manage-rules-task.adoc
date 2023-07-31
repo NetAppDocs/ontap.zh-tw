@@ -22,43 +22,43 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 
  a| 
-"叢集對等刪除"
+`cluster peer delete`
 
-"Event config modif修改"
+`event config modify`
 
-《安全登入建立》
+`security login create`
 
-'安全登入刪除'
+`security login delete`
 
-"ecurity登入修改"
+`security login modify`
 
-'系統節點執行'
+`system node run`
 
-系統節點系統Shell
+`system node systemshell`
 
-磁碟區刪除
+`volume delete`
 
-Volume FlexCache 不刪除
+`volume flexcache delete`
  a| 
-Volume Snapshot自動刪除修改
+`volume snapshot autodelete modify`
 
-磁碟區快照刪除
+`volume snapshot delete`
 
-「Volume Snapshot原則附加排程」
+`volume snapshot policy add-schedule`
 
-磁碟區快照原則建立
+`volume snapshot policy create`
 
-磁碟區快照原則刪除
+`volume snapshot policy delete`
 
-磁碟區快照原則修改
+`volume snapshot policy modify`
 
-「Volume Snapshot原則modify-schedule」
+`volume snapshot policy modify-schedule`
 
-「Volume Snapshot原則移除排程」
+`volume snapshot policy remove-schedule`
 
-磁碟區快照還原
+`volume snapshot restore`
 
-"vserver對等刪除"
+`vserver peer delete`
 
 |===
 您可以從 ONTAP 9.13.1 開始建立下列命令的規則：
@@ -68,14 +68,14 @@ Volume Snapshot自動刪除修改
 
 此外、在啟用MAV時、下列命令預設會受到保護、但您可以修改規則、以移除這些命令的保護。
 
-* "ecurity登入密碼"
-* 《安全登入解除鎖定》
-* 《設定》
+* `security login password`
+* `security login unlock`
+* `set`
 
 
-MAV系統預設命令的規則（即「安全的多管理員驗證」命令）無法變更。
+MAV 系統預設命令的規則– `security multi-admin-verify` 命令–不可變更。
 
-建立規則時、您可以選擇性地指定「-query」選項、將要求限制為命令功能的子集。例如、在預設的set命令中、「-query」設為「-priv.」、表示只有在指定-priv.時、才會針對set命令產生要求。
+建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。例如、在預設的 Set 命令中、 `-query` 設為 `-privilege diag`，表示只有在指定 -priv特權 診斷時，才會為 set 命令產生要求。
 
 [listing]
 ----
@@ -86,7 +86,7 @@ Vserver Operation                              Approvers Groups
 vs01    set                                    -         -
           Query: -privilege diagnostic
 ----
-根據預設、規則會指定在輸入受保護的作業時、自動產生對應的「安全性多管理員驗證要求create _「protected_operation」_」命令。您可以修改此預設值、以要求分別輸入「REquest create」命令。
+根據預設、規則會指定對應的 `security multi-admin-verify request create _“protected_operation”_` 輸入受保護的作業時、會自動產生命令。您可以修改此預設值、要求使用 `request create` 請分別輸入命令。
 
 根據預設、規則會繼承下列全域MAV設定、不過您可以指定規則特定的例外狀況：
 
@@ -125,7 +125,7 @@ vs01    set                                    -         -
 == CLI程序
 
 
-NOTE: 所有的「安全性多管理員驗證規則」命令在執行之前、都必須取得MAV系統管理員核准、但「安全性多管理員驗證規則顯示」除外。
+NOTE: 全部 `security multi-admin-verify rule` 命令必須先獲得 MAV 管理員核准、才能執行 `security multi-admin-verify rule show`。
 
 [cols="50,50"]
 |===
@@ -133,31 +133,31 @@ NOTE: 所有的「安全性多管理員驗證規則」命令在執行之前、�
 
 
 | 建立規則  a| 
-「安全性多管理驗證規則」會建立作業_「protected_operation」_[-query _operation_Subset_][_parameters_]
+`security multi-admin-verify rule create -operation _“protected_operation”_ [-query _operation_subset_] [_parameters_]`
 
 
 
 | 修改目前系統管理員的認證資料  a| 
-「安全登入修改_」
+`security login modify _<parameters>_`
 
 *範例*：下列規則需要核准才能刪除根Volume。
 
-「安全性多管理驗證規則」建立作業「Volume DELETE」查詢「-vserver vs0」
+`security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0`
 
 
 
 | 修改規則  a| 
-「安全性多管理驗證規則修改作業_「protected_operation」_[_parameters_]」
+`security multi-admin-verify rule modify -operation _“protected_operation”_ [_parameters_]`
 
 
 
 | 刪除規則  a| 
-「安全性多管理驗證規則刪除作業_「protected_operation」_」
+`security multi-admin-verify rule delete -operation _“protected_operation”_`
 
 
 
 | 顯示規則  a| 
-「安全的多管理員驗證規則顯示」
+`security multi-admin-verify rule show`
 
 |===
-如需命令語法的詳細資料、請參閱「安全性多管理員驗證規則」手冊頁。
+如需命令語法詳細資料、請參閱 `security multi-admin-verify rule` 手冊頁。

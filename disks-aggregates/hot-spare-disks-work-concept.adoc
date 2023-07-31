@@ -13,7 +13,7 @@ summary: 熱備援磁碟是指派給儲存系統的磁碟、已準備就緒可�
 [role="lead"]
 熱備援磁碟是指派給儲存系統的磁碟、已準備就緒可供使用、但未供RAID群組使用、且不保留任何資料。
 
-如果RAID群組內發生磁碟故障、熱備援磁碟會自動指派給RAID群組、以取代故障磁碟。故障磁碟的資料會從RAID同位元檢查磁碟在背景的熱備援替換磁碟上重建。重建活動會記錄在「etc/message」檔案中、AutoSupport 並傳送一個資訊提示訊息。
+如果RAID群組內發生磁碟故障、熱備援磁碟會自動指派給RAID群組、以取代故障磁碟。故障磁碟的資料會從RAID同位元檢查磁碟在背景的熱備援替換磁碟上重建。重建活動會登入 `/etc/message` 檔案和 AutoSupport 訊息隨即傳送。
 
 如果可用的熱備援磁碟與故障磁碟的大小不同、則會選擇大小較大的磁碟、然後再縮減大小以符合所更換磁碟的大小。
 
@@ -25,4 +25,5 @@ summary: 熱備援磁碟是指派給儲存系統的磁碟、已準備就緒可�
 
 您必須隨時為多個磁碟機磁碟保留至少兩個熱備援磁碟。若要支援使用維護中心、並避免多個並行磁碟故障所造成的問題、您應至少保留四個熱備援磁碟、以確保穩定狀態運作、並立即更換故障磁碟。
 
-如果兩個磁碟同時故障、但只有兩個可用的熱備援磁碟、ONTAP 則可能無法將故障磁碟的內容及其載體與備用磁碟的結合交換。這種情況稱為「停滯」。如果發生這種情況、系統會透過EMS訊息和AutoSupport 功能性訊息通知您。當替換電信業者推出時、您必須遵循EMS訊息所提供的指示。如需相關資訊、請參閱知識庫文章 link:++https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/Draft_-_RAID_Layout_Cannot_Be_Autocorrected_-_AutoSupport_message++["RAID配置無法自動重新命名- AutoSupport 資訊不整"]
+如果兩個磁碟同時故障、但只有兩個可用的熱備援磁碟、ONTAP 則可能無法將故障磁碟的內容及其載體與備用磁碟的結合交換。這種情況稱為「停滯」。如果發生這種情況、系統會透過EMS訊息和AutoSupport 功能性訊息通知您。當替換電信業者推出時、您必須遵循EMS訊息所提供的指示。
+如需相關資訊、請參閱知識庫文章 link:++https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/Draft_-_RAID_Layout_Cannot_Be_Autocorrected_-_AutoSupport_message++["RAID配置無法自動重新命名- AutoSupport 資訊不整"]

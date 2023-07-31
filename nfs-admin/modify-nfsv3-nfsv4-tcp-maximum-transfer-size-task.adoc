@@ -11,17 +11,17 @@ summary: 您可以修改-tcp-max-xfer-size選項、以使用NFSv3和NFSv4.x傳�
 
 
 [role="lead"]
-您可以修改「-tcp-max-xfer-size」選項、以使用NFSv3和NFSv4.x傳輸協定、設定所有TCP連線的最大傳輸大小。
+您可以修改 `-tcp-max-xfer-size` 使用 NFSv3 和 NFSv4.x 通訊協定、為所有 TCP 連線設定最大傳輸大小的選項。
 
 .關於這項工作
 您可以針對每個儲存虛擬機器（SVM）個別修改這些選項。
 
-從ONTAP 功能區塊9開始、「v3-tcp -max-read-size」和「v3-tcp -max-write－size」選項已過時。您必須改用「-tcp-max-xfer-size」選項。
+從 ONTAP 9 開始 `v3-tcp-max-read-size` 和 `v3-tcp-max-write-size` 選項已過時。您必須使用 `-tcp-max-xfer-size` 選項。
 
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 執行下列其中一項動作：
 +
@@ -33,7 +33,7 @@ summary: 您可以修改-tcp-max-xfer-size選項、以使用NFSv3和NFSv4.x傳�
  a| 
 修改NFSv3或NFSv4 TCP最大傳輸大小
  a| 
-「vserver NFS modify -vserver vserver_name -tcp-max-xfer-size integer_maxfer_size」
+`vserver nfs modify -vserver vserver_name -tcp-max-xfer-size integer_max_xfer_size`
 
 |===
 +
@@ -43,11 +43,11 @@ summary: 您可以修改-tcp-max-xfer-size選項、以使用NFSv3和NFSv4.x傳�
 
 
  a| 
-tcp-max-xfer-size"
+`-tcp-max-xfer-size`
  a| 
 8192至1048576位元組
  a| 
-65536位元組
+65536 位元組
 
 |===
 +
@@ -56,7 +56,7 @@ tcp-max-xfer-size"
 您輸入的最大傳輸大小必須是4 KB（4096位元組）的倍數。未適當調整的要求會對效能造成負面影響。
 
 ====
-. 使用「vserver NFS show -Fields tcp-max-xfer-size」命令來驗證變更。
+. 使用 `vserver nfs show -fields tcp-max-xfer-size` 用於驗證變更的命令。
 . 如果有任何用戶端使用靜態掛載、請卸載並重新掛載新的參數大小以使其生效。
 
 

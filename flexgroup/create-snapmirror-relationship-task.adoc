@@ -27,9 +27,9 @@ link:../peering/index.html["叢集與SVM對等關係"]
 
 
 .步驟
-. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
+. 建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 的組成數量相同：
 +
-.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
+.. 從來源叢集中、判斷來源 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -46,7 +46,7 @@ vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57
 vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ...
 ----
-.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
+.. 從目的地叢集建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 相同。
 +
 [listing]
 ----
@@ -56,7 +56,7 @@ Warning: The FlexGroup volume "dstFG" will be created with the following number 
 Do you want to continue? {y|n}: y
 [Job 766] Job succeeded: Successful
 ----
-.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
+.. 從目的地叢集、確認目的地 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -75,25 +75,25 @@ vsd       dstFG__0007    Aggr_cmode   online     DP         25TB    10.63TB   57
 ----
 
 
-. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
+. 建立工作排程： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour hour -minute minute`
 +
-在「月」、「星期」及「小時」選項中、您可以分別指定「所有」來執行每月、每週的每一天和每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour` 選項、您可以指定 `all` 每個月、每週的每一天、每小時執行一次工作。
 
 +
-以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]
 ----
 cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
-. 針對SnapMirror關係建立類型為「asn同步 鏡射」的自訂原則：「napmirror policy create -vserver sVM -policy SnapMirror -type asn同步 鏡射」
+. 建立類型的自訂原則 `async-mirror` 對於 SnapMirror 關係： `snapmirror policy create -vserver SVM -policy snapmirror_policy -type async-mirror`
 +
-如果您不建立自訂原則、則應針對SnapMirror關係指定「鏡像AllSnapshots」原則。
+如果您未建立自訂原則、則應指定 `MirrorAllSnapshots` SnapMirror 關係原則。
 
-. 從目的地叢集、在來源FlexGroup 供應區與目的地FlexGroup 供應區之間建立SnapMirror關係：「napmirror create -source-path src/svm:sr_flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -policy -scheduled sched_name」
+. 從目的地叢集、在來源 FlexGroup Volume 和目的地 FlexGroup Volume 之間建立 SnapMirror 關係： `snapmirror create -source-path src_svm:src_flexgroup -destination-path dest_svm:dest_flexgroup -type XDP -policy snapmirror_policy -schedule sched_name`
 +
-SnapMirror與FlexGroup 資料區的關係必須是XDP類型。
+FlexGroup 磁碟區的 SnapMirror 關係必須屬於類型 `XDP`。
 
 +
 如果您為FlexGroup SnapMirror關係指定一個流向值、則每個組成部分都會使用相同的節流值。節流值不會分成多個部分。
@@ -105,7 +105,7 @@ SnapMirror與FlexGroup 資料區的關係必須是XDP類型。
 
 ====
 +
-在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+在 ONTAP 9.4 及更早版本中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAllSnapshots` 原則預設為使用。在 ONTAP 9.5 中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAndVault` 原則預設為使用。
 
 +
 [listing]
@@ -113,7 +113,7 @@ SnapMirror與FlexGroup 資料區的關係必須是XDP類型。
 cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -policy MirrorAllSnapshots -schedule hourly
 Operation succeeded: snapmirror create for the relationship with destination "vsd:dstFG".
 ----
-. 從目的地叢集、執行基礎傳輸來初始化SnapMirror關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」
+. 從目的地叢集執行基準傳輸、以初始化 SnapMirror 關係： `snapmirror initialize -destination-path dest_svm:dest_flexgroup`
 +
 基礎傳輸完成後、目的地FlexGroup 的E動磁 碟區會根據SnapMirror關係的排程定期更新。
 
@@ -126,7 +126,7 @@ Operation is queued: snapmirror initialize of destination "vsd:dstFG".
 +
 [NOTE]
 ====
-如果FlexGroup 您已在來源叢集執行ONTAP 版本為9.3的來源叢集與執行ONTAP 版本為9.2或更早版本的目的地叢集之間建立任何SnapMirror關係、而且如果您在來源FlexGroup 版本為0、SnapMirror更新就會失敗。若要從這種情況中恢復、您必須刪除FlexGroup 整個非預設qtree中的所有qtree、停用FlexGroup 該實體磁碟區上的qtree功能、然後刪除所有啟用qtree功能的Snapshot複本。如果您已在支援qtree功能的情況下、您也必須在從ONTAP 還原為ONTAP 舊版的支援功能之前執行這些步驟FlexGroup 。  https://docs.netapp.com/us-en/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["還原之前、請先停用FlexGroup 完所有的qtree功能"]
+如果FlexGroup 您已在來源叢集執行ONTAP 版本為9.3的來源叢集與執行ONTAP 版本為9.2或更早版本的目的地叢集之間建立任何SnapMirror關係、而且如果您在來源FlexGroup 版本為0、SnapMirror更新就會失敗。若要從這種情況中恢復、您必須刪除FlexGroup 整個非預設qtree中的所有qtree、停用FlexGroup 該實體磁碟區上的qtree功能、然後刪除所有啟用qtree功能的Snapshot複本。如果您已在支援qtree功能的情況下、您也必須在從ONTAP 還原為ONTAP 舊版的支援功能之前執行這些步驟FlexGroup 。    https://docs.netapp.com/us-en/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["還原之前、請先停用FlexGroup 完所有的qtree功能"]
 
 ====
 

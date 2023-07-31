@@ -25,11 +25,11 @@ summary: 如果您執行ONTAP 的是版本不符合要求的9.5或更新版本�
 
 
 .步驟
-. 使用「sorage Aggregate object-store config create」命令搭配「-provider-type」「IBM_COs」參數、指定IBM Cloud Object Storage組態資訊。
+. 使用指定 IBM Cloud Object Storage 組態資訊 `storage aggregate object-store config create` 命令 `-provider-type` `IBM_COS` 參數。
 +
-** 如果以提供的資訊無法存取IBM Cloud Object Storage、則「儲存Aggregate object-store config create」命令會失敗ONTAP 。
-** 您可以使用「-access-key」參數來指定存取金鑰、以授權要求存取IBM Cloud Object Storage物件存放區。
-** 您可以使用「-secret密碼」參數來指定密碼（秘密存取金鑰）、以驗證對IBM Cloud Object Storage物件存放區的要求。
+** 。 `storage aggregate object-store config create` 如果 ONTAP 無法使用提供的資訊存取 IBM Cloud Object Storage 、則命令會失敗。
+** 您可以使用 `-access-key` 此參數可指定存取金鑰、以將要求授權給 IBM Cloud Object Storage 物件存放區。
+** 您可以使用 `-secret-password` 此參數可指定密碼（秘密存取金鑰）、以驗證對 IBM Cloud Object Storage 物件儲存區的要求。
 ** 如果IBM Cloud Object Storage密碼已變更、您應該ONTAP 立即更新儲存在BIOS中的對應密碼。
 +
 如此一來、即可讓支援中心在不中斷的情況下存取IBM Cloud Object Storage中的資料。ONTAP
@@ -44,8 +44,8 @@ storage aggregate object-store config create
 -server s3.us-east.objectstorage.softlayer.net
 -container-name my-ibm-cos-bucket -access-key DXJRXHPXHYXA9X31X3JX
 ----
-. 使用「儲存Aggregate object-store config show」命令來顯示及驗證IBM Cloud Object Storage組態資訊。
+. 使用顯示及驗證 IBM Cloud Object Storage 組態資訊 `storage aggregate object-store config show` 命令。
 +
-您可以使用「儲存Aggregate object-store config modify」命令來修改IBM Cloud Object Storage組態資訊FabricPool 、以供參考。
+。 `storage aggregate object-store config modify` 命令可讓您修改 FabricPool 的 IBM 雲端物件儲存組態資訊。
 
 

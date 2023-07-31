@@ -62,16 +62,16 @@ summary: 建立原則工作並將其新增至安全性原則、是設定及套�
 儲存層級存取保護會忽略任何選用參數的值。如需詳細資訊、請參閱手冊頁。
 
 .步驟
-. 將具有相關安全性描述元的工作新增至安全性原則：「vserver安全性檔案目錄原則工作add -vserver vserver_name -police-name policy_name -path path -ntfs-SD sd_nameOptional _parameters'
+. 將具有相關安全性描述元的工作新增至安全性原則： `vserver security file-directory policy task add -vserver vserver_name -policy-name policy_name -path path -ntfs-sd SD_nameoptional_parameters`
 +
-"file-directory"是"-access-control"參數的預設值。設定檔案和目錄存取工作時、可選擇指定存取控制類型。
+`file-directory` 為的預設值 `-access-control` 參數。設定檔案和目錄存取工作時、可選擇指定存取控制類型。
 
 +
-「Vserver安全性檔案目錄原則工作add -vserver VS1 -policy-name policy1 -path /home/dir1 -security-type NTFS -ntfs-mode exp -ntfs-SD SD2 -index-num 1 -access-controlfile目錄」
+`vserver security file-directory policy task add -vserver vs1 -policy-name policy1 -path /home/dir1 -security-type ntfs -ntfs-mode propagate -ntfs-sd sd2 -index-num 1 -access-control file-directory`
 
-. 驗證原則工作組態：「vserver安全性檔案目錄原則工作show -vserver vserver_name -police-name policy_name -path path'
+. 驗證原則工作組態： `vserver security file-directory policy task show -vserver vserver_name -policy-name policy_name -path path`
 +
-「Vserver安全檔案目錄原則工作說明」
+`vserver security file-directory policy task show`
 
 +
 [listing]

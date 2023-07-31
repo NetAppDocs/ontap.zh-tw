@@ -17,11 +17,11 @@ summary: 若要讓叢集離線以恢復至先前ONTAP 版本的版本、您必�
 
 還原叢集需要在還原期間讓叢集離線。
 
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 將權限層級設為進階： `set -privilege advanced`
 +
 系統提示您繼續時、請輸入* y*。
 
-. 驗證是否ONTAP 安裝目標版的圖形軟體：「System image show」（系統映像顯示）
+. 確認已安裝目標 ONTAP 軟體： `system image show`
 +
 下列範例顯示9.1版已安裝為兩個節點的替代映像：
 
@@ -40,7 +40,7 @@ node1
          image2  false   false   9.1        MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 停用叢集中的所有資料LIF：「網路介面修改｛-role data｝-STATUS-admin down」
+. 停用叢集中的所有資料生命： `network interface modify {-role data} -status-admin down`
 . 判斷您是否有叢集間FlexCache 的相依關係： `flexcache origin show-caches -relationship-type inter-cluster`
 . 如果存在叢集間的快閃資源包、請停用快取叢集上的資料資源包： `network interface modify -vserver vserver_name -lif lif_name -status-admin down`
 . 如果叢集僅包含兩個節點、請停用叢集HA： `cluster ha modify -configured false`
@@ -52,8 +52,8 @@ HA配對只需停用一次儲存容錯移轉。當您停用節點的儲存容錯
 +
 若要還原節點、您必須透過節點的節點管理LIF登入叢集。
 
-. 將節點的目標ONTAP Isfetical軟體映像設為預設映像：「System image modify -nodame -image target -IsDefault true」
-. 驗證目標ONTAP 的物件不全軟體映像是否設為您要還原之節點的預設映像：「System image show」（系統映像顯示）
+. 將節點的目標 ONTAP 軟體映像設定為預設映像： `system image modify -node nodename -image target_image -isdefault true`
+. 確認目標 ONTAP 軟體映像已設為您要還原之節點的預設映像： `system image show`
 +
 以下範例顯示9.1版已設定為節點0上的預設映像：
 
@@ -74,7 +74,7 @@ node1
 ----
 . 如果叢集僅包含兩個節點、請確認節點未保留epsilon：
 +
-.. 檢查節點目前是否保留epsilon：「cluster show -nodame」
+.. 檢查節點目前是否保留 epsilon ： `cluster show -node nodename`
 +
 下列範例顯示節點擁有epsilon：
 
@@ -89,11 +89,11 @@ cluster1::*> cluster show -node node1
    Eligibility: true
         Health: true
 ----
-.. 如果節點保留epsilon、請在節點上將epsilon標示為假、以便將epsilon傳輸至節點的合作夥伴：「cluster modify -nodelameA -epsilon fals」
-.. 在合作夥伴節點上標示epsilon true、將epsilon傳輸至節點的合作夥伴：「cluster modify -nodenameB -epsilon true」
+.. 如果節點保留 epsilon 、請在節點上將 epsilon 標記為 false 、以便將 epsilon 傳輸至節點的合作夥伴： `cluster modify -node nodenameA -epsilon false`
+.. 在合作夥伴節點上標示 epsilon true 、將 epsilon 傳輸至節點的合作夥伴： `cluster modify -node nodenameB -epsilon true`
 
 
-. 驗證節點是否已準備好進行還原：「System Node Reven-toe-nodame -check only true -version 9.x」
+. 確認節點已準備好進行還原： `system node revert-to -node nodename -check-only true -version 9.x`
 +
 Check Only參數可識別還原前必須處理的任何先決條件、例如下列範例：
 
@@ -103,19 +103,19 @@ Check Only參數可識別還原前必須處理的任何先決條件、例如下�
 ** 刪除升級至更新版本ONTAP 的更新版本的功能表後所建立的Snapshot複本
 
 
-. 驗證是否已解決所有先決條件：「System Node Reven-toe-nodame -check only true -version 9.x」（系統節點還原至節點節點節點節點名稱-僅檢查為真版本9.x）
-. 還原節點的叢集組態：「System Node Reven-toe-nodame -version 9.x」
+. 確認已解決所有先決條件： `system node revert-to -node nodename -check-only true -version 9.x`
+. 還原節點的叢集組態： `system node revert-to -node nodename -version 9.x`
 +
 -version選項是指目標版本。例如、如果您安裝並驗證的軟體ONTAP 是更新版9.1、則版本選項的正確值為9.1。
 
 +
 叢集組態會還原、然後從叢集Shell登出。
 
-. 重新登入叢集Shell、然後切換至節點節點節點：「run -nodename」（執行節點節點節點名稱）
+. 重新登入 clustershell 、然後切換至 nodesdell ： `run -node nodename`
 +
 再次登入叢集Shell之後、可能需要幾分鐘的時間才能準備好接受nodesdell命令。因此、如果命令失敗、請稍候幾分鐘、然後再試一次。
 
-. 恢復節點的檔案系統組態：「垂直轉換至9.x」
+. 還原節點的檔案系統組態： `revert_to 9.x`
 +
 此命令可驗證節點的檔案系統組態是否已準備好還原、然後還原。如果發現任何先決條件、您必須解決這些條件、然後重新執行reet_to命令。
 
@@ -127,9 +127,9 @@ NOTE: 使用系統主控台來監控還原程序、顯示的詳細資料比在�
 如果自動開機為true、則命令完成後、節點將重新開機ONTAP 至flex.
 
 +
-如果自動開機為假、則命令完成時會顯示載入器提示字元。輸入「yes」以回復、然後使用「boot_ONTAP」手動重新啟動節點。
+如果自動開機為假、則命令完成時會顯示載入器提示字元。輸入 `yes` 若要還原、請使用 `boot_ontap` 手動重新啟動節點。
 
-. 節點重新開機後、請確認新軟體正在執行：「System Node image show」（系統節點映像顯示）
+. 節點重新開機後、請確認新軟體正在執行： `system node image show`
 +
 在下列範例中、image1是新ONTAP 的版本、並設為節點0上的目前版本：
 
@@ -153,7 +153,7 @@ node1
 狀態應列示為「完成」。
 
 . 重複 <<step-6>> 透過 <<step-16>> 在HA配對的其他節點上。
-. 如果叢集僅包含兩個節點、請重新啟用叢集HA：「叢集HA modify -configured true」
+. 如果叢集僅包含兩個節點、請重新啟用叢集 HA ： `cluster ha modify -configured true`
 . [[step -19]如果兩個節點先前已停用、請重新啟用其上的儲存容錯移轉： `storage failover modify -node nodename -enabled true`
 . 重複 <<step-5>> 透過 <<step-19>> 針對MetroCluster 每個額外的HA配對和兩組叢集進行支援。
 

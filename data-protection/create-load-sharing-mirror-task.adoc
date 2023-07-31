@@ -26,19 +26,19 @@ summary: 您應該為叢集中的每個根磁碟區建立負載共用鏡像（LS
 .步驟
 . 建立LSM的目的地Volume：
 +
-「Volume create -vserver _svm_-volume -aggregate _gregate _-type DP -size size」
+`volume create -vserver _SVM_ -volume volume -aggregate _aggregate_ -type DP -size size`
 
 +
 目的地Volume的大小應與根Volume相同或更大。
 
 +
-最佳做法是使用後置碼命名根和目的地Volume、例如「_root」和「_M1」。
+最佳做法是使用後綴（例如）來命名根卷和目標卷 `_root` 和 `_m1`。
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會在叢集資源中建立根磁碟區「svm1_root（shvm1_root））的負載共享鏡像磁碟區：
+以下範例為根磁碟區建立負載共用鏡射磁碟區 `svm1_root` 在中 `cluster_src`：
 
 +
 [listing]
@@ -48,13 +48,13 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 . 建立複寫工作排程、如所述 link:create-replication-job-schedule-task.html["建立複寫工作排程"]。
 . 在SVM根磁碟區與LSM目的地磁碟區之間建立負載共用鏡射關係：
 +
-「napmirror create -source-path _svm:volume？」（napmirror create -source-path _svm:volume）|叢集：//Svm/volume（/volume）- destination-path _svm:volume（SVM：Volume）|叢集：//Svm/volume（SVM / Volume）-鍵入ls -schedule（排程）_
+`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _SVM:volume_|_cluster://SVM/volume_ -type LS -schedule _schedule_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例在根磁碟區「svm1_root」和負載共用鏡像磁碟區「svm1_M1」之間建立負載共用鏡射關係：
+以下範例在根磁碟區之間建立負載共用鏡像關係 `svm1_root` 以及負載共用鏡射磁碟區 `svm1_m1`：
 
 +
 [listing]
@@ -62,11 +62,11 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path svm1:svm1_m1 -type LS -schedule hourly
 ----
 +
-負載共享鏡像的類型屬性會從「DP」變更為「LS」。
+負載共用鏡像的類型屬性會從變更 `DP` 至 `LS`。
 
 . 初始化負載共用鏡像：
 +
-「napmirror initialize-ls-set -source-path _svm:volume」（napmirror initialize-ls-set -source-path _Svm:volume）|叢集：//Svm/volume」
+`snapmirror initialize-ls-set -source-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。
@@ -75,7 +75,7 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例可初始化根磁碟區「svm1_root（））的負載共享鏡像：
+以下範例初始化根磁碟區的負載共用鏡像 `svm1_root`：
 
 +
 [listing]

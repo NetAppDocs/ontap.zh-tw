@@ -25,15 +25,15 @@ summary: 如果您可以讓叢集離線升級至新ONTAP 版的版本、則可�
 
 在中斷升級中、因為停用每個HA配對的儲存容錯移轉、而且每個節點都會更新、所以需要停機。停用儲存容錯移轉時、每個節點都會做為單一節點叢集、也就是與節點相關的系統服務會中斷、只要系統重新開機即可。
 
-. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
-. 將新ONTAP 的更新版軟體映像設為預設映像：「System image modify｛-node*-iscurrent fuls｝-IsDefault true」
+. 將新的 ONTAP 軟體映像設為預設映像： `system image modify {-node * -iscurrent false} -isdefault true`
 +
 此命令會使用延伸查詢、將目標ONTAP 的支援軟體映像（安裝為替代映像）變更為每個節點的預設映像。
 
-. 確認新ONTAP 的更新版軟體映像已設定為預設映像：「System image show」（系統映像顯示）
+. 確認新的 ONTAP 軟體映像已設為預設映像： `system image show`
 +
 在下列範例中、影像2是新ONTAP 的版本、並在兩個節點上設為預設影像：
 
@@ -69,11 +69,11 @@ node1
  a| 
 兩個節點
  a| 
-.. 停用叢集高可用度：「叢集ha modify -configured假」
+.. 停用叢集高可用度： `cluster ha modify -configured false`
 +
-出現提示時、請輸入「y」繼續。
+輸入 `y` 以在出現提示時繼續。
 
-.. 停用HA配對的儲存容錯移轉：「torage容錯移轉修改-node*-enablED假」
+.. 停用 HA 配對的儲存容錯移轉： `storage failover modify -node * -enabled false`
 
 
 
@@ -81,10 +81,10 @@ node1
  a| 
 兩個以上的節點
  a| 
-停用叢集中每個HA配對的儲存容錯移轉：「torage容錯移轉修改-node*-enablED假」
+停用叢集中每個 HA 配對的儲存容錯移轉： `storage failover modify -node * -enabled false`
 
 |===
-. 重新啟動叢集中的節點：「ystem nodem reboot-nodename -ignore quorum warnings」
+. 重新啟動叢集中的節點： `system node reboot -node nodename -ignore-quorum-warnings`
 +
 
 IMPORTANT: 請勿一次重新開機超過一個節點。
@@ -117,18 +117,18 @@ node1
 ----
 . 確認升級成功完成：
 +
-.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-.. 驗證每個節點的升級狀態是否已完成：「System Node Upgrade（系統節點升級）- f還原show -nodename（還原顯示節點節點節點名稱）」
+.. 將權限層級設為進階： `set -privilege advanced`
+.. 確認每個節點的升級狀態為完成： `system node upgrade-revert show -node nodename`
 +
 狀態應列示為「完成」。
 
 +
 如果狀態不完整、 link:http://mysupport.netapp.com/["請聯絡NetApp支援部門"] 立即。
 
-.. 返回管理員權限等級：「et -priv. admin」
+.. 返回管理權限層級： `set -privilege admin`
 
 
 . 針對每個額外節點重複步驟2到7。
-. 如果叢集由兩個以上的節點組成、請針對叢集中的每個HA配對啟用儲存容錯移轉：「torage容錯移轉修改節點*啟用true」
-. 如果叢集僅包含兩個節點、請啟用叢集高可用度：「cluster ha modify -configured true」
+. 如果叢集包含兩個以上的節點、請為叢集中的每個 HA 配對啟用儲存容錯移轉： `storage failover modify -node * -enabled true`
+. 如果叢集僅包含兩個節點、請啟用叢集高可用度： `cluster ha modify -configured true`
 

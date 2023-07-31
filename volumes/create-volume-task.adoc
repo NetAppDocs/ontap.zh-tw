@@ -11,10 +11,10 @@ summary: 您可以使用volume create命令來建立磁碟區、並指定其交�
 
 
 [role="lead"]
-您可以使用「volume create」命令來建立磁碟區、並指定其交會點和其他屬性。
+您可以使用建立 Volume 並指定其連接點和其他屬性 `volume create` 命令。
 
 .關於這項工作
-磁碟區必須包含_交會路徑_、才能讓用戶端使用其資料。您可以在建立新磁碟區時指定交會路徑。如果您在建立磁碟區時未指定交會路徑、則必須使用「volume mount」命令、在SVM命名空間中掛載磁碟區。
+磁碟區必須包含_交會路徑_、才能讓用戶端使用其資料。您可以在建立新磁碟區時指定交會路徑。如果您在建立磁碟區時未指定連接路徑、則必須使用 _ 掛載 _ SVM 命名空間中的磁碟區 `volume mount` 命令。
 
 .開始之前
 * 新磁碟區的SVM和將儲存設備供應給磁碟區的Aggregate必須已經存在。
@@ -31,24 +31,24 @@ summary: 您可以使用volume create命令來建立磁碟區、並指定其交�
 `volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ [-policy _export_policy_name_]`
 
 +
-「安全樣式」、「使用者」、「群組」、「交會路徑」及「原則」選項僅適用於NAS命名空間。
+。 `-security style`、 `-user`、 `-group`、 `-junction-path`和 `-policy` 選項僅適用於 NAS 命名空間。
 
 +
-可以選擇以下選項：
+的選擇 `-junction-path` 以下是：
 
 +
-** 直接位於根目錄下、例如「/new_vol」
+** 直接位於根目錄下、例如 `/new_vol`
 +
 您可以建立新磁碟區、並指定將其直接掛載到SVM根磁碟區。
 
-** 在現有目錄下、例如：「/existing目錄/new_vol」
+** 在現有目錄下、例如 `/existing_dir/new_vol`
 +
 您可以建立新磁碟區、並指定將其掛載至現有磁碟區（在現有階層架構中）、以目錄形式表示。
 
 
 
 +
-如果您想要在新目錄（新磁碟區下的新階層）中建立磁碟區、例如：「/new_dir / new_vol」、則必須先建立新的父磁碟區、並與SVM根磁碟區建立連接。接著、您會在新父Volume（新目錄）的交會路徑中建立新的子Volume。
+如果您想在新目錄中建立磁碟區（在新磁碟區下的新階層中）、例如： `/new_dir/new_vol`接著、您必須先建立與 SVM 根 Volume 相關的新父 Volume 。接著、您會在新父Volume（新目錄）的交會路徑中建立新的子Volume。
 
 . 確認已使用所需的交會點建立磁碟區：
 +
@@ -70,7 +70,7 @@ Vserver           Volume  Active   Junction Path   Path Source
 ----------------- ------- -------- --------------- -----------
 vs1.example.com   users1  true     /users          RW_volume
 ----
-下列命令會在SVM上建立一個名為「'home4'」的新磁碟區：vs1.example.com`"和Aggr1'集合體。VS1 SVM的命名空間中已存在目錄「/eng/」、新的Volume可從「/eng/home'」取得、這是「/eng/」命名空間的主目錄。磁碟區大小為750 GB、磁碟區保證類型為「Volume」（Volume）（預設）。
+下列命令會在SVM上建立一個名為「'home4'」的新磁碟區：vs1.example.com`"和Aggr1'集合體。目錄 `/eng/` VS1 SVM 的命名空間已存在、新的 Volume 可從取得 `/eng/home`、成為的主目錄 `/eng/` 命名空間。磁碟區大小為 750 GB 、其磁碟區保證屬於類型 `volume` （預設）。
 
 [listing]
 ----

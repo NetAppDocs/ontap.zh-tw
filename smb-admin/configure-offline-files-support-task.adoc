@@ -21,28 +21,28 @@ summary: 您可以在ONTAP 建立SMB共用時、或隨時修改現有的SMB共�
 
 
  a| 
-無
+`none`
  a| 
 不允許Windows用戶端快取此共用區上的任何檔案。
 
 
 
  a| 
-《永久》
+`manual`
  a| 
 可讓Windows用戶端上的使用者手動選取要快取的檔案。
 
 
 
  a| 
-《文件》
+`documents`
  a| 
 允許Windows用戶端快取使用者用於離線存取的使用者文件。
 
 
 
  a| 
-《節目》
+`programs`
  a| 
 允許Windows用戶端快取使用者用於離線存取的程式。即使共用可用、用戶端仍可在離線模式下使用快取的程式檔案。
 
@@ -59,21 +59,21 @@ summary: 您可以在ONTAP 建立SMB共用時、或隨時修改現有的SMB共�
  a| 
 新的SMB共用區
  a| 
-「Vserver CIFS共用區create -vserver vserver_name -share-name share_name -path path -offline檔案｛none| manual | documents|programs｝」
+`vserver cifs share create -vserver vserver_name -share-name share_name -path path -offline-files {none|manual|documents|programs}`
 
 
 
  a| 
 現有的SMB共用區
  a| 
-「vserver CIFS共用修改-vserver vserver_name -share-name share_name -offline檔案｛none| manual | documents|programs｝」
+`vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files {none|manual|documents|programs}`
 
 |===
-. 確認SMB共用組態正確：「vserver CIFS共用區show -vserver vserver_name -share-name share_name -instance」
+. 確認 SMB 共用組態正確無誤： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
 
 
 .範例
-下列命令會建立名為「data1」的SMB共用區、並將離線檔案設為「documents」（文件）：
+下列命令會建立名為「 data1 」的 SMB 共用、並將離線檔案設為 `documents`：
 
 [listing]
 ----
@@ -100,7 +100,7 @@ cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
 Maximum Tree Connections on Share: 4294967295
        UNIX Group for File Create: -
 ----
-下列命令會將離線檔案設定變更為「手動」、並新增檔案和目錄模式建立遮罩的值、藉此修改名為「data1」的現有SMB共用：
+下列命令會將離線檔案設定變更為、以修改名為「 data1 」的現有 SMB 共用 `manual` 以及新增檔案和目錄模式建立遮罩的值：
 
 [listing]
 ----

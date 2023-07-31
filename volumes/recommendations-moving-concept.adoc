@@ -34,7 +34,7 @@ summary: 移動磁碟區有許多考量因素和建議、會受到您正在移�
 * 您可以在Flash Pool Aggregate與非Flash Pool Aggregate之間移動磁碟區。
 +
 ** 如果您將磁碟區從Flash Pool Aggregate移至非Flash Pool Aggregate、ONTAP 則會顯示訊息警告您移動可能會影響磁碟區效能、並詢問您是否要繼續。
-** 如果您將Volume從非Flash Pool Aggregate移至Flash Pool Aggregate、ONTAP 則會指派「自動」快取原則。
+** 如果您將磁碟區從非 Flash Pool Aggregate 移至 Flash Pool Aggregate 、 ONTAP 會指派 `auto` 快取原則：
 
 
 * 磁碟區擁有其所在之集合體的閒置資料保護。如果您將磁碟區從包含NSE磁碟機的集合體移至不包含的磁碟區、則該磁碟區將不再具有NSE資料閒置保護。
@@ -45,7 +45,7 @@ summary: 移動磁碟區有許多考量因素和建議、會受到您正在移�
 == FlexClone Volume考量與建議
 
 * FlexClone Volume在移動時無法離線。
-* 您可以將FlexClone磁碟區從同一個Aggregate移至同一個節點或同一個SVM中的另一個節點上的另一個Aggregate、而無需啟動「vol clone sap start」命令。
+* 您可以將 FlexClone Volume 從一個 Aggregate 移至同一個節點或同一個 SVM 中的另一個節點上的另一個 Aggregate 、而無需啟動 `vol clone split start` 命令。
 +
 藉由在FlexClone Volume上啟動Volume Move作業、複製磁碟區會在移轉過程中分割至不同的Aggregate。在複製磁碟區上移動磁碟區完成之後、移動的磁碟區不再顯示為複製、而是顯示為獨立磁碟區、而不會與先前的父磁碟區建立任何複製關係。
 

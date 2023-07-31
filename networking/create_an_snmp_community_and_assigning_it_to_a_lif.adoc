@@ -16,7 +16,7 @@ summary: 建立SNMP社群、做為管理站與SVM之間的驗證機制
 [role="lead"]
 使用SNMP v1和SNMP v2c時、您可以建立SNMP社群、做為管理站與儲存虛擬機器（SVM）之間的驗證機制。
 
-透過在資料SVM中建立SNMP社群、您可以在資料生命體上執行諸如「mpdwing」和「snmpGet」等命令。
+透過在資料 SVM 中建立 SNMP 社群、您可以執行命令、例如 `snmpwalk` 和 `snmpget` 資料生命。
 
 .關於這項工作
 * 在全新安裝ONTAP 的功能中、預設會停用SNMPv1和SNMPv2c。
@@ -24,20 +24,20 @@ summary: 建立SNMP社群、做為管理站與SVM之間的驗證機制
 在建立SNMP社群之後、會啟用SNMP v1和SNMP v2c。
 
 * 支援唯讀社群。ONTAP
-* 根據預設、指派給資料生命期的「資料」防火牆原則會將SNMP服務設為「deny」。
+* 依預設、指派給資料生命期的「資料」防火牆原則會將 SNMP 服務設為 `deny`。
 +
-為資料SVM建立SNMP使用者時、您必須建立新的防火牆原則、並將SNMP服務設為「允許」。
+您必須建立新的防火牆原則、並將 SNMP 服務設為 `allow` 為資料 SVM 建立 SNMP 使用者時。
 
 +
 
 NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF服務原則取代。如需詳細資訊、請參閱 link:../networking/configure_firewall_policies_for_lifs.html["設定lifs的防火牆原則"]。
 
 * 您可以為管理SVM和資料SVM的SNMP v1和SNMP v2c使用者建立SNMP社群。
-* 由於SVM並非SNMP標準的一部分、因此資料LIF上的查詢必須包含NetApp root oID（1.3.6.1.4.1.789）、例如「snmpwalk-v 2c -c snmpNFS 10.238.19.14 1.3.6.1.4.1.789」。
+* 由於 SVM 不是 SNMP 標準的一部分、因此資料生命體的查詢必須包含 NetApp 根 OID （ 1.3.6.1.4.1.789 ）、例如 `snmpwalk -v 2c -c snmpNFS 10.238.19.14 1.3.6.1.4.1.789`。
 
 
 .步驟
-. 使用「System SNMP community add」命令建立SNMP社群。下列命令顯示如何在管理SVM叢集1中建立SNMP社群：
+. 使用建立 SNMP 社群 `system snmp community add` 命令。下列命令顯示如何在管理SVM叢集1中建立SNMP社群：
 +
 ....
 system snmp community add -type ro -community-name comty1 -vserver cluster-1
@@ -61,7 +61,7 @@ rocomty1
 vs1
 rocomty2
 ....
-. 使用「系統服務防火牆原則」「show」命令、檢查「資料」防火牆原則中是否允許SNMP作為服務。
+. 使用檢查是否允許 SNMP 作為「資料」防火牆原則中的服務 `system services firewall policy` `show` 命令。
 +
 下列命令顯示預設的「資料」防火牆原則不允許SNMP服務（僅「管理」防火牆原則允許SNMP服務）：
 
@@ -91,9 +91,9 @@ cluster-1
                      snmp       0.0.0.0/0
                      ssh        0.0.0.0/0
 ....
-. 使用「系統服務防火牆原則create」命令建立新的防火牆原則、以允許使用「nMP」服務進行存取。
+. 建立允許使用存取的新防火牆原則 `snmp` 使用進行服務 `system services firewall policy create` 命令。
 +
-下列命令會建立名為「data1」的新資料防火牆原則、以允許使用「shnMP」
+下列命令會建立一個新的資料防火牆原則「 data1 」、允許使用 `snmp`
 
 +
 ....

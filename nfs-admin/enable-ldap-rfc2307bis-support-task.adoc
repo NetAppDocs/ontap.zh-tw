@@ -33,22 +33,22 @@ summary: 如果您想要使用LDAP並需要額外的功能來使用巢狀群組�
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 修改複製的RFC2307 LDAP用戶端架構、以啟用RFC2307bis支援：
 +
-「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema-name -enable rfc2307bis true」
+`vserver services name-service ldap client schema modify -vserver vserver_name -schema schema-name -enable-rfc2307bis true`
 
 . 修改架構以符合LDAP伺服器支援的物件類別：
 +
-「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema_name -group of Unique名稱-object-Class object_Class」
+`vserver services name-service ldap client schema modify -vserver vserver-name -schema schema_name -group-of-unique-names-object-class object_class`
 
 . 修改架構以符合LDAP伺服器支援的屬性名稱：
 +
-「Vserver服務名稱服務LDAP用戶端架構修改-vserver vserver_name -schema_name -unice-member-attribute_name`
+`vserver services name-service ldap client schema modify -vserver vserver-name -schema schema_name -unique-member-attribute attribute_name`
 
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

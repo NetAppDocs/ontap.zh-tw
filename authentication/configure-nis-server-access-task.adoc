@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: configure, nis server, access 
 summary: 您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存取SVM。您可以使用vserver services name-service NIS網域create命令、在SVM上建立NIS網域組態。 
 ---
-= 設定NIS伺服器存取
+= 設定 NIS 伺服器存取
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存取SVM。您可以使用「vserver services name-service NIS網域create」命令、在SVM上建立NIS網域組態。
+您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存取SVM。您可以使用 `vserver services name-service nis-domain create` 在 SVM 上建立 NIS 網域組態的命令。
 
 .您需要的產品
 * 在SVM上設定NIS網域之前、所有已設定的伺服器都必須可供使用和存取。
@@ -19,21 +19,21 @@ summary: 您必須先設定NIS伺服器對SVM的存取權、NIS帳戶才能存�
 
 
 .關於這項工作
-您可以建立多個NIS網域。一次只能將一個NIS網域設定為「現用」。
+您可以建立多個NIS網域。只能將一個 NIS 網域設定為 `active` 一次。
 
 .步驟
-. 在SVM上建立NIS網域組態：「vserver services name-service nis-domain create -vserver svm_name -domain client_configuration -active true|假-nis-servers ns_server_ips」
+. 在 SVM 上建立 NIS 網域組態： `vserver services name-service nis-domain create -vserver SVM_name -domain client_configuration -active true|false -nis-servers NIS_server_IPs`
 +
 如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
 
 +
 [NOTE]
 ====
-從ONTAP 功能變數《-NIS伺服器》開始、這個功能變數取代了現場的「伺服器」。此新欄位可以使用NIS伺服器的主機名稱或IP位址。
+從 ONTAP 9.2 開始 `-nis-servers` 取代欄位 `-servers`。此新欄位可取得 NIS 伺服器的主機名稱或 IP 位址。
 
 ====
 +
-以下命令可在SVM 'engData'上建立NIS網域組態。NIS網域「nisdomain」在建立時會作用、並以IP位址「192.0.2.180」與NIS伺服器通訊。
+下列命令會在 SVM 上建立 NIS 網域組態 ``engData``。NIS 網域 `nisdomain` 在建立時處於作用中狀態、並與 NIS 伺服器與 IP 位址進行通訊 `192.0.2.180`。
 
 +
 [listing]

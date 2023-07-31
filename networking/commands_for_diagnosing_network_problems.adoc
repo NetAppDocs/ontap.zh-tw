@@ -14,7 +14,7 @@ summary: 診斷網路上的問題
 
 
 [role="lead"]
-您可以使用「ping」、「traceroute」、「NDP」和「tcpdump」等命令來診斷網路上的問題。您也可以使用「ping6」和「traceroute6」等命令來診斷IPv6問題。
+您可以使用命令來診斷網路上的問題、例如 `ping, traceroute, ndp,` 和 `tcpdump`。您也可以使用命令、例如 `ping6` 和 `traceroute6` 診斷 IPv6 問題。
 
 |===
 
@@ -22,33 +22,41 @@ summary: 診斷網路上的問題
 | 如果您想要... | 輸入此命令... 
 
 
-| 測試節點是否能連線到網路上的其他主機 | 網路ping 
+| 測試節點是否能連線到網路上的其他主機 | `network ping` 
 
 
-| 測試節點是否能連線至IPv6網路上的其他主機 | 《網路ping6》 
+| 測試節點是否能連線至IPv6網路上的其他主機 | `network ping6` 
 
 
-| 追蹤將IPv4封包帶到網路節點的路由 | 網路追蹤系統 
+| 追蹤將IPv4封包帶到網路節點的路由 | `network traceroute` 
 
 
-| 追蹤IPv6封包通往網路節點的路由 | 網路追蹤6 
+| 追蹤IPv6封包通往網路節點的路由 | `network traceroute6` 
 
 
-| 管理鄰近探索傳輸協定（NDP） | 網路NDP 
+| 管理鄰近探索傳輸協定（NDP） | `network ndp` 
 
 
-| 顯示在指定網路介面或所有網路介面上接收和傳送的封包統計資料 | "run -node_node_name_ifstat"*注*：此命令可從nodesh解除 命令中獲取。 
+| 顯示在指定網路介面或所有網路介面上接收和傳送的封包統計資料 | `run -node _node_name_ ifstat`
+
+* 附註 * ：此命令可從 nodesdesh 取得。 
 
 
-| 顯示從叢集中每個節點和連接埠探索到的鄰近裝置相關資訊、包括遠端裝置類型和裝置平台 | 「網路裝置探索秀」 
+| 顯示從叢集中每個節點和連接埠探索到的鄰近裝置相關資訊、包括遠端裝置類型和裝置平台 | `network device-discovery show` 
 
 
-| 檢視節點的CDP鄰近節點（ONTAP 僅支援CDPv1廣告） | 「run -node_node_name_ CDPD show-forests」*附註*：此命令可從nodesh解除 程式取得。 
+| 檢視節點的CDP鄰近節點（ONTAP 僅支援CDPv1廣告） | `run -node _node_name_ cdpd show-neighbors`
+
+* 附註 * ：此命令可從 nodesdesh 取得。 
 
 
-| 追蹤在網路中傳送和接收的封包 | 「network cpdump start -node_node-name_-port _port_name_」*附註*：此命令可從nodeshro地 下載。 
+| 追蹤在網路中傳送和接收的封包 | `network tcpdump start -node _node-name_ -port _port_name_`
+
+* 附註 * ：此命令可從 nodesdesh 取得。 
 
 
-| 測量叢集間或叢集內節點之間的延遲和處理量 | 「network test -path -source-node_source_nodename local_-destination-cluster _dite_clustername_-dite-node_dite_nodename_-site-type _efault_、_各級 同步鏡像_、_各級 同步鏡射遠端_或_RemoteDataTransf_」如需詳細資訊、請參閱 link:../performance-admin/index.html["效能管理"^]。 
+| 測量叢集間或叢集內節點之間的延遲和處理量 | `network test -path -source-node _source_nodename local_ -destination-cluster _destination_clustername_ -destination-node _destination_nodename_ -session-type _Default_, _AsyncMirrorLocal_, _AsyncMirrorRemote_, _SyncMirrorRemote_, or _RemoteDataTransfer_`
+
+如需詳細資訊、請參閱 link:../performance-admin/index.html["效能管理"^]。 
 |===
 如需這些命令的詳細資訊、請參閱適當的手冊頁： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]

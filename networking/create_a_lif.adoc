@@ -20,7 +20,7 @@ LIF （網路介面）是與實體或邏輯連接埠相關聯的 IP 位址。如
 * 基礎實體或邏輯網路連接埠必須設定為管理UP狀態。
 * 如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。
 +
-子網路包含屬於同一第3層子網路的IP位址集區。它們是使用System Manager或「network subnet create」命令建立的。
+子網路包含屬於同一第3層子網路的IP位址集區。它們是使用 System Manager 或建立的 `network subnet create` 命令。
 
 * 指定LIF處理之流量類型的機制已變更。對於僅適用於更新版本的版本、LIF會使用角色來指定其處理的流量類型。ONTAP從ONTAP Sf6開始、l生命 就會使用服務原則來指定處理的流量類型。
 
@@ -37,7 +37,7 @@ LIF （網路介面）是與實體或邏輯連接埠相關聯的 IP 位址。如
 * 如果叢集中有大量的生命量、您可以驗證叢集上支援的LIF容量：
 +
 ** System Manager：從ONTAP 功能完善的9.12.0,開始檢視網路介面網格的處理量。
-** CLI：使用「network interface cape流量show」命令、以及在每個節點上支援的LIF容量、方法是使用「network interface capeat details show」命令（進階權限層級）。
+** CLI ：使用 `network interface capacity show` 命令和 LIF 容量、可透過使用在每個節點上支援 `network interface capacity details show` 命令（進階權限層級）。
 
 
 * 從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP
@@ -57,10 +57,10 @@ LIF （網路介面）是與實體或邏輯連接埠相關聯的 IP 位址。如
 * 從ONTAP 《》的《》（ `network interface` CLI命令包括 `-rdma-protocols` NFS over RDMA組態的參數。從ONTAP 版本S9.12.1開始、System Manager支援透過RDMA組態建立NFS的網路介面。如需詳細資訊、請參閱 xref:../nfs-rdma/configure-lifs-task.html[透過RDMA設定NFS的LIF]。
 * 從ONTAP 《Sf9.11.1》開始、iSCSI LIF容錯移轉功能可在所有SAN Array ASA （簡稱「ESCSI」）平台上使用。
 +
-iSCSI LIF容錯移轉會自動啟用（容錯移轉原則設為「僅限合作夥伴」、自動還原值設為「true」） 在新建立的iSCSI LIF上、如果指定的SVM中不存在iSCSI LIF、或指定SVM中的所有現有iSCSI LIF已啟用iSCSI LIF容錯移轉。
+iSCSI LIF 容錯移轉會自動啟用（容錯移轉原則設為 `sfo-partner-only` 且自動還原值設為 `true`）如果指定 SVM 中不存在 iSCSI 生命負載、或指定 SVM 中所有現有的 iSCSI 生命負載均已透過 iSCSI LIF 容錯移轉啟用、則新建立的 iSCSI 生命負載。
 
 +
-如果在升級ONTAP 至版本S209.11.1或更新版本之後、SVM中的現有iSCSI LIF已啟用iSCSI LIF容錯移轉功能、而且您在相同SVM中建立新的iSCSI LIF、 新的iSCSI生命體採用與SVM中現有iSCSI生命體相同的容錯移轉原則（「停用」）。
+如果您升級至 ONTAP 9.11.1 或更新版本後、 SVM 中現有的 iSCSI 生命體尚未啟用 iSCSI LIF 容錯移轉功能、且您在同一個 SVM 中建立新的 iSCSI 生命體、則新的 iSCSI 生命體將採用相同的容錯移轉原則 (`disabled`） SVM 中現有的 iSCSI 生命。
 
 +
 link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
@@ -114,7 +114,7 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI 
 --
 .CLI
 --
-*使用CLI建立LIF*
+* 使用 CLI 建立 LIF*
 
 .步驟
 . 建立LIF：
@@ -123,35 +123,36 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI 
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
 ....
 +
-** 當LIF上執行「網路介面回復」命令時、LIF會傳回的節點為「主節點」。
+** `-home-node` 是 LIF 在返回時返回的節點 `network interface revert` 命令會在LIF上執行。
 +
 您也可以使用-autom-revert選項、指定LIF是否應自動還原為主節點和主連接埠。
 
-** 首頁連接埠是LIF在LIF上執行「網路介面回復」命令時、LIF傳回的實體或邏輯連接埠。
-** 您可以使用"-address"和"-netask"選項來指定IP位址、也可以使用"-subnet_name"選項從子網路進行分配。
+** `-home-port` 是 LIF 在時傳回的實體或邏輯連接埠 `network interface revert` 命令會在LIF上執行。
+** 您可以使用指定 IP 位址 `-address` 和 `-netmask` 或是您可以使用從子網路進行分配 `-subnet_name` 選項。
 ** 使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。
-** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。"network rout" creation"手冊頁包含有關在SVM中建立靜態路由的資訊。
-** 「自動還原」可讓您指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、是否將資料LIF自動還原至其主節點。預設設定為「假」、但您可以根據環境中的網路管理原則、將其設定為「真」。
-** 從功能介紹9.5開始、您ONTAP 可以使用「服務原則」選項來指派LIF的服務原則。當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
-** 「資料傳輸協定」可讓您建立支援FCP或NVMe/FC傳輸協定的LIF。建立IP LIF時不需要此選項。
+** 如果您手動指派IP位址（不使用子網路）、則在不同IP子網路上有用戶端或網域控制器時、可能需要設定通往閘道的預設路由。。 `network route create` 手冊頁包含在 SVM 中建立靜態路由的相關資訊。
+** `-auto-revert` 可讓您指定資料 LIF 是否在啟動、管理資料庫狀態變更或建立網路連線等情況下自動還原至其主節點。預設設定為 `false`但您可以將其設定為 `true` 視環境中的網路管理原則而定。
+**  `-service-policy` 從 ONTAP 9.5 開始、您可以使用指派 LIF 的服務原則 `-service-policy` 選項。
+當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
+** `-data-protocol` 可讓您建立支援 FCP 或 NVMe / FC 傳輸協定的 LIF 。建立IP LIF時不需要此選項。
 
 
 . *選用*：在-address選項中指派IPv6位址：
 +
 .. 使用network NDP prefix show命令查看在各種介面上學習到的RA前置詞清單。
 +
-「network NDP prefix show」命令可在進階權限層級使用。
+。 `network ndp prefix show` 命令可在進階權限層級使用。
 
-.. 使用「prefix::id」格式手動建構IPv6位址。
+.. 使用格式 `prefix::id` 手動建構 IPv6 位址。
 +
-「prefix」是在各種介面上學習的前置詞。
+`prefix` 是在各種介面上學習的首碼。
 
 +
-若要導出「id」、請選擇隨機的64位元十六進位數字。
+用於導出 `id`，選擇隨機 64 位元十六進位數字。
 
 
 
-. 使用「network interface show」命令確認是否已建立LIF。
+. 請使用確認 LIF 已建立 `network interface show` 命令。
 . 確認已設定的IP位址可連線：
 
 
@@ -167,7 +168,7 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 | IPv6位址 | 網路ping6. 
 |===
 .範例
-下列命令會建立LIF、並使用「-address'（位址）」和「-netmask'（網路遮罩）」參數來指定IP位址和網路遮罩值：
+下列命令會建立 LIF 並使用指定 IP 位址和網路遮罩值 `-address` 和 `-netmask` 參數：
 
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -service-policy default-data-files -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
@@ -177,7 +178,7 @@ network interface create -vserver vs1.example.com -lif datalif1 -service-policy 
 ....
 network interface create -vserver vs3.example.com -lif datalif3 -service-policy default-data-files -home-node node-3 -home-port e1c -subnet-name client1_sub - auto-revert true
 ....
-下列命令會建立一個NVMe / FC LIF、並指定「NVMe -光纖通道」資料傳輸協定：
+下列命令會建立一個 NVMe / FC LIF 並指定 `nvme-fc` 資料傳輸協定：
 
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -data-protocol nvme-fc -home-node node-4 -home-port 1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true

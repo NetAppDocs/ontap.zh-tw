@@ -11,7 +11,7 @@ summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的�
 
 
 [role="lead"]
-一線儲存設備中的來源磁碟區與二線儲存設備中的目的地磁碟區之間的關係稱為_DATA保護關係。_您可以使用「napmirror create」命令來建立SnapMirror DR、SnapVault ESAN或統一化複寫資料保護關係。
+主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create` 建立 SnapMirror DR 、 SnapVault 或統一化複寫資料保護關係的命令。
 
 .您需要的產品
 * 來源與目的地叢集和SVM必須進行對等關係。
@@ -81,7 +81,7 @@ XDPDefault（SnapVault 晚餐）
 
 * SVM資料保護關係仍預設為DP模式。
 +
-明確指定XDP以使用預設的「鏡像AllSnapshots」原則來取得XDP模式。
+明確指定 XDP 以取得預設的 XDP 模式 `MirrorAllSnapshots` 原則。
 
 * 負載共用資料保護關係仍預設為DP模式。
 * 將資料保護關係預設為DP模式。SnapLock
@@ -103,7 +103,7 @@ options replication.create_data_protection_rels.enable on
 .步驟
 . 從目的地叢集建立複寫關係：
 +
-"napmirror create -source-path _svm:volume（napmirror create -source-path _svm:volume）_cluster（叢集）：//SVM/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... 鍵入dp | xDP -schedule _schedule_-policy _`
+`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -type DP|XDP -schedule _schedule_ -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -111,11 +111,11 @@ options replication.create_data_protection_rels.enable on
 +
 [NOTE]
 ====
-建立SnapMirror同步關係時、「排程」參數不適用。
+。 `schedule` 建立 SnapMirror 同步關係時、參數不適用。
 
 ====
 +
-以下範例使用預設的「鏡像Latest（鏡像最新）原則建立SnapMirror DR關係：
+以下範例使用預設值建立 SnapMirror DR 關係 `MirrorLatest` 原則：
 
 +
 [listing]
@@ -123,7 +123,7 @@ options replication.create_data_protection_rels.enable on
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorLatest
 ----
 +
-以下範例SnapVault 使用預設的「XDPDefault」原則建立一個「不全」關係：
+下列範例使用預設值建立 SnapVault 關係 `XDPDefault` 原則：
 
 +
 [listing]
@@ -131,7 +131,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy XDPDefault
 ----
 +
-以下範例使用預設的「鏡像AndVault（鏡像AndVault）原則建立統一化複寫關係：
+下列範例使用預設值建立統一化的複寫關係 `MirrorAndVault` 原則：
 
 +
 [listing]
@@ -139,7 +139,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault
 ----
 +
-以下範例使用自訂的「my_Unified」原則建立統一化複寫關係：
+下列範例使用自訂建立統一複寫關係 `my_unified` 原則：
 
 +
 [listing]
@@ -147,7 +147,7 @@ cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_bac
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy my_unified
 ----
 +
-以下範例使用預設的「同步的（Sync）原則建立SnapMirror同步關係：
+以下範例使用預設值建立 SnapMirror 同步關係 `Sync` 原則：
 
 +
 [listing]
@@ -155,7 +155,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy Sync
 ----
 +
-以下範例使用預設的「trictSync」原則建立SnapMirror同步關係：
+以下範例使用預設值建立 SnapMirror 同步關係 `StrictSync` 原則：
 
 +
 [listing]
@@ -163,7 +163,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy StrictSync
 ----
 +
-以下範例建立SnapMirror DR關係。在DP類型自動轉換為XDP且未指定任何原則的情況下、原則預設為「鏡射AllSnapshots」原則：
+以下範例建立SnapMirror DR關係。在 DP 類型自動轉換為 XDP 且未指定原則的情況下、原則預設為 `MirrorAllSnapshots` 原則：
 
 +
 [listing]
@@ -171,7 +171,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type DP -schedule my_daily
 ----
 +
-以下範例建立SnapMirror DR關係。在未指定類型或原則的情況下、原則預設為「鏡像AllSnapshots」原則：
+以下範例建立SnapMirror DR關係。如果未指定任何類型或原則、則原則預設為 `MirrorAllSnapshots` 原則：
 
 +
 [listing]
@@ -179,7 +179,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -schedule my_daily
 ----
 +
-以下範例建立SnapMirror DR關係。若未指定原則、原則預設為「XDPDefault」原則：
+以下範例建立SnapMirror DR關係。未指定原則時、原則預設為 `XDPDefault` 原則：
 
 +
 [listing]
@@ -187,7 +187,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily
 ----
 +
-以下範例建立SnapMirror同步關係、並使用預先定義的原則「napCenterSync」：
+以下範例建立 SnapMirror 同步關係與預先定義的原則 `SnapCenterSync`：
 
 +
 [listing]
@@ -197,13 +197,13 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 +
 [NOTE]
 ====
-預先定義的原則「napCenterSync」為「Sync」類型。此原則會複寫任何以「app_nistent」的「napmirror標籤」建立的Snapshot複本。
+預先定義的原則 `SnapCenterSync` 屬於類型 `Sync`。此原則會複寫使用建立的任何 Snapshot 複本 `snapmirror-label` 的「 app_sistent 」。
 
 ====
 
 
 .完成後
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。
 
 
 

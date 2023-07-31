@@ -16,26 +16,26 @@ summary: 您可以顯示透過SMB工作階段連線的使用者類型資訊。�
 .關於這項工作
 下列類型的使用者可透過SMB工作階段連線：
 
-* 「本機使用者」
+* `local-user`
 +
 已驗證為本機CIFS使用者
 
-* 「主要使用者」
+* `domain-user`
 +
 驗證為網域使用者（可從CIFS伺服器的主網域或信任的網域）
 
-* 「來賓使用者」
+* `guest-user`
 +
 驗證為來賓使用者
 
-* 「匿名使用者」
+* `anonymous-user`
 +
 驗證為匿名或null使用者
 
 
 
 .步驟
-. 判斷透過SMB工作階段連線的使用者類型：「vserver CIFS工作階段show -vserver _vserver_name_-windows-user_windows_user_name_-功能變數windows-user,address,lif-address,user-type'
+. 判斷透過 SMB 工作階段連線的使用者類型： `vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user,address,lif-address,user-type`
 +
 |===
 | 如果您要顯示已建立工作階段的使用者類型資訊... | 輸入下列命令... 
@@ -44,14 +44,14 @@ summary: 您可以顯示透過SMB工作階段連線的使用者類型資訊。�
  a| 
 適用於具有指定使用者類型的所有工作階段
  a| 
-「Vserver CIFS工作階段show -vserver _vserver_name_-user-type｛local-user| domain-user| guest-user| anone-user｝」
+`vserver cifs session show -vserver _vserver_name_ -user-type {local-user|domain-user|guest-user|anonymous-user}`
 
 
 
  a| 
 適用於特定使用者
  a| 
-「vserver CIFS工作階段show -vserver _vserver_name_-windows-user_windows_user_name_-功能 變數windows-user,address,lif-address,user-type」
+`vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user,address,lif-address,user-type`
 
 |===
 

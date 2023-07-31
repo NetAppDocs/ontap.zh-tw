@@ -11,11 +11,11 @@ summary: 從ONTAP 零分9開始、command-history.log檔案會由稽核記錄取
 
 
 [role="lead"]
-從ONTAP 功能表9開始、「command-history .log」檔案會被「稽核記錄」取代、而「mgwd. log」檔案則不再包含稽核資訊。如果您要升級ONTAP 至VMware版、請檢閱任何參考舊版檔案及其內容的指令碼或工具。
+從 ONTAP 9 開始 `command-history.log` 檔案取代為 `audit.log`和 `mgwd.log` 檔案不再包含稽核資訊。如果您要升級ONTAP 至VMware版、請檢閱任何參考舊版檔案及其內容的指令碼或工具。
 
-升級ONTAP 至flex9之後、現有的「command-history .log」檔案會保留下來。當新的「稽核記錄」檔案被旋轉（建立）時、這些檔案會被旋轉（刪除）。
+升級至 ONTAP 9 之後、即為現有的 `command-history.log` 檔案會保留。它們會以新的方式旋轉（刪除） `audit.log` 檔案會在中旋轉（建立）。
 
-檢查「command-history .log」檔案的工具和指令碼可能會繼續運作、因為在升級時會建立從「command-history .log」到「Audit .log」的軟體連結。但是、檢查「mgwd. log」檔案的工具和指令碼將會失敗、因為該檔案不再包含稽核資訊。
+檢查的工具和指令碼 `command-history.log` 檔案可能會繼續運作、因為有的軟式連結 `command-history.log` 至 `audit.log` 在升級時建立。不過、檢查的工具和指令碼 `mgwd.log` 檔案將會失敗、因為該檔案不再包含稽核資訊。
 
 此外、由於下列項目不被視為有用、導致不必要的記錄活動、因此在更新版本的版本中、不再包含稽核記錄：ONTAP
 

@@ -51,9 +51,9 @@ image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「
 .步驟
 . 識別目的地叢集。
 . 在目的地叢集上、安裝SnapLock 該資訊安全許可證、初始化「完成時鐘」、如果您使用ONTAP 的是早於9.10.1的版本、請建立SnapLock 一個如所述的「不中斷彙總」 xref:workflow-concept.html[流程SnapLock]。
-. 在目的地叢集上、建立SnapLock 一個尺寸等於或大於來源Volume的「DP」類型的「Sf目的地Volume」：
+. 在目的地叢集上、建立類型為的 SnapLock 目的地 Volume `DP` 大小與來源 Volume 相同或更大：
 +
-‘* Volume create -vserver _Svm_name_-volume _volume _name_-Aggregate _Aggregate name_-SnapLock-type Compliance |企業類型DP -size _size_*
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`
 
 +
 [NOTE]
@@ -62,7 +62,7 @@ image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「
 
 ====
 +
-下列命令會在SnapLock Aggregate「node01_aggr」上的「VM2」中、建立一個名為「dstvolB」的2 GB「Compliance」磁碟區：
+下列命令會建立 2 GB SnapLock `Compliance` Volume 命名 `dstvolB` 在中 `SVM2` 在 Aggregate 上 `node01_aggr`：
 
 +
 [listing]
@@ -78,7 +78,7 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ====
 . xref:../data-protection/create-replication-relationship-task.adoc[建立新的複寫關係] 在非SnapLock來源和SnapLock 您在步驟3中建立的新的目的地之間。
 +
-此範例使用SnapLock 「XDPDefault」原則、建立與目的地的SnapMirror Volume「dstvolB」的新SnapMirror關係、以每小時排程標示為每日和每週的資料保存Snapshot複本：
+此範例建立了與目的地 SnapLock Volume 的全新 SnapMirror 關係 `dstvolB` 使用的原則 `XDPDefault` 若要按每小時排程、將標示為每天和每週的 Snapshot 複本資料保存：
 
 +
 [listing]
@@ -93,19 +93,19 @@ xref:../data-protection/create-custom-replication-policy-concept.adoc[建立自�
 ====
 . 在目的地SVM上、初始化SnapVault 步驟5中建立的S動動學 關係：
 +
-’* SnapMirror初始化-destination-path _destination_path_*
+`*snapmirror initialize -destination-path _destination_path_*`
 
 +
-下列命令可初始化來源Volume "srcvola" on "VM1"與目的地Volume "dstvolB" on "VM2"之間的關係：
+下列命令可初始化來源磁碟區之間的關係 `srcvolA` 開啟 `SVM1` 以及目的地Volume `dstvolB` 開啟 `SVM2`：
 
 +
 [listing]
 ----
 cluster2::> snapmirror initialize -destination-path SVM2:dstvolB
 ----
-. 在關係初始化並閒置之後、請在目的地上使用「napshot show」命令、驗證SnapLock 套用至複製Snapshot複本的「不驗證過期時間」。
+. 在關係初始化及閒置之後、請使用 `snapshot show` 用於驗證已套用至複寫 Snapshot 複本的 SnapLock 到期時間的命令。
 +
-此範例列出磁碟區「dstvolB」上的Snapshot複本、這些複本具有SnapMirror標籤和SnapLock 該失效日期：
+此範例列出磁碟區上的 Snapshot 複本 `dstvolB` SnapMirror 標籤和 SnapLock 到期日：
 
 +
 [listing]

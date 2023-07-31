@@ -16,7 +16,7 @@ summary: 分割廣播網域、將ONTAP 更新的版本組態與實體網路拓�
 [role="lead"]
 如果透過實體網路連線或交換器組態變更了網路連接埠連線能力、 先前在單一廣播網域中設定的一組網路連接埠已分割成兩個不同的連線能力集、您可以分割廣播網域、將ONTAP 此「更新」組態與實體網路拓撲進行同步。
 
-若要判斷網路連接埠廣播網域是否已分割成多個連線能力集、請使用「網路連接埠可連線性show -tdetails」命令、並注意哪些連接埠無法彼此連線（「無法連線的連接埠」）。一般而言、無法連線的連接埠清單會在您確認實體和交換器組態正確之後、定義應分割成另一個廣播網域的連接埠集。
+若要判斷網路連接埠廣播網域是否分割成多個連線能力集、請使用 `network port reachability show -details` 命令並注意哪些連接埠無法彼此連線（「無法連線的連接埠」）。一般而言、無法連線的連接埠清單會定義一組連接埠、這些連接埠應在您確認實體和交換器組態正確後分割成另一個廣播網域。
 
 .步驟
 將廣播網域分割成兩個廣播網域：
@@ -24,8 +24,8 @@ summary: 分割廣播網域、將ONTAP 更新的版本組態與實體網路拓�
 ....
 network port broadcast-domain split -ipspace <ipspace_name> -broadcast-domain <broadcast_domain_name> -new-broadcast-domain <broadcast_domain_name> -ports <node:port,node:port>
 ....
-* 「IPspace_name」是廣播網域所在的IPSpace名稱。
-* 「broadcast網域」是要分割的廣播網域名稱。
-* 「new廣播網域」是將建立的新廣播網域名稱。
-* 「連接埠」是要新增至新廣播網域的節點名稱和連接埠。
+* `ipspace_name` 是廣播網域所在 IPSpace 的名稱。
+* -`broadcast-domain` 是要分割的廣播網域名稱。
+* -`new-broadcast-domain` 是要建立的新廣播網域名稱。
+* -`ports` 是要新增至新廣播網域的節點名稱和連接埠。
 

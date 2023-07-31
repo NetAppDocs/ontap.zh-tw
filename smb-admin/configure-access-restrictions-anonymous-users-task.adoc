@@ -14,7 +14,7 @@ summary: 根據預設、匿名、未驗證的使用者（也稱為null使用者�
 根據預設、匿名、未驗證的使用者（也稱為_null使用者_）可以存取網路上的特定資訊。您可以使用SMB伺服器選項來設定匿名使用者的存取限制。
 
 .關於這項工作
-「-restrit-an無名 氏」SMB伺服器選項對應於Windows中的「限制匿名」登錄項目。
+。 `-restrict-anonymous` SMB 伺服器選項對應於 `RestrictAnonymous` Windows 中的登錄項目。
 
 匿名使用者可以從網路上的Windows主機列出或列舉特定類型的系統資訊、包括使用者名稱和詳細資料、帳戶原則和共用名稱。您可以指定下列三種存取限制設定之一來控制匿名使用者的存取：
 
@@ -23,30 +23,30 @@ summary: 根據預設、匿名、未驗證的使用者（也稱為null使用者�
 
 
  a| 
-「無限制」（預設）
+`no-restriction` （預設）
  a| 
 不指定匿名使用者的存取限制。
 
 
 
  a| 
-「無列舉」
+`no-enumeration`
  a| 
 指定僅限匿名使用者進行列舉。
 
 
 
  a| 
-「無法存取」
+`no-access`
  a| 
 指定匿名使用者的存取受到限制。
 
 |===
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 設定「限制匿名」設定：「vserver CIFS選項修改-vserver _vserver_name_-restrict匿名｛ne-restraction| ne-statution| no_access｝」
-. 確認選項已設定為所需的值：「vserver CIFS options show -vserver _vserver_name_」
-. 返回管理員權限等級：「et -priv. admin」
+. 將權限層級設為進階： `set -privilege advanced`
+. 設定限制匿名設定： `vserver cifs options modify -vserver _vserver_name_ -restrict-anonymous {no-restriction|no-enumeration|no-access}`
+. 確認選項設定為所需的值： `vserver cifs options show -vserver _vserver_name_`
+. 返回管理權限層級： `set -privilege admin`
 
 
 .相關資訊

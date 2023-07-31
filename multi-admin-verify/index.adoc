@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: multi-admin-verify/index.html 
 keywords: ontap, mav, RBAC, protected, operation, multi-admin, administrator, verification, approval, rules 
-summary: 從版本號《支援》9.11.1開始ONTAP 、您可以使用多管理員驗證（MAV）來確保特定作業（例如刪除磁碟區或Snapshot複本）只能在指定管理員核准後執行。 
+summary: 從版本號《支援》9.11.1開始ONTAP 、您可以使用多管理員驗證（MAV）來確保特定作業（例如刪除磁碟區或Snapshot複本）只能在指定管理員核准後執行。  
 ---
 = 多管理員驗證總覽
 :allow-uri-read: 
@@ -29,7 +29,7 @@ summary: 從版本號《支援》9.11.1開始ONTAP 、您可以使用多管理�
 * 核准後、使用者即完成作業。
 
 
-多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。如果您想要一起使用自動化和MAV、建議您針對特定的MAV作業使用查詢。例如、您只能將「Volume DELETE」MAV規則套用至不涉及自動化的磁碟區、而且您可以指定具有特定命名配置的磁碟區。
+多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。  如果您想要一起使用自動化和MAV、建議您針對特定的MAV作業使用查詢。例如、您可以申請 `volume delete` MAV 規則僅適用於不涉及自動化的磁碟區、您可以指定具有特定命名方案的磁碟區。
 
 
 NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員驗證功能、請聯絡NetApp支援部門、並提及下列知識庫文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在無法使用MAV管理時停用多管理員驗證"^]。
@@ -49,19 +49,19 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 啟用多管理員驗證時、系統定義的規則（也稱為_guard rail _規則）會建立一組MAV作業、以控制規避MAV程序本身的風險。這些作業無法從規則表格中移除。啟用MAV之後、以星號（*）指定的作業在執行之前、必須先經過一或多位管理員的核准、* show*命令除外。
 
-* 「安全性多管理驗證修改*」
+* `security multi-admin-verify modify*`
 +
 控制多管理員驗證功能的組態。
 
-* 「安全的多管理員驗證核准群組」作業*
+* `security multi-admin-verify approval-group` 營運 *
 +
 以多管理員驗證認證身分證明來控制系統管理員群組的成員資格。
 
-* 「安全的多管理員驗證規則」作業*
+* `security multi-admin-verify rule` 營運 *
 +
 控制需要多管理員驗證的命令集。
 
-* 「安全的多管理員驗證要求」作業
+* `security multi-admin-verify request` 營運
 +
 控制核准程序。
 
@@ -69,9 +69,9 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
 
-* "ecurity登入密碼"
-* 《安全登入解除鎖定》
-* 《設定》
+* `security login password`
+* `security login unlock`
+* `set`
 
 
 下列命令可在ONTAP 更新版本的版本中獲得保護。
@@ -81,43 +81,43 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 
  a| 
-"叢集對等刪除"
+`cluster peer delete`
 
-"Event config modif修改"
+`event config modify`
 
-《安全登入建立》
+`security login create`
 
-'安全登入刪除'
+`security login delete`
 
-"ecurity登入修改"
+`security login modify`
 
-'系統節點執行'
+`system node run`
 
-系統節點系統Shell
+`system node systemshell`
 
-磁碟區刪除
+`volume delete`
 
-Volume FlexCache 不刪除
+`volume flexcache delete`
  a| 
-Volume Snapshot自動刪除修改
+`volume snapshot autodelete modify`
 
-磁碟區快照刪除
+`volume snapshot delete`
 
-「Volume Snapshot原則附加排程」
+`volume snapshot policy add-schedule`
 
-磁碟區快照原則建立
+`volume snapshot policy create`
 
-磁碟區快照原則刪除
+`volume snapshot policy delete`
 
-磁碟區快照原則修改
+`volume snapshot policy modify`
 
-「Volume Snapshot原則modify-schedule」
+`volume snapshot policy modify-schedule`
 
-「Volume Snapshot原則移除排程」
+`volume snapshot policy remove-schedule`
 
-磁碟區快照還原
+`volume snapshot restore`
 
-"vserver對等刪除"
+`vserver peer delete`
 
 |===
 從 ONTAP 9.13.1 開始、可以保護下列命令：
@@ -154,10 +154,11 @@ MAV系統管理員無法核准自己執行受保護作業的要求。因此：
 
 * 不應在只有一位系統管理員的叢集上啟用MAV。
 * 如果MAV群組中只有一個人、則MAV管理員無法進入受保護的作業；一般管理員必須輸入這些作業、MAV管理員只能核准。
-* 如果您想讓MAV管理員能夠執行受保護的作業、則MAV管理員人數必須大於所需的核准人數。例如、如果受保護的作業需要兩次核准、而您希望MAV系統管理員執行這些核准、則MAV系統管理員群組中必須有三位人員。
+* 如果您想讓MAV管理員能夠執行受保護的作業、則MAV管理員人數必須大於所需的核准人數。
+例如、如果受保護的作業需要兩次核准、而您希望MAV系統管理員執行這些核准、則MAV系統管理員群組中必須有三位人員。
 
 
-MAV系統管理員可以接收電子郵件警示中的核准要求（使用EMS）、也可以查詢要求佇列。當他們收到要求時、可以採取下列三種行動之一：
+MAV系統管理員可以接收電子郵件警示中的核准要求（使用EMS）、也可以查詢要求佇列。  當他們收到要求時、可以採取下列三種行動之一：
 
 * 核准
 * 拒絕（否決）

@@ -22,18 +22,18 @@ summary: 需要憑證授權單位（CA）憑證、才能啟用從S3用戶端到�
 
 link:../authentication/index.html["系統管理員驗證與RBAC"]
 
-請參閱「安全性憑證」手冊頁、以取得其他組態選項。
+請參閱 `security certificate` 手冊頁以瞭解其他組態選項。
 
 .步驟
 . 建立自我簽署的數位憑證：
 +
-「安全性憑證建立-vserver _Svm_name_-type root-ca -common-name _ca_cert名稱_」
+`security certificate create -vserver _svm_name_ -type root-ca -common-name _ca_cert_name_`
 
 +
-「type root-ca」選項會建立並安裝自我簽署的數位憑證、以做為憑證授權單位（CA）來簽署其他憑證。
+。 `-type root-ca` 選項會建立及安裝自我簽署的數位憑證、以作為憑證授權單位（ CA ）來簽署其他憑證。
 
 +
-「-commate-name」選項會建立SVM的憑證授權單位（CA）名稱、並在產生憑證的完整名稱時使用。
+。 `-common-name` 選項會建立 SVM 的憑證授權單位（ CA ）名稱、並在產生憑證的完整名稱時使用。
 
 +
 預設的憑證大小為2048位元。
@@ -53,10 +53,10 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 產生憑證簽署要求：
 +
-「安全性憑證genere-csr -common-name _s2_server_name_[addent_options]」
+`security certificate generate-csr -common-name _s3_server_name_ [additional_options]`
 
 +
-簽署要求的「通用名稱」參數必須是S3伺服器名稱（FQDN）。
+。 `-common-name` 簽署要求的參數必須是 S3 伺服器名稱（ FQDN ）。
 
 +
 如有需要、您可以提供SVM的位置和其他詳細資訊。
@@ -66,14 +66,14 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 使用SVM_CA簽署CSR以產生S3伺服器的憑證：
 +
-「安全性憑證符號-vserver _Svm_name_-ca _ca_cert名稱_-ca-serial _ca_cert _sSerial_number_[addent_options]」
+`security certificate sign -vserver _svm_name_ -ca _ca_cert_name_ -ca-serial _ca_cert_serial_number_ [additional_options]`
 
 +
 輸入您在先前步驟中使用的命令選項：
 
 +
-** 「-ca」-您在步驟1中輸入的CA一般名稱。
-** 「-ca序號」-步驟1中的CA序號。例如、如果CA憑證名稱為svm1_ca _159D1587CE21E9D4_svm1_ca、序號為159D1587CE21E9D4。
+** `-ca` -- 您在步驟 1 中輸入的 CA 的一般名稱。
+** `-ca-serial` -- 步驟 1 中的 CA 序號。例如、如果CA憑證名稱為svm1_ca _159D1587CE21E9D4_svm1_ca、序號為159D1587CE21E9D4。
 
 
 +
@@ -87,7 +87,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 在啟用S3的SVM上安裝簽署的憑證：
 +
-「安全性憑證安裝-類型server -vserver _Svm_name_」
+`security certificate install -type server -vserver _svm_name_`
 
 +
 出現提示時、請輸入憑證和私密金鑰。
@@ -100,7 +100,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 取得公開金鑰憑證：
 +
-「安全證書show -vserver _svm_name_-common-name _ca_cert名稱_-type root-ca -instance」
+`security certificate show -vserver _svm_name_ -common-name _ca_cert_name_ -type root-ca -instance`
 
 +
 儲存公開金鑰憑證以供稍後的用戶端組態使用。

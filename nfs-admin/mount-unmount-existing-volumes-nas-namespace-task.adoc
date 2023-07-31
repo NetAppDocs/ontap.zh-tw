@@ -36,24 +36,24 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
  a| 
 掛載Volume
  a| 
-「Volume mount -vserver Svm_name -volume volume volume volume名稱-jeter-path jeting_path'
+`volume mount -vserver svm_name -volume volume_name -junction-path junction_path`
 
 
 
  a| 
 卸載Volume
  a| 
-「Volume unmount -vserver Svm_name -volume volume volume Volume _name」「volume offline -vserver Svm_name -volume volume volume Volume _name」
+`volume unmount -vserver svm_name -volume volume_name` `volume offline -vserver svm_name -volume volume_name`
 
 |===
 . 驗證磁碟區是否處於所需的掛載狀態：
 +
-「Volume show -vserver vserver_name -volume volume volume volume volume名稱-Fields state、jeter-path、jeter-active」
+`volume show -vserver vserver_name -volume volume_name -fields state,junction-path,junction-active`
 
 
 
 .範例
-以下範例將SVM VS1上名為「shes」的磁碟區掛載到交會點「/sales」：
+以下範例將位於 SVM VS1 的名為「 ''''''''''''''''''''''''''''''''''''' `/sales`：
 
 [listing]
 ----

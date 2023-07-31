@@ -17,12 +17,12 @@ summary: 當您在節點或機櫃上執行特定的硬體維護、並想要保�
 當您在節點或機櫃上執行特定的硬體維護、並想要保持合作夥伴節點正常運作、以限制停機時間時、您無需啟動接管、即可停止或重新啟動雙節點叢集中的節點、 或是當發生無法手動接管的問題、而您想要讓合作夥伴節點的集合體維持正常運作並提供資料時。此外、如果技術支援正在協助您疑難排解問題、他們可能會請您執行此程序、做為這些工作的一部分。
 
 .關於這項工作
-* 在禁止接管之前（使用「禁止接管」實際參數）、您必須停用叢集HA。
+* 禁止接管之前（使用 `-inhibit-takeover true` 參數）、您可以停用叢集 HA 。
 
 
 [CAUTION]
 ====
-* 在雙節點叢集中、叢集HA可確保一個節點的故障不會停用叢集。但是、如果您在使用「-INROBA-takeover true]參數之前未停用叢集HA、則兩個節點都會停止提供資料。
+* 在雙節點叢集中、叢集HA可確保一個節點的故障不會停用叢集。不過、如果您在使用之前未停用叢集 HA  `-inhibit-takeover true` 參數、兩個節點都會停止提供資料。
 * 如果您在停用叢集HA之前嘗試停止或重新開機節點、ONTAP 則會發出警告並指示您停用叢集HA。
 
 
@@ -32,9 +32,10 @@ summary: 當您在節點或機櫃上執行特定的硬體維護、並想要保�
 
 
 .步驟
-. 驗證兩個節點是否正常：「叢集顯示」
+. 確認兩個節點都正常：
+`cluster show`
 +
-對於兩個節點、「Health」（健全狀況）欄位都會顯示「true」。
+對於兩個節點、 `true` 會出現在中 `Health` 欄位。
 
 +
 [listing]
@@ -45,10 +46,12 @@ Node         Health  Eligibility
 node1        true     true
 node2        true     true
 ----
-. 將您要停止或重新開機的所有生命體移轉至合作夥伴節點：「network interface migrall-all -node_node_name_」（網路介面移轉-all節點_node_name_）
+. 將所有生命從您要停止或重新開機的節點移轉至合作夥伴節點：
+`network interface migrate-all -node _node_name_`
 . 如果您要在節點上停止或重新開機、當節點當機時、有您想要保持線上狀態的集合體、請將它們重新放置到合作夥伴節點；否則、請執行下一步。
 +
-.. 顯示要停止或重新開機的節點上的集合體：「torage aggregate show -node_node_name_」
+.. 在您要停止或重新開機的節點上顯示集合體：
+`storage aggregates show -node _node_name_`
 +
 例如、node1是要暫停或重新開機的節點：
 
@@ -70,18 +73,20 @@ test2_aggr  2.18TB    2.18TB    0% online       7 node1    raid_dp,
                                                                 normal
 4 entries were displayed.
 ----
-.. 將Aggregate移至合作夥伴節點：「torage Aggregate regate reg搬 移開始節點_node_name_-destination_node_name_-aggregate清單_gregate名稱_」
+.. 將集合體移至合作夥伴節點：
+`storage aggregate relocation start -node _node_name_ -destination _node_name_ -aggregate-list _aggregate_name_`
 +
 例如、Agggr1、aggr2和test2_aggr正在從節點1移至節點2：
 
 +
-「torage Aggregate regate regate regulationstart -node1_-destate _node2_-aggregate-list _aggr1_、_aggr2_、_test2_aggr_」
+`storage aggregate relocation start -node _node1_ -destination _node2_ -aggregate-list _aggr1_,_aggr2_,_test2_aggr_`
 
 
 
-. 停用叢集HA：「叢集HA modify -configured假」
+. 停用叢集 HA ：
+`cluster ha modify -configured false`
 +
-傳回輸出確認HA已停用：「注意：HA已停用」
+傳回輸出會確認 HA 已停用： `Notice: HA is disabled`
 
 +
 
@@ -89,42 +94,50 @@ NOTE: 此作業不會停用儲存容錯移轉。
 
 . 使用適當的命令來停止或重新開機、並禁止接管目標節點：
 +
-** 「System Node halt -node_node_name_-intride-takeover true」
-** 「系統節點重新開機-node_node_name_-intride-takeover true」
+** `system node halt -node _node_name_ -inhibit-takeover true`
+** `system node reboot -node _node_name_ -inhibit-takeover true`
 +
 
-NOTE: 在命令輸出中、您會看到一則警告、詢問您是否要繼續、請輸入「y」。
+NOTE: 在命令輸出中、您會看到一則警告、詢問您是否要繼續、請輸入 `y`。
 
 
 
-. 確認仍在線上的節點處於正常狀態（當合作夥伴關機時）：「cluster show」（叢集顯示）
+. 確認仍在線上的節點處於正常狀態（當合作夥伴關機時）：
+`cluster show`
 +
-對於線上節點、「Health（健全狀況）」欄位會顯示「true（真）」。
+對於線上節點、 `true` 會出現在中 `Health` 欄位。
 
 +
 
 NOTE: 在命令輸出中、您會看到叢集HA未設定的警告。此時您可以忽略此警告。
 
 . 執行必要的動作、以停止或重新啟動節點。
-. 從載入器提示字元「boot_ONTAP」開機離線節點
-. 驗證兩個節點是否正常：「叢集顯示」
+. 從載入程式提示字元啟動離線節點：
+`boot_ontap`
+. 確認兩個節點都正常：
+`cluster show`
 +
-對於兩個節點、「Health」（健全狀況）欄位都會顯示「true」。
+對於兩個節點、 `true` 會出現在中 `Health` 欄位。
 
 +
 
 NOTE: 在命令輸出中、您會看到叢集HA未設定的警告。此時您可以忽略此警告。
 
-. 重新啟用叢集HA：「叢集HA modify -configured true」
-. 如果在此程序之前、您將Aggregate重新定位至合作夥伴節點、請將其移回其主節點；否則、請移至下一個步驟：「torage Aggregate regate reg搬 移起始節點節點節點_node_name_-destination _nor_name_-aggregate list_gregate name_」
+. 重新啟用叢集 HA ：
+`cluster ha modify -configured true`
+. 如果您在本程序稍早將集合體重新定位至合作夥伴節點、請將它們移回其主節點；否則、請移至下一步：
+`storage aggregate relocation start -node _node_name_ -destination _node_name_ -aggregate-list _aggregate_name_`
 +
-例如、Agggr1、aggr2和test2_aggr正從節點節點2移至節點節點1：「torage Aggregate regate reg搬 移開始節點_node2_-destate _node1_-aggregate-list _aggr1_、_aggr2_、_test2_aggr_」
+例如、 Aggr1 、 aggr2 和 test2_aggr 正從節點 node2 移至節點 node1 ：
+`storage aggregate relocation start -node _node2_ -destination _node1_ -aggregate-list _aggr1_,_aggr2_,_test2_aggr_`
 
 . 將LIF還原至其主連接埠：
 +
-.. 查看不在家裡的生命：「網路介面show -is主頁假報」
+.. 檢視不在家裡的生命：
+`network interface show -is-home false`
 .. 如果沒有從下一節點移轉的非主系LIF、請在還原之前確認是否可以安全地移動它們。
-.. 如果安全的話、請將所有LIF回復到主目錄。「網路介面回復*」
+.. 如果安全的話、請將所有LIF回復到主目錄。
+`network interface revert *`
 
 
 

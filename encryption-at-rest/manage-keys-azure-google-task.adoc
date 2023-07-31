@@ -69,9 +69,13 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 .Azure
 --
 .在 ONTAP SVM 上啟用 Azure Key Vault
-. 開始之前、您必須先從Azure帳戶取得適當的驗證認證資料、包括用戶端機密或憑證。您也必須確保叢集中的所有節點都正常運作。您可以使用命令「cluster show」來檢查。
-. 將權限層級設為進階的「套用-priv進階」
-. 在SVM上啟用AKV「安全金鑰管理程式外部azure enable -client-id _client_id_-租 戶ID _租 戶id_-name -key-id _key_id_-imite-method｛Certificate | client-secret｝」。出現提示時、請輸入Azure帳戶的用戶端憑證或用戶端機密。
+. 開始之前、您必須先從Azure帳戶取得適當的驗證認證資料、包括用戶端機密或憑證。
+您也必須確保叢集中的所有節點都正常運作。您可以使用命令來檢查 `cluster show`。
+. 將權限層級設為進階
+`set -priv advanced`
+. 在 SVM 上啟用 AKV
+`security key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method {certificate|client-secret}`
+出現提示時、請輸入 Azure 帳戶的用戶端憑證或用戶端機密。
 . 確認 AKV 已正確啟用：
 `security key-manager external azure show vserver _svm_name_`
 如果服務連線能力不正常、請透過資料 SVM LIF 建立與 AKV 金鑰管理服務的連線。
@@ -97,7 +101,8 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 --
 ====
 如果已為資料SVM設定一或多個加密磁碟區、且對應的NVE金鑰由管理SVM內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用 CLI 執行此作業、請執行命令：
-`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`在成功移轉資料 SVM 的所有 NVE 金鑰之前、無法為租戶的資料 SVM 建立新的加密磁碟區。
+`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`
+在成功移轉資料 SVM 的所有 NVE 金鑰之前、無法為租戶的資料 SVM 建立新的加密磁碟區。
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-encrypting-volumes.html["使用適用於 Cloud Volumes ONTAP 的 NetApp 加密解決方案來加密磁碟區"^]

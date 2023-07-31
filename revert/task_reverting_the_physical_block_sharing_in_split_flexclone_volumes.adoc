@@ -15,8 +15,8 @@ summary: 如果您已將FlexClone Volume從其父Volume分割開、則必須先�
 
 此工作僅適用於AFF 在任何FlexClone磁碟區上執行分割時的不必要系統。
 
-. 登入進階權限層級：「et -priv榮幸advanced」（設定-權限進階）
-. 使用共享實體區塊識別分割的FlexClone磁碟區：「Volume Clone share-by -split show」
+. 登入進階權限層級： `set -privilege advanced`
+. 識別具有共用實體區塊的分離 FlexClone 磁碟區： `volume clone sharing-by-split show`
 +
 [listing]
 ----
@@ -27,8 +27,8 @@ node1           vs1       vol_clone1    aggr1
 node2           vs2       vol_clone2    aggr2
 2 entries were displayed.
 ----
-. 復原叢集內所有分割FlexClone磁碟區的實體區塊共用：「Volume Clone share-by split undo start-all」
-. 驗證是否沒有使用共享實體區塊的分離式FlexClone磁碟區：「Volume Clone share-by split show」
+. 在叢集中的所有分離式 FlexClone 磁碟區中復原實體區塊共用： `volume clone sharing-by-split undo start-all`
+. 確認沒有分割的 FlexClone 磁碟區與共用的實體區塊： `volume clone sharing-by-split show`
 +
 [listing]
 ----

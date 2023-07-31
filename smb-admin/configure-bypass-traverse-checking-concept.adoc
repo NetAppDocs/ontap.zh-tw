@@ -30,7 +30,7 @@ summary: 略過周遊檢查是一項使用者權限（也稱為權限）、可�
 
 您可以使用ONTAP CLI或使用此使用者權限設定Active Directory群組原則、來設定略過周遊檢查。
 
-「eChangeleNotifyPrivilege」權限可控制是否允許使用者略過周遊檢查。
+。 `SeChangeNotifyPrivilege` 權限可控制是否允許使用者略過周遊檢查。
 
 * 將它新增至SVM上的本機SMB使用者或群組、或新增至網域使用者或群組、可進行略過周遊檢查。
 * 從SVM上的本機SMB使用者或群組或網域使用者或群組中移除此功能、將不允許略過周遊檢查。
@@ -38,24 +38,24 @@ summary: 略過周遊檢查是一項使用者權限（也稱為權限）、可�
 
 根據預設、SVM上的下列BUILTIN群組有權略過周遊檢查：
 
-* 「BUILTIN\Administrators」
-* 「BUILTIN\Power使用者」
-* 「BUILTIN\Backup Operators」
-* 「BUILTIN\Users」
-* 「每個人」
+* `BUILTIN\Administrators`
+* `BUILTIN\Power Users`
+* `BUILTIN\Backup Operators`
+* `BUILTIN\Users`
+* `Everyone`
 
 
 如果您不想讓其中一個群組的成員略過周遊檢查、則必須從群組中移除此權限。
 
 使用CLI在SVM上設定本機SMB使用者和群組的略過周遊檢查時、必須謹記下列事項：
 
-* 如果您想要允許自訂本機或網域群組的成員略過周遊檢查、您必須將「eChangeleNotifyPrivilege」權限新增至該群組。
-* 如果您想要允許個別本機或網域使用者略過周遊檢查、而且該使用者不是具有該權限的群組成員、您可以將「eChangelNotifyPrivilege」權限新增至該使用者帳戶。
-* 您可以隨時移除「eChangeleNotifyPrivilege」權限、以停用本機或網域使用者或群組的略過周遊檢查。
+* 如果您想要允許自訂本機或網域群組的成員略過周遊檢查，則必須新增 `SeChangeNotifyPrivilege` 權限給該群組。
+* 如果您想要允許個別本機或網域使用者略過周遊檢查，而該使用者不是具有該權限的群組成員，則可以新增 `SeChangeNotifyPrivilege` 該使用者帳戶的權限。
+* 您可以移除來停用本機或網域使用者或群組的略過周遊檢查 `SeChangeNotifyPrivilege` 隨時享有特權。
 +
 [NOTE]
 ====
-若要針對指定的本機或網域使用者或群組停用略過網路保護程式檢查、您也必須從「任何人」群組中移除「eChangeChangelNotifyPrivilege」權限。
+若要停用特定本機或網域使用者或群組的略過傳輸檢查、您也必須移除 `SeChangeNotifyPrivilege` 的權限 `Everyone` 群組：
 
 ====
 

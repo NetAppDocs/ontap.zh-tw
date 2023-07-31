@@ -23,31 +23,32 @@ summary: 當您建立FPolicy原則時、會將外部引擎和一或多個事件�
 .步驟
 . 建立FPolicy原則：
 +
-「vserver fpolicy原則create -vserver_name vserver_name -police-name policy_name -engine engine_name -events EVOND_NAME、... [-is-muted｛true|假｝][-allow-特權 存取｛yes | no｝][-特權 使用者名稱網域\使用者名稱][-is-passthrough讀取啟用｛true|假｝]
+`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name,... [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
 
 +
 ** 您可以將一或多個事件新增至FPolicy原則。
 ** 預設會啟用強制篩選。
-** 如果您想要將「允許權限存取」參數設為「是」、以允許存取權限、您也必須設定授權使用者名稱以進行權限存取。
-** 如果您要設定passthrough讀取、將「as-pass-pass-read-enabling」參數設為「true」、您也必須設定特殊權限資料存取。
+** 如果您想要透過設定來允許特殊權限存取 `-allow-privileged-access` 參數至 `yes`、您也必須設定權限使用者名稱以進行權限存取。
+** 如果您想要設定 Passthrough-read 、請設定 `-is-passthrough-read-enabled` 參數至 `true`、您也必須設定特殊權限資料存取。
 +
-下列命令會建立名為「policy1'」的原則、其事件名稱為「EVENT1」、外部引擎名稱為「engine 1'」。此原則會使用原則組態中的預設值：「vserver fpolicy create -vserver vs1.example.com -police-name policy1 -evenges EVENT1 -engine 1」
+下列命令會建立名為「policy1'」的原則、其事件名稱為「EVENT1」、外部引擎名稱為「engine 1'」。此原則會在原則組態中使用預設值：
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name policy1 -events event1 -engine engine1`
 
 +
 下列命令會建立名為「policy2」的原則、其事件名稱為「'Event2」、外部引擎名稱為「engine 2」。此原則設定為使用指定的使用者名稱來使用權限存取。Passthsthread-read已啟用：
 
 +
-「vserver fpolicy原則create -vserver vs1.example.com -policy-name policy2 -events事件事件事件2 -engine engine 2 -enerive-特權 存取yes（權限使用者名稱範例）\archive_acct-as-passrough-read-enabledtrue（vserver fpolicy原則建立-vserver -policy2 -事件事件
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name policy2 -events event2 -engine engine2 -allow-privileged-access yes ‑privileged-user-name example\archive_acct -is-passthrough-read-enabled true`
 
 +
 下列命令會建立名為「native1」的原則、並將事件命名為「事件3」。此原則使用原生引擎、並在原則組態中使用預設值：
 
 +
-「vserver fpolicy原則create -vserver vs1.example.com -police-name native1 -events event3 -engine native'
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name native1 -events event3 -engine native`
 
 
 
-. 使用「vserver fpolicy policy show」命令來驗證FPolicy原則組態。
+. 使用驗證 FPolicy 原則組態 `vserver fpolicy policy show` 命令。
 +
 下列命令會顯示有關三個已設定的FPolicy原則的資訊、包括下列資訊：
 
@@ -56,7 +57,8 @@ summary: 當您建立FPolicy原則時、會將外部引擎和一或多個事件�
 ** 與原則相關聯的外部引擎
 ** 與原則相關的事件
 ** 是否需要強制篩選
-** 是否需要特殊權限存取「vserver fpolicy policy show」
+** 是否需要權限存取
+`vserver fpolicy policy show`
 
 
 +

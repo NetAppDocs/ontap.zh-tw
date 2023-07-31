@@ -46,11 +46,15 @@ summary: 您必須瞭解FlexCache 支援的功能、包括由《支援的功能�
  a| 
 是的
 
-支援從ONTAP 支援的功能為從功能9.7開始、您可以FlexCache 使用原生ONTAP 的支援功能進行稽核、以稽核功能來稽核彼此之間關係中的NFS檔案存取事件。如需詳細資訊、請參閱 xref:audit-flexcache-volumes-concept.adoc[稽核FlexCache 功能的考量]
+支援從ONTAP 支援的功能從支援的功能9.7開始
+您可以使用原生 ONTAP 稽核來稽核 FlexCache 關聯中的 NFS 檔案存取事件。
+如需詳細資訊、請參閱 xref:audit-flexcache-volumes-concept.adoc[稽核FlexCache 功能的考量]
  a| 
 是的
 
-支援從ONTAP 支援的功能為從功能9.7開始、您可以FlexCache 使用原生ONTAP 的支援功能進行稽核、以稽核功能來稽核彼此之間關係中的NFS檔案存取事件。如需詳細資訊、請參閱 xref:audit-flexcache-volumes-concept.adoc[稽核FlexCache 功能的考量]
+支援從ONTAP 支援的功能從支援的功能9.7開始
+您可以使用原生 ONTAP 稽核來稽核 FlexCache 關聯中的 NFS 檔案存取事件。
+如需詳細資訊、請參閱 xref:audit-flexcache-volumes-concept.adoc[稽核FlexCache 功能的考量]
 
 
 
@@ -208,7 +212,7 @@ NetApp Volume Encryption（NVE）
 
 
  a| 
-NFSv3
+NFSv3.
  a| 
 是的
  a| 
@@ -223,7 +227,10 @@ NFSv4.
  a| 
 是的
 
-支援從ONTAP 功能升級至功能升級至功能升級
+從 ONTAP 9.10.1 開始支援。
+
+
+NOTE: 若要使用 NFSv4.x 通訊協定存取快取磁碟區、來源叢集和快取叢集都必須使用 ONTAP 9.10.1 或更新版本。原始叢集和 FlexCache 叢集可以有不同的 ONTAP 版本、但兩者都應該是 ONTAP 9.10.1 和更新版本、例如、原始叢集可以有 ONTAP 9.10.1 、快取可以有 ONTAP 9.11.1 。
 
 
 
@@ -232,7 +239,10 @@ QoS
  a| 
 是的
  a| 
-是的附註：FlexCache 不支援檔案層級的QoS。
+是的
+
+
+NOTE: 不支援FlexCache 檔案層級的QoS以供支援使用。
 
 
 
@@ -248,9 +258,9 @@ qtree
  a| 
 配額
  a| 
-是的。從 ONTAP 9.6 開始、就支援 FlexCache 原始磁碟區的配額強制。
+是的。從 ONTAP 9.6 開始、使用者和群組都支援在 FlexCache 原始磁碟區上強制執行配額。
  a| 
-否
+不可以使用 FlexCache 寫入模式（預設模式）時、快取上的寫入會轉送到原始磁碟區。配額會在原點強制執行。
 
 
 NOTE: 從ONTAP 功能支援的不只是功能性的9.6、FlexCache 還能在功能區上支援遠端配額（rquota）。

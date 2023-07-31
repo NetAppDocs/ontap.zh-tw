@@ -42,9 +42,11 @@ summary: 如果來源儲存區中的資料無法使用、您可以中斷SnapMirr
 
 == CLI程序
 
-. 針對目的地儲存區起始容錯移轉作業：「napmirror容錯移轉開始- destination-path _Svm_name_/bucket/_bucket_name_」
-. 驗證容錯移轉作業的狀態：「napmirror show -Fields Status」
+. 針對目的地儲存區啟動容錯移轉作業：
+`snapmirror failover start -destination-path _svm_name_:/bucket/_bucket_name_`
+. 確認容錯移轉作業的狀態：
+`snapmirror show -fields status`
 
 
 .範例
-「clusterA：：> SnapMirror容錯移轉開始- destination-path VS1：/Bucket / test-Bucket鏡射」
+`clusterA::> snapmirror failover start -destination-path vs1:/bucket/test-bucket-mirror`

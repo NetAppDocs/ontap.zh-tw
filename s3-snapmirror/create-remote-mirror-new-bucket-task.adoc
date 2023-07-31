@@ -39,7 +39,8 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至遠端叢
 .. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
 .. 在*設定*索引標籤中、按一下 image:icon_pencil.gif["編輯圖示"] 在「* S3 *」方塊中。
 .. 在「*使用者*」索引標籤中、確認root使用者有存取金鑰。
-.. 如果沒有、請按一下 image:icon_kabob.gif["更多圖示"] 在* root*旁邊、然後按一下*重新產生Key*。如果金鑰已經存在、請勿重新產生金鑰。
+.. 如果沒有、請按一下 image:icon_kabob.gif["更多圖示"] 在* root*旁邊、然後按一下*重新產生Key*。
+如果金鑰已經存在、請勿重新產生金鑰。
 
 
 . 編輯儲存VM以新增使用者、並在來源與目的地儲存VM中新增使用者至群組：
@@ -69,8 +70,9 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至遠端叢
 .. 在*權限*下、按一下*新增*。
 +
 *** *主體*和*效果*：選取對應於使用者群組設定的值、或接受預設值。
-*** *動作*：請確定顯示下列值：「GetObject、PuttObject、刪除物件、清單庫、GetBucketAcl、GetObjectAcl、ListBucketMultiPartUploads、ListMultiPartUploPartParts」
-*** *資源*-使用預設值「（_bonetname、bonetname_/*）」或其他您需要的值。
+*** *Action*- 確保顯示以下值：
+`GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** * 資源 * - 使用預設值 `(_bucketname, bucketname_/*)` 或其他您需要的價值。
 +
 請參閱 link:../task_object_provision_manage_bucket_access.html["管理使用者對儲存區的存取權"] 以取得這些欄位的詳細資訊。
 
@@ -109,24 +111,24 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至遠端叢
 
 . 如果這是此SVM的第一個S3 SnapMirror關係、請驗證來源和目的地SVM是否都有根使用者金鑰、如果不符合下列條件、請重新產生這些金鑰：
 +
-「vserver object-store-server使用者秀」
+`vserver object-store-server user show`
 
 +
 確認root使用者有存取金鑰。如果沒有、請輸入：
 
 +
-「vserver object-store-server使用者重新產生金鑰-vserver Svm_name -user_root_」
+`vserver object-store-server user regenerate-keys -vserver svm_name -user _root_`
 
 +
 如果金鑰已經存在、請勿重新產生金鑰。
 
 . 在來源和目的地SVM中建立儲存區：
 +
-「vserver object-store-server bucket create -vserver Svm_name -bucket bucket_name [-size _integer_[KB | MB | GB | TB | PB ][-comment _text_][_additional _options_]」
+`vserver object-store-server bucket create -vserver svm_name -bucket bucket_name [-size _integer_[KB|MB|GB|TB|PB]] [-comment _text_] [_additional_options_]`
 
 . 將存取規則新增至來源和目的地SVM中的預設資源桶原則：
 +
-「Vserver object-store-server Bucket policy add-statement -vserver _Svm_name_-Bucket _bucket_name_-effect｛allow| deny｝-action _object_store_actions _-principier_and_group _names_-resource_[-sID _text_][-index _integer_
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -bucket _bucket_name_ -effect {allow|deny} -action _object_store_actions_ -principal _user_and_group_names_ -resource _object_store_resources_ [-sid _text_] [-index _integer_]`
 
 +
 .範例
@@ -134,14 +136,15 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至遠端叢
 ----
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 在來源SVM上、如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則：「napmirror policy create -vserver _Svm_name_-policy name -ttype Continuous [-RPO _integer_][-wid_type_][-comment _text_][_additional _options_]
+. 在來源SVM上、如果您沒有現有的S3 SnapMirror原則、而且不想使用預設原則、請建立S3 SnapMirror原則：
+`snapmirror policy create -vserver _svm_name_ -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 參數：
 
 +
-** 類型「Continuous（持續）」是S3 SnapMirror關係的唯一原則類型（必填）。
-** 「-RPO」–指定恢復點目標的時間（以秒為單位）（選用）。
-** 「節流」–指定處理量/頻寬的上限、單位為千位元組/秒（選用）。
+** 類型 `continuous` – S3 SnapMirror 關係的唯一原則類型（必要）。
+** `-rpo` –指定恢復點目標的時間（以秒爲單位）（可選）。
+** `-throttle` –指定處理量 / 頻寬的上限（以千位元組 / 秒為單位）（選用）。
 +
 .範例
 [listing]
@@ -152,19 +155,21 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 . 在來源叢集和目的地叢集的管理SVM上安裝CA伺服器憑證：
 +
-.. 在來源叢集上、安裝簽署_dest_ S3伺服器憑證的CA憑證：「安全證書安裝-類型server -ca -vserver _SR_admin_SVM_-cert-name _dest_server_certificat_」
-.. 在目的地叢集上、安裝簽署_SOURGE_S3伺服器憑證的CA憑證：「安全證書安裝-類型伺服器-ca -vserver _dest_admin_SVM_-cert-name _SR_server_certificat_」
+.. 在來源叢集上、安裝簽署 _destination_ S3 伺服器憑證的 CA 憑證：
+`security certificate install -type server-ca -vserver _src_admin_svm_ -cert-name _dest_server_certificate_`
+.. 在目的地叢集上、安裝簽署 _SOURC_ S3 伺服器憑證的 CA 憑證：
+`security certificate install -type server-ca -vserver _dest_admin_svm_ -cert-name _src_server_certificate_`
 +
 如果您使用由外部CA廠商簽署的憑證、請在來源和目的地管理SVM上安裝相同的憑證。
 
 +
-有關詳細信息，請參見"the siturity Certificate install"（安全證書安裝）手冊頁。
+請參閱 `security certificate install` 詳細資訊請參閱手冊頁。
 
 
 
 . 在來源SVM上、建立S3 SnapMirror關係：
 +
-「napmirror create -source-path _sm_svm_name_：/bucket/_bucket_name_-destination-path _dest_peer_svm_name_：/bucket/_bucket_name_、...」｝ [-policy policy_name]
+`snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]`
 
 +
 您可以使用所建立的原則、或接受預設值。
@@ -175,5 +180,6 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 ----
 src_cluster::> snapmirror create -source-path vs0-src:/bucket/test-bucket -destination-path vs1-dest:bucket/test-bucket-mirror -policy test-policy
 ----
-. 驗證鏡射是否為作用中狀態：「napmirror show -police-type nContinuous -Fields Status」
+. 驗證鏡射是否為作用中：
+`snapmirror show -policy-type continuous -fields status`
 

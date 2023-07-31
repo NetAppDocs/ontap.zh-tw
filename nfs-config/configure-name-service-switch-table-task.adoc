@@ -19,19 +19,19 @@ summary: 您必須正確設定名稱服務交換器表、才能讓ONTAP 支援�
 如果您打算使用netGroups、則必須依照RFC 5952中的指定、縮短及壓縮netGroups中指定的所有IPv6位址。
 
 .關於這項工作
-請勿包含未使用的資訊來源。例如、如果您的環境未使用NIS、請勿指定「來源NIS」選項。
+請勿包含未使用的資訊來源。例如、如果您的環境中未使用 NIS 、請勿指定 `-sources nis` 選項。
 
 .步驟
 . 將必要的項目新增至名稱服務交換器表：
 +
-「Vserver服務名稱服務ns-switchcreate -vserver _vserver_name_-database_database_name_-sources _source_names _」
+`vserver services name-service ns-switch create -vserver _vserver_name_ -database _database_name_ -sources _source_names_`
 
 . 驗證名稱服務交換器表格是否包含所需順序的預期項目：
 +
-「Vserver服務名稱服務ns_switchshow -vserver _vserver_name_」
+`vserver services name-service ns-switch show -vserver _vserver_name_`
 
 +
-如果要進行任何修正、您必須使用「vserver services name-service ns. switch-modify」或「vserver services name-service ns.
+如果您想要進行任何修正、您必須使用 `vserver services name-service ns-switch modify` 或 `vserver services name-service ns-switch delete` 命令。
 
 
 

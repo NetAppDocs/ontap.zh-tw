@@ -16,7 +16,7 @@ summary: 根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使�
 .關於這項工作
 如果使用者的認證中有超過預設的群組ID數目、則其餘的群組ID會被刪減、而且使用者在嘗試從儲存系統存取檔案時可能會收到錯誤訊息。您應該將每個SVM的最大群組數設定為代表環境中最大群組數的數字。
 
-下表顯示「vserver NFS modify」命令的兩個參數、可決定三個範例組態中的群組ID數目上限：
+下表顯示的兩個參數 `vserver nfs modify` 決定三個範例組態中群組 ID 最大數目的命令：
 
 [cols="40,30,30"]
 |===
@@ -26,13 +26,13 @@ summary: 根據預設、ONTAP 使用Kerberos（RPCSEC_GSS）驗證處理NFS使�
 
 
  a| 
-「延伸群組限制」
+`-extended-groups-limit`
 
--`-auth-sys-extended - Groups（驗證系統擴充群組）
+`-auth-sys-extended-groups`
  a| 
-《32》
+`32`
 
-"禁用"
+`disabled`
 
 這些是預設設定。
  a| 
@@ -43,32 +43,32 @@ AUTH_SYS：16
 
 
  a| 
-「延伸群組限制」
+`-extended-groups-limit`
 
--`-auth-sys-extended - Groups（驗證系統擴充群組）
+`-auth-sys-extended-groups`
  a| 
-"256"
+`256`
 
-"禁用"
+`disabled`
  a| 
-RPCSEC_GSS：256
+RPCSEC_GSS ： 256
 
 AUTH_SYS：16
 
 
 
  a| 
-「延伸群組限制」
+`-extended-groups-limit`
 
--`-auth-sys-extended - Groups（驗證系統擴充群組）
+`-auth-sys-extended-groups`
  a| 
-"512"
+`512`
 
-「已啟用」
+`enabled`
  a| 
-RPCSEC_GSS：512
+RPCSEC_GSS ： 512
 
-AUTH_SYS：512
+驗證系統： 512
 
 |===
 [NOTE]
@@ -79,7 +79,7 @@ AUTH_SYS：512
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 執行所需的動作：
 +
@@ -92,20 +92,20 @@ AUTH_SYS：512
  a| 
 僅適用於RPCSEC_GSS、並將AUTH_SYS設為預設值16
  a| 
-Check Alignment of PHs>+vserver NFS modify -vserver vserver_name -extended Groups-limit {32-101010}-auth-sys-extended - Groups disabled+'
+`+vserver nfs modify -vserver vserver_name -extended-groups-limit {32-1024} -auth-sys-extended-groups disabled+`
 
 
 
  a| 
 適用於RPCSEC_GSS和AUTH_SYS
  a| 
-+vserver NFS modify -vserver vserver_name -extended Groups-limit {32-1010}-auth-sys-extended - Groups enabled_+
+`+vserver nfs modify -vserver vserver_name -extended-groups-limit {32-1024} -auth-sys-extended-groups enabled+`
 
 |===
-. 驗證「extended - Groups-limit」值、並驗證auth_SYS是否使用延伸群組：「vserver NFS show -vserver vserver_name -Fields auth-sys-extended - Groups、extended - Groups-limit」
+. 驗證 `-extended-groups-limit` 並驗證 AUTH_SYS 是否使用延伸群組： `vserver nfs show -vserver vserver_name -fields auth-sys-extended-groups,extended-groups-limit`
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 
 

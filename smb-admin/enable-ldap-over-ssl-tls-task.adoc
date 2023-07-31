@@ -13,21 +13,21 @@ summary: 您的SMB伺服器必須先修改SMB伺服器安全性設定、才能�
 [role="lead"]
 您的SMB伺服器必須先修改SMB伺服器安全性設定、才能使用TLS與Active Directory LDAP伺服器進行安全通訊。
 
-從ONTAP 《支援範圍》9.10.1開始、Active Directory（AD）和名稱服務LDAP連線預設都支援LDAP通道繫結。僅當啟用Start-TLS或LDAPS並將工作階段安全性設定為簽署或密封時、才能嘗試透過LDAP連線進行通道繫結。ONTAP若要停用或重新啟用與AD伺服器的LDAP通道繫結、請使用「vserver CIFS安全性修改」命令搭配「ter-channel繫結-for ad-LDAP」參數。
+從ONTAP 《支援範圍》9.10.1開始、Active Directory（AD）和名稱服務LDAP連線預設都支援LDAP通道繫結。僅當啟用Start-TLS或LDAPS並將工作階段安全性設定為簽署或密封時、才能嘗試透過LDAP連線進行通道繫結。ONTAP若要停用或重新啟用與 AD 伺服器的 LDAP 通道繫結、請使用 `-try-channel-binding-for-ad-ldap` 參數 `vserver cifs security modify` 命令。
 
 若要深入瞭解、請參閱：
 
-* link:../nfs-admin/using-ldap-concept.html["LDAP總覽"]
+* link:../nfs-admin/using-ldap-concept.html["LDAP 概述"]
 * link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 LDAP通道繫結和LDAP簽署要求、適用於Windows"^]。
 
 
 .步驟
-. 設定SMB伺服器安全性設定、以允許與Active Directory LDAP伺服器進行安全的LDAP通訊：「vserver CIFS安全性修改-vserver _vserver_name_-USe-start-tlS-for-ad-LDAP true」
-. 驗證LDAP over TLS安全性設定是否設為「true」：「vserver CIFS安全性show -vserver _vserver_name_」
+. 設定 SMB 伺服器安全性設定、以允許與 Active Directory LDAP 伺服器進行安全的 LDAP 通訊： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
+. 確認 LDAP over TLS 安全性設定已設定為 `true`： `vserver cifs security show -vserver _vserver_name_`
 +
 [NOTE]
 ====
-如果SVM使用相同的LDAP伺服器來查詢名稱對應或其他UNIX資訊（例如使用者、群組和網路群組）、您也必須使用「vserver services name-service LDAP Client modify」命令來修改「use-start-TLS」選項。
+如果 SVM 使用相同的 LDAP 伺服器來查詢名稱對應或其他 UNIX 資訊（例如使用者、群組和網路群組）、則您也必須修改 `-use-start-tls` 選項：使用 `vserver services name-service ldap client modify` 命令。
 
 ====
 

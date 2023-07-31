@@ -14,7 +14,7 @@ summary: Aggregate層級的重複資料刪除技術可在屬於同一個Aggregat
 Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各磁碟區之間消除重複區從功能完善的9.2開始ONTAP 、您可以在AFF 下列系統上即時執行集合體層級的重複資料刪除功能：此功能預設會針對所有新建立的磁碟區和所有已升級的磁碟區啟用、並開啟Volume即時重複資料刪除功能。
 
 .關於這項工作
-重複資料刪除作業可在資料寫入磁碟之前、先消除重複的區塊。只有將「最快保證」設為「無」的磁碟區、才能參與集合體層級的即時重複資料刪除。這是AFF 在整個系統上的預設設定。
+重複資料刪除作業可在資料寫入磁碟之前、先消除重複的區塊。只有具有的 Volume `space guarantee` 設定為 `none` 可參與 Aggregate 層級的內嵌重複資料刪除。這是AFF 在整個系統上的預設設定。
 
 [NOTE]
 ====
@@ -32,21 +32,21 @@ Aggregate層級的即時重複資料刪除技術有時稱為跨磁碟區即時�
  a| 
 啟用Aggregate層級的即時重複資料刪除技術
  a| 
-「Volume Effiveive-modify -vserver vserver_name -volume vol_name -Cross-volvole-ine-dewide-dupe true」
+`volume efficiency modify -vserver vserver_name -volume vol_name -cross-volume-inline-dedupe true`
 
 
 
  a| 
 停用Aggregate層級的即時重複資料刪除
  a| 
-「Volume Effiveive-modify -vserver vserver_name -volume vol_name -Cross-volvolvole-ine-dedupe fals'
+`volume efficiency modify -vserver vserver_name -volume vol_name -cross-volume-inline-dedupe false`
 
 
 
  a| 
 顯示Aggregate層級的即時重複資料刪除狀態
  a| 
-Volume Effim兼 具組態- Volume vol_name
+`volume efficiency config -volume vol_name`
 
 |===
 

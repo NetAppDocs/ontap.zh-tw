@@ -25,13 +25,13 @@ NOTE: 使用物件儲存伺服器原則時、您可以在群組定義中指定�
 有三種唯讀的預設原則可供存取ONTAP 不完整的S3資源：
 
 * FullAccess
-* NoS3Access
+* NoS3 存取
 * ReadOnlyAccess
 
 
 您也可以建立新的自訂原則、然後為新使用者和群組新增陳述式、或是修改現有陳述式的屬性。如需更多選項、請參閱 `vserver object-store-server policy` link:https://docs.netapp.com/us-en/ontap-cli-9131/index.html["命令參考資料"^]。
 
-從發行版的版本起、如果您計畫支援AWS用戶端物件標記功能搭配使用版S3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。ONTAP ONTAP
+從 ONTAP 9.9.1 及更新版本開始、如果您計畫在 ONTAP S3 伺服器上支援 AWS 用戶端物件標記功能、就會執行這些動作 `GetObjectTagging`、 `PutObjectTagging`和 `DeleteObjectTagging` 需要使用貯體或群組原則來允許。
 
 您遵循的程序取決於您使用的介面- System Manager或CLI：
 
@@ -54,7 +54,8 @@ NOTE: 使用物件儲存伺服器原則時、您可以在群組定義中指定�
 *** 群組：授予存取權的群組。
 *** 效果：允許或拒絕存取一或多個群組。
 *** 行動：特定群組的一個或多個儲存桶中允許的行動。
-*** 資源：一或多個儲存區內的物件路徑和名稱、這些儲存區已授予或拒絕存取權限。例如：
+*** 資源：一或多個儲存區內的物件路徑和名稱、這些儲存區已授予或拒絕存取權限。
+例如：
 +
 **** ***授予對儲存VM中所有儲存區的存取權。
 **** * Bucketname*與* Bucketname/*可授予特定儲存區中所有物件的存取權。
@@ -76,11 +77,11 @@ NOTE: 使用物件儲存伺服器原則時、您可以在群組定義中指定�
 .步驟
 . 建立物件儲存伺服器原則：
 +
-「Vserver object-store-server原則create -vserver _Svm_name_-policy _name_[-comment _text_]」
+`vserver object-store-server policy create -vserver _svm_name_ -policy _policy_name_ [-comment _text_]`
 
 . 建立原則聲明：
 +
-「vserver object-store-server原則聲明create -vserver _svm_name_-policy _policy_name_-effect｛allow| deny｝-action _object_store_actions_-resource_store_resources_[-sID text]」
+`vserver object-store-server policy statement create -vserver _svm_name_ -policy _policy_name_ -effect {allow|deny} -action _object_store_actions_ -resource _object_store_resources_ [-sid text]`
 
 +
 下列參數定義存取權限：
@@ -91,30 +92,30 @@ NOTE: 使用物件儲存伺服器原則時、您可以在群組定義中指定�
 
 
  a| 
-「效果」
+`-effect`
  a| 
 此聲明可能允許或拒絕存取
 
 
 
  a| 
-「行動」
+`-action`
  a| 
-您可以指定「*」表示所有動作、或是下列一或多個清單：「GetObject、PuttObject、刪除物件、清單庫、GetBucketAcl、GetObjectAcl、 listAllMybBucks、listBucketMultiPartUploads、以及「ListMultpartUploParts」。
+您可以指定 `*` 表示所有動作、或是下列一或多個動作清單： `GetObject, PutObject, DeleteObject, ListBucket,GetBucketAcl, GetObjectAcl, ListAllMyBuckets, ListBucketMultipartUploads,` 和 `ListMultipartUploadParts`。
 
 
 
  a| 
-資源
+`-resource`
  a| 
-儲存區及其所包含的任何物件。通配字元「*」和「？」 可用於形成規則運算式、以指定資源。
+儲存區及其所包含的任何物件。萬用字元 `*` 和 `?` 可用於形成用於指定資源的規則運算式。
 
 |===
 +
-您可以選擇使用「-SID'」選項、將文字字串指定為註解。
+您可以選擇性地指定文字字串做為的註解 `-sid` 選項。
 
 +
-根據預設、新的對帳單會新增至對帳單清單的結尾、並依順序處理。稍後新增或修改陳述式時、您可以選擇修改陳述式的「索引」設定、以變更處理順序。
+根據預設、新的對帳單會新增至對帳單清單的結尾、並依順序處理。稍後新增或修改說明時、您可以選擇修改說明 `-index` 設定以變更處理順序。
 
 
 

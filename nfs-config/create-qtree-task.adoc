@@ -11,7 +11,7 @@ summary: 您可以使用volume qtree create命令來建立qtree以包含資料�
 
 
 [role="lead"]
-您可以使用「volume qtree create」命令來建立qtree以包含資料、並指定其內容。
+您可以建立 qtree 來包含資料、並使用來指定其內容 `volume qtree create` 命令。
 
 .您需要的產品
 * SVM和將要包含新qtree的Volume必須已經存在。
@@ -21,22 +21,22 @@ summary: 您可以使用volume qtree create命令來建立qtree以包含資料�
 .步驟
 . 建立qtree：
 +
-「Volume qtree create -vserver _vserver_name_｛-volume _volume _name_-qtree _qtree name_|-qtree路徑_qtree path_｝-安全型UNIX [-policy _policy_name_]
+`volume qtree create -vserver _vserver_name_ { -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ } -security-style unix [-policy _export_policy_name_]`
 
 +
-您可以將Volume和qtree指定為個別的引數、或是以「/vol/_volume_name/_qtree名稱_」格式指定qtree路徑引數。
+您可以將 Volume 和 qtree 指定為個別的引數、或以格式指定 qtree 路徑引數 `/vol/_volume_name/_qtree_name_`。
 
 +
-根據預設、qtree會繼承其父Volume的匯出原則、但可以設定為使用自己的原則。如果您打算使用現有的匯出原則、則可以在建立qtree時加以指定。您也可以稍後使用「volume qtree modify」命令新增匯出原則。
+根據預設、qtree會繼承其父Volume的匯出原則、但可以設定為使用自己的原則。如果您打算使用現有的匯出原則、則可以在建立qtree時加以指定。您也可以稍後使用新增匯出原則 `volume qtree modify` 命令。
 
 . 確認qtree是以所需的交會路徑建立：
 +
-「Volume qtree show -vserver _vserver_name_｛-volume _volume _name_-qtree _qtree name_|-qtree路徑_qtree path_｝」
+`volume qtree show -vserver _vserver_name_ { -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ }`
 
 
 
 .範例
-以下範例會在SVM vs1.example.com上建立一個名為qt01的qtree、該qtree具有連接路徑「/vol/data1」：
+以下範例建立一個 qtree 、名稱為 qt01 、位於 SVM vs1.example.com 上、具有交會路徑 `/vol/data1`：
 
 [listing]
 ----

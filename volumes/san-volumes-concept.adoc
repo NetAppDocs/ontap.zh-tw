@@ -24,7 +24,7 @@ summary: 提供三種基本的Volume資源配置選項：完整資源配置、�
 
 建立精簡配置的磁碟區時ONTAP 、建立磁碟區時、不需要保留任何額外空間。當資料寫入磁碟區時、磁碟區會從Aggregate要求所需的儲存設備、以配合寫入作業。使用精簡配置的磁碟區可讓您過度使用Aggregate、這可能會導致磁碟區無法在Aggregate用盡可用空間時、保護所需的空間。
 
-您可以將其FlexVol 「空間保證」選項設為「無」、以建立精簡配置的供應的現象。
+您可以透過設定精簡配置的 FlexVol Volume 來建立它 `-space-guarantee` 選項 `none`。
 
 
 
@@ -32,7 +32,7 @@ summary: 提供三種基本的Volume資源配置選項：完整資源配置、�
 
 建立完整資源配置的Volume時ONTAP 、功能組會從集合區中保留足夠的儲存空間、以確保磁碟區中的任何區塊都能隨時寫入。當您將磁碟區設定為使用完整資源配置時、您可以運用ONTAP 任何一套功能（例如壓縮和重複資料刪除）來抵銷較大的前置儲存需求。
 
-您可以將其FlexVol 「空間插槽」（服務層級目標）選項設為「thick」、藉此建立一個完整配置的餐廳。
+您可以透過設定完整佈建的 FlexVol Volume 來建立它 `-space-slo` （服務層級目標）選項 `thick`。
 
 
 
@@ -45,7 +45,7 @@ summary: 提供三種基本的Volume資源配置選項：完整資源配置、�
 您無法在使用半厚資源配置的磁碟區上採用重複資料刪除、壓縮及壓縮等儲存效率技術。
 
 ====
-您可以將半厚的配置FlexVol 式供應的流通區設定為「最大程度」（服務層級目標）選項、以建立一個半厚的供應區。
+您可以透過設定半完整佈建的 FlexVol Volume 來建立它 `-space-slo` （服務層級目標）選項 `semi-thick`。
 
 
 
@@ -116,8 +116,8 @@ summary: 提供三種基本的Volume資源配置選項：完整資源配置、�
 
 支援T10 SCSI精簡配置LUN、以及NetApp精簡配置LUN。ONTAPT10 SCSI精簡配置可讓主機應用程式支援SCSI功能、包括用於區塊環境的LUN空間回收和LUN空間監控功能。您的SCSI主機軟體必須支援T10 SCSI精簡配置。
 
-您可以使用ONTAP 「停止分配」設定來啟用/停用對LUN上T10精簡配置的支援。您可以使用ONTAP 「啟用速度分配」設定、在LUN上啟用T10 SCSI精簡配置。
+您使用的是 ONTAP `space-allocation` 設定以啟用 / 停用 LUN 上 T10 精簡配置的支援。您使用的是 ONTAP `space-allocation enable` 在 LUN 上啟用 T10 SCSI 精簡配置的設定。
 
-《支援T10精簡配置》的「-space-allocation {enabled| disabled}]」命令ONTAP 可提供更多資訊、以啟用/停用對T10精簡配置的支援、並在LUN上啟用T10 SCSI精簡配置。
+。 `[-space-allocation {enabled|disabled}]` ONTAP 命令參考手冊中的命令提供更多資訊、可啟用 / 停用對 T10 精簡配置的支援、以及在 LUN 上啟用 T10 SCSI 精簡配置。
 
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]

@@ -46,9 +46,9 @@ summary: 將物件存放區設定為雲端層之後、您可以將其附加Fabri
 +
 查看某個Volume中有多少資料處於非作用中狀態、有助於決定哪些Aggregate可用於FabricPool 哪些用途。
 
-. 使用「儲存區Aggregate object-store attach」命令、將物件存放區附加至Aggregate。
+. 使用將物件存放區附加至 Aggregate `storage aggregate object-store attach` 命令。
 +
-如果Aggregate從未搭配FabricPool 使用、而且它包含現有的磁碟區、則會將預設的「僅快照」分層原則指派給磁碟區。
+如果 FabricPool 從未使用過 Aggregate 、而且其中包含現有的 Volume 、則會將這些 Volume 指派為預設 `snapshot-only` 分層原則。
 
 +
 [listing]
@@ -57,9 +57,9 @@ cluster1::> storage aggregate object-store attach -aggregate myaggr
 -object-store-name Amazon01B1
 ----
 +
-您可以使用「allow-flexgroup」「true」選項來附加包含FlexGroup 大量組成的集合體。
+您可以使用 `allow-flexgroup` `true` 可附加包含 FlexGroup Volume 成分的集合體。
 
-. 顯示物件存放區資訊、並使用「儲存區Aggregate object-store show」命令來驗證附加的物件存放區是否可用。
+. 顯示物件存放區資訊、並使用來驗證附加的物件存放區是否可用 `storage aggregate object-store show` 命令。
 +
 [listing]
 ----

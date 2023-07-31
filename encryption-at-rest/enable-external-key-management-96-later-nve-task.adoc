@@ -31,7 +31,7 @@ summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加�
 * 從ONTAP 功能表9.6開始、您可以使用_SVM範圍來設定叢集中資料SVM的外部金鑰管理。這最適合多租戶環境、每個租戶使用不同的SVM（或一組SVM）來提供資料。只有特定租戶的SVM管理員可以存取該租戶的金鑰。
 * 對於多租戶環境、請使用下列命令安裝_MT_EK-Mgmt_的授權：
 +
-「系統授權新增授權代碼<MT_EK-Mgmt授權代碼>」
+`system license add -license-code <MT_EK_MGMT license code>`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
@@ -40,23 +40,23 @@ summary: 您可以使用一或多個KMIP伺服器來保護叢集用來存取加�
 
 您可以在同一個叢集中使用這兩個範圍。如果SVM已設定金鑰管理伺服器、ONTAP 則僅使用這些伺服器來保護金鑰。否則ONTAP 、利用為叢集設定的金鑰管理伺服器來保護金鑰。
 
-您可以在叢集範圍設定內建金鑰管理、並在SVM範圍設定外部金鑰管理。您可以使用「安全金鑰管理程式金鑰移轉」命令、將金鑰從叢集範圍內的內建金鑰管理移轉至SVM範圍內的外部金鑰管理程式。
+您可以在叢集範圍設定內建金鑰管理、並在SVM範圍設定外部金鑰管理。您可以使用 `security key-manager key migrate` 命令將金鑰從叢集範圍內的機載金鑰管理移轉至 SVM 範圍內的外部金鑰管理程式。
 
 .步驟
 . 設定叢集的金鑰管理程式連線：
 +
-「安全金鑰管理程式外部啟用-vserver admin_SVM -key-servers host_name | ip_address:連接埠、... -client-cert client_Certificate -server_cert server_ca_certificates
+`security key-manager external enable -vserver admin_SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 
 +
 [NOTE]
 ====
-** 。 `security key-manager external enable` 命令會取代 `security key-manager setup` 命令。如果您在叢集登入提示字元中執行命令、 `_admin_SVM_` 預設為目前叢集的管理SVM。您必須是叢集管理員、才能設定叢集範圍。您可以執行 `security key-manager external modify` 命令以變更外部金鑰管理組態。
+** 。 `security key-manager external enable` 命令會取代 `security key-manager setup` 命令。如果您在叢集登入提示字元中執行命令、 `_admin_SVM_` 預設為目前叢集的管理SVM。  您必須是叢集管理員、才能設定叢集範圍。您可以執行 `security key-manager external modify` 命令以變更外部金鑰管理組態。
 ** 在支援管理SVM的環境中、如果您要設定外部金鑰管理、則必須重複執行MetroCluster `security key-manager external enable` 合作夥伴叢集上的命令。
 
 
 ====
 +
-下列命令可在三個外部金鑰伺服器上、為「cluster1」啟用外部金鑰管理。第一個金鑰伺服器是使用其主機名稱和連接埠來指定、第二個金鑰伺服器是使用IP位址和預設連接埠來指定、第三個金鑰伺服器則是使用IPv6位址和連接埠來指定：
+下列命令可啟用的外部金鑰管理 `cluster1` 使用三個外部金鑰伺服器。第一個金鑰伺服器是使用其主機名稱和連接埠來指定、第二個金鑰伺服器是使用IP位址和預設連接埠來指定、第三個金鑰伺服器則是使用IPv6位址和連接埠來指定：
 
 +
 [listing]
@@ -65,18 +65,18 @@ clusterl::> security key-manager external enable -vserver cluster1 -key-servers 
 ----
 . 設定SVM的金鑰管理程式：
 +
-「安全金鑰管理程式外部啟用-vserver SVM -key-servers host_name | ip_address:連接埠、... -client-cert client_Certificate -server_cert server_ca_certificates
+`security key-manager external enable -vserver SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 
 +
 [NOTE]
 ====
-** 如果您在SVM登入提示字元中執行命令、則「VM」預設為目前的SVM。您必須是叢集或SVM管理員、才能設定SVM範圍。您可以執行「安全金鑰管理程式外部修改」命令來變更外部金鑰管理組態。
+** 如果您在 SVM 登入提示字元下執行命令、 `SVM` 預設為目前的 SVM 。  您必須是叢集或SVM管理員、才能設定SVM範圍。您可以執行 `security key-manager external modify` 命令以變更外部金鑰管理組態。
 ** 在支援資料SVM的環境中、如果您要設定外部金鑰管理、就不需要重複執行MetroCluster `security key-manager external enable` 合作夥伴叢集上的命令。
 
 
 ====
 +
-下列命令可在預設連接埠5696上偵聽單一金鑰伺服器、為「vm1」啟用外部金鑰管理：
+下列命令可啟用的外部金鑰管理 `svm1` 使用單一金鑰伺服器聆聽預設連接埠 5696 ：
 
 +
 [listing]
@@ -87,17 +87,17 @@ svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserv
 +
 [NOTE]
 ====
-您也可以使用「安全金鑰管理程式外部附加伺服器」命令來設定其他SVM。「安全金鑰管理程式外部附加伺服器」命令取代了「安全金鑰管理程式附加」命令。如需完整的命令語法、請參閱手冊頁。
+您也可以使用 `security key-manager external add-servers` 用於設定其他 SVM 的命令。。 `security key-manager external add-servers` 命令會取代 `security key-manager add` 命令。如需完整的命令語法、請參閱手冊頁。
 
 ====
 . 確認所有已設定的KMIP伺服器均已連線：
 +
-「安全金鑰管理程式外部顯示狀態-node_name」
+`security key-manager external show-status -node node_name`
 
 +
 [NOTE]
 ====
-Check Alignment of PHs>安全密鑰管理器external show-STATUS'命令取代了"安全 密鑰管理器show -STATUS"命令。如需完整的命令語法、請參閱手冊頁。
+。 `security key-manager external show-status` 命令會取代 `security key-manager show -status` 命令。如需完整的命令語法、請參閱手冊頁。
 
 ====
 +

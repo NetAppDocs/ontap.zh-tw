@@ -11,15 +11,15 @@ summary: 當SVM DR保護旗標在FlexGroup 某個SVM Volume上設為「未受保
 
 
 [role="lead"]
-當SVM DR保護旗標設定FlexGroup 為「不受保護」時、您可以將旗標設定為「受保護」、以啟用SVM DR保護。
+當 SVM DR 保護旗標設定為時 `unprotected` 在 FlexGroup 磁碟區上、您可以將旗標設定為 `protected` 以啟用 SVM DR 保護。
 
 .您需要的產品
 * 一線與二線之間的SVM DR關係是健全的。
-* SVM DR保護參數設為「未受保護」。
+* SVM DR 保護參數設為 `unprotected`。
 
 
 .步驟
-. 使用「Volume modify」（磁碟區修改）將FlexGroup 「vserver -dr-protection」（Vserver - DR-protection）參數變更為「protected」（受保護）、以啟用保護功能。
+. 使用啟用保護 `volume modify` 以變更 `vserver-dr-protection` FlexGroup Volume 的參數 `protected`。
 +
 [listing]
 ----
@@ -28,13 +28,13 @@ cluster2::> volume modify -vserver vs1 -volume fg_src -vserver-dr-protection pro
 [Job 5384] Steps completed: 4 of 4.
 cluster2::>
 ----
-. 請在次要站台更新SVM：「napmirror update -destination-path destination_svm_name -source-path svm_name」
+. 更新次要站台的 SVM ： `snapmirror update -destination-path destination_svm_name -source-path source_svm_name`
 +
 [listing]
 ----
 snapmirror update -destination-path vs1_dst: -source-path vs1:
 ----
-. 驗證SnapMirror關係是否健全：「napmirror show」
+. 驗證 SnapMirror 關係是否健全： `snapmirror show`
 +
 [listing]
 ----
@@ -46,7 +46,7 @@ Path        Type  Path        State   Status         Progress  Healthy Updated
 vs1:        XDP  vs1_dst:     Snapmirrored
                                       Idle           -         true    -
 ----
-. 驗證FlexGroup SnapMirror關係是否健全：「napmirror show -expand」（napmirror show -expand）
+. 驗證 FlexGroup SnapMirror 關係是否健全： `snapmirror show -expand`
 +
 [listing]
 ----

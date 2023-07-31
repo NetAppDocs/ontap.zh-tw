@@ -11,7 +11,7 @@ summary: 根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES�
 
 
 [role="lead"]
-根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES、AES-128和AES-256。您可以使用「vserver NFS modify」命令搭配「允許的enc類型」參數、為每個SVM設定允許的加密類型、以符合特定環境的安全需求。
+根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES、AES-128和AES-256。您可以使用設定每個 SVM 的允許加密類型、以符合特定環境的安全需求 `vserver nfs modify` 命令 `-permitted-enc-types` 參數。
 
 .關於這項工作
 為了達到最大的用戶端相容性、ONTAP 根據預設、支援弱的Des和強式AES加密。例如、如果您想要提高安全性、而且環境支援、可以使用此程序來停用Des和3DES、並要求用戶端僅使用AES加密。
@@ -35,27 +35,43 @@ summary: 根據預設ONTAP 、支援下列NFS Kerberos加密類型：DE、3DES�
  a| 
 DE或3DES
  a| 
-.. 設定SVM的NFS Kerberos允許加密類型：+「vserver NFS modify -vserver _vserver_name_-apid-enc類型_加密 類型_」
+.. 設定 SVM 的 NFS Kerberos 允許加密類型：
+ +
+`vserver nfs modify -vserver _vserver_name_ -permitted-enc-types _encryption_types_`
 +
 以逗號分隔多種加密類型。
 
-.. 確認變更是否成功：+「vserver NFS show -vserver _vserver_name_-Fields apid-enc類型」
+.. 確認變更成功：
+ +
+`vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
 
 
 
 
  a| 
-AES-128或AES-256
+AES-128 或 AES-256
  a| 
-.. 識別啟用SVM和LIF Kerberos的項目：+「vserver NFS Kerberos介面show」
-.. 在SVM上的所有LIF上停用Kerberos（NFS Kerberos允許您修改其加密類型）：+「vserver NFS Kerberos介面停用-lif_lif_name_」
-.. 設定SVM的NFS Kerberos允許加密類型：+「vserver NFS modify -vserver _vserver_name_-apid-enc類型_加密 類型_」
+.. 識別啟用哪個 SVM 和 LIF Kerberos ：
+ +
+`vserver nfs kerberos interface show`
+.. 在要修改其 NFS Kerberos 允許加密類型的 SVM 上、停用所有生命負載上的 Kerberos ：
+ +
+`vserver nfs kerberos interface disable -lif _lif_name_`
+.. 設定 SVM 的 NFS Kerberos 允許加密類型：
+ +
+`vserver nfs modify -vserver _vserver_name_ -permitted-enc-types _encryption_types_`
 +
 以逗號分隔多種加密類型。
 
-.. 確認變更是否成功：+「vserver NFS show -vserver _vserver_name_-Fields apid-enc類型」
-.. 在SVM上的所有LIF上重新啟用Kerberos：+「vserver NFS Kerberos介面啟用-lif_lif_name_-SPN_service_principal_name_」
-.. 驗證是否已在所有lifs上啟用Kerberos：+「vserver NFS Kerberos介面show」
+.. 確認變更成功：
+ +
+`vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
+.. 在 SVM 上的所有生命上重新啟用 Kerberos ：
+ +
+`vserver nfs kerberos interface enable -lif _lif_name_ -spn _service_principal_name_`
+.. 驗證是否已在所有生命中啓用 Kerberos ：
+ +
+`vserver nfs kerberos interface show`
 
 
 |===

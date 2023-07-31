@@ -33,7 +33,7 @@ VIP資料生命量具備下列優點：
 
 從概念9.9.1開始ONTAP 、VIP BGP會使用BGP對等群組來提供預設路由自動化功能、以簡化組態設定。
 
-當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請將「-use對等端點即下一跳」屬性設為「true」。依預設、此屬性為「假」。
+當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請設定 `-use-peer-as-next-hop` 屬性至 `true`。依預設、此屬性為 `false`。
 
 如果您已設定靜態路由、則這些路由仍會優先於這些自動預設路由。
 
@@ -46,7 +46,7 @@ NOTE: 不處理來自路由器的任何傳入路由宣告、因此您應該設�
 .關於這項工作
 設定BGP包括選擇性地建立BGP組態、建立BGP LIF、以及建立BGP對等群組。當在指定節點上建立第一個BGP對等群組時、使用預設值自動建立預設BGP組態。ONTAPBGP LIF用於與對等路由器建立BGP TCP工作階段。對於對等路由器而言、BGP LIF是下一跳、可到達VIP LIF。BGP LIF已停用容錯移轉。BGP對等群組會針對對等群組的IPspace中的所有SVM通告VIP路由。
 
-從功能組別9.8開始ONTAP 、這些欄位已新增至「network BGP對等群組」命令：
+從 ONTAP 9.8 開始、這些欄位已新增至 `network bgp peer-group` 命令：
 
 * -ASN預先輸入類型
 * -ASN預先準備端點數
@@ -57,7 +57,8 @@ NOTE: 不處理來自路由器的任何傳入路由宣告、因此您應該設�
 
 從功能變數9.9開始ONTAP 、新增了下列欄位：
 
-* -ASN或-Peer-ASN（4位元組值）屬性本身並不是新的、但現在它使用4位元組的整數。
+* -ASN 或 -peer-ASN （ 4 位元組值）
+屬性本身不是新的、但現在使用 4 位元組整數。
 * 中型
 * -use對等即下一跳
 
@@ -70,7 +71,7 @@ NOTE: 雖然支援上述BGP屬性、但路由器卻不需要遵守這些屬性�
 .步驟
 . 登入進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 選用：執行下列其中一項動作、建立BGP組態或修改叢集的預設BGP組態：
 +
@@ -101,8 +102,8 @@ network bgp defaults modify -asn asn_integer -holdtime hold_time
 network bgp defaults modify -asn 65502
 ....
 +
-*** 「ASin_integer'」指定ASN。從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是16位元數（1 - 65534個可用值）。從ONTAP 支援BGP的ASN 9.9.1開始、支援4位元組的非負整數（1 - 4294967295）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
-*** 「HOD_TIME」指定保留時間（以秒為單位）。預設值為180s。
+*** `asn_integer` 指定 ASN 。從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是16位元數（1 - 65534個可用值）。從ONTAP 支援BGP的ASN 9.9.1開始、支援4位元組的非負整數（1 - 4294967295）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
+*** `hold_time` 指定保留時間（以秒為單位）。預設值為180s。
 
 
 
@@ -113,7 +114,7 @@ network bgp defaults modify -asn 65502
 network interface create -vserver system_svm -lif lif_name -service-policy default-route-announce -home-node home_node -home-port home_port -address ip_address -netmask netmask
 ....
 +
-您可以使用BGP LIF的「預設路由宣告」服務原則、或是任何包含「管理- BGP」服務的自訂服務原則。
+您可以使用 `default-route-announce` BGP LIF 的服務原則或任何包含「管理 BGP 」服務的自訂服務原則。
 
 +
 ....
@@ -171,7 +172,7 @@ network interface create -vserver svm_name -lif lif_name -role data -data-protoc
 {nfs|cifs|iscsi|fcache|none|fc-nvme} -home-node home_node -address ip_address -is-vip true
 ....
 +
-如果您未使用「network interface create」命令指定主連接埠、則會自動選取VIP連接埠。
+如果您未使用指定主連接埠、則會自動選取 VIP 連接埠 `network interface create` 命令。
 
 +
 根據預設、VIP資料LIF屬於系統建立的每個IPspace名為「VIP」的廣播網域。您無法修改VIP廣播網域。
@@ -189,7 +190,7 @@ Node        Vserver  bgp status
 	    node1       vs1      up
 ....
 +
-如果節點上SVM的BGP狀態為「快轉」、則VIP資料LIF會容錯移轉至另一個節點、而SVM的BGP狀態為「快轉」。如果所有節點上的BGP狀態都是「動態」、則VIP資料LIF就無法在任何地方託管、且LIF狀態為「關閉」。
+如果 BGP 狀態為 `down` 對於節點上的 SVM 、 VIP 資料 LIF 會容錯移轉至另一個節點、而該節點的 BGP 狀態是 SVM 的正常狀態。如果 BGP 狀態為 `down` 在所有節點上、 VIP 資料 LIF 無法在任何位置託管、且 LIF 狀態為「關閉」。
 
 
 
@@ -197,7 +198,7 @@ Node        Vserver  bgp status
 
 == 管理BGP的命令
 
-從ONTAP 功能介紹版開始、您可以使用「network BGP」命令來管理ONTAP BGP工作階段。
+從 ONTAP 9.5 開始、您可以使用 `network bgp` 用於管理 ONTAP 中 BGP 工作階段的命令。
 
 
 

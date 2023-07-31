@@ -129,7 +129,7 @@ NOTE: 必要的核准者數量必須小於預設核准群組中唯一核准者�
  a| 
 啟用MAV功能
  a| 
-「安全性多管理驗證修改-approvid-Groups _Group1_[,_group2_...] [-required核准人_n__]-啟用true [-execution -f過期[_n_h_h][_n_m_m][_n_s_s_s]][-approvid-過期[_n_h][_n_m_m][_n_s_s]]
+`security multi-admin-verify modify -approval-groups _group1_[,_group2_...] [-required-approvers _nn_ ] -enabled true   [ -execution-expiry [__nn__h][__nn__m][__nn__s]]    [ -approval-expiry [__nn__h][__nn__m][__nn__s]]`
 
 *範例*：下列命令可啟用具有1個核准群組、2個必要核准者及預設到期期間的MAV。
 
@@ -144,14 +144,14 @@ cluster-1::> security multi-admin-verify modify -approval-groups mav-grp1 -requi
  a| 
 修改MAV組態（需要MAV核准）
  a| 
-「安全性多管理員驗證核准群組修改[-approving-Groups _Group1_[,_group2_...]」 [-required核准者_n__][-execution -f過期[__nd_h][__nd_m_m][_n_s_s]][-approvid-過期[_n_h][_n_m_m][_n_s_s]]
+`security multi-admin-verify approval-group modify [-approval-groups _group1_[,_group2_...]] [-required-approvers _nn_ ]    [ -execution-expiry [__nn__h][__nn__m][__nn__s]]    [ -approval-expiry [__nn__h][__nn__m][__nn__s]]`
 
 
 
  a| 
 驗證MAV功能
  a| 
-「安全的多管理員驗證顯示」
+`security multi-admin-verify show`
 
 *範例：*
 
@@ -167,6 +167,6 @@ true    2         1h        1h       mav-grp1
  a| 
 停用MAV功能（需要MAV核准）
  a| 
-「安全性多管理驗證修改-啟用假」
+`security multi-admin-verify modify -enabled false`
 
 |===

@@ -11,7 +11,7 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 
 
 [role="lead"]
-一線儲存設備中的來源磁碟區與二線儲存設備中的目的地磁碟區之間的關係稱為_DATA保護關係_。您可以使用「napmirror create」命令、從元素來源建立資料保護關係、從ONTAP 元素來源建立資料保護關係、到目的地、ONTAP 或從來源到元素目的地。
+一線儲存設備中的來源磁碟區與二線儲存設備中的目的地磁碟區之間的關係稱為_DATA保護關係_。您可以使用 `snapmirror create` 命令可建立從元素來源到 ONTAP 目的地、或從 ONTAP 來源到元素目的地的資料保護關係。
 
 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP 一個目的地系統。萬一Element站台發生災難、您可以從ONTAP 該系統將資料提供給用戶端、然後在恢復服務時重新啟動Element來源Volume。
 
@@ -28,7 +28,7 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 
 
 .關於這項工作
-您必須以「_hostip：_/LUN/_name_」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
 
 元素Volume大致相當ONTAP 於一個實體LUN。當元素軟體與ONTAP SnapMirror之間的資料保護關係初始化時、SnapMirror會建立一個名稱為Element Volume的LUN。如果LUN符合從Element軟體複製到ONTAP SnapMirror的要求、SnapMirror會將資料複寫到現有LUN。
 
@@ -43,13 +43,13 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 .步驟
 . 從目的地叢集建立從元素來源到ONTAP 目的地的複寫關係：
 +
-「napmirror create -source-path _hostip:_/LUN/名稱-dite-path _svm:volume _|_cluster：//Svm/volume _-輸入XDP -schedule schedule -policy _'
+`snapmirror create -source-path _hostip:_/lun/name -destination-path _SVM:volume_|_cluster://SVM/volume_ -type XDP -schedule schedule -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例使用預設的「鏡像Latest（鏡像最新）原則建立SnapMirror DR關係：
+以下範例使用預設值建立 SnapMirror DR 關係 `MirrorLatest` 原則：
 
 +
 [listing]
@@ -57,7 +57,7 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 cluster_dst::> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorLatest
 ----
 +
-以下範例使用預設的「鏡像AndVault（鏡像AndVault）原則建立統一化複寫關係：
+下列範例使用預設值建立統一化的複寫關係 `MirrorAndVault` 原則：
 
 +
 [listing]
@@ -65,7 +65,7 @@ cluster_dst::> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-p
 cluster_dst:> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault
 ----
 +
-以下範例使用「Unified7fay（統一7年））原則建立統一化的複寫關係：
+下列範例使用建立統一化的複寫關係 `Unified7year` 原則：
 
 +
 [listing]
@@ -73,7 +73,7 @@ cluster_dst:> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-pa
 cluster_dst::> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy Unified7year
 ----
 +
-以下範例使用自訂的「my_Unified」原則建立統一化複寫關係：
+下列範例使用自訂建立統一複寫關係 `my_unified` 原則：
 
 +
 [listing]
@@ -83,4 +83,4 @@ cluster_dst::> snapmirror create -source-path 10.0.0.11:/lun/0005 -destination-p
 
 
 .完成後
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。

@@ -25,27 +25,27 @@ summary: 您必須採取幾個步驟、才能使用集中存取原則來保護CI
 http://technet.microsoft.com/library/["Microsoft TechNet程式庫"]
 
 .步驟
-. 如果尚未使用「vserver CIFS options modify」命令啟用SVM上的動態存取控制、請啟用此功能。
+. 如果 SVM 尚未使用啟用動態存取控制、請在 SVM 上啟用動態存取控制 `vserver cifs options modify` 命令。
 +
-「Vserver CIFS選項修改-vserver VS1 -is啟用DAC的true」
+`vserver cifs options modify -vserver vs1 -is-dac-enabled true`
 
-. 如果CIFS伺服器上尚未使用「vserver CIFS群組原則修改」命令啟用群組原則物件（GPO）、
+. 如果尚未使用啟用群組原則物件（ GPO ）、請在 CIFS 伺服器上啟用這些物件 `vserver cifs group-policy modify` 命令。
 +
-「vserver CIFS群組原則修改-vserver VS1 -狀態已啟用」
+`vserver cifs group-policy modify -vserver vs1 -status enabled`
 
 . 在Active Directory上建立集中存取規則和集中存取原則。
 . 建立群組原則物件（GPO）、在Active Directory上部署集中存取原則。
 . 將GPO套用至CIFS伺服器電腦帳戶所在的容器。
-. 使用「vserver CIFS群組原則更新」命令、手動更新套用至CIFS伺服器的GPO。
+. 使用手動更新套用至 CIFS 伺服器的 GPO `vserver cifs group-policy update` 命令。
 +
-「Vserver CIFS群組原則更新-vserver VS1」
+`vserver cifs group-policy update -vserver vs1`
 
-. 使用「vserver CIFS group原則show-applied」命令、確認GPO集中存取原則已套用至CIFS伺服器上的資源。
+. 使用確認 GPO 中央存取原則已套用至 CIFS 伺服器上的資源 `vserver cifs group-policy show-applied` 命令。
 +
 下列範例顯示預設網域原則有兩個套用至CIFS伺服器的集中存取原則：
 
 +
-「Vserver CIFS群組原則已套用」
+`vserver cifs group-policy show-applied`
 
 +
 [listing]

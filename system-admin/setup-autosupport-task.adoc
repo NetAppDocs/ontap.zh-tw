@@ -18,7 +18,7 @@ summary: 您可以控制AutoSupport 是否及如何將資訊傳送至技術支�
 
 [NOTE]
 ====
-從使用Sf2 9.5開始ONTAP 、「系統節點AutoSupport fulmodify」命令的範圍是整個叢集範圍。即使指定了「-node-」選項、叢集中的所有節點上也會修改此組態。AutoSupport此選項會被忽略、但會保留此選項、以供CLI向後相容。
+從 ONTAP 9.5 開始、就是的範圍 `system node autosupport modify` 命令適用於整個叢集。AutoSupport 組態會在叢集中的所有節點上修改、即使在 `-node` 已指定選項。此選項會被忽略、但會保留此選項、以供CLI向後相容。
 
 在 ONTAP 9.4 及更早版本中、的範圍是 `system node autosupport modify` 命令是特定於節點的。應該在叢集中的每個節點上修改此組態。AutoSupport
 
@@ -51,14 +51,15 @@ system node autosupport modify -support enable
 |===
 
 
-| 如果您想要... | 然後設定「系統節點AutoSupport 的fitmodify」命令的下列參數... 
+| 如果您想要... | 然後設定的下列參數 `system node autosupport modify` 命令 ... 
 
 
  a| 
 使用預設的HTTPS傳輸協定
  a| 
-.. 將「-transport」設為「https」。
-.. 如果您使用Proxy、請將「-proxy-URL」設為您Proxy的URL。此組態可支援AutoSupport 透過不必要的功能進行通訊、以及上傳大型檔案。
+.. 設定 `-transport` 至 `https`。
+.. 如果您使用 Proxy 、請設定 `-proxy-url` 到您 Proxy 的 URL 。
+此組態可支援AutoSupport 透過不必要的功能進行通訊、以及上傳大型檔案。
 
 
 
@@ -66,14 +67,14 @@ system node autosupport modify -support enable
  a| 
 使用SMTP
  a| 
-將「transport」設為「中期計劃」。
+設定 `-transport` 至 `smtp`。
 
 此組態不支援AutoSupport 以「根據需求」或上傳大型檔案。
 
 |===
 . 如果您想要內部支援組織或支援合作夥AutoSupport 伴接收到各種消息、請執行下列動作：
 +
-.. 設定「System Node AutoSupport of the fitmodify」命令的下列參數、以識別組織中的收件者：
+.. 設定的下列參數來識別組織中的收件者 `system node autosupport modify` 命令：
 +
 |===
 
@@ -82,38 +83,38 @@ system node autosupport modify -support enable
 
 
  a| 
-「-目標」
+`-to`
  a| 
 內部支援組織最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、可接收關鍵AutoSupport 的消息
 
 
 
  a| 
-「- noto To」
+`-noteto`
  a| 
 內部支援組織最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、將會收到AutoSupport 專為行動電話和其他行動裝置所設計的關鍵字版資訊
 
 
 
  a| 
-合作夥伴地址
+`-partner-address`
  a| 
 支援合作夥伴組織中最多五個以逗號分隔的個別電子郵件地址或通訊群組清單、將會接收所有AutoSupport 的消息
 
 |===
-.. 使用「系統節點AutoSupport 景點show」命令列出目的地、檢查位址是否設定正確。
+.. 使用列出目的地、檢查位址是否正確設定 `system node autosupport destinations show` 命令。
 
 
-. 如果您要將訊息傳送給內部支援組織、或是選擇將訊息傳送給技術支援部門的SMTP傳輸、請設定「系統節點AutoSupport 更新」命令的下列參數來設定SMTP：
+. 如果您要傳送訊息給內部支援組織、或是選擇 SMTP 傳輸訊息給技術支援、請設定的下列參數來設定 SMTP `system node autosupport modify` 命令：
 +
-** 將「-mail-hosts"（郵件主機）設為一或多個郵件主機、並以逗號分隔。
+** 設定 `-mail-hosts` 至一或多個郵件主機、以逗號分隔。
 +
 您最多可以設定五個。
 
 +
-您可以設定每個郵件主機的連接埠值、方法是在郵件主機名稱後面指定一個分號和連接埠號碼：例如、「mymailhost.example.com:5678`」、其中5678是郵件主機的連接埠。
+您可以在郵件主機名稱之後指定一個冒號和連接埠編號、為每個郵件主機設定連接埠值：例如、 `mymailhost.example.com:5678`，其中 5678 是郵件主機的連接埠。
 
-** 將「來源」設為傳送AutoSupport 該消息的電子郵件地址。
+** 設定 `-from` 傳送 AutoSupport 訊息的電子郵件地址。
 
 
 . 設定DNS。
@@ -122,7 +123,7 @@ system node autosupport modify -support enable
 |===
 
 
-| 如果您想要執行此動作... | 然後設定「系統節點AutoSupport 的fitmodify」命令的下列參數... 
+| 如果您想要執行此動作... | 然後設定的下列參數 `system node autosupport modify` 命令 ... 
 
 
  a| 
@@ -135,17 +136,17 @@ system node autosupport modify -support enable
  a| 
 停止以週期AutoSupport 性的資訊訊息傳送效能資料
  a| 
-將「-perf」設為「假」。
+設定 `-perf` 至 `false`。
 
 |===
-. 使用AutoSupport 帶有「-node"參數的「系統節點show」命令來檢查整體組態。
-. 使用AutoSupport 「系統節點AutoSupport 的不二檢查show」命令來驗證此功能是否正常運作。
+. 使用檢查整體組態 `system node autosupport show` 命令 `-node` 參數。
+. 使用驗證 AutoSupport 作業 `system node autosupport check show` 命令。
 +
-如果報告有任何問題、請使用「系統節點AutoSupport 不完整地檢查show details」命令來檢視更多資訊。
+如果回報有任何問題、請使用 `system node autosupport check show-details` 命令以檢視更多資訊。
 
 . 測試AutoSupport 正在傳送和接收的不實訊息：
 +
-.. 使用「系統節點AutoSupport 的fite-invoke」命令、將「類型」參數設為「test」。
+.. 使用 `system node autosupport invoke` 命令 `-type` 參數設為 `test`。
 +
 [listing]
 ----
@@ -156,7 +157,7 @@ cluster1::> system node autosupport invoke -type test -node node1
 系統節點AutoSupport 的不正常歷程顯示節點為本機節點
 
 +
-所有AutoSupport 適當的傳輸協定目的地、最新傳出的不完整資訊狀態最終應變更為「不成功」。
+最新傳出的 AutoSupport 訊息狀態最終應變更為 `sent-successful` 適用於所有適當的傳輸協定目的地。
 
 .. 您也可以選擇檢查您為設定的任何地址的電子郵件、確定 AutoSupport 訊息已傳送至您的內部支援組織或支援合作夥伴 `-to`、 `-noteto`或 `-partner-address`  的參數 `system node autosupport modify` 命令。
 

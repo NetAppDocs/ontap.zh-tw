@@ -4,7 +4,7 @@ permalink: smbc/smbc_admin_monitoring.html
 keywords: SM-BC, SMBC, monitoring, Mediator status, EMS, errors, planned failover status, automatic unplanned failover status, SM-BC status 
 summary: 您可以監控數個SM至BC元件和作業。 
 ---
-= 基本監控
+= 監控 SnapMirror 業務持續運作作業
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,19 +14,25 @@ summary: 您可以監控數個SM至BC元件和作業。
 
 
 [role="lead"]
-您可以監控數個SM至BC元件和作業。
+您可以監控下列 SnapMirror 業務連續性（ SM-BC ）作業、以確保 SM-BC 組態的健全狀況：
+
+* 資訊媒體ONTAP
+* 計畫性容錯移轉作業
+* 自動非計畫性容錯移轉作業
+* SM至BC可用度
 
 
 
-== 中間器ONTAP
 
-在正常操作期間、應連接「中保」狀態。如果處於任何其他狀態、可能表示發生錯誤。您可以檢閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/sm-mediator-events.html["事件管理系統（EMS）訊息"^] 以判斷錯誤及適當的修正行動。
+== 資訊媒體ONTAP
+
+在正常作業期間、應連接 ONTAP Mediator 狀態。如果處於任何其他狀態、可能表示發生錯誤。您可以檢閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/sm-mediator-events.html["事件管理系統（EMS）訊息"^] 以判斷錯誤及適當的修正行動。
 
 
 
 == 計畫性容錯移轉作業
 
-您可以使用「napmirror fover show」命令來監控計畫性容錯移轉作業的狀態和進度。例如：
+您可以使用監控規劃的容錯移轉作業狀態和進度 `snapmirror failover show` 命令。例如：
 
 ....
 ClusterB::> snapmirror failover start -destination-path vs1:/cg/dcg1
@@ -36,13 +42,13 @@ ClusterB::> snapmirror failover start -destination-path vs1:/cg/dcg1
 ....
 ClusterA::> snapmirror show
 ....
-請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-pfo-events.html["EMS參考資料"^] 以瞭解事件訊息和修正行動。
+請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-pfo-events.html["EMS 參考"^] 以瞭解事件訊息和修正行動。
 
 
 
 == 自動非計畫性容錯移轉作業
 
-在非計畫性自動容錯移轉期間、您可以使用「napmirror Failover show」命令來監控作業狀態。例如：
+在非計畫性自動容錯移轉期間、您可以使用監控作業狀態 `snapmirror failover show` 命令。
 
 ....
 ClusterB::> snapmirror failover show -instance
@@ -57,7 +63,7 @@ Last Progress Update: -
        Failover Type: unplanned
   Error Reason codes: -
 ....
-請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-aufo-events.html["EMS參考資料"^] 以瞭解事件訊息及修正行動。
+請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-aufo-events.html["EMS 參考"^] 以瞭解事件訊息及修正行動。
 
 
 
@@ -65,7 +71,7 @@ Last Progress Update: -
 
 您可以使用一系列命令來檢查SM-BC關係的可用度、無論是在主叢集、次要叢集或兩者。
 
-您使用的命令包括主叢集和次叢集上的「napmirror中介show」命令、以檢查連線和仲裁狀態、「napmirror show」命令和「volume show」命令。例如：
+您使用的命令包括 `snapmirror mediator show` 用於檢查連線和仲裁狀態的主要和次要叢集命令 `snapmirror show` 命令、和 `volume show` 命令。例如：
 
 ....
 SMBC_A::*> snapmirror mediator show

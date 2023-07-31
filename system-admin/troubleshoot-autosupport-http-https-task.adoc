@@ -30,42 +30,42 @@ summary: 如果系統未傳送預期AutoSupport 的資訊、而您使用HTTP或H
 .步驟
 . 顯示AutoSupport 資訊子系統的詳細狀態：
 +
-「系統節點AutoSupport 不完整檢查顯示詳細資料」
+`system node autosupport check show-details`
 
 +
 這包括透過AutoSupport 傳送測試訊息來驗證與景點的連線能力、並提供AutoSupport 一份清單、列出您的列舉設定中可能發生的錯誤。
 
 . 驗證節點管理LIF的狀態：
 +
-「網路介面show -home-node-local -role node-mgmt -功能 變數vserver、lif,STATUS-oper,STATUS-admin,address,role」
+`network interface show -home-node local -role node-mgmt -fields vserver,lif,status-oper,status-admin,address,role`
 
 +
-「狀態選項」和「狀態管理」欄位應會傳回「up」。
+。 `status-oper` 和 `status-admin` 欄位應傳回 "`up" 。
 
 . 記下SVM名稱、LIF名稱及LIF IP位址以供日後使用。
 . 確認DNS已啟用且設定正確：
 +
-「Vserver服務名稱服務DNS節目」
+`vserver services name-service dns show`
 
 . 解決AutoSupport 由該消息傳回的任何錯誤：
 +
-「系統節點AutoSupport 的不整歷程記錄顯示-Node *-Fields節點、sq-num、destination,last更新、狀態、錯誤」
+`system node autosupport history show -node * -fields node,seq-num,destination,last-update,status,error`
 
 +
 如需疑難排解任何傳回錯誤的協助、請參閱 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/ONTAP_AutoSupport_(Transport_HTTPS_and_HTTP)_Resolution_Guide["《》（Transport HTTPS和HTTP）解決方案指南ONTAP AutoSupport"^]。
 
 . 確認叢集可以成功存取所需的伺服器和網際網路：
 +
-.. 「network traceroute -lIF node-management _LIF -destination DNS server」
-.. 「network traceroute -lIF node_management _LIF -destination support.netapp.com`」
+.. `network traceroute -lif node-management_LIF -destination DNS server`
+.. `network traceroute -lif node_management_LIF -destination support.netapp.com`
 +
 [NOTE]
 ====
-地址「upport.netapp.com`本身並不會回應ping / traceroute、但每個躍點的資訊非常寶貴。
+地址 `support.netapp.com` 本身不會回應 ping / traceroute 、但每一跳的資訊非常寶貴。
 
 ====
-.. 「系統節點AutoSupport 不顯示欄位proxy-URL」
-.. 「network traceroute -Node node_management _LIF -destination proxy_URL」
+.. `system node autosupport show -fields proxy-url`
+.. `network traceroute -node node_management_LIF -destination proxy_url`
 
 
 +
@@ -77,7 +77,7 @@ summary: 如果系統未傳送預期AutoSupport 的資訊、而您使用HTTP或H
 +
 確保所有組態參數的值與AutoSupport 使用相同的組態設定值相同、包括使用相同的Proxy伺服器、使用者名稱、密碼和連接埠。
 
-.. 使用Web用戶端存取「+https://support.netapp.com+`」。
+.. 存取 `+https://support.netapp.com+` 使用 Web 用戶端。
 +
 存取應該會成功。如果不是、請確定所有防火牆均已正確設定、以允許HTTPS和DNS流量、而且Proxy伺服器的設定正確。如需設定support.netapp.com靜態名稱解析的詳細資訊、請參閱知識庫文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何將主機項目新增至ONTAP support.netapp.com?的功能表"^]
 

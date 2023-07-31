@@ -33,14 +33,14 @@ SMB工作階段中的同時連線數目取決於您已部署的NIC：
 
 您也可以修改下列參數（進階權限）：
 
-* *（最大連線數）-每個工作階段*
+* *`-max-connections-per-session`*
 +
 每個多通道工作階段允許的最大連線數。預設為32個連線。
 
 +
 如果您想要啟用比預設值更多的連線、則必須對用戶端組態進行類似的調整、也就是預設的32個連線。
 
-* *最大生命量每個工作階段*
+* *`-max-lifs-per-session`*
 +
 每個多通道工作階段所通告的網路介面數量上限。預設為256個網路介面。
 
@@ -49,19 +49,19 @@ SMB工作階段中的同時連線數目取決於您已部署的NIC：
 .步驟
 . 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
 . 在SMB伺服器上啟用SMB多通道：
 +
-「* vserver CIFS選項修改-vserver _vserver_name_-is多通道的true*」
+`*vserver cifs options modify -vserver _vserver_name_ -is-multichannel-enabled true*`
 
 . 驗證ONTAP 此功能是否回報SMB多通道工作階段：
 +
-「* vserver CIFS工作階段」會顯示選項*
+`*vserver cifs session show options*`
 
 . 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
 
 

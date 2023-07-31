@@ -1,11 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_admin_upgrade_and_revert_considerations.html 
-keywords: SM-BC, SMBC, upgrade, revert, ONTAP 
-summary: 您應該瞭解升級及還原SM至BC組態的需求。 
+keywords: upgrade, revert, ONTAP 
+summary: 升級或還原 ONTAP 會影響您的 SM-BC 關係、尤其是移轉至 ONTAP 9.8 或更新版本或 9.7 及更早版本時。 
 ---
-= SM至BC升級與還原考量
-:hardbreaks:
+= 使用 SM-BC 升級及還原 ONTAP
 :allow-uri-read: 
 :nofooter: 
 :icons: font
@@ -14,40 +13,46 @@ summary: 您應該瞭解升級及還原SM至BC組態的需求。
 
 
 [role="lead"]
-您應該瞭解升級及還原SM至BC組態的需求。
+從 ONTAP 9.8 開始、即可支援 SnapMirror 業務持續運作（ SM-BC ）。根據您要升級或還原的 ONTAP 版本、升級和還原 ONTAP 叢集對 SM-BC 關係有影響。
 
 
 
-== 升級
+== 升級ONTAP
 
-您必須先將來源叢集和目的地叢集上的所有節點升級ONTAP 為「版本9.8」或更新版本、才能設定及使用SMBC。link:link:../upgrade/index.html["在ONTAP 叢集上升級軟體"]
+您必須先將來源叢集和目的地叢集上的所有節點升級ONTAP 為「版本9.8」或更新版本、才能設定及使用SMBC。
+link:link:../upgrade/index.html["ONTAP 叢集上的升級軟體"]
+
+
+NOTE: 。 `snapmirror quiesce` 和 `snampirror resume` SM-BC 不支援命令。
+
+當您將叢集從 9.8 或 9.9.1 升級至 9.10.1 時、 ONTAP 會在來源和目的地建立新的 SMBC 關係一致性群組。您可以在 System Manager 中的「 ** 一致性群組 ** 」選項下管理這些項目、或使用 ONTAP REST API 搭配一致性群組端點。
+
+
+
+== 從 ONTAP 9.10.1 還原至 ONTAP 9.9.1
+
+若要將關係從9.10.1還原為9.9.1、則必須刪除SMBC關係、接著刪除9.10.1一致性群組執行個體。無法刪除具有作用中 SM-BC 關係的一致性群組。任何先前在9.9.1或更早版本中與另一個Smart Container或Enterprise App相關聯的更新至9.10.1的版次、將不再與還原相關聯。FlexVol刪除一致性群組不會刪除組成磁碟區或磁碟區精細快照。請參閱 link:../consistency-groups/delete-task.html["刪除一致性群組"] 如需 ONTAP 9.10.1 及更新版本中此工作的詳細資訊、請參閱。
+
+
+
+== 從 ONTAP 9.8 回復至 ONTAP 9.7
 
 
 NOTE: SMBC不支援混合ONTAP 式的仰賴於混合式的NetApp 9.7 ONTAP 和更新的支援。
 
-將叢集從9.8或9.9.1升級至9.10.1、可在來源和目的地上建立新的一致性群組、以利建立SM至BC關係。
-
-
-
-== 從ONTAP 還原9.10.1還原至版本資訊ONTAP
-
-若要將關係從9.10.1還原為9.9.1、則必須刪除SMBC關係、接著刪除9.10.1一致性群組執行個體。無法刪除具有作用中SMBC關係的一致性群組。任何先前在9.9.1或更早版本中與另一個Smart Container或Enterprise App相關聯的更新至9.10.1的版次、將不再與還原相關聯。FlexVol刪除一致性群組不會刪除組成磁碟區或磁碟區精細快照。請參閱 link:../consistency-groups/delete-task.html["刪除一致性群組"] 以取得此工作的詳細資訊。
-
-
-
-== 從ONTAP 還原至物件9.7 ONTAP
-
 當您從ONTAP 還原到ONTAP 更新9.7時、您必須注意下列事項：
 
-* 如果叢集裝載的是SM至BC目的地、則在ONTAP 關係中斷並刪除之前、不允許還原至VMware 9.7。
-* 如果叢集裝載的是SM - BC來源、則在ONTAP 關係釋出之前、不允許還原至VMware 9.7。
+* 如果叢集主控 SM-BC 目的地、則除非關係中斷並刪除、否則不允許還原至 ONTAP 9.7 。
+* 如果叢集主控 SM-BC 來源、則在關係解除之前、不允許還原至 ONTAP 9.7 。
 * 所有使用者建立的自訂SMBC SnapMirror原則、都必須先刪除、才能還原ONTAP 至還原為版本9.7。
 
+
+若要符合這些要求、請參閱 link:smbc_admin_removing_an_smbc_configuration.html["移除SM至BC組態"]。
 
 .步驟
 . 從SMBC關係中的其中一個叢集執行還原檢查：
 +
-「叢集：*>系統節點還原至9.7版-僅檢查」
+`cluster::*> system node revert-to -version 9.7 -check-only`
 
 +
 範例：

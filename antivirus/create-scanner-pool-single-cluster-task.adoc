@@ -24,12 +24,13 @@ summary: 掃描器集區會定義VScan伺服器和可連線至SVM的授權使用
 .步驟
 . 建立掃描器集區：
 +
-「vserver vscan掃描儀資源池create -vserver data_SVM |叢集管理SVM -掃描儀資源池Sciper_Pool -主機名稱Vscan伺服器主機名稱-privacy_users privacy_users」
+`vserver vscan scanner-pool create -vserver data_SVM|cluster_admin_SVM -scanner-pool scanner_pool -hostnames Vscan_server_hostnames -privileged-users privileged_users`
 
 +
 ** 為個別SVM定義的資源池指定資料SVM、並為叢集中所有SVM定義的資源池指定叢集管理SVM。
 ** 為每個VScan伺服器主機名稱指定IP位址或FQDN。
-** 指定每個授權使用者的網域和使用者名稱。如需選項的完整清單、請參閱命令的手冊頁。
+** 指定每個授權使用者的網域和使用者名稱。
+如需選項的完整清單、請參閱命令的手冊頁。
 
 
 +
@@ -48,7 +49,7 @@ cluster1::> vserver vscan scanner-pool create -vserver vs1 -scanner-pool SP -hos
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會顯示「P」掃描器資源池的詳細資料：
+下列命令會顯示的詳細資料 `SP` 掃描器集區：
 
 +
 [listing]
@@ -66,6 +67,6 @@ List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
                    List of Privileged Users: cifs\u1, cifs\u2
 ----
 +
-您也可以使用「vserver vscan ScANer-Pool show」命令來檢視SVM上的所有掃描器集區。如需完整的命令語法、請參閱命令的手冊頁。
+您也可以使用 `vserver vscan scanner-pool show` 命令以檢視 SVM 上的所有掃描器集區。如需完整的命令語法、請參閱命令的手冊頁。
 
 

@@ -27,11 +27,11 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 
 . 驗證叢集版本是否為目標ONTAP 版本的發行版本：
 +
-「分度」
+`version`
 
 . 如果叢集版本不是目標ONTAP 版本的版本、您可以驗證所有節點的升級狀態：
 +
-「系統節點升級回復顯示」
+`system node upgrade-revert show`
 
 
 
@@ -43,7 +43,7 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 
 . 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格：
 +
-「叢集展示」
+`cluster show`
 
 +
 [listing]
@@ -59,7 +59,7 @@ node1                 true    true
 
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 +
 輸入「y」以繼續。
@@ -81,28 +81,28 @@ node1                 true    true
  a| 
 管理應用程式
  a| 
-「叢集環顯示-unitname mgmt」
+`cluster ring show -unitname mgmt`
 
 
 
  a| 
 Volume位置資料庫
  a| 
-「叢集環顯示-unitname VLDB」
+`cluster ring show -unitname vldb`
 
 
 
  a| 
 虛擬介面管理程式
  a| 
-「叢集環show -unitname vifmgr'
+`cluster ring show -unitname vifmgr`
 
 
 
  a| 
 SAN管理精靈
  a| 
-「叢集環show -unitname bcomd」
+`cluster ring show -unitname bcomd`
 
 |===
 +
@@ -122,7 +122,7 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：「事件記錄檔顯示嚴重性資訊-message-name scsimble.*」
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `event log show  -severity informational -message-name scsiblade.*`
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 
@@ -148,12 +148,12 @@ link:../system-admin/index.html["系統管理"]
 
 .關於這項工作
 
-NOTE: 此程序僅適用於MetroCluster 不含功能的FC組態。如果您使用MetroCluster 的是一套靜態IP組態、請跳過此程序。
+NOTE: 此程序僅適用於MetroCluster 不含功能的FC組態。  如果您使用MetroCluster 的是一套靜態IP組態、請跳過此程序。
 
 .步驟
 . 檢查是否已啟用自動非計畫性切換：
 +
-《不看》MetroCluster
+`metrocluster show`
 
 +
 如果啟用自動非計畫性切換、命令輸出中會出現下列陳述：
@@ -165,7 +165,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
 ----
 . 如果未出現該陳述、請啟用自動非計畫性切換：
 +
-《MetroCluster 關於在叢集上發生auso-on叢集災難的迴轉自動切換失敗網域》
+`metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
 
 . 重複步驟1、確認已啟用自動非計畫性切換。
 
@@ -189,7 +189,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
  a| 
 .. 顯示任何毀損的磁碟：
 +
-「torage disk show -state dis中斷」
+`storage disk show -state broken`
 
 .. 移除或更換任何損壞的磁碟。
 
@@ -201,7 +201,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
  a| 
 .. 顯示任何處於維護、擱置或重建狀態的磁碟：
 +
-「torage disk show -stance maintenance |待發| remisten構造」
+`storage disk show -state maintenance|pending|reconstructing`
 
 .. 請等待維護或重建作業完成後再繼續。
 
@@ -209,7 +209,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
 |===
 . 顯示實體與邏輯儲存設備的狀態（包括儲存集合體）、以確認所有集合體均處於線上狀態：
 +
-「torage Aggregate show -state！online」
+`storage aggregate show -state !online`
 
 +
 此命令會顯示_非_線上的集合體。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
@@ -222,7 +222,7 @@ There are no entries matching your query.
 ----
 . 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上：
 +
-「Volume show -state！online」
+`volume show -state !online`
 
 +
 執行重大升級或還原之前和之後、所有磁碟區都必須處於線上狀態。
@@ -235,7 +235,7 @@ There are no entries matching your query.
 ----
 . 確認沒有不一致的磁碟區：
 +
-「Volume show -is不一致true」
+`volume show -is-inconsistent true`
 
 +
 請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。

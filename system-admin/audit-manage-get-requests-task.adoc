@@ -11,7 +11,7 @@ summary: 雖然預設會記錄設定要求、但不會記錄取得要求。不�
 
 
 [role="lead"]
-雖然預設會記錄設定要求、但不會記錄取得要求。不過、您可以控制檔案ONTAP 中是否ONTAP 記錄了從Sethtml（`-ttpGet`）、the sesti CLI（`-cliget'）或ONTAP 從SetsAPI（`-ontapiget'）傳送的Get要求。
+雖然預設會記錄設定要求、但不會記錄取得要求。不過、您可以控制是否從 ONTAP HTML 傳送 GET 要求 (`-httpget`）、 ONTAP CLI (`-cliget`）或 ONTAP API (`-ontapiget`）會記錄在檔案中。
 
 您可以從ONTAP 「系統ONTAP 管理程式」修改稽核記錄設定、從「系統管理程式」開始修改從「版本9.11.1」開始的記錄。
 
@@ -26,8 +26,10 @@ summary: 雖然預設會記錄設定要求、但不會記錄取得要求。不�
 --
 .CLI
 --
-* 若要指定ONTAP 應在稽核記錄檔（audit.log檔案）中記錄來自於SectionCLI或API的Get要求、除了預設的Set要求之外、請輸入：+「安全稽核修改」（-cliget｛on|off｝）[-HttpGet｛on|off｝）[-ontapiget｛on|off｝]
-* 若要顯示目前的設定、請輸入：+「安全性稽核顯示」
+* 若要指定從 ONTAP CLI 或 API 取得要求應記錄在稽核記錄檔（ audit.log 檔案）中、除了預設的 Set 要求外、請輸入： +
+`security audit modify [-cliget {on|off}][-httpget {on|off}][-ontapiget {on|off}]`
+* 若要顯示目前的設定、請輸入： +
+`security audit show`
 
 
 如需詳細資料、請參閱手冊頁。

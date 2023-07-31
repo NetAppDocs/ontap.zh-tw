@@ -11,10 +11,10 @@ summary: 使用ONTAP 命令列、更新已過時的Eflexec命令 所對應的EMS
 
 
 [role="lead"]
-如果您的EMS事件對應目前使用過時ONTAP 的支援功能（「EVENT Destination'、「EVENT Route」）進行設定、您應該依照此程序來更新對應、以使用「事件篩選器」、「事件通知」和「事件通知目的地」命令集。
+如果您的 EMS 事件對應目前是使用過時的 ONTAP 命令集進行設定 (`event destination`、 `event route`）、您應該遵循此程序來更新對應以使用 `event filter`、 `event notification`和 `event notification destination` 命令集。
 
 .步驟
-. 使用「EVENT DEST目的地show」命令、列出系統中的所有事件目的地。
+. 使用列出系統中的所有事件目的地 `event destination show` 命令。
 +
 [listing]
 ----
@@ -30,7 +30,7 @@ test             test@xyz.com      -                  -                  false
 traphost         -                 -                  -                  false
 6 entries were displayed.
 ----
-. 對於每個目的地、請使用「EVENT Route show -destinations <目的地名稱>」命令列出對應到它的事件。
+. 針對每個目的地、使用列出對應至目的地的事件  `event route show -destinations <destination name>` 命令。
 +
 [listing]
 ----
@@ -44,7 +44,8 @@ raid.aggr.lock.conflict          INFORMATIONAL  test           0       0
 raid.aggr.log.CP.count           DEBUG          test           0       0
 4 entries were displayed.
 ----
-. 建立對應的「事件篩選器」、其中包含所有這些事件子集。例如、如果您只想要包含「RAID.aggr」*事件、請在建立篩選時使用萬用字元作為「message-name」參數。您也可以為單一事件建立篩選器。
+. 建立對應的 `event filter` 其中包括所有這些事件子集。
+例如、如果您只想要包含 `raid.aggr.`* 事件、請使用萬用字元 `message-name` 建立篩選器時的參數。您也可以為單一事件建立篩選器。
 +
 
 NOTE: 您最多可以建立50個事件篩選器。
@@ -65,7 +66,7 @@ test_events
             2        exclude   *                      *               *
 2 entries were displayed.
 ----
-. 為每個「事件目的地」端點（例如SMTP/SNP/syslog）建立「事件通知目的地」
+. 建立 `event notification destination` 針對每個 `event destination` 端點（例如 SMTP/SNMP/Syslog ）
 +
 [listing]
 ----
@@ -91,10 +92,10 @@ ID   Filter Name                     Destinations
 2    asup_events                     dest1
 2 entries were displayed.
 ----
-. 對每個具有「事件路由」對應的「事件目的地」重複步驟1-5。
+. 針對每個項目重複步驟 1-5 `event destination` 那有 `event route` 對應：
 +
 
-NOTE: 路由至SNMP目的地的事件應對應至「傳送至傳送主機」事件通知目的地。SNMP traphost目的地使用系統設定的SNMP traphost。
+NOTE: 路由至 SNMP 目的地的事件應對應至 `snmp-traphost` 事件通知目的地。SNMP traphost目的地使用系統設定的SNMP traphost。
 
 +
 [listing]

@@ -2,7 +2,7 @@
 permalink: upgrade/remove-ems-lif-service-task.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, after, post, ems, event, management, system, lifs, messages, not, delivered 
-summary: 「升級顧問」服務Active IQ 提供智慧功能、協助您規劃升級作業、並將不確定性與風險降至最低。 
+summary: Active IQ Digital Advisor 中的 Upgrade Advisor（升級顧問）服務提供智慧情報，能夠協助您規劃升級作業，將不確定性與風險降至最低。 
 ---
 = 從網路服務原則中移除EMS LIF服務
 :allow-uri-read: 
@@ -13,14 +13,14 @@ summary: 「升級顧問」服務Active IQ 提供智慧功能、協助您規劃�
 [role="lead"]
 如果您在升級ONTAP 之前已設定事件管理系統（EMS）訊息、並將其從版本升級至ONTAP 版本9.8或更新版本、則在升級之後、可能無法傳送您的EMS訊息。
 
-在升級期間、管理環境管理服務（即EMS LIF服務）會新增至所有現有的服務原則。這可讓EMS訊息從任何與任何服務原則相關的任何生命期傳送。如果選取的LIF無法連線至事件通知目的地、則不會傳送訊息。
+在升級期間、管理環境管理服務（即EMS LIF服務）會新增至所有現有的服務原則。  這可讓EMS訊息從任何與任何服務原則相關的任何生命期傳送。  如果選取的LIF無法連線至事件通知目的地、則不會傳送訊息。
 
 若要避免這種情況發生、在升級後、您應該從無法連線到目的地的網路服務原則中移除EMS LIF服務。
 
 .步驟
 . 識別可用來傳送EMS訊息的生命與相關網路服務原則：
 +
-「網路介面show -Fields service-policy -services management管理-EMS」
+`network interface show -fields service-policy -services management-ems`
 
 +
 [listing]
@@ -39,7 +39,7 @@ cluster-1      inter_cluster
 ----
 . 檢查每個LIF是否可連線至EMS目的地：
 +
-「network ping -lIF lif_name -vserver Svm_name -destination_address'
+`network ping -lif lif_name -vserver svm_name -destination destination_address`
 
 +
 在每個節點上執行此操作。
@@ -56,15 +56,15 @@ no answer from 10.10.10.10
 ----
 . 輸入進階權限層級：
 +
-《進階設定》
+`set advanced`
 
 . 對於無法連線的LIF、請從對應的服務原則中移除管理- EMS LIF服務：
 +
-「網路介面服務原則移除服務-vserver Svm_name -policy service_name -service管理-EMS」
+`network interface service-policy remove-service -vserver svm_name -policy service_policy_name -service management-ems`
 
 . 確認管理- EMS LIF現在僅與提供EMS目的地連線能力的LIF相關聯：
 +
-「網路介面show -Fields service-policy -services management管理-EMS」
+`network interface show -fields service-policy -services management-ems`
 
 
 

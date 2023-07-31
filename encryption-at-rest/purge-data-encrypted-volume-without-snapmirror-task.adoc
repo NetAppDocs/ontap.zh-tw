@@ -19,7 +19,7 @@ summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 
 
 .關於這項工作
-視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用「volume encryption fure-purge show」命令來檢視作業狀態。您可以使用「Volume Encryption Secure（磁碟區加密）- Purge abort]（安全清除中止）命令來終止作業。
+視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用 `volume encryption secure-purge show` 檢視作業狀態的命令。您可以使用 `volume encryption secure-purge abort` 命令以終止作業。
 
 [NOTE]
 ====
@@ -35,18 +35,18 @@ summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 
 . 在儲存系統上、變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 如果您要安全清除的檔案位於快照中、請刪除快照：
 +
-「napshot DELETE -vserver svm_name -volume vol_name -snapshot」
+`snapshot delete -vserver SVM_name -volume vol_name -snapshot`
 
 . 安全地清除刪除的檔案：
 +
-「Volume加密安全清除start -vserver Svm_name -volume volume volume名稱」
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
 
 +
-下列命令可安全清除SVM上「vol1」的刪除檔案：
+下列命令可安全地清除上刪除的檔案 `vol1` 在 SVM 上``vs1``：
 
 +
 [listing]
@@ -55,6 +55,6 @@ cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
 ----
 . 驗證安全清除作業的狀態：
 +
-「Volume加密安全清除秀」
+`volume encryption secure-purge show`
 
 

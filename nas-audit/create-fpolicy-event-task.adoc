@@ -20,13 +20,13 @@ summary: 在建立FPolicy原則組態時、您需要建立FPolicy事件。您可
 
 == 建立FPolicy事件
 
-. 使用「vserver fpolicy policy事件create」命令建立FPolicy事件。
+. 使用建立 FPolicy 事件 `vserver fpolicy policy event create` 命令。
 +
 `vserver fpolicy policy event create -vserver vs1.example.com -event-name event1 -protocol cifs -file-operations open,close,read,write`
 
-. 使用「vserver fpolicy policy EVENT show」命令來驗證FPolicy事件組態。
+. 使用驗證 FPolicy 事件組態 `vserver fpolicy policy event show` 命令。
 +
-「vserver fpolicy policy事件show -vserver vs1.example.com」
+`vserver fpolicy policy event show -vserver vs1.example.com`
 
 +
 [listing]
@@ -46,7 +46,7 @@ vs1.example.com   event1    cifs      open, close,  -         false
 
 從 ONTAP 9.13.1 開始、使用者可以收到因權限不足而導致檔案作業失敗的通知。這些通知對於安全性、勒索軟體保護和治理來說非常重要。
 
-. 使用「vserver fpolicy policy事件create」命令建立FPolicy事件。
+. 使用建立 FPolicy 事件 `vserver fpolicy policy event create` 命令。
 +
 `vserver fpolicy policy event create -vserver vs1.example.com -event-name event1 -protocol cifs -monitor-fileop-failure true -file-operations open`
 

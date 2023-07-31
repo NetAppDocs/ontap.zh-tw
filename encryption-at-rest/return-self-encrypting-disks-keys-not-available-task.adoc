@@ -35,14 +35,25 @@ summary: 如果您永久遺失FIPS磁碟機或SED的驗證金鑰、而且無法�
  a| 
 未處於FIPS相容模式、或處於FIPS相容模式、且FIPS金鑰可供使用
  a| 
-.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-.. 將FIPS金鑰重設為預設製造商安全ID：「torage加密磁碟modify -fIPS-key-id x0 -disk _disk_id_」
-.. 驗證作業是否成功：「儲存加密磁碟顯示狀態」如果作業失敗、請使用本主題中的PSID程序。
-.. 清理毀損的磁碟：「儲存加密磁碟清理磁碟_disk _id_」繼續下一步之前、請先使用命令「儲存加密磁碟顯示狀態」驗證作業是否成功。
-.. 將已消毒的磁碟取消容錯：「torage disk unfail -spare true -disk _disk_id_」
-.. 檢查磁碟是否有擁有者：「torage disk show -disk _disk_id_」
-.. 如果磁碟沒有擁有者、請指派一個擁有者、然後再次取消磁碟故障：「torage disk assign -OnerNode -disk _disk_id_」（磁碟故障恢復-備用true -disk _disk_id_）
-.. 驗證磁碟現在是否為備用磁碟、並準備好在Aggregate中重複使用：「torage disk show -disk _disk_id_」
+.. 將權限層級設為進階：
+`set -privilege advanced`
+.. 將 FIPS 金鑰重設為預設製造安全 ID 0x0 ：
+`storage encryption disk modify -fips-key-id 0x0 -disk _disk_id_`
+.. 確認作業成功：
+`storage encryption disk show-status`
+如果作業失敗、請使用本主題中的 PSID 程序。
+.. 清理損壞的磁碟：
+`storage encryption disk sanitize -disk _disk_id_`
+使用命令驗證作業是否成功 `storage encryption disk show-status` 繼續下一步之前。
+.. 解除清理磁碟故障：
+`storage disk unfail -spare true -disk _disk_id_`
+.. 檢查磁碟是否擁有擁有者：
+`storage disk show -disk _disk_id_`
+.. 如果磁碟沒有擁有者、請指派一個擁有者、然後再次解除磁碟故障：
+`storage disk assign -owner node -disk _disk_id_`
+`storage disk unfail -spare true -disk _disk_id_`
+.. 確認磁碟現在已成為備援磁碟、並可在集合體中重複使用：
+`storage disk show -disk _disk_id_`
 
 
 
@@ -51,12 +62,20 @@ summary: 如果您永久遺失FIPS磁碟機或SED的驗證金鑰、而且無法�
 在FIPS相容模式中、FIPS金鑰無法使用、且SED標籤上印有PSID
  a| 
 .. 從磁碟標籤取得磁碟的PSID。
-.. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-.. 將磁碟重設為原廠設定的設定：「磁碟加密磁碟還原為原始狀態-磁碟_disk_id_-PSID _disk_fort_secure_id_」繼續下一步之前、請先使用命令「儲存加密磁碟顯示狀態」驗證作業是否成功。
-.. 將已消毒的磁碟取消容錯：「torage disk unfail -spare true -disk _disk_id_」
-.. 檢查磁碟是否有擁有者：「torage disk show -disk _disk_id_」
-.. 如果磁碟沒有擁有者、請指派一個擁有者、然後再次取消磁碟故障：「torage disk assign -OnerNode -disk _disk_id_」（磁碟故障恢復-備用true -disk _disk_id_）
-.. 驗證磁碟現在是否為備用磁碟、並準備好在Aggregate中重複使用：「torage disk show -disk _disk_id_」
+.. 將權限層級設為進階：
+`set -privilege advanced`
+.. 將磁碟重設為原廠設定的設定：
+`storage encryption disk revert-to-original-state -disk _disk_id_ -psid _disk_physical_secure_id_`
+使用命令驗證作業是否成功 `storage encryption disk show-status` 繼續下一步之前。
+.. 解除清理磁碟故障：
+`storage disk unfail -spare true -disk _disk_id_`
+.. 檢查磁碟是否擁有擁有者：
+`storage disk show -disk _disk_id_`
+.. 如果磁碟沒有擁有者、請指派一個擁有者、然後再次解除磁碟故障：
+`storage disk assign -owner node -disk _disk_id_`
+`storage disk unfail -spare true -disk _disk_id_`
+.. 確認磁碟現在已成為備援磁碟、並可在集合體中重複使用：
+`storage disk show -disk _disk_id_`
 
 
 |===

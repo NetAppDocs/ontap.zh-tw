@@ -30,11 +30,11 @@ summary: 您可以手動或使用自動指派來設定容器磁碟或分割區�
 .步驟
 . 使用CLI顯示分割磁碟的目前擁有權：
 +
-「torage disk show -disk _disk_name_-partition-Ouge」
+`storage disk show -disk _disk_name_ -partition-ownership`
 
 . 將CLI權限等級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 根據您要指派所有權的所有權實體、輸入適當的命令：
 +
@@ -48,21 +48,21 @@ summary: 您可以手動或使用自動指派來設定容器磁碟或分割區�
  a| 
 Container磁碟
  a| 
-'磁碟指派磁碟磁碟_disk_name_-Owner_Owner_name_'
+`storage disk assign -disk _disk_name_ -owner _owner_name_`
 
 
 
  a| 
 資料分割區
  a| 
-'磁碟指派磁碟磁碟_disk_name_-Owner_Owner_name_-data true'
+`storage disk assign -disk _disk_name_ -owner _owner_name_ -data true`
 
 
 
  a| 
 根分割區
  a| 
-'磁碟指派磁碟磁碟_disk_name_-Owner_Owner_name_-root true '
+`storage disk assign -disk _disk_name_ -owner _owner_name_ -root true`
 
 |===
 +
@@ -79,20 +79,20 @@ Container磁碟
 根資料資料分割會建立一個小型分割區做為根分割區、並建立兩個較大、大小相同的資料分割區。
 
 .關於這項工作
-參數必須與「磁碟指派」命令搭配使用、才能指派根資料分割磁碟的適當分割區。這些參數無法搭配儲存資源池中的磁碟使用。預設值為「'假'」。
+參數必須搭配使用 `disk assign` 命令來指派根資料分割磁碟的正確分割區。這些參數無法搭配儲存資源池中的磁碟使用。預設值為「'假'」。
 
-* data1 true參數會指派root資料a1資料2分割磁碟的「dataa1」分割區。
-* data2 true'參數會指派根資料a1資料2分割磁碟的「data 2」分割區。
+* 。 `-data1 true` 參數會指派 root-data1-data2 分割磁碟的「 data1 」分割區。
+* 。 `-data2 true` 參數指定 root-dataa-data2 分割磁碟的「 data2 」分割區。
 
 
 .步驟
 . 使用CLI顯示分割磁碟的目前擁有權：
 +
-「torage disk show -disk _disk_name_-partition-Ouge」
+`storage disk show -disk _disk_name_ -partition-ownership`
 
 . 將CLI權限等級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 根據您要指派所有權的所有權實體、輸入適當的命令：
 +
@@ -106,28 +106,28 @@ Container磁碟
  a| 
 Container磁碟
  a| 
-'磁碟指派磁碟磁碟_disk_name_-Owner_Owner_name_'
+`storage disk assign -disk _disk_name_ -owner _owner_name_`
 
 
 
  a| 
 Data1分割區
  a| 
-"torage disk assign -disk _disk_name_-Owner_Owner_name_-data1 true（磁碟指派-disk _disk_name_-Owner_name_-data1真）"
+`storage disk assign -disk _disk_name_ -owner _owner_name_ -data1 true`
 
 
 
  a| 
-Data2分割區
+Data2 分割區
  a| 
-「torage disk assign -disk _disk_name_-Owner_Owner_name_-data2 true」
+`storage disk assign -disk _disk_name_ -owner _owner_name_ -data2 true`
 
 
 
  a| 
 根分割區
  a| 
-'磁碟指派磁碟磁碟_disk_name_-Owner_Owner_name_-root true '
+`storage disk assign -disk _disk_name_ -owner _owner_name_ -root true`
 
 |===
 

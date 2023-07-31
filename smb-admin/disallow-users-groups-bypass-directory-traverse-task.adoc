@@ -11,7 +11,7 @@ summary: 如果您不希望使用者周遊檔案路徑中的所有目錄、因�
 
 
 [role="lead"]
-如果您不想讓使用者周遊檔案路徑中的所有目錄、因為使用者對周遊目錄沒有權限、您可以從儲存虛擬機器（SVM）上的本機SMB使用者或群組中移除「eChangeleNotifyPrivilege」權限。
+如果您不希望使用者周遊檔案路徑中的所有目錄、因為使用者對周遊目錄沒有權限、您可以移除 `SeChangeNotifyPrivilege` 本機 SMB 使用者或儲存虛擬機器上群組的權限（ SVM ）。
 
 .開始之前
 將從中移除權限的本機或網域使用者或群組必須已經存在。
@@ -20,11 +20,11 @@ summary: 如果您不希望使用者周遊檔案路徑中的所有目錄、因�
 當移除網域使用者或群組的權限時、ONTAP 可能會聯絡網域控制器來驗證網域使用者或群組。如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
 
 .步驟
-. 不允許略過周遊檢查：「vserver CIFS user-and -group priv榮幸remove-priv榮幸-vserver _vserver_name_-user-or -group name _name_-priv家sseChangelNotifypriv
+. 不允許略過周遊檢查： `vserver cifs users-and-groups privilege remove-privilege -vserver _vserver_name_ -user-or-group-name _name_ -privileges SeChangeNotifyPrivilege`
 +
-此命令會將「eChangepalNotifyPrivilege」權限從本機或網域使用者或群組中移除、並以「-user-or group - name _」參數的值指定。
+命令會移除 `SeChangeNotifyPrivilege` 本機或網域使用者或群組的權限、您可以使用的值來指定 `-user-or-group-name _name_` 參數。
 
-. 確認指定的使用者或群組已停用略過周遊檢查：「vserver CIFS user-and Groups priv榮幸 地顯示-vserver _vserver_name_（vserver CIFS使用者與群組權限）」
+. 確認指定的使用者或群組已停用略過周遊檢查： `vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _name_`
 
 
 .範例

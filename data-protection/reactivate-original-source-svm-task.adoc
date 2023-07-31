@@ -19,7 +19,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 link:destination-volume-grows-automatically-concept.html["當目的地Volume自動成長時"]
 
 .關於這項工作
-從功能完善的SVM 9.11.1開始ONTAP 、您可以在執行SVM DR關係的反向重新同步時、使用「快轉重新同步」命令的「快速重新同步真」選項、縮短災難恢復演練期間的重新同步時間。快速重新同步可繞過資料倉儲的重建與還原作業、縮短返回正式作業所需的時間。
+從 ONTAP 9.11.1 開始、您可以使用來減少災難恢復排練期間的重新同步時間 `-quick-resync true` 的選項 `snapmirror resync` 執行 SVM DR 關係的反向重新同步時執行命令。快速重新同步可繞過資料倉儲的重建與還原作業、縮短返回正式作業所需的時間。
 
 
 NOTE: 快速重新同步並不會保留目的地磁碟區的儲存效率。啟用快速重新同步可能會增加目的地磁碟區所使用的磁碟區空間。
@@ -31,16 +31,16 @@ NOTE: 快速重新同步並不會保留目的地磁碟區的儲存效率。啟�
 .步驟
 . 從原始來源SVM或原始來源叢集、使用與原始SVM DR關係相同的組態、原則及身分保留設定、建立反向SVM DR關係：
 +
-「napmirror create -source-path SVM：-destination-path SVM：」
+`snapmirror create -source-path SVM: -destination-path SVM:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例建立您用來提供資料的SVM、「shvm_backup」和原始來源SVM、「svm1」之間的關係：
+以下範例在您用來提供資料的 SVM 之間建立關係、 `svm_backup`和原始來源 SVM 、 `svm1`：
 
 +
 [listing]
@@ -49,12 +49,12 @@ cluster_src::> snapmirror create -source-path svm_backup: -destination-path svm1
 ----
 . 從原始來源SVM或原始來源叢集、執行下列命令以反轉資料保護關係：
 +
-「napmirror resSync -source-path _svm_：-destination-path _svm_：」
+`snapmirror resync -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
@@ -63,11 +63,11 @@ cluster_src::> snapmirror create -source-path svm_backup: -destination-path svm1
 +
 [NOTE]
 ====
-如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用 `snapmirror initialize` 重新初始化關係。
 
 ====
 +
-以下範例可反轉原始來源SVM、「svm1」和您用來提供資料的SVM之間的關係：
+以下範例反轉原始來源 SVM 之間的關係、 `svm1`以及您要從中提供資料的 SVM 、 `svm_backup`：
 
 +
 [listing]
@@ -84,7 +84,7 @@ cluster_src::> snapmirror resync -source-path svm_backup: -destination-path svm1
 ----
 . 當您準備重新建立對原始來源SVM的資料存取時、請停止原始目的地SVM、以中斷目前連線至原始目的地SVM的所有用戶端。
 +
-「Vserver stop -vserver _svm_」
+`vserver stop -vserver _SVM_`
 
 +
 下列範例會停止目前正在處理資料的原始目的地SVM：
@@ -94,7 +94,7 @@ cluster_src::> snapmirror resync -source-path svm_backup: -destination-path svm1
 ----
 cluster_dst::> vserver stop svm_backup
 ----
-. 使用「vserver show」命令確認原始目的地SVM處於「已停止」狀態。
+. 使用驗證原始目的地 SVM 是否處於停止狀態 `vserver show` 命令。
 +
 [listing]
 ----
@@ -106,16 +106,16 @@ svm_backup     data    default    stopped    stopped     rv         aggr1
 ----
 . 從原始來源SVM或原始來源叢集、執行下列命令以執行反向關係的最終更新、將所有變更從原始目的地SVM傳輸至原始來源SVM：
 +
-「napmirror update -source-path _svm_：-destination-path _svm_：」
+`snapmirror update -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例更新您用來提供資料的原始目的地SVM、「shvm_Backup」和原始來源SVM、「svm1」之間的關係：
+以下範例更新了您用來提供資料的原始目的地 SVM 之間的關係,`svm_backup`和原始來源 SVM 、 `svm1`：
 
 +
 [listing]
@@ -124,16 +124,16 @@ cluster_src::> snapmirror update -source-path svm_backup: -destination-path svm1
 ----
 . 從原始來源SVM或原始來源叢集、執行下列命令停止針對反向關係所排程的傳輸：
 +
-「napmirror quiesce -source-path _svm_：-destination-path _svm_：」
+`snapmirror quiesce -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例會停止您提供資料的SVM、「shvm_backup」和原始SVM、「svm1」之間的排程傳輸：
+下列範例會停止您要從哪個 SVM 傳送資料、 `svm_backup`和原始 SVM 、 `svm1`：
 
 +
 [listing]
@@ -142,16 +142,16 @@ cluster_src::> snapmirror quiesce -source-path svm_backup: -destination-path svm
 ----
 . 當完成最後的更新、且關係指出關係狀態為「靜止」時、請從原始來源SVM或原始來源叢集執行下列命令、以中斷反向關係：
 +
-「napmirror中斷-source-path _svm_：-destination-path _svm_：」
+`snapmirror break -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例打破了您用來提供資料的原始目的地SVM、「shvm_backup」和原始來源SVM、「svm1」之間的關係：
+以下範例打破了您用來提供資料的原始目的地 SVM 之間的關係、 `svm_backup`和原始來源 SVM 、 `svm1`：
 
 +
 [listing]
@@ -160,7 +160,7 @@ cluster_src::> snapmirror break -source-path svm_backup: -destination-path svm1:
 ----
 . 如果原始來源SVM先前已停止、請從原始來源叢集啟動原始來源SVM：
 +
-「vserver start -vserver _svm_」
+`vserver start -vserver _SVM_`
 
 +
 下列範例會啟動原始來源SVM：
@@ -172,16 +172,16 @@ cluster_src::> vserver start svm1
 ----
 . 從原始目的地SVM或原始目的地叢集重新建立原始資料保護關係：
 +
-「napmirror resSync -source-path _svm_：-destination-path _svm_：」
+`snapmirror resync -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例重新建立原始來源SVM、「svm1」和原始目的地SVM、「shvm_backup」之間的關係：
+以下範例重新建立原始來源 SVM 之間的關係、 `svm1`和原始目的地 SVM 、 `svm_backup`：
 
 +
 [listing]
@@ -190,16 +190,16 @@ cluster_dst::> snapmirror resync -source-path svm1: -destination-path svm_backup
 ----
 . 從原始來源SVM或原始來源叢集、執行下列命令以刪除反轉的資料保護關係：
 +
-「napmirror DELETE -source-path _svm_：-destination-path _svm_：」
+`snapmirror delete -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例刪除原始目的地SVM、「shvm_backup」和原始來源SVM、「svm1」之間的反向關係：
+以下範例刪除原始目的地 SVM 之間的反向關係、 `svm_backup`和原始來源 SVM 、 `svm1`：
 
 +
 [listing]
@@ -208,16 +208,16 @@ cluster_src::> snapmirror delete -source-path svm_backup: -destination-path svm1
 ----
 . 從原始目的地SVM或原始目的地叢集、釋出反轉的資料保護關係：
 +
-「napmirror release -source-path SVM：-destination-path SVM：」
+`snapmirror release -source-path SVM: -destination-path SVM:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-下列範例會在原始目的地SVM、SVM_Backup與原始來源SVM、「svm1」之間、釋出相反的關係
+下列範例會釋出原始目的地 SVM 、 SVM_backup 與原始來源 SVM 之間的反向關係、 `svm1`
 
 +
 [listing]
@@ -227,4 +227,4 @@ cluster_dst::> snapmirror release -source-path svm_backup: -destination-path svm
 
 
 .完成後
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。

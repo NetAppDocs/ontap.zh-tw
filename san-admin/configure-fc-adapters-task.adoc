@@ -2,7 +2,7 @@
 permalink: san-admin/configure-fc-adapters-task.html 
 sidebar: sidebar 
 keywords: configure, fc, adapters, target, initiator, mode 
-summary: 每個內建FC連接埠都可個別設定為啟動器或目標。某些FC介面卡上的連接埠也可以個別設定為目標連接埠或啟動器連接埠、就像內建FC連接埠一樣。 
+summary: 每個內建FC連接埠都可個別設定為啟動器或目標。某些FC介面卡上的連接埠也可以個別設定為目標連接埠或啟動器連接埠、就像內建FC連接埠一樣。  
 ---
 = 設定FC介面卡
 :allow-uri-read: 
@@ -24,23 +24,23 @@ summary: 每個內建FC連接埠都可個別設定為啟動器或目標。某些
 .步驟
 . 使介面卡離線：
 +
-「節點執行節點_norme_name_儲存設備會停用介面卡_adapter_name_」
+`node run -node _node_name_ storage disable adapter _adapter_name_`
 
 +
 如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
 
 . 將介面卡從啟動器變更為目標：
 +
-「系統硬體統一連線修改-t目標節點_norme_name_介面卡_adapter_name_」
+`system hardware unified-connect modify -t target -node _node_name_ adapter _adapter_name_`
 
 . 重新啟動裝載您所變更介面卡的節點。
 . 驗證目標連接埠的組態是否正確：
 +
-「網路FCP介面卡顯示-node_node_name_」
+`network fcp adapter show -node _node_name_`
 
 . 將介面卡上線：
 +
-"network FCP介面卡修改-node_node_name_-Adapter _adapter_port_-st現 況"
+`network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up`
 
 
 
@@ -61,26 +61,26 @@ NVMe / FC支援啟動器模式。
 .步驟
 . 移除介面卡上的所有LIF：
 +
-「網路介面刪除-vserver _svm_name_-lif_lif_name、lif_name_`
+`network interface delete -vserver _SVM_name_ -lif _LIF_name,LIF_name_`
 
 . 讓介面卡離線：
 +
-「網路FCP介面卡修改-node_node_name_-Adapter _adapter_port_-stue-admin down」
+`network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -status-admin down`
 
 +
 如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
 
 . 將介面卡從目標變更為啟動器：
 +
-「系統硬體統一連線修改-t啟動器_adapter_port_」
+`system hardware unified-connect modify -t initiator _adapter_port_`
 
 . 重新啟動裝載您所變更介面卡的節點。
 . 驗證FC連接埠的組態設定是否正確：
 +
-「系統硬體統一連線展示」
+`system hardware unified-connect show`
 
 . 將介面卡重新連線：
 +
-「節點執行節點節點_norme_name_儲存設備啟用介面卡_adapter_port_」
+`node run -node _node_name_ storage enable adapter _adapter_port_`
 
 

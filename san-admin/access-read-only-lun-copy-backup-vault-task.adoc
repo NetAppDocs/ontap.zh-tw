@@ -26,7 +26,7 @@ summary: 您可以從SnapVault 最新的Snapshot複本中存取LUN的唯讀複�
 如果SnapVault 在從先前Snapshot複本對應LUN的同時、將新的Snapshot複本新增至二線實體磁碟區、則對應LUN的內容會變更。LUN仍會以相同的識別碼對應、但資料會從新的Snapshot複本取得。如果LUN大小變更、部分主機會自動偵測大小變更；Windows主機需要重新掃描磁碟、才能接收任何大小變更。
 
 .步驟
-. 執行「LUN show」命令、列出SnapVault 位於列舉次要磁碟區中的可用LUN。
+. 執行 `lun show` 命令列出 SnapVault 次要磁碟區中的可用 LUN 。
 +
 在此範例中、您可以同時查看主要Volume srcvolA中的原始LUN、SnapVault 以及《支援還原的次要Volume dstvolB：
 
@@ -46,7 +46,7 @@ vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
 
 6 entries were displayed.
 ----
-. 如果所需主機的igroup尚未存在於包含SnapVault 該等二線磁碟區的SVM上、請執行「igroup create」命令來建立igroup。
+. 如果所需主機的 igroup 尚未存在於包含 SnapVault 次要 Volume 的 SVM 上、請執行 `igroup create` 建立 igroup 的命令。
 +
 此命令會為使用iSCSI傳輸協定的Windows主機建立igroup：
 
@@ -57,7 +57,7 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 執行「LUN對應建立」命令、將所需的LUN複本對應至igroup。
+. 執行 `lun mapping create` 將所需 LUN 複本對應至 igroup 的命令。
 +
 [listing]
 ----

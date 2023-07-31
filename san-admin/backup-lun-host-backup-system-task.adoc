@@ -21,21 +21,21 @@ summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的
 +
 您可以使用主機作業系統提供的命令、也可以使用SnapDrive 適用於Windows的支援功能或SnapDrive 適用於UNIX的支援功能。您也可以選擇將此步驟納入SAN備份預先處理指令碼。
 
-. 使用「Volume Snapshot create」命令建立正式作業LUN的Snapshot複本。
+. 使用 `volume snapshot create` 建立正式作業 LUN Snapshot 複本的命令。
 +
-「Volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment「Single snapshot」-foregrod」
+`volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment "Single snapshot" -foreground false`
 
-. 使用「volume file clone cre創作」命令來建立正式作業LUN的複本。
+. 使用 `volume file clone create` 建立正式作業 LUN 複本的命令。
 +
-「Volume file clone create -vserver VS3 -volume vol3 -source-path lun1 -snapsnapshot name snap_vol3 -destination-path lun1_Backup」
+`volume file clone create -vserver vs3 -volume vol3 -source-path lun1 -snapshot-name snap_vol3 -destination-path lun1_backup`
 
-. 使用「LUN igroup create」命令建立一個包含備份伺服器WWPN的igroup。
+. 使用 `lun igroup create` 建立包含備份伺服器 WWPN 的 igroup 命令。
 +
-「LUN igroup create -vserver VS3 -igroup igroup3 -傳輸協定光纖通道-ostypes windows -啟動器10：00：00：c9：73：5b：91」
+`lun igroup create -vserver vs3 -igroup igroup3 -protocol fc -ostype windows -initiator 10:00:00:00:c9:73:5b:91`
 
-. 使用「LUN對應建立」命令、將您在步驟3中建立的LUN實體複本對應到備份主機。
+. 使用 `lun mapping create` 命令、將您在步驟 3 中建立的 LUN 複本對應至備份主機。
 +
-"LUN對應建立-vserver VS3 - Volume vol3 -LUN lun1_backup -igroup igroup3"
+`lun mapping create -vserver vs3 -volume vol3 -lun lun1_backup -igroup igroup3`
 
 +
 您可以選擇將此步驟納入SAN備份應用程式的後處理指令碼。
@@ -45,16 +45,16 @@ summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的
 您可以選擇將此步驟納入SAN備份應用程式的後處理指令碼。
 
 . 使用SAN備份應用程式、將LUN實體複製中的資料從備份主機備份到磁帶。
-. 使用「LUN modify」命令可讓LUN實體複製離線。
+. 使用 `lun modify` 命令將 LUN 複製作業離線。
 +
-"LUN modify -vserver VS3 -path /vol/vol3/lun1_backup -state offline（LUN修改-vserver VS3路徑/vol/vol3/lun1_backup狀態離線）"
+`lun modify -vserver vs3 -path /vol/vol3/lun1_backup -state offline`
 
-. 使用「LUN刪除」來移除LUN實體複本。
+. 使用 `lun delete` 移除 LUN 複本。
 +
-"LUN DELETE -vserver VS3 -volume vol3 -LUN lun1_backup"（LUN刪除-vserver VS3 - Volume vol3 -LUN lun1_Backup）
+`lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
 
-. 使用「volume snapshot delete」命令移除Snapshot複本。
+. 使用 `volume snapshot delete` 刪除 Snapshot 複本的命令。
 +
-磁碟區快照刪除-vserver VS3 - Volume vol3 - snapshot vol3_snapshot
+`volume snapshot delete -vserver vs3 -volume vol3 -snapshot vol3_snapshot`
 
 

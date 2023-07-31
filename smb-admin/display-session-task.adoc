@@ -16,12 +16,12 @@ summary: 您可以顯示已建立SMB工作階段的相關資訊、包括SMB連�
 .關於這項工作
 您可以在SVM上以摘要形式顯示所有工作階段的資訊。不過、在許多情況下、傳回的輸出量很大。您可以指定選用參數、自訂輸出中顯示的資訊：
 
-* 您可以使用選用的「-Fields」參數來顯示所選欄位的輸出。
+* 您可以使用選用的 `-fields` 參數顯示有關所選欄位的輸出。
 +
-您可以輸入「-Fields？」 以判斷您可以使用哪些欄位。
+您可以輸入 `-fields ?` 決定您可以使用哪些欄位。
 
-* 您可以使用「-instance」參數來顯示已建立SMB工作階段的詳細資訊。
-* 您可以單獨使用「-Fields」參數或「-instance」參數、也可以搭配其他選用參數使用。
+* 您可以使用 `-instance` 顯示已建立 SMB 工作階段的詳細資訊的參數。
+* 您可以使用 `-fields` 參數或 `-instance` 參數可以單獨使用、也可以搭配其他選用參數使用。
 
 
 .步驟
@@ -34,60 +34,60 @@ summary: 您可以顯示已建立SMB工作階段的相關資訊、包括SMB連�
  a| 
 以摘要形式顯示SVM上的所有工作階段
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name」
+`vserver cifs session show -vserver vserver_name`
 
 
 
  a| 
 在指定的連線ID上
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name -connection-id integer'
+`vserver cifs session show -vserver vserver_name -connection-id integer`
 
 
 
  a| 
 從指定的工作站IP位址
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name -address workstation_ip_address'
+`vserver cifs session show -vserver vserver_name -address workstation_IP_address`
 
 
 
  a| 
 在指定的LIF IP位址上
  a| 
-「vserver CIFS工作階段show -vserver vserver_name -lif-address lif_ip_address'
+`vserver cifs session show -vserver vserver_name -lif-address LIF_IP_address`
 
 
 
  a| 
 在指定的節點上
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name -nodes {node_name|local}」
+`vserver cifs session show -vserver vserver_name -node {node_name|local}`
 
 
 
  a| 
 從指定的Windows使用者
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name -windows-userdomain_name\user_name」
+`vserver cifs session show -vserver vserver_name -windows-user domain_name\\user_name`
 
 
 
  a| 
 使用指定的驗證機制
  a| 
-「Vserver CIFS工作階段show -vserver vserver_name -auth-機械 裝置｛Lnv1 | vLMv2 | Kerberos | Anonymous｝」
+`vserver cifs session show -vserver vserver_name -auth-mechanism {NTLMv1|NTLMv2|Kerberos|Anonymous}`
 
 
 
  a| 
 使用指定的傳輸協定版本
  a| 
-「Vserver CIFS工作階段顯示-vserver vserver_name -PROPECTA-version｛SMB1|SMB2|SMB2_1|SMB3|SMB3_1｝」
+`vserver cifs session show -vserver vserver_name -protocol-version {SMB1|SMB2|SMB2_1|SMB3|SMB3_1}`
 
 [NOTE]
 ====
-持續可用的保護功能和SMB多通道功能僅適用於SMB 3.0及更新版本的工作階段。若要在所有合格的工作階段中檢視其狀態、您應該指定此參數、並將其值設為「MB3」或更新版本。
+持續可用的保護功能和SMB多通道功能僅適用於SMB 3.0及更新版本的工作階段。若要在所有合格的工作階段中檢視其狀態、您應該指定此參數、並將值設為 `SMB3` 或更新版本。
 
 ====
 
@@ -95,11 +95,11 @@ summary: 您可以顯示已建立SMB工作階段的相關資訊、包括SMB連�
  a| 
 提供特定等級的持續可用保護
  a| 
-「Vserver CIFS工作階段顯示-vserver vserver_name -持續可用｛否|是|部分｝」
+`vserver cifs session show -vserver vserver_name -continuously-available {No|Yes|Partial}`
 
 [NOTE]
 ====
-如果持續可用狀態為「部分」、表示工作階段包含至少一個開啟的持續可用檔案、但工作階段中有些檔案未以持續可用的保護開啟。您可以使用「vserver CIFS工作階段檔案show」命令、判斷已建立工作階段中的哪些檔案未以持續可用的保護開啟。
+如果持續可用的狀態為 `Partial`這表示工作階段至少包含一個開啟的持續可用檔案、但工作階段有一些檔案無法以持續可用的保護開啟。您可以使用 `vserver cifs sessions file show` 命令來判斷已建立工作階段上的哪些檔案未以持續可用的保護開啟。
 
 ====
 
@@ -107,7 +107,7 @@ summary: 您可以顯示已建立SMB工作階段的相關資訊、包括SMB連�
  a| 
 具有指定的SMB簽署工作階段狀態
  a| 
-「vserver CIFS工作階段show -vserver vserver_name -is-session signed {true|fal}」
+`vserver cifs session show -vserver vserver_name -is-session-signed {true|false}`
 
 |===
 

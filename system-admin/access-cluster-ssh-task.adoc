@@ -2,26 +2,26 @@
 permalink: system-admin/access-cluster-ssh-task.html 
 sidebar: sidebar 
 keywords: access, ssh, cluster, administrative, task 
-summary: 您可以向叢集發出SSH要求、以執行管理工作。SSH預設為啟用。 
+summary: 您可以向叢集發出SSH要求、以執行管理工作。SSH 預設為啟用。 
 ---
-= 使用SSH存取叢集
+= 使用 SSH 存取叢集
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以向叢集發出SSH要求、以執行管理工作。SSH預設為啟用。
+您可以向叢集發出SSH要求、以執行管理工作。SSH 預設為啟用。
 
 .您需要的產品
-* 您必須擁有設定為使用「shh」作為存取方法的使用者帳戶。
+* 您必須擁有設定為使用的使用者帳戶 `ssh` 作為存取方法。
 +
 。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9131_main/security-login-create.html#description["手冊頁"^] 包含其他資訊。
 
-* 如果您使用Active Directory（AD）網域使用者帳戶來存取叢集、則必須透過啟用CIFS的儲存虛擬機器（SVM）設定叢集驗證通道、 此外、您的AD網域使用者帳戶也必須以「sh」存取方法新增至叢集、並以「domain」驗證方法新增至叢集。
+* 如果您使用 Active Directory （ AD ）網域使用者帳戶來存取叢集、則必須透過啟用 CIFS 的儲存虛擬機器（ SVM ）來設定叢集的驗證通道、而且您的 AD 網域使用者帳戶也必須新增至具有的叢集 `ssh` 作為存取方法和 `domain` 作為驗證方法。
 * 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
 +
-「network options IPv6 show」命令會顯示是否啟用IPv6。「系統服務防火牆原則show」命令會顯示防火牆原則。
+。 `network options ipv6 show` 命令會顯示是否已啟用 IPv6 。。 `system services firewall policy show` 命令會顯示防火牆原則。
 
 
 
@@ -57,19 +57,19 @@ AD使用者名稱和網域名稱不區分大小寫。不過ONTAP 、不區分使
 
 
 .步驟
-. 在管理主機上、以下列其中一種格式輸入「sh」命令：
+. 從管理主機輸入 `ssh` 命令的格式如下：
 +
-** hes* ssh _username@hostname_or_ip_[_command_]*
-** "* ssh -l _usernamehostname_or_ip_[_command_]*
+** `*ssh _username@hostname_or_IP_ [_command_]*`
+** `*ssh -l _username hostname_or_IP_ [_command_]*`
 
 
 
 
-如果您使用的是AD網域使用者帳戶、則必須以「_domainname\AD_accountName_」格式指定「_username_」（網域名稱後加上雙反斜槓）或「_domainname\AD_accountName_」（在網域名稱後加上雙引號和單一反斜槓）。
+如果您使用的是 AD 網域使用者帳戶、則必須指定 `_username_` 的格式 `_domainname\\AD_accountname_` （在網域名稱後面加上雙反斜線）或 `"_domainname\AD_accountname_"` （以雙引號括住、並在網域名稱之後加上單一反斜線）。
 
-「主機名稱」或「IP」是叢集管理LIF或節點管理LIF的主機名稱或IP位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+`_hostname_or_IP_` 是叢集管理 LIF 或節點管理 LIF 的主機名稱或 IP 位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
 
-SSH互動工作階段不需要「_command_」。
+`_command_` 不需要 SSH 互動式工作階段。
 
 .SSH要求範例
 下列範例顯示名為「'joe'」的使用者帳戶如何發出SSH要求、以存取叢集管理LIF為10.72.137.28的叢集：

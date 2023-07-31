@@ -27,7 +27,7 @@ summary: 變更LIF屬性以修改LIF
 
 * 您無法修改主節點或節點範圍管理LIF的目前節點。
 * 使用子網路變更LIF的IP位址和網路遮罩值時、會從指定的子網路分配IP位址；如果LIF的先前IP位址來自不同的子網路、則IP位址會傳回該子網路。
-* 若要將LIF的位址系列從IPV4修改為IPV6、您必須使用IPv6位址的分號符號、並為「-netmask-length」參數新增一個值。
+* 若要將 LIF 的位址系列從 IPv4 修改為 IPv6 、您必須使用冒號表示法來表示 IPv6 位址、並為新增值 `-netmask-length` 參數。
 * 您無法修改自動設定的連結本機IPv6位址。
 * 修改LIF會導致LIF沒有有效的容錯移轉目標、因此會產生警告訊息。
 +
@@ -67,7 +67,7 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI 
 *使用CLI修改LIF*
 
 .步驟
-. 使用「network interface modify」命令修改LIF的屬性。
+. 使用修改 LIF 屬性 `network interface modify` 命令。
 +
 下列範例說明如何使用IP位址和子網路client1_sub的網路遮罩值來修改LIF datalif2的IP位址和網路遮罩：
 
@@ -93,14 +93,14 @@ network interface modify -vserver siteA -lif node1_inter1 -service-policy exampl
  a| 
 IPV4位址
  a| 
-網路ping
+`network ping`
 
 
 
  a| 
 IPv6位址
  a| 
-《網路ping6》
+`network ping6`
 
 |===
 

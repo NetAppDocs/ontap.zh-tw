@@ -11,7 +11,7 @@ summary: 手動排清匯出原則快取（vserver匯出原則快取排清）會�
 
 
 [role="lead"]
-使用多個匯出原則快取來儲存匯出原則相關資訊、以加快存取速度。ONTAP手動排清匯出原則快取（「vserver匯出原則快取排清」）會移除可能過時的資訊、迫使ONTAP 效益分析從適當的外部資源擷取目前資訊。這有助於解決與用戶端存取NFS匯出相關的各種問題。
+使用多個匯出原則快取來儲存匯出原則相關資訊、以加快存取速度。ONTAP手動排清匯出原則快取 (`vserver export-policy cache flush`）移除可能過期的資訊、並強制 ONTAP 從適當的外部資源擷取目前資訊。這有助於解決與用戶端存取NFS匯出相關的各種問題。
 
 .關於這項工作
 匯出原則快取資訊可能因為下列原因而過期：
@@ -33,35 +33,35 @@ summary: 手動排清匯出原則快取（vserver匯出原則快取排清）會�
  a| 
 所有匯出原則快取（showmount除外）
  a| 
-「vserver匯出原則快取flush -vserver vserver_name」
+`vserver export-policy cache flush -vserver vserver_name`
 
 
 
  a| 
 匯出原則規則存取快取
  a| 
-「vserver匯出原則快取排清-vserver vserver_name -快取存取」可以包含選用的「節點」參數、以指定您要排清存取快取的節點。
+`vserver export-policy cache flush -vserver vserver_name -cache access`     您可以加入選用的 `-node` 用於指定要清除存取快取的節點的參數。
 
 
 
  a| 
 主機名稱快取
  a| 
-「vserver匯出原則快取flush -vserver vserver_name -cache host」
+`vserver export-policy cache flush -vserver vserver_name -cache host`
 
 
 
  a| 
 netgroup快取
  a| 
-「vserver匯出原則快取排清-vserver vserver_name -cache netgroup」網路群組的處理作業需要大量資源。如果您嘗試解決由舊網路群組所造成的用戶端存取問題、則只能清除網路群組快取。
+`vserver export-policy cache flush -vserver vserver_name -cache netgroup`     網路群組的處理需要大量資源。如果您嘗試解決由舊網路群組所造成的用戶端存取問題、則只能清除網路群組快取。
 
 
 
  a| 
 showmount快取
  a| 
-「vserver匯出原則快取flush -vserver vserver_name -cache showmount」
+`vserver export-policy cache flush -vserver vserver_name -cache showmount`
 
 |===
 . 如果已啟用名稱服務快取、請執行下列其中一項動作：
@@ -74,28 +74,28 @@ showmount快取
  a| 
 匯出原則規則存取快取
  a| 
-「vserver匯出原則快取排清-vserver vserver_name -快取存取」可以包含選用的「節點」參數、以指定您要排清存取快取的節點。
+`vserver export-policy cache flush -vserver vserver_name -cache access`     您可以加入選用的 `-node` 用於指定要清除存取快取的節點的參數。
 
 
 
  a| 
 主機名稱快取
  a| 
-「Vserver服務名稱服務快取主機轉送查詢刪除全部」
+`vserver services name-service cache hosts forward-lookup delete-all`
 
 
 
  a| 
 netgroup快取
  a| 
-「Vserver服務名稱服務快取網路群組IP對網路群組刪除所有」「Vserver服務名稱服務快取網路群組成員刪除所有」網路群組的處理作業需要大量資源。如果您嘗試解決由舊網路群組所造成的用戶端存取問題、則只能清除網路群組快取。
+`vserver services name-service cache netgroups ip-to-netgroup delete-all` `vserver services name-service cache netgroups members delete-all`     網路群組的處理需要大量資源。如果您嘗試解決由舊網路群組所造成的用戶端存取問題、則只能清除網路群組快取。
 
 
 
  a| 
 showmount快取
  a| 
-「vserver匯出原則快取flush -vserver vserver_name -cache showmount」
+`vserver export-policy cache flush -vserver vserver_name -cache showmount`
 
 |===
 

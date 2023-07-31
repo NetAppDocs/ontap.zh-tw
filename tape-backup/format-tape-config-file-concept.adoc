@@ -20,25 +20,25 @@ summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類�
 
 
  a| 
-"_vndor_id"（字串）
+`vendor_id` （字串）
  a| 
 最多8個位元組
  a| 
-廠商ID、如「csi Inquiry」命令所報告。
+所報告的廠商 ID `SCSI Inquiry` 命令。
 
 
 
  a| 
-"product_id"（字串）
+`product_id`（字串）
  a| 
-最多16個位元組
+最多 16 個位元組
  a| 
-產品ID、如「SCSI查詢」命令所報告。
+報告的產品 ID `SCSI Inquiry` 命令。
 
 
 
  a| 
-"id_match_size"（數字）
+`id_match_size`（數量）
  a| 
  a| 
 用於偵測要識別之磁帶機的產品ID位元組數、從查詢資料中產品ID的第一個字元開始算起。
@@ -46,44 +46,44 @@ summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類�
 
 
  a| 
-「_vndor_fal」（字串）
+`vendor_pretty` （字串）
  a| 
-最多16個位元組
+最多 16 個位元組
  a| 
-如果此參數存在、則會由命令「儲存磁帶show -device-names」所顯示的字串指定、否則會顯示INQ_VENDO_ID。
+如果此參數存在、則由命令顯示的字串指定、 `storage tape show -device-names`；否則，將顯示 INQ_VENDOL_ID 。
 
 
 
  a| 
-"product_fappet"（字串）
+`product_pretty`（字串）
  a| 
-最多16個位元組
+最多 16 個位元組
  a| 
-如果此參數存在、則會由命令「儲存磁帶show -device-names」所顯示的字串指定、否則會顯示INQ_product_ID。
+如果此參數存在、則由命令顯示的字串指定、 `storage tape show -device-names`；否則，將顯示 INQ_PRODUCT_ID 。
 
 |===
 [NOTE]
 ====
-「版本」和「product_napp」欄位為選用欄位、但如果其中一個欄位有值、則另一個欄位也必須有值。
+。 `vendor_pretty` 和 `product_pretty` 欄位為選用欄位、但如果其中一個欄位有值、則另一個欄位也必須有值。
 
 ====
-下表說明各種壓縮類型的說明、密度代碼和壓縮演算法、例如「l」、「m」、「h」和「a」：
+下表說明各種壓縮類型（例如）的說明、密度代碼和壓縮演算法 `l`、 `m`、 `h`和 `a`：
 
 |===
 | 項目 | 尺寸 | 說明 
 
 
  a| 
-「｛l | m | h | a｝_description=（字串）」
+`{l | m | h | a}_description=(string)`
  a| 
-最多24個位元組
+最多 24 個位元組
  a| 
-用於nodesl解除 命令的列印字串「show -t」、說明特定密度設定的特性。
+用於 nodesdesh 命令的列印字串、 `sysconfig -t`，說明特定密度設定的特性。
 
 
 
  a| 
-「｛l | m | h | a｝密度=（六角代碼）」
+`{l | m | h | a}_density=(hex codes)`
  a| 
  a| 
 要在SCSI模式頁區塊描述元中設定的密度程式碼、對應於所需的l、m、h或a密度程式碼
@@ -91,7 +91,7 @@ summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類�
 
 
  a| 
-「｛l | m | h | a｝演算法=（hex codes）」
+`{l | m | h | a}_algorithm=(hex codes)`
  a| 
  a| 
 要在SCSI壓縮模式頁面中設定的壓縮演算法、對應於密度代碼和所需的密度特性。
@@ -104,14 +104,14 @@ summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類�
 
 
  a| 
-「autolload=（布林型是/否）」
+`autoload=(Boolean yes/no)`
  a| 
-如果磁帶機具有自動載入功能、則此欄位會設為「yes」（是）；也就是在插入磁帶匣之後、磁帶機就會準備就緒、而不需要執行「SCSI load」（開始/停止裝置）命令。此欄位的預設值為「否」。
+此欄位設定為 `yes` 如果磁帶機具有自動載入功能、也就是插入磁帶匣之後、磁帶機就會準備就緒、無需執行 `SCSI load` （起動 / 停止裝置）命令。此欄位的預設值為 `no`。
 
 
 
  a| 
-"cmd：timeout_0X"
+`cmd_timeout_0x`
  a| 
 個別逾時值。只有當您想要指定與磁帶驅動程式預設值不同的逾時值時、才必須使用此欄位。範例檔案會列出磁帶機使用的預設SCSI命令逾時值。逾時值可以以分鐘（m）、秒（s）或毫秒（ms）表示。
 
@@ -121,46 +121,46 @@ summary: 磁帶組態檔案格式包含廠商ID、產品ID及磁帶機壓縮類�
 
 ====
 |===
-您可以從NetApp支援網站下載及檢視磁帶組態檔案。
+您可以從 NetApp 支援網站下載及查看磁帶組態檔。
 
 .磁帶組態檔案格式範例
 HP LTO5 Ultrium磁帶機的磁帶組態檔案格式如下：
 
-"vmndor_id"="HP"
+`vendor_id`= 「 HP 」
 
-"product_id"=「ultrium5-scse"
+`product_id`="Ultrium 5-SCSI"
 
-"id_match_size"=9.
+`id_match_size`=9
 
-"vmndor_fals"="HP與Packard "
+`vendor_pretty`= 「 Hewlett-Packard 」
 
-「product_nappe」=「lto 5」
+`product_pretty`="LTO-5"
 
-「l_description」=「lto 3（ro）/ 4 4/800GB」
+`l_description`= 「 LTO-3 （ ro ） /4 4/800GB 」
 
-l_diminity=x00
+`l_density`= 0x00
 
-l_rim演算 法=x00
+`l_algorithm`= 0x00
 
-「M_description」=「LTO-3（ro）/ 4 8/1600GB CMP」
+`m_description`= 「 LTO-3 （ ro ） /4 8/1600GB CMP 」
 
-"M_密度"=0x00
+`m_density`= 0x00
 
-"m_form"=0x01
+`m_algorithm`= 0x01
 
-「h_description」=「lto 5 1600GB」
+`h_description`="LTO-5 1600GB"
 
-h_diminity=x58
+`h_density`=0x58
 
-h演算法=x00
+`h_algorithm`= 0x00
 
-「a_description」=「LTO-5 3200GB CMP」
+`a_description`="LTO-5 3200GB CMP"
 
-「a_diminity=0658」
+`a_density`=0x58
 
-「a_forerim演算 法」= 0x01
+`a_algorithm`= 0x01
 
-「autolload」=「yes」
+`autoload`= 是
 
 .相關資訊
 https://mysupport.netapp.com/site/tools/tool-eula/5f4d322319c1ab1cf34fd063["NetApp工具：磁帶設備組態檔案"]

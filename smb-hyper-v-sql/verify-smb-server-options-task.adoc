@@ -24,33 +24,33 @@ summary: 您必須確認已根據Hyper-V和SQL Server在SMB上的不中斷營運
 +
 .. 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
 .. 輸入下列命令：
 +
-「* vserver CIFS」選項顯示-vserver _vserver_name_*
+`*vserver cifs options show -vserver _vserver_name_*`
 
 +
-下列選項應設為「true」：
+下列選項應設定為 `true`：
 
 +
-*** 「smb2-enabl」
-*** 「smb3-enabl」
-*** 「複製卸載已啟用」
-*** 已啟用「含休閒複製」（僅限Hyper-V）
+*** `-smb2-enabled`
+*** `-smb3-enabled`
+*** `-copy-offload-enabled`
+*** `-shadowcopy-enabled` （僅適用於 Hyper-V ）
 
 
 
 
-. 如果有任何選項未設定為「true」、請執行下列步驟：
+. 如果任何選項未設定為 `true`，請執行下列步驟：
 +
-.. 使用「vserver CIFS options modify」命令將其設為「true」。
-.. 使用「vserver CIFS options show」命令確認選項設定為「true」。
+.. 將它們設為 `true` 使用 `vserver cifs options modify` 命令。
+.. 確認選項已設定為 `true` 使用 `vserver cifs options show` 命令。
 
 
 . 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
 
 

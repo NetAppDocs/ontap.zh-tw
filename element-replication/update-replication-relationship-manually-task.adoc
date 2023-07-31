@@ -14,12 +14,12 @@ summary: 如果更新因為網路錯誤而失敗、您可能需要手動更新�
 如果更新因為網路錯誤而失敗、您可能需要手動更新複寫關係。
 
 .關於這項工作
-您必須以「_hostip：_/LUN/_name_」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
 
 .步驟
 . 手動更新複寫關係：
 +
-「napmirror update -source-path _hostip:_/LUN/名稱_-dite-path _svm:volume _」|_cluster：//Svm/volume _」
+`snapmirror update -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -27,11 +27,11 @@ summary: 如果更新因為網路錯誤而失敗、您可能需要手動更新�
 +
 [NOTE]
 ====
-如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用 `snapmirror initialize` 以重新初始化關係。
 
 ====
 +
-以下範例更新IP位址為10.0.0.11的來源Volume「0005」與「shvm_backup」上的目的地Volume「Vola_dst」之間的關係：
+以下範例更新來源磁碟區之間的關係 `0005` 在 IP 位址 10.0.0.11 和目的地 Volume `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]

@@ -17,7 +17,7 @@ summary: 您也可以在SMB共用區內設定最大目錄深度、以便建立�
 必須啟用VSS陰影複製功能。
 
 .關於這項工作
-預設為建立最多五個子目錄的陰影複本。如果該值設為「0」、ONTAP 則會為所有子目錄建立陰影複製。
+預設為建立最多五個子目錄的陰影複本。如果值設為 `0`， ONTAP 會為所有子目錄建立陰影複本。
 
 [NOTE]
 ====
@@ -27,17 +27,17 @@ summary: 您也可以在SMB共用區內設定最大目錄深度、以便建立�
 .步驟
 . 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
 . 將VSS陰影複製目錄深度設定為所需的層級：
 +
-hy*vserver CIFS選項可修改-vserver _vserver_name_-ShadowCopy-dir-depth integer*
+`*vserver cifs options modify -vserver _vserver_name_ -shadowcopy-dir-depth integer*`
 
 +
-"* vserver CIFS選項修改-vserver VS1 -ShadowCopy-dir-depth 6*"
+`*vserver cifs options modify -vserver vs1 -shadowcopy-dir-depth 6*`
 
 . 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
 

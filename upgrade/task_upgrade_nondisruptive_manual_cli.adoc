@@ -38,23 +38,23 @@ summary: 若要使用手動不中斷的方法升級由兩個或多個節點組�
 
 升級第一個節點之後、您應該盡快升級合作夥伴節點。請勿讓兩個節點處於版本不相符的狀態超過必要時間。
 
-. 請叫用AutoSupport 下列資訊更新叢集中的第一個節點：「AutoSupport /setoke -node*-type all -messing_NDU」
+. 透過調用 AutoSupport 訊息來更新叢集中的第一個節點： `autosupport invoke -node * -type all -message "Starting_NDU"`
 +
 本資訊通知包含更新前的系統狀態記錄。AutoSupport如果更新程序發生問題、它會儲存有用的疑難排解資訊。
 
 +
 如果叢集未設定為傳送AutoSupport 功能性訊息、則會在本機儲存通知複本。
 
-. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
-. 將新ONTAP 的更新版軟體映像設為預設映像：「System image modify｛-nodeama -iscurrent fuls｝-IsDefault true」
+. 將新的 ONTAP 軟體映像設為預設映像： `system image modify {-node nodenameA -iscurrent false} -isdefault true`
 +
 系統映像修改命令會使用延伸查詢、將新ONTAP 的更新版軟體映像（安裝為替代映像）變更為節點的預設映像。
 
-. 監控更新進度：「系統節點升級回復顯示」
-. 確認新ONTAP 的更新版軟體映像已設定為預設映像：「System image show」（系統映像顯示）
+. 監控更新進度： `system node upgrade-revert show`
+. 確認新的 ONTAP 軟體映像已設為預設映像： `system image show`
 +
 在下列範例中、image2是新ONTAP 的版本、並設為節點0上的預設映像：
 
@@ -73,11 +73,11 @@ node1
          image2  false   false   Y.Y.Y     MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 如果已啟用「儲存容錯移轉修改節點節點節點節點節點節點節點節點節點節點節點名稱B -自動恢復錯誤」、請停用該節點上的自動恢復功能
+. 如果合作夥伴節點已啟用自動恢復功能、請停用該功能： `storage failover modify -node nodenameB -auto-giveback false`
 +
-如果叢集是雙節點叢集、則會顯示一則訊息、警告您停用自動恢復功能、可在發生其他故障情況時、防止管理叢集服務上線。輸入「y」繼續。
+如果叢集是雙節點叢集、則會顯示一則訊息、警告您停用自動恢復功能、可在發生其他故障情況時、防止管理叢集服務上線。輸入 `y` 以繼續。
 
-. 驗證是否已針對節點的合作夥伴停用自動還原：「torage容錯移轉show -nodelameB -功能 變數自動還原」
+. 確認已停用節點合作夥伴的自動恢復功能： `storage failover show -node nodenameB -fields auto-giveback`
 +
 [listing]
 ----
@@ -87,7 +87,7 @@ node     auto-giveback
 node1    false
 1 entry was displayed.
 ----
-. 執行下列命令兩次、以判斷要更新的節點目前是否為任何用戶端提供「系統節點執行節點節點節點節點節點節點名稱A命令正常運作時間」
+. 執行下列命令兩次、以判斷要更新的節點目前是否正在服務任何用戶端 `system node run -node nodenameA -command uptime`
 +
 正常運作時間命令會顯示節點自上次開機以來、針對NFS、SMB、FC和iSCSI用戶端執行的作業總數。對於每個傳輸協定、您必須執行兩次命令、以判斷作業計數是否增加。如果數量不斷增加、則節點目前正在為該傳輸協定的用戶端提供服務。如果不增加、則節點目前不會為該傳輸協定的用戶端提供服務。
 
@@ -106,8 +106,8 @@ cluster1::> system node run -node node0 -command uptime
 cluster1::> system node run -node node0 -command uptime
   2:58pm up  7 days, 19:17 800001573 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32815 iSCSI ops
 ----
-. 將所有資料生命體移出節點：「network interface migrame-all -nodedenameA」
-. 驗證您移轉的任何生命：「network interface show」（網路介面顯示）
+. 將所有資料生命從節點移轉至其他位置： `network interface migrate-all -node nodenameA`
+. 驗證您移轉的任何生命： `network interface show`
 +
 如需可用於驗證LIF狀態的參數相關資訊、請參閱網路介面show手冊頁。
 
@@ -126,7 +126,7 @@ vs0     data003 node0     e0b       node1     e0b       up          up
 vs0     data004 node0     e0a       node1     e0a       up          up
 4 entries were displayed.
 ----
-. 開始接管：「儲存容錯移轉接管-節點節點節點名稱A」
+. 啟動接管： `storage failover takeover -ofnode nodenameA`
 +
 請勿指定-option Immediate參數、因為要將節點接管以開機至新的軟體映像時、需要正常接管。如果您未手動將l生命 從節點移轉至其他節點、則會自動移轉至節點的HA合作夥伴、以確保不會發生服務中斷。
 
@@ -136,7 +136,7 @@ vs0     data004 node0     e0a       node1     e0a       up          up
 +
 *附註*：如果AutoSupport 啟用了S廳、AutoSupport 系統會傳送一則不確定訊息、指出節點已超出叢集仲裁。您可以忽略此通知並繼續更新。
 
-. 驗證接管是否成功：「儲存容錯移轉顯示」
+. 確認接管成功： `storage failover show`
 +
 您可能會看到錯誤訊息、指出版本不相符和信箱格式問題。這是預期的行為、在重大且不中斷營運的升級中、這是暫時性的狀態、而且不會造成傷害。
 
@@ -163,11 +163,11 @@ node1          node0          false    In takeover
 
 
 
-. 將集合體傳回第一個節點：「儲存容錯移轉還原–ofnodenameA」
+. 將集合體傳回第一個節點： `storage failover giveback –ofnode nodenameA`
 +
 恢復會先將根Aggregate傳回合作夥伴節點、然後在該節點完成開機之後、傳回非根Aggregate及任何設定為自動還原的LIF。新開機的節點會在傳回Aggregate後、立即開始從每個Aggregate向用戶端提供資料。
 
-. 驗證是否已傳回所有集合體：「儲存容錯移轉顯示還原」
+. 驗證是否已傳回所有的集合體： `storage failover show-giveback`
 +
 如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪個子系統已對恢復執行了指令。
 
@@ -195,18 +195,18 @@ link:../high-availability/index.html["高可用度組態"]
 
 . 驗證是否已成功完成節點的更新：
 +
-.. 進入進階權限層級：「最先進的權限」
-.. 驗證節點的更新狀態是否已完成：「System Node update-f還原show -nodenameA」
+.. 進入進階權限等級：``set -privilege advanced``
+.. 確認節點的更新狀態為完成： `system node upgrade-revert show -node nodenameA`
 +
 狀態應列示為「完成」。
 
 +
 如果狀態不完整、請聯絡技術支援部門。
 
-.. 返回管理員權限等級：「et -priv. admin」
+.. 返回管理權限層級： `set -privilege admin`
 
 
-. 驗證節點的連接埠是否正常運作：「network port show -Node nodenameA」
+. 驗證節點的連接埠是否正常運作： `network port show -node nodenameA`
 +
 您必須在升級至ONTAP 更新版本的更新版本的節點上執行此命令。
 
@@ -228,7 +228,7 @@ node0
        e1b       Cluster      Cluster          up       9000  auto/10000
 5 entries were displayed.
 ----
-. 將生命期恢復到節點：「網路介面回復*」
+. 將生命恢復到節點： `network interface revert *`
 +
 此命令會傳回從節點移轉的LIF。
 
@@ -238,7 +238,7 @@ node0
 cluster1::> network interface revert *
 8 entries were acted on.
 ----
-. 驗證節點的資料lifs是否已成功還原至節點、以及它們是否已啟動：「網路介面show」
+. 驗證節點的資料生命是否已成功還原至節點、以及它們是否正常運作： `network interface show`
 +
 下列範例顯示節點所主控的所有資料生命期已成功還原至節點、而且其作業狀態為「up」（開機）：
 
@@ -256,7 +256,7 @@ vs0
             data004      up/up    192.0.2.123/24     node0         e0a     true
 4 entries were displayed.
 ----
-. 如果您先前判斷此節點是為用戶端提供服務、請驗證該節點是否為先前所提供的每個傳輸協定提供服務：「System Node run -nodeameA -command uptime」（系統節點執行節點節點節點節點節點節點節點名稱A命令正常運作時間）
+. 如果您先前已確定此節點為用戶端提供服務、請確認節點為其先前所服務的每個傳輸協定提供服務： `system node run -node nodenameA -command uptime`
 +
 更新期間、作業數會重設為零。
 
@@ -269,7 +269,7 @@ vs0
 cluster1::> system node run -node node0 -command uptime
   3:15pm up  0 days, 0:16 129 NFS ops, 0 CIFS ops, 0 HTTP ops, 0 FCP ops, 2 iSCSI ops
 ----
-. 如果先前已停用、請在合作夥伴節點上重新啟用自動恢復功能：「儲存容錯移轉修改節點節點節點節點節點節點節點節點節點名稱B -自動恢復true」
+. 如果合作夥伴節點先前已停用、請重新啟用自動恢復功能： `storage failover modify -node nodenameB -auto-giveback true`
 
 
 您應該盡快更新節點的HA合作夥伴。如果您因為任何原因必須暫停更新程序、HA配對中的兩個節點都應該執行相同ONTAP 的版本。
@@ -280,18 +280,18 @@ cluster1::> system node run -node node0 -command uptime
 
 更新HA配對中的第一個節點之後、您可以在其上啟動接管、藉此更新其合作夥伴。第一個節點會在合作夥伴節點升級時、為合作夥伴的資料提供服務。
 
-. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
-. 將新ONTAP 的更新版軟體映像設為預設映像：「系統映像修改｛-nodeamb -iscurrent fuls｝-IsDefault true」
+. 將新的 ONTAP 軟體映像設為預設映像： `system image modify {-node nodenameB -iscurrent false} -isdefault true`
 +
 系統映像修改命令會使用延伸查詢、將新ONTAP 的Imagesoftware映像（安裝為替代映像）變更為節點的預設映像。
 
-. 監控更新進度：「系統節點升級回復顯示」
-. 確認新ONTAP 的更新版軟體映像已設定為預設映像：「System image show」（系統映像顯示）
+. 監控更新進度： `system node upgrade-revert show`
+. 確認新的 ONTAP 軟體映像已設為預設映像： `system image show`
 +
-在下列範例中、「image2」是ONTAP 新版的介紹、並設為節點上的預設影像：
+在下列範例中、 `image2` 是 ONTAP 的新版本、設定為節點上的預設映像：
 
 +
 [listing]
@@ -308,11 +308,11 @@ node1
          image2  true    false   Y.Y.Y     MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 如果啟用「儲存容錯移轉修改節點節點節點節點節點節點節點名稱A -自動恢復錯誤」、請停用夥伴節點上的自動恢復功能
+. 如果合作夥伴節點已啟用自動恢復功能、請停用該功能： `storage failover modify -node nodenameA -auto-giveback false`
 +
-如果叢集是雙節點叢集、則會顯示一則訊息、警告您停用自動恢復功能、可在發生其他故障情況時、防止管理叢集服務上線。輸入「y」繼續。
+如果叢集是雙節點叢集、則會顯示一則訊息、警告您停用自動恢復功能、可在發生其他故障情況時、防止管理叢集服務上線。輸入 `y` 以繼續。
 
-. 驗證是否已針對合作夥伴節點停用自動還原：「torage容錯移轉show -nodenameA -Fields autom-famover」
+. 確認已停用合作夥伴節點的自動恢復功能： `storage failover show -node nodenameA -fields auto-giveback`
 +
 [listing]
 ----
@@ -322,7 +322,7 @@ node     auto-giveback
 node0    false
 1 entry was displayed.
 ----
-. 執行下列命令兩次、以判斷要更新的節點目前是否正在服務任何用戶端：「ystem nodNode run -nodenameB -command uptime」（系統節點執行節點節點節點節點節點節點節點節點名稱B命令正常運作時間）
+. 執行下列命令兩次、判斷要更新的節點目前是否正在服務任何用戶端： `system node run -node nodenameB -command uptime`
 +
 正常運作時間命令會顯示節點自上次開機以來、針對NFS、SMB、FC和iSCSI用戶端執行的作業總數。對於每個傳輸協定、您必須執行兩次命令、以判斷作業計數是否增加。如果數量不斷增加、則節點目前正在為該傳輸協定的用戶端提供服務。如果不增加、則節點目前不會為該傳輸協定的用戶端提供服務。
 
@@ -341,8 +341,8 @@ cluster1::> system node run -node node1 -command uptime
 cluster1::> system node run -node node1 -command uptime
   2:58pm up  7 days, 19:17 800001573 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32815 iSCSI ops
 ----
-. 將所有資料生命體從節點移轉到另一個位置：「network interface migrall-all -nodedameB」
-. 驗證您移轉的任何生命設備狀態：「網路介面顯示」
+. 將所有資料生命從節點移轉至其他位置： `network interface migrate-all -node nodenameB`
+. 確認您移轉的任何生命的狀態： `network interface show`
 +
 如需可用於驗證LIF狀態的參數相關資訊、請參閱網路介面show手冊頁。
 
@@ -361,9 +361,12 @@ vs0     data003 node1     e0b       node0     e0b       up          up
 vs0     data004 node1     e0a       node0     e0a       up          up
 4 entries were displayed.
 ----
-. 啟動接管：「儲存容錯移轉接管-節點節點節點名稱B -選項允許版本不符」
+. 啟動接管： `storage failover takeover -ofnode nodenameB -option allow-version-mismatch`
 +
 請勿指定-option Immediate參數、因為要將節點接管以開機至新的軟體映像時、需要正常接管。如果您未手動將l生命 從節點移轉至其他節點、則會自動移轉至節點的HA合作夥伴、以避免服務中斷。
+
++
+畫面會顯示警告。  您必須輸入 `y` 以繼續。
 
 +
 接管的節點會開機至等待恢復狀態。
@@ -371,7 +374,7 @@ vs0     data004 node1     e0a       node0     e0a       up          up
 +
 *附註*：如果AutoSupport 啟用了S廳、AutoSupport 系統會傳送一則不確定訊息、指出節點已超出叢集仲裁。您可以忽略此通知並繼續更新。
 
-. 驗證接管是否成功：「儲存容錯移轉顯示」
+. 確認接管成功： `storage failover show`
 +
 以下範例顯示接管作業成功。節點節點1處於等待恢復狀態、其合作夥伴處於接管狀態。
 
@@ -395,11 +398,11 @@ node1          node0          false    Waiting for giveback (HA mailboxes)
 
 
 
-. 將Aggregate傳回合作夥伴節點：「torage容錯移轉還原-ofnodameB」
+. 將集合體傳回合作夥伴節點： `storage failover giveback -ofnode nodenameB`
 +
 恢復作業會先將根Aggregate傳回合作夥伴節點、然後在該節點完成開機之後、傳回非根Aggregate及任何設定為自動還原的LIF。新開機的節點會在傳回Aggregate後、立即開始從每個Aggregate向用戶端提供資料。
 
-. 驗證是否傳回所有的集合體：「儲存容錯移轉顯示還原」
+. 驗證是否已傳回所有的集合體： `storage failover show-giveback`
 +
 如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪些子系統已對恢復作業進行了否決。
 
@@ -427,18 +430,18 @@ link:https://docs.netapp.com/us-en/ontap/high-availability/index.html["高可用
 
 . 驗證是否已成功完成節點的更新：
 +
-.. 進入進階權限層級：「最先進的權限」
-.. 驗證節點的更新狀態是否已完成：「System Node update-f還原show -nodedameB」
+.. 進入進階權限等級：``set -privilege advanced``
+.. 確認節點的更新狀態為完成： `system node upgrade-revert show -node nodenameB`
 +
 狀態應列示為「完成」。
 
 +
 如果狀態不完整、請從節點執行系統節點升級還原升級命令。如果命令未完成更新、請聯絡技術支援部門。
 
-.. 返回管理員權限等級：「et -priv. admin」
+.. 返回管理權限層級： `set -privilege admin`
 
 
-. 驗證節點的連接埠是否正常運作：「network port show -Node nodenameB」
+. 驗證節點的連接埠是否正常運作： `network port show -node nodenameB`
 +
 您必須在已升級ONTAP 至flex9.4的節點上執行此命令。
 
@@ -460,7 +463,7 @@ node1
        e1b       Cluster      Cluster          up       9000  auto/10000
 5 entries were displayed.
 ----
-. 將生命期恢復到節點：「網路介面回復*」
+. 將生命恢復到節點： `network interface revert *`
 +
 此命令會傳回從節點移轉的LIF。
 
@@ -470,7 +473,7 @@ node1
 cluster1::> network interface revert *
 8 entries were acted on.
 ----
-. 驗證節點的資料lifs是否已成功還原至節點、以及它們是否已啟動：「網路介面show」
+. 驗證節點的資料生命是否已成功還原至節點、以及它們是否正常運作： `network interface show`
 +
 以下範例顯示、節點所主控的所有資料生命期都會成功還原回節點、而且其作業狀態為「up」（開機）：
 
@@ -488,7 +491,7 @@ vs0
             data004      up/up    192.0.2.123/24     node1         e0a     true
 4 entries were displayed.
 ----
-. 如果您先前判斷此節點是為用戶端提供服務、請驗證該節點是否為先前所提供的每個傳輸協定提供服務：「System Node run -nodeameB -command uptime」（系統節點執行節點節點節點節點節點節點節點節點名稱B命令正常運作時間）
+. 如果您先前已確定此節點為用戶端提供服務、請確認節點為其先前所服務的每個傳輸協定提供服務： `system node run -node nodenameB -command uptime`
 +
 更新期間、作業數會重設為零。
 
@@ -513,7 +516,7 @@ cluster1::> system node run -node node1 -command uptime
 
 . 確認新的 ONTAP 軟體正在 HA 配對的兩個節點上執行：
 +
-"進階權限"
+`set -privilege advanced`
 
 +
 `system node image show`
@@ -536,12 +539,12 @@ node1
          image2  true    true    Y.Y.Y     MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 如果先前已停用、請在合作夥伴節點上重新啟用自動恢復功能：「儲存容錯移轉修改節點節點節點節點節點節點名稱A -自動恢復true」
+. 如果合作夥伴節點先前已停用、請重新啟用自動恢復功能： `storage failover modify -node nodenameA -auto-giveback true`
 . 使用叢集show和叢集環show命令（進階權限層級）、確認叢集處於仲裁狀態、且服務正在執行中。
 +
 在升級任何其他HA配對之前、您必須先執行此步驟。
 
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理權限層級： `set -privilege admin`
 
 
 升級任何其他HA配對。

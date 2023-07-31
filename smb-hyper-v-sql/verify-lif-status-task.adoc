@@ -19,13 +19,13 @@ summary: 即使您將採用Hyper-V的儲存虛擬機器（SVM）和SQL Server設
 .步驟
 . 顯示SVM的已設定LIF相關資訊：
 +
-hy*網路介面show -vserver _vserver_name_*
+`*network interface show -vserver _vserver_name_*`
 
 +
 在此範例中、「lif1」不在主連接埠上。
 
 +
-「網路介面show -vserver VS1」
+`network interface show -vserver vs1`
 
 +
 [listing]
@@ -42,10 +42,10 @@ vs1
 +
 .. 針對每個LIF、判斷LIF的主連接埠：
 +
-hy*網路介面show -vserver _vserver_name_-lif_lif_name_-Fields home-node, home-port*
+`*network interface show -vserver _vserver_name_ -lif _lif_name_ -fields home-node,home-port*`
 
 +
-`*網路介面show -vserver VS1 -lIF lif1 -功能 變數主節點、主連接埠*
+`*network interface show -vserver vs1 -lif lif1 -fields home-node,home-port*`
 
 +
 [listing]
@@ -57,10 +57,10 @@ vs1     lif1 node1      e0d
 ----
 .. 針對每個LIF、判斷LIF的主連接埠是否正常運作：
 +
-hy*網路連接埠show -node_node_name_-port _port_-Fields port,link*
+`*network port show -node _node_name_ -port _port_ -fields port,link*`
 
 +
-「網路連接埠show -node1 -port e0d -功能 變數連接埠、link」
+`network port show -node node1 -port e0d -fields port,link`
 
 +
 [listing]
@@ -71,24 +71,24 @@ node       port link
 node1      e0d  up
 ----
 +
-在此範例中、「lif1」應移轉回其主連接埠「node1：e0d」。
+在此範例中、「 lif1 」應移轉回其主連接埠、 `node1:e0d`。
 
 
 
-. 如果應該與生命期相關聯的任何主連接埠網路介面均未處於「up」狀態、請解決問題、使這些介面正常運作。
+. 如果有任何應與生命相關聯的主連接埠網路介面不在中 `up` 請解決問題、讓這些介面正常運作。
 . 如有需要、請將l生命 回復至主連接埠：
 +
-h.*網路介面回復-vserver _vserver_name_-lif_lif_name_*
+`*network interface revert -vserver _vserver_name_ -lif _lif_name_*`
 
 +
-`*網路介面還原-vserver VS1 -lIF lif1*
+`*network interface revert -vserver vs1 -lif lif1*`
 
 . 確認叢集中的每個節點都有SVM的作用中LIF：
 +
-hy*網路介面show -vserver _vserver_name_*
+`*network interface show -vserver _vserver_name_*`
 
 +
-`*網路介面show -vserver VS1*
+`*network interface show -vserver vs1*`
 
 +
 [listing]

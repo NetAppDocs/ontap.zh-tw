@@ -19,7 +19,7 @@ summary: 定期變更內建金鑰管理通關密碼、是安全性最佳實務�
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 變更內建金鑰管理通關密碼：
 +
@@ -33,21 +33,21 @@ summary: 定期變更內建金鑰管理通關密碼、是安全性最佳實務�
  a| 
 更新版本ONTAP
  a| 
-「安全金鑰管理程式內建更新密碼」
+`security key-manager onboard update-passphrase`
 
 
 
  a| 
 不含更新版本ONTAP
  a| 
-「安全金鑰管理程式更新密碼」
+`security key-manager update-passphrase`
 
 |===
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-下列ONTAP 支援功能的支援功能9.6可讓您變更「cluster1」的機載金鑰管理密碼：
+下列 ONTAP 9.6 命令可讓您變更的內建金鑰管理複雜密碼 `cluster1`：
 
 +
 [listing]
@@ -58,7 +58,7 @@ Do you want to continue? {y|n}: y
 Enter current passphrase:
 Enter new passphrase:
 ----
-. 在提示符下輸入「y」、以變更內建金鑰管理通關密碼。
+. 輸入 `y` 在提示時變更內建金鑰管理複雜密碼。
 . 在目前的通關密碼提示字元中輸入目前的通關密碼。
 . 在新的通關密碼提示字元中、輸入介於32到256個字元之間的通關密碼、或輸入介於64到256個字元之間的通關密碼「'cc-mode'」。
 +
@@ -70,8 +70,8 @@ Enter new passphrase:
 .完成後
 在這個環境中、您必須更新合作夥伴叢集上的通關密碼：MetroCluster
 
-* 在BIOS 9.5或更早版本中、您必須在合作夥伴叢集上以相同的通關密碼執行「安全金鑰管理程式更新通關密碼」ONTAP 。
-* 在Section9.6及更新版本中、系統會提示您在合作夥伴叢集上使用相同密碼執行「安全金鑰管理程式內建同步」ONTAP 。
+* 在 ONTAP 9.5 或更早版本中、您必須執行 `security key-manager update-passphrase` 在合作夥伴叢集上使用相同的複雜密碼。
+* 在 ONTAP 9.6 及更新版本中、系統會提示您執行 `security key-manager onboard sync` 在合作夥伴叢集上使用相同的複雜密碼。
 
 
 您應該將內建金鑰管理通關密碼複製到儲存系統外部的安全位置、以供未來使用。

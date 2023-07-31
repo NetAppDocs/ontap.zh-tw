@@ -18,15 +18,15 @@ summary: 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安�
 
 * 您必須擁有一個叢集本機使用者帳戶、並將其設定為使用RSH作為存取方法。
 +
-「安全登入」命令的「-application」參數會指定使用者帳戶的存取方法。如需詳細資訊、請參閱「安全登入」手冊頁。
+。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。如需詳細資訊、請參閱 `security login` 手冊頁。
 
 * Rsh必須已在叢集或節點管理生命體所使用的管理防火牆原則中啟用、以便讓RSHH要求能夠通過防火牆。
 +
-預設會停用RSH。帶有「-service rsh」參數的「系統服務防火牆原則show」命令會顯示是否已在防火牆原則中啟用RSH.如需詳細資訊、請參閱「系統服務防火牆原則」手冊頁。
+依預設、 RSH 會停用。。 `system services firewall policy show` 命令 `-service rsh` 參數顯示是否已在防火牆原則中啟用 RSH 。如需詳細資訊、請參閱 `system services firewall policy` 手冊頁。
 
 * 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
 +
-「network options IPv6 show」命令會顯示是否啟用IPv6。「系統服務防火牆原則show」命令會顯示防火牆原則。
+。 `network options ipv6 show` 命令會顯示是否已啟用 IPv6 。。 `system services firewall policy show` 命令會顯示防火牆原則。
 
 
 
@@ -47,18 +47,18 @@ summary: 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安�
 .步驟
 . 從管理主機輸入下列命令：
 +
-h.*rsh _hostname_or_ip_-l _username:passwormcommand_*
+`*rsh _hostname_or_IP_ -l _username:passwordcommand_*`
 
 +
-「主機名稱」或「IP」是叢集管理LIF或節點管理LIF的主機名稱或IP位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+`_hostname_or_IP_` 是叢集管理 LIF 或節點管理 LIF 的主機名稱或 IP 位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
 
 +
-「_command_」是您要透過RSH.執行的命令。
+`_command_` 是您要透過 RSH 執行的命令。
 
 
 
 .RSH申請範例
-以下範例顯示使用RSHE存取設定的「'joe'」使用者如何發出RSHE要求來執行「cluster show」命令：
+下列範例顯示已設定 RSH 存取權限的使用者「 Joe 」如何發出 RSHE 要求來執行 `cluster show` 命令：
 
 [listing]
 ----

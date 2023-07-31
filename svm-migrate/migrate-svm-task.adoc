@@ -13,11 +13,11 @@ summary: SVM移轉完成後、用戶端會自動切換至目的地叢集、並�
 [role="lead"]
 SVM移轉完成後、用戶端會自動切換至目的地叢集、並從來源叢集移除不必要的SVM。預設會啟用自動轉換和自動來源清除功能。如有必要、您可以停用用戶端自動切換功能、以便在轉換之前暫停移轉、也可以停用自動來源SVM清除功能。
 
-* 您可以使用「-autom-cover lobs'」選項、在自動用戶端切換正常執行時暫停移轉、然後稍後手動執行切換。
+* 您可以使用 `-auto-cutover false` 當自動用戶端轉換通常發生時暫停移轉的選項、然後稍後手動執行轉換。
 +
 xref:manual-client-cutover-task.adoc[在SVM移轉之後手動切換用戶端]
 
-* 您可以使用進階權限「-auto-source-cleanup fals'」選項、在轉換之後停用移除來源SVM、然後在轉換之後手動觸發來源清除。
+* 您可以使用進階權限 `-auto-source-cleanup false` 此選項可在轉換後停用來源 SVM 的移除、然後在轉換之後手動觸發來源清理。
 +
 xref:manual-source-removal-task.adoc[轉換後手動移除來源SVM]
 
@@ -32,15 +32,15 @@ xref:manual-source-removal-task.adoc[轉換後手動移除來源SVM]
 .步驟
 . 從目的地叢集執行移轉預先檢查：
 +
-「Dest_cluster> vserver移轉start -vserver _Svm_name_-source-cluster _cluster_name _-check only true」
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 從目的地叢集開始SVM移轉：
 +
-「Dest_cluster」> vserver移轉start -vserver _Svm_name_-source-cluster _cluster名稱_」
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_`
 
 . 檢查移轉狀態：
 +
-「Dest_cluster」> vserver移轉show
+`dest_cluster> vserver migrate show`
 
 +
 SVM移轉完成時、狀態會顯示「移轉完成」。
@@ -56,15 +56,16 @@ SVM移轉完成時、狀態會顯示「移轉完成」。
 .步驟
 . 從目的地叢集執行移轉預先檢查：
 +
-「Dest_cluster> vserver移轉start -vserver _Svm_name_-source-cluster _cluster_name _-check only true」
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 從目的地叢集開始SVM移轉：
 +
-「Dest_cluster」> vserver移轉start -vserver _Svm_name_-source-cluster _叢 集名稱_-auto-covover false」
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -auto-cutover false`
 
 . 檢查移轉狀態：
 +
-「Dest_cluster > vserver移轉顯示」當SVM移轉完成非同步資料傳輸時、狀態會顯示為「準備好轉換」、並準備好進行轉換作業。
+`dest_cluster> vserver migrate show`
+當 SVM 移轉完成非同步資料傳輸時、狀態會顯示「準備好轉換」、並準備好進行轉換作業。
 
 
 
@@ -77,15 +78,15 @@ SVM移轉完成時、狀態會顯示「移轉完成」。
 .步驟
 . 從目的地叢集執行移轉預先檢查：
 +
-「Dest_cluster*」> vserver移轉start -vserver _Svm_name_-source-cluster _cluster_name _-check only true
+`dest_cluster*> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 從目的地叢集開始SVM移轉：
 +
-「Dest_cluster *」> vserver移轉start -vserver _Svm_name_-source-cluster _cluster名稱_-auto-source-cleanup fals'
+`dest_cluster*> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -auto-source-cleanup false`
 
 . 檢查移轉狀態：
 +
-「最大叢集*」> vserver移轉show
+`dest_cluster*> vserver migrate show`
 
 +
 當SVM移轉轉換完成、且準備好移除來源叢集上的SVM時、狀態會顯示為「準備好進行來源清理」。

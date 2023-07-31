@@ -26,10 +26,13 @@ summary: 您可以使用SnapMirror在SVM之間建立資料保護關係。在此�
 +
 ** 在正常的排程作業、更新和重新同步期間、不會從來源覆寫到目的地
 ** 在中斷作業期間不會刪除這些項目。
-** 它們不會在反轉重新同步作業期間刪除。當您使用ONTAP 鏡射保存原則使用版本號9.9.1及更新版本來設定SVM DR關係時、該原則的行為如下：
+** 它們不會在反轉重新同步作業期間刪除。
+當您使用ONTAP 鏡射保存原則使用版本號9.9.1及更新版本來設定SVM DR關係時、該原則的行為如下：
 ** 來源的使用者定義Snapshot複本原則不會複製到目的地。
 ** 系統定義的Snapshot複本原則不會複製到目的地。
-** 磁碟區與使用者和系統定義的Snapshot原則之間的關聯不會複製到目的地。+ SVM：
+** 磁碟區與使用者和系統定義的Snapshot原則之間的關聯不會複製到目的地。
+ +
+SVM 。
 
 
 * 從ONTAP SnapMirror 9.2、_SnapMirror統一化複寫開始、目的地設定為DR和長期保留。
@@ -115,12 +118,12 @@ link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror ONTAP 關係�
 
 SVM複寫關係的內容取決於下列欄位的互動：
 
-* "napmirror cree"命令的"idente-preserve"選項會複寫整個SVM組態。
+* 。 `-identity-preserve true` 的選項 `snapmirror create` 命令會複寫整個 SVM 組態。
 +
-「idente-preserve假」選項只會複寫SVM的磁碟區、驗證和授權組態、以及中所列的傳輸協定和名稱服務設定 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在SVM DR關係中複寫的組態"]。
+。 `-identity-preserve false` 選項僅複寫 SVM 的磁碟區和驗證與授權組態、以及中列出的通訊協定和名稱服務設定 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在SVM DR關係中複寫的組態"]。
 
-* 在源SVM和目標SVM位於不同子網路的情況下、可使用「napmirror policy create」命令的「Discard組態」網路選項、將LIF和相關的網路設定排除在SVM複寫中。
-* 「volume modify」命令的「-vserver-dr-protection protection protection protection protection protection」選項可將指定的磁碟區排除在SVM複寫之外。
+* 。 `-discard-configs network` 的選項 `snapmirror policy create` 命令會從 SVM 複寫中排除生命與相關網路設定、以供來源和目的地 SVM 位於不同子網路的情況使用。
+* 。 `-vserver-dr-protection unprotected` 的選項 `volume modify` 命令會將指定的 Volume 排除在 SVM 複寫之外。
 
 
 否則、SVM複寫幾乎與Volume複寫相同。您幾乎可以使用與用於磁碟區複寫相同的SVM複寫工作流程。
@@ -222,6 +225,13 @@ MetroCluster
 
 
  a| 
+SS3 ONTAP
+ a| 
+SVM DR不支援。
+
+
+
+ a| 
 SnapMirror同步
  a| 
 SVM DR不支援。
@@ -237,10 +247,10 @@ SVM DR不支援。
 |===
 
 
-2+| 組態已複寫 2+| 《*身分識別保護》（Identity‑Preserve true*） | 「*」身分識別保護假* 
+2+| 組態已複寫 2+| `*‑identity‑preserve true*` | `*‑identity‑preserve false*` 
 
 
-|  |  | *不含「丟棄組態」網路組態的原則* | *使用「-discard組態」網路組態的原則* |  
+|  |  | * 政策不含 `-discard-configs network` 設定 * | * 政策與 `-discard-configs network` 設定 * |  
 
 
  a| 

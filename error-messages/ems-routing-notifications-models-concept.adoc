@@ -11,27 +11,27 @@ summary: 在版本不含故障碼的9.0之前ONTAP 、EMS事件只能根據事�
 
 
 [role="lead"]
-在版本不含故障碼的9.0之前ONTAP 、EMS事件只能根據事件名稱模式的相符結果對應至事件目的地。使用此模型的ONTAP 指令集（「EVENT destination'、「EVENT route'」）仍可在ONTAP 最新版的版的更新版中使用、但ONTAP 從使用率為0的版本開始、這些指令集已被淘汰。
+在版本不含故障碼的9.0之前ONTAP 、EMS事件只能根據事件名稱模式的相符結果對應至事件目的地。ONTAP 命令集 (`event destination`、 `event route`）使用此模型的 ONTAP 最新版本仍然可用，但從 ONTAP 9.0 開始已被淘汰。
 
-從功能區支援的9.0開始ONTAP 、ONTAP 最佳實務做法是使用「事件篩選器」、「事件通知」和「事件通知目的地」命令集、在多個欄位上執行模式比對、以更具擴充性的事件篩選器模式進行。
+從 ONTAP 9.0 開始、 ONTAP EMS 事件目的地對應的最佳實務做法是使用更具擴充性的事件篩選器模型、在多個欄位上使用進行模式比對 `event filter`、 `event notification`和 `event notification destination` 命令集。
 
-如果您使用過時的命令來設定EMS對應、您應該更新對應、以使用「事件篩選器」、「事件通知」和「事件通知目的地」命令集。
+如果您的 EMS 對應是使用過時的命令進行設定、您應該更新對應以使用 `event filter`、 `event notification`和 `event notification destination` 命令集。
 
 事件目的地有兩種類型：
 
 . *系統產生的目的地*：有五個系統產生的事件目的地（預設為建立）
 +
-** 《allevents》
-** "阿蘇"
-** 《批評》
-** 《尋呼機》
-** 《traphost》
+** `allevents`
+** `asup`
+** `criticals`
+** `pager`
+** `traphost`
 +
 某些系統產生的目的地是為了特殊目的而設計。例如、asup目的地會將CallHome.*事件路由到AutoSupport 位在畫面上的這個動作模組ONTAP 、以產生AutoSupport 各種訊息。
 
 
 
-. *使用者建立的目的地*：這些是使用「事件目的地建立」命令手動建立的。
+. * 使用者建立的目的地 * ：這些目的地是使用手動建立的 `event destination create` 命令。
 +
 [listing]
 ----
@@ -63,7 +63,7 @@ traphost         -                 -                  -                  false
 ----
 
 
-在已過時的模型中、EMS事件會使用「事件路由附加目的地」命令個別對應至目的地。
+在過時的模型中、 EMS 事件會使用個別對應至目的地 `event route add-destinations` 命令。
 
 [listing]
 ----

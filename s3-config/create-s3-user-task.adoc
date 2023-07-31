@@ -20,7 +20,7 @@ summary: 所有ONTAP 的物件儲存區都需要使用者授權、才能限制�
 .關於這項工作
 S3使用者可以存取SVM中的任何儲存區、但不能存取多個SVM。
 
-建立S3使用者時、會產生存取金鑰和秘密金鑰。必須與使用者共用、以及物件存放區的FQDN和儲存區名稱。S3使用者的金鑰可以使用「vserver object-store-server使用者show」命令來顯示。
+建立S3使用者時、會產生存取金鑰和秘密金鑰。必須與使用者共用、以及物件存放區的FQDN和儲存區名稱。S3 使用者的金鑰可以與一起顯示 `vserver object-store-server user show` 命令。
 
 您可以在儲存區原則或物件伺服器原則中、將特定的存取權限授予S3使用者。
 
@@ -33,7 +33,8 @@ S3使用者可以存取SVM中的任何儲存區、但不能存取多個SVM。
 ====
 .CLI
 --
-. 建立S3使用者：「vserver object-store-server使用者create -vserver _Svm_name_-user_name_[-comment _text_]」
+. 建立S3使用者：
+`vserver object-store-server user create -vserver _svm_name_ -user _user_name_ [-comment _text_]`
 . 請務必儲存存取金鑰和秘密金鑰、以便從S3用戶端存取。
 
 

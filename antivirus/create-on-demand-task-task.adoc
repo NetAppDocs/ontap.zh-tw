@@ -21,10 +21,10 @@ summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描�
 .步驟
 . 建立隨需工作：
 +
-「vserver vscan on需求工作create -vserver data_SVM -task-name task_name -scan路徑_of_fils_to _scan -report-directoryreport_directory_path -report-expire-time_for_report -schedule cron副檔名-max-file-size max _size_for_fils_to _scan -the-ext-paths的文件不包括文件的副檔名
+`vserver vscan on-demand-task create -vserver data_SVM -task-name task_name -scan-paths paths_of_files_to_scan -report-directory report_directory_path -report-expiry-time expiration_time_for_report -schedule cron_schedule -max-file-size max_size_of_files_to_scan -paths-to-exclude paths_of_files_to_exclude -file-ext-to-exclude extensions_of_files_to_exclude -file-ext-to-include extensions_of_files_to_include -scan-files-with-no-ext true|false -directory-recursion true|false`
 
 +
-** 「-file-ext-to-exclude」設定會覆寫「-file-ext-to-including」設定。
+** 。 `-file-ext-to-exclude` 設定會覆寫 `-file-ext-to-include` 設定：
 ** 設定 `-scan-files-with-no-ext` 至 true 可掃描不含副檔名的檔案。
 
 
@@ -42,7 +42,7 @@ cluster1::> vserver vscan on-demand-task create -vserver vs1 -task-name Task1 -s
 ----
 +
 
-NOTE: 您可以使用「jobshow」命令來檢視工作狀態。您可以使用「工作暫停」和「工作恢復」命令來暫停和重新啟動工作、或使用「工作停止」命令來結束工作。
+NOTE: 您可以使用 `job show` 檢視工作狀態的命令。您可以使用 `job pause` 和 `job resume` 暫停及重新啟動工作的命令、或 `job stop` 命令以結束工作。
 
 . 確認已建立隨選工作：
 +
@@ -52,7 +52,7 @@ NOTE: 您可以使用「jobshow」命令來檢視工作狀態。您可以使用�
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會顯示「task1」工作的詳細資料：
+下列命令會顯示的詳細資料 `Task1` 工作：
 
 +
 [listing]

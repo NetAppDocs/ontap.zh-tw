@@ -16,13 +16,13 @@ summary: 您可以在與資料網路共用的連接埠上設定叢集間的LIF�
 .步驟
 . 列出叢集中的連接埠：
 +
-「網路連接埠展示」
+`network port show`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示「cluster01」中的網路連接埠：
+下列範例顯示中的網路連接埠 `cluster01`：
 
 +
 [listing]
@@ -52,21 +52,21 @@ cluster01-02
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面create -vserver _system_Svm_-lif_lif_name_-service-policy default-intercluster -home-node_-home-port port -address _port_ip_-netask_km
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port port -address _port_IP_ -netmask _netmask_`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面create -vserver _system_Svm_-lif_lif_name_-role inter-cluster -home-node_node_-home-port _port_-address_port_ip_-netask_netask_」
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 |===
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例建立叢集間的lifs「cluster01_icl01」和「cluster01_icl02」：
+以下範例建立叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02`：
 
 +
 [listing]
@@ -89,14 +89,14 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面show -service-policy default-intercluster」
+`network interface show -service-policy default-intercluster`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面show -role intercluster」
+`network interface show -role intercluster`
 
 |===
 +
@@ -124,21 +124,21 @@ cluster01
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面show–service-policy default-intercluster -faulty」
+`network interface show –service-policy default-intercluster -failover`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面show -role intercluster -容 錯移轉」
+`network interface show -role intercluster -failover`
 
 |===
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示、在「e0c」連接埠上的叢集間lifs「cluster01_icl01」和「cluster01_icl02」將會容錯移轉至「e0d」連接埠。
+以下範例顯示叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在上 `e0c` 連接埠將容錯移轉至 `e0d` 連接埠。
 
 +
 [listing]

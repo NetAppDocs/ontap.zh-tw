@@ -14,10 +14,10 @@ summary: 您可以顯示BranchCache統計資料、以識別快取效能的表現
 您可以顯示BranchCache統計資料、以識別快取效能的表現、判斷您的組態是否提供快取內容給用戶端、並判斷是否刪除雜湊檔案、以留出空間來儲存較新的雜湊資料。
 
 .關於這項工作
-「hashd」統計物件包含提供有關BranchCache雜湊統計資訊的計數器。「CIFS」統計物件包含提供有關BranchCache相關活動統計資訊的計數器。您可以在進階權限層級收集及顯示這些物件的相關資訊。
+。 `hashd` 統計資料物件包含提供有關 BranchCache 雜湊統計資訊的計數器。。 `cifs` 統計資料物件包含提供與 BranchCache 相關活動之統計資訊的計數器。您可以在進階權限層級收集及顯示這些物件的相關資訊。
 
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 將權限層級設為進階： `set -privilege advanced`
 +
 [listing]
 ----
@@ -26,7 +26,7 @@ cluster1::> set -privilege advanced
 Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
 Do you want to continue? {y|n}: y
 ----
-. 使用「統計資料目錄計數器show」命令來顯示與BranchCache相關的計數器。
+. 使用顯示與 BranchCache 相關的計數器 `statistics catalog counter show` 命令。
 +
 如需統計資料計數器的詳細資訊、請參閱此命令的手冊頁。
 
@@ -84,7 +84,7 @@ Object: cifs
                                 content was not available on the server.
    ....Output truncated....
 ----
-. 使用「統計資料開始」和「統計資料停止」命令來收集與BranchCache相關的統計資料。
+. 使用收集與 BranchCache 相關的統計資料 `statistics start` 和 `statistics stop` 命令。
 +
 [listing]
 ----
@@ -94,7 +94,7 @@ Statistics collection is being started for Sample-id: 11
 cluster1::*> statistics stop -sample-id 11
 Statistics collection is being stopped for Sample-id: 11
 ----
-. 使用「統計資料顯示」命令顯示所收集的BranchCache統計資料。
+. 使用顯示收集的 BranchCache 統計資料 `statistics show` 命令。
 +
 [listing]
 ----
@@ -128,7 +128,7 @@ Cluster: cluster1
     branchcache_missing_hash_bytes                                  0
     branchcache_missing_hash_bytes                                  0
 ----
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理權限層級： `set -privilege admin`
 +
 [listing]
 ----

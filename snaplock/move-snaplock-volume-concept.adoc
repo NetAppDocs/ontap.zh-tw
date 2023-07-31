@@ -30,10 +30,10 @@ summary: 從ONTAP 功能不全的9.8開始、您可以將SnapLock 一個功能�
 .步驟
 . 建立SnapLock 具備管理員角色的SVM系統管理員帳戶：
 +
-hy*安全性登入可建立-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _imization_method_-role _role_-comment _comment _*
+`*security login create -vserver _SVM_name_ -user-or-group-name _user_or_group_name_ -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_*`
 
 +
-下列命令可讓SVM系統管理員帳戶「napLockAdmin」使用預先定義的「SnapLock Sfor」角色、使用密碼存取管理SVM「cluster1」：
+下列命令可啟用 SVM 管理員帳戶 `SnapLockAdmin` 使用預先定義的 `snaplock` 存取管理 SVM 的角色 `cluster1` 使用密碼：
 
 +
 [listing]
@@ -46,7 +46,7 @@ cluster1::> security login create -vserver cluster1 -user-or-group-name SnapLock
 
 == 移動SnapLock 一個流通量的資料
 
-您可以使用「volume move」命令、將SnapLock 一個現象區移到目的地Aggregate。
+您可以使用 `volume move` 將 SnapLock Volume 移至目的地 Aggregate 的命令。
 
 .您需要的產品
 * 您必須先建立受SnapLock保護的稽核記錄、才能執行SnapLock 循環Volume移動。
@@ -60,14 +60,14 @@ link:create-audit-log-task.html["建立稽核記錄"]。
 .步驟
 . 使用安全連線、登入ONTAP 到「叢集管理LIF」：
 +
-hes* ssh SnapLock用戶@cluster管理_ip*
+`*ssh snaplock_user@cluster_mgmt_ip*`
 
 . 移動SnapLock 一個流通量：
 +
-'磁碟區移轉開始- vserver _svm_name_-volume _SnapLock Volume名稱_-destination-Aggregate _dgregate名稱_*
+`*volume move start -vserver _SVM_name_ -volume _SnapLock_volume_name_ -destination-aggregate _destination_aggregate_name_*`
 
 . 檢查Volume Move作業的狀態：
 +
-「* Volume Move show -volume _SnapLock Volume name_-vserver _Svm_name_-Fields volume、PHASE、vserver*」
+`*volume move show -volume _SnapLock_volume_name_ -vserver _SVM_name_ -fields volume,phase,vserver*`
 
 

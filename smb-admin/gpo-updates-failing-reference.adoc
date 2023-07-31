@@ -11,20 +11,20 @@ summary: 在某些情況下、來自Windows 2012網域控制器的群組原則�
 
 
 [role="lead"]
-在某些情況下、Windows 2012網域控制器的群組原則物件（GPO）更新可能會失敗、因此在輸出「vserver CIFS群組原則show defined」命令的「Central Access Policy Settings」（中央存取原則設定）區段中、看不到任何內容。如果發生此問題、您應該知道如何修正。
+在某些情況下、來自 Windows 2012 網域控制站的群組原則物件（ GPO ）更新可能會失敗、導致在中看不到任何內容 `Central Access Policy Settings` 的輸出部分 `vserver cifs group-policy show-defined` 命令。如果發生此問題、您應該知道如何修正。
 
 |===
 | 根本原因 | 補救方法 
 
 
  a| 
-當嘗試連線至Windows 2012網域控制器以執行GPO更新時ONTAP 、連線可能會失敗、並顯示錯誤「錯誤：0xc00000bd（NT STATUS_REATON_NAME）」。
+當 ONTAP 嘗試連線至 Windows 2012 網域控制器以執行 GPO 更新時、連線可能會失敗並出現錯誤 `error 0xc00000bd (NT STATUS_DUPLICATE_NAME)`。
 
 當用於建立連線的伺服器名稱與CIFS伺服器的NetBios名稱不同時、就會發生此錯誤。這種情況可能有多種原因、包括使用別名。此外ONTAP 、連接至網域控制器時所用的NetBios名稱也會使名稱長度等於15個字元。這可能會使CIFS伺服器名稱和NetBios名稱有所不同。
  a| 
-. 在Windows伺服器上新增下列登錄機碼、並將值設為「1」、以停用NetBios名稱檢查：
+. 在 Windows 伺服器上新增下列登錄機碼，並將值設為，以停用 NetBIOS 名稱檢查 `1`：
 +
-「HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters\DisableStrictNameChecking」
+`"HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters\DisableStrictNameChecking"`
 
 +
 若要深入瞭解此登錄機碼、請聯絡Microsoft支援部門。

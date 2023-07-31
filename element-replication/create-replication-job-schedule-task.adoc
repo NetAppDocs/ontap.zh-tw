@@ -13,7 +13,7 @@ summary: 您可以使用工作排程cron create命令來建立複寫工作排程
 [role="lead"]
 無論您是要將資料從元素複製到ONTAP 靜態或ONTAP 從靜態複製到元素、都必須設定工作排程、指定原則、以及建立及初始化關係。您可以使用預設或自訂原則。
 
-您可以使用「jobschedule cron create」命令來建立複寫工作排程。工作排程會決定SnapMirror何時自動更新排程指派的資料保護關係。
+您可以使用 `job schedule cron create` 建立複寫工作排程的命令。工作排程會決定SnapMirror何時自動更新排程指派的資料保護關係。
 
 .關於這項工作
 您可以在建立資料保護關係時指派工作排程。如果您未指派工作排程、則必須手動更新關係。
@@ -21,19 +21,19 @@ summary: 您可以使用工作排程cron create命令來建立複寫工作排程
 .步驟
 . 建立工作排程：
 +
-作業排程cron create -name _job_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
 +
 從功能性的9.10.1開始ONTAP 、您可以在工作排程中加入Vserver：
 
 +
-作業排程cron create -name _job_name_-vserver _vserver_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]

@@ -13,7 +13,7 @@ summary: 此工作說明S3稽核所使用的參數。
 [role="lead"]
 您必須為S3稽核組態指定多個參數、或接受預設值。特別是、您應該考慮哪些記錄旋轉參數有助於確保有足夠的可用空間。
 
-如需語法詳細資料、請參閱*「vserver object-store-server稽核create」*手冊頁。
+請參閱 *`vserver object-store-server audit create`* 語法詳細資料請參閱手冊頁。
 
 
 
@@ -35,7 +35,7 @@ _SVM名稱_
 
 SVM必須已經存在、且已啟用S3。
  a| 
--verserver _Svm_name_'
+`-verserver _svm_name_`
  a| 
 是的
 
@@ -50,7 +50,7 @@ _記錄目的地路徑_
 
 如果路徑無效、稽核組態命令就會失敗。
  a| 
-destination_text_`
+`-destination _text_`
  a| 
 是的
 
@@ -61,13 +61,15 @@ destination_text_`
 
 您可以稽核下列事件類別：
 
-* Data GetObject、PuttObject和刪除物件事件
-* 管理PuttBucket和刪除Bucket活動
+* 資料
+GetObject 、 PutObject 和 DeleteObject 事件
+* 管理
+PutBucket 和 DeleteBucket 活動
 
 
 預設為僅稽核資料事件。
  a| 
-「事件｛data｛vbar｝management｝、...」
+`-events {data{vbar}management}, ...`
  a| 
 否
 
@@ -86,9 +88,9 @@ _記錄檔案旋轉限制_
 
 決定要保留多少稽核記錄檔、然後再將最舊的記錄檔轉出。例如、如果您輸入值5、則會保留最後五個記錄檔。
 
-值0表示保留所有記錄檔。預設值為0。
+值0表示保留所有記錄檔。預設值為 0 。
  a| 
-「-旋轉限制_integer_」
+`-rotate-limit _integer_`
  a| 
 否
 
@@ -99,9 +101,9 @@ _記錄檔案持續時間限制_
 
 決定在刪除記錄檔之前可以保留多久。例如、如果您輸入5d0h0m的值、超過5天的記錄就會刪除。
 
-值0表示保留所有記錄檔。預設值為0。
+值0表示保留所有記錄檔。預設值為 0 。
  a| 
-「-」保留期間_integer_time_
+`-retention duration _integer_time_`
  a| 
 否
 
@@ -118,11 +120,11 @@ _記錄檔案持續時間限制_
 
 如果您要使用預設的記錄檔旋轉方法和預設的記錄檔大小、則不需要設定任何特定的記錄檔旋轉參數。預設記錄大小為100 MB。
 
-如果您不想使用預設的記錄大小、可以設定「-rote-size」參數來指定自訂的記錄大小。
+如果您不想使用預設記錄大小、可以設定 `-rotate-size` 指定自訂記錄大小的參數。
 
-如果您只想根據記錄大小重設旋轉、請使用下列命令取消設定「-rote-schedule-minute」參數：
+如果您想要僅根據記錄大小重設旋轉、請使用下列命令取消設定 `-rotate-schedule-minute` 參數：
 
-「vserver稽核修改-vserver _svm_name_-destination /-rote-schedule-minute」
+`vserver audit modify -vserver _svm_name_ -destination / -rotate-schedule-minute -`
 
 
 
@@ -130,27 +132,28 @@ _記錄檔案持續時間限制_
 
 如果您選擇根據排程來旋轉稽核記錄、您可以使用任何組合的時間型旋轉參數來排程記錄輪調。
 
-* 如果您使用時間型旋轉、則必須使用「-rote-schedule-minute-minute」參數。
+* 如果您使用時間型旋轉、則會使用 `-rotate-schedule-minute` 參數為必填。
 * 所有其他的時間型旋轉參數都是選用的。
 +
-** 「旋轉排程月」
-** 週日：週五、週五、週五、週六、週五、週六、週五
-** 「-旋轉-排程-日」
-** 「週轉-排程-小時」
+** `-rotate-schedule-month`
+** `-rotate-schedule-dayofweek`
+** `-rotate-schedule-day`
+** `-rotate-schedule-hour`
 
 
-* 旋轉排程是使用所有與時間相關的值來計算。例如、如果您只指定「-rote-schedule-minutes'」參數、稽核記錄檔就會根據一週中所有天、一年中所有月份的所有小時所指定的分鐘數來旋轉。
-* 如果您只指定一或兩個時間型旋轉參數（例如、「-rote-schedule-month」和「-rote-schedule-minutes... minutes...」）、則記錄檔會根據您在一週的所有日子、所有時間、但僅在指定月份內所指定的分鐘值來旋轉。
+* 旋轉排程是使用所有與時間相關的值來計算。
+例如、如果您只指定 `-rotate-schedule-minute` 參數時、稽核記錄檔會根據一週中所有天所指定的分鐘數、在一年中所有月份的所有小時內進行旋轉。
+* 如果只指定一或兩個時間型旋轉參數（例如、 `-rotate-schedule-month` 和 `-rotate-schedule-minutes`）、記錄檔會根據您在一週的所有天、所有時間、但僅在指定的月份內所指定的分鐘值來旋轉。
 +
 例如、您可以指定稽核日誌在一月、三月和八月的所有週一、週三和週六上午10：30進行輪調
 
-* 如果您同時指定「週日」和「週日」的值、就會視為獨立的。
+* 如果您同時指定兩者的值 `-rotate-schedule-dayofweek` 和 `-rotate-schedule-day`的問題。
 +
-例如、如果您將「週五週五」指定為「週五」、「週五週日」指定為「週日」、「週日」則稽核記錄會在每週五和指定月份的第13天、而不只是每週五的第13天。
+例如、如果您指定 `-rotate-schedule-dayofweek` 星期五和 `-rotate-schedule-day` 截至 13 日、稽核記錄將會在每週五和指定月份的第 13 天、而不只是在每週五的第 13 天輪調。
 
-* 如果您只想根據排程重設旋轉、請使用下列命令來取消「-rote-size參數」的設定：
+* 如果您想要僅根據排程重設旋轉、請使用下列命令取消設定 `-rotate-size parameter`：
 +
-「vserver稽核修改-vserver _svm_name_-destination /-rote-size -」
+`vserver audit modify -vserver _svm_name_ -destination / -rotate-size -`
 
 
 
@@ -158,4 +161,4 @@ _記錄檔案持續時間限制_
 
 === 根據記錄大小和排程來旋轉記錄
 
-您可以選擇根據記錄大小和排程來旋轉記錄檔、方法是在任何組合中設定-rote-size參數和時間型旋轉參數。例如：如果將「-rote-size」設為10 MB、而「-rote-schedule-minute」設為15、則記錄檔會在記錄檔大小達到10 MB或每小時15分鐘（以先發生的事件為準）時旋轉。
+您可以選擇根據記錄大小和排程來旋轉記錄檔、方法是在任何組合中設定-rote-size參數和時間型旋轉參數。例如： IF `-rotate-size` 設為 10 MB 、且 `-rotate-schedule-minute` 設為 15 、當記錄檔大小達到 10 MB 或每小時 15 分鐘（以先發生的事件為準）時、記錄檔會旋轉。

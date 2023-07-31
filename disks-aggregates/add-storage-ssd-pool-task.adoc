@@ -2,7 +2,7 @@
 permalink: disks-aggregates/add-storage-ssd-pool-task.html 
 sidebar: sidebar 
 keywords: add, ssd, storage, pool 
-summary: 當您將固態硬碟（SSD）新增至SSD儲存池時、就會增加儲存池的實體與可用大小、以及配置單位大小。較大的配置單元大小也會影響已分配給Flash Pool本機層（Aggregate）的配置單元。 
+summary: 當您將固態硬碟（SSD）新增至SSD儲存池時、就會增加儲存池的實體與可用大小、以及配置單位大小。較大的配置單元大小也會影響已分配給Flash Pool本機層（Aggregate）的配置單元。  
 ---
 = 將SSD新增至SSD儲存資源池
 :allow-uri-read: 
@@ -40,15 +40,15 @@ summary: 當您將固態硬碟（SSD）新增至SSD儲存池時、就會增加�
 .步驟
 . *選用：*檢視儲存資源池的目前配置單位大小和可用儲存空間：
 +
-「torage Pool show -instance _sp_name_」
+`storage pool show -instance _sp_name_`
 
 . 尋找可用的SSD：
 +
-「torage disk show -container型備用SSD」
+`storage disk show -container-type spare -type SSD`
 
 . 將SSD新增至儲存資源池：
 +
-「儲存池新增-storage資源池sp_name -disks-list _disk1、disk2…_」
+`storage pool add -storage-pool sp_name -disk-list _disk1,disk2…_`
 
 +
 系統會顯示哪些Flash Pool Aggregate的大小會隨著這項作業和作業量而增加、並提示您確認作業。

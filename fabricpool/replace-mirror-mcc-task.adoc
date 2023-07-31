@@ -14,19 +14,19 @@ summary: 如果FabricPool 某個物件儲存在一個鏡射中、在MetroCluster
 如果FabricPool 某個物件儲存在一個鏡射中、在MetroCluster 一個物件組態中毀損或永久無法使用、您可以讓物件儲存鏡射（如果鏡射尚未儲存）、從FabricPool 鏡射中移除受損的物件儲存區。 然後將新的物件儲存鏡射新增FabricPool 到這個物件庫。
 
 .步驟
-. 如果受損的物件存放區尚未是鏡射、請使用「儲存區Aggregate object-store modify」命令、讓物件儲存鏡射。
+. 如果損壞的物件存放區尚未成為鏡射、請將物件存放在鏡射中 `storage aggregate object-store modify` 命令。
 +
 [listing]
 ----
 storage aggregate object-store modify -aggregate -aggregate fp_aggr1_A01 -name mcc1_ostore1 -mirror-type mirror
 ----
-. 使用「shorage aggregate object-store unmirror」命令、將物件存放區鏡射從FabricPool 實體中移除。
+. 使用從 FabricPool 移除物件存放區鏡射 `storage aggregate object-store unmirror` 命令。
 +
 [listing]
 ----
 storage aggregate object-store unmirror -aggregate <aggregate name> -name mcc1_ostore1
 ----
-. 您可以在移除鏡射資料存放區之後、使用「叢集集合體物件存放區修改」搭配「強制分層的MetroCluster true」選項、強制在主要資料存放區上恢復分層。
+. 使用移除鏡射資料存放區之後、您可以強制在主要資料存放區上恢復分層 `storage aggregate object-store modify` 使用 `-force-tiering-on-metrocluster true` 選項。
 +
 沒有鏡射會干擾MetroCluster 到整個流程組態的複寫需求。
 
@@ -35,19 +35,19 @@ storage aggregate object-store unmirror -aggregate <aggregate name> -name mcc1_o
 ----
 storage aggregate object-store modify -aggregate <aggregate name> -name mcc1_ostore1 -force-tiering-on-metrocluster true
 ----
-. 使用「儲存Aggregate object-store config create」命令建立替換物件存放區。
+. 使用建立替換物件存放區 `storage aggregate object-store config create` 命令。
 +
 [listing]
 ----
 storage aggregate object-store config create -object-store-name mcc1_ostore3 -cluster clusterA -provider-type SGWS -server <SGWS-server-1> -container-name <SGWS-bucket-1> -access-key <key> -secret-password <password> -encrypt <true|false> -provider <provider-type> -is-ssl-enabled <true|false> ipspace <IPSpace>
 ----
-. 使用「shorage Aggregate object-store mirror」命令、將物件存放區鏡射新增FabricPool 至鏡射。
+. 使用將物件存放區鏡射新增至 FabricPool 鏡射 `storage aggregate object-store mirror` 命令。
 +
 [listing]
 ----
 storage aggregate object-store mirror -aggregate aggr1 -name mcc1_ostore3-mc
 ----
-. 使用「儲存Aggregate object-store show」命令顯示物件存放區資訊。
+. 使用顯示物件儲存區資訊 `storage aggregate object-store show` 命令。
 +
 [listing]
 ----
@@ -61,7 +61,7 @@ aggregate      object-store-name mirror-type     is-mirror-degraded
 aggr1          mcc1_ostore1-mc    primary           -
                mcc1_ostore3-mc    mirror          true
 ----
-. 使用「shorage Aggregate object-store show-res出 同步狀態」命令監控鏡射重新同步狀態。
+. 使用監控鏡像重新同步狀態 `storage aggregate object-store show-resync-status` 命令。
 +
 [listing]
 ----

@@ -33,7 +33,7 @@ summary: 自動健全狀況監控和一組健全狀況監視器、可協助您�
 * 在容錯移轉事件期間、降級的連接埠不會被視為容錯移轉目標。如果沒有可用的正常連接埠、則降級的連接埠會根據正常的容錯移轉原則來主機生命期。
 * 您無法建立、移轉LIF或將其還原為降級連接埠。
 +
-您可以將網路連接埠的「ignore、health、Status」設定修改為「true」。然後、您可以在健全的連接埠上裝載LIF。
+您可以修改 `ignore-health-status` 將網路連接埠設定為 `true`。然後、您可以在健全的連接埠上裝載LIF。
 
 
 
@@ -69,7 +69,7 @@ network options port-health-monitor show
 
 
 
-. 使用「network options port-health監控modify」命令、視需要啟用或停用IPspace的任何健全狀況監視器。
+. 使用啟用或停用 IPspace 的任何健全狀況監視器 `network options port-health-monitor modify` 命令。
 . 檢視連接埠的詳細健全狀況：
 +
 ....
@@ -77,10 +77,10 @@ network port show -health
 ....
 
 
-命令輸出會顯示連接埠的健全狀況狀態、「Ignore health Status」（忽略健全狀況狀態）設定、以及連接埠標示為降級的原因清單。
+命令輸出會顯示連接埠的健全狀況狀態、 `ignore health status` 設定、以及連接埠標示為降級的原因清單。
 
-連接埠健全狀況可以是「健全」或「降級」。
+連接埠健全狀況狀態可以是 `healthy` 或 `degraded`。
 
-如果「忽略健全狀況」設定為「真」、表示管理員已將連接埠健全狀況從「降級」改為「健全」。
+如果是 `ignore health status` 設定為 `true`、表示連接埠健全狀況狀態已從修改 `degraded` 至 `healthy` 由管理員提供。
 
-如果「ignore healing Status」（忽略健全狀況狀態）設定為「假」、則連接埠健全狀況會由系統自動決定。
+如果是 `ignore health status` 設定為 `false`，連接埠健全狀況狀態會由系統自動決定。

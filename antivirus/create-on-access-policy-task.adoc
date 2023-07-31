@@ -15,7 +15,7 @@ summary: 存取時原則定義存取時掃描的範圍。您可以為個別SVM�
 
 .關於這項工作
 * 您可以指定要掃描的檔案大小上限、掃描中要包含的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。
-* 您可以將「強制掃描」選項設為「關」、以指定在沒有VScan伺服器可供掃毒時、允許存取檔案。
+* 您可以設定 `scan-mandatory` 選項為「關閉」、可指定在沒有 VScan 伺服器可供病毒掃描時、允許檔案存取。
 * 根據預設、 ONTAP 會建立名為「 Default_CIFS 」的存取上原則、並為叢集中的所有 SVM 啟用該原則。
 * 符合掃描排除條件的任何檔案、根據 `paths-to-exclude`、 `file-ext-to-exclude`或 `max-file-size` 即使是、也不會考慮掃描參數 `scan-mandatory` 選項設為「開啟」。（請勾選此項 link:vscan-server-connection-concept.html["疑難排解"] 有關連線問題的章節 `scan-mandatory` 選項。）
 * 依預設、只會掃描讀寫磁碟區。您可以指定篩選條件、以允許掃描唯讀磁碟區、或限制掃描以執行存取開啟的檔案。
@@ -39,11 +39,11 @@ summary: 存取時原則定義存取時掃描的範圍。您可以為個別SVM�
 .步驟
 . 建立存取時原則：
 +
-「vserver vscan on-access-policy create -vserver _data_svm|叢集管理_svm_-policy_name _policy_name_-免 於傳輸協定CIFS -max-file-size _main_file_of_to_scan _–篩選器[scan -ro-volume、][scan執行-access]-file-ext-th_off_ext_files的掃描副檔名不包括_ext_ext_ext_ext_ext_files_
+`vserver vscan on-access-policy create -vserver _data_SVM|cluster_admin_SVM_ -policy-name _policy_name_ -protocol CIFS -max-file-size _max_size_of_files_to_scan_ –filters [scan-ro-volume,][scan-execute-access] -file-ext-to-include _extensions_of_files_to_include_ -file-ext-to-exclude _extensions_of_files_to_exclude_ -scan-files-with-no-ext true|false -paths-to-exclude _paths_of_files_to_exclude_ -scan-mandatory on|off`
 
 +
 ** 為個別SVM定義的原則指定資料SVM、為叢集中所有SVM定義的原則指定叢集管理SVM。
-** 「-file-ext-to-exclude」設定會覆寫「-file-ext-to-including」設定。
+** 。 `-file-ext-to-exclude` 設定會覆寫 `-file-ext-to-include` 設定：
 ** 設定 `-scan-files-with-no-ext` 至 true 可掃描不含副檔名的檔案。
 下列命令會建立名為的存取上原則 `Policy1` 在上 `vs1` SVM ：
 
@@ -53,12 +53,12 @@ summary: 存取時原則定義存取時掃描的範圍。您可以為個別SVM�
 ----
 cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
 ----
-. 請確認已建立存取原則：「vserver vscan on存取原則show -instance _data_Svm|叢集管理_svm_-police-name policy_name'
+. 確認已建立存取原則： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name policy_name`
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會顯示「Policy1」原則的詳細資料：
+下列命令會顯示的詳細資料 `Policy1` 原則：
 
 +
 [listing]

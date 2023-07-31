@@ -11,7 +11,7 @@ summary: 您必須先將SVM目的地磁碟區設為可寫入、才能將資料�
 
 
 [role="lead"]
-您必須先將SVM目的地磁碟區設為可寫入、才能將資料提供給用戶端。此程序與磁碟區複寫程序大致相同、但有一項例外。如果您在建立SVM複寫關係時設定了「-idente-preserve true」、則必須在啟動目的地SVM之前停止來源SVM。
+您必須先將SVM目的地磁碟區設為可寫入、才能將資料提供給用戶端。此程序與磁碟區複寫程序大致相同、但有一項例外。如果您已設定 `-identity-preserve true` 建立 SVM 複寫關係時、必須先停止來源 SVM 、然後再啟動目的地 SVM 。
 
 .關於這項工作
 如需完整的命令語法、請參閱手冊頁。
@@ -24,16 +24,16 @@ summary: 您必須先將SVM目的地磁碟區設為可寫入、才能將資料�
 .步驟
 . 從目的地SVM或目的地叢集停止排程傳輸至目的地：
 +
-「napmirror quiesce -source-path _svm_：-destination-path _svm_：」
+`snapmirror quiesce -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例會停止來源SVM「svm1」與目的地SVM「svm_backup」之間的排程傳輸：
+下列範例會停止來源 SVM 之間的排程傳輸 `svm1` 以及目的地 SVM `svm_backup`：
 
 +
 [listing]
@@ -42,16 +42,16 @@ cluster_dst::> snapmirror quiesce -source-path svm1: -destination-path svm_backu
 ----
 . 從目的地SVM或目的地叢集停止持續傳輸至目的地：
 +
-「napmirror abort-source-path _svm_：-destination-path _svm_：」
+`snapmirror abort -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例會停止來源SVM「svm1」與目的地SVM「svm_backup」之間的持續傳輸：
+下列範例會停止來源 SVM 之間的持續傳輸 `svm1` 以及目的地 SVM `svm_backup`：
 
 +
 [listing]
@@ -60,28 +60,28 @@ cluster_dst::> snapmirror abort -source-path svm1: -destination-path svm_backup:
 ----
 . 從目的地SVM或目的地叢集、中斷複寫關係：
 +
-「napmirror中斷-source-path _svm_：-destination-path _svm_：」
+`snapmirror break -source-path _SVM_: -destination-path _SVM_:`
 
 +
 [NOTE]
 ====
-您必須在"-source-path"和"-destination-path"選項的SVM名稱後面輸入一個分號（：）。請參閱以下範例。
+您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：請參閱以下範例。
 
 ====
 +
-以下範例打破了來源SVM「svm1」與目的地SVM「svm_backup」之間的關係：
+以下範例打破來源 SVM 之間的關係 `svm1` 以及目的地 SVM `svm_backup`：
 
 +
 [listing]
 ----
 cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
 ----
-. 如果您在建立SVM複寫關係時設定了「-idente-preserve true」、請停止來源SVM：
+. 如果您已設定 `-identity-preserve true` 建立 SVM 複寫關係時、請停止來源 SVM ：
 +
-「Vserver stop -vserver _svm_」
+`vserver stop -vserver _SVM_`
 
 +
-以下範例會停止來源SVM「svm1」：
+下列範例會停止來源 SVM `svm1`：
 
 +
 [listing]
@@ -90,10 +90,10 @@ cluster_src::> vserver stop svm1
 ----
 . 啟動目的地SVM：
 +
-「vserver start -vserver _svm_」
+`vserver start -vserver _SVM_`
 
 +
-以下範例會啟動目的地SVM「shvm_backup」：
+下列範例會啟動目的地 SVM `svm_backup`：
 
 +
 [listing]

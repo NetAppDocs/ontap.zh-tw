@@ -14,7 +14,7 @@ summary: 您可以判斷SMB用戶端是否使用NetBios別名進行連線、如�
 您可以判斷SMB用戶端是否使用NetBios別名進行連線、如果是、則會使用哪個NetBios別名進行連線。這在疑難排解連線問題時很有用。
 
 .關於這項工作
-您必須使用「-instance」參數來顯示與SMB連線相關聯的NetBios別名（如果有）。如果使用CIFS伺服器名稱或IP位址進行SMB連線、則「NetBios Name」（NetBios名稱）欄位的輸出為「-」（連字號）。
+您必須使用 `-instance` 顯示與 SMB 連線相關聯的 NetBIOS 別名（如果有）的參數。如果使用 CIFS 伺服器名稱或 IP 位址建立 SMB 連線、則會輸出 `NetBIOS Name` 欄位為 `-` （連字號）。
 
 .步驟
 . 執行所需的動作：
@@ -24,23 +24,23 @@ summary: 您可以判斷SMB用戶端是否使用NetBios別名進行連線、如�
 
 
  a| 
-SMB連線
+SMB 連線
  a| 
-「vserver CIFS工作階段顯示-instance」
+`vserver cifs session show -instance`
 
 
 
  a| 
 使用指定的NetBios別名的連線：
  a| 
-「Vserver CIFS工作階段顯示-instance -netbios-name _netbios_name_」
+`vserver cifs session show -instance -netbios-name _netbios_name_`
 
 |===
 +
 下列範例顯示使用工作階段ID 1建立SMB連線所用的NetBios別名資訊：
 
 +
-「vserver CIFS工作階段show -session-id 1 -instance」
+`vserver cifs session show -session-id 1 -instance`
 
 +
 [listing]

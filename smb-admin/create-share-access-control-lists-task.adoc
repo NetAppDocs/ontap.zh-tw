@@ -16,7 +16,7 @@ summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限�
 .關於這項工作
 您可以使用本機或網域Windows使用者或群組名稱、或UNIX使用者或群組名稱來設定共用層級ACL。
 
-在建立新的ACL之前、您應該刪除預設的共用ACL「任何人/完全控制」、這會造成安全風險。
+建立新 ACL 之前、您應該先刪除預設的共用 ACL `Everyone / Full Control`，這會帶來安全風險。
 
 在工作群組模式中、本機網域名稱是SMB伺服器名稱。
 
@@ -45,17 +45,17 @@ Windows群組
  a| 
 UNIX使用者
  a| 
-「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group類型_unix-user_-user-or group _unix_user_name_-permission access_Right」
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type _unix-user_ -user-or-group _UNIX_user_name_ -permission access_right`
 
 
 
  a| 
 UNIX群組
  a| 
-「Vserver CIFS共用存取控制create -vserver _vserver_name_-share_share_name_-user-group類型_unix-group _-user-or group _unix_group name_-permission access_Right」
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type _unix-group_ -user-or-group _UNIX_group_name_ -permission access_right`
 
 |===
-. 使用「vserver CIFS共用存取控制show」命令、確認套用至共用區的ACL正確無誤。
+. 使用驗證套用至共用的 ACL 是否正確 `vserver cifs share access-control show` 命令。
 
 
 .範例

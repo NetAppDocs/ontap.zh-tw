@@ -17,7 +17,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
 
 == 建立或修改登入帳戶
 
-當您啟用登入帳戶以存取儲存虛擬機器（SVM）時、您可以使用「安全登入create」命令來提供這些值。當您修改帳戶存取SVM的方式時、可以使用「安全登入修改」命令來提供相同的值。
+您可以使用提供這些值 `security login create` 命令：當您啟用登入帳戶以存取儲存虛擬機器（ SVM ）時。您可以使用提供相同的值 `security login modify` 命令：修改帳戶存取 SVM 的方式。
 
 [cols="3*"]
 |===
@@ -27,7 +27,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
 
 
  a| 
-vserver
+`-vserver`
  a| 
 帳戶存取的SVM名稱。預設值為叢集的管理SVM名稱。
  a| 
@@ -35,7 +35,7 @@ vserver
 
 
  a| 
-「使用者或群組名稱」
+`-user-or-group-name`
  a| 
 帳戶的使用者名稱或群組名稱。指定群組名稱可讓您存取群組中的每個使用者。您可以將使用者名稱或群組名稱與多個應用程式建立關聯。
  a| 
@@ -43,59 +43,59 @@ vserver
 
 
  a| 
-應用程式
+`-application`
  a| 
 用於存取SVM的應用程式：
 
-* 《http》
-* 《龍塔皮》
-* 《NMP》
-* 《Sh》
+* `http`
+* `ontapi`
+* `snmp`
+* `ssh`
 
  a| 
 
 
 
  a| 
-"-authmethod"
+`-authmethod`
  a| 
 用於驗證帳戶的方法：
 
-* SSL憑證驗證的「CERT」
-* Active Directory驗證的「Domain」
-* 用於LDAP或NIS驗證的「nsswitch」
-* 使用者密碼驗證的密碼
-* 公開金鑰驗證的公開金鑰
-* SNMP社群字串的社群
-* SNMP使用者安全模式的USM
-* 安全聲明標記語言（SAML）驗證的「反洗錢」
+* `cert` 用於 SSL 憑證驗證
+* `domain` 用於 Active Directory 驗證
+* `nsswitch` 用於 LDAP 或 NIS 驗證
+* `password` 用於使用者密碼驗證
+* `publickey` 用於公開金鑰驗證
+* `community` 適用於 SNMP 社群字串
+* `usm` 適用於 SNMP 使用者安全模式
+* `saml` 用於安全聲明標記語言（ SAML ）驗證
 
  a| 
 
 
 
  a| 
-「reme-switch-ipaddress」
+`-remote-switch-ipaddress`
  a| 
-遠端交換器的IP位址。遠端交換器可以是由叢集交換器健全狀況監控器（CSHM）監控的叢集交換器、或MetroCluster 是由不健全狀況監控器（MCC-HM）監控的光纖通道（FC）交換器。此選項僅適用於應用程式為「shnMP」、驗證方法為「USM」時。
+遠端交換器的IP位址。遠端交換器可以是由叢集交換器健全狀況監控器（CSHM）監控的叢集交換器、或MetroCluster 是由不健全狀況監控器（MCC-HM）監控的光纖通道（FC）交換器。此選項僅適用於應用程式 `snmp` 驗證方法是 `usm`。
  a| 
 
 
 
  a| 
-「角色」
+`-role`
  a| 
 指派給帳戶的存取控制角色：
 
-* 對於叢集（管理SVM）、預設值為「admin」。
-* 對於資料SVM、預設值為「vsadmin」。
+* 對於叢集（ admin SVM ）、預設值為 `admin`。
+* 對於資料 SVM 、預設值為 `vsadmin`。
 
  a| 
 
 
 
  a| 
-留言
+`-comment`
  a| 
 （選用）帳戶的說明文字。您應該以雙引號（"）括住文字。
  a| 
@@ -103,22 +103,22 @@ vserver
 
 
  a| 
--`-is交換器群組'
+`-is-ns-switch-group`
  a| 
-帳戶是LDAP群組帳戶或NIS群組帳戶（「yes」或「no」）。
+帳戶是 LDAP 群組帳戶還是 NIS 群組帳戶 (`yes` 或 `no`）。
  a| 
 
 
 
  a| 
-第二驗證方法
+`-second-authentication-method`
  a| 
 第二種驗證方法、適用於* ONTAP 《支援*》9.3 *的多因素驗證：
 
-* 如果不使用多因素驗證、則為「無」、預設值
-* 當「authmethod」為密碼或nsswitch時、用於公開金鑰驗證的「publickey」
-* 當「驗證方法」為公開金鑰時、使用者密碼驗證的「密碼」
-* 驗證方法為publickey時、使用者密碼驗證的「nsswitch」
+* `none` 如果不使用多因素驗證、則為預設值
+* `publickey` 用於公開金鑰驗證 `authmethod` 為密碼或 nsswitch
+* `password` 用於使用者密碼驗證 `authmethod` 為公開金鑰
+* `nsswitch` 驗證方法為 publickey 時用於使用者密碼驗證
 +
 [NOTE]
 ====
@@ -133,9 +133,9 @@ vserver
 
 
  a| 
--`-is、LDAP、fastbind
+`-is-ldap-fastbind`
  a| 
-從「支援支援支援」9.11.1開始ONTAP 、設定為「真」時、會啟用LDAP快速連結以進行Nsswitch驗證；預設值為「假」。若要使用LDAP快速連結、必須將「-authent證 方法」值設為「nsswitch」。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["瞭解適用於Nsswitch驗證的LDAP fastbind。"]
+從「支援支援支援」9.11.1開始ONTAP 、設定為「真」時、會啟用LDAP快速連結以進行Nsswitch驗證；預設值為「假」。若要使用 LDAP 快速繫結、請使用 `-authentication-method` 值必須設定為 `nsswitch`。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["瞭解適用於Nsswitch驗證的LDAP fastbind。"]
  a| 
 
 |===
@@ -143,7 +143,7 @@ vserver
 
 == 定義自訂角色
 
-定義自訂角色時、您可以使用「安全登入角色create」命令來提供這些值。
+您可以使用提供這些值 `security login role create` 命令：定義自訂角色。
 
 [cols="3*"]
 |===
@@ -153,7 +153,7 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 （選用）與角色相關聯的SVM名稱。
  a| 
@@ -161,7 +161,7 @@ vserver
 
 
  a| 
-「角色」
+`-role`
  a| 
 角色名稱。
  a| 
@@ -169,28 +169,28 @@ vserver
 
 
  a| 
--`-cmdlirname'
+`-cmddirname`
  a| 
-角色提供存取權的命令或命令目錄。您應該以雙引號（"）括住命令子目錄名稱。例如、「Volume Snapshot」。您必須輸入「預設」以指定所有命令目錄。
+角色提供存取權的命令或命令目錄。您應該以雙引號（"）括住命令子目錄名稱。例如、 `"volume snapshot"`。您必須輸入 `DEFAULT` 指定所有命令目錄。
  a| 
 
 
 
  a| 
-存取
+`-access`
  a| 
 （選用）角色的存取層級。對於命令目錄：
 
-* 「NONE」（自訂角色的預設值）會拒絕存取命令目錄中的命令
-* "REadonly（回寫）"可讓您存取命令目錄及其子目錄中的"show（顯示）"命令
-* 「ALL」可讓您存取命令目錄及其子目錄中的所有命令
+* `none` （自訂角色的預設值）會拒絕存取命令目錄中的命令
+* `readonly` 授予存取權 `show` 命令目錄及其子目錄中的命令
+* `all` 授予對命令目錄及其子目錄中所有命令的存取權
 
 
-對於非內在命令_（不以「create」、「modify」、「delete」或「show」結尾的命令）：
+用於 _nonnonnalin 命令 _ （不以結尾的命令） `create`、 `modify`、 `delete`或 `show`）：
 
-* 「NONE」（自訂角色的預設值）會拒絕存取命令
-* 不適用的是"REadonly（僅限）"
-* 「ALL」允許存取命令
+* `none` （自訂角色的預設值）拒絕存取命令
+* `readonly` 不適用
+* `all` 授予對命令的存取權
 
 
 若要授與或拒絕內部命令的存取權、您必須指定命令目錄。
@@ -199,9 +199,9 @@ vserver
 
 
  a| 
-'查詢'
+`-query`
  a| 
-（選用）用於篩選存取層級的查詢物件、其格式為命令的有效選項或命令目錄中的命令的有效選項。您應該以雙引號（"）括住查詢物件。例如、如果命令目錄為「volume」、查詢物件「-aggr aggr0」將僅啟用「aggr0」Aggregate的存取。
+（選用）用於篩選存取層級的查詢物件、其格式為命令的有效選項或命令目錄中的命令的有效選項。您應該以雙引號（"）括住查詢物件。例如、如果命令目錄為 `volume`，查詢物件 `"-aggr aggr0"` 將啟用的存取 `aggr0` 僅 Aggregate 。
  a| 
 
 |===
@@ -209,7 +209,7 @@ vserver
 
 == 將公開金鑰與使用者帳戶建立關聯
 
-當您將SSH公開金鑰與使用者帳戶建立關聯時、您可以使用「安全登入公開金鑰create」命令來提供這些值。
+您可以使用提供這些值 `security login publickey create` 命令：將 SSH 公開金鑰與使用者帳戶建立關聯。
 
 [cols="3*"]
 |===
@@ -219,7 +219,7 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 （選用）帳戶存取的SVM名稱。
  a| 
@@ -227,15 +227,15 @@ vserver
 
 
  a| 
--`-username'
+`-username`
  a| 
-帳戶的使用者名稱。預設值「admin」是叢集管理員的預設名稱。
+帳戶的使用者名稱。預設值、 `admin`，這是叢集管理員的預設名稱。
  a| 
 
 
 
  a| 
-索引
+`-index`
  a| 
 公開金鑰的索引編號。如果金鑰是為帳戶建立的第一個金鑰、則預設值為0；否則、預設值大於該帳戶現有的最高索引編號。
  a| 
@@ -243,7 +243,7 @@ vserver
 
 
  a| 
-「publickey」
+`-publickey`
  a| 
 OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
  a| 
@@ -251,7 +251,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 
  a| 
-「角色」
+`-role`
  a| 
 指派給帳戶的存取控制角色。
  a| 
@@ -259,7 +259,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 
  a| 
-留言
+`-comment`
  a| 
 （選用）公開金鑰的說明文字。您應該以雙引號（"）括住文字。
  a| 
@@ -284,7 +284,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 == 安裝CA簽署的伺服器數位憑證
 
-當您產生數位憑證簽署要求（CSR）以用於驗證SVM做為SSL伺服器時、可以使用「安全憑證genere-csr」命令來提供這些值。
+您可以使用提供這些值 `security certificate generate-csr` 命令：當您產生數位憑證簽署要求（ CSR ）、以用於將 SVM 驗證為 SSL 伺服器時。
 
 [cols="3*"]
 |===
@@ -294,7 +294,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 
  a| 
-常見名稱
+`-common-name`
  a| 
 憑證的名稱、可以是完整網域名稱（FQDN）或自訂通用名稱。
  a| 
@@ -302,23 +302,23 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 
  a| 
-規模
+`-size`
  a| 
-私密金鑰中的位元數。價值越高、金鑰就越安全。預設值為「2048」。可能的值包括「512」、「1024」、「1536」和「2048」。
- a| 
-
-
-
- a| 
-國家/地區
- a| 
-SVM所在國家/地區、以兩個字母的代碼表示。預設值為「US」。請參閱手冊頁以取得代碼清單。
+私密金鑰中的位元數。價值越高、金鑰就越安全。預設值為 `2048`。可能的值包括 `512`、 `1024`、 `1536`和 `2048`。
  a| 
 
 
 
  a| 
-「州」
+`-country`
+ a| 
+SVM所在國家/地區、以兩個字母的代碼表示。預設值為 `US`。請參閱手冊頁以取得代碼清單。
+ a| 
+
+
+
+ a| 
+`-state`
  a| 
 SVM的州或省。
  a| 
@@ -326,7 +326,7 @@ SVM的州或省。
 
 
  a| 
-「地點」
+`-locality`
  a| 
 SVM的位置。
  a| 
@@ -334,7 +334,7 @@ SVM的位置。
 
 
  a| 
-組織
+`-organization`
  a| 
 SVM的組織。
  a| 
@@ -342,7 +342,7 @@ SVM的組織。
 
 
  a| 
-單位
+`-unit`
  a| 
 SVM組織中的單位。
  a| 
@@ -350,7 +350,7 @@ SVM組織中的單位。
 
 
  a| 
-電子郵件地址
+`-email-addr`
  a| 
 SVM聯絡人管理員的電子郵件地址。
  a| 
@@ -358,9 +358,9 @@ SVM聯絡人管理員的電子郵件地址。
 
 
  a| 
-「雜湊功能」
+`-hash-function`
  a| 
-用於簽署憑證的密碼編譯雜湊功能。預設值為「s S25256」。可能的值包括「HA1」、「S25256」和「MD5」。
+用於簽署憑證的密碼編譯雜湊功能。預設值為 `SHA256`。可能的值包括 `SHA1`、 `SHA256`和 `MD5`。
  a| 
 
 |===
@@ -374,7 +374,7 @@ SVM聯絡人管理員的電子郵件地址。
 
 
  a| 
-vserver
+`-vserver`
  a| 
 要安裝憑證的SVM名稱。
  a| 
@@ -382,14 +382,14 @@ vserver
 
 
  a| 
-類型
+`-type`
  a| 
 憑證類型：
 
-* 伺服器憑證和中繼憑證的伺服器
-* SSL用戶端根CA的公開金鑰憑證為「用戶端- CA」
-* 「伺服器- CA」、適用於SSL伺服器根CA的公開金鑰憑證ONTAP 、而該SSL伺服器是用戶端
-* 「用戶端」、表示自我簽署或CA簽署的數位憑證、以及ONTAP 用作SSL用戶端的私有金鑰
+* `server` 適用於伺服器憑證和中繼憑證
+* `client-ca` 用於 SSL 用戶端根 CA 的公開金鑰憑證
+* `server-ca` 用於 ONTAP 為用戶端之 SSL 伺服器根 CA 的公開金鑰憑證
+* `client` 適用於自我簽署或 CA 簽署的數位憑證、以及 ONTAP 做為 SSL 用戶端的私密金鑰
 
  a| 
 
@@ -398,7 +398,7 @@ vserver
 
 == 設定Active Directory網域控制器存取
 
-當您已為資料SVM設定SMB伺服器、且想要將SVM設定為閘道或_通道_、以便Active Directory網域控制器存取叢集時、您可以使用「安全登入網域通道建立」命令來提供這些值。
+您可以使用提供這些值 `security login domain-tunnel create` 命令：當您已為資料 SVM 設定 SMB 伺服器、並且想要將 SVM 設定為閘道或 _tunnel_ 、以便 Active Directory 網域控制器存取叢集時。
 
 [cols="3*"]
 |===
@@ -408,13 +408,13 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 已設定SMB伺服器的SVM名稱。
  a| 
 
 |===
-如果您尚未設定SMB伺服器、而且想要在Active Directory網域上建立SVM電腦帳戶、請使用「vserver active-directorycreate」命令來提供這些值。
+您可以使用提供這些值 `vserver active-directory create` 當您尚未設定 SMB 伺服器且想要在 Active Directory 網域上建立 SVM 電腦帳戶時的命令。
 
 [cols="3*"]
 |===
@@ -424,7 +424,7 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 您要為其建立Active Directory電腦帳戶的SVM名稱。
  a| 
@@ -432,7 +432,7 @@ vserver
 
 
  a| 
-'帳戶名稱'
+`-account-name`
  a| 
 電腦帳戶的NetBios名稱。
  a| 
@@ -440,7 +440,7 @@ vserver
 
 
  a| 
-「網域」
+`-domain`
  a| 
 完整網域名稱（FQDN）。
  a| 
@@ -448,9 +448,9 @@ vserver
 
 
  a| 
-「-ou'」
+`-ou`
  a| 
-網域中的組織單位。預設值為「cn=computers'」。將此值附加到網域名稱、以產生Active Directory辨別名稱。ONTAP
+網域中的組織單位。預設值為 `CN=Computers`。將此值附加到網域名稱、以產生Active Directory辨別名稱。ONTAP
  a| 
 
 |===
@@ -458,11 +458,11 @@ vserver
 
 == 設定LDAP或NIS伺服器存取
 
-當您為SVM建立LDAP用戶端組態時、可以使用「vserver services name-service LDAP用戶端cred'」命令來提供這些值。
+您可以使用提供這些值 `vserver services name-service ldap client create` 為 SVM 建立 LDAP 用戶端組態時的命令。
 
 [NOTE]
 ====
-從ONTAP 功能組9.2開始、「LDAP伺服器」欄位會取代「伺服器」欄位。此新欄位可以使用主機名稱或IP位址做為LDAP伺服器的值。
+從 ONTAP 9.2 開始 `-ldap-servers` 欄位會取代 `-servers` 欄位。此新欄位可以使用主機名稱或IP位址做為LDAP伺服器的值。
 
 ====
 下表僅顯示與帳戶組態相關的選項：
@@ -475,7 +475,7 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 用戶端組態的SVM名稱。
  a| 
@@ -483,7 +483,7 @@ vserver
 
 
  a| 
-「用戶端組態」
+`-client-config`
  a| 
 用戶端組態的名稱。
  a| 
@@ -491,7 +491,7 @@ vserver
 
 
  a| 
-伺服器
+`-servers`
  a| 
 *《S169.0、9.1*》：用戶端連線之LDAP伺服器的IP位址清單（以英文分隔）ONTAP 。
  a| 
@@ -499,7 +499,7 @@ vserver
 
 
  a| 
-LDAP伺服器
+`-ldap-servers`
  a| 
 *《S122*》：用戶端所連接之LDAP伺服器的IP位址和主機名稱清單、以逗號分隔。ONTAP
  a| 
@@ -507,7 +507,7 @@ LDAP伺服器
 
 
  a| 
-架構
+`-schema`
  a| 
 用戶端用來進行LDAP查詢的架構。
  a| 
@@ -515,9 +515,9 @@ LDAP伺服器
 
 
  a| 
-使用起始TLS
+`-use-start-tls`
  a| 
-用戶端是否使用Start TLS來加密與LDAP伺服器的通訊（「true」或「假」）。
+用戶端是否使用 Start TLS 來加密與 LDAP 伺服器的通訊 (`true` 或 `false`）。
 
 [NOTE]
 ====
@@ -526,7 +526,7 @@ LDAP伺服器
 ==== a| 
 
 |===
-當您將LDAP用戶端組態與SVM建立關聯時、可以使用「vserver services name-service LDAP create」命令來提供這些值。
+您可以使用提供這些值 `vserver services name-service ldap create` 將 LDAP 用戶端組態與 SVM 建立關聯時的命令。
 
 [cols="3*"]
 |===
@@ -536,7 +536,7 @@ LDAP伺服器
 
 
  a| 
-vserver
+`-vserver`
  a| 
 要與用戶端組態建立關聯的SVM名稱。
  a| 
@@ -544,7 +544,7 @@ vserver
 
 
  a| 
-「用戶端組態」
+`-client-config`
  a| 
 用戶端組態的名稱。
  a| 
@@ -552,17 +552,17 @@ vserver
 
 
  a| 
-「用戶端已啟用」
+`-client-enabled`
  a| 
-SVM是否可以使用LDAP用戶端組態（「true」或「假」）。
+SVM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
  a| 
 
 |===
-在SVM上建立NIS網域組態時、您可以使用「vserver services name-service NIS網域create」命令來提供這些值。
+您可以使用提供這些值 `vserver services name-service nis-domain create` 在 SVM 上建立 NIS 網域組態時的命令。
 
 [NOTE]
 ====
-從ONTAP 功能組9.2開始、「-NIS伺服器」欄位將取代「伺服器」欄位。此新欄位可以使用主機名稱或IP位址做為NIS伺服器的值。
+從 ONTAP 9.2 開始 `-nis-servers` 欄位會取代 `-servers` 欄位。這個新欄位可以使用主機名稱或 IP 位址做為 NIS 伺服器的值。
 
 ====
 [cols="3*"]
@@ -573,7 +573,7 @@ SVM是否可以使用LDAP用戶端組態（「true」或「假」）。
 
 
  a| 
-vserver
+`-vserver`
  a| 
 要在其中建立網域組態的SVM名稱。
  a| 
@@ -581,7 +581,7 @@ vserver
 
 
  a| 
-「網域」
+`-domain`
  a| 
 網域名稱。
  a| 
@@ -589,15 +589,15 @@ vserver
 
 
  a| 
-「-Active」
+`-active`
  a| 
-網域是否為作用中（「true」或「假」）。
+網域是否為作用中 (`true` 或 `false`）。
  a| 
 
 
 
  a| 
-伺服器
+`-servers`
  a| 
 *《S169.0、9.1*：網域組態所使用之NIS伺服器的IP位址清單》。ONTAP
  a| 
@@ -605,13 +605,13 @@ vserver
 
 
  a| 
-——NIS伺服器
+`-nis-servers`
  a| 
 *《S122*》：網域組態所使用之NIS伺服器的IP位址和主機名稱清單、以英文分隔。ONTAP
  a| 
 
 |===
-當您指定名稱服務來源的查詢順序時、可以使用「vserver services name-service ns-switchcreate」命令來提供這些值。
+您可以使用提供這些值 `vserver services name-service ns-switch create` 命令：指定名稱服務來源的查詢順序。
 
 [cols="3*"]
 |===
@@ -621,7 +621,7 @@ vserver
 
 
  a| 
-vserver
+`-vserver`
  a| 
 要設定名稱服務查詢順序的SVM名稱。
  a| 
@@ -629,29 +629,29 @@ vserver
 
 
  a| 
-資料庫
+`-database`
  a| 
 名稱服務資料庫：
 
-* 用於檔案和DNS名稱服務的主機
-* 檔案、LDAP和NIS名稱服務的「群組」
-* 檔案、LDAP和NIS名稱服務的「passwd」
-* 檔案、LDAP和NIS名稱服務的「netgroup」
-* 檔案和LDAP名稱服務的名稱
+* `hosts` 適用於檔案和 DNS 名稱服務
+* `group` 適用於檔案、 LDAP 和 NIS 名稱服務
+* `passwd` 適用於檔案、 LDAP 和 NIS 名稱服務
+* `netgroup` 適用於檔案、 LDAP 和 NIS 名稱服務
+* `namemap` 適用於檔案和 LDAP 名稱服務
 
  a| 
 
 
 
  a| 
-來源
+`-sources`
  a| 
 查詢名稱服務來源的順序（在以逗號分隔的清單中）：
 
-* 檔案
-* 《Dns》
-* "LDAP"
-* 《NIS》
+* `files`
+* `dns`
+* `ldap`
+* `nis`
 
  a| 
 
@@ -660,7 +660,7 @@ vserver
 
 == 設定SAML存取
 
-從ONTAP 使用支援支援功能的支援功能9.3開始、您可以使用「安全性SAML命令create」命令來設定SAML驗證。
+從 ONTAP 9.3 開始、您可以將這些值提供給 `security saml-sp create` 用於設定 SAML 驗證的命令。
 
 [cols="3*"]
 |===
@@ -670,7 +670,7 @@ vserver
 
 
  a| 
-———————————————
+`-idp-uri`
  a| 
 身分識別供應商（IDP）主機的FTP位址或HTTP位址、可從該主機下載IDP中繼資料。
  a| 
@@ -678,7 +678,7 @@ vserver
 
 
  a| 
-sp-host'
+`-sp-host`
  a| 
 SAML服務供應商主機ONTAP （亦即系統）的主機名稱或IP位址。根據預設、會使用叢集管理LIF的IP位址。
  a| 
@@ -694,9 +694,9 @@ SAML服務供應商主機ONTAP （亦即系統）的主機名稱或IP位址。�
 
 
  a| 
-驗證中繼資料伺服器
+`-verify-metadata-server`
  a| 
-IDP中繼資料伺服器的身分識別必須經過驗證（「true」或「假」）。最佳實務做法是永遠將此值設為「true」。
+IDP 中繼資料伺服器的身分識別是否必須驗證  `true` 或 `false`）。最佳實務做法是永遠將此值設為 `true`。
  a| 
 
 |===

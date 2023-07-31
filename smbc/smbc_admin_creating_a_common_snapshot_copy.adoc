@@ -14,20 +14,26 @@ summary: 除了定期排程的Snapshot複製作業之外、您也可以在主要
 
 
 [role="lead"]
-除了定期排程的Snapshot複製作業之外、您也可以在主要SnapMirror一致性群組中的磁碟區與次要SnapMirror一致性群組中的磁碟區之間手動建立通用的Snapshot複本。
+除了定期排程的 Snapshot 複本作業之外、您也可以手動建立通用的 link:../concepts/snapshot-copies-concept.html["Snapshot複本"] 在主要 SnapMirror 一致性群組中的磁碟區與次要 SnapMirror 一致性群組中的磁碟區之間。
 
-在NetApp 9.8中ONTAP 、排定的快照建立時間間隔為一小時。從2019年9月1日開始ONTAP 、此時間間隔為12小時。
+.關於這項工作
+* 在NetApp 9.8中ONTAP 、排定的快照建立時間間隔為一小時。
++
+從2019年9月1日開始ONTAP 、此時間間隔為12小時。
+
+
 
 .開始之前
-SnapMirror群組關係必須同步。
+* SnapMirror群組關係必須同步。
+
 
 .步驟
 . 建立通用的Snapshot複本：
 +
-「目的地：：：>SnapMirror更新-dite-path VS1_dst：/Cg / Cg _dst」
+`destination::>snapmirror update -destination-path vs1_dst:/cg/cg_dst`
 
 . 監控更新進度：
 +
-「目的地：」：>SnapMirror顯示-欄位-最新快照
+`destination::>snapmirror show -fields -newest-snapshot`
 
 

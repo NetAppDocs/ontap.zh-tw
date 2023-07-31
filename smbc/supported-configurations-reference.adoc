@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: smbc/supported-configurations-reference.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout 
+summary: SM-BC 與 ONTAP 中的許多作業系統和其他功能相容 
+---
+= 支援的組態與功能
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+SnapMirror Business Continuity 可與 ONTAP 中的多種作業系統和其他功能相容。瞭解詳細資料和建議的組態。
+
+
+
+== 支援的組態
+
+SMBC 支援多種作業系統、包括：
+
+* AIX （從 ONTAP 9.11.1 開始）
+* HP-UX （從 ONTAP 9.10.1 開始）
+* Solaris 11.4 （從 ONTAP 9.10.1 開始）
+
+
+
+
+== AIX
+
+從ONTAP 《支援》版本的《支援》（從《支援》版本的版本起）開始、《支援AIX》（SMBC）在AIX組態下、主要叢集是「作用中」叢集。
+
+在AIX組態中、容錯移轉會中斷運作。每次容錯移轉時、您都必須在主機上執行重新掃描、才能恢復I/O作業。
+
+若要使用SMBC設定AIX主機、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_configure_an_AIX_host_for_SnapMirror_Business_Continuity_(SM-BC)["如何設定AIX主機以實現SnapMirror營運不中斷（SMBC）"]。
+
+
+
+== HP-UX
+
+從ONTAP 功能更新至功能更新至功能更新、支援適用於HP-UX的SMBC。
+
+
+
+=== HP-UX 的限制
+
+如果在SM至BC組態的隔離主叢集上發生自動非計畫性容錯移轉（AUFO）事件、則在HP-UX主機上恢復I/O可能需要120秒以上的時間。視執行的應用程式而定、這可能不會導致任何I/O中斷或錯誤訊息。如果隔離的主叢集發生AUFO事件、您必須重新啟動HP-UX主機上的應用程式、使其中斷容錯能力低於120秒。
+
+當主要與次要叢集之間的連線中斷、且主要叢集與中介器之間的連線中斷時、隔離的主要叢集上的AUFO事件可能會導致雙事件故障。這是罕見的事件、與其他AUFO事件不同。
+
+
+
+== Solaris 主機設定建議
+
+從功能支援的版本起、SM-BC支援Solaris 11.4。ONTAP
+
+為了確保 Solaris 用戶端應用程式在 SM-BC 環境中發生非計畫性站台容錯移轉切換時不會中斷運作、請修改預設的 Solaris OS 設定。若要使用建議的設定來設定 Solaris 、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris主機支援SnapMirror營運不中斷（SMBC）組態中的建議設定"^]。
+
+
+
+== ONTAP 整合
+
+SM-BC 支援 ONTAP 的其他功能、包括：
+
+* 連出組態
+* NDMP 複本（從 ONTAP 9.13.1 開始）
+* 部分檔案還原（從 ONTAP 9.12.1 開始）
+
+
+
+
+=== FabricPool
+
+SM-BC 支援 FabricPool 上的來源和目的地磁碟區、其分層原則為「無」、「快照」或「自動」。SM-S SM-BC 不支援使用「全部」分層原則的 FabricPool 集合體。
+
+
+
+=== 連出組態
+
+在 A 中 xref:../data-protection/supported-deployment-config-concept.html[連出組態]、您的來源磁碟區可以鏡射到 SM-BC 目的地端點、以及一或多個非同步 SnapMirror 關係。
+
+image:fanout-diagram.png["扇出組態的圖表"]
+
+SM - BC支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態] 使用 `MirrorAllSnapshots` 原則、從 ONTAP 9.11.1 開始 `MirrorAndVault` 原則。搭配的SM至BC不支援連出組態 `XDPDefault` 原則。
+
+如果在扇出組態的SM至BC目的地上發生容錯移轉、您必須手動進行 xref:smbc_admin_what_happens_during_an_automatic_unplanned_failover.html#resume-protection-in-a-fan-out-configuration-after-failover[在連出組態中恢復保護]。
+
+
+
+=== NDMP 還原
+
+從 ONTAP 9.13.1 開始、您可以使用 NDMP 複製及還原 SMBC 的資料。使用 NDMP 可讓您將資料移至 SM-BC 來源、以完成還原而不需暫停保護。這在扇出組態中特別有用。
+
+若要深入瞭解此程序、請參閱 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用 NDMP 複本傳輸資料]。
+
+
+
+=== 部分檔案還原
+
+從《支援部分LUN還原的ONTAP 功能（從《支援部分LUN還原功能的功能（《支援SMBC Volume：如需此程序的相關資訊、請參閱 link:../data-protection/restore-part-file-snapshot-task.html["從Snapshot複本還原部分檔案"]。

@@ -14,26 +14,26 @@ summary: 您可以設定磁碟區以進行精簡配置、完整配置或半密�
 您可以設定磁碟區以進行精簡配置、完整配置或半密集配置。
 
 .關於這項工作
-將「-space-慢」選項設為「thick」可確保下列項目：
+設定 `-space-slo` 選項 `thick` 確保下列事項：
 
-* 整個磁碟區會預先配置在Aggregate中。您無法使用「volume create」或「volume modify」命令來設定磁碟區的「space－保證」選項。
-* 保留覆寫所需的空間100%。您無法使用「volume modify」命令來設定Volume的「-分數 保留」選項
+* 整個磁碟區會預先配置在Aggregate中。您無法使用 `volume create` 或 `volume modify` 用於設定 Volume 的命令 `-space-guarantee` 選項。
+* 保留覆寫所需的空間100%。您無法使用 `volume modify` 用於設定 Volume 的命令 `-fractional-reserve` 選項
 
 
-將「-space-慢」選項設為「shEMI-thick」、可確保下列項目：
+設定 `-space-slo` 選項 `semi-thick` 確保下列事項：
 
-* 整個磁碟區會預先配置在Aggregate中。您無法使用「volume create」或「volume modify」命令來設定磁碟區的「space－保證」選項。
-* 不會保留空間進行覆寫。您可以使用「volume modify」命令來設定Volume的「-分數 保留」選項。
+* 整個磁碟區會預先配置在Aggregate中。您無法使用 `volume create` 或 `volume modify` 用於設定 Volume 的命令 `-space-guarantee` 選項。
+* 不會保留空間進行覆寫。您可以使用 `volume modify` 用於設定 Volume 的命令 `-fractional-reserve` 選項。
 * 已啟用自動刪除Snapshot複本。
 
 
 .步驟
 . 設定Volume資源配置選項：
 +
-「Volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-space-l慢 動作nONE | thick |半厚-space-muturenone| volume」
+`volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -space-slo none|thick|semi-thick -space-guarantee none|volume`
 
 +
-對於不支援AFF AFF DP的系統和非AFF DP磁碟區、「空間保證」選項預設為「無」。否則、它會預設為「Volume」（磁碟區）。對於現有FlexVol 的靜態磁碟區、請使用「volume modify」命令來設定資源配置選項。
+。 `-space-guarantee` 選項預設為 `none` 適用於 AFF 系統和非 AFF DP 磁碟區。否則、預設為 `volume`。對於現有的 FlexVol 磁碟區、請使用 `volume modify` 用於設定資源配置選項的命令。
 
 +
 下列命令可在SVM VS1上設定vol1以進行精簡配置：

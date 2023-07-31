@@ -25,9 +25,9 @@ summary: 您可以新增或移除共用內容、來自訂現有的SMB共用區�
 新增的內容會附加到現有的共用內容清單中。
 
 * 如果您為已套用至共用區的共用屬性指定新值、則新指定的值會取代原始值。
-* 您無法使用「vserver CIFS共用內容add」命令來移除共用內容。
+* 您無法使用移除共用內容 `vserver cifs share properties add` 命令。
 +
-您可以使用「vserver CIFS共用內容移除」命令來移除共用內容。
+您可以使用 `vserver cifs share properties remove` 移除共用內容的命令。
 
 
 
@@ -47,21 +47,21 @@ summary: 您可以新增或移除共用內容、來自訂現有的SMB共用區�
  a| 
 新增共用內容
  a| 
-Check Alignment of PHs>+vserver CIFS共享屬性add -vserver _vserver_name_-share-name _share_name_-share-properties_,...+
+`+vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
 
 
 
  a| 
 移除共用內容
  a| 
-Check Alignment of PHs>+vserver CIFS共享屬性移除-vserver _vserver_name_-share-name _share_name_-share-properties_,...+
+`+vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
 
 |===
-. 驗證共享內容設定：「vserver CIFS共用區show -vserver vserver_name -share-name share_name」
+. 確認共用內容設定： `vserver cifs share show -vserver vserver_name -share-name share_name`
 
 
 .範例
-下列命令會將「show snapshot」共用屬性新增至SVM VS1上名為「shafre1」的共用區：
+下列命令會新增 `showsnapshot` 在 SVM VS1 上、將屬性共用至名為「 shahre1 」的共享區：
 
 [listing]
 ----
@@ -75,7 +75,7 @@ vs1        share1  /share1   oplocks      -          Everyone / Full Control
                              changenotify
                              showsnapshot
 ----
-下列命令會從SVM VS1上名為「shafre2」的共用區移除「可瀏覽的」共用內容：
+下列命令會移除 `browsable` 在 SVM VS1 上共享名爲 "shahre2" 的共享區的屬性：
 
 [listing]
 ----

@@ -14,14 +14,14 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
 [role="lead"]
-在規劃SnapMirror營運不中斷解決方案部署時、您必須考量幾項先決條件。
+規劃 SnapMirror Business Continuity 部署時、請確保您符合各種硬體、軟體和系統組態需求。
 
 
 
 == 硬體
 
 * 僅支援雙節點HA叢集
-* 這兩個叢集必須AFF 是「不混合ASA 」或「不混合」（不混合）
+* 兩個叢集都必須是 AFF （包括 AFF C 系列）或 ASA （不混合）
 
 
 
@@ -41,7 +41,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
  a| 
-1.6
+1.6.
  a| 
 * Red Hat Enterprise Linux ： 8.4 、 8.5 、 8.6 、 8.7 、 8.8 、 9.0 、 9.1 、 9.2
 * Rocky Linux 8 和 9
@@ -50,7 +50,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
  a| 
-1.5
+1.5.
  a| 
 * Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
 * CentOS：7.6、7.7、7.8、7.9
@@ -59,7 +59,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
  a| 
-1.4
+1.4.
  a| 
 * Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
 * CentOS：7.6、7.7、7.8、7.9
@@ -68,7 +68,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
  a| 
-1.3
+1.3.
  a| 
 * Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
 * CentOS：7.6、7.7、7.8、7.9
@@ -77,7 +77,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 
 
  a| 
-1.2
+1.2.
  a| 
 * Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
 * CentOS：7.6、7.7、7.8%
@@ -92,7 +92,7 @@ summary: 在規劃SnapMirror營運不中斷解決方案部署時、您必須考�
 * SnapMirror授權必須套用至兩個叢集
 +
 
-NOTE: 如果ONTAP 您的不符合銷售需求的儲存系統是在2019年6月之前購買、請按一下 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP -主要授權金鑰"^] 以取得必要的SM-S授權。
+NOTE: 如果您的 ONTAP 儲存系統是在 2019 年 6 月之前購買、請參閱 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP -主要授權金鑰"^] 以取得必要的SM-S授權。
 
 
 
@@ -100,16 +100,16 @@ NOTE: 如果ONTAP 您的不符合銷售需求的儲存系統是在2019年6月之
 
 == 網路環境
 
-* 叢集間的往返延遲時間（RTT）必須少於10毫秒
-* SCSI-3持續保留服務*不支援SMBC
+* 叢集間延遲往返時間（ RTT ）必須少於 10 毫秒。
+* SCSI-3 持續保留是 ** 不 ** 受 SMBC 支援。
 
 
 
 
 == 支援的傳輸協定
 
-* 僅支援SAN傳輸協定（非NFS/SMB）
-* 僅支援光纖通道和iSCSI傳輸協定
+* 僅支援 SAN 通訊協定（不支援 NFS/SMB ）。
+* 僅支援光纖通道和 iSCSI 傳輸協定。
 * SM-BC需要預設IPspace才能建立叢集對等關係。不支援自訂IPspace。
 
 
@@ -123,8 +123,11 @@ SMBC磁碟區*不支援NTFS安全樣式。
 
 == 資訊媒體ONTAP
 
-* 必須在外部配置資源並附加ONTAP 至功能不受限的功能、才能實現透明的應用程式容錯移轉。
-* 如需ONTAP 更多有關《新聞》的資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["準備安裝ONTAP 《不知道如何安裝》服務"^]。
+* ONTAP Mediator 可從外部配置、並附加至 ONTAP 、以實現透明的應用程式容錯移轉。
+* 為了使功能完整、並啟用自動非計畫性容錯移轉、外部ONTAP 的整套功能應該以ONTAP 支援叢集的方式配置和設定。
+* ONTAP Mediator 必須安裝在第三個故障網域中、與兩個 ONTAP 叢集分開。
+* 安裝 ONTAP Mediator 時、您應該使用由主流可靠 CA 簽署的有效憑證來取代自我簽署的憑證。
+* 如需ONTAP 更多有關《新聞》的資訊、請參閱 link:../mediator/index.html["準備安裝ONTAP 《不知道如何安裝》服務"]。
 
 
 
@@ -166,4 +169,5 @@ NOTE: 對於 ONTAP 9.8 與 9.12.1 P2 之間的 ONTAP 版本、您必須確保主
 == 更多資訊
 
 * link:https://hwu.netapp.com/["Hardware Universe"^]
+* link:../mediator/mediator-overview-concept.html["ONTAP Mediator 概述"^]
 

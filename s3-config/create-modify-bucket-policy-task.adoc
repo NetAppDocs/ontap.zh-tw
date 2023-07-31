@@ -19,11 +19,11 @@ summary: 您可以將存取規則新增至預設的儲存區原則。其存取�
 在授予權限之前、您必須先建立使用者或群組。
 
 .關於這項工作
-您可以為新使用者和群組新增聲明、也可以修改現有聲明的屬性。如需更多選項、請參閱「vserver object-store-server Bucket policy」手冊頁。
+您可以為新使用者和群組新增聲明、也可以修改現有聲明的屬性。如需更多選項、請參閱 `vserver object-store-server bucket policy` 手冊頁。
 
 使用者和群組權限可在建立儲存區時或稍後視需要授予。您也可以修改儲存區容量和QoS原則群組指派。
 
-從發行版的版本起、如果您計畫支援AWS用戶端物件標記功能搭配使用版S3伺服器、則必須使用儲存區或群組原則、允許執行「GetObjectTagging」、「ObjectPutting」和「刪除物件標記」等動作。ONTAP ONTAP
+從 ONTAP 9.9.1 及更新版本開始、如果您計畫在 ONTAP S3 伺服器上支援 AWS 用戶端物件標記功能、就會執行這些動作 `GetObjectTagging`、 `PutObjectTagging`和 `DeleteObjectTagging` 需要使用貯體或群組原則來允許。
 
 您遵循的程序取決於您使用的介面- System Manager或CLI：
 
@@ -32,7 +32,8 @@ summary: 您可以將存取規則新增至預設的儲存區原則。其存取�
 .系統管理員
 --
 .步驟
-. 編輯儲存桶：按一下「*儲存設備>儲存桶*」、按一下所需的儲存桶、然後按一下「*編輯*」。新增或修改權限時、您可以指定下列參數：
+. 編輯儲存桶：按一下「*儲存設備>儲存桶*」、按一下所需的儲存桶、然後按一下「*編輯*」。
+新增或修改權限時、您可以指定下列參數：
 +
 ** *主要*：授予存取權的使用者或群組。
 ** * effect*：允許或拒絕存取使用者或群組。
@@ -52,7 +53,7 @@ summary: 您可以將存取規則新增至預設的儲存區原則。其存取�
 .步驟
 . 在庫位政策中加入聲明：
 +
-「Vserver object-store-server Bucket policy add-statement -vserver _Svm_name_-Bucket _bucket_name_-effect｛allow| deny｝-action _object_store_actions _-principe_user_and _group_names_-resource_[-sID text][-index integer]。
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -bucket _bucket_name_ -effect {allow|deny} -action _object_store_actions_ -principal _user_and_group_names_ -resource _object_store_resources_ [-sid text] [-index integer]`
 
 +
 下列參數定義存取權限：
@@ -63,40 +64,40 @@ summary: 您可以將存取規則新增至預設的儲存區原則。其存取�
 
 
  a| 
-「效果」
+`-effect`
  a| 
 此聲明可能允許或拒絕存取
 
 
 
  a| 
-「行動」
+`-action`
  a| 
-您可以指定「*」表示所有動作、或是下列一或多個清單：「GetObject、PuttObject、刪除物件、清單庫、GetBucketAcl、GetObjectAcl、 listBucketMultiPartUploads、和"listMultpartUploParts"。
+您可以指定 `*` 表示所有動作、或是下列一或多個動作清單： `GetObject, PutObject, DeleteObject, ListBucket, GetBucketAcl,GetObjectAcl, ListBucketMultipartUploads,` 和 `ListMultipartUploadParts`。
 
 
 
  a| 
-「校長」
+`-principal`
  a| 
 一或多個S3使用者或群組的清單。
 
 ** 最多可指定10個使用者或群組。
-** 如果指定S3群組、則必須使用「群組/群組名稱」格式
-** 可以將「*」指定為「公共存取」、也就是「沒有存取金鑰和秘密金鑰的存取」。
+** 如果已指定 S3 群組、則該群組必須採用格式 `group/group_name.`
+** `*` 可以指定為公開存取、也就是說、無需存取金鑰和秘密金鑰即可存取。
 ** 如果未指定主體、則SVM中的所有S3使用者都會被授予存取權。
 
 
 
 
  a| 
-資源
+`-resource`
  a| 
-儲存區及其所包含的任何物件。通配字元「*」和「？」 可用於形成規則運算式、以指定資源。
+儲存區及其所包含的任何物件。萬用字元 `*` 和 `?` 可用於形成用於指定資源的規則運算式。
 
 |===
 +
-您可以選擇使用「-SID'」選項、將文字字串指定為註解。
+您可以選擇性地指定文字字串做為的註解 `-sid` 選項。
 
 
 

@@ -11,7 +11,7 @@ summary: 您必須先將目的地Volume設定為可寫入、才能將資料從�
 
 
 [role="lead"]
-您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用「napmirror quiesce」命令來停止排程的目的地傳輸、使用「napmirror abort]命令來停止進行中的傳輸、以及使用「shapmirror Break」命令來使目的地可寫入。
+您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用 `snapmirror quiesce` 停止排程傳輸至目的地的命令 `snapmirror abort` 命令以停止進行中的傳輸、以及 `snapmirror break` 可讓目的地寫入的命令。
 
 .關於這項工作
 您必須從目的地SVM或目的地叢集執行此工作。
@@ -19,13 +19,13 @@ summary: 您必須先將目的地Volume設定為可寫入、才能將資料從�
 .步驟
 . 停止排程的目的地傳輸：
 +
-"napmirror quiesce -path _svm:volume | cluster：//svm/volume _、... -destination-path _svm:volume | cluster：//svm/volume _、...
+`snapmirror quiesce -source-path _SVM:volume|cluster://SVM/volume_, ... -destination-path _SVM:volume|cluster://SVM/volume_, ...`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會停止在來源磁碟區「Vola」（位於「svm1」）和目的地磁碟區「Vola_dst」（位於「shvm_backup」）之間的排程傳輸：
+下列範例會停止來源磁碟區之間的排程傳輸 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -34,7 +34,7 @@ cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_b
 ----
 . 停止持續傳輸至目的地：
 +
-"napmirror abort-source-path _svm:volume _|_cluster：//Svm/volume _、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+`snapmirror abort -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -46,7 +46,7 @@ SnapMirror同步關係不需要執行此步驟（ONTAP 從支援的版本號為9
 
 ====
 +
-以下範例會停止在來源磁碟區「Vola」（在「svm1」）和目的地磁碟區「Vola_dst」（在「shvm_backup」）之間進行傳輸：
+下列範例會停止來源磁碟區之間的持續傳輸 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -55,13 +55,13 @@ cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_bac
 ----
 . 打破SnapMirror DR關係：
 +
-"napmirror中斷-source-path _svm:volume（磁碟區）_cluster：//Svm/volume（磁碟區）"、... -destination-path _svm:volume _|_cluster：//svm/volume _、...
+`snapmirror break -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例打破了「svm1」上的來源磁碟區「Vola」與「shvm_backup」上的目的地磁碟區「Vola_dst」之間的關係：
+以下範例打破來源磁碟區之間的關係 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]

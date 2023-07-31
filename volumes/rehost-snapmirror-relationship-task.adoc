@@ -41,43 +41,43 @@ summary: 您可以在SnapMirror關係中重新裝載磁碟區。
 .步驟
 . 記錄SnapMirror關係類型：
 +
-「napmirror show」
+`snapmirror show`
 
 +
 這是預防步驟、可避免在磁碟區重組失敗時遺失SnapMirror關係類型的相關資訊。
 
 . 從目的地叢集刪除SnapMirror關係：
 +
-'刪除napmirror '
+`snapmirror delete`
 
 +
 您不得中斷SnapMirror關係；否則、目的地Volume的資料保護功能將會遺失、而且在重新託管作業之後、將無法重新建立關係。
 
 . 從來源叢集移除SnapMirror關係資訊：
 +
-「napmirror版本的關係、僅供參考」
+`snapmirror release relationship-info-only true`
 
 +
-將「僅供參考」參數設定為「true」、會移除來源關係資訊、而不會刪除Snapshot複本。
+設定 `relationship-info-only` 參數至 `true` 移除來源關係資訊、而不刪除 Snapshot 複本。
 
 . 切換至進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 在目的地SVM上重新裝載磁碟區：
 +
-「Volume rehost -vserver svm_svm -volume vol_name -destination-vserver destination_svm'
+`volume rehost -vserver source_svm -volume vol_name -destination-vserver destination_svm`
 
 . 如果SVM對等關係不存在、請在來源SVM和目的地SVM之間建立SVM對等關係：
 +
-vserver對等點的建立
+`vserver peer create`
 
 . 在來源Volume與目的地Volume之間建立SnapMirror關係：
 +
-'建立napmirror '
+`snapmirror create`
 
 +
-您必須從主控DP Volume的SVM執行「建立快照鏡像」命令。重新託管的Volume可以是SnapMirror關係的來源或目的地。
+您必須執行 `snapmirror create` 主控 DP Volume 的 SVM 命令。重新託管的Volume可以是SnapMirror關係的來源或目的地。
 
 . 重新同步SnapMirror關係。
 

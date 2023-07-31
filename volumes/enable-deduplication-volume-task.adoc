@@ -24,34 +24,35 @@ summary: 您可以在FlexVol 支援重複資料刪除技術的過程中、在一
 
 ====
 .選擇
-* 使用「Volume Eff效率on」命令來啟用後置處理重複資料刪除。
+* 使用 `volume efficiency on` 用於啟用後處理重複資料刪除的命令。
 +
 下列命令可在Volume Vola上啟用後處理重複資料刪除：
 
 +
-「-vserver VS1 -volume Vola」上的Volume效率
+`volume efficiency on -vserver vs1 -volume VolA`
 
-* 使用「Volume Eff效率on」命令、接著使用「Volume Eff高效 修改」命令、並將「即時重複資料刪除」選項設為「true」、以啟用後置處理重複資料刪除和即時重複資料刪除。
+* 使用 `volume efficiency on` 命令後面接著 `volume efficiency modify` 命令 `-inline-deduplication` 選項設為 `true` 啟用後處理重複資料刪除和內嵌重複資料刪除。
 +
 下列命令可在Volume Vola上同時啟用後處理重複資料刪除和即時重複資料刪除：
 
 +
-「-vserver VS1 -volume Vola」上的Volume效率
+`volume efficiency on -vserver vs1 -volume VolA`
 
 +
-「Volume Effiv更 有效率修改-vserver VS1 -volume Vola -inite-dedupe true」
+`volume efficiency modify -vserver vs1 -volume VolA -inline-dedupe true`
 
-* 使用「Volume Eff效率on」命令、接著使用「Volume Eff高效modify」命令、將「即時重複資料刪除」選項設為「true」、「-policy」選項設為「僅限即時」、僅啟用即時重複資料刪除功能。
+* 使用 `volume efficiency on` 命令後面接著 `volume efficiency modify` 命令 `-inline-deduplication` 選項設為 `true` 和 `-policy` 選項設為 `inline-only` 僅啟用即時重複資料刪除。
 +
 下列命令僅在Volume Vola上啟用即時重複資料刪除：
 
 +
-「-vserver VS1 -volume Vola」上的Volume效率
+`volume efficiency on -vserver vs1 -volume VolA`
 
 +
-「Volume Effiveive-modify -vserver VS1 -volume Vola -policy inite-only -inite-dedupe true」（Volume效率修改-vserver VS1 -volume Vola -原則僅限內嵌
+`volume efficiency modify -vserver vs1 -volume VolA -policy inline-only -inline-dedupe true`
 
 
 
 .完成後
-檢視Volume Eff效率 設定：「Volume Eff效率show -instance」（Volume Eff效率 顯示-instance）、確認設定已變更
+檢視 Volume EffEffEffEffEff需 的設定、確認設定已變更：
+`volume efficiency show -instance`

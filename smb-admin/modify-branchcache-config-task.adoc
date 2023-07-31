@@ -23,14 +23,14 @@ summary: 您可以修改SVM上的BranchCache服務組態、包括變更雜湊存
  a| 
 修改雜湊存放區目錄大小
  a| 
-「Vserver CIFS BranchCache modify -vserver vserver_name -hash-store-max-size｛integer[kb|MB|GB|TB|PB]｝」
+`vserver cifs branchcache modify -vserver vserver_name -hash-store-max-size {integer[KB|MB|GB|TB|PB]}`
 
 
 
  a| 
 增加包含雜湊存放區的磁碟區大小
  a| 
-「Volume size -vserver vserver_name -volume volume volume volume名稱-new-size new_size[k| m|g|t]」如果包含雜湊存放區的磁碟區已滿、您可能可以增加磁碟區的大小。您可以將新的Volume大小指定為數字、然後再指定單位。
+`volume size -vserver vserver_name -volume volume_name -new-size new_size[k|m|g|t]`     如果包含雜湊儲存區的磁碟區已滿、您可能可以增加磁碟區的大小。您可以將新的Volume大小指定為數字、然後再指定單位。
 
 深入瞭解 link:../volumes/commands-manage-flexvol-volumes-reference.html["管理FlexVol 功能"]
 
@@ -39,14 +39,14 @@ summary: 您可以修改SVM上的BranchCache服務組態、包括變更雜湊存
  a| 
 修改雜湊存放區目錄路徑
  a| 
-「Vserver CIFS BranchCache modify -vserver vserver_name -hash-store-path -flush-hashes｛true|fals｝」如果SVM是SVM災難恢復來源、則雜湊路徑無法位於根磁碟區上。這是因為根磁碟區並未複寫到災難恢復目的地。
+`vserver cifs branchcache modify -vserver vserver_name -hash-store-path path -flush-hashes {true|false}`     如果SVM是SVM災難恢復來源、則雜湊路徑無法位於根磁碟區上。這是因為根磁碟區並未複寫到災難恢復目的地。
 
 BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
 
-如果您修改雜湊路徑、則必須使用「-Flush雜湊」參數、指定ONTAP 是否要讓效益分析從原始雜湊存放區位置清除雜湊。您可以為「齊面雜湊」參數設定下列值：
+如果您修改雜湊路徑、 `-flush-hashes` 是必要參數、可指定 ONTAP 是否要清除原始雜湊儲存位置的雜湊。您可以為設定下列值 `-flush-hashes` 參數：
 
-** 如果您指定「true」、ONTAP 則當啟用了BranchCache的用戶端發出新要求時、會刪除原始位置的雜湊、並在新位置建立新的雜湊。
-** 如果您指定「假」、則不會清除雜湊。
+** 如果您指定 `true`， ONTAP 會刪除原始位置的雜湊，並在啟用 BranchCache 的用戶端提出新要求時，在新位置建立新的雜湊。
+** 如果您指定 `false`，則不會清除雜湊。
 +
 在這種情況下、您可以選擇稍後再重複使用現有的雜湊、方法是將雜湊存放區路徑變更回原始位置。
 
@@ -57,7 +57,7 @@ BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
  a| 
 變更操作模式
  a| 
-「Vserver CIFS BranchCache modify -vserver vserver_name -operation-tMode｛per共享區| all-shares|停用｝」
+`vserver cifs branchcache modify -vserver vserver_name -operating-mode {per-share|all-shares|disable}`
 
 修改操作模式時、請注意下列事項：
 
@@ -70,8 +70,8 @@ BranchCache雜湊路徑可以包含空白和任何有效的檔案名稱字元。
  a| 
 變更支援的BranchCache版本
  a| 
-「Vserver CIFS BranchCache modify -vserver vserver_name -versions｛v1-enable | v2-enable | enable All｝」
+`vserver cifs branchcache modify -vserver vserver_name -versions {v1-enable|v2-enable|enable-all}`
 
 |===
-. 使用「vserver CIFS BranchCache show」命令來驗證組態變更。
+. 使用驗證組態變更 `vserver cifs branchcache show` 命令。
 

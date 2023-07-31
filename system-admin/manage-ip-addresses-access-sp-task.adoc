@@ -14,17 +14,17 @@ summary: 依預設、SP會接受來自任何IP位址管理主機的SSH連線要�
 依預設、SP會接受來自任何IP位址管理主機的SSH連線要求。您可以將SP設定為僅接受來自您指定IP位址之管理主機的SSH連線要求。您所做的變更會套用至叢集中任何節點的SP存取SSH。
 
 .步驟
-. 使用帶有「-allowed -addresses」參數的「系統服務處理器ssh add-allowed -addresses」命令、僅將SP存取權授予您指定的IP位址。
+. 僅將 SP 存取權授予您使用指定的 IP 位址 `system service-processor ssh add-allowed-addresses` 命令 `-allowed-addresses` 參數。
 +
-** 必須以「address/'netmask'」格式指定「允許位址」參數的值、且多個「位址」/「網路遮罩」配對必須以逗號分隔、例如「10.98.150.10/24、FD20:8b1e:b255:c09b:/64'。
+** 的值 `-allowed-addresses` 參數必須以的格式指定 `address`/`netmask`和多個 `address`/`netmask` 配對必須以逗號分隔、例如 `10.98.150.10/24, fd20:8b1e:b255:c09b::/64`。
 +
-將「允許的位址」參數設定為「0.00.0.0/0」、即：/0」可讓所有IP位址存取SP（預設）。
+設定 `-allowed-addresses` 參數至 `0.0.0.0/0, ::/0` 啟用所有 IP 位址以存取 SP （預設）。
 
-** 當您將SP存取限制為僅指定的IP位址來變更預設值時ONTAP 、會提示您確認是否要指定的IP位址取代「允許所有」預設設定（「0.00.0.0/0、：/0」）。
-** 「系統服務處理器ssh show」命令會顯示可存取SP的IP位址。
+** 當您只將 SP 存取限制為指定的 IP 位址來變更預設值時、 ONTAP 會提示您確認是否要指定的 IP 位址取代「允許所有」的預設設定 (`0.0.0.0/0, ::/0`）。
+** 。 `system service-processor ssh show` 命令會顯示可存取 SP 的 IP 位址。
 
 
-. 如果您要封鎖指定的IP位址、使其無法存取SP、請使用「系統服務處理器ssh移除允許的位址」命令搭配「允許的位址」參數。
+. 如果您要封鎖指定的 IP 位址、使其無法存取 SP 、請使用 `system service-processor ssh remove-allowed-addresses` 命令 `-allowed-addresses` 參數。
 +
 如果您封鎖所有IP位址、使其無法從任何管理主機存取SP。
 

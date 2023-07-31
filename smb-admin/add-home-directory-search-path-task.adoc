@@ -14,17 +14,17 @@ summary: 如果您想要使用ONTAP 支援功能的SMB主目錄、您必須至�
 如果您想要使用ONTAP 支援功能的SMB主目錄、您必須至少新增一個主目錄搜尋路徑。
 
 .關於這項工作
-您可以使用「vserver CIFS主目錄search-path add」命令來新增主目錄搜尋路徑。
+您可以使用新增主目錄搜尋路徑 `vserver cifs home-directory search-path add` 命令。
 
-在命令執行期間、「vserver CIFS home-directorysearch-path add」命令會檢查在「-path」選項中指定的路徑。如果指定的路徑不存在、命令會產生訊息、提示您是否要繼續。您選擇「y」或「n」。如果您選擇「y」繼續、ONTAP 則會建立搜尋路徑。不過、您必須先建立目錄結構、才能在主目錄組態中使用搜尋路徑。如果您選擇不繼續、則命令會失敗；不會建立搜尋路徑。然後您可以建立路徑目錄結構、然後重新執行「vserver CIFS主目錄search-path add」命令。
+。 `vserver cifs home-directory search-path add` 命令會檢查中指定的路徑 `-path` 命令執行期間的選項。如果指定的路徑不存在、命令會產生訊息、提示您是否要繼續。您可以自行選擇 `y` 或 `n`。如果您選擇 `y` 若要繼續、 ONTAP 會建立搜尋路徑。不過、您必須先建立目錄結構、才能在主目錄組態中使用搜尋路徑。如果您選擇不繼續、則命令會失敗；不會建立搜尋路徑。接著您可以建立路徑目錄結構、然後重新執行 `vserver cifs home-directory search-path add` 命令。
 
 .步驟
-. 新增主目錄搜尋路徑：「vserver CIFS主目錄搜尋路徑add -vserver vserver -path path」
-. 使用「vserver CIFS主目錄search-path show」命令、確認您已成功新增搜尋路徑。
+. 新增主目錄搜尋路徑： `vserver cifs home-directory search-path add -vserver vserver -path path`
+. 請確認您已使用成功新增搜尋路徑 `vserver cifs home-directory search-path show` 命令。
 
 
 .範例
-以下範例將路徑「/hhome1」新增至SVM VS1的主目錄組態。
+下列範例新增路徑 `/home1` 移至 SVM VS1 上的主目錄組態。
 
 [listing]
 ----
@@ -35,7 +35,7 @@ Vserver     Position Path
 ----------- -------- -----------------
 vs1         1        /home1
 ----
-下列範例嘗試將路徑「/Home2」新增至SVM VS1的主目錄組態。路徑不存在。您可以選擇不繼續。
+下列範例會嘗試新增路徑 `/home2` 移至 SVM VS1 上的主目錄組態。路徑不存在。您可以選擇不繼續。
 
 [listing]
 ----

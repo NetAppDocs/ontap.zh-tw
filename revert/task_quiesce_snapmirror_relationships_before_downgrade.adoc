@@ -14,7 +14,7 @@ summary: 建議您在執行ONTAP 不中斷營運的降級功能之前、先停�
 建議您在執行ONTAP 降級功能之前、先停止SnapMirror作業。
 
 . 使用SnapMirror show命令來確定每個SnapMirror關係的目的地路徑。
-. 對於每個目的地磁碟區、暫停未來的SnapMirror傳輸：「napmirror quiesce -destination-path destination...」
+. 針對每個目的地Volume、暫停未來的SnapMirror傳輸： `snapmirror quiesce -destination-path destination`
 +
 如果SnapMirror關係沒有作用中的傳輸、此命令會將其狀態設為靜止。如果關係有作用中的傳輸、狀態會設定為靜止、直到傳輸完成為止、然後狀態會變成靜止。
 
@@ -26,7 +26,7 @@ summary: 建議您在執行ONTAP 不中斷營運的降級功能之前、先停�
 ----
 cluster1::> snapmirror quiesce -destination-path vs0.example.com:vol1
 ----
-. 驗證是否所有SnapMirror關係均處於靜止狀態：「napmirror show -STATUS！quiesed」（napmirror show -STATUS！靜止）
+. 確認所有SnapMirror關係均已靜止： `snapmirror show -status !Quiesced`
 +
 此命令會顯示任何非靜止的SnapMirror關係。
 
@@ -54,7 +54,7 @@ There are no entries matching your query.
 
 
  a| 
-停止傳輸：「napmirror abort-destination-path destination -h」*注意：*如果您要中止負載共用鏡像傳輸、則必須使用-foregrounder true參數。
+停止傳輸： `snapmirror abort -destination-path destination -h`    * 注意： * 如果您正在中止負載共用鏡像傳輸、則必須使用 -fort景色 真的參數。
  a| 
 此命令會停止SnapMirror傳輸、並將目的地磁碟區還原至上次成功傳輸的Snapshot複本。關係設定為「靜止」狀態。
 

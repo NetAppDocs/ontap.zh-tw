@@ -16,7 +16,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 .關於這項工作
 以下程序假設原始來源Volume中的基準線完整無缺。如果基準不完整、您必須先建立並初始化您要從中處理資料的磁碟區與原始來源磁碟區之間的關係、然後再執行程序。
 
-您必須以「_hostip：_/LUN/_name_」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「名稱」是元素Volume的名稱。
+您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
 
 從ONTAP 功能表9.4開始、當ONTAP 您從功能表來源重新啟動時、系統會自動複寫在從功能表目的地處理資料時所建立的LUN Snapshot複本。
 
@@ -30,13 +30,13 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 .步驟
 . 刪除原始資料保護關係：
 +
-「napmirror DELETE -source-path _svm:volume _」（napmirror刪除-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/名稱_-policy _」（原則_）
+`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例刪除原始來源磁碟區「0005」（IP位址為10.0.11）與您所提供資料的磁碟區之間的關係、「svm_backup」上的「Vola_dst」（Vola_dst）：
+以下範例刪除原始來源磁碟區之間的關係、 `0005` 在 IP 位址 10.0.0.11 、以及您提供資料的磁碟區、 `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -45,7 +45,7 @@ cluster_dst::> snapmirror delete -source-path 10.0.0.11:/lun/0005 -policy Mirror
 ----
 . 反轉原始資料保護關係：
 +
-「napmirror resSync -source-path _svm:volume _」（napmirror重新同步-來源路徑_Svm:volume _）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_-policy _」（原則_）
+`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -54,7 +54,7 @@ cluster_dst::> snapmirror delete -source-path 10.0.0.11:/lun/0005 -policy Mirror
 雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
 
 +
-以下範例反轉了原始來源磁碟區（IP位址為10.0.11的「0005」）與您所提供資料的磁碟區之間的關係、即在「shvm_backup」上的「Vola_dst」（Vola_dst）：
+以下範例反轉原始來源 Volume 之間的關係、 `0005` 在 IP 位址 10.0.0.11 、以及您提供資料的磁碟區、 `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -63,7 +63,7 @@ cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 ----
 . 更新反轉的關係：
 +
-「napmirror update -source-path _svm:volume？」（napmirror update -source-path _svm:volume）|叢集：//Svm/volume（/volume）- dite-path _hostips：_/lun/_name_」
+`snapmirror update -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -71,11 +71,11 @@ cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 +
 [NOTE]
 ====
-如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用「napmirror initialize」重新初始化關係。
+如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用 `snapmirror initialize` 以重新初始化關係。
 
 ====
 +
-以下範例更新您提供資料的磁碟區、「svm_backup」上的「Vola_dst」、以及IP位址為10.0.11的原始來源磁碟區「0005」之間的關係：
+以下範例更新了您要從中提供資料的磁碟區之間的關係、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `0005` IP 位址 10.0.0.11 ：
 
 +
 [listing]
@@ -84,13 +84,13 @@ cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 ----
 . 停止針對反向關係進行排程的轉帳：
 +
-「napmirror quiesce -source-path _svm:volume _」（napmirror靜止-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_」
+`snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會停止您所提供資料的磁碟區之間的排程傳輸、在「shvm_backup」上停止「Vola_dst」、在IP位址10.0.11上停止原始來源磁碟區「0005」：
+以下範例會停止您要提供資料的磁碟區之間的排程傳輸、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `0005` IP 位址 10.0.0.11 ：
 
 +
 [listing]
@@ -99,13 +99,13 @@ cluster_dst::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-
 ----
 . 停止針對反向關係進行中的轉帳：
 +
-「napmirror abort-source-path _svm:volume？」（napmirror abort-source-path _svm:volume）|叢集：//Svm/volume（/volume）- dite-path _hostips：_/lun/_name_」
+`snapmirror abort -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會停止在您提供資料的磁碟區之間進行傳輸、在「shvm_backup」上停止「Vola_dst」、在IP位址10.0.11上停止原始來源磁碟區「0005」：
+以下範例會停止您正在處理資料的磁碟區之間持續傳輸、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `0005` IP 位址 10.0.0.11 ：
 
 +
 [listing]
@@ -114,13 +114,13 @@ cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-pa
 ----
 . 打破反向關係：
 +
-「napmirror中斷-source-path _svm:volume？」|「叢集」：//Svm/volume _-dite-path _hostips：_/lun/_name_」
+`snapmirror break -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例打破了您提供資料的磁碟區、「svm_backup」上的「Vola_dst」、以及IP位址為10.0.11的原始來源磁碟區「0005」之間的關係：
+以下範例打破了您提供資料的磁碟區之間的關係、 `volA_dst` 開啟 `svm_backup`和原始來源Volume、 `0005` IP 位址 10.0.0.11 ：
 
 +
 [listing]
@@ -129,13 +129,13 @@ cluster_dst::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 ----
 . 刪除反轉的資料保護關係：
 +
-「napmirror DELETE -source-path _svm:volume _」（napmirror刪除-source-path _svm:volume）|「叢集」：//Svm/volume _-dite-path _hostip_：/lun/_name_-policy _」（原則_）
+`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip_:/lun/_name_ -policy _policy_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例刪除了原始來源磁碟區「0005」（IP位址為10.0.11）與您提供資料的磁碟區之間的反向關係：「VM備份」上的「Vola_dst」（Vola_dst）：
+以下範例刪除原始來源磁碟區之間的反向關係、 `0005` 在 IP 位址 10.0.0.11 、以及您提供資料的磁碟區、 `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -144,13 +144,13 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 . 重新建立原始資料保護關係：
 +
-「napmirror resSync -source-path _hostip_:/LUN/_name_-destination-path _svm:volume | cluster：//Svm/volume _」
+`snapmirror resync -source-path _hostip_:/lun/_name_ -destination-path _SVM:volume|cluster://SVM/volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例重新建立原始來源磁碟區（IP位址為10.0.11的「0005」）與原始目的地磁碟區（在「shvm_backup」上為「Vola_dst」）之間的關係：
+以下範例重新建立原始來源磁碟區之間的關係、 `0005` 在 IP 位址 10.0.0.11 和原始目的地 Volume 、 `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]
@@ -160,4 +160,4 @@ cluster_dst::> snapmirror resync -source-path 10.0.0.11:/lun/0005 -destination-p
 
 
 .完成後
-使用「napmirror show」命令來驗證SnapMirror關係是否已建立。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。

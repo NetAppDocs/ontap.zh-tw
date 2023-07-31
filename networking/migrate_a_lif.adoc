@@ -35,7 +35,8 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
 移轉iSCSI LIF僅限於主節點或HA合作夥伴上的連接埠。
 
 +
-您也可以使用System Manager移轉iSCSI LIF。link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
+您也可以使用System Manager移轉iSCSI LIF。
+link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
 
 * 如果您的平台並非ASA 執行ONTAP 版本9.11.1或更新版本的All SAN Array（更新版本）平台、您就無法將iSCSI LIF從一個節點移轉至另一個節點。
 +
@@ -44,7 +45,7 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
 * 如果您想要透過RDMA移轉LIF（網路介面）for NFS、則必須確保目的地連接埠具有RoCE功能。您必須執行ONTAP 版本S廳9.10.1或更新版本、才能使用CLI移轉LIF、ONTAP 或使用System Manager移轉版本。在System Manager中、一旦您選取了具備RoCE功能的目的地連接埠、就必須勾選*使用roce連接埠*旁的方塊、才能成功完成移轉。深入瞭解 link:../nfs-rdma/configure-lifs-task.html["透過RDMA設定NFS的LIF"]。
 * 當您移轉來源或目的地LIF時、VMware VAAI複製卸載作業會失敗。深入瞭解卸載複本：
 +
-** link:../nfs-admin/support-vmware-vstorage-over-nfs-concept.html["NFS環境"]
+** link:../nfs-admin/support-vmware-vstorage-over-nfs-concept.html["NFS 環境"]
 ** link:../san-admin/storage-virtualization-vmware-copy-offload-concept.html["SAN環境"]
 
 
@@ -82,21 +83,21 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
  a| 
 特定LIF
  a| 
-網路介面移轉
+`network interface migrate`
 
 
 
  a| 
 節點上的所有資料和叢集管理生命體
  a| 
-「網路介面移轉到全部」
+`network interface migrate-all`
 
 
 
  a| 
 連接埠上的所有生命
  a| 
-「network interface migration-all -Node <node>-port <port>」
+`network interface migrate-all -node <node> -port <port>`
 
 |===
 下列範例說明如何移轉名為的LIF `datalif1` 在SVM上 `vs0` 連接埠 `e0d` 開啟 `node0b`：

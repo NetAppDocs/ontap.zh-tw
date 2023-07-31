@@ -16,40 +16,48 @@ Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用
 .關於這項工作
 Hyper-V和SQL Server使用網域電腦帳戶建立SMB連線。此外、SQL Server也會使用網域使用者帳戶做為進行SMB連線的服務帳戶。
 
-建立儲存虛擬機器（SVM）時ONTAP 、會自動建立名為「'pcuser'」（UID為「65534」）的預設使用者、以及名為「'pcuser'（gid為「65534」）的群組、並將預設使用者新增至「'pcuser'」群組。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
+當您建立儲存虛擬機器（ SVM ）時、 ONTAP 會自動建立名為「 'pcuser' 」的預設使用者（其 UID 為 `65534`）和名稱為「 'pcuser' 的群組（具有的 GID `65534`）、並將預設使用者新增至「 'pcuser' 」群組。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
 
 .步驟
 . 判斷是否有預設的UNIX使用者：
 +
-「* vserver CIFS」選項顯示-vserver _vserver_name_*
+`*vserver cifs options show -vserver _vserver_name_*`
 
 . 如果未設定預設使用者選項、請判斷是否有UNIX使用者可以指定為預設UNIX使用者：
 +
-「* vserver服務UNIX使用者show -vserver _vserver_name_*」
+`*vserver services unix-user show -vserver _vserver_name_*`
 
 . 如果未設定預設使用者選項、而且沒有UNIX使用者可指定為預設UNIX使用者、請建立預設UNIX使用者和預設群組、然後將預設使用者新增至群組。
 +
-一般而言、預設使用者的使用者名稱為「'pcuser'」、必須指派「65534」的UID。預設群組通常會指定群組名稱「'pcuser'」。指派給群組的GID必須為「65534」。
+一般而言、預設使用者的使用者名稱為「 'pcuser' 」、必須指派的 UID `65534`。預設群組通常會指定群組名稱「'pcuser'」。指派給群組的 GID 必須是 `65534`。
 
 +
-.. 建立預設群組：+`* vserver services unix-group create -vserver _vserver_name_-name pcluser-id 65534*
-.. 建立預設使用者並將預設使用者新增至預設群組：+ hy*vserver服務unix-usercreate -vserver _vserver_name_-userpcluser-id 65534 -prime-gid 65534*
-.. 驗證是否正確配置了默認用戶和默認組：+`* vserver services unix-user show -vserver _vserver_name_*+`* vserver services unix-group show -vserver _vserver_name_-ems*
+.. 建立預設群組：
++
+`*vserver services unix-group create -vserver _vserver_name_ -name pcuser -id 65534*`
+.. 建立預設使用者、並將預設使用者新增至預設群組：
++
+`*vserver services unix-user create -vserver _vserver_name_ -user pcuser -id 65534 -primary-gid 65534*`
+.. 確認已正確設定預設使用者和預設群組：
++
+`*vserver services unix-user show -vserver _vserver_name_*`
++
+`*vserver services unix-group show -vserver _vserver_name_ -members*`
 
 
 . 如果未設定CIFS伺服器的預設使用者、請執行下列步驟：
 +
 .. 設定預設使用者：
 +
-hy*vserver CIFS選項可修改-vserver * vserver_name*-default-unix-user-pcuser*
+`*vserver cifs options modify -vserver *vserver_name* -default-unix-user pcuser*`
 
 .. 確認預設UNIX使用者已正確設定：
 +
-「* vserver CIFS」選項顯示-vserver _vserver_name_*
+`*vserver cifs options show -vserver _vserver_name_*`
 
 
 
-. 若要驗證應用程式伺服器的電腦帳戶是否正確對應至預設使用者、請使用「vserver CIFS工作階段show」命令、將磁碟機對應至駐留在SVM上的共用區、並確認Windows使用者與UNIX使用者之間的對應關係。
+. 若要驗證應用程式伺服器的電腦帳戶是否正確對應至預設使用者、請將磁碟機對應至 SVM 上的共用、然後使用確認 Windows 使用者與 UNIX 使用者的對應 `vserver cifs session show` 命令。
 +
 如需使用此命令的詳細資訊、請參閱手冊頁。
 

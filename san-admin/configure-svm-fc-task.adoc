@@ -14,10 +14,10 @@ summary: 若要設定FC的儲存虛擬機器（SVM）、您必須為SVM建立生
 若要設定FC的儲存虛擬機器（SVM）、您必須為SVM建立生命期、並將FC傳輸協定指派給這些生命期。
 
 .開始之前
-您必須擁有FC授權、而且必須啟用。如果未啟用FC授權、則LIF和SVM似乎處於線上狀態、但作業狀態為「親自」。您必須啟用FC服務、才能讓您的LIF和SVM正常運作。您必須為SVM中的所有FC LIF使用單一啟動器分區、才能裝載啟動器。
+您必須擁有FC授權、而且必須啟用。如果未啟用 FC 授權、則生命體和 SVM 看起來會上線、但作業狀態為 `down`。您必須啟用FC服務、才能讓您的LIF和SVM正常運作。您必須為SVM中的所有FC LIF使用單一啟動器分區、才能裝載啟動器。
 
 .關於這項工作
-NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一個FC LIF。每個節點必須使用兩個LIF和兩個Fabric、每個節點必須附加一個LIF。這可在節點層和網路上提供備援功能。
+NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一個FC LIF。  每個節點必須使用兩個LIF和兩個Fabric、每個節點必須附加一個LIF。這可在節點層和網路上提供備援功能。
 
 .步驟
 [role="tabbed-block"]
@@ -35,14 +35,16 @@ NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一
 . 在System Manager中、按一下* Storage > Storage VM*、然後按一下* Add*。
 . 輸入儲存VM的名稱。
 . 選擇* FC*作為*存取傳輸協定*。
-. 按一下*啟用FC*。+ FC連接埠會自動指派。
+. 按一下 * 啟用 FC* 。
++ FC連接埠會自動指派。
 . 按一下「 * 儲存 * 」。
 
  a| 
 . 在System Manager中、按一下* Storage > Storage VM*。
 . 按一下您要設定的儲存VM。
 . 按一下*設定*索引標籤、然後按一下 image:icon_gear.gif[""] FC傳輸協定旁邊。
-. 按一下「*啟用FC*」、然後輸入網路介面的IP位址和子網路遮罩。+ FC連接埠會自動指派。
+. 按一下「*啟用FC*」、然後輸入網路介面的IP位址和子網路遮罩。
++ FC連接埠會自動指派。
 . 按一下「 * 儲存 * 」。
 
 
@@ -52,7 +54,7 @@ NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一
 --
 . 在SVM上啟用FC服務：
 +
-「vserver FCP create -vserver _vserver_name_-stue-admin up」
+`vserver fcp create -vserver _vserver_name_ -status-admin up`
 
 . 在每個服務FC的節點上為SVM建立兩個生命期：
 +
@@ -62,13 +64,13 @@ NetApp為每個以FC傳輸協定提供資料的SVM、每個節點至少支援一
 
 ** 適用於更新版本的版本：ONTAP
 +
-「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定FCP -home-node_node_name_-home-port _port_」
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol fcp -home-node _node_name_ -home-port _port_`
 
 
 
-. 確認您的生命已建立、且其作業狀態為「線上」：
+. 確認您的生命已建立、且其操作狀態為 `online`：
 +
-「網路介面show -vserver _vserver_name__lif_name_」
+`network interface show -vserver _vserver_name_ _lif_name_`
 
 
 

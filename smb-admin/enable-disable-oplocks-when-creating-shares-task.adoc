@@ -28,11 +28,11 @@ oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔�
  a| 
 在共用建立期間、在共用區上啟用oplocks
  a| 
-輸入下列命令：「+vserver CIFS共用區create -vserver _vserver_name_-share-name share_name -path path_to_d共用-share-properties [oplocks、...]+]
+輸入下列命令： `+vserver cifs share create -vserver _vserver_name_ -share-name share_name -path path_to_share -share-properties [oplocks,...]+`
 
 [NOTE]
 ====
-如果您希望共享區只啟用「oplocks」、「可瀏覽的」和「changenotifening」等預設共用內容、則在建立SMB共用時、不需要指定「-share-properties」參數。如果您想要預設以外的任何共用屬性組合、則必須指定共用屬性清單中的「-share-properties」參數、以供該共用使用。
+如果您希望共用只有預設的共用內容、即 `oplocks`、 `browsable`和 `changenotify` 啟用時、您不需要指定 `-share-properties` 建立 SMB 共用時的參數。如果您想要使用預設以外的任何共用內容組合、則必須指定 `-share-properties` 參數、以及用於該共用的共用內容清單。
 
 ====
 
@@ -40,11 +40,11 @@ oplocks可讓用戶端在本機上鎖定檔案和快取內容、進而提升檔�
  a| 
 在共用建立期間停用共用區上的oplocks
  a| 
-輸入下列命令：「+vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path _path_to _share_-share-properties [other _share_property、...]+]
+輸入下列命令： `+vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_to_share_ -share-properties [other_share_property,...]+`
 
 [NOTE]
 ====
-停用oplocks時、您必須在建立共用時指定共用內容清單、但不應指定oplocks屬性。
+停用 oplocks 時、您必須在建立共用時指定共用內容清單、但不應指定 `oplocks` 屬性。
 
 ====
 |===

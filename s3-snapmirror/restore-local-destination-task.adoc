@@ -24,7 +24,7 @@ summary: 當來源儲存區中的資料遺失或毀損時、您可以從目的�
 .關於這項工作
 您可以將目的地庫位還原至現有的庫位或新的庫位。還原作業的目標儲存區必須大於目的地儲存區的邏輯已用空間。
 
-如果您使用現有的儲存區、則在開始還原作業時必須是空的。還原不會「回溯」儲存區的時間、而是將先前的內容填入一個空的儲存區。
+如果您使用現有的儲存區、則在開始還原作業時必須是空的。  還原不會「回溯」儲存區的時間、而是將先前的內容填入一個空的儲存區。
 
 還原作業必須從遠端叢集啟動。
 
@@ -51,7 +51,8 @@ summary: 當來源儲存區中的資料遺失或毀損時、您可以從目的�
 ** 若要還原成*新的Bucket *、請輸入下列值：
 +
 *** 用於託管新儲存區的叢集與儲存VM。
-*** 新的儲存庫名稱、容量和效能服務層級。請參閱 link:../s3-config/storage-service-definitions-reference.html["儲存服務層級"] 以取得更多資訊。
+*** 新的儲存庫名稱、容量和效能服務層級。
+請參閱 link:../s3-config/storage-service-definitions-reference.html["儲存服務層級"] 以取得更多資訊。
 *** 目的地S3伺服器CA憑證的內容。
 
 
@@ -66,7 +67,8 @@ summary: 當來源儲存區中的資料遺失或毀損時、您可以從目的�
 == CLI程序
 
 . 如果您要還原至新的儲存庫、請建立新的儲存庫。如需詳細資訊、請參閱 link:create-cloud-backup-new-bucket-task.html["建立新儲存庫（雲端目標）的備份關係"]。
-. 針對目的地儲存區初始化還原作業：「napmirror restore -source-path _svm_name_：/bucke/_bucket_name_-destination-path _svm_name_：/bucket/_bucket_name_」
+. 為目的地貯體啟動還原作業：
+`snapmirror restore -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _svm_name_:/bucket/_bucket_name_`
 
 
 .範例

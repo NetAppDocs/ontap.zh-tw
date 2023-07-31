@@ -13,31 +13,31 @@ summary: 授權是一或多個軟體授權的記錄。在從功能升級到功�
 [role="lead"]
 授權是一或多個軟體授權的記錄。在從功能更新到功能更新到版本9.9.1的過程中、授權金鑰會以28個字元的字串形式提供、每個功能有一個金鑰。ONTAP ONTAP ONTAP更新授權金鑰格式的NetApp授權檔案（NLF）已於ONTAP 《》中推出、僅供叢集範圍內的功能使用、例如FabricPool ：
 
-從功能完整的支援升級到功能完整的升級版、所有授權均以NLF形式提供。ONTAP根據ONTAP 您的購買情況、LIF授權可啟用一或多項功能。您可以搜尋系統（控制器）序號、從NetApp支援網站擷取NLF授權。
+從功能完整的支援升級到功能完整的升級版、所有授權均以NLF形式提供。ONTAP根據ONTAP 您的購買情況、LIF授權可啟用一或多項功能。您可以搜尋系統（控制器）序號，從 NetApp 支援網站擷取 NLF 授權。
 
-您可以在NetApp支援網站的* My Support*>* Software Licenses*（需要登入）下、找到初始或附加軟體訂單的授權。如需授權更換的詳細資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["更新AFF/FAS系統授權的主機板後更換程序"]。
+您可以在 NetApp 支援網站的「*My Support（我的支援）*> *Software Licenses（軟體授權）*」下找到初始或附加軟體訂單的授權（需登入）。如需授權更換的詳細資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["更新AFF/FAS系統授權的主機板後更換程序"]。
 
 利用支援功能的支援、您可以透過下列方式管理功能授權：ONTAP
 
-* 顯示已安裝授權的相關資訊（「系統授權顯示」）
-* 在叢集上顯示需要授權的套件及其目前授權狀態（「系統授權狀態顯示」）
-* 從叢集或您指定序號的節點刪除授權（「系統授權刪除」）
-* 顯示或移除過期或未使用的授權（「系統授權清理」）
+* 顯示已安裝授權的相關資訊 (`system license show`）
+* 顯示叢集上需要授權的套件及其目前授權狀態 (`system license status show`）
+* 從叢集或您指定序號的節點刪除授權 (`system license delete`）
+* 顯示或移除過期或未使用的授權 (`system license clean-up`）
 
 
 利用此功能、您可以透過下列方式監控功能使用量和授權風險：ONTAP
 
-* 以每個節點為基礎、顯示叢集中的功能使用量摘要（「系統功能使用量顯示摘要」）
+* 以每個節點為基礎、顯示叢集中的功能使用摘要 (`system feature-usage show-summary`）
 +
 摘要包含計數器資訊、例如功能使用的週數、以及上次使用功能的日期和時間。
 
-* 在叢集中以每個節點和每週為單位顯示功能使用狀態（「系統功能使用量顯示歷史記錄」）
+* 以每節點和每週為單位顯示叢集中的功能使用狀態 (`system feature-usage show-history`）
 +
-功能使用狀態可以是「未使用」、「已設定」或「使用中」。如果使用資訊無法使用、狀態會顯示「Not -Available」（無法使用）。
+功能使用狀態可以是 `not-used`、 `configured`或 `in-use`。如果無法取得使用資訊、則會顯示狀態 `not-available`。
 
-* 顯示每個授權套件的授權授權風險狀態（「系統授權權利風險顯示」）
+* 顯示每個授權套件的授權權利風險狀態 (`system license entitlement-risk show`）
 +
-風險狀態可以是「低」、「中」、「高」、「無牌」或「未知」。風險狀態也包含在AutoSupport 資訊資訊中。授權權利風險不適用於基礎授權套件。
+風險狀態可以是 `low`、 `medium`、 `high`、 `unlicensed`或 `unknown`。風險狀態也包含在AutoSupport 資訊資訊中。授權權利風險不適用於基礎授權套件。
 
 +
 授權權利風險的評估是使用多種因素、其中可能包括但不限於下列因素：
@@ -45,14 +45,15 @@ summary: 授權是一或多個軟體授權的記錄。在從功能升級到功�
 +
 ** 每個套件的授權狀態
 ** 每個授權的類型、到期狀態、以及整個叢集的授權一致性
-** 使用授權套件相關功能如果評估程序判定叢集有授權權利風險、則命令輸出也會建議修正行動。
+** 使用與授權套件相關的功能
+如果評估程序判斷叢集有授權權利風險、命令輸出也會建議修正行動。
 
 
 
 
 [NOTE]
 ====
-附註：ONTAP 使用System Manager或CLI時、支援28個字元的授權金鑰。不過、如果某項功能安裝了NLF授權、您就無法在NLF授權上安裝28個字元的授權金鑰、以取得相同的功能。如需使用System Manager安裝NLF或授權金鑰的相關資訊、請參閱「啟用新功能」。
+附註： ONTAP 9.10.1 也支援使用系統管理員或 CLI 的 28 個字元授權金鑰。不過、如果某項功能安裝了NLF授權、您就無法在NLF授權上安裝28個字元的授權金鑰、以取得相同的功能。如需使用System Manager安裝NLF或授權金鑰的相關資訊、請參閱「啟用新功能」。
 
 ====
 .相關資訊

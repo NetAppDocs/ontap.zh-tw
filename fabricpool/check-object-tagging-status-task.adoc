@@ -14,7 +14,7 @@ summary: 您可以檢查一FabricPool 或多個版本的功能是否已完成標
 您可以檢查一FabricPool 或多個版本的功能是否已完成標記。
 
 .步驟
-. 使用帶有「-sids-object-Retagging」選項的「vol show」命令、查看標記是否正在進行、是否已完成、或是否未設定標記。
+. 使用 `vol show` 命令 `-fieldsneeds-object-retagging` 選項可查看標記是否正在進行、是否已完成、或是否未設定標記。
 +
 [listing]
 ----
@@ -24,9 +24,9 @@ vol show -fields needs-object-retagging  [ -instance | -volume <volume name>]
 將顯示下列其中一個值：
 
 +
-** 「真」：物件標記掃描器尚未執行、或需要為此磁碟區重新執行
-** 「假」：物件標記掃描器已完成此磁碟區的標記
-** 「+」（+）+「+」（+）-物件標記掃描器不適用於此磁碟區。這種情況發生在未駐留在FabricPools上的磁碟區。
+** `true` -- 物件標記掃描器尚未執行、或需要為此磁碟區再次執行
+** `false` -- 物件標記掃描器已完成此磁碟區的標記
+** `+<->+` -- 物件標記掃描器不適用於此 Volume 。這種情況發生在未駐留在FabricPools上的磁碟區。
 
 
 

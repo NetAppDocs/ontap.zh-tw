@@ -29,7 +29,7 @@ OCSP支援下列應用程式：
 
 
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」。
+. 將權限層級設為進階： `set -privilege advanced`。
 . 若要啟用或停用OCSP憑證狀態檢查以檢查特定ONTAP 的功能、請使用適當的命令。
 +
 |===
@@ -77,24 +77,24 @@ cluster::*> security config ocsp enable -app asup,ems
  a| 
 已啟用
  a| 
-「安全性組態OCSP啟用」
+`security config ocsp enable`
 
-「應用程式全部」
+`-app all`
 
 
 
  a| 
 已停用
  a| 
-「安全性組態OCSP停用」
+`security config ocsp disable`
 
-「應用程式全部」
+`-app all`
 
 |===
 +
 啟用時、所有應用程式都會收到已簽署的回應、表示指定的憑證良好、已撤銷或不明。若憑證遭撤銷、應用程式將無法繼續進行。如果應用程式無法從OCSP伺服器接收回應、或伺服器無法連線、則應用程式將無法繼續進行。
 
-. 使用「安全性組態OCSP show」命令來顯示所有支援OCSP的應用程式及其支援狀態。
+. 使用 `security config ocsp show` 顯示所有支援 OCSP 的應用程式及其支援狀態的命令。
 +
 [listing]
 ----

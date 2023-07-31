@@ -26,7 +26,7 @@ summary: 如果連接埠重新連接纜線、或交換器組態變更、則可�
 . 檢查交換器組態和纜線。
 . 檢查連接埠的可連線性：
 +
-「網路連接埠可連線性show -detail -nod節點-port」
+`network port reachability show -detail -node -port`
 
 +
 命令輸出包含可到達性結果。
@@ -47,7 +47,8 @@ image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
  a| 
 好的
  a| 
-連接埠可連線至其指派的廣播網域的第2層。如果連線狀態為「正常」、但有「非預期的連接埠」、請考慮合併一或多個廣播網域。如需詳細資訊、請參閱下列_Unexpected連接埠_資料列。
+連接埠可連線至其指派的廣播網域的第2層。
+如果連線狀態為「正常」、但有「非預期的連接埠」、請考慮合併一或多個廣播網域。如需詳細資訊、請參閱下列_Unexpected連接埠_資料列。
 
 如果連線狀態為「正常」、但有「無法連線的連接埠」、請考慮分割一或多個廣播網域。如需詳細資訊、請參閱下列_Unreachable連接埠_資料列。
 
@@ -84,7 +85,7 @@ image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
 
 您可以修復連接埠連線能力。執行下列命令時、系統會將連接埠指派給可連線的廣播網域：
 
-網路連接埠可連線性修復-節點-連接埠
+`network port reachability repair -node -port`
 
 
 
@@ -95,7 +96,7 @@ image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
 
 您可以修復連接埠連線能力。執行下列命令時、系統會將連接埠指派給預設IPspace中自動建立的新廣播網域：
 
-網路連接埠可連線性修復-節點-連接埠
+`network port reachability repair -node -port`
 
 
 
@@ -126,21 +127,21 @@ image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
 
 如果LIF的主連接埠移至其他節點、或已清除、則LIF會被視為「已移除」。您可以使用下列命令來檢視這些已移出的LIF：
 
-「顯示介面」
+`displaced-interface show`
 
 如果有任何需要更換的生命、您必須：
 
 * 還原已移出的LIF的主場：
 +
-「顯示介面還原」
+`displaced-interface restore`
 
 * 手動設定LIF的主目錄：
 +
-「網路介面修改-home-port -home-nod節點」
+`network interface modify -home-port -home-node`
 
 * 如果您對LIF目前設定的主目錄感到滿意、請從「失所介面」表格中移除該項目：
 +
-「顯示介面刪除」
+`displaced-interface delete`
 
 
 
@@ -150,17 +151,17 @@ image:ontap_nm_image1.png["修復可連線性決策樹狀結構"]
 
 如果修復的連接埠有VLAN、這些VLAN會自動刪除、但也會記錄為「已移除」。您可以檢視這些已移離的VLAN：
 
-「顯示虛擬區域網路」
+`displaced-vlans show`
 
 如果有任何已被取代的VLAN、您必須：
 
 * 將VLAN還原至其他連接埠：
 +
-「Dis放置VLAN還原」
+`displaced-vlans restore`
 
 * 從「Valler-VLANs」表中移除項目：
 +
-「Dis放置VLAN刪除」
+`displaced-vlans delete`
 
 
 

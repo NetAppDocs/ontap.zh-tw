@@ -11,7 +11,7 @@ summary: 您可以修改參數-v4-acl-max-aces、以修改每個NFSv4 ACL允許�
 
 
 [role="lead"]
-您可以修改參數「-v4-acl-max-aces」、以修改每個NFSv4 ACL允許的最大ACE數。根據預設、每個ACL的限制設為400個ACE。增加此限制有助於確保資料成功移轉、ACL中包含超過400個ACE、以移轉至執行ONTAP 效益測試的儲存系統。
+您可以修改參數、以修改每個 NFSv4 ACL 允許的 ACE 數量上限 `-v4-acl-max-aces`。根據預設、每個ACL的限制設為400個ACE。增加此限制有助於確保資料成功移轉、ACL中包含超過400個ACE、以移轉至執行ONTAP 效益測試的儲存系統。
 
 .關於這項工作
 增加此限制可能會影響使用NFSv4 ACL存取檔案的用戶端效能。
@@ -19,20 +19,20 @@ summary: 您可以修改參數-v4-acl-max-aces、以修改每個NFSv4 ACL允許�
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 修改NFSv4 ACL的最大ACE限制：
 +
-「Vserver NFS modify -v4.x acl-max-aces max-ace_iment'」
+`vserver nfs modify -v4-acl-max-aces max_ace_limit`
 
 +
 的有效範圍
 
 +
-'Marax_ace_limit（最大值）是"192"到"1024."
+`max_ace_limit` 是 `192` 至 `1024.`
 
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

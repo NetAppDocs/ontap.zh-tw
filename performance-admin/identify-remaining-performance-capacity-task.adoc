@@ -17,10 +17,10 @@ summary: 效能容量或預留空間可測量在資源上的工作負載效能�
 此工作需要進階權限層級命令。
 
 .關於這項工作
-您可以針對「-object」選項使用下列值來收集及顯示保留空間統計資料：
+您可以將下列值用於 `-object` 用於收集和顯示保留空間統計資料的選項：
 
-* 對於CPU、請使用「RESOUR_DA餘 量_CPU」。
-* 對於Aggregate、請使用「RESOUR資料 保留空間」。
+* 對於 CPU 、 `resource_headroom_cpu`。
+* 對於集合體、 `resource_headroom_aggr`。
 
 
 您也可以使用System Manager和Active IQ Unified Manager 整套功能來完成這項工作。
@@ -28,34 +28,34 @@ summary: 效能容量或預留空間可測量在資源上的工作負載效能�
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 開始即時保留空間統計資料收集：
 +
-「tstart statisticsion–object resource_netmite_cpu|aggr」
+`statistics start –object resource_headroom_cpu|aggr`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 . 顯示即時保留空間統計資訊：
 +
-「tstatisticsion show -object resource_thime_cpu|aggr」
+`statistics show -object resource_headroom_cpu|aggr`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 . 返回管理權限：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 
 
 .範例
 下列範例顯示叢集節點的平均每小時保留空間統計資料。
 
-您可以從「optimal_point_utilization」計數器減去「current_utilization」計數器、來計算節點的可用效能容量。在此範例中、「CPU_sti2520-213」的使用率為-14%（72%至86%）、這表示過去一小時內CPU平均過度使用率。
+您可以透過減去來計算節點的可用效能容量 `current_utilization` 來自的計數器 `optimal_point_utilization` 計數器。在此範例中、是的使用率容量 `CPU_sti2520-213` 為 -14% （ 72% 至 86% ）、表示過去一小時的 CPU 平均利用率過高。
 
-您可以指定「EWMA_每日」、「EWMA_EUSEY」或「EWMA_BONY」、以取得較長時間內平均的相同資訊。
+您可以指定 `ewma_daily`、 `ewma_weekly`或 `ewma_monthly` 以獲得較長時間內的相同資訊平均值。
 
 [listing]
 ----

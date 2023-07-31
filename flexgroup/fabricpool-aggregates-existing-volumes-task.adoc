@@ -14,7 +14,7 @@ summary: 從ONTAP 功能支援的版本起、FabricPool 支援從功能9.5開始
 從ONTAP 功能支援的版本起、FabricPool 支援從功能9.5開始FlexGroup 的功能。如果您想要在FabricPool 現有FlexGroup 的流通區使用aggregate in整個功能、您可以將FlexGroup 駐留在該功能區的集合體轉換成FabricPool 集合體、或是將FlexGroup 流通區的成員資料移轉到FabricPool 流通區、以利在流通區內集合體。
 
 .您需要的產品
-* 此現象必須將空間保證設定為「無」FlexGroup 。
+* FlexGroup 磁碟區必須將空間保證設定為 `none`。
 * 如果您想要將FlexGroup 駐留在該實體磁碟區的集合體轉換成FabricPool 在元資料中的集合體、則集合體必須使用所有的SSD磁碟。
 
 
@@ -24,13 +24,13 @@ summary: 從ONTAP 功能支援的版本起、FabricPool 支援從功能9.5開始
 .選擇
 * 若要將FlexGroup 駐留在該磁碟區上的集合體轉換成FabricPool 在整個過程中的集合體、請執行下列步驟：
 +
-.. 在現有FlexGroup 的支援磁碟區上設定分層原則：「Volume modify -volume flexgroup名稱-tiering原則[auto| snapshot | none| backup]」
+.. 在現有的 FlexGroup 磁碟區上設定分層原則： `volume modify -volume flexgroup_name -tiering-policy [auto|snapshot|none|backup]`
 +
 [listing]
 ----
 cluster-2::> volume modify -volume fg1 -tiering-policy auto
 ----
-.. 識別FlexGroup 出此現象所在的集合體：「Volume show -volume flexgroup_name -Fields agger-list'
+.. 識別 FlexGroup 磁碟區所在的集合體： `volume show -volume flexgroup_name -fields aggr-list`
 +
 [listing]
 ----
@@ -39,7 +39,7 @@ vserver volume aggr-list
 ------- ------ -----------
 vs1     fg1    aggr1,aggr3
 ----
-.. 將物件存放區附加到Aggregate清單中列出的每個Aggregate：「torage Aggregate object-store attach -Aggregate name -name object-store-name -allow-flexgroup true」
+.. 將物件存放區附加至集合清單中列出的每個集合： `storage aggregate object-store attach -aggregate aggregate name -name object-store-name -allow-flexgroup true`
 +
 您必須將所有集合體附加至物件存放區。
 
@@ -52,13 +52,13 @@ cluster-2::> storage aggregate object-store attach -aggregate aggr1 -object-stor
 ----
 * 若要移轉FlexGroup 將整個過程的對象組成到FabricPool 整個過程中的集合體、請執行下列步驟：
 +
-.. 在現有FlexGroup 的支援磁碟區上設定分層原則：「Volume modify -volume flexgroup名稱-tiering原則[auto| snapshot | none| backup]」
+.. 在現有的 FlexGroup 磁碟區上設定分層原則： `volume modify -volume flexgroup_name -tiering-policy [auto|snapshot|none|backup]`
 +
 [listing]
 ----
 cluster-2::> volume modify -volume fg1 -tiering-policy auto
 ----
-.. 在FlexGroup 同一個叢集中、將每個組成的Setsvolume移到FabricPool 一個Aggregate：「Volume Move start -volume sention-volume -destination-aggregate FabricPool -agregate -allow-micagg-Types true」
+.. 將 FlexGroup Volume 的每個組成要素移至同一個叢集中 FabricPool 中的集合： `volume move start -volume constituent-volume -destination-aggregate FabricPool_aggregate -allow-mixed-aggr-types true`
 +
 您必須將FlexGroup 所有的「不穩定」Volume成員移至FabricPool 「不穩定」（如果FlexGroup 「不穩定」磁碟區成員為混合式Aggregate類型）、並確保所有成員在叢集中的節點之間取得平衡。
 

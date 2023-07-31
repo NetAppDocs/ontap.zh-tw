@@ -119,7 +119,8 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 ** NDMP可重新設定的備份擴充（RBE）和Snapshot Management Extension（SSME）
 ** 環境變數exclude、而多重樹狀結構名稱支援FlexGroup 還原備份
 ** 引進ignore _CTIM_mtime環境變數以FlexGroup 進行還原備份
-** 在升級或還原期間、會中止以NDMP快照復原訊息作為FlexGroup 功能的個別檔案還原、此訊息為副檔名0x2050傾印和還原工作階段的一部分。
+** 使用副檔名 0x2050 的 NDMP 快照恢復訊息、在 FlexGroup 中進行個別檔案還原
+傾印和還原工作階段會在升級或還原期間中止。
 
 
 
@@ -129,7 +130,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 == 支援功能、從ONTAP 支援的功能從支援的功能
 
 * FlexClone Volume
-* NFSv4和NFSv4.1
+* NFSv4 和 NFSv4.1
 * pNFS
 * 使用NDMP進行磁帶備份與還原
 +
@@ -142,7 +143,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 ** 不支援FlexGroup NDMP可重新啓動備份擴充（RBE）以供支援。
 ** 不支援FlexGroup 環境變數exclude、也不支援多重樹狀結構名稱。
-** 支援「ndmpcopy」命令、可在FlexVol 支援的情況下在支援的範FlexGroup 圍內傳輸資料至各個版本。
+** 。 `ndmpcopy` FlexVol 與 FlexGroup 磁碟區之間的資料傳輸支援命令。
 +
 如果您從Data ONTAP 還原9.7回復至舊版、先前傳輸的遞增傳輸資訊將不會保留、因此您必須在還原後執行基礎複本。
 
@@ -159,8 +160,8 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 * 持續可用的SMB共用
 * 內部組態MetroCluster
-* 重新命名FlexGroup 流通區（「volume rename」命令）
-* 縮小FlexGroup 或縮小一個現象（「Volume Size'命令」）
+* 重新命名 FlexGroup Volume (`volume rename` 命令）
+* 縮減或縮減 FlexGroup Volume 的大小 (`volume size` 命令）
 * 彈性調整規模
 * NetApp Aggregate加密（NAE）
 * Cloud Volumes ONTAP
@@ -174,7 +175,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 * 儲存層級存取保護
 * 增強功能、可變更SMB共用的通知
 +
-變更通知會傳送至設定「changedgengenerge」屬性的父目錄變更、以及該父目錄中所有子目錄的變更。
+變更通知會針對變更傳送至父目錄的變更 `changenotify` 內容已設定、並用於變更該父目錄中的所有子目錄。
 
 * FabricPool
 * 配額強制執行
@@ -192,7 +193,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 * 適用於FlexGroup 整個過程的處理量層（QoS下限）和調適性QoS
 * 處理量上限（QoS上限）和處理量層（QoS下限）、用於FlexGroup 支援包含在內的檔案
 +
-您可以使用「Volume file modify」命令來管理與檔案相關聯的QoS原則群組。
+您可以使用 `volume file modify` 用於管理與檔案相關聯的 QoS 原則群組的命令。
 
 * 放寬SnapMirror限制
 * SMB 3.x多通道
@@ -205,7 +206,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 * 防毒組態
 * 變更SMB共用的通知
 +
-只有在設定「changgengengengenotify"屬性的父目錄變更時、才會傳送通知。變更通知不會針對父目錄中子目錄的變更傳送。
+只會針對變更的父目錄而傳送通知 `changenotify` 內容已設定。變更通知不會針對父目錄中子目錄的變更傳送。
 
 * qtree
 * 處理量上限（QoS上限）

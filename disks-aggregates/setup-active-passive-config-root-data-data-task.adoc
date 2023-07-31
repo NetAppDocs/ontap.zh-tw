@@ -30,32 +30,32 @@ summary: 當HA配對設定為由原廠使用根資料資料分割時、資料分
 
 . 檢視資料分割區的目前擁有權：
 +
-「torage Aggregate show-spare磁碟-原始擁有者_passive_node_name_-欄位為本機可用資料大小、本機可用資料大小2-size」
+`storage aggregate show-spare-disks -original-owner _passive_node_name_ -fields local-usable-data1-size, local-usable-data2-size`
 
 +
 輸出顯示一半的資料分割區是由一個節點擁有、一半由另一個節點擁有。所有的資料分割區都應該是備用的。
 
 . 輸入進階權限層級：
 +
-《進階設定》
+`set advanced`
 
 . 對於將成為被動節點的節點所擁有的每個資料1分割區、請將其指派給主動節點：
 +
-"torage disk assign-force -data1 -Oner_active_node_name_-disk _disk_name_"
+`storage disk assign -force -data1 -owner _active_node_name_ -disk _disk_name_`
 
 +
 您不需要將分割區納入磁碟名稱中
 
 . 對於將成為被動節點的節點所擁有的每個data2分割區、請將其指派給主動節點：
 +
-「torage disk assign -force -data2 -Owner_active_node_name_-disk _disk_name_」
+`storage disk assign -force -data2 -owner _active_node_name_ -disk _disk_name_`
 
 +
 您不需要將分割區納入磁碟名稱中
 
 . 確認所有分割區都已指派給作用中節點：
 +
-「torage Aggregate show-spare磁碟」
+`storage aggregate show-spare-disks`
 
 +
 [listing]
@@ -97,17 +97,17 @@ Original Owner: cluster1-02
 
 . 返回管理權限：
 +
-「et admin」
+`set admin`
 
 . 建立您的資料Aggregate、至少保留一個資料分割區作為備用：
 +
-儲存區Aggregate create _new_aggr_name_-diskcount_number_of_partspace_-node_active_node_name_`
+`storage aggregate create _new_aggr_name_ -diskcount _number_of_partitions_ -node _active_node_name_`
 
 +
 資料Aggregate會建立、並由作用中節點擁有。
 
 . 或者、您也可以使用ONTAP建議的Aggregate配置、其中包括RAID群組配置和備用數的最佳實務做法：
 +
-「torage Aggregate自動資源配置」
+`storage aggregate auto-provision`
 
 

@@ -19,17 +19,17 @@ summary: 透過SMB存取、即使存取NTFS安全型磁碟區中的資料、也�
 .關於這項工作
 SVM會使用名稱服務ns-交換器資料庫來決定查詢指定名稱服務資料庫來源的順序。ns-交換器來源可以是「Files」、「NIS」或「LDAP」的任意組合。針對Groups資料庫、ONTAP Ses庫 會嘗試從所有已設定的來源取得群組成員資格、然後使用整合的群組成員資格資訊進行存取檢查。如果其中一個來源在取得UNIX群組資訊時無法使用、ONTAP 則無法取得完整的UNIX認證、後續的存取檢查可能會失敗。因此、您必須一律在ns交換器設定中、檢查是否已針對群組資料庫設定所有的ns交換器來源。
 
-預設值是讓SMB伺服器將所有Windows使用者對應至儲存在本機「passwd」資料庫中的預設UNIX使用者。如果您想要使用預設組態、則可選擇設定NIS或LDAP UNIX使用者與群組名稱服務或LDAP使用者對應、以供SMB存取。
+預設是讓 SMB 伺服器將所有 Windows 使用者對應至儲存在本機中的預設 UNIX 使用者 `passwd` 資料庫。如果您想要使用預設組態、則可選擇設定NIS或LDAP UNIX使用者與群組名稱服務或LDAP使用者對應、以供SMB存取。
 
 .步驟
 . 如果UNIX使用者、群組及netgroup資訊是由NIS名稱服務管理、請設定NIS名稱服務：
 +
-.. 使用「vserver services name-service nns交換器show」命令來判斷名稱服務的目前順序。
+.. 使用判斷名稱服務的目前順序 `vserver services name-service ns-switch show` 命令。
 +
-在本例中，可以使用「NIS」做為名稱服務來源的三個資料庫（「group」、「passwd」和「netgroup」）僅使用「Files」做為來源。
+在此範例中、這三個資料庫 (`group`、 `passwd`和 `netgroup`） `nis` 因為名稱服務來源僅在使用中 `files` 做為來源。
 
 +
-「Vserver服務名稱服務ns-switchshow -vserver VS1」
+`vserver services name-service ns-switch show -vserver vs1`
 
 +
 [listing]
@@ -46,9 +46,9 @@ vs1             netgroup       true            files
 vs1             namemap        true            files
 ----
 +
-您必須將「NIS」來源新增至「群組」和「密碼」資料庫、並選擇性新增至「netgroup」資料庫。
+您必須新增 `nis` 的來源 `group` 和 `passwd` 資料庫、或是選擇性的 `netgroup` 資料庫。
 
-.. 使用「vserver services name-service nns交換器modify」命令、視需要調整名稱服務n-switch-資料庫排序。
+.. 使用調整名稱服務 nS-switch 資料庫的順序 `vserver services name-service ns-switch modify` 命令。
 +
 為獲得最佳效能、除非您計畫在SVM上設定名稱服務、否則不應將名稱服務新增至名稱服務資料庫。
 
@@ -56,14 +56,14 @@ vs1             namemap        true            files
 如果您修改多個名稱服務資料庫的組態、則必須針對每個要修改的名稱服務資料庫分別執行命令。
 
 +
-在本例中、「NIS」和「檔案」會依序設定為「群組」和「密碼」資料庫的來源。其餘的名稱服務資料庫則維持不變。
+在此範例中、 `nis` 和 `files` 設定為的來源 `group` 和 `passwd` 資料庫、依此順序。其餘的名稱服務資料庫則維持不變。
 
 +
-「Vserver服務名稱服務ns-switchmodify -vserver VS1 -database-s1群組-sources nis、files"「vserver服務名稱服務ns-switchmodify -vserver VS1 -database-passwd-sources nis、files"
+`vserver services name-service ns-switch modify -vserver vs1 -database group -sources nis,files` `vserver services name-service ns-switch modify -vserver vs1 -database passwd -sources nis,files`
 
-.. 使用「vserver services name-service nns交換器show」命令來確認名稱服務的順序是否正確。
+.. 使用確認名稱服務的順序正確無誤 `vserver services name-service ns-switch show` 命令。
 +
-「Vserver服務名稱服務ns-switchshow -vserver VS1」
+`vserver services name-service ns-switch show -vserver vs1`
 
 +
 [listing]
@@ -81,19 +81,20 @@ vs1             passwd         true            nis,
 vs1             netgroup       true            files
 vs1             namemap        true            files
 ----
-.. 建立NIS名稱服務組態：+「vserver services name-service nse-domain create -vserver _vserver_name_-domain_ns_domain_name_-servers _ns_server_ipaddress_、...」 -active true+
+.. 建立 NIS 名稱服務組態： +
+`vserver services name-service nis-domain create -vserver _vserver_name_ -domain _NIS_domain_name_ -servers _NIS_server_IPaddress_,... -active true+`
 +
-「Vserver services name-service NIS網域create -vserver VS1 -domain example.com -servers 10.0.0.60 -active true」
+`vserver services name-service nis-domain create -vserver vs1 -domain example.com -servers 10.0.0.60 -active true`
 
 +
 [NOTE]
 ====
-從ONTAP 功能變數《-NIS伺服器》開始、這個功能變數取代了現場的「伺服器」。此新欄位可以使用NIS伺服器的主機名稱或IP位址。
+從 ONTAP 9.2 開始 `-nis-servers` 取代欄位 `-servers`。此新欄位可取得 NIS 伺服器的主機名稱或 IP 位址。
 
 ====
-.. 確認NIS名稱服務已正確設定且處於作用中狀態：「vserver services name-service nse-domain show vserver _vserver_name_」
+.. 確認 NIS 名稱服務已正確設定且為作用中： `vserver services name-service nis-domain show vserver _vserver_name_`
 +
-「Vserver services name-service NIS網域show vserver VS1」
+`vserver services name-service nis-domain show vserver vs1`
 
 +
 [listing]

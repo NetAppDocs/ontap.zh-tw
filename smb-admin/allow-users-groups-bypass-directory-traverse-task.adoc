@@ -11,27 +11,27 @@ summary: 如果您希望使用者能夠遍歷檔案路徑中的所有目錄、�
 
 
 [role="lead"]
-如果您希望使用者能夠遍歷檔案路徑中的所有目錄、即使使用者沒有周遊目錄的權限、您也可以將「eChangelNotifyPrivilege」權限新增至儲存虛擬機器（SVM）上的本機SMB使用者或群組。根據預設、使用者可以略過目錄周遊檢查。
+如果您希望使用者能夠周遊檔案路徑中的所有目錄、即使使用者對周遊目錄沒有權限、您也可以新增 `SeChangeNotifyPrivilege` 本機 SMB 使用者或儲存虛擬機器上群組的權限（ SVM ）。根據預設、使用者可以略過目錄周遊檢查。
 
 .開始之前
 * SVM上必須有SMB伺服器。
 * 必須啟用本機使用者和群組SMB伺服器選項。
-* 要新增「eChangeleNotifyPrivilege」權限的本機或網域使用者或群組必須已經存在。
+* 本機或網域使用者或群組 `SeChangeNotifyPrivilege` 新增權限必須已存在。
 
 
 .關於這項工作
 將權限新增至網域使用者或群組時ONTAP 、可能會聯絡網域控制器來驗證網域使用者或群組。如果無法聯絡網域控制器、則指令可能會失敗ONTAP 。
 
 .步驟
-. 若要啟用略過周遊檢查、請將「eChangepalNotifyPrivilege」權限新增至本機或網域使用者或群組：「vserver CIFS user-and -group priv榮幸」權限附加權限-vserver _vserver_name_-user-or -group name _name_-priv家 權限SeChangelifyPrivilege」
+. 新增以啟用略過周遊檢查 `SeChangeNotifyPrivilege` 本機或網域使用者或群組的權限： `vserver cifs users-and-groups privilege add-privilege -vserver _vserver_name_ -user-or-group-name _name_ -privileges SeChangeNotifyPrivilege`
 +
-「使用者或群組名稱」參數的值為本機使用者或群組、或網域使用者或群組。
+的值 `-user-or-group-name` 參數是本機使用者或群組、或是網域使用者或群組。
 
-. 確認指定的使用者或群組已啟用「vserver CIFS user-and Groups」（Vserver CIFS使用者和群組）權限顯示-vserver _vserver_name_（使用者或群組名稱_name_）
+. 確認指定的使用者或群組已啟用略過周遊檢查： `vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _name_`
 
 
 .範例
-下列命令可讓屬於「'example\eng'」群組的使用者略過目錄周遊檢查、方法是將「eChangeleNotifyPrivilege"權限新增至群組：
+下列命令可讓屬於 "`example\eng`" 群組的使用者透過新增來略過目錄周遊檢查 `SeChangeNotifyPrivilege` 群組的權限：
 
 [listing]
 ----

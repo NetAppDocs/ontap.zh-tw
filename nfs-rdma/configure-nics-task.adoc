@@ -19,7 +19,8 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 
 需要在伺服器上安裝X1148 RDMA介面卡。如果您使用HA組態、則必須在容錯移轉合作夥伴上有對應的X1148介面卡、以便在容錯移轉期間繼續RDMA服務。NIC必須具備ROCE功能。
 
-從ONTAP 版本號《支援資料》（RDMA）9.10.1開始、您可以使用以下命令檢視RDMA卸載傳輸協定清單：「network port show -RDMA -protocols roce」（網路連接埠show -RDMA傳輸協定資源）
+從 ONTAP 9.10.1 開始、您可以使用命令檢視 RDMA 卸載通訊協定清單：
+`network port show -rdma-protocols roce`
 
 
 
@@ -54,7 +55,7 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 `vserver nfs show-vserver _SVM_name_`
 
 +
-根據預設、應該啟用「-RDMA」。如果不是、請在NFS伺服器上啟用RDMA存取：
+根據預設、 `-rdma` 應啟用。如果不是、請在NFS伺服器上啟用RDMA存取：
 
 +
 `vserver nfs modify -vserver _SVM_name_ -rdma enabled`
@@ -64,11 +65,11 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 .. proto參數的輸入取決於伺服器IP傳輸協定版本。如果是IPV4、請使用 `proto=rdma`。如果是IPv6、請使用 `proto=rdma6`。
 .. 將NFS目標連接埠指定為 `port=20049` 而非標準連接埠2049：
 +
-「安裝-o ves=4、minorversion=0、proto=RDMA、port=20049 _Server_ip_address_//_volume路徑__mount_point_」
+`mount -o vers=4,minorversion=0,proto=rdma,port=20049 _Server_IP_address_:/_volume_path_ _mount_point_`
 
 
 
-. *選用*：如果您需要卸載用戶端、請執行命令「unmount _mount_path_」
+. * 選用 * ：如果您需要卸載用戶端、請執行命令 `unmount _mount_path_`
 
 
 --

@@ -19,15 +19,15 @@ summary: 您可以FlexGroup 轉換現有FlexGroup 的SnapMirror磁碟區關係�
 
 
 .步驟
-. 從SnapMirror目的地、重新同步FlexGroup 化「SnapMirror層級」關係：「napmirror resSync」（快照鏡射重新同步）
-. 建立FlexGroup SVM DR SnapMirror關係。使用FlexGroup 在《SfestVolume SnapMirror關係》中設定的相同SnapMirror原則：「napmirror create -dest-path dest_svm:-source-path src-Svm:-idente-preserve true -policy MirrorAllSnapshots」
+. 從 SnapMirror 目的地重新同步 FlexGroup 層級的 SnapMirror 關係： `snapmirror resync`
+. 建立FlexGroup SVM DR SnapMirror關係。使用在 FlexGroup Volume SnapMirror 關係上設定的相同 SnapMirror 原則： `snapmirror create -destination-path dest_svm: -source-path src_svm: -identity-preserve true -policy MirrorAllSnapshots`
 +
 [NOTE]
 ====
-建立複寫關係時、您必須使用「napmirror create」命令的「-identite-preserve true」選項。
+您必須使用 `-identity-preserve true` 的選項 `snapmirror create` 建立複寫關係時的命令。
 
 ====
-. 驗證關係是否已中斷：「napmirror show -dest-path dest_svm:-source-path sr_svm:」
+. 確認關係已中斷： `snapmirror show -destination-path dest_svm: -source-path src_svm:`
 +
 [listing]
 ----
@@ -40,7 +40,7 @@ Path        Type  Path        State   Status         Progress  Healthy Updated
 fg_vs:        XDP  fg_vs1_renamed:     Broken-off
                                       Idle           -         true   -
 ----
-. 停止目的地SVM：「vserver stop -vserver vvs名稱」
+. 停止目的地SVM： `vserver stop -vserver vs_name`
 +
 [listing]
 ----
@@ -48,13 +48,13 @@ vserver stop -vserver fg_vs_renamed
 [Job 245] Job is queued: Vserver Stop fg_vs_renamed.
 [Job 245] Done
 ----
-. 重新同步SVM SnapMirror關係：「napmirror resync -dest-path dest_svm:-source-path sr_svm:」
+. 重新同步 SVM SnapMirror 關係： `snapmirror resync -destination-path dest_svm: -source-path src_svm:`
 +
 [listing]
 ----
 snapmirror resync -destination-path fg_vs_renamed: -source-path fg_vs:
 Warning: This Vserver has volumes which are the destination of FlexVol or FlexGroup SnapMirror relationships. A resync on the Vserver SnapMirror relationship will cause disruptions in data access
 ----
-. 驗證SVM DR層級SnapMirror關係是否達到正常閒置狀態：「napmirror show -expand」（napmirror show -expand）
-. 驗證FlexGroup SnapMirror關係是否處於正常狀態：「napmirror show」
+. 確認 SVM DR 層級 SnapMirror 關係達到健全的閒置狀態： `snapmirror show -expand`
+. 驗證 FlexGroup SnapMirror 關係是否處於正常狀態： `snapmirror show`
 

@@ -13,26 +13,26 @@ summary: 使用NVMe時、您必須將命名空間對應至子系統。
 [role="lead"]
 此程序會使用ONTAP CLI將現有的NVMe命名空間對應至現有的NVMe子系統。
 
-您的命名空間和子系統應該已經建立。如果您需要建立命名空間和子系統、請參閱 link:create-nvme-namespace-subsystem-task.html["配置NVMe儲存設備"]。
+您的命名空間和子系統應該已經建立。  如果您需要建立命名空間和子系統、請參閱 link:create-nvme-namespace-subsystem-task.html["配置NVMe儲存設備"]。
 
 .步驟
 . 從主機取得NQN。
 . 將主機NQN新增至子系統：
 +
-「Vserver NVMe子系統主機add -vserver _Svm_name_-subsystem _subsystem_name_-host-nqn _Host_NQN_：subsystem._subsystem_name_」
+`vserver nvme subsystem host add -vserver _SVM_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_:subsystem._subsystem_name_`
 
 . 將命名空間對應至子系統：
 +
-「Vserver NVMe子系統對應add -vserver _svm_name_-subsystem _subsystem_name_-path _path_」
+`vserver nvme subsystem map add -vserver _SVM_name_ -subsystem _subsystem_name_ -path _path_`
 
 +
 命名空間只能對應至單一子系統。
 
 . 確認命名空間已對應至子系統：
 +
-「Vserver NVMe命名空間show -vserver _svm_name_-instance」
+`vserver nvme namespace show -vserver _SVM_name_ -instance`
 
 +
-子系統應列為「附加子系統」。
+子系統應列為 `Attached subsystem`。
 
 

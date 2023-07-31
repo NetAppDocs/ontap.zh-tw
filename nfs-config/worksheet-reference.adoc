@@ -34,7 +34,7 @@ NFS組態工作表可讓您收集必要資訊、以便為用戶端設定NFS存�
 
 *用於建立SVM*的參數
 
-如果您要建立新的SVM、請使用「vserver create」命令來提供這些值。
+您可以將這些值提供給 `vserver create` 命令、如果您要建立新的 SVM 。
 
 |===
 
@@ -43,7 +43,7 @@ NFS組態工作表可讓您收集必要資訊、以便為用戶端設定NFS存�
 
 
  a| 
-vserver
+`-vserver`
  a| 
 您為新SVM提供的名稱、可以是完整網域名稱（FQDN）、也可以遵循另一種在叢集內強制執行唯一SVM名稱的慣例。
  a| 
@@ -51,7 +51,7 @@ vserver
 
 
  a| 
-「Aggregate」
+`-aggregate`
  a| 
 叢集中有足夠空間可容納新NFS儲存容量的集合體名稱。
  a| 
@@ -59,7 +59,7 @@ vserver
 
 
  a| 
--`rootvolume
+`-rootvolume`
  a| 
 您為SVM根磁碟區提供的唯一名稱。
  a| 
@@ -67,25 +67,25 @@ vserver
 
 
  a| 
-「rootvolume安全型」
+`-rootvolume-security-style`
  a| 
 使用SVM的UNIX安全樣式。
  a| 
-UNIX
+`unix`
 
 
 
  a| 
-「-語言」
+`-language`
  a| 
 使用此工作流程中的預設語言設定。
  a| 
-《C．utf-8》
+`C.UTF-8`
 
 
 
  a| 
-《IPSpace》
+`ipspace`
  a| 
 IPspaces是（儲存虛擬機器（SVM））所在的不同IP位址空間。
  a| 
@@ -93,7 +93,7 @@ IPspaces是（儲存虛擬機器（SVM））所在的不同IP位址空間。
 |===
 *建立NFS伺服器的參數*
 
-當您建立新的NFS伺服器並指定支援的NFS版本時、可以使用「vserver NFS create」命令來提供這些值。
+您可以將這些值提供給 `vserver nfs create` 命令：建立新的 NFS 伺服器並指定支援的 NFS 版本。
 
 如果您要啟用NFSv4或更新版本、則應使用LDAP來改善安全性。
 
@@ -104,18 +104,18 @@ IPspaces是（儲存虛擬機器（SVM））所在的不同IP位址空間。
 
 
  a| 
-v3-v3、-v4.0、-v4.1、-v4.1-pNFS
+`-v3`、 `-v4.0`、 `-v4.1`、 `-v4.1-pnfs`
  a| 
 視需要啟用NFS版本。
 
 
-NOTE: 啟用「v4.1」時、支援V4.2。ONTAP
+NOTE: ONTAP 9.8 及更新版本也支援 V4.2 `v4.1` 已啟用。
  a| 
 
 
 
  a| 
-vv4 id-domain'
+`-v4-id-domain`
  a| 
 ID對應網域名稱。
  a| 
@@ -123,7 +123,7 @@ ID對應網域名稱。
 
 
  a| 
-vv4數字ID
+`-v4-numeric-ids`
  a| 
 支援數字擁有者ID（啟用或停用）。
  a| 
@@ -131,7 +131,7 @@ vv4數字ID
 |===
 *用於建立LIF*的參數
 
-您可以在建立lifs時、使用「network interface create」命令來提供這些值。
+您可以將這些值提供給 `network interface create` 建立生命時的命令。
 
 如果您使用Kerberos、則應在多個LIF上啟用Kerberos。
 
@@ -142,7 +142,7 @@ vv4數字ID
 
 
  a| 
-「-lif'」
+`-lif`
  a| 
 您為新LIF提供的名稱。
  a| 
@@ -150,41 +150,41 @@ vv4數字ID
 
 
  a| 
-「角色」
+`-role`
  a| 
 在此工作流程中使用資料LIF角色。
  a| 
-"DAAT"
+`data`
 
 
 
  a| 
-資料傳輸協定
+`-data-protocol`
  a| 
 在此工作流程中僅使用NFS傳輸協定。
  a| 
-NFS
+`nfs`
 
 
 
  a| 
-首頁節點
+`-home-node`
  a| 
-當LIF上執行「網路介面回復」命令時、LIF會傳回的節點。
- a| 
-
-
-
- a| 
-首頁連接埠
- a| 
-在LIF上執行「網路介面回復」命令時、LIF傳回的連接埠或介面群組。
+LIF 在返回時返回的節點 `network interface revert` 命令會在LIF上執行。
  a| 
 
 
 
  a| 
-地址
+`-home-port`
+ a| 
+LIF 在返回時傳回的連接埠或介面群組 `network interface revert` 命令會在LIF上執行。
+ a| 
+
+
+
+ a| 
+`-address`
  a| 
 叢集上的IPV4或IPv6位址、用於新LIF的資料存取。
  a| 
@@ -192,7 +192,7 @@ NFS
 
 
  a| 
-網路遮罩
+`-netmask`
  a| 
 LIF的網路遮罩和閘道。
  a| 
@@ -200,24 +200,24 @@ LIF的網路遮罩和閘道。
 
 
  a| 
-子網路
+`-subnet`
  a| 
-IP位址集區。自動指定位址和網路遮罩、而非使用「-address'（位址）」和「-netmask（網路遮罩）」。
+IP位址集區。改用 `-address` 和 `-netmask` 自動指派位址和網路遮罩。
  a| 
 
 
 
  a| 
-防火牆原則
+`-firewall-policy`
  a| 
 在此工作流程中使用預設的資料防火牆原則。
  a| 
-"DAAT"
+`data`
 
 |===
 * DNS主機名稱解析參數*
 
-在設定DNS時、您可以使用「vserver services name-service DNS creation」命令來提供這些值。
+您可以將這些值提供給 `vserver services name-service dns create` 設定 DNS 時的命令。
 
 |===
 
@@ -226,7 +226,7 @@ IP位址集區。自動指定位址和網路遮罩、而非使用「-address'（
 
 
  a| 
-「網域」
+`-domains`
  a| 
 最多五個DNS網域名稱。
  a| 
@@ -234,7 +234,7 @@ IP位址集區。自動指定位址和網路遮罩、而非使用「-address'（
 
 
  a| 
-名稱伺服器
+`-name-servers`
  a| 
 每個DNS名稱伺服器最多三個IP位址。
  a| 
@@ -246,12 +246,12 @@ IP位址集區。自動指定位址和網路遮罩、而非使用「-address'（
 
 *建立本機使用者的參數*
 
-如果您使用「vserver services name-service unix-usercreate」命令來建立本機使用者、請提供這些值。如果您是透過從統一資源識別元（URI）載入含有UNIX使用者的檔案來設定本機使用者、則不需要手動指定這些值。
+如果您是使用建立本機使用者、請提供這些值 `vserver services name-service unix-user create` 命令。如果您是透過從統一資源識別元（URI）載入含有UNIX使用者的檔案來設定本機使用者、則不需要手動指定這些值。
 
 |===
 
 
-|  | 使用者名稱「（-user）」 | 使用者ID：（-id） | Group ID（-prime-gid） | 全名（全名） 
+|  | 使用者名稱 `(-user)` | 使用者ID `(-id)` | 群組ID `(-primary-gid)` | 全名 `(-full-name)` 
 
 
  a| 
@@ -313,12 +313,12 @@ n
 |===
 *建立本機群組的參數*
 
-如果您是使用「vserver services name-service unix-group create」命令來建立本機群組、請提供這些值。如果您是從URI載入含有UNIX群組的檔案來設定本機群組、則不需要手動指定這些值。
+如果您是使用建立本機群組、請提供這些值 `vserver services name-service unix-group create` 命令。如果您是從URI載入含有UNIX群組的檔案來設定本機群組、則不需要手動指定這些值。
 
 |===
 
 
-|  | 群組名稱（`-name`） | 群組ID（`-id`） 
+|  | 群組名稱 (`-name`） | 群組ID (`-id`） 
 
 
  a| 
@@ -366,11 +366,11 @@ n
 |===
 * NIS的參數*
 
-您可以使用「vserver services name-service NIS網域create」命令來提供這些值。
+您可以將這些值提供給 `vserver services name-service nis-domain create` 命令。
 
 [NOTE]
 ====
-從ONTAP 功能變數《-NIS伺服器》開始、這個功能變數取代了現場的「伺服器」。此新欄位可以使用NIS伺服器的主機名稱或IP位址。
+從 ONTAP 9.2 開始 `-nis-servers` 取代欄位 `-servers`。此新欄位可取得 NIS 伺服器的主機名稱或 IP 位址。
 
 ====
 |===
@@ -380,7 +380,7 @@ n
 
 
  a| 
-「網域」
+`-domain`
  a| 
 SVM將用於名稱查詢的NIS網域。
  a| 
@@ -388,16 +388,16 @@ SVM將用於名稱查詢的NIS網域。
 
 
  a| 
-「-Active」
+`-active`
  a| 
 作用中的NIS網域伺服器。
  a| 
-「真」或「假」
+`true` 或 `false`
 
 
 
  a| 
-伺服器
+`-servers`
  a| 
 部分9.0、9.1：NIS網域組態所使用之NIS伺服器的一個或多個IP位址。ONTAP
  a| 
@@ -405,7 +405,7 @@ SVM將用於名稱查詢的NIS網域。
 
 
  a| 
-——NIS伺服器
+`-nis-servers`
  a| 
 解答9.2：網域組態所使用之NIS伺服器的IP位址和主機名稱清單、以逗號分隔。ONTAP
  a| 
@@ -413,13 +413,13 @@ SVM將用於名稱查詢的NIS網域。
 |===
 * LDAP*的參數
 
-您可以使用「vserver services name-service LDAP用戶端create」命令來提供這些值。
+您可以將這些值提供給 `vserver services name-service ldap client create` 命令。
 
-您也需要自行簽署的根CA憑證「.pem」檔案。
+您也需要自我簽署的根 CA 憑證 `.pem` 檔案：
 
 [NOTE]
 ====
-從ONTAP 功能變數《LDAP伺服器》開始、功能變數《LDAP伺服器》將取代功能變數《伺服器》。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
+從 ONTAP 9.2 開始 `-ldap-servers` 取代欄位 `-servers`。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
 
 ====
 |===
@@ -427,7 +427,7 @@ SVM將用於名稱查詢的NIS網域。
 
 
  a| 
-vserver
+`-vserver`
  a| 
 您要為其建立LDAP用戶端組態的SVM名稱。
  a| 
@@ -435,7 +435,7 @@ vserver
 
 
  a| 
-「用戶端組態」
+`-client-config`
  a| 
 您指派給新LDAP用戶端組態的名稱。
  a| 
@@ -443,7 +443,7 @@ vserver
 
 
  a| 
-伺服器
+`-servers`
  a| 
 部分9.0、9.1：一個或多個LDAP伺服器、依IP位址在以逗號分隔的清單中。ONTAP
  a| 
@@ -451,7 +451,7 @@ vserver
 
 
  a| 
-LDAP伺服器
+`-ldap-servers`
  a| 
 《示例9.2：LDAP伺服器的IP位址和主機名稱清單》（以英文分隔）ONTAP 。
  a| 
@@ -459,24 +459,24 @@ LDAP伺服器
 
 
  a| 
-query-timeout
+`-query-timeout`
  a| 
-此工作流程使用預設的「3」秒。
+使用預設值 `3` 此工作流程的秒數。
  a| 
-3）
+`3`
 
 
 
  a| 
-最小綁定層級
+`-min-bind-level`
  a| 
-最小連結驗證層級。預設值為「匿名」。如果已設定簽署和密封、則必須設定為「shASL'」。
+最小連結驗證層級。預設值為 `anonymous`。必須設定為 `sasl` 如果已設定簽署和密封。
  a| 
 
 
 
  a| 
-首選的廣告伺服器
+`-preferred-ad-servers`
  a| 
 在以逗號分隔的清單中、依IP位址列出一或多個慣用的Active Directory伺服器。
  a| 
@@ -484,7 +484,7 @@ query-timeout
 
 
  a| 
-廣告網域
+`-ad-domain`
  a| 
 Active Directory網域。
  a| 
@@ -492,7 +492,7 @@ Active Directory網域。
 
 
  a| 
-架構
+`-schema`
  a| 
 要使用的架構範本。您可以使用預設或自訂架構。
  a| 
@@ -500,16 +500,16 @@ Active Directory網域。
 
 
  a| 
-「-port」
+`-port`
  a| 
-此工作流程使用預設的LDAP伺服器連接埠「389」。
+使用預設的 LDAP 伺服器連接埠 `389` 適用於此工作流程。
  a| 
-《389》
+`389`
 
 
 
  a| 
-「bind－dn」
+`-bind-dn`
  a| 
 「連結」使用者辨別名稱。
  a| 
@@ -517,40 +517,40 @@ Active Directory網域。
 
 
  a| 
-以「base -dn」為基礎
+`-base-dn`
  a| 
-基礎辨別名稱。預設值為「」（root）。
- a| 
-
-
-
- a| 
-「基礎範圍」
- a| 
-此工作流程使用預設的基礎搜尋範圍「子網路」。
- a| 
-《Subnet》
-
-
-
- a| 
-「工作階段安全性」
- a| 
-啟用LDAP簽署或簽署及密封。預設值為「無」。
+基礎辨別名稱。預設值為 `""` （根目錄）。
  a| 
 
 
 
  a| 
-使用起始TLS
+`-base-scope`
  a| 
-啟用LDAP over TLS。預設值為「假」。
+使用預設的基礎搜尋範圍 `subnet` 適用於此工作流程。
+ a| 
+`subnet`
+
+
+
+ a| 
+`-session-security`
+ a| 
+啟用LDAP簽署或簽署及密封。預設值為 `none`。
+ a| 
+
+
+
+ a| 
+`-use-start-tls`
+ a| 
+啟用LDAP over TLS。預設值為 `false`。
  a| 
 
 |===
 * Kerberos驗證的參數*
 
-您可以使用「vserver NFS Kerberos領域create」命令來提供這些值。部分值會因您使用Microsoft Active Directory做為金鑰發佈中心（Kdc）伺服器、MIT或其他UNIX Kdc伺服器而有所不同。
+您可以將這些值提供給 `vserver nfs kerberos realm create` 命令。部分值會因您使用Microsoft Active Directory做為金鑰發佈中心（Kdc）伺服器、MIT或其他UNIX Kdc伺服器而有所不同。
 
 |===
 
@@ -559,7 +559,7 @@ Active Directory網域。
 
 
  a| 
-vserver
+`-vserver`
  a| 
 與Kdc通訊的SVM。
  a| 
@@ -567,7 +567,7 @@ vserver
 
 
  a| 
-「領域」
+`-realm`
  a| 
 Kerberos領域。
  a| 
@@ -575,7 +575,7 @@ Kerberos領域。
 
 
  a| 
-「時鐘偏移」
+`-clock-skew`
  a| 
 用戶端與伺服器之間允許的時鐘偏移。
  a| 
@@ -583,7 +583,7 @@ Kerberos領域。
 
 
  a| 
-K狀態
+`-kdc-ip`
  a| 
 Kdc IP位址。
  a| 
@@ -591,7 +591,7 @@ Kdc IP位址。
 
 
  a| 
-Kd-port'
+`-kdc-port`
  a| 
 Kdc連接埠號碼。
  a| 
@@ -599,7 +599,7 @@ Kdc連接埠號碼。
 
 
  a| 
-adserver-name
+`-adserver-name`
  a| 
 僅限Microsoft Kdc：AD伺服器名稱。
  a| 
@@ -607,7 +607,7 @@ adserver-name
 
 
  a| 
-"-adserver-ip"
+`-adserver-ip`
  a| 
 僅限Microsoft Kdc：AD伺服器IP位址。
  a| 
@@ -615,7 +615,7 @@ adserver-name
 
 
  a| 
--`adminserver-ip'
+`-adminserver-ip`
  a| 
 僅UNIX Kdc：管理伺服器IP位址。
  a| 
@@ -623,7 +623,7 @@ adserver-name
 
 
  a| 
-adminserver端口
+`-adminserver-port`
  a| 
 僅UNIX Kdc：管理伺服器連接埠號碼。
  a| 
@@ -631,7 +631,7 @@ adminserver端口
 
 
  a| 
-「-passworster-IP」
+`-passwordserver-ip`
  a| 
 僅UNIX Kdc：密碼伺服器IP位址。
  a| 
@@ -639,7 +639,7 @@ adminserver端口
 
 
  a| 
-密碼伺服器連接埠
+`-passwordserver-port`
  a| 
 僅UNIX Kdc：密碼伺服器連接埠。
  a| 
@@ -647,22 +647,22 @@ adminserver端口
 
 
  a| 
-KA-VENDOR
+`-kdc-vendor`
  a| 
 Kdc廠商：
  a| 
-{「Microsoft」|「其他」}
+｛ `Microsoft` | `Other` }
 
 
 
  a| 
-留言
+`-comment`
  a| 
 任何想要的意見。
  a| 
 
 |===
-您可以使用「vserver NFS介面啟用」命令來提供這些值。
+您可以將這些值提供給 `vserver nfs kerberos interface enable` 命令。
 
 |===
 
@@ -671,7 +671,7 @@ Kdc廠商：
 
 
  a| 
-vserver
+`-vserver`
  a| 
 您要為其建立Kerberos組態的SVM名稱。
  a| 
@@ -679,7 +679,7 @@ vserver
 
 
  a| 
-「-lif'」
+`-lif`
  a| 
 您要啟用Kerberos的資料LIF。您可以在多個LIF上啟用Kerberos。
  a| 
@@ -687,7 +687,7 @@ vserver
 
 
  a| 
-SPN-'
+`-spn`
  a| 
 服務原則名稱（SPN-）
  a| 
@@ -695,15 +695,15 @@ SPN-'
 
 
  a| 
-允許的enc類型
+`-permitted-enc-types`
  a| 
-Kerberos over NFS允許的加密類型；建議使用「AES-256」、視用戶端功能而定。
+Kerberos over NFS 允許的加密類型； `aes-256` 建議使用、視用戶端功能而定。
  a| 
 
 
 
  a| 
--`admin-username'
+`-admin-username`
  a| 
 用於直接從Kdc擷取SPN機密金鑰的Kdc系統管理員認證。需要密碼
  a| 
@@ -711,7 +711,7 @@ Kerberos over NFS允許的加密類型；建議使用「AES-256」、視用戶�
 
 
  a| 
-密鑰索引標籤- URI
+`-keytab-uri`
  a| 
 如果您沒有Kdc系統管理員認證、則會從包含SPN-Key的Kdc取得Keytab檔案。
  a| 
@@ -719,7 +719,7 @@ Kerberos over NFS允許的加密類型；建議使用「AES-256」、視用戶�
 
 
  a| 
-「-ou'」
+`-ou`
  a| 
 當您使用領域為Microsoft Kdc啟用Kerberos時、會在組織單位（OU）下建立Microsoft Active Directory伺服器帳戶。
  a| 
@@ -731,7 +731,7 @@ Kerberos over NFS允許的加密類型；建議使用「AES-256」、視用戶�
 
 *用於建立匯出原則與規則的參數*
 
-您可以使用「vserver匯出原則create」命令來提供這些值。
+您可以將這些值提供給 `vserver export-policy create` 命令。
 
 |===
 
@@ -740,7 +740,7 @@ Kerberos over NFS允許的加密類型；建議使用「AES-256」、視用戶�
 
 
  a| 
-vserver
+`-vserver`
  a| 
 將裝載新磁碟區的SVM名稱。
  a| 
@@ -748,13 +748,13 @@ vserver
 
 
  a| 
-'策略名稱'
+`-policyname`
  a| 
 您為新的匯出原則提供的名稱。
  a| 
 
 |===
-您可以使用「vserver匯出原則規則create」命令、為每個規則提供這些值。
+您可以為每個規則提供這些值 `vserver export-policy rule create` 命令。
 
 |===
 
@@ -763,7 +763,7 @@ vserver
 
 
  a| 
-「-'用戶端比對'
+`-clientmatch`
  a| 
 用戶端符合規格。
  a| 
@@ -771,7 +771,7 @@ vserver
 
 
  a| 
-’-rueindex'
+`-ruleindex`
  a| 
 匯出規則在規則清單中的位置。
  a| 
@@ -779,16 +779,16 @@ vserver
 
 
  a| 
-「-'傳輸協定」
+`-protocol`
  a| 
 在此工作流程中使用NFS。
  a| 
-NFS
+`nfs`
 
 
 
  a| 
-「-rorule」
+`-rorule`
  a| 
 唯讀存取的驗證方法。
  a| 
@@ -796,7 +796,7 @@ NFS
 
 
  a| 
-「-rwrRule」
+`-rwrule`
  a| 
 讀寫存取的驗證方法。
  a| 
@@ -804,7 +804,7 @@ NFS
 
 
  a| 
-超級用戶
+`-superuser`
  a| 
 超級使用者存取的驗證方法。
  a| 
@@ -812,7 +812,7 @@ NFS
 
 
  a| 
-「-anon」
+`-anon`
  a| 
 匿名使用者對應的使用者ID。
  a| 
@@ -823,7 +823,7 @@ NFS
 |===
 
 
-| -rueindex* | 「*用戶端比對*」 | 「*」-「rorrule *」 | *「-rwrRule *」 | 「*超級使用者*」 | 「*- anon*」 
+| `*-ruleindex*` | `*-clientmatch*` | `*-rorule*` | `*-rwrule*` | `*-superuser*` | `*-anon*` 
 
 
  a| 
@@ -892,7 +892,7 @@ n
 |===
 *建立Volume的參數*
 
-如果您要建立磁碟區而非qtree、請使用「volume create」命令來提供這些值。
+您可以將這些值提供給 `volume create` 如果您要建立的是 Volume 而非 qtree 、則為命令。
 
 |===
 
@@ -901,7 +901,7 @@ n
 
 
  a| 
-vserver
+`-vserver`
  a| 
 將裝載新磁碟區的新SVM或現有SVM名稱。
  a| 
@@ -909,7 +909,7 @@ vserver
 
 
  a| 
-「Volume」
+`-volume`
  a| 
 您為新磁碟區提供的唯一描述性名稱。
  a| 
@@ -917,7 +917,7 @@ vserver
 
 
  a| 
-「Aggregate」
+`-aggregate`
  a| 
 叢集中有足夠空間可容納新NFS磁碟區的集合體名稱。
  a| 
@@ -925,7 +925,7 @@ vserver
 
 
  a| 
-規模
+`-size`
  a| 
 您為新磁碟區大小所提供的整數。
  a| 
@@ -933,7 +933,7 @@ vserver
 
 
  a| 
-「使用者」
+`-user`
  a| 
 設定為磁碟區根目錄擁有者的使用者名稱或ID。
  a| 
@@ -941,7 +941,7 @@ vserver
 
 
  a| 
-團體
+`-group`
  a| 
 設定為磁碟區根目錄擁有者的群組名稱或ID。
  a| 
@@ -949,16 +949,16 @@ vserver
 
 
  a| 
-「安全風格」
+`--security-style`
  a| 
 使用UNIX安全樣式來執行此工作流程。
  a| 
-UNIX
+`unix`
 
 
 
  a| 
-「交會路徑」
+`-junction-path`
  a| 
 要掛載新磁碟區的根目錄（/）下的位置。
  a| 
@@ -966,7 +966,7 @@ UNIX
 
 
  a| 
-「匯出政策」
+`-export-policy`
  a| 
 如果您打算使用現有的匯出原則、則可以在建立Volume時輸入其名稱。
  a| 
@@ -974,7 +974,7 @@ UNIX
 |===
 *用於建立qtree的參數*
 
-如果您要建立qtree而非Volume、請使用「volume qtree create」命令來提供這些值。
+您可以將這些值提供給 `volume qtree create` 如果您要建立 qtree 而非 Volume 、請執行命令。
 
 |===
 
@@ -983,7 +983,7 @@ UNIX
 
 
  a| 
-vserver
+`-vserver`
  a| 
 包含qtree之磁碟區所在的SVM名稱。
  a| 
@@ -991,7 +991,7 @@ vserver
 
 
  a| 
-「Volume」
+`-volume`
  a| 
 將包含新qtree的磁碟區名稱。
  a| 
@@ -999,7 +999,7 @@ vserver
 
 
  a| 
-qtree
+`-qtree`
  a| 
 您為新qtree提供的唯一描述性名稱、64個字元或更少。
  a| 
@@ -1007,15 +1007,15 @@ qtree
 
 
  a| 
-qtree路徑
+`-qtree-path`
  a| 
-您可以指定格式為「/vol/_volume_name/qtree名稱_>>」的qtree路徑引數、而非將Volume和qtree指定為個別引數。
+格式中的 qtree path 引數 `/vol/_volume_name/qtree_name_\>` 可以指定、而非將 Volume 和 qtree 指定為個別的引數。
  a| 
 
 
 
  a| 
-UNIX權限
+`-unix-permissions`
  a| 
 選用：qtree的UNIX權限。
  a| 
@@ -1023,7 +1023,7 @@ UNIX權限
 
 
  a| 
-「匯出政策」
+`-export-policy`
  a| 
 如果您打算使用現有的匯出原則、可以在建立qtree時輸入其名稱。
  a| 

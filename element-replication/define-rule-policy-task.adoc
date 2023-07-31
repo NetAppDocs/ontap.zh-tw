@@ -61,20 +61,20 @@ SnapMirror建立的Snapshot複本會在初始化與更新時傳輸。
 |===
 您可以視需要為預設或自訂原則指定其他規則。例如：
 
-* 對於預設的「鏡射AndVault」原則、您可以建立一個稱為「每月兩次」的規則、將來源上的Snapshot複本與「每月兩次」SnapMirror標籤配對。
+* 為預設值 `MirrorAndVault` 原則中、您可以建立名為「每月兩次」的規則、將來源上的 Snapshot 複本與「每月兩次」 SnapMirror 標籤進行比對。
 * 對於具有「鏡射-保存庫」原則類型的自訂原則、您可以建立名為「雙週」的規則、將來源上的Snapshot複本與「雙週」SnapMirror標籤配對。
 
 
 .步驟
 . 定義原則規則：
 +
-「napmirror policy add-rule -vserver _svm_-policy _policy_for_rorm_-SnapMirror標籤_SnapMirror標籤_-stee_retent_count_」
+`snapmirror policy add-rule -vserver _SVM_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label_ -keep _retention_count_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例將SnapMirror標籤「雙月版（bi-bonev月）”的規則新增至預設的「鏡像AndVault（鏡像AndVault）原則：
+以下範例新增了帶有 SnapMirror 標籤的規則 `bi-monthly` 至預設值 `MirrorAndVault` 原則：
 
 +
 [listing]
@@ -82,7 +82,7 @@ SnapMirror建立的Snapshot複本會在初始化與更新時傳輸。
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -snapmirror-label bi-monthly -keep 6
 ----
 +
-以下範例將SnapMirror標籤「雙週」的規則新增至自訂的「my_SnapVault」原則：
+以下範例新增了帶有 SnapMirror 標籤的規則 `bi-weekly` 自訂 `my_snapvault` 原則：
 
 +
 [listing]
@@ -90,7 +90,7 @@ cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy my_snapvault -snapmirror-label bi-weekly -keep 26
 ----
 +
-以下範例將SnapMirror標籤「app_nistent」的規則新增至自訂「Sync」原則：
+以下範例新增了帶有 SnapMirror 標籤的規則 `app_consistent` 自訂 `Sync` 原則：
 
 +
 [listing]

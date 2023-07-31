@@ -21,7 +21,7 @@ summary: 您可以將快取保留原則指派給Flash Pool本機層（Aggregate�
 
 . 將權限設定變更為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 驗證磁碟區的快取保留原則：
 +
@@ -38,21 +38,21 @@ summary: 您可以將快取保留原則指派給Flash Pool本機層（Aggregate�
  a| 
 版本9.0、ONTAP 9.1
  a| 
-「priority hemye-cache set volume名稱read-cache = read_cache值write快取=寫入快取值快取-保留-優先順序=快取_retent_policy」
+`priority hybrid-cache set volume_name read-cache=read_cache_value write-cache=write_cache_value cache-retention-priority=cache_retention_policy`
 
-將您想要保留在快取中較長時間的資料、設定為「cache _retent_policy」（快取保留原則）。對於您想要更快從快取中移除的資料、請將「cache_retent_policy」設為「low」（低）。
+設定 `cache_retention_policy` 至 `high` 適用於您想要在快取中保留更久的資料。設定 `cache_retention_policy` 至 `low` 適用於您想要更快從快取移除的資料。
 
 
 
  a| 
 0 ： 2 或更新版本 ONTAP
  a| 
-「Volume modify -volume volume volume名稱-vserver vserver_name -bapping_policy policy_name.」
+`volume modify -volume volume_name -vserver vserver_name -caching-policy policy_name.`
 
 |===
 . 確認磁碟區的快取保留原則已變更為您選取的選項。
 . 將權限設定傳回給admin：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

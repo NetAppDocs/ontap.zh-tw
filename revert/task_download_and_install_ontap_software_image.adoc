@@ -11,19 +11,19 @@ summary: 您必須先下載ONTAP 此功能、然後才能安裝。
 
 
 [role="lead"]
-您必須先從ONTAP NetApp支援網站下載此解決方案、然後才能安裝。
+您必須先從 NetApp 支援網站下載 ONTAP 軟體，然後才能安裝。
 
 
 
 == 下載軟體映像
 
-若要降級ONTAP 或從還原9.4以上版本、您可以將ONTAP NetApp支援網站上的還原軟體映像複製到本機資料夾。若要降級或回復ONTAP 至版本不符合更新版本的版本、您必須將ONTAP 此版本的更新版本複製到網路上的HTTP伺服器或FTP伺服器。
+若要從 ONTAP 9.4 及更新版本降級或回復至舊版，您可以從 NetApp 支援網站將 ONTAP 軟體映像檔複製到本機資料夾。若要降級或回復ONTAP 至版本不符合更新版本的版本、您必須將ONTAP 此版本的更新版本複製到網路上的HTTP伺服器或FTP伺服器。
 
 請注意下列重要資訊：
 
 * 軟體映像是特定於平台機型。
 +
-您必須取得適用於叢集的正確映像。NetApp支援網站上提供適用於您平台機型的軟體映像、韌體版本資訊及最新韌體。
+您必須取得適用於叢集的正確映像。NetApp 支援網站上提供適用於您平台機型的軟體映像檔、韌體版本資訊及最新韌體。
 
 * 軟體映像包含ONTAP 系統韌體的最新版本、在發佈特定版本的資訊時、即可取得此版本。
 * 如果您要降級採用ONTAP NetApp Volume Encryption的系統、從版本更新至版本更新版本、則必須下載ONTAP 不受限國家/地區的版次軟體映像、其中包括NetApp Volume Encryption。
@@ -31,11 +31,11 @@ summary: 您必須先下載ONTAP 此功能、然後才能安裝。
 如果您使用ONTAP 受限國家/地區的還原軟體映像來降級或還原採用NetApp Volume Encryption的系統、系統會出現問題、而且您無法存取磁碟區。
 
 +
-.. 在中找到目標ONTAP 的Software link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"] NetApp支援網站的區域。
+.. 在中找到目標ONTAP 的Software link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"] NetApp 支援網站的區域。
 .. 複製軟體映像。
 +
-*** 若為ONTAP 版本9.3或更早版本、請將軟體映像（例如93_q_image.tgz）從NetApp支援網站複製到HTTP伺服器或FTP伺服器上的目錄、以供映像使用。
-*** 對於《支援網站》、將軟體映像（例如97_q_image.tgz）從NetApp支援網站複製到HTTP伺服器或FTP伺服器上的目錄、或複製到本機資料夾。ONTAP
+*** 若為 ONTAP 9.3 或較舊版本，請從 NetApp 支援網站將軟體映像檔（例如 93_q_image.tgz）複製到將要使用該映像檔的 HTTP 伺服器或 FTP 伺服器上的目錄中。
+*** 若為 ONTAP 9.4 或更新版本，請從 NetApp 支援網站將軟體映像檔（例如 97_q_image.tgz）複製到將要使用該映像檔的 HTTP 伺服器或 FTP 伺服器上的目錄中，或複製到本機資料夾。
 
 
 
@@ -53,27 +53,27 @@ summary: 您必須先下載ONTAP 此功能、然後才能安裝。
 如果您使用ONTAP 受限國家/地區的還原軟體映像來降級或還原採用NetApp Volume Encryption的系統、系統會出現問題、而且您無法存取磁碟區。
 
 +
-.. 將權限等級設為進階、並在系統提示您繼續時輸入* y*：「et -priv
+.. 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
 .. 在節點上安裝軟體映像。
 +
 此命令可同時下載並安裝所有節點上的軟體映像。若要在每個節點上一次下載並安裝映像、請勿指定-background參數。
 
 +
-*** 如果您要降級或還原非MetroCluster組態或雙節點MetroCluster 的版本：「系統節點映像更新節點*-套件位置-replace -package true -setDefault true -background true」
+*** 如果您要降級或還原非 MetroCluster 組態或雙節點 MetroCluster 組態：``system node image update -node * -package location -replace-package true -setdefault true -background true``
 +
 此命令會使用延伸查詢、將安裝為替代映像的目標軟體映像變更為節點的預設映像。
 
-*** 如果您要降級或還原四節點MetroCluster 或八節點的現象組態、則必須在兩個叢集上發出下列命令：「ystem nodem image update -Node *-package location -replace -package true -background true -setDefault ful」
+*** 如果您要重新建立或還原四個或八個節點的 MetroCluster 組態、則必須在兩個叢集上發出下列命令： `system node image update -node * -package location -replace-package true true -background true -setdefault false`
 +
 此命令會使用延伸查詢來變更目標軟體映像、此映像會安裝為每個節點的替代映像。
 
 
 
-.. 出現提示時、請輸入「y」繼續。
-.. 確認軟體映像已下載並安裝在每個節點上：「System Node image show-update-progress -Node *」
+.. 輸入 `y` 以在出現提示時繼續。
+.. 確認軟體映像已下載並安裝在每個節點上： `system node image show-update-progress -node *`
 +
 此命令會顯示軟體映像下載與安裝的目前狀態。您應該繼續執行此命令、直到所有節點回報「執行狀態」為「已結束」、以及「結束成功狀態」。
 

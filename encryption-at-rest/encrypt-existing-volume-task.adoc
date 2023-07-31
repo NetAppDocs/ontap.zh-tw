@@ -11,7 +11,7 @@ summary: 您可以使用Volume Move start命令、藉由移動現有的Volume來
 
 
 [role="lead"]
-您可以使用「volume move start」命令、藉由移動現有的Volume來啟用加密功能。您必須在ONTAP 更新版本的版本中使用「Volume Move start（Volume Move start）」。您可以使用相同的Aggregate或不同的Aggregate。
+您可以使用 `volume move start` 命令、可透過移動現有磁碟區來啟用加密。您必須使用 `volume move start` 在 ONTAP 9.2 及更早版本中。您可以使用相同的Aggregate或不同的Aggregate。
 
 .您需要的產品
 您必須是叢集管理員才能執行此工作、或是叢集管理員已委派權限的SVM管理員。
@@ -19,9 +19,9 @@ summary: 您可以使用Volume Move start命令、藉由移動現有的Volume來
 link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執行Volume Move命令"]
 
 .關於這項工作
-從使用支援功能支援功能的支援功能升級至ONTAP 支援功能的功能、您可以使用「Volume Move start（Volume Move start）」來啟用SnapLock 對功能性功能的加密功能。FlexGroup
+從 ONTAP 9.8 開始、您可以使用 `volume move start` 在 SnapLock 或 FlexGroup 磁碟區上啟用加密。
 
-從ONTAP 功能表9.4開始、如果您在設定Onboard Key Manager時啟用「'cc-mode'」、則使用「Volume Move start」命令建立的磁碟區會自動加密。您不需要指定「-加密 目的地true」。
+從 ONTAP 9.4 開始、如果您在設定內建金鑰管理程式時啟用「 cc 模式」、就會使用建立磁碟區 `volume move start` 命令會自動加密。您不需要指定 `-encrypt-destination true`。
 
 從ONTAP 功能區9.6開始、您可以使用Aggregate層級的加密功能、將金鑰指派給內含的Aggregate、以供移動的磁碟區使用。使用唯一金鑰加密的Volume稱為_NVE Volume。使用Aggregate層級金鑰加密的Volume稱為_NAE Volume（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
 
@@ -38,42 +38,42 @@ link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執�
  a| 
 NVE Volume的純文字磁碟區
  a| 
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-Aggregate aggregate名稱-加密 目的地true」
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
 
 
 
  a| 
 NAE磁碟區的NVE或純文字磁碟區（假設目的地已啟用Aggregate層級加密）
  a| 
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-aggregate aggregate名稱-加密-with aggr-key true」
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key true`
 
 
 
  a| 
 NAE Volume至NVE Volume
  a| 
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-Aggregate aggregate名稱-加密-with -agger-key fals'
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key false`
 
 
 
  a| 
 NAE磁碟區至純文字磁碟區
  a| 
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-aggregate aggregate名稱-加密 目的地假-加密 使用aggreg-key假」
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-with-aggr-key false`
 
 
 
  a| 
 從NVE磁碟區移至純文字磁碟區
  a| 
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-Aggregate aggregate名稱-加密 目的地假」
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
 
 |===
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-下列命令會將名為「vol1」的純文字磁碟區轉換成NVE磁碟區：
+下列命令會轉換名為的純文字磁碟區 `vol1` 至 NVE Volume ：
 
 +
 [listing]
@@ -81,7 +81,7 @@ NAE磁碟區至純文字磁碟區
 cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-destination true
 ----
 +
-假設目的地已啟用Aggregate層級加密、下列命令會將名為「vol1」的NVE或純文字磁碟區轉換成NAE磁碟區：
+假設目的地上已啟用 Aggregate 層級加密、下列命令會轉換名為的 NVE 或純文字磁碟區 `vol1` 至 NAE Volume ：
 
 +
 [listing]
@@ -89,7 +89,7 @@ cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-with-aggr-key true
 ----
 +
-下列命令可將名為「vol2」的NAE Volume轉換成NVE Volume：
+下列命令會轉換名為的 NAE Volume `vol2` 至 NVE Volume ：
 
 +
 [listing]
@@ -97,7 +97,7 @@ cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-with-aggr-key false
 ----
 +
-下列命令可將名稱為「vol2」的NAE Volume轉換成純文字Volume：
+下列命令會轉換名為的 NAE Volume `vol2` 至純文字磁碟區：
 
 +
 [listing]
@@ -105,7 +105,7 @@ cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-destination false -encrypt-with-aggr-key false
 ----
 +
-下列命令可將名為「vol2」的NVE Volume轉換成純文字Volume：
+下列命令會轉換名為的 NVE Volume `vol2` 至純文字磁碟區：
 
 +
 [listing]
@@ -114,16 +114,16 @@ cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate a
 ----
 . 檢視叢集磁碟區的加密類型：
 +
-「Volume show -Fields加密類型nONE | volume | aggregate」
+`volume show -fields encryption-type none|volume|aggregate`
 
 +
-「加密類型」欄位可在ONTAP 32個以上版本中找到。
+。 `encryption-type` 欄位可在 ONTAP 9.6 及更新版本中取得。
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-下列命令會在「cluster2」中顯示磁碟區的加密類型：
+下列命令會顯示中的磁碟區加密類型 `cluster2`：
 
 +
 [listing]
@@ -138,13 +138,13 @@ vs3      vol3    aggregate
 ----
 . 確認已啟用磁碟區進行加密：
 +
-「Volume show -is加密true」
+`volume show -is-encrypted true`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-下列命令會顯示「cluster2」上的加密磁碟區：
+下列命令會顯示上的加密磁碟區 `cluster2`：
 
 +
 [listing]

@@ -11,11 +11,11 @@ summary: 您可以使用模式比對、在SnapMirror命令中指定來源和目�
 
 
 [role="lead"]
-您可以使用模式比對、在「napmirror」命令中指定來源和目的地路徑。
+您可以在中使用模式比對來指定來源和目的地路徑 `snapmirror` 命令。
 
-「napmirror」命令使用下列格式的完整路徑名稱：「vserver:volume」。您可以透過不輸入SVM名稱來縮寫路徑名稱。如果您這麼做、則「napmirror」命令會假設使用者的本機SVM內容。
+ `snapmirror` 命令會使用下列格式的完整路徑名稱： `vserver:volume`。您可以透過不輸入SVM名稱來縮寫路徑名稱。如果您這麼做、就會出現 `snapmirror` 命令會假設使用者的本機 SVM 內容。
 
-假設SVM稱為「vserver1」、而磁碟區稱為「vol1」、則完整路徑名稱為「vserver1：vol1」。
+假設 SVM 稱為「 'vserver1' 」、而 Volume 稱為「 'vol1' 」、則完整路徑名稱為 `vserver1:vol1`。
 
 您可以在路徑中使用星號（*）做為萬用字元、以選取符合條件的完整路徑名稱。下表提供使用萬用字元選取一系列磁碟區的範例。
 
@@ -24,30 +24,30 @@ summary: 您可以使用模式比對、在SnapMirror命令中指定來源和目�
 
 
  a| 
-’*
+`*`
  a| 
 符合所有路徑。
 
 
 
  a| 
-《Vvs *》
+`vs*`
  a| 
-將所有SVM和Volume與以「Vs」開頭的SVM名稱進行比對。
-
-
-
- a| 
-"*：* SRS*
- a| 
-將所有SVM與含有「shrc」文字的Volume名稱配對。
+將所有 SVM 和 Volume 與以開頭的 SVM 名稱配對 `vs`。
 
 
 
  a| 
-《*：vol*》
+`*:*src*`
  a| 
-將所有SVM與以「vol.」開頭的Volume名稱進行比對。
+將所有 SVM 與包含的磁碟區名稱配對 `src` 文字。
+
+
+
+ a| 
+`*:vol*`
+ a| 
+將所有 SVM 與以開頭的磁碟區名稱配對 `vol`。
 
 |===
 [listing]

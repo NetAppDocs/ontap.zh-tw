@@ -19,7 +19,7 @@ summary: 從ONTAP 支援SnapMirror 9.5開始、即支援SnapMirror同步關係�
 .步驟
 . 從目的地叢集、靜止現有的SnapMirror同步關係：
 +
-「napmirror quiesce -dest-path dest_svm:dest_volume」
+`snapmirror quiesce -destination-path dest_SVM:dest_volume`
 
 +
 [listing]
@@ -28,7 +28,7 @@ cluster2::> snapmirror quiesce -destination-path vs1_dr:vol1
 ----
 . 從目的地叢集刪除現有的SnapMirror同步關係：
 +
-「napmirror DELETE -destination-path dest_svm:dest_volume」
+`snapmirror delete -destination-path dest_SVM:dest_volume`
 
 +
 [listing]
@@ -37,7 +37,7 @@ cluster2::> snapmirror delete -destination-path vs1_dr:vol1
 ----
 . 從來源叢集發佈SnapMirror關係、而不刪除常見的Snapshot複本：
 +
-「napmirror release -nation-tinfo-only true -destination-path dest_svm:dest_volume」
+`snapmirror release -relationship-info-only true -destination-path dest_SVM:dest_volume`
 
 +
 [listing]
@@ -46,7 +46,7 @@ cluster1::> snapmirror release -relationship-info-only true -destination-path vs
 ----
 . 從目的地叢集指定要轉換SnapMirror同步關係的模式、以建立SnapMirror同步關係：
 +
-「napmirror create -source-path VS1:vol1 -dite-path dest_svm:dest_volume -policy Sync| StrictSync」
+`snapmirror create -source-path vs1:vol1 -destination-path dest_SVM:dest_volume -policy Sync|StrictSync`
 
 +
 [listing]
@@ -55,7 +55,7 @@ cluster2::> snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol
 ----
 . 從目的地叢集重新同步SnapMirror關係：
 +
-「napmirror resync -dest-path dest_svm:dest_volume」
+`snapmirror resync -destination-path dest_SVM:dest_volume`
 
 +
 [listing]

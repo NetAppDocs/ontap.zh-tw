@@ -11,7 +11,7 @@ summary: 您可以使用vserver NFS Kerberos介面啟用命令、在資料LIF上
 
 
 [role="lead"]
-您可以使用「vserver NFS Kerberos介面啟用」命令、在資料LIF上啟用Kerberos。這可讓SVM使用Kerberos安全服務來執行NFS。
+您可以使用 `vserver nfs kerberos interface enable` 在資料 LIF 上啟用 Kerberos 的命令。這可讓SVM使用Kerberos安全服務來執行NFS。
 
 .關於這項工作
 如果您使用Active Directory Kdc、則所使用的任何SPN前15個字元在領域或網域內的SVM之間必須是唯一的。
@@ -19,13 +19,13 @@ summary: 您可以使用vserver NFS Kerberos介面啟用命令、在資料LIF上
 .步驟
 . 建立NFS Kerberos組態：
 +
-「Vserver NFS Kerberos介面啟用-vserver _vserver_name_-lif_logical_interface_-SPN_service_principal_name_」
+`vserver nfs kerberos interface enable -vserver _vserver_name_ -lif _logical_interface_ -spn _service_principal_name_`
 
 +
 支援Kerberos介面時、需要使用來自Kdc的SPN秘密金鑰。ONTAP
 
 +
-對於Microsoft KDC、會聯絡到KDC、並在CLI發出使用者名稱和密碼提示以取得秘密金鑰。如果需要在Kerberos領域的其他OU中建立SPN,您可以指定選用的「-Ou」參數。
+對於Microsoft KDC、會聯絡到KDC、並在CLI發出使用者名稱和密碼提示以取得秘密金鑰。如果您需要在 Kerberos 領域的不同 OU 中建立 SPN 、您可以指定選用的 `-ou` 參數。
 
 +
 對於非Microsoft KDC、可使用下列兩種方法之一取得秘密金鑰：
@@ -38,19 +38,19 @@ summary: 您可以使用vserver NFS Kerberos介面啟用命令、在資料LIF上
  a| 
 請讓Kdc系統管理員認證資料直接從Kdc擷取金鑰
  a| 
--`admin-username`_kd_admin_username_`
+`-admin-username` `_kdc_admin_username_`
 
 
 
  a| 
 不具有kdc系統管理員認證、但從包含金鑰的kdc取得Keytab檔案
  a| 
-按鍵索引標籤的URI｛ftp.http｝：//`_Uri_'
+`-keytab-uri` ｛ FTP | http ｝ ： //`_uri_`
 
 |===
 . 確認LIF上已啟用Kerberos：
 +
-「vserver NFS Kerberos組態顯示」
+`vserver nfs kerberos-config show`
 
 . 重複步驟1和2、在多個LIF上啟用Kerberos。
 

@@ -45,11 +45,11 @@ FPolicy範圍組態定義下列組態資訊：
 
 下列優先規則適用於範圍組態：
 
-* 如果共享區包含在「共享區至包含區」參數中、且共享區的父Volume包含在「至排除區」參數中、則「至排除區」優先於「共享區至包含區」。
-* 如果匯出原則包含在「-exper-policies to include-included」參數中、而且匯出原則的父Volume包含在「-volume to exclude」參數中、則「-volume to exclude」優先於「expexper-policies to include-included」。
-* 系統管理員可以指定「副檔名」與「副檔名至排除」清單。
+* 當共享區包含在中時 `-shares-to-include` 共享區的參數和父Volume會包含在中 `-volumes-to-exclude` 參數、 `-volumes-to-exclude` 優先於 `-shares-to-include`。
+* 當中包含匯出原則時 `-export-policies-to-include` 匯出原則的參數和父Volume會包含在中 `-volumes-to-exclude` 參數、 `-volumes-to-exclude` 優先於 `-export-policies-to-include`。
+* 系統管理員可以同時指定兩者 `-file-extensions-to-include` 和 `-file-extensions-to-exclude` 清單。
 +
-檢查「副檔名至排除」參數之前、會先檢查「副檔名至包含」參數。
+。 `-file-extensions-to-exclude` 參數會在之前檢查 `-file-extensions-to-include` 參數已核取。
 
 
 
@@ -61,7 +61,7 @@ FPolicy範圍組態定義下列組態資訊：
 
 [NOTE]
 ====
-當設定要納入或排除範圍的共用、匯出原則、磁碟區及副檔名時、包含和排除參數可以包含像是「」之類的元元符號?`" and "`*。不支援使用規則運算式。
+當設定要納入或排除範圍的共用、匯出原則、磁碟區及副檔名時、包含和排除參數可以包含像是「」之類的元元符號?`" and "`*。  不支援使用規則運算式。
 
 ====
 [cols="70,30"]
@@ -78,7 +78,7 @@ _SVM_
 
 每個FPolicy組態都是在單一SVM中定義。為了建立FPolicy原則組態、而將外部引擎、原則事件、原則範圍和原則結合在一起的原則、都必須與相同的SVM建立關聯。
  a| 
-vserver的「vserver_name」
+`-vserver` `vserver_name`
 
 
 
@@ -87,7 +87,7 @@ _原則名稱_
 
 指定要附加範圍的FPolicy原則名稱。FPolicy原則必須已經存在。
  a| 
-政策名稱「policy_name」
+`-policy-name` `policy_name`
 
 
 
@@ -96,7 +96,7 @@ _原則名稱_
 
 指定以逗號分隔的共用清單、以監控套用範圍的FPolicy原則。
  a| 
-共享區至包含區的「shhare名稱」、...
+`-shares-to-include` `share_name`、 ...
 
 
 
@@ -105,14 +105,14 @@ _原則名稱_
 
 指定要從套用範圍之FPolicy原則的監控中排除的以逗號分隔的共用清單。
  a| 
-共享區至排除區的「share名稱」、...
+`-shares-to-exclude` `share_name`、 ...
 
 
 
  a| 
 _要包含的磁碟區_指定以逗號分隔的磁碟區清單、以監控套用範圍的FPolicy原則。
  a| 
-'包括的磁碟區' Volume名稱'、...
+`-volumes-to-include` `volume_name`、 ...
 
 
 
@@ -121,7 +121,7 @@ _要包含的磁碟區_指定以逗號分隔的磁碟區清單、以監控套用
 
 指定要從套用範圍之FPolicy原則的監控中排除的以逗號分隔的磁碟區清單。
  a| 
-'要排除的磁碟區'、' Volume名稱'、...
+`-volumes-to-exclude` `volume_name`、 ...
 
 
 
@@ -130,7 +130,7 @@ _要包含的磁碟區_指定以逗號分隔的磁碟區清單、以監控套用
 
 指定以逗號分隔的匯出原則清單、以監控套用範圍的FPolicy原則。
  a| 
-「匯出原則」至「包含」、「匯出原則名稱」、...
+`-export-policies-to-include` `export_policy_name`、 ...
 
 
 
@@ -139,7 +139,7 @@ _要包含的磁碟區_指定以逗號分隔的磁碟區清單、以監控套用
 
 指定要從套用範圍之FPolicy原則的監控中排除的匯出原則清單（以英文分隔）。
  a| 
--`-exapper-policies to -exclude’"exappe_policy_name"、...
+`-export-policies-to-exclude` `export_policy_name`、 ...
 
 
 
@@ -148,7 +148,7 @@ _要包括的副檔名_
 
 指定要監控套用範圍之FPolicy原則的檔案副檔名以逗號分隔的清單。
  a| 
-副檔名：副檔名：「file_extensions...」、...
+`-file-extensions-to-include` `file_extensions`、 ...
 
 
 
@@ -157,17 +157,17 @@ _要包括的副檔名_
 
 指定要從套用範圍之FPolicy原則的監控中排除的檔案副檔名以逗號分隔的清單。
  a| 
--`-file-extensions-te-exclude’"file_extensions"、...
+`-file-extensions-to-exclude` `file_extensions`、 ...
 
 
 
  a| 
 _檔案副檔名檢查是否已啟用目錄？_
 
-指定副檔名檢查是否也適用於目錄物件。如果此參數設為「true」、則目錄物件會受到與一般檔案相同的副檔名檢查。如果此參數設為「假」、則目錄名稱不會與副檔名相符、即使其副檔名不符、也會針對目錄傳送通知。
+指定副檔名檢查是否也適用於目錄物件。如果此參數設為 `true`，目錄物件會受到與一般檔案相同的副檔名檢查。如果此參數設為 `false`，目錄名稱不符合副檔名，即使目錄的副檔名不符，也會傳送通知給目錄。
 
-如果指派範圍的FPolicy原則設定為使用原生引擎、則此參數必須設定為「true」。
+如果將範圍指派給的 FPolicy 原則設定為使用原生引擎、則必須將此參數設定為 `true`。
  a| 
-啟用目錄檢查功能的「is副檔名」（we-file-extens-check on）｛'true'（真）|「假」（假）|｝
+`-is-file-extension-check-on-directories-enabled` {`true`| `false`| ｝
 
 |===

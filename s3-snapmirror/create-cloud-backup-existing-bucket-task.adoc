@@ -31,7 +31,8 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 
 == System Manager程序
 
-. 確認使用者和群組已正確定義：按一下*儲存設備>儲存設備VM*、按一下儲存設備VM、按一下*設定*、然後按一下 image:icon_pencil.gif["編輯圖示"] 在S3下。
+. 確認已正確定義使用者和群組：
+按一下「*儲存設備>儲存設備VM*」、按一下儲存設備VM、按一下「*設定*」、然後按一下 image:icon_pencil.gif["編輯圖示"] 在S3下。
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組"] 以取得更多資訊。
 
@@ -69,8 +70,8 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 .. 在*權限*索引標籤中、按一下 image:icon_pencil.gif["編輯圖示"] *編輯*、然後按一下*權限*下的*新增*。
 +
 *** *主體*和*效果*：選取對應於使用者群組設定的值、或接受預設值。
-*** *動作*-請確定顯示下列值：「GetObject、PuttObject、刪除物件、清單庫、GetBucketAcl、GetObjectAcl、ListBucketMultiPartUploads、ListMultiPartUploPartParts」
-*** *資源*-使用預設值「_（帶區名稱、帶區名稱/*）_」或其他您需要的值。
+*** *Actions* - 確保顯示以下值： `GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** * 資源 * - 使用預設值 `_(bucketname, bucketname/*)_` 或其他您需要的價值。
 +
 請參閱 link:../task_object_provision_manage_bucket_access.html["管理使用者對儲存區的存取權"] 以取得這些欄位的詳細資訊。
 
@@ -92,16 +93,21 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 
 == CLI程序
 
-. 確認預設儲存區原則中的存取規則正確：「vserver object-store-server bucket policy add-statement -vserver _svm_name_-bucket _bucket_name_-effect｛allow| deny｝-action _object_store_actions _-principier_user_and _group_names_-resource_[-sid_text_index_integer]
+. 確認預設儲存區原則中的存取規則正確無誤：
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -bucket _bucket_name_ -effect {allow|deny} -action _object_store_actions_ -principal _user_and_group_names_ -resource _object_store_resources_ [-sid _text_] [-index _integer_]`
 +
 .範例
 [listing]
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則：「napmirror policy create -vserver svm_name -policy policy_name -ttype Continuous [-RPO _integer_][-w節 流_twant_][-comment _text_][_additional _options_]」
+. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則、請建立S3 SnapMirror原則：
+`snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
-參數：*「Type Continuous」（類型持續）：S3 SnapMirror關係的唯一原則類型（必填）。*「-RPO」–指定恢復點目標的時間（以秒為單位）（選用）。*「-調節」–指定處理量/頻寬的上限、單位為千位元組/秒（選用）。
+參數：
+* `type continuous` – S3 SnapMirror 關係的唯一原則類型（必要）。
+* `-rpo` –指定恢復點目標的時間（以秒爲單位）（可選）。
+* `-throttle` –指定處理量 / 頻寬的上限（以千位元組 / 秒為單位）（選用）。
 
 +
 .範例
@@ -109,13 +115,22 @@ clusterA::> vserver object-store-server bucket policy add-statement -bucket test
 ----
 clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
 ----
-. 如果目標StorageGRID 是一個不完整的系統、請在StorageGRID 來源叢集的管理SVM上安裝「安全憑證安裝-類型server -ca -vserver _SR_admin_SVM_-cert-name _Storage_GRID_server_CERE_」
+. 如果目標是 StorageGRID 系統、請在來源叢集的管理 SVM 上安裝 StorageGRID CA 憑證：
+`security certificate install -type server-ca -vserver _src_admin_svm_ -cert-name _storage_grid_server_certificate_`
 +
-有關詳細信息，請參見"the siturity Certificate install"（安全證書安裝）手冊頁。
+請參閱 `security certificate install` 詳細資訊請參閱手冊頁。
 
-. 定義S3 SnapMirror目的地物件存放區：「napmirror object-store config create -vserver _Svm_name_-object-store-name _target _store_name_-usage data -provider-type｛AWs_s3 | SGWS｝-server _target _fqd_-container名稱_reme_buck_name -is-SSL啟用的true -port _port_port_number_secret key存取金鑰
+. 定義 S3 SnapMirror 目的地物件儲存區：
+`snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type {AWS_S3|SGWS} -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_number_ -access-key target_access_key -secret-password _target_secret_key_`
 +
-參數：*「-object-store-name」–物件儲存目標在本機ONTAP 視覺系統上的名稱。*`-usage'–此工作流程使用「data'」。支援*「供應商類型」–「AWs_S3」和「GWS」StorageGRID （視覺）目標。*「-server」（伺服器）–目標伺服器的FQDN或IP位址。*「啟用SSL」–啟用SSL是選用功能、但建議使用。+有關詳細信息，請參閱"shnapmirror object-store config creD"手冊頁。
+參數：
+* `-object-store-name` –本機 ONTAP 系統上物件存放區目標的名稱。
+* `-usage` –使用 `data` 適用於此工作流程。
+* `-provider-type` – `AWS_S3` 和 `SGWS` 支援（ StorageGRID ）目標。
+* `-server` –目標伺服器的 FQDN 或 IP 位址。
+* `-is-ssl-enabled` –啓用 SSL 是可選的，但建議使用。
+  +
+請參閱 `snapmirror object-store config create` 詳細資訊請參閱手冊頁。
 
 +
 .範例
@@ -123,13 +138,18 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 建立S3 SnapMirror關係：「napmirror create -source-path _svm_name_：/bucket/_bucket_name_-destination-path _object_store_name_：/物件存放區-policy _policy_name_」
+. 建立 S3 SnapMirror 關係：
+`snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore  -policy _policy_name_`
 +
-參數：*「-destination-path」–您在上一步建立的物件存放區名稱、以及固定值「物件存放區」。+您可以使用您建立的原則或接受預設值。
+參數：
+* `-destination-path` –您在上一個步驟中建立的物件存放區名稱和固定值 `objstore`。
+  +
+您可以使用所建立的原則、或接受預設值。
 
 +
 ....
 src_cluster::> snapmirror create -source-path vs0:/bucket/buck-evp -destination-path sgws-store:/objstore -policy test-policy
 ....
-. 驗證鏡射是否為作用中狀態：「napmirror show -police-type nContinuous -Fields Status」
+. 驗證鏡射是否為作用中：
+`snapmirror show -policy-type continuous -fields status`
 

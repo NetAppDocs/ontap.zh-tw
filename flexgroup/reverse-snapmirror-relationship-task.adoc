@@ -16,16 +16,16 @@ summary: 當災難停用FlexGroup SnapMirror關係的來源等量資料時、您
 .關於這項工作
 目的地磁碟區上的任何作用中配額規則都會停用、而且配額規則會在執行重新同步之前刪除。
 
-您可以使用「Volume配額原則規則create」和「volume quota modify」命令、在重新同步作業完成後建立和重新啟動配額規則。
+您可以使用 `volume quota policy rule create` 和 `volume quota modify` 在重新同步作業完成後建立及重新啟動配額規則的命令。
 
 .步驟
-. 在原始目的地FlexGroup 的Sfetsvolume上、移除來源FlexGroup 供應區與目的地FlexGroup 供應區之間的資料保護鏡像關係：「napmirror DELETE -destination-path Svm_name：volume名稱」
+. 在原始目的地 FlexGroup 磁碟區上、移除來源 FlexGroup 磁碟區與目的地 FlexGroup 磁碟區之間的資料保護鏡射關係： `snapmirror delete -destination-path svm_name:volume_name`
 +
 [listing]
 ----
 cluster2::> snapmirror delete -destination-path vsd:dst
 ----
-. 在原始來源FlexGroup 的Sfidvolume上、從來源FlexGroup 的Sfidvolume移除關係資訊：「napmirror release -destination-path Svm_name：volume名稱-bidation-info-only」
+. 在原始來源 FlexGroup 磁碟區上、從來源 FlexGroup 磁碟區移除關係資訊： `snapmirror release -destination-path svm_name:volume_name -relationship-info-only`
 +
 刪除SnapMirror關係之後、您必須先從來源FlexGroup 的SnapMirror Volume移除關係資訊、然後再嘗試重新同步作業。
 
@@ -34,19 +34,19 @@ cluster2::> snapmirror delete -destination-path vsd:dst
 ----
 cluster1::> snapmirror release -destination-path vsd:dst -relationship-info-only true
 ----
-. 在新的目的地FlexGroup Sfidvolume上、建立鏡射關係：「napmirror create -source-path sr_svm_name：volume名稱-dite-path dst_svm_name：volume名稱-type XDP -policy MirrorAllSnapshots」
+. 在新的目的地 FlexGroup 磁碟區上、建立鏡射關係： `snapmirror create -source-path src_svm_name:volume_name -destination-path dst_svm_name:volume_name -type XDP -policy MirrorAllSnapshots`
 +
 [listing]
 ----
 cluster1::> snapmirror create -source-path vsd:dst -destination-path vss:src -type XDP -policy MirrorAllSnapshots
 ----
-. 在新的目的地FlexGroup Sesfvolume上、重新同步來源FlexGroup Sesf:「napmirror resSync -source-path Svm_name：volume名稱」
+. 在新的目的地 FlexGroup 磁碟區上、重新同步來源 FlexGroup ： `snapmirror resync -source-path svm_name:volume_name`
 +
 [listing]
 ----
 cluster1::> snapmirror resync -source-path vsd:dst
 ----
-. 監控SnapMirror傳輸：「napmirror show -expand」
+. 監控 SnapMirror 傳輸： `snapmirror show -expand`
 +
 [listing]
 ----
@@ -76,6 +76,6 @@ vsd:dst__0008 XDP  vss:src__0008  Snapmirrored
 ...
 ----
 +
-每個組織的SnapMirror關係狀態顯示為「napMirroring」、表示重新同步已成功。
+每個成分的 SnapMirror 關係狀態顯示為 `Snapmirrored` 這表示重新同步已成功。
 
 

@@ -2,7 +2,7 @@
 permalink: snaplock/create-snaplock-aggregate-task.html 
 sidebar: sidebar 
 keywords: create, snaplock, aggregate, compliance, enterprise, mode, volumes 
-summary: 您可以使用Volume「-SnapLock類型」選項來指定「Compliance」（符合性）或「Enterprise SnapLock 」（企業）等Volume類型。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。 
+summary: '您使用的是 Volume `-snaplock-type` 指定法規遵循或企業 SnapLock Volume 類型的選項。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。' 
 ---
 = 建立SnapLock 一個不只一個的集合體
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以使用Volume「-SnapLock類型」選項來指定「Compliance�
 
 
 [role="lead"]
-您可以使用Volume「-SnapLock類型」選項來指定「Compliance」（符合性）或「Enterprise SnapLock 」（企業）等Volume類型。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。
+您使用的是 Volume `-snaplock-type` 指定法規遵循或企業 SnapLock Volume 類型的選項。對於ONTAP 版本早於版本的版本、您必須建立獨立SnapLock 的集合體。從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。
 
 .您需要的產品
 * 您必須是叢集管理員才能執行此工作。
@@ -41,13 +41,13 @@ summary: 您可以使用Volume「-SnapLock類型」選項來指定「Compliance�
 .步驟
 . 建立SnapLock 一個不只一個的集合體：
 +
-hy*儲存Aggregate create -Aggregate _gregate name_-node_node_name_-diskcount_number_of_disks_-SnapLock類型法規遵循|企業*
+`*storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_ -snaplock-type compliance|enterprise*`
 
 +
 命令的手冊頁包含完整的選項清單。
 
 +
-下列命令會建立SnapLock 一個名為「aggr1」的「Compliance」（符合性）集合體、其中三個磁碟位於「node1」上：
+下列命令會建立 SnapLock `Compliance` Aggregate 命名 `aggr1` 開啟三個磁碟 `node1`：
 
 +
 [listing]

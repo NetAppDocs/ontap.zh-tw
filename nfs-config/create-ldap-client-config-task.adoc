@@ -22,22 +22,22 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 
 ====
 .步驟
-. 請洽詢您的LDAP管理員、以判斷「vserver services name-service LDAP用戶端create」命令的適當組態值：
+. 請洽詢您的 LDAP 管理員、以決定的適當組態值 `vserver services name-service ldap client create` 命令：
 +
 .. 指定與LDAP伺服器的網域型或位址型連線。
 +
-「-ad-domain'」和「-servers」選項是互不相關的。
+。 `-ad-domain` 和 `-servers` 選項是互斥的。
 
 +
-*** 使用"-ad-domain"選項可在Active Directory網域中啟用LDAP伺服器探索。
+*** 使用 `-ad-domain` 在 Active Directory 網域中啟用 LDAP 伺服器探索的選項。
 +
-您可以使用「慣用的-ad-servers」選項、在以逗號分隔的清單中、依IP位址指定一或多個慣用的Active Directory伺服器。建立用戶端之後、您可以使用「vserver services name-service LDAP用戶端modify」命令來修改此清單。
+您可以使用 `-preferred-ad-servers` 選項可依以逗號分隔的清單中的 IP 位址來指定一或多個偏好的 Active Directory 伺服器。建立用戶端之後、您可以使用修改此清單 `vserver services name-service ldap client modify` 命令。
 
-*** 使用「-servers」（伺服器）選項、在以逗號分隔的清單中、依IP位址指定一或多個LDAP伺服器（AD或UNIX）。
+*** 使用 `-servers` 選項可依以逗號分隔的清單中的 IP 位址來指定一或多個 LDAP 伺服器（ AD 或 UNIX ）。
 +
 [NOTE]
 ====
-《伺服器》選項已在ONTAP 不再適用於某些應用程式。從ONTAP 功能組9.2開始、「LDAP伺服器」欄位會取代「伺服器」欄位。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
+。 `-servers` ONTAP 9.2 中的選項已過時。從 ONTAP 9.2 開始 `-ldap-servers` 欄位會取代 `-servers` 欄位。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
 
 ====
 
@@ -54,15 +54,15 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 +
 根據RFC-2307bis、這是大多數標準Windows 2012及更新版本LDAP部署的慣用LDAP架構。
 
-*** 《AD-IDMU》
+*** `AD-IDMU`
 +
 根據Active Directory Identity Management for UNIX、此架構適用於大多數Windows 2008、Windows 2012及更新的AD伺服器。
 
-*** 《反SFU》
+*** `AD-SFU`
 +
 此架構以Active Directory Services for UNIX為基礎、適用於大多數Windows 2003和舊版AD伺服器。
 
-*** 《RFC-2307》
+*** `RFC-2307`
 +
 根據RFC-2307（_an方法使用LDAP做為網路資訊服務_）、此架構適用於大多數UNIX AD伺服器。
 
@@ -70,15 +70,15 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 
 .. 選取「連結值」。
 +
-*** -`-min-bind-level {anonuse|simone|sasSL}指定最小綁定驗證層級。
+*** `-min-bind-level {anonymous|simple|sasl}` 指定最小繫結驗證層級。
 +
-預設值為「* an無名*」。
+預設值為 `*anonymous*`。
 
-*** -`bind-dn _LDAP_DN_'指定綁定使用者。
+*** `-bind-dn _LDAP_DN_` 指定綁定用戶。
 +
 對於Active Directory伺服器、您必須在帳戶（網域\使用者）或主體（user@domain.com）表單中指定使用者。否則、您必須以辨別名稱（CN=user,DC=domain,DC=com）格式指定使用者。
 
-*** 「-stind-password_password_」指定連結密碼。
+*** `-bind-password _password_` 指定綁定密碼。
 
 
 .. 如有需要、請選取工作階段安全選項。
@@ -86,21 +86,21 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 如果LDAP伺服器需要、您可以啟用LDAP簽署和密封、或透過TLS啟用LDAP。
 
 +
-*** 「-session-security｛none| sign|簽章｝」
+*** `--session-security {none|sign|seal}`
 +
-您可以啟用簽署（「設計」、資料完整性）、簽署與封裝（「封裝」、資料完整性與加密）、或兩者皆非（「無」、無簽署或密封）。預設值為「無」。
+您可以啟用簽署 (`sign`、資料完整性）、簽署及密封 (`seal`或兩者皆非  `none`、無簽署或密封）。預設值為 `none`。
 
 +
-如果簽名和密封綁定失敗，您也應該設置“-min-bind-level”{"shals"}，除非您希望綁定驗證返回到“* anonoone*”或“* simon*”。
+您也應該設定 `-min-bind-level` {`sasl`} 除非您想讓繫結驗證回復為 `*anonymous*` 或 `*simple*` 如果簽署和密封綁定失敗。
 
-*** 使用-start-TLS（｛'true'|'fals'｝）
+*** `-use-start-tls` {`true`|`false`}
 +
-如果設為「* true*」且LDAP伺服器支援、LDAP用戶端會使用加密的TLS連線來連線至伺服器。預設值為「*假*」。您必須安裝LDAP伺服器的自我簽署根CA憑證、才能使用此選項。
+如果設為 `*true*` LDAP 伺服器也支援此功能、 LDAP 用戶端會使用加密的 TLS 連線連線至伺服器。預設值為 `*false*`。您必須安裝LDAP伺服器的自我簽署根CA憑證、才能使用此選項。
 
 +
 [NOTE]
 ====
-如果SVM新增了SMB伺服器至網域、而LDAP伺服器是SMB伺服器主網域的其中一個網域控制器、您可以使用「vserver CIFS安全性修改」命令來修改「session-security-for ad-LDAP」選項。
+如果 SVM 已將 SMB 伺服器新增至網域、而 LDAP 伺服器是 SMB 伺服器主網域的其中一個網域控制器、則您可以修改 `-session-security-for-ad-ldap` 選項：使用 `vserver cifs security modify` 命令。
 
 ====
 
@@ -110,28 +110,28 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 建議使用預設值、但您必須向LDAP管理員確認這些值是否適合您的環境。
 
 +
-*** "-port_port_"指定LDAP伺服器連接埠。
+*** `-port _port_` 指定 LDAP 伺服器連接埠。
 +
-預設值為「389」。
+預設值為 `389`。
 
 +
 如果您打算使用Start TLS來保護LDAP連線、則必須使用預設連接埠389。啟動TLS會以純文字連線的形式透過LDAP預設連接埠389開始、然後將該連線升級為TLS。如果您變更連接埠、啟動TLS就會失敗。
 
-*** query-timeout _integer__指定查詢超時（以秒計）。
+*** `-query-timeout _integer_` 指定查詢逾時（以秒為單位）。
 +
-允許的範圍為1到10秒。預設值為「3」秒。
+允許的範圍為1到10秒。預設值為 `3` 秒。
 
-*** -`base-dn _LDAP_DN_'指定基礎DN。
+*** `-base-dn _LDAP_DN_` 指定基礎 DN 。
 +
-如有需要、可輸入多個值（例如啟用LDAP參照追蹤）。預設值為「」（root）。
+如有需要、可輸入多個值（例如啟用LDAP參照追蹤）。預設值為 `""` （根目錄）。
 
-*** 「base-scoe'｛'base（基本）|「onele'」|「shubtree」｝指定基本搜尋範圍。
+*** `-base-scope` {`base`|`onelevel`|`subtree`} 指定基本搜尋範圍。
 +
-預設值為「子樹狀結構」。
+預設值為 `subtree`。
 
-*** 啟用「參照」的｛'true'|'fals'｝會指定是否啟用LDAP參照追蹤。
+*** `-referral-enabled` {`true`|`false`} 指定是否啟用 LDAP 參照追蹤。
 +
-從ONTAP 功能介紹9.5開始、ONTAP 如果主要LDAP伺服器傳回LDAP參照回應、表示所需記錄存在於參照的LDAP伺服器上、即可讓功能介紹LDAP用戶端將查詢要求參照到其他LDAP伺服器。預設值為「*假*」。
+從ONTAP 功能介紹9.5開始、ONTAP 如果主要LDAP伺服器傳回LDAP參照回應、表示所需記錄存在於參照的LDAP伺服器上、即可讓功能介紹LDAP用戶端將查詢要求參照到其他LDAP伺服器。預設值為 `*false*`。
 
 +
 若要搜尋所參照LDAP伺服器中的記錄、必須將所參照記錄的基礎DN新增至基礎DN、做為LDAP用戶端組態的一部分。
@@ -142,7 +142,7 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 
 . 在SVM上建立LDAP用戶端組態：
 +
-「vserver服務名稱服務LDAP用戶端create -vserver _vserver_name_-client-config _client_config_name_｛-servers _LDAP_server_list_|-ad-domain _ad_dome_-ped-ad-servers _ped_ad_server_list_-schema_schema_-port 389 -query-timeout 3 -min-bind-dn-dn-dn-nomanone-ind-dn簡單綁定層級LDAP sent_dn｛sign｛-dn_dn_station tion sign｛-dn_station sign｛
+`vserver services name-service ldap client create -vserver _vserver_name_ -client-config _client_config_name_ {-servers _LDAP_server_list_ | -ad-domain _ad_domain_ -preferred-ad-servers _preferred_ad_server_list_ -schema _schema_ -port 389 -query-timeout 3 -min-bind-level {anonymous|simple|sasl} -bind-dn _LDAP_DN_ -bind-password _password_ -base-dn _LDAP_DN_ -base-scope subtree -session-security {none|sign|seal} [-referral-enabled {true|false}]`
 
 +
 [NOTE]
@@ -152,7 +152,7 @@ AD網域已解析清單中前三部伺服器之一必須為正常運作並提供
 ====
 . 確認LDAP用戶端組態已成功建立：
 +
-「Vserver服務名稱服務LDAP用戶端show -client-config client_config_name」
+`vserver services name-service ldap client show -client-config client_config_name`
 
 
 

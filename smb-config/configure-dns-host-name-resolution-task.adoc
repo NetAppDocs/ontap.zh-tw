@@ -11,18 +11,18 @@ summary: 您可以使用vserver services name-service DNS命令在SVM上啟用DN
 
 
 [role="lead"]
-您可以使用「vserver services name-service DNS」命令在SVM上啟用DNS、並將其設定為使用DNS進行主機名稱解析。使用外部DNS伺服器解析主機名稱。
+您可以使用 `vserver services name-service dns` 命令在 SVM 上啟用 DNS 、並將其設定為使用 DNS 進行主機名稱解析。使用外部DNS伺服器解析主機名稱。
 
 .開始之前
 站台範圍的DNS伺服器必須可供主機名稱查詢。
 
-您應該設定多個DNS伺服器、以避免單點故障。如果您只輸入一個DNS伺服器名稱、「vserver services name-service DNS create」命令會發出警告。
+您應該設定多個DNS伺服器、以避免單點故障。。 `vserver services name-service dns create` 如果只輸入一個 DNS 伺服器名稱、命令會發出警告。
 
 .關於這項工作
 網路管理指南_包含在SVM上設定動態DNS的相關資訊。
 
 .步驟
-. 在SVM上啟用DNS：「vserver services name-service DNS create -vserver vserver_name -domain_name -name-servers ip_addresses -state enabled_s
+. 在SVM上啟用DNS： `vserver services name-service dns create -vserver vserver_name -domains domain_name -name-servers ip_addresses -state enabled`
 +
 下列命令可啟用SVM VS1上的外部DNS伺服器：
 
@@ -34,10 +34,10 @@ vserver services name-service dns create -vserver vs1.example.com -domains examp
 +
 [NOTE]
 ====
-從ONTAP 功能組態9.2開始、「vserver services name-service DNS creation」命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時回報錯誤訊息。
+從 ONTAP 9.2 開始 `vserver services name-service dns create` 如果 ONTAP 無法連絡名稱伺服器、命令會執行自動組態驗證、並回報錯誤訊息。
 
 ====
-. 使用「vserver services name-service DNS show」命令來顯示DNS網域組態。」
+. 使用顯示 DNS 網域組態 `vserver services name-service dns show` 命令。」
 +
 下列命令會顯示叢集中所有SVM的DNS組態：
 
@@ -67,9 +67,9 @@ vserver services name-service dns show -vserver vs1.example.com
         Timeout (secs): 2
       Maximum Attempts: 1
 ----
-. 使用「vserver services name-service DNS check」命令來驗證名稱伺服器的狀態。
+. 使用驗證名稱伺服器的狀態 `vserver services name-service dns check` 命令。
 +
-「vserver services name-service DNS Check」命令可從ONTAP 版本號為2開始使用。
+。 `vserver services name-service dns check` 命令可從 ONTAP 9.2 開始使用。
 
 +
 [listing]

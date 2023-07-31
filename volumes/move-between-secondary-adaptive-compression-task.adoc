@@ -19,27 +19,27 @@ summary: 視資料讀取量而定、您可以在二線壓縮和調適性壓縮�
 .步驟
 . 停用Volume上的資料壓縮：
 +
-《Volume Eff高效 修改》
+`volume efficiency modify`
 
 +
 下列命令會停用Volume vol1上的資料壓縮：
 
 +
-「Volume Eff效率 修改-壓縮假內嵌壓縮假Volume vol1」
+`volume efficiency modify -compression false -inline-compression false -volume vol1`
 
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 解壓縮壓縮資料：
 +
-《Volume Eff效率 復原》
+`volume efficiency undo`
 
 +
 下列命令會解壓縮Volume vol1上的壓縮資料：
 
 +
-磁碟區效率復原-vserver VS1 -volume vol1 -壓縮true
+`volume efficiency undo -vserver vs1 -volume vol1 -compression true`
 
 +
 [NOTE]
@@ -49,23 +49,23 @@ summary: 視資料讀取量而定、您可以在二線壓縮和調適性壓縮�
 ====
 . 確認作業狀態為閒置：
 +
-「Volume Eff效率 展」
+`volume efficiency show`
 
 +
 下列命令會顯示Volume vol1上效率作業的狀態：
 
 +
-「Volume Eff效率」顯示-vserver VS1 -volume vol1
+`volume efficiency show -vserver vs1 -volume vol1`
 
 . 啟用資料壓縮、然後設定壓縮類型：
 +
-《Volume Eff高效 修改》
+`volume efficiency modify`
 
 +
 下列命令可啟用資料壓縮、並將壓縮類型設為Volume vol1的次要壓縮：
 
 +
-「Volume Effiv更 有效率修改-vserver VS1 -volume vol1 -壓縮true -壓縮 類型為二線」
+`volume efficiency modify -vserver vs1 -volume vol1 -compression true -compression-type secondary`
 
 +
 [NOTE]
@@ -79,16 +79,16 @@ summary: 視資料讀取量而定、您可以在二線壓縮和調適性壓縮�
 ====
 . 變更為管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 . 選用：啟用即時壓縮：
 +
-《Volume Eff高效 修改》
+`volume efficiency modify`
 
 +
 下列命令可在Volume vol1上啟用即時壓縮：
 
 +
-「Volume Effiv更 有效率修改-vserver VS1 -volume vol1 -ine-壓縮true」
+`volume efficiency modify -vserver vs1 -volume vol1 -inline-compression true`
 
 

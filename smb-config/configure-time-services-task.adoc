@@ -19,15 +19,16 @@ summary: 在Active Domain控制器中建立SMB伺服器之前、您必須確保S
 從功能完善的9.5開始ONTAP 、您可以使用對稱驗證來設定NTP伺服器。
 
 .步驟
-. 使用「叢集時間服務NTP伺服器create」命令來設定時間服務。
+. 使用設定時間服務 `cluster time-service ntp server create` 命令。
 +
-** 若要設定時間服務而不進行對稱驗證、請輸入下列命令：「cluster time-service NTP server create -server server_ip_address'（叢集時間服務NTP伺服器建立-server server_ip_address'）
-** 若要使用對稱驗證來設定時間服務、請輸入下列命令：「cluster time-service NTP server create -server server_ip_address -key-id key_id」、「cluster time-service NTP server create -server 10.10.1」、「cluster time-service NTP server create -server 10.10.2」
+** 若要在不使用對稱驗證的情況下設定時間服務、請輸入下列命令： `cluster time-service ntp server create -server server_ip_address`
+** 若要使用對稱驗證來設定時間服務、請輸入下列命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
+`cluster time-service ntp server create -server 10.10.10.1` `cluster time-service ntp server create -server 10.10.10.2`
 
 
-. 使用「叢集時間服務NTP伺服器show」命令、確認時間服務已正確設定。
+. 使用確認時間服務已正確設定 `cluster time-service ntp server show` 命令。
 +
-「叢集時間服務NTP伺服器顯示」
+`cluster time-service ntp server show`
 
 +
 [listing]

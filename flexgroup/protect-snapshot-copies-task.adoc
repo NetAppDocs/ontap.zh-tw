@@ -19,7 +19,7 @@ summary: 您可以建立Snapshot原則來自動管理Snapshot複本的建立、�
 
 
 
-NOTE: 從ONTAP 功能區的《Volume Snapshot show》命令《從功能區9.8開始FlexGroup 》、會使用邏輯區塊來報告Snapshot複本大小、而非計算最年輕的擁有區塊。這種新的尺寸計算方法可能會使Snapshot複本尺寸大於ONTAP 舊版的更新計算。
+NOTE: 從 ONTAP 9.8 開始 `volume snapshot show` FlexGroup Volume 命令會使用邏輯區塊來報告 Snapshot 複本大小、而非計算最年輕的擁有區塊。這種新的尺寸計算方法可能會使Snapshot複本尺寸大於ONTAP 舊版的更新計算。
 
 .步驟
 . 建立Snapshot原則或手動建立Snapshot複本：
@@ -33,19 +33,19 @@ NOTE: 從ONTAP 功能區的《Volume Snapshot show》命令《從功能區9.8開
  a| 
 Snapshot原則
  a| 
-磁碟區快照原則建立
+`volume snapshot policy create`
 
 
 NOTE: 與某個Shapes Snapshot原則相關的排程FlexGroup 時間必須超過30分鐘。
 
-當您建立FlexGroup 一個Eshot Volume時、「預設」的Snapshot原則會套用至FlexGroup 該卷。
+當您建立 FlexGroup Volume 時 `default` Snapshot 原則會套用至 FlexGroup Volume 。
 
 
 
  a| 
 手動複製Snapshot複本
  a| 
-磁碟區快照建立
+`volume snapshot create`
 
 
 NOTE: 為FlexGroup 某個Shapes Volume建立Snapshot複本之後、就無法修改Snapshot複本的屬性。如果您想要修改屬性、則必須刪除並重新建立Snapshot複本。
@@ -55,7 +55,7 @@ NOTE: 為FlexGroup 某個Shapes Volume建立Snapshot複本之後、就無法修�
 
 建立Snapshot複本時、用戶端對FlexGroup 此功能的存取會短暫停止。
 
-. 驗證FlexGroup 是否已針對「the現象」磁碟區建立有效的Snapshot複本：「Volume snapshot show -volume volume volume volume _name -Fields state」
+. 確認已為 FlexGroup Volume 建立有效的 Snapshot 複本： `volume snapshot show -volume volume_name -fields state`
 +
 [listing]
 ----
@@ -64,7 +64,7 @@ vserver volume snapshot               state
 ------- ------ ---------------------- -----
 fg_vs   fg     hourly.2016-08-23_0505 valid
 ----
-. 查看FlexGroup 《Snapshot》（快照）複本以瞭如《Volume Snapshot show -is組成true》（《Volume Snapshot show -is組成true》）
+. 檢視 FlexGroup Volume 組成要素的 Snapshot 複本： `volume snapshot show -is-constituent true`
 +
 [listing]
 ----

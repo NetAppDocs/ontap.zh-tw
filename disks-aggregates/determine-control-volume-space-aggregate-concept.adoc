@@ -13,11 +13,11 @@ summary: 您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Agg
 [role="lead"]
 您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Aggregate）中最大的空間、以及磁碟區內的哪些功能。
 
-「Volume show-finage」命令提供磁碟區佔用空間或其在包含Aggregate內的空間使用量資訊。
+。 `volume show-footprint` 命令提供有關卷佔用空間或其在包含的 Aggregate 中的空間使用情況的信息。
 
-「Volume show-f足跡」命令會顯示集合體中每個磁碟區的空間使用量詳細資料、包括離線磁碟區。此命令可彌補「Volume show-space"和「Aggregate show-space"命令的輸出之間的落差。所有百分比均以Aggregate大小的百分比計算。
+。 `volume show-footprint` 命令會顯示集合體中每個磁碟區（包括離線磁碟區）的空間使用量詳細資料。此命令可橋接的輸出之間的間距 `volume show-space` 和 `aggregate show-space` 命令。所有百分比均以Aggregate大小的百分比計算。
 
-以下範例顯示名為testvol.的Volume「Volume show-fout跡」命令輸出：
+下列範例顯示 `volume show-footprint` 稱為 testvol 的 Volume 命令輸出：
 
 ....
 cluster1::> volume show-footprint testvol
@@ -33,7 +33,7 @@ cluster1::> volume show-footprint testvol
       Delayed Frees                           1.36MB       0%
       Total Footprint                         2.01GB      76%
 ....
-下表說明「Volume show-famage」命令輸出的一些關鍵列、以及您可以採取哪些行動來降低該功能的空間使用量：
+下表說明的輸出部分主要列 `volume show-footprint` 命令以及您可以採取哪些行動來嘗試利用該功能來減少空間使用量：
 
 |===
 
@@ -42,7 +42,7 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-「Volume Data Footprint」
+`Volume Data Footprint`
  a| 
 使用中包含Aggregate的空間總量（依作用中檔案系統中的磁碟區資料）、以及磁碟區Snapshot複本所使用的空間。此列不包含保留空間。
  a| 
@@ -53,16 +53,16 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-「Volume保證」
+`Volume Guarantee`
  a| 
 磁碟區在Aggregate中保留的空間量、以供未來寫入。保留的空間量取決於磁碟區的保證類型。
  a| 
-將磁碟區的保證類型變更為「無」。
+將磁碟區的保證類型變更為 `none`。
 
 
 
  a| 
-「彈性Volume中繼資料」
+`Flexible Volume Metadata`
  a| 
 磁碟區中繼資料檔案在集合中使用的空間總量。
  a| 
@@ -71,16 +71,16 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-《解放》
+`Delayed Frees`
  a| 
-用於ONTAP 效能的區塊、無法立即釋出。對於SnapMirror目的地、此列的值為「0」、不會顯示。
+用於ONTAP 效能的區塊、無法立即釋出。對於 SnapMirror 目的地、此列的值為 `0` 且不會顯示。
  a| 
 沒有直接的控制方法。
 
 
 
  a| 
-「檔案作業中繼資料」
+`File Operation Metadata`
  a| 
 保留給檔案作業中繼資料的空間總量。
  a| 
@@ -89,7 +89,7 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-「總佔用空間」
+`Total Footprint`
  a| 
 磁碟區在集合體中使用的空間總量。這是所有列的總和。
  a| 

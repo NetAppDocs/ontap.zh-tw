@@ -11,7 +11,7 @@ summary: 您可以使用vserver CIFS modify命令、將SMB伺服器從工作群�
 
 
 [role="lead"]
-您可以使用「vserver CIFS modify」命令、將SMB伺服器從工作群組移至Active Directory網域、從工作群組移至其他工作群組、或從Active Directory網域移至工作群組。
+您可以使用將 SMB 伺服器從工作群組移至 Active Directory 網域、從工作群組移至其他工作群組、或從 Active Directory 網域移至工作群組 `vserver cifs modify` 命令。
 
 .關於這項工作
 您也可以修改SMB伺服器的其他屬性、例如SMB伺服器名稱和管理狀態。如需詳細資料、請參閱手冊頁。
@@ -19,35 +19,35 @@ summary: 您可以使用vserver CIFS modify命令、將SMB伺服器從工作群�
 .選擇
 * 將SMB伺服器從工作群組移至Active Directory網域：
 +
-.. 將SMB伺服器的管理狀態設定為「自己」。
+.. 將 SMB 伺服器的管理狀態設為 `down`。
 +
 [listing]
 ----
 Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
 ----
-.. 將SMB伺服器從工作群組移至Active Directory網域：「vsserver CIFS modify -vserver _vserver_name_-domain_name_」
+.. 將SMB伺服器從工作群組移至Active Directory網域： `vsserver cifs modify -vserver _vserver_name_ -domain _domain_name_`
 +
 [listing]
 ----
 Cluster1::>vserver cifs modify -vserver vs1 -domain example.com
 ----
 +
-若要建立SMB伺服器的Active Directory機器帳戶、您必須提供Windows帳戶的名稱和密碼、並具有足夠的權限、以便將電腦新增至「_example _」網域內的「ou=_example _ ou」容器。
+若要為 SMB 伺服器建立 Active Directory 機器帳戶、您必須提供具有足夠權限的 Windows 帳戶名稱和密碼、以便將電腦新增至 `ou=_example_ ou` 中的容器 `_example_`.com 網域。
 
 +
-從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到URI時、請在「-keytab-uri」參數中加入「vserver CIFS」命令。
+從ONTAP 功能更新9.7開始、AD管理員可以提供Keytab檔案的URI、作為提供權限Windows帳戶名稱和密碼的替代方案。當您收到 URI 時、請將其加入 `-keytab-uri` 參數 `vserver cifs` 命令。
 
 
 
 * 將SMB伺服器從工作群組移至其他工作群組：
 +
-.. 將SMB伺服器的管理狀態設定為「自己」。
+.. 將 SMB 伺服器的管理狀態設為 `down`。
 +
 [listing]
 ----
 Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
 ----
-.. 修改SMB伺服器的工作群組：「vserver CIFS modify -vserver _vserver_name_-workgroup _new_workgroup name_」
+.. 修改 SMB 伺服器的工作群組： `vserver cifs modify -vserver _vserver_name_ -workgroup _new_workgroup_name_`
 +
 [listing]
 ----
@@ -57,13 +57,13 @@ Cluster1::>vserver cifs modify -vserver vs1 -workgroup workgroup2
 
 * 將SMB伺服器從Active Directory網域移至工作群組：
 +
-.. 將SMB伺服器的管理狀態設定為「自己」。
+.. 將 SMB 伺服器的管理狀態設為 `down`。
 +
 [listing]
 ----
 Cluster1::>vserver cifs modify -vserver vs1 -status-admin down
 ----
-.. 將SMB伺服器從Active Directory網域移至工作群組：「vserver CIFS modify -vserver _vserver_name_-workgroup _workgroup name_」
+.. 將 SMB 伺服器從 Active Directory 網域移至工作群組： `vserver cifs modify -vserver _vserver_name_ -workgroup _workgroup_name_`
 +
 [listing]
 ----
@@ -76,7 +76,7 @@ cluster1::> vserver cifs modify -vserver vs1 -workgroup workgroup1
 
 ====
 +
-*** 使用「vserver CIFS modify」命令的適當參數來修改其他屬性。
+*** 使用的適當參數修改其他屬性 `vserver cifs modify` 命令。
 
 
 

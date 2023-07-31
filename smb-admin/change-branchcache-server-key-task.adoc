@@ -19,11 +19,11 @@ summary: 您可以修改儲存虛擬機器（SVM）上的BranchCache組態、並
 變更伺服器金鑰時、您也必須清除雜湊快取。在清除雜湊之後、ONTAP 當啟用了BranchCache的用戶端發出新要求時、會建立新的雜湊。
 
 .步驟
-. 使用下列命令變更伺服器金鑰：「vserver CIFS BranchCache modify -vserver vserver_name -server_key text -flush-hahes true」
+. 使用下列命令變更伺服器金鑰： `vserver cifs branchcache modify -vserver vserver_name -server-key text -flush-hashes true`
 +
-設定新的伺服器金鑰時、您也必須指定「-Flush雜湊」、並將值設為「true」。
+設定新的伺服器金鑰時、您也必須指定 `-flush-hashes` 並將值設為 `true`。
 
-. 使用「vserver CIFS BranchCache show」命令來驗證BranchCache組態是否正確。
+. 使用驗證 BranchCache 組態是否正確 `vserver cifs branchcache show` 命令。
 
 
 .範例

@@ -11,16 +11,16 @@ summary: ndmpcopy命令可在支援NDMP v4的儲存系統之間傳輸資料。�
 
 
 [role="lead"]
-在支援NDMP v4的儲存系統之間、「ndmpcopy」nodesl解除 命令會傳輸資料。您可以執行完整和遞增資料傳輸。您可以傳輸完整或部分磁碟區、qtree、目錄或個別檔案。
+。 `ndmpcopy` Nodesdesh 命令會在支援 NDMP v4 的儲存系統之間傳輸資料。您可以執行完整和遞增資料傳輸。您可以傳輸完整或部分磁碟區、qtree、目錄或個別檔案。
 
 .關於這項工作
 使用發行版本的不限次數地進行遞增傳輸（一次完整備份、最多兩次遞增備份）ONTAP 。
 
 從發行版的更新版本開始、遞增式傳輸最多只能有九個層級（一個完整備份、最多九個遞增備份）ONTAP 。
 
-您可以在來源與目的地儲存系統的nodesdro解除 命令列執行「ndmpcopy」、或是在非資料傳輸來源或目的地的儲存系統上執行。您也可以在單一儲存系統上執行「ndmpcopy」、這是資料傳輸的來源和目的地。
+您可以執行 `ndmpcopy` 在來源與目的地儲存系統的 nodesdesh 命令列、或是既不是資料傳輸來源也不是目的地的儲存系統。您也可以執行 `ndmpcopy` 在單一儲存系統上、同時是資料傳輸的來源和目的地。
 
-您可以在"ndmpcopy（ndmpcopy）"命令中使用來源和目的地儲存系統的IPv6位址。路徑格式為「/vserver_name/volume名稱\[path\]」。
+您可以使用中來源和目的地儲存系統的 IPv4 或 IPv6 位址 `ndmpcopy` 命令。路徑格式為 `/vserver_name/volume_name \[path\]`。
 
 .步驟
 . 在來源與目的地儲存系統上啟用NDMP服務：
@@ -34,11 +34,11 @@ summary: ndmpcopy命令可在支援NDMP v4的儲存系統之間傳輸資料。�
  a| 
 SVM範圍的NDMP模式
  a| 
-「Vserver服務NDMP開啟」
+`vserver services ndmp on`
 
 [NOTE]
 ====
-對於管理SVM中的NDMP驗證、使用者帳戶為「admin」、使用者角色為「admin」或「備份」。在資料SVM中、使用者帳戶為「vsadmin」、使用者角色為「vsadmin」或「vsadmin-Backup」。
+對於管理 SVM 中的 NDMP 驗證、使用者帳戶是 `admin` 而且使用者角色是 `admin` 或 `backup`。在資料 SVM 中、使用者帳戶是 `vsadmin` 而且使用者角色是 `vsadmin` 或 `vsadmin-backup` 角色：
 
 ====
 
@@ -46,12 +46,12 @@ SVM範圍的NDMP模式
  a| 
 節點範圍的NDMP模式
  a| 
-「系統服務NDMP開啟」
+`system services ndmp on`
 
 |===
-. 在儲存系統內或儲存系統之間、使用nnodesdro解除 命令「ndmpcopy」來傳輸資料：
+. 使用在儲存系統內或儲存系統之間傳輸資料 `ndmpcopy` Nodesdesh以下 的命令：
 +
-系統節點執行節點<節點名稱>< ndmpcopy [選項] source_ip:source_path dite_ip:destination_path [-MCS {inet| inet6}][-mcd {inet| inet6}][-md {inet|inson6}]*
+`*::> system node run -node <node_name> < ndmpcopy [options] source_IP:source_path destination_IP:destination_path [-mcs {inet|inet6}] [-mcd {inet|inet6}] [-md {inet|inet6}]*`
 
 +
 [NOTE]
@@ -60,32 +60,32 @@ SVM範圍的NDMP模式
 
 ====
 +
-** "ndmpcopy（ndmpcopy）"命令決定控制連線的位址模式、如下所示：
+** 。 `ndmpcopy` 命令會決定控制連線的位址模式、如下所示：
 +
 *** 控制連線的位址模式會對應所提供的IP位址。
-*** 您可以使用「-mcs」和「-mcd」選項來覆寫這些規則。
+*** 您可以使用來覆寫這些規則 `-mcs` 和 `-mcd` 選項：
 
 
 ** 如果來源或目的地是ONTAP 指不支援的系統、則視NDMP模式（節點範圍或SVM範圍）而定、請使用允許存取目標Volume的IP位址。
-** 「source_path」和「destining_path」是直到磁碟區、qtree、目錄或檔案精細層級為止的絕對路徑名稱。
-** 「-mcs」指定控制連線至來源儲存系統的偏好定址模式。
+** `source_path` 和 `destination_path` 是磁碟區、 qtree 、目錄或檔案精細層級之前的絕對路徑名稱。
+** `-mcs` 指定與來源儲存系統的控制連線的慣用定址模式。
 +
-「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+`inet` 表示 IPv4 位址模式和 `inet6` 表示 IPv6 位址模式。
 
-** mcd'指定控制連線到目的地儲存系統的偏好定址模式。
+** `-mcd` 指定與目的地儲存系統的控制連線的慣用定址模式。
 +
-「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+`inet` 表示 IPv4 位址模式和 `inet6` 表示 IPv6 位址模式。
 
-** 「-md」指定來源與目的地儲存系統之間資料傳輸的偏好定址模式。
+** `-md` 指定來源與目的地儲存系統之間資料傳輸的慣用定址模式。
 +
-「Inet」代表IPv6位址模式、而「inet6」代表IPv6位址模式。
+`inet` 表示 IPv4 位址模式和 `inet6` 表示 IPv6 位址模式。
 
 +
-如果在"ndmpcopy（ndmpcopy）"命令中不使用"-md"選項、則資料連線的定址模式如下所示：
+如果您不使用 `-md` 中的選項 `ndmpcopy` 命令時、資料連線的定址模式如下所示：
 
 +
 *** 如果為控制連線指定的任一位址是IPv6位址、則資料連線的位址模式為IPv6。
-*** 如果為控制連線指定的兩個位址都是IPV4位址、則「ndmpcopy」命令會先嘗試使用IPv6位址模式進行資料連線。
+*** 如果控制連線指定的兩個位址都是 IPv4 位址、則為 `ndmpcopy` 命令會先嘗試資料連線的 IPv6 位址模式。
 +
 如果失敗、命令會使用IPv4位址模式。
 
@@ -96,7 +96,7 @@ SVM範圍的NDMP模式
 
 ====
 +
-此命令範例可將資料從來源路徑（「來源路徑」）移轉至目的地路徑（「目的地路徑」）。
+此範例命令會從來源路徑移轉資料 (`source_path`）到目的地路徑 (`destination_path`）。
 
 +
 [listing]

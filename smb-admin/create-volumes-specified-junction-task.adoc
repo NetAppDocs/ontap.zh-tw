@@ -24,7 +24,7 @@ summary: 您可以在建立資料Volume時指定交會點。結果Volume會自�
 
 ====
 .步驟
-. 建立具有連接點的磁碟區：「volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _aggregate name_-size｛integer[kb| MB| GB| TB| PB ]｝-SECURITY樣式｛ntfs|unix | mixed｝-path _jeting_path_」
+. 建立具有交會點的Volume： `volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path _junction_path_`
 +
 交會路徑必須以根（/）開頭、且可同時包含目錄和輔助磁碟區。交會路徑不需要包含磁碟區名稱。交會路徑與磁碟區名稱無關。
 
@@ -32,16 +32,16 @@ summary: 您可以在建立資料Volume時指定交會點。結果Volume會自�
 指定Volume安全樣式為選用項目。如果您未指定安全樣式、ONTAP 則會以套用至儲存虛擬機器（SVM）根磁碟區的相同安全樣式來建立磁碟區。不過、根磁碟區的安全樣式可能不是您要套用至所建立資料磁碟區的安全樣式。建議您在建立磁碟區時指定安全樣式、以將難以疑難排解的檔案存取問題降至最低。
 
 +
-交會路徑不區分大小寫；「/eng」與「/eng」相同。如果您建立CIFS共用區、Windows會將交會路徑視為區分大小寫。例如、如果交會是「/eng」、則CIFS共用路徑必須以「/eng」開頭、而非「/eng」開頭。
+接合路徑不區分大小寫； `/ENG` 與相同 `/eng`。如果您建立CIFS共用區、Windows會將交會路徑視為區分大小寫。例如、如果交會是 `/ENG`、 CIFS 共用路徑必須以開頭 `/ENG`、不是 `/eng`。
 
 +
-您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱「Volume create」命令的手冊頁。
+您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱的手冊頁 `volume create` 命令。
 
-. 驗證是否已使用所需的交會點建立磁碟區：「volume show -vserver _vserver_name_-volume _volume _name_-jetion」
+. 確認已使用所需的交會點建立磁碟區： `volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
 
 
 .範例
-下列範例建立名為「home4」的磁碟區、位於SVM VS1、其交會路徑為「/eng/hHome」：
+以下範例建立一個名為「 'home4' 」的 Volume 、該 Volume 位於 SVM VS1 上、且具有交會路徑 `/eng/home`：
 
 [listing]
 ----

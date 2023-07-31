@@ -27,7 +27,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 設定叢集層級的MOTD：
 
-'*安全登入motd修改-vserver _cluster名稱_｛[-message "_text_"]|[-URI _ftp._or_http _addr_]}*
+`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 
 
 
@@ -36,16 +36,16 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 修改叢集層級的MOTD：
 
-'*安全性登入motd修改-vserver _cluster名稱_｛[-message "_text_]"｝|[-URI ftp._or_http _addr]}*
+`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] } | [-uri ftp_or_http_addr] }*`
 
 
 
  a| 
 若未設定SVM層級的MOTD、請移除所有登入的MOTD
  a| 
-將叢集層級的MOTD設為空白字串（「」）：
+將叢集層級的 MOTD 設定為空白字串 (`""`）：
 
-hy*安全登錄motd modify -vserver _cluster名稱_-message "*
+`*security login motd modify -vserver _cluster_name_ -message ""*`
 
 
 
@@ -54,8 +54,8 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 設定叢集層級的MOTD、然後在啟用叢集層級MOTD的情況下、將所有SVM層級的MOTD設為空白字串：
 
-.. '*安全登入motd修改-vserver _cluster名稱_｛[-message "_text_"]|[-URI _ftp._or_http _addr_]}*
-.. hy*安全性登入motd修改｛-vserver！"_cluster名稱_"｝-訊息""-is叢集訊息啟用true*
+.. `*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+.. `*security login motd modify { -vserver !"_cluster_name_" } -message "" -is-cluster-message-enabled true*`
 
 
 
@@ -65,8 +65,8 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 將叢集層級的MOTD設為空白字串、然後為選取的SVM設定SVM層級的MOTD：
 
-.. hy*安全登錄motd modify -vserver _cluster名稱_-message "*
-.. '*安全性登入motd modify -vserver _Svm_name_｛[-message "_text_]"|[-uri _ftp._or_http _addr_]}*
+.. `*security login motd modify -vserver _cluster_name_ -message ""*`
+.. `*security login motd modify -vserver _svm_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 +
 您可以視需要為每個SVM重複此步驟。
 
@@ -79,7 +79,7 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 將叢集和所有SVM設定為使用相同的MOTD：
 
-'*安全性登入motd修改-vserver_*｛[-message "_text_"]|[-URI _ftp._or_http _addr_]}*
+`*security login motd modify _-vserver_ * { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 
 [NOTE]
 ====
@@ -93,7 +93,7 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 設定叢集層級的MOTD、但停用叢集的顯示：
 
-'*安全登入motd修改-vserver _cluster名稱_｛[-message "_text_"]|[-URI _ftp._or_http _addr_]｝-is叢集訊息啟用的假*
+`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] } -is-cluster-message-enabled false*`
 
 
 
@@ -102,7 +102,7 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 將叢集和所有SVM設定為使用MOTD的空白字串：
 
-"*安全登入motd modify -vserver *-most "*
+`*security login motd modify -vserver * -message ""*`
 
 
 
@@ -111,7 +111,7 @@ hy*安全登錄motd modify -vserver _cluster名稱_-message "*
  a| 
 使用延伸查詢可選擇性修改MOTD：
 
-hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-message "_text_"]|[-URI _ftp._or_http _addr_]}*
+`*security login motd modify { -vserver !"_cluster_name_" -message !"" } { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 
 
 
@@ -120,7 +120,7 @@ hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-
  a| 
 使用查詢顯示MOTD：
 
-「*安全登入motd show -message *"Jane"\***"2015"**」
+`*security login motd show -message *"January"\***"2015"**`
 
 
 
@@ -132,7 +132,7 @@ hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-
 |===
 * 在SVM層級管理MOTD：
 +
-在SVM環境中不需要指定「-vserver _Svm_name_'」。
+指定 `-vserver _svm_name_` 在 SVM 內容中不需要。
 
 +
 |===
@@ -144,7 +144,7 @@ hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-
  a| 
 修改SVM層級的MOTD：
 
-'*安全性登入motd modify -vserver _Svm_name_｛[-message "_text_]"|[-uri _ftp._or_http _addr_]}*
+`*security login motd modify -vserver _svm_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 
 
 
@@ -153,8 +153,8 @@ hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-
  a| 
 將SVM層級MOTD設為空白字串、然後讓叢集管理員啟用SVM的叢集層級MOTD：
 
-.. hy*安全登入motd modify -vserver _Svm_name_-m則 為「*」
-.. （適用於叢集管理員）「*安全性登入motd modify -vserver _svm_name_-is叢集訊息啟用true*」
+.. `*security login motd modify -vserver _svm_name_ -message ""*`
+.. （適用於叢集管理員） `*security login motd modify -vserver _svm_name_ -is-cluster-message-enabled true*`
 
 
 
@@ -164,8 +164,8 @@ hy*安全性登入motd修改｛-vserver！"_cluster名稱_"-message！"｝ ｛[-
  a| 
 將SVM層級MOTD設為空白字串、然後讓叢集管理員停用SVM的叢集層級MOTD：
 
-.. hy*安全登入motd modify -vserver _Svm_name_-m則 為「*」
-.. （適用於叢集管理員）「*安全性登入motd modify -vserver _Svm_name_-is叢集訊息啟用的假*」
+.. `*security login motd modify -vserver _svm_name_ -message ""*`
+.. （適用於叢集管理員） `*security login motd modify -vserver _svm_name_ -is-cluster-message-enabled false*`
 
 
 |===

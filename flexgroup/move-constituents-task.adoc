@@ -73,12 +73,12 @@ Validation succeeded.
 磁碟區移動作業會以背景程序的形式執行。
 
 +
-從支援的9.5版開始ONTAP 、您可以將FlexGroup 支援的不支援磁碟區從Fabric集區移至非Fabric集區、或是將「允許混合型」參數設為「真」、將兩者移至非Fabric集區。默認情況下，"-allow-come-agg-types（允許混合型）"選項設置爲"假"。
+從 ONTAP 9.5 開始、您可以將 FlexGroup Volume 組成要素從 Fabric Pool 移至非 Fabric Pool 、或是透過設定來將其移至非 Fabric Pool `-allow-mixed-aggr-types` 參數至 `true`。依預設 `-allow-mixed-aggr-types` 選項設定為 `false`。
 
 +
 [NOTE]
 ====
-您無法使用「Volume Move」命令來啟用FlexGroup 對現象區的加密。
+您無法使用 `volume move` 在 FlexGroup 磁碟區上啟用加密的命令。
 
 ====
 +
@@ -89,7 +89,7 @@ cluster1::> volume move start -vserver vs2 -volume fg1_002 -destination-aggregat
 +
 [NOTE]
 ====
-如果磁碟區移動作業因為主動式SnapMirror作業而失敗、您應該使用「napmirror abort-h」命令來中止SnapMirror作業。在某些情況下、SnapMirror中止作業也可能失敗。在這種情況下、您應該中止Volume Move作業、然後稍後再試一次。
+如果磁碟區移動作業因使用中的 SnapMirror 作業而失敗、您應該使用中止 SnapMirror 作業 `snapmirror abort -h` 命令。     在某些情況下、SnapMirror中止作業也可能失敗。在這種情況下、您應該中止Volume Move作業、然後稍後再試一次。
 
 ====
 . 驗證Volume Move作業的狀態：

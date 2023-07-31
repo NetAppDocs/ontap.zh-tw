@@ -37,7 +37,7 @@ TLS是一種在網際網路上廣泛使用的密碼編譯傳輸協定。它使�
 
 ====
 HTTP:: 您可以使用HTTP來傳輸事件通知。使用此組態時、連線不安全。不驗證不驗證ONTAP 客戶端和Webhook應用程式的身分。此外、網路流量並未加密或受到保護。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http["設定Webhook目的地以使用HTTP"] 以取得組態詳細資料。
-HTTPS:: 為了提高安全性、您可以在裝載Webhook例行工作的伺服器上安裝憑證。驗證Webhook應用程式伺服器及雙方身分的HTTPS傳輸協定、ONTAP 以確保網路流量的隱私性和完整性。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定Webhook目的地以使用HTTPS"] 以取得組態詳細資料。
+HTTPS:: 為了提高安全性、您可以在裝載Webhook例行工作的伺服器上安裝憑證。驗證Webhook應用程式伺服器及雙方身分的HTTPS傳輸協定、ONTAP 以確保網路流量的隱私性和完整性。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定 Webhook 目的地以使用 HTTPS"] 以取得組態詳細資料。
 HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安裝用戶端憑證、進一步強化HTTPS安全性。除了驗證Webhook應用程式伺服器的身分、並保護網路流量之外、Webhook應用程式還會驗證該客戶端的身分。ONTAP ONTAP這種雙向對等驗證稱為「相互TLS」。請參閱 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication["設定Webhook目的地使用HTTPS進行相互驗證"] 以取得組態詳細資料。
 
 
@@ -52,24 +52,24 @@ HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安�
 您可以設定ONTAP 使用HTTP將事件通知轉送至Webhook應用程式。這是最不安全的選項、但設定起來最簡單。
 
 .步驟
-. 建立一個新的目的地「REstapi-EMS（REstapi-EMS））來接收事件：
+. 建立新目的地 `restapi-ems` 若要接收事件：
 +
-「事件通知目的地create -name restapi-EMS -REST -API-URL \http://<webhook-application>`」
+`event notification destination create -name restapi-ems -rest-api-url \http://<webhook-application>`
 
 +
 在上述命令中、您必須使用* HTTP配置作為目的地。
 
-. 建立一個通知、將「重要事件（Important）”篩選器連結至「REstapi-EMS（REstapi-EMS）目的地：
+. 建立連結的通知 `important-events` 使用篩選 `restapi-ems` 目的地：
 +
-「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 
 
 
 
-== 設定Webhook目的地以使用HTTPS
+== 設定 Webhook 目的地以使用 HTTPS
 
-您可以設定ONTAP 使用HTTPS將事件通知轉送至Webhook應用程式。使用伺服器憑證來確認Webhook應用程式的身分識別、以及保護網路流量。ONTAP
+您可以設定 ONTAP 、使用 HTTPS 將事件通知轉寄至 Webhook 應用程式。使用伺服器憑證來確認Webhook應用程式的身分識別、以及保護網路流量。ONTAP
 
 .開始之前
 * 為Webhook應用程式伺服器產生私密金鑰和憑證
@@ -80,21 +80,21 @@ HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安�
 . 在裝載Webhook應用程式的伺服器上安裝適當的伺服器私密金鑰和憑證。具體的組態步驟取決於伺服器。
 . 將伺服器根憑證安裝在ONTAP
 +
-「安全憑證安裝類型：server、ca」
+`security certificate install -type server-ca`
 
 +
 命令會要求提供憑證。
 
-. 建立「REstapi-EMS（接收事件）目的地：
+. 建立 `restapi-ems` 接收事件的目的地：
 +
-「事件通知目的地create -name restapi-EMS -REST -API-URL \https://<webhook-application>`」
+`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application>`
 
 +
 在上述命令中、您必須使用* HTTPS *配置作為目的地。
 
-. 建立通知、將「重要事件（Important）”篩選器連結至新的「REstapi-EMS（REstapi-EMS）目的地：
+. 建立連結的通知 `important-events` 使用新的篩選器 `restapi-ems` 目的地：
 +
-「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 
 
@@ -113,24 +113,24 @@ HTTPS搭配相互驗證:: 您可以在ONTAP 發出Webbook要求的系統上安�
 
 
 .步驟
-. 執行工作的前兩個步驟 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定Webhook目的地以使用HTTPS"] 安裝伺服器憑證、ONTAP 以便驗證伺服器的身分。
+. 執行工作的前兩個步驟 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["設定 Webhook 目的地以使用 HTTPS"] 安裝伺服器憑證、ONTAP 以便驗證伺服器的身分。
 . 在Webhook應用程式中安裝適當的根和中繼憑證、以驗證用戶端憑證。
 . 將用戶端憑證安裝ONTAP 在下列項目中：
 +
-「安全憑證安裝類型用戶端」
+`security certificate install -type client`
 
 +
 命令會要求提供私密金鑰和憑證。
 
-. 建立「REstapi-EMS（接收事件）目的地：
+. 建立 `restapi-ems` 接收事件的目的地：
 +
-「事件通知目的地create -name restapi-EMS -rit-api-URL \https://<webhook-application>-credite-authority <用戶端憑證的發行者>-credite-serial <用戶端憑證的序列>」
+`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application> -certificate-authority <issuer of the client certificate> -certificate-serial <serial of the client certificate>`
 
 +
 在上述命令中、您必須使用* HTTPS *配置作為目的地。
 
-. 建立通知、將「重要事件（Important）”篩選器連結至新的「REstapi-EMS（REstapi-EMS）目的地：
+. 建立連結的通知 `important-events` 使用新的篩選器 `restapi-ems` 目的地：
 +
-「事件通知會建立-filter名稱Important事件-destinations restapi-EMS」
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 

@@ -14,7 +14,7 @@ summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允�
 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允許的Kerberos時鐘偏移時間上限、Kerberos票證壽命、以及票證續約天數上限。
 
 .關於這項工作
-使用「vserver CIFS安全性修改」命令修改CIFS伺服器Kerberos設定、只會修改您使用「-vserver」參數指定的單一儲存虛擬機器（SVM）上的設定。您可以使用Active Directory群組原則物件（GPO）、集中管理屬於同一個Active Directory網域之叢集上所有SVM的Kerberos安全性設定。
+使用修改 CIFS 伺服器 Kerberos 設定 `vserver cifs security modify` 命令只會修改您使用指定的單一儲存虛擬機器（ SVM ）上的設定 `-vserver` 參數。您可以使用Active Directory群組原則物件（GPO）、集中管理屬於同一個Active Directory網域之叢集上所有SVM的Kerberos安全性設定。
 
 .步驟
 . 執行下列一或多項動作：
@@ -28,7 +28,7 @@ summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允�
  a| 
 指定允許的Kerberos時鐘偏移時間上限（以分鐘為單位）。
  a| 
-「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos時鐘偏移_integer_in_Minuts_」
+`vserver cifs security modify -vserver _vserver_name_ -kerberos-clock-skew _integer_in_minutes_`
 
 預設設定為5分鐘。
 
@@ -37,7 +37,7 @@ summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允�
  a| 
 以小時為單位指定Kerberos票證壽命。
  a| 
-「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos票證-存留整合時間」
+`vserver cifs security modify -vserver _vserver_name_ -kerberos-ticket-age integer_in_hours`
 
 預設設定為10小時。
 
@@ -46,7 +46,7 @@ summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允�
  a| 
 指定通知單續約天數上限。
  a| 
-「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos更新年齡_integer_days _」
+`vserver cifs security modify -vserver _vserver_name_ -kerberos-renew-age _integer_in_days_`
 
 預設設定為7天。
 
@@ -55,14 +55,14 @@ summary: 您可以修改某些CIFS伺服器Kerberos安全性設定、包括允�
  a| 
 指定KDC上的通訊端逾時、之後所有KDC都會標示為無法連線。
  a| 
-「Vserver CIFS安全性修改-vserver _vserver_name_-Kerberos - kdc -逾時_integer_in_seconds_」
+`vserver cifs security modify -vserver _vserver_name_ -kerberos-kdc-timeout _integer_in_seconds_`
 
 預設設定為3秒。
 
 |===
 . 驗證Kerberos安全性設定：
 +
-「Vserver CIFS安全性顯示-vserver _vserver_name_`
+`vserver cifs security show -vserver _vserver_name_`
 
 
 

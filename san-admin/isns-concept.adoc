@@ -1,10 +1,10 @@
 ---
 permalink: san-admin/isns-concept.html 
 sidebar: sidebar 
-keywords: what, isns 
+keywords: isns, isns server, internet storage name service, iscsi, iqn 
 summary: 網際網路儲存名稱服務（iSNS）是一種傳輸協定、可在TCP/IP儲存網路上自動探索及管理iSCSI裝置。iSNS伺服器會維護網路上作用中iSCSI裝置的相關資訊、包括其IP位址、iSCSI節點名稱IQN及入口網站群組。 
 ---
-= 什麼是SNSis
+= 網際網路儲存名稱服務（ iSNS ）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -28,3 +28,92 @@ iSNS伺服器使用網際網路儲存名稱服務（SNSs）傳輸協定來維護
 透過iSNS傳輸協定、可自動探索及管理IP儲存網路上的iSCSI裝置。iSCSI啟動器可查詢iSNS伺服器以探索iSCSI目標裝置。
 
 NetApp不供應或經銷iSNS伺服器。您可以向NetApp支援的廠商取得這些伺服器。
+
+
+
+== SVM如何與iSNS伺服器互動
+
+透過SVM管理LIF、iSNS伺服器可與每個儲存虛擬機器（SVM）進行通訊。管理LIF會將所有iSCSI目標節點名稱、別名及入口網站資訊登錄至特定SVM的iSNS服務。
+
+在以下範例中、 SVM 「 'VS1' 」使用 SVM 管理 LIF 「 'VS1_mgmt_lif' 」向 iSNS 伺服器註冊。在登錄到iSNS期間、SVM會透過SVM管理LIF將所有iSCSI LIF傳送到iSNS伺服器。一旦完成 iSNS 登錄、則 iSNS 伺服器會在「 VS1 」中列出所有服務 iSCSI 的生命體清單。如果叢集包含多個SVM、則每個SVM都必須分別向iSNS伺服器註冊、才能使用iSNS服務。
+
+image::../media/bsag_c-mode_iSNS_register.png[BSAG c模式ISSSNSRegister]
+
+在下一個範例中、當 iSNS 伺服器完成目標的登錄後、主機 A 可以透過 iSNS 伺服器探索「 VS1 」的所有生命、如步驟 1 所示。在主機 A 完成「 VS1 」的生命探索後、主機 A 可以建立與「 VS1 」中任何生命的連線、如步驟 2 所示。在管理層將 "`VS2` 的 "`VS2_mgmt_LIF" 註冊到 iSNS 伺服器之前、主機 A 並未偵測到 "'VS2'" 中的任何生命。
+
+image::../media/bsag_c-mode_iSNS_connect.png[BSAG c模式的SNSSNSConnect連線]
+
+不過、如果您定義介面存取清單、主機只能使用介面存取清單中定義的lifs來存取目標。
+
+初始設定完iSNS之後ONTAP 、當SVM組態設定變更時、Sesfe會自動更新iSNS伺服器。
+
+在您進行組態變更和 ONTAP 將更新傳送至 iSNS 伺服器之間、可能會發生幾分鐘的延遲。強制立即更新 iSNS 伺服器上的 iSNS 資訊： `vserver iscsi isns update`
+
+
+
+== 管理iSNS的命令
+
+支援支援支援管理您的iSNS服務的命令。ONTAP
+
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+設定iSNS服務
+ a| 
+`vserver iscsi isns create`
+
+
+
+ a| 
+啟動iSNS服務
+ a| 
+`vserver iscsi isns start`
+
+
+
+ a| 
+修改iSNS服務
+ a| 
+`vserver iscsi isns modify`
+
+
+
+ a| 
+顯示iSNS服務組態
+ a| 
+`vserver iscsi isns show`
+
+
+
+ a| 
+強制更新已登錄的iSNS資訊
+ a| 
+`vserver iscsi isns update`
+
+
+
+ a| 
+停止iSNS服務
+ a| 
+`vserver iscsi isns stop`
+
+
+
+ a| 
+移除iSNS服務
+ a| 
+`vserver iscsi isns delete`
+
+
+
+ a| 
+查看命令的手冊頁
+ a| 
+`man _command name_`
+
+|===
+如需詳細資訊、請參閱每個命令的手冊頁。

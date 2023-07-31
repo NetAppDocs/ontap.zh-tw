@@ -38,14 +38,14 @@ link:https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/dc4eb5
 +
 .. 若要確認LDAP FAST Bind伺服器已列在LDAP用戶端組態中、請輸入：
 +
-「Vserver服務名稱服務LDAP用戶端展示」
+`vserver services name-service ldap client show`
 
 +
 link:https://docs.netapp.com/us-en/ontap/nfs-config/create-ldap-client-config-task.html["瞭解LDAP用戶端組態。"]
 
-.. 若要確認「LDAP」是nsswitch「passwd」資料庫的設定來源之一、請輸入：
+.. 以確認 `ldap` 是 nsswitch 設定的來源之一 `passwd` 資料庫、輸入：
 +
-「Vserver服務名稱服務n-switchshow」
+`vserver services name-service ns-switch show`
 
 +
 link:https://docs.netapp.com/us-en/ontap/nfs-config/configure-name-service-switch-table-task.html["深入瞭解nsswitch組態。"]
@@ -54,12 +54,12 @@ link:https://docs.netapp.com/us-en/ontap/nfs-config/configure-name-service-switc
 
 . 確保管理使用者正在使用nsswitch進行驗證、且其帳戶中已啟用LDAP快速連結驗證。
 +
-** 對於現有使用者、請輸入「安全登入修改」、並確認下列參數設定：
+** 對於現有使用者、請輸入 `security login modify` 並驗證下列參數設定：
 +
-nsswitch驗證方法
+`-authentication-method nsswitch`
 
 +
-「is、LDAP、fastbind true」
+`-is-ldap-fastbind true`
 
 ** 如需新的管理使用者、請參閱 link:https://docs.netapp.com/us-en/ontap/authentication/grant-access-nis-ldap-user-accounts-task.html["啟用LDAP或NIS帳戶存取。"]
 

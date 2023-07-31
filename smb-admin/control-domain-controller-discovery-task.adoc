@@ -16,12 +16,12 @@ summary: 從ONTAP 功能更新9.3開始、您可以修改探索網域控制器�
 .關於這項工作
 根據預設、動態探索程序會探索所有可用的DC、包括任何慣用的DC、本機站台中的所有DC、以及所有遠端DC。此組態可能會導致驗證延遲、以及在特定環境中存取共用區。如果您已經決定要使用的DC資源池、或是遠端DC不足或無法存取、您可以變更探索方法。
 
-在更新版本的發行版中、「CIFS網域探索到伺服器」命令的「探索模式」參數可讓您選取下列其中一個探索選項：ONTAP
+在 ONTAP 9.3 及更新版本中 `discovery-mode` 的參數 `cifs domain discovered-servers` 命令可讓您選取下列其中一個探索選項：
 
 * 探索網域中的所有DC。
 * 只會探索本機站台中的DC。
 +
-必須定義SMB伺服器的「預設站台」參數、才能使用此模式。
+。 `default-site` 必須定義 SMB 伺服器的參數、才能使用此模式。
 
 * 未執行伺服器探索、SMB伺服器組態僅取決於偏好的DC。
 +
@@ -30,20 +30,20 @@ summary: 從ONTAP 功能更新9.3開始、您可以修改探索網域控制器�
 
 
 .步驟
-. 指定所需的探索選項：「vserver CIFS網域探索伺服器探索模式修改-vserver _vserver_name_-mode｛all| site | none｝」
+. 指定所需的探索選項： `vserver cifs domain discovered-servers discovery-mode modify -vserver _vserver_name_ -mode {all|site|none}`
 +
-"mod"參數的選項：
+的選項 `mode` 參數：
 
 +
-** 全部
+** `all`
 +
 探索所有可用的DC（預設）。
 
-** 《站點》
+** `site`
 +
 將DC探索限制在您的站台上。
 
-** 無
+** `none`
 +
 僅使用偏好的DC、而不執行探索。
 

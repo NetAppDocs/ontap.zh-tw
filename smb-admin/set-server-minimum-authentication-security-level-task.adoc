@@ -28,35 +28,35 @@ summary: 您可以在SMB伺服器上設定SMB伺服器的最低安全性層級�
 
 
  a| 
-「lm-NTLM-NTLMv-krb」（預設）
+`lm-ntlm-ntlmv2-krb` （預設）
  a| 
 儲存虛擬機器（SVM）接受LM、NTLM、NTLMv2及Kerberos驗證安全性。
 
 
 
  a| 
-「NTLM-NTLMv-krb」
+`ntlm-ntlmv2-krb`
  a| 
 SVM接受NTLM、NTLMv2及Kerberos驗證安全性。SVM拒絕LM驗證。
 
 
 
  a| 
-「vbvbe-krb」
+`ntlmv2-krb`
  a| 
 SVM接受NTLMv2和Kerberos驗證安全性。SVM拒絕LM和NTLM驗證。
 
 
 
  a| 
-「KRB'」
+`krb`
  a| 
 SVM僅接受Kerberos驗證安全性。SVM會拒絕LM、NTLM及NTLMv2驗證。
 
 |===
 .步驟
-. 設定最低驗證安全性層級：「vserver CIFS安全性修改-vserver _vserver_name_-lm相容性層級｛lm -NTLM-NTLMv-krb | NTLM-NTLMv-krb | krb｝」
-. 驗證驗證安全性層級是否設為所需層級：「vserver CIFS安全性show -vserver _vserver_name_」
+. 設定最低驗證安全層級： `vserver cifs security modify -vserver _vserver_name_ -lm-compatibility-level {lm-ntlm-ntlmv2-krb|ntlm-ntlmv2-krb|ntlmv2-krb|krb}`
+. 驗證驗證安全性層級是否設為所需層級： `vserver cifs security show -vserver _vserver_name_`
 
 
 .相關資訊

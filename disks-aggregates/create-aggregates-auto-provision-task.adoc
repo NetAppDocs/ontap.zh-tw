@@ -11,7 +11,8 @@ summary: 如果ONTAP 您的環境適合使用由NetApp提供的自動新增本�
 
 
 [role="lead"]
-如果ONTAP 您的環境適合使用由NetApp提供的自動新增本機層（使用自動資源配置建立集合體）的最佳實務建議、您可以接受建議、並讓ONTAP 它加入本機層。
+如果 ONTAP 提供自動新增本機層的最佳實務建議（使用自動資源配置建立 Aggregate ）
+在您的環境中、您可以接受建議、並讓 ONTAP 新增本機層。
 
 您遵循的程序取決於您使用的介面、系統管理員或CLI。
 
@@ -23,7 +24,7 @@ summary: 如果ONTAP 您的環境適合使用由NetApp提供的自動新增本�
 
 .步驟
 . 在 System Manager 中、按一下 * Storage > Tiers* 。
-. 在* Tiers*頁面中、按一下 image:icon-add-local-tier.png["新增本機層圖示"] 若要建立新的本機層：
+. 在* Tiers*頁面中、按一下 image:icon-add-local-tier.png["新增本機層圖示"]  若要建立新的本機層：
 +
 「*新增本機層級*」頁面顯示可在節點上建立的建議本機層數、以及可用的儲存設備。
 
@@ -44,7 +45,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 +
 ** *磁碟*：顯示磁碟的數量、大小和類型
 ** *配置*：顯示RAID群組配置、包括哪些磁碟為同位元檢查或資料、以及哪些插槽未使用。
-** *備用磁碟*：顯示節點名稱、備用磁碟的數量和大小、以及儲存設備的類型。
+** * 備用磁碟 * ：顯示節點名稱、備用磁碟的數量和大小、以及儲存類型。
 
 
 . 請執行下列其中一個步驟：
@@ -72,7 +73,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 
 
 |===
-. [[step5-okm-加密]（選用）：如果已安裝Onboard Key Manager、您可以將其設定為加密。選中* Configure Onboard Key Manager for加密*複選框。
+. [[step5-okm-bride] （選用）：如果已安裝 Onboard Key Manager 、您可以將其設定為加密。  選中* Configure Onboard Key Manager for加密*複選框。
 +
 .. 輸入通關密碼。
 .. 再次輸入密碼以確認密碼。
@@ -88,15 +89,15 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 --
 *使用CLI建立具有自動資源配置的Aggregate *
 
-您可以執行「儲存Aggregate自動資源配置」命令來產生集合體配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
+您可以執行 `storage aggregate auto-provision` 命令以產生 Aggregate 配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
 
 .您需要的產品
 叢集上必須執行部分為9.2或更新版本。ONTAP
 
 .關於這項工作
-使用"shorage Aggregate auto-Provision "命令產生的預設摘要會列出建議建立的集合體、包括名稱和可用大小。您可以檢視清單、並在出現提示時決定是否要建立建議的集合體。
+使用產生的預設摘要 `storage aggregate auto-provision` 命令會列出建議建立的集合體、包括名稱和可用大小。您可以檢視清單、並在出現提示時決定是否要建立建議的集合體。
 
-您也可以使用「-verbose」選項來顯示詳細摘要、該選項會顯示下列報告：
+您也可以使用顯示詳細摘要 `-verbose` 選項、顯示下列報告：
 
 * 每個節點的新集合體摘要、可在建立集合體之後建立、探索備援磁碟和剩餘的備用磁碟和磁碟分割
 * 新的資料集合體可建立要使用的磁碟和分割區數
@@ -104,16 +105,16 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 * 有關建立Aggregate之後剩餘的備用磁碟和分割區的詳細資料
 
 
-如果您熟悉自動資源配置方法、而且環境已正確準備好、您可以使用「跳過確認」選項建立建議的集合體、而不需顯示和確認。「儲存Aggregate自動資源配置」命令不受CLI工作階段「確認」設定影響。
+如果您熟悉自動資源配置方法、且環境已準備妥當、則可以使用 `-skip-confirmation` 選項可建立建議的 Aggregate 、不需顯示和確認。。 `storage aggregate auto-provision` 命令不受 CLI 工作階段影響 `-confirmations` 設定：
 
 。[`storage aggregate auto-provision` 手冊頁^]包含更多有關Aggregate配置建議的資訊。
 
 .步驟
-. 使用所需的顯示選項來執行「儲存Aggregate自動資源配置」命令。
+. 執行 `storage aggregate auto-provision` 命令及所需的顯示選項。
 +
 ** 無選項：顯示標準摘要
-** 「verbose」選項：顯示詳細摘要
-** 「SKIP確認」選項：建立建議的集合體、不需顯示或確認
+** `-verbose` 選項：顯示詳細摘要
+** `-skip-confirmation` 選項：建立建議的集合體、無需顯示或確認
 
 
 . 請執行下列其中一個步驟：

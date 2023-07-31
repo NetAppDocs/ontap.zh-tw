@@ -47,7 +47,7 @@ HA配對中的兩個節點均實體連線至彼此的磁碟或陣列LUN。每個
 .步驟
 . 檢視節點上的集合體、確認要移動哪些集合體、並確保它們處於線上狀態且狀況良好：
 +
-「torage Aggregate show -node-nodE_」
+`storage aggregate show -node _source-node_`
 
 +
 下列命令顯示叢集中四個節點上的六個集合體。所有的集合體都在線上。node1和node3形成HA配對、Node2和Node4形成HA配對。
@@ -74,7 +74,7 @@ aggr_5     239.0GB   239.0GB    0% online       4 node4  raid_dp,
 ----
 . 發出命令以啟動Aggregate重新配置：
 +
-「torage aggregate regate regate regate regate regate start -gregate list _gregate 1 _、_gregate 2」... -node-source-nod__-destination _destination-nod__
+`storage aggregate relocation start -aggregate-list _aggregate-1_, _aggregate-2_... -node _source-node_ -destination _destination-node_`
 
 +
 下列命令可將Agggr_1和aggr_2從Node1移至node3。node3是Node1的HA合作夥伴。只能在HA配對內移動集合體。
@@ -86,9 +86,9 @@ cluster::> storage aggregate relocation start -aggregate-list aggr_1, aggr_2 -no
 Run the storage aggregate relocation show command to check relocation status.
 node1::storage aggregate>
 ----
-. 使用「shorage aggregate regate reg搬 移show」命令來監控集合體重新配置的進度：
+. 使用監控 Aggregate 重新定位的進度 `storage aggregate relocation show` 命令：
 +
-「torage Aggregate or搬 移顯示-node/source-nodE_」
+`storage aggregate relocation show -node _source-node_`
 
 +
 以下命令顯示要移至節點3的集合體進度：

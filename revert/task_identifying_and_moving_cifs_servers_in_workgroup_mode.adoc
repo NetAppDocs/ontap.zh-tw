@@ -13,7 +13,7 @@ summary: 在執行還原之前、您必須刪除工作群組模式中的任何SM
 [role="lead"]
 在執行還原之前、您必須刪除工作群組模式中的任何SMB伺服器、或將其移入網域。不支援使用支援ONTAP 更新至版本不支援的工作群組模式ONTAP 。
 
-. 識別任何採用「驗證」形式工作群組的SMB伺服器：「Vserver CIFS show」
+. 識別任何採用工作群組驗證形式的 SMB 伺服器： `vserver cifs show`
 . 移動或刪除您識別的伺服器：
 +
 [cols="2*"]
@@ -24,14 +24,14 @@ summary: 在執行還原之前、您必須刪除工作群組模式中的任何SM
  a| 
 將SMB伺服器從工作群組移至Active Directory網域：
  a| 
-"Vserver CIFS modify -vserver _vserver_name_-domain_ddomain_name_"
+`vserver cifs modify -vserver _vserver_name_ -domain _domain_name_`
 
 
 
  a| 
 刪除SMB伺服器
  a| 
-"Vserver CIFS刪除-vserver vserver_name"
+`vserver cifs delete -vserver vserver_name`
 
 |===
 . 如果刪除SMB伺服器、請輸入網域的使用者名稱、然後輸入使用者密碼。

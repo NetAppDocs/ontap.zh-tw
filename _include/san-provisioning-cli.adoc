@@ -2,9 +2,9 @@
 :allow-uri-read: 
 
 
-. 使用「系統授權show」命令來驗證您是否擁有FC或iSCSI的授權。
+. 使用 `system license show` 用於驗證您是否擁有 FC 或 iSCSI 授權的命令。
 +
-「系統授權展示」
+`system license show`
 
 +
 [listing]
@@ -18,31 +18,31 @@ Package           Type    Description           Expiration
  iSCSI             site    iSCSI License         -
  FCP               site    FCP License           -
 ----
-. 如果您沒有FC或iSCSI的授權、請使用「license add」命令。
+. 如果您沒有 FC 或 iSCSI 授權、請使用 `license add` 命令。
 +
-「license add -license code-code-_y_your less_code_」
+`license add -license-code _your_license_code_`
 
 . 在SVM上啟用您的傳輸協定服務：
 +
-*對於iSCSI：*「vserver iSCSI create -vserver _vserver_name_-target別名_vserver_name_」
+* iSCSI ： * `vserver iscsi create -vserver _vserver_name_ -target-alias _vserver_name_`
 
 +
-*對於FC：*「vserver FCP create -vserver _vserver_name_-stue-admin up」
+* 代表 FC ： * `vserver fcp create -vserver _vserver_name_ -status-admin up`
 
 . 在每個節點上為SVM建立兩個生命期：
 +
-「網路介面create -vserver _vserver_name_-lif_lif_name_-role data -data傳輸協定iscsiSCSI|fc-home-node_node_name_-home-port _port_name_-address_ip_address_-netmask_`
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi|fc -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask netmask`
 
 +
 NetApp為每個SVM服務資料的每個節點至少支援一個iSCSI或FC LIF。不過、備援需要每個節點兩個生命期。
 
-. 確認您的生命已建立、且其作業狀態為「線上」：
+. 確認您的生命已建立、且其操作狀態為 `online`：
 +
-「網路介面show -vserver _vserver_name__lif_name_」
+`network interface show -vserver _vserver_name_ _lif_name_`
 
 . 建立LUN：
 +
-「LUN create -vserver vserver_name -volume _volume _name_-LUN _lun_name_-size _lun_size_-osttype Linux -space-Reserve enabled| disabled'
+`lun create -vserver vserver_name -volume _volume_name_ -lun _lun_name_ -size _lun_size_ -ostype linux -space-reserve enabled|disabled`
 
 +
 您的LUN名稱不得超過255個字元、且不得包含空格。
@@ -53,15 +53,15 @@ NOTE: 在磁碟區中建立LUN時、NVFIL選項會自動啟用。
 
 . 建立您的igroup：
 +
-"igroup create -vserver _vserver_name_-igroup _igroup_name_-protocol FCP | iscs|混合類型Linux -initiator _name_"
+`igroup create -vserver _vserver_name_ -igroup _igroup_name_ -protocol fcp|iscsi|mixed -ostype linux -initiator _initiator_name_`
 
 . 將LUN對應至igroup：
 +
-"LUN對應會建立-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
 . 驗證LUN的設定是否正確：
 +
-「LUN show -vserver _vserver_name_」
+`lun show -vserver _vserver_name_`
 
 . link:san-admin/create-port-sets-binding-igroups-task.html["建立連接埠集並繫結至igroup"] （選用）。
 . 請遵循主機文件中的步驟、在特定主機上啟用區塊存取。

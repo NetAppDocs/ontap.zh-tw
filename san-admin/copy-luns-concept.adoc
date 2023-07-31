@@ -13,9 +13,9 @@ summary: 在複製LUN之前、您應該注意某些事項。
 [role="lead"]
 在複製LUN之前、您應該注意某些事項。
 
-叢集管理員可使用「LUN copy」命令、在叢集中的儲存虛擬機器（SVM）之間複製LUN。叢集管理員必須先使用「vserver對等create」命令建立儲存虛擬機器（SVM）對等關係、然後再執行SVM之間的LUN複製作業。來源磁碟區中必須有足夠空間可用於SIS複製。
+叢集管理員可以使用、在叢集中的儲存虛擬機器（ SVM ）之間複製 LUN `lun copy` 命令。叢集管理員必須使用建立儲存虛擬機器（ SVM ）對等關係 `vserver peer create` 執行跨 SVM LUN 複製作業之前的命令。來源磁碟區中必須有足夠空間可用於SIS複製。
 
-Snapshot複本中的LUN可作為「LUN複製」命令的來源LUN。當您使用「LUN copy」命令複製LUN時、LUN複本會立即可供讀取和寫入存取。建立LUN複本後、來源LUN將維持不變。來源LUN和LUN複本均以不同LUN序號的唯一LUN形式存在。對來源LUN所做的變更不會反映在LUN複本中、而對LUN複本所做的變更不會反映在來源LUN中。來源LUN的LUN對應不會複製到新的LUN；必須對應LUN複本。
+Snapshot 複本中的 LUN 可作為的來源 LUN `lun copy` 命令。當您使用複製 LUN 時 `lun copy` 命令、 LUN 複本可立即用於讀寫存取。建立LUN複本後、來源LUN將維持不變。來源LUN和LUN複本均以不同LUN序號的唯一LUN形式存在。對來源LUN所做的變更不會反映在LUN複本中、而對LUN複本所做的變更不會反映在來源LUN中。來源LUN的LUN對應不會複製到新的LUN；必須對應LUN複本。
 
 透過Snapshot複本進行資料保護、是在磁碟區層級進行。因此、如果您將LUN複製到與來源LUN磁碟區不同的磁碟區、則目的地LUN將受目的地磁碟區的資料保護方案所管制。如果您沒有為目的地磁碟區建立Snapshot複本、則不會建立LUN複本的Snapshot複本。
 

@@ -20,23 +20,23 @@ summary: 如果叢集中沒有至少一個SVM來提供NFS用戶端的資料存�
 .步驟
 . 建立SVM：
 +
-「vserver create -vserver _vserver_name_-rootvolume _root_volume名稱_-Aggregate _Aggregate名稱_-rootvolume安全型UNIX語言C。utf-8 -IPSpace _IPspace_name_」
+`vserver create -vserver _vserver_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style unix -language C.UTF-8 -ipspace _ipspace_name_`
 
 +
-** 將UNIX設定用於「-rootvolume安全樣式」選項。
-** 使用預設的C.utf-8「-Language」選項。
-** 「IPSpace」設定為選用設定。
+** 使用的 UNIX 設定 `-rootvolume-security-style` 選項。
+** 使用預設的 C.UTF-8 `-language` 選項。
+** 。 `ipspace` 設定為選用項目。
 
 
 . 驗證新建立的SVM的組態和狀態：
 +
-「vserver show -vserver _vserver_name_」
+`vserver show -vserver _vserver_name_`
 
 +
-「允許的傳輸協定」欄位必須包含NFS。您可以稍後再編輯此清單。
+。 `Allowed Protocols` 欄位必須包含 NFS 。您可以稍後再編輯此清單。
 
 +
-「Vserver運作狀態」欄位必須顯示「執行中」狀態。如果顯示「初始化」狀態、表示根磁碟區建立等中介作業失敗、您必須刪除SVM並重新建立它。
+。 `Vserver Operational State` 欄位必須顯示 `running` 州/省。如果顯示 `initializing` 狀態、表示有些中繼作業（例如建立根磁碟區）失敗、您必須刪除 SVM 並重新建立它。
 
 
 
@@ -51,7 +51,7 @@ cluster1::> vserver create -vserver vs1.example.com -rootvolume root_vs1 -aggreg
 [Job 2059] Job succeeded:
 Vserver creation completed
 ----
-下列命令顯示SVM是以1 GB的根磁碟區建立、而且會自動啟動、並處於「執行中」狀態。根磁碟區具有預設的匯出原則、不含任何規則、因此根磁碟區在建立時不會匯出。
+下列命令顯示 SVM 是以 1 GB 的根磁碟區所建立、而且是自動啟動且位於中 `running` 州/省。根磁碟區具有預設的匯出原則、不含任何規則、因此根磁碟區在建立時不會匯出。
 
 [listing]
 ----

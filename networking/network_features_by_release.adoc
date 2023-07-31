@@ -50,7 +50,7 @@ IPv6 叢集設定
 
 
  a| 
-零點9.12.1. ONTAP
+ONTAP 9.12.1
  a| 
 LIF服務
  a| 
@@ -63,7 +63,7 @@ link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ON
 
 
  a| 
-零點9.12.1. ONTAP
+ONTAP 9.12.1
  a| 
 System Manager網路增強功能
  a| 
@@ -183,7 +183,7 @@ link:configure_ip_security_@ipsec@_over_wire_encryption.html["透過有線加密
  a| 
 零點9.10.1 ONTAP
  a| 
-LIF服務
+LIF 服務
  a| 
 防火牆原則已過時、並完全由LIF服務原則取代。
 
@@ -198,7 +198,7 @@ link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ON
  a| 
 NFS over RDMA
  a| 
-支援NFS over RDMA、為採用NVIDIA GDX生態系統的客戶提供更高效能的NFSv4.0。ONTAP利用RDMA介面卡、可將記憶體直接從儲存設備複製到GPU、以規避CPU負荷。
+支援NFS over RDMA、為採用NVIDIA GDX生態系統的客戶提供更高效能的NFSv4.0。ONTAP使用 RDMA 介面卡可將記憶體直接從儲存設備複製到 GPU 、避免 CPU 負荷。
 
 link:../nfs-rdma/index.html["NFS over RDMA"]
 
@@ -223,7 +223,8 @@ link:../nfs-rdma/index.html["NFS over RDMA"]
 
 * 分析連線問題的命令：
 +
-** 使用下列命令顯示哪些叢集路徑發生封包遺失：「網路介面檢查叢集連線能力show」
+** 使用下列命令顯示哪些叢集路徑發生封包遺失：
+`network interface check cluster-connectivity show`
 
 
 
@@ -237,12 +238,13 @@ VIP LIF增強功能
  a| 
 新增下列欄位以擴充虛擬IP（VIP）邊界閘道傳輸協定（BGP）功能：
 
-* -ASN或-Peer-ASN（4位元組值）屬性本身並不是新的、但現在它使用4位元組的整數。
+* -ASN 或 -peer-ASN （ 4 位元組值）
+屬性本身不是新的、但現在使用 4 位元組整數。
 * 中型
 * -use對等即下一跳
 
 
-「ASon_integer'參數指定自治系統編號（ASN）或對等ASN。
+。 `asn_integer` 參數指定自治系統編號（ ASN ）或對等 ASN 。
 
 * 從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是16位元數（0 - 64511可用值）。
 * 從ONTAP 支援BGP的ASN 9.9.1開始、支援4位元組的非負整數（65536 - 4294967295）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
@@ -250,7 +252,7 @@ VIP LIF增強功能
 
 您可以利用多重出口鑑別器（MED-）支援、針對路徑優先順序進行進階路由選擇。BGP更新訊息中的選用屬性Medion、可讓路由器為流量選取最佳路由。MEDA是無符號32位元整數（0 - 4294967295）、偏好較低的值。
 
-VIP BGP使用BGP對等群組來提供預設路由自動化、以簡化組態。當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請將「-use對等端點即下一跳」屬性設為「true」。依預設、此屬性為「假」。
+VIP BGP使用BGP對等群組來提供預設路由自動化、以簡化組態。當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請設定 `-use-peer-as-next-hop` 屬性至 `true`。依預設、此屬性為 `false`。
 
 link:configure_virtual_ip_@vip@_lifs.html["設定虛擬IP（VIP）LIF"]
 
@@ -299,7 +301,7 @@ link:configure_ip_security_@ipsec@_over_wire_encryption.html["透過有線加密
  a| 
 虛擬IP（VIP）擴充
  a| 
-新欄位已新增至「network BGP對等群組」命令。此擴充可讓您為虛擬IP（VIP）設定兩個額外的邊界閘道傳輸協定（BGP）屬性。
+新欄位已新增至 `network bgp peer-group` 命令。此擴充可讓您為虛擬IP（VIP）設定兩個額外的邊界閘道傳輸協定（BGP）屬性。
 
 *路徑前加*：其他因素相同、BGP偏好選擇具有最短AS（自治系統）路徑的路由。您可以使用選用的as path prepend屬性來重複自動系統編號（ASN）、以增加as path屬性的長度。接收器會選取最短AS路徑的路由更新。
 
@@ -357,12 +359,12 @@ link:configure_firewall_policies_for_lifs.html#portmap-service-configuration["po
  a| 
 快取搜尋
  a| 
-您可以使用「vserver services name-service netse-domain netgroup -databases」命令快取NIS「netgroup .byhost」項目。
+您可以快取 NIS `netgroup.byhost` 使用的項目 `vserver services name-service nis-domain netgroup-database` 命令。
 
 
 
  a| 
-部分9.6 ONTAP
+ONTAP 9.6
  a| 
 立方
  a| 
@@ -373,7 +375,7 @@ link:configure_firewall_policies_for_lifs.html#portmap-service-configuration["po
 
 
  a| 
-部分9.6 ONTAP
+ONTAP 9.6
  a| 
 LIF服務原則取代LIF角色
  a| 
@@ -437,7 +439,7 @@ link:enable_multipath_routing.html["啟用多重路徑路由"]
 
 
  a| 
-部分9.4 ONTAP
+ONTAP 9.4
  a| 
 portmap服務
  a| 
@@ -452,7 +454,7 @@ link:configure_firewall_policies_for_lifs.html#portmap-service-configuration["po
 
 
  a| 
-部分9.4 ONTAP
+ONTAP 9.4
  a| 
 適用於LDAP或NIS的SSH MFA
  a| 
@@ -461,7 +463,7 @@ link:configure_firewall_policies_for_lifs.html#portmap-service-configuration["po
 
 
  a| 
-部分9.3 ONTAP
+ONTAP 9.3
  a| 
 SSH MFA
  a| 
@@ -470,7 +472,7 @@ SSH MFA
 
 
  a| 
-部分9.3 ONTAP
+ONTAP 9.3
  a| 
 SAML驗證
  a| 
@@ -479,7 +481,7 @@ SAML驗證
 
 
  a| 
-部分9.2 ONTAP
+ONTAP 9.2
  a| 
 SSH登入嘗試
  a| 
@@ -488,7 +490,7 @@ SSH登入嘗試
 
 
  a| 
-部分9.2 ONTAP
+ONTAP 9.2
  a| 
 數位安全證書
  a| 
@@ -497,20 +499,20 @@ SSH登入嘗試
 
 
  a| 
-部分9.2 ONTAP
+ONTAP 9.2
  a| 
 FastPath
  a| 
 在更新網路堆疊以改善效能和恢復能力的過程中、ONTAP 由於難以識別不正確路由表的問題、因此在版本更新的版本中、不再支援使用快速路徑路由。因此、您不再可以在nodesdro解除 中設定下列選項、而在升級ONTAP 至版本化為版本化9.2或更新版本時、會停用現有的快速路徑組態：
 
-「ip.fastpath.enable」
+`ip.fastpath.enable`
 
 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Network_traffic_not_sent_or_sent_out_of_an_unexpected_interface_after_upgrade_to_9.2_due_to_elimination_of_IP_Fastpath["升級至9.2後、由於IP Fastpath不存在、因此未從非預期介面傳送或傳送網路流量"^]
 
 
 
  a| 
-部分9.1 ONTAP
+ONTAP 9.1
  a| 
 使用v3 traphosts的安全性
  a| 
@@ -521,7 +523,7 @@ link:configure_traphosts_to_receive_snmp_notifications.html["設定traphosts以�
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 IPv6
  a| 
@@ -532,7 +534,7 @@ link:create_a_lif.html["建立LIF"]
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 每個節點的生命量
  a| 
@@ -545,9 +547,9 @@ link:https://hwu.netapp.com/["NetApp Hardware Universe"^]
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
-LIF管理
+LIF 管理
  a| 
 系統管理程式可自動偵測並隔離網路連接埠故障。ONTAPLIF會自動從降級的連接埠移轉至正常的連接埠。
 
@@ -556,7 +558,7 @@ link:monitor_the_health_of_network_ports.html["監控網路連接埠的健全狀
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 LLDP
  a| 
@@ -567,7 +569,7 @@ link:display_network_connectivity_with_neighbor_discovery_protocols.html#use-cdp
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 UC符合Dscp標記
  a| 
@@ -586,7 +588,7 @@ link:dscp_marking_for_uc_compliance.html["針對美國法規遵循的Dscp標記"
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 SHA-2密碼雜湊功能
  a| 
@@ -597,7 +599,7 @@ SHA-2密碼雜湊功能
 
 
  a| 
-部分9.0 ONTAP
+ONTAP 9.0
  a| 
 FIPS 140-2支援
  a| 

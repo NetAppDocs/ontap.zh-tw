@@ -36,9 +36,9 @@ summary: 您可以自動配置FlexGroup 一個流通量。透過自動選取集�
  a| 
 0 ： 2 或更新版本 ONTAP
  a| 
-「Volume create -vserver Svm_name -volume fa_vol_name–autose-Provise-as FlexGroup fis-size fg_size [–加密true][-qos-police-group qos_policy_group名稱][-support-tiering true]」
+`volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true]`
 
-從功能性的9.5開始ONTAP 、您就能建立FlexGroup 適用於FabricPool 功能性的若要自動在FlexGroup 支援上配置一個資料區、FabricPool 您必須將「支援分層」參數設為「true」。Volume保證必須永遠設定FabricPool 為「無」、才能用於顯示。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
+從功能性的9.5開始ONTAP 、您就能建立FlexGroup 適用於FabricPool 功能性的若要在 FabricPool 上自動佈建 FlexGroup 磁碟區、您必須設定 `-support-tiering` 參數至 `true`。Volume 保證一律必須設定為 `none` 適用於 FabricPool 。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
 
 link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
 
@@ -46,7 +46,7 @@ link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
 
 link:../performance-admin/index.html["效能管理"]
 
-從ONTAP 支援支援支援功能的功能9.2開始、您可以將「-加密」參數設為「真」、以便在FlexGroup 支援功能的支援下對此功能進行加密。若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
+從 ONTAP 9.2 開始、您可以設定 `-encrypt` 參數至 `true` 如果您想要在 FlexGroup 磁碟區上啟用加密。若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
 
 
 NOTE: 您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
@@ -56,13 +56,13 @@ link:../encryption-at-rest/index.html["加密閒置的資料"]
 
 
  a| 
-部分9.1 ONTAP
+ONTAP 9.1
  a| 
-「Volume FlexGroup Sideploy -vserver Svm_name -size Fa_Size'」
+`volume flexgroup deploy -vserver svm_name -size fg_size`
 
 |===
 +
-「最小化」參數指定FlexGroup 以KB、MB、GB、TB或PB為單位的現象Volume大小。
+。 `size` 參數指定 FlexGroup 磁碟區大小、單位為 KB 、 MB 、 GB 、 TB 或 PB 。
 
 +
 以下範例說明如何在FlexGroup 功能強大的功能中配置尺寸400 TB的等量磁碟區ONTAP ：
@@ -109,9 +109,9 @@ Do you want to continue? {y|n}: y
 建立此解決方案時、叢集中的每個節點都會有八個組成要素。FlexGroup這些成員會平均分散在每個節點上兩個最大的集合體之間。
 
 +
-根據預設、FlexGroup 除了AFF 在非功能性系統上、使用「Volume」（磁碟區）空間保證設定建立的現象是不一樣的。對於流通系統、根據預設、以「無」空間保證建立的是流通量。AFF FlexGroup
+根據預設、 FlexGroup Volume 是使用建立的 `volume` 空間保證設定、 AFF 系統除外。對於 AFF 系統、依預設會使用建立 FlexGroup Volume `none` 空間保證。
 
-. 使用FlexGroup 交會路徑「volume mount -vserver vserver_name -volume vol_name -jet-path jeting_path」來掛載此現象
+. 使用連接路徑掛載 FlexGroup Volume ： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
 +
 [listing]
 ----

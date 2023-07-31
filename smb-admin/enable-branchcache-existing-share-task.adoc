@@ -11,36 +11,36 @@ summary: 您可以將BranchCache共用屬性新增至現有的共用內容清單
 
 
 [role="lead"]
-您可以將「BranchCache」共用內容新增至現有的共用內容清單、以在現有的SMB共用區上啟用「BranchCache」。
+您可以新增、在現有的 SMB 共用上啟用 BranchCache `branchcache` 將屬性共用至現有的共用屬性清單。
 
 .關於這項工作
 * 如果在SMB共用區上啟用了BranchCache、則共用區必須將離線檔案組態設定為手動快取。
 +
 如果現有共用的離線檔案設定未設定為手動快取、您必須修改共用區來設定。
 
-* 即使儲存虛擬機器（SVM）上未設定及啟用BranchCache、您仍可在共用區上設定「BranchCache」（BranchCache）屬性。
+* 您可以設定 `branchcache` 即使在儲存虛擬機器（ SVM ）上未設定和啟用 BranchCache 、也會在共用上顯示內容。
 +
 不過、如果您想要共用區提供快取內容、則必須在SVM上設定及啟用BranchCache。
 
-* 當您將「BranchCache」共用內容新增至共用區時、會保留現有的共用設定和共用內容。
+* 當您新增時 `branchcache` 共用屬性、現有的共用設定和共用屬性都會保留。
 +
-會將BranchCache共用屬性新增至現有的共用屬性清單。如需使用「vserver CIFS共用內容add」命令的詳細資訊、請參閱手冊頁。
+會將BranchCache共用屬性新增至現有的共用屬性清單。如需使用的詳細資訊、請參閱 `vserver cifs share properties add` 命令，請參見手冊頁。
 
 
 
 .步驟
 . 如有必要、請設定離線檔案共用設定以手動快取：
 +
-.. 使用「vserver CIFS共用show」命令來判斷離線檔案共用設定。
-.. 如果離線檔案共用設定未設定為手動、請將其變更為所需的值：「vserver CIFS共用修改-vserver vserver_name -share-name share_name -offline檔案手冊」
+.. 使用來判斷離線檔案共用設定 `vserver cifs share show` 命令。
+.. 如果未將離線檔案共用設定設為手動、請將其變更為所需的值： `vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files manual`
 
 
-. 在現有的SMB共用區上啟用BranchCache：「vserver CIFS共用內容add -vserver vserver_name -share-name share_name -share-properties BranchCache」
-. 驗證是否已在SMB共用區上設定「vserver CIFS共用區show -vserver vserver_name -share-name share_name share_name」
+. 在現有的 SMB 共用上啟用 BranchCache ： `vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties branchcache`
+. 確認已在 SMB 共用上設定 BranchCache 共用屬性： `vserver cifs share show -vserver vserver_name -share-name share_name`
 
 
 .範例
-下列命令可在SVM VS1上的現有SMB共用區「data2」上啟用BranchCache、路徑為「/data2」：
+下列命令會在路徑為的現有 SMB 共用「 'data2 」上啟用 BranchCache `/data2` 在 SVM VS1 上：
 
 [listing]
 ----

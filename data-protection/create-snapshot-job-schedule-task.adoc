@@ -11,29 +11,29 @@ summary: Snapshot原則至少需要一個Snapshot複本工作排程。您可以�
 
 
 [role="lead"]
-Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用「jobschedule cron create」命令來建立工作排程。
+Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用 `job schedule cron create` 建立工作排程的命令。
 
 .關於這項工作
 根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱。
 
-如果您同時指定日期和星期的值、則會將這些值視為獨立的值。例如、每天都會執行一次cron排程、日期規格為「星期五」、月份規格為「13」、而不是每週五、第13天執行一次。
+如果您同時指定日期和星期的值、則會將這些值視為獨立的值。例如、包含日期規格的 cron 排程 `Friday` 以及月份規格 `13` 每週五及每月第 13 天都會執行、不只是每週五的第 13 天。
 
 .步驟
 . 建立工作排程：
 +
-作業排程cron create -name _job_name_-month -dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_'
+`job schedule cron create -name _job_name_ -month month -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
 +
 從功能性的9.10.1開始ONTAP 、您可以在工作排程中加入Vserver：
 
 +
-作業排程cron create -name _job_name_-vserver _vserver_name_-month _month_-dayofWeek _Day_of_Week _-Day _Day_of_month_-hour _hour _-minute _minute_
+`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-以下範例建立名為「每週一次」的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `myweekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]
@@ -41,7 +41,7 @@ Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用「j
 cluster1::> job schedule cron create -name myweekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
 +
-以下範例建立名為「myweeklymulti」的排程、指定多天、小時和分鐘：
+下列範例會建立名為的排程 `myweeklymulti` 指定多天、小時和分鐘：
 
 +
 [listing]

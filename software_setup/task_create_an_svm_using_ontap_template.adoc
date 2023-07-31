@@ -23,9 +23,9 @@ VserverEnvironment設定範本是預先設定的範本、可用於設定SVM。Vs
 * 通訊協定
 * 資料生命量
 * 網路路由
-* DNS組態
+* DNS 組態
 * Active Directory組態
-* NIS組態
+* NIS 組態
 * LDAP用戶端和伺服器組態
 * CIFS伺服器
 
@@ -33,7 +33,7 @@ VserverEnvironment設定範本是預先設定的範本、可用於設定SVM。Vs
 VserverEnvironment安裝範本為唯讀範本。您無法修改此範本的預設參數值。若要修改範本中任何參數的預設值、您必須複製範本、然後修改參數的預設值。
 
 .步驟
-. 檢視並記下範本中定義的參數值、以建立及設定SVM：「範本參數顯示」
+. 檢視並記下範本中所定義用於建立和設定 SVM 的參數值： `template parameter show`
 +
 [listing]
 ----
@@ -82,7 +82,7 @@ cifs_server         string       -            no   CIFS Server Name
 +
 .. 複製範本：
 +
-'範本複本-name template名稱-destination_name new_timent_name
+`template copy -name template_name -destination_name new_template_name`
 
 +
 [listing]
@@ -94,7 +94,7 @@ cluster1::> template copy -name VserverEnvironmentSetup -destination-name templa
 
 .. 修改您要變更之參數的預設值：
 +
-「範本參數修改-範本範本名稱-名稱參數名稱-預設值new_default_value'
+`template parameter modify -template template_name -name parameter_name -default-value new_default_value`
 
 +
 [listing]
@@ -105,7 +105,7 @@ cluster1::> template parameter modify -template template1 -name security_style -
 
 . 指定範本中參數的值來配置SVM：
 +
-範本資源配置-name template_name
+`template provision -name template_name`
 
 +
 [listing]

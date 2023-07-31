@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: smbc/smbc_troubleshoot_link_between_site_a_and_mediator_down.html 
 keywords: SM-BC, SMBC, troubleshooting, connectivity, consensus 
-summary: 疑難排解站台A與調壓器之間的連結中斷、站台B關閉。 
+summary: 疑難排解站台 A 與 ONTAP 調解器停機和站台 B 停機之間的連結。 
 ---
-= 站台A與調壓器向下連結、站台B向下連結
+= 站台 A 與協調器向下和站台 B 向下連結
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -18,15 +18,15 @@ summary: 疑難排解站台A與調壓器之間的連結中斷、站台B關閉。
 
 [cols="3"]
 |===
-| 要檢查的項目 | CLI命令 | 指標 
+| 要檢查的項目 | CLI 命令 | 指標 
 
 
-| 站台A的中介者 | 「napmirror中介秀」 | 連線狀態為「無法連線」 
+| 站台A的中介者 | `snapmirror mediator show` | 連線狀態為 `unreachable` 
 
 
-| 站台B連線能力 | 「叢集同儕秀」 | 可用度將會是無法使用的 
+| 站台B連線能力 | `cluster peer show` | 可用度為 `unavailable` 
 
 
-| SMBC Volume的協商一致狀態 | 「Volume show _volume name_-Fields smbc-Consensus」 | 將把《協商一致》欄位改成《等待協商一致》 
+| SMBC Volume的協商一致狀態 | `volume show _volume_name_ -fields smbc-consensus` | 。 `sm-bc consensus` 欄位將會顯示 `Awaiting-consensus` 
 |===
 如需診斷及解決此問題的其他資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Link_between_Site_A_and_Mediator_down_and_Site_B_down_when_using_SM-BC["使用SMBC時、站台A和訊號器向下和站台B向下之間的連結"^]。

@@ -21,63 +21,63 @@ summary: 您可以在建立SMB共用時或隨時修改現有SMB共用時、指�
 
 
  a| 
-「enable」（已過時*）
+`enable` （已過時 * ）
  a| 
 指定啟用符號連結以進行讀寫存取。
 
 
 
  a| 
-「僅限讀取」（已過時*）
+`read_only` （已過時 * ）
  a| 
 指定啟用symlink進行唯讀存取。此設定不適用於無線連結。Wielink存取永遠是讀寫的。
 
 
 
  a| 
-「hide」（已過時*）
+`hide` （已過時 * ）
  a| 
 指定SMB用戶端無法看到symlink。
 
 
 
  a| 
-「沒有嚴格的安全性」
+`no-strict-security`
  a| 
 指定用戶端在共用邊界之外追蹤symlink。
 
 
 
  a| 
-「symlinks」
+`symlinks`
  a| 
-指定在本機啟用symlink以進行讀寫存取。即使CIFS選項「is-Advertis-DFS-enablated」設定為「true」、也不會產生DFS廣告。這是預設設定。
-
-
-
- a| 
-《雙鏈接與無線連結》
- a| 
-指定本機symlink和widelinks以進行讀寫存取。即使CIFS選項「is-Advertise-DFS-enabled」設定為「假」、也會針對本機symlink和widelink產生DFS-廣告。
+指定在本機啟用symlink以進行讀寫存取。即使使用 CIFS 選項、也不會產生 DFS 通告 `is-advertise-dfs-enabled` 設為 `true`。這是預設設定。
 
 
 
  a| 
-「禁用」
+`symlinks-and-widelinks`
  a| 
-指定停用symlink和widelinks。即使CIFS選項「is-Advertis-DFS-enablated」設定為「true」、也不會產生DFS廣告。
+指定本機symlink和widelinks以進行讀寫存取。即使使用 CIFS 選項、也會同時為本機 symlink 和 wedelinks 產生 DFS 通告 `is-advertise-dfs-enabled` 設為 `false`。
 
 
 
  a| 
-「」（null、未設定）
+`disable`
+ a| 
+指定停用symlink和widelinks。即使使用 CIFS 選項、也不會產生 DFS 通告 `is-advertise-dfs-enabled` 設為 `true`。
+
+
+
+ a| 
+`""` （ null 、未設定）
  a| 
 停用共用區上的符號連結。
 
 
 
  a| 
-（未設定）
+`-` （未設定）
  a| 
 停用共用區上的符號連結。
 
@@ -97,21 +97,21 @@ summary: 您可以在建立SMB共用時或隨時修改現有SMB共用時、指�
  a| 
 新的SMB共用區
  a| 
-+vserver CIFS共用create -vserver vserver_name -share-name share_name -path -symlink屬性｛enable | hid| read-only |"|-|symlinks | symlinks和-widelinks | disable｝、...+'
+`+vserver cifs share create -vserver vserver_name -share-name share_name -path path -symlink-properties {enable|hide|read-only|""|-|symlinks|symlinks-and-widelinks|disable},...]+`
 
 
 
  a| 
 現有的SMB共用區
  a| 
-Check Alignment of PHs>+vserver CIFS共享modify -vserver vserver_name -share-name share_name -symlink屬性{enable | hid| read-only |"|-|symlinks | symlinks和-widelinks | disable}、...]+
+`+vserver cifs share modify -vserver vserver_name -share-name share_name -symlink-properties {enable|hide|read-only|""|-|symlinks|symlinks-and-widelinks|disable},...]+`
 
 |===
-. 確認SMB共用組態正確：「vserver CIFS共用區show -vserver vserver_name -share-name share_name -instance」
+. 確認 SMB 共用組態正確無誤： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
 
 
 .範例
-下列命令會建立名為「data1」的SMB共用區、並將UNIX符號連結組態設定設為「enable」：
+下列命令會建立名為「 data1 」的 SMB 共用、並將 UNIX 符號連結組態設定為 `enable`：
 
 [listing]
 ----

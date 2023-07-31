@@ -30,17 +30,17 @@ SVM名稱與所有共用相同
 您必須設定下列兩個共用內容：
 
 +
-** 《oplocks》
-** 「持續可用」
+** `oplocks`
+** `continuously-available`
 
 
 
 
 不得設定下列共用內容：
 
-* 「HomeDirectory屬性」
-* 《BranchCache》
-* 「存取型列舉」
+* `homedirectory attributecache`
+* `branchcache`
+* `access-based-enumeration`
 +
 [NOTE]
 ====
@@ -48,7 +48,7 @@ SVM名稱與所有共用相同
 
 ====
 +
-** 必須停用symlink（symlink屬性參數的值必須為null ["]）。
+** 必須停用 symlinks （的值） `-symlink-properties` 參數必須為 null （「」）。
 
 
 
@@ -61,7 +61,7 @@ SVM名稱與所有共用相同
 
 建立資料庫目錄結構時、SQL Server無法跨交會。您不應該為包含交會點的SQL Server建立共用路徑。
 
-例如、如果您想要將虛擬機器檔案或資料庫檔案儲存在磁碟區「vol1」、「vol2」、「vol3」和「vol4」、則應在下列路徑建立應用程式伺服器的共用：「/data1/vol1」、「/data1/2」、「/data2/vol2」、「/data2」、「/vol2」。
+例如、如果您想要將虛擬機器檔案或資料庫檔案儲存在磁碟區 "`vol1`" 、 "`vol2`" 、 "`vol3`" 及 "`vol4`" 上、請在下列路徑為應用程式伺服器建立共用： `/data1/vol1`、 `/data1/vol2`、 `/data2/vol3`和 `/data2/vol4`。
 
 [listing]
 ----
@@ -78,7 +78,7 @@ vs1     vol4          true     /data2/vol4          RW_volume
 ----
 [NOTE]
 ====
-雖然您可以在「/data1」和「/data2」路徑上建立共用區以進行管理、但您不得將應用程式伺服器設定為使用這些共用區來儲存資料。
+雖然您可以在上建立共用 `/data1` 和 `/data2` 管理管理路徑、您不得將應用程式伺服器設定為使用這些共用來儲存資料。
 
 ====
 
@@ -96,7 +96,7 @@ _Volume 1：SMB共用名稱和路徑_
 
 
  a| 
-_Volume 2：SMB共用名稱和路徑_
+Volume 2 ： SMB 共享名稱和路徑 _
  a| 
 
 
@@ -114,19 +114,19 @@ _Volume 4：SMB共用名稱與路徑_
 
 
  a| 
-_Volume 5：SMB共用名稱和路徑_
+Volume 5 ： SMB 共享名稱和路徑 _
  a| 
 
 
 
  a| 
-_Volume 6：SMB共用名稱和路徑
+Volume 6 ： SMB 共享名稱和路徑 _
  a| 
 
 
 
  a| 
-_Volume 7：SMB共用名稱與路徑_
+Volume 7 ： SMB 共享名稱和路徑 _
  a| 
 
 

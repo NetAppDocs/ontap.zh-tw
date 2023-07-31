@@ -24,21 +24,21 @@ NAT裝置一端的IP位址在另一端毫無意義、但FQDN在兩端都具有�
 .步驟
 . 將權限設定變更為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 設定iSCSI LIF以傳回FQDN：
 +
-「vserver iSCSI介面修改-vserver _svm_name_-lif_iscsi_lif_name_-endtargets_FQDN」
+`vserver iscsi interface modify -vserver _SVM_name_ -lif _iscsi_LIF_name_ -sendtargets_fqdn FQDN`
 
 +
 在下列範例中、iSCSI LIF設定為傳回storagehost-005.example.com做為FQDN。
 
 +
-「vserver iSCSI介面修改-vserver VS1 -lIF VS1_iscsi1 -endtargets-FQDN storagehost-005.example.com」
+`vserver iscsi interface modify -vserver vs1 -lif vs1_iscsi1 -sendtargets-fqdn storagehost-005.example.com`
 
 . 驗證sendTarget是否為FQDN：
 +
-「vserver iSCSI介面show -vserver _svm_name_-Fields sendtarget-FQDN」
+`vserver iscsi interface show -vserver _SVM_name_ -fields sendtargets-fqdn`
 
 +
 在此範例中、storagehost-005.example.com會顯示在「endtargets-FQDN」輸出欄位中。

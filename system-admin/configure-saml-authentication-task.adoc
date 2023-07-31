@@ -19,9 +19,9 @@ summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以�
 
 
 .關於這項工作
-* SAML驗證僅適用於「http」和「ontapi」應用程式。
+* SAML 驗證僅適用於 `http` 和 `ontapi` 應用程式：
 +
-下列網路服務使用「http」和「ontapi」應用程式：服務處理器基礎架構、ONTAP 介紹API或系統管理員。
+。 `http` 和 `ontapi` 應用程式由下列 Web 服務使用：服務處理器基礎架構、 ONTAP API 或系統管理員。
 
 * SAML驗證僅適用於存取管理SVM。
 
@@ -29,13 +29,13 @@ summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以�
 .步驟
 . 建立SAML組態、ONTAP 以便讓整個程序能夠存取IDP中繼資料：
 +
-Check Alignment of PHs>安全性SAML sp create -IDP -URI _IDP _Uri_-sp主機_ontap_host_name_*
+`*security saml-sp create -idp-uri _idp_uri_ -sp-host _ontap_host_name_*`
 
 +
-「IDP開放給我們」是IDP主機的FTP或HTTP位址、可從其中下載IDP中繼資料。
+`idp_uri` 是 IDP 主機的 FTP 或 HTTP 位址、可從其中下載 IDP 中繼資料。
 
 +
-「ONTAP_HOST_NAME」是SAML服務供應商主機的主機名稱或IP位址、在此例中是ONTAP 指支援系統。根據預設、會使用叢集管理LIF的IP位址。
+`ontap_host_name` 是 SAML 服務供應商主機的主機名稱或 IP 位址、在此情況下為 ONTAP 系統。根據預設、會使用叢集管理LIF的IP位址。
 
 +
 您可以選擇性地提供ONTAP 伺服器的驗證資訊。根據預設ONTAP 、會使用「驗證」Web伺服器憑證資訊。
@@ -62,14 +62,16 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 
 . 啟用SAML組態：
 +
-「*安全性SAML sp modify -is啟用true *」
+`*security saml-sp modify -is-enabled true*`
 
 +
-任何存取「http」或「ontapi」應用程式的現有使用者、都會自動設定為SAML驗證。
+存取的任何現有使用者 `http` 或 `ontapi` 應用程式會自動設定以進行 SAML 驗證。
 
-. 如果您想要在設定SAML之後、為「http」或「ontapi」應用程式建立使用者、請將SAML指定為新使用者的驗證方法。
+. 如果您想要為建立使用者 `http` 或 `ontapi` 設定 SAML 之後的應用程式、請將 SAML 指定為新使用者的驗證方法。
 +
-.. 使用SAML驗證為新使用者建立登入方法：+`*安全性登入建立-user-or group名稱_user_name_-application[http | ontapi]-imalize-method SAML -vserver _Svm_name_*
+.. 使用 SAML 驗證為新使用者建立登入方法：
++
+`*security login create -user-or-group-name _user_name_ -application [http | ontapi] -authentication-method saml -vserver _svm_name_*`
 +
 [listing]
 ----
@@ -77,7 +79,7 @@ cluster_12::> security login create -user-or-group-name admin1 -application http
 ----
 .. 確認已建立使用者項目：
 +
-「*安全登入秀*」
+`*security login show*`
 
 +
 [listing]

@@ -18,14 +18,15 @@ summary: 如果您希望SMB用戶端使用別名連線至CIFS伺服器、您可�
 * 您最多可以在SMB伺服器上設定200個NetBios別名。
 * 不允許使用下列字元：
 +
-@#*（）=+[]|；："、<>\/？
+@ # * （） = + [ ] | ；： " 、 < > \ / ？
 
 
 
 .步驟
-. 新增NetBios別名：+「vserver CIFS add-netbios-alias -vserver _vserver_name_-netbios-alias _netbios_alias、...」
+. 新增 NetBIOS 別名： +
+`vserver cifs add-netbios-aliases -vserver _vserver_name_ -netbios-aliases _NetBIOS_alias_,...`
 +
-「Vserver CIFS add-netbios-alias -vserver VS1 -netbios-alias alias 1、alias 2、alias _3」
+`vserver cifs add-netbios-aliases -vserver vs1 -netbios-aliases alias_1,alias_2,alias_3`
 
 +
 ** 您可以使用以逗號分隔的清單來指定一或多個NetBios別名。
@@ -33,9 +34,9 @@ summary: 如果您希望SMB用戶端使用別名連線至CIFS伺服器、您可�
 ** 如果清單目前空白、則會建立新的NetBios別名清單。
 
 
-. 驗證是否正確新增了NetBios別名：「vserver CIFS show -vserver vserver_name -show-netbios-aliases」
+. 確認已正確新增 NetBIOS 別名： `vserver cifs show -vserver vserver_name -display-netbios-aliases`
 +
-「Vserver CIFS show -vserver VS1 -show-netbios-aliases」
+`vserver cifs show -vserver vs1 -display-netbios-aliases`
 
 +
 [listing]

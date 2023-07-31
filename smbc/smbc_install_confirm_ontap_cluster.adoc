@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_install_confirm_ontap_cluster.html 
-keywords: SM-BC, SMBC, ONTAP, cluster, configure, peering, volume, SVM, SAN, LIFs, map, igroup, discover 
-summary: 您應該確定來源叢集和目的地叢集已正確設定。 
+keywords: SM-BC, SMBC, cluster, peering, ONTAP Mediator, initialize 
+summary: SM-BC 要求您安裝及初始化 ONTAP Mediator 、並確保適當的叢集對等關係。 
 ---
-= 安裝ONTAP 「支援中心服務」並確認ONTAP 「支援中心」組態
+= 設定 ONTAP Mediator 和叢集以實現 SnapMirror 業務持續運作
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,20 +14,39 @@ summary: 您應該確定來源叢集和目的地叢集已正確設定。
 
 
 [role="lead"]
-您應該確定來源叢集和目的地叢集已正確設定。
+SnapMirror Business Continuity （ SM-BC ）採用對等叢集、確保在發生容錯移轉情況時、資料可用。ONTAP Mediator 是確保業務持續運作、監控每個叢集健全狀況的關鍵資源。若要設定 SM-BC 、您必須先安裝 ONTAP Mediator 、並確保已正確設定主要和次要叢集。
 
-.關於這項工作
+安裝 ONTAP Mediator 並設定叢集之後、您必須 <<initialize-the-ontap-mediator>> ONTAP Mediator 適用於 SM-BC 。您必須這樣做 xref:../task_san_configure_protection_for_business_continuity.html[建立、初始化及對應 SM-BC 的一致性群組]
+
+
+
+== 資訊媒體ONTAP
+
+此功能可在SMBC關係中、為不實叢集建立仲裁。ONTAP ONTAP當偵測到故障時、它會協調自動容錯移轉、判斷哪個叢集是主要叢集、並確保資料能從正確目的地送達或送達。
+
+.必要條件ONTAP
+* 此《程式集》包含自己的一組先決條件。ONTAP安裝中介器之前、您必須符合這些先決條件。
++
+如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["準備安裝ONTAP 《不知道如何安裝》服務"^]。
+
+* 根據預設ONTAP 、此功能可透過TCP連接埠31784提供服務。您應該確定連接埠31784已開啟、而且可以在ONTAP 各個叢集和中介器之間使用。
+
+
+
+
+== 安裝 ONTAP Mediator 並確認叢集組態
+
 請繼續執行下列每個步驟。對於每個步驟、您都應該確認已執行特定組態。請使用每個步驟之後隨附的連結、視需要取得更多資訊。
 
 .步驟
 . 在ONTAP 確保來源叢集和目的地叢集已正確設定之前、請先安裝「盡力協助」服務。
 +
-xref:../mediator/index.html[介紹員服務ONTAP]
+xref:../mediator/index.html[準備安裝或升級 ONTAP Mediator 服務]
 
 . 確認叢集之間存在叢集對等關係。
 +
 
-NOTE: SM-BC需要預設IPspace才能建立叢集對等關係。不支援自訂IPspace。
+NOTE: SM-BC需要預設IPspace才能建立叢集對等關係。不支援自訂 IPspace 。
 
 +
 xref:../task_dp_prepare_mirror.html[設定對等關係]
@@ -51,9 +70,72 @@ link:../san-admin/lifs-cluster-concept.html["叢集SAN環境中的LIF考量"]
 +
 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-4B666C44-694A-48A3-B0A9-517FA7FD2502.html?cp=13_6_4_0["建立LIF"^]
 
-. 確認已建立必要的LUN並對應至igroup、此群組用於將LUN對應至應用程式主機上的啟動器。
+. 確認已建立必要的 LUN 並對應至 igroup 、用於將 LUN 對應至應用程式主機上的啟動器。
 +
 xref:../san-admin/create-luns-mapping-igroups-task.html[建立LUN並對應igroup]
 
 . 重新掃描應用程式主機以探索任何新的LUN。
 
+
+
+
+== 初始化 SMBC 的 ONTAP 中介器
+
+安裝 ONTAP Mediator 並確認叢集組態後、您必須初始化 ONTAP Mediator 以進行叢集監控。您可以使用系統管理員或 ONTAP CLI 來初始化 ONTAP Mediator 。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+使用系統管理員、您可以將 ONTAP Mediator 伺服器設定為自動容錯移轉。如果您尚未使用第三方驗證的SSL憑證和CA、也可以將自行簽署的SSL和CA更換為第三方驗證的SSL憑證和CA。
+
+.步驟
+. 瀏覽至* Protection > Overview > Mediator > Configure *。
+. 選取 * 新增 * 、然後輸入下列 ONTAP Mediator 伺服器資訊：
++
+** IPV4位址
+** 使用者名稱
+** 密碼
+** 憑證
+
+
+
+
+--
+.CLI
+--
+您可以使用 ONTAP CLI 從主叢集或次叢集初始化 ONTAP Mediator 。當您發出時 `mediator add` 命令在一個叢集上、 ONTAP Mediator 會自動新增至另一個叢集。
+
+.步驟
+. 在其中一個叢集上初始化媒體器：
++
+`snapmirror mediator add -mediator-address IP_Address -peer-cluster cluster_name -username user_name`
+
++
+* 範例 *
+
++
+....
+cluster1::> snapmirror mediator add -mediator-address 192.168.10.1 -peer-cluster cluster2 -username mediatoradmin
+Notice: Enter the mediator password.
+
+Enter the password: ******
+Enter the password again: ******
+....
+. 檢查中保組態的狀態：
++
+`snapmirror mediator show`
+
++
+....
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+192.168.10.1     cluster-2        connected         true
+....
++
+`Quorum Status` 指出 SnapMirror 一致性群組關係是否與中介者同步；狀態為 `true` 表示同步成功。
+
+
+
+--
+====

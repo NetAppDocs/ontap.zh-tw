@@ -11,13 +11,13 @@ summary: 疑難排解與網路群組相關的NFS用戶端存取問題時、您�
 
 
 [role="lead"]
-在疑難排解與網路群組相關的NFS用戶端存取問題時、您可以使用「vserver匯出原則netgroup檢查成員資格」命令來協助判斷用戶端IP是否為特定網路群組的成員。
+疑難排解與網路群組相關的 NFS 用戶端存取問題時、您可以使用 `vserver export-policy netgroup check-membership` 用於確定客戶端 IP 是否是某個 netgroup 的成員的命令。
 
 .關於這項工作
 檢查netgroup成員資格可讓您判斷ONTAP 是否知道客戶端是或不是netgroup的成員。它也能讓您知道ONTAP 、在重新整理netgroup資訊的同時、該功能是否處於暫時性狀態。此資訊可協助您瞭解為何用戶端可能會被意外授予或拒絕存取。
 
 .步驟
-. 檢查用戶端IP位址的netgroup成員資格：「vserver匯出原則netgroup檢查成員資格-vserver vserver_name -netgroup netgroup name -client-ip client_ip'
+. 檢查用戶端 IP 位址的 netgroup 成員資格： `vserver export-policy netgroup check-membership -vserver vserver_name -netgroup netgroup_name -client-ip client_ip`
 +
 命令可傳回下列結果：
 
@@ -33,7 +33,7 @@ summary: 疑難排解與網路群組相關的NFS用戶端存取問題時、您�
 ** 用戶端不是netgroup的成員。
 ** 由於目前正在重新整理網路群組快取、所以無法判斷用戶端的成員資格ONTAP 。
 +
-除非如此、否則無法明確排除成員資格。使用「vserver匯出原則netgroup佇列show」命令來監控netgroup的載入、並在檢查完成後重試檢查。
+除非如此、否則無法明確排除成員資格。使用 `vserver export-policy netgroup queue show` 命令來監控 netgroup 的載入、並在完成後重試檢查。
 
 
 

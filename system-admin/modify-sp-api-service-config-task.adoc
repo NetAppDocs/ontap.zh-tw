@@ -14,9 +14,9 @@ summary: SP API是一種安全的網路API、ONTAP 可讓支援透過網路與SP
 SP API是一種安全的網路API、ONTAP 可讓支援透過網路與SP進行通訊。您可以變更SP API服務所使用的連接埠、續約服務用於內部通訊的憑證、或完全停用服務。只有在極少數情況下才需要修改組態。
 
 .關於這項工作
-* SP API服務預設使用連接埠「50000」。
+* SP API 服務使用連接埠 `50000` 依預設。
 +
-例如、如果您位於另一個網路應用程式使用連接埠「50000」進行通訊的網路設定中、或想要區分流量與其他應用程式和SP API服務產生的流量、則可以變更連接埠值。
+例如、如果您在連接埠所在的網路設定中、則可以變更連接埠值 `50000` 用於其他網路應用程式的通訊、或是您想要區分流量與其他應用程式、以及 SP API 服務所產生的流量。
 
 * SP API服務所使用的SSL和SSH憑證是叢集內部的憑證、不會在外部散佈。
 +
@@ -32,7 +32,7 @@ SP API是一種安全的網路API、ONTAP 可讓支援透過網路與SP進行通
 
 
 .步驟
-. 使用「show -privit advance"命令切換至進階權限層級。
+. 使用切換至進階權限層級 `set -privilege advanced` 命令。
 . 修改SP API服務組態：
 +
 |===
@@ -42,21 +42,21 @@ SP API是一種安全的網路API、ONTAP 可讓支援透過網路與SP進行通
  a| 
 變更SP API服務使用的連接埠
  a| 
-使用'-port'{'49152'.'65535'}參數修改「System服務處理器API服務」
+`system service-processor api-service modify` 使用 `-port` {`49152`。.`65535`} 參數
 
 
 
  a| 
 續約SP API服務用於內部通訊的SSL和SSH憑證
  a| 
-** 針對S299.5或更新版本、請使用「系統服務處理器API服務更新內部證書」ONTAP
+** 適用於 ONTAP 9.5 或更新版本 `system service-processor api-service renew-internal-certificate`
 ** 適用於更新版本的應用ONTAP
-** 「系統服務處理器API服務續約證書」
+** `system service-processor api-service renew-certificates`
 +
 如果未指定參數、則只會更新主機憑證（包括用戶端和伺服器憑證）。
 
 +
-如果指定了「-relae-all true」參數、則會同時更新主機憑證和根CA憑證。
+如果是 `-renew-all true` 指定參數時、主機憑證和根 CA 憑證都會更新。
 
 
 
@@ -71,8 +71,8 @@ SP API是一種安全的網路API、ONTAP 可讓支援透過網路與SP進行通
  a| 
 停用或重新啟用SP API服務
  a| 
-使用'-is enabled（啟用）'｛'true'（真實）|'假'（假）｝參數進行「系統服務處理器API服務修改」
+`system service-processor api-service modify` 使用 `-is-enabled` {`true`|`false`} 參數
 
 |===
-. 使用「系統服務處理器API服務show」命令來顯示SP API服務組態。
+. 使用顯示 SP API 服務組態 `system service-processor api-service show` 命令。
 

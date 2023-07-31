@@ -20,7 +20,7 @@ summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
 * 您必須至少執行ONTAP 才能使用FabricPool 的是才能使用的景點。
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
-** 「自動」分層原則
+** 。 `auto` 分層原則
 +
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
 
@@ -39,7 +39,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層�
 
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
-** 這是「全」分層政策
+** 。 `all` 分層原則
 ** 在HDD Aggregate上手動啟用非使用中資料報告
 ** 當您升級ONTAP 至32位9.6時、會自動啟用SSD集合體的非作用中資料報告功能、並在建立集合體時、除非是低階系統的CPU少於4、RAM少於6 GB、或是WAFL緩衝快取大小低於3 GB。
 +
@@ -71,7 +71,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 +
 ** 雲端移轉控制功能、可讓您覆寫預設的分層原則
 ** 將資料提升至效能層級
-** 以解決此問題FabricPool SnapLock
+** FabricPool with SnapLock Enterprise 。FabricPool with SnapLock Enterprise 需要功能產品差異要求（ FPVR ）。若要建立 FPVR 、請聯絡您的銷售團隊。
 ** 最短冷卻期最長183天
 ** 使用使用者建立的自訂標記進行物件標記
 ** 硬碟平台和集合體上的FabricPools
@@ -132,7 +132,7 @@ HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、B
 * 您打算使用的物件存放區「'Bucke'」（容器）必須已設定完成、至少必須有10 GB的儲存空間、且不得重新命名。
 * 使用FabricPool 物件儲存區的HA配對需要叢集間的LIF才能與物件儲存區通訊。
 * 附加物件儲存庫後、您無法將其從FabricPool 物件儲存庫組態中分離出來。
-* 如果您使用處理量層（QoS下限）、則必須先將磁碟區上的分層原則設定為「無」、才能將Aggregate附加至FabricPool Suse。
+* 如果您使用處理量層（ QoS 最小）、則必須將磁碟區上的分層原則設定為 `none` 將 Aggregate 附加至 FabricPool 之前。
 +
 其他分層原則則可防止將Aggregate附加FabricPool 到無法使用的物件上。啟用 FabricPool 時、 QoS 原則不會強制執行處理量層。
 
@@ -173,7 +173,7 @@ FabricPool 僅支援 StorageGRID 的資訊生命週期管理原則、用於資�
 * 使用更新版本時的資料來源SnapLock ONTAP
 * 使用SMTape備份啟用FabricPool的Aggregate
 * 自動平衡功能
-* 使用「無」以外空間保證的磁碟區
+* 使用除以外的空間保證的磁碟區 `none`
 +
 除了根SVM磁碟區和CIFS稽核暫存磁碟區之外、FabricPool 不支援將雲端層附加至使用空間保證以外的其他磁碟區的集合體 `none`。例如、使用空間保證的Volume `volume` (`-space-guarantee` `volume`）不受支援。
 

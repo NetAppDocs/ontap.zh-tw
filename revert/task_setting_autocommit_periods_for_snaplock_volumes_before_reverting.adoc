@@ -13,6 +13,6 @@ summary: 若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設�
 [role="lead"]
 若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設定為小時、而非天。在嘗試回復之前、您必須檢查SnapLock 您的功能驗證資料、並視需要從數天改為數小時。
 
-. 驗證SnapLock 叢集中是否有不受支援的自動提交期間：'volume SnapLock show -autocomple-period * days
-. 將不受支援的自動提交期間修改為小時：「Volume SnapLock flexmodify -vserver vserver_name -volume volume volume volume name -autocomple-period Value Hours」
+. 驗證叢集中是否有 SnapLock 磁碟區具有不受支援的自動認可期間：``volume snaplock show -autocommit-period *days``
+. 將不支援的自動認可期間修改為小時： `volume snaplock modify -vserver vserver_name -volume volume_name -autocommit-period value hours`
 

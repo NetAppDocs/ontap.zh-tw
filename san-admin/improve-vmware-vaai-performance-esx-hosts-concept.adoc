@@ -15,7 +15,7 @@ summary: 當ESX主機執行ESX 4.1或更新版本時、支援特定的VMware vSt
 
 VAAI功能支援下列SCSI命令：
 
-* 「extended複製」
+* `EXTENDED_COPY`
 +
 此功能可讓主機在LUN或LUN之間開始傳輸資料、而無需讓主機參與資料傳輸。如此可節省ESX CPU週期並提高網路處理量。延伸複本功能也稱為「複本卸載」、適用於複製虛擬機器等情況。當ESX主機叫用時、複本卸載功能會複製儲存系統內的資料、而非透過主機網路。複本卸載會以下列方式傳輸資料：
 
@@ -23,14 +23,15 @@ VAAI功能支援下列SCSI命令：
 ** 在LUN內
 ** 在磁碟區內的LUN之間
 ** 儲存虛擬機器（SVM）內不同磁碟區上的LUN之間
-** 在叢集內不同SVM上的LUN之間如果無法叫用此功能、ESX主機會自動使用標準的讀取和寫入命令來執行複製作業。
+** 在叢集內不同 SVM 上的 LUN 之間
+如果無法叫用此功能、 ESX 主機會自動使用標準讀寫命令來執行複製作業。
 
 
-* "WRITE相同"
+* `WRITE_SAME`
 +
 此功能可卸載將重複模式（如全部零）寫入儲存陣列的工作。ESX主機在零填檔案等作業中使用此功能。
 
-* 比較與寫入
+* `COMPARE_AND_WRITE`
 +
 這項功能會略過某些檔案存取並行限制、以加速啟動虛擬機器等作業。
 
@@ -65,26 +66,26 @@ VAAI功能是ESX作業系統的一部分、當您設定正確的環境時、ESX�
 
 [cols="2*"]
 |===
-| SCSI命令 | ESX控制名稱（VAAI功能） 
+| SCSI 命令 | ESX控制名稱（VAAI功能） 
 
 
  a| 
 extended複製
  a| 
-《HardwareAcceleratedMove》
+`HardwareAcceleratedMove`
 
 
 
  a| 
 寫入相同
  a| 
-《HardwareAcceleratedInit》
+`HardwareAcceleratedInit`
 
 
 
  a| 
 比較與寫入
  a| 
-《HardwareAcceleratedLocking》
+`HardwareAcceleratedLocking`
 
 |===

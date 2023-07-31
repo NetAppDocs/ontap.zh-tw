@@ -24,21 +24,21 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
  a| 
 啟用SP的SP自動網路組態、讓SP使用指定子網路的IPv4或IPv6位址系列
  a| 
-「系統服務處理器網路自動組態啟用」
+`system service-processor network auto-configuration enable`
 
 
 
  a| 
 停用SP所指定之子網路的IPv4或IPv6位址系列的SP自動網路組態
  a| 
-「系統服務處理器網路自動組態停用」
+`system service-processor network auto-configuration disable`
 
 
 
  a| 
-顯示SP自動網路組態
+顯示 SP 自動網路組態
  a| 
-「系統服務處理器網路自動組態顯示」
+`system service-processor network auto-configuration show`
 
 
 
@@ -54,7 +54,7 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
 * SP的閘道IP位址
 
  a| 
-「系統服務處理器網路修改」
+`system service-processor network modify`
 
 
 
@@ -72,9 +72,9 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
 * SP網路設定失敗的原因
 
  a| 
-「系統服務處理器網路展」
+`system service-processor network show`
 
-要顯示完整的SP網路詳細資料、必須使用「-instance」參數。
+若要顯示完整的 SP 網路詳細資料、必須使用 `-instance` 參數。
 
 
 
@@ -85,7 +85,7 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
 * 啟用或停用SP API服務
 
  a| 
-「系統服務處理器API服務修改」
+`system service-processor api-service modify`
 
 （進階權限層級）
 
@@ -94,7 +94,7 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
  a| 
 顯示SP API服務組態
  a| 
-「系統服務處理器API服務展示」
+`system service-processor api-service show`
 
 （進階權限層級）
 
@@ -103,8 +103,8 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
  a| 
 續約SP API服務用於內部通訊的SSL和SSH憑證
  a| 
-* 適用於S299.5或更新版本：「系統服務處理器API服務更新內部憑證」ONTAP
-* 適用於《系統服務處理器API服務續約證書》（適用於更新版本9.4或更新版本）ONTAP
+* ONTAP 9.5 或更新版本： `system service-processor api-service renew-internal-certificates`
+* ONTAP 9.4 或更早版本： `system service-processor api-service renew-certificates`
 +
 （進階權限層級）
 
@@ -127,16 +127,16 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
 * 韌體自動更新是否已啟用、以及上次更新狀態
 
  a| 
-「系統服務處理器影像顯示」
+`system service-processor image show`
 
-「-is目前」參數表示SP目前開機的映像（主要或備份）、而非安裝的韌體版本最新的映像。
+。 `-is-current` 參數表示 SP 目前從其開機的映像（主要或備份）、而非安裝的韌體版本最新。
 
 
 
  a| 
 啟用或停用SP自動韌體更新
  a| 
-「系統服務處理器映像修改」
+`system service-processor image modify`
 
 根據預設、當ONTAP 手動下載新版SP韌體時、SP韌體會自動更新以更新版本的功能。不建議停用自動更新、因為這樣做可能會導致ONTAP 不理想或不合格的結合、使整個過程不符合理想的要求。
 
@@ -145,11 +145,11 @@ summary: 支援支援的指令可用於管理SP、包括SP網路組態、SP韌�
  a| 
 在節點上手動下載SP韌體映像
  a| 
-'系統節點映像Get'
+`system node image get`
 
 [NOTE]
 ====
-在執行「系統節點映像」命令之前、您必須先將權限層級設為進階（「權限進階」）、並在系統提示您繼續之前輸入* y*。
+在您執行之前 `system node image` 命令時、您必須將權限等級設為進階 (`set -privilege advanced`）、當系統提示您繼續時輸入 * y* 。
 
 ====
 SP韌體映像是隨ONTAP 附於Image.您不需要手動下載SP韌體、除非您想要使用不同於ONTAP 隨附的SP韌體版本。
@@ -163,7 +163,7 @@ SP韌體映像是隨ONTAP 附於Image.您不需要手動下載SP韌體、除非�
 * 是否正在進行更新、以及完成的百分比
 
  a| 
-「系統服務處理器映像更新進度顯示」
+`system service-processor image update-progress show`
 
 |===
 
@@ -177,21 +177,21 @@ SP韌體映像是隨ONTAP 附於Image.您不需要手動下載SP韌體、除非�
  a| 
 僅將SP存取權授予指定的IP位址
  a| 
-「系統服務處理器ssh可新增的位址」
+`system service-processor ssh add-allowed-addresses`
 
 
 
  a| 
 封鎖指定的IP位址、使其無法存取SP
  a| 
-「系統服務處理器ssh移除允許的位址」
+`system service-processor ssh remove-allowed-addresses`
 
 
 
  a| 
 顯示可存取SP的IP位址
  a| 
-「系統服務處理器ssh show」
+`system service-processor ssh show`
 
 |===
 
@@ -213,28 +213,28 @@ SP韌體映像是隨ONTAP 附於Image.您不需要手動下載SP韌體、除非�
 * 是否已啟用SP韌體自動更新
 
  a| 
-顯示完整SP資訊的「系統服務處理器展示」需要「執行個體」參數。
+`system service-processor show` 若要顯示完整的 SP 資訊、必須使用 `-instance` 參數。
 
 
 
  a| 
 在節點上重新啟動SP
  a| 
-「系統服務處理器重新開機」
+`system service-processor reboot-sp`
 
 
 
  a| 
 產生AutoSupport 並傳送包含從指定節點收集的SP記錄檔的資訊
  a| 
-「系統節點AutoSupport 不知叫用程式」
+`system node autosupport invoke-splog`
 
 
 
  a| 
 顯示叢集中所收集SP記錄檔的分配對應、包括位於每個收集節點的SP記錄檔順序編號
  a| 
-「系統服務處理器記錄顯示分配」
+`system service-processor log show-allocations`
 
 |===
 .相關資訊

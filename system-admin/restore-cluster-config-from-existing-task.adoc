@@ -26,14 +26,14 @@ summary: 若要在叢集故障後從現有組態還原叢集組態、請使用�
 .步驟
 . 停用每個HA配對的儲存容錯移轉：
 +
-hy*儲存容錯移轉修改-node_node_name_-enabled_fal*
+`*storage failover modify -node _node_name_ -enabled false*`
 
 +
 您只需針對每個HA配對停用一次儲存容錯移轉。當您停用節點的儲存容錯移轉時、節點的合作夥伴也會停用儲存容錯移轉。
 
 . 停止每個節點（恢復節點除外）：
 +
-'*系統節點halt -node_node_name_-理由"text"*
+`*system node halt -node _node_name_ -reason "text"*`
 
 +
 [listing]
@@ -44,9 +44,9 @@ Warning: Are you sure you want to halt the node? {y|n}: y
 ----
 . 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
-. 在恢復節點上、使用「*系統組態恢復叢集recreflex*」命令重新建立叢集。
+. 在恢復節點上、使用 `*system configuration recovery cluster recreate*` 用於重新建立叢集的命令。
 +
 此範例使用儲存在恢復節點上的組態資訊重新建立叢集：
 
@@ -67,7 +67,7 @@ Do you want to continue? {y|n}: y
 
 . 如果您是從組態備份檔案重新建立叢集、請確認叢集還原仍在進行中：
 +
-系統組態恢復叢集show *
+`*system configuration recovery cluster show*`
 
 +
 如果您是從正常節點重新建立叢集、則不需要驗證叢集還原狀態。
@@ -87,7 +87,7 @@ cluster1::*> system configuration recovery cluster show
 +
 .. 從重新建立的叢集上健全的節點、重新加入目標節點：
 +
-系統組態恢復叢集重新加入節點_norme_name_*
+`*system configuration recovery cluster rejoin -node _node_name_*`
 
 +
 此範例將「'node2'」目標節點重新加入重新建立的叢集：
@@ -110,7 +110,7 @@ Do you want to continue? {y|n}: y
 
 .. 驗證目標節點是否正常、並已與叢集中的其他節點形成仲裁：
 +
-‘*叢集顯示-合格資格為true *
+`*cluster show -eligibility true*`
 
 +
 目標節點必須重新加入重新建立的叢集、才能重新加入其他節點。
@@ -129,14 +129,14 @@ node1                true    true          false
 
 . 如果您是從組態備份檔案重新建立叢集、請將恢復狀態設為「完成」：
 +
-系統組態恢復叢集修改恢復狀態完成*
+`*system configuration recovery cluster modify -recovery-status complete*`
 
 . 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
-. 如果叢集僅包含兩個節點、請使用「*叢集HA modify*」命令重新啟用叢集HA。
-. 使用「*儲存容錯移轉modify*」命令、為每個HA配對重新啟用儲存容錯移轉。
+. 如果叢集僅包含兩個節點、請使用 `*cluster ha modify*` 命令以重新啟用叢集 HA 。
+. 使用 `*storage failover modify*` 為每個 HA 配對重新啟用儲存容錯移轉的命令。
 
 
 .完成後

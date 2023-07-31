@@ -11,7 +11,7 @@ summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原指
 
 
 [role="lead"]
-您可以使用「Volume Snapshot還原」命令、從Snapshot複本還原指定磁碟區中的所有LUN。
+您可以使用 `volume snapshot restore` 命令從 Snapshot 複本還原指定 Volume 中的所有 LUN 。
 
 .步驟
 . 從主機停止對LUN的所有主機存取。
@@ -21,36 +21,36 @@ summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原指
 . 卸載該主機上的LUN、使主機無法存取LUN。
 . 取消對應LUN：
 +
-"LUN對應刪除-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
+`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
 . 確定要將磁碟區還原到的Snapshot複本：
 +
-「Volume snapshot show -vserver _vserver_name_-volume _volume名稱_」
+`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
 
 . 將您的權限設定變更為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 還原資料：
 +
-磁碟區快照還原-vserver _vserver_name_-volume _volume _name_-snapshot _snapshot name_`
+`volume snapshot restore -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
 
 . 請依照畫面上的指示操作。
 . 重新對應LUN：
 +
-"LUN對應會建立-vserver _vserver_name_-volume _volume _name_-LUN _lun_name_-igroup _igroup_name_"
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
 . 驗證LUN是否處於線上狀態：
 +
-「LUN show -vserver _vserver_name_-path _lun_path_-Fields st現 況」
+`lun show -vserver _vserver_name_ -path _lun_path_ -fields state`
 
 . 如果LUN不在線上、請將其上線：
 +
-"LUN modify -vserver _vserver_name_-path _lun_path_-st現 線"
+`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
 
 . 將您的權限設定變更為admin：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 . 從主機重新掛載LUN。
 . 從主機重新啟動對LUN的存取。

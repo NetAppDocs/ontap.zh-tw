@@ -35,21 +35,21 @@ Active Directory網域預設會啟用Kerberos驗證。不過、可以使用「�
 +
 .. 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
-.. 驗證是否將"-is exportpolice-enable" CIFS server選項設置爲"假"：
+.. 確認 `-is-exportpolicy-enabled` CIFS 伺服器選項設為 `false`：
 +
-hy*vserver CIFS選項可顯示-vserver _vserver_name_-fields vserver、is匯出原則啟用*
+`*vserver cifs options show -vserver _vserver_name_ -fields vserver,is-exportpolicy-enabled*`
 
 .. 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
 
 
 . 如果未停用SMB的匯出原則、請停用這些原則：
 +
-hy*vserver CIFS選項可修改-vserver _vserver_name_-is匯出原則啟用的fal*
+`*vserver cifs options modify -vserver _vserver_name_ -is-exportpolicy-enabled false*`
 
 . 確認網域中同時允許使用NTLMv2和Kerberos驗證。
 +

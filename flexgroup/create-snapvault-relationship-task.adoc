@@ -17,9 +17,9 @@ summary: 您可以設定SnapVault 一個靜態關係、並為SnapVault 該關係
 您必須瞭解建立SnapVault 有關本區的不景點關係的考量FlexGroup 事項。
 
 .步驟
-. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
+. 建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 的組成數量相同：
 +
-.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
+.. 從來源叢集中、判斷來源 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -36,7 +36,7 @@ vss       src__0006    aggr1        online     RW         25TB    10.64TB   57%
 vss       src__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ...
 ----
-.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
+.. 從目的地叢集建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 相同。
 +
 [listing]
 ----
@@ -46,7 +46,7 @@ Warning: The FlexGroup volume "dst" will be created with the following number of
 Do you want to continue? {y|n}: y
 [Job 766] Job succeeded: Successful
 ----
-.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
+.. 從目的地叢集、確認目的地 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -65,12 +65,12 @@ vsd       dst__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ----
 
 
-. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
+. 建立工作排程： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour hour -minute minute`
 +
-如果是月、日、小時、則可以分別指定「ALL」來執行每月、每週、每週、每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
 +
-以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]
@@ -79,23 +79,23 @@ cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour
 ----
 . 建立SnapVault 一套不規則的原則、然後定義SnapVault 一套適用於該決策的規則：
 +
-.. 建立類型為「vVault」的自訂原則SnapVault 、以利實現上述關係：「napmirror policy create -vserver svm_name -policy policy_name -type vVault」
-.. 定義SnapVault 確定在初始化和更新作業期間傳輸哪些Snapshot複本的SIRSTE原則：「napmirror policy add-rule -vserver Svm_name -policy policy_for_rRule - SnapMirror標籤SnapMirror標籤-reteure_count-schedule schedule」
+.. 建立類型的自訂原則 `vault` 對於 SnapVault 關係： `snapmirror policy create -vserver svm_name -policy policy_name -type vault`
+.. 為 SnapVault 原則定義規則、以決定在初始化和更新作業期間傳輸哪些 Snapshot 複本： `snapmirror policy add-rule -vserver svm_name -policy policy_for_rule - snapmirror-label snapmirror-label -keep retention_count -schedule schedule`
 
 
 +
-如果您不建立自訂原則、則應指定「XDPDefault」原則來SnapVault 建立人際關係。
+如果您未建立自訂原則、則應指定 `XDPDefault` SnapVault 關係原則。
 
-. 建立SnapVault 一個不一致的關係：「napmirror create -source-path src-svm:src-flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -schedule_name -policy Xdpdefault」
+. 建立 SnapVault 關係： `snapmirror create -source-path src_svm:src_flexgroup -destination-path dest_svm:dest_flexgroup -type XDP -schedule schedule_name -policy XDPDefault`
 +
-在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+在 ONTAP 9.4 及更早版本中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAllSnapshots` 原則預設為使用。在 ONTAP 9.5 中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAndVault` 原則預設為使用。
 
 +
 [listing]
 ----
 cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy XDPDefault
 ----
-. 從目的地叢集中SnapVault 、執行基礎傳輸來初始化此等資訊關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」（napmirror初始化-dest-path dest_svm:dest_flexgroup）
+. 從目的地叢集執行基準傳輸來初始化 SnapVault 關係： `snapmirror initialize -destination-path dest_svm:dest_flexgroup`
 +
 [listing]
 ----

@@ -21,24 +21,24 @@ summary: 對於NFS、您可以檢查讀取和寫入的TCP最大傳輸大小是�
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 檢查TCP最大傳輸大小：
 +
-「vserver NFS show -vserver _vserver_name_-instance」
+`vserver nfs show -vserver _vserver_name_ -instance`
 
 . 如果TCP最大傳輸大小太小、請增加大小：
 +
-「vserver NFS modify -vserver _vserver_name_-tcp-max-xfer-size _integer_」
+`vserver nfs modify -vserver _vserver_name_ -tcp-max-xfer-size _integer_`
 
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 
 
 .範例
-以下範例將TCP最大傳輸大小「VM1（VM1）”變更為1048576：
+下列範例變更的 TCP 傳輸大小上限 `SVM1` 至 1048576 ：
 
 [listing]
 ----

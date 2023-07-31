@@ -2,7 +2,7 @@
 permalink: encryption-at-rest/secure-purge-data-encrypted-volume-concept.html 
 sidebar: sidebar 
 keywords: secure, purge, scrub, data, encrypted, volume, nve, netapp 
-summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、在不中斷營運的情況下清除資料。ONTAP加密磁碟區上的資料清理功能可確保資料無法從實體媒體中恢復、例如在「資源刪除」的情況下、資料追蹤可能會在區塊遭到覆寫時留下、或是安全地刪除租戶的資料。 
+summary: '從支援NVE的磁碟區開始、您可以使用安全清除功能、在不中斷營運的情況下清除資料。ONTAP清理加密磁碟區上的資料可確保無法從實體媒體中復原資料、例如在發生的情況下 `spillage,` 當區塊被覆寫時、可能會留下資料追蹤資料、或是為了安全刪除正在搬移的租戶資料。' 
 ---
 = 在加密磁碟區總覽中安全清除資料
 :allow-uri-read: 
@@ -37,10 +37,10 @@ summary: 從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 +
 ** 根據預設、使用SnapMirror資料保護（DP）模式的磁碟區會使用Volume Move Re-Encryption方法重新加密資料。
 ** 根據預設、未使用SnapMirror資料保護的磁碟區或使用SnapMirror延伸資料保護（XDP）模式的磁碟區、會使用就地重新加密方法。
-** 您可以使用「sure Purge re-encryption方法[volume－move|in－place－rekey]」命令來變更這些預設值。
+** 您可以使用變更這些預設值 `secure purge re-encryption-method [volume-move|in-place-rekey]` 命令。
 
 
-* 根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用「sure Purge delete-all-snapshots [true|fal]」命令來變更這些預設值。
+* 根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用變更這些預設值 `secure purge delete-all-snapshots [true|false]` 命令。
 
 
 --

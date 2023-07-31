@@ -27,30 +27,30 @@ summary: 自動恢復命令
 
 預設設定為true。
  a| 
-「儲存容錯移轉修改」（modify）節點_nodename_（節點名稱）-「自動恢復true」（自動恢復true）
+`storage failover modify ‑node _nodename_ ‑auto‑giveback true`
 
 
 
  a| 
 停用自動還原。預設設定為true。
 
-*注意：*將此參數設為「假」並不會在發生緊急情況時停用接管後自動恢復功能；在發生緊急情況時、必須將「自動恢復」參數設為「假」、才能停用在發生緊急情況時自動恢復功能。
+* 附註： * 將此參數設為 false 、並不會在發生緊急情況時自動恢復、而在發生緊急情況時自動恢復必須透過設定來停用 `‑auto‑giveback‑after‑panic` 參數為 FALSE 。
  a| 
-「儲存容錯移轉修改」節點_nodename_‑自動還原為「假」
+`storage failover modify ‑node _nodename_ ‑auto‑giveback false`
 
 
 
  a| 
 在發生緊急情況時停用接管後自動恢復（此設定預設為啟用）。
  a| 
-「儲存容錯移轉修改」（節點_nodename_）、「自動恢復」（在發生緊急情況後）、「假」
+`storage failover modify ‑node _nodename_ ‑auto‑giveback‑after‑panic false`
 
 
 
  a| 
 延遲自動恢復指定秒數（預設值為600）。此選項可決定在執行自動恢復之前、節點仍處於接管狀態的最短時間。
  a| 
-"torage容錯移轉修改節點_nodename_（延遲秒數）_seconds__（秒）
+`storage failover modify ‑node _nodename_ ‑delay‑seconds _seconds_`
 
 |===
 
@@ -59,7 +59,7 @@ summary: 自動恢復命令
 
 自動恢復的操作取決於您如何設定儲存容錯移轉修改命令的參數。
 
-下表列出適用於非緊急狀況所造成之接管事件的「儲存容錯移轉修改」命令參數預設設定。
+下表列出的預設設定 `storage failover modify` 套用至接管事件的命令參數、不是因恐慌所造成。
 
 |===
 
@@ -68,37 +68,37 @@ summary: 自動恢復命令
 
 
  a| 
-自動恢復_true_|_fals__
+`-auto-giveback _true_ | _false_`
  a| 
-》
+`_true_`
 
 
 
  a| 
-延遲秒數_integer_（秒）
+`-delay-seconds _integer_ (seconds)`
  a| 
 600
 
 
 
  a| 
-「-onreboot_true_|_fals__」
+`-onreboot _true_ | _false_`
  a| 
-》
+`_true_`
 
 |===
-下表說明「-onreboot'」和「-automatic恢復」參數的組合、如何影響非由恐慌所造成的接管事件自動恢復。
+下表說明的組合方式 `-onreboot` 和 `-auto-giveback` 參數會影響自動恢復接管事件的恢復、而非因恐慌而造成的。
 
 |===
 
 
-| 使用了"torage容錯移轉修改"參數 | 接管原因 | 是否會自動還原？ 
+| `storage failover modify` 使用的參數 | 接管原因 | 是否會自動還原？ 
 
 
  a| 
-「-onreboot_true_」
+`-onreboot _true_`
 
-自動恢復_true_'
+`-auto-giveback _true_`
 | 重新開機命令 | 是的 
 
 
@@ -106,9 +106,9 @@ summary: 自動恢復命令
 
 
  a| 
-「-onreboot_true_」
+`-onreboot _true_`
 
-自動恢復_fals__
+`-auto-giveback _false_`
 | 重新開機命令 | 是的 
 
 
@@ -116,33 +116,34 @@ summary: 自動恢復命令
 
 
  a| 
-「-onreboot_假_」
+`-onreboot _false_`
 
-自動恢復_true_'
-| 重新開機命令 | 不適用在此情況下、不會發生接管 
+`-auto-giveback _true_`
+| 重新開機命令 | 不適用
+在這種情況下、不會發生接管 
 
 
 | 停止命令、或從服務處理器發出的關機後再開機 | 是的 
 
 
  a| 
-「-onreboot_假_」
+`-onreboot _false_`
 
-自動恢復_fals__
+`-auto-giveback _false_`
 | 重新開機命令 | 否 
 
 
 | 停止命令、或從服務處理器發出的關機後再開機 | 否 
 |===
-「自動恢復」參數可控制在發生緊急情況後以及所有其他自動移除的情況下恢復。如果將"-onreboot"參數設為"true"、而由於重新開機而導致接管、則無論"-automatic mover（自動恢復）"參數是否設為"true"、都會自動執行恢復。
+。 `-auto-giveback` 參數可控制緊急狀況後的恢復和所有其他自動接管。如果是 `-onreboot` 參數設定為 `true` 而且由於重新開機而發生接管、無論是否執行自動恢復、都會執行自動恢復 `-auto-giveback` 參數設定為 `true`。
 
-「-onreboot'」參數適用於ONTAP 由停止執行的重新開機和停止命令。如果將"-onreboot"參數設置爲假，則在重新引導節點時不會發生接管操作。因此、無論「自動恢復」參數是否設為true、都無法自動恢復。發生用戶端中斷。
+。 `-onreboot` 此參數適用於從 ONTAP 發出的重新開機和停止命令。當 `-onreboot` 參數設為 false 、節點重新開機時不會發生接管。因此、無論是否執行、都無法自動恢復 `-auto-giveback` 參數設為 true 。發生用戶端中斷。
 
 
 
 == 自動還原參數組合的效果、適用於緊急情況。
 
-下表列出適用於緊急情況的「儲存容錯移轉修改」命令參數：
+下表列出 `storage failover modify` 適用於緊急情況的命令參數：
 
 |===
 
@@ -151,54 +152,63 @@ summary: 自動恢復命令
 
 
  a| 
-「-on痛苦_真|假_」
+`-onpanic _true | false_`
  a| 
-》
+`_true_`
 
 
 
  a| 
-自動恢復備份、發生恐慌後的_true |假_
+`-auto-giveback-after-panic _true | false_`
 
 （權限：進階）
  a| 
-》
+`_true_`
 
 
 
  a| 
-自動恢復_true|假_
+`-auto-giveback _true | false_`
  a| 
-》
+`_true_`
 
 |===
-下表說明「儲存容錯移轉修改」命令的參數組合、如何在發生緊急情況時、影響自動恢復。
+下表說明的參數組合方式 `storage failover modify` 命令會在緊急情況下影響自動恢復。
 
 [cols="60,40"]
 |===
 
 
-| 使用的是"容錯移轉"參數 | 發生緊急狀況後、是否會自動還原？ 
+| `storage failover` 使用的參數 | 發生緊急狀況後、是否會自動還原？ 
 
 
-| 「真的」、「真的」、「真的自動恢復」、「真的」、「真的」 | 是的 
+| `-onpanic true`
+`-auto-giveback true`
+`-auto-giveback-after-panic true` | 是的 
 
 
-| 「真的」、「真的」、「真的自動恢復」、「在發生恐慌之後自動恢復」 | 是的 
+| `-onpanic true`
+`-auto-giveback true`
+`-auto-giveback-after-panic false` | 是的 
 
 
-| 「真的很痛苦」、「真的」、「真的自動還原」、「真的很痛苦」 | 是的 
+| `-onpanic true`
+`-auto-giveback false`
+`-auto-giveback-after-panic true` | 是的 
 
 
-| 「真的很痛苦」、「自助恢復假」、「自錯回傳」 | 否 
+| `-onpanic true`
+`-auto-giveback false`
+`-auto-giveback-after-panic false` | 否 
 
 
-| 如果將"-on痛苦"設置爲"false"，則無論"-auto-f恢復"或"-aut-f恢復 後"的值設置如何，都不會發生接管/恢復 | 否 
+| `-onpanic false`
+如果 `-onpanic` 設為 `false`、無論設定的值為何、都不會執行接管 / 恢復作業 `-auto-giveback` 或 `-auto-giveback-after-panic` | 否 
 |===
 
-NOTE: 接管可能是因為故障與恐慌無關。當節點與其合作夥伴之間的通訊中斷時、也稱為「_活動訊號遺失_」、就會發生_故障_。如果因故障而發生接管、則會由控制恢復 `-onfailure` 參數而非 `-auto-giveback-after-panic parameter`。
+NOTE: 接管可能是因為故障與恐慌無關。  當節點與其合作夥伴之間的通訊中斷時、也稱為「_活動訊號遺失_」、就會發生_故障_。如果因故障而發生接管、則會由控制恢復 `-onfailure` 參數而非 `-auto-giveback-after-panic parameter`。
 
 
-NOTE: 當節點出現緊急情況時、它會將緊急情況封包傳送至其合作夥伴節點。如果合作夥伴節點因為任何原因而未收到緊急封包、則該緊急情況可能會被誤解為故障。如果沒有收到緊急封包、合作夥伴節點就只知道通訊已中斷、而且不知道發生了恐慌。在這種情況下、合作夥伴節點會將失去通訊視為失敗而非恐慌處理、而傳回則由控制 `-onfailure` 參數（而非 `-auto-giveback-after-panic parameter`）。
+NOTE: 當節點出現緊急情況時、它會將緊急情況封包傳送至其合作夥伴節點。  如果合作夥伴節點因為任何原因而未收到緊急封包、則該緊急情況可能會被誤解為故障。  如果沒有收到緊急封包、合作夥伴節點就只知道通訊已中斷、而且不知道發生了恐慌。  在這種情況下、合作夥伴節點會將失去通訊視為失敗而非恐慌處理、而傳回則由控制 `-onfailure` 參數（而非 `-auto-giveback-after-panic parameter`）。
 
 以取得詳細資訊 `storage failover modify` 參數、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131/storage-failover-modify.html["手冊頁ONTAP"]。

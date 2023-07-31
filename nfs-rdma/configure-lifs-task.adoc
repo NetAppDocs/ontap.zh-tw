@@ -38,11 +38,11 @@ summary: 本文說明如何設定LIF（網路介面）以支援RDMA。
 .步驟
 . 建立LIF：
 +
-「網路介面create -vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy _rose_true_true
+`network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
 
 +
 ** 服務原則必須是預設資料檔案或包含資料NFS網路介面服務的自訂原則。
-** 「-RDMA傳輸協定」參數會接受預設為空白的清單。當「RoCE」新增為值時、LIF只能設定在支援RoCE卸載的連接埠上、進而影響機器人程式LIF移轉和容錯移轉。
+** 。 `-rdma-protocols` 參數接受預設為空白的清單。何時 `roce` 新增的值是 LIF 只能在支援 roce 卸載的連接埠上設定、影響 bot LIF 移轉和容錯移轉。
 
 
 
@@ -70,10 +70,10 @@ summary: 本文說明如何設定LIF（網路介面）以支援RDMA。
 --
 .CLI
 --
-. 您可以使用「network interface show」命令來檢查您的lifs狀態。服務原則必須包含資料NFS網路介面服務。RDMA傳輸協定清單應包含「roce」。如果上述任一條件不正確、請修改LIF。
+. 您可以使用檢查您的生命狀態 `network interface show` 命令。服務原則必須包含資料NFS網路介面服務。。 `-rdma-protocols` 清單應包含在內 `roce`。如果上述任一條件不正確、請修改LIF。
 . 若要修改LIF、請執行：
 +
-「網路介面修改Vserver _Svm_name_-lif_lif_name_-service-policy _policy_name_-home-node_node_name_-home-port _port_name_｛-address _ip_address_-netmask_value_|-subnet-name _subnet_name_｝-firewall-policy _policy_policy_rewall_name_rue_true_true
+`network interface modify vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
 
 
 
@@ -91,7 +91,7 @@ NOTE: 如果將LIF修改為需要特定卸載傳輸協定、但目前未將LIF�
 只有在下列情況下、才能透過RDMA組態將LIF移轉至NFS：
 
 * 它是NFS RDMA網路介面（LIF）、裝載於具備RoCE功能的連接埠上。
-* 它是NFS TCP網路介面（LIF）、裝載於具備RoCE功能的連接埠上。
+* 它是 NFS TCP 網路介面（ LIF ）、主控於具備 ROCE 功能的連接埠上。
 * 它是NFS TCP網路介面（LIF）、裝載於不具備資源處理能力的連接埠上。
 
 

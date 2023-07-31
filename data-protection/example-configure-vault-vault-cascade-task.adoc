@@ -35,23 +35,23 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 .步驟
 . 在次要目的地叢集上、建立「snapVault_secondary」原則：
 +
-「叢集輔助：」：> SnapMirror原則建立-policy SnapVault _次要類型vault -註釋「資料保險箱至資料保險箱串聯的次要原則」-vserver SVM_secondary
+`cluster_secondary::> snapmirror policy create -policy snapvault_secondary -type vault -comment “Policy on secondary for vault to vault cascade” -vserver svm_secondary`
 
 . 在次要目的地叢集上、定義原則的「每日」規則：
 +
-「叢集輔助：」：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-der-don-t；保留7-vserver SVM_secondary」
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-daily -keep 7 -vserver svm_secondary`
 
 . 在次要目的地叢集上、定義原則的「每週」規則：
 +
-「叢集輔助：」：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-bedure_flex每 週-保留52個vserver SVM_secondary」
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-weekly -keep 52 -vserver svm_secondary`
 
 . 在次要目的地叢集上、定義原則的「每月」規則：
 +
-「叢集輔助：：> SnapMirror原則附加規則-policy SnapVault _次要-SnapMirror標記my-bon月刊-ee樣180 -vserver SVM_secondary」
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-monthly -keep 180 -vserver svm_secondary`
 
 . 在次要目的地叢集上、驗證原則：
 +
-「叢集輔助：」：> SnapMirror原則顯示SnapVault次要執行個體
+`cluster_secondary::> snapmirror policy show snapvault_secondary -instance`
 
 +
 [listing]
@@ -77,23 +77,23 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 ----
 . 在次要目的地叢集上、建立與來源叢集的關係：
 +
-「叢集輔助：」：> SnapMirror create -source-path SVM_primary：Vola -dite-path SVM_secondary：Vola -type XDP -schedule my_SnapVault -policy SnapVault _secondary」
+`cluster_secondary::> snapmirror create -source-path svm_primary:volA -destination-path svm_secondary:volA -type XDP -schedule my_snapvault -policy snapvault_secondary`
 
 . 在次要目的地叢集上、初始化與來源叢集的關係：
 +
-「叢集輔助：」：> SnapMirror初始化-source-path Svm_primary：Vola -dite-path Svm_secondary：Vola
+`cluster_secondary::> snapmirror initialize -source-path svm_primary:volA -destination-path svm_secondary:volA`
 
 . 在第三目的地叢集上、建立「snapVault_三 線」原則：
 +
-「叢集_第三：：> SnapMirror原則建立-原則SnapVault -第三層-類型vault -註解「資料保險箱至資料保險箱串聯的第三層原則」-vserver SVM_第 三層
+`cluster_tertiary::> snapmirror policy create -policy snapvault_tertiary -type vault -comment “Policy on tertiary for vault to vault cascade” -vserver svm_tertiary`
 
 . 在第三個目的地叢集上、定義原則的「每週」規則：
 +
-「叢集_第三：：> SnapMirror原則附加規則-policy SnapVault原則-第三層-SnapMirror標籤my-flex每 週-保留250 -vserver SVM_第 三層」
+`cluster_tertiary::> snapmirror policy add-rule -policy snapvault_tertiary -snapmirror-label my-weekly -keep 250 -vserver svm_tertiary`
 
 . 在第三目的地叢集上、確認原則：
 +
-「叢集_第三：：> SnapMirror原則顯示SnapVault -第三執行個體」
+`cluster_tertiary::> snapmirror policy show snapvault_tertiary -instance`
 
 +
 [listing]
@@ -117,10 +117,10 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 ----
 . 在第三個目的地叢集上、建立與第二個叢集的關係：
 +
-「叢集_三線：」：> SnapMirror create -source-path SVM_secondary：Vola -dite-path SVM_三 線：Vola - type XDP -schedule my_SnapVault -policy SnapVault _三線」
+`cluster_tertiary::> snapmirror create -source-path svm_secondary:volA -destination-path svm_tertiary:volA -type XDP -schedule my_snapvault -policy snapvault_tertiary`
 
 . 在第三個目的地叢集上、初始化與第二個叢集的關係：
 +
-「叢集_第三：：> SnapMirror初始化-source-path Svm_secondary：Vola -dite-path Svm_tlited:Vola'
+`cluster_tertiary::> snapmirror initialize -source-path svm_secondary:volA -destination-path svm_tertiary:volA`
 
 

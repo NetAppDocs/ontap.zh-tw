@@ -22,22 +22,22 @@ summary: 如果節點需要離線、您可以移動SAN LIF來保留其組態資�
 .步驟
 . 檢視LIF的管理和作業狀態：
 +
-「網路介面show -vserver _vserver_name_」
+`network interface show -vserver _vserver_name_`
 
-. 將LIF的狀態變更為「down」（離線）：
+. 將 LIF 的狀態變更為 `down` （離線）：
 +
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-stue-admin down」
+`network interface modify -vserver _vserver_name_ -lif _LIF_name_ -status-admin down`
 
 . 為LIF指派新的節點和連接埠：
 +
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-home-node_node_name_-home-port _port_name_」
+`network interface modify -vserver _vserver_name_ -lif _LIF_name_ -home-node _node_name_ -home-port _port_name_`
 
-. 將LIF的狀態變更為「up」（上線）：
+. 將 LIF 的狀態變更為 `up` （線上）：
 +
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-stue-admin up」
+`network interface modify -vserver _vserver_name_ -lif _LIF_name_ -status-admin up`
 
 . 驗證您的變更：
 +
-「網路介面show -vserver _vserver_name_」
+`network interface show -vserver _vserver_name_`
 
 

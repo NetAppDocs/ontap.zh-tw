@@ -11,38 +11,38 @@ summary: '您可以使用%w、%d和%u變數來建立其他主目錄組態、讓�
 
 
 [role="lead"]
-您可以使用「%w」、「%d」及「%u」變數來建立其他主目錄組態、以便自訂主目錄組態以滿足您的需求。
+您可以使用建立其他主目錄組態 `%w`、 `%d`和 `%u` 變數、可讓您自訂主目錄組態以滿足您的需求。
 
 您可以使用共用名稱和搜尋路徑中的變數和靜態字串組合、來建立許多主目錄組態。下表提供一些範例、說明如何建立不同的主目錄組態：
 
 |===
-| 當`/vol1/use'包含主目錄時建立的路徑... | 共用命令... 
+| 建立時間的路徑 `/vol1/user` 包含主目錄 ... | 共用命令... 
 
 
  a| 
-可建立共用路徑：「\VS1\~win_username'、將使用者導向至「/vol1/user/win_username'」
+建立共用路徑 `\\vs1\~win_username` 將使用者導向 `/vol1/user/win_username`
  a| 
-「Vserver CIFS共用區create -share-name ~%w -path %w -share-properties oplocks、可瀏覽的、changenotifeing、HomeDirectory」
-
-
-
- a| 
-可建立共用路徑：「\VS1\win_username'」、將使用者導向「/vol1/user/domain/win_username'」
- a| 
-「Vserver CIFS共用區create -share-name %w -path %d/%w -share-properties oplocks、可瀏覽、changenotifeing、HomeDirectory」
+`vserver cifs share create -share-name ~%w -path %w -share-properties oplocks,browsable,changenotify,homedirectory`
 
 
 
  a| 
-可建立共用路徑：「\VS1\win_username'」、將使用者導向至「/vol1/user/unix使用者名稱」
+建立共用路徑 `\\vs1\win_username` 將使用者導向 `/vol1/user/domain/win_username`
  a| 
-「Vserver CIFS共用區create -share-name %w -path %u -share-properties oplocks、可瀏覽、changengenotifeing、HomeDirectory」
+`vserver cifs share create -share-name %w -path %d/%w -share-properties oplocks,browsable,changenotify,homedirectory`
 
 
 
  a| 
-可建立共用路徑：「\VS1_UNIX/USERNAME」、將使用者導向至「/vol1/user/UNIX/USERNAME」
+建立共用路徑 `\\vs1\win_username` 將使用者導向 `/vol1/user/unix_username`
  a| 
-「Vserver CIFS共用區create -share-name %u -path %u -share-properties oplocks、可瀏覽、changengenotifeing、HomeDirectory」
+`vserver cifs share create -share-name %w -path %u -share-properties oplocks,browsable,changenotify,homedirectory`
+
+
+
+ a| 
+建立共用路徑 `\\vs1\unix_username` 將使用者導向 `/vol1/user/unix_username`
+ a| 
+`vserver cifs share create -share-name %u -path %u -share-properties oplocks,browsable,changenotify,homedirectory`
 
 |===

@@ -48,11 +48,11 @@ summary: 防火牆原則可增強叢集的安全性
 
 LIF防火牆原則是用來限制透過每個LIF存取叢集。您需要瞭解預設防火牆原則如何影響每種LIF類型的系統存取、以及如何自訂防火牆原則以提高或降低LIF的安全性。
 
-使用「網路介面create」或「網路介面modify」命令設定LIF時、針對「-firewall-policy」參數指定的值會決定允許存取LIF的服務傳輸協定和IP位址。
+使用設定 LIF 時 `network interface create` 或 `network interface modify` 命令、為指定的值 `-firewall-policy` 參數決定允許存取 LIF 的服務傳輸協定和 IP 位址。
 
 在許多情況下、您可以接受預設的防火牆原則值。在其他情況下、您可能需要限制特定IP位址和特定管理服務傳輸協定的存取。可用的管理服務傳輸協定包括SSH、HTTP、HTTPS、Telnet、NTP、 NDMP、NDMPS、RSH, DNS及SNMP。
 
-所有叢集lifs的防火牆原則預設為「」、無法修改。
+所有叢集生命的防火牆原則預設為 `""` 且無法修改。
 
 下表說明在ONTAP 建立LIF時指派給每個LIF的預設防火牆原則、具體取決於其角色（版本號為9.5或更早）或服務原則ONTAP （版本為9.6及更新版本）：
 
@@ -139,11 +139,11 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 .如何新增或移除portmap服務
 若要將portmap服務新增至SVM或叢集防火牆原則（可在防火牆內存取）、請輸入：
 
-「系統服務防火牆原則create -vserver SVM -policy mgmt| intercluster | data| custom -service portmap」
+`system services firewall policy create -vserver SVM -policy mgmt|intercluster|data|custom -service portmap`
 
 若要從SVM或叢集防火牆原則中移除portmap服務（使其在防火牆內無法存取）、請輸入：
 
-「系統服務防火牆原則刪除-vserver SVM -policy mgmt| intercluster | data| custom -service portmap」
+`system services firewall policy delete -vserver SVM -policy mgmt|intercluster|data|custom -service portmap`
 
 您可以使用網路介面modify命令、將防火牆原則套用至現有的LIF。如需完整的命令語法、請參閱 link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]。
 
@@ -154,7 +154,7 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 當您建立LIF時、預設的防火牆原則會指派給每個LIF。在許多情況下、預設的防火牆設定運作良好、您不需要變更這些設定。如果您想要變更可存取LIF的網路服務或IP位址、可以建立自訂防火牆原則並將其指派給LIF。
 
 .關於這項工作
-* 您無法使用「policy」名稱「data"、「intercluster」、「cluster」或「mGMT」來建立防火牆原則。
+* 您無法使用建立防火牆原則 `policy` 名稱 `data`、  `intercluster`、  `cluster`或 `mgmt`。
 +
 這些值保留給系統定義的防火牆原則。
 
@@ -165,32 +165,32 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 * 如果您需要從原則中移除服務、則必須刪除現有的防火牆原則並建立新原則。
 * 如果叢集上已啟用IPv6、您可以使用IPv6位址建立防火牆原則。
 +
-啟用IPv6之後、「data"、「叢集間」和「mGMT」防火牆原則會在其接受的位址清單中包括：：：/0、IPv6萬用字元。
+啟用 IPv6 之後、  `data`、 `intercluster`和 `mgmt` 防火牆原則包括： /0 （ IPv6 萬用字元）在其接受的位址清單中。
 
 * 使用System Manager設定跨叢集的資料保護功能時、您必須確保叢集間LIF IP位址包含在允許的清單中、而且叢集間LIF和公司擁有的防火牆都允許HTTPS服務。
 +
-根據預設、「叢集間」防火牆原則允許從所有IP位址（0.00.0.0/0或：/0 for IPv6）存取、並啟用HTTPS、NDMP和NDMPS服務。如果您修改此預設原則、或是為叢集間LIF建立自己的防火牆原則、則必須將每個叢集間LIF IP位址新增至允許的清單、並啟用HTTPS服務。
+依預設 `intercluster` 防火牆原則允許從所有 IP 位址（ 0.0.0/0 或： /0 （ IPv6 ））存取、並啟用 HTTPS 、 NDMP 和 NDMPS 服務。如果您修改此預設原則、或是為叢集間LIF建立自己的防火牆原則、則必須將每個叢集間LIF IP位址新增至允許的清單、並啟用HTTPS服務。
 
 * 從支援SJS9.6開始ONTAP 、不支援HTTPS和SSH防火牆服務。
 +
-在S69.6中ONTAP 、「management -https」和「management -ssh」LIF服務可用於HTTPS和SSH管理存取。
+在 ONTAP 9.6 中 `management-https` 和 `management-ssh` LIF 服務可用於 HTTPS 和 SSH 管理存取。
 
 
 
 .步驟
 . 建立防火牆原則、讓特定SVM上的LIF可以使用：
 +
-「系統服務防火牆原則」會建立-vserver _vserver_name_-policy _policy_name_-service _network_service_-list_ip_address/mask_
+`system services firewall policy create -vserver _vserver_name_ -policy _policy_name_ -service _network_service_ -allow-list _ip_address/mask_`
 
 +
 您可以多次使用此命令、為防火牆原則中的每個服務新增多個網路服務和允許的IP位址清單。
 
-. 使用「系統服務防火牆原則show」命令、確認原則已正確新增。
+. 使用確認原則已正確新增 `system services firewall policy show` 命令。
 . 將防火牆原則套用至LIF：
 +
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-firewall-policy _policy_name_」
+`network interface modify -vserver _vserver_name_ -lif _lif_name_ -firewall-policy _policy_name_`
 
-. 使用「network interface show -Fields firewall-policy」命令、確認原則已正確新增至LIF。
+. 使用確認原則已正確新增至 LIF `network interface show -fields firewall-policy` 命令。
 
 
 .建立防火牆原則並將其套用至LIF的範例

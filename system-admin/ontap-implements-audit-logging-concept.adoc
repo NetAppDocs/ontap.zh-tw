@@ -23,20 +23,20 @@ summary: 稽核日誌中記錄的管理活動會包含在標準AutoSupport 版�
 
 * 設定要求、通常適用於非顯示命令或作業
 +
-** 例如、當您執行「create」、「modify」或「刪除」命令時、就會發出這些要求。
+** 這些要求會在您執行時發出 `create`、 `modify`或 `delete` 例如命令。
 ** 預設會記錄設定要求。
 
 
 * Get要求、可擷取資訊並在管理介面中顯示
 +
-** 例如、當您執行「show」命令時、就會發出這些要求。
-** 根據預設、不會記錄Get要求、但您可以控制是否ONTAP 在檔案中記錄從S時CLI（`-cliget'）或ONTAP 從Esilt API（`-ontapiget'）傳送的Get要求。
+** 這些要求會在您執行時發出 `show` 例如命令。
+** 依預設不會記錄 GET 要求、但您可以控制是否從 ONTAP CLI 傳送 GET 要求 (`-cliget`）或來自 ONTAP API (`-ontapiget`）會記錄在檔案中。
 
 
 
 
-此功能可將管理活動記錄在節點的「/mroot/etc/log/mlog/Audit記錄檔」中。ONTAP這裏記錄了三個Shell中用於CLI命令的命令（即clusterShell、nodesell和非交互式系統Shell（不記錄交互式系統Shell命令）以及API命令。稽核記錄包含時間戳記、可顯示叢集中的所有節點是否都同步時間。
+ONTAP 會在中記錄管理活動 `/mroot/etc/log/mlog/audit.log` 節點的檔案。這裏記錄了三個Shell中用於CLI命令的命令（即clusterShell、nodesell和非交互式系統Shell（不記錄交互式系統Shell命令）以及API命令。稽核記錄包含時間戳記、可顯示叢集中的所有節點是否都同步時間。
 
-「稽核記錄」檔案是AutoSupport 由「不行」工具傳送給指定的收件者。您也可以將內容安全地轉送到您指定的外部目的地、例如Splunk或syslog伺服器。
+。 `audit.log` 檔案是由 AutoSupport 工具傳送給指定的收件者。您也可以將內容安全地轉送到您指定的外部目的地、例如Splunk或syslog伺服器。
 
-「稽核記錄」檔案會每日循環。當檔案大小達到100 MB時、也會進行旋轉、並保留先前的48個複本（最多總共49個檔案）。稽核檔案執行每日旋轉時、不會產生任何EMS訊息。如果稽核檔案因為超過檔案大小限制而旋轉、則會產生EMS訊息。
+。 `audit.log` 檔案會每日旋轉。當檔案大小達到100 MB時、也會進行旋轉、並保留先前的48個複本（最多總共49個檔案）。稽核檔案執行每日旋轉時、不會產生任何EMS訊息。如果稽核檔案因為超過檔案大小限制而旋轉、則會產生EMS訊息。

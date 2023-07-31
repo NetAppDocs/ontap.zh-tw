@@ -25,7 +25,7 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 * link:install-ssl-certificates-hardware-task.html["SVM已啟用KMIP金鑰管理"]。
 * 此程序僅支援使用KMIP的主要伺服器。如需支援的金鑰伺服器清單、請查看 link:http://mysupport.netapp.com/matrix/["NetApp 互通性對照表工具"^]。
 * 叢集中的所有節點都必須執行ONTAP 版本不符合要求的9.11.1或更新版本。
-* 伺服器在「次要金鑰伺服器」參數中列出引數的順序、反映外部金鑰管理（KMIP）伺服器的存取順序。
+* 伺服器的順序會列出中的引數 `-secondary-key-servers` 參數反映外部金鑰管理（ KMIP ）伺服器的存取順序。
 
 
 
@@ -38,15 +38,21 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 ====
 .將主要和次要金鑰伺服器新增至SVM
 --
-. 確認叢集尚未啟用金鑰管理：「安全金鑰管理程式外部show -vserver _vserver_name_」。如果SVM已啟用最多四個主要金鑰伺服器、則您必須先移除其中一個現有的主要金鑰伺服器、然後再新增一個主要金鑰伺服器。
-. 啟用主金鑰管理程式：「安全金鑰管理程式外部啟用-vserver _vserver_name_-key-servers _server_ip_-client-cert _client_cert_name_-server_certs _server_ca_cert_names _」
-. 修改主金鑰伺服器以新增次要金鑰伺服器。「次要金鑰伺服器」參數可接受最多三個主要伺服器的以逗號分隔的清單。「安全金鑰管理程式外部修改伺服器-vserver _vserver_name_-key-servers _primary金鑰伺服器_-secondary金鑰伺服器_list_of_key_servers_」
+. 確認未啟用叢集的金鑰管理：
+`security key-manager external show -vserver _vserver_name_`
+如果 SVM 已啟用最多四個主要金鑰伺服器、則必須先移除其中一個現有的主要金鑰伺服器、才能新增新的金鑰伺服器。
+. 啟用主要金鑰管理程式：
+`security key-manager external enable -vserver _vserver_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
+. 修改主金鑰伺服器以新增次要金鑰伺服器。。 `-secondary-key-servers` 參數接受最多三個主要伺服器的逗號分隔清單。
+`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 
 
 --
 .新增次要金鑰伺服器至現有的主要金鑰伺服器
 --
-. 修改主金鑰伺服器以新增次要金鑰伺服器。「次要金鑰伺服器」參數可接受最多三個主要伺服器的以逗號分隔的清單。「安全金鑰管理程式外部修改伺服器-vserver _vserver_name_-key-servers _primary _key_server_-secondary金鑰伺服器_list_of_key_servers_」如需次要金鑰伺服器的詳細資訊、請參閱 <<mod-secondary>>。
+. 修改主金鑰伺服器以新增次要金鑰伺服器。。 `-secondary-key-servers` 參數接受最多三個主要伺服器的逗號分隔清單。
+`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+如需次要金鑰伺服器的詳細資訊、請參閱  <<mod-secondary>>。
 
 
 --
@@ -61,7 +67,7 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 
 === 轉換主要和次要金鑰伺服器
 
-若要將主金鑰伺服器轉換成次要金鑰伺服器、您必須先使用「安全金鑰管理程式外部移除伺服器」命令、將其從SVM中移除。
+若要將主要金鑰伺服器轉換為次要金鑰伺服器、您必須先使用將其從 SVM 中移除 `security key-manager external remove-servers` 命令。
 
 若要將次要金鑰伺服器轉換成主要金鑰伺服器、您必須先從現有的主要金鑰伺服器移除次要金鑰伺服器。請參閱 <<mod-secondary>>。如果您在移除現有金鑰時將次要金鑰伺服器轉換為主要伺服器、在完成移除和轉換之前嘗試新增伺服器可能會導致金鑰重複。
 
@@ -69,8 +75,8 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 
 === 修改次要金鑰伺服器
 
-次要金鑰伺服器是以「安全金鑰管理程式外部modify-server'命令的「次要金鑰伺服器」參數來管理。「次要金鑰伺服器」參數接受以逗號分隔的清單。清單中次要金鑰伺服器的指定順序決定次要金鑰伺服器的存取順序。存取順序可藉由執行命令「安全金鑰管理程式外部修改伺服器」來修改、並以不同順序輸入次要金鑰伺服器。
+次要金鑰伺服器是使用管理 `-secondary-key-servers` 的參數 `security key-manager external modify-server` 命令。。 `-secondary-key-servers` 參數接受以逗號分隔的清單。清單中次要金鑰伺服器的指定順序決定次要金鑰伺服器的存取順序。您可以執行命令來修改存取順序 `security key-manager external modify-server` 以不同順序輸入次要金鑰伺服器。
 
-若要移除次要金鑰伺服器、「次要金鑰伺服器」的引數應包含您要保留的主要伺服器、而不需要移除該伺服器。若要移除所有次要金鑰伺服器、請使用「-」這個引數表示「無」。
+若要移除次要金鑰伺服器、請使用 `-secondary-key-servers` 引數應包含您想要保留的主要伺服器、同時省略要移除的伺服器。若要移除所有次要金鑰伺服器、請使用引數 `-`表示沒有。
 
 如需其他資訊、請參閱 `security key-manager external` 頁面 link:https://docs.netapp.com/us-en/ontap-cli-9131/["指令參考資料ONTAP"^]。

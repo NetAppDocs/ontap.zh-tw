@@ -21,14 +21,14 @@ summary: 從推出支援的版本號為《支援網路時間傳輸協定》（NT
  a| 
 設定NTP伺服器而不進行對稱驗證
  a| 
-「叢集時間服務NTP伺服器create -server server_name」
+`cluster time-service ntp server create -server server_name`
 
 
 
  a| 
 設定採用對稱驗證的NTP伺服器
  a| 
-「叢集時間服務NTP伺服器create -server server_ip_address -key-id key_id」
+`cluster time-service ntp server create -server server_ip_address -key-id key_id`
 
 
 
@@ -37,14 +37,14 @@ summary: 從推出支援的版本號為《支援網路時間傳輸協定》（NT
 
 您可以修改現有的NTP伺服器、藉由新增必要的金鑰ID來啟用驗證。
  a| 
-「叢集時間服務NTP伺服器修改-server server_name -key-id key_id」
+`cluster time-service ntp server modify -server server_name -key-id key_id`
 
 
 
  a| 
 設定共用的NTP金鑰
  a| 
-「叢集時間服務NTP金鑰create -id shared_key_id -type shared_key_type -Value shared_key_value'
+`cluster time-service ntp key create -id shared_key_id -type shared_key_type -value shared_key_value`
 
 *附註：*共享金鑰是由ID所指。節點和NTP伺服器上的ID、其類型和值必須相同
 
@@ -53,14 +53,14 @@ summary: 從推出支援的版本號為《支援網路時間傳輸協定》（NT
  a| 
 使用未知的金鑰ID設定NTP伺服器
  a| 
-「叢集時間服務NTP伺服器create -server server_name -key-id key_id」
+`cluster time-service ntp server create -server server_name -key-id key_id`
 
 
 
  a| 
 在NTP伺服器上設定未設定金鑰ID的伺服器。
  a| 
-「叢集時間服務NTP伺服器create -server server_name -key-id key_id」
+`cluster time-service ntp server create -server server_name -key-id key_id`
 
 *附註：*金鑰ID、類型和值必須與NTP伺服器上設定的金鑰ID、類型和值相同。
 
@@ -69,6 +69,6 @@ summary: 從推出支援的版本號為《支援網路時間傳輸協定》（NT
  a| 
 停用對稱驗證
  a| 
-「叢集時間服務NTP伺服器修改-伺服器server_name -驗證已停用」
+`cluster time-service ntp server modify -server server_name -authentication disabled`
 
 |===

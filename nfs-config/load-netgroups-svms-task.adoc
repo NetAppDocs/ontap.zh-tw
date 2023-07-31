@@ -11,7 +11,7 @@ summary: 您可以在匯出原則規則中使用符合用戶端的方法之一�
 
 
 [role="lead"]
-您可以在匯出原則規則中使用符合用戶端的方法之一、就是使用netGroups中列出的主機。您可以將網路群組從統一資源識別元（URI）載入SVM、以取代使用儲存在外部名稱伺服器（「vserver services name-service netgroup loads」）中的網路群組。
+您可以在匯出原則規則中使用符合用戶端的方法之一、就是使用netGroups中列出的主機。您可以將網路群組從統一的資源識別碼（ URI ）載入 SVM 、以取代使用儲存在外部名稱伺服器中的網路群組 (`vserver services name-service netgroup load`）。
 
 .您需要的產品
 Netgroup檔案在載入SVM之前、必須符合下列要求：
@@ -21,7 +21,7 @@ Netgroup檔案在載入SVM之前、必須符合下列要求：
 此功能可在載入netgroup文字檔格式之前檢查其內容。ONTAP如果檔案包含錯誤、則不會載入、並會顯示訊息、指出您必須在檔案中執行的修正。更正錯誤後、您可以將netgroup檔案重新載入指定的SVM。
 
 * netgroup檔案中主機名稱中的任何字母字元都應為小寫。
-* 支援的檔案大小上限為5 MB。
+* 支援的檔案大小上限為 5 MB 。
 * 巢狀網路群組支援的最大層級為1000。
 * 在netgroup檔案中定義主機名稱時、只能使用主要DNS主機名稱。
 +
@@ -39,7 +39,7 @@ Netgroup檔案在載入SVM之前、必須符合下列要求：
 .步驟
 . 從URI將網路群組載入SVM：
 +
-「Vserver services name-service netgroup load -vserver _vserver_name_-source｛ftp | http | ftps| https｝：//_uni_」
+`vserver services name-service netgroup load -vserver _vserver_name_ -source {ftp|http|ftps|https}://_uri_`
 
 +
 載入netgroup檔案並建置netgroup。byhost對應可能需要數分鐘的時間。
@@ -50,7 +50,7 @@ Netgroup檔案在載入SVM之前、必須符合下列要求：
 
 
 .範例
-下列命令會從HTTP URL h+http://intranet/downloads/corp-netgroup+`:將netgroup定義載入名為VS1的SVM
+下列命令會從 HTTP URL 將 netgroup 定義載入名為 VS1 的 SVM `+http://intranet/downloads/corp-netgroup+`：
 
 [listing]
 ----

@@ -27,13 +27,13 @@ NOTE: 在升級過程中、會根據升級方法來移轉LIF。視升級方法�
 | 如果ONTAP 您的版本是... | 使用此命令 
 
 
-| 9.6或更新版本  a| 
+| 9.6 或更新版本  a| 
 `network interface show -service-policy \*data* -failover`
 
 
 
-| 9.5或更早版本  a| 
-「網路介面show -role data -容 錯移轉」
+| 9.5 或更早版本  a| 
+`network interface show -role data -failover`
 
 |===
 +
@@ -67,7 +67,7 @@ vs1
 . 如果任何生命期（SAN生命期以外）的容錯移轉原則設定為停用、請使用網路介面modify命令來啟用容錯移轉。
 . 對於每個LIF、請確認「*容錯移轉目標*」欄位包含來自不同節點的資料連接埠、這些連接埠在LIF主節點升級時仍會保持正常運作。
 +
-您可以使用「network interface容錯移轉群組modify」命令、將容錯移轉目標新增至容錯移轉群組。
+您可以使用 `network interface failover-groups modify` 命令將容錯移轉目標新增至容錯移轉群組。
 
 +
 .範例

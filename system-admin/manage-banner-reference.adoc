@@ -25,16 +25,16 @@ summary: 您可以在叢集或SVM層級管理橫幅。為叢集設定的橫幅�
  a| 
 設定叢集層級橫幅：
 
-'*安全登入橫幅修改-vserver _cluster名稱_｛[-message "text"｝|[_-uri ftp._or_http _addr_]}*
+`*security login banner modify -vserver _cluster_name_ { [-message "text"] | [_-uri ftp_or_http_addr_] }*`
 
 
 
  a| 
 移除所有（叢集和SVM）登入的橫幅
  a| 
-將橫幅設定為空白字串（「」）：
+將橫幅設定為空白字串 (`""`）：
 
-「*安全登入橫幅修改-vserver *-message "*」
+`*security login banner modify -vserver * -message ""*`
 
 
 
@@ -43,12 +43,12 @@ summary: 您可以在叢集或SVM層級管理橫幅。為叢集設定的橫幅�
  a| 
 修改SVM橫幅訊息：
 
-'*安全性登入橫幅修改-vserver _Svm_name_｛[-message "_text_"]|[-URI _ftp._or_http _addr_]}*
+`*security login banner modify -vserver _svm_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
 
 |===
 * 在SVM層級管理橫幅：
 +
-在SVM環境中不需要指定「-vserver _Svm_name_'」。
+指定 `-vserver _svm_name_` 在 SVM 內容中不需要。
 
 +
 |===
@@ -60,7 +60,7 @@ summary: 您可以在叢集或SVM層級管理橫幅。為叢集設定的橫幅�
  a| 
 為SVM建立橫幅：
 
-'*安全登入橫幅修改-vserver _Svm_name_｛[-message "text"｝|[-uri ftp._or_https_addr]}*
+`*security login banner modify -vserver _svm_name_ { [-message "text"] | [-uri ftp_or_http_addr] }*`
 
 
 
@@ -69,16 +69,16 @@ summary: 您可以在叢集或SVM層級管理橫幅。為叢集設定的橫幅�
  a| 
 將SVM橫幅設定為空白字串、以供SVM使用：
 
-hy*安全登錄標語modify -vserver _Svm_name_-message "*（修改-vserver _Svm_name_-message "*）
+`*security login banner modify -vserver _svm_name_ -message ""*`
 
 
 
  a| 
 當SVM目前使用SVM層級橫幅時、請使用叢集層級橫幅
  a| 
-將SVM橫幅設定為「-」：
+將 SVM 橫幅設定為 `"-"`：
 
-hy*安全登錄標語modify -vserver _Svm_name_-message "-"*
+`*security login banner modify -vserver _svm_name_ -message "-"*`
 
 |===
 

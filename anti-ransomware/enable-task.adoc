@@ -69,13 +69,13 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 .在現有磁碟區上啟用 ARP
 . 修改現有磁碟區以在學習模式中啟用勒索軟體保護：
 +
-「安全性防勒索軟體磁碟區乾式執行-volume _vol_name_-vserver _Svm_name_」
+`security anti-ransomware volume dry-run -volume _vol_name_ -vserver _svm_name_`
 
 +
 您也可以使用啟用勒索軟體保護 `volume modify` 命令：
 
 +
-「Volume modify -volume _vol_name_-vserver _svm_name_-anti-勒索 軟體狀態drain-run」
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state dry-run`
 
 +
 如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
@@ -85,24 +85,24 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 
 . 學習期間結束時、如果尚未自動完成、請修改受保護的磁碟區以切換至作用中模式：
 +
-「安全性防勒索軟體磁碟區可啟用-volume _vol_name_-vserver _svm_name_」
+`security anti-ransomware volume enable -volume _vol_name_ -vserver _svm_name_`
 
 +
 您也可以使用modify volume命令切換至作用中模式：
 
 +
-「Volume modify -volume _vol_name_-vserver _Svm_name_-anti-勒索 軟體狀態active」
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state active`
 
 . 驗證磁碟區的ARP狀態。
 +
-「安全性反勒索軟體量顯示」
+`security anti-ransomware volume show`
 
 
 
 .在新磁碟區上啟用 ARP
 . 在資源配置資料之前、請先啟用反勒索軟體保護功能、建立新的 Volume 。
 +
-「Volume create -volume _vol_name_-vserver _Svm_name_-Aggregate _aggregate _name_-size _n_-anti-勒索 軟體狀態dle-run -jeter-path //path_name_`
+`volume create -volume _vol_name_ -vserver _svm_name_  -aggregate _aggr_name_ -size _nn_ -anti-ransomware-state dry-run -junction-path /_path_name_`
 
 +
 如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
@@ -112,17 +112,17 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 
 . 學習期間結束時、如果尚未自動完成、請修改受保護的磁碟區以切換至作用中模式：
 +
-「安全性防勒索軟體磁碟區可啟用-volume _vol_name_-vserver _svm_name_」
+`security anti-ransomware volume enable -volume _vol_name_ -vserver _svm_name_`
 
 +
 您也可以使用modify volume命令切換至作用中模式：
 
 +
-「Volume modify -volume _vol_name_-vserver _Svm_name_-anti-勒索 軟體狀態active」
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state active`
 
 . 驗證磁碟區的ARP狀態。
 +
-「安全性反勒索軟體量顯示」
+`security anti-ransomware volume show`
 
 
 

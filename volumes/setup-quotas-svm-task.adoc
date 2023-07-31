@@ -21,10 +21,10 @@ summary: 若要在新的儲存虛擬機器（SVM、先前稱為Vserver）上設�
 +
 [NOTE]
 ====
-您也可以使用「volume quota policy create」命令來建立新原則。
+您也可以使用建立新原則 `volume quota policy create` 命令。
 
 ====
-. 使用「volume quota policy rRule cree"（磁碟區配額原則規則建立）」命令、為SVM上的每個磁碟區建立下列配額規則中的_any：
+. 使用 `volume quota policy rule create` 命令可為 SVM 上的每個磁碟區建立下列任何配額規則：
 +
 ** 所有使用者的預設配額規則
 ** 針對特定使用者的明確配額規則
@@ -34,20 +34,20 @@ summary: 若要在新的儲存虛擬機器（SVM、先前稱為Vserver）上設�
 ** 特定qtree的明確配額規則
 
 
-. 使用「volume quota policy rRule show」命令檢查配額規則的設定是否正確。
-. 如果您正在制定新原則、請使用「vserver modify」命令將新原則指派給SVM。
-. 使用「Volume quota on」命令初始化SVM上每個磁碟區的配額。
+. 使用 `volume quota policy rule show` 檢查配額規則是否正確設定的命令。
+. 如果您正在制定新原則、請使用 `vserver modify` 命令將新原則指派給 SVM 。
+. 使用 `volume quota on` 用於初始化 SVM 上每個磁碟區的配額的命令。
 +
 您可以使用下列方式監控初始化程序：
 
 +
-** 使用「Volume quota on」命令時、您可以新增「-foreground」參數、在前景的工作上執行配額。（依預設、工作會在背景執行。）
+** 當您使用時 `volume quota on` 您可以新增 `-foreground` 在工作前景執行配額的參數。（依預設、工作會在背景執行。）
 +
-當工作在背景中執行時、您可以使用「jobshow」命令來監控其進度。
+當工作在背景執行時、您可以使用監控其進度 `job show` 命令。
 
-** 您可以使用「volume quota show」命令來監控配額初始化的狀態。
+** 您可以使用 `volume quota show` 用於監控配額初始化狀態的命令。
 
 
-. 使用「volume quota show -instance」命令來檢查初始化錯誤、例如無法初始化的配額規則。
-. 使用「Volume quota report」命令顯示配額報告、確保強制執行的配額符合您的期望。
+. 使用 `volume quota show -instance` 用於檢查初始化錯誤的命令、例如無法初始化的配額規則。
+. 使用 `volume quota report` 顯示配額報告的命令、以確保強制配額符合您的期望。
 

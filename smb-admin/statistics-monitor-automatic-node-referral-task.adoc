@@ -11,24 +11,24 @@ summary: 若要判斷所參照的SMB連線數量、您可以使用統計資料�
 
 
 [role="lead"]
-若要判斷所參照的SMB連線數量、您可以使用「統計資料」命令來監控自動節點參照活動。透過監控轉介、您可以判斷自動轉介在裝載共用的節點上尋找連線的程度、以及是否應重新分配資料生命量、以提供對CIFS伺服器上共用區的更佳本機存取。
+若要判斷要參照多少 SMB 連線、您可以使用監控自動節點參照活動 `statistics` 命令。透過監控轉介、您可以判斷自動轉介在裝載共用的節點上尋找連線的程度、以及是否應重新分配資料生命量、以提供對CIFS伺服器上共用區的更佳本機存取。
 
 .關於這項工作
-「CIFS」物件在進階權限層級提供數個計數器、有助於監控SMB自動節點參照：
+。 `cifs` 物件在進階權限層級提供數個計數器、可在監控 SMB 自動節點參照時提供協助：
 
-* "node_Referring_器 已發出"
+* `node_referral_issued`
 +
 在用戶端使用與共用根節點不同的節點所主控的LIF連線之後、已向共用根節點發出參照的用戶端數目。
 
-* "node_Referring_local"
+* `node_referral_local`
 +
 使用裝載共用根目錄之同一個節點所裝載之LIF進行連線的用戶端數目。本機存取通常可提供最佳效能。
 
-* "node_Referring_not _可能性"
+* `node_referral_not_possible`
 +
 使用與共用根節點不同的節點所裝載的LIF進行連線之後、尚未向裝載共用根目錄的節點發出轉介的用戶端數目。這是因為找不到共用根節點的作用中資料LIF。
 
-* "node_Referring_rement"
+* `node_referral_remote`
 +
 使用裝載於共享根目錄之節點不同之節點的LIF所連線的用戶端數目。遠端存取可能導致效能降低。
 
@@ -38,30 +38,30 @@ summary: 若要判斷所參照的SMB連線數量、您可以使用統計資料�
 
 [NOTE]
 ====
-若要評估及使用您從「統計資料」命令收集到的資訊、您應該瞭解用戶端在您環境中的分佈情況。
+評估及使用您從收集到的資訊 `statistics` 命令、您應該瞭解用戶端在環境中的發佈。
 
 ====
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
-. 使用「統計資料」命令檢視自動節點參照統計資料。
+. 將權限層級設為進階： `set -privilege advanced`
+. 使用檢視自動節點參照統計資料 `statistics` 命令。
 +
 此範例透過收集和檢視取樣期間的資料來檢視自動節點參照統計資料：
 
 +
-.. 開始收集：「統計資料start -object CIFS -instance VS1 -same-id sample1」
+.. 開始收藏： `statistics start -object cifs -instance vs1 -sample-id sample1`
 +
 [listing]
 ----
 Statistics collection is being started for Sample-id: sample1
 ----
 .. 等待所需的收集時間到。
-.. 停止收集：「統計資料停止-樣本ID範例1」
+.. 停止集合： `statistics stop -sample-id sample1`
 +
 [listing]
 ----
 Statistics collection is being stopped for Sample-id: sample1
 ----
-.. 查看自動節點參照統計資料：「tStatistics show -same-id Sample1 -counter * node*」
+.. 檢視自動節點參照統計資料： `statistics show -sample-id sample1 -counter *node*`
 +
 [listing]
 ----
@@ -92,7 +92,7 @@ Cluster: cluster1
 
 
 
-. 返回管理員權限等級：「et -priv. admin」
+. 返回管理權限層級： `set -privilege admin`
 
 
 .相關資訊

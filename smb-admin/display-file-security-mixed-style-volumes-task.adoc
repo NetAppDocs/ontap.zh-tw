@@ -37,20 +37,20 @@ summary: 您可以在混合式安全型磁碟區上顯示檔案與目錄安全�
  a| 
 以摘要形式提供
  a| 
-「vserver安全性檔案目錄show -vserver vserver_name -path path'
+`vserver security file-directory show -vserver vserver_name -path path`
 
 
 
  a| 
 更詳細的資料
  a| 
-「vserver安全性檔案目錄show -vserver vserver_name -path path -expand mask true」
+`vserver security file-directory show -vserver vserver_name -path path -expand-mask true`
 
 |===
 
 
 .範例
-以下範例以擴充遮罩形式顯示SVM VS1中路徑「/專案」的安全資訊。這種混合式安全型路徑具有UNIX有效的安全性。
+下列範例顯示有關路徑的安全性資訊 `/projects` 在 SVM VS1 中以擴充遮罩形式呈現。這種混合式安全型路徑具有UNIX有效的安全性。
 
 [listing]
 ----
@@ -78,7 +78,7 @@ Expanded Dos Attributes: 0x10
  Unix Mode Bits in Text: rwx------
                    ACLs: -
 ----
-以下範例顯示SVM VS1中路徑「/data」的安全資訊。這種混合式安全型路徑具有NTFS有效安全性。
+下列範例顯示有關路徑的安全性資訊 `/data` 在 SVM VS1 中。這種混合式安全型路徑具有NTFS有效安全性。
 
 [listing]
 ----
@@ -104,7 +104,7 @@ cluster1::> vserver security file-directory show -vserver vs1 -path /data
                                             ALLOW-Everyone-0x1f01ff
                                             ALLOW-Everyone-0x10000000-OI|CI|IO
 ----
-以下範例顯示SVM VS1路徑「/datavol5」的磁碟區安全資訊。這種混合式安全型磁碟區的最上層具有UNIX有效的安全性。Volume具有儲存層級的存取保護安全性。
+以下範例顯示路徑中有關 Volume 的安全性資訊 `/datavol5` 在 SVM VS1 中。這種混合式安全型磁碟區的最上層具有UNIX有效的安全性。Volume具有儲存層級的存取保護安全性。
 
 [listing]
 ----

@@ -18,11 +18,11 @@ summary: 您可以修改個別儲存區的稽核參數、或是在SVM中選取�
 | 如果您想要修改稽核組態... | 輸入... 
 
 
-| 個別庫存箱 | 「vserver object-store-server稽核事件選取器modify -vserver _Svm_name_[-bucket _bucket_name_][_蔘 與修改的參數_]」 
+| 個別庫存箱 | `vserver object-store-server audit event-selector modify -vserver _svm_name_ [-bucket _bucket_name_] [_parameters to modify_]` 
 
 
 | SVM中的所有儲存區  a| 
-「vserver object-store-server稽核修改-vserver _Svm_name_[_parameters to modify_]」
+`vserver object-store-server audit modify -vserver _svm_name_ [_parameters to modify_]`
 
 |===
 .範例
@@ -32,7 +32,7 @@ summary: 您可以修改個別儲存區的稽核參數、或是在SVM中選取�
 ----
 cluster1::> vserver object-store-server audit event-selector modify -vserver vs1 -bucket test-bucket -access write-only
 ----
-下列範例會修改SVM中所有儲存區的稽核組態、將記錄大小限制變更為10MB、並在旋轉前保留3個記錄檔。
+以下範例修改 SVM 中所有貯體的稽核組態、將記錄大小限制變更為 10MB 、並在旋轉前保留 3 個記錄檔。
 
 [listing]
 ----

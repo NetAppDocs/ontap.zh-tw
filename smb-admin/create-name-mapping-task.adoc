@@ -11,17 +11,17 @@ summary: 您可以使用vserver name-mapping create命令來建立名稱對應�
 
 
 [role="lead"]
-您可以使用「vserver name-mappping create」命令來建立名稱對應。您可以使用名稱對應來讓Windows使用者存取UNIX安全樣式的磁碟區和相反的磁碟區。
+您可以使用 `vserver name-mapping create` 建立名稱對應的命令。您可以使用名稱對應來讓Windows使用者存取UNIX安全樣式的磁碟區和相反的磁碟區。
 
 .關於這項工作
 針對每個SVM、ONTAP 支援最多12、500個各個方向的名稱對應。
 
 .步驟
-. 建立名稱對應：「vserver name-mapping create -vserver _vserver_name_-direction｛krb-unix | win-unix | unix-win｝-positive _integer_-Pattern text -replacement _text_」
+. 建立名稱對應： `vserver name-mapping create -vserver _vserver_name_ -direction {krb-unix|win-unix|unix-win} -position _integer_ -pattern text -replacement _text_`
 +
 [NOTE]
 ====
-也可以將「-Pattern'（模式）」和「-replacement（取代）」陳述式做為規則運算式。您也可以使用「-replacement」陳述式、使用null置換字串「」（空格字元）明確拒絕對使用者的對應。有關詳細信息，請參見"vserver name-mapping creman"（vserver名稱映射創建）手冊頁。
+。 `-pattern` 和 `-replacement` 陳述式可做為規則運算式。您也可以使用 `-replacement` 使用 null 置換字串明確拒絕對應至使用者的陳述 `" "` （空格字元）。請參閱 `vserver name-mapping create` 詳細資訊請參閱手冊頁。
 
 ====
 +

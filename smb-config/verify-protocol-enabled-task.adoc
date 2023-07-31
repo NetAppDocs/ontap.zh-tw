@@ -2,39 +2,39 @@
 permalink: smb-config/verify-protocol-enabled-task.html 
 sidebar: sidebar 
 keywords: configure, smb, svm, verify, protocol, enable, verify that the smb protocol is enabled on the svm 
-summary: 在SVM上設定及使用SMB之前、您必須先確認已啟用該傳輸協定。 
+summary: 在 SVM 上設定和使用 SMB 之前、您必須先確認已啟用傳輸協定。 
 ---
-= 確認SVM上已啟用SMB傳輸協定
+= 確認 SVM 上已啟用 SMB 傳輸協定
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在SVM上設定及使用SMB之前、您必須先確認已啟用該傳輸協定。
+在 SVM 上設定和使用 SMB 之前、您必須先確認已啟用傳輸協定。
 
 .關於這項工作
-這通常是在SVM設定期間完成、但如果您在設定期間未啟用該傳輸協定、則可以稍後使用「vserver add-protocols」命令加以啟用。
+這通常是在 SVM 設定期間完成、但如果您在設定期間未啟用傳輸協定、您可以稍後使用加以啟用 `vserver add-protocols` 命令。
 
 [NOTE]
 ====
 一旦建立LIF、您就無法從其新增或移除通訊協定。
 
 ====
-您也可以使用「vserver remove-protocols」命令來停用SVM上的傳輸協定。
+您也可以使用停用 SVM 上的通訊協定 `vserver remove-protocols` 命令。
 
 .步驟
-. 檢查SVM目前啟用和停用的傳輸協定：「vserver show -vserver vserver_name -protocols」
+. 檢查SVM目前啟用和停用的傳輸協定： `vserver show -vserver vserver_name -protocols`
 +
-您也可以使用「vserver show-protocols」命令來檢視叢集中所有SVM上目前啟用的傳輸協定。
+您也可以使用 `vserver show-protocols` 用於檢視叢集中所有 SVM 上目前啟用的通訊協定的命令。
 
 . 如有必要、請啟用或停用傳輸協定：
 +
-** 若要啟用SMB傳輸協定：「vserver add-protocols -vserver vserver_name -protocols CIFS」
-** 若要停用傳輸協定：「+vserver disable-protocols -vserver vserver_name -PROVAT傳輸 協定名稱[,PROTER_name,...]+`
+** 若要啟用 SMB 傳輸協定： `vserver add-protocols -vserver vserver_name -protocols cifs`
+** 若要停用通訊協定： `+vserver remove-protocols -vserver vserver_name -protocols protocol_name[,protocol_name,...]+`
 
 
-. 確認已啟用和停用的傳輸協定已正確更新：「vserver show -vserver vserver_name -protocols」
+. 確認已啟用和停用的傳輸協定已正確更新： `vserver show -vserver vserver_name -protocols`
 
 
 .範例
@@ -47,7 +47,7 @@ Vserver           Allowed Protocols         Disallowed Protocols
 -----------       ----------------------    -----------------------
 vs1.example.com   cifs                       nfs, fcp, iscsi, ndmp
 ----
-下列命令可將「CIFS」新增至SVM上已啟用的傳輸協定清單（名稱為VS1）、以透過SMB存取：
+下列命令可透過新增來存取 SMB `cifs` 到名為 VS1 的 SVM 上已啟用的通訊協定清單：
 
 [listing]
 ----

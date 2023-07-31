@@ -11,7 +11,7 @@ summary: 您可以使用安全登入create命令、讓系統管理員帳戶使�
 
 
 [role="lead"]
-您可以使用「安全登入create」命令、讓系統管理員帳戶使用SSH公開金鑰來存取管理或資料SVM。
+您可以使用 `security login create` 命令可讓系統管理員帳戶使用 SSH 公開金鑰存取管理或資料 SVM 。
 
 .您需要的產品
 您必須是叢集管理員才能執行此工作。
@@ -24,12 +24,12 @@ xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者�
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用 `security login modify` 命令以稍後新增角色。
 
 
-如果您想在叢集上啟用FIPS模式、則必須使用支援的金鑰類型來重新設定現有SSH公開金鑰帳戶、而不需要支援的金鑰演算法。在您啟用FIPS之前、應先重新設定帳戶、否則系統管理員驗證將會失敗。
+如果您想在叢集上啟用FIPS模式、則必須使用支援的金鑰類型來重新設定現有SSH公開金鑰帳戶、而不需要支援的金鑰演算法。  在您啟用FIPS之前、應先重新設定帳戶、否則系統管理員驗證將會失敗。
 
-下表指出ONTAP 支援哪些主機金鑰類型演算法來進行支援以利執行支援的SSH連線。這些金鑰類型不適用於設定SSH公用驗證。
+下表指出ONTAP 支援哪些主機金鑰類型演算法來進行支援以利執行支援的SSH連線。  這些金鑰類型不適用於設定SSH公用驗證。
 
 [cols="30,30,30"]
 |===
@@ -39,20 +39,29 @@ xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者�
 
 
  a| 
-9.11.1及更新版本
+9.11.1 及更新版本
  a| 
 ECDSA-SHA2-nistp256
  a| 
-ECDSA-SHA2-nistp256 + RSA-SHA2-512 + RSA-SHA2-256 + SSH-ed25519 + SSH-DSS + SSHA-RSA
+ECDSA-SHA2-nistp256 +
+RSA-SHA2-512 +
+RSA-SHA2-256 +
+SSH-ed25519 +
+SSH-DSS +
+SSH-RSA
 
 
 
  a| 
 9.10.1及更早版本
  a| 
-ECDSA-SHA2-nistp256 + ssh編輯25519
+ECDSA-SHA2-nistp256 +
+SSH-ed25519.
  a| 
-ECDSA-SHA2-nistp256 + ssh - ed25519 + ssh - DSS + ssh - RSA
+ECDSA-SHA2-nistp256 +
+SSH-ed25519 +
+SSH-DSS +
+SSH-RSA
 
 |===
 
@@ -63,13 +72,13 @@ NOTE: 9.11.1中移除SSH-ed25519主機金鑰演算法支援
 .步驟
 . 允許本機系統管理員帳戶使用SSH公開金鑰存取SVM：
 +
-「安全性登入建立-vserver _Svm_name_-user-or group名稱user_or group名稱-application_application_-authmethod _auth_method_-role _role__-comment _comment _」
+`security login create -vserver _SVM_name_ -user-or-group-name user_or_group_name -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_`
 
 +
 如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
 
 +
-下列命令可讓SVM系統管理員帳戶「svmadmin1」使用預先定義的「vsadmin-volume」角色、使用SSH公開金鑰來存取SVM「engData1」：
+下列命令可啟用 SVM 管理員帳戶 `svmadmin1` 使用預先定義的 `vsadmin-volume` 存取 SVM 的角色``engData1`` 使用 SSH 公開金鑰：
 
 +
 [listing]

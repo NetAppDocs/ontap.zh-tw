@@ -11,10 +11,10 @@ summary: 您可以變更磁碟區的分層原則、以控制當資料變成非�
 
 
 [role="lead"]
-您可以變更磁碟區的分層原則、以控制當資料變成非作用中時、是否將其移至雲端層（_Cold）。對於具有「僅快照」或「自動」分層原則的磁碟區、您也可以指定使用者資料在移至雲端層之前、必須保持停用狀態的最低分層冷卻時間。
+您可以變更磁碟區的分層原則、以控制當資料變成非作用中時、是否將其移至雲端層（_Cold）。適用於具有的 Volume `snapshot-only` 或 `auto` 分層原則、您也可以指定在將使用者資料移至雲端層之前、使用者資料必須保持非作用中狀態的分層最低冷卻期間。
 
 .您需要的產品
-若要將磁碟區變更為「自動」分層原則、或是修改分層最低冷卻週期、則需要ONTAP 使用更新版本的版本9.4或更新版本。
+將 Volume 變更為 `auto` 分層原則或修改分層最低冷卻期需要 ONTAP 9.4 或更新版本。
 
 .關於這項工作
 變更磁碟區的分層原則只會變更磁碟區的後續分層行為。它不會將資料追溯到雲端層。
@@ -24,28 +24,28 @@ summary: 您可以變更磁碟區的分層原則、以控制當資料變成非�
 link:tiering-policies-concept.html#what-happens-when-you-modify-the-tiering-policy-of-a-volume-in-fabricpool["當您修改FabricPool 完一份Volume的分層原則時、會發生什麼情況"]
 
 .步驟
-. 使用「volume modify（磁碟區修改）”命令搭配「分層原則（tiering -policy）（參數））、修改現有磁碟區的分層原則：
+. 使用修改現有磁碟區的分層原則 `volume modify` 命令 `-tiering-policy` 參數：
 +
 您可以指定下列分層原則之一：
 
 +
-** 「napshot-only（僅限快照）」（預設）
-** 「自動」
-** 全部
-** 無
+** `snapshot-only` （預設）
+** `auto`
+** `all`
+** `none`
 +
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
 
 
 
-. 如果磁碟區使用「限快照」或「自動」分層原則、而您想要修改分層的最小冷卻時間、請在進階權限層級中使用「Volume modify」命令搭配「分層最低冷卻天數」選用參數。
+. 如果磁碟區使用 `snapshot-only` 或 `auto` 分層原則、而且您想要修改分層的最低冷卻期、請使用 `volume modify` 命令 `-tiering-minimum-cooling-days` 進階權限層級中的選用參數。
 +
 您可以在分層的最小冷卻天數中指定介於2到183之間的值。如果您使用ONTAP 的是9.8之前的版本、則可在分層的最低冷卻天數中指定介於2到63之間的值。
 
 
 
 .修改分層原則的範例、以及磁碟區的分層最低冷卻週期
-以下範例將SVM「'VS1'」中Volume「mytvol'」的分層原則變更為「自動」、並將分層最低冷卻時間變更為45天：
+以下範例將 SVM 「 VS1 」中的 Volume 「 myvol 」分層原則變更為 `auto` 並將最低冷卻時間分層至 45 天：
 
 [listing]
 ----

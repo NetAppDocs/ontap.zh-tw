@@ -22,7 +22,7 @@ summary: 建立子網路來配置或保留特定的IP位址區塊、以供ONTAP 
 .關於這項工作
 * 所有子網路名稱在IPspace內必須是唯一的。
 * 將IP位址範圍新增至子網路時、您必須確保網路中沒有重疊的IP位址、以免不同的子網路或主機嘗試使用相同的IP位址。
-* 如果您在定義子網路時指定閘道、則當使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。如果您不使用子網路、或在定義子網路時未指定閘道、則需要使用「Route create」命令手動新增至SVM的路由。
+* 如果您在定義子網路時指定閘道、則當使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。如果您不使用子網路、或是定義子網路時未指定閘道、則需要使用 `route create` 手動將路由新增至 SVM 的命令。
 
 
 .步驟
@@ -31,22 +31,22 @@ summary: 建立子網路來配置或保留特定的IP位址區塊、以供ONTAP 
 ....
 network subnet create -subnet-name subnet_name -broadcast-domain <broadcast_domain_name> [- ipspace <ipspace_name>] -subnet <subnet_address> [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
 ....
-* 「ubnet_name」是您要建立的第3層子網路名稱。
+* `subnet_name` 為您要建立的第 3 層子網路名稱。
 +
 名稱可以是像「Mgmt」這樣的文字字串、也可以是特定的子網路IP值、例如192.0/24。
 
-* 「broadcast網域名稱」是子網路所在的廣播網域名稱。
-* 「IPspace_name」是廣播網域所屬的IPspace名稱。
+* `broadcast_domain_name` 是子網路所在的廣播網域名稱。
+* `ipspace_name` 是廣播網域所屬的 IPspace 名稱。
 +
 除非您指定此選項的值、否則會使用「預設」IPspace。
 
-* 「Subnet_address」是子網路的IP位址和遮罩、例如192.0/24。
-* 「gateway_address」是子網路預設路由的閘道、例如192.0.2.1。
-* 「ip_address_list」是分配給子網路的IP位址清單或範圍。
+* `subnet_address` 是子網路的 IP 位址和遮罩、例如 192.0.2.0/24 。
+* `gateway_address` 是子網路預設路由的閘道、例如 192.0.2.1 。
+* `ip_address_list` 是將分配給子網路的 IP 位址清單或範圍。
 +
 IP位址可以是個別位址、IP位址範圍、或是以逗號分隔的清單組合。
 
-* 您可以針對「-force-update-lif-關聯」選項設定「true」值。
+* 價值 `true` 可設定為 `-force-update-lif-associations` 選項。
 +
 如果任何服務處理器或網路介面目前正在使用指定範圍內的IP位址、則此命令會失敗。將此值設為true、可將任何手動定址的介面與目前子網路建立關聯、並允許命令成功執行。
 
@@ -65,4 +65,4 @@ network subnet create -subnet-name sub2 -broadcast-domain Default -subnet 3FFE::
 .完成後
 您可以使用子網路中的位址、將SVM和介面指派給IPspace。
 
-如果您需要變更現有子網路的名稱、請使用「network subnet rame」命令。
+如果您需要變更現有子網路的名稱、請使用 `network subnet rename` 命令。

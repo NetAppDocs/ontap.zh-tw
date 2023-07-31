@@ -17,14 +17,14 @@ summary: 您可以建立資料Volume而不指定交會點。結果Volume不會�
 您要在其中建立磁碟區的集合體必須已經存在。
 
 .步驟
-. 使用下列命令建立沒有連接點的磁碟區：「volume create -vserver _vserver_name_-volume _volume _name_-Aggregate _Aggregate name_-size｛integer[kb|MB|GB|TB|PB｝-SECURITY風格｛ntfs|UNIX | mixed}」
+. 使用下列命令建立沒有交會點的磁碟區： `volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed}`
 +
 指定Volume安全樣式為選用項目。如果您未指定安全樣式、ONTAP 則會以套用至儲存虛擬機器（SVM）根磁碟區的相同安全樣式來建立磁碟區。不過、根磁碟區的安全樣式可能不是您要套用到資料磁碟區的安全樣式。建議您在建立磁碟區時指定安全樣式、以將難以疑難排解的檔案存取問題降至最低。
 
 +
-您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱「Volume create」命令的手冊頁。
+您可以使用許多選用參數來自訂資料Volume。若要深入瞭解、請參閱的手冊頁 `volume create` 命令。
 
-. 驗證是否在沒有連接點的情況下建立磁碟區：「volume show -vserver _vserver_name_-volume _volume _name_-jetion」
+. 驗證是否在沒有連接點的情況下建立磁碟區： `volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
 
 
 .範例

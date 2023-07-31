@@ -15,8 +15,8 @@ summary: 啟用S3傳輸協定存取、包括確保啟用NAS的SVM符合與啟用
 
 對於新ONTAP 的版本、建議您在將SVM設定為將NAS資料提供給用戶端之後、啟用SVM的S3傳輸協定存取。若要深入瞭解NAS傳輸協定組態、請參閱：
 
-* link:../nfs-config/index.html["NFS組態"]
-* link:../smb-config/index.html["SMB組態"]
+* link:../nfs-config/index.html["NFS 組態"]
+* link:../smb-config/index.html["SMB 組態"]
 
 
 .開始之前
@@ -65,7 +65,8 @@ summary: 啟用S3傳輸協定存取、包括確保啟用NAS的SVM符合與啟用
 --
 . 驗證SVM是否允許S3傳輸協定：+
 `vserver show -fields allowed-protocols`
-. 記錄此SVM的公開金鑰憑證。+如果ONTAP 需要全新的自我簽署憑證、請參閱 link:../s3-config/create-install-ca-certificate-svm-task.html["在SVM上建立並安裝CA憑證"]。
+. 記錄此SVM的公開金鑰憑證。+
+如果需要新的 ONTAP 自我簽署憑證、請參閱 link:../s3-config/create-install-ca-certificate-svm-task.html["在SVM上建立並安裝CA憑證"]。
 . 更新服務資料原則
 +
 .. 顯示SVM +的服務資料原則
@@ -82,15 +83,18 @@ summary: 啟用S3傳輸協定存取、包括確保啟用NAS的SVM符合與啟用
 
 您可以在建立S3伺服器時或稍後隨時指定其他選項。
 
-* 預設會在連接埠443上啟用HTTPS。您可以使用-secure-listener-port選項來變更連接埠號碼。+啟用HTTPS時、需要CA憑證才能與SSL/TLS適當整合。
-* HTTP預設為停用；啟用時、伺服器會偵聽連接埠80。您可以使用-is啟用http的選項來啟用它、或使用-listener-port選項來變更連接埠編號。+啟用HTTP時、所有的要求和回應都會以純文字透過網路傳送。
+* 預設會在連接埠443上啟用HTTPS。您可以使用-secure-listener-port選項來變更連接埠號碼。+
+啟用HTTPS時、需要CA憑證才能與SSL/TLS適當整合。
+* HTTP預設為停用；啟用時、伺服器會偵聽連接埠80。您可以使用-is啟用http的選項來啟用它、或使用-listener-port選項來變更連接埠編號。+
+啟用HTTP時、所有的要求和回應都會以純文字透過網路傳送。
 
 
 . 驗證是否已根據需要配置S3：+
 `vserver object-store-server show`
 
 
-*範例*+下列命令可驗證所有物件儲存伺服器的組態值：+
+* 範例 * +
+下列命令可驗證所有物件儲存伺服器的組態值： +
 `cluster1::> vserver object-store-server show`
 
 [listing]

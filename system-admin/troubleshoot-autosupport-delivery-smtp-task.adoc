@@ -32,36 +32,36 @@ summary: 如果系統無法透過AutoSupport SMTP傳送不實訊息、您可以�
 .步驟
 . 驗證節點管理LIF的狀態：
 +
-`*網路介面show -home-node-local -role node-mgmt -功能 變數vserver、lif,STATUS-oper、STATUS-admin、address,role *
+`*network interface show -home-node local -role node-mgmt -fields vserver,lif,status-oper,status-admin,address,role*`
 
 +
-「狀態選項」和「狀態管理」欄位應會傳回「UP」。
+。 `status-oper` 和 `status-admin` 欄位應會傳回 `up`。
 
 . 記下SVM名稱、LIF名稱及LIF IP位址以供日後使用。
 . 確認DNS已啟用且設定正確：
 +
-'* vserver服務名稱服務DNS show*
+`*vserver services name-service dns show*`
 
 . 顯示AutoSupport 所有設定供下列對象使用的伺服器：
 +
-系統節點AutoSupport 不顯示字段mail-hosts*
+`*system node autosupport show -fields mail-hosts*`
 
 +
 記錄顯示的所有伺服器名稱。
 
-. 對於上一步顯示的每個伺服器和「upport.netapp.com`」、請確定節點可以連線到伺服器或URL：
+. 針對上一步所顯示的每部伺服器、以及 `support.netapp.com`、請確定節點可以連線到伺服器或 URL ：
 +
-h.* network traceroute節點local -destination_server_name_*
+`*network traceroute -node local -destination _server_name_*`
 
 +
 如果其中任何一條路由無法運作、請使用大多數協力廠商網路用戶端上的「'traceroute」或「`TRACERT」公用程式、嘗試從與叢集位於同一子網路上的正常運作主機發出相同的路由。這有助於判斷問題是發生在您的網路組態或叢集組態中。
 
 . 登入指定為郵件主機的主機、並確保它可以處理下列的SMTP要求：
 +
-‘* netstat-aaaae|grep 25*’
+`*netstat -aAn|grep 25*`
 
 +
-「25」是接聽程式的SMTP連接埠號碼。
+`25` 是接聽程式 SMTP 連接埠號碼。
 
 +
 此時會顯示類似下列文字的訊息：
@@ -73,7 +73,7 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 ----
 . 從其他主機、開啟與郵件主機之SMTP連接埠的遠端登入工作階段：
 +
-[* Telnet_mailhost_25*（登錄_mailhost_25*）]
+`*telnet _mailhost_ 25*`
 
 +
 此時會顯示類似下列文字的訊息：
@@ -86,29 +86,30 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 ----
 . 在登入提示字元時、請確定訊息可以從您的郵件主機轉送：
 +
-hy*hiLO_domain_name_*
+`*HELO _domain_name_*`
 
 +
-郵件寄件者：_yue_email_address_*
+`*MAIL FROM: _your_email_address_*`
 
 +
-「* RCPt To：\autosupport@netapp.com *」
+`*RCPT TO: \autosupport@netapp.com*`
 
 +
-「Domain_name」是您網路的網域名稱。
+`domain_name` 是您網路的網域名稱。
 
 +
 如果傳回錯誤、指出中繼遭拒、則不會在郵件主機上啟用中繼。請聯絡您的系統管理員。
 
 . 在登入提示字元下、傳送測試訊息：
 +
-*資料*
+`*DATA*`
 
 +
-主題：test*（測試*）、*這是一項測試*
+`*SUBJECT: TESTING*`
+`*THIS IS A TEST*`
 
 +
-*。*
+`*.*`
 
 +
 [NOTE]
@@ -121,21 +122,21 @@ hy*hiLO_domain_name_*
 
 . 從這個指令行介面、將一份不實的測試訊息傳送到您有權存取的信任電子郵件地址：ONTAP AutoSupport
 +
-‘*系統節點AutoSupport 可叫用節點本機類型test*
+`*system node autosupport invoke -node local -type test*`
 
 . 尋找嘗試的順序編號：
 +
-系統節點AutoSupport 的不全歷史記錄顯示節點本機-目的地SMTP*
+`*system node autosupport history show -node local -destination smtp*`
 
 +
 根據時間戳記尋找嘗試的順序編號。這可能是最近的嘗試。
 
 . 顯示測試訊息嘗試的錯誤：
 +
-系統節點AutoSupport 的不全歷史記錄顯示節點local -sq-num seq_um -Fields error*
+`*system node autosupport history show -node local -seq-num seq_num -fields error*`
 
 +
-如果顯示的錯誤為「Login Denied（登入遭拒）」、表示您的SMTP伺服器不接受來自叢集管理LIF的傳送要求。如果您不想變更為使用HTTPS作為傳輸傳輸協定、請聯絡您的站台網路管理員、設定以解決此問題的SMTP閘道。
+如果顯示錯誤 `Login denied`，您的 SMTP 伺服器不接受叢集管理 LIF 的傳送要求。如果您不想變更為使用HTTPS作為傳輸傳輸協定、請聯絡您的站台網路管理員、設定以解決此問題的SMTP閘道。
 
 +
 如果此測試成功、但傳送至mailto：autosupport@netapp.com的同一訊息卻沒有、請確定所有的SMTP郵件主機都已啟用了SMTP轉送、或使用HTTPS作為傳輸傳輸傳輸傳輸傳輸協定。

@@ -30,7 +30,7 @@ summary: 從功能升級至功能區9.7開始ONTAP 、FlexVol 您可以在不Fle
 
 
 .步驟
-. 驗證FlexVol 此現象是否在線上：「Volume show vol_name -vol-形式extended、state」（Volume show vol_name -volume樣式擴充、狀態）
+. 驗證 FlexVol Volume 是否在線上： `volume show vol_name -volume-style-extended,state`
 +
 [listing]
 ----
@@ -41,8 +41,8 @@ vs0     my_volume online flexvol
 ----
 . 驗證FlexVol 是否可在不發生問題的情況下轉換此功能：
 +
-.. 登入進階權限模式：「et -priv榮幸 進階」
-.. 驗證轉換程序：「Volume Conversion start -vserver VS1 -volume FlexVol se-contrate-only true」
+.. 登入進階權限模式： `set -privilege advanced`
+.. 驗證轉換程序： `volume conversion start -vserver vs1 -volume flexvol -check-only true`
 +
 在轉換磁碟區之前、您必須先修正所有錯誤。
 
@@ -54,7 +54,7 @@ vs0     my_volume online flexvol
 ====
 
 
-. 開始轉換：「Volume conversion start -vserver Svm_name -volume vol_name」
+. 開始轉換： `volume conversion start -vserver svm_name -volume vol_name`
 +
 [listing]
 ----
@@ -67,7 +67,7 @@ Warning: Converting flexible volume "my_volume" in Vserver "vs0" to a FlexGroup
 Do you want to continue? {y|n}: y
 [Job 57] Job succeeded: success
 ----
-. 確認轉換成功：「Volume show vol_name -功能 變數-vol-形式 擴充、state」
+. 確認轉換成功： `volume show vol_name -fields -volume-style-extended,state`
 +
 [listing]
 ----

@@ -11,7 +11,7 @@ summary: 可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保�
 
 
 [role="lead"]
-可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保用戶端檔案作業要求使用有效的qtree ID、而且用戶端只能在同一個qtree內移動檔案。您可以修改「-valide-qtree匯出」參數來啟用或停用此驗證。此參數預設為啟用。
+可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保用戶端檔案作業要求使用有效的qtree ID、而且用戶端只能在同一個qtree內移動檔案。您可以修改來啟用或停用此驗證 `-validate-qtree-export` 參數。此參數預設為啟用。
 
 .關於這項工作
 此參數僅在您已將匯出原則直接指派給儲存虛擬機器（SVM）上的一或多個qtree時有效。
@@ -19,7 +19,7 @@ summary: 可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保�
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 執行下列其中一項動作：
 +
@@ -31,18 +31,18 @@ summary: 可選擇性地執行qtree ID的額外驗證。ONTAP此驗證可確保�
  a| 
 已啟用
  a| 
-「vserver NFS modify -vserver vserver_name -valide-qtree匯出已啟用」
+`vserver nfs modify -vserver vserver_name -validate-qtree-export enabled`
 
 
 
  a| 
 已停用
  a| 
-「vserver NFS modify -vserver vserver_name -valide-qtree匯出已停用」
+`vserver nfs modify -vserver vserver_name -validate-qtree-export disabled`
 
 |===
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

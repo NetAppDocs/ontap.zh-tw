@@ -14,9 +14,9 @@ summary: 在Volume或qtree上設定儲存層級存取保護時、您需要遵循
 在Volume或qtree上設定儲存層級存取保護時、您需要遵循許多步驟。儲存層級的存取保護可提供在儲存層級設定的存取安全性層級。它提供的安全性適用於從所有NAS傳輸協定到套用它的儲存物件的所有存取。
 
 .步驟
-. 使用「vserver安全性檔案目錄NTFS create」命令建立安全性描述元。
+. 使用建立安全性描述元 `vserver security file-directory ntfs create` 命令。
 +
-「Vserver安全性檔案目錄NTFS create -vserver VS1 -nts-SD SD1」「vserver安全性檔案目錄NTFS show -vserver VS1」
+`vserver security file-directory ntfs create -vserver vs1 -ntfs-sd sd1` `vserver security file-directory ntfs show -vserver vs1`
 
 +
 [listing]
@@ -54,19 +54,19 @@ Vserver: vs1
 
 . 從安全性描述元中移除任何您不想設定儲存層級存取保護安全性的預設DACL ACE：
 +
-.. 使用「vserver安全性檔案目錄NTFS DACL移除」命令移除任何不想要的DACL ACE。
+.. 使用移除任何不想要的 DACL ACE `vserver security file-directory ntfs dacl remove` 命令。
 +
 在此範例中、安全性描述元中會移除三個預設的DACL ACE：BUILTIN\Administrator、BUILTIN\Users和Creator Owners。
 
 +
-「vserver安全性檔案目錄NTFS DACL移除-vserver VS1 -ntfs-SD SD1 -access-ttype allow -Account builtin\users'「vserver安全性檔案目錄NTFS DACL移除-vserver VS1 -ntfs-SD SD1 -access-type允許-Account builtin\管理員'「vserver安全性檔案目錄NTFS DACL移除-vserver s1」-vserver s1型s1允許存取s1
+`vserver security file-directory ntfs dacl remove -vserver vs1 -ntfs-sd sd1 -access-type allow -account builtin\users` `vserver security file-directory ntfs dacl remove -vserver vs1 -ntfs-sd sd1 -access-type allow -account builtin\administrators` `vserver security file-directory ntfs dacl remove -vserver vs1 -ntfs-sd sd1 -access-type allow -account "creator owner"`
 
-.. 使用「vserver安全性檔案目錄NTFS DACL show」命令、確認您不想用於儲存層級存取保護安全性的DACL ACE已從安全性描述元中移除。
+.. 請使用確認您不想用於儲存層級存取保護安全性的 DACL ACE 已從安全性描述元中移除 `vserver security file-directory ntfs dacl show` 命令。
 +
 在此範例中、命令的輸出會驗證安全性描述元中是否已移除三個預設的DACL ACE、只留下NT AUTORITY\SYSTEM預設的DACL ACE項目：
 
 +
-「Vserver安全檔案目錄NTFS DACL show -vserver VS1」
+`vserver security file-directory ntfs dacl show -vserver vs1`
 
 +
 [listing]
@@ -83,26 +83,26 @@ Vserver: vs1
 ----
 
 
-. 使用「vserver安全性檔案目錄NTFS DACL add」命令、將一或多個DACL項目新增至安全性描述元。
+. 使用將一或多個 DACL 項目新增至安全性描述元 `vserver security file-directory ntfs dacl add` 命令。
 +
 在此範例中、安全性描述元中會新增兩個DACL ACE：
 
 +
-「vserver安全性檔案目錄NTFS DACL add -vserver VS1 -ntfs-SD SD1 -access-ttype allow -account範例\Engineering -權限完整控制-套用至此資料夾、子資料夾、檔案」「vserver安全性檔案目錄NTFS DACL add -vserver VS1 -ntfs-SD SD1 -access-ttype允許-Account「範例\網域使用者」-套用此子資料夾的權限
+`vserver security file-directory ntfs dacl add -vserver vs1 -ntfs-sd sd1 -access-type allow -account example\engineering -rights full-control -apply-to this-folder,sub-folders,files` `vserver security file-directory ntfs dacl add -vserver vs1 -ntfs-sd sd1 -access-type allow -account "example\Domain Users" -rights read -apply-to this-folder,sub-folders,files`
 
-. 使用「vserver安全檔案目錄NTFS SACL add」命令、將一或多個SACL項目新增至安全性描述元。
+. 使用將一或多個 SACL 項目新增至安全性描述元 `vserver security file-directory ntfs sacl add` 命令。
 +
-在此範例中、安全性描述元中會新增兩個SACL ACE：
+在此範例中、兩個 SACL ACE 會新增至安全性描述元：
 
 +
-「vserver安全性檔案目錄NTFS SACL add -vserver VS1 -ntfs-SD SD1 -access-ttype故障-Account「範例\網域使用者」-rights read -apple-to this資料夾、子資料夾、檔案」「vserver安全性檔案目錄NTFS SACL add -vserver VS1 -ntfs-SD SD1 -access-ttype sum -account somep-fer-apply -f-trise -fer-fmuty文件夾、se-file、se-apply、se-file、se-fs-apply、se-file
+`vserver security file-directory ntfs sacl add -vserver vs1 -ntfs-sd sd1 -access-type failure -account "example\Domain Users" -rights read -apply-to this-folder,sub-folders,files` `vserver security file-directory ntfs sacl add -vserver vs1 -ntfs-sd sd1 -access-type success -account example\engineering -rights full-control -apply-to this-folder,sub-folders,files`
 
-. 分別使用「vserver安全檔案目錄NTFS DACL show」和「vserver安全檔案目錄NTFS SACL show」命令、確認DACL和SACL ACE的設定正確。
+. 使用確認 DACL 和 SACL ACE 已正確設定 `vserver security file-directory ntfs dacl show` 和 `vserver security file-directory ntfs sacl show` 命令。
 +
 在此範例中、下列命令會顯示安全性描述元「'shd1」的DACL項目資訊：
 
 +
-「Vserver安全性檔案目錄NTFS DACL show -vserver VS1 -NTFs-SD SD1」
+`vserver security file-directory ntfs dacl show -vserver vs1 -ntfs-sd sd1`
 
 +
 [listing]
@@ -125,7 +125,7 @@ Vserver: vs1
 在此範例中、下列命令會顯示安全性描述元「'shd1'」的SACL項目相關資訊：
 
 +
-「Vserver安全性檔案目錄NTFS SACL show -vserver VS1 -NTFs-SD SD1」
+`vserver security file-directory ntfs sacl show -vserver vs1 -ntfs-sd sd1`
 
 +
 [listing]
@@ -142,16 +142,16 @@ Vserver: vs1
     EXAMPLE\engineering
                      success  full-control   this-folder, sub-folders, files
 ----
-. 使用「vserver安全性檔案目錄原則create」命令建立安全性原則。
+. 使用建立安全性原則 `vserver security file-directory policy create` 命令。
 +
 以下範例建立名為「policy1'」的原則：
 
 +
-「vserver安全性檔案目錄原則create -vserver VS1 -police-name policy1」
+`vserver security file-directory policy create -vserver vs1 -policy-name policy1`
 
-. 使用「vserver安全性檔案目錄原則show」命令、確認原則設定正確。
+. 使用確認原則已正確設定 `vserver security file-directory policy show` 命令。
 +
-「Vserver安全檔案目錄原則顯示」
+`vserver security file-directory policy show`
 
 +
 [listing]
@@ -166,14 +166,14 @@ Vserver: vs1
 即使原則可以包含多個儲存層級的存取保護工作、您也無法將原則設定為同時包含檔案目錄和儲存層級的存取保護工作。原則必須包含所有儲存層級的存取保護工作或所有檔案目錄工作。
 
 +
-在此範例中、工作會新增至名為「policy1」的原則、該原則會指派給安全性描述元「shD1」。它會指派給「/datavol1」路徑、存取控制類型設為「shlag」。
+在此範例中、工作會新增至名為「policy1」的原則、該原則會指派給安全性描述元「shD1」。它會指派給 `/datavol1` 存取控制類型設為「 lag 」的路徑。
 
 +
-「Vserver安全性檔案目錄原則工作add -vserver VS1 -policy-name policy1 -path /datavol1 -access-controllag -security-type NTFS -ntfs-mode exp -ntfs-SD SD1」
+`vserver security file-directory policy task add -vserver vs1 -policy-name policy1 -path /datavol1 -access-control slag -security-type ntfs -ntfs-mode propagate -ntfs-sd sd1`
 
-. 使用「vserver安全性檔案目錄原則工作show」命令、確認工作已正確設定。
+. 使用確認工作已正確設定 `vserver security file-directory policy task show` 命令。
 +
-「vserver安全性檔案目錄原則工作show -vserver VS1 -policy-name policy1」
+`vserver security file-directory policy task show -vserver vs1 -policy-name policy1`
 
 +
 [listing]
@@ -187,19 +187,19 @@ Vserver: vs1
    -----  -----------  ---------------  --------  ---------- ---------------
    1      /datavol1    slag             ntfs      propagate  sd1
 ----
-. 使用「vserver安全性檔案目錄套用」命令套用儲存層級的存取保護安全性原則。
+. 使用套用儲存層級存取保護安全性原則 `vserver security file-directory apply` 命令。
 +
-「vserver安全性檔案目錄套用-vserver VS1 -police-name policy1」
+`vserver security file-directory apply -vserver vs1 -policy-name policy1`
 
 +
 已排程要套用安全性原則的工作。
 
-. 使用「vserver安全檔案目錄show」命令、確認套用的儲存層級存取保護安全性設定正確無誤。
+. 使用驗證套用的儲存層級存取保護安全性設定是否正確 `vserver security file-directory show` 命令。
 +
-在此範例中、命令的輸出顯示儲存層級存取保護安全性已套用至NTFS磁碟區「/datavol1」。即使預設的DACL允許「所有人」完全控制、儲存層級的存取保護安全性仍會限制（及稽核）存取儲存層級存取保護設定中定義的群組。
+在此範例中、命令的輸出顯示儲存層級存取保護安全性已套用至 NTFS 磁碟區 `/datavol1`。即使預設的DACL允許「所有人」完全控制、儲存層級的存取保護安全性仍會限制（及稽核）存取儲存層級存取保護設定中定義的群組。
 
 +
-「vserver安全性檔案目錄show -vserver VS1 -path /datavol1」
+`vserver security file-directory show -vserver vs1 -path /datavol1`
 
 +
 [listing]

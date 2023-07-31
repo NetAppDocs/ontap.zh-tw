@@ -84,7 +84,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 
 image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表。]
 
-. 識別組態中的DR配對：MetroCluster 「不二節點show -Fields DR-Partner」
+. 識別組態中的 DR 配對： `metrocluster node show -fields dr-partner`
 +
 [listing]
 ----
@@ -100,13 +100,13 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 
  cluster_A::>
 ----
-. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
 . 確認ONTAP 每個節點上執行的版本：
 +
-.. 確認叢集A上的版本：「System image show」（系統映像顯示）
+.. 確認叢集 A 上的版本： `system image show`
 +
 [listing]
 ----
@@ -124,7 +124,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 
  cluster_A::>
 ----
-.. 確認叢集B上的版本：「System image show」（系統映像顯示）
+.. 確認叢集 B 上的版本： `system image show`
 +
 [listing]
 ----
@@ -144,20 +144,20 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 ----
 
 
-. 觸發AutoSupport 一個功能不全的通知：「AutoSupport 不完整地叫用-node*-type all -messing_NDU」
+. 觸發AutoSupport 功能不支援通知： `autosupport invoke -node * -type all -message "Starting_NDU"`
 +
 本資訊更新通知包含更新前系統狀態的記錄。AutoSupport如果更新程序發生問題、它會儲存有用的疑難排解資訊。
 
 +
 如果您的叢集未設定為傳送AutoSupport 功能性訊息、則通知複本會儲存在本機。
 
-. 針對第一組中的每個節點、將目標ONTAP SURFESS-軟體映像設為預設映像：「系統映像修改｛節點節點名稱-is潮流 錯誤｝-IsDefault true」
+. 針對第一組中的每個節點、將目標 ONTAP 軟體映像設為預設映像： `system image modify {-node nodename -iscurrent false} -isdefault true`
 +
 此命令會使用延伸查詢、將安裝為替代映像的目標軟體映像變更為節點的預設映像。
 
 . 驗證目標ONTAP 不實軟體映像是否設為預設映像：
 +
-.. 驗證叢集A上的映像：「System image show」（系統映像顯示）
+.. 驗證叢集 A 上的映像： `system image show`
 +
 在下列範例中、image2是新ONTAP 的版本、並在第一組的每個節點上設為預設影像：
 
@@ -177,7 +177,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 
  2 entries were displayed.
 ----
-.. 驗證叢集B上的映像：「System image show」（系統映像顯示）
+.. 驗證叢集 B 上的映像： `system image show`
 +
 下列範例顯示、目標版本已設定為第一組中每個節點的預設映像：
 
@@ -199,7 +199,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 ----
 
 
-. 判斷要升級的節點目前是否為每個節點提供兩次用戶端服務：「System Node run -node-node-command uptime」（系統節點執行節點目標節點命令正常運作時間）
+. 確定要升級的節點目前是否為每個節點提供兩次任何用戶端服務： `system node run -node target-node -command uptime`
 +
 正常運作時間命令會顯示節點自上次開機以來、針對NFS、CIFS、FC和iSCSI用戶端執行的作業總數。對於每個傳輸協定、您需要執行兩次命令、以判斷作業數是否增加。如果數量不斷增加、則節點目前正在為該傳輸協定的用戶端提供服務。如果不增加、則節點目前不會為該傳輸協定的用戶端提供服務。
 
@@ -233,11 +233,11 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 如果您已在ONTAP 第一個DR群組上更新了該軟件、並正在更新八節點MetroCluster 的版本資訊功能組態中的第二個DR群組、在此工作中、您將會更新node_a_3和node_b_3。
 
 . 如果MetroCluster 啟用了《斷電器軟體》、請將其停用。
-. 針對HA配對中的每個節點、停用自動還原：「儲存容錯移轉修改節點目標節點-自動還原錯誤」
+. 針對 HA 配對中的每個節點、停用自動恢復： `storage failover modify -node target-node -auto-giveback false`
 +
 此命令必須針對HA配對中的每個節點重複執行。
 
-. 驗證自動恢復功能是否已停用：「torage容錯移轉顯示欄位自動恢復」
+. 確認已停用自動恢復： `storage failover show -fields auto-giveback`
 +
 此範例顯示兩個節點上的自動恢復功能均已停用：
 
@@ -257,7 +257,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
 
 +
-.. 接管叢集A（node_a_1）上的DR合作夥伴：「儲存容錯移轉接管-ofnode_a_1`
+.. 接管叢集 A （ node_a_1 ）上的 DR 合作夥伴：``storage failover takeover -ofnode node_A_1``
 +
 節點會開機至「等待恢復」狀態。
 
@@ -265,7 +265,7 @@ image::../media/mcc_dr_groups_8_node.gif[八節點 MetroCluster 組態的圖表�
 
 NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
 
-.. 驗證接管是否成功：「儲存容錯移轉顯示」
+.. 確認接管成功： `storage failover show`
 +
 以下範例顯示接管作業成功。node_a_1處於「等待恢復」狀態、node_a_2則處於「接管」狀態。
 
@@ -287,7 +287,7 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
 
 +
-.. 接管node_B_1：「torage容錯移轉接管-ofnode_B_1」
+.. 接管 node_B_1 ： `storage failover takeover -ofnode node_B_1`
 +
 節點會開機至「等待恢復」狀態。
 
@@ -295,7 +295,7 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 
 NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
 
-.. 驗證接管是否成功：「儲存容錯移轉顯示」
+.. 確認接管成功： `storage failover show`
 +
 以下範例顯示接管作業成功。node_B_1處於「等待恢復」狀態、node_B_2則處於「接管」狀態。
 
@@ -326,14 +326,14 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5或更新版本之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。
 
 +
-.. 將Aggregate歸還給叢集_A上的DR合作夥伴：「儲存容錯移轉恢復–ofnode_a_1」
-.. 將Aggregate歸還給叢集B上的DR合作夥伴：「torage容錯移轉恢復–ofnode_b_1」
+.. 將集合物傳回叢集 A 上的 DR 合作夥伴： `storage failover giveback –ofnode node_A_1`
+.. 將集合物傳回叢集 B 上的 DR 合作夥伴： `storage failover giveback –ofnode node_B_1`
 +
 恢復作業會先將根Aggregate傳回節點、然後在節點完成開機之後、傳回非根Aggregate。
 
 
 
-. 請在兩個叢集上發出下列命令、確認所有的集合體都已傳回：「儲存容錯移轉show -gorback」
+. 在兩個叢集上發出下列命令、確認已傳回所有的集合體： `storage failover show-giveback`
 +
 如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪個子系統已對恢復執行了指令。
 
@@ -356,11 +356,11 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 
 
 
-. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
+. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
-. 確認叢集A上的版本：「System image show」（系統映像顯示）
+. 確認叢集 A 上的版本： `system image show`
 +
 下列範例顯示、節點a_1上的系統影像2應為預設版本和目前版本：
 
@@ -381,7 +381,7 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 
  cluster_A::>
 ----
-. 確認叢集B上的版本：「System image show」（系統映像顯示）
+. 確認叢集 B 上的版本： `system image show`
 +
 下列範例顯示、節點ONTAP _a_1上的系統影像2（0版）為預設版本和目前版本：
 
@@ -423,11 +423,11 @@ NOTE: 如果啟用了「支援」、則會傳送一則消息「不支援」、�
 +
 .. 接管叢集_A上的DR合作夥伴：
 +
-「容錯移轉接管-節點節點_a_2選項允許版本不符」
+`storage failover takeover -ofnode node_A_2 -option allow-version-mismatch`
 
 +
 
-NOTE: 從BIOS 9.0升級ONTAP 至ONTAP BIOS 9.1或任何修補程式升級時、不需要使用「允許版本不符」選項。
+NOTE: 。 `allow-version-mismatch` 從 ONTAP 9.0 升級至 ONTAP 9.1 或任何修補程式升級時、都不需要選項。
 
 +
 節點會開機至「等待恢復」狀態。
@@ -435,7 +435,7 @@ NOTE: 從BIOS 9.0升級ONTAP 至ONTAP BIOS 9.1或任何修補程式升級時、�
 +
 如果啟用了「支援」、則會傳送一則消息「不支援」、指出節點已超出叢集仲裁。AutoSupport AutoSupport您可以忽略此通知並繼續升級。
 
-.. 驗證接管是否成功：「儲存容錯移轉顯示」
+.. 確認接管成功： `storage failover show`
 +
 以下範例顯示接管作業成功。node_a_2處於「等待恢復」狀態、node_a_1處於「接管」狀態。
 
@@ -457,7 +457,7 @@ node_A_2       node_A_1       -        Waiting for giveback (HA mailboxes)
 請勿指定-option Immediate參數、因為要重新啟動至新軟體映像的節點需要正常接管。
 
 +
-.. 接管叢集B（node_B_2）上的DR合作夥伴：
+.. 接管叢集 B 上的 DR 合作夥伴（ node_B_2 ）：
 +
 [cols="2*"]
 |===
@@ -465,16 +465,17 @@ node_A_2       node_A_1       -        Waiting for giveback (HA mailboxes)
 
 
  a| 
-部分版本ONTAP ONTAP
+ONTAP 9.2 或 ONTAP 9.1
  a| 
-'容錯移轉接管-節點節點_B_2'
+`storage failover takeover -ofnode node_B_2`
 
 
 
  a| 
-部分版本的升級版ONTAP Data ONTAP
+ONTAP 9.0 或 Data ONTAP 8.3.x
  a| 
-「容錯移轉接管-節點節點_B_2 -選項允許版本不符」附註：ONTAP 「允許版本不符」選項不適用於從BIOS 9.0升級至ONTAP 更新版本至更新版本或任何修補程式升級。
+`storage failover takeover -ofnode node_B_2 -option allow-version-mismatch`
+附註 `allow-version-mismatch` 從 ONTAP 9.0 升級至 ONTAP 9.1 或任何修補程式升級時、都不需要選項。
 
 |===
 
@@ -483,9 +484,10 @@ node_A_2       node_A_1       -        Waiting for giveback (HA mailboxes)
 
 節點會開機至「等待恢復」狀態。
 
-+附註：如果AutoSupport 啟用了S廳、AutoSupport 系統會傳送一則不確定訊息、指出節點已超出叢集仲裁。您可以安全地忽略此通知並繼續升級。
++
+附註：如果啟用 AutoSupport 、則會傳送 AutoSupport 訊息、指出節點已超出叢集仲裁。您可以安全地忽略此通知並繼續升級。
 
-. 驗證接管是否成功：「儲存容錯移轉顯示」
+. 確認接管成功： `storage failover show`
 +
 以下範例顯示接管作業成功。node_B_2處於「等待恢復」狀態、node_B_1處於「接管中」狀態。
 
@@ -516,13 +518,13 @@ node_B_2       node_B_1       -        Waiting for giveback (HA mailboxes)
 
 
 
-. 將Aggregate歸還給叢集_A上的DR合作夥伴：「儲存容錯移轉恢復–ofnode_a_2」
-. 將Aggregate歸還給叢集B上的DR合作夥伴：「torage容錯移轉恢復–ofnode_b_2」
+. 將集合物傳回叢集 A 上的 DR 合作夥伴： `storage failover giveback –ofnode node_A_2`
+. 將集合物傳回叢集 B 上的 DR 合作夥伴： `storage failover giveback –ofnode node_B_2`
 +
 恢復作業會先將根Aggregate傳回節點、然後在節點完成開機之後、傳回非根Aggregate。
 
 +
-.. 請在兩個叢集上發出下列命令、確認所有的集合體都已傳回：「儲存容錯移轉show -gorback」
+.. 在兩個叢集上發出下列命令、確認已傳回所有的集合體： `storage failover show-giveback`
 +
 如果「歸還狀態」欄位指出沒有要歸還的集合體、則會傳回所有集合體。如果恢復被否決、命令會顯示恢復進度、以及哪個子系統已對恢復執行了指令。
 
@@ -533,17 +535,21 @@ node_B_2       node_B_1       -        Waiting for giveback (HA mailboxes)
 . 如有必要、請解決錯誤訊息中所述的「『驗證』條件、確保所有已識別的作業都能正常終止。
 . 重新輸入儲存容錯移轉恢復命令。
 +
-如果您決定覆寫「vito'」條件、請將-overre-etoes參數設為true。。至少等待八分鐘、以確保下列情況穩定：*用戶端多重路徑（若已部署）。**用戶端會從還原期間發生的I/O暫停中恢復。
+如果您決定覆寫「vito'」條件、請將-overre-etoes參數設為true。
+。至少等待八分鐘、以確保發生下列情況：
+ ** 用戶端多重路徑（若已部署）已穩定下來。
+ **用戶端會從還原期間發生的I/O暫停中恢復。
 
 +
-+恢復時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
++
+還原時間是用戶端專屬的、視用戶端應用程式的特性而定、可能需要8分鐘以上的時間。
 
 +
-.. 將權限等級從admin設定為進階、並在系統提示您繼續時輸入* y*：「et -priv
+.. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ： `set -privilege advanced`
 +
-出現進階提示（「*>」）。
+進階提示 (`*>`）。
 
-.. 確認叢集A上的版本：「System image show」（系統映像顯示）
+.. 確認叢集 A 上的版本： `system image show`
 +
 下列範例顯示、節點ONTAP _a_2上的系統影像2（目標版本）為預設版本和目前版本：
 
@@ -564,7 +570,7 @@ node_A_2
 
 cluster_A::>
 ----
-.. 確認叢集B上的版本：「System image show」（系統映像顯示）
+.. 確認叢集 B 上的版本： `system image show`
 +
 下列範例顯示、節點ONTAP _B_2上的系統影像2（目標版本）為預設版本和目前版本：
 
@@ -585,11 +591,11 @@ node_B_2
 
 cluster_A::>
 ----
-.. 針對HA配對中的每個節點、啟用自動還原：「儲存容錯移轉修改節點目標節點-自動恢復為真」
+.. 針對 HA 配對中的每個節點、啟用自動恢復： `storage failover modify -node target-node -auto-giveback true`
 +
 此命令必須針對HA配對中的每個節點重複執行。
 
-.. 驗證是否已啟用自動還原：「torage容錯移轉顯示欄位自動還原」
+.. 確認已啟用自動恢復： `storage failover show -fields auto-giveback`
 +
 此範例顯示兩個節點均已啟用自動恢復功能：
 

@@ -14,57 +14,60 @@ summary: 您可以將現有的零恢復點保護（零RPO）同步SnapMirror關�
 
 
 [role="lead"]
-您可以將現有的零恢復點保護（零RPO）同步SnapMirror關係、轉換成SMBC零RTO同步SnapMirror一致性群組關係。
+如果來源叢集與目的地叢集之間有現有的同步 SnapMirror 關係、您可以將其轉換為 SM-BC 關係。這可讓您將鏡射的磁碟區與一致性群組建立關聯、確保在多個磁碟區工作負載之間維持零 RPO 。此外、如果您需要在建立 SM-BC 關係之前還原到某個時間點、也可以保留現有的 SnapMirror 快照。
 
 .開始之前
-* 一線和二線之間存在零RPO同步SnapMirror關係。
-* 在建立零RTO SnapMirror關係之前、會先取消對應目的地磁碟區上的所有LUN。
+* 主叢集與次叢集之間必須存在零 RPO 同步 SnapMirror 關係。
+* 必須先取消對應目的地磁碟區上的所有 LUN 、才能建立零 RTO SnapMirror 關係。
 * SMBC僅支援SAN傳輸協定（非NFS/CIFS）。確保沒有為NAS存取安裝一致性群組的任何成員。
 
 
 .關於這項工作
-* 您必須是來源和目的地的叢集和SVM管理員。
+* 您必須是主叢集和次叢集上的叢集和 SVM 管理員。
 * 您無法變更SnapMirror原則、將零RPO轉換為零RTO同步。
-* 如果已對應次要磁碟區上的現有LUN、則使用AutomatedFailover原則建立的「napmirror create」會觸發錯誤。在發出「napmirror creation」命令之前、您必須先確定LUN已取消對應。
+* 在發行之前、您必須確定 LUN 已取消對應 `snapmirror create` 命令。
++
+如果次要磁碟區上的現有 LUN 已對應、則會對應 `AutomatedFailover` 原則已設定為 `snapmirror create` 會觸發錯誤。
+
 
 
 .步驟
-. 針對現有關係執行SnapMirror更新作業：
+. 從次叢集、對現有關係執行 SnapMirror 更新：
 +
-「目的地：」：>SnapMirror更新-dite-path VS1_dst:vol1
+`destination::>snapmirror update -destination-path vs1_dst:vol1`
 
 . 驗證SnapMirror更新是否成功完成：
 +
-「目的地：：>SnapMirror show」
+`destination::>snapmirror show`
 
 . 靜止每個零RPO同步關係：
 +
-「目的地：：：>SnapMirror靜止-dite-path VS1_dst:vol1」
+`destination::>snapmirror quiesce -destination-path vs1_dst:vol1`
 
 +
-「目的地：：：>SnapMirror靜止-dite-path VS1_dst:vol2」
+`destination::>snapmirror quiesce -destination-path vs1_dst:vol2`
 
 . 刪除零RPO同步關係：
 +
-「目的地：」：>SnapMirror刪除-dite-path VS1_dst:vol1
+`destination::>snapmirror delete -destination-path vs1_dst:vol1`
 
 +
-「目的地：」：>SnapMirror刪除-dite-path VS1_dst:vol2
+`destination::>snapmirror delete -destination-path vs1_dst:vol2`
 
 . 釋放來源SnapMirror關係、但保留常見的Snapshot複本：
 +
-「來源：：>SnapMirror版本-僅關係資訊true -dite-path VS1_dst:vol1'
+`source::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol1`
 
 +
-「來源：：>SnapMirror版本-僅關係資訊true -dite-path VS1_dst:vol2」
+`source::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol2`
 
 . 建立群組零RTO同步SnapMirror關係：
 +
-「目的地：」：> SnapMirror create -source-path VS1_SRS:/ccc/cm_src -dite-path VS1_dst:/cc/cc_dst -cc-item對應vol1：@vol1、vol2：@vol2 - policy AutomatedFailover
+`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol1:@vol1,vol2:@vol2 -policy AutomatedFailover`
 
-. 重新同步零RTO一致性群組：
+. 重新同步一致性群組：
 +
-「目的地：」：> SnapMirror重新同步-dest-path VS1_dst../cg / Cg _dst
+`destination::> snapmirror resync -destination-path vs1_dst:/cg/cg_dst`
 
 . 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
 

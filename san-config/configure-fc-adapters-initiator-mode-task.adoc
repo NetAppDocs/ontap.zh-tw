@@ -29,26 +29,26 @@ NVMe / FC支援啟動器模式。
 .步驟
 . 移除介面卡上的所有LIF：
 +
-「網路介面刪除-vserver _Svm_name_-lif_lif_name_、_lif_name_」
+`network interface delete -vserver _SVM_name_ -lif _lif_name_,_lif_name_`
 
 . 讓介面卡離線：
 +
-「網路FCP介面卡修改-node_node_name_-Adapter _adapter_port_-stue-admin down」
+`network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -status-admin down`
 
 +
 如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
 
 . 將介面卡從目標變更為啟動器：
 +
-「系統硬體統一連線修改-t啟動器_adapter_port_」
+`system hardware unified-connect modify -t initiator _adapter_port_`
 
 . 重新啟動裝載您所變更介面卡的節點。
 . 驗證FC連接埠的組態設定是否正確：
 +
-「系統硬體統一連線展示」
+`system hardware unified-connect show`
 
 . 將介面卡重新連線：
 +
-「節點執行節點節點_norme_name_儲存設備啟用介面卡_adapter_port_」
+`node run -node _node_name_ storage enable adapter _adapter_port_`
 
 

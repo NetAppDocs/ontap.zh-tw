@@ -49,9 +49,9 @@ Vserver      User Name                Full Name      Description
 vs1_dst      CIFS1_DST\Administrator                 Built-in administrator account
 vs1_dst      CIFS1_DST\user1          -              -
 ----
-雖然本機使用者和群組資料庫中的本機使用者和群組名稱會自動變更、但不會在檔案目錄原則組態中自動變更本機使用者或群組名稱（在CLI上使用「vserver安全檔案目錄」命令系列設定的原則）。
+雖然本機使用者和群組資料庫中的本機使用者和群組名稱會自動變更、但檔案目錄原則組態中的本機使用者或群組名稱不會自動變更（使用在 CLI 上設定的原則） `vserver security file-directory` Command Family ）。
 
-例如、對於「VS1」、如果您已設定DACL項目、其中「-Account」參數設為「'CIFS1\user1'」、則目的地SVM上的設定不會自動變更、以反映目的地的CIFS伺服器名稱。
+例如、如果您已設定 DACL 項目、其中會顯示「 'VS1' 」 `-account` 參數設為「 'CIFS1\user1' 」、目的地 SVM 上的設定不會自動變更、以反映目的地的 CIFS 伺服器名稱。
 
 [listing]
 ----
@@ -75,7 +75,7 @@ Vserver: vs1_dst
     --------------   -------  -------            -----------
     **CIFS1**\user1          allow    full-control      this-folder
 ----
-您必須使用「vserver安全性檔案目錄修改」命令、手動將CIFS伺服器名稱變更為目的地CIFS伺服器名稱。
+您必須使用 `vserver security file-directory modify` 手動將 CIFS 伺服器名稱變更為目的地 CIFS 伺服器名稱的命令。
 
 
 
@@ -85,13 +85,13 @@ Vserver: vs1_dst
 
 * 安全性描述元
 +
-您可以選擇性地指定安全性描述元的擁有者和安全性描述元擁有者的主要群組。如果安全性描述元使用本機使用者或群組做為擁有者和主要群組項目、則必須修改安全性描述元、才能在帳戶名稱中使用目的地SVM。您可以使用「vserver安全性檔案目錄NTFS modify」命令、對帳戶名稱進行必要的變更。
+您可以選擇性地指定安全性描述元的擁有者和安全性描述元擁有者的主要群組。如果安全性描述元使用本機使用者或群組做為擁有者和主要群組項目、則必須修改安全性描述元、才能在帳戶名稱中使用目的地SVM。您可以使用 `vserver security file-directory ntfs modify` 命令以對帳戶名稱進行任何必要的變更。
 
 * DACL項目
 +
 每個DACL項目都必須與一個帳戶相關聯。您必須修改任何使用本機使用者或群組帳戶的DACL、才能使用目的地SVM名稱。由於您無法修改現有DACL項目的帳戶名稱、因此您必須從安全性描述元中移除任何具有本機使用者或群組的DACL項目、以修正的目的地帳戶名稱建立新的DACL項目、並將這些新的DACL項目與適當的安全性描述元建立關聯。
 
-* SACL項目
+* SACL 項目
 +
 每個SACL項目都必須與帳戶建立關聯。您必須修改任何使用本機使用者或群組帳戶的SACL、才能使用目的地SVM名稱。由於您無法修改現有SACL項目的帳戶名稱、因此您必須從安全性描述元中移除具有本機使用者或群組的任何SACL項目、以修正的目的地帳戶名稱建立新的SACL項目、並將這些新的SACL項目與適當的安全性描述元建立關聯。
 

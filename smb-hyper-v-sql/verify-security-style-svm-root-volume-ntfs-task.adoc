@@ -15,21 +15,21 @@ summary: 為了確保Hyper-V和SQL Server在SMB上的不中斷營運成功、磁
 
 .關於這項工作
 * 您可以在建立SVM時指定根磁碟區的安全樣式。
-* 如果SVM不是以設為NTFS安全性樣式的根磁碟區建立、您可以稍後使用「volume modify」命令來變更安全性樣式。
+* 如果建立 SVM 時根磁碟區未設定為 NTFS 安全樣式、您可以稍後使用變更安全樣式 `volume modify` 命令。
 
 
 .步驟
 . 判斷SVM根磁碟區目前的安全樣式：
 +
-‘* volume show -vserver _vserver_name_-Fields vserver、volume、安全風格*
+`*volume show -vserver _vserver_name_ -fields vserver,volume,security-style*`
 
 . 如果根磁碟區不是NTFS安全型磁碟區、請將安全樣式變更為NTFS：
 +
-hy* volume modify -vserver _vserver_name_-volume root_volume名稱-SECURITY樣式ntfs*
+`*volume modify -vserver _vserver_name_ -volume root_volume_name -security-style ntfs*`
 
 . 確認SVM根磁碟區已設定為NTFS安全樣式：
 +
-‘* volume show -vserver _vserver_name_-Fields vserver、volume、安全風格*
+`*volume show -vserver _vserver_name_ -fields vserver,volume,security-style*`
 
 
 

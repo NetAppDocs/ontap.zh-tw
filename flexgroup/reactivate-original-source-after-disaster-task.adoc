@@ -16,11 +16,11 @@ summary: 當來源FlexGroup 供應時、您可以重新同步原始來源FlexGro
 .關於這項工作
 目的地磁碟區上的任何作用中配額規則都會停用、而且配額規則會在執行重新同步之前刪除。
 
-您可以使用「Volume配額原則規則create」和「volume quota modify」命令、在重新同步作業完成後建立和重新啟動配額規則。
+您可以使用 `volume quota policy rule create` 和 `volume quota modify` 在重新同步作業完成後建立及重新啟動配額規則的命令。
 
 .步驟
-. 從目的地叢集、重新同步FlexGroup 處理Sfestvolume SnapMirror關係：「napmirror resSync -dest-path dst_svm:dest_flexgroup」
-. 檢視SnapMirror關係的狀態：「napmirror show -expand」
+. 從目的地叢集重新同步 FlexGroup Volume SnapMirror 關係： `snapmirror resync -destination-path dst_svm:dest_flexgroup`
+. 查看 SnapMirror 關係的狀態： `snapmirror show -expand`
 +
 [listing]
 ----
@@ -50,6 +50,6 @@ vss:s__0008 XDP  vsd:dst__0008  Snapmirrored
 ...
 ----
 +
-每個組織的SnapMirror關係狀態都是「napMirror鏡 射」。
+每個組成要素的 SnapMirror 關係狀態為 `Snapmirrored`。
 
 

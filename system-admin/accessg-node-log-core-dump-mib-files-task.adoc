@@ -11,48 +11,48 @@ summary: 服務處理器基礎架構（SPI）Web服務預設為啟用、可讓We
 
 
 [role="lead"]
-服務處理器基礎架構（「fili」）網路服務預設為啟用、可讓網頁瀏覽器存取叢集中節點的記錄、核心傾印和mib檔案。即使節點關閉、只要節點由其合作夥伴接管、檔案仍可存取。
+服務處理器基礎架構 (`spi`）網路服務預設為啟用、可讓網頁瀏覽器存取叢集中節點的記錄檔、核心傾印和 MIB 檔案。即使節點關閉、只要節點由其合作夥伴接管、檔案仍可存取。
 
 .您需要的產品
 * 叢集管理LIF必須已啟動。
 +
-您可以使用叢集或節點的管理LIF來存取「sepi」Web服務。不過、建議使用叢集管理LIF。
+您可以使用叢集或節點的管理 LIF 來存取 `spi` Web 服務。不過、建議使用叢集管理LIF。
 
 +
-「network interface show」命令會顯示叢集中所有lifs的狀態。
+。 `network interface show` 命令會顯示叢集中所有生命的狀態。
 
 * 您必須使用本機使用者帳戶來存取 `spi` Web服務、不支援網域使用者帳戶。
-* 如果您的使用者帳戶沒有「admin」角色（預設為存取「pi」網路服務）、您的存取控制角色必須獲得存取「pi」網路服務的權限。
+* 如果您的使用者帳戶沒有「 admin 」角色（可存取 `spi` Web 服務）、您的存取控制角色必須獲得存取權 `spi` Web 服務。
 +
-「vserver services web access show」命令會顯示哪些角色被授予存取哪些Web服務的權限。
+。 `vserver services web access show` 命令會顯示哪些角色可存取哪些 Web 服務。
 
-* 如果您不使用「'admin'」使用者帳戶（預設包含「http」存取方法）、則必須使用「http」存取方法來設定您的使用者帳戶。
+* 如果您未使用「 admin 」使用者帳戶（包括 `http` 存取方法）、您的使用者帳戶必須使用設定 `http` 存取方法。
 +
-「安全登入show」命令會顯示使用者帳戶的存取和登入方法、以及其存取控制角色。
+。 `security login show` 命令會顯示使用者帳戶的存取和登入方法及其存取控制角色。
 
 * 如果您想要使用HTTPS進行安全的網路存取、則必須啟用SSL並安裝數位憑證。
 +
-「系統服務Web show」命令會在叢集層級顯示Web傳輸協定引擎的組態。
+。 `system services web show` 命令會顯示叢集層級的 Web 傳輸協定引擎組態。
 
 
 
 .關於這項工作
-預設會啟用「sepi」網路服務、並可手動停用該服務（「vserver services web modify -vserver *-name spi -enabled假」）。
+。 `spi` Web 服務預設為啟用、且可手動停用該服務 (`vserver services web modify -vserver * -name spi -enabled false`）。
 
-「'admin'」角色依預設可存取「sipi'網路服務」、且可手動停用存取（「服務Web存取刪除-vserver _cluster名稱_-name spi -role admin」）。
+「 admin 」角色可存取 `spi` Web 服務預設為停用、且可手動停用存取 (`services web access delete -vserver _cluster_name_ -name spi -role admin`）。
 
 .步驟
-. 將網頁瀏覽器指向下列其中一種格式的「pi」網路服務URL：
+. 將 Web 瀏覽器指向 `spi` 下列其中一種格式的 Web 服務 URL ：
 +
-** http://_cluster-mgmt-LIF_/spi/`
-** https://_cluster-mgmt-LIF_/spi/`
+** `http://_cluster-mgmt-LIF_/spi/`
+** `https://_cluster-mgmt-LIF_/spi/`
 +
-「叢集管理- LIF」是叢集管理LIF的IP位址。
+`cluster-mgmt-LIF` 是叢集管理 LIF 的 IP 位址。
 
 
 
 . 當瀏覽器提示時、請輸入您的使用者帳戶和密碼。
 +
-驗證帳戶後、瀏覽器會顯示叢集中每個節點的「/mroot/etc/log/」、「/mroot/etc/crash /」和「/mroot/etc/mIB/」目錄連結。
+驗證帳戶後、瀏覽器會顯示的連結 `/mroot/etc/log/`、 `/mroot/etc/crash/`和 `/mroot/etc/mib/` 叢集中每個節點的目錄。
 
 

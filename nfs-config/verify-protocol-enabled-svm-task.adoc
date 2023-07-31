@@ -14,32 +14,36 @@ summary: 在SVM上設定及使用NFS之前、您必須先確認已啟用該傳�
 在SVM上設定及使用NFS之前、您必須先確認已啟用該傳輸協定。
 
 .關於這項工作
-這通常是在SVM設定期間完成、但如果您在設定期間未啟用該傳輸協定、則可以稍後使用「vserver add-protocols」命令加以啟用。
+這通常是在 SVM 設定期間完成、但如果您在設定期間未啟用傳輸協定、您可以稍後使用加以啟用 `vserver add-protocols` 命令。
 
 [NOTE]
 ====
 一旦建立LIF、您就無法從其新增或移除通訊協定。
 
 ====
-您也可以使用「vserver remove-protocols」命令來停用SVM上的傳輸協定。
+您也可以使用停用 SVM 上的通訊協定 `vserver remove-protocols` 命令。
 
 .步驟
 . 檢查SVM目前啟用和停用的傳輸協定：
 +
-「vserver show -vserver _vserver_name_-protocols」
+`vserver show -vserver _vserver_name_ -protocols`
 
 +
-您也可以使用「vserver show-protocols」命令來檢視叢集中所有SVM上目前啟用的傳輸協定。
+您也可以使用 `vserver show-protocols` 用於檢視叢集中所有 SVM 上目前啟用的通訊協定的命令。
 
 . 如有必要、請啟用或停用傳輸協定：
 +
-** 若要啟用NFS傳輸協定：+「vserver add傳輸協定-vserver _vserver_name_-傳輸協定nfs」
-** 若要停用傳輸協定：+「vserver disable-protocols -vserver _vserver_name_-PROUNTIAT傳輸 協定_name_[,_PROUNT_name_,...]
+** 若要啟用 NFS 傳輸協定：
+ +
+`vserver add-protocols -vserver _vserver_name_ -protocols nfs`
+** 若要停用通訊協定：
+ +
+`vserver remove-protocols -vserver    _vserver_name_ -protocols _protocol_name_[,_protocol_name_,...]`
 
 
 . 確認已啟用和停用的傳輸協定已正確更新：
 +
-「vserver show -vserver _vserver_name_-protocols」
+`vserver show -vserver _vserver_name_ -protocols`
 
 
 
@@ -53,7 +57,7 @@ Vserver           Allowed Protocols         Disallowed Protocols
 -----------       ----------------------    -----------------------
 vs1.example.com   nfs                       cifs, fcp, iscsi, ndmp
 ----
-下列命令可將「NFS」新增至名為VS1的SVM上已啟用的傳輸協定清單、以允許透過NFS存取：
+下列命令可新增以允許透過 NFS 存取 `nfs` 到名為 VS1 的 SVM 上已啟用的通訊協定清單：
 
 [listing]
 ----

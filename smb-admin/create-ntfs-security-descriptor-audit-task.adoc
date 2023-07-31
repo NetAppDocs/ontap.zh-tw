@@ -75,12 +75,12 @@ NT AUTHORITY\系統
 儲存層級存取保護會忽略任何選用參數的值。如需詳細資訊、請參閱手冊頁。
 
 .步驟
-. 如果您要使用進階參數、請將權限等級設為進階：「et -priv. advanc進 階」
-. 建立安全性描述元：「vserver安全性檔案目錄NTFS create -vserver vserver_name -ntfs-SD SD_name選擇性參數」
+. 如果您要使用進階參數、請將權限等級設為進階： `set -privilege advanced`
+. 建立安全性描述元： `vserver security file-directory ntfs create -vserver vserver_name -ntfs-sd SD_nameoptional_parameters`
 +
-「Vserver安全性檔案目錄NTFS create -nts-SD SD1 -vserver VS1 -Ownerdomain\joe'
+`vserver security file-directory ntfs create -ntfs-sd sd1 -vserver vs1 -owner DOMAIN\joe`
 
-. 確認安全性描述元組態正確：「vserver安全性檔案目錄NTFS show -vserver vserver_name -ntfs-SD sd_name」
+. 驗證安全描述元組態是否正確： `vserver security file-directory ntfs show -vserver vserver_name -ntfs-sd SD_name`
 +
 [listing]
 ----
@@ -93,5 +93,5 @@ vserver security file-directory ntfs show -vserver vs1 -ntfs-sd sd1
                            Security Descriptor Name: sd1
                    Owner of the Security Descriptor: DOMAIN\joe
 ----
-. 如果您處於進階權限層級、請返回管理員權限層級：「et -priv. admin」
+. 如果您處於進階權限層級、請返回管理權限層級： `set -privilege admin`
 

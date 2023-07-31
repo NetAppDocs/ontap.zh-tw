@@ -25,12 +25,12 @@ summary: 您可以手動或自動提交檔案至WORM（一次寫入、多次讀�
 
 
 .關於這項工作
-執行命令或程式時、Volume Compliance時鐘 時間會寫入檔案的「ctime」欄位。「完成時鐘時間」可決定何時達到檔案的保留時間。
+Volume 體能時鐘時間會寫入 `ctime` 執行命令或程式時的檔案欄位。「完成時鐘時間」可決定何時達到檔案的保留時間。
 
 .步驟
 . 使用適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
 +
-在UNIX Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+在 UNIX Shell 中、請使用下列命令建立名為的檔案 `document.txt` 唯讀：
 
 +
 [listing]
@@ -38,7 +38,7 @@ summary: 您可以手動或自動提交檔案至WORM（一次寫入、多次讀�
 chmod -w document.txt
 ----
 +
-在Windows Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+在 Windows Shell 中、使用下列命令建立名為的檔案 `document.txt` 唯讀：
 
 +
 [listing]
@@ -51,7 +51,8 @@ attrib +r document.txt
 
 == 自動將檔案提交至WORM
 
-利用此功能、您可以自動將檔案提交至WORM。SnapLock如果SnapLock 檔案在自動提交期間未變更、自動提交功能會將檔案提交至某個支援區上的WORM狀態。自動提交功能預設為停用。
+利用此功能、您可以自動將檔案提交至WORM。SnapLock如果檔案在自動認可期間沒有變更、則自動認可功能會將檔案提交至 SnapLock 磁碟區的 WORM 狀態
+持續時間。自動提交功能預設為停用。
 
 .您需要的產品
 * 您想要自動提交的檔案必須位於SnapLock 一個流通於一個不流通的資料冊上。
@@ -134,13 +135,13 @@ _autodit句點_指定檔案在自動提交之前必須保持不變的時間量�
 .步驟
 . 將SidVolume上的所有檔案自動複製到SnapLock WORM：
 +
-‘* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-autocomplet-period _autody_p段_*
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -autocommit-period _autocommit_period_*`
 
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-下列命令會自動提交SVM VS1磁碟區「vol1」上的檔案、只要這些檔案在5小時內維持不變：
+下列命令會自動認可磁碟區上的檔案 `vol1` SVM VS1 的檔案只要維持不變 5 小時：
 
 +
 [listing]
@@ -170,7 +171,7 @@ WORM可應用檔案必須位在SnapLock 一個流通不全的磁碟區上。
 .步驟
 . 使用適當的命令或程式、以所需的保留時間建立零長度檔案。
 +
-在UNIX Shell中、使用下列命令將保留時間設定為2020年11月21日上午6：00在零長度檔案「document.txt」上：
+在UNIX Shell中、使用下列命令將保留時間設定為2020年11月21日上午6：00在名為的零長度檔案上 `document.txt`：
 
 +
 [listing]
@@ -179,7 +180,7 @@ touch -a -t 202011210600 document.txt
 ----
 . 使用適當的命令或程式、將檔案的讀寫屬性變更為唯讀。
 +
-在UNIX Shell中、使用下列命令將名為「document.txt"的檔案設定為唯讀：
+在 UNIX Shell 中、請使用下列命令建立名為的檔案 `document.txt` 唯讀：
 
 +
 [listing]
@@ -194,7 +195,7 @@ chmod 444 document.txt
 
 ====
 +
-在UNIX Shell中、使用下列命令可讓名為「document.txt"的檔案寫入：
+在 UNIX Shell 中、請使用下列命令建立名為的檔案 `document.txt` 可寫入：
 
 +
 [listing]
@@ -203,7 +204,7 @@ chmod 777 document.txt
 ----
 . 使用適當的命令或程式開始將資料寫入檔案。
 +
-在UNIX Shell中、使用下列命令將資料寫入「document.txt」：
+在 UNIX Shell 中、使用下列命令將資料寫入 `document.txt`：
 
 +
 [listing]
@@ -240,15 +241,15 @@ VAM不支援SnapLock 在不支援的稽核記錄磁碟區上。
 
 ====
 .步驟
-. 啟用VAM：
+. 啟用 VAM ：
 +
-「* Volume SnapLock fidmodify -vserver _Svm_name_-volume _volume _name_-is-volume、append-mode enabled true、假*」
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -is-volume-append-mode-enabled true|false*`
 
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 
 +
-以下命令可在SVM的vol1（VS1）上啟用VAM：
+下列命令可在磁碟區上啟用 VAM `vol1` SVM``vs1``：
 
 +
 [listing]

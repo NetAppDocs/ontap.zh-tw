@@ -13,7 +13,7 @@ summary: 在升級叢集之前、您應該先確認節點狀況良好且符合�
 [role="lead"]
 在升級叢集之前、您應該先確認節點狀況良好且符合參與叢集的資格、而且叢集已達到仲裁數。
 
-. 驗證叢集中的節點是否在線上、是否符合參加叢集的資格：「叢集展示」
+. 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格： `cluster show`
 +
 [listing]
 ----
@@ -26,7 +26,7 @@ node1                 true    true
 +
 如果有任何節點不健全或不符合資格、請檢查EMS記錄是否有錯誤、並採取修正行動。
 
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：「事件記錄檔顯示嚴重性資訊-message-name scsimble.*」
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `event log show  -severity informational -message-name scsiblade.*`
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 

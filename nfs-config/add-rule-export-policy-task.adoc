@@ -11,7 +11,7 @@ summary: 如果沒有規則、匯出原則就無法讓用戶端存取資料。�
 
 
 [role="lead"]
-如果沒有規則、匯出原則就無法讓用戶端存取資料。若要建立新的匯出規則、您必須識別用戶端並選取用戶端比對格式、選取存取和安全性類型、指定匿名使用者ID對應、選取規則索引編號、然後選取存取傳輸協定。然後您可以使用「vserver匯出原則規則create」命令、將新規則新增至匯出原則。
+如果沒有規則、匯出原則就無法讓用戶端存取資料。若要建立新的匯出規則、您必須識別用戶端並選取用戶端比對格式、選取存取和安全性類型、指定匿名使用者ID對應、選取規則索引編號、然後選取存取傳輸協定。然後您就可以使用 `vserver export-policy rule create` 命令將新規則新增至匯出原則。
 
 .您需要的產品
 * 您要新增匯出規則的匯出原則必須已經存在。
@@ -21,9 +21,9 @@ summary: 如果沒有規則、匯出原則就無法讓用戶端存取資料。�
 
 * 如果您使用Kerberos進行驗證、則必須確定NFS用戶端使用下列哪些安全性方法：
 +
-** KRB5（Kerberos V5傳輸協定）
-** KRB5i（Kerberos V5傳輸協定、使用Checksum進行完整性檢查）
-** KRB5p（Kerberos V5傳輸協定、含隱私權服務）
+** `krb5` （ Kerberos V5 傳輸協定）
+** `krb5i` （使用 Checksum 進行完整性檢查的 Kerberos V5 傳輸協定）
+** `krb5p` （具有隱私權服務的 Kerberos V5 傳輸協定）
 
 
 
@@ -31,12 +31,12 @@ summary: 如果沒有規則、匯出原則就無法讓用戶端存取資料。�
 .關於這項工作
 如果匯出原則中的現有規則涵蓋了用戶端的相符和存取需求、則不需要建立新規則。
 
-如果您使用Kerberos進行驗證、而且SVM的所有磁碟區都是透過Kerberos存取、您可以將根磁碟區的匯出規則選項「-rorule」、「-rwrRule」和「-超級 使用者」設為「krb5」、「krb5i」或「krb5p」。
+如果您正在使用 Kerberos 進行驗證、而且 SVM 的所有磁碟區都是透過 Kerberos 存取、您可以設定匯出規則選項 `-rorule`、 `-rwrule`和 `-superuser` 將根磁碟區移至 `krb5`、 `krb5i`或 `krb5p`。
 
 .步驟
 . 識別新規則的用戶端和用戶端比對格式。
 +
-"-clientmatch"選項指定規則適用的用戶端。可以指定單一或多個用戶端符合值；多個值的規格必須以逗號分隔。您可以指定下列任一格式的相符項目：
+。 `-clientmatch` 選項指定規則所套用的用戶端。可以指定單一或多個用戶端符合值；多個值的規格必須以逗號分隔。您可以指定下列任一格式的相符項目：
 
 +
 |===
@@ -46,60 +46,60 @@ summary: 如果沒有規則、匯出原則就無法讓用戶端存取資料。�
  a| 
 網域名稱前面加上「.」字元
  a| 
-「.example.com」或「+.example.com,.example.net,...+`」
+`.example.com` 或 `+.example.com,.example.net,...+`
 
 
 
  a| 
 主機名稱
  a| 
-「host1」或「+host1、host2、...+」
+`host1` 或 `+host1,host2, ...+`
 
 
 
  a| 
 IPV4位址
  a| 
-「10.12.24」或「+10.12.24、10.12.25、...+」
+`10.1.12.24` 或 `+10.1.12.24,10.1.12.25, ...+`
 
 
 
  a| 
 以多位元表示子網路遮罩的IPv4位址
  a| 
-「10.12.10/4」或「+10.1.12.10/4、10.1.12.11/4、...+」
+`10.1.12.10/4` 或 `+10.1.12.10/4,10.1.12.11/4,...+`
 
 
 
  a| 
 具有網路遮罩的IPV4位址
  a| 
-「10.1.16.0/255．255．255．0」或「+10．10．16.0/255．255．255．1．17.0/255．255．0、...+」
+`10.1.16.0/255.255.255.0` 或 `+10.1.16.0/255.255.255.0,10.1.17.0/255.255.255.0,...+`
 
 
 
  a| 
 以點分格式提供IPv6位址
  a| 
-：「1.2.3.4」或「+」：1.2.3.4、：1.2.3.5、...+」
+`::1.2.3.4` 或 `+::1.2.3.4,::1.2.3.5,...+`
 
 
 
  a| 
-以多位元表示子網路遮罩的IPv6位址
+IPv6 位址、子網路遮罩以位元數表示
  a| 
-「ff：00/32」或「+ff：00/32、ff：：01/32、...+」
+`ff::00/32` 或 `+ff::00/32,ff::01/32,...+`
 
 
 
  a| 
 以@字元開頭的netgroup名稱為單一netgroup
  a| 
-「@netgroup 1」或「+@netgroup 1、@netgroup 2、...+」
+`@netgroup1` 或 `+@netgroup1,@netgroup2,...+`
 
 |===
 +
-您也可以合併用戶端定義類型、例如「.example.com,@netgroup1`」。
+您也可以合併用戶端定義的類型、例如 `.example.com,@netgroup1`。
 
 +
 指定IP位址時、請注意下列事項：
@@ -121,9 +121,9 @@ IPV4位址
 您可以指定下列一或多種存取模式、以驗證具有指定安全性類型的用戶端：
 
 +
-** 「-rorrule」（唯讀存取）
-** -rwrRule（讀寫存取）
-** 超級用戶（root存取權）
+** `-rorule` （唯讀存取）
+** `-rwrule` （讀寫存取權）
+** `-superuser` （ root 存取權）
 +
 [NOTE]
 ====
@@ -131,7 +131,7 @@ IPV4位址
 
 ====
 +
-您可以為規則指定多種安全性類型的以逗號分隔的清單。如果您將安全類型指定為「any」或「Never」、請勿指定任何其他安全類型。從下列有效的安全類型中選擇：
+您可以為規則指定多種安全性類型的以逗號分隔的清單。如果您將安全性類型指定為 `any` 或 `never`，請勿指定任何其他安全類型。從下列有效的安全類型中選擇：
 
 +
 |===
@@ -139,75 +139,75 @@ IPV4位址
 
 
  a| 
-「任何」
+`any`
  a| 
 無論傳入的安全類型為何、
 
 
 
  a| 
-無
+`none`
  a| 
 如果單獨列出、則會將具有任何安全類型的用戶端授予匿名存取權。如果列出其他安全性類型、則會授與具有指定安全性類型的用戶端存取權、而具有任何其他安全性類型的用戶端則會以匿名存取權。
 
 
 
  a| 
-《永不》
+`never`
  a| 
 永不、無論傳入的安全類型為何。
 
 
 
  a| 
-《KRB5》
+`krb5`
  a| 
-如果是由Kerberos 5驗證。僅驗證：簽署每個要求和回應的標頭。
-
-
-
- a| 
-《KRB5i》
- a| 
-如果通過Kerberos 5i驗證。驗證與完整性：簽署每個要求與回應的標頭與實體。
+如果是由Kerberos 5驗證。    僅驗證：簽署每個要求和回應的標頭。
 
 
 
  a| 
-《krb5p》
+`krb5i`
  a| 
-如果通過Kerberos 5p驗證。驗證、完整性和隱私：簽署每個要求和回應的標頭和實體、並加密NFS資料有效負載。
+如果通過Kerberos 5i驗證。    驗證與完整性：簽署每個要求與回應的標頭與實體。
 
 
 
  a| 
-"NTLM"
+`krb5p`
+ a| 
+如果是由 Kerberos 5p 驗證。    驗證、完整性和隱私：簽署每個要求和回應的標頭和實體、並加密NFS資料有效負載。
+
+
+
+ a| 
+`ntlm`
  a| 
 如果通過CIFS的NTLM驗證。
 
 
 
  a| 
-《時代》
+`sys`
  a| 
 如果是由NFS AUTH_SYS驗證的。
 
 |===
 +
-建議使用的安全類型是"shys"、如果使用Kerberos、則為"krb5"、"krb5i"或"krb5p"。
+建議的安全類型為 `sys`或是使用 Kerberos 、 `krb5`、 `krb5i`或 `krb5p`。
 
 
 
 +
-如果您使用Kerberos搭配NFSv3、匯出原則規則除了允許「krb5」之外、還必須允許「-rorule」和「-rwrRule」存取「sys」。這是因為需要允許網路鎖定管理程式（NLM）存取匯出。
+如果將 Kerberos 與 NFSv3 搭配使用、則匯出原則規則必須允許 `-rorule` 和 `-rwrule` 存取 `sys` 此外 `krb5`。這是因為需要允許網路鎖定管理程式（NLM）存取匯出。
 
 . 指定匿名使用者ID對應。
 +
-「-anon'」選項會指定對應至用戶端要求的UNIX使用者ID或使用者名稱、該用戶ID通常與使用者名稱root相關聯、且會以0（零）的使用者ID送達。預設值為「65534」。NFS用戶端通常會將使用者ID 65534與使用者名稱nobody建立關聯（也稱為根系統衝突_）。在本功能中、此使用者ID與使用者pcuser相關聯。ONTAP若要停用使用者ID為0的任何用戶端存取、請指定值「65535"。
+。 `-anon` 選項會指定 UNIX 使用者 ID 或使用者名稱、該使用者 ID 會對應至以 0 （零）為使用者 ID 的用戶端要求、此 ID 通常與使用者名稱根目錄相關聯。預設值為 `65534`。NFS用戶端通常會將使用者ID 65534與使用者名稱nobody建立關聯（也稱為根系統衝突_）。在本功能中、此使用者ID與使用者pcuser相關聯。ONTAP若要停用使用者 ID 為 0 的任何用戶端存取、請指定值為 `65535`。
 
 . 選取規則索引順序。
 +
-"-rueindex"選項指定規則的索引編號。規則會根據索引編號清單中的順序來評估；索引編號較低的規則會先評估。例如、索引編號為1的規則會在索引編號為2的規則之前進行評估。
+。 `-ruleindex` 選項指定規則的索引編號。規則會根據索引編號清單中的順序來評估；索引編號較低的規則會先評估。例如、索引編號為1的規則會在索引編號為2的規則之前進行評估。
 
 +
 |===
@@ -217,36 +217,38 @@ IPV4位址
  a| 
 匯出原則的第一條規則
  a| 
-輸入「1」。
+輸入 `1`。
 
 
 
  a| 
 匯出原則的其他規則
  a| 
-.. 在原則中顯示現有規則：+「vserver匯出原則規則show -instance -policyname _ying_policy_」
+.. 在原則中顯示現有規則：
+ +
+`vserver export-policy rule show -instance -policyname _your_policy_`
 .. 根據新規則的評估順序、為新規則選取索引編號。
 
 
 |===
-. 選取適用的NFS存取值：｛'NFS'|'nfs3'|'nfs4'｝。
+. 選取適用的 NFS 存取值： {`nfs`|`nfs3`|`nfs4`} 。
 +
-NFS與任何版本（nfs3）和nfs4（nfs4）相匹配，只能與這些特定版本相匹配。
+`nfs` 符合任何版本、 `nfs3` 和 `nfs4` 僅符合這些特定版本。
 
 . 建立匯出規則並將其新增至現有的匯出原則：
 +
-「vserver匯出原則規則create -vserver _vserver_name_-policyname _policy_name_-rueindex _integer_-protocol {nfs_nfs3|nfs4}-clientm比 對{ text |_"text、..."_｝-rorrorme_security_type_-rwrwrwrid_time_type _-super_tim_s_-/site_use_user__-time_user_ners_use_an_time_use_n_an__
+`vserver export-policy rule create -vserver _vserver_name_ -policyname _policy_name_ -ruleindex _integer_ -protocol {nfs|nfs3|nfs4} -clientmatch { text | _"text,text,..."_ } -rorule _security_type_ -rwrule _security_type_ -superuser _security_type_ -anon _user_ID_`
 
 . 顯示匯出原則的規則、以驗證是否存在新規則：
 +
-「vserver匯出原則規則show -policyname _policy_name_」
+`vserver export-policy rule show -policyname _policy_name_`
 
 +
 命令會顯示該匯出原則的摘要、包括套用至該原則的規則清單。此功能會為每個規則指派一個規則索引編號。ONTAP知道規則索引編號之後、您可以使用它來顯示指定匯出規則的詳細資訊。
 
 . 確認已正確設定套用至匯出原則的規則：
 +
-「vserver匯出原則規則show -policyname _policy_name_-vserver _vserver_name_-rueindex _integer_」
+`vserver export-policy rule show -policyname _policy_name_ -vserver _vserver_name_ -ruleindex _integer_`
 
 
 

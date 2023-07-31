@@ -11,7 +11,7 @@ summary: 您可以使用volume move start命令來移動及取消加密Volume資
 
 
 [role="lead"]
-您可以使用「volume move start」命令來移動及取消加密Volume資料。
+您可以使用 `volume move start` 用於移動和取消加密 Volume 資料的命令。
 
 .您需要的產品
 您必須是叢集管理員才能執行此工作、或是叢集管理員已委派權限的SVM管理員。
@@ -21,13 +21,13 @@ link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執�
 .步驟
 . 移動現有的加密磁碟區、並取消加密磁碟區上的資料：
 +
-「Volume move start -vserver Svm_name -volume volume volume volume名稱-destination-Aggregate aggregate名稱-加密 目的地假」
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-下列命令會將名為「vol1」的現有磁碟區移至目的地Aggr3、並取消加密磁碟區上的資料：
+下列命令會移動名為的現有 Volume `vol1` 至目的地 Aggregate `aggr3` 並取消加密磁碟區上的資料：
 
 +
 [listing]
@@ -39,13 +39,13 @@ cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate a
 
 . 確認磁碟區已停用加密：
 +
-「Volume show -encryption」
+`volume show -encryption`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-以下命令顯示是否加密「cluster1」上的磁碟區：
+下列命令會顯示磁碟區是否開啟 `cluster1` 已加密：
 
 +
 [listing]

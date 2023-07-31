@@ -16,13 +16,13 @@ summary: 您可以在專用連接埠上設定叢集間的LIF。這樣做通常�
 .步驟
 . 列出叢集中的連接埠：
 +
-「網路連接埠展示」
+`network port show`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示「cluster01」中的網路連接埠：
+下列範例顯示中的網路連接埠 `cluster01`：
 
 +
 [listing]
@@ -49,13 +49,13 @@ cluster01-02
 ----
 . 判斷哪些連接埠可用於叢集間通訊：
 +
-「網路介面show -field home-port、curr-port」
+`network interface show -fields home-port,curr-port`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示連接埠「e0e」和「e0f」尚未指派生命權：
+以下範例顯示連接埠 `e0e` 和 `e0f` 尚未指派生命：
 
 +
 [listing]
@@ -77,10 +77,10 @@ cluster01
 ----
 . 為專用連接埠建立容錯移轉群組：
 +
-「網路介面容錯移轉群組可建立-vserver _system_SVM_-容 錯移轉群組_容 錯移轉群組_-鎖 定_Physical _OR_logical_ports _」
+`network interface failover-groups create -vserver _system_SVM_ -failover-group _failover_group_ -targets _physical _or_logical_ports_`
 
 +
-以下範例將連接埠「e0e」和「e0f」指派給系統SVM「cluster01」上的容錯移轉群組「intercluster01」：
+下列範例指派連接埠 `e0e` 和 `e0f` 移轉至容錯移轉群組 `intercluster01` 在系統 SVM 上 `cluster01`：
 
 +
 [listing]
@@ -91,7 +91,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 ----
 . 確認已建立容錯移轉群組：
 +
-「網路介面容錯移轉群組顯示」
+`network interface failover-groups show`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -126,21 +126,21 @@ cluster01
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面create -vserver _system_svm_-lif_lif_name_-service-policy之間叢集-home-node_-home-port _port_-address _port_ip_-netask _netask_-容 錯移轉群組_容 錯移轉_group_」
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home- port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面create -vserver _system_svm_-lif_lif_name_-role inter-cluster -home-node_node_-home-port _port_-address _port_ip_-netask_-over-group _furobet_group _」
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
 
 |===
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會在容錯移轉群組「intercluster01」中建立叢集間LIF「cluster01_icl01」和「cluster01_icl02」：
+以下範例建立叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在容錯移轉群組中 `intercluster01`：
 
 +
 [listing]
@@ -162,14 +162,14 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面show -service-policy default-intercluster」
+`network interface show -service-policy default-intercluster`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面show -role intercluster」
+`network interface show -role intercluster`
 
 |===
 +
@@ -197,21 +197,21 @@ cluster01
  a| 
 * ONTAP 在S69.6及更新版本中：*
  a| 
-「網路介面show -service-policy default-intercluster -容 錯移轉」
+`network interface show -service-policy default-intercluster -failover`
 
 
 
  a| 
 * ONTAP 在《S19.5及更早版本》中：*
  a| 
-「網路介面show -role intercluster -容 錯移轉」
+`network interface show -role intercluster -failover`
 
 |===
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示、SVM 'e0e'連接埠上的叢集間lifs「cluster01_icl01」和「cluster01_icl02」將會容錯移轉至「e0f」連接埠。
+以下範例顯示叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在SVM上``e0e`` 連接埠將容錯移轉至 `e0f` 連接埠。
 
 +
 [listing]

@@ -23,17 +23,17 @@ link:delete-key-management-database-task.html["從外部金鑰管理移轉至內
 
 
 .關於這項工作
-每次將節點新增至叢集時、都必須執行「安全金鑰管理程式設定」命令。
+您必須執行 `security key-manager setup` 每次將節點新增至叢集時的命令。
 
 如果您使用MetroCluster 的是「不確定」組態、請參閱下列準則：
 
-* 在支援功能9.5中ONTAP 、您必須在本機叢集上執行「安全金鑰管理程式設定」、在遠端叢集上執行「安全金鑰管理程式設定-同步- MetroCluster組態設定是」、並在每個叢集上使用相同的密碼。
-* 在發行版發行版發行版之前、您必須在本機叢集上執行「安全金鑰管理程式設定」、等待約20秒、然後在遠端叢集上執行「安全金鑰管理程式設定」、並在每個叢集上使用相同的密碼。ONTAP
+* 在 ONTAP 9.5 中、您必須執行 `security key-manager setup` 在本機叢集和上 `security key-manager setup -sync-metrocluster-config yes` 在遠端叢集上、使用相同的複雜密碼。
+* 在 ONTAP 9.5 之前、您必須執行 `security key-manager setup` 在本機叢集上、等待大約 20 秒、然後執行 `security key-manager setup` 在遠端叢集上、使用相同的複雜密碼。
 
 
-根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。從ONTAP 使用支援功能9.4開始、您可以使用「-enable cc-mode yes」（啟用cc-mode yes）選項、要求使用者在重新開機後輸入通關密碼。
+根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。從 ONTAP 9.4 開始、您可以使用 `-enable-cc-mode yes` 選項要求使用者在重新開機後輸入複雜密碼。
 
-對於NVE、如果您設定為「啟用cc-mode yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。對於「Volume create」、您不需要指定「-加密true」。對於「Volume Move start」（磁碟區移動開始）、您不需要指定「-加密-目的地true」。
+如果您已設定、則適用於 NVE `-enable-cc-mode yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。適用於 `volume create`，您不需要指定 `-encrypt true`。適用於 `volume move start`，您不需要指定 `-encrypt-destination true`。
 
 [NOTE]
 ====
@@ -43,12 +43,12 @@ link:delete-key-management-database-task.html["從外部金鑰管理移轉至內
 .步驟
 . 啟動金鑰管理程式設定：
 +
-「安全金鑰管理程式設定-啟用cc-mode yes | no」
+`security key-manager setup -enable-cc-mode yes|no`
 
 +
 [NOTE]
 ====
-從ONTAP 《支援功能》9.4開始、您可以使用「啟用cc-mode yes」（啟用cc-mode yes）選項、要求使用者在重新開機後輸入金鑰管理程式密碼。對於NVE、如果您設定為「啟用cc-mode yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。
+從 ONTAP 9.4 開始、您可以使用 `-enable-cc-mode yes` 此選項可要求使用者在重新開機後輸入金鑰管理密碼。如果您已設定、則適用於 NVE `-enable-cc-mode yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。
 
 ====
 +
@@ -67,7 +67,7 @@ Would you like to use onboard key-management? {yes, no} [yes]:
 Enter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 ----
-. 在提示符下輸入「yes」以設定機載金鑰管理。
+. 輸入 `yes` 在提示下設定內建金鑰管理。
 . 在通關密碼提示字元中、輸入32到256個字元之間的通關密碼、或輸入「'cc-mode'」（64到256個字元之間的通關密碼）。
 +
 [NOTE]
@@ -78,7 +78,7 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在通關密碼確認提示下、重新輸入通關密碼。
 . 驗證是否已為所有節點設定金鑰：
 +
-「安全金鑰管理程式的關鍵展示」
+`security key-manager key show`
 
 +
 如需完整的命令語法、請參閱手冊頁。

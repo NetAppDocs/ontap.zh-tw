@@ -11,28 +11,28 @@ summary: 除了手動建立個別的本機UNIX群組之外、您也可以使用v
 
 
 [role="lead"]
-除了手動建立個別的本機UNIX群組、您也可以使用「vserver services name-service unix-group load-from -uri」命令、從統一的資源識別元（URI）將本機UNIX群組清單載入SVM。
+除了手動建立個別的本機 UNIX 群組之外、您也可以使用、從統一的資源識別元（ URI ）將本機 UNIX 群組清單載入 SVM `vserver services name-service unix-group load-from-uri` 命令。
 
 .步驟
 . 建立包含您要載入之本機UNIX群組清單的檔案。
 +
-檔案必須包含UNIX「/etc/group」格式的群組資訊：
+檔案必須包含 UNIX 中的群組資訊 `/etc/group` 格式：
 
 +
-`_group名稱：密碼：group ID：Comma_separed_list_of_user_`
+`_group_name: password: group_ID: comma_separated_list_of_users_`
 
 +
-命令會捨棄「_password_」欄位的值。
+命令會捨棄的值 `_password_` 欄位。
 
 +
-支援的檔案大小上限為1 MB。
+支援的檔案大小上限為 1 MB 。
 
 +
 群組檔案中每一行的長度上限為32、768個字元。
 
 . 確認清單中沒有任何重複資訊。
 +
-清單不得包含重複的項目、否則載入清單將會失敗。如果SVM中已經有項目存在、您必須將「-Overwrite」參數設為「true」、以新檔案覆寫所有現有項目、或是確保新檔案中沒有任何複製現有項目的項目。
+清單不得包含重複的項目、否則載入清單將會失敗。如果 SVM 中已有項目、您必須設定 `-overwrite` 參數至 `true` 以新檔案覆寫所有現有項目、或確保新檔案不包含任何重複現有項目的項目。
 
 . 將檔案複製到伺服器。
 +
@@ -44,15 +44,15 @@ URI是您提供給儲存系統的位址、用以指出檔案所在位置。
 
 . 從URI將包含本機UNIX群組清單的檔案載入SVM：
 +
-「Vserver服務名稱服務unix-group load-from -uri -vserver _vserver_name_-uri｛ftp.http | ftps| https｝：//_uri_-ovwrite｛true|假｝」
+`vserver services name-service unix-group load-from-uri -vserver _vserver_name_ -uri {ftp|http|ftps|https}://_uri_ -overwrite {true|false}`
 
 +
-'-`Overwrite’{'true'|'假'}指定是否覆寫項目。預設值為「假」。如果您將此參數指定為「true」、ONTAP 則由正在載入的檔案中的項目取代指定SVM的整個現有本機UNIX群組資料庫。
+`-overwrite`  `true` `false`} 指定是否覆寫項目。預設值為 `false`。如果您將此參數指定為 `true`， ONTAP 會將指定 SVM 的整個現有本機 UNIX 群組資料庫，取代為您所載入檔案的項目。
 
 
 
 .範例
-下列命令會將URI `+ftp://ftp.example.com/group+`的本機UNIX群組清單載入名為VS1的SVM。SVM上的現有群組不會被URI的資訊覆寫。
+下列命令會從 URI 載入本機 UNIX 群組清單 `+ftp://ftp.example.com/group+` 進入名為 VS1 的 SVM 。SVM上的現有群組不會被URI的資訊覆寫。
 
 [listing]
 ----

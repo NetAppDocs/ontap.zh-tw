@@ -14,7 +14,7 @@ summary: 即使傳入的SMB使用者不是檔案的擁有者、您也可以設�
 即使傳入的SMB使用者不是檔案的擁有者、您也可以設定此選項、以授予群組存取檔案或目錄的權限。
 
 .步驟
-. 將權限等級設為進階：「et -priv榮幸advanc進 階」
+. 將權限層級設為進階： `set -privilege advanced`
 . 視需要設定授予UNIX群組權限：
 +
 |===
@@ -24,16 +24,16 @@ summary: 即使傳入的SMB使用者不是檔案的擁有者、您也可以設�
  a| 
 即使使用者不是檔案的擁有者、也能存取檔案或目錄、以取得群組權限
  a| 
-「Vserver CIFS選項修改–vass-unix-group perms-to nothers true」
+`vserver cifs options modify –grant-unix-group-perms-to-others true`
 
 
 
  a| 
 即使使用者不是檔案的擁有者、也請停用檔案或目錄的存取權、以取得群組權限
  a| 
-「Vserver CIFS選項修改–vass-unix-group、perms-to sothers fals'
+`vserver cifs options modify –grant-unix-group-perms-to-others false`
 
 |===
-. 確認選項設定為所需的值：「vserver CIFS options show–功能變數贈與unix-group perms-to others」（vserver CIFS選項顯示–功能變數贈與unix-group perms-to others）
-. 返回管理員權限等級：「et -priv. admin」
+. 確認選項設定為所需的值： `vserver cifs options show –fields grant-unix-group-perms-to-others`
+. 返回管理權限層級： `set -privilege admin`
 

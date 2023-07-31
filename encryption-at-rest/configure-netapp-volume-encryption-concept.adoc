@@ -49,9 +49,9 @@ NOTE: FASA220、FASA800、FAS2720、FAS2750及更新版本的系統會將核心�
 
 NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregate層級加密下加密的磁碟區為NAE磁碟區。加密磁碟區時、您可以覆寫預設值。
 
-您可以使用「Volume Move」命令、將NVE Volume轉換為NAE Volume、反之亦然。您可以將NAE磁碟區複寫至NVE磁碟區。
+您可以使用 `volume move` 將 NVE Volume 轉換為 NAE Volume 的命令、反之亦然。您可以將NAE磁碟區複寫至NVE磁碟區。
 
-您無法在NAE Volume上使用「安全清除」命令。
+您無法使用 `secure purge` NAE 磁碟區上的命令。
 
 
 
@@ -77,7 +77,7 @@ NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregat
 
 您可以在同一個叢集中使用這兩個範圍。如果SVM已設定金鑰管理伺服器、ONTAP 則僅使用這些伺服器來保護金鑰。否則ONTAP 、利用為叢集設定的金鑰管理伺服器來保護金鑰。
 
-中提供已驗證的外部金鑰管理程式清單 link:http://mysupport.netapp.com/matrix/["NetApp互通性對照表工具IMT （不含）"^]。您可以在IMT的搜尋功能中輸入「金鑰管理程式」一詞、以找到此清單。
+中提供已驗證的外部金鑰管理程式清單 link:http://mysupport.netapp.com/matrix/["NetApp互通性對照表工具IMT （不含）"^]。您可以在 IMT 的搜尋功能中輸入「關鍵經理」一詞來找到此清單。
 
 
 
@@ -104,11 +104,11 @@ NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregat
  a| 
 從推出更新版本時開始ONTAP 、新建立的Aggregate和Volume會在您新增Volume加密（VE）授權、並設定內建或外部金鑰管理程式時、依預設進行加密。如果您需要建立未加密的Aggregate、請使用下列命令：
 
-「torage Aggregate create -加密 與agger-key假」
+`storage aggregate create -encrypt-with-aggr-key false`
 
 如果您需要建立純文字Volume、請使用下列命令：
 
-「Volume create -加密 假」
+`volume create -encrypt false`
 
 在下列情況下、預設不會啟用加密：
 

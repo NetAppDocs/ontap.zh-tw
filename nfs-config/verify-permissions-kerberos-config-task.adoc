@@ -16,7 +16,7 @@ Kerberos需要為SVM根磁碟區及本機使用者和群組設定特定的UNIX�
 .步驟
 . 顯示SVM根磁碟區的相關權限：
 +
-「Volume show -volume _root_vol_name_-Fields user,group、unix-permissions」
+`volume show -volume _root_vol_name_-fields user,group,unix-permissions`
 
 +
 SVM的根Volume必須具有下列組態：
@@ -47,11 +47,11 @@ UNIX權限
 
 |===
 +
-如果未顯示這些值、請使用「volume modify」命令來更新這些值。
+如果未顯示這些值、請使用 `volume modify` 命令進行更新。
 
 . 顯示本機UNIX使用者：
 +
-「Vserver服務名稱服務UNIX使用者show -vserver _vserver_name_」
+`vserver services name-service unix-user show -vserver _vserver_name_`
 
 +
 SVM必須設定下列UNIX使用者：
@@ -66,7 +66,7 @@ NFS
  a| 
 500
  a| 
-0
+0%
  a| 
 GSS初始化階段所需的項目。
 
@@ -79,19 +79,19 @@ NFS用戶端使用者的第一個使用者是使用者。
  a| 
 根
  a| 
-0
+0%
  a| 
-0
+0%
  a| 
 安裝所需。
 
 |===
 +
-如果未顯示這些值、您可以使用「vserver services name-service unix-usermodify」命令來更新這些值。
+如果未顯示這些值、您可以使用 `vserver services name-service unix-user modify` 命令進行更新。
 
 . 顯示本機UNIX群組：
 +
-「Vserver服務名稱服務UNIX群組show -vserver _vserver__name」
+`vserver services name-service unix-group show -vserver _vserver_ _name`
 
 +
 SVM必須設定下列UNIX群組：
@@ -111,10 +111,10 @@ SVM必須設定下列UNIX群組：
  a| 
 根
  a| 
-0
+0%
 
 |===
 +
-如果未顯示這些值、您可以使用「vserver services name-service unix-group modify」命令來更新這些值。
+如果未顯示這些值、您可以使用 `vserver services name-service unix-group modify` 命令進行更新。
 
 

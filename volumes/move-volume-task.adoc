@@ -14,14 +14,14 @@ summary: 您可以將FlexVol 某個SVM磁碟區移至同一個儲存虛擬機器
 您可以將FlexVol 某個SVM磁碟區移至同一個儲存虛擬機器（SVM）內的不同集合體、節點或兩者、以在判斷儲存容量不平衡之後、平衡儲存容量。
 
 .關於這項工作
-根據預設、如果切換作業在30秒內無法完成、將會重試。您可以使用「轉換時間」和「轉換動作」參數來調整預設行為、這兩個參數都需要進階權限層級存取。如需詳細資訊、請參閱「Volume Move start」（Volume Move start）手冊頁。
+根據預設、如果切換作業在30秒內無法完成、將會重試。您可以使用調整預設行為 `-cutover-window` 和 `-cutover-action` 這兩個參數都需要進階權限層級存取。如需詳細資訊、請參閱 `volume move start` 手冊頁。
 
 .步驟
-. 如果您正在移動資料保護鏡像、但尚未初始化鏡射關係、請使用「napmirror initialize」命令來初始化鏡射關係。
+. 如果您要移動資料保護鏡像、但尚未初始化鏡射關係、請使用初始化鏡射關係 `snapmirror initialize` 命令。
 +
 必須先初始化資料保護鏡射關係、才能移動其中一個磁碟區。
 
-. 使用「volume move target -aggr show」命令來判斷可將磁碟區移至哪個集合體。
+. 使用來判斷可將磁碟區移至的集合體 `volume move target-aggr show` 命令。
 +
 您選取的Aggregate必須有足夠的磁碟區空間、也就是可用的大小大於您要移動的磁碟區。
 
@@ -41,8 +41,8 @@ node12a_aggr1    10.36GB          hdd
 node12a_aggr4    10.36GB          hdd
 5 entries were displayed.
 ----
-. 使用「volume move start -perform validation only」命令來執行驗證檢查、以驗證磁碟區是否可移至所需的Aggregate。
-. 使用「volume move start」命令來移動磁碟區。
+. 使用確認磁碟區可以移至預期的 Aggregate `volume move start -perform-validation-only` 執行驗證檢查的命令。
+. 使用移動 Volume `volume move start` 命令。
 +
 下列命令可將VS2 SVM上的user_max Volume移至node12a_aggr3 Aggregate。此移動會以背景程序執行。
 
@@ -52,7 +52,7 @@ node12a_aggr4    10.36GB          hdd
 cluster1::> volume move start -vserver vs2 -volume user_max
 -destination-aggregate node12a_aggr3
 ----
-. 使用「volume move show」命令來判斷Volume Move作業的狀態。
+. 使用判斷 Volume Move 作業的狀態 `volume move show` 命令。
 +
 以下範例顯示完成複寫階段且處於轉換階段的Volume Move狀態：
 
@@ -66,6 +66,6 @@ Vserver   Volume     State    Move Phase  Percent-Complete Time-To-Complete
 vs2       user_max   healthy  cutover     -                -
 ----
 +
-當Volume Move不再出現在「volume move show」命令輸出中時、即表示該磁碟區已完成移動。
+當 Volume 移動不再出現在中時、即完成移動 `volume move show` 命令輸出。
 
 

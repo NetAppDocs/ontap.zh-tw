@@ -11,18 +11,18 @@ summary: 根據預設、會複寫來源SVM的所有RW資料磁碟區。如果您
 
 
 [role="lead"]
-根據預設、會複寫來源SVM的所有RW資料磁碟區。如果您不想保護來源SVM上的所有磁碟區、可以使用「volume modify」命令的「-vserver-dr-protection protection protection protection protection protection protection protection protection」選項、將磁碟區排除在SVM複寫之外。
+根據預設、會複寫來源SVM的所有RW資料磁碟區。如果您不想保護來源 SVM 上的所有磁碟區、可以使用 `-vserver-dr-protection unprotected` 的選項 `volume modify` 從 SVM 複寫中排除磁碟區的命令。
 
 .步驟
 . 從SVM複寫中排除磁碟區：
 +
-「Volume modify -vserver _svm_-volume _volume _-vserver -dr-protection protection protection protection protection protection protection protection protection protection protection protection protection protection protection
+`volume modify -vserver _SVM_ -volume _volume_ -vserver-dr-protection unprotected`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例將磁碟區「Vola_SRC」排除在SVM複寫之外：
+以下範例排除磁碟區 `volA_src` 從 SVM 複寫：
 
 +
 [listing]
@@ -33,10 +33,10 @@ cluster_src::> volume modify -vserver SVM1 -volume volA_src -vserver-dr-protecti
 如果您稍後想要在原本排除的SVM複寫中加入一個Volume、請執行下列命令：
 
 +
-「Volume modify -vserver _svm_-volume _volume _-vserver -dr-protection protected」
+`volume modify -vserver _SVM_ -volume _volume_ -vserver-dr-protection protected`
 
 +
-以下範例包括SVM複寫中的Volume「Vola_SRC」：
+以下範例包括 Volume `volA_src` 在 SVM 複寫中：
 
 +
 [listing]

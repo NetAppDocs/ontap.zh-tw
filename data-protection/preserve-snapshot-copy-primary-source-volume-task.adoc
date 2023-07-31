@@ -11,22 +11,22 @@ summary: 您可以使用SnapMirror SnapShot SnapShot擁有者create命令、在�
 
 
 [role="lead"]
-您可以使用「快照鏡射snapshot -Ownercreate」命令、在鏡射保存庫部署中、將標示為Snapshot的複本保留在次要系統上。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。
+您可以使用 `snapmirror snapshot-owner create` 命令、在鏡射資料保險箱部署的次要上保留標示的 Snapshot 複本。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。
 
 .關於這項工作
 如果您使用組合鏡射資料庫的連出或串聯部署、請記住、如果來源和目的地磁碟區上不存在通用的Snapshot複本、更新將會失敗。
 
 這對於鏡射儲存庫的扇出或串聯部署中的鏡射關係而言、絕對不會有任何問題、因為SnapMirror在執行更新之前、一律會先建立來源磁碟區的Snapshot複本。
 
-不過、這可能是資料保險箱關係的問題、因為SnapMirror在更新資料保險箱關係時、不會建立來源磁碟區的Snapshot複本。您需要使用「快照鏡射快照擁有者建立」、以確保在資料保存關係的來源和目的地上、至少有一個通用的Snapshot複本。
+不過、這可能是資料保險箱關係的問題、因為SnapMirror在更新資料保險箱關係時、不會建立來源磁碟區的Snapshot複本。您需要使用 `snapmirror snapshot-owner create` 確保在資料保險箱關係的來源和目的地上至少有一個通用 Snapshot 複本。
 
 .步驟
 . 在來源磁碟區上、將擁有者指派給您要保留的標記Snapshot複本：
 +
-「napmirror snapshot -Ownercreate -vserver _svm_-volume _volume _-snapshot _snapshot _-Owner_hon_」
+`snapmirror snapshot-owner create -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -owner _owner_`
 
 +
-以下範例將「ApplicationA」指派為「Snapshot 1」Snapshot複本的擁有者：
+以下範例指派 `ApplicationA` 身為的擁有者 `snap1` Snapshot 複本：
 
 +
 [listing]
@@ -40,13 +40,13 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 
 . 將標示的Snapshot複本傳輸至資料保險箱目的地：
 +
-"napmirror update -source-path _svm:volume（napmirror更新-source-path _svm:volume）_cluster（叢集）：//Svm/volume（磁碟區）"、... -destination-path _svm:Volume _|_cluster：//svm/volume _、... -source-snapshot snapshot快照
+`snapmirror update -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -source-snapshot snapshot`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例會傳輸「快照1」快照複本::
+下列範例將轉移 `snap1` Snapshot複本::
 +
 --
 [listing]
@@ -61,10 +61,10 @@ clust1::> snapmirror update -vserver vs1 -volume vol1
 
 . 在來源磁碟區上、從標記為Snapshot複本的擁有者中移除：
 +
-「napmirror snapshot -Ownerdelete -vserver _svm_-volume _volume _-snapshot _snapshot _-OOwner_`」
+`snapmirror snapshot-owner delete -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -owner _owner_`
 
 +
-以下範例將「ApplicationA」移除為「Snapshot 1」Snapshot複本的擁有者：
+下列範例會移除 `ApplicationA` 身為的擁有者 `snap1` Snapshot 複本：
 
 +
 [listing]

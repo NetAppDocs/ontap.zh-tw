@@ -34,12 +34,12 @@ summary: 將磁碟擁有權資訊寫入磁碟。ONTAP從節點移除備用磁碟
 .步驟
 . 如果磁碟擁有權自動指派已開啟、請使用CLI將其關閉：
 +
-「torage disk option modify -node_node_name_-autodassign Off」
+`storage disk option modify -node _node_name_ -autoassign off`
 
 . 如有需要、請針對節點的HA合作夥伴重複上一個步驟。
 . 從磁碟移除軟體擁有權資訊：
 +
-'磁碟移除擁有者_磁碟名稱_'
+`storage disk removeowner _disk_name_`
 
 +
 若要移除多個磁碟的擁有權資訊、請使用以逗號分隔的清單。
@@ -60,10 +60,10 @@ storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 
 .. 若為ONTAP 版本號9.9.1或更早版本、請輸入兩個命令：
 +
-'磁碟移除擁有者-磁碟_磁碟名稱_-root true '
+`storage disk removeowner -disk _disk_name_ -root true`
 
 +
-'磁碟移除擁有者-磁碟_磁碟_名稱_-data true '
+`storage disk removeowner -disk _disk_name_ -data true`
 
 
 
@@ -72,7 +72,7 @@ storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 --
 . 如果您先前關閉磁碟擁有權的自動指派、請在磁碟移除或重新指派之後將其開啟：
 +
-「torage disk option modify -node_node_name_-autodassign on」
+`storage disk option modify -node _node_name_ -autoassign on`
 
 . 如有需要、請針對節點的HA合作夥伴重複上一個步驟。
 

@@ -21,13 +21,13 @@ summary: 您必須先建立受SnapLock保護的稽核記錄、才能執行特殊
 
 [NOTE]
 ====
-在更新版本的版本中、您無法使用無法稽核記錄的「功能不全企業版」磁碟區。ONTAP SnapLock您必須使用SnapLock 「不符合需求」量。在更新版本的版本中、您可以使用「更新版本」或「更新版本」來記錄稽核記錄。ONTAP SnapLock SnapLock在所有情況下、稽核記錄磁碟區都必須掛載於交會路徑「/SnapLock稽核日誌」。沒有其他磁碟區可以使用此交會路徑。
+在更新版本的版本中、您無法使用無法稽核記錄的「功能不全企業版」磁碟區。ONTAP SnapLock您必須使用SnapLock 「不符合需求」量。在更新版本的版本中、您可以使用「更新版本」或「更新版本」來記錄稽核記錄。ONTAP SnapLock SnapLock在所有情況下、稽核記錄磁碟區都必須掛載在連接路徑上 `/snaplock_audit_log`。沒有其他磁碟區可以使用此交會路徑。
 
 ====
-您可以在SnapLock 稽核記錄磁碟區根目錄下的「/SnapLock」目錄中、找到名為「privdel_log」（特殊權限刪除作業）和「system_log」（其他一切）的子目錄中的「/selock」稽核記錄。稽核記錄檔名稱包含第一次記錄作業的時間戳記、可讓您在執行作業的大約時間內輕鬆搜尋記錄。
+您可以在中找到 SnapLock 稽核記錄 `/snaplock_log` 位於稽核記錄磁碟區根目錄下的目錄、位於名為的子目錄中 `privdel_log` （特權刪除作業）和 `system_log` （其他一切）。稽核記錄檔名稱包含第一次記錄作業的時間戳記、可讓您在執行作業的大約時間內輕鬆搜尋記錄。
 
-* 您可以使用「SnapLock flexflog file show」命令來檢視稽核記錄磁碟區上的記錄檔。
-* 您可以使用「SnapLock flexflog file archive」命令來歸檔目前的記錄檔、並建立新的記錄檔、這在需要將稽核記錄資訊記錄在個別檔案中的情況下非常有用。
+* 您可以使用 `snaplock log file show` 命令以檢視稽核記錄磁碟區上的記錄檔。
+* 您可以使用 `snaplock log file archive` 命令將目前的記錄檔歸檔並建立新的記錄檔、這在您需要將稽核記錄檔資訊記錄在個別檔案中時非常有用。
 
 
 如需詳細資訊、請參閱命令的手冊頁。
@@ -48,7 +48,7 @@ xref:create-snaplock-volume-task.adoc[建立SnapLock 一個流通量]
 
 . 設定SVM進行稽核記錄：
 +
-hy* SnapLock flexlog create -vserver _svm_name_-volume _SnapLock Volume名稱_-max-file-size _size_-retion-period _default_retent_p段_*
+`*snaplock log create -vserver _SVM_name_ -volume _snaplock_volume_name_ -max-file-size _size_ -retention-period _default_retention_period_*`
 
 +
 [NOTE]
@@ -57,14 +57,14 @@ hy* SnapLock flexlog create -vserver _svm_name_-volume _SnapLock Volume名稱_-m
 
 ====
 +
-下列命令會設定「VM1」、以供使用SnapLock VMware Volume「logvol」進行稽核記錄。稽核日誌的最大大小為20 GB、保留8個月。
+下列命令可進行設定 `SVM1` 用於使用 SnapLock Volume 進行稽核記錄 `logVol`。稽核日誌的最大大小為20 GB、保留8個月。
 
 +
 [listing]
 ----
 SVM1::> snaplock log create -vserver SVM1 -volume logVol -max-file-size 20GB -retention-period 8months
 ----
-. 在您設定用於稽核記錄的SVM上、將SnapLock 該SVM掛載到交會路徑「/SnapLock稽核日誌」。
+. 在您設定用於稽核記錄的 SVM 上、將 SnapLock 磁碟區掛載到連接路徑 `/snaplock_audit_log`。
 +
 xref:mount-snaplock-volume-task.adoc[掛載SnapLock 一個流通量]
 

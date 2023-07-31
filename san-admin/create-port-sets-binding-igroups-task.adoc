@@ -49,18 +49,18 @@ link:manage-san-initiators-task.html["檢視及管理啟動器和igroup"]
 --
 . 建立包含適當lifs的連接埠集：
 +
-「portset create -vserver _vserver_name_-portset _portset_name_-protocol _port-name _port_name_」
+`portset create -vserver _vserver_name_ -portset _portset_name_ -protocol _protocol_ -port-name _port_name_`
 
 +
-如果您使用FC、請將「傳輸協定」參數指定為「FCP」。如果您使用iSCSI、請將「傳輸協定」參數指定為「iSCSI」。
+如果您使用的是 FC 、請指定 `protocol` 參數為 `fcp`。如果您使用的是 iSCSI 、請指定 `protocol` 參數為 `iscsi`。
 
 . 將igroup繫結至連接埠集：
 +
-「LUN igroup bind-vserver _vserver_name_-igroup _igroup_name_-portset _portSet_name_」
+`lun igroup bind -vserver _vserver_name_ -igroup _igroup_name_ -portset _portset_name_`
 
 . 驗證連接埠集和LIF是否正確：
 +
-「portset show -vserver _vserver_name_」
+`portset show -vserver _vserver_name_`
 
 +
 [listing]

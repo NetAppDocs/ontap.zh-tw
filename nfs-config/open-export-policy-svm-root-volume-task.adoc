@@ -21,7 +21,7 @@ SVM根磁碟區的預設匯出原則必須包含允許所有用戶端透過NFS�
 .步驟
 . 如果您使用現有的SVM、請檢查預設的根Volume匯出原則：
 +
-「Vserver匯出原則規則顯示」
+`vserver export-policy rule show`
 
 +
 命令輸出應類似下列內容：
@@ -49,15 +49,15 @@ User ID To Which Anonymous Users Are Mapped: 65534
 
 . 建立SVM根磁碟區的匯出規則：
 +
-「vserver匯出原則規則create -vserver _vserver_name_-policyname預設-rueindex 1 -傳輸協定NFS -clientmMATCH 0.00.0.0/-rorrule any -rwrwrRule any -rooter'」
+`vserver export-policy rule create -vserver _vserver_name_ -policyname default -ruleindex 1 -protocol nfs -clientmatch 0.0.0.0/0 -rorule any ‑rwrule any -superuser any`
 
 +
-如果SVM只包含Kerberos保護的磁碟區、您可以將根磁碟區的匯出規則選項「-rorule」、「-rwrRule」及「超級使用者」設為「krb5」或「krb5i」。例如：
+如果 SVM 只包含受 Kerberos 保護的磁碟區、您可以設定匯出規則選項 `-rorule`、 `-rwrule`和 `-superuser` 將根磁碟區移至 `krb5` 或 `krb5i`。例如：
 
 +
-Check Alignment of PHs>-`rorrule krb5i -rwrwrRule krb5i -超級 用戶krb5i
+`-rorule krb5i -rwrule krb5i -superuser krb5i`
 
-. 使用「vserver匯出原則規則show」命令來驗證規則建立。
+. 使用驗證規則建立 `vserver export-policy rule show` 命令。
 
 
 .結果

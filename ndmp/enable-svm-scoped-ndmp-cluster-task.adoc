@@ -20,21 +20,21 @@ DMA必須支援駕駛擴充功能。
 關閉節點範圍的NDMP模式可在叢集上啟用SVM範圍的NDMP模式。
 
 .步驟
-. 使用帶有「node-sceme-mode」參數的「系統服務NDMP」命令來啟用SVM範圍的NDMP模式。
+. 使用啟用 SVM 範圍的 NDMP 模式 `system services ndmp` 命令 `node-scope-mode` 參數。
 +
 [listing]
 ----
 cluster1::> system services ndmp node-scope-mode off
 NDMP node-scope-mode is disabled.
 ----
-. 使用「vserver services NDMP on」命令、在管理SVM上啟用NDMP服務。
+. 使用在管理 SVM 上啟用 NDMP 服務 `vserver services ndmp on` 命令。
 +
 [listing]
 ----
 cluster1::> vserver services ndmp on -vserver cluster1
 ----
 +
-驗證類型預設設定為「挑戰」、並停用純文字驗證。
+驗證類型設為 `challenge` 預設會停用純文字驗證。
 
 +
 [NOTE]
@@ -42,7 +42,7 @@ cluster1::> vserver services ndmp on -vserver cluster1
 為了安全通訊、您應該停用純文字驗證。
 
 ====
-. 使用「vserver services NDMP show」命令來驗證NDMP服務是否已啟用。
+. 使用驗證 NDMP 服務是否已啟用 `vserver services ndmp show` 命令。
 +
 [listing]
 ----

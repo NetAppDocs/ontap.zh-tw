@@ -19,19 +19,19 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 
 .關於這項工作
-每次將節點新增至叢集時、您都必須執行「安全金鑰管理程式內建同步」命令。
+您必須執行 `security key-manager onboard sync` 每次將節點新增至叢集時的命令。
 
 如果您有 MetroCluster 組態、則必須執行 `security key-manager onboard enable` 先在本機叢集上執行 `security key-manager onboard sync` 在遠端叢集上、使用相同的複雜密碼。
 
-根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。您可以使用「cc-mode-enable=yes」選項、要求使用者在重新開機後輸入通關密碼。
+根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。您可以使用 `cc-mode-enabled=yes` 選項要求使用者在重新開機後輸入複雜密碼。
 
-對於NVE、如果您設定「cc-mode-enabled=yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。對於「Volume create」、您不需要指定「-加密true」。對於「Volume Move start」（磁碟區移動開始）、您不需要指定「-加密-目的地true」。
+如果您已設定、則適用於 NVE `cc-mode-enabled=yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。適用於 `volume create`，您不需要指定 `-encrypt true`。適用於 `volume move start`，您不需要指定 `-encrypt-destination true`。
 
 設定ONTAP 靜止資料加密時、若要符合商業分類解決方案（CSfC）的要求、您必須搭配NVE使用NSE、並確保在「一般條件」模式中啟用「內建金鑰管理程式」。請參閱 link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSfC解決方案簡介"^] 如需CSfC的詳細資訊、
 
 [NOTE]
 ====
-在「Common Criteria（一般條件）」模式中啟用「Onboard Key Manager（機載金鑰管理程式）」（「cc-mode enabled=yes（啟用cc-mode-enable=yes）」）時、系統行為會以下列方式變更：
+當「內建金鑰管理程式」在「一般條件」模式中啟用時 (`cc-mode-enabled=yes`）、系統行為會以下列方式變更：
 
 * 系統會監控在「一般準則」模式下運作時、連續嘗試失敗的叢集密碼。
 +
@@ -52,12 +52,12 @@ Onboard Key Manager可將金鑰儲存在揮發性記憶體中。當系統重新�
 .步驟
 . 啟動金鑰管理程式設定：
 +
-「安全金鑰管理程式已內建啟用-cc-mode啟用yes | no」
+`security key-manager onboard enable -cc-mode-enabled yes|no`
 
 +
 [NOTE]
 ====
-設定「cc-mode-enable=yes」、要求使用者在重新開機後輸入金鑰管理程式密碼。對於NVE、如果您設定「cc-mode-enabled=yes」、則使用「volume create」和「volume move start」命令所建立的磁碟區會自動加密。支援cc-mode-enabled的選項MetroCluster 不支援在各種組態中。「安全金鑰管理程式內建啟用」命令取代了「安全金鑰管理程式設定」命令。
+設定 `cc-mode-enabled=yes` 要求使用者在重新開機後輸入金鑰管理密碼。如果您已設定、則適用於 NVE `cc-mode-enabled=yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。。 `- cc-mode-enabled` MetroCluster 組態不支援此選項。    。 `security key-manager onboard enable` 命令會取代 `security key-manager setup` 命令。
 
 ====
 +
@@ -81,16 +81,16 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在通關密碼確認提示下、重新輸入通關密碼。
 . 確認已建立驗證金鑰：
 +
-「安全金鑰管理程式金鑰查詢-金鑰類型NSE-AK」
+`security key-manager key query -key-type NSE-AK`
 
 +
 [NOTE]
 ====
-「安全金鑰管理程式金鑰查詢」命令會取代「安全金鑰管理程式查詢金鑰」命令。如需完整的命令語法、請參閱手冊頁。
+。 `security key-manager key query` 命令會取代 `security key-manager query key` 命令。如需完整的命令語法、請參閱手冊頁。
 
 ====
 +
-下列範例可驗證是否已為「cluster1（叢集1）”建立驗證金鑰：
+下列範例會驗證是否已為建立驗證金鑰 `cluster1`：
 
 +
 [listing]

@@ -14,7 +14,7 @@ summary: 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用�
 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用遠端的功能（雲端）分層、則必須設定叢集間的生命體。您可以在與資料網路共用的連接埠上設定叢集間的LIF。如此可減少叢集間網路所需的連接埠數量。
 
 .您需要的產品
-* 基礎實體或邏輯網路連接埠必須設定為管理「up」狀態。
+* 基礎實體或邏輯網路連接埠必須已設定為系統管理 `up` 狀態。
 * LIF服務原則必須已經存在。
 
 
@@ -24,10 +24,10 @@ summary: 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用�
 .步驟
 . 列出叢集中的連接埠：
 +
-「網路連接埠展示」
+`network port show`
 
 +
-以下範例顯示「cluster01」中的網路連接埠：
+下列範例顯示中的網路連接埠 `cluster01`：
 
 +
 [listing]
@@ -50,10 +50,10 @@ cluster01-02
 ----
 . 在系統SVM上建立叢集間LIF：
 +
-「網路介面create -vserver cluster -lIF _LIF_name_-service-policy default-intercluster -home-node_node_-home-port _port_-address _port_ip_-netask_netapp__」
+`network interface create -vserver Cluster -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 +
-以下範例建立叢集間的lifs「cluster01_icl01」和「cluster01_icl02」：
+以下範例建立叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02`：
 
 +
 [listing]
@@ -69,7 +69,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 ----
 . 驗證是否已建立叢集間的LIF：
 +
-「網路介面show -service-policy default-intercluster」
+`network interface show -service-policy default-intercluster`
 
 +
 [listing]
@@ -86,10 +86,10 @@ cluster01
 ----
 . 驗證叢集間的LIF是否為備援：
 +
-「網路介面show–service-policy default-intercluster -faulty」
+`network interface show –service-policy default-intercluster -failover`
 
 +
-以下範例顯示、在「e0c」連接埠上的叢集間lifs「cluster01_icl01」和「cluster01_icl02」將會容錯移轉至「e0d」連接埠。
+以下範例顯示叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在上 `e0c` 連接埠將容錯移轉至 `e0d` 連接埠。
 
 +
 [listing]

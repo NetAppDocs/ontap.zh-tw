@@ -11,7 +11,7 @@ summary: 如果您想要使FIPS磁碟機或SED上的資料永久無法存取、�
 
 
 [role="lead"]
-如果您想要使FIPS磁碟機或SED上的資料永久無法存取、並將磁碟機用於新資料、您可以使用「儲存加密磁碟清理」命令來清理磁碟機。
+如果您想讓 FIPS 磁碟機或 SED 上的資料永遠無法存取、並將磁碟機用於新資料、您可以使用 `storage encryption disk sanitize` 用於清理磁碟機的命令。
 
 .您需要的產品
 您必須是叢集管理員才能執行此工作。
@@ -23,7 +23,7 @@ summary: 如果您想要使FIPS磁碟機或SED上的資料永久無法存取、�
 . 將任何需要保留的資料移轉到另一個磁碟上的集合體。
 . 刪除FIPS磁碟機或SED上要消毒的Aggregate：
 +
-'儲存Aggregate刪除-Aggregate _Aggregate名稱_'
+`storage aggregate delete -aggregate _aggregate_name_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -35,7 +35,7 @@ cluster1::> storage aggregate delete -aggregate aggr1
 ----
 . 識別要消毒的FIPS磁碟機或SED的磁碟ID：
 +
-「torage加密磁碟顯示-欄位資料金鑰ID、fIPS-KEY-ID、擁有者」
+`storage encryption disk show -fields data-key-id,fips-key-id,owner`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -53,10 +53,10 @@ Disk    Mode Data Key ID
 ----
 . 如果FIPS磁碟機以FIPS相容模式執行、請將節點的FIPS驗證金鑰ID設回預設的MSID 0x0：
 +
-「torage加密磁碟修改磁碟_disk _id_-fIPS-key-id 0x0」
+`storage encryption disk modify -disk _disk_id_ -fips-key-id 0x0`
 
 +
-您可以使用「安全金鑰管理程式查詢」命令來檢視金鑰ID。
+您可以使用 `security key-manager query` 檢視金鑰ID的命令。
 
 +
 [listing]
@@ -69,10 +69,10 @@ Info: Starting modify on 1 disk.
 ----
 . 為磁碟機消毒：
 +
-'磁碟加密磁碟資料抹除-disk _disk_id_'
+`storage encryption disk sanitize -disk _disk_id_`
 
 +
-您只能使用此命令來清除熱備援磁碟或中斷的磁碟。若要清除所有磁碟的資料、無論其類型為何、請使用「-force-all-state」選項。如需完整的命令語法、請參閱手冊頁。
+您只能使用此命令來清除熱備援磁碟或中斷的磁碟。若要清理所有磁碟、無論其類型為何、請使用 `-force-all-state` 選項。如需完整的命令語法、請參閱手冊頁。
 
 +
 [NOTE]

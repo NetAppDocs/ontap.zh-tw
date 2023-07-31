@@ -34,12 +34,12 @@ NOTE: 只有當FlexCache 您控制快取與來源之間的連線可靠性時、�
 == 在新FlexCache 的支援區啟用全域檔案鎖定
 
 .步驟
-. 建立FlexCache 將「-is全域檔案鎖定」設為true的現象：
+. 使用建立 FlexCache Volume `-is-global-file-locking` 設為true：
 +
-「Volume FlexCache 支援功能可鎖定全域檔案、Volume _volume名稱_-is。
+`volume flexcache create volume _volume_name_ -is-global-file-locking-enabled true`
 
 +
-預設值「-is全域檔案鎖定」為「假」。在FlexCache Volume上執行任何後續的「Volume示例」命令時、必須將「is全域檔案鎖定」設定為「true」、才能傳遞這些命令。
+的預設值 `-is-global-file-locking` 為 "`FALSE" 。之後的任何時候 `volume flexcache create` 命令是在磁碟區上執行、必須與一起傳遞 `-is-global-file-locking enabled` 設為「 'true' 」。
 
 
 
@@ -51,17 +51,17 @@ NOTE: 只有當FlexCache 您控制快取與來源之間的連線可靠性時、�
 . 必須從來源磁碟區設定全域檔案鎖定。
 . 來源不能有任何其他現有關係（例如SnapMirror）。任何現有的關係都必須取消關聯。執行命令時、必須連接所有快取和磁碟區。若要檢查連線狀態、請執行：
 +
-Volume FlexCache 不中斷連線狀態顯示
+`volume flexcache connection-status show`
 
 +
-所有列出的磁碟區的狀態應顯示為「Connected（已連線）」。 如需詳細資訊、請參閱 link:view-connection-status-origin-task.html["檢視FlexCache 彼此之間的關係狀態"] 或 link:synchronize-properties-origin-volume-task.html["從FlexCache 來源同步處理一個不同步的資料區的屬性"]。
+所有列出的磁碟區的狀態應顯示為 “`connected.`」如需詳細資訊、請參閱 link:view-connection-status-origin-task.html["檢視FlexCache 彼此之間的關係狀態"] 或 link:synchronize-properties-origin-volume-task.html["從FlexCache 來源同步處理一個不同步的資料區的屬性"]。
 
 . 在快取上啟用全域檔案鎖定：
 +
-「Volume FlexCache SUR原 點組態顯示/修改-volume _volume _name_-is - global-file-ligure-enabled_true」
+`volume flexcache origin config show/modify -volume _volume_name_ -is-global-file-locking-enabled true`
 
 
 
 如果還原ONTAP 至9.9.1之前的版本、則必須先在來源和相關快取上停用全域檔案鎖定。這可透過執行下列項目來管理：
 
-Volume FlexCache 不穩定準備降級-disable-feature-set 9.10.0
+`volume flexcache prepare-to-downgrade -disable-feature-set 9.10.0`

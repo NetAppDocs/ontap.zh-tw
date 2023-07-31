@@ -14,7 +14,8 @@ summary: 您可以使用叢集設定精靈在第一個節點上建立叢集。�
 您可以使用叢集設定精靈在第一個節點上建立叢集。精靈可協助您設定叢集網路、以連接節點、建立叢集管理儲存虛擬機器（SVM）、新增功能授權金鑰、以及為第一個節點建立節點管理介面。
 
 .開始之前
-* 您應該已根據平台機型的安裝與設定指示、安裝、連接新的儲存系統並開啟電源。請參閱 https://docs.netapp.com/us-en/ontap-systems/index.html["不再需要使用本技術AFF FAS"]。
+* 您應該已根據平台機型的安裝與設定指示、安裝、連接新的儲存系統並開啟電源。
+請參閱 https://docs.netapp.com/us-en/ontap-systems/index.html["不再需要使用本技術AFF FAS"]。
 * 叢集網路介面應在叢集的每個節點上設定、以進行叢集內通訊。
 * 如果您在叢集上設定 IPv6 、則應在 Base Management Controller （ BMC ）上設定 IPv6 、以便使用 SSH 存取系統。
 
@@ -42,7 +43,7 @@ NOTE: 根據預設會啟用支援。AutoSupport
 
 . 請依照畫面上的指示、將IP位址指派給節點。
 +
-從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
+從 ONTAP 9.13.1 開始、您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。  對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
 
 . 按* Enter鍵*繼續。
 +
@@ -50,9 +51,9 @@ NOTE: 根據預設會啟用支援。AutoSupport
 ----
 Do you want to create a new cluster or join an existing cluster? {create, join}:
 ----
-. 建立新的叢集：「create」
+. 建立新叢集： `create`
 . 接受系統預設值或輸入您自己的值。
-. 完成設定後、請登入叢集、輸入ONTAP 「叢集顯示」命令、確認叢集處於作用中狀態、且第一個節點正常運作
+. 安裝完成後、請登入叢集、並輸入 ONTAP CLI 命令、確認叢集已啟用、第一個節點正常運作： `cluster show`
 +
 以下範例顯示第一個節點（cluster1-01）健全且符合參與資格的叢集：
 
@@ -65,7 +66,7 @@ Node                  Health  Eligibility
 cluster1-01           true    true
 ----
 +
-您可以使用「叢集設定」命令存取叢集設定精靈、以變更您為管理SVM或節點SVM所輸入的任何值。
+您可以存取叢集設定精靈、使用變更您為管理 SVM 或節點 SVM 輸入的任何值 `cluster setup` 命令。
 
 
 

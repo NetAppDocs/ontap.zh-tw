@@ -9,7 +9,7 @@ summary: 您可以使用儲存加密磁碟修改命令搭配-fIPS-key-id選項�
 
 
 [role="lead"]
-您可以使用「儲存加密磁碟修改」命令搭配「FIPS金鑰ID」選項、將FIPS 140-2驗證金鑰指派給FIPS磁碟機。叢集節點將此金鑰用於資料存取以外的磁碟機作業、例如防止磁碟機遭受拒絕服務攻擊。
+您可以使用 `storage encryption disk modify` 命令 `-fips-key-id` 將 FIPS 140-2 驗證金鑰指派給 FIPS 磁碟機的選項。叢集節點將此金鑰用於資料存取以外的磁碟機作業、例如防止磁碟機遭受拒絕服務攻擊。
 
 .關於這項工作
 您的安全設定可能需要使用不同的金鑰來進行資料驗證和FIPS 140-2驗證。如果情況並非如此、您可以使用與資料存取相同的FIPS法規遵循驗證金鑰。
@@ -20,13 +20,13 @@ summary: 您可以使用儲存加密磁碟修改命令搭配-fIPS-key-id選項�
 磁碟機韌體必須支援FIPS 140-2規範。。 link:https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^] 包含支援磁碟機韌體版本的相關資訊。
 
 .步驟
-. 您必須先確定已指派資料驗證金鑰。您可以使用來完成這項作業 xref:assign-authentication-keys-seds-external-task.html[外部金鑰管理程式] 或是 xref:assign-authentication-keys-seds-onboard-task.html[內建金鑰管理程式]。驗證是否已使用命令「shorage加密磁碟show」指派金鑰。
+. 您必須先確定已指派資料驗證金鑰。您可以使用來完成這項作業 xref:assign-authentication-keys-seds-external-task.html[外部金鑰管理程式] 或是 xref:assign-authentication-keys-seds-onboard-task.html[內建金鑰管理程式]。確認已使用命令指派金鑰 `storage encryption disk show`。
 . 指派FIPS 140-2驗證金鑰給SED：
 +
-「torage加密磁碟修改磁碟_disk _disk_id_-fIPS-key-id _fFIPS驗證_key_id_」
+`storage encryption disk modify -disk _disk_id_ -fips-key-id _fips_authentication_key_id_`
 
 +
-您可以使用「安全金鑰管理程式查詢」命令來檢視金鑰ID。
+您可以使用 `security key-manager query` 檢視金鑰ID的命令。
 
 +
 [source]
@@ -39,7 +39,7 @@ Info: Starting modify on 14 disks.
 ----
 . 確認已指派驗證金鑰：
 +
-「torage加密磁碟顯示-FIPS」
+`storage encryption disk show -fips`
 
 +
 如需完整的命令語法、請參閱手冊頁。

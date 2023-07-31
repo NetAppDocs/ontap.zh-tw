@@ -78,14 +78,15 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
 
 
 
-| 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、記錄您的決策並恢復正常的ARP監控。+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
+| 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後按一下*更新*和*清除可疑的檔案類型*、記錄您的決策並恢復正常的ARP監控。+
+如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
 |===
 --
 .CLI
 --
 . 當您收到可疑勒索軟體攻擊的通知時、請確認攻擊的時間和嚴重性：
 +
-「安全性防勒索軟體Volume show -vserver _svm_name_-volume _vol_name_」
+`security anti-ransomware volume show -vserver _svm_name_ -volume _vol_name_`
 
 +
 範例輸出：
@@ -103,17 +104,17 @@ Number of Attacks: 1
 您也可以檢查EMS訊息：
 
 +
-「事件記錄檔顯示-message-name callhome.arw.activity.seen`
+`event log show -message-name callhome.arw.activity.seen`
 
 . 產生攻擊報告並記下輸出位置：
 +
-「安全性反勒索軟體磁碟區攻擊會產生報告-volume _vol_name_-dest-path _file_port_/」
+`security anti-ransomware volume attack generate-report -volume _vol_name_ -dest-path _file_location_/`
 
 +
 範例輸出：
 
 +
-「Report "report_file_vs0_vol1_14-09-2021_01-21-08"（報告「report_file_vs0_vol1_14-09-2021_08-08」）、可在路徑「vs0：vol1/」取得
+`Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"`
 
 . 在管理用戶端系統上檢視報告。例如：
 +
@@ -132,17 +133,23 @@ Number of Attacks: 1
 `anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
 +
-使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]」序號。[`-exte_text_,… 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、格式為「-start-time_time_-tend-time_]、檔案範圍的開始和結束時間。
+使用下列其中一個參數來識別副檔名：
+`[-seq-no _integer_]` 可疑清單中檔案的序號。
+`[-extension _text_, … ]` 副檔名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除之檔案範圍的開始和結束時間、格式為「 MM/DD/YYYY HH ： MM ： SS 」。
 
 ** 可能的勒索軟體攻擊
 +
 回應攻擊和 link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。恢復資料後、輸入下列命令以記錄您的決定、並恢復正常的 ARP 監控：
 
 +
-「反勒索軟體磁碟區攻擊清除可疑的-vserver _Svm_name_-volume _vol_name_[_extension identids_]-假 正假」
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
 
 +
-使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]順序編號「[-extension_text_、…」 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、「開始時間_date時間_-結束時間_date時間_」、格式為「mm/DD/YYYY hh：MM：SS」。
+使用下列其中一個參數來識別副檔名：
+`[-seq-no _integer_]` 可疑清單中檔案的序號
+`[-extension _text_, … ]` 副檔名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除之檔案範圍的開始和結束時間、格式為「 MM/DD/YYYY HH ： MM ： SS 」。
 
 +
 如果還原整個磁碟區、則沒有可疑的檔案類型可清除。將移除 ARP 建立的備份快照、並清除攻擊報告。

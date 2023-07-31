@@ -26,28 +26,28 @@ summary: 您可以在SMB共用區上啟用或停用存取型列舉（ABE）、�
  a| 
 在新共用區上啟用ABE
  a| 
-「Vserver CIFS共用區create -vserver vserver_name -share-name share_name -path -share-properties存取型列舉」您可以在建立SMB共用區時指定其他選用的共用設定和其他共用內容。如需詳細資訊、請參閱「vserver CIFS共用create」命令的手冊頁。
+`vserver cifs share create -vserver vserver_name -share-name share_name -path path -share-properties access-based-enumeration`     建立 SMB 共用時、您可以指定其他選用的共用設定和其他共用內容。如需詳細資訊、請參閱的手冊頁 `vserver cifs share create` 命令。
 
 
 
  a| 
 在現有共用區上啟用ABE
  a| 
-「Vserver CIFS共用內容add -vserver vserver_name -share-name share_name -share-properties存取型列舉」現有的共用內容會保留下來。ABE共用屬性會新增至現有的共用屬性清單。
+`vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties access-based-enumeration`     保留現有的共用內容。ABE共用屬性會新增至現有的共用屬性清單。
 
 
 
  a| 
 停用現有共用區上的ABE
  a| 
-「Vserver CIFS共用內容移除-vserver vserver_name -share-name share_name -share-properties存取型列舉」會保留其他共用內容。只有ABE共用內容會從共用內容清單中移除。
+`vserver cifs share properties remove -vserver vserver_name -share-name share_name -share-properties access-based-enumeration`     其他共用內容將會保留。只有ABE共用內容會從共用內容清單中移除。
 
 |===
-. 使用「vserver CIFS共用show」命令來驗證共用組態是否正確。
+. 使用確認共用組態正確無誤 `vserver cifs share show` 命令。
 
 
 .範例
-以下範例在SVM VS1上建立名為「shes」的ABE SMB共用區、路徑為「/sait」。共用區是以「存取型列舉」建立、做為共用內容：
+以下範例建立名為「銷售」的 ABE SMB 共用、路徑為 `/sales` 在 SVM VS1 上。共用即會建立於 `access-based-enumeration` 做為共享內容：
 
 [listing]
 ----
@@ -73,7 +73,7 @@ File Attribute Cache Lifetime: -
                 Offline Files: manual
 Vscan File-Operations Profile: standard
 ----
-以下範例將「存取型列舉」共用內容新增至名為「data2」的SMB共用區：
+下列範例新增 `access-based-enumeration` 將內容共用至名為「 data2 」的 SMB 共用區：
 
 [listing]
 ----

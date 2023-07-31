@@ -14,31 +14,32 @@ summary: 您可以監控SMB工作階段統計資料、並判斷哪些已建立�
 您可以監控SMB工作階段統計資料、並判斷哪些已建立的工作階段已簽署、哪些尚未簽署。
 
 .關於這項工作
-進階權限層級的「統計資料」命令會提供「Designed _sessions」計數器、可用來監控已簽署的SMB工作階段數量。「Designed_Sessions」計數器可與下列統計資料物件一起使用：
+。 `statistics` 進階權限層級的命令提供 `signed_sessions` 可用來監控已簽署 SMB 工作階段數量的計數器。。 `signed_sessions` 下列統計資料物件可使用計數器：
 
-* CIFS可讓您監控所有SMB工作階段的SMB簽署。
-* 您可利用《mb1》監控SMB簽署SMB 1.0工作階段。
-* 您可以使用"MB2"監控SMB簽署SMB 2.x和SMB 3.0工作階段。
+* `cifs` 可讓您監控所有 SMB 工作階段的 SMB 簽署。
+* `smb1` 可讓您監控 SMB 1.0 工作階段的 SMB 簽署。
+* `smb2` 可讓您監控 SMB 2.x 和 SMB 3.0 工作階段的 SMB 簽署。
 +
-SMB 3.0統計資料會包含在「shMB2」物件的輸出中。
+的輸出中包含 SMB 3.0 統計資料 `smb2` 物件：
 
 
 
-如果您想要比較已簽署工作階段的數量與工作階段總數、可以比較「Designed _sessions'（已設定工作階段）」計數器的輸出與「END_Sessions（已建立工作階段）」計數器的輸出。
+如果您想要比較已簽署工作階段的數目與工作階段總數、您可以比較的輸出 `signed_sessions` 以的輸出進行計數 `established_sessions` 計數器。
 
 您必須先開始收集統計資料樣本、才能檢視結果資料。如果不停止資料收集、您可以檢視範例中的資料。停止資料收集可提供固定的範例。不停止資料收集可讓您取得更新的資料、以便與先前的查詢進行比較。這項比較可協助您識別趨勢。
 
 .步驟
-. 將權限層級設為進階：+「Set -priv榮幸advanc進 階」
+. 將權限等級設為進階： +
+`set -privilege advanced`
 . 開始資料收集：+
 `statistics start -object {cifs|smb1|smb2} -instance instance -sample-id _sample_ID_ [-node _node_name_]`
 +
-如果未指定"-same-id"參數、命令會為您產生範例識別碼、並將此範例定義為CLI工作階段的預設範例。「-sample-id」的值是一個字串。如果您在相同的CLI工作階段中執行此命令、但未指定「-same-id」參數、則命令會覆寫先前的預設範例。
+如果您未指定 `-sample-id` 參數、命令會為您產生範例識別碼、並將此範例定義為 CLI 工作階段的預設範例。的價值 `-sample-id` 為文字字串。如果您在相同的CLI工作階段中執行此命令、但未指定 `-sample-id` 參數時、命令會覆寫先前的預設範例。
 
 +
 您可以選擇性地指定要收集統計資料的節點。如果您未指定節點、範例會收集叢集中所有節點的統計資料。
 
-. 使用「統計資料停止」命令停止收集範例的資料。
+. 使用 `statistics stop` 停止收集樣本資料的命令。
 . 檢視SMB簽署統計資料：
 +
 |===
@@ -48,20 +49,21 @@ SMB 3.0統計資料會包含在「shMB2」物件的輸出中。
  a| 
 已簽署的工作階段
  a| 
-「How -same-id same_ID -counter signed_sessions」（如何樣例識別碼-counter signed_sessions）|_nnode_name_（-node_node_name_]）
+`show -sample-id sample_ID -counter signed_sessions|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 已簽署的工作階段和已建立的工作階段
  a| 
-「How -same-id _sample _id_-counter signed_sessions」（如何樣例識別碼_same_id_計數器簽署的工作階段）|「isited_sessions」（建立的工作階段）|節點名稱_（-node_name]）
+`show -sample-id _sample_ID_ -counter signed_sessions|established_sessions|_node_name_ [-node node_name]`
 
 |===
 +
-如果您只想顯示單一節點的資訊、請指定選用的「節點」參數。
+如果您只想顯示單一節點的資訊、請指定選用項目 `-node` 參數。
 
-. 返回管理員權限等級：+「設置權限管理」
+. 返回管理權限層級： +
+`set -privilege admin`
 
 
 .範例

@@ -22,37 +22,40 @@ summary: 您可以使用ONTAP 指令來監控HA配對的狀態。
 | 如果您想要檢查 | 使用此命令 
 
 
-| 無論容錯移轉已啟用或已發生、或目前無法進行容錯移轉的原因 | 「容錯移轉顯示」 
+| 無論容錯移轉已啟用或已發生、或目前無法進行容錯移轉的原因 | `storage failover show` 
 
 
-| 檢視已啟用儲存容錯移轉HA模式設定的節點、您必須將該節點的值設為ha、才能參與儲存容錯移轉（HA配對）組態。「非哈」值僅用於獨立或單節點叢集組態。 | 「儲存容錯移轉顯示欄位模式」 
+| 檢視已啟用儲存容錯移轉 HA 模式設定的節點
+您必須將值設為 HA 、節點才能參與儲存容錯移轉（ HA 配對）組態。
+。 `non-ha` 值僅用於獨立或單節點叢集組態。 | `storage failover show -fields mode` 
 
 
-| 是否啟用硬體輔助接管 | 「容錯移轉hwassist show」 
+| 是否啟用硬體輔助接管 | `storage failover hwassist show` 
 
 
-| 發生硬體輔助接管事件的歷史記錄 | 「顯示容錯移轉的hwassist統計資料」 
+| 發生硬體輔助接管事件的歷史記錄 | `storage failover hwassist stats show` 
 
 
-| 當合作夥伴的集合體移至執行接管的節點時、接管作業的進度會移至該節點 | 「容錯移轉show takeover」 
+| 當合作夥伴的集合體移至執行接管的節點時、接管作業的進度會移至該節點 | `storage failover show‑takeover` 
 
 
-| 將Aggregate傳回合作夥伴節點的還原作業進度 | 「儲存容錯移轉顯示還原」 
+| 將Aggregate傳回合作夥伴節點的還原作業進度 | `storage failover show‑giveback` 
 
 
-| 在接管或恢復作業期間、Aggregate是否位於主目錄 | 「Aggregate show」欄位為主選項ID、擁有者ID、主選項名稱、擁有者名稱、即為主選項」 
+| 在接管或恢復作業期間、Aggregate是否位於主目錄 | `aggregate show ‑fields home‑id,owner‑id,home‑name,owner‑name,is‑home` 
 
 
-| 是否啟用叢集HA（僅適用於兩個節點叢集） | 《叢集表演》 
+| 是否啟用叢集HA（僅適用於兩個節點叢集） | `cluster ha show` 
 
 
-| HA配對元件的HA狀態（在使用HA狀態的系統上） | 「ha‑config show」這是一種維護模式命令。 
+| HA配對元件的HA狀態（在使用HA狀態的系統上） | `ha‑config show`
+這是維護模式命令。 
 |===
 
 
 == 儲存容錯移轉show type命令所顯示的節點狀態
 
-下列清單說明節點顯示「儲存容錯移轉show」命令的狀態。
+下表說明節點的狀態 `storage failover show` 命令隨即顯示。
 
 |===
 
@@ -72,7 +75,7 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。停用
  a| 
 本機節點無法透過HA互連與合作夥伴節點交換資訊。合作夥伴的GiveBack of SFO集合體已完成、但合作夥伴備用磁碟仍由本機節點擁有。
 
-* 如需詳細資訊、請執行「儲存容錯移轉show-f恢復」命令。
+* 執行 `storage failover show-giveback` 命令以取得更多資訊。
 
 
 
@@ -141,7 +144,8 @@ SFO集合體所有權從本機節點移轉至接管節點的作業正在進行�
 
 
  a| 
-已連線至PARTNER_NAME。先前的接管嘗試已中止、因為原因。本機節點擁有部分合作夥伴的SFO Aggregate。將「繞過最佳化」參數設為true、以接管其他Aggregate、或是發行合作夥伴的贈品、以歸還重新放置的Aggregate。
+已連線至PARTNER_NAME。先前的接管嘗試已中止、因為原因。本機節點擁有部分合作夥伴的SFO Aggregate。
+重新核發與的合作夥伴接管 `‑bypass-optimization` 參數設為 true 可接管其餘的集合體、或是核發合作夥伴的贈品以傳回重新部署的集合體。
  a| 
 HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。先前的接管嘗試已中止、原因如下所示。本機節點擁有部分合作夥伴的SFO集合體。
 
@@ -151,7 +155,8 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。先前
 
 
  a| 
-已連線至PARTNER_NAME。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO Aggregate。將「繞過最佳化」參數設為true、以接管其他Aggregate、或是發行合作夥伴的贈品、以歸還重新放置的Aggregate。
+已連線至PARTNER_NAME。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO Aggregate。
+重新核發與的合作夥伴接管 `‑bypass-optimization` 參數設為 true 可接管其餘的集合體、或是核發合作夥伴的贈品以傳回重新部署的集合體。
  a| 
 HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO集合體。
 
@@ -161,7 +166,8 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。先前
 
 
  a| 
-正在等待PARTNER_NAME。先前的接管嘗試已中止、因為原因。本機節點擁有部分合作夥伴的SFO Aggregate。將「-bypass optimization」參數設為true、以接管其餘的集合體、或發出合作夥伴的恢復、以歸還重新放置的集合體。
+正在等待PARTNER_NAME。先前的接管嘗試已中止、因為原因。本機節點擁有部分合作夥伴的SFO Aggregate。
+將「-bypass optimization」參數設為true、以接管其餘的集合體、或發出合作夥伴的恢復、以歸還重新放置的集合體。
  a| 
 本機節點無法透過HA互連與合作夥伴節點交換資訊。先前的接管嘗試已中止、原因如下所示。本機節點擁有部分合作夥伴的SFO集合體。
 
@@ -171,7 +177,8 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。先前
 
 
  a| 
-正在等待PARTNER_NAME。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO Aggregate。將「-bypass optimization」參數設為true、以接管其餘的集合體、或發出合作夥伴的恢復、以歸還重新放置的集合體。
+正在等待PARTNER_NAME。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO Aggregate。
+將「-bypass optimization」參數設為true、以接管其餘的集合體、或發出合作夥伴的恢復、以歸還重新放置的集合體。
  a| 
 本機節點無法透過HA互連與合作夥伴節點交換資訊。先前的接管嘗試已中止。本機節點擁有部分合作夥伴的SFO集合體。
 
@@ -227,7 +234,7 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。合作
  a| 
 先前在模組模組模組名稱中的恢復嘗試失敗。自動恢復將在秒數內啟動。
 
-* 如需詳細資訊、請執行「儲存容錯移轉show-f恢復」命令。
+* 執行 `storage failover show-giveback` 命令以取得更多資訊。
 
 
 
@@ -285,7 +292,7 @@ HA互連處於作用中狀態、可將資料傳輸至合作夥伴節點。系統
  a| 
 無法進行儲存容錯移轉。HA模式選項設定為非_HA。
 
-* 您必須在HA配對中的兩個節點上執行「儲存容錯移轉修改」模式「ha」節點節點節點節點節點名稱」命令、然後重新啟動節點以啟用HA功能。
+* 您必須執行 `storage failover modify ‑mode ha ‑node nodename` 在 HA 配對中的兩個節點上執行命令、然後重新啟動節點以啟用 HA 功能。
 
 
 |===

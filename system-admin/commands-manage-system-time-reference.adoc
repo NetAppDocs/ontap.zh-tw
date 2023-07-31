@@ -11,7 +11,7 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
 
 
 [role="lead"]
-您可以使用「叢集時間服務NTP伺服器」命令來管理叢集的NTP伺服器。您可以使用「叢集日期」命令手動管理叢集時間。
+您可以使用 `cluster time-service ntp server` 用於管理叢集 NTP 伺服器的命令。您可以使用 `cluster date` 手動管理叢集時間的命令。
 
 從使用S25 9.5開始ONTAP 、您可以使用對稱驗證來設定NTP伺服器。
 
@@ -24,18 +24,18 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
  a| 
 將叢集與外部NTP伺服器建立關聯、而不進行對稱驗證
  a| 
-「叢集時間服務NTP伺服器create -server server_name」
+`cluster time-service ntp server create -server server_name`
 
 
 
  a| 
 將叢集與外部NTP伺服器建立關聯、使其具有ONTAP 可在版次9.5或更新版本中使用的對稱驗證
  a| 
-「叢集時間服務NTP伺服器create -server server_ip_address -key-id key_id」
+`cluster time-service ntp server create -server server_ip_address -key-id key_id`
 
 [NOTE]
 ====
-「key_id」必須指已設定「叢集時間服務NTP金鑰」的現有共用金鑰。
+。 `key_id` 必須參考現有的共用金鑰、該金鑰設定為「叢集時間服務 NTP 金鑰」。
 
 ====
 
@@ -45,7 +45,7 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
 
 提供版本僅適用於S9.5或更新版本ONTAP
  a| 
-「叢集時間服務NTP伺服器修改-server server_name -key-id key_id」
+`cluster time-service ntp server modify -server server_name -key-id key_id`
 
 
 
@@ -59,7 +59,7 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
  a| 
 設定共用的NTP金鑰
  a| 
-「叢集時間服務NTP金鑰create -id shared_key_id -type shared_key_type -Value shared_key_value'
+`cluster time-service ntp key create -id shared_key_id -type shared_key_type -value shared_key_value`
 
 [NOTE]
 ====
@@ -71,28 +71,28 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
  a| 
 顯示與叢集相關聯之NTP伺服器的相關資訊
  a| 
-「叢集時間服務NTP伺服器顯示」
+`cluster time-service ntp server show`
 
 
 
  a| 
 修改與叢集相關聯的外部NTP伺服器組態
  a| 
-「叢集時間服務NTP伺服器修改」
+`cluster time-service ntp server modify`
 
 
 
  a| 
 將NTP伺服器與叢集取消關聯
  a| 
-「叢集時間服務NTP伺服器刪除」
+`cluster time-service ntp server delete`
 
 
 
  a| 
 清除所有外部NTP伺服器與叢集的關聯、以重設組態
  a| 
-「叢集時間服務NTP伺服器重設」
+`cluster time-service ntp server reset`
 
 [NOTE]
 ====
@@ -109,14 +109,14 @@ summary: 您可以使用叢集時間服務NTP伺服器命令來管理叢集的NT
  a| 
 設定或修改時區、日期和時間
  a| 
-《叢集日期修改》
+`cluster date modify`
 
 
 
  a| 
 顯示叢集的時區、日期和時間設定
  a| 
-「叢集日期顯示」
+`cluster date show`
 
 |===
 .相關資訊

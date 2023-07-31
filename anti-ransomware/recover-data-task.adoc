@@ -39,7 +39,7 @@ NOTE: 如果發生勒索軟體攻擊、請參閱知識庫文章 link:https://kb.
 ====
 .系統管理員
 --
-. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
+. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。  如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
 +
 [cols="2"]
 |===
@@ -68,10 +68,10 @@ NOTE: 如果發生勒索軟體攻擊、請參閱知識庫文章 link:https://kb.
 --
 .CLI
 --
-. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
+. 如果您想要從較早的Snapshot複本還原資料、而非從ARP複本還原資料、則必須執行下列動作、才能釋放反勒索軟體Snapshot鎖定。  如果您想要從ARP複本還原、就不需要釋放鎖定、您可以跳過此步驟。
 +
 
-NOTE: 如果您使用的是、只有在從舊版 Snapshot 複本還原之前、才需要釋放反勒索軟體 SnapLock `volume snap restore` 命令、如下所述。如果您要使用 Flex Clone 、單一檔案快照還原或其他方法還原資料、則不需要這麼做。
+NOTE: 如果您使用的是、只有在從舊版 Snapshot 複本還原之前、才需要釋放反勒索軟體 SnapLock `volume snap restore` 命令、如下所述。  如果您要使用 Flex Clone 、單一檔案快照還原或其他方法還原資料、則不需要這麼做。
 
 +
 [cols="2"]
@@ -84,7 +84,10 @@ NOTE: 如果您使用的是、只有在從舊版 Snapshot 複本還原之前、�
 
 `anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
-使用下列參數之一來識別副檔名：可疑清單中檔案的「[-seq-no _integer_]」序號。[`-exte_text_,… 檔案副檔名為「mm/DD/YYYY hh：mm:SS」、格式為「-start-time_time_-tend-time_]、檔案範圍的開始和結束時間。
+使用下列其中一個參數來識別副檔名：
+`[-seq-no _integer_]` 可疑清單中檔案的序號。
+`[-extension _text_, … ]` 副檔名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除之檔案範圍的開始和結束時間、格式為「 MM/DD/YYYY HH ： MM ： SS 」。
  a| 
 若要釋放Snapshot鎖定、您必須先從ARP複本還原、才能從先前的Snapshot複本還原。
 
@@ -93,10 +96,10 @@ NOTE: 如果您使用的是、只有在從舊版 Snapshot 複本還原之前、�
 |===
 . 列出Volume中的Snapshot複本：
 +
-「Volume Snapshot show -vserver _svm_-volume _volume _」
+`volume snapshot show -vserver _SVM_ -volume _volume_`
 
 +
-以下範例顯示「vol1」中的Snapshot複本：
+下列範例顯示中的 Snapshot 複本 `vol1`：
 
 +
 [listing]
@@ -118,10 +121,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原磁碟區內容：
 +
-「Volume Snapshot還原-vserver _svm_-volume _volume _-snapshot _snapshot _」
+`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
 
 +
-以下範例還原「vol1（vol1）”的內容：
+下列範例還原的內容 `vol1`：
 
 +
 [listing]

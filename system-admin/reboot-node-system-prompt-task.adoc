@@ -18,11 +18,11 @@ summary: 您可以在系統提示字元中、以正常模式重新開機節點�
 +
 .. 將權限層級設為進階：
 +
-「*設定-權限進階*」
+`*set -privilege advanced*`
 
 .. 判斷哪個節點擁有epsilon：
 +
-‘*叢集顯示*’
+`*cluster show*`
 
 +
 以下範例顯示「'node1'」擁有epsilon：
@@ -41,21 +41,21 @@ node4                true    true          false
 ----
 .. 如果要重新開機的節點保留了epsilon、請從節點移除epsilon：
 +
-hy*叢集修改-node_node_name_-epsilon假*
+`*cluster modify -node _node_name_ -epsilon false*`
 
 .. 將epsilon指派給另一個將維持正常運作的節點：
 +
-hy*叢集修改-node_node_name_-epsilon true*
+`*cluster modify -node _node_name_ -epsilon true*`
 
 .. 返回管理權限層級：
 +
-「*設定-權限管理*」
+`*set -privilege admin*`
 
 
 
-. 使用「系統節點重新開機」命令重新開機節點。
+. 使用 `system node reboot` 命令重新啟動節點。
 +
-如果您未指定「-skip-lif-migrate」參數、命令會在重新開機之前、嘗試將資料和叢集管理lifs同步移轉至另一個節點。如果LIF移轉失敗或逾時、重新開機程序便會中止、ONTAP 而導致錯誤顯示LIF移轉失敗。
+如果您未指定 `-skip-lif-migration` 參數時、命令會嘗試在重新開機之前、將資料和叢集管理同步移轉至另一個節點。如果LIF移轉失敗或逾時、重新開機程序便會中止、ONTAP 而導致錯誤顯示LIF移轉失敗。
 
 +
 [listing]

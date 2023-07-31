@@ -20,7 +20,7 @@ summary: 對於所有關係類型、初始化會執行基準傳輸：它會製�
 
 
 .關於這項工作
-您必須以「_hostip:_/LUN/_name_'」格式指定元素來源路徑、其中「LUN」是實際字串「LUN」、而「name_」是元素Volume的名稱。
+您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `_name_` 是元素 Volume 的名稱。
 
 初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。
 
@@ -38,13 +38,13 @@ summary: 對於所有關係類型、初始化會執行基準傳輸：它會製�
 .步驟
 . 初始化複寫關係：
 +
-「napmirror initialize -source-path _hostips：_/LUN/_name_-destination-path _svm:volume | cluster：//Svm/volume _」
+`snapmirror initialize -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume|cluster://SVM/volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例可初始化IP位址10.0.0.11的來源磁碟區「0005」與目的地磁碟區「Vola_dst」在「shvm_backup」上的關係：
+以下範例初始化來源磁碟區之間的關係 `0005` 在 IP 位址 10.0.0.11 和目的地 Volume `volA_dst` 開啟 `svm_backup`：
 
 +
 [listing]

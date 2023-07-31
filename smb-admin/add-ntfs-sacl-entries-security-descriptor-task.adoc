@@ -18,7 +18,7 @@ summary: 將SACL（系統存取控制清單）存取控制項目（ACE）新增�
 
 如果安全性描述元包含具有現有ACE的SACL、則命令會將新的ACE新增至SACL。如果安全性描述元未包含SACL、則命令會建立SACL並將新的ACE新增至其中。
 
-您可以設定SACL項目、方法是針對在「-Account（帳戶）」參數中指定的帳戶、指定要稽核的成功或失敗事件權限。有三種互不相容的方法可以指定權限：
+您可以指定要稽核中所指定帳戶成功或失敗事件的權限、以設定 SACL 項目 `-account` 參數。有三種互不相容的方法可以指定權限：
 
 * 權利
 * 進階權限
@@ -27,19 +27,19 @@ summary: 將SACL（系統存取控制清單）存取控制項目（ACE）新增�
 
 [NOTE]
 ====
-如果您未指定SACL項目的權限、預設設定為「完全控制」。
+如果您未指定 SACL 項目的權限、則預設設定為 `Full Control`。
 
 ====
-您可以選擇自訂SACL項目、方法是指定如何使用「套用至」參數套用繼承。如果您未指定此參數、預設值為將此SACL項目套用至此資料夾、子資料夾及檔案。
+您可以選擇自訂 SACL 項目、方法是指定如何使用套用繼承 `apply to` 參數。如果您未指定此參數、預設值為將此SACL項目套用至此資料夾、子資料夾及檔案。
 
 .步驟
-. 將SACL項目新增至安全性描述元：「vserver安全性檔案目錄NTFS SACL add -vserver vserver_name -ntfs-SD sd_name -access-type｛funes|s成功率｝-Account name_or_SIDOptional _parameters'
+. 將 SACL 項目新增至安全性描述元： `vserver security file-directory ntfs sacl add -vserver vserver_name -ntfs-sd SD_name -access-type {failure|success} -account name_or_SIDoptional_parameters`
 +
-「Vserver安全性檔案目錄NTFS SACL add -ntfs-SD SD1 -access-type故障-Account domain\Joe -rights full Control -apple-to this資料夾-vserver VS1」
+`vserver security file-directory ntfs sacl add -ntfs-sd sd1 -access-type failure -account domain\joe -rights full-control -apply-to this-folder -vserver vs1`
 
-. 確認SACL項目正確：「vserver安全性檔案目錄NTFS SACL show -vserver vserver_name -ntfs-SD SD_name -access-type｛funes|s字 詞｝-Account name_or_sid'
+. 驗證 SACL 項目是否正確： `vserver security file-directory ntfs sacl show -vserver vserver_name -ntfs-sd SD_name -access-type {failure|success} -account name_or_SID`
 +
-「Vserver安全性檔案目錄NTFS SACL show -vserver VS1 -ntfs-SD SD1 -access-ttype deny -account domain\joe'
+`vserver security file-directory ntfs sacl show -vserver vs1 -ntfs-sd sd1 -access-type deny -account domain\joe`
 
 +
 [listing]

@@ -17,30 +17,30 @@ summary: 當您變更現有配額的大小時、可以調整所有受影響磁�
 您的儲存虛擬機器（SVM、先前稱為Vserver）具有強制配額、您想要變更現有配額的大小限制、或是新增或刪除已有衍生配額的目標配額。
 
 .步驟
-. 使用帶有"-instance"參數的"vserver show"命令來決定目前指派給SVM的原則名稱。
+. 使用 `vserver show` 命令 `-instance` 用於確定當前分配給 SVM 的策略名稱的參數。
 . 執行下列任一動作來修改配額規則：
 +
-** 使用「volume quota policy rule modify」命令來修改現有配額規則的磁碟或檔案限制。
-** 使用「Volume quota原則規則create」命令、為目前具有衍生配額的目標（使用者、群組或qtree）建立明確的配額規則。
-** 使用「volume quota policy rRule DELETE」命令、刪除也具有預設配額的目標（使用者、群組或qtree）明確配額規則。
+** 使用 `volume quota policy rule modify` 修改現有配額規則磁碟或檔案限制的命令。
+** 使用 `volume quota policy rule create` 命令可為目前已衍生配額的目標（使用者、群組或 qtree ）建立明確的配額規則。
+** 使用 `volume quota policy rule delete` 用於刪除具有預設配額之目標（使用者、群組或 qtree ）的明確配額規則的命令。
 
 
-. 使用「volume quota policy rRule show」命令檢查配額規則的設定是否正確。
-. 在您變更配額的每個磁碟區上、使用「Volume quota resize」命令來啟動每個磁碟區的變更。
+. 使用 `volume quota policy rule show` 檢查配額規則是否正確設定的命令。
+. 使用 `volume quota resize` 命令、在您變更配額的每個磁碟區上啟動每個磁碟區上的變更。
 +
 您可以使用下列任一方法來監控調整大小程序：
 
 +
-** 使用「Volume quota resize」命令時、您可以新增「-foreground」參數、在前景執行調整大小工作。（依預設、工作會在背景執行。）
+** 當您使用時 `volume quota resize` 您可以新增 `-foreground` 在前景執行調整工作的參數。（依預設、工作會在背景執行。）
 +
-當工作在背景中執行時、您可以使用「jobshow」命令來監控其進度。
+當工作在背景執行時、您可以使用監控其進度 `job show` 命令。
 
-** 您可以使用「volume quota show」命令來監控調整大小狀態。
+** 您可以使用 `volume quota show` 用於監控調整大小狀態的命令。
 
 
-. 使用「volume quota show -instance」命令來檢查大小錯誤、例如無法調整大小的配額規則。
+. 使用 `volume quota show -instance` 用於檢查大小調整錯誤的命令、例如無法調整大小的配額規則。
 +
 特別是、針對尚未有衍生配額的目標、新增明確配額後、重新調整配額大小時、請檢查「'new definition」錯誤。
 
-. 使用「Volume quota report」命令顯示配額報告、確保強制執行的配額符合您的需求。
+. 使用 `volume quota report` 顯示配額報告的命令，以確保強制配額符合您的需求。
 

@@ -14,18 +14,18 @@ summary: 對於SnapVault 不中斷複寫和統一化複寫關係、您可以在�
 對於SnapVault 不中斷複寫和統一化複寫關係、您可以在目的地上建立上次傳輸的Snapshot複本複本、避免更新的Snapshot複本毀損。無論來源上的保留規則為何、都會保留此「本機複本」、即使來源上不再提供SnapMirror原本傳輸的Snapshot、也會在目的地上提供該Snapshot複本。
 
 .關於這項工作
-您可以在「napmirror policy add-rRule」命令的「-schedule」選項中指定建立本機複本的排程。
+您可以在中指定建立本機複本的排程 `-schedule` 的選項 `snapmirror policy add-rule` 命令。
 
 .步驟
 . 定義在目的地上建立本機複本的排程：
 +
-「napmirror policy add-rule -vserver _svm_-policy _policy_for_rorm_-SnapMirror標籤_SnapMirror標籤_-schedule_」
+`snapmirror policy add-rule -vserver _SVM_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label_ -schedule _schedule_`
 
 +
 如需完整的命令語法、請參閱手冊頁。如需如何建立工作排程的範例、請參閱 link:create-replication-job-schedule-task.html["建立複寫工作排程"]。
 
 +
-下列範例新增建立本機複本的排程至預設的「鏡像AndVault（鏡像AndVault）原則：
+下列範例將建立本機複本的排程新增至預設值 `MirrorAndVault` 原則：
 
 +
 [listing]
@@ -33,7 +33,7 @@ summary: 對於SnapVault 不中斷複寫和統一化複寫關係、您可以在�
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -snapmirror-label my_monthly -schedule my_monthly
 ----
 +
-下列範例新增建立本機複本的排程至自訂「my_Unified」原則：
+下列範例新增了建立自訂本機複本的排程 `my_unified` 原則：
 
 +
 [listing]

@@ -23,21 +23,21 @@ summary: 依預設、使用者的主目錄只能由該使用者存取。如果�
  a| 
 ｛tilde｝%d｛tilde｝%w
  a| 
-「net use *｛反斜槓｝｛反斜槓｝IP位址｛反斜槓｝｛tilde｝網域｛tilde｝使用者/ u：認證」
+`net use * {backslash}{backslash}IPaddress{backslash}{tilde}domain{tilde}user/u:credentials`
 
 
 
  a| 
 ｛tilde｝%w
  a| 
-「net use *｛反斜槓｝｛反斜槓｝IPaddress｛反斜槓｝｛tilde｝user/u:bonations'
+`net use * {backslash}{backslash}IPaddress{backslash}{tilde}user/u:credentials`
 
 
 
  a| 
 ｛tilde｝abc｛tilde｝%w
  a| 
-「net use *｛反斜槓｝｛反斜槓｝IPaddress｛反斜槓｝abc｛tilde｝user/u:bonations'
+`net use * {backslash}{backslash}IPaddress{backslash}abc{tilde}user/u:credentials`
 
 |===
 .步驟
@@ -47,19 +47,26 @@ summary: 依預設、使用者的主目錄只能由該使用者存取。如果�
 | 如果您要啟用或停用存取使用者主目錄的權限、以便... | 輸入下列項目... 
 
 
-| Windows系統管理員 | 「vserver CIFS主目錄修改-vserver _vserver_name_-is主目錄存取-for-admin-enabled_{true｛vbar｝假｝」預設值為「true」。 
+| Windows系統管理員 | `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-admin-enabled {true{vbar}false}`
+預設值為 `true`。 
 
 
 | 任何使用者（公共存取）  a| 
-.. 將權限層級設為進階：+「Set -priv榮幸advanc進 階」
-.. 啟用或停用存取：「vserver CIFS主目錄修改-vserver _vserver_name_-is-home-dirs-access-for-public-enabled｛true|假｝」+預設值為「假」。
-.. 返回管理員權限等級：+「設置權限管理」
+.. 將權限等級設為進階： +
+`set -privilege advanced`
+.. 啟用或停用存取： `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-public-enabled {true|false}` +
+預設值為 `false`。
+.. 返回管理權限層級： +
+`set -privilege admin`
 
 
 |===
 
 
-下列範例可讓使用者公開存取其主目錄：+「設為進階權限」+「vserver CIFS主目錄修改-vserver VS1 -is主目錄-dirs-access-for public-enabledtrue」+「設為權限管理」
+下列範例可讓使用者的主目錄公開存取： +
+`set -privilege advanced` +
+`vserver cifs home-directory modify -vserver vs1 -is-home-dirs-access-for-public-enabled true` +
+`set -privilege admin`
 
 .相關資訊
 xref:display-user-home-directory-path-task.adoc[顯示SMB使用者主目錄路徑的相關資訊]

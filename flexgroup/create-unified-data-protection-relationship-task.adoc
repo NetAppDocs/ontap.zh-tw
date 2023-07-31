@@ -19,9 +19,9 @@ summary: 從ONTAP 使用支援功能支援功能9.3開始、您可以建立及�
 link:snapvault-backup-concept.html["建立SnapVault 不支援的備份關係和FlexGroup 統一資料保護關係的考量事項"]
 
 .步驟
-. 建立與FlexGroup 來源FlexGroup 供應區相同的「DP」類型目的地。
+. 建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 的組成數量相同：
 +
-.. 從來源叢集、判斷來源FlexGroup Sof Volume中的成分數量：「Volume show -volume volume volume volume Volume name*-is組成true」（Volume show -volume volume volume Volume name*-is組成true）
+.. 從來源叢集中、判斷來源 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -38,7 +38,7 @@ vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57
 vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ...
 ----
-.. 從目的地叢集中、建立一個目的地FlexGroup 的「DP」類型的「S目的地」Volume、其成員數量與來源FlexGroup 的「Sof the volume」相同。
+.. 從目的地叢集建立類型的目的地 FlexGroup Volume `DP` 其組成數量與來源 FlexGroup Volume 相同。
 +
 [listing]
 ----
@@ -48,7 +48,7 @@ Warning: The FlexGroup volume "dstFG" will be created with the following number 
 Do you want to continue? {y|n}: y
 [Job 766] Job succeeded: Successful
 ----
-.. 從目的地叢集中、確認目的地FlexGroup 的組成數量：「Volume show -volume volume volume Volume name*-is組成true」
+.. 從目的地叢集、確認目的地 FlexGroup Volume 中的組成數量： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -67,37 +67,37 @@ vsd       dstFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57
 ----
 
 
-. 建立工作排程：「工作排程cron create -name job_name -month -dayofWeek Day_of_Week -Day Day_of_month -hour -minute minute'
+. 建立工作排程： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour hour -minute minute`
 +
-在「月」、「星期」及「小時」選項中、您可以分別指定「所有」來執行每月、每週的每一天和每小時的工作。
+適用於 `-month`、 `-dayofweek`和 `-hour` 選項、您可以指定 `all` 每個月、每週的每一天、每小時執行一次工作。
 
 +
-以下範例會建立一個名為「my_fours'的工作排程、於週六上午3：00執行：
+以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
 +
 [listing]
 ----
 cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
-. 建立類型為「鏡射-保存庫」的自訂原則、然後定義鏡射與保存原則的規則：
+. 建立類型的自訂原則 `mirror-vault`, 然後定義鏡射和資料保險箱原則的規則 :
 +
-.. 針對統一化資料保護關係、建立類型為「mirror-vVault」的自訂原則：「napmirror policy create -vserver svm_name -policy原則名稱-type mirror vVault」
-.. 定義鏡射與資料保存原則的規則、以決定在初始化與更新作業期間要傳輸哪些Snapshot複本：「napmirror policy add-rule -vserver svm_name -policy policy_for_rRule - SnapMirror標籤SnapMirror標籤-reture_count-schedule schedule」
+.. 建立類型的自訂原則 `mirror-vault` 針對統一化的資料保護關係： `snapmirror policy create -vserver svm_name -policy policy_name -type mirror-vault`
+.. 定義鏡射和資料保險箱原則的規則、以決定在初始化和更新作業期間傳輸哪些 Snapshot 複本： `snapmirror policy add-rule -vserver svm_name -policy policy_for_rule - snapmirror-label snapmirror-label -keep retention_count -schedule schedule`
 
 
 +
-如果您未指定自訂原則、則「鏡像AndVault」原則會用於統一化資料保護關係。
+如果您未指定自訂原則、請使用 `MirrorAndVault` 原則用於統一化資料保護關係。
 
-. 建立統一化的資料保護關係：「napmirror create -source-path src-svm:srs_flexgroup -dite-path dest_svm:dest_flexgroup -type XDP -schedule_name -policy MirrorAndVault」
+. 建立統一化的資料保護關係： `snapmirror create -source-path src_svm:src_flexgroup -destination-path dest_svm:dest_flexgroup -type XDP -schedule schedule_name -policy MirrorAndVault`
 +
-在版本9.4及更早版本中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AllSnapshots」原則。ONTAP在S還原9.5中、如果未使用「napmirror create」命令指定原則、則預設會使用「鏡射AndVault」原則。ONTAP
+在 ONTAP 9.4 及更早版本中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAllSnapshots` 原則預設為使用。在 ONTAP 9.5 中、如果原則未使用指定 `snapmirror create` 命令 `MirrorAndVault` 原則預設為使用。
 
 +
 [listing]
 ----
 cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy MirrorAndVault
 ----
-. 從目的地叢集、執行基準傳輸來初始化統一化資料保護關係：「napmirror initialize -dest-path dest_svm:dest_flexgroup」
+. 從目的地叢集執行基準傳輸、以初始化統一化資料保護關係： `snapmirror initialize -destination-path dest_svm:dest_flexgroup`
 +
 [listing]
 ----

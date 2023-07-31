@@ -19,7 +19,7 @@ summary: 從使用支援NVE的磁碟區開始、您可以使用安全清除功�
 
 
 .關於這項工作
-視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用「volume encryption fure-purge show」命令來檢視作業狀態。您可以使用「Volume Encryption Secure（磁碟區加密）- Purge abort]（安全清除中止）命令來終止作業。
+視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用 `volume encryption secure-purge show` 檢視作業狀態的命令。您可以使用 `volume encryption secure-purge abort` 命令以終止作業。
 
 [NOTE]
 ====
@@ -29,7 +29,7 @@ summary: 從使用支援NVE的磁碟區開始、您可以使用安全清除功�
 .步驟
 . 在儲存系統上、變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 刪除您要安全清除的檔案或LUN。
 +
@@ -39,32 +39,32 @@ summary: 從使用支援NVE的磁碟區開始、您可以使用安全清除功�
 
 . 在非同步關係中準備好要安全清除的目的地Volume：
 +
-「Volume加密安全清除start -vserver Svm_name -volume volume volume volume名稱-prepare true」
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name -prepare true`
 
 +
 針對同步SnapMirror關係中的其他磁碟區重複此步驟。
 
 . 如果您要安全清除的檔案位於Snapshot複本中、請刪除Snapshot複本：
 +
-「napshot DELETE -vserver svm_name -volume vol_a -snapshot snapshot」
+`snapshot delete -vserver SVM_name -volume vol_A -snapshot snapshot`
 
 . 如果安全清除檔案位於基礎或通用Snapshot複本中、請更新SnapMirror以將通用Snapshot複本移至下一頁：
 +
-「napmirror update -source-snapshot snapshot name -destination-path destination_path」
+`snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
 
 +
 共有兩個常見的Snapshot複本、因此必須發出兩次此命令。
 
 . 如果安全清除檔案位於應用程式一致的Snapshot複本中、請刪除同步SnapMirror關係中兩個磁碟區上的Snapshot複本：
 +
-「napshot DELETE -vserver svm_name -volume vol_name -snapshot」
+`snapshot delete -vserver SVM_name -volume vol_name -snapshot snapshot`
 
 +
 在兩個磁碟區上執行此步驟。
 
 . 安全地清除刪除的檔案：
 +
-「Volume加密安全清除start -vserver Svm_name -volume volume volume名稱」
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
 
 +
 在同步SnapMirror關係中的每個磁碟區上重複此步驟。
@@ -79,6 +79,6 @@ cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
 ----
 . 確認安全清除作業的狀態：
 +
-「Volume加密安全清除秀」
+`volume encryption secure-purge show`
 
 

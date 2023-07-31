@@ -17,13 +17,13 @@ summary: 除了CIFS伺服器SMB簽署安全性設定之外、Windows用戶端上
 
 以下是Microsoft用戶端上兩種SMB簽署原則的說明：
 
-* 「Microsoft網路用戶端：數位簽署通訊（如果伺服器同意）」
+* `Microsoft network client: Digitally sign communications (if server agrees)`
 +
 此設定可控制是否啟用用戶端的SMB簽署功能。預設為啟用。當用戶端停用此設定時、與CIFS伺服器的用戶端通訊取決於CIFS伺服器上的SMB簽署設定。
 
-* 「Microsoft網路用戶端：數位簽署通訊（永遠）」
+* `Microsoft network client: Digitally sign communications (always)`
 +
-此設定可控制用戶端是否需要SMB簽署才能與伺服器通訊。預設為停用。當用戶端停用此設定時、SMB簽署行為會根據「Microsoft網路用戶端：數位簽署通訊（如果伺服器同意）」的原則設定、以及CIFS伺服器上的設定。
+此設定可控制用戶端是否需要SMB簽署才能與伺服器通訊。預設為停用。當用戶端上停用此設定時、 SMB 簽署行為會根據的原則設定而定 `Microsoft network client: Digitally sign communications (if server agrees)` 以及 CIFS 伺服器上的設定。
 
 +
 [NOTE]
@@ -167,6 +167,6 @@ AES-CMAC：
 |===
 [NOTE]
 ====
-Microsoft不再建議使用「簽署通訊（若用戶端同意）」或「簽署通訊（若伺服器同意）」群組原則設定。Microsoft也不再建議使用「啟用安全性簽章」登錄設定。這些選項只會影響SMB 1的行為、可改為「簽名通訊（永遠）」群組原則設定或「RequireSecuritySignatures」登錄設定。您也可以從Microsoft部落格取得更多資訊。http://blogs.technet.com/b/josebda/archive/2010/12/01/the-basics-of-smb-signing-covering-both-smb1-and-smb2.aspx[The SMB簽章基礎知識（涵蓋SMB1和SMB2）]
+Microsoft 不再建議使用 `Digitally sign communications (if client agrees)` 或 `Digitally sign communications (if server agrees)` 群組原則設定。Microsoft 也不再建議使用 `EnableSecuritySignature` 登錄設定。這些選項只會影響 SMB 1 行為、可由取代 `Digitally sign communications (always)` 群組原則設定或 `RequireSecuritySignature` 登錄設定。您也可以從 Microsoft 部落格取得更多資訊。 http://blogs.technet.com/b/josebda/archive/2010/12/01/the-basics-of-smb-signing-covering-both-smb1-and-smb2.aspx[The SMB 簽署基礎知識（涵蓋 SMB1 和 SMB2 ） ]
 
 ====

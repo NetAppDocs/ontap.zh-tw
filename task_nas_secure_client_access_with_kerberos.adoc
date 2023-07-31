@@ -30,7 +30,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用Kerberos保護�
 .步驟
 . 在指令行中、設定儲存VM根Volume的UNIX權限。ONTAP
 +
-.. 顯示儲存VM根磁碟區的相關權限：「Volume show -volume _root_vol_name_-Fields user,group、unix-permissions」
+.. 顯示儲存 VM 根磁碟區的相關權限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`
 +
 儲存VM的根Volume必須具有下列組態：
 
@@ -48,12 +48,12 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用Kerberos保護�
 
 | UNIX權限 | 755 
 |===
-.. 如果未顯示這些值、請使用「volume modify」命令來更新這些值。
+.. 如果未顯示這些值、請使用 `volume modify` 命令進行更新。
 
 
 . 設定儲存VM根磁碟區的使用者權限。
 +
-.. 顯示本機UNIX使用者：「vserver services name-service unix-user show -vserver _vserver_name_」
+.. 顯示本機UNIX使用者： `vserver services name-service unix-user show -vserver _vserver_name_`
 +
 儲存VM應設定下列UNIX使用者：
 
@@ -63,20 +63,20 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用Kerberos保護�
 | 使用者名稱 | 使用者ID | 主要群組ID 
 
 
-| NFS | 500 | 0 
+| NFS | 500 | 0% 
 
 
-| 根 | 0 | 0 
+| 根 | 0% | 0% 
 |===
 +
 *附註：*如果NFS用戶端使用者的SPN-UNIX名稱對應存在、則不需要NFS使用者；請參閱步驟5。
 
-.. 如果未顯示這些值、請使用「vserver services name-service unix-usermodify」命令來更新這些值。
+.. 如果未顯示這些值、請使用 `vserver services name-service unix-user modify` 命令進行更新。
 
 
 . 設定儲存VM根磁碟區的群組權限。
 +
-.. 顯示本機UNIX群組：「vserver services name-service unix-group show -vserver _vserver_name_」
+.. 顯示本機UNIX群組： `vserver services name-service unix-group show -vserver _vserver_name_`
 +
 儲存VM應設定下列UNIX群組：
 
@@ -89,9 +89,9 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用Kerberos保護�
 | 精靈 | 1. 
 
 
-| 根 | 0 
+| 根 | 0% 
 |===
-.. 如果未顯示這些值、請使用「vserver services name-service unix-group modify」命令來更新這些值。
+.. 如果未顯示這些值、請使用 `vserver services name-service unix-group modify` 命令進行更新。
 
 
 . 切換至System Manager以設定Kerberos
@@ -112,7 +112,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用Kerberos保護�
 
 . 如果需要、請將Kerberos主要名稱的對應新增至本機使用者名稱。
 +
-.. 單擊* Storage（儲存設備）> Storage VM*（儲存VM*）、然後選擇儲存VM。
+.. 按一下 * 儲存 > 儲存 VM* 、然後選取儲存 VM 。
 .. 按一下*設定*、然後按一下 image:icon_arrow.gif["箭頭"] 在*名稱對應*下。
 .. 在「* Kerberos到UNIX*」下、使用規則運算式新增模式和替代項目。
 

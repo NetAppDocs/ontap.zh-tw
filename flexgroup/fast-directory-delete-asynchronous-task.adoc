@@ -32,11 +32,11 @@ summary: 從ONTAP 功能表9.8開始、您可以使用Volume檔案as同步 刪�
 
 . 進入進階權限模式：
 +
-「權限提升」
+`-privilege advance`
 
 . 刪除 FlexVol 或 FlexGroup 磁碟區上的目錄：
 +
-「Volume file as同步 刪除start -vserver vserver_name -volume volume volume volume Volume name -path file_path -節 流」
+`volume file async-delete start -vserver vserver_name -volume volume_name -path file_path -throttle throttle`
 
 +
 最小節流值為10、最大值為100、000、預設值為5000。
@@ -50,7 +50,7 @@ cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
 ....
 . 確認目錄已刪除：
 +
-「事件記錄顯示」
+`event log show`
 
 +
 下列範例顯示成功刪除目錄時事件記錄的輸出。
@@ -68,18 +68,18 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 . 進入進階權限模式：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 確認正在刪除目錄：
 +
-「Volume file as同步 刪除show」
+`volume file async-delete show`
 
 +
 如果顯示SVM、Volume、JobID和目錄路徑、您可以取消工作。
 
 . 取消目錄刪除：
 +
-「Volume file as同步 刪除cancel -vserver _svm_name_-volume _volume名稱_-jobid _job_id_`
+`volume file async-delete cancel -vserver _SVM_name_ -volume _volume_name_ -jobid _job_id_`
 
 
 

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: microsoft, offloaded, data, transfer, odx 
 summary: Microsoft卸載資料傳輸（ODX、Offloaded Data Transfer）也稱為複本卸載、可在儲存裝置內或相容儲存裝置之間直接傳輸資料、而無需透過主機電腦傳輸資料。 
 ---
-= Microsoft卸載資料傳輸（ODX）總覽
+= Microsoft卸載資料傳輸（ODX）
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -20,3 +20,130 @@ Microsoft卸載資料傳輸（ODX）也稱為_copy offload_、可在儲存裝置
 由於ODX卸載複本是直接在來源與目的地之間執行、因此可獲得顯著的效能效益、包括加快複製時間、降低用戶端的CPU與記憶體使用率、以及降低網路I/O頻寬使用率。
 
 對於SAN環境、ODX只有在主機和儲存系統均支援時才能使用。支援ODX並自動且透明地啟用ODX的用戶端電腦、可在移動或複製檔案時使用卸載檔案傳輸。無論您是透過Windows檔案總管拖放檔案、還是使用命令列檔案複製命令、或是用戶端應用程式啟動檔案複製要求、都會使用ODX。
+
+
+
+== 使用ODX的需求
+
+如果您打算使用ODX進行複本卸載、則必須熟悉Volume支援考量、系統需求及軟體功能需求。
+
+若要使用ODX、您的系統必須具備下列條件：
+
+* ONTAP
++
+在支援的ONTAP 版本的支援中、會自動啟用ODX。
+
+* 來源Volume下限為2 GB
++
+為獲得最佳效能、來源磁碟區應大於260 GB。
+
+* 重複資料刪除
++
+ODX在複製程序中使用重複資料刪除技術。如果您不想在SVM上執行重複資料刪除、應該停用該SVM上的ODX。
+
+* Windows用戶端上的ODX支援
++
+ODX在Windows Server 2012或更新版本以及Windows 8或更新版本中均受支援。互通性對照表包含有關支援的Windows用戶端的最新資訊。
+
++
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+
+* 複製ODX的應用程式支援
++
+執行資料傳輸的應用程式必須支援ODX。支援ODX的應用程式作業包括：
+
++
+** Hyper-V管理作業、例如建立及轉換虛擬硬碟（VHD）、管理Snapshot複本、以及在虛擬機器之間複製檔案
+** Windows檔案總管作業
+** Windows PowerShell複製命令
+** Windows命令提示字元複製命令
+Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支援的 ODX 應用程式的資訊。
+
+
+* 如果使用壓縮磁碟區、壓縮群組大小必須為8K。
++
+不支援32K壓縮群組大小。
+
+
+
+ODX不適用於下列磁碟區類型：
+
+* 容量低於2 GB的來源磁碟區
+* 唯讀磁碟區
+* link:../flexcache/supported-unsupported-features-concept.html["資料量FlexCache"]
+* link:../san-admin/san-volumes-concept.html#semi-thick-provisioning-for-volumes["半厚的已配置磁碟區"]
+
+
+
+
+== 特殊系統檔案需求
+
+您可以刪除qtree中找到的ODX檔案。除非技術支援人員告知您、否則您不得移除或修改任何其他ODX系統檔案。
+
+使用ODX功能時、系統的每個磁碟區都有ODX系統檔案。這些檔案可讓ODX傳輸期間所使用的資料以時間點表示。下列系統檔案位於每個磁碟區的根層級、其中包含已卸載資料的LUN或檔案：
+
+* `.copy-offload` （隱藏目錄）
+* `.tokens` （檔案位於隱藏的下方 `.copy-offload` 目錄）
+
+
+您可以使用 `copy-offload delete-tokens -path dir_path -node _node_name_` 刪除包含 ODX 檔案的 qtree 的命令。
+
+
+
+== ODX的使用案例
+
+您應該瞭解在SVM上使用ODX的使用案例、以便判斷ODX在何種情況下可為您提供效能優勢。
+
+支援ODX的Windows伺服器和用戶端使用複本卸載做為在遠端伺服器上複製資料的預設方法。如果Windows伺服器或用戶端不支援ODX、或ODX複本卸載在任何時間點都失敗、則複本或移動作業會回溯到複本或移動作業的傳統讀取和寫入。
+
+下列使用案例支援使用ODX複本和移動：
+
+* Volume內
++
+來源與目的地檔案或LUN位於同一個磁碟區內。
+
+* 磁碟區間、相同節點、相同SVM
++
+來源與目的地檔案或LUN位於同一個節點上的不同磁碟區。資料歸同一個SVM所有。
+
+* 磁碟區間、不同節點、相同SVM
++
+來源與目的地檔案或LUN位於不同節點上的不同磁碟區。資料歸同一個SVM所有。
+
+* SVM之間、相同節點
++
+來源與目的地檔案或LUN位於同一個節點上的不同磁碟區。資料由不同的SVM擁有。
+
+* SVM之間、不同節點
++
+來源與目的地檔案或LUN位於不同節點上的不同磁碟區。資料由不同的SVM擁有。
+
+* 叢集間
++
+來源和目的地LUN位於不同的磁碟區、位於不同的叢集節點上。這僅支援 SAN 、不適用於 SMB 。
+
+
+
+還有一些特殊使用案例：
+
+* 藉由ONTAP 採用流通不整的ODX技術、您可以使用ODX在SMB共享區與FC或iSCSI附加虛擬磁碟機之間複製檔案。
++
+您可以使用Windows檔案總管、Windows CLI或PowerShell、Hyper-V或其他支援ODX的應用程式、使用ODX複製卸載功能在SMB共用區和連線LUN之間順暢地複製或移動檔案、前提是SMB共用區和LUN位於同一個叢集上。
+
+* Hyper-V針對ODX複製卸載提供了一些額外的使用案例：
++
+** 您可以使用ODX複本卸載傳遞搭配Hyper-V、在虛擬硬碟（VHD）檔案內或之間複製資料、或在同一個叢集內的對應SMB共用區和連接的iSCSI LUN之間複製資料。
++
+如此一來、從客體作業系統的複本就能傳遞到基礎儲存設備。
+
+** 建立固定大小的VHD時、ODX會使用已知的零權杖、以零初始化磁碟。
+** 如果來源與目的地儲存設備位於同一個叢集、則ODX複本卸載可用於虛擬機器儲存移轉。
+
+
++
+[NOTE]
+====
+若要利用ODX複本卸載傳遞與Hyper-V的使用案例、來賓作業系統必須支援ODX、而來賓作業系統的磁碟必須是支援ODX的儲存設備（SMB或SAN）所支援的SCSI磁碟。客體作業系統上的IDE磁碟不支援ODX傳遞。
+
+====
+

@@ -55,7 +55,7 @@ summary: 查看磁碟區中有多少資料處於非使用中狀態、可讓您�
 .CLI
 --
 .若要使用CLI啟用非作用中資料報告：
-. 如果FabricPool 您想查看非作用中資料報告的Aggregate未用於支援的資訊、請使用「sorage aggregate modify」命令搭配「is - inactive - data report-enabl用量 報告」的「true」參數、為Aggregate啟用非作用中資料報告功能。
+. 如果您要查看非作用中資料報告的集合體未用於 FabricPool 、請使用啟用非作用中的彙總資料報告 `storage aggregate modify` 命令 `-is-inactive-data-reporting-enabled` `true` 參數。
 +
 [listing]
 ----
@@ -65,12 +65,12 @@ cluster1::> storage aggregate modify -aggregate aggr1 -is-inactive-data-reportin
 您必須在非FabricPool 用於支援的Aggregate上明確啟用非作用中資料報告功能。
 
 +
-您無法也不需要在啟用FabricPool的Aggregate上啟用非作用中資料報告、因為Aggregate已隨附非作用中資料報告。啟用「is - inactive - data - report-enabl用途」的參數無法在啟用FabricPool的Aggregate上運作。
+您無法也不需要在啟用FabricPool的Aggregate上啟用非作用中資料報告、因為Aggregate已隨附非作用中資料報告。。 `-is-inactive-data-reporting-enabled` 參數無法用於啟用 FabricPool 的集合體。
 
 +
-「儲存Aggregate show」命令的「Fields is -inactive、data -report-enabl用」參數會顯示是否在集合體上啟用非作用中資料報告。
+。 `-fields is-inactive-data-reporting-enabled` 的參數 `storage aggregate show` 命令會顯示是否在 Aggregate 上啟用非作用中的資料報告。
 
-. 若要顯示磁碟區中有多少資料處於非作用中狀態、請使用「volume show」命令搭配「-Fields Performance層級非作用中使用者資料」、「Performance層級非作用中使用者資料百分比」參數。
+. 若要顯示磁碟區上有多少資料處於非作用中狀態、請使用 `volume show` 命令 `-fields performance-tier-inactive-user-data,performance-tier-inactive-user-data-percent` 參數。
 +
 [listing]
 ----
@@ -85,13 +85,13 @@ vs1     vv2    10.38MB                             0%
 4 entries were displayed.
 ----
 +
-** 「效能層-非使用中-使用者資料」欄位會顯示集合體中儲存的使用者資料量處於非使用中狀態。
-** 「效能層-非使用中-使用者-資料百分比」欄位會顯示作用中檔案系統和Snapshot複本中有多少資料處於非使用中狀態。
+** 。 `performance-tier-inactive-user-data` 欄位會顯示儲存在 Aggregate 中的使用者資料處於非作用中狀態的程度。
+** 。 `performance-tier-inactive-user-data-percent` 欄位會顯示作用中檔案系統和 Snapshot 複本中的非作用中資料百分比。
 ** 對於不用於FabricPool 不供使用的Aggregate、非作用中的資料報告會使用分層原則來決定要報告多少資料為冷資料。
 +
-*** 對於「無」分層原則、使用31天。
-*** 對於僅使用「快照」和「自動」的資料、非使用中的資料報告使用「分層最低冷卻天數」。
-*** 對於「ALL」原則、非使用中的資料報告會假設資料會在一天內分層處理。
+*** 適用於 `none` 分層原則使用 31 天。
+*** 適用於 `snapshot-only` 和 `auto`、非使用中的資料報告用途 `tiering-minimum-cooling-days`。
+*** 適用於 `ALL` 原則、非作用中的資料報告會假設資料會在一天內分級。
 +
 直到達到週期為止、輸出會顯示非作用中資料量的「」、而非數值。
 
@@ -99,8 +99,8 @@ vs1     vv2    10.38MB                             0%
 
 ** 在屬於某個部分的磁碟區上FabricPool 、不活動的功能取決於在某個磁碟區上設定的分層原則。ONTAP
 +
-*** 針對「無」分層原則ONTAP 、本公司會報告所有未啟用至少31天的磁碟區數量。您不能將「分層-最低-冷卻天數」參數與「無」分層原則搭配使用。
-*** 對於「ALL」、「純快照」和「自動」分層原則、不支援非使用中的資料報告。
+*** 適用於 `none` 分層原則、 ONTAP 會報告整個磁碟區中至少 31 天沒有作用的數量。您無法使用 `-tiering-minimum-cooling-days` 參數 `none` 分層原則。
+*** 適用於 `ALL`、 `snapshot-only`和 `auto` 不支援分層原則、非作用中資料報告。
 
 
 

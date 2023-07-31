@@ -11,7 +11,7 @@ summary: Snapshot原則會指定何時建立Snapshot複本、保留多少複本�
 
 
 [role="lead"]
-Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能會每天在上午12：10建立一個Snapshot複本、保留兩個最新的複本、並將其命名為「daily.`_timestamp_'」。 Snapshot原則最多可包含五個工作排程。
+Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能會在每天上午 12 ： 10 建立一個 Snapshot 複本、保留兩個最新的複本、並將其命名為「 daily 」.`_timestamp_`.`" Snapshot 原則最多可包含五個工作排程。
 
 .關於這項工作
 根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱：
@@ -24,15 +24,15 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 ----
 您可以視需要以首碼取代工作排程名稱。
 
-「napmirror標籤」選項適用於SnapMirror複寫。如需詳細資訊、請參閱 link:define-rule-policy-task.html["定義原則規則"]。
+。 `snapmirror-label` 選項適用於 SnapMirror 複寫。如需詳細資訊、請參閱 link:define-rule-policy-task.html["定義原則規則"]。
 
 .步驟
 . 建立Snapshot原則：
 +
-「Volume Snapshot原則create -vserver _SVM_-policy _policy_name_-enabled true|假-schedul1 _schedule_name_-count1 _copies to _sthet_-prefied 1 _snapshot _prefix_-SnapMirror標籤1 _snapshot標籤_...」 -schedul1 _schedule5_name_-count5 _copies to _stef_-prefied5 _snapshot前置碼_-SnapMirror標籤5 _snapshot標籤_
+`volume snapshot policy create -vserver _SVM_ -policy _policy_name_ -enabled true|false -schedule1 _schedule1_name_ -count1 _copies_to_retain_ -prefix1 _snapshot_prefix_ -snapmirror-label1 _snapshot_label_ ... -schedule1 _schedule5_name_ -count5 _copies_to_retain_-prefix5 _snapshot_prefix_ -snapmirror-label5 _snapshot_label_`
 
 +
-以下範例建立名為「午睡原則每日」的Snapshot原則、該原則會在「每日」排程上執行。此原則最多可有五個Snapshot複本、每個複本的名稱為「每日」。
+以下範例建立名為的 Snapshot 原則 `snap_policy_daily` 在上執行 `daily` 排程。原則最多有五個 Snapshot 複本、每個副本都有名稱 `daily`.`_timestamp_` 和 SnapMirror 標籤 `daily`：
 
 +
 [listing]

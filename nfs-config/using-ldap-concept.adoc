@@ -13,9 +13,10 @@ summary: 如果您的環境中使用LDAP來提供名稱服務、您必須與LDAP
 [role="lead"]
 如果您的環境中使用LDAP來提供名稱服務、您必須與LDAP管理員合作、以判斷需求和適當的儲存系統組態、然後將SVM啟用為LDAP用戶端。
 
-從ONTAP 功能支援的版本為：從功能支援的版本為：LDAP通道繫結、依預設會同時支援Active Directory和名稱服務LDAP連線。僅當啟用Start-TLS或LDAPS並將工作階段安全性設定為簽署或密封時、才能嘗試透過LDAP連線進行通道繫結。ONTAP若要停用或重新啟用LDAP通道與名稱伺服器的繫結、請使用「LDAP用戶端修改」命令搭配「ter-channel繫結」參數。
+從ONTAP 功能支援的版本為：從功能支援的版本為：LDAP通道繫結、依預設會同時支援Active Directory和名稱服務LDAP連線。僅當啟用Start-TLS或LDAPS並將工作階段安全性設定為簽署或密封時、才能嘗試透過LDAP連線進行通道繫結。ONTAP若要停用或重新啟用與名稱伺服器的 LDAP 通道繫結、請使用 `-try-channel-binding` 參數 `ldap client modify` 命令。
 
-如需詳細資訊、請參閱link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 LDAP通道繫結和LDAP簽署要求、適用於Windows"^]。
+如需詳細資訊、請參閱
+link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 LDAP通道繫結和LDAP簽署要求、適用於Windows"^]。
 
 * 在設定LDAP ONTAP 以供使用之前、您應確認您的站台部署符合LDAP伺服器和用戶端組態的最佳實務做法。尤其必須符合下列條件：
 +
@@ -77,9 +78,9 @@ LDAP參照追蹤不支援下列組態。
 
 ** 適用於更新版本的支援功能（9.9.1及更新版本均支援）ONTAP ：
 +
-*** LDAP簽署與密封（「工作階段安全性」選項）
-*** 加密TLS連線（「-use－start-TLS」選項）
-*** 透過LDAPS連接埠636進行通訊（「使用- LDAPS-for -ad-LDAP」選項）
+*** LDAP 簽署與密封（ `-session-security` 選項）
+*** 加密 TLS 連線（ `-use-start-tls` 選項）
+*** 透過 LDAPS 連接埠 636 （ `-use-ldaps-for-ad-ldap` 選項）
 
 
 

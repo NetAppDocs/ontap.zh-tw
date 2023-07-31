@@ -11,7 +11,7 @@ summary: 您可以設定「BranchCache共用區」屬性、在建立共用區時
 
 
 [role="lead"]
-建立共用區時、您可以設定「BranchCache」共用區內容、在SMB共用區上啟用「BranchCache」。
+您可以在建立共用時、透過設定在 SMB 共用上啟用 BranchCache `branchcache` 共用屬性。
 
 .關於這項工作
 * 如果在SMB共用區上啟用了BranchCache、則共用區必須將離線檔案組態設定為手動快取。
@@ -19,21 +19,22 @@ summary: 您可以設定「BranchCache共用區」屬性、在建立共用區時
 這是您建立共用時的預設設定。
 
 * 您也可以在建立啟用了BranchCache的共用時指定其他選用的共用參數。
-* 即使儲存虛擬機器（SVM）上未設定及啟用BranchCache、您仍可在共用區上設定「BranchCache」（BranchCache）屬性。
+* 您可以設定 `branchcache` 即使在儲存虛擬機器（ SVM ）上未設定和啟用 BranchCache 、也會在共用上顯示內容。
 +
 不過、如果您想要共用區提供快取內容、則必須在SVM上設定及啟用BranchCache。
 
-* 由於使用「-share-properties」參數時、沒有套用到共用區的預設共用屬性、因此除了使用以逗號分隔的清單來指定「BranchCache」共用屬性之外、您還必須指定要套用到共用區的所有其他共用屬性。
-* 如需詳細資訊、請參閱「vserver CIFS共用create」命令的手冊頁。
+* 因為使用時並未套用預設共用屬性至共用 `-share-properties` 參數、除了、您還必須指定要套用至共用的所有其他共用屬性 `branchcache` 使用以逗號分隔的清單來共用屬性。
+* 如需詳細資訊、請參閱的手冊頁 `vserver cifs share create` 命令。
 
 
 .步驟
-. 建立啟用了BranchCache的SMB共用區：+「vserver CIFS共用區create -vserver _vserver_name_-share-name _share_name_-path _path_-share-properties BranchCache、...]
-. 使用「vserver CIFS共用show」命令、確認在SMB共用區上設定了「BranchCache共用區」屬性。
+. 建立啟用 BranchCache 的 SMB 共用區： +
+`vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties branchcache[,...]`
+. 使用確認 SMB 共用上的 BranchCache 共用屬性已設定 `vserver cifs share show` 命令。
 
 
 .範例
-下列命令會在SVM VS1上建立一個名為「dATA」的啟用了BranchCache的SMB共用區、路徑為「/data」。根據預設、離線檔案設定設為「手動」：
+下列命令會建立一個已啟用 BranchCache 的 SMB 共用，名稱為「 dATA 」，路徑為 `/data` 在 SVM VS1 上。根據預設，離線檔案設定為 `manual`：
 
 [listing]
 ----

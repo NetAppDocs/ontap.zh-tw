@@ -2,7 +2,7 @@
 permalink: authentication/setup-ssh-multifactor-authentication-task.html 
 sidebar: sidebar 
 keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
-summary: 多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方法來登入管理或資料 SVM 、以增強安全性。 
+summary: 多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方法來登入管理或資料 SVM 、以增強安全性。  
 ---
 = 啟用多因素驗證
 :allow-uri-read: 
@@ -15,7 +15,7 @@ summary: 多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方
 
 .關於這項工作
 * 您必須是叢集管理員才能執行此工作。
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用「安全登入修改」命令稍後新增角色。
+* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用 `security login modify` 命令以稍後新增角色。
 +
 link:modify-role-assigned-administrator-task.html["修改指派給系統管理員的角色"]
 
@@ -42,7 +42,7 @@ link:manage-public-key-authentication-concept.html["將公開金鑰與使用者�
 security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method <password|publickey> -role admin -second-authentication-method <password|publickey>
 ----
 +
-以下命令要求SVM系統管理員帳戶「admin2」（具有預先定義的「admin」角色）、以SSH公開金鑰和使用者密碼登入SVM「engData1」：
+下列命令需要 SVM 系統管理員帳戶 `admin2` 使用預先定義的 `admin` 登入 SVM 的角色``engData1`` 使用 SSH 公開金鑰和使用者密碼：
 
 +
 [listing]
@@ -61,7 +61,7 @@ Warning: To use public-key authentication, you must create a public key for user
 
 從 ONTAP 9.13.1 開始、您可以要求本機使用者同時使用 SSH 公開金鑰或使用者密碼和時間型一次性密碼（ TOTP ）登入管理或資料 SVM 、以增強安全性。啟用 MFA 與 TOTP 的帳戶後、本機使用者必須登入 link:configure-local-account-mfa-totp-task.html["完成組態設定"]。
 
-TOTP 是一種電腦演算法、使用目前時間來產生一次性密碼。如果使用 TOTP 、它永遠是 SSH 公開金鑰或使用者密碼之後的第二種驗證形式。
+TOTP 是一種電腦演算法、使用目前時間來產生一次性密碼。  如果使用 TOTP 、它永遠是 SSH 公開金鑰或使用者密碼之後的第二種驗證形式。
 
 .開始之前
 您必須是儲存管理員才能執行這些工作。

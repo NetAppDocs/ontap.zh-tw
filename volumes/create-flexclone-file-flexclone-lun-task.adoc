@@ -11,7 +11,7 @@ summary: 您FlexVol 可以使用Volume檔案Clone Create命令、為出現在流
 
 
 [role="lead"]
-您FlexVol 可以使用「Volume file clone creation」命令、為出現在現象的檔案和LUN建立節省空間和時間的複本、並建立這些複本。
+您可以使用來建立 FlexVol Volume 或 FlexClone Volume 中檔案和 LUN 的空間效率與時間效率複本 `volume file clone create` 命令。
 
 .您需要的產品
 * FlexClone授權必須安裝在叢集上。
@@ -27,12 +27,12 @@ summary: 您FlexVol 可以使用Volume檔案Clone Create命令、為出現在流
 
 您可以在建立及修改複本時、指定FlexClone檔案和FlexClone LUN的自動刪除設定。依預設、自動刪除設定為停用。
 
-當您使用「volume file clone create」命令搭配「-Overwrite目的地」參數建立複本時、可以覆寫現有的FlexClone檔案或FlexClone LUN。
+使用建立複本時、您可以覆寫現有的 FlexClone 檔案或 FlexClone LUN `volume file clone create` 命令 `-overwrite-destination` 參數。
 
-當節點達到最大的分割負載時、節點會暫時停止接受建立FlexClone檔案和FlexClone LUN的要求、並發出「EBUSY」錯誤訊息。當節點的分割負載低於最大值時、節點會再次接受建立FlexClone檔案和FlexClone LUN的要求。再次嘗試建立要求之前、您應該等到節點有建立複本的容量時再進行。
+當節點達到最大分割負載時、節點會暫時停止接受建立 FlexClone 檔案和 FlexClone LUN 的要求、並發出 `EBUSY` 錯誤訊息。當節點的分割負載低於最大值時、節點會再次接受建立FlexClone檔案和FlexClone LUN的要求。再次嘗試建立要求之前、您應該等到節點有建立複本的容量時再進行。
 
 .步驟
-. 使用「volume file clone cre創作」命令建立FlexClone檔案或FlexClone LUN。
+. 使用建立 FlexClone 檔案或 FlexClone LUN `volume file clone create` 命令。
 +
 以下範例說明如何在Volume vol1中建立父檔案file1_source的FlexClone檔案file1_clone：
 

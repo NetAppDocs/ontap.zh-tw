@@ -17,19 +17,19 @@ summary: 當來源FlexGroup 供應資料時、由於資料毀損、意外刪除�
 您必須從目的地叢集執行此工作。
 
 .步驟
-. 停用FlexGroup 針對Sesfvolume SnapMirror關係的未來傳輸：「napmirror quiesce dest_Svm:dest_flexgroup」（napmirror靜止dest_Svm:dest_flexgroup）
+. 停用 FlexGroup Volume SnapMirror 關係的未來傳輸： `snapmirror quiesce dest_svm:dest_flexgroup`
 +
 [listing]
 ----
 cluster2::> snapmirror quiesce -destination-path vsd:dst
 ----
-. 打破FlexGroup 「SnapMirror磁碟區」關係：「napmirror Break dest_svm:dest_flexgroup」
+. 中斷 FlexGroup Volume SnapMirror 關係： `snapmirror break dest_svm:dest_flexgroup`
 +
 [listing]
 ----
 cluster2::> snapmirror break -destination-path vsd:dst
 ----
-. 檢視SnapMirror關係的狀態：「napmirror show -expand」
+. 查看 SnapMirror 關係的狀態： `snapmirror show -expand`
 +
 [listing]
 ----
@@ -59,9 +59,9 @@ vss:s__0008 XDP  vsd:dst__0008  Broken-off
 ...
 ----
 +
-每個組織的SnapMirror關係狀態都是「中斷」。
+每個組成要素的 SnapMirror 關係狀態為 `Broken-off`。
 
-. 確認目的地FlexGroup 的Svm_name為讀取/寫入：「volume show -vserver Svm_name」
+. 確認目的地 FlexGroup Volume 為讀取 / 寫入： `volume show -vserver svm_name`
 +
 [listing]
 ----

@@ -42,14 +42,18 @@ AFF 、 FAS 和 ASA 平台為 128 TB
 
 
 
-| S69.5、9.6、ONTAP 9.7 | 16TB 
+| ONTAP 9.5 、 9.6 、 9.7 | 16TB 
 
 
-| 更新版本ONTAP | 原始LUN大小的10倍、但不超過16TB、即最大LUN大小。例如、如果您建立100 GB LUN、則只能將其擴充至1、000 GB。LUN的實際最大大小可能不恰好為16TB。將限制捨位至稍低的值。ONTAP 
+| 更新版本ONTAP | 原始LUN大小的10倍、但不超過16TB、即最大LUN大小。
+
+例如、如果您建立100 GB LUN、則只能將其擴充至1、000 GB。
+
+LUN的實際最大大小可能不恰好為16TB。  將限制捨位至稍低的值。ONTAP 
 |===
 您不需要將LUN離線以增加大小。不過、增加大小之後、您必須重新掃描主機上的LUN、讓主機識別大小的變更。
 
-如需調整LUN大小的詳細資訊、請參閱命令參考頁面上的「LUN resize（LUN大小調整）」命令。
+請參閱的命令參考頁面 `lun resize` 命令以取得有關調整 LUN 大小的詳細資訊。
 
 .步驟
 [role="tabbed-block"]
@@ -70,11 +74,11 @@ AFF 、 FAS 和 ASA 平台為 128 TB
 
 . 增加LUN的大小：
 +
-"LUN resize -vserver _vserver_name_-volume _volume_name_-LUN _LUN_name_-size _LUN_Size_
+`lun resize -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -size _lun_size_`
 
 . 驗證LUN大小是否增加：
 +
-「LUN show -vserver _vserver_name_」
+`lun show -vserver _vserver_name_`
 
 +
 [NOTE]

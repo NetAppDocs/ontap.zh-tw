@@ -11,27 +11,27 @@ summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空�
 
 
 [role="lead"]
-如果您將「最快分配」選項設為「已啟用」、ONTAP 則當磁碟區空間不足且磁碟區中的LUN無法接受寫入時、會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。
+如果您設定 `space-allocation` 選項 `enabled`，當磁碟區空間不足且磁碟區中的 LUN 無法接受寫入時， ONTAP 會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。
 
 .關於這項工作
-「最快分配」選項預設為「停用」、您必須將LUN離線才能啟用空間分配。啟用空間分配之後、您必須在主機上執行探索、主機才能辨識已啟用空間分配。
+。 `space-allocation` 選項設定為 `disabled` 根據預設、您必須將 LUN 離線才能啟用空間分配。啟用空間分配之後、您必須在主機上執行探索、主機才能辨識已啟用空間分配。
 
 .步驟
 . 使LUN離線。
 +
 `lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline`
 
-. 將「空間分配」參數設為「已啟用」：
+. 設定 `-space-allocation` 參數至 `enabled`：
 +
-「LUN modify -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-space-allocation enabl用」
+`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
 
 . 確認已啟用空間分配：
 +
-「LUN show -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-Fields space-allocation」
+`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
 
 . 使LUN上線：
 +
-"LUN modify -vserver _vserver_name_-volume _volume _name_-LUN _LUN_name_-st現 線"
+`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online`
 
-. 在主機上重新掃描所有磁碟、以確保正確探索對「空間分配」選項的變更。
+. 在主機上、重新掃描所有磁碟、以確保變更為 `-space-allocation` 已正確探索選項。
 

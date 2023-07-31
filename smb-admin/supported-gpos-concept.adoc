@@ -36,7 +36,7 @@ SVM目前支援下列GPO：
 
 ====
 +
-使用「進階稽核原則組態/稽核原則/物件存取」GPO中的「稽核中心存取原則分階段」設定來設定。
+使用設定 `Audit Central Access Policy Staging` 的設定 `Advanced Audit Policy Configuration/Audit Policies/Object Access` GPO ：
 
 +
 [NOTE]
@@ -48,11 +48,11 @@ SVM目前支援下列GPO：
 +
 ** 啟用CIFS的SVM的群組原則重新整理時間間隔
 +
-使用「登錄」GPO設定。
+使用設定 `Registry` GPO ：
 
 ** 群組原則重新整理隨機偏移
 +
-使用「登錄」GPO設定。
+使用設定 `Registry` GPO ：
 
 ** BranchCache的雜湊發佈
 +
@@ -61,7 +61,8 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 +
 *** 每個共用區
 *** All共享區
-*** 使用「登錄」GPO設定為停用。
+*** 已停用
+使用設定 `Registry` GPO ：
 
 
 ** 支援BranchCache的雜湊版本
@@ -70,8 +71,9 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 
 +
 *** BranchCache第1版
-*** BranchCache第2版
-*** 使用「登錄」GPO設定的BranchCache版本1和2。
+*** BranchCache 版本 2
+*** BranchCache 第 1 版和第 2 版
+使用設定 `Registry` GPO ：
 
 
 
@@ -94,7 +96,8 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 **** 請勿稽核
 **** 僅稽核成功事件
 **** 稽核失敗事件
-**** 使用「本機原則/稽核原則」GPO中的「稽核登入事件」設定來稽核成功和失敗事件。
+**** 稽核成功與失敗事件
+使用設定 `Audit logon events` 的設定 `Local Policies/Audit Policy` GPO ：
 
 
 +
@@ -111,7 +114,8 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 **** 請勿稽核
 **** 僅稽核成功事件
 **** 稽核失敗事件
-**** 使用「本機原則/稽核原則」GPO中的「稽核物件存取」設定來稽核成功和失敗事件。
+**** 稽核成功與失敗事件
+使用設定 `Audit object access` 的設定 `Local Policies/Audit Policy` GPO ：
 
 
 +
@@ -126,7 +130,8 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 
 +
 **** 當記錄檔大小超過最大記錄檔大小時、請覆寫事件記錄
-**** 請勿覆寫使用「事件記錄」GPO中的「安全記錄保留方法」設定所設定的事件記錄（手動清除記錄）。
+**** 不要覆寫事件記錄（手動清除記錄）
+使用設定 `Retention method for security log` 的設定 `Event Log` GPO ：
 
 
 *** 最大記錄大小
@@ -134,7 +139,7 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 指定稽核記錄的最大大小。
 
 +
-使用「事件記錄」GPO中的「最大安全性記錄大小」設定來設定。
+使用設定 `Maximum security log size` 的設定 `Event Log` GPO ：
 
 
 
@@ -149,7 +154,7 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 指定透過GPO套用檔案安全性的檔案或目錄清單。
 
 +
-使用「檔案系統」GPO設定。
+使用設定 `File System` GPO ：
 
 +
 [NOTE]
@@ -164,21 +169,21 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 指定電腦時鐘同步的最大容許值（以分鐘為單位）。
 
 +
-使用「帳戶原則/Kerberos原則」GPO中的「電腦時鐘同步的最大容許度」設定來設定。
+使用設定 `Maximum tolerance for computer clock synchronization` 的設定 `Account Policies/Kerberos Policy` GPO ：
 
 *** 票證最長使用期限
 +
 指定使用者票證的最長壽命（以小時為單位）。
 
 +
-使用「帳戶原則/Kerberos原則」GPO中的「使用者票證的最大壽命」設定來設定。
+使用設定 `Maximum lifetime for user ticket` 的設定 `Account Policies/Kerberos Policy` GPO ：
 
 *** 票證續約期限上限
 +
 指定使用者票證續約的最長壽命（以天為單位）。
 
 +
-使用「帳戶原則/Kerberos原則」GPO中的「使用者票證更新的最大壽命」設定來設定。
+使用設定 `Maximum lifetime for user ticket renewal` 的設定 `Account Policies/Kerberos Policy` GPO ：
 
 
 
@@ -189,21 +194,21 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 指定有權取得任何安全物件所有權的使用者和群組清單。
 
 +
-使用「本機原則/使用者權限指派」GPO中的「取得檔案或其他物件的擁有權」設定來設定。
+使用設定 `Take ownership of files or other objects` 的設定 `Local Policies/User Rights Assignment` GPO ：
 
 *** 安全性權限
 +
 指定使用者和群組清單、這些使用者和群組可指定個別資源（例如檔案、資料夾和Active Directory物件）物件存取的稽核選項。
 
 +
-使用「本機原則/使用者權限指派」GPO中的「管理稽核與安全性記錄」設定來設定。
+使用設定 `Manage auditing and security log` 的設定 `Local Policies/User Rights Assignment` GPO ：
 
 *** 變更通知權限（略過周遊檢查）
 +
 指定可遍歷目錄樹狀結構的使用者和群組清單、即使使用者和群組對周遊目錄可能沒有權限。
 
 +
-使用者必須擁有相同的權限、才能接收檔案和目錄變更通知。使用「本機原則/使用者權限指派」GPO中的「略過周遊檢查」設定來設定。
+使用者必須擁有相同的權限、才能接收檔案和目錄變更通知。使用設定 `Bypass traverse checking` 的設定 `Local Policies/User Rights Assignment` GPO ：
 
 
 
@@ -214,7 +219,7 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 指定是否啟用或停用必要的SMB簽署。
 
 +
-使用「安全選項」GPO中的「Microsoft網路伺服器：數位簽署通訊（永遠）」設定來設定。
+使用設定 `Microsoft network server: Digitally sign communications (always)` 的設定 `Security Options` GPO ：
 
 
 
@@ -225,60 +230,60 @@ BranchCache GPO的雜湊發佈會對應到BranchCache作業模式。支援下列
 +
 *** 無列舉安全性客戶經理（SAM）帳戶：
 +
-此安全性設定可決定授與哪些其他權限給電腦的匿名連線。如果啟用此選項ONTAP 、則在支援的情況下、此選項會顯示為「無列舉」。
+此安全性設定可決定授與哪些其他權限給電腦的匿名連線。此選項會顯示為 `no-enumeration` 在 ONTAP 中（如果已啓用）。
 
 +
-使用「本機原則/安全性選項」GPO中的「網路存取：不允許SAM帳戶的匿名列舉」設定來設定。
+使用設定 `Network access: Do not allow anonymous enumeration of SAM accounts` 的設定 `Local Policies/Security Options` GPO ：
 
 *** 未列舉SAM帳戶和共用
 +
-此安全性設定可決定是否允許SAM帳戶和共用的匿名列舉。如果啟用此選項ONTAP 、則在支援的情況下、此選項會顯示為「無列舉」。
+此安全性設定可決定是否允許SAM帳戶和共用的匿名列舉。此選項會顯示為 `no-enumeration` 在 ONTAP 中（如果已啓用）。
 
 +
-使用「本機原則/安全性選項」GPO中的「網路存取：不允許SAM帳戶和共用的匿名列舉」設定來設定。
+使用設定 `Network access: Do not allow anonymous enumeration of SAM accounts and shares` 的設定 `Local Policies/Security Options` GPO ：
 
 *** 限制匿名存取共用和具名管道
 +
-此安全性設定會限制匿名存取共用和管道。如果啟用此選項ONTAP 、則在支援的情況下、此選項會在畫面上顯示為「無法存取」。
+此安全性設定會限制匿名存取共用和管道。此選項會顯示為 `no-access` 在 ONTAP 中（如果已啓用）。
 
 +
-使用「本機原則/安全性選項」GPO中的「網路存取：限制匿名存取具名管道和共用」設定來設定。
+使用設定 `Network access: Restrict anonymous access to Named Pipes and Shares` 的設定 `Local Policies/Security Options` GPO ：
 
 
 
 
 
 +
-顯示已定義及已套用群組原則的相關資訊時、「匿名使用者的結果限制」輸出欄位會提供三種限制匿名GPO設定的結果限制相關資訊。可能的結果限制如下：
+顯示已定義和已套用群組原則的相關資訊時、會顯示 `Resultant restriction for anonymous user` 「輸出」欄位提供三個限制匿名 GPO 設定的結果限制相關資訊。可能的結果限制如下：
 
 +
-** 「無法存取」
+** `no-access`
 +
-匿名使用者無法存取指定的共用和具名管道、也無法使用SAM帳戶和共用的列舉。如果啟用「網路存取：限制匿名存取具名管道和共用」GPO、就會看到此限制。
+匿名使用者無法存取指定的共用和具名管道、也無法使用SAM帳戶和共用的列舉。如果出現這種情況、就會出現這種限制 `Network access: Restrict anonymous access to Named Pipes and Shares` 已啟用 GPO 。
 
-** 「無列舉」
+** `no-enumeration`
 +
 匿名使用者可以存取指定的共用和具名管道、但無法使用SAM帳戶和共用的列舉。如果符合下列兩項條件、就會看到這項限制：
 
 +
-*** 停用「網路存取：限制匿名存取具名管道和共用」GPO。
-*** 啟用「網路存取：不允許SAM帳戶的匿名列舉」或「網路存取：不允許SAM帳戶和共用的匿名列舉」GPO。
+*** 。 `Network access: Restrict anonymous access to Named Pipes and Shares` GPO 已停用。
+*** 或是 `Network access: Do not allow anonymous enumeration of SAM accounts` 或 `Network access: Do not allow anonymous enumeration of SAM accounts and shares` 已啟用 GPO 。
 
 
-** 「無限制」
+** `no-restriction`
 +
 匿名使用者擁有完整存取權、可以使用列舉功能。如果符合下列兩項條件、就會看到這項限制：
 
 +
-*** 停用「網路存取：限制匿名存取具名管道和共用」GPO。
-*** 停用「網路存取：不允許SAM帳戶的匿名列舉」和「網路存取：不允許SAM帳戶和共用的匿名列舉」GPO。
+*** 。 `Network access: Restrict anonymous access to Named Pipes and Shares` GPO 已停用。
+*** 兩者皆是 `Network access: Do not allow anonymous enumeration of SAM accounts` 和 `Network access: Do not allow anonymous enumeration of SAM accounts and shares` GPO 已停用。
 +
 **** 受限群組
 +
 您可以設定受限群組、集中管理內建或使用者定義群組的成員資格。透過群組原則套用受限群組時、CIFS伺服器本機群組的成員資格會自動設定為符合套用群組原則中定義的成員資格清單設定。
 
 +
-使用「受限群組」GPO設定。
+使用設定 `Restricted Groups` GPO ：
 
 
 

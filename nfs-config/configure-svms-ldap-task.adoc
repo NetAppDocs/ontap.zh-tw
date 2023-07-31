@@ -16,7 +16,7 @@ summary: 您必須驗證SVM的名稱服務交換器表中是否正確列出名�
 .步驟
 . 顯示目前名稱服務交換器表格內容：
 +
-「Vserver服務名稱服務ns-switchshow -vserver _svm_name_」
+`vserver services name-service ns-switch show -vserver _svm_name_`
 
 +
 下列命令顯示SVM My_SVM的結果：
@@ -37,9 +37,9 @@ My_SVM          namemap        files
 5 entries were displayed.
 ----
 +
-「namemap」指定搜尋名稱對應資訊的來源、以及搜尋順序。在純UNIX環境中、不需要輸入此項目。只有在同時使用UNIX和Windows的混合環境中才需要名稱對應。
+`namemap` 指定要搜尋名稱對應資訊的來源、以及搜尋順序。在純UNIX環境中、不需要輸入此項目。只有在同時使用UNIX和Windows的混合環境中才需要名稱對應。
 
-. 視需要更新「n-switch'」項目：
+. 更新 `ns-switch` 視情況輸入：
 +
 |===
 | 如果您想要更新下列項目的ns交換器項目... | 輸入命令... 
@@ -48,21 +48,21 @@ My_SVM          namemap        files
  a| 
 使用者資訊
  a| 
-「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-database-passwd-sources LDAP、files"
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database passwd -sources ldap,files`
 
 
 
  a| 
 群組資訊
  a| 
-「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-database-sources LDAP、files"
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database group -sources ldap,files`
 
 
 
  a| 
 網路群組資訊
  a| 
-「Vserver服務名稱服務ns_switchmodify -vserver _vserver_name_-databases netgroup -sources LDAP、files」
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database netgroup -sources ldap,files`
 
 |===
 

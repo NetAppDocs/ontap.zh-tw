@@ -50,7 +50,7 @@ image::../media/qos-ceiling-concepts.gif[QoS上限概念]
 
 [NOTE]
 ====
-如果節點或Aggregate上的效能容量（保留空間）不足、或是在執行「Volume Move toger-cover」（Volume Move tog-tover）等關鍵作業時、工作負載的處理量可能會低於指定樓層。即使有足夠的可用容量且未執行關鍵作業、工作負載的處理量仍可能低於指定樓層達5%。
+如果節點或集合體上的效能容量（保留空間）不足、或在類似的關鍵作業期間、工作負載的處理量可能會低於指定的樓層 `volume move trigger-cutover`。即使有足夠的可用容量且未執行關鍵作業、工作負載的處理量仍可能低於指定樓層達5%。
 
 ====
 image::../media/qos-floor-concepts.gif[QoS場地概念]
@@ -68,7 +68,8 @@ _Adaptive QoS_會自動將原則群組值調整為工作負載大小、並隨著
 
 NOTE: 在ONTAP 更新版本的更新版本中、可在處理量層使用已用的空間。不支援ONTAP 使用於效能不符合更新版本的資料層。
 
-+ 從 ONTAP 9.13.1 開始、您可以使用調適性 QoS 來設定 SVM 層級的處理量樓層和天花板。
++
+從 ONTAP 9.13.1 開始、您可以使用調適性 QoS 來設定 SVM 層級的處理量樓層和天花板。
 
 * _allocated space_原則會根據儲存物件的名義大小、維持IOPS/TB|GB比率。如果比率為100 IOPS/GB、則150 GB的磁碟區只要磁碟區維持該大小、就會有15,000 IOPS的處理量上限。如果磁碟區大小調整為300 GB、調適性QoS會將處理量上限調整為30、000 IOPS。
 * _used space_原則（預設值）會根據儲存效率前的實際資料量、維持IOPS/TB|GB比率。如果比率為100 IOPS/GB、則儲存100 GB資料的150 GB磁碟區的處理量上限為10、000 IOPS。隨著使用空間量的變化、調適性QoS會根據比率調整處理量上限。

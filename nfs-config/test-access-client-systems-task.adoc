@@ -21,18 +21,24 @@ summary: 驗證NFS對新儲存物件的存取之後、您應該登入NFS管理�
 .步驟
 . 在叢集上、驗證裝載新磁碟區之LIF的IP位址：
 +
-「網路介面show–vserver _svm_name_」
+`network interface show –vserver _svm_name_`
 
 . 以root使用者身分登入管理主機用戶端系統。
 . 將目錄變更為掛載資料夾：
 +
-"CD /mnt/"
+`cd /mnt/`
 
 . 使用SVM的IP位址建立及掛載新資料夾：
 +
-.. 建立新資料夾：+「mkdir /mnt/_folder_」
-.. 將新的磁碟區掛載到這個新目錄：+"mount-t nfs -o hard _ipAddress_://_volVolume name_/mnt/_folder_"
-.. 將目錄變更為新資料夾：+"CD _foldem_"
+.. 建立新資料夾：
+ +
+`mkdir /mnt/_folder_`
+.. 將新磁碟區掛載至此新目錄：
+ +
+`mount -t nfs -o hard _IPAddress_:/_volume_name_ /mnt/_folder_`
+.. 將目錄變更為新資料夾：
+ +
+`cd _folder_`
 +
 下列命令會建立名為test1的資料夾、將vol1磁碟區掛載到test1掛載資料夾的192.0.2.130 IP位址、然後變更為新的test1目錄：
 
@@ -47,15 +53,27 @@ host# cd /mnt/test1
 
 . 建立新檔案、確認檔案是否存在、然後將文字寫入：
 +
-.. 建立測試檔案：+「Touch _Fil性_」
-.. 確認檔案存在：+「ls -l _fileName」
-.. 輸入：+「CAT >_FILENOY_」
+.. 建立測試檔案：
+ +
+`touch _filename_`
+.. 確認檔案存在：
+ +
+`ls -l _filename_`
+.. 輸入：
+ +
+`cat > _filename_`
 +
 輸入一些文字、然後按下Ctrl+D將文字寫入測試檔案。
 
-.. 顯示測試檔案的內容。+"CAT _FIL_"
-.. 移除測試檔案：+「rm _fileName」
-.. 返回父目錄：+"CD .."
+.. 顯示測試檔案的內容。
+ +
+`cat _filename_`
+.. 移除測試檔案：
+ +
+`rm _filename_`
+.. 返回父目錄：
+ +
+`cd ..`
 +
 [listing]
 ----

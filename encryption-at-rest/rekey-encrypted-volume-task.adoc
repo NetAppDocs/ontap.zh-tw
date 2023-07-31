@@ -11,25 +11,25 @@ summary: 定期變更磁碟區的加密金鑰是安全性最佳做法。從ONTAP
 
 
 [role="lead"]
-定期變更磁碟區的加密金鑰是安全性最佳做法。從ONTAP 功能介紹9.3開始、您可以使用「Volume Encryption rekey start」命令來變更加密金鑰。
+定期變更磁碟區的加密金鑰是安全性最佳做法。從功能介紹9.3開始ONTAP 、您可以使用 `volume encryption rekey start` 變更加密金鑰的命令。
 
 .關於這項工作
-重新輸入作業一旦開始、就必須完成。不會返回舊金鑰。如果您在作業期間遇到效能問題、可以執行「Volume Encryption rekey Pause」命令來暫停作業、然後執行「Volume Encryption rekey resume」命令來恢復作業。
+重新輸入作業一旦開始、就必須完成。不會返回舊金鑰。如果您在作業期間遇到效能問題、可以執行 `volume encryption rekey pause` 暫停作業的命令、以及 `volume encryption rekey resume` 命令以恢復作業。
 
 在重新輸入作業完成之前、磁碟區會有兩個按鍵。新的寫入及其對應的讀取將使用新的金鑰。否則、讀取將使用舊的金鑰。
 
 [NOTE]
 ====
-您無法使用「Volume Encryption rekey start」來重新輸入SnapLock 一個版本。
+您無法使用 `volume encryption rekey start` 重新輸入 SnapLock Volume 。
 
 ====
 .步驟
 . 變更加密金鑰：
 +
-「Volume Encryption rekey start -vserver Svm_name -volume volume Volume _name」
+`volume encryption rekey start -vserver SVM_name -volume volume_name`
 
 +
-下列命令會變更SVM上「vol1」的加密金鑰「VS1」：
+下列命令會變更的加密金鑰 `vol1` 在 SVM 上``vs1``：
 
 +
 [listing]
@@ -38,7 +38,7 @@ cluster1::> volume encryption rekey start -vserver vs1 -volume vol1
 ----
 . 確認重新輸入作業的狀態：
 +
-「Volume Encryption Rekey show」
+`volume encryption rekey show`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
@@ -57,13 +57,13 @@ vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
 ----
 . 重新輸入作業完成後、請確認磁碟區已啟用加密功能：
 +
-「Volume show -is加密true」
+`volume show -is-encrypted true`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-下列命令會顯示「cluster1」上的加密磁碟區：
+下列命令會顯示上的加密磁碟區 `cluster1`：
 
 +
 [listing]

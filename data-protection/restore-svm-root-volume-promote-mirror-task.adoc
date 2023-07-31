@@ -19,17 +19,17 @@ summary: 如果根磁碟區永久無法使用、您可以升級負載共用鏡�
 .步驟
 . 變更為進階權限層級：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 升級LSM Volume：
 +
-「napmirror Promote -dite-path _Svm:volume」（napmirror提升-dite-path _Svm:volume）|「_cluster」（叢集）：//Svm/volume」（虛擬磁
+`snapmirror promote -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例將磁碟區「svm1_m2」升級為新的SVM根磁碟區：
+以下範例將會提升 Volume `svm1_m2` 作為新的 SVM 根 Volume ：
 
 +
 [listing]
@@ -44,7 +44,7 @@ Warning: Promote will delete the offline read-write volume
 Do you want to continue? {y|n}: y
 ----
 +
-輸入「y」。利用此功能、LSM磁碟區可成為讀寫磁碟區、並可在存取時刪除原始根磁碟區。ONTAP
+輸入 `y`。利用此功能、LSM磁碟區可成為讀寫磁碟區、並可在存取時刪除原始根磁碟區。ONTAP
 
 +
 [NOTE]
@@ -54,14 +54,14 @@ Do you want to continue? {y|n}: y
 ====
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 . 依照您用於根磁碟區的命名慣例、重新命名所升級的磁碟區：
 +
-「Volume rame -vserver _svm_-volume _volume _-newname _new_name_`」
+`volume rename -vserver _SVM_ -volume _volume_ -newname _new_name_`
 
 +
-以下範例將升級的Volume「svm1_m2（svm1_root）”重新命名為「svm1_root（svm1_root））：
+以下範例將重新命名升級的 Volume `svm1_m2` 名稱 `svm1_root`：
 
 +
 [listing]

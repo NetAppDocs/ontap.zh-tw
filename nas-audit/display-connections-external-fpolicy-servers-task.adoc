@@ -24,7 +24,7 @@ summary: 您可以顯示叢集或特定儲存虛擬機器（SVM）與外部FPoli
 
 除了顯示叢集或特定SVM上FPolicy連線的相關資訊、您也可以使用命令參數、根據其他條件篩選命令的輸出。
 
-您可以指定「-instance」參數、以顯示所列原則的詳細資訊。或者、您也可以使用「-Fields」參數、在命令輸出中僅顯示指定的欄位。您可以輸入「？」 在「-Fields」參數之後、找出您可以使用的欄位。
+您可以指定 `-instance` 顯示所列原則詳細資訊的參數。或者、您也可以使用 `-fields` 此參數僅顯示命令輸出中指定的欄位。您可以輸入 `?` 之後 `-fields` 參數來找出您可以使用的欄位。
 
 .步驟
 . 使用適當的命令、顯示節點與FPolicy伺服器之間連線狀態的篩選資訊：
@@ -39,35 +39,35 @@ summary: 您可以顯示叢集或特定儲存虛擬機器（SVM）與外部FPoli
  a| 
 您指定的
  a| 
-「vserver fpolicy show-engine -server ip_address'」
+`vserver fpolicy show-engine -server IP_address`
 
 
 
  a| 
 適用於指定的SVM
  a| 
-「vserver fpolicy show-engine -vserver vserver_name」
+`vserver fpolicy show-engine -vserver vserver_name`
 
 
 
  a| 
 隨附於指定原則的
  a| 
-「vserver fpolicy show-engine -police-name policy_name」
+`vserver fpolicy show-engine -policy-name policy_name`
 
 
 
  a| 
 使用您指定的伺服器狀態
  a| 
-「vserver fpolicy show-engine -server-Status」
+`vserver fpolicy show-engine -server-status status`
 
 伺服器狀態可以是下列其中一項：
 
-** 已連線
-** "已連線"
-** "連線"
-** '中斷連線'
+** `connected`
+** `disconnected`
+** `connecting`
+** `disconnecting`
 
 
 
@@ -75,12 +75,12 @@ summary: 您可以顯示叢集或特定儲存虛擬機器（SVM）與外部FPoli
  a| 
 使用指定類型
  a| 
-「vserver fpolicy show-engine -server-type」
+`vserver fpolicy show-engine -server-type type`
 
 FPolicy伺服器類型可以是下列其中一種：
 
-** "一線"
-** 《第二年》
+** `primary`
+** `secondary`
 
 
 
@@ -88,16 +88,16 @@ FPolicy伺服器類型可以是下列其中一種：
  a| 
 已中斷連線的原因
  a| 
-「vserver fpolicy show-engine -disconnect-reef原因 文字」
+`vserver fpolicy show-engine -disconnect-reason text`
 
 中斷連線可能有多種原因。以下是中斷連線的常見原因：
 
-** 從CLI接收到的"Disconnect命令"
-** 「剖析FPolicy伺服器的通知回應時發生錯誤。
-** 《FPolicy握手失敗》
-** “SL交握失敗
-** 「TCP連線至FPolicy伺服器失敗。
-** 「從FPolicy伺服器收到的螢幕回應訊息無效。
+** `Disconnect command received from CLI.`
+** `Error encountered while parsing notification response from FPolicy server.`
+** `FPolicy Handshake failed.`
+** `SSL handshake failed.`
+** `TCP Connection to FPolicy server failed.`
+** `The screen response message received from the FPolicy server is not valid.`
 
 
 |===

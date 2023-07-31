@@ -14,22 +14,22 @@ summary: 為了確保資料持續安全且加密、ONTAP 即使在傳輸過程�
 
 
 [role="lead"]
-從使用畫面9.8開始ONTAP 、ONTAP 在傳輸模式中使用IPsec傳輸協定、確保資料持續安全且加密、即使在傳輸過程中也沒問題。IPsec為所有IP流量提供資料加密、包括NFS、iSCSI和SMB傳輸協定。IPsec為iSCSI流量提供唯一的傳輸加密選項。
+ONTAP 在傳輸模式中使用網際網路傳輸協定安全性（ IPsec ）、確保資料即使在傳輸過程中也能持續安全且加密。IPsec為所有IP流量提供資料加密、包括NFS、iSCSI和SMB傳輸協定。
 
-從ONTAP 靜止9.9.1開始、IPsec使用的加密演算法已通過FIPS 140-2驗證。這些演算法是由ONTAP NetApp的《NetApp Cryptographic Module in the F地 加密模組」所產生、此模組可執行FIPS 140-2驗證。
+從ONTAP 推出支援支援功能的支援功能支援支援功能的功能範例、從功能性支援功能支援功能的支援功能範例起、MetroCluster 可從功能性支援功能的支援功能範例中選擇支援功能MetroCluster 。
+支援的IPsec MetroCluster 僅限於前端主機流量、MetroCluster 不受支援於叢集間的LIF。
 
 從ONTAP 版本號《21：1：2：1：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2以前只有PSDK受IPsec支援。
 
-從ONTAP 推出支援支援功能的支援功能支援支援功能的功能範例、從功能性支援功能支援功能的支援功能範例起、MetroCluster 可從功能性支援功能的支援功能範例中選擇支援功能MetroCluster 。
+從ONTAP 靜止9.9.1開始、IPsec使用的加密演算法已通過FIPS 140-2驗證。這些演算法是由ONTAP NetApp的《NetApp Cryptographic Module in the F地 加密模組」所產生、此模組可執行FIPS 140-2驗證。
 
-* 支援的IPsec MetroCluster 僅限於前端主機流量、MetroCluster 不受支援於叢集間的LIF。
-
+從 ONTAP 9.8 開始、 ONTAP 在傳輸模式中支援 IPsec 。
 
 設定好IPsec之後、用戶端與ONTAP 支援中心之間的網路流量會受到預防措施的保護、以對抗重播和攔截式（MITM）攻擊。
 
 對於NetApp SnapMirror和叢集對等流量加密、叢集對等加密（CPe）、仍建議使用傳輸層安全性（TLS）來透過IPsec進行傳輸、以確保傳輸過程安全無虞。這是因為TLS的效能優於IPsec。
 
-雖然叢集已啟用IPsec功能、但網路需要安全原則資料庫（SPD）項目來符合要保護的流量、並在流量傳輸之前指定保護詳細資料（例如密碼套件和驗證方法）。每個用戶端也需要對應的SPD項目。無論是在PSK或認證驗證方法中、都需要SPD需求。
+雖然叢集已啟用IPsec功能、但網路需要安全原則資料庫（SPD）項目來符合要保護的流量、並在流量傳輸之前指定保護詳細資料（例如密碼套件和驗證方法）。每個用戶端也需要對應的SPD項目。
 
 
 
@@ -40,33 +40,33 @@ summary: 為了確保資料持續安全且加密、ONTAP 即使在傳輸過程�
 .步驟
 . 探索是否已啟用IPsec：
 +
-「安全性IPsec組態顯示」
+`security ipsec config show`
 
 +
-如果結果包含「啟用IPsec：假」、請繼續下一步。
+如果結果包括 `IPsec Enabled: false`，繼續下一步。
 
 . 啟用IPsec：
 +
-「安全性IPsec組態修改-已啟用true」
+`security ipsec config modify -is-enabled true`
 
 . 再次執行探索命令：
 +
-「安全性IPsec組態顯示」
+`security ipsec config show`
 
 +
-結果現在包括「啟用IPsec：true」。
+現在的結果包括 `IPsec Enabled: true`。
 
 
 
 
 
-== 準備以憑證驗證建立IPsec原則
+== 準備使用憑證驗證建立 IPsec 原則
 
-如果您只使用預先共用金鑰的PSK進行驗證、而且不會使用憑證驗證、則可以跳過此步驟。
+如果您只使用預先共用金鑰（ PSK ）進行驗證、而且不會使用憑證驗證、則可以略過此步驟。
 
-在建立使用憑證進行驗證的IPsec原則之前、您必須確保符合下列先決條件：
+在建立使用憑證進行驗證的 IPsec 原則之前、您必須確認符合下列先決條件：
 
-* 用戶端和用戶端都必須安裝對方的CA憑證、才能讓雙方驗證終端實體（或用戶端）憑證ONTAP ONTAP
+* ONTAP 和用戶端都必須安裝另一方的 CA 憑證、以便雙方可驗證終端實體（ ONTAP 或用戶端）憑證
 * 系統會為ONTAP 參與該原則的Sfor the Sfor the Sfor the Sfor the Sfor the Sfor the Sfor the Sfor the
 
 
@@ -74,12 +74,24 @@ summary: 為了確保資料持續安全且加密、ONTAP 即使在傳輸過程�
 NOTE: 可共享證書的產品。ONTAP不需要在憑證與lifs之間建立一對一對應關係。
 
 .步驟
-. 除非ONTAP 已安裝（如ONTAP 自我簽署的根CA）、否則您必須安裝在相互驗證期間使用的所有CA憑證、包括ONTAP端CA和用戶端CA。*命令範例*「叢集：>安全性憑證安裝-vserver Svm_name -type server_ca-cert名稱my_ca_cert」
-. 為了確保所安裝的CA在驗證期間位於IPsec CA搜尋路徑內、ONTAP 請使用「安全性IPsec cA-certificate add」命令、將Sure憑證管理CA新增至IPsec模組。*範例命令*「叢集：>安全性IPsec ca-Certificate add -vserver Svm_name -ca-certs my_ca_cert」
-. 建立並安裝認證以供ONTAP 《Sfor the Suse LIF（供《Sfor the Suse：此憑證的發卡行CA必須已安裝ONTAP 至ESA並新增至IPsec。*命令範例*「叢集：>安全性憑證安裝-vserver Svm_name -type server -cert名稱my_nfs_server_cert」
+. 除非已安裝 ONTAP 憑證管理（例如 ONTAP 自我簽署的根 CA ）、否則請將在相互驗證期間使用的所有 CA 憑證（包括 ONTAP 端和用戶端 CA ）安裝到憑證管理。
++
+* 命令範例 *
+`cluster::> security certificate install -vserver svm_name -type server-ca -cert-name my_ca_cert`
+
+. 若要確保在驗證期間安裝的 CA 位於 IPsec CA 搜尋路徑內、請使用將 ONTAP 憑證管理 CA 新增至 IPsec 模組 `security ipsec ca-certificate add` 命令。
++
+* 命令範例 *
+`cluster::> security ipsec ca-certificate add -vserver svm_name -ca-certs my_ca_cert`
+
+. 建立並安裝認證以供ONTAP 《Sfor the Suse LIF（供《Sfor the Suse：此憑證的發卡行CA必須已安裝ONTAP 至ESA並新增至IPsec。
++
+* 命令範例 *
+`cluster::> security certificate install -vserver svm_name -type server -cert-name my_nfs_server_cert`
 
 
-如需ONTAP 更多有關資訊、請參閱ONTAP 《》介紹文件中的安全認證命令。
+
+有關 ONTAP 中證書的詳細信息，請參閱 ONTAP 9 文檔中的安全證書命令。
 
 
 
@@ -88,7 +100,7 @@ NOTE: 可共享證書的產品。ONTAP不需要在憑證與lifs之間建立一�
 在允許流量在網路上傳輸之前、IPsec需要SPD項目。無論您使用的是用於驗證的PSK或憑證、都是如此。
 
 .步驟
-. 使用「安全性IPsec原則create（安全性IPsec原則建立）》命令：
+. 使用 `security ipsec policy create` 命令至：
 +
 .. 選取ONTAP 要參與IPsec傳輸的IP位址或子網路。
 .. 選取要連線ONTAP 至「靜態IP位址」的用戶端IP位址。
@@ -96,14 +108,18 @@ NOTE: 可共享證書的產品。ONTAP不需要在憑證與lifs之間建立一�
 
 NOTE: 用戶端必須使用預先共用金鑰（PSK）來支援網際網路金鑰交換版本2（IKEv2）。
 
-.. 選用。選取要保護的上層傳輸協定（udp、tcp、icmp等）、本機連接埠號碼及遠端連接埠號碼。相應的參數分別是「傳輸協定」、「本機連接埠」和「連線埠」。
+.. 選用。選取精細的流量參數、例如上層傳輸協定（ UDP 、 TCP 、 ICMP 等） ）、本機連接埠號碼和遠端連接埠號碼、以保護流量。對應的參數為 `protocols`、 `local-ports` 和 `remote-ports` 分別。
 +
 跳過此步驟以保護ONTAP 所有介於整個過程中的資訊流量、例如：靜態IP位址和用戶端IP位址。保護所有流量是預設設定。
 
-.. 在所需驗證方法的「auth-method」參數中輸入PSK或pic。
+.. 輸入的 PSK 或公開金鑰基礎架構（ PKI ） `auth-method` 所需驗證方法的參數。
 +
-... 如果您輸入了一個PSK,請在完成所有其他選用參數之後按<enter>來輸入並驗證預先共用金鑰的提示。
-... 如果您輸入的是公開密碼匙基礎建設、您也必須輸入「cert-name」、「local-identity」、「remote-identity」等參數。如果遠端憑證的身分不明、或是需要多個用戶端身分識別、請輸入特殊字詞「任何項目」。
+... 如果您輸入一個 PSK 、請包含參數、然後按 <enter> 鍵提示您輸入並驗證預先共用金鑰。
++
+
+NOTE: `local-identity` 和 `remote-identity` 如果主機和用戶端都使用強化天鵝、而且沒有為主機或用戶端選取萬用字元原則、則參數是選用的。
+
+... 如果您輸入 PKI 、也需要輸入 `cert-name`、 `local-identity`、 `remote-identity` 參數。如果遠端端憑證身分不明、或是需要多個用戶端身分識別、請輸入特殊身分識別 `ANYTHING`。
 
 
 
@@ -111,30 +127,32 @@ NOTE: 用戶端必須使用預先共用金鑰（PSK）來支援網際網路金�
 
 
 ....
-security ipsec policy create -vserver <vs1> -name <test34> -local-ip-subnets <192.168.134.34/32> -remote-ip-subnets <192.168.134.44/32>
+security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32
 Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
 ....
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32 -local-ports 2049 -protocols tcp -auth-method PKI -cert-name my_nfs_server_cert -local-identity CN=netapp.ipsec.lif1.vs0 -remote-identity ANYTHING
 ....
-在用戶端ONTAP 和用戶端都設定相符的IPsec原則、且驗證認證（或是PSK或憑證）在兩端均已就緒之前、IP流量無法在用戶端和伺服器之間流通。如需詳細資訊，請參閱用戶端的IPsec組態。
+除非 ONTAP 和用戶端都設定了相符的 IPsec 原則、而且雙方都有驗證認證（可以是 PSK 或憑證）、否則 IP 流量無法在用戶端和伺服器之間傳輸。如需詳細資訊、請參閱用戶端端 IPsec 組態。
 
 
 
 == 使用IPsec身分識別
 
-對於預先共用金鑰驗證方法、除非IPsec用戶端（例如Libreswan）要求、否則身分識別為選用項目。對於公開密碼匙基礎建設/憑證驗證方法、本機和遠端身分識別都是必要的。身分識別會指定在每一方的憑證中認證的身分識別、並用於驗證程序中。如果遠端識別身分不明、或是可能有許多不同的身分識別、請使用特殊的「任何」身分識別。
+對於預先共用金鑰驗證方法、如果主機和用戶端都使用強化天鵝、而且沒有為主機或用戶端選取萬用字元原則、則本機和遠端身分識別是選用的。
+
+對於公開密碼匙基礎建設/憑證驗證方法、本機和遠端身分識別都是必要的。身分識別會指定在每一方憑證中認證的身分識別、並用於驗證程序。如果遠端身分識別不明、或是可能有許多不同的身分識別、請使用特殊身分識別 `ANYTHING`。
 
 .關於這項工作
 在不受限的情況下、可透過修改SPD項目或在SPD原則建立期間來指定身分識別。ONTAPSPD可以是IP位址或字串格式身分識別名稱。
 
 .步驟
-若要修改現有SPD的身分識別設定、請使用下列命令：
+若要修改現有的 SPD 身分識別設定、請使用下列命令：
 
-《安全性IPsec原則修改》
+`security ipsec policy modify`
 
 .命令範例
-「安全性IPsec原則修改-vserver _VS1_-name _test34_-local-identity _192.168.1.34_-reme-identity _client.fooboo.com_`」
+`security ipsec policy modify -vserver _vs1_ -name _test34_ -local-identity _192.168.134.34_ -remote-identity _client.fooboo.com_`
 
 
 
@@ -147,7 +165,7 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 
 * *子網路組態*
 +
-若要允許特定子網路上的所有用戶端（例如：192.168.1.0/24）使用單一SPD原則項目連線至單一SVM IP位址、您必須以子網路形式指定「遠端IP子網路」。此外、您必須使用正確的用戶端身分識別來指定「身份識別」欄位。
+若要允許特定子網路上的所有用戶端（例如 192.168.134.0/24 ）使用單一 SPD 原則項目連線到單一 SVM IP 位址、您必須指定 `remote-ip-subnets` 子網路形式。此外、您必須指定 `remote-identity` 具有正確用戶端身分識別的欄位。
 
 
 
@@ -156,33 +174,33 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 
 * *允許所有用戶端組態*
 +
-若要允許任何用戶端（無論其來源IP位址為何）連線至SVM IPsec IP位址、請在指定「遠端IP子網路」欄位時使用「0.00.0.0/0」萬用字元。
+若要允許任何用戶端連線至 SVM IPsec 啟用的 IP 位址、無論其來源 IP 位址為何、請使用 `0.0.0.0/0` 指定時使用萬用字元 `remote-ip-subnets` 欄位。
 
 +
-此外、您必須使用正確的用戶端身分識別來指定「身份識別」欄位。若要進行憑證驗證、您可以輸入「任何項目」。
+此外、您必須指定 `remote-identity` 具有正確用戶端身分識別的欄位。對於憑證驗證、您可以輸入 `ANYTHING`。
 
 +
-此外、使用「0.00.0.0/0」萬用字元卡時、您必須設定特定的本機或遠端連接埠號碼才能使用。例如、「NFS連接埠2049」。
+此外、當 `0.0.0.0/0` 使用萬用字元時、您必須設定要使用的特定本機或遠端連接埠號碼。例如、 `NFS port 2049`。
 
 +
 .步驟
-.. 使用下列其中一個命令來設定多個用戶端的IPsec：
+.. 使用下列其中一個命令來設定多個用戶端的 IPsec 。
 +
-... 如果您使用*子網路組態*來支援多個IPsec用戶端：
+... 如果您使用 * 子網路組態 * 來支援多個 IPsec 用戶端：
 +
-「安全性」IPsec原則建立-vserver _vserver_name_-name _policy_name_-local-ip-subnets_ipSEC_ip_address/32_-reme-ip-subnets_ip_address/subnet_-local-identity _local_id_-reme-identity _reme_id_`
+`security ipsec policy create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _IPsec_IP_address/32_ -remote-ip-subnets _IP_address/subnet_ -local-identity _local_id_ -remote-identity _remote_id_`
 
 +
 .命令範例
-「安全性」IPsec原則建立-vserver _VS1_-name _subnet134_-local-ip-subnets_192.168.1.34 /32_-reme-ip-subnets_192.168.1.0/24_-local-identity _ontap_side identity_-reme-identity _client_side identity_
+`security ipsec policy create -vserver _vs1_ -name _subnet134_ -local-ip-subnets _192.168.134.34/32_ -remote-ip-subnets _192.168.134.0/24_ -local-identity _ontap_side_identity_ -remote-identity _client_side_identity_`
 
-... 如果您使用*允許所有用戶端組態*來支援多個IPsec用戶端：
+... 如果您使用 * 允許所有用戶端組態 * 來支援多個 IPsec 用戶端：
 +
-「安全性」IPsec原則建立-vserver _vserver_name_-name _policy_name_-local-ip-Subnets_ipSEC_ip_address/32_-remite-ip子 網路_0.00.0.0/0_-local-ports_number_-local-identity _local_id_-remite-identity _remite_id_`
+`security ipsec policy create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _IPsec_IP_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _port_number_ -local-identity _local_id_ -remote-identity _remote_id_`
 
 +
 .命令範例
-「安全性」IPsec原則建立-vserver _VS1_-name _test35_-local-ip-Subnets_ipec_ip_address/32_-remite-ip子 網路_0.00.0.0/0_-local-port _2049_-local-identity _ontap_side identity_-remite-identity _client_identity_
+`security ipsec policy create -vserver _vs1_ -name _test35_ -local-ip-subnets _IPsec_IP_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _2049_ -local-identity _ontap_side_identity_ -remote-identity _client_side_identity_`
 
 
 
@@ -201,11 +219,11 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 .命令範例
 IKE SA命令範例：
 
-「安全性IPsec show-ikesasa -node_hosting_node_name_for_Svm_ip_」
+`security ipsec show-ikesasa -node _hosting_node_name_for_svm_ip_`
 
 IPsec SA命令和輸出範例：
 
-「安全性IPsec show-ipsecsa -node_hosting_node_name_for_Svm_ip_」
+`security ipsec show-ipsecsa -node _hosting_node_name_for_svm_ip_`
 
 ....
 cluster1::> security ipsec show-ikesa -node cluster1-node1

@@ -20,12 +20,12 @@ summary: 根據預設、ONTAP 在評估網路群組的用戶端存取時、會�
 
 為了避免這種情況ONTAP 、此功能會將從DNS傳回的主機網域、與針對SVM設定的DNS網域名稱清單進行比較。如果符合、則允許存取。如果不相符、則會拒絕存取。
 
-此驗證預設為啟用。您可以修改「-netgroup -dns網域搜尋」參數來管理它、此參數可在進階權限層級取得。
+此驗證預設為啟用。您可以修改來管理 `-netgroup-dns-domain-search` 參數、可在進階權限層級使用。
 
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 執行所需的動作：
 +
@@ -37,18 +37,18 @@ summary: 根據預設、ONTAP 在評估網路群組的用戶端存取時、會�
  a| 
 已啟用
  a| 
-「vserver NFS modify -vserver vserver_name -netgroup DNS網域搜尋已啟用」
+`vserver nfs modify -vserver vserver_name -netgroup-dns-domain-search enabled`
 
 
 
  a| 
 已停用
  a| 
-「vserver NFS modify -vserver vserver_name -netgroup -DNs網域搜尋已停用」
+`vserver nfs modify -vserver vserver_name -netgroup-dns-domain-search disabled`
 
 |===
 . 將權限等級設為admin：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

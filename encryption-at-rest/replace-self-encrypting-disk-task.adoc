@@ -24,7 +24,7 @@ NOTE: 如果HA配對正在使用 link:https://docs.netapp.com/us-en/ontap/encryp
 .步驟
 . 確定磁碟已標示為故障：
 +
-「torage disk show -dis中斷」
+`storage disk show -broken`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -45,7 +45,7 @@ Original Owner: cluster1-01
 . 請依照磁碟櫃模型硬體指南中的指示、移除故障磁碟、並以新的FIPS磁碟機或SED進行更換。
 . 指派新更換磁碟的擁有權：
 +
-'磁碟指派磁碟磁碟名稱-擁有者節點'
+`storage disk assign -disk disk_name -owner node`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -57,7 +57,7 @@ cluster1::> storage disk assign -disk 2.1.1 -owner cluster1-01
 ----
 . 確認已指派新磁碟：
 +
-「torage加密磁碟顯示」
+`storage encryption disk show`
 
 +
 如需完整的命令語法、請參閱手冊頁。

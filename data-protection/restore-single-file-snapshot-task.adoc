@@ -11,7 +11,7 @@ summary: 您可以使用Volume Snapshot還原檔案命令、從Snapshot複本還
 
 
 [role="lead"]
-您可以使用「Volume Snapshot還原檔案」命令、從Snapshot複本還原單一檔案或LUN。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。
+您可以使用 `volume snapshot restore-file` 從 Snapshot 複本還原單一檔案或 LUN 的命令。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。
 
 .關於這項工作
 如果要還原現有LUN、則會以Snapshot複本的形式建立及備份LUN複本。在還原作業期間、您可以讀取及寫入LUN。
@@ -21,13 +21,13 @@ summary: 您可以使用Volume Snapshot還原檔案命令、從Snapshot複本還
 .步驟
 . 列出Volume中的Snapshot複本：
 +
-「Volume Snapshot show -vserver _svm_-volume _volume _」
+`volume snapshot show -vserver _SVM_ -volume _volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例顯示「vol1」中的Snapshot複本：
+下列範例顯示中的 Snapshot 複本 `vol1`：
 
 +
 [listing]
@@ -49,13 +49,13 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原檔案：
 +
-「Volume Snapshot還原檔案-vserver _svm_-volume _volume _-snapshot _snapshot _-path _file_path_-還原 路徑_destination_path_」
+`volume snapshot restore-file -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -path _file_path_ -restore-path _destination_path_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-以下範例還原檔案「myfile.txt」：
+以下範例還原檔案 `myfile.txt`：
 
 +
 [listing]

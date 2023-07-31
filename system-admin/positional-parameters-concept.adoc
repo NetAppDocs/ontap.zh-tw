@@ -18,7 +18,7 @@ summary: 您可以利用ONTAP 資訊中心的位置參數功能來提高命令�
 == 什麼是位置參數
 
 * 位置參數是一個參數、在指定參數值之前、不需要指定參數名稱。
-* 位置參數可以與命令輸入中的非位置參數進行互連、只要其相對順序與同一個命令中的其他位置參數相同、如'*_command_name ?_*輸出所示。
+* 位置參數可以與命令輸入中的非位置參數互連、只要它在同一個命令中觀察其相對順序與其他位置參數、如所示 `*_command_name ?_*` 輸出。
 * 位置參數可以是命令的必要或選用參數。
 * 參數可以是一個命令的位置、但不能是另一個命令的位置。
 
@@ -32,29 +32,29 @@ summary: 您可以利用ONTAP 資訊中心的位置參數功能來提高命令�
 
 == 識別位置參數
 
-您可以在'*_command_name ?_*'命令輸出中識別位置參數。位置參數的參數名稱前後有方括弧、格式如下：
+您可以在中識別位置參數 `*_command_name ?_*` 命令輸出。位置參數的參數名稱前後有方括弧、格式如下：
 
-* [`_-parameter_name_`]`_parameter_value_'顯示所需的位置參數。
-* [[`_-parameter_name_`]`_parameter_value_`]顯示的是可選參數的位置。
+* [`_-parameter_name_`] `_parameter_value_` 顯示位置所需的參數。
+* [[`_-parameter_name_`] `_parameter_value_`] 顯示位置的選用參數。
 
 
-例如，當在'*_command_name ?_*輸出中顯示如下內容時，該參數是其所顯示命令的位置：
+例如、當顯示為中的下列項目時 `*_command_name ?_*` 輸出時、參數是其所顯示命令的位置：
 
-* [-lif]<lif-name>'
-* [`[-lif]<lif-name>].'
+* `[-lif] <lif-name>`
+* `[[-lif] <lif-name>]`
 
 
 但是、當顯示為下列項目時、參數會與顯示於中的命令非位置：
 
-* h-lif <lif-name>'
-* [`-lif<lif-name>].'
+* `-lif <lif-name>`
+* `[-lif <lif-name>]`
 
 
 
 
 == 使用位置參數的範例
 
-在以下範例中、「* Volume create？*」輸出顯示命令的位置有三個參數：「-volume」、「-Aggregate」和「-size」。
+在下列範例中、 `*_volume create ?_*` 輸出顯示命令的位置為三個參數： `-volume`、 `-aggregate`和 `-size`。
 
 [listing]
 ----
@@ -73,12 +73,12 @@ cluster1::> volume create ?
   [ -percent-snapshot-space <percent> ]   Space Reserved for Snapshot Copies
   ...
 ----
-在以下範例中、指定「volume create」命令時不會使用位置參數功能：
+在下列範例中、 `volume create` 命令是在不使用位置參數功能的情況下指定的：
 
-「cluster1：：> Volume create -vserver svm1 -volume vol1 -aggregate * aggr1 -size 1g*-百分 點-snapshot space 0」
+`cluster1::> volume create -vserver svm1 -volume vol1 -aggregate *aggr1 -size 1g* -percent-snapshot-space 0`
 
-下列範例使用位置參數功能來提高命令輸入的效率。位置參數會與「volume create」命令中的非位置參數互連、而位置參數值則會指定而不使用參數名稱。位置參數的指定順序與'* volume create？*（磁碟區建立？*）輸出相同。也就是將「-volume」的值指定在「-Aggregate」之前、而「-volume」的值則指定在「-size」之前。
+下列範例使用位置參數功能來提高命令輸入的效率。位置參數會與中的非位置參數互置 `volume create` 命令和位置參數值是在沒有參數名稱的情況下指定的。位置參數的指定順序與所指示的順序相同 `*volume create ?*` 輸出。也就是的價值 `-volume` 在的之前指定 `-aggregate`，而這又是在的之前指定的 `-size`。
 
-「cluster1：：> Volume create * vol2** aggr1** 1g*-vserver svm1 -百分 點-snapshot space 0」
+`cluster1::> volume create *vol2* *aggr1* *1g* -vserver svm1 -percent-snapshot-space 0`
 
-「cluster1：：> Volume create -vserver svm1 * vol3*-snapshot原則預設* aggr1*-nvail off * 1g*-space-assurenone'
+`cluster1::> volume create -vserver svm1 *vol3* -snapshot-policy default *aggr1* -nvfail off *1g* -space-guarantee none`

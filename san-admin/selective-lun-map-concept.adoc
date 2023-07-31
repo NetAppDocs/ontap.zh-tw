@@ -1,7 +1,7 @@
 ---
 permalink: san-admin/selective-lun-map-concept.html 
 sidebar: sidebar 
-keywords: select, lun, map 
+keywords: select, selective, lun, map, slm, enabled, modify, reporting, nodes, list 
 summary: 選擇性LUN對應（SLM）可減少從主機到LUN的路徑數量。使用SLM,當建立新的LUN對應時,只能透過擁有LUN及其HA合作夥伴的節點上的路徑來存取LUN。 
 ---
 = 選擇性LUN對應總覽
@@ -18,3 +18,46 @@ summary: 選擇性LUN對應（SLM）可減少從主機到LUN的路徑數量。�
 PortSets可搭配使用於SLM,如同先前版本ONTAP 的更新版本一樣,進一步限制特定目標對特定啟動器的存取。當使用具有連接埠集的SLM, LUN將可在擁有LUN的節點及該節點的HA合作夥伴的連接埠集中的一組lifs上存取。
 
 在所有新LUN對應上、預設會啟用「SLM"。
+
+
+
+== 確定是否在LUN對應上啟用了「SLA」
+
+如果您的環境結合ONTAP 了在舊版中建立的LUN和從舊版轉換的LUN、您可能需要判斷是否在特定LUN上啟用選擇性LUN對應（SLA）。
+
+您可以使用的輸出中顯示的資訊 `lun mapping show -fields reporting-nodes, node` 命令以判斷是否已在 LUN 對應上啟用 SLM 。如果未啟用 SLM 、命令輸出的「移轉節點」欄下方的儲存格中會顯示「 - 」。如果啓用了 SLM ，則在“移植節點”列中顯示在“節點”列下的節點列表將重複出現。
+
+
+
+== 修改「SLM-報告節點」清單
+
+如果您要將LUN或包含LUN的磁碟區移至同一個叢集內的另一個高可用度（HA）配對、則在開始移動之前、應先修改選擇性LUN對應（SLM）報告節點清單、以確保維持作用中、最佳化的LUN路徑。
+
+.步驟
+. 將目的地節點及其合作夥伴節點新增至Aggregate或Volume的報告節點清單：
++
+`lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ [-destination-aggregate _aggregate_name_|-destination-volume _volume_name_]`
+
++
+如果您有一致的命名慣例、可以使用同時修改多個 LUN 對應 `_igroup_prefix*_` 而非 `_igroup_name_`。
+
+. 重新掃描主機以探索新增的路徑。
+. 如果您的作業系統需要它、請將新路徑新增至多重路徑網路I/O（MPIO）組態。
+. 執行所需移動作業的命令、並等待作業完成。
+. 確認I/O是透過主動/最佳化路徑進行服務：
++
+`lun mapping show -fields reporting-nodes`
+
+. 從報告節點清單中移除先前的LUN擁有者及其合作夥伴節點：
++
+`lun mapping remove-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ -remote-nodes`
+
+. 驗證LUN是否已從現有LUN對應中移除：
++
+`lun mapping show -fields reporting-nodes`
+
+. 移除主機作業系統的任何過時裝置項目。
+. 如有必要、請變更任何多重路徑組態檔。
+. 重新掃描主機以驗證是否移除舊路徑。+
+如需重新掃描主機的特定步驟、請參閱主機文件。
+

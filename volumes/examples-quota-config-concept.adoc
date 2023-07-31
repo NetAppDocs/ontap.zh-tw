@@ -107,7 +107,7 @@ cluster1::>volume quota policy rule modify -vserver vs1 -policy quota_policy_vs1
 ----
 由於現有規則的大小已變更、您可以調整磁碟區上的配額大小、以啟動變更。您需要等待調整大小程序完成。
 
-若要查看具有臨界值的配額報告、請將「臨界值」參數新增至「Volume quota report」命令：
+若要查看具有臨界值的配額報告、請新增 `-thresholds` 的參數 `volume quota report` 命令：
 
 [listing]
 ----
@@ -147,7 +147,7 @@ cluster1:>>volume quota on -vserver vs1 -volume vol1 -foreground
 ----
 [NOTE]
 ====
-您必須確保在每個受影響的磁碟區上重新啟動配額之前等待約五分鐘、因為在執行「Volume quota Off」命令之後、幾乎立即嘗試啟動配額可能會導致錯誤。或者、您也可以執行命令、從包含特定磁碟區的節點重新初始化磁碟區的配額。
+您必須確保在重新啟動每個受影響磁碟區上的配額之前、等待大約五分鐘、因為在執行之後、您幾乎會立即嘗試啟動配額 `volume quota off` 命令可能會導致錯誤。或者、您也可以執行命令、從包含特定磁碟區的節點重新初始化磁碟區的配額。
 
 ====
 在重新初始化程序期間不會強制執行配額、這比調整大小程序所需的時間更長。

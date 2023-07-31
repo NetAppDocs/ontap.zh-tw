@@ -38,9 +38,9 @@ FPolicy可以監控SMB、NFSv3和NFSv4檔案存取作業。
 
 [NOTE]
 ====
-有三個參數（`-Protocol、`-file-operations、`-filers'）相依。下列組合對三個參數有效：
+其中三個參數有相依性 (`-protocol`、 `-file-operations`、 `-filters`）。下列組合對三個參數有效：
 
-* 您可以指定「-Protocol」和「-file-operations」參數。
+* 您可以指定 `-protocol` 和 `-file-operations` 參數。
 * 您可以指定全部三個參數。
 * 您不能指定任何參數。
 
@@ -66,7 +66,7 @@ _SVM_
 
 每個FPolicy組態都是在單一SVM中定義。為了建立FPolicy原則組態、而將外部引擎、原則事件、原則範圍和原則結合在一起的原則、都必須與相同的SVM建立關聯。
  a| 
-vserver的「vserver_name」
+`-vserver` `vserver_name`
 
 
 
@@ -84,32 +84,32 @@ vserver的「vserver_name」
 ====
 名稱可以包含下列任何Ascii範圍字元的組合：
 
-* 從A到Z
-* 從「Z」到「A」
-* 從0到9
-* 「_」、「-」及「」。
+* `a` 透過 `z`
+* `A` 透過 `Z`
+* `0` 透過 `9`
+* " `_` " 、 "-`", and "`.`"
 
  a| 
-事件名稱「EVAT_NAME」
+`-event-name` `event_name`
 
 
 
  a| 
 _傳輸協定_
 
-指定要為FPolicy事件設定的傳輸協定。「-Protocol」清單可包含下列其中一個值：
+指定要為FPolicy事件設定的傳輸協定。的清單 `-protocol` 可以包含下列其中一個值：
 
-* 《CIFS》
-* 《NFSv3》
-* 《NFSv4》
+* `cifs`
+* `nfsv3`
+* `nfsv4`
 
 
 [NOTE]
 ====
-如果您指定了「-Protocol」、則必須在「-file-operations」參數中指定有效值。隨著傳輸協定版本變更、有效值可能會變更。
+如果您指定 `-protocol`、然後您必須在中指定有效值 `-file-operations` 參數。隨著傳輸協定版本變更、有效值可能會變更。
 
 ==== a| 
-「傳輸協定」
+`-protocol` `protocol`
 
 
 
@@ -118,111 +118,111 @@ _File operations _
 
 指定FPolicy事件的檔案作業清單。
 
-事件會使用「-Protocol」參數中指定的傳輸協定、從所有用戶端要求中檢查此清單中指定的作業。您可以使用以逗號分隔的清單來列出一或多個檔案作業。「-file-operations」清單可包含下列一或多個值：
+事件會使用中指定的通訊協定、從所有用戶端要求檢查此清單中指定的作業 `-protocol` 參數。您可以使用以逗號分隔的清單來列出一或多個檔案作業。的清單 `-file-operations` 可以包含下列一或多個值：
 
-* 關閉檔案以進行檔案關閉作業
-* 建立檔案以建立檔案
-* 用於目錄建立作業的「cree-dir」
-* 檔案刪除作業的刪除功能
-* 目錄刪除作業的"Delete_dir"
-* ggetattr用於獲取屬性操作
-* 連結作業的連結
-* 查閱作業的查詢
-* 「開放」檔案開啟作業
-* 檔案讀取作業的"read"
-* 用於檔案寫入作業的寫入功能
-* 檔案重新命名作業的名稱
-* 目錄重新命名作業的"REname_dir"
-* 「etattr」用於設定屬性作業
-* 符號連結作業的「symlink」
+* `close` 用於檔案關閉作業
+* `create` 用於檔案建立作業
+* `create-dir` 用於目錄建立作業
+* `delete` 用於檔案刪除作業
+* `delete_dir` 用於目錄刪除作業
+* `getattr` 以取得屬性作業
+* `link` 用於連結作業
+* `lookup` 用於查詢作業
+* `open` 適用於檔案開啟作業
+* `read` 檔案讀取作業
+* `write` 適用於檔案寫入作業
+* `rename` 用於檔案重新命名作業
+* `rename_dir` 用於目錄重新命名作業
+* `setattr` 用於 Set 屬性作業
+* `symlink` 用於符號連結作業
 
 
 [NOTE]
 ====
-如果您指定了「-file-operations」、則必須在「-protocol」參數中指定有效的傳輸協定。
+如果您指定 `-file-operations`、然後您必須在中指定有效的傳輸協定 `-protocol` 參數。
 
 ==== a| 
-「檔案作業」「file_operations」、...
+`-file-operations` `file_operations`、 ...
 
 
 
  a| 
 _篩選_
 
-指定指定傳輸協定之特定檔案作業的篩選器清單。「-filters」參數中的值用於篩選用戶端要求。清單可包含下列一項或多項內容：
+指定指定傳輸協定之特定檔案作業的篩選器清單。中的值 `-filters` 參數用於篩選用戶端要求。清單可包含下列一項或多項內容：
 
 [NOTE]
 ====
-如果您指定了「-filers'參數、則也必須為「-file-operations」和「-Protocol」參數指定有效值。
+如果您指定 `-filters` 參數、您也必須為指定有效值 `-file-operations` 和 `-protocol` 參數。
 
 ====
-* 「監視者廣告」選項可篩選用戶端的替代資料串流要求。
-* 「近距離修改」選項可篩選用戶端要求以進行修改。
-* 「關閉而不修改」選項、可在不修改的情況下、篩選用戶端的關閉要求。
-* 第一讀取選項可篩選用戶端的第一讀取要求。
-* 「first-write」選項可篩選用戶端的初次寫入要求。
-* 「離線位元」選項可篩選用戶端的離線位元集要求。
+* `monitor-ads` 用於篩選用戶端要求的替代資料串流選項。
+* `close-with-modification` 篩選用戶端要求以進行修改以關閉的選項。
+* `close-without-modification` 篩選用戶端要求以關閉而不修改的選項。
+* `first-read` 篩選用戶端要求以進行第一讀取的選項。
+* `first-write` 篩選用戶端要求進行第一次寫入的選項。
+* `offline-bit` 用於篩選用戶端離線位元集要求的選項。
 +
 設定此篩選器後、FPolicy伺服器只會在存取離線檔案時收到通知。
 
-* 「以刪除方式開啟」選項可篩選出用戶端的開啟要求、並具有刪除意圖。
+* `open-with-delete-intent` 用於篩選用戶端要求以進行「刪除目的」開啟的選項。
 +
-設定此篩選器後、FPolicy伺服器只會在嘗試開啟檔案以刪除檔案時收到通知。當指定「file_delete_on_close」旗標時、檔案系統會使用此功能。
+設定此篩選器後、FPolicy伺服器只會在嘗試開啟檔案以刪除檔案時收到通知。檔案系統會在使用時使用此功能 `FILE_DELETE_ON_CLOSE` 已指定旗標。
 
-* 「以寫入方式開啟」選項可篩選出用戶端要求以寫入方式開啟。
+* `open-with-write-intent` 篩選用戶端要求以進行寫入目的開啟的選項。
 +
 設定此篩選器後、FPolicy伺服器只會在嘗試開啟檔案時收到通知、以便在其中寫入內容。
 
-* "write with size-chang"選項可在大小變更時篩選用戶端寫入要求。
+* `write-with-size-change` 選項可篩選用戶端寫入要求、並變更大小。
 
  a| 
-篩選器的「篩選器」、...
+`-filters` `filter`、 ...
 
 
 
  a| 
 _Filters"（續）
 
-* 「etattr-with -Owner-change」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的擁有者。
-* 「etattr-with group變更」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的群組。
-* 「etattr-with -SACL-changing」選項可篩選用戶端設定屬性要求、以變更檔案或目錄上的SACL。
+* `setattr-with-owner-change` 用於篩選用戶端設定檔要求以變更檔案或目錄擁有者的選項。
+* `setattr-with-group-change` 用於篩選用戶端集點要求以變更檔案或目錄群組的選項。
+* `setattr-with-sacl-change` 用於篩選用戶端集點要求以變更檔案或目錄上的 SACL 的選項。
 +
 此篩選器僅適用於SMB和NFSv4傳輸協定。
 
-* 「etattr-with -Dacl-change」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的DACL。
+* `setattr-with-dacl-change` 用於篩選用戶端集點要求以變更檔案或目錄上的 DACL 的選項。
 +
 此篩選器僅適用於SMB和NFSv4傳輸協定。
 
-* 「etattr-with modify-time-changing」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的修改時間。
-* 「etattr-with存取時間變更」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的存取時間。
-* 「etattr-with creation-time-changing」選項可篩選用戶端設定屬性要求、以變更檔案或目錄的建立時間。
+* `setattr-with-modify-time-change` 用於篩選用戶端 setattr 要求以變更檔案或目錄的修改時間的選項。
+* `setattr-with-access-time-change` 用於篩選用戶端 setattr 要求以變更檔案或目錄的存取時間的選項。
+* `setattr-with-creation-time-change` 用於篩選用戶端 setattr 要求以變更檔案或目錄的建立時間的選項。
 +
 此選項僅適用於SMB傳輸協定。
 
-* 「etattr-with mode變更」選項可篩選用戶端設定屬性要求、以變更檔案或目錄上的模式位元。
-* "ettr-with size-chang"選項可篩選用戶端設定屬性要求、以變更檔案大小。
-* 「etattr-with all撥款 大小變更」選項可篩選用戶端設定屬性要求、以變更檔案的分配大小。
+* `setattr-with-mode-change` 用於篩選用戶端 setattr 要求以變更檔案或目錄上的模式位元的選項。
+* `setattr-with-size-change` 用於篩選用戶端 setattr 要求以變更檔案大小的選項。
+* `setattr-with-allocation-size-change` 用於篩選用戶端集點要求以變更檔案分配大小的選項。
 +
 此選項僅適用於SMB傳輸協定。
 
-* 「exclude目錄」選項可篩選用戶端對目錄作業的要求。
+* `exclude-directory` 用於篩選用戶端目錄作業要求的選項。
 +
 指定此篩選器時、不會監控目錄作業。
 
 
  a| 
-篩選器的「篩選器」、...
+`-filters` `filter`、 ...
 
 
 
  a| 
 _需要磁碟區作業_
 
-指定磁碟區掛載和卸載作業是否需要監控。預設值為「假」。
+指定磁碟區掛載和卸載作業是否需要監控。預設值為 `false`。
  a| 
-大容量作業模式：｛'true'|'fals'｝
+`-volume-operation` {`true`|`false`}
 
-篩選器的「篩選器」、...
+`-filters` `filter`、 ...
 
 
 

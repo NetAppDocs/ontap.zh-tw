@@ -17,32 +17,32 @@ summary: 您可以建立SMB共用的UNIX符號連結對應。您可以建立相�
 如果您使用SMB 2.x、就無法從Mac OS X用戶端存取Widgelinks當使用者嘗試從Mac OS X用戶端使用wideinks連線至共用時、嘗試會失敗。不過、如果您使用SMB 1、則可以將wideinks與Mac OS X用戶端搭配使用。
 
 .步驟
-. 若要建立SMB共用的符號連結對應：「vserver CIFS symlink create -vserver virtual_server_name -unix-path path -share-name share_name -CIFS路徑[-CIFS伺服器伺服器名稱][-locity {local| free | widelink}][-home-directory{true|假}]
+. 若要建立 SMB 共用的符號連結對應： `vserver cifs symlink create -vserver virtual_server_name -unix-path path -share-name share_name -cifs-path path [-cifs-server server_name] [-locality {local|free|widelink}] [-home-directory {true|false}]`
 +
-vserver的「virtual_server_name」指定儲存虛擬機器（SVM）名稱。
+`-vserver` `virtual_server_name` 指定儲存虛擬機器（ SVM ）名稱。
 
 +
-unix-path'"path"指定UNIX路徑。UNIX路徑必須以斜槓（`/`）開頭、且結尾必須以斜槓（`/`）結尾。
+`-unix-path` `path` 指定 UNIX 路徑。UNIX 路徑必須以斜線開頭 (`/`）、且必須以斜線結尾 (`/`）。
 
 +
-共享名"shhare名稱"指定要映射的SMB共享的名稱。
+`-share-name` `share_name` 指定要對應的 SMB 共用名稱。
 
 +
-"CIFS路徑"的"path"指定了CIFS路徑。CIFS路徑必須以斜槓（`/`）開頭、且必須以斜槓（`/`）結尾。
+`-cifs-path` `path` 指定 CIFS 路徑。CIFS 路徑必須以斜線開頭 (`/`）、且必須以斜線結尾 (`/`）。
 
 +
-CIFS伺服器的「伺服器名稱」指定CIFS伺服器名稱。CIFS伺服器名稱可以指定為DNS名稱（例如mynetwork.cifs.server.com）、IP位址或NetBios名稱。您可以使用「vserver CIFS show」命令來判斷NetBios名稱。如果未指定此選用參數、預設值為本機CIFS伺服器的NetBios名稱。
+`-cifs-server` `server_name` 指定 CIFS 伺服器名稱。CIFS伺服器名稱可以指定為DNS名稱（例如mynetwork.cifs.server.com）、IP位址或NetBios名稱。您可以使用來判斷 NetBIOS 名稱 `vserver cifs show` 命令。如果未指定此選用參數、預設值為本機CIFS伺服器的NetBios名稱。
 
 +
-"-location"{'locale'|'free '|'widelink'}指定是建立本機連結、免費連結或寬符號連結。本機符號連結會對應至本機SMB共用區。免費的符號連結可以對應到本機SMB伺服器上的任何位置。廣泛的符號連結會對應到網路上的任何SMB共用區。如果您未指定此選用參數、預設值為「本機」。
+`-locality`  `local`|`free`|`widelink`} 指定要建立本機連結、免費連結或寬符號連結。本機符號連結會對應至本機SMB共用區。免費的符號連結可以對應到本機SMB伺服器上的任何位置。廣泛的符號連結會對應到網路上的任何SMB共用區。如果您未指定此選用參數、則預設值為 `local`。
 
 +
-首頁目錄{'true'|'假'}指定目標共用區是否為主目錄。即使此參數為選用參數、當目標共用區設定為主目錄時、您仍必須將此參數設為「true」。預設值為「假」。
+`-home-directory`  `true` `false`} 指定目標共用是否為主目錄。即使此參數為選用參數、您仍必須將此參數設為 `true` 當目標共用設定為主目錄時。預設值為 `false`。
 
 
 
 .範例
-下列命令會在名為VS1的SVM上建立符號連結對應。它具有UNIX路徑「/src/」、SMB共用名稱「ourCE」、CIFS路徑「/mycompany / source/」、CIFS伺服器IP位址123.123.123、而且是一種無線連結。
+下列命令會在名為VS1的SVM上建立符號連結對應。它有 UNIX 路徑 `/src/`、 SMB 共享名稱「 'SOURCE' 」、 CIFS 路徑 `/mycompany/source/`和 CIFS 伺服器 IP 位址 123.123.123.123 、這是一種有線連結。
 
 [listing]
 ----

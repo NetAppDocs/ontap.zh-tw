@@ -49,7 +49,7 @@ link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
 第一次叫用SnapMirror時、它會執行從來源磁碟區到目的地磁碟區的_基準傳輸_。關聯的_SnapMirror原則_定義了基準的內容和任何更新。
 
-預設SnapMirror原則「鏡像AllSnapshots」下的基礎傳輸包含下列步驟：
+預設 SnapMirror 原則下的基礎傳輸 `MirrorAllSnapshots` 涉及下列步驟：
 
 * 製作來源Volume的Snapshot複本。
 * 將Snapshot複本及其參照的所有資料區塊傳輸到目的地Volume。
@@ -62,10 +62,10 @@ link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
 更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的Snapshot原則。
 
-在「鏡射AllSnapshots」原則下的每次更新中、SnapMirror都會建立來源磁碟區的Snapshot複本、並傳輸自上次更新以來所製作的Snapshot複本和任何Snapshot複本。在「鏡射原則show」命令的「鏡射AllSnapshots」原則輸出中、請注意下列事項：
+在的每個更新中 `MirrorAllSnapshots` 原則： SnapMirror 會建立來源 Volume 的 Snapshot 複本、並傳輸該 Snapshot 複本和自上次更新後所建立的任何 Snapshot 複本。在的下列輸出中 `snapmirror policy show` 的命令 `MirrorAllSnapshots` 原則請注意下列事項：
 
-* 「Create Snapshot」（建立Snapshot）是「true」、表示SnapMirror更新關係時、「鏡像AllSnapshots」會建立Snapshot複本。
-* 「鏡射AllSnapshots」的規則為「shm_已 建立」和「all來源快照」、表示SnapMirror建立的Snapshot複本和上次更新後建立的任何Snapshot複本、都會在SnapMirror更新關係時傳輸。
+* `Create Snapshot` 為「 'true' 」、表示這一點 `MirrorAllSnapshots` 當 SnapMirror 更新關係時建立 Snapshot 複本。
+* `MirrorAllSnapshots` 具有規則 "`shm_Created （已建立） " 和 "`all_source_snapshots" （所有源快照），表示 SnapMirror 建立的 Snapshot 複本和自上次更新後建立的任何 Snapshot 複本都會在 SnapMirror 更新關係時傳輸。
 
 
 [listing]
@@ -95,7 +95,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
 
 == MirrorLatest原則
 
-預先設定的「鏡像Latest」原則的運作方式與「鏡像AllSnapshots」完全相同、只是在初始化與更新時才傳輸SnapMirror建立的Snapshot複本。
+預先設定的 `MirrorLatest` 原則的運作方式與完全相同 `MirrorAllSnapshots`，但在初始化和更新時僅傳輸 SnapMirror 所建立的 Snapshot 複本。
 
 [listing]
 ----

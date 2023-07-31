@@ -18,20 +18,20 @@ summary: 您必須在啟用稽核的SVM中指定要稽核的儲存區。
 
 
 .關於這項工作
-S3稽核組態是以每個SVM為基礎來啟用、但您必須在SVMS中選取已啟用稽核的儲存區。如果您將儲存區新增至SVM、而且想要稽核新的儲存區、則必須使用此程序來選取這些儲存區。您也可以在SVM中啟用未稽核的儲存區以進行S3稽核。
+S3 稽核組態是以每個 SVM 為基礎啟用、但您必須在 SVMS 中選取已啟用稽核的儲存區。如果您將儲存區新增至SVM、而且想要稽核新的儲存區、則必須使用此程序來選取這些儲存區。您也可以在SVM中啟用未稽核的儲存區以進行S3稽核。
 
-在使用「vserver object-store-server audit object-Select DELETE」命令移除之前、會持續對儲存區進行稽核組態。
+在移除之前、貯體的稽核組態都會持續存在 `vserver object-store-server audit object-select delete` 命令。
 
 .程序
 選取S3稽核的儲存庫：
 
-「vserver object-store-server稽核事件選取器create -vserver _svm_name_-bucket _bucket_name_[-access]｛read-only | write only | all｝][-可用 權限]｛只允許|拒絕-只允許| all｝]」
+`vserver object-store-server audit event-selector create -vserver _svm_name_ -bucket _bucket_name_ [[-access] {read-only|write-only|all}] [[-permission] {allow-only|deny-only|all}]`
 
-* 「-access'（存取）」-指定要稽核的事件存取類型：「僅讀取」、「僅寫入」或「ALL」（全部）（預設為「ALL」）。
-* 「-'權限」-指定要稽核的事件權限類型：「僅允許」、「僅允許」或「全部」（預設為「全部」）。
+* `-access` - 指定要稽核的事件存取類型： `read-only`、 `write-only` 或 `all` （預設為 `all`）。
+* `-permission` - 指定要稽核的事件權限類型： `allow-only`、 `deny-only` 或 `all` （預設為 `all`）。
 
 
 .範例
 下列範例會建立只記錄允許唯讀存取的事件的庫區稽核組態：
 
-「cluster1：：> vserver object-store-server稽核事件選取器create -vserver VS1 -Bucket test-Bucket -access read-only -permission only」
+`cluster1::> vserver object-store-server audit event-selector create -vserver vs1 -bucket test-bucket -access read-only -permission allow-only`

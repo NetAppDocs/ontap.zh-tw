@@ -18,18 +18,18 @@ summary: 站台A故障不會觸發站台B上的非計畫性容錯移轉
 站台A故障不會觸發站台B上的非計畫性容錯移轉
 
 .可能原因#1：
-未設定中介器。要確定這是否是原因、請在站台B叢集上發出「napmirror中介show」命令。
+未設定 ONTAP Mediator 。若要判斷這是否是原因、請核發 `snapmirror mediator show` 站台 B 叢集上的命令。
 
 ....
 Cluster2::*> snapmirror mediator show
 This table is currently empty.
 ....
-此範例指出、「資訊管理器」並未在站台B上設定
+此範例表示 ONTAP Mediator 未在站台 B 上設定
 
 .解決方案：
-請確定已在兩個叢集上設定「訊務員」、狀態為「已連線」、仲裁設定為「真」。
+請確定兩個叢集都已設定 ONTAP Mediator 、狀態已連線、仲裁已設為 True 。
 
-.可能原因#2：
+.可能原因 #2 ：
 SnapMirror一致性群組不同步。若要判斷原因是否為此、請檢視事件記錄、以檢視一致性群組在站台發生故障期間是否同步。
 
 ....
@@ -43,14 +43,14 @@ Time                Node             Severity      Event
 請完成下列步驟、在站台B上執行強制容錯移轉
 
 . 從站台B取消對應屬於一致性群組的所有LUN
-. 使用「force」選項刪除SnapMirror一致性群組關係。
-. 在一致性群組組成磁碟區上輸入「快照鏡射中斷」命令、將磁碟區從DP轉換成R/W、以啟用站台B的I/O
+. 使用刪除 SnapMirror 一致性群組關係 `force` 選項。
+. 輸入 `snapmirror break` 針對一致性群組組成磁碟區執行命令、將磁碟區從 DP 轉換為 R/W 、以啟用站台 B 的 I/O
 . 啟動站台A節點、以建立從站台B到站台A的零RTO關係
-. 使用站台A上的「僅供參考」釋放一致性群組、以保留通用的Snapshot複本、並取消對應屬於一致性群組的LUN。
+. 使用釋放一致性群組 `relationship-info-only` 在站台 A 上保留一般 Snapshot 複本、並取消對應屬於一致性群組的 LUN 。
 . 使用同步原則或非同步原則設定磁碟區層級關係、將站台A上的磁碟區從右/右轉換為DP。
-. 發出「napmirror resSync」來同步關係。
+. 發行 `snapmirror resync` 以同步處理關聯。
 . 刪除與站台A上同步原則的SnapMirror關係
-. 在站點B上使用「僅供參考的真實情況」來發佈SnapMirror與Sync原則的關係
+. 使用同步原則來釋放 SnapMirror 關係 `relationship-info-only true` 現場 B...
 . 建立站台B與站台A之間的一致性群組關係
 . 從站台A重新同步一致性群組、然後驗證一致性群組是否同步。
 . 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。

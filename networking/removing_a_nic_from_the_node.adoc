@@ -36,7 +36,7 @@ cluster controller-replacement network displaced-vlans show
 ....
 +
 
-NOTE: 「dis放置 介面show」、「dis放置VLAN show」和「dis放置VLAN還原」命令是獨一無二的、不需要以「叢集控制器更換網路」開頭的完整命令名稱。
+NOTE: 。 `displaced-interface show`、 `displaced-vlans show`和 `displaced-vlans restore` 命令是唯一的，不需要以開頭的完整命令名稱 `cluster controller-replacement network`。
 
 . 這些VLAN會被刪除、但可以使用下列命令還原：
 +
@@ -45,7 +45,7 @@ displaced-vlans restore
 ....
 . 如果連接埠上已設定任何LIF、ONTAP 則在同一個廣播網域的另一個連接埠上、會自動為這些LIF選擇新的主連接埠。如果在同一個檔案管理器上找不到合適的主連接埠、則這些生命區會被視為已取代。您可以使用下列命令來檢視已移出的LIF：
 +
-「顯示介面」
+`displaced-interface show`
 
-. 將新連接埠新增至同一個節點上的廣播網域時、便會自動還原該LIF的主連接埠。或者、您也可以使用「network interface modify -home-port -home-Node」設定主連接埠、或使用「移動介面還原」命令。
+. 將新連接埠新增至同一個節點上的廣播網域時、便會自動還原該LIF的主連接埠。或者、您也可以使用設定主連接埠 `network interface modify -home-port -home-node or use the displaced- interface restore` 命令。
 

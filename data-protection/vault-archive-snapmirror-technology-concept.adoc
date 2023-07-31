@@ -25,7 +25,7 @@ image::../media/snapvault-data-protection.gif[資料保護SnapVault]
 
 關係的SnapMirror原則定義了基礎的內容和任何更新。
 
-根據預設的保存原則「XDPDefault」進行基準傳輸時、會建立來源Volume的Snapshot複本、然後將該複本及其參照的資料區塊傳輸到目的地Volume。與SnapMirror關係不同的是、資料庫備份不會在基準中包含舊的Snapshot複本。
+預設資料保險箱原則下的基準傳輸 `XDPDefault` 製作來源 Volume 的 Snapshot 複本、然後將該複本及其參照的資料區塊傳輸至目的地 Volume 。與SnapMirror關係不同的是、資料庫備份不會在基準中包含舊的Snapshot複本。
 
 
 
@@ -33,10 +33,10 @@ image::../media/snapvault-data-protection.gif[資料保護SnapVault]
 
 更新是非同步的、會依照您設定的排程進行。您在關聯原則中定義的規則會識別要納入更新的新Snapshot複本、以及要保留的複本數量。原則中定義的標籤（例如「每月」）必須符合來源上Snapshot原則中定義的一或多個標籤。否則、複寫會失敗。
 
-在每次根據「XDPDefault」原則進行更新時、SnapMirror都會傳輸自上次更新以來所製作的Snapshot複本、前提是這些複本的標籤必須符合原則規則中所定義的標籤。在「XDPDefault」原則的「napmirror policy show」命令的下列輸出中、請注意下列事項：
+在的每個更新中 `XDPDefault` 原則： SnapMirror 會傳輸自上次更新後所製作的 Snapshot 複本、前提是它們的標籤必須符合原則規則中定義的標籤。在的下列輸出中 `snapmirror policy show` 的命令 `XDPDefault` 原則請注意下列事項：
 
-* 「Create Snapshot」是「假」、表示SnapMirror更新關係時、「XDPDefault」不會建立Snapshot複本。
-* 《XDPDefault》的規則是「每日」和「每週」、表示當SnapMirror更新關係時、會傳輸來源標籤相符的所有Snapshot複本。
+* `Create Snapshot` 為 "'false" 、表示這種情況 `XDPDefault` SnapMirror 更新關係時不會建立 Snapshot 複本。
+* `XDPDefault` 有「每日」和「每週」的規則、表示當 SnapMirror 更新關係時、會傳輸來源上所有具有相符標籤的 Snapshot 複本。
 
 
 [listing]

@@ -29,7 +29,7 @@ NOTE: 若要檢視mgwd程序和SecD程序的DNS名稱服務統計資料、請使
 .步驟
 . 判斷主機名稱服務資料庫目前的組態為何。在此範例中、主機名稱服務資料庫會使用預設設定。
 +
-「Vserver services name-service _nse-switch_ show -vserver _Vs1_-database-hosts_」
+`vserver services name-service _ns-switch_ show -vserver _vs1_ -database _hosts_`
 
 +
 ....
@@ -45,11 +45,11 @@ Name Service Source Order: files, dns
 在此範例中、主機資料庫會設定為依該順序使用DNS和本機檔案。
 
 +
-「Vserver服務名稱服務_ns-switch_修改-vserver _Vs1_-database-hosts_-sources _dns、filers_」
+`vserver services name-service _ns-switch_ modify -vserver _vs1_ -database _hosts_ -sources _dns,files_`
 
 .. 驗證名稱服務組態是否正確。
 +
-「Vserver services name-service _nse-switch_ show -vserver _Vs1_-database-hosts_」
+`vserver services name-service _ns-switch_ show -vserver _vs1_ -database _hosts_`
 
 +
 ....
@@ -61,7 +61,7 @@ Name Service Source Order: dns, files
 
 . 設定DNS服務。
 +
-「Vserver服務名稱服務DNS create -vserver _VS1_-domains _example.com,example2.com_-name-servers _10.0.50,10.0.51_」
+`vserver services name-service dns create -vserver _vs1_ -domains _example.com,example2.com_ -name-servers _10.0.0.50,10.0.0.51_`
 
 +
 
@@ -77,7 +77,7 @@ Maximum Attempts: 1
 ....
 . 驗證名稱伺服器的狀態。
 +
-「Vserver服務名稱服務DNS檢查-vserver _VS1_」
+`vserver services name-service dns check -vserver _vs1_`
 
 
 
@@ -100,7 +100,7 @@ vs1      10.0.0.51    up      Response time (msec): 2
 
 指定的完整網域名稱（FQDN）必須是唯一的：
 
-* 對於NFS、在'-vserver-fqd'命令中指定的值、即「vserver services name-service DNS sive-update」命令的一部分、即會成為該LIF的註冊FQDN。
+* 若為 NFS 、則為中指定的值 `-vserver-fqdn` 作為的一部分 `vserver services name-service dns dynamic-update` 命令會成為已註冊的 FQDN 。
 * 對於SMB、指定為CIFS伺服器的NetBios名稱和CIFS伺服器完整網域名稱的值、會成為該LIF的註冊FQDN。這在ONTAP 不進行設定的情況下無法進行。在下列案例中、LIF FQDN為「CIFS_VS1.EXAMPLE.COM":」
 +
 ....
@@ -127,17 +127,17 @@ NOTE: 若要避免SVM FQDN組態失敗、但不符合DDNS更新的RFC規則、�
 .步驟
 . 在SVM上設定DDNS：
 +
-「Vserver服務名稱服務DNS動態更新修改-vserver _vserver_name_-is-已啟用_true_[-use-secure{true|fals}-vserver_FQDN _fqd_used_for_dns_updates_」
+`vserver services name-service dns dynamic-update modify -vserver _vserver_name_ -is- enabled _true_ [-use-secure {true|false} -vserver-fqdn _FQDN_used_for_DNS_updates_`
 
 +
-「Vserver服務名稱服務DNS動態更新修改-vserver _VS1_-is啟用的_true_-使用安全的_true_-vserver-FQDN _vs1.example.com_`
+`vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _true_ - use-secure _true_ -vserver-fqdn _vs1.example.com_`
 
 +
-星號無法作為自訂FQDN的一部分使用。例如、「*.netapp.com」無效。
+星號無法作為自訂FQDN的一部分使用。例如、 `*.netapp.com` 無效。
 
 . 確認DDNS組態正確：
 +
-「Vserver服務名稱服務DNS動態更新展示」
+`vserver services name-service dns dynamic-update show`
 
 +
 ....

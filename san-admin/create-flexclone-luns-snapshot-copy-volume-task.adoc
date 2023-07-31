@@ -23,21 +23,21 @@ FlexClone LUN繼承父LUN的空間保留屬性。空間保留的FlexClone LUN所
 . 確認LUN未對應或寫入。
 . 建立包含LUN的磁碟區Snapshot複本：
 +
-磁碟區快照建立-vserver _vserver_name_-volume _volume _name_-snapshot _snapshot name_`
+`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
 
 +
 您必須為要複製的LUN建立Snapshot複本（備份Snapshot複本）。
 
 . 從Snapshot複本建立FlexClone LUN：
 +
-「檔案複製」會建立-vserver _vserver_name_-volume _volume _name_-source-path _source_path_-snapshot名稱_snapshot name_-destination-path _destination_path_
+`file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -snapshot-name _snapshot_name_ -destination-path _destination_path_`
 
 +
-如果您需要FlexClone LUN可供自動刪除、請加入「-autodete true」。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+如果您需要 FlexClone LUN 才能自動刪除、請加入 `-autodelete true`。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
 
 . 驗證FlexClone LUN是否正確：
 +
-「LUN show -vserver _vserver_name_」
+`lun show -vserver _vserver_name_`
 
 +
 [listing]

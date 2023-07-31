@@ -22,11 +22,11 @@ summary: 將磁碟區從來源SVM複寫到目的地SVM時、請務必瞭解選�
 
 * 來源磁碟區FabricPool 位於目的地FabricPool 的Sichaggregate上、具有相同的分層原則。
 * 如果來源SVM上的磁碟區位於Flash Pool Aggregate上、則該磁碟區會放置在目的地SVM上的Flash Pool Aggregate上、如果有此類Aggregate存在且有足夠的可用空間。
-* 如果複製的Volume的「空間保證」選項設為「Volume」、則僅會考慮使用大於Volume大小的可用空間集合體。
+* 如果是 `-space-guarantee` 複寫的磁碟區選項設為 `volume`，只有可用空間大於 Volume 大小的集合體才會被視為。
 * 根據來源Volume大小、在複寫期間、目的地SVM上的Volume大小會自動增加。
 +
 如果您要預先保留目的地SVM的大小、則必須調整磁碟區大小。磁碟區大小不會根據來源SVM在目的地SVM上自動縮小。
 
 
 
-如果您想要將磁碟區從一個Aggregate移至另一個Aggregate、可以在目的地SVM上使用「Volume Move」命令。
+如果您想要將磁碟區從一個集合體移到另一個集合體、可以使用 `volume move` 目的地 SVM 上的命令。

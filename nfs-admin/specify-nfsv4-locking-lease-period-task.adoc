@@ -11,22 +11,22 @@ summary: 若要指定NFSv4鎖定租期（即ONTAP 不可撤銷地授予用戶端
 
 
 [role="lead"]
-若要指定NFSv4鎖定租期（即ONTAP 不可撤銷地授予用戶端鎖定的期間）、您可以修改「-v4-lease-seconds」選項。較短的租用期間可加速伺服器恢復、而較長的租用期間則有利於處理大量用戶端的伺服器。
+若要指定 NFSv4 鎖定租用期間（也就是 ONTAP 不可撤銷地授予用戶端鎖定的期間）、您可以修改 `-v4-lease-seconds` 選項。較短的租用期間可加速伺服器恢復、而較長的租用期間則有利於處理大量用戶端的伺服器。
 
 .關於這項工作
-此選項預設為「30」。此選項的最小值為「10」。此選項的最大值是鎖定寬限期、您可以使用「liding_lease_seconds」選項來設定。
+根據預設、此選項設為 `30`。此選項的最小值為 `10`。此選項的最大值是鎖定寬限期、您可以使用設定 `locking.lease_seconds` 選項。
 
 .步驟
 . 將權限層級設為進階：
 +
-"進階權限"
+`set -privilege advanced`
 
 . 輸入下列命令：
 +
-「vserver NFS modify -vserver vserver_name -vv4租用秒number_of_seconds」
+`vserver nfs modify -vserver vserver_name -v4-lease-seconds number_of_seconds`
 
 . 返回管理權限層級：
 +
-「et -priv. admin」
+`set -privilege admin`
 
 

@@ -55,17 +55,17 @@ summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能
 .步驟
 . 將本機層（Aggregate）標示為符合資格、可成為Flash Pool Aggregate：
 +
-「torage Aggregate modify -Aggregate _aggreg_name_-himge-enabled_true」
+`storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
 
 +
 如果此步驟失敗、請判斷目標Aggregate的寫入快取資格。
 
-. 使用「shorage aggregate add」命令將SSD新增至Aggregate。
+. 使用將 SSD 新增至 Aggregate `storage aggregate add` 命令。
 +
-** 您可以使用ID或「diskcount」和「disktype」參數來指定SSD。
-** 如果HDD和SSD沒有相同的Checksum類型、或如果Aggregate是混合式Checksum Aggregate、則您必須使用「checksumstyle」參數來指定要新增至Aggregate的磁碟總和檢查碼類型。
-** 您可以使用「Raidtype」參數、為SSD快取指定不同的RAID類型。
-** 如果您希望快取RAID群組大小不同於所使用RAID類型的預設值、您應該使用「-cache -RAID-group size-」參數來立即變更。
+** 您可以依 ID 或使用來指定 SSD `diskcount` 和 `disktype` 參數。
+** 如果 HDD 和 SSD 沒有相同的 Checksum 類型、或如果 Aggregate 是混合式 Checksum Aggregate 、則您必須使用 `checksumstyle` 用於指定要新增至集合體之磁碟的 Checksum 類型的參數。
+** 您可以使用為 SSD 快取指定不同的 RAID 類型 `raidtype` 參數。
+** 如果您想要快取 RAID 群組大小與您所使用 RAID 類型的預設大小不同、您應該現在使用變更快取 RAID 群組大小 `-cache-raid-group-size` 參數。
 
 
 

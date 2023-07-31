@@ -17,13 +17,13 @@ summary: 不支援使用qtree for FlexGroup 0的ONTAP 功能、不支援使用�
 
 . 識別並刪除FlexGroup 每個啟用qtree功能的各個支援功能的所有非預設qtree：
 +
-.. 登入進階權限層級：「et -priv榮幸advanced」（設定-權限進階）
+.. 登入進階權限層級： `set -privilege advanced`
 .. 驗證FlexGroup 是否已啟用任何具有qtree功能的支援功能。
 +
-對於支援支援整合式快取的支援功能為「Volume show -is -qtree快取的true」、請ONTAP 使用「Volume show -is -qtree快取啟用true」
+對於 ONTAP 9.6 或更新版本、請使用： `volume show -is-qtree-caching-enabled true`
 
 +
-若為ONTAP 更新版本、請使用：「Volume show -is、flexgroup、qtree啟用true」
+若為 ONTAP 9.5 或更早版本、請使用： `volume show -is-flexgroup-qtree-enabled true`
 
 +
 [listing]
@@ -33,7 +33,7 @@ Vserver   Volume       Aggregate    State      Type       Size  Available Used%
 --------- ------------ ------------ ---------- ---- ---------- ---------- -----
 vs0       fg           -            online     RW        320MB    220.4MB   31%
 ----
-.. 刪除FlexGroup 每個啟用qtree功能的所有非預設qtree中的所有qtree：「Volume qtree DELETE -vserver Svm_name -volume volume volume Volume name -qtree qtree名稱」
+.. 刪除每個啟用 qtree 功能的 FlexGroup Volume 中的所有非預設 qtree ： `volume qtree delete -vserver svm_name -volume volume_name -qtree qtree_name`
 +
 如果qtree功能已啟用、因為您修改了預設qtree的屬性、而且沒有任何qtree、則可以跳過此步驟。
 
@@ -46,7 +46,7 @@ WARNING: Are you sure you want to delete qtree qtree4 in volume fg vserver vs0? 
 ----
 
 
-. 停用每FlexGroup 個Isfvolume上的qtree功能：「Volume FlexGroup fqtree停用-vserver Svm_name -volume volume volume name'
+. 停用每個 FlexGroup 磁碟區上的 qtree 功能： `volume flexgroup qtree-disable -vserver svm_name -volume volume_name`
 +
 [listing]
 ----
@@ -54,7 +54,7 @@ cluster1::*> volume flexgroup qtree-disable -vserver vs0 -volume fg
 ----
 . 識別並刪除已啟用qtree功能的任何Snapshot複本。
 +
-.. 驗證是否已使用qtree功能啟用任何Snapshot複本：「Volume snapshot show -vserver vserver_name -volume volume volume _name -功能 變數為啟用flexgroup qtree」
+.. 驗證是否已使用 qtree 功能啟用任何 Snapshot 複本： `volume snapshot show -vserver vserver_name -volume volume_name -fields is-flexgroup-qtree-enabled`
 +
 [listing]
 ----
@@ -66,7 +66,7 @@ vs0     fg     daily.2017-09-27_0010 true
 vs0     fg     daily.2017-09-28_0010 true
 vs0     fg     snapmirror.0241f354-a865-11e7-a1c0-00a098a71764_2147867740.2017-10-04_124524 true
 ----
-.. 刪除所有已啟用qtree功能的Snapshot複本：「Volume snapshot delete -vserver Svm_name -volume volume volume _name -snapshot snapshot _name -force true -ignore所有者true」
+.. 刪除使用 qtree 功能啟用的所有 Snapshot 複本： `volume snapshot delete -vserver svm_name -volume volume_name -snapshot snapshot_name -force true -ignore-owners true`
 +
 必須刪除的Snapshot複本包括為SnapMirror關係所建立的一般Snapshot複本和Snapshot複本。如果FlexGroup 您已針對執行ONTAP 支援qtree FlexGroup 功能的來源供應用來源供應的來源供應區叢集、為其建立任何SnapMirror關係、則必須刪除所有在啟用此功能時所取得的Snapshot複本。
 

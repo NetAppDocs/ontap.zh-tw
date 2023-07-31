@@ -16,7 +16,7 @@ Aggregate層級的重複資料刪除技術可在屬於同一個Aggregate的各�
 .關於這項工作
 當填入足夠大的變更記錄百分比時、系統會自動觸發此作業。沒有與作業相關的排程或原則。
 
-從使用者執行的功能為物件9.4開始ONTAP 、AFF 使用者也可以執行Aggregate層級的重複資料刪除掃描程式、以消除集合體中各磁碟區之間現有資料的重複資料。您可以使用「sorage Aggregate Effiate Effiue-volume -dedupe start」命令搭配「scope-old-data=true」選項來啟動掃描器：
+從使用者執行的功能為物件9.4開始ONTAP 、AFF 使用者也可以執行Aggregate層級的重複資料刪除掃描程式、以消除集合體中各磁碟區之間現有資料的重複資料。您可以使用 `storage aggregate efficiency cross-volume-dedupe start` 命令 `-scan-old-data=true` 啟動掃描器的選項：
 
 [listing]
 ----
@@ -40,21 +40,21 @@ Aggregate層級的背景重複資料刪除技術有時稱為跨Volume背景重�
  a| 
 啟用Aggregate層級的背景重複資料刪除
  a| 
-「Volume EffiveiverEff間 修改-vserver <vserver_name\>-volume <vol_name\>-Cross-volVolume背景重複資料刪除true」
+`volume efficiency modify -vserver <vserver_name\> -volume <vol_name\> -cross-volume-background-dedupe true`
 
 
 
  a| 
 停用Aggregate層級的背景重複資料刪除
  a| 
-「Volume EffiveiverEff間 修改-vserver <vserver_name\>-volume <vol_name\>-Cross-volVolume背景重複資料刪除錯誤」
+`volume efficiency modify -vserver <vserver_name\> -volume <vol_name\> -cross-volume-background-dedupe false`
 
 
 
  a| 
 顯示Aggregate層級的背景重複資料刪除狀態
  a| 
-「Aggregate EffeEffe效率 跨磁碟區重複資料刪除顯示」
+`aggregate efficiency cross-volume-dedupe show`
 
 |===
 

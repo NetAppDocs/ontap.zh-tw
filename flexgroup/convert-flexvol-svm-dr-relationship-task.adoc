@@ -17,7 +17,8 @@ summary: 從ONTAP SVM-DR FlexVol 來源開始、您可以將一個Svm-DR Volume�
 * 正在轉換的這個版本必須在線上。FlexVol
 * 在這個過程中、執行的操作和設定FlexVol 必須與轉換程序相容。
 +
-如果FlexVol 現象不一致、而且取消了Volume轉換、就會產生錯誤訊息。您可以採取修正行動、然後重試轉換。如需詳細資料、請參閱 xref:convert-flexvol-concept.html[將FlexVol 功能區轉換FlexGroup 為功能區的考量事項]
+如果FlexVol 現象不一致、而且取消了Volume轉換、就會產生錯誤訊息。您可以採取修正行動、然後重試轉換。
+如需詳細資料、請參閱 xref:convert-flexvol-concept.html[將FlexVol 功能區轉換FlexGroup 為功能區的考量事項]
 
 
 
@@ -25,30 +26,30 @@ summary: 從ONTAP SVM-DR FlexVol 來源開始、您可以將一個Svm-DR Volume�
 . 使用進階權限模式登入： `set -privilege advanced`
 . 從目的地更新SVM-DR關係：
 +
-h.* SnapMirror更新-destination-path destination_Svm_name：-source-path svm_name:*
+`*snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:*`
 
 . 確保SVM-DR關係處於Snapor不可 中斷的狀態：
 +
-SnapMirror SHOGAL*
+`*snapmirror show*`
 
 . 從目的地SVM、確認FlexVol 支援的不只是支援轉換的功能：
 +
-‘* Volume conversion start -vserver Svm_name -volume vol_name -clCheck only true*’（'磁碟區轉換開始- vserver Svm_name -磁碟區vol_name -僅檢查true *）
+`*volume conversion start -vserver svm_name -volume vol_name -check-only true*`
 
 +
 如果此命令產生「這是目的地SVMDR Volume」以外的任何錯誤、您可以採取適當的修正行動、再次執行命令、然後繼續轉換。
 
 . 從目的地停用SVM-DR關係上的傳輸：
 +
-’* SnapMirror靜止-dest-path dest_svm:*
+`*snapmirror quiesce -destination-path dest_svm:*`
 
 . 開始轉換：
 +
-‘* Volume轉換start -vserver Svm_name -volume vol_name*’
+`*volume conversion start -vserver svm_name -volume vol_name*`
 
 . 確認轉換成功：
 +
-‘* volume show vol_name -功能 變數-vol-形式 擴充、state *
+`*volume show vol_name -fields -volume-style-extended,state*`
 
 +
 [listing]
@@ -61,19 +62,19 @@ vs0     my_volume  online  flexgroup
 ----
 . 從目的地叢集繼續傳輸關係：
 +
-’* SnapMirror恢復- destination-path dest_svm:*
+`*snapmirror resume -destination-path dest_svm:*`
 
 . 從目的地叢集執行更新、將轉換傳播到目的地：
 +
-’* SnapMirror更新- destination-path dest_svm:*
+`*snapmirror update -destination-path dest_svm:*`
 
 . 確保SVM-DR關係處於Snap/快照狀態、且不會中斷：
 +
-SnapMirror SHOGAL*
+`*snapmirror show*`
 
 . 確保轉換發生在目的地：
 +
-‘* volume show vol_name -功能 變數-vol-形式 擴充、state *
+`*volume show vol_name -fields -volume-style-extended,state*`
 
 +
 [listing]

@@ -11,11 +11,11 @@ summary: 獨立感測器沒有臨界值。這些讀取值顯示在SP CLI系統�
 
 
 [role="lead"]
-獨立感測器沒有臨界值。SP CLI的「系統感測器」命令輸出中「目前」欄下顯示的讀取值、並不具有實際意義、因此SP會忽略這些讀取值。系統感測器命令輸出中的「狀態」欄會以十六進位格式顯示個別感測器的狀態值。
+獨立感測器沒有臨界值。其讀數會顯示在下 `Current` SP CLI 中的列 `system sensors` 命令輸出，不帶有實際意義，因此 SP 將忽略該命令輸出。。 `Status` 中的欄 `system sensors` 命令輸出會以十六進位格式顯示離散感測器的狀態值。
 
 獨立感測器的範例包括風扇、電源供應器（PSU）故障和系統故障的感測器。獨立感測器的特定清單取決於平台。
 
-您可以使用SP CLI的「系統感測器Get」（系統感測器）「ensor名稱」命令、協助解讀大多數獨立感測器的狀態值。以下範例顯示在獨立感測器CPU0_Error和IO_Slot1_present中輸入「系統感測器Get'「ensor名稱」的結果：
+您可以使用 SP CLI `system sensors get` `sensor_name` 命令以協助解讀大多數離散感測器的狀態值。下列範例顯示輸入的結果 `system sensors get` `sensor_name` 對於離散感測器 CPU0_Error 和 IO_Slot1_Present ：
 
 [listing]
 ----
@@ -37,15 +37,15 @@ Sensor ID              : IO_Slot1_Present (0x74)
  States Asserted       : Availability State
                         [Device Present]
 ----
-雖然「系統感測器」命令會顯示大多數獨立感測器的狀態資訊、但不會提供System_FW_Status、System_Watchdog、PSU1_Input_Type和PSU2_Input_Type獨立感測器的狀態資訊。您可以使用下列資訊來解譯這些感測器的狀態值。
+儘管如此 `system sensors get` `sensor_name` 命令會顯示大多數離散感測器的狀態資訊、但不會提供 System_FW_Status 、 System_Watchdog 、 PSU1_Input_Type 和 PSU2_Input_Type 等獨立感測器的狀態資訊。您可以使用下列資訊來解譯這些感測器的狀態值。
 
 
 
 == System_FW_Status
 
-System_FW_Status感測器的狀況顯示為「0xAABB」。您可以合併「AA」和「BB」資訊、以判斷感應器的狀況。
+System_FW_Status 感測器的狀況以形式出現 `0xAABB`。您可以合併的資訊 `AA` 和 `BB` 以判斷感測器的狀況。
 
-「AA」可以有下列其中一個值：
+`AA` 可以有下列其中一個值：
 
 |===
 | 價值 | 感測器的狀況 
@@ -71,7 +71,7 @@ System_FW_Status感測器的狀況顯示為「0xAABB」。您可以合併「AA�
 系統韌體進度
 
 |===
-「bB」可以有下列其中一個值：
+`BB` 可以有下列其中一個值：
 
 |===
 | 價值 | 感測器的狀況 
@@ -127,21 +127,21 @@ BIOS正在啟動
 
 
  a| 
-20
+20.
  a| 
 載入程式正在執行中
 
 
 
  a| 
-21
+21.
  a| 
 載入程式正在設定主要BIOS韌體。您不得關閉系統電源。
 
 
 
  a| 
-22
+22.
  a| 
 載入程式正在程式設定替代的BIOS韌體。您不得關閉系統電源。
 

@@ -28,7 +28,7 @@ summary: 您可以FlexVol 使用ONTAP CLI在S什麼 磁碟區上顯示NFSv4稽�
 
 * ACL輸出中的擁有者和群組輸出欄位僅適用於NTFS安全性描述元。
 * 因為即使Volume root或qtree的有效安全樣式為UNIX、也可以在混合式安全型Volume或qtree上設定儲存層級的存取保護安全性、 已設定儲存層級存取保護的Volume或qtree路徑輸出、可能會同時顯示一般NFSv4檔案和目錄SACL、以及儲存層級存取保護NTFS SACL。
-* 由於UNIX Volume或qtree上支援儲存層級的存取保護安全性（如果SVM上已設定CIFS伺服器）、因此輸出可能包含套用至「-path」參數中指定之Volume或qtree的儲存層級存取保護安全性相關資訊。
+* 由於如果在 SVM 上設定 CIFS 伺服器、則 UNIX 磁碟區或 qtree 上支援儲存層級存取保護安全性、因此輸出可能包含適用於中指定之磁碟區或 qtree 的儲存層級存取保護安全性相關資訊 `-path` 參數。
 
 
 .步驟
@@ -41,20 +41,20 @@ summary: 您可以FlexVol 使用ONTAP CLI在S什麼 磁碟區上顯示NFSv4稽�
  a| 
 以摘要形式提供
  a| 
-「vserver安全性檔案目錄show -vserver vserver_name -path path'
+`vserver security file-directory show -vserver vserver_name -path path`
 
 
 
  a| 
 更詳細的資料
  a| 
-「vserver安全性檔案目錄show -vserver vserver_name -path path -expand mask true」
+`vserver security file-directory show -vserver vserver_name -path path -expand-mask true`
 
 |===
 
 
 .範例
-以下範例顯示SVM VS1中路徑「/lab」的安全資訊。此UNIX安全型路徑具有NFSv4 SACL。
+下列範例顯示有關路徑的安全性資訊 `/lab` 在 SVM VS1 中。此UNIX安全型路徑具有NFSv4 SACL。
 
 [listing]
 ----

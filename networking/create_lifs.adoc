@@ -27,7 +27,7 @@ SVM透過一或多個網路邏輯介面（LIF）、為用戶端提供資料服�
 .步驟
 . 確定要用於LIF的廣播網域連接埠。
 +
-「網路連接埠廣播網域show -IPSpace _ipspace1_」
+`network port broadcast-domain show -ipspace _ipspace1_`
 
 +
 ....
@@ -42,15 +42,15 @@ ipspace1
 ....
 . 驗證要用於lifs的子網路是否包含足夠的未使用IP位址。
 +
-「network subnet show -IPspace _ipspace1_」
+`network subnet show -ipspace _ipspace1_`
 
 . 在您要用來存取資料的連接埠上建立一個或多個生命體。
 +
-「網路介面create -vserver _VS1_-lif_lif1_-home-node1_-home-port _e0d_-service-policy _default-data-filers_-subnet-name _ipspace1_」
+`network interface create -vserver _vs1_ -lif _lif1_ -home-node _node1_ -home-port _e0d_ -service-policy _default-data-files_ -subnet-name _ipspace1_`
 
 . 驗證LIF介面組態是否正確。
 +
-「網路介面show -vserver VS1」
+`network interface show -vserver vs1`
 
 +
 ....
@@ -62,7 +62,7 @@ vs1
 ....
 . 確認容錯移轉群組組態符合需求。
 +
-「網路介面show -Failover -vserver _VS1_」
+`network interface show -failover -vserver _vs1_`
 
 +
 ....

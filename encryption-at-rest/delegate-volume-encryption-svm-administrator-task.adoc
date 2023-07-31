@@ -11,21 +11,21 @@ summary: 您可以使用volume move命令來加密現有的Volume、移動加密
 
 
 [role="lead"]
-您可以使用「Volume Move」命令來加密現有的磁碟區、移動加密的磁碟區或取消加密磁碟區。叢集管理員可以自行執行「Volume Move」命令、也可以將執行命令的權限委派給SVM管理員。
+您可以使用 `volume move` 用於加密現有磁碟區、移動加密磁碟區或取消加密磁碟區的命令。叢集管理員可以執行 `volume move` 命令本身、或是將執行命令的權限委派給 SVM 管理員。
 
 .關於這項工作
-根據預設、SVM系統管理員會被指派「vsadmin」角色、而不包括移動磁碟區的權限。您必須將「vsadmin-volume」角色指派給SVM系統管理員、讓他們執行「volume move」命令。
+依預設、 SVM 系統管理員會被指派 `vsadmin` 角色、不包括移動磁碟區的權限。您必須指派 `vsadmin-volume` SVM 系統管理員的角色、讓他們能夠執行 `volume move` 命令。
 
 .步驟
-. 委派執行「Volume Move（Volume Move））指令的權限：
+. 委派執行的權限 `volume move` 命令：
 +
-「安全性登入修改-vserver _Svm_name_-user-or group名稱_user_or_group名稱_-application_-authmethod _auth_method_-role _vsadmin-volume _」
+`security login modify -vserver _SVM_name_ -user-or-group-name _user_or_group_name_ -application _application_ -authmethod _authentication_method_ -role _vsadmin-volume_`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。
 
 +
-以下命令授予SVM管理員執行「Volume Move」命令的權限。
+下列命令會授予 SVM 管理員執行的權限 `volume move` 命令。
 
 +
 [listing]

@@ -38,20 +38,27 @@ summary: 從儲存虛擬機器（SVM）的DNS負載平衡區域新增或移除LI
  a| 
 新增LIF
  a| 
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-DNSS-ZONE _ZON_name_」範例：「網路介面修改-vserver VS1 -lIF data1 -DNSS-ZONE cifs.company.com`」
+`network interface modify -vserver _vserver_name_ -lif _lif_name_ -dns-zone _zone_name_`
+範例：
+`network interface modify -vserver vs1 -lif data1 -dns-zone cifs.company.com`
 
 
 
  a| 
 移除單一LIF
  a| 
-「網路介面修改-vserver _vserver_name_-lif_lif_name_-dns區域無」範例：「網路介面修改-vserver VS1 -lIF data1 -dns區域無」
+`network interface modify -vserver _vserver_name_ -lif _lif_name_ -dns-zone none`
+範例：
+ `network interface modify -vserver vs1 -lif data1 -dns-zone none`
 
 
 
  a| 
 移除所有生命
  a| 
-「網路介面修改-vserver _vserver_name_-lIF *-DNS-Zone none"範例：「網路介面修改-vserver vs0 -lIF *-DNS-Zone non」您可以從負載平衡區域移除SVM中的所有lifs、從該區域移除SVM。
+`network interface modify -vserver _vserver_name_ -lif * -dns-zone none`
+範例：
+`network interface modify -vserver vs0 -lif * -dns-zone none`
+您可以從負載平衡區域移除 SVM 中的所有生命負載、以移除 SVM 中的 SVM 。
 
 |===
