@@ -41,7 +41,7 @@ summary: 混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的
 
 | ONTAP 9.7 或更低 | 7 天 
 |===
-* 從 ONTAP 9.8 開始、混合版本的 ONTAP 叢集最多可跨越 4 個主要版本。例如、混合版本的 ONTAP 叢集可能會有執行 ONTAP 9.8 和 9.12.1 的節點、或者可能有執行 ONTAP 9.9.1 和 9.13.1 的節點。由於混合版本的 ONTAP 叢集橫跨 5 個主要版本、因此不支援節點執行 ONTAP 9.8 和 9.13.1 的混合版本叢集。
+* 從 ONTAP 9.8 開始、混合版本的 ONTAP 叢集最多可跨越 5 個主要版本。例如、混合版本的 ONTAP 叢集可能會有執行 ONTAP 9.8 和 9.12.1 的節點、或者可能有執行 ONTAP 9.9.1 和 9.13.1 的節點。由於混合版本的 ONTAP 叢集橫跨 6 個主要版本、因此不支援節點執行 ONTAP 9.8 和 9.13.1 的混合版本叢集。
 
 
 
@@ -60,15 +60,19 @@ summary: 混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的
 
 理想情況下、您可以將所有現有節點升級至您計畫新增至叢集的節點所需的最低 ONTAP 版本。不過、如果由於部分現有節點不支援較新版本的 ONTAP 、因此無法執行此動作、則在升級程序中、您必須在有限的時間內輸入混合版本狀態。如果節點不支援新控制器所需的最低 ONTAP 版本、您應該執行下列動作：
 
-. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 叢集中支援新控制器所需最低 ONTAP 版本的任何節點。
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 不支援新控制器所需最低 ONTAP 版本的節點、達到其所支援的最大 ONTAP 版本。
++
+例如、如果您有執行 ONTAP 9.5 的 FAS8000 、而且您要新增執行 ONTAP 9.12.1 的 C 系列平台、則您應該將 FAS8000 升級為 ONTAP 9.8 （這是它支援的最大 ONTAP 版本）。
+
 . 將新節點新增至叢集。
 +
 使用 ONTAP 命令叢集 `add-node -allow-mixed-version-join` 在進階權限層級加入新節點。
 
 . 將資料從任何無法升級的節點移轉至執行較高 ONTAP 版本的節點。
 . link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["從叢集中移除不支援的節點"^]。
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 叢集中其餘節點的版本與新節點相同。
 +
-使用 ONTAP 命令叢集 `remove-node -skip-last-low-version-node-check` 移除這些節點。（在 ONTAP 9.3 及更早版本中、請使用 `cluster unjoin -skip-last-low-version-node-check` 命令。）
+您也可以選擇將整個叢集（包括新節點）升級至 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建議的修補程式版本"] 新節點上執行的 ONTAP 版本。
 
 
 
