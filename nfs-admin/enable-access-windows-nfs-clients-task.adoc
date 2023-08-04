@@ -13,18 +13,21 @@ summary: 支援從Windows NFSv3用戶端存取檔案。ONTAP這表示執行Windo
 [role="lead"]
 支援從Windows NFSv3用戶端存取檔案。ONTAP這表示執行Windows作業系統且支援NFSv3的用戶端現在可以存取叢集上NFSv3匯出的檔案。若要成功使用此功能、您必須正確設定儲存虛擬機器（SVM）、並注意某些需求和限制。
 
-.您需要的產品
-必須在SVM上啟用NFSv3。
-
 .關於這項工作
 依照預設、Windows NFSv3用戶端支援會停用。
+
+.開始之前
+必須在SVM上啟用NFSv3。
 
 .步驟
 . 啟用Windows NFSv3用戶端支援：
 +
-`vserver nfs modify -vserver vserver_name -v3-ms-dos-client enabled`
+`vserver nfs modify -vserver _svm_name_ -v3-ms-dos-client enabled`
 
-. 在所有支援 Windows NFSv3 用戶端的 SVM 上、停用 `-enable-ejukebox` 和 `-v3-connection-drop` 參數： `vserver nfs modify -vserver vserver_name -enable-ejukebox false -v3-connection-drop disabled`
+. 在所有支援 Windows NFSv3 用戶端的 SVM 上、停用 `-enable-ejukebox` 和 `-v3-connection-drop` 參數：
++
+`vserver nfs modify -vserver vserver_name -enable-ejukebox false -v3-connection-drop disabled`
+
 +
 Windows NFSv3用戶端現在可以在儲存系統上掛載匯出。
 
