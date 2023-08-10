@@ -1,0 +1,57 @@
+---
+permalink: upgrade/download-software-image.html 
+sidebar: sidebar 
+keywords: ontap, software, image, download, downloading, upgrade 
+summary: 升級 ONTAP 之前、您必須先從 NetApp 支援網站 下載 ONTAP 軟體。 
+---
+= 下載 ONTAP 軟體映像
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+升級 ONTAP 之前、您必須先從 NetApp 支援網站 下載目標 ONTAP 軟體映像。視 ONTAP 版本而定、您可以將 ONTAP 軟體下載到網路上的 HTTPS 、 HTTP 或 FTP 伺服器、或是本機資料夾。
+
+[cols="2"]
+|===
+| 如果您正在執行... | 您可以將映像下載至此位置 ... 
+
+
+| 更新版本ONTAP  a| 
+* HTTPS 伺服器 +
+伺服器的 CA 憑證必須安裝在本機系統上。
+* 本機資料夾
+* HTTP或FTP伺服器
+
+
+
+
+| 更新版本ONTAP  a| 
+* 本機資料夾
+* HTTP或FTP伺服器
+
+
+
+
+| 不含更新版本ONTAP | HTTP或FTP伺服器 
+|===
+.關於這項工作
+* 如果您使用執行自動不中斷升級 link:concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級途徑"]，您需要下載中級 ONTAP 版本和升級所需的目標 ONTAP 版本的軟體套件。  例如、如果您要從 ONTAP 9.8 升級至 ONTAP 9.13.1 、則必須下載 ONTAP 9.12.1 的軟體套件和 ONTAP 9.13.1 的軟體套件。  請參閱 link:concept_upgrade_paths.html#supported-upgrade-paths-for-on-premises-ontap-and-ontap-select["支援的升級路徑"] 若要判斷您的特定升級是否需要下載中介軟體套件。
+* 如果您要將採用NetApp Volume Encryption的系統升級ONTAP 為版本9.5或更新版本、則必須下載ONTAP 非受限國家/地區的版本、包括NetApp Volume Encryption。
++
+如果您使用ONTAP 受限國家/地區的「更新版」軟體映像來升級採用NetApp Volume Encryption的系統、系統就會出現問題、而且您無法存取磁碟區。
+
+* 您不需要為韌體下載個別的軟體套件。您叢集的韌體更新隨附於 ONTAP 軟體升級套件中、並複製到每個節點的開機裝置。新韌體隨後會在升級程序中安裝。
+
+
+.步驟
+. 在中找到目標ONTAP 的Software link:https://mysupport.netapp.com/site/products/all/details/ontap9/downloads-tab["軟體下載"] NetApp 支援網站的區域。
++
+如需ONTAP Select 升級版、請選取* ONTAP Select 《節點升級*》。
+
+. 將軟體映像（例如97_q_image.tgz）複製到適當的位置。
++
+視ONTAP 您的版本而定、此位置將是HTTP、HTTPS或FTP伺服器的目錄、映像將從該目錄提供給本機系統、或是儲存系統上的本機資料夾。
+
+
