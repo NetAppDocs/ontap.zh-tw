@@ -34,6 +34,7 @@ summary: 存取時原則定義存取時掃描的範圍。您可以為個別SVM�
 ** 請確認所有排除項目都是在同一個原則中指定、因為一次只能啟用一個原則。NetApp 強烈建議您在防毒引擎中指定相同的排除項目集。
 
 
+* 必須有存取上的原則才能使用 xref:create-on-demand-task-task.html[隨需掃描]。為了避免進行存取掃描、您應該設定 `-scan-files-with-no-ext` 為假、且 `-file-ext-to-exclude` 至 * 以排除所有副檔名。
 
 
 .步驟
@@ -53,7 +54,7 @@ summary: 存取時原則定義存取時掃描的範圍。您可以為個別SVM�
 ----
 cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
 ----
-. 確認已建立存取原則： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name policy_name`
+. 確認已建立存取原則： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name _name_`
 +
 如需選項的完整清單、請參閱命令的手冊頁。
 

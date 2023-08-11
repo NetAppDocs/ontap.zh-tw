@@ -1,8 +1,8 @@
 ---
 permalink: antivirus/create-on-demand-task-task.html 
 sidebar: sidebar 
-keywords: create, on-demand, task 
-summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。 
+keywords: create, on-demand, task, vserver vscan 
+summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。 
 ---
 = 建立隨需工作
 :allow-uri-read: 
@@ -11,17 +11,21 @@ summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描�
 
 
 [role="lead"]
-隨需工作可定義隨需掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。
+隨選工作會定義隨選病毒掃描的範圍。您可以指定要掃描的檔案大小上限、要包含在掃描中的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。
 
 .關於這項工作
 * 每個 SVM 最多可有十（ 10 ）個隨選工作、但只有一個可以使用中。
 * 隨選工作會建立報告、其中包含與掃描相關的統計資料資訊。您可以使用命令或下載工作在定義位置所建立的報告檔案、來存取此報告。
 
 
+.開始之前
+* 您必須擁有 xref:create-on-access-policy-task.html[已建立存取原則]。原則可以是預設原則或使用者建立的原則。如果沒有存取原則、就無法啟用掃描。
+
+
 .步驟
 . 建立隨需工作：
 +
-`vserver vscan on-demand-task create -vserver data_SVM -task-name task_name -scan-paths paths_of_files_to_scan -report-directory report_directory_path -report-expiry-time expiration_time_for_report -schedule cron_schedule -max-file-size max_size_of_files_to_scan -paths-to-exclude paths_of_files_to_exclude -file-ext-to-exclude extensions_of_files_to_exclude -file-ext-to-include extensions_of_files_to_include -scan-files-with-no-ext true|false -directory-recursion true|false`
+`vserver vscan on-demand-task create -vserver _data_SVM_ -task-name _task_name_ -scan-paths _paths_of_files_to_scan_ -report-directory _report_directory_path_ -report-expiry-time _expiration_time_for_report_ -schedule cron_schedule -max-file-size _max_size_of_files_to_scan_ -paths-to-exclude _paths_ -file-ext-to-exclude _file_extensions_ -file-ext-to-include _file_extensions_ -scan-files-with-no-ext true|false -directory-recursion true|false`
 
 +
 ** 。 `-file-ext-to-exclude` 設定會覆寫 `-file-ext-to-include` 設定：
@@ -29,10 +33,10 @@ summary: 隨需工作可定義隨需掃描的範圍。您可以指定要掃描�
 
 
 +
-如需選項的完整清單、請參閱命令的手冊頁。
+如需完整的選項清單、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131/vserver-vscan-on-demand-task-create.html["命令參考資料"^]。
 
 +
-下列命令會建立名為的隨選工作 `Task1` 在上 ``vs1``SVM ：
+下列命令會建立名為的隨選工作 `Task1` 在「 VS1 ’ shVM ：
 
 +
 [listing]
