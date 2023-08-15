@@ -104,11 +104,11 @@ ARP 有兩種模式：
 
 當您啟用 ARP 時、它會以學習模式執行。在學習模式中、 ONTAP 系統會根據上述分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP 快照、以便在偵測到威脅時保護資料。
 
-建議您讓 ARP 處於學習模式至少 30 天、不過您可以隨時切換至使用中模式。提早切換可能導致誤報過多。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
+建議您讓 ARP 處於學習模式至少 30 天、不過您可以隨時切換至使用中模式。切換太早可能導致誤報過多。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
 
 在作用中模式中、如果檔案副檔名標示為異常、您應該評估警示。您可以對警示採取行動以保護資料、也可以將警示標記為誤報。當您標示為誤報時、 ONTAP 會更新 ARP 警示設定檔、使副檔名不會在後續加上旗標。命令 `security anti-ransomware volume workload-behavior show` 顯示在磁碟區中偵測到的副檔名。（如果您在學習模式早期執行此命令、並顯示正確的檔案類型表示、則不應將該資料當作移至作用中模式的基礎、因為 ONTAP 仍在收集其他計量。）
 
-從 ONTAP 9.11.1 開始、您可以使用自訂 ARP 的偵測參數 `security anti-ransomware volume attack-detection-parameters modify` 命令。例如、如果您希望在磁碟區中使用多種新的檔案類型、您可以停用從未見過的檔案類型的警示。如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131/security-anti-ransomware-volume-attack-detection-parameters-modify.html["指令參考資料ONTAP"^]。
+從 ONTAP 9.11.1 開始、您可以自訂 ARP 的偵測參數。如需詳細資訊、請參閱 xref:manage-parameters-task.html[管理 ARP 攻擊偵測參數]。
 
 
 
@@ -119,14 +119,14 @@ ARP 有兩種模式：
 * ** 低 ** ：這是第一次在磁碟區中觀察到新的副檔名時指派的。
 * ** 中度 ** ：觀察到多個檔案副檔名之前從未見過的檔案。
 +
-** 在 ONTAP 9.10.1 中、向上提報至中度的臨界值為 100 個以上的檔案。從 ONTAP 9.11.1 開始、檔案數量可自訂、預設值為 20 。
+** 在 ONTAP 9.10.1 中、向上提報至中度的臨界值為 100 個以上的檔案。從 ONTAP 9.11.1 開始、檔案數量可修改、預設值為 20 。
 
 
 
 
-當攻擊可能性低時、表示 ONTAP 偵測到異常、並會在背景中建立磁碟區的快照、以建立可能的最佳恢復點。例如、 ARP Snapshot 可透過其名稱來識別 `Anti_ransomware_backup.2022-12-20_1248`，並使用標記 `anti-ransomware-backup`。
+在威脅較低的情況下、 ONTAP 會偵測到異常狀況、並建立磁碟區的快照、以建立最佳的恢復點。ARP Snapshot 使用 `anti-ransomware-backup` 例如、標記和可透過其名稱識別 `Anti_ransomware_backup.2022-12-20_1248`。
 
-ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。會記錄低層級的威脅、但 ONTAP 不會傳送低威脅的警示。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
+ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。系統管理員的「事件」 ** 區段會記錄並顯示低層級的威脅、但 ONTAP 不會傳送低威脅的警示。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
 您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show -vserver _svm_name_` 命令。
 

@@ -18,16 +18,20 @@ summary: 從支援4位元組的UTF-8編碼名稱開始、即可建立及顯示�
 * 您必須以下列其中一種方式建立新的Volume：
 * 設定音量 `-language` 選項明確： `volume create -language utf8mb4 {…}`
 * 繼承 Volume `-language` SVM 中的選項、此選項已針對選項建立或修改： `vserver [create|modify] -language utf8mb4 {…}``volume create {…}`
-* 您無法修改用於utf8mb4支援的現有磁碟區；您必須建立新的utf8mb4就緒磁碟區、然後使用用戶端型複製工具來移轉資料。
+* 在 9.6 之前的 ONTAP 版本中、您無法修改現有的磁碟區以支援 utf8mb4 ；您必須建立新的 utf8mb4 就緒磁碟區、然後使用用戶端型複本工具移轉資料。
 +
 您可以更新SVM以取得utf8mb4支援、但現有磁碟區仍保留其原始語言代碼。
 
 +
-[NOTE]
-====
-目前不支援使用4位元組utf-8字元的LUN名稱。
+如果您使用的是 ONTAP 9.7P1 或更新版本、您可以透過支援要求修改 utf8mb4 的現有磁碟區。如需詳細資訊、請參閱 link:https://kb.netapp.com/onprem/ontap/da/NAS/Can_the_volume_language_be_changed_after_creation_in_ONTAP["是否可以在 ONTAP 中建立後變更 Volume 語言？"^]。
 
-====
+
+
++
+
+
+NOTE: 目前不支援使用4位元組utf-8字元的LUN名稱。
+
 * 在Windows檔案系統應用程式中、通常會使用16位元的統一碼轉換格式（UTF-16）來表示統一碼字元資料、在使用8位元的統一碼轉換格式（UTF-8）的NFS檔案系統中則代表統一碼字元資料。
 +
 在發行版不含更新版本的版本中、Windows用戶端所建立的名稱（包括UTF-16輔助字元）會正確顯示給其他Windows用戶端、但不會正確轉譯為適用於NFS用戶端的UTF-8。ONTAP同樣地、已建立NFS用戶端的名稱若含有UTF-8補充字元、則無法正確轉譯為適用於Windows用戶端的UTF-16。
@@ -44,10 +48,8 @@ summary: 從支援4位元組的UTF-8編碼名稱開始、即可建立及顯示�
 * qtree名稱可以包含多位元組的統一碼格式字元、例如日文和中文字元。
 * 在版本不含支援的版本中、僅支援使用BMP字元（也就是可以以3個位元組表示的字元）ONTAP 。
 +
-[NOTE]
-====
-在發行版之前的版本中、qtree父磁碟區的交會路徑可以包含qtree和含有統一碼字元的目錄名稱。ONTAP。 `volume show` 當父磁碟區具有 UTF-8 語言設定時、命令會正確顯示這些名稱。不過、如果父Volume語言不是UTF-8語言設定之一、則會使用數值NFS替代名稱來顯示交會路徑的某些部分。
 
-====
+NOTE: 在發行版之前的版本中、qtree父磁碟區的交會路徑可以包含qtree和含有統一碼字元的目錄名稱。ONTAP。 `volume show` 當父磁碟區具有 UTF-8 語言設定時、命令會正確顯示這些名稱。不過、如果父Volume語言不是UTF-8語言設定之一、則會使用數值NFS替代名稱來顯示交會路徑的某些部分。
+
 * 在9.5及更新版本中、如果qtree位於啟用utf8mb4的Volume中、則qtree名稱中支援4位元組字元。
 

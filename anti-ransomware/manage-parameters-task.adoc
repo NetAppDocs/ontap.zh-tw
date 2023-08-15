@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/manage-parameters-task.html 
+keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
+summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體保護偵測參數。 
+---
+= 管理 ARP 攻擊偵測參數
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+從 ONTAP 9.11.1 開始、您可以修改特定 Automware Protection 磁碟區上的勒索軟體偵測參數、並將已知的激增報告為正常檔案活動。調整偵測參數有助於根據您的特定 Volume 工作負載、提高報告的準確度。
+
+
+
+== 攻擊偵測的運作方式
+
+當自主勒索軟體保護（ ARP ）處於學習模式時、它會為 Volume 行為開發基準值。這些是 Entropy 、檔案副檔名、以及從 ONTAP 9.11.1 開始的 IOPS 。這些基準用於評估勒索軟體威脅。如需這些條件的詳細資訊、請參閱 xref:index.html#what-arp-detects[ARP 偵測到什麼]。
+
+在 ONTAP 9.10.1 中、如果 ARP 偵測到下列兩種情況、就會發出警告：
+
+* 在磁碟區中、有 20 多個檔案的副檔名先前未被觀察到
+* 高 Entropy 資料
+
+
+從 ONTAP 9.11.1 開始、如果符合 _ 僅 _ 一個條件、 ARP 就會發出威脅警告。例如、如果在 24 小時內觀察到超過 20 個檔案的副檔名、而這些副檔名先前未在磁碟區中觀察到、則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。（ 24 小時和 20 個檔案值為預設值、可加以修改。）
+
+某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
+
+
+
+== 修改攻擊偵測參數
+
+視您的 ARP 磁碟區預期行為而定、您可能需要修改攻擊偵測參數。
+
+.步驟
+. 檢視現有的攻擊偵測參數：
++
+`security anti-ransomware volume attack-detection-parameters show -vserver _svm_name_ -volume _volume_name_`
+
++
+....
+security anti-ransomware volume attack-detection-parameters show -vserver vs1 -volume vol1
+                                             Vserver Name : vs1
+                                              Volume Name : vol1
+            Is Detection Based on High Entropy Data Rate? : true
+  Is Detection Based on Never Seen before File Extension? : true
+                  Is Detection Based on File Create Rate? : true
+                  Is Detection Based on File Rename Rate? : true
+                  Is Detection Based on File Delete Rate? : true
+           Is Detection Relaxing Popular File Extensions? : true
+                High Entropy Data Surge Notify Percentage : 100
+                 File Create Rate Surge Notify Percentage : 100
+                 File Rename Rate Surge Notify Percentage : 100
+                 File Delete Rate Surge Notify Percentage : 100
+ Never Seen before File Extensions Count Notify Threshold : 20
+       Never Seen before File Extensions Duration in Hour : 24
+....
+. 顯示的所有欄位都可以使用布林值或整數值來修改。若要修改欄位、請使用 `security anti-ransomware volume attack-detection-parameters modify` 命令。
++
+如需參數的完整清單、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131/security-anti-ransomware-volume-attack-detection-parameters-modify.html["指令參考資料ONTAP"^]。
+
+
+
+
+
+== 回報已知的突波
+
+即使處於作用中模式、 ARP 仍會繼續修改偵測參數的基準值。如果您知道 Volume 活動的突波（一次性突波或是新常態特徵的突波）、您應該將其回報為安全的。手動回報這些突波的安全性、有助於提高 ARP 威脅評估的準確度。
+
+.一次性突波
+. 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
++
+`security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
+
+
+
+.修改基準突波
+. 如果回報的喘振應視為正常應用程式行為、請回報喘振、以修改基準喘振值。
++
+`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver _svm_name_ -volume _volume_name_`
+
+
+
+.更多資訊
+* link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]
+
