@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_admin_performing_a_planned_failover.html 
-keywords: SM-BC, SMBC, testing failover, planned failover, maintenance, Mediator, quorum 
+keywords: SM-BC, testing failover, planned failover, maintenance, quorum 
 summary: 您可以執行計畫性容錯移轉、以測試災難恢復組態、或在主叢集上執行維護。 
 ---
 = 執行計畫性容錯移轉
@@ -32,7 +32,15 @@ summary: 您可以執行計畫性容錯移轉、以測試災難恢復組態、�
 
 [role="tabbed-block"]
 ====
-.CLI ONTAP
+.系統管理員
+--
+. 在 System Manager 中、選取「 ** 保護」 > 「總覽」 > 「關係」 ** 。
+. 識別您要容錯移轉的 SM-BC 關係。在其名稱旁邊、選取 `...` 在關係名稱旁、選取「 ** 容錯移轉 ** 」。
+. 若要監控容錯移轉的狀態、請使用 `snapmirror failover show` 在 ONTAP CLI 中。
+
+
+--
+.CLI
 --
 . 從目的地叢集啟動容錯移轉作業：
 +
@@ -46,14 +54,6 @@ summary: 您可以執行計畫性容錯移轉、以測試災難恢復組態、�
 +
 `destination::>snapmirror show`
 
-
-
---
-.系統管理員
---
-. 在 System Manager 中、選取「 ** 保護」 > 「總覽」 > 「關係」 ** 。
-. 識別您要容錯移轉的 SM-BC 關係。在其名稱旁邊、選取 `...` 在關係名稱旁、選取「 ** 容錯移轉 ** 」。
-. 若要監控容錯移轉的狀態、請使用 `snapmirror failover show` 在 ONTAP CLI 中。
 
 
 --
