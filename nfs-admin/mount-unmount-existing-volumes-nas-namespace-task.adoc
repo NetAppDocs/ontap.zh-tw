@@ -14,11 +14,11 @@ summary: 磁碟區必須先掛載到NAS命名空間、才能設定NAS用戶端�
 磁碟區必須先掛載到NAS命名空間、才能設定NAS用戶端存取儲存虛擬機器（SVM）磁碟區中所含的資料。如果目前未掛載磁碟區、您可以將其掛載至交會點。您也可以卸載Volume。
 
 .關於這項工作
-如果您卸載磁碟區並離線、則NAS用戶端將無法存取連接點內的所有資料、包括位於已卸載磁碟區命名空間內的連接點磁碟區中的資料。
+如果您卸載磁碟區並使其離線、則 NAS 用戶端無法存取連接點內的所有資料、包括位於未掛載磁碟區命名空間內具有連接點的磁碟區中的資料。
 
 [NOTE]
 ====
-若要停止NAS用戶端對磁碟區的存取、只是卸載磁碟區是不夠的。您必須離線磁碟區、或採取其他步驟、以確保用戶端檔案處理快取無效。如需詳細資訊、請參閱下列知識庫文章：
+若要停止NAS用戶端對磁碟區的存取、只是卸載磁碟區是不夠的。您必須將磁碟區離線、或採取其他步驟、確保用戶端檔案處理快取無效。如需詳細資訊、請參閱下列知識庫文章：
 
 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP["NFSv3用戶端在從ONTAP 靜態命名空間移除後、仍可存取Volume"]
 
@@ -36,24 +36,26 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
  a| 
 掛載Volume
  a| 
-`volume mount -vserver svm_name -volume volume_name -junction-path junction_path`
+`volume mount -vserver _svm_name_ -volume _volume_name_ -junction-path _junction_path_`
 
 
 
  a| 
 卸載Volume
  a| 
-`volume unmount -vserver svm_name -volume volume_name` `volume offline -vserver svm_name -volume volume_name`
+`volume unmount -vserver _svm_name_ -volume _volume_name_`
+
+`volume offline -vserver _svm_name_ -volume _volume_name_`
 
 |===
 . 驗證磁碟區是否處於所需的掛載狀態：
 +
-`volume show -vserver vserver_name -volume volume_name -fields state,junction-path,junction-active`
+`volume show -vserver _svm_name_ -volume _volume_name_ -fields state,junction-path,junction-active`
 
 
 
 .範例
-以下範例將位於 SVM VS1 的名為「 ''''''''''''''''''''''''''''''''''''' `/sales`：
+以下範例將位於 SVM 'VS1' 的名為 ''''''''''''s'" 的 Volume 裝入連接點 "'/sales" ：
 
 [listing]
 ----
@@ -67,7 +69,7 @@ vs1       data       online    /data           true
 vs1       home4      online    /eng/home       true
 vs1       sales      online    /sales          true
 ----
-以下範例會卸載並卸載SVM VS1上名為「dATA」的磁碟區：
+以下範例將卸載並離線位於 SVM 「 'VS1 」上的名為「 dATA 」的磁碟區：
 
 [listing]
 ----

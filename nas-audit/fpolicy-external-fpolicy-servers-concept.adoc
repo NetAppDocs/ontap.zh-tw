@@ -1,10 +1,10 @@
 ---
 permalink: nas-audit/fpolicy-external-fpolicy-servers-concept.html 
 sidebar: sidebar 
-keywords: fpolicy, works, external fpolicy servers 
+keywords: fpolicy, works, external fpolicy servers, privileged data access, channels, synchronous communication, connection, credentials, super user 
 summary: 在儲存虛擬機器（SVM）上設定並啟用FPolicy之後、FPolicy會在SVM所參與的每個節點上執行。FPolicy負責建立及維護與外部FPolicy伺服器（FPolicy伺服器）的連線、通知處理、以及管理與FPolicy伺服器之間的通知訊息。 
 ---
-= FPolicy如何與外部FPolicy伺服器搭配運作總覽
+= FPolicy如何搭配外部FPolicy伺服器運作
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,3 +21,73 @@ summary: 在儲存虛擬機器（SVM）上設定並啟用FPolicy之後、FPolicy
 * 透過驗證的工作階段將通知傳送至FPolicy伺服器。
 * 管理FPolicy伺服器所建立的Passthrough-read資料連線、以便在啟用passe-read時、為用戶端要求提供服務。
 
+
+
+
+== 控制通道如何用於FPolicy通訊
+
+FPolicy會從儲存虛擬機器（SVM）上每個節點的資料生命期、啟動與外部FPolicy伺服器的控制通道連線。FPolicy使用控制通道來傳輸檔案通知、因此FPolicy伺服器可能會根據SVM拓撲看到多個控制通道連線。
+
+
+
+== 特殊權限資料存取通道如何用於同步通訊
+
+在同步使用案例中、FPolicy伺服器會透過特殊權限的資料存取路徑、存取儲存虛擬機器（SVM）上的資料。透過權限路徑存取時、會將完整的檔案系統公開給FPolicy伺服器。它可以存取資料檔案來收集資訊、掃描檔案、讀取檔案或寫入檔案。
+
+由於外部FPolicy伺服器可透過特殊權限的資料通道、從SVM的根目錄存取整個檔案系統、因此具有特殊權限的資料通道連線必須安全無虞。
+
+
+
+== 如何將FPolicy連線認證用於特殊權限的資料存取通道
+
+FPolicy伺服器會使用與FPolicy組態一起儲存的特定Windows使用者認證、建立與叢集節點的授權資料存取連線。SMB是唯一支援的傳輸協定、可用來建立特殊權限資料存取通道連線。
+
+如果FPolicy伺服器需要存取授權資料、則必須符合下列條件：
+
+* 必須在叢集上啟用SMB授權。
+* FPolicy伺服器必須在FPolicy組態中設定的認證下執行。
+
+
+建立資料通道連線時、FPolicy會使用指定Windows使用者名稱的認證資料。資料存取是透過管理共用ONTAP_admin$進行。
+
+
+
+== 授與超級使用者認證以進行授權資料存取的意義
+
+使用FPolicy組態中設定的IP位址和使用者認證組合、將超級使用者認證授予FPolicy伺服器。ONTAP
+
+當FPolicy伺服器存取資料時、超級使用者狀態會授予下列權限：
+
+* 避免進行權限檢查
++
+使用者無需檢查檔案和目錄存取。
+
+* 特殊鎖定權限
++
+支援讀取、寫入或修改任何檔案的存取權限、無論現有的鎖定為何。ONTAP如果FPolicy伺服器對檔案進行位元組範圍鎖定、則會立即移除檔案上現有的鎖定。
+
+* 略過任何FPolicy檢查
++
+存取不會產生任何FPolicy通知。
+
+
+
+
+
+== FPolicy如何管理原則處理
+
+可能有多個FPolicy原則指派給您的儲存虛擬機器（SVM）、每個原則的優先順序各不相同。若要在SVM上建立適當的FPolicy組態、請務必瞭解FPolicy如何管理原則處理。
+
+每個檔案存取要求都會經過初始評估、以判斷哪些原則正在監控此事件。如果是受監控的事件、則監控事件的相關資訊以及相關的原則都會傳送到FPolicy、並在FPolicy中進行評估。每個原則都會依照指派的優先順序進行評估。
+
+在設定原則時、您應考慮下列建議：
+
+* 當您想要在其他原則之前一律先評估原則時、請以較高的優先順序設定該原則。
+* 如果所要求的檔案存取作業在受監控事件上成功、是根據其他原則評估檔案要求的先決條件、請將控制第一個檔案作業成功或失敗的原則設定為較高的優先順序。
++
+例如、如果一個原則管理FPolicy檔案歸檔與還原功能、而另一個原則管理線上檔案的檔案存取作業、 管理檔案還原的原則必須具有較高的優先順序、才能在第二個原則所管理的作業之前還原檔案。
+
+* 如果您想要評估所有可能套用至檔案存取作業的原則、請將同步原則的優先順序降低。
+
+
+您可以修改原則順序編號、重新排列現有原則的原則優先順序。不過、若要讓FPolicy根據修改後的優先順序來評估原則、您必須停用並重新啟用具有修改順序編號的原則。

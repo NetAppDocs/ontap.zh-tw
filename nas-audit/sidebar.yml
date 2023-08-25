@@ -1,235 +1,88 @@
 ---
 section: nas-audit
-title: NAS稽核與安全追蹤
+title: 稽核SVM上的NAS事件
 entries:
 - title: 總覽
   url: "/nas-audit/index.html"
-- title: 稽核SVM上的NAS事件
+- title: 稽核的運作方式
+  entries:
+  - title: 基本稽核概念
+    url: "/nas-audit/basic-auditing-concept.html"
+  - title: 如何執行不稽核程序ONTAP
+    url: "/nas-audit/auditing-process-concept.html"
+- title: 稽核需求與考量
+  url: "/nas-audit/requirements-considerations-concept.html"
+- title: 暫存檔案的稽核記錄大小限制
+  url: "/nas-audit/auditing-limitations-size-audit-records-concept.html"
+- title: 支援的稽核事件記錄格式為何
+  url: "/nas-audit/supported-audit-event-log-formats-concept.html"
+- title: 檢視稽核事件記錄
+  url: "/nas-audit/view-audit-event-logs-concept.html"
+- title: 可稽核的SMB事件
   entries:
   - title: 總覽
-    url: "/nas-audit/auditing-events-concept.html"
-  - title: 稽核的運作方式
-    entries:
-    - title: 基本稽核概念
-      url: "/nas-audit/basic-auditing-concept.html"
-    - title: 如何執行不稽核程序ONTAP
-      url: "/nas-audit/auditing-process-concept.html"
-  - title: 稽核需求與考量
-    url: "/nas-audit/requirements-considerations-concept.html"
-  - title: 暫存檔案的稽核記錄大小限制
-    url: "/nas-audit/auditing-limitations-size-audit-records-concept.html"
-  - title: 支援的稽核事件記錄格式為何
-    url: "/nas-audit/supported-audit-event-log-formats-concept.html"
-  - title: 檢視稽核事件記錄
-    url: "/nas-audit/view-audit-event-logs-concept.html"
-  - title: 可稽核的SMB事件
-    entries:
-    - title: 總覽
-      url: "/nas-audit/smb-events-audit-concept.html"
-    - title: 判斷稽核物件的完整路徑
-      url: "/nas-audit/determine-complete-path-audited-object-task.html"
-    - title: 稽核symlink和硬式連結時的考量
-      url: "/nas-audit/audit-symlinks-hard-links-concept.html"
-    - title: 稽核替代NTFS資料流時的考量事項
-      url: "/nas-audit/audit-alternate-ntfs-data-streams-concept.html"
-  - title: 可稽核的NFS檔案和目錄存取事件
-    url: "/nas-audit/file-directory-access-events-audited-reference.html"
-  - title: 規劃稽核組態
-    url: "/nas-audit/plan-auditing-config-concept.html"
-  - title: 在SVM上建立檔案和目錄稽核組態
-    entries:
-    - title: 建立稽核組態
-      url: "/nas-audit/create-auditing-config-task.html"
-    - title: 在SVM上啟用稽核
-      url: "/nas-audit/enable-audit-svm-task.html"
-    - title: 驗證稽核組態
-      url: "/nas-audit/verify-auditing-config-task.html"
-  - title: 設定檔案和資料夾稽核原則
-    entries:
-    - title: 總覽
-      url: "/nas-audit/configure-file-folder-audit-policies-concept.html"
-    - title: 在NTFS安全型檔案和目錄上設定稽核原則
-      url: "/nas-audit/configur-policies-ntfs-security-concept.html"
-    - title: 設定UNIX安全樣式檔案和目錄的稽核
-      url: "/nas-audit/configure-auditing-unix-security-files-directories-task.html"
-  - title: 顯示套用至檔案和目錄的稽核原則相關資訊
-    entries:
-    - title: 使用Windows安全性索引標籤顯示稽核原則的相關資訊
-      url: "/nas-audit/display-audit-policies-windows-security-tab-task.html"
-    - title: 使用FlexVol CLI在整個過程中顯示有關NTFS稽核原則的資訊
-      url: "/nas-audit/display-ntfs-audit-policies-flexvol-task.html"
-    - title: 顯示檔案安全性與稽核原則相關資訊的方法
-      url: "/nas-audit/wildcards-display-security-policies-concept.html"
-  - title: 可稽核的CLI變更事件
-    entries:
-    - title: 總覽
-      url: "/nas-audit/cli-change-events-concept.html"
-    - title: 管理檔案共用事件
-      url: "/nas-audit/manage-file-share-event-concept.html"
-    - title: 管理稽核原則變更事件
-      url: "/nas-audit/manage-audit-policy-change-event-concept.html"
-    - title: 管理使用者帳戶事件
-      url: "/nas-audit/manage-user-account-event-concept.html"
-    - title: 管理安全性群組事件
-      url: "/nas-audit/manage-security-group-event-concept.html"
-    - title: 管理授權原則變更事件
-      url: "/nas-audit/manage-authorization-policy-change-event-concept.html"
-  - title: 管理稽核組態
-    entries:
-    - title: 手動旋轉稽核事件記錄
-      url: "/nas-audit/manual-rotate-audit-event-logs-task.html"
-    - title: 啟用和停用SVM上的稽核
-      url: "/nas-audit/enable-disable-auditing-svms-task.html"
-    - title: 顯示稽核組態的相關資訊
-      url: "/nas-audit/display-audit-config-task.html"
-    - title: 用於修改稽核組態的命令
-      url: "/nas-audit/commands-modify-auditing-config-reference.html"
-    - title: 刪除稽核組態
-      url: "/nas-audit/delete-audit-config-task.html"
-    - title: 還原時的程序為何
-      url: "/nas-audit/process-when-reverting-concept.html"
-  - title: 疑難排解稽核和暫存磁碟區空間問題
-    url: "/nas-audit/troubleshoot-auditing-staging-volume-concept.html"
-- title: 在SVM上使用FPolicy進行檔案監控與管理
+    url: "/nas-audit/smb-events-audit-concept.html"
+  - title: 判斷稽核物件的完整路徑
+    url: "/nas-audit/determine-complete-path-audited-object-task.html"
+  - title: 稽核symlink和硬式連結時的考量
+    url: "/nas-audit/audit-symlinks-hard-links-concept.html"
+  - title: 稽核替代NTFS資料流時的考量事項
+    url: "/nas-audit/audit-alternate-ntfs-data-streams-concept.html"
+- title: 可稽核的NFS檔案和目錄存取事件
+  url: "/nas-audit/file-directory-access-events-audited-reference.html"
+- title: 規劃稽核組態
+  url: "/nas-audit/plan-auditing-config-concept.html"
+- title: 在SVM上建立檔案和目錄稽核組態
   entries:
-  - title: FPolicy的運作方式
-    entries:
-    - title: FPolicy解決方案的兩個部分是什麼
-      url: "/nas-audit/two-parts-fpolicy-solution-concept.html"
-    - title: 什麼是同步和非同步通知
-      url: "/nas-audit/synchronous-asynchronous-notifications-concept.html"
-    - title: 叢集元件在FPolicy實作中扮演的角色
-      url: "/nas-audit/roles-cluster-components-fpolicy-concept.html"
-    - title: FPolicy如何搭配外部FPolicy伺服器運作
-      entries:
-      - title: 總覽
-        url: "/nas-audit/fpolicy-external-fpolicy-servers-concept.html"
-      - title: 控制通道如何用於FPolicy通訊
-        url: "/nas-audit/control-channels-fpolicy-communication-concept.html"
-      - title: 特殊權限資料存取通道如何用於同步通訊
-        url: "/nas-audit/privileged-data-access-channels-synchronous-concept.html"
-      - title: 如何將FPolicy連線認證用於特殊權限的資料存取通道
-        url: "/nas-audit/fpolicy-credentials-privileged-data-access-concept.html"
-      - title: 授與超級使用者認證以進行授權資料存取的意義
-        url: "/nas-audit/super-user-credentials-privileged-access-concept.html"
-      - title: FPolicy如何管理原則處理
-        url: "/nas-audit/fpolicy-manages-policy-processing-concept.html"
-    - title: 節點對外部FPolicy伺服器的通訊程序為何
-      url: "/nas-audit/node-fpolicy-server-communication-process-concept.html"
-    - title: FPolicy服務如何跨SVM命名空間運作
-      url: "/nas-audit/fpolicy-services-svm-namespaces-concept.html"
-  - title: FPolicy組態類型
-    url: "/nas-audit/fpolicy-config-types-concept.html"
-  - title: FPolicy Passthrough-read如何強化階層式儲存管理的使用性
-    url: "/nas-audit/fpolicy-passthrough-read-enhances-usability-concept.html"
-  - title: 設定FPolicy的需求、考量及最佳實務做法
-    url: "/nas-audit/requirements-best-practices-fpolicy-concept.html"
-  - title: 設定FPolicy組態的步驟為何
-    url: "/nas-audit/steps-setup-fpolicy-config-concept.html"
-  - title: 規劃FPolicy組態
-    entries:
-    - title: 規劃FPolicy外部引擎組態
-      url: "/nas-audit/plan-fpolicy-external-engine-config-concept.html"
-      entries:
-      - title: 設定FPolicy外部引擎使用SSL驗證連線的其他相關資訊
-        url: "/nas-audit/configure-fpolicy-ssl-connections-concept.html"
-      - title: 憑證無法在SVM災難恢復關係中複寫非ID保留組態
-        url: "/nas-audit/certificates-disaster-recovery-non-id-preserve-concept.html"
-      - title: 叢集範圍內的FPolicy外部引擎、搭配MetroCluster 使用功能性和SVM災難恢復組態的限制
-        url: "/nas-audit/restrictions-fpolicy-mcc-svm-disaster-recovery-concept.html"
-      - title: 完成FPolicy外部引擎組態工作表
-        url: "/nas-audit/fpolicy-external-engine-config-worksheet-reference.html"
-    - title: 規劃FPolicy事件組態
-      entries:
-      - title: 總覽
-        url: "/nas-audit/plan-fpolicy-event-config-concept.html"
-      - title: FPolicy 可監控 SMB 的支援檔案作業和篩選器組合
-        url: "/nas-audit/supported-file-operation-filter-fpolicy-smb-concept.html"
-      - title: FPolicy 可監控 NFSv3 的支援檔案作業和篩選器組合
-        url: "/nas-audit/supported-file-operation-filter-fpolicy-nfsv3-concept.html"
-      - title: FPolicy可監控NFSv4的支援檔案操作和篩選器組合
-        url: "/nas-audit/supported-file-operation-filter-fpolicy-nfsv4-concept.html"
-      - title: 完成FPolicy事件組態工作表
-        url: "/nas-audit/fpolicy-event-config-worksheet-reference.html"
-    - title: 規劃FPolicy原則組態
-      entries:
-      - title: 總覽
-        url: "/nas-audit/plan-fpolicy-policy-config-concept.html"
-      - title: 如果FPolicy原則使用原生引擎、則需要FPolicy範圍組態
-        url: "/nas-audit/fpolicy-scope-config-native-engine-concept.html"
-      - title: 完成FPolicy原則工作表
-        url: "/nas-audit/fpolicy-policy-worksheet-reference.html"
-    - title: 規劃FPolicy範圍組態
-      entries:
-      - title: 總覽
-        url: "/nas-audit/plan-fpolicy-scope-config-concept.html"
-      - title: 完成FPolicy範圍工作表
-        url: "/nas-audit/fpolicy-scope-worksheet-reference.html"
-  - title: 建立FPolicy組態
-    entries:
-    - title: 建立FPolicy外部引擎
-      url: "/nas-audit/create-fpolicy-external-engine-task.html"
-    - title: 建立FPolicy事件
-      url: "/nas-audit/create-fpolicy-event-task.html"
-    - title: 建立FPolicy原則
-      url: "/nas-audit/create-fpolicy-policy-task.html"
-    - title: 建立FPolicy範圍
-      url: "/nas-audit/create-fpolicy-scope-task.html"
-    - title: 啟用FPolicy原則
-      url: "/nas-audit/enable-fpolicy-policy-task.html"
-  - title: 修改FPolicy組態
-    entries:
-    - title: 修改FPolicy組態的命令
-      url: "/nas-audit/commands-modify-fpolicy-config-reference.html"
-    - title: 啟用或停用FPolicy原則
-      url: "/nas-audit/enable-disable-fpolicy-policies-task.html"
-  - title: 顯示FPolicy組態的相關資訊
-    entries:
-    - title: show命令的運作方式
-      url: "/nas-audit/show-commands-work-concept.html"
-    - title: 用於顯示FPolicy組態資訊的命令
-      url: "/nas-audit/commands-display-fpolicy-config-reference.html"
-    - title: 顯示FPolicy原則狀態的相關資訊
-      url: "/nas-audit/display-fpolicy-policy-status-task.html"
-    - title: 顯示已啟用FPolicy原則的相關資訊
-      url: "/nas-audit/display-enabled-fpolicy-policies-task.html"
-  - title: 管理FPolicy伺服器連線
-    entries:
-    - title: 連線至外部FPolicy伺服器
-      url: "/nas-audit/connect-external-fpolicy-servers-task.html"
-    - title: 中斷與外部FPolicy伺服器的連線
-      url: "/nas-audit/disconnect-from-external-fpolicy-servers-task.html"
-    - title: 顯示與外部FPolicy伺服器連線的相關資訊
-      url: "/nas-audit/display-connections-external-fpolicy-servers-task.html"
-    - title: 顯示有關FPolicy Passthrough-read連線狀態的資訊
-      url: "/nas-audit/display-fpolicy-passthrough-read-connection-task.html"
-- title: 使用安全性追蹤來驗證或疑難排解檔案和目錄存取
+  - title: 建立稽核組態
+    url: "/nas-audit/create-auditing-config-task.html"
+  - title: 在SVM上啟用稽核
+    url: "/nas-audit/enable-audit-svm-task.html"
+  - title: 驗證稽核組態
+    url: "/nas-audit/verify-auditing-config-task.html"
+- title: 設定檔案和資料夾稽核原則
   entries:
-  - title: 安全追蹤的運作方式
-    url: "/nas-audit/security-traces-work-concept.html"
-  - title: 存取類型會檢查監控的安全追蹤
-    url: "/nas-audit/types-access-checks-security-traces-monitor-concept.html"
-  - title: 建立安全追蹤時的考量
-    url: "/nas-audit/create-security-traces-concept.html"
-  - title: 執行安全追蹤
-    entries:
-    - title: 總覽
-      url: "/nas-audit/perform-security-traces-task.html"
-    - title: 建立安全追蹤篩選器
-      url: "/nas-audit/create-security-trace-filters-task.html"
-    - title: 顯示安全追蹤篩選器的相關資訊
-      url: "/nas-audit/display-security-trace-filters-task.html"
-    - title: 顯示安全性追蹤結果
-      url: "/nas-audit/display-security-trace-results-task.html"
-    - title: 修改安全性追蹤篩選器
-      url: "/nas-audit/modify-security-trace-filters-task.html"
-    - title: 刪除安全追蹤篩選器
-      url: "/nas-audit/delete-security-trace-filters-task.html"
-    - title: 刪除安全性追蹤記錄
-      url: "/nas-audit/delete-security-trace-records-task.html"
-    - title: 刪除所有安全追蹤記錄
-      url: "/nas-audit/delete-all-security-trace-records-task.html"
-  - title: 解讀安全性追蹤結果
-    url: "/nas-audit/interpret-security-trace-results-concept.html"
-- title: 何處可找到其他資訊
-  url: "/nas-audit/additional-information-reference.html"
+  - title: 總覽
+    url: "/nas-audit/configure-file-folder-audit-policies-concept.html"
+  - title: 在NTFS安全型檔案和目錄上設定稽核原則
+    url: "/nas-audit/configur-policies-ntfs-security-concept.html"
+  - title: 設定UNIX安全樣式檔案和目錄的稽核
+    url: "/nas-audit/configure-auditing-unix-security-files-directories-task.html"
+- title: 顯示套用至檔案和目錄的稽核原則相關資訊
+  entries:
+  - title: 使用Windows安全性索引標籤顯示稽核原則的相關資訊
+    url: "/nas-audit/display-audit-policies-windows-security-tab-task.html"
+  - title: 使用FlexVol CLI在整個過程中顯示有關NTFS稽核原則的資訊
+    url: "/nas-audit/display-ntfs-audit-policies-flexvol-task.html"
+  - title: 顯示檔案安全性與稽核原則相關資訊的方法
+    url: "/nas-audit/wildcards-display-security-policies-concept.html"
+- title: 可稽核的CLI變更事件
+  entries:
+  - title: 總覽
+    url: "/nas-audit/cli-change-events-concept.html"
+  - title: 管理檔案共用事件
+    url: "/nas-audit/manage-file-share-event-concept.html"
+  - title: 管理稽核原則變更事件
+    url: "/nas-audit/manage-audit-policy-change-event-concept.html"
+  - title: 管理使用者帳戶事件
+    url: "/nas-audit/manage-user-account-event-concept.html"
+  - title: 管理安全性群組事件
+    url: "/nas-audit/manage-security-group-event-concept.html"
+  - title: 管理授權原則變更事件
+    url: "/nas-audit/manage-authorization-policy-change-event-concept.html"
+- title: 管理稽核組態
+  entries:
+  - title: 手動旋轉稽核事件記錄
+    url: "/nas-audit/manual-rotate-audit-event-logs-task.html"
+  - title: 啟用和停用SVM上的稽核
+    url: "/nas-audit/enable-disable-auditing-svms-task.html"
+  - title: 顯示稽核組態的相關資訊
+    url: "/nas-audit/display-audit-config-task.html"
+  - title: 用於修改稽核組態的命令
+    url: "/nas-audit/commands-modify-auditing-config-reference.html"
+  - title: 刪除稽核組態
+    url: "/nas-audit/delete-audit-config-task.html"
+  - title: 還原時的程序為何
+    url: "/nas-audit/process-when-reverting-concept.html"
+- title: 疑難排解稽核和暫存磁碟區空間問題
+  url: "/nas-audit/troubleshoot-auditing-staging-volume-concept.html"

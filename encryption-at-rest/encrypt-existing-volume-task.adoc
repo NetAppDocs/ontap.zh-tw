@@ -1,16 +1,100 @@
 ---
 permalink: encryption-at-rest/encrypt-existing-volume-task.html 
 sidebar: sidebar 
-keywords: enabling, encryption, existing, volume, volume move start, command 
-summary: 您可以使用Volume Move start命令、藉由移動現有的Volume來啟用加密功能。您必須在ONTAP 不包含更新版本的版本中使用Volume Move start。您可以使用相同的Aggregate或不同的Aggregate。 
+keywords: enabling, encryption, existing, volume, volume move start, command, volume encryption conversion start 
+summary: 您可以使用兩種方法之一來在現有的磁碟區上啟用加密功能：使用 Volume Move start 命令或使用 Volume 加密轉換 start 命令。 
 ---
-= 使用Volume Move start命令在現有磁碟區上啟用加密
+= 在現有磁碟區上啟用加密
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
+您可以使用兩種方法之一、在現有的磁碟區上啟用加密 `volume move start command` 或使用 `volume encryption conversion start` 命令。
+
+.關於這項工作
+* 從功能介紹9.3開始ONTAP 、您可以使用 `volume encryption conversion start` 命令可「就地」加密現有的磁碟區、而無需將磁碟區移至其他位置。或者、您也可以使用 `volume move start` 命令。
+* 對於 ONTAP 9.2 及更早版本、您只能使用 `volume move start` 命令、可透過移動現有磁碟區來啟用加密。
+
+
+
+
+== 使用Volume Encryption Conversion start命令、在現有磁碟區上啟用加密
+
+從功能介紹9.3開始ONTAP 、您可以使用 `volume encryption conversion start` 命令可「就地」加密現有的磁碟區、而無需將磁碟區移至其他位置。
+
+在您開始轉換作業之後、必須完成此作業。如果您在作業期間遇到效能問題、可以執行 `volume encryption conversion pause` 暫停作業的命令、以及 `volume encryption conversion resume` 命令以恢復作業。
+
+[NOTE]
+====
+您無法使用 `volume encryption conversion start` 轉換 SnapLock Volume 。
+
+====
+.步驟
+. 在現有磁碟區上啟用加密：
++
+`volume encryption conversion start -vserver SVM_name -volume volume_name`
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令可在現有磁碟區上啟用加密 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
+----
++
+系統會為磁碟區建立加密金鑰。磁碟區上的資料已加密。
+
+. 確認轉換作業的狀態：
++
+`volume encryption conversion show`
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令會顯示轉換作業的狀態：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 轉換作業完成後、請確認磁碟區已啟用加密功能：
++
+`volume show -is-encrypted true`
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令會顯示上的加密磁碟區 `cluster1`：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+.結果
+如果您使用KMIP伺服器來儲存節點的加密金鑰、ONTAP 則當您加密磁碟區時、會自動將加密金鑰「推送」至伺服器。
+
+
+
+== 使用Volume Move start命令在現有磁碟區上啟用加密
+
 您可以使用 `volume move start` 命令、可透過移動現有磁碟區來啟用加密。您必須使用 `volume move start` 在 ONTAP 9.2 及更早版本中。您可以使用相同的Aggregate或不同的Aggregate。
 
 .您需要的產品
@@ -19,11 +103,10 @@ summary: 您可以使用Volume Move start命令、藉由移動現有的Volume來
 link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執行Volume Move命令"]
 
 .關於這項工作
-從 ONTAP 9.8 開始、您可以使用 `volume move start` 在 SnapLock 或 FlexGroup 磁碟區上啟用加密。
+* 從 ONTAP 9.8 開始、您可以使用 `volume move start` 在 SnapLock 或 FlexGroup 磁碟區上啟用加密。
+* 從ONTAP 功能區9.6開始、您可以使用Aggregate層級的加密功能、將金鑰指派給內含的Aggregate、以供移動的磁碟區使用。使用唯一金鑰加密的Volume稱為_NVE Volume。使用Aggregate層級金鑰加密的Volume稱為_NAE Volume（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
+* 從 ONTAP 9.4 開始、如果您在設定內建金鑰管理程式時啟用「 cc 模式」、就會使用建立磁碟區 `volume move start` 命令會自動加密。您不需要指定 `-encrypt-destination true`。
 
-從 ONTAP 9.4 開始、如果您在設定內建金鑰管理程式時啟用「 cc 模式」、就會使用建立磁碟區 `volume move start` 命令會自動加密。您不需要指定 `-encrypt-destination true`。
-
-從ONTAP 功能區9.6開始、您可以使用Aggregate層級的加密功能、將金鑰指派給內含的Aggregate、以供移動的磁碟區使用。使用唯一金鑰加密的Volume稱為_NVE Volume。使用Aggregate層級金鑰加密的Volume稱為_NAE Volume（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
 
 .步驟
 . 移動現有磁碟區、並指定是否在磁碟區上啟用加密：

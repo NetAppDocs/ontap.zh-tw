@@ -1,7 +1,7 @@
 ---
 permalink: authentication/enable-ad-users-groups-access-cluster-svm-task.html 
 sidebar: sidebar 
-keywords: configure, active directory, domain, controller access 
+keywords: configure, active directory, domain, controller access, authentication tunnel, SMB server, create, svm, computer, account, domain, cifs server 
 summary: 您必須先設定AD網域控制器存取叢集或SVM、AD帳戶才能存取SVM。如果您已為資料SVM設定SMB伺服器、則可將SVM設定為閘道或通道、以供AD存取叢集。如果您尚未設定SMB伺服器、可以在AD網域上建立SVM的電腦帳戶。 
 ---
 = 設定Active Directory網域控制器存取總覽
@@ -38,6 +38,83 @@ summary: 您必須先設定AD網域控制器存取叢集或SVM、AD帳戶才能�
 
 `cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true`
 
-預設值為 `false`。
+預設值為「 'FALSE' 」。
 
 在9.10.1之前的版本中、如果網域控制器針對安全的Netlogon服務強制執行AES、連線就會失敗。ONTAP網域控制器必須設定為在ONTAP 這些版本中接受使用下列功能的強大金鑰連線。
+
+
+
+== 設定驗證通道
+
+如果您已為資料 SVM 設定 SMB 伺服器、則可以使用 `security login domain-tunnel create` 命令將 SVM 設定為閘道或 _tunnel_ 、以便 AD 存取叢集。
+
+.您需要的產品
+* 您必須為資料SVM設定SMB伺服器。
+* 您必須啟用AD網域使用者帳戶、才能存取叢集的管理SVM。
+* 您必須是叢集管理員才能執行此工作。
+
+
+從ONTAP 《S209.10.1》開始、如果您有SVM閘道（網域通道）可供AD存取、則如果您在AD網域中停用了NTLM、就可以使用Kerberos進行系統管理驗證。在舊版中、不支援Kerberos搭配SVM閘道的管理驗證。此功能預設為可用、不需設定。
+
+.附註
+一律會先嘗試Kerberos驗證。一旦失敗、就會嘗試執行NTLM驗證。
+
+.步驟
+. 將啟用SMB的資料SVM設定為驗證通道、以便AD網域控制器存取叢集：
++
+`security login domain-tunnel create -vserver SVM_name`
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+SVM必須執行、使用者才能通過驗證。
+
+====
++
+下列命令會將啟用 SMB 的資料 SVM 「 'engData' 」設定為驗證通道。
+
++
+[listing]
+----
+cluster1::>security login domain-tunnel create -vserver engData
+----
+
+
+
+
+== 在網域上建立SVM電腦帳戶
+
+如果您尚未設定資料 SVM 的 SMB 伺服器、則可以使用 `vserver active-directory create` 命令、為網域上的 SVM 建立電腦帳戶。
+
+.您需要的產品
+您必須是叢集或SVM管理員、才能執行此工作。
+
+.關於這項工作
+輸入之後 `vserver active-directory create` 命令時、系統會提示您提供 AD 使用者帳戶的認證、並提供足夠的權限、以便將電腦新增至網域中指定的組織單位。帳戶密碼不可空白。
+
+.步驟
+. 在AD網域上建立SVM的電腦帳戶：
++
+`vserver active-directory create -vserver _SVM_name_ -account-name _NetBIOS_account_name_ -domain _domain_ -ou _organizational_unit_`
+
++
+如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
+
++
+下列命令會在網域 "'example.com`" for SVM "`engData" 上建立名為 "`ADSERVER1`" 的電腦帳戶。輸入命令後、系統會提示您輸入AD使用者帳戶認證。
+
++
+[listing]
+----
+cluster1::>vserver active-directory create -vserver engData -account-name ADSERVER1 -domain example.com
+
+In order to create an Active Directory machine account, you must supply the name and password of a Windows account with sufficient privileges to add computers to the "CN=Computers" container within the "example.com" domain.
+
+Enter the user name: Administrator
+
+Enter the password:
+----
+

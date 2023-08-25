@@ -1,7 +1,7 @@
 ---
 permalink: system-admin/different-shells-cli-commands-concept-cluster-admin.html 
 sidebar: sidebar 
-keywords: diag, secd, different, shells, cli, commands, cluster, administrators, clustershell, nodeshell, systemshell 
+keywords: diag, secd, different, shells, cli, commands, cluster, administrators, clustershell, nodeshell, systemshell, display, list, help 
 summary: 叢集有三種不同的CLI命令Shell、叢集Shell、節點和系統Shell。這些Shell的用途各不相同、而且每個Shell都有不同的命令集。 
 ---
 = 關於CLI命令的不同Shell概述（僅限叢集管理員）
@@ -32,3 +32,73 @@ Nodesdesh CLI 說明（觸發者 `?` 或 `help` 在 nodesdeshed 提示符下）�
 系統Shell和相關的「diag」帳戶是專為低階診斷用途而設計。他們的存取權限需要診斷權限層級、僅保留給技術支援人員執行疑難排解工作。
 
 
+
+
+
+== 存取叢集Shell中的nodesdell命令和選項
+
+可以透過nodesdro解除 來存取Nodesl解除 命令和選項：
+
+`system node run –node _nodename_`
+
+許多常用的nodeslell命令和選項都經過通道處理或別名處理到clusterShell中、也可以從clusterShell執行。
+
+您可以使用存取叢集 Shell 中支援的 Nodesdell 選項 `vserver options clustershell` 命令。若要查看這些選項、您可以執行下列其中一項：
+
+* 使用查詢 clustershell CLI `vserver options -vserver _nodename_or_clustername_ -option-name ?`
+* 存取 `vserver options` 使用的 clustershell CLI 中的手冊頁 `man vserver options`
+
+
+如果您在clusterShell中輸入nodeslell或legacy命令或選項、且命令或選項具有等效的clusterShell命令、ONTAP 則此功能會通知您要使用clusterShell命令。
+
+如果您輸入叢集Shell不支援的nodeslell或legacy命令或選項、ONTAP 則會將命令或選項的「不支援」狀態通知您。
+
+
+
+== 顯示可用的nodesdro解除 命令
+
+您可以使用nodesdro解除 程序中的CLI說明、取得可用的nodesdro解除 命令清單。
+
+.步驟
+. 若要存取nodesdell、請在clusterShell的系統提示字元中輸入下列命令：
++
+`*system node run -node {_nodename_|local}*`
+
++
+`local` 是您用來存取叢集的節點。
+
++
+[NOTE]
+====
+。 `system node run` 命令具有 alias 命令、 `run`。
+
+====
+. 在nodesdro解除 命令中輸入以下命令以查看可用的nodesl解除 命令列表：
++
+`*[_commandname_] help*`
+
++
+ `_commandname_` 是您要顯示其可用度的命令名稱。如果您不包括在內 `_commandname_`， CLI 會顯示所有可用的 nodesdesh 命令。
+
++
+您輸入 `exit` 或鍵入 Ctrl-d 返回至 clustershell CLI 。
+
+
+
+.顯示可用的nodesl解除 命令的範例
+以下示例訪問名爲 node2 的節點的 nodesbate ，並顯示 nodesbate 命令的信息 `environment`：
+
+[listing]
+----
+cluster1::> system node run -node node2
+Type 'exit' or 'Ctrl-D' to return to the CLI
+
+node2> environment help
+Usage: environment status |
+     [status] [shelf [<adapter>[.<shelf-number>]]] |
+     [status] [shelf_log] |
+     [status] [shelf_stats] |
+     [status] [shelf_power_status] |
+     [status] [chassis [all | list-sensors | Temperature | PSU 1 |
+     PSU 2 | Voltage | SYS FAN | NVRAM6-temperature-3 | NVRAM6-battery-3]]
+----

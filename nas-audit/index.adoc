@@ -1,10 +1,10 @@
 ---
 permalink: nas-audit/index.html 
 sidebar: sidebar 
-keywords: file, access, auditing, audit, smb, cifs, nfs, fpolicy 
+keywords: file, access, auditing, audit, smb, cifs, nfs, fpolicy, udit, nas, events, svms 
 summary: 您可以搭配ONTAP 使用適用於SMB和NFS傳輸協定的檔案存取稽核功能、例如使用FPolicy進行原生稽核和檔案原則管理。 
 ---
-= SMB與NFS稽核與安全性追蹤總覽
+= SMB與NFS稽核與安全性追蹤
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -23,3 +23,41 @@ summary: 您可以搭配ONTAP 使用適用於SMB和NFS傳輸協定的檔案存�
 
 
 
+
+
+
+== 稽核SVM上的NAS事件
+
+稽核NAS事件是一項安全性措施、可讓您追蹤及記錄儲存虛擬機器（SVM）上的特定SMB和NFS事件。這有助於您追蹤潛在的安全問題、並提供任何安全漏洞的證據。您也可以登錄及稽核Active Directory集中存取原則、以瞭解實作原則的結果。
+
+
+
+=== SMB 活動
+
+您可以稽核下列事件：
+
+* SMB檔案與資料夾存取事件
++
+您可以稽核儲存在FlexVol 包含啟用稽核功能之SVM的物件上的SMB檔案和資料夾存取事件。
+
+* SMB登入和登出事件
++
+您可以稽核SVM上SMB伺服器的SMB登入和登出事件。
+
+* 集中存取原則執行事件
++
+您可以使用透過建議的集中存取原則套用的權限、來稽核SMB伺服器上物件的有效存取。透過集中存取原則的暫存進行稽核、可讓您在部署中央存取原則之前、先瞭解其影響。
+
++
+使用Active Directory GPO設定集中存取原則暫存稽核；不過、SVM稽核組態必須設定為稽核集中存取原則暫存事件。
+
++
+雖然您可以在稽核組態中啟用集中存取原則接移功能、但不會在SMB伺服器上啟用動態存取控制、但只有啟用動態存取控制時、才會產生集中存取原則接移事件。動態存取控制是透過SMB伺服器選項來啟用。預設不會啟用此功能。
+
+
+
+
+
+=== NFS 事件
+
+您可以利用NFSv4 ACL來稽核儲存在SVM上的物件、以稽核檔案和目錄事件。

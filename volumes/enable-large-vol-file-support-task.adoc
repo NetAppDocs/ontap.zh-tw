@@ -1,0 +1,59 @@
+---
+permalink: volumes/enable-large-vol-file-support-task.html 
+sidebar: sidebar 
+keywords: create, modify, volume, large file, large volume 
+summary: 您可以在建立新磁碟區時啟用大型磁碟區和檔案的支援、也可以修改現有的磁碟區。 
+---
+= 啟用大容量和大檔案支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.12.1 P2 開始、您可以建立新的磁碟區或修改現有的磁碟區、以支援最大容量 300TB 、最大檔案（ LUN ）大小 128TB 。
+
+.開始之前
+* ONTAP 9.12.1 P2 或更新版本已安裝在叢集上。
+* 您是叢集或 SVM 管理員。
+
+
+
+
+== 建立新的 Volume
+
+.步驟
+. 建立已啟用大容量和檔案支援的 Volume ：
++
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
+
+
+
+.範例
+以下範例建立新的 Volume 、並啟用大容量和檔案大小支援。
+
+[listing]
+----
+volume create -vserver vs1 -volume big_vol1 -aggregate aggr1 -is-large-size-enabled true
+----
+
+
+== 修改現有的 Volume
+
+. 修改磁碟區以啟用大容量和檔案支援：
++
+`volume modify -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
+
+
+
+.範例
+以下範例修改現有的 Volume 、以支援大容量和檔案大小。
+
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -aggregate aggr1 -is-large-size-enabled true
+----
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap/volumes/create-volume-task.html["建立Volume"]
+* link:https://docs.netapp.com/us-en/ontap-cli-9131/["命令參考資料"]
+

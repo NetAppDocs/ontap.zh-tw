@@ -1,8 +1,8 @@
 ---
 permalink: system-admin/configure-saml-authentication-task.html 
 sidebar: sidebar 
-keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, lanaguage, active, directory 
-summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。 
+keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, lanaguage, active, directory, disable, authentication, idp, active directory, troubleshoot, repair 
+summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。停用SAML驗證時、會使用已設定的目錄服務供應商（例如Active Directory和LDAP）進行驗證。 
 ---
 = 設定SAML驗證
 :allow-uri-read: 
@@ -100,10 +100,116 @@ admin          service-processor
                            password      admin            no     none
 admin          ssh         password      admin            no     none
 admin1         http        password      backup           no     none
-**admin1         http        saml          backup           -      none**
+**admin1       http        saml          backup           -      none**
 ----
 
 
+
+
+
+
+== 停用SAML驗證
+
+若要停止使用外部身分識別供應商（IDP）驗證Web使用者、您可以停用SAML驗證。停用SAML驗證時、會使用已設定的目錄服務供應商（例如Active Directory和LDAP）進行驗證。
+
+.您需要的產品
+您必須從主控台登入。
+
+.步驟
+. 停用SAML驗證：
++
+`*security saml-sp modify -is-enabled false*`
+
+. 如果您不想再使用SAML驗證、或想要修改IDP、請刪除SAML組態：
++
+`*security saml-sp delete*`
+
+
+
+
+
+== 疑難排解SAML組態問題
+
+如果設定安全性聲明標記語言（SAML）驗證失敗、您可以手動修復SAML組態失敗的每個節點、並從故障中恢復。在修復程序期間、會重新啟動Web伺服器、並中斷任何作用中的HTTP連線或HTTPS連線。
+
+.關於這項工作
+設定SAML驗證時ONTAP 、將會以每個節點為基礎來套用SAML組態。啟用SAML驗證時ONTAP 、如果發生組態問題、則會自動嘗試修復每個節點。如果任何節點上的SAML組態發生問題、您可以停用SAML驗證、然後重新啟用SAML驗證。在重新啟用SAML驗證後、SAML組態仍無法套用至一或多個節點的情況下、可能會發生。您可以識別SAML組態失敗的節點、然後手動修復該節點。
+
+.步驟
+. 登入進階權限層級：
++
+`*set -privilege advanced*`
+
+. 識別SAML組態失敗的節點：
++
+`*security saml-sp status show -instance*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp status show -instance
+
+                         Node: node1
+                Update Status: config-success
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 179
+
+                         Node: node2
+                Update Status: config-failed
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text: SAML job failed, Reason: Internal error. Failed to receive the SAML IDP Metadata file.
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 180
+2 entries were displayed.
+----
+. 修復故障節點上的SAML組態：
++
+`*security saml-sp repair -node _node_name_*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp repair -node node2
+
+Warning: This restarts the web server. Any HTTP/S connections that are active
+         will be disrupted.
+Do you want to continue? {y|n}: y
+[Job 181] Job is running.
+[Job 181] Job success.
+----
++
+Web伺服器會重新啟動、且任何作用中的HTTP連線或HTTPS連線都會中斷。
+
+. 確認已在所有節點上成功設定SAML：
++
+`*security saml-sp status show -instance*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp status show -instance
+
+                         Node: node1
+                Update Status: config-success
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 179
+
+                         Node: node2
+                Update Status: **config-success**
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 180
+2 entries were displayed.
+----
 
 
 .相關資訊

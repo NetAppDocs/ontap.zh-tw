@@ -1,0 +1,162 @@
+---
+permalink: system-admin/manage-node-root-volumes-aggregates-task.html 
+sidebar: sidebar 
+keywords: node, governing, root, volume, aggregate, files, special, directories, free, space, full, delete, file, core, dump 
+summary: 節點的根Volume FlexVol 是指由原廠安裝或安裝軟體安裝的一個現象。 
+---
+= 管理節點根磁碟區和根集合體
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+節點的根Volume FlexVol 是指由原廠安裝或安裝軟體安裝的一個現象。它保留給系統檔案、記錄檔和核心檔案。目錄名稱為 `/mroot`，只有技術支援人員才能透過系統 Shell 存取。節點根磁碟區的最小大小取決於平台模型。
+
+
+
+== 管理節點根磁碟區和根集合體總覽的規則
+
+節點的根磁碟區包含該節點的特殊目錄和檔案。根Aggregate包含根磁碟區。節點的根磁碟區和根Aggregate有幾項規則。
+
+* 下列規則管理節點的根Volume：
++
+** 除非技術支援人員指示您這麼做、否則請勿修改根磁碟區的組態或內容。
+** 請勿將使用者資料儲存在根Volume中。
++
+將使用者資料儲存在根磁碟區中、會增加HA配對中節點之間的儲存恢復時間。
+
+** 您可以將根磁碟區移至其他Aggregate。  請參閱 <<relocate-root>>。
+
+
+* 根Aggregate僅專供節點的根Volume使用。
++
+無法在根Aggregate中建立其他磁碟區。ONTAP
+
+
+
+https://hwu.netapp.com["NetApp Hardware Universe"^]
+
+
+
+== 釋放節點根磁碟區上的空間
+
+當節點的根磁碟區已滿或幾乎已滿時、會出現警告訊息。當節點的根磁碟區已滿時、節點無法正常運作。您可以刪除核心傾印檔、封包追蹤檔和根Volume Snapshot複本、以釋放節點根磁碟區上的空間。
+
+.步驟
+. 顯示節點的核心傾印檔案及其名稱：
++
+`system node coredump show`
+
+. 從節點刪除不需要的核心傾印檔案：
++
+`system node coredump delete`
+
+. 存取節點：
++
+`*system node run -node _nodename_*`
+
++
+`_nodename_` 是要釋放其根磁碟區空間的節點名稱。
+
+. 從nodesdro解除 高階權限層級：
++
+`*priv set advanced*`
+
+. 透過nodesdro解除 顯示及刪除節點的封包追蹤檔案：
++
+.. 顯示節點根磁碟區中的所有檔案：
++
+`*ls /etc*`
+
+.. 如果有任何封包追蹤檔案 (`*.trc`）位於節點的根磁碟區中、請分別刪除：
++
+`*rm /etc/log/packet_traces/_file_name.trc_*`
+
+
+
+. 透過節點識別並刪除節點的根Volume Snapshot複本：
++
+.. 識別根磁碟區名稱：
++
+`*vol status*`
+
++
+根 Volume 由的「選項」欄中的「 root 」一詞表示 `vol status` 命令輸出。
+
++
+在以下範例中、根磁碟區是 `vol0`：
+
++
+[listing]
+----
+node1*> vol status
+
+         Volume State           Status            Options
+           vol0 online          raid_dp, flex     root, nvfail=on
+                                64-bit
+----
+.. 顯示根Volume Snapshot複本：
++
+`*snap list root_vol_name*`
+
+.. 刪除不需要的根Volume Snapshot複本：
++
+`*snap delete root_vol_namesnapshot_name*`
+
+
+
+. 退出nodesdell並返回clusterShell：
++
+`*exit*`
+
+
+
+
+
+== 將根磁碟區重新部署到新的Aggregate
+
+根置換程序會將目前的根Aggregate移轉到另一組磁碟、而不會造成中斷。
+
+.關於這項工作
+必須啟用儲存容錯移轉、才能重新部署根磁碟區。您可以使用 `storage failover modify -node _nodename_ -enable true` 啟用容錯移轉的命令。
+
+您可以在下列案例中、將根磁碟區的位置變更為新的Aggregate：
+
+* 當根集合體不在您偏好的磁碟上時
+* 當您想要重新排列連接至節點的磁碟時
+* 當您執行更換EOS磁碟櫃的磁碟櫃時
+
+
+.步驟
+. 將權限層級設為進階：
++
+`*set privilege advanced*`
+
+. 重新部署根Aggregate：
++
+`*system node migrate-root -node _nodename_ -disklist _disklist_ -raid-type _raid-type_*`
+
++
+** *節點*
++
+指定擁有您要移轉之根Aggregate的節點。
+
+** *磁碟清單*
++
+指定要在其中建立新根Aggregate的磁碟清單。所有磁碟都必須是備援磁碟、且必須由同一個節點擁有。所需的磁碟數目下限取決於RAID類型。
+
+** * RAID類型*
++
+指定根Aggregate的RAID類型。預設值為 `raid-dp`。
+
+
+
+. 監控工作進度：
++
+`*job show -id _jobid_ -instance*`
+
+
+
+.結果
+如果所有的預先檢查都成功、命令會啟動根磁碟區置換工作並結束。期望節點重新啟動。
