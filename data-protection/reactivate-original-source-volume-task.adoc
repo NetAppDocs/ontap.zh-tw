@@ -19,24 +19,6 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 
 
 .步驟
-. 刪除原始資料保護關係：
-+
-`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
-+
-如需完整的命令語法、請參閱手冊頁。
-
-+
-您必須從目的地SVM或目的地叢集執行此命令。
-
-+
-以下範例刪除原始來源磁碟區之間的關係、 `volA` 開啟 `svm1`以及您要提供資料的磁碟區、 `volA_dst` 開啟 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
-----
 . 反轉原始資料保護關係：
 +
 `snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
