@@ -4,11 +4,29 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade, how, post-checks 
 summary: 升級ONTAP 完您的更新版的更新版軟體之後、您應該執行幾項工作來驗證叢集是否就緒。 
 ---
-= 升級後該怎麼辦
+= ONTAP 升級後的處理方式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-升級ONTAP 完您的更新版的更新版軟體之後、您應該執行幾項工作來驗證叢集是否就緒。
+升級 ONTAP 之後、您應該執行數項工作來驗證叢集就緒性。
+
+. link:task_verify_cluster_after_upgrade.html["驗證您的叢集"]。
++
+升級 ONTAP 之後、您應該驗證叢集版本、叢集健全狀況和儲存健全狀況。如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已啟用自動非計畫性切換功能。
+
+. link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["確認所有的生命都在主連接埠上"]。
++
+在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。升級叢集之後、您必須啟用及還原任何不在主連接埠上的生命。
+
+. 驗證 link:concept_special_configurations_post_checks.html["特殊考量"] 特定於您的叢集。
++
+如果叢集上存在某些組態、您可能需要在升級後執行其他步驟。
+
+. link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新磁碟認證套件（ DQP ）"]。
++
+不會在ONTAP 進行升級時更新DQP。
+
+

@@ -1,0 +1,43 @@
+---
+permalink: upgrade/prepare.html 
+sidebar: sidebar 
+keywords: upgrade, ontap, prepare, preparation, before you upgrade, plan, upgrade overview, upgrade summary 
+summary: 準備 ONTAP 軟體升級 
+---
+= 準備 ONTAP 升級
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+正確準備 ONTAP 升級、有助於在開始升級程序之前識別並減輕潛在的升級風險或封鎖程式。在升級準備期間、您也可以找出升級前可能需要考量的任何特殊考量事項。例如、如果您的叢集已啟用 SSL FIPS 模式、且系統管理員帳戶使用 SSH 公開金鑰進行驗證、則您必須驗證目標 ONTAP 版本是否支援主機金鑰演算法。
+
+您應該執行下列步驟來準備升級：
+
+. link:choose-target-version.html["選擇您的目標 ONTAP 版本"]。
+. 檢閱 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^] 目標版本。
++
+「升級注意事項」一節說明升級至新版本之前、您應該注意的潛在問題。「新增功能」與「已知問題與限制」章節說明升級至新版本後的新系統行為。
+
+. link:confirm-configuration.html["確認 ONTAP 支援您的硬體組態"]。
++
+您的硬體平台、叢集管理交換器和 MetroCluster IP 交換器必須支援目標版本。  如果您的叢集是針對 SAN 進行設定、則必須完全支援 SAN 組態。
+
+. link:task_check_for_common_configuration_errors_using_config_advisor.html["使用 Active IQ Config Advisor 驗證您沒有常見的組態錯誤。"]
+. 檢閱支援的 ONTAP link:concept_upgrade_paths.html#supported-upgrade-paths-for-on-premises-ontap-and-ontap-select["升級途徑"] 判斷您是否可以執行直接升級、或是否需要分階段完成升級。
+. link:create-upgrade-plan.html["建立升級計畫"]。
++
+如果您有有效的 SupportEdge 合約 link:https://aiq.netapp.com/["Active IQ Digital Advisor"^]、請使用 Upgrade Advisor 規劃升級。  如果您無法存取 Active IQ Digital Advisor 、請建立自己的升級計畫。
+
+. link:task_verifying_the_lif_failover_configuration.html["驗證 LIF 容錯移轉組態"]。
++
+在執行升級之前、您需要確認叢集的容錯移轉原則和容錯移轉群組已正確設定。
+
+. link:concept_verify_svm_routing.html["驗證 SVM 路由組態"]。
+. link:special-considerations.html["驗證特殊考量"] 適用於您的叢集。
++
+如果叢集上有特定組態、則在開始 ONTAP 軟體升級之前、您需要採取特定行動。
+
+. link:concept_how_firmware_is_updated_during_upgrade.html["重新啟動 SP 或 BMC"]。
+

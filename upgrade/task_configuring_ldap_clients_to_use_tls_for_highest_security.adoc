@@ -11,20 +11,36 @@ summary: 在升級至目標ONTAP 版本之前、您必須使用SSLv3設定LDAP�
 
 
 [role="lead"]
-在升級至目標ONTAP 版本之前、您必須使用SSLv3設定LDAP用戶端、以便與LDAP伺服器進行安全通訊、以使用TLS。升級後將無法使用SSL。
+在升級 ONTAP 之前、您必須使用 SSLv3 設定 LDAP 用戶端、以便與 LDAP 伺服器進行安全通訊、以使用 TLS 。升級後將無法使用SSL。
 
 根據預設、用戶端與伺服器應用程式之間的LDAP通訊不會加密。您必須禁止使用SSL並強制使用TLS。
 
+.步驟
 . 確認環境中的LDAP伺服器支援TLS。
 +
 如果沒有、請勿繼續。您應該將LDAP伺服器升級至支援TLS的版本。
 
-. 檢查哪些 ONTAP LDAP 用戶端組態已啟用 LDAP over SSL/TLS ： `vserver services name-service ldap client show`
+. 檢查哪些 ONTAP LDAP 用戶端組態已啟用 LDAP over SSL/TLS ：
++
+[source, cli]
+----
+vserver services name-service ldap client show
+----
 +
 如果沒有、您可以跳過其餘步驟。不過、您應該考慮使用LDAP over TLS來提高安全性。
 
-. 對於每個 LDAP 用戶端組態、不允許 SSL 強制使用 TLS ： `vserver services name-service ldap client modify -vserver vserver_name -client-config ldap_client_config_name -allow-ssl false`
-. 確認不再允許任何 LDAP 用戶端使用 SSL ： `vserver services name-service ldap client show`
+. 對於每個 LDAP 用戶端組態、不允許 SSL 強制使用 TLS ：
++
+[source, cli]
+----
+vserver services name-service ldap client modify -vserver vserver_name -client-config ldap_client_config_name -allow-ssl false
+----
+. 確認不再允許任何 LDAP 用戶端使用 SSL ：
++
+[source, cli]
+----
+vserver services name-service ldap client show
+----
 
 
 .相關資訊

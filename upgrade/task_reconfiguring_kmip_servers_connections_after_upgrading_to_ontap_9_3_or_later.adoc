@@ -4,30 +4,71 @@ sidebar: sidebar
 keywords: ontap, upgrade, reconfigure, reconfiguring, kmip, server, connections, 9.3, later 
 summary: 在升級ONTAP 至更新版本的版本之前、您必須重新設定外部金鑰管理（KMIP）伺服器連線。 
 ---
-= 升級ONTAP 至更新版本的更新版本後、重新設定KMIP伺服器連線
+= 從 ONTAP 9.2 或更早版本升級後、重新設定 KMIP 伺服器連線
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在升級ONTAP 至更新版本的版本之前、您必須重新設定外部金鑰管理（KMIP）伺服器連線。
+從 ONTAP 9.2 或更新版本升級至 ONTAP 9.3 或更新版本後、您需要重新設定任何外部金鑰管理（ KMIP ）伺服器連線。
 
-. 設定金鑰管理程式連線能力：``security key-manager setup``
-. 新增 KMIP 伺服器： `security key-manager add -address key_management_server_ip_address`
-. 確認 KMIP 伺服器已連線： `security key-manager show -status`
-. 查詢關鍵伺服器： `security key-manager query`
-. 建立新的驗證金鑰和密碼： `security key-manager create-key -prompt-for-key true`
+.步驟
+. 設定金鑰管理程式連線能力：
++
+[source, cli]
+----
+security key-manager setup
+----
+. 新增 KMIP 伺服器：
++
+[source, cli]
+----
+security key-manager add -address key_management_server_ip_address
+----
+. 確認 KMIP 伺服器已連線：
++
+[source, cli]
+----
+security key-manager show -status
+----
+. 查詢關鍵伺服器：
++
+[source, cli]
+----
+security key-manager query
+----
+. 建立新的驗證金鑰和密碼：
++
+[source, cli]
+----
+security key-manager create-key -prompt-for-key true
+----
 +
 通關密碼必須至少包含32個字元。
 
-. 查詢新的驗證金鑰： `security key-manager query`
-. 將新的驗證金鑰指派給自我加密磁碟（ SED ）： `storage encryption disk modify -disk disk_ID -data-key-id key_ID`
+. 查詢新的驗證金鑰：
++
+[source, cli]
+----
+security key-manager query
+----
+. 將新的驗證金鑰指派給自我加密磁碟（ SED ）：
++
+[source, cli]
+----
+storage encryption disk modify -disk disk_ID -data-key-id key_ID
+----
 +
 
 NOTE: 請確定您使用的是查詢中的新驗證金鑰。
 
-. 如有需要、請指派 FIPS 金鑰給 SED ： `storage encryption disk modify -disk disk_id -fips-key-id fips_authentication_key_id`
+. 如有需要、請指派 FIPS 金鑰給 SED ：
++
+[source, cli]
+----
+storage encryption disk modify -disk disk_id -fips-key-id fips_authentication_key_id
+----
 +
 如果您的安全性設定要求您使用不同的金鑰進行資料驗證和FIPS 140-2驗證、您應該為每個金鑰建立個別的金鑰。如果情況並非如此、您可以使用與資料存取相同的FIPS法規遵循驗證金鑰。
 

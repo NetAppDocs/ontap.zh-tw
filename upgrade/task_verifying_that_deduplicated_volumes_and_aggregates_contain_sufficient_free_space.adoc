@@ -11,12 +11,23 @@ summary: 在升級ONTAP 支援功能之前、您必須確認任何已刪除重�
 
 
 [role="lead"]
-在升級ONTAP 支援功能之前、您必須確認任何已刪除重複資料的磁碟區和包含這些磁碟區的集合體、都有足夠的可用空間可用於重複資料刪除中繼資料。如果可用空間不足、ONTAP 則在完成升級時、重複資料刪除功能將會停用。
+在升級 ONTAP 之前、您必須驗證任何已刪除的重複磁碟區和包含這些磁碟區的集合體、是否有足夠的可用空間可用於重複資料刪除中繼資料。如果可用空間不足、ONTAP 則在完成升級時、重複資料刪除功能將會停用。
 
 每個已刪除重複資料的磁碟區必須至少包含4%的可用空間。每個包含重複資料刪除磁碟區的Aggregate都必須包含至少3%的可用空間。
 
-. 確定要進行重複資料刪除的磁碟區： `volume efficiency show`
-. 確定您識別的每個磁碟區上的可用空間： `vol show -vserver Vserver_name -volume volume_name -fields volume, size, used, available, percent-used, junction-path`
+.步驟
+. 確定要進行重複資料刪除的磁碟區：
++
+[source, cli]
+----
+volume efficiency show
+----
+. 確定您識別的每個磁碟區上的可用空間：
++
+[source, cli]
+----
+vol show -vserver Vserver_name -volume volume_name -fields volume, size, used, available, percent-used, junction-path
+----
 +
 每個已刪除重複資料的Volume不得包含超過96%的已用容量。如有必要、您可以增加任何超過此容量的磁碟區大小。
 
@@ -35,7 +46,12 @@ cluster1-01 vol0   22.99GB -             14.11GB      7.73GB 35%
 cluster1-02 vol0   22.99GB -             12.97GB      8.87GB    40%
 2 entries were displayed.
 ----
-. 識別包含已刪除重複資料之磁碟區的每個集合體上可用的空間： `aggr show -aggregate aggregate_name -fields aggregate, size, usedsize, availsize, percent-used`
+. 識別包含已刪除重複資料之磁碟區的每個集合體上可用的空間：
++
+[source, cli]
+----
+aggr show -aggregate aggregate_name -fields aggregate, size, usedsize, availsize, percent-used
+----
 +
 每個Aggregate不得包含超過97%的已用容量。如有必要、您可以增加任何超過此容量的集合體大小。
 

@@ -11,28 +11,64 @@ summary: 如果您在ONTAP 使用NetApp Storage Encryption（NSE）on the Ex9.2�
 
 
 [role="lead"]
-如果您在ONTAP 更新版本之前使用NetApp Storage Encryption（NSE）、並升級ONTAP 至版本資訊畫面9.3或更新版本、則在執行升級之前、必須使用命令列介面（CLI）刪除任何現有的外部金鑰管理（KMIP）伺服器連線。
+升級 ONTAP 之前、如果您使用 NetApp 儲存加密（ NSE ）執行 ONTAP 9.2 或更早版本、並升級至 ONTAP 9.3 或更新版本、則必須使用命令列介面（ CLI ）刪除任何現有的外部金鑰管理（ KMIP ）伺服器連線。
 
+.步驟
 . 確認NSE磁碟機已解除鎖定、開啟並設定為預設製造商安全ID 0x0：
 +
-`storage encryption disk show -disk*`
-
+[source, cli]
+----
+storage encryption disk show -disk*
+----
 . 進入進階權限模式：
 +
-`set -privilege advanced`
-
-. 使用預設製造安全 ID 0x0 將 FIPS 金鑰指派給自我加密磁碟（ SED ）： `storage encryption disk modify -fips-key-id 0x0 -disk *`
-. 確認指派 FIPS 金鑰給所有磁碟已完成： `storage encryption disk show-status`
-. 驗證所有磁碟的 * 模式 * 是否設為資料： `storage encryption disk show`
-. 檢視已設定的 KMIP 伺服器： `security key-manager show`
-. 刪除已設定的 KMIP 伺服器： `security key-manager delete -address kmip_ip_address`
-. 刪除外部金鑰管理程式組態：``security key-manager delete-kmip-config``
+[source, cli]
+----
+set -privilege advanced
+----
+. 使用預設製造安全 ID 0x0 將 FIPS 金鑰指派給自我加密磁碟（ SED ）：
++
+[source, cli]
+----
+storage encryption disk modify -fips-key-id 0x0 -disk *
+----
+. 確認指派 FIPS 金鑰給所有磁碟已完成：
++
+[source, cli]
+----
+storage encryption disk show-status
+----
+. 驗證所有磁碟的 * 模式 * 是否已設定為資料
++
+[source, cli]
+----
+storage encryption disk show
+----
+. 檢視已設定的 KMIP 伺服器：
++
+[source, cli]
+----
+security key-manager show
+----
+. 刪除已設定的 KMIP 伺服器：
++
+[source, cli]
+----
+security key-manager delete -address kmip_ip_address
+----
+. 刪除外部金鑰管理程式組態：
++
+[source, cli]
+----
+security key-manager delete-kmip-config
+----
 +
 
 NOTE: 此步驟不會移除NSE憑證。
 
 
 
+.下一步
 升級完成後、您必須重新設定KMIP伺服器連線。
 
 .相關資訊

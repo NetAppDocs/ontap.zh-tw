@@ -4,21 +4,58 @@ sidebar: sidebar
 keywords: ontap, upgrade, snapmirror, operations, quisce 
 summary: 建議您在執行ONTAP 不中斷營運的更新之前、先停止SnapMirror作業。 
 ---
-= 準備SnapMirror關係以進行不中斷營運的升級
+= 準備 SnapMirror 關係以進行 ONTAP 升級
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-建議您在執行ONTAP 不中斷營運的更新之前、先停止SnapMirror作業。
+在執行 SnapMirror 的叢集上升級 ONTAP 之前、 SnapMirror 作業必須針對包含目的地 Volume 的每個節點進行停用、而且每個對等 SVM 在整個叢集上都必須有唯一的名稱。最佳做法是為每個 SVM 使用唯一的完整網域名稱（ FQDN ）、例如「 'dataVerser.hq' 」或「 mirorVserver.offo' 」。
 
+您也應該瞭解、如果您要升級具有 DP SnapMirror 關係的叢集、則必須先升級目的地節點、然後再升級來源節點。
+
+
+
+== 在升級 ONTAP 之前、請先停用 SnapMirror 作業
+
+若要防止 SnapMirror 傳輸失敗、您必須停止 SnapMirror 作業。或者、您也可以在特定目的地磁碟區上執行 SnapMirror 傳輸、並在升級來源節點之前升級所屬目的地節點、以便繼續進行所有其他目的地磁碟區的 SnapMirror 傳輸。下表說明暫停SnapMirror作業的兩個選項。
+
+[cols="3*"]
+|===
+| 選項 | 說明 | 在來源節點之前升級目的地節點？ 
+
+
+ a| 
+在NDU期間暫停SnapMirror作業（不中斷升級）。
+ a| 
+在SnapMirror環境中升級最簡單的方法是暫停所有SnapMirror作業、執行升級、然後恢復SnapMirror作業。不過、在整個NDU期間不會發生SnapMirror傳輸。如果叢集包含將磁碟區彼此鏡射的節點、則必須使用此方法。
+ a| 
+否、節點可以任何順序升級。
+
+
+
+ a| 
+暫停SnapMirror作業一次一個目的地磁碟區。
+ a| 
+您可以暫停特定目的地Volume的SnapMirror傳輸、升級包含目的地Volume的節點（或HA配對）、升級包含來源Volume的節點（或HA配對）、然後恢復目的地Volume的SnapMirror傳輸。使用此方法、可在升級包含原始目的地和來源磁碟區的節點時、繼續傳輸所有其他目的地磁碟區的SnapMirror傳輸。
+ a| 
+是的。
+
+|===
 .步驟
-. 使用 `snapmirror show` 命令來判斷每個SnapMirror關係的目的地路徑。
+. 確定每個 SnapMirror 關係的目的地路徑：
++
+[source, cli]
+----
+snapmirror show
+----
 . 針對每個目的地Volume、暫停未來的SnapMirror傳輸：
 +
-`snapmirror quiesce -destination-path destination`
-
+[source, cli]
+----
+snapmirror quiesce -destination-path destination
+----
 +
 如果SnapMirror關係沒有作用中的傳輸、此命令會將其狀態設為「靜止」。如果關係有作用中的傳輸、狀態會設定為「靜止」、直到傳輸完成為止、然後狀態會變成「靜止」。
 
@@ -65,12 +102,9 @@ There are no entries matching your query.
 
 `snapmirror abort -destination-path destination -h`
 
-*注意：*您必須使用 `-foreground true` 如果您正在中止負載共用鏡射傳輸、則為參數。
+*注意：*您必須使用 `-foreground true` 如果您正在終止負載共用鏡像傳輸、則為參數。
  a| 
 此命令會停止SnapMirror傳輸、並將目的地磁碟區還原至上次成功傳輸的Snapshot複本。關係設定為「靜止」狀態。
 
 |===
 
-
-.相關資訊
-xref:concept_upgrade_requirements_for_snapmirror.adoc[SnapMirror的升級需求]

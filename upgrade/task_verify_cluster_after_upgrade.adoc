@@ -4,24 +4,20 @@ sidebar: sidebar
 keywords: ontap, upgrade, upgrade, verify, status, health, post, after 
 summary: 升級之後、您應該確認叢集。 
 ---
-= 升級後的叢集驗證
+= 在 ONTAP 升級後驗證叢集
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-升級之後、您應該確認叢集版本、叢集健全狀況和儲存健全狀況。
-
-.開始之前
-
-NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已啟用自動非計畫性切換功能。
+升級 ONTAP 之後、您應該驗證叢集版本、叢集健全狀況和儲存健全狀況。  如果您的叢集是在 MetroCluster FC 組態中、您也需要驗證叢集是否已啟用、以便自動進行非計畫性切換。
 
 
 
 == 驗證叢集版本
 
-在所有HA配對升級之後、您必須使用version命令來驗證所有節點是否都在執行目標版本。
+升級所有 HA 配對後、您必須使用 version 命令來驗證所有節點是否都在執行目標版本。
 
 叢集版本是ONTAP 叢集內任何節點上執行的最低版本的功能。如果叢集版本不是目標ONTAP 版本的版本、您可以升級叢集。
 
@@ -29,7 +25,7 @@ NOTE: 如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已�
 +
 `version`
 
-. 如果叢集版本不是目標ONTAP 版本的版本、您可以驗證所有節點的升級狀態：
+. 如果叢集版本不是目標 ONTAP 版本、您應該驗證所有節點的升級狀態：
 +
 `system node upgrade-revert show`
 
@@ -60,9 +56,6 @@ node1                 true    true
 . 將權限層級設為進階：
 +
 `set -privilege advanced`
-
-+
-輸入「y」以繼續。
 
 . 驗證每個RDB程序的組態詳細資料。
 +
@@ -122,18 +115,17 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `event log show  -severity informational -message-name scsiblade.*`
-+
-每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
-
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `cluster kernel-service show`
 +
 [listing]
 ----
-cluster1::*> event log show  -severity informational -message-name scsiblade.*
-Time             Node       Severity       Event
----------------  ---------- -------------- ---------------------------
-MM/DD/YYYY TIME  node0      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
-MM/DD/YYYY TIME  node1      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
+cluster1::*> cluster kernel-service show
+Master            Cluster           Quorum        Availability  Operational
+Node              Node              Status        Status        Status
+----------------- ----------------- ------------- ------------- -------------
+cluster1-01       cluster1-01       in-quorum     true          operational
+                  cluster1-02       in-quorum     true          operational
+2 entries were displayed.
 ----
 
 
@@ -142,9 +134,9 @@ link:../system-admin/index.html["系統管理"]
 
 
 
-== 確認已啟用自動非計畫性切換
+== 確認已啟用自動非計畫性切換（僅限 MetroCluster FC 組態）
 
-升級叢集之後、您應該確認已啟用自動非計畫性切換。
+如果您的叢集是在 MetroCluster FC 組態中、您應該驗證在升級 ONTAP 之後、是否已啟用自動非計畫性切換。
 
 .關於這項工作
 
@@ -168,78 +160,6 @@ AUSO Failure Domain  auso-on-cluster-disaster
 `metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
 
 . 重複步驟1、確認已啟用自動非計畫性切換。
-
-
-
-
-== 驗證儲存設備健全狀況
-
-升級叢集之後、您應該確認磁碟、集合體和磁碟區的狀態。
-
-. 驗證磁碟狀態：
-+
-|===
-
-
-| 若要檢查... | 執行此動作... 
-
-
- a| 
-中斷的磁碟
- a| 
-.. 顯示任何毀損的磁碟：
-+
-`storage disk show -state broken`
-
-.. 移除或更換任何損壞的磁碟。
-
-
-
-
- a| 
-正在進行維護或重建的磁碟
- a| 
-.. 顯示任何處於維護、擱置或重建狀態的磁碟：
-+
-`storage disk show -state maintenance|pending|reconstructing`
-
-.. 請等待維護或重建作業完成後再繼續。
-
-
-|===
-. 顯示實體與邏輯儲存設備的狀態（包括儲存集合體）、以確認所有集合體均處於線上狀態：
-+
-`storage aggregate show -state !online`
-
-+
-此命令會顯示_非_線上的集合體。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
-
-+
-[listing]
-----
-cluster1::> storage aggregate show -state !online
-There are no entries matching your query.
-----
-. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上：
-+
-`volume show -state !online`
-
-+
-執行重大升級或還原之前和之後、所有磁碟區都必須處於線上狀態。
-
-+
-[listing]
-----
-cluster1::> volume show -state !online
-There are no entries matching your query.
-----
-. 確認沒有不一致的磁碟區：
-+
-`volume show -is-inconsistent true`
-
-+
-請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
-
 
 
 .相關資訊

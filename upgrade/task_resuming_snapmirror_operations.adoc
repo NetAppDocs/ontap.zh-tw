@@ -4,22 +4,31 @@ sidebar: sidebar
 keywords: ontap, upgrade, resuming, resume, snapmirror 
 summary: 完成不中斷升級之後、您必須恢復任何已暫停的SnapMirror關係。 
 ---
-= 恢復SnapMirror作業
+= 在 ONTAP 升級後恢復 SnapMirror 操作
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-完成不中斷升級之後、您必須恢復任何已暫停的SnapMirror關係。
+在不中斷 ONTAP 升級之後、您需要恢復任何已暫停的 SnapMirror 關係。
 
-必須使用SnapMirror quiesce命令暫停現有的SnapMirror關係、而且叢集必須在不中斷營運的情況下進行升級。
-
-. 恢復先前已中止的每個 SnapMirror 關係的傳輸： `snapmirror resume *`
+.步驟
+. 恢復先前已中止的每個 SnapMirror 關係的傳輸：
++
+[source, cli]
+----
+snapmirror resume *
+----
 +
 此命令會恢復所有靜止SnapMirror關係的傳輸。
 
-. 驗證 SnapMirror 作業是否已恢復： `snapmirror show`
+. 驗證 SnapMirror 作業是否已恢復：
++
+[source, cli]
+----
+snapmirror show
+----
 +
 [listing]
 ----

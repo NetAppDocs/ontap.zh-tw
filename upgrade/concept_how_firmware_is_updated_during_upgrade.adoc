@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, upgrade, how, firmware, updated, during 
 summary: 您不需要在ONTAP 進行升級之前手動更新韌體。  叢集的韌體隨附ONTAP 於更新套件中、並複製到每個節點的開機裝置。  新韌體隨後會在升級程序中安裝。 
 ---
-= 重新啟動SP或BMC、準備韌體更新
+= 重新啟動 SP 或 BMC 、以準備在 ONTAP 升級期間進行韌體更新
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -25,10 +25,18 @@ summary: 您不需要在ONTAP 進行升級之前手動更新韌體。  叢集的
 若要準備順利更新、您應該在升級開始之前重新啟動SP或BMC。
 
 .步驟
-. 在升級之前重新啟動SP或BMC： `system service-processor reboot-sp -node node_name`
+. 在升級之前重新啟動SP或BMC：
++
+[source, cli]
+----
+system service-processor reboot-sp -node node_name
+----
++
+一次只能重新啟動一個 SP 或 BMC 。  等待重新開機的 SP 或 BMC 完全回收、然後再重新開機。
 
 
-如果需要、您也可以 link:../update/firmware-task.html["手動更新韌體"] 在ONTAP 兩次升級之間。  如果您有Active IQ 任何問題、您可以 link:https://activeiq.netapp.com/system-firmware/["檢視ONTAP 目前包含在您的ImageImage中的韌體版本清單"^]。
+
+您也可以 link:../update/firmware-task.html["手動更新韌體"] 在ONTAP 兩次升級之間。  如果您有Active IQ 任何問題、您可以 link:https://activeiq.netapp.com/system-firmware/["檢視ONTAP 目前包含在您的ImageImage中的韌體版本清單"^]。
 
 更新的韌體版本如下所示：
 

@@ -11,10 +11,9 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 
 
 [role="lead"]
-您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。
+如果您要升級ONTAP 至更新版本的版本、則必須先將DP類型的關係轉換成XDP、然後再升級。不支援DP類型的關係。ONTAP您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。
 
 .關於這項工作
-* 如果您要升級ONTAP 至更新版本的版本、則必須先將DP類型的關係轉換成XDP、然後再升級。不支援DP類型的關係。ONTAP
 * SnapMirror不會自動將現有的DP類型關係轉換為XDP。若要轉換關係、您必須中斷並刪除現有的關係、建立新的XDP關係、然後重新同步關係。如需背景資訊、請參閱 link:version-flexible-snapmirror-default-concept.html["XDP取代DP做為SnapMirror預設值"]。
 * 規劃轉換時、您應該注意、XDP SnapMirror關係的背景準備和資料倉儲階段可能需要很長時間。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
 
@@ -27,8 +26,10 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 .步驟
 . 從目的地叢集、確定SnapMirror關係為DP類型、鏡射狀態為Snapmirror、關係狀態為閒置、關係健全：
 +
-`snapmirror show -destination-path _SVM:volume_|_cluster://SVM/volume_`
-
+[source, cli]
+----
+snapmirror show -destination-path _SVM:volume_|_cluster://SVM/volume_
+----
 +
 下列範例顯示的輸出 `snapmirror show` 命令：
 
@@ -63,8 +64,10 @@ Healthy: true
 ====
 . 從來源和目的地磁碟區、確保兩個磁碟區都有一個通用的Snapshot複本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver _SVM_ -volume _volume_
+----
 +
 下列範例顯示 `volume snapshot show` 來源和目的地磁碟區的輸出：
 
@@ -110,10 +113,12 @@ snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
 ----
 . 若要確保在轉換期間不會執行排程的更新、請停止現有的DP類型關係：
 +
-`snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-如需完整的命令語法、請參閱手冊頁。
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-quiesce.html["手冊頁"^]。
 
 +
 [NOTE]
@@ -131,10 +136,12 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 打破現有的DP類型關係：
 +
-`snapmirror break -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror break -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-如需完整的命令語法、請參閱手冊頁。
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-break.html["手冊頁"^]。
 
 +
 [NOTE]
@@ -164,10 +171,12 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 ----
 . 刪除現有的DP類型關係：
 +
-`snapmirror delete -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror delete -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-如需完整的命令語法、請參閱手冊頁。
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-delete.html["手冊頁"^]。
 
 +
 [NOTE]
@@ -185,8 +194,10 @@ cluster_dst::> snapmirror delete -destination-path svm_backup:volA_dst
 ----
 . 您可以使用從保留的輸出 `snapmirror show` 建立新 XDP 類型關係的命令：
 +
-`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -type XDP -schedule _schedule_ -policy _policy_`
-
+[source, cli]
+----
+snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -type XDP -schedule _schedule_ -policy _policy_
+----
 +
 新關係必須使用相同的來源和目的地Volume。如需完整的命令語法、請參閱手冊頁。
 
@@ -207,10 +218,12 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 ----
 . 重新同步來源與目的地磁碟區：
 +
-`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-若要改善重新同步時間、您可以使用 `-quick-resync` 選項、但您應該注意儲存效率節約可能會損失。如需完整的命令語法、請參閱手冊頁： link:https://docs.netapp.com/us-en/ontap-cli-9131/snapmirror-resync.html#parameters.html["SnapMirror重新同步命令"]。
+若要改善重新同步時間、您可以使用 `-quick-resync` 選項、但您應該注意儲存效率節約可能會損失。如需完整的命令語法、請參閱手冊頁： link:https://docs.netapp.com/us-en/ontap-cli-9131/snapmirror-resync.html#parameters.html["SnapMirror重新同步命令"^]。
 
 +
 [NOTE]
@@ -228,11 +241,13 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 ----
 . 如果停用自動刪除Snapshot複本、請重新啟用：
 +
-`volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled true`
-
+[source, cli]
+----
+volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled true
+----
 
 
 .完成後
-. 使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。
-. SnapMirror XDP 目的地 Volume 開始更新 SnapMirror 原則定義的 Snapshot 複本之後、您就可以使用的輸出 `snapmirror list-destinations` 來源叢集的命令、以顯示新的 SnapMirror XDP 關係。
+. 使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。
+. SnapMirror XDP 目的地 Volume 開始更新 SnapMirror 原則定義的 Snapshot 複本後、請使用的輸出 `snapmirror list-destinations` 來源叢集的命令、以顯示新的 SnapMirror XDP 關係。
 

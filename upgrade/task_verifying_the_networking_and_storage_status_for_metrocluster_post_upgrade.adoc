@@ -4,16 +4,21 @@ sidebar: sidebar
 keywords: ontap, post, after, upgrade, verify, networking, storage, status, metrocluster, mcc 
 summary: 在執行完更新以更新的過程之前和之後MetroCluster 、您應該確認每個叢集的生命、集合體和磁碟區狀態。 
 ---
-= 驗證MetroCluster 網路和儲存設備的資訊不完整組態狀態
+= 在 ONTAP 升級之後、確認 MetroCluster 組態的網路和儲存狀態
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在執行完更新以執行完整個過程後、您應該確認每個叢集的生命、集合體和磁碟區狀態。MetroCluster
+在 MetroCluster 組態中升級 ONTAP 叢集之後、您應該驗證每個叢集的生命體、集合體和磁碟區的狀態。
 
-. 驗證 LIF 狀態： `network interface show`
+. 驗證 LIF 狀態：
++
+[source, cli]
+----
+network interface show
+----
 +
 在正常操作中、來源SVM的l生命 區必須具有UP（啟動）管理狀態、並且位於其主節點上。目的地SVM的LIF不需要在其主節點上啟動或定位。在切換時、所有生命期的管理員狀態都為up、但不需要位於主節點上。
 
@@ -43,7 +48,12 @@ cluster1-01
 
 27 entries were displayed.
 ----
-. 驗證集合體的狀態： `storage aggregate show -state !online`
+. 驗證集合體的狀態：
++
+[source, cli]
+----
+storage aggregate show -state !online
+----
 +
 此命令會顯示任何非連線的Aggregate。正常運作時、位於本機站台的所有集合體都必須在線上。但是MetroCluster 、如果將S還原 組態切換到災難恢復站台、則允許位於災難恢復站台的根集合體離線。
 
@@ -75,7 +85,12 @@ aggr0_b2
                                                                    degraded
 2 entries were displayed.
 ----
-. 驗證磁碟區的狀態： `volume show -state !online`
+. 驗證磁碟區的狀態：
++
+[source, cli]
+----
+volume show -state !online
+----
 +
 此命令會顯示任何非連線的磁碟區。
 
@@ -102,7 +117,12 @@ vs2-mc    vol3         aggr1_b1     -          RW            -          -     -
 vs2-mc    vol4         aggr1_b1     -          RW            -          -     -
 5 entries were displayed.
 ----
-. 確認沒有不一致的磁碟區： `volume show -is-inconsistent true`
+. 確認沒有不一致的磁碟區：
++
+[source, cli]
+----
+volume show -is-inconsistent true
+----
 +
 請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
 

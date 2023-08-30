@@ -1,0 +1,42 @@
+---
+permalink: upgrade/confirm-configuration.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, before, confirm, configuration, hardware, cluster management switches, metrocluster ip switches, san, target, release 
+summary: 在升級 ONTAP 之前、您應該確認目標版本支援您的組態。 
+---
+= 確認 ONTAP 支援您的硬體組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升級 ONTAP 之前、您應該確認您的組態可以支援目標版本。
+
+
+
+== 所有組態
+
+使用 https://hwu.netapp.com["NetApp Hardware Universe"^] 確認目標 ONTAP 版本支援您的硬體平台、叢集和管理交換器。  叢集與管理交換器包括叢集網路交換器（ NX-OS ）、管理網路交換器（ IOS ）和參考組態檔（ RCF ）。  如果您的叢集和管理交換器受到支援、但未執行目標 ONTAP 版本所需的最低軟體版本、請將交換器升級至支援的軟體版本。
+
+* https://mysupport.netapp.com/site/info/broadcom-cluster-switch["NetApp下載：Broadcom叢集交換器"^]
+* https://mysupport.netapp.com/site/info/cisco-ethernet-switch["NetApp下載：Cisco乙太網路交換器"^]
+* https://mysupport.netapp.com/site/info/netapp-cluster-switch["NetApp下載：NetApp叢集交換器"^]
+
+
+
+NOTE: 如果您需要升級交換器、 NetApp 建議您先完成 ONTAP 軟體升級、然後為交換器執行軟體升級。
+
+
+
+== 內部組態MetroCluster
+
+升級 ONTAP 之前、如果您有 MetroCluster 組態、請使用 https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^] 確認目標版本支援您的 MetroCluster IP 交換器。
+
+
+
+== SAN組態
+
+升級 ONTAP 之前、如果您的叢集已針對 SAN 進行設定、請使用 https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^] 確認 SAN 組態完全受支援。
+
+應支援所有SAN元件、包括目標ONTAP 版的整套軟體、主機作業系統和修補程式、必要的主機公用程式軟體、多重路徑軟體、以及介面卡驅動程式和韌體。

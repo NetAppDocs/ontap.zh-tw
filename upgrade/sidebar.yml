@@ -4,70 +4,46 @@ title: 升級ONTAP
 entries:
 - title: 總覽
   url: "/upgrade/index.html"
-- title: 升級途徑
-  url: "/upgrade/concept_upgrade_paths.html"
-- title: 使用Upgrade Advisor升級
-  url: "/upgrade/task_plan_with_upgrade_advisor.html"
-- title: 不使用升級顧問進行升級
+- title: 何時升級 ONTAP
+  url: "/upgrade/when-to-upgrade.html"
+- title: 準備 ONTAP 升級
   entries:
-  - title: 我是否應該在不使用升級顧問的情況下升級？
-    url: "/upgrade/task_plan_without_upgrade_advisor.html"
-  - title: 升級前該閱讀什麼內容？
-    url: "/upgrade/task_reviewing_pre_update_resources.html"
-  - title: 在升級之前、如果沒有升級顧問、應該先確認哪些事項？
-    entries:
-    - title: 總覽
-      url: "/upgrade/task_what_to_verify_before_upgrade.html"
-    - title: 叢集升級限制
-      url: "/upgrade/task_verifying_cluster_upgrade_limits.html"
-    - title: 目前的叢集活動
-      url: "/upgrade/task_identifying_current_cluster_activity.html"
-- title: 在升級之前、我應該先驗證什麼？
-  entries:
-  - title: 升級前驗證總覽
-    url: "/upgrade/task_what_to_check_before_upgrade.html"
-  - title: 叢集健全狀況
-    url: "/upgrade/task_verifying_cluster_health_verifying_that_the_cluster_is_ready.html"
-  - title: 儲存健全狀況
-    url: "/upgrade/task_verifying_storage_health_verifying_that_the_cluster_is_ready.html"
-  - title: 重新啟動SP或BMC
-    url: "/upgrade/concept_how_firmware_is_updated_during_upgrade.html"
-  - title: SVM路由組態
-    url: "/upgrade/concept_verify_svm_routing.html"
-  - title: LIF容錯移轉組態
-    url: "/upgrade/task_verifying_the_lif_failover_configuration.html"
-  - title: 狀態（HA、LDAP、DNS、MetroCluster 不完整網路和儲存）
-    url: "/upgrade/task_verify_status.html"
-  - title: 所有生命都在主連接埠上
-    url: "/upgrade/task_enabling_and_reverting_lifs_to_home_ports_preparing_the_ontap_software_for_the_update.html"
-  - title: 常見組態錯誤
+  - title: 準備摘要
+    url: "/upgrade/prepare.html"
+  - title: 選擇您的目標 ONTAP 版本
+    url: "/upgrade/choose-target-version.html"
+  - title: 確認組態支援
+    url: "/upgrade/confirm-configuration.html"
+  - title: 識別常見的組態錯誤
     url: "/upgrade/task_check_for_common_configuration_errors_using_config_advisor.html"
+  - title: 升級途徑
+    url: "/upgrade/concept_upgrade_paths.html"
+  - title: 建立升級計畫
+    url: "/upgrade/create-upgrade-plan.html"
+  - title: 驗證 LIF 容錯移轉組態
+    url: "/upgrade/task_verifying_the_lif_failover_configuration.html"
+  - title: 驗證SVM路由組態
+    url: "/upgrade/concept_verify_svm_routing.html"
   - title: 特殊考量
     entries:
     - title: 特別考量摘要
-      url: "/upgrade/concept_pre_upgrade_checks.html"
+      url: "/upgrade/special-considerations.html"
     - title: 混合式版本叢集
       url: "/upgrade/concept_mixed_version_requirements.html"
+    - title: MetroCluster 升級需求
+      url: "/upgrade/concept_upgrade_requirements_for_metrocluster_configurations.html"
     - title: SAN組態
       url: "/upgrade/task_verifying_the_san_configuration.html"
-    - title: 內部組態MetroCluster
-      entries:
-      - title: 升級需求
-        url: "/upgrade/concept_upgrade_requirements_for_metrocluster_configurations.html"
-      - title: 網路與儲存狀態
-        url: "/upgrade/task_verifying_the_networking_and_storage_status_for_metrocluster_cluster_is_ready.html"
-    - title: 進階資料分割
-      url: "/upgrade/concept_upgrade_considerations_for_root_data_partitioning.html"
-    - title: 重複資料刪除的磁碟區和集合體
-      url: "/upgrade/task_verifying_that_deduplicated_volumes_and_aggregates_contain_sufficient_free_space.html"
     - title: SnapMirror
       entries:
-      - title: 升級需求
-        url: "/upgrade/concept_upgrade_requirements_for_snapmirror.html"
       - title: 準備SnapMirror關係
         url: "/upgrade/task_preparing_snapmirror_relationships_for_a_nondisruptive_upgrade_or_downgrade.html"
-    - title: 負載共享鏡像ONTAP 、位於
-      url: "/upgrade/task_preparing_all_load_sharing_mirrors_for_a_major_upgrade.html"
+      - title: 驗證 ONTAP 版本的相容性
+        url: "/data-protection/compatible-ontap-versions-snapmirror-concept.html"
+    - title: DP 型關係
+      url: "/data-protection/convert-snapmirror-version-flexible-task.html"
+    - title: 重複資料刪除的磁碟區和集合體
+      url: "/upgrade/task_verifying_that_deduplicated_volumes_and_aggregates_contain_sufficient_free_space.html"
     - title: NetApp儲存加密
       url: "/upgrade/task_preparing_to_upgrade_nodes_using_netapp_storage_encryption_with_external_key_management_servers.html"
     - title: 網路群組
@@ -78,11 +54,13 @@ entries:
       url: "/upgrade/concept_considerations_for_session_oriented_protocols.html"
     - title: SSH公開金鑰
       url: "/upgrade/considerations-authenticate-ssh-public-key-fips-concept.html"
-    - title: DP類型關係
-      url: "/data-protection/convert-snapmirror-version-flexible-task.html"
-- title: 如何取得升級軟體套件？
+    - title: 負載分配鏡像（ 8.3 ）
+      url: "/upgrade/task_preparing_all_load_sharing_mirrors_for_a_major_upgrade.html"
+  - title: 重新啟動SP或BMC
+    url: "/upgrade/concept_how_firmware_is_updated_during_upgrade.html"
+- title: 下載 ONTAP 軟體映像
   url: "/upgrade/download-software-image.html"
-- title: 我應該使用哪種升級方法？
+- title: ONTAP 升級方法
   entries:
   - title: 升級方法總覽
     url: "/upgrade/concept_upgrade_methods.html"
@@ -90,7 +68,7 @@ entries:
     url: "/upgrade/task_upgrade_andu_sm.html"
   - title: 使用CLI自動不中斷營運
     url: "/upgrade/task_upgrade_andu_cli.html"
-  - title: 使用CLI自動中斷營運
+  - title: 自動化中斷
     url: "/upgrade/task_upgrade_disruptive_automated_cli.html"
   - title: 手動升級
     entries:
@@ -104,37 +82,33 @@ entries:
       url: "/upgrade/task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html"
     - title: 手動中斷
       url: "/upgrade/task_updating_an_ontap_cluster_disruptively.html"
-- title: 升級後該怎麼辦？
+- title: ONTAP 升級後的處理方式
   entries:
-  - title: 升級後驗證總覽
+  - title: 升級後驗證摘要
     url: "/upgrade/task_what_to_do_after_upgrade.html"
-  - title: 驗證您的叢集
+  - title: 驗證叢集
     url: "/upgrade/task_verify_cluster_after_upgrade.html"
   - title: 驗證所有生命點是否都位於主連接埠上
     url: "/upgrade/task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html"
-  - title: 驗證特殊組態
+  - title: 特殊組態
     entries:
-    - title: 特殊組態驗證摘要
+    - title: 升級後特殊組態摘要
       url: "/upgrade/concept_special_configurations_post_checks.html"
-    - title: 驗證您的網路組態
+    - title: 網路組態
       url: "/upgrade/task_verifying_your_network_configuration_after_upgrade.html"
-    - title: 驗證您的網路和儲存狀態
-      url: "/upgrade/task_verifying_the_networking_and_storage_status_for_metrocluster_post_upgrade.html"
-    - title: 驗證SAN組態
-      url: "/upgrade/task_verifying_the_san_configuration_after_an_upgrade.html"
-    - title: 重新設定KMIP伺服器連線
-      url: "/upgrade/task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html"
-    - title: 重新部署移動的負載共用鏡射來源磁碟區
-      url: "/upgrade/task_relocating_moved_load_sharing_mirror_source_volumes.html"
-    - title: 恢復SnapMirror作業
-      url: "/upgrade/task_resuming_snapmirror_operations.html"
-    - title: 設定NFS用戶端所需的NT ACL權限顯示層級
-      url: "/upgrade/task_setting_the_desired_nt_acl_permissions_display_level_for_nfs_clients.html"
-    - title: 在系統管理員密碼上強制執行SHA-2
-      url: "/upgrade/task_enforcing_sha_2_on_user_account_passwords_dot_9_0_upgrade_guide.html"
-    - title: 可存取服務處理器的使用者帳戶變更
-      url: "/upgrade/sp-user-accounts-change-concept.html"
-    - title: 從網路服務原則中移除EMS LIF服務
+    - title: EMS LIF 服務
       url: "/upgrade/remove-ems-lif-service-task.html"
+    - title: 網路與儲存狀態
+      url: "/upgrade/task_verifying_the_networking_and_storage_status_for_metrocluster_post_upgrade.html"
+    - title: SAN 組態
+      url: "/upgrade/task_verifying_the_san_configuration_after_an_upgrade.html"
+    - title: KMIP 伺服器連線
+      url: "/upgrade/task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html"
+    - title: 負載共用鏡射來源磁碟區
+      url: "/upgrade/task_relocating_moved_load_sharing_mirror_source_volumes.html"
+    - title: SnapMirror作業
+      url: "/upgrade/task_resuming_snapmirror_operations.html"
+    - title: 可存取服務處理器的使用者帳戶
+      url: "/upgrade/sp-user-accounts-change-concept.html"
   - title: 更新「DQP」
     url: "/upgrade/concept_when_you_need_to_update_the_disk_qualification_package.html"

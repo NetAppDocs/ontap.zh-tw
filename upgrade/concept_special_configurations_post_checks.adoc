@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade, manually, manual, checks, cluster, ready, verification, verify 
 summary: 如果您的叢集已設定下列任何功能、您可能需要在升級後執行其他步驟。 
 ---
-= 升級後檢查特殊組態
+= ONTAP 升級後的特殊考量
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -18,31 +18,28 @@ summary: 如果您的叢集已設定下列任何功能、您可能需要在升�
 | 請自問... | 如果您的答案是*是*、請執行此動作... 
 
 
-| 我是否從ONTAP 更新版本的地方升級至版本不含ONTAP 更新版本的版本、從版本不含更新版本的版本 | xref:task_verifying_your_network_configuration_after_upgrade.html[驗證您的網路組態]
+| 我是從 ONTAP 9.7 或更早版本升級到 ONTAP 9.8 或更高版本嗎？ | xref:task_verifying_your_network_configuration_after_upgrade.html[驗證您的網路組態]
 
 xref:remove-ems-lif-service-task.html[將EMS LIF服務從無法提供緊急服務目的地的網路服務原則中移除] 
 
 
-| 我是否MetroCluster 有一個不知道的組態？ | xref:task_verifying_the_networking_and_storage_status_for_metrocluster_post_upgrade.html[驗證您的網路和儲存狀態] 
+| 我的叢集是否採用 MetroCluster 組態？ | xref:task_verifying_the_networking_and_storage_status_for_metrocluster_post_upgrade.html[驗證您的網路和儲存狀態] 
 
 
 | 我是否有SAN組態？ | xref:task_verifying_the_san_configuration_after_an_upgrade.html[驗證SAN組態] 
 
 
-| 我是否使用NetApp儲存加密技術、並升級至ONTAP 版本更新至版本不更新的版本？ | xref:task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html[重新設定KMIP伺服器連線] 
+| 我是否從 ONTAP 9.3 或更早版本升級、並使用 NetApp 儲存加密？ | xref:task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html[重新設定KMIP伺服器連線] 
 
 
 | 我是否有負載共用鏡像？ | xref:task_relocating_moved_load_sharing_mirror_source_volumes.html[重新部署移動的負載共用鏡射來源磁碟區] 
 
 
-| 我是否使用SnapMirror？ | xref:task_resuming_snapmirror_operations.html[恢復SnapMirror作業] 
+| 我的叢集是否已定義 SnapMirror 關係？ | xref:task_resuming_snapmirror_operations.html[恢復SnapMirror作業] 
+
+
+| 我是否擁有 ONTAP 9.9.1 之前建立的服務處理器（ SP ）存取使用者帳戶？ | xref:sp-user-accounts-change-concept.html[驗證可存取服務處理器的帳戶變更] 
 
 
 | 我是否從ONTAP 版本8.3.0升級？ | xref:task_setting_the_desired_nt_acl_permissions_display_level_for_nfs_clients.html[設定NFS用戶端所需的NT ACL權限顯示層級] 
-
-
-| 我是否有ONTAP 在版本不包含9.0之前建立的系統管理員帳戶？ | xref:task_enforcing_sha_2_on_user_account_passwords_dot_9_0_upgrade_guide.html[在系統管理員密碼上強制執行SHA-2] 
-
-
-| 我是否有使用者帳戶、可存取ONTAP 在版本號為1.9.1之前建立的服務處理器（SP）？ | xref:sp-user-accounts-change-concept.html[驗證可存取服務處理器的帳戶變更] 
 |===
