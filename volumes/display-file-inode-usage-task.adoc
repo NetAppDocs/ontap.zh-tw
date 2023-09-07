@@ -21,20 +21,16 @@ summary: 包含最多檔案數量的資料。FlexVol知道磁碟區包含多少�
 .步驟
 . 若要顯示磁碟區的inode使用量、請輸入下列命令：
 +
-`df -i volume_name`
-
-+
-您可以省略磁碟區名稱；在此情況ONTAP 下、功能區會顯示叢集中所有磁碟區的inode使用量。您也可以指定儲存虛擬機器（SVM）、以便僅查看該SVM上的磁碟區。
-
+[source, cli]
+----
+volume show -vserver <SVM_name> -volume <volume_name> -fields files
+----
 
 
 .範例
 [listing]
 ----
-cm320c-rst::> df -i -vserver vs1
-Filesystem               iused      ifree  %iused  Mounted on
-/vol/cifs_test/            105       2928      3%  /home
-/vol/root/                  98        468     17%  ---
-/vol/vola/                 103      12047      0%  /nfsv4
-3 entries were displayed.
+cluster1::*> volume show -vserver vs1 -volume vol1 -fields files
+Vserver Name: vs1
+Files Used (for user-visible data): 98
 ----

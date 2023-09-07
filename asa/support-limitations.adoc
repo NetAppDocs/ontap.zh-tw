@@ -21,20 +21,49 @@ summary: 請使用下列程序、使用System Manager來設定All SAN Array。
 [role="lead"]
 支援的組態限制與支援因版本而異ONTAP ASA 。如需支援組態限制的最新詳細資料、請參閱 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-[cols="2"]
+ASA 支援每個叢集的 SAN 通訊協定和節點如下：
+
+[cols="3*"]
 |===
-| 開始於... | 支援的支援對象AFF ASA ... 
 
 
-| 9.12.1 | 4節點MetroCluster 之間的NVMe / FC傳輸協定、不支援靜態IP組態 
+| 從ONTAP 無到無...開始 | 傳輸協定支援 | 每個叢集的最大節點數 
+
+
+| 9.12.1  a| 
+* NVMe
++
+** 4 節點 MetroCluster IP 組態
+** 非 MetroCluster IP 組態
+
+
+* FC
+* iSCSI
+
+| 12. 
 
 
 | 9.9.1  a| 
-* 非MetroCluster使用者IP組態最多可有12個節點
-* 多達8個節點、可進行MetroCluster 各種不完整的IP組態
-* NVMe傳輸協定、MetroCluster 但不適用於支援不支援的傳輸協定
+* NVMe
++
+** 非 MetroCluster IP 組態
 
 
+* FC
+* iSCSI
+
+ a| 
+* 12 個節點用於非 MetroCluster IP 組態
+* 8 個節點用於 MetroCluster IP 組態
+
+
+
+
+| 9.7%  a| 
+* FC
+* iSCSI
+
+| 4. 
 |===
 
 

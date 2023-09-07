@@ -15,16 +15,20 @@ summary: 從支援4位元組的UTF-8編碼名稱開始、即可建立及顯示�
 
 若要啟用 4 位元組 UTF-8 編碼名稱的支援、可使用新的 _utf8mb4_ 語言代碼 `vserver` 和 `volume` 命令系列。
 
-* 您必須以下列其中一種方式建立新的Volume：
+您必須以下列其中一種方式建立新的Volume：
+
 * 設定音量 `-language` 選項明確： `volume create -language utf8mb4 {…}`
 * 繼承 Volume `-language` SVM 中的選項、此選項已針對選項建立或修改： `vserver [create|modify] -language utf8mb4 {…}``volume create {…}`
-* 在 9.6 之前的 ONTAP 版本中、您無法修改現有的磁碟區以支援 utf8mb4 ；您必須建立新的 utf8mb4 就緒磁碟區、然後使用用戶端型複本工具移轉資料。
+* 在 ONTAP 9.6 及更早版本中、您無法修改現有的 Volume 以支援 utf8mb4 ；您必須建立新的 utf8mb4 就緒磁碟區、然後使用用戶端型複本工具移轉資料。
 +
 您可以更新SVM以取得utf8mb4支援、但現有磁碟區仍保留其原始語言代碼。
 
 +
 如果您使用的是 ONTAP 9.7P1 或更新版本、您可以透過支援要求修改 utf8mb4 的現有磁碟區。如需詳細資訊、請參閱 link:https://kb.netapp.com/onprem/ontap/da/NAS/Can_the_volume_language_be_changed_after_creation_in_ONTAP["是否可以在 ONTAP 中建立後變更 Volume 語言？"^]。
 
+
+
+* 從 ONTAP 9.8 開始、您可以使用 `[-language <Language code>]` 將 Volume 語言從 *.UTF-8 變更為 utf8mb4 的參數。若要變更 Volume 的語言、請聯絡 link:http://mysupport.netapp.com/["NetApp支援"^]。
 
 
 
