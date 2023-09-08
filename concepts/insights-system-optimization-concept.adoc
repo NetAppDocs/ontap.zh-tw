@@ -1,0 +1,291 @@
+---
+permalink: concepts/insights-system-optimization-concept.html 
+sidebar: sidebar 
+keywords: system manager, optimize, optimise, optimization, optimisation, insight, cluster, system, analysis, analyze, perform, performing, performance, capacity, local tier, storage tier, telnet, remote shell, rsh, autosupport, auto support, auto-support, insecure protocol, login banner, log in banner, ssh, secure shell, cbc cipher, ntp server, admin user, administrative, user, best practice, practise, fabricpool, fabric pool, physical capacity, aggregate, cloud, snapshot, directories, directory, file, remote access, transport protocol, https, http, autogrow, auto grow, auto-grow, shrink, reduce, reduction, dismiss, undismiss, explore, fix, remove, replace, analytic, security, compliance, secure, comply, volume, applications, reclaim, space, full, provisioning, provisioned cluster, serial, port, node 
+summary: 有了 System Manager 、您就能檢視深入分析、協助您最佳化系統的效能與安全性。 
+---
+= System Manager 洞見
+:allow-uri-read: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9.11.1 開始、系統管理員會顯示 _Insights 、協助您最佳化系統的效能與安全性。
+
+
+NOTE: 若要檢視、自訂及回應深入分析、請參閱 link:../insights-system-optimization-task.html["獲得深入見解、協助您最佳化系統"]
+
+
+
+== 容量洞見
+
+System Manager 可根據系統的容量狀況顯示下列洞見：
+
+[cols="15,15,20,50"]
+|===
+
+
+| 洞見 | 嚴重性 | 條件 | 修正 
+
+
+ a| 
+本機層的實體容量即將用盡
+ a| 
+補救風險
+ a| 
+一或多個本機層的整體容量超過 95% 、而且成長迅速。
+ a| 
+* 建議的修正 * ：執行其他選項之一。
+
+* 其他選項 * ：
+
+* 清除 Volume 恢復佇列。
+* 在完整佈建的磁碟區上啟用精簡配置、以釋放受困的儲存空間。
+* 將磁碟區移到另一個本機層。
+* 刪除不需要的 Snapshot 複本。
+* 刪除磁碟區中不需要的目錄或檔案。
+* 啟用 Fabric Pool 將資料分層至雲端。
+
+
+
+
+ a| 
+FlexGroup Volume 的容量不平衡
+ a| 
+最佳化儲存
+ a| 
+一個或多個 FlexGroup 磁碟區的不平衡率很高。
+ a| 
+* 建議 * ：重新平衡 FlexGroup 磁碟區。
+
+
+
+ a| 
+應用程式空間不足
+ a| 
+需要注意
+ a| 
+超過 95% 的磁碟區已滿、並未啟用自動擴充。
+ a| 
+* 建議 * ：啟用自動擴充、最高可達目前容量的 150% 。
+
+* 其他選項 * ：
+
+* 刪除 Snapshot 複本以回收空間。
+* 調整磁碟區大小。
+* 刪除目錄或檔案。
+
+
+|===
+
+
+== 安全見解
+
+System Manager 可針對可能危及資料或系統安全的情況、顯示下列深入見解。
+
+[cols="15,15,20,50"]
+|===
+
+
+| 洞見 | 嚴重性 | 條件 | 修正 
+
+
+ a| 
+已啟用 Telnet
+ a| 
+最佳實務做法
+ a| 
+安全 Shell （ SSH ）應用於安全的遠端存取。
+ a| 
+* 建議 * ：停用 Telnet 並使用 SSH 進行安全的遠端存取。
+
+
+
+ a| 
+設定的 NTP 伺服器太少
+ a| 
+最佳實務做法
+ a| 
+針對 NTP 設定的伺服器數量少於 3 部。
+ a| 
+* 建議 * ：新增 NTP 伺服器、至少有 3 個。
+
+
+
+ a| 
+AutoSupport 使用的是不安全的傳輸協定
+ a| 
+最佳實務做法
+ a| 
+AutoSupport 未設定為透過 HTTPS 通訊。
+ a| 
+* 建議 * ：將傳輸通訊協定變更為 HTTPS 。
+
+
+
+ a| 
+預設的管理使用者未被鎖定
+ a| 
+最佳實務做法
+ a| 
+沒有人使用預設的系統管理帳戶（ admin 或 diag ）登入、而且這些帳戶不會被鎖定。
+ a| 
+* 建議 * ：不使用預設管理帳戶時、請鎖定這些帳戶。
+
+
+
+ a| 
+Volume 沒有 Snapshot 原則
+ a| 
+需要注意
+ a| 
+一個或多個磁碟區未附加適當的 Snapshot 原則。
+ a| 
+* 建議 * ：將 Snapshot 原則附加至沒有 Snapshot 原則的磁碟區。否則、萬一發生勒索軟體攻擊、可能無法為這些磁碟區恢復資料。
+
+
+
+ a| 
+快照自動刪除已啟用
+ a| 
+需要注意
+ a| 
+自動刪除一或多個磁碟區的 Snapshot 複本。
+ a| 
+* 建議 * ：停用自動刪除 Snapshot 複本。否則、萬一發生勒索軟體攻擊、可能無法為這些磁碟區恢復資料。
+
+
+
+ a| 
+磁碟區不會受到勒索軟體攻擊的監控
+ a| 
+需要注意
+ a| 
+防勒索軟體支援多個磁碟區、但尚未設定。否則、您可能不會注意到磁碟區受到威脅或攻擊。
+ a| 
+* 建議 * ：在磁碟區上啟用反勒索軟體。
+
+
+
+ a| 
+儲存 VM 並未設定用於反勒索軟體
+ a| 
+最佳實務做法
+ a| 
+數個儲存 VM 支援反勒索軟體、但尚未設定。
+ a| 
+* 建議 * ：在儲存 VM 上啟用反勒索軟體。否則、您可能不會注意到儲存 VM 受到威脅或攻擊。
+
+
+
+ a| 
+未設定原生 FPolicy
+ a| 
+最佳實務做法
+ a| 
+未針對 NAS 儲存 VM 設定 FPolicy 。
+ a| 
+* 建議 * ：在 NAS 儲存 VM 中設定 FPolicy 、以控制允許或不允許寫入叢集中磁碟區的副檔名。
+
+
+
+ a| 
+未啟用「反勒索軟體」的作用中模式
+ a| 
+需要注意
+ a| 
+數個磁碟區已完成其學習模式、但使用中模式尚未開啟。
+ a| 
+* 建議 * ：開啟這些磁碟區的作用中模式。
+
+
+
+ a| 
+未設定登入橫幅
+ a| 
+最佳實務做法
+ a| 
+未針對叢集或儲存 VM 設定登入訊息。
+ a| 
+* 建議 * ：設定叢集或儲存 VM 的登入橫幅、並啟用使用。
+
+
+
+ a| 
+已啟用遠端 Shell （ RSH ）
+ a| 
+最佳實務做法
+ a| 
+安全 Shell （ SSH ）應用於安全的遠端存取。
+ a| 
+* 建議 * ：停用 RSH 並使用 SSH 進行安全遠端存取。
+
+
+
+ a| 
+Secure Shell （ SSH ）使用不安全的密碼
+ a| 
+最佳實務做法
+ a| 
+目前的組態使用不安全的 CBC 密碼。
+ a| 
+* 建議 * ：移除名稱包含「 CBC 」的密碼、例如「 ais126-CBC 」、「 aes192-CBC 」、「 AES256-CBC 」和「 3DES-CBC 」。
+
+
+
+ a| 
+全域 FIPS 已停用
+ a| 
+最佳實務做法
+ a| 
+停用全域 FIPS 140-2 規範。
+ a| 
+* 建議 * ：啟用全球 FIPS 140-2 法規遵循。
+
+|===
+
+
+== 組態洞見
+
+System Manager 可以顯示下列深入資訊、以回應您對系統組態的疑慮。
+
+[cols="15,15,20,50"]
+|===
+
+
+| 洞見 | 嚴重性 | 條件 | 修正 
+
+
+ a| 
+未啟用自動更新。
+ a| 
+最佳實務做法
+ a| 
+未接受叢集的 EULA 。
+ a| 
+* 建議 * ：接受叢集的 EULA 。
+
+
+
+ a| 
+有最新的韌體更新可用
+ a| 
+最佳實務做法
+ a| 
+您的系統沒有最新的韌體更新、可能會有改善、安全性修補程式或新功能、有助於保護叢集的安全、以獲得更好的效能。
+ a| 
+* 建議 * ：更新 ONTAP 韌體。
+
+
+
+ a| 
+通知尚未設定
+ a| 
+最佳實務做法
+ a| 
+電子郵件、 Webhooks 或 SNMP traphost 並未設定為讓您接收有關叢集問題的通知。
+ a| 
+* 建議 * ：設定叢集通知。
+
+|===

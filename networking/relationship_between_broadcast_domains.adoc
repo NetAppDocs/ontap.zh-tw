@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: networking/relationship_between_broadcast_domains.html 
+keywords: relationship, broadcast, domain, failover, fail, over, group, policy, policies, relationship between broadcast domains, failover groups, and failover policies, comparing broadcast domains, failover groups, and failover policies, port failover, network interface show -failover, decide which lif failover policy to use, failover policy decision tree, default failover policies by lif type, sfo-partner-only 
+summary: 廣播網域、容錯移轉群組及容錯移轉原則可共同運作、以判斷發生故障時要接管哪個連接埠 
+---
+= 廣播網域、容錯移轉群組和容錯移轉原則之間的關係
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+廣播網域、容錯移轉群組及容錯移轉原則可共同運作、以判斷在設定LIF的節點或連接埠發生故障時、哪個連接埠會接管。
+
+廣播網域會列出同一層乙太網路中所有可連線的連接埠。從其中一個連接埠傳送的乙太網路廣播封包會被廣播網域中的所有其他連接埠所看到。廣播網域的這項通用可到達性特性對lifs很重要、因為如果LIF要容錯移轉至廣播網域中的任何其他連接埠、它仍可連線到從原始連接埠可連線的每個本機和遠端主機。
+
+容錯移轉群組可定義廣播網域內的連接埠、以提供彼此的LIF容錯移轉涵蓋範圍。每個廣播網域都有一個容錯移轉群組、其中包含所有連接埠。此容錯移轉群組包含廣播網域中的所有連接埠、是LIF的預設及建議容錯移轉群組。您可以使用所定義的較小子集建立容錯移轉群組、例如在廣播網域中具有相同連結速度的連接埠容錯移轉群組。
+
+容錯移轉原則決定LIF在節點或連接埠當機時、如何使用容錯移轉群組的連接埠。將容錯移轉原則視為套用至容錯移轉群組的篩選器類型。LIF的容錯移轉目標（LIF可容錯移轉的一組連接埠）是透過將LIF的容錯移轉原則套用至廣播網域中LIF的容錯移轉群組來決定。
+
+您可以使用下列CLI命令檢視LIF的容錯移轉目標：
+
+....
+network interface show -failover
+....
+NetApp強烈建議針對LIF類型使用預設的容錯移轉原則。
+
+
+
+== 決定要使用哪個LIF容錯移轉原則
+
+決定是使用建議的預設容錯移轉原則、還是根據LIF類型和環境來變更。
+
+
+
+=== 容錯移轉原則決策樹狀結構
+
+image:LIF_failover_decision_tree.png["LIF容錯移轉決策樹狀結構映像"]
+
+
+
+=== 依LIF類型的預設容錯移轉原則
+
+[cols="25,25,50"]
+|===
+
+
+| LIF類型 | 預設容錯移轉原則 | 說明 
+
+
+| BGP lifs | 已停用 | LIF不會容錯移轉至其他連接埠。 
+
+
+| 叢集生命 | 僅限本機 | LIF只會容錯移轉至同一個節點上的連接埠。 
+
+
+| 叢集管理LIF | 整個廣播網域 | LIF會容錯移轉至同一個廣播網域中的連接埠、以及叢集中的任何節點。 
+
+
+| 叢集間LIF | 僅限本機 | LIF只會容錯移轉至同一個節點上的連接埠。 
+
+
+| NAS資料生命量 | 系統定義 | LIF容錯移轉至另一個非HA合作夥伴的節點。 
+
+
+| 節點管理生命里 | 僅限本機 | LIF只會容錯移轉至同一個節點上的連接埠。 
+
+
+| SAN 資料生命 | 已停用 | LIF不會容錯移轉至其他連接埠。 
+|===
+「僅限SFO合作夥伴」容錯移轉原則並非預設值、但只有當您希望LIF容錯移轉至主節點或SFO合作夥伴上的連接埠時、才可使用此原則。
