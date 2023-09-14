@@ -20,10 +20,7 @@ summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
 * 您必須至少執行ONTAP 才能使用FabricPool 的是才能使用的景點。
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
-** 。 `auto` 分層原則
-+
-link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
-
+** 。 `auto` link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則"]
 ** 指定分層的最低冷卻週期
 ** 非作用中資料報告（印尼盾）
 ** 使用Microsoft Azure Blob Storage for the Cloud做為FabricPool 適用於NetApp的雲端層
@@ -131,7 +128,7 @@ HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、B
 
 * 您打算使用的物件存放區「'Bucke'」（容器）必須已設定完成、至少必須有10 GB的儲存空間、且不得重新命名。
 * 使用FabricPool 物件儲存區的HA配對需要叢集間的LIF才能與物件儲存區通訊。
-* 附加物件儲存庫後、您無法將其從FabricPool 物件儲存庫組態中分離出來。
+* 您無法在附加雲端層之後、將其從本機層分離；不過、您可以使用 link:https://docs.netapp.com/us-en/ontap/fabricpool/create-mirror-task.html["FabricPool 鏡射"] 將本機層附加至不同的雲端層。
 * 如果您使用處理量層（ QoS 最小）、則必須將磁碟區上的分層原則設定為 `none` 將 Aggregate 附加至 FabricPool 之前。
 +
 其他分層原則則可防止將Aggregate附加FabricPool 到無法使用的物件上。啟用 FabricPool 時、 QoS 原則不會強制執行處理量層。

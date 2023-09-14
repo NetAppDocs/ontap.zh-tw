@@ -1,8 +1,8 @@
 ---
 permalink: concepts/insights-system-optimization-concept.html 
 sidebar: sidebar 
-keywords: system manager, optimize, optimise, optimization, optimisation, insight, cluster, system, analysis, analyze, perform, performing, performance, capacity, local tier, storage tier, telnet, remote shell, rsh, autosupport, auto support, auto-support, insecure protocol, login banner, log in banner, ssh, secure shell, cbc cipher, ntp server, admin user, administrative, user, best practice, practise, fabricpool, fabric pool, physical capacity, aggregate, cloud, snapshot, directories, directory, file, remote access, transport protocol, https, http, autogrow, auto grow, auto-grow, shrink, reduce, reduction, dismiss, undismiss, explore, fix, remove, replace, analytic, security, compliance, secure, comply, volume, applications, reclaim, space, full, provisioning, provisioned cluster, serial, port, node 
-summary: 有了 System Manager 、您就能檢視深入分析、協助您最佳化系統的效能與安全性。 
+keywords: system manager, optimize, optimise, optimization, optimisation, insight, cluster, system, analysis, analyze, perform, performing, performance, capacity, local tier, storage tier, telnet, remote shell, rsh, autosupport, auto support, auto-support, insecure protocol, nonsecure, login banner, log in banner, ssh, secure shell, cbc cipher, ntp server, admin user, administrative, user, best practice, practise, fabricpool, fabric pool, physical capacity, aggregate, cloud, snapshot, directories, directory, file, remote access, transport protocol, https, http, autogrow, auto grow, auto-grow, shrink, reduce, reduction, dismiss, undismiss, explore, fix, remove, replace, analytic, security, compliance, secure, comply, volume, applications, reclaim, space, full, provisioning, provisioned cluster, serial, port, node, global fips 140-2 
+summary: 從 ONTAP 9.11.1 開始、系統管理程式會顯示洞見、協助您最佳化系統的效能與安全性。 
 ---
 = System Manager 洞見
 :allow-uri-read: 
@@ -30,15 +30,13 @@ System Manager 可根據系統的容量狀況顯示下列洞見：
 
 
  a| 
-本機層的實體容量即將用盡
+本機層缺乏空間
  a| 
 補救風險
  a| 
-一或多個本機層的整體容量超過 95% 、而且成長迅速。
+一或多個本機層的整體容量超過 95% 、而且成長迅速。現有的工作負載可能無法擴充、或是在極端情況下、現有的工作負載可能會用盡空間而故障。
  a| 
-* 建議的修正 * ：執行其他選項之一。
-
-* 其他選項 * ：
+* 建議的修正 * ：執行下列其中一個選項。
 
 * 清除 Volume 恢復佇列。
 * 在完整佈建的磁碟區上啟用精簡配置、以釋放受困的儲存空間。
@@ -51,22 +49,11 @@ System Manager 可根據系統的容量狀況顯示下列洞見：
 
 
  a| 
-FlexGroup Volume 的容量不平衡
- a| 
-最佳化儲存
- a| 
-一個或多個 FlexGroup 磁碟區的不平衡率很高。
- a| 
-* 建議 * ：重新平衡 FlexGroup 磁碟區。
-
-
-
- a| 
-應用程式空間不足
+應用程式缺乏空間
  a| 
 需要注意
  a| 
-超過 95% 的磁碟區已滿、並未啟用自動擴充。
+一或多個磁碟區已滿 95% 以上、但未啟用自動擴充功能。
  a| 
 * 建議 * ：啟用自動擴充、最高可達目前容量的 150% 。
 
@@ -76,6 +63,28 @@ FlexGroup Volume 的容量不平衡
 * 調整磁碟區大小。
 * 刪除目錄或檔案。
 
+
+
+
+ a| 
+FlexGroup 磁碟區的容量不平衡
+ a| 
+最佳化儲存
+ a| 
+一或多個 FlexGroup 磁碟區的組成磁碟區大小隨著時間而成長不平均、導致容量使用率不平衡。  如果組成磁碟區已滿、可能會發生寫入失敗。
+ a| 
+* 建議 * ：重新平衡 FlexGroup 磁碟區。
+
+
+
+ a| 
+儲存 VM 容量不足
+ a| 
+最佳化儲存
+ a| 
+一或多個儲存 VM 的容量接近最大容量。  如果儲存 VM 達到最大容量、您將無法為新的或現有的磁碟區配置更多空間。
+ a| 
+* 建議 * ：如果可能、請增加儲存 VM 的最大容量限制。
 
 |===
 
@@ -89,6 +98,50 @@ System Manager 可針對可能危及資料或系統安全的情況、顯示下�
 
 
 | 洞見 | 嚴重性 | 條件 | 修正 
+
+
+ a| 
+磁碟區仍處於反勒索軟體學習模式
+ a| 
+需要注意
+ a| 
+一或多個磁碟區已處於反勒索軟體學習模式 90 天。
+ a| 
+* 建議 * ：為這些磁碟區啟用反勒索軟體作用中模式。
+
+
+
+ a| 
+磁碟區上已啟用自動刪除 Snapshot 複本
+ a| 
+需要注意
+ a| 
+在一個或多個磁碟區上啟用快照自動刪除。
+ a| 
+* 建議 * ：停用自動刪除 Snapshot 複本。否則、萬一發生勒索軟體攻擊、可能無法針對這些磁碟區進行資料恢復。
+
+
+
+ a| 
+Volume 沒有 Snapshot 原則
+ a| 
+需要注意
+ a| 
+一個或多個磁碟區沒有適當的 Snapshot 原則附加在它們上。
+ a| 
+* 建議 * ：將 Snapshot 原則附加至沒有 Snapshot 原則的磁碟區。否則、萬一發生勒索軟體攻擊、可能無法針對這些磁碟區進行資料恢復。
+
+
+
+ a| 
+未設定原生 FPolicy
+ a| 
+最佳實務做法
+ a| 
+FPolicy 未在一或多個 NAS 儲存 VM 上設定。
+ a| 
+* 建議 * ：在 NAS 儲存 VM 中設定 FPolicy 、以控制允許或不允許寫入叢集中磁碟區的副檔名。這有助於防止攻擊者利用已知副檔名勒索軟體。
+
 
 
  a| 
@@ -109,106 +162,7 @@ System Manager 可針對可能危及資料或系統安全的情況、顯示下�
  a| 
 針對 NTP 設定的伺服器數量少於 3 部。
  a| 
-* 建議 * ：新增 NTP 伺服器、至少有 3 個。
-
-
-
- a| 
-AutoSupport 使用的是不安全的傳輸協定
- a| 
-最佳實務做法
- a| 
-AutoSupport 未設定為透過 HTTPS 通訊。
- a| 
-* 建議 * ：將傳輸通訊協定變更為 HTTPS 。
-
-
-
- a| 
-預設的管理使用者未被鎖定
- a| 
-最佳實務做法
- a| 
-沒有人使用預設的系統管理帳戶（ admin 或 diag ）登入、而且這些帳戶不會被鎖定。
- a| 
-* 建議 * ：不使用預設管理帳戶時、請鎖定這些帳戶。
-
-
-
- a| 
-Volume 沒有 Snapshot 原則
- a| 
-需要注意
- a| 
-一個或多個磁碟區未附加適當的 Snapshot 原則。
- a| 
-* 建議 * ：將 Snapshot 原則附加至沒有 Snapshot 原則的磁碟區。否則、萬一發生勒索軟體攻擊、可能無法為這些磁碟區恢復資料。
-
-
-
- a| 
-快照自動刪除已啟用
- a| 
-需要注意
- a| 
-自動刪除一或多個磁碟區的 Snapshot 複本。
- a| 
-* 建議 * ：停用自動刪除 Snapshot 複本。否則、萬一發生勒索軟體攻擊、可能無法為這些磁碟區恢復資料。
-
-
-
- a| 
-磁碟區不會受到勒索軟體攻擊的監控
- a| 
-需要注意
- a| 
-防勒索軟體支援多個磁碟區、但尚未設定。否則、您可能不會注意到磁碟區受到威脅或攻擊。
- a| 
-* 建議 * ：在磁碟區上啟用反勒索軟體。
-
-
-
- a| 
-儲存 VM 並未設定用於反勒索軟體
- a| 
-最佳實務做法
- a| 
-數個儲存 VM 支援反勒索軟體、但尚未設定。
- a| 
-* 建議 * ：在儲存 VM 上啟用反勒索軟體。否則、您可能不會注意到儲存 VM 受到威脅或攻擊。
-
-
-
- a| 
-未設定原生 FPolicy
- a| 
-最佳實務做法
- a| 
-未針對 NAS 儲存 VM 設定 FPolicy 。
- a| 
-* 建議 * ：在 NAS 儲存 VM 中設定 FPolicy 、以控制允許或不允許寫入叢集中磁碟區的副檔名。
-
-
-
- a| 
-未啟用「反勒索軟體」的作用中模式
- a| 
-需要注意
- a| 
-數個磁碟區已完成其學習模式、但使用中模式尚未開啟。
- a| 
-* 建議 * ：開啟這些磁碟區的作用中模式。
-
-
-
- a| 
-未設定登入橫幅
- a| 
-最佳實務做法
- a| 
-未針對叢集或儲存 VM 設定登入訊息。
- a| 
-* 建議 * ：設定叢集或儲存 VM 的登入橫幅、並啟用使用。
+* 建議 * ：將至少三個 NTP 伺服器與叢集建立關聯。  否則、叢集時間的同步可能會發生問題。
 
 
 
@@ -224,24 +178,79 @@ Volume 沒有 Snapshot 原則
 
 
  a| 
-Secure Shell （ SSH ）使用不安全的密碼
+未設定登入橫幅
+ a| 
+最佳實務做法
+ a| 
+未針對叢集、儲存 VM 或兩者設定登入訊息。
+ a| 
+* 建議 * ：設定叢集和儲存 VM 的登入橫幅、並啟用其使用。
+
+
+
+ a| 
+AutoSupport 使用的是不安全的傳輸協定
+ a| 
+最佳實務做法
+ a| 
+AutoSupport 未設定為透過 HTTPS 通訊。
+ a| 
+* 建議 * ：強烈建議使用 HTTPS 做為預設傳輸通訊協定、將 AutoSupport 訊息傳送給技術支援部門。
+
+
+
+ a| 
+預設管理使用者未鎖定
+ a| 
+最佳實務做法
+ a| 
+沒有人使用預設的系統管理帳戶（ admin 或 diag ）登入、而且這些帳戶不會被鎖定。
+ a| 
+* 建議 * ：不使用預設管理帳戶時、請鎖定這些帳戶。
+
+
+
+ a| 
+Secure Shell （ SSH ）使用非安全的密碼
  a| 
 最佳實務做法
  a| 
 目前的組態使用不安全的 CBC 密碼。
  a| 
-* 建議 * ：移除名稱包含「 CBC 」的密碼、例如「 ais126-CBC 」、「 aes192-CBC 」、「 AES256-CBC 」和「 3DES-CBC 」。
+* 建議 * ：您應該僅允許網路伺服器上的安全密碼、以保護與訪客的安全通訊。移除名稱包含「 CBC 」的密碼、例如「 ais128/CBC 」、「 aes192-CBC 」、「 AES256-CBC 」和「 3DES-CBC 」。
 
 
 
  a| 
-全域 FIPS 已停用
+停用全域 FIPS 140-2 規範
  a| 
 最佳實務做法
  a| 
-停用全域 FIPS 140-2 規範。
+叢集上的全域 FIPS 140-2 規範已停用。
  a| 
-* 建議 * ：啟用全球 FIPS 140-2 法規遵循。
+* 建議 * ：基於安全考量、您應啟用符合全球 FIPS 140-2 標準的加密技術、以確保 ONTAP 能安全地與外部用戶端或伺服器用戶端通訊。
+
+
+
+ a| 
+磁碟區並未受到勒索軟體攻擊的監控
+ a| 
+需要注意
+ a| 
+在一或多個磁碟區上停用反勒索軟體。
+ a| 
+* 建議 * ：在磁碟區上啟用反勒索軟體。否則、您可能不會注意到磁碟區受到威脅或攻擊。
+
+
+
+ a| 
+儲存 VM 並未設定用於反勒索軟體
+ a| 
+最佳實務做法
+ a| 
+一或多個儲存 VM 未設定為提供反勒索軟體保護。
+ a| 
+* 建議 * ：在儲存 VM 上啟用反勒索軟體。否則、您可能不會注意到儲存 VM 受到威脅或攻擊。
 
 |===
 
@@ -258,34 +267,34 @@ System Manager 可以顯示下列深入資訊、以回應您對系統組態的�
 
 
  a| 
-未啟用自動更新。
+叢集未設定用於通知
  a| 
 最佳實務做法
  a| 
-未接受叢集的 EULA 。
+電子郵件、 Webhooks 或 SNMP traphost 未設定為可讓您接收有關叢集問題的通知。
  a| 
-* 建議 * ：接受叢集的 EULA 。
+* 建議 * ：設定叢集通知。
 
 
 
  a| 
-有最新的韌體更新可用
+叢集未設定為自動更新。
+ a| 
+最佳實務做法
+ a| 
+叢集尚未設定為在最新的磁碟鑑定套件、磁碟韌體、機櫃韌體和 SP/BMC 韌體檔案可用時、接收自動更新。
+ a| 
+* 建議 * ：啟用此功能。
+
+
+
+ a| 
+叢集韌體不是最新的
  a| 
 最佳實務做法
  a| 
 您的系統沒有最新的韌體更新、可能會有改善、安全性修補程式或新功能、有助於保護叢集的安全、以獲得更好的效能。
  a| 
 * 建議 * ：更新 ONTAP 韌體。
-
-
-
- a| 
-通知尚未設定
- a| 
-最佳實務做法
- a| 
-電子郵件、 Webhooks 或 SNMP traphost 並未設定為讓您接收有關叢集問題的通知。
- a| 
-* 建議 * ：設定叢集通知。
 
 |===
