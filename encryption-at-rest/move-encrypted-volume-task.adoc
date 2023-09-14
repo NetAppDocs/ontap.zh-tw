@@ -13,20 +13,18 @@ summary: 您可以使用Volume Move start命令來移動加密的Volume。移動
 [role="lead"]
 您可以使用 `volume move start` 用於移動加密磁碟區的命令。移動的磁碟區可以位於相同的集合體或不同的集合體上。
 
-.您需要的產品
-您必須是叢集管理員才能執行此工作、或是叢集管理員已委派權限的SVM管理員。
-
-link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執行Volume Move命令"]
-
 .關於這項工作
 如果目的地節點或目的地Volume不支援Volume加密、則移動將會失敗。
 
-。 `-encrypt-destination` 的選項 `volume move start` 加密磁碟區的預設值為 true 。要求您明確指定不要加密目的地磁碟區、以確保不會不慎將磁碟區上的資料解密。
+。 `-encrypt-destination` 的選項 `volume move start` 加密磁碟區的預設值為 true 。指定您不希望目的地 Volume 加密的要求、可確保您不會不小心將磁碟區上的資料解密。
+
+.開始之前
+您必須是叢集管理員才能執行此工作。或者、您也可以是叢集管理員委派權限的 SVM 管理員。如需詳細資訊、請參閱 link:delegate-volume-encryption-svm-administrator-task.html["委派執行 Volume Move 命令的權限"]。
 
 .步驟
 . 移動現有的加密磁碟區、並將磁碟區上的資料保持加密狀態：
 +
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。

@@ -22,7 +22,7 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 
 == 開始之前
 
-* link:install-ssl-certificates-hardware-task.html["SVM已啟用KMIP金鑰管理"]。
+* link:install-ssl-certificates-hardware-task.html["必須為 SVM 啟用 KMIP 金鑰管理"]。
 * 此程序僅支援使用KMIP的主要伺服器。如需支援的金鑰伺服器清單、請查看 link:http://mysupport.netapp.com/matrix/["NetApp 互通性對照表工具"^]。
 * 叢集中的所有節點都必須執行ONTAP 版本不符合要求的9.11.1或更新版本。
 * 伺服器的順序會列出中的引數 `-secondary-key-servers` 參數反映外部金鑰管理（ KMIP ）伺服器的存取順序。
@@ -39,19 +39,19 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 .將主要和次要金鑰伺服器新增至SVM
 --
 . 確認未啟用叢集的金鑰管理：
-`security key-manager external show -vserver _vserver_name_`
+`security key-manager external show -vserver _svm_name_`
 如果 SVM 已啟用最多四個主要金鑰伺服器、則必須先移除其中一個現有的主要金鑰伺服器、才能新增新的金鑰伺服器。
 . 啟用主要金鑰管理程式：
-`security key-manager external enable -vserver _vserver_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
+`security key-manager external enable -vserver _svm_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
 . 修改主金鑰伺服器以新增次要金鑰伺服器。。 `-secondary-key-servers` 參數接受最多三個主要伺服器的逗號分隔清單。
-`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 
 
 --
 .新增次要金鑰伺服器至現有的主要金鑰伺服器
 --
 . 修改主金鑰伺服器以新增次要金鑰伺服器。。 `-secondary-key-servers` 參數接受最多三個主要伺服器的逗號分隔清單。
-`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 如需次要金鑰伺服器的詳細資訊、請參閱  <<mod-secondary>>。
 
 

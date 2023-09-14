@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: sanitize, fips, drive, sed, psid, physical secure ID, nrd plus, emergency 
 summary: 發生安全性緊急情況時、即使儲存系統或KMIP伺服器無法使用電源、您仍可立即防止存取FIPS磁碟機或SED。 
 ---
-= 緊急銷毀FIPS磁碟機或SED上的資料
+= FIPS 磁碟機或 SED 上的緊急資料會被粉碎
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,7 +13,7 @@ summary: 發生安全性緊急情況時、即使儲存系統或KMIP伺服器無�
 [role="lead"]
 發生安全性緊急情況時、即使儲存系統或KMIP伺服器無法使用電源、您仍可立即防止存取FIPS磁碟機或SED。
 
-.您需要的產品
+.開始之前
 * 如果您使用的KMIP伺服器沒有可用的電源、則KMIP伺服器必須設定容易銷毀的驗證項目（例如智慧卡或USB磁碟機）。
 * 您必須是叢集管理員才能執行此工作。
 
@@ -51,11 +51,9 @@ summary: 發生安全性緊急情況時、即使儲存系統或KMIP伺服器無�
 
 
 +
-[NOTE]
-====
-。 `disk encrypt sanitize` 和 `disk encrypt destroy` 命令僅保留用於維護模式。這些命令必須在每個HA節點上執行、而且無法用於中斷的磁碟。
 
-====
+NOTE: 。 `disk encrypt sanitize` 和 `disk encrypt destroy` 命令僅保留用於維護模式。這些命令必須在每個HA節點上執行、而且無法用於中斷的磁碟。
+
 .. 針對合作夥伴節點重複這些步驟。
 如此一來、儲存系統就會處於永久停用狀態、並清除所有資料。若要再次使用系統、您必須重新設定。
 

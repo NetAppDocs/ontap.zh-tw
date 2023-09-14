@@ -11,63 +11,62 @@ summary: 從ONTAP 支援NFSv4.2的用戶端開始、支援NFSv4.2傳輸協定來
 
 
 [role="lead"]
-從ONTAP 支援NFSv4.2的用戶端開始、支援NFSv4.2傳輸協定來存取NFSv4.2。
+從 ONTAP 9.8 開始、 ONTAP 支援 NFSv4.2 傳輸協定、以允許啟用 NFSv4.2 的用戶端存取。
 
-NFSSv4.2預設會在ONTAP 支援更新版本的版本中啟用。在 ONTAP 9.8 中、您可以透過指定來啟用 v4.2 `-v4.1` 選項並將其設定為 `enabled` 在儲存虛擬機器（ SVM ）上建立 NFS 伺服器時。啟用NFSv4.1也可讓用戶端在安裝為v4.2時使用NFSv4.1功能。
+NFSSv4.2預設會在ONTAP 支援更新版本的版本中啟用。在 ONTAP 9.8 中、需要透過指定來手動啟用 v4.2 `-v4.1` 選項並將其設定為 `enabled` 在儲存虛擬機器（ SVM ）上建立 NFS 伺服器時。啟用NFSv4.1也可讓用戶端在安裝為v4.2時使用NFSv4.1功能。
 
-支援下列NFSv4.2選用功能：
+後續的 ONTAP 版本擴大支援 NFSv4.2 選用功能。
 
 [cols="2*"]
 |===
-| 功能 | 支援的開頭為... 
+| 開始於... | NFSv4.2 選用功能包括 ... 
 
 
- a| 
-標示為NFS的強制存取控制（MAC）
- a| 
-部分9.9.1 ONTAP
+| ONTAP 9.12.1  a| 
+* NFS擴充屬性
+* 稀疏檔案
+* 空間保留
 
 
 
- a| 
-NFS擴充屬性
- a| 
-ONTAP 9.12.1
 
+| 部分9.9.1 ONTAP | 標示為NFS的強制存取控制（MAC） 
 |===
-其他NFSv4.2選用功能將會新增至後續ONTAP 版本的更新版本。
 
 
-
-== 啟用NFS v4.2安全性標籤
+== NFS v4.2 安全性標籤
 
 從ONTAP 推出支援NFS9.9.1的功能開始、就能啟用NFS安全標籤。依預設會停用。
 
 使用NFS v4.2安全性標籤時、ONTAP 即可識別出需求性的NFS伺服器存取控制（MAC）、儲存及擷取用戶端傳送的sec_label屬性。
 
-如需詳細資訊、請參閱 link:https://tools.ietf.org/html/rfc7204["RFC 7240"^]
+如需詳細資訊、請參閱 link:https://tools.ietf.org/html/rfc7204["RFC 7240"^]。
 
 從ONTAP S廳9.12.1開始、支援NDMP傾印作業的NFS v4.2安全標籤。如果在舊版的檔案或目錄上遇到安全性標籤、傾印就會失敗。
 
 .步驟
 . 將權限設定變更為進階：
 +
-``set -privilege advanced``
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 啟用安全性標籤：
 +
-``vserver nfs modify -vserver _svm_name_ -v4.2-seclabel enabled``
+[source, cli]
+----
+vserver nfs modify -vserver _svm_name_ -v4.2-seclabel enabled
+----
 
 
 
 
-
-== 啟用NFS擴充屬性
+== NFS擴充屬性
 
 從S廳9.12.1開始ONTAP 、預設會啟用NFS擴充屬性（xattro）。
 
-延伸屬性是定義的標準NFS屬性 https://tools.ietf.org/html/rfc8276["RFC 8276"^] 並在現代化的NFS用戶端中啟用。它們可用於將使用者定義的中繼資料附加至檔案系統物件、而且對進階安全性部署很感興趣。
+延伸屬性是定義的標準NFS屬性 https://tools.ietf.org/html/rfc8276["RFC 8276"^] 並在現代化的NFS用戶端中啟用。它們可用於將使用者定義的中繼資料附加至檔案系統物件、而且對進階安全性部署非常感興趣。
 
 NDMP傾印作業目前不支援NFS擴充屬性。如果在檔案或目錄上遇到延伸屬性、傾印會繼續進行、但不會備份這些檔案或目錄上的延伸屬性。
 
-如果您需要停用延伸屬性、請使用 ``vserver nfs modify -v4.2-xattrs disabled`` 命令。
+如果您需要停用延伸屬性、請使用 `vserver nfs modify -v4.2-xattrs disabled` 命令。

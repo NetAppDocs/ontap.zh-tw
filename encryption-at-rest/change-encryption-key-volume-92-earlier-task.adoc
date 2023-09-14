@@ -13,18 +13,16 @@ summary: 定期變更磁碟區的加密金鑰是安全性最佳做法。您可�
 [role="lead"]
 定期變更磁碟區的加密金鑰是安全性最佳做法。您可以使用 `volume move start` 變更加密金鑰的命令。您必須使用 `volume move start` 在 ONTAP 9.2 及更早版本中。移動的磁碟區可以位於相同的集合體或不同的集合體上。
 
-.您需要的產品
-您必須是叢集管理員才能執行此工作、或是叢集管理員已委派權限的SVM管理員。
-
-link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執行Volume Move命令"]
-
 .關於這項工作
 您無法使用 `volume move start` 重新輸入 SnapLock 或 FlexGroup 磁碟區。
+
+.開始之前
+您必須是叢集管理員才能執行此工作。或者、您也可以是叢集管理員委派權限的 SVM 管理員。如需詳細資訊、請參閱 link:delegate-volume-encryption-svm-administrator-task.html["委派執行 Volume Move 命令的權限"]。
 
 .步驟
 . 移動現有磁碟區並變更加密金鑰：
 +
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -generate-destination-key true`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -generate-destination-key true`
 
 +
 如需完整的命令語法、請參閱命令的手冊頁。

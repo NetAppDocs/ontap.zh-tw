@@ -11,21 +11,19 @@ summary: 從使用支援NVE的磁碟區開始、您可以使用安全清除功�
 
 
 [role="lead"]
-從使用支援NVE的磁碟區開始、您可以使用安全的資料清除功能、在不中斷營運的情況下、使用具有同步SnapMirror關係的「crub」資料。ONTAP
-
-.您需要的產品
-* 您必須是叢集管理員才能執行此工作。
-* 此工作需要進階權限。
-
+從 ONTAP 9.8 開始、您可以使用安全的清除功能、在具有同步 SnapMirror 關係的 NVE 磁碟區上進行不中斷的「清理」資料。
 
 .關於這項工作
 視刪除檔案中的資料量而定、安全清除可能需要數分鐘到數小時才能完成。您可以使用 `volume encryption secure-purge show` 檢視作業狀態的命令。您可以使用 `volume encryption secure-purge abort` 命令以終止作業。
 
-[NOTE]
-====
-若要在SAN主機上執行安全清除、您必須刪除包含您要清除之檔案的整個LUN、或者您必須能夠在LUN上為屬於您要清除之檔案的區塊鑽孔。如果您無法刪除LUN或主機作業系統不支援在LUN上打孔、則無法執行安全清除。
 
-====
+NOTE: 若要在SAN主機上執行安全清除、您必須刪除包含您要清除之檔案的整個LUN、或者您必須能夠在LUN上為屬於您要清除之檔案的區塊鑽孔。如果您無法刪除LUN或主機作業系統不支援在LUN上打孔、則無法執行安全清除。
+
+.開始之前
+* 您必須是叢集管理員才能執行此工作。
+* 此工作需要進階權限。
+
+
 .步驟
 . 在儲存系統上、變更為進階權限層級：
 +
@@ -46,25 +44,25 @@ summary: 從使用支援NVE的磁碟區開始、您可以使用安全清除功�
 
 . 如果您要安全清除的檔案位於Snapshot複本中、請刪除Snapshot複本：
 +
-`snapshot delete -vserver SVM_name -volume vol_A -snapshot snapshot`
+`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot _snapshot_`
 
 . 如果安全清除檔案位於基礎或通用Snapshot複本中、請更新SnapMirror以將通用Snapshot複本移至下一頁：
 +
-`snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
+`snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
 
 +
 共有兩個常見的Snapshot複本、因此必須發出兩次此命令。
 
 . 如果安全清除檔案位於應用程式一致的Snapshot複本中、請刪除同步SnapMirror關係中兩個磁碟區上的Snapshot複本：
 +
-`snapshot delete -vserver SVM_name -volume vol_name -snapshot snapshot`
+`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot _snapshot_`
 
 +
 在兩個磁碟區上執行此步驟。
 
 . 安全地清除刪除的檔案：
 +
-`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
+`volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_`
 
 +
 在同步SnapMirror關係中的每個磁碟區上重複此步驟。
