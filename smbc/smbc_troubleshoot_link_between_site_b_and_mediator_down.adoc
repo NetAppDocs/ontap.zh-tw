@@ -14,7 +14,7 @@ summary: 站台B的中介連線顯示無法連線。
 
 
 [role="lead"]
-若要檢查 ONTAP Mediator 的連線、請使用 `snapmirror mediator show` 命令。如果連線狀態無法連線、且站台B無法連線至站台B、您將會有類似下列的輸出。請依照解決方案中的步驟還原連線
+若要檢查 ONTAP Mediator 的連線、請使用 `snapmirror mediator show` 命令。如果連線狀態無法連線、且站台 B 無法連線至站台 A 、您將會有類似以下的輸出。請依照解決方案中的步驟還原連線
 
 ....
 cluster::*> snapmirror mediator show
@@ -41,20 +41,18 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 C1_cluster 			  1-80-000011           Unavailable    ok
 ....
 .解決方案
-強制容錯移轉以啟用站台B的I/O、然後建立從站台B到站台A的零RTO關係
-
-請完成下列步驟、在站台B上執行強制容錯移轉
+強制容錯移轉以啟用站台B的I/O、然後建立從站台B到站台A的零RTO關係請完成下列步驟、在站台B上執行強制容錯移轉
 
 . 從站台B取消對應屬於一致性群組的所有LUN
 . 使用force選項刪除SnapMirror一致性群組關係。
-. 在一致性群組組成磁碟區上輸入SnapMirror中斷命令、將磁碟區從DP轉換為RW、以啟用站台B的I/O
+. 在一致性群組組成磁碟區上輸入 SnapMirror 中斷命令、將磁碟區從 DP 轉換為 RW 、以啟用站台 B 的 I/O
 . 啟動站台A節點、以建立從站台B到站台A的零RTO關係
 . 在站台A上釋放僅含關係資訊的一致性群組、以保留通用的Snapshot複本、並取消對應屬於一致性群組的LUN。
 . 使用同步原則或非同步原則設定磁碟區層級關係、將站台A上的磁碟區從RW轉換為DP。
-. 發出SnapMirror重新同步以同步關係。
+. 發行 `snapmirror resync` 同步關係的命令。
 . 刪除站台A上的SnapMirror與同步原則的關係
 . 在站台B上使用僅限關係資訊的true、以Sync原則釋放SnapMirror關係
-. 建立站台B與站台A之間的一致性群組關係
-. 從站台A重新同步一致性群組、然後驗證一致性群組是否同步。
-. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+. 在站台 B 與站台 A 之間建立一致性群組關係
+. 從來源叢集重新同步一致性群組。驗證一致性群組狀態是否同步。
+. 重新掃描主機 LUN I/O 路徑、以還原 LUN 的所有路徑。
 
