@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: system manager, external key manager, configure external key manager, migrate keys, store keys, authentication keys, encryption keys 
 summary: 從 ONTAP 9.13.1 開始、您可以使用系統管理員來管理外部金鑰管理員、以儲存及管理驗證與加密金鑰。 
 ---
-= 管理外部金鑰管理員
+= 使用 System Manager 管理外部金鑰管理員
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -27,7 +27,6 @@ Onboard Key Manager 的範圍是叢集層級；不過、外部金鑰管理員的
 
 == 設定外部金鑰管理程式
 
-.開始之前
 若要新增儲存 VM 的外部金鑰管理程式、您應該在設定儲存 VM 的網路介面時新增選用閘道。如果儲存 VM 是在沒有網路路由的情況下建立的、您必須為外部金鑰管理程式明確建立路由。請參閱 link:../networking/create_a_lif.html["建立 LIF （網路介面）"]。
 
 .步驟
@@ -56,7 +55,7 @@ Onboard Key Manager 的範圍是叢集層級；不過、外部金鑰管理員的
  a| 
 * 儲存 * > * Tiers*
  a| 
-按一下「 *+ 新增本機層 * 」。核取標有「 Configure Key Manager 」的核取方塊。選取 * 外部金鑰管理員 * 。
+選取 *+ 新增本機層 * 。核取標有「 Configure Key Manager 」的核取方塊。選取 * 外部金鑰管理員 * 。
 
 
 
@@ -74,19 +73,19 @@ Onboard Key Manager 的範圍是叢集層級；不過、外部金鑰管理員的
  a| 
 * 儲存 * > * 儲存 VM *
  a| 
-選取儲存VM。按一下 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_gear_blue_bg.png["設定圖示"]。
+選取儲存VM。選取 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_gear_blue_bg.png["設定圖示"]。
 
 |===
-. 若要新增主要金鑰伺服器、請按一下 image:icon_add.gif["+ 新增"]，然後填寫 *IP 地址或主機名 * 和 *Port* 字段。
+. 若要新增主要金鑰伺服器、請選取 image:icon_add.gif["+ 新增"]，然後填寫 *IP 地址或主機名 * 和 *Port* 字段。
 . 現有安裝的憑證會列在 * KMIP 伺服器 CA 憑證 * 和 * KMIP 用戶端憑證 * 欄位中。  您可以執行下列任一動作：
 +
-** 按一下 image:icon_dropdown_arrow.gif["下拉箭頭"] 可選擇要映射至密鑰管理器的已安裝證書。（可以選取多個服務 CA 憑證、但只能選取一個用戶端憑證。）
+** 選取 image:icon_dropdown_arrow.gif["下拉箭頭"] 可選擇要映射至密鑰管理器的已安裝證書。（可以選取多個服務 CA 憑證、但只能選取一個用戶端憑證。）
 ** 選取 * 新增憑證 * 以新增尚未安裝的憑證、並將其對應至外部金鑰管理員。
-** 按一下 image:icon-x-close.gif["x"] 在憑證名稱旁、刪除您不想對應至外部金鑰管理程式的已安裝憑證。
+** 選取 image:icon-x-close.gif["x"] 在憑證名稱旁、刪除您不想對應至外部金鑰管理程式的已安裝憑證。
 
 
-. 若要新增次要金鑰伺服器、請按一下 * 次要金鑰伺服器 * 欄中的 * 新增 * 、並提供詳細資料。
-. 按一下 * 儲存 * 以完成組態。
+. 若要新增次要金鑰伺服器、請在 * 次要金鑰伺服器 * 欄中選取 * 新增 * 、並提供詳細資料。
+. 選取 * 儲存 * 以完成組態。
 
 
 
@@ -119,13 +118,13 @@ Onboard Key Manager 的範圍是叢集層級；不過、外部金鑰管理員的
  a| 
 * 儲存 * > * 儲存 VM *
  a| 
-選取儲存VM。按一下 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_kabob.gif["烤串圖示"]，然後選擇 * 編輯外部金鑰管理員 * 。
+選取儲存VM。選取 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_kabob.gif["烤串圖示"]，然後選擇 * 編輯外部金鑰管理員 * 。
 
 |===
 . 現有的主要伺服器會列在 * 金鑰伺服器 * 表中。您可以執行下列作業：
 +
-** 按一下以新增金鑰伺服器 image:icon_add.gif["+ 新增"]。
-** 按一下以刪除金鑰伺服器 image:icon_kabob.gif["烤串圖示"] 在包含金鑰伺服器名稱的表格儲存格結尾處。與該主要金鑰伺服器相關的次要金鑰伺服器也會從組態中移除。
+** 選取以新增金鑰伺服器 image:icon_add.gif["+ 新增"]。
+** 選取以刪除金鑰伺服器 image:icon_kabob.gif["烤串圖示"] 在包含金鑰伺服器名稱的表格儲存格結尾處。與該主要金鑰伺服器相關的次要金鑰伺服器也會從組態中移除。
 
 
 
@@ -160,7 +159,7 @@ Onboard Key Manager 的範圍是叢集層級；不過、外部金鑰管理員的
  a| 
 * 儲存 * > * 儲存 VM *
  a| 
-選取儲存VM。按一下 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_kabob.gif["烤串圖示"]，然後選擇 * 刪除外部金鑰管理員 * 。
+選取儲存VM。選取 * 設定 * 索引標籤。在 * 安全性 * 下的 * 加密 * 區段中、選取 image:icon_kabob.gif["烤串圖示"]，然後選擇 * 刪除外部金鑰管理員 * 。
 
 |===
 
