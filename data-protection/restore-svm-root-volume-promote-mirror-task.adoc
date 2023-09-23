@@ -19,12 +19,19 @@ summary: 如果根磁碟區永久無法使用、您可以升級負載共用鏡�
 .步驟
 . 變更為進階權限層級：
 +
-`set -privilege advanced`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 升級LSM Volume：
 +
-`snapmirror promote -destination-path _SVM:volume_|_cluster://SVM/volume_`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+snapmirror promote -destination-path <SVM:volume>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -54,12 +61,19 @@ Do you want to continue? {y|n}: y
 ====
 . 返回管理權限層級：
 +
-`set -privilege admin`
-
+[source, cli]
+----
+set -privilege admin
+----
 . 依照您用於根磁碟區的命名慣例、重新命名所升級的磁碟區：
 +
-`volume rename -vserver _SVM_ -volume _volume_ -newname _new_name_`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+volume rename -vserver <SVM> -volume <volume> -newname <new_name>
+----
 +
 以下範例將重新命名升級的 Volume `svm1_m2` 名稱 `svm1_root`：
 

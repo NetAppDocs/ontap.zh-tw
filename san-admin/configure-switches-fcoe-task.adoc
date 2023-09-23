@@ -27,27 +27,29 @@ summary: 您必須先為FCoE設定交換器、FC服務才能在現有的乙太�
 
 .步驟
 . 請使用交換器文件來設定FCoE的交換器。
-. 使用 `dcb show` 用於驗證叢集中每個節點的 DCB 設定是否已正確設定的命令。
+. 確認叢集中每個節點的 DCB 設定都已正確設定。
 +
-`run -node node1 -command dcb show`
-
+[source, cli]
+----
+run -node node1 -command dcb show
+----
 +
 DCB設定值是在交換器上設定的。如果設定不正確、請參閱交換器文件。
 
-. 使用 `fcp adapter show` 確認 FCoE 登入在 FC 目標連接埠線上狀態為時運作的命令 `true`。
+. 驗證當 FC 目標連接埠的線上狀態為時、 FCoE 登入是否正常運作 `true`。
 +
-`cluster1::> fcp adapter show -fields node,adapter,status,state,speed,fabric-established,physical-protocol`
-
+[sourc]
+----
+fcp adapter show -fields node,adapter,status,state,speed,fabric-established,physical-protocol
+----
 +
 如果 FC 目標連接埠的線上狀態為 `false`，請參閱交換器文件。
 
 
 
 .相關資訊
-https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+* https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]
+* http://www.netapp.com/us/media/tr-3800.pdf["NetApp技術報告3800：乙太網路光纖通道（FCoE）端點對端點部署指南"^]
+* http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["Cisco MDS 9000 NX-OS與SAN-OS軟體組態指南"]
+* http://www.brocade.com/products/all/index.page["Brocade產品"]
 
-http://www.netapp.com/us/media/tr-3800.pdf["NetApp技術報告3800：乙太網路光纖通道（FCoE）端點對端點部署指南"^]
-
-http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["Cisco MDS 9000 NX-OS與SAN-OS軟體組態指南"]
-
-http://www.brocade.com/products/all/index.page["Brocade產品"]

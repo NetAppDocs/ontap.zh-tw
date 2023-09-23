@@ -45,8 +45,13 @@ https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM�
 .步驟
 . 只需一個步驟即可建立及初始化複寫關係：
 +
-`snapmirror protect -path-list _SVM:volume_|_cluster://SVM/volume_, ... -destination-vserver _destination_SVM_ -policy _policy_ -schedule _schedule_ -auto-initialize true|false -destination-volume-prefix _prefix_ -destination-volume-suffix _suffix_`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+snapmirror protect -path-list <SVM:volume> -destination-vserver <destination_SVM> -policy <policy> -schedule <schedule> -auto-initialize <true|false> -destination-volume-prefix <prefix> -destination-volume-suffix <suffix>
+----
 +
 [NOTE]
 ====

@@ -20,25 +20,22 @@ summary: 如果不再需要LUN、您可以從儲存虛擬機器（SVM）刪除LU
 . 確認應用程式或主機未使用LUN。
 . 從igroup取消對應LUN：
 +
-`lun mapping delete`
-
-+
-`lun mapping delete -vserver vs5 -volume vo5 -lun lun5 -igroup igr5`
-
+[source, cli]
+----
+lun mapping delete -vserver <SVM_name> -volume <volume_name> -lun <LUN_name> -igroup <igroup_name>
+----
 . 刪除 LUN ：
 +
-`lun delete`
-
-+
-`lun delete -vserver vs5 -volume vol5 -lun lun5`
-
+[source, cli]
+----
+lun delete -vserver <SVM_name> -volume <volume_name> -lun <LUN_name>
+----
 . 確認您已刪除 LUN ：
 +
-`lun show`
-
-+
-`lun show -vserver vs5`
-
+[source, cli]
+----
+lun show -vserver <SVM_name>
+----
 +
 [listing]
 ----

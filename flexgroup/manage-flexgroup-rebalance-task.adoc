@@ -65,6 +65,10 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 +
 從 ONTAP 9.13.1 開始、可在 inode 之間複製自發勒索軟體保護、以進行破壞性與不中斷營運的重新平衡作業。
 
+* SS3 ONTAP
++
+ONTAP S3 FlexGroup 磁碟區不支援 FlexGroup 重新平衡、這些磁碟區不會像 NAS FlexGroup 磁碟區一樣受到不平衡的情況。
+
 
 
 
@@ -83,13 +87,13 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 * 使用初始化還原平衡時、會自動設定此功能FlexGroup `volume rebalance` 命令
 
 
+.步驟
 您可以FlexGroup 使用ONTAP VMware System Manager或ONTAP VMware CLI來管理不均衡的功能。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-.步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
 . 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
 . 選擇 * 重新平衡 * 。
@@ -100,7 +104,6 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 --
 .CLI
 --
-.步驟
 . 開始自動重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
 +
 您也可以指定下列選項：
@@ -148,7 +151,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .系統管理員
 --
-.步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 要重新平衡的S復原 磁碟區。
 . 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
 . 選擇 * 重新平衡 * 。
@@ -158,7 +160,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .CLI
 --
-.步驟
 . 修改自動重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
 +
 您可以指定下列一或多個選項：
@@ -198,7 +199,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .系統管理員
 --
-.步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
 . 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 可查看Volume詳情。
 . 選取 * 停止重新平衡 * 。
@@ -207,7 +207,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .CLI
 --
-.步驟
 . 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
 
 
@@ -223,7 +222,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .系統管理員
 --
-.步驟
 . 瀏覽至* Storage > Volumes *、找到FlexGroup 《不確定的問題》（英文）。
 . 選取 image:icon_dropdown_arrow.gif["顯示詳細資料圖示"] 以檢視FlexGroup 詳細資訊。
 . *此「平衡狀態」*會顯示在詳細資料窗格底部附近。FlexGroup
@@ -233,7 +231,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .CLI
 --
-.步驟
 . 檢視FlexGroup 畫面重新平衡作業的狀態： `volume rebalance show`
 +
 重新平衡狀態範例：

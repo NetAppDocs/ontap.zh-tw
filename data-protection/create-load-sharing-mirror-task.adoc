@@ -28,8 +28,13 @@ LSM 不適用於單一 HA 叢集、因此應針對多個 HA 配對叢集進行�
 .步驟
 . 建立LSM的目的地Volume：
 +
-`volume create -vserver _SVM_ -volume volume -aggregate _aggregate_ -type DP -size size`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -size <size>
+----
 +
 目的地Volume的大小應與根Volume相同或更大。
 
@@ -47,11 +52,16 @@ LSM 不適用於單一 HA 叢集、因此應針對多個 HA 配對叢集進行�
 ----
 cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -size 1gb -state online -type DP
 ----
-. 建立複寫工作排程、如所述 link:create-replication-job-schedule-task.html["建立複寫工作排程"]。
+. link:create-replication-job-schedule-task.html["建立複製工作排程"]。
 . 在SVM根磁碟區與LSM目的地磁碟區之間建立負載共用鏡射關係：
 +
-`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _SVM:volume_|_cluster://SVM/volume_ -type LS -schedule _schedule_`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -68,8 +78,13 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 
 . 初始化負載共用鏡像：
 +
-`snapmirror initialize-ls-set -source-path _SVM:volume_|_cluster://SVM/volume_`
+執行此命令之前、您必須以必要的值取代尖括號中的變數。
 
++
+[source, cli]
+----
+snapmirror initialize-ls-set -source-path <SVM:volume>
+----
 +
 初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。
 

@@ -19,19 +19,25 @@ summary: 使用NVMe時、您必須將命名空間對應至子系統。
 . 從主機取得NQN。
 . 將主機NQN新增至子系統：
 +
-`vserver nvme subsystem host add -vserver _SVM_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_:subsystem._subsystem_name_`
-
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> -host-nqn <Host_NQN_:subsystem._subsystem_name>
+----
 . 將命名空間對應至子系統：
 +
-`vserver nvme subsystem map add -vserver _SVM_name_ -subsystem _subsystem_name_ -path _path_`
-
+[source, cli]
+----
+vserver nvme subsystem map add -vserver <SVM_name> -subsystem <subsystem_name> -path <path>
+----
 +
 命名空間只能對應至單一子系統。
 
 . 確認命名空間已對應至子系統：
 +
-`vserver nvme namespace show -vserver _SVM_name_ -instance`
-
+[source, cli]
+----
+vserver nvme namespace show -vserver <SVM_name> -instance
+----
 +
 子系統應列為 `Attached subsystem`。
 
