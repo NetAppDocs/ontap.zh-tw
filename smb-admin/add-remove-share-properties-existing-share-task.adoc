@@ -1,0 +1,91 @@
+---
+permalink: smb-admin/add-remove-share-properties-existing-share-task.html 
+sidebar: sidebar 
+keywords: customize, exist, smb, share, add, remove, removing, properties, useful, configuration, changing, change, requirement, environment, add or remove share properties on an existing smb share 
+summary: 您可以新增或移除共用內容、來自訂現有的SMB共用區。如果您想要變更共用組態以符合環境中不斷變化的需求、這項功能就很有用。 
+---
+= 新增或移除現有SMB共用區上的共用內容
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以新增或移除共用內容、來自訂現有的SMB共用區。如果您想要變更共用組態以符合環境中不斷變化的需求、這項功能就很有用。
+
+.開始之前
+您要修改其內容的共用區必須存在。
+
+.關於這項工作
+新增共用內容的準則：
+
+* 您可以使用以逗號分隔的清單來新增一或多個共用屬性。
+* 您先前指定的任何共用內容都會維持有效。
++
+新增的內容會附加到現有的共用內容清單中。
+
+* 如果您為已套用至共用區的共用屬性指定新值、則新指定的值會取代原始值。
+* 您無法使用移除共用內容 `vserver cifs share properties add` 命令。
++
+您可以使用 `vserver cifs share properties remove` 移除共用內容的命令。
+
+
+
+移除共用內容的準則：
+
+* 您可以使用以逗號分隔的清單來移除一或多個共用屬性。
+* 您先前已指定但未移除的任何共用內容都會維持有效。
+
+
+.步驟
+. 輸入適當的命令：
++
+|===
+| 如果您想要... | 輸入命令... 
+
+
+ a| 
+新增共用內容
+ a| 
+`+vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
+
+
+
+ a| 
+移除共用內容
+ a| 
+`+vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
+
+|===
+. 確認共用內容設定： `vserver cifs share show -vserver vserver_name -share-name share_name`
+
+
+.範例
+下列命令會新增 `showsnapshot` 在 SVM VS1 上、將屬性共用至名為「 shahre1 」的共享區：
+
+[listing]
+----
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name share1 -share-properties showsnapshot
+
+cluster1::> vserver cifs share show -vserver vs1
+Vserver    Share   Path      Properties   Comment    ACL
+---------  ------  --------  ----------   --------   -----------
+vs1        share1  /share1   oplocks      -          Everyone / Full Control
+                             browsable
+                             changenotify
+                             showsnapshot
+----
+下列命令會移除 `browsable` 在 SVM VS1 上共享名爲 "shahre2" 的共享區的屬性：
+
+[listing]
+----
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name share2 -share-properties browsable
+
+cluster1::> vserver cifs share show -vserver vs1
+Vserver    Share   Path      Properties   Comment    ACL
+---------  ------  --------  ----------   --------   -----------
+vs1        share2  /share2   oplocks      -          Everyone / Full Control
+                             changenotify
+----
+.相關資訊
+xref:commands-manage-shares-reference.adoc[管理SMB共用的命令]

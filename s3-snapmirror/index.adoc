@@ -19,7 +19,7 @@ summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡�
 
 
 [role="lead"]
-從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體。此外、與標準SnapMirror不同的是、S3 SnapMirror可能具有非NetApp目的地。
+從 ONTAP 9.10.1 開始、您可以使用 SnapMirror 鏡射和備份功能、保護 ONTAP S3 物件儲存區中的貯體。與標準 SnapMirror 不同的是、 S3 SnapMirror 可將鏡像和備份複製到 AWS S3 等非 NetApp 目的地。
 
 S3 SnapMirror支援從ONTAP Sirs3儲存庫到下列目的地的主動鏡像和備份層：
 
@@ -44,20 +44,15 @@ SS3 ONTAP
 | AWS S3 |  | image:status-enabled-perf-config.gif["核取符號"] 
 
 
-| 適用於 Azure Cloud Volumes ONTAP
-（從 ONTAP 9.0.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+| 適用於 Azure Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
 
 
-| AWS 適用的 Cloud Volumes ONTAP
-（從 ONTAP 9.11.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+| AWS 適用的 Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
 
 
-| 適用於 Google Cloud Cloud Volumes ONTAP
-（從 ONTAP 9.12.0 開始） | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
+| 適用於 Google Cloud Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["核取符號"] | image:status-enabled-perf-config.gif["核取符號"] 
 |===
 您可以保護ONTAP 現有的SS3伺服器庫位、也可以立即啟用資料保護功能、建立新的庫位。
-
-S3 SnapMirror支援連出和串聯關係。如需概觀、請參閱 link:../data-protection/supported-deployment-config-concept.html["橫向和串聯資料保護部署"]。
 
 
 
@@ -73,7 +68,7 @@ ONTAP 來源和目的地系統需要下列授權套件：
 ** 資料保護產品組合
 S3 SnapMirror 以其他 NetApp 物件儲存目標（ ONTAP S3 、 StorageGRID 和 Cloud Volumes ONTAP ）為目標。
 ** 資料保護套裝組合與混合雲套裝組合
-適用於 S3 SnapMirror 以協力廠商物件儲存區（ AWS S3 ）為目標。
+適用於 S3 SnapMirror 、以協力廠商物件儲存區為目標、包括 AWS S3 。
 
 
 * SS3 ONTAP
@@ -124,6 +119,14 @@ S3 SnapMirror 關係需要儲存 VM 根使用者存取金鑰； ONTAP 預設不�
 
 
 
+== 控制對 S3 儲存區的存取
+
+S3 SnapMirror支援連出和串聯關係。如需總覽、請參閱扇出和串聯資料保護部署。
+
+S3 SnapMirror 不支援 fFan In 部署（多個來源貯體和單一目的地貯體之間的資料保護關係）。S3 SnapMirror可支援從多個叢集到單一次要叢集的多個儲存區鏡像、但每個來源儲存區都必須在次要叢集上擁有自己的目的地儲存區。
+
+
+
 == S3 SnapMirror考量與限制
 
 建立新的儲存庫時、您可以建立使用者和群組來控制存取。如需詳細資訊、請參閱下列主題：
@@ -131,12 +134,4 @@ S3 SnapMirror 關係需要儲存 VM 根使用者存取金鑰； ONTAP 預設不�
 * link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組（系統管理員）"]
 * link:../s3-config/create-s3-user-task.html["建立S3使用者（CLI）"]
 * link:../s3-config/create-modify-groups-task.html["建立或修改S3群組（CLI）"]
-
-
-目前S3 SnapMirror版本不支援下列標準SnapMirror功能：
-
-* 連入部署（多個來源儲存區與單一目的地儲存區之間的資料保護關係）
-+
-S3 SnapMirror可支援從多個叢集到單一次要叢集的多個儲存區鏡像、但每個來源儲存區都必須在次要叢集上擁有自己的目的地儲存區。
-
 
