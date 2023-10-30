@@ -11,10 +11,12 @@ summary: 您必須先建立受SnapLock保護的稽核記錄、才能執行特殊
 
 
 [role="lead"]
-您必須先建立受SnapLock保護的稽核記錄、才能執行特殊權限刪除或SnapLock 取消Volume移動。稽核日誌會記錄SnapLock 建立和刪除不支援的管理員帳戶、修改記錄磁碟區、是否啟用特殊權限刪除、特殊權限刪除作業、SnapLock 以及執行不需執行任何資料的Volume搬移作業。
+如果您使用的是 ONTAP 9.9.1 或更早版本、則必須先建立 SnapLock Aggregate 、然後建立受 SnapLock 保護的稽核記錄、才能執行特殊權限刪除或 SnapLock Volume 搬移。稽核日誌會記錄SnapLock 建立和刪除不支援的管理員帳戶、修改記錄磁碟區、是否啟用特殊權限刪除、特殊權限刪除作業、SnapLock 以及執行不需執行任何資料的Volume搬移作業。
 
-.您需要的產品
-您必須是叢集管理員、才能建立SnapLock 一個不實的Aggregate。
+從 ONTAP 9.10.1 開始、您不再建立 SnapLock Aggregate 。您必須使用 -SnapLock 類型選項 link:https://docs.netapp.com/us-en/ontap/snaplock/create-snaplock-volume-task.html["明確建立 SnapLock Volume"] 將 Compliance 或 Enterprise 指定為 SnapLock 類型。
+
+.開始之前
+如果您使用的是 ONTAP 9.9.1 或更早版本、則必須是叢集管理員才能建立 SnapLock Aggregate 。
 
 .關於這項工作
 在記錄檔保留期間結束之前、您無法刪除稽核記錄。即使保留期間已過、您也無法修改稽核記錄。這適用於SnapLock 「不符合需求」和「企業」模式。
