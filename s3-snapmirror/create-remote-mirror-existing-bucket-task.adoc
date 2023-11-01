@@ -30,10 +30,10 @@ summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從
 .關於這項工作
 您需要在來源叢集和目的地叢集上執行工作。
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+====
+.系統管理員
+--
 . 如果這是此儲存VM的第一個S3 SnapMirror關係、請驗證來源和目的地儲存VM是否都有根使用者金鑰、如果沒有：
 +
 .. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
@@ -103,10 +103,9 @@ summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從
 
 當您按一下「*儲存*」時、現有的儲存區會鏡射到目的地儲存VM中的新儲存區。
 
-
-
-== CLI程序
-
+--
+.CLI
+--
 . 如果這是此SVM的第一個S3 SnapMirror關係、請驗證來源和目的地SVM是否都有根使用者金鑰、如果不符合下列條件、請重新產生這些金鑰：
 `vserver object-store-server user show`
  +
@@ -176,3 +175,6 @@ src_cluster::> snapmirror create -source-path vs0:/bucket/test-bucket -destinati
 . 驗證鏡射是否為作用中：
 `snapmirror show -policy-type continuous -fields status`
 
+
+--
+====

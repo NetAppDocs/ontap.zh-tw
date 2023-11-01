@@ -27,10 +27,10 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 * 來源儲存VM的DNS組態必須能夠解析目標的FQDN。
 
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+====
+.系統管理員
+--
 . 確認已正確定義使用者和群組：
 按一下「*儲存設備>儲存設備VM*」、按一下儲存設備VM、按一下「*設定*」、然後按一下 image:icon_pencil.gif["編輯圖示"] 在S3下。
 +
@@ -89,10 +89,9 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 
 當您按一下*「Save（儲存）」*時、現有的儲存區會備份到雲端物件存放區。
 
-
-
-== CLI程序
-
+--
+.CLI
+--
 . 確認預設儲存區原則中的存取規則正確無誤：
 `vserver object-store-server bucket policy add-statement -vserver _svm_name_ -bucket _bucket_name_ -effect {allow|deny} -action _object_store_actions_ -principal _user_and_group_names_ -resource _object_store_resources_ [-sid _text_] [-index _integer_]`
 +
@@ -153,3 +152,6 @@ src_cluster::> snapmirror create -source-path vs0:/bucket/buck-evp -destination-
 . 驗證鏡射是否為作用中：
 `snapmirror show -policy-type continuous -fields status`
 
+
+--
+====

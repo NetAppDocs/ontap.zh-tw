@@ -27,10 +27,10 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個
 * 來源與目的地VM需要CA憑證。您可以使用由外部CA廠商簽署的自我簽署CA憑證或憑證。
 
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+====
+.系統管理員
+--
 . 如果這是此儲存VM的第一個S3 SnapMirror關係、請驗證來源和目的地儲存VM是否都有根使用者金鑰、如果沒有：
 +
 .. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
@@ -99,10 +99,9 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個
 
 當您按一下「*儲存*」時、會在來源儲存VM中建立一個新的儲存區、並將其鏡射至建立目的地儲存VM的新儲存區。
 
-
-
-== CLI程序
-
+--
+.CLI
+--
 . 如果這是此SVM的第一個S3 SnapMirror關係、請驗證來源和目的地SVM是否都有根使用者金鑰、如果不符合下列條件、請重新產生這些金鑰：
 `vserver object-store-server user show`
 +
@@ -166,3 +165,6 @@ src_cluster::> snapmirror create -source-path vs0-src:/bucket/test-bucket -desti
 . 驗證鏡射是否為作用中：
 `snapmirror show -policy-type continuous -fields status`
 
+
+--
+====

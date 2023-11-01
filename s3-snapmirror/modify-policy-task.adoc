@@ -21,20 +21,19 @@ summary: 您可能想要修改S3鏡射原則、例如、如果您想要調整RPO
 [role="lead"]
 您可能想要修改S3鏡射原則、例如、如果您想要調整RPO和節流值。
 
-
-
-== System Manager程序
-
+[role="tabbed-block"]
+====
+.系統管理員
+--
 如果您想要調整這些值、可以編輯現有的保護原則。
 
 . 按一下*保護>關係*、然後針對您要修改的關係選取保護原則。
 . 按一下 image:icon_kabob.gif["更多圖示"] 在原則名稱旁、然後按一下*編輯*。
 
 
-
-
-== CLI程序
-
+--
+.CLI
+--
 修改 S3 SnapMirror 原則：
 `snapmirror policy modify -vserver svm_name -policy policy_name [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_]`
 
@@ -47,3 +46,5 @@ summary: 您可能想要修改S3鏡射原則、例如、如果您想要調整RPO
 ....
 clusterA::> snapmirror policy modify -vserver vs0 -policy test-policy -rpo 60
 ....
+--
+====
