@@ -37,11 +37,11 @@ NetApp不供應或經銷iSNS伺服器。您可以向NetApp支援的廠商取得�
 
 在以下範例中、 SVM 「 'VS1' 」使用 SVM 管理 LIF 「 'VS1_mgmt_lif' 」向 iSNS 伺服器註冊。在登錄到iSNS期間、SVM會透過SVM管理LIF將所有iSCSI LIF傳送到iSNS伺服器。一旦完成 iSNS 登錄、則 iSNS 伺服器會在「 VS1 」中列出所有服務 iSCSI 的生命體清單。如果叢集包含多個SVM、則每個SVM都必須分別向iSNS伺服器註冊、才能使用iSNS服務。
 
-image::../media/bsag_c-mode_iSNS_register.png[BSAG c模式ISSSNSRegister]
+image::../media/bsag_c-mode_iSNS_register.png[SVM 和 iSNS 伺服器互動範例 1.]
 
 在下一個範例中、當 iSNS 伺服器完成目標的登錄後、主機 A 可以透過 iSNS 伺服器探索「 VS1 」的所有生命、如步驟 1 所示。在主機 A 完成「 VS1 」的生命探索後、主機 A 可以建立與「 VS1 」中任何生命的連線、如步驟 2 所示。在管理層將 "`VS2` 的 "`VS2_mgmt_LIF" 註冊到 iSNS 伺服器之前、主機 A 並未偵測到 "'VS2'" 中的任何生命。
 
-image::../media/bsag_c-mode_iSNS_connect.png[BSAG c模式的SNSSNSConnect連線]
+image::../media/bsag_c-mode_iSNS_connect.png[SVM 和 iSNS 伺服器互動範例 2.]
 
 不過、如果您定義介面存取清單、主機只能使用介面存取清單中定義的lifs來存取目標。
 

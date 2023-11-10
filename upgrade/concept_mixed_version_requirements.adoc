@@ -27,8 +27,8 @@ summary: 混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的
 
 如果您的叢集需要進入混合式 ONTAP 版本狀態、您必須注意重要的要求和限制。
 
-* 在任何指定時間、叢集中都不能有兩個以上不同的主要 ONTAP 版本。如果節點執行的是相同 ONTAP 版本的不同 P 或 D 修補層級、例如 ONTAP 9.9.9.1 和 9.9.9.1P5 、則叢集將不視為混合版本的 ONTAP 叢集。
-* 當叢集處於混合版本狀態時、除了升級或資料移轉程序所需的命令外、您不應輸入任何會改變叢集作業或組態的命令。  例如、在升級和資料移轉完成之前、不應執行 LIF 移轉、規劃的儲存容錯移轉作業或大規模物件建立或銷毀等活動。
+* 在任何指定時間、叢集中都不能有兩個以上不同的主要 ONTAP 版本。例如、支援 ONTAP 9.9.1 和 9.13.1 、但不支援 ONTAP 9.9.1 、 9.12.1 和 9.13.1 。如果節點執行的是相同 ONTAP 版本的不同 P 或 D 修補層級、例如 ONTAP 9.9.9.1 和 9.9.9.1P5 、則叢集將不視為混合版本的 ONTAP 叢集。
+* 當叢集處於混合版本狀態時、除了升級或資料移轉程序所需的命令外、您不應輸入任何會改變叢集作業或組態的命令。  例如、在升級和資料移轉完成之前、不應執行（但不限於） LIF 移轉、規劃的儲存容錯移轉作業或大規模物件建立或刪除等活動。
 * 為了達到最佳叢集作業、叢集處於混合版本狀態的時間長度應儘可能短。  叢集在混合版本狀態下的最大持續時間長度取決於叢集中最低的 ONTAP 版本。
 +
 [cols="2*"]
@@ -61,17 +61,14 @@ summary: 混合版本的 ONTAP 叢集由執行兩個不同主要 ONTAP 版本的
 
 如果您打算將新節點新增至叢集、而這些節點需要比叢集目前執行版本更高的最低 ONTAP 版本、則在新增節點之前、您必須在叢集中現有節點上執行任何支援的軟體升級。
 
-理想情況下、您可以將所有現有節點升級至您計畫新增至叢集的節點所需的最低 ONTAP 版本。不過、如果由於部分現有節點不支援較新版本的 ONTAP 、因此無法執行此動作、則在升級程序中、您必須在有限的時間內輸入混合版本狀態。如果節點不支援新控制器所需的最低 ONTAP 版本、您應該執行下列動作：
+理想情況下、您可以將所有現有節點升級至您計畫新增至叢集的節點所需的最低 ONTAP 版本。不過、如果因為部分現有節點不支援較新版的 ONTAP 、所以無法這麼做、則在升級程序中、您必須在有限的時間內輸入混合版本狀態。如果節點不支援新控制器所需的最低 ONTAP 版本、您應該執行下列動作：
 
 . link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 不支援新控制器所需最低 ONTAP 版本的節點、達到其所支援的最大 ONTAP 版本。
 +
-例如、如果您有執行 ONTAP 9.5 的 FAS8000 、而且您要新增執行 ONTAP 9.12.1 的 C 系列平台、則您應該將 FAS8000 升級為 ONTAP 9.8 （這是它支援的最大 ONTAP 版本）。
+例如、如果您有執行 ONTAP 9.5 的 FAS8080 、而且您要新增執行 ONTAP 9.12.1 的 C 系列平台、則您應該將 FAS8080 升級至 ONTAP 9.8 （這是它支援的最大 ONTAP 版本）。
 
-. 將新節點新增至叢集。
-+
-使用 ONTAP 命令叢集 `add-node -allow-mixed-version-join` 在進階權限層級加入新節點。
-
-. link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["移轉資料"] 從任何無法升級至執行較高 ONTAP 版本之節點的節點。
+. https://review.docs.netapp.com/us-en/ontap_pcarriga-ontapdoc1416-9oct/system-admin/add-nodes-cluster-concept.html["將新節點新增至叢集"]。
+. link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["移轉資料"] 從要從叢集移除的節點、移至新增的節點。
 . link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["從叢集中移除不支援的節點"^]。
 . link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升級"] 叢集中其餘節點的版本與新節點相同。
 +
