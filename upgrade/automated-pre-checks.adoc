@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: upgrade/automated-pre-checks.html 
+keywords: netapp, ontap, automate, automatic, automated, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本。 
+---
+= 在計畫性升級之前執行 ONTAP 自動升級前檢查
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+您不需要升級 ONTAP 軟體、就能執行 ONTAP 自動升級預先檢查。  獨立於 ONTAP 自動升級程序執行升級前檢查、可讓您查看哪些檢查是針對叢集執行、並在您開始實際升級之前、提供任何應更正的錯誤或警告清單。  例如、假設您預期在排定於兩週內進行的維護期間內升級 ONTAP 軟體。  在等待排程日期時、您可以執行自動升級預先檢查、並在維護期間之前採取任何必要的修正行動。  這將在您開始升級後、降低發生非預期組態錯誤的風險。
+
+如果您已準備好開始 ONTAP 軟體升級、則不需要執行此程序。  您應該遵循 link:automated-upgrade-task.html["自動化升級程序"]，包括執行自動升級預先檢查。
+
+
+NOTE: 對於 MetroCluster 組態、您應該先在叢集 A 上執行這些步驟、然後在叢集 B 上執行相同的步驟
+
+.開始之前
+您應該 link:download-software-image.html["下載目標 ONTAP 軟體映像"]。
+
+執行的自動升級預先檢查 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您只需下載目標 ONTAP 版本的軟體套件。  在您開始實際升級之前、您不需要載入中繼 ONTAP 版本。  例如、如果您要執行自動升級前檢查、以從 9.8 升級至 9.13.1 、則需要下載 ONTAP 9.13.1 的軟體套件。  您不需要下載 ONTAP 9.12.1 的軟體套件。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 驗證 ONTAP 目標映像：
++
+
+NOTE: 如果您要升級 MetroCluster 組態、您應該驗證叢集 A 、然後在叢集 B 上重複驗證程序
+
++
+.. 視您執行的版本而定ONTAP 、請執行下列其中一個步驟：
++
+|===
+
+
+| 如果您正在執行... | 執行此動作... 
+
+
+| 部分9.8或更新版本ONTAP  a| 
+按一下*叢集>總覽*。
+
+
+
+| S69.5、9.6及9.7 ONTAP  a| 
+按一下*組態*>*叢集*>*更新*。
+
+
+
+| 更新版本ONTAP  a| 
+按一下「*組態*>*叢集更新*」。
+
+|===
+.. 在 * 總覽 * 窗格的右角、按一下 image:icon_kabob.gif["功能表圖示"]。
+.. 按一下* ONTAP 《更新*》。
+.. 在 * 叢集更新 * 索引標籤中、新增映像或選取可用的映像。
++
+|===
+
+
+| 如果您想要... | 然後... 
+
+
+ a| 
+從本機資料夾新增軟體映像
+
+您應該已經擁有了 link:download-software-image.html["已下載映像"] 至本機用戶端。
+ a| 
+... 在 * 可用的軟體映像 * 下、按一下 * 從本機 * 新增。
+... 瀏覽至儲存軟體映像的位置、選取映像、然後按一下*「Open*（開啟*）」。
+
+
+
+
+ a| 
+從 HTTP 或 FTP 伺服器新增軟體映像
+ a| 
+... 按一下「*從伺服器新增*」。
+... 在 * 新增軟體映像 * 對話方塊中、輸入您從 NetApp 支援網站 下載 ONTAP 軟體映像的 HTTP 或 FTP 伺服器 URL 。
++
+對於匿名FTP、您必須在中指定URL ftp://anonymous@ftpserver[] 格式。
+
+... 按一下「 * 新增 * 」。
+
+
+
+
+ a| 
+選取可用的映像
+ a| 
+選擇所列的其中一個影像。
+
+|===
+.. 按一下 * 驗證 * 以執行升級前驗證檢查。
++
+如果在驗證期間發現任何錯誤或警告、則會顯示這些錯誤或警告、並附上修正動作清單。您必須先解決所有錯誤、才能繼續升級。  最佳做法是也解決警告。
+
+
+
+
+
+--
+.CLI
+--
+. 將目標 ONTAP 軟體映像載入叢集套件儲存庫：
++
+[source, cli]
+----
+cluster image package get -url location
+----
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
+
+Package download completed.
+Package processing completed.
+----
+. 驗證叢集套件儲存庫中是否有可用的軟體套件：
++
+[source, cli]
+----
+cluster image package show-repository
+----
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.13.1              MM/DD/YYYY 10:32:15
+----
+. 執行自動升級前檢查：
++
+[source, cli]
+----
+cluster image validate -version package_version_number -show-validation-details true
+----
++
+
+NOTE: 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、使用目標 ONTAP 套件進行驗證。  您不需要個別驗證中間升級映像。  例如、如果您要從 9.8 升級至 9.13.1 、則應使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
+
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.13.1 -show-validation-details true
+
+It can take several minutes to complete validation...
+Pre-update Check       Status      Error-Action
+---------------------  ---------   -------------------------------------------
+CIFS status            OK
+Cluster health status  OK
+Clsuter quorum status  OK
+Disk status            OK
+High Availability      OK
+status
+LIF status             OK
+LIFs on home node      OK
+MetroCluster           OK
+configuration status
+SnapMirror status      OK
+Overall Status         OK
+10 entries were displayed.
+
+----
++
+系統會顯示完整的自動升級預先檢查清單、以及在您開始升級程序之前應解決的任何錯誤或警告。
+
+
+
+--
+====

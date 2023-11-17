@@ -1,0 +1,347 @@
+---
+sidebar: sidebar 
+permalink: upgrade/automated-upgrade-task.html 
+keywords: netapp, ontap, automate, automatic, automated, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本。 
+---
+= 自動化不中斷 ONTAP 升級
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+執行自動升級時、 ONTAP 會自動在每個節點上安裝目標 ONTAP 映像、驗證叢集是否可以成功升級、然後執行任一項 xref:concept_upgrade_methods.html[批次或循環升級] 在背景中、根據叢集中的節點數量。
+
+如果您的組態支援此功能、您應該使用 System Manager 來執行自動升級。  如果您的組態不支援使用系統管理員進行自動升級、您可以使用 ONTAP 命令列介面（ CLI ）來執行自動升級。
+
+
+IMPORTANT: 修改的設定 `storage failover modify-auto-giveback` 在自動不中斷升級（ andu ）開始之前的命令選項、不會影響升級程序。在更新所需的接管/恢復期間、andu程序會忽略此選項的任何預設值。例如、設定 `-autogiveback` 如果在開始之前為 FALSE 、則不會在恢復之前中斷自動升級。
+
+.開始之前
+* 您應該 link:prepare.html["準備升級"]。
+* 您應該 link:download-software-image.html["下載 ONTAP 軟體映像"] 適用於您的目標 ONTAP 版本。
++
+如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，您需要下載您的特定所需的兩個 ONTAP 映像 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升級途徑"]。
+
+* 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
++
+如果您有8個以上的節點、批次升級方法將用於自動不中斷升級。  在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP  如果合作夥伴在同一個廣播網域中沒有任何連接埠、則 LIF 移轉會失敗。
+
++
+在更新的版本中、如果使用批次方法、則會將lifs移轉至其他批次群組。ONTAP
+
+* 如果您要在 MetroCluster FC 組態中升級 ONTAP 、則應該啟用叢集、以便自動進行非計畫性切換。
+* 如果您不打算監控升級程序的進度、您應該 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["要求EMS通知可能需要手動介入的錯誤"]。
+
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 驗證 ONTAP 目標映像：
++
+
+NOTE: 如果您要升級 MetroCluster 組態、您應該驗證叢集 A 、然後在叢集 B 上重複驗證程序
+
++
+.. 視您執行的版本而定ONTAP 、請執行下列其中一個步驟：
++
+|===
+
+
+| 如果您正在執行... | 執行此動作... 
+
+
+| 部分9.8或更新版本ONTAP  a| 
+按一下*叢集>總覽*。
+
+
+
+| S69.5、9.6及9.7 ONTAP  a| 
+按一下*組態*>*叢集*>*更新*。
+
+
+
+| 更新版本ONTAP  a| 
+按一下「*組態*>*叢集更新*」。
+
+|===
+.. 在 * 總覽 * 窗格的右角、按一下 image:icon_kabob.gif["功能表圖示"]。
+.. 按一下* ONTAP 《更新*》。
+.. 在 * 叢集更新 * 索引標籤中、新增映像或選取可用的映像。
++
+|===
+
+
+| 如果您想要... | 然後... 
+
+
+ a| 
+從本機資料夾新增軟體映像
+
+您應該已經擁有了 link:download-software-image.html["已下載映像"] 至本機用戶端。
+ a| 
+... 在 * 可用的軟體映像 * 下、按一下 * 從本機 * 新增。
+... 瀏覽至儲存軟體映像的位置、選取映像、然後按一下*「Open*（開啟*）」。
+
+
+
+
+ a| 
+從 HTTP 或 FTP 伺服器新增軟體映像
+ a| 
+... 按一下「*從伺服器新增*」。
+... 在 * 新增軟體映像 * 對話方塊中、輸入您從 NetApp 支援網站 下載 ONTAP 軟體映像的 HTTP 或 FTP 伺服器 URL 。
++
+對於匿名FTP、您必須在中指定URL ftp://anonymous@ftpserver[] 格式。
+
+... 按一下「 * 新增 * 」。
+
+
+
+
+ a| 
+選取可用的映像
+ a| 
+選擇所列的其中一個影像。
+
+|===
+.. 按一下 * 驗證 * 以執行升級前驗證檢查。
++
+如果在驗證期間發現任何錯誤或警告、則會顯示這些錯誤或警告、並附上修正動作清單。您必須先解決所有錯誤、才能繼續升級。  最佳做法是也解決警告。
+
+
+
+. 單擊 * 下一步 * 。
+. 按一下 * 更新 * 。
++
+再次執行驗證。任何剩餘的錯誤或警告會連同修正行動清單一起顯示。  您必須先修正錯誤、才能繼續升級。  如果驗證過程中出現警告、請修正警告、或選擇 * 更新並顯示警告 * 。
+
++
+
+NOTE: 根據預設、 ONTAP 會使用 link:concept_upgrade_methods.html["批次升級程序"] 升級具有八個或更多節點的叢集。  從 ONTAP 9.10.1 開始（如果願意）、您可以選擇 * 一次更新一個 HA 配對 * 來覆寫預設值、並使用循環升級程序、讓叢集一次升級一個 HA 配對。
+
++
+對於節點超過 2 個的 MetroCluster 組態、 ONTAP 升級程序會在兩個站台的 HA 配對上同時開始。  對於雙節點 MetroCluster 組態、升級會先在未初始化升級的站台上啟動。第一次升級完成後、其餘站台的升級便會開始。
+
+. 如果升級因為錯誤而暫停、請按一下錯誤訊息以檢視詳細資料、然後修正錯誤和 link:resume-upgrade-after-andu-error.html["繼續升級"]。
+
+
+.完成後
+升級成功完成後、節點會重新開機、並將您重新導向至 System Manager 登入頁面。如果節點需要很長時間重新開機、您應該重新整理瀏覽器。
+
+--
+.CLI
+--
+. 驗證 ONTAP 目標軟體映像
++
+
+NOTE: 如果您要升級 MetroCluster 組態、您應該先在叢集 A 上執行下列步驟、然後在叢集 B 上執行相同的步驟
+
++
+.. 刪除先前ONTAP 的版本：
++
+[source, cli]
+----
+cluster image package delete -version previous_ONTAP_Version
+----
+.. 將目標 ONTAP 軟體映像載入叢集套件儲存庫：
++
+[source, cli]
+----
+cluster image package get -url location
+----
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
+
+Package download completed.
+Package processing completed.
+----
++
+如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，您也需要載入升級所需的 ONTAP 中間版本的軟體套件。例如、如果您要從 9.8 升級至 9.13.1 、則需要載入 ONTAP 9.12.1 的軟體套件、然後使用相同的命令載入 9.13.1 的軟體套件。
+
+.. 驗證叢集套件儲存庫中是否有可用的軟體套件：
++
+[source, cli]
+----
+cluster image package show-repository
+----
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.13.1              MM/DD/YYYY 10:32:15
+----
+.. 執行自動升級前檢查：
++
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
++
+如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您只需使用目標 ONTAP 套件進行驗證。  您不需要個別驗證中間升級映像。  例如、如果您要從 9.8 升級至 9.13.1 、請使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
+
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.13.1
+
+WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
+----
+.. 監控驗證進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+.. 完成驗證所識別的所有必要行動。
+
+
+. 產生軟體升級預估：
++
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
++
+
+NOTE: 如果您要升級 MetroCluster 組態、可以在叢集 A 或叢集 B 上執行此命令  您不需要在兩個叢集上執行。
+
++
+軟體升級預估會顯示每個要更新元件的詳細資料、以及升級的預估期間。
+
+. 執行軟體升級：
++
+[source, cli]
+----
+cluster image update -version package_version_number
+----
++
+** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
+** 根據預設、 ONTAP 會使用 link:concept_upgrade_methods.html["批次升級程序"] 升級具有八個或更多節點的叢集。  如有需要、您可以使用 `-force-rolling` 此參數可覆寫預設程序、並使用循環升級程序、讓叢集一次升級一個節點。
+** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用 `-stabilize-minutes` 指定不同穩定時間量的參數。
+** 如果 MetroCluster 組態的節點數量超過 4 個、則自動升級會在兩個站台的 HA 配對上同時開始。  對於雙節點 MetroCluster 組態、升級會從未初始化升級的站台開始。第一次升級完成後、其餘站台的升級便會開始。
+
+
++
+[listing]
+----
+cluster1::> cluster image update -version 9.13.1
+
+Starting validation for this update. Please wait..
+
+It can take several minutes to complete validation...
+
+WARNING: There are additional manual upgrade validation checks...
+
+Pre-update Check      Status     Error-Action
+--------------------- ---------- --------------------------------------------
+...
+20 entries were displayed
+
+Would you like to proceed with update ? {y|n}: y
+Starting update...
+
+cluster-1::>
+----
+. 顯示叢集更新進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
++
+如果您要升級 4 節點或 8 節點 MetroCluster 組態、請使用 `cluster image show-update-progress` 命令只會顯示您執行命令所在節點的進度。您必須在每個節點上執行命令、才能查看個別節點的進度。
+
+. 驗證是否已在每個節點上成功完成升級。
++
+[source, cli]
+----
+cluster image show-update-progress
+----
++
+[listing]
+----
+cluster1::> cluster image show-update-progress
+
+                                             Estimated         Elapsed
+Update Phase         Status                   Duration        Duration
+-------------------- ----------------- --------------- ---------------
+Pre-update checks    completed                00:10:00        00:02:07
+Data ONTAP updates   completed                01:31:00        01:39:00
+Post-update checks   completed                00:10:00        00:02:00
+3 entries were displayed.
+
+Updated nodes: node0, node1.
+----
+. 觸發AutoSupport 功能不支援通知：
++
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_NDU"
+----
++
+如果您的叢集未設定為傳送AutoSupport 功能性訊息、則會在本機儲存通知複本。
+
+. 如果您要升級 MetroCluster FC 組態、請確認叢集已啟用以進行自動非計畫性切換。
++
+
+NOTE: 如果您要升級標準組態或 MetroCluster IP 組態、則不需要執行此步驟。
+
++
+.. 檢查是否已啟用自動非計畫性切換：
++
+[source, cli]
+----
+metrocluster show
+----
++
+如果啟用自動非計畫性切換、命令輸出中會出現下列陳述：
+
++
+....
+AUSO Failure Domain    auso-on-cluster-disaster
+....
+.. 如果輸出中未顯示該陳述、請啟用自動非計畫性切換：
++
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+.. 確認已啟用自動非計畫性切換：
++
+[source, cli]
+----
+metrocluster show
+----
+
+
+
+
+--
+====
+
+
+== 影片：輕鬆升級
+
+請參閱ONTAP 《System Manager》ONTAP 中的簡化版《系統管理程式》（NetApp）。
+
+video::xwwX8vrrmIk[youtube,width=848,height=480]
+.相關資訊
+* https://aiq.netapp.com/["產品Active IQ 發表"]
+* https://docs.netapp.com/us-en/active-iq/["本文檔Active IQ"]
+

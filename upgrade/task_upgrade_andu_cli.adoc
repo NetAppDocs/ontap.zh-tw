@@ -19,20 +19,16 @@ summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本�
 
 
 [role="lead"]
+對於自動升級、 ONTAP 會自動在每個節點上安裝目標 ONTAP 映像、驗證叢集元件、確保叢集可以不中斷地升級、然後執行 xref:concept_upgrade_methods.html[批次或循環升級] 在背景中、根據節點數量。
+
 您可以使用命令列介面（CLI）來驗證叢集是否可在不中斷營運的情況下升級、在ONTAP 每個節點上安裝目標的版本資訊、然後在背景執行升級。
 
 
 NOTE: 如果您不打算監控升級程序的進度、這是很好的做法 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["要求EMS通知可能需要手動介入的錯誤"]。
 
 .開始之前
-* 您應該啟動 Active IQ Digital Advisor。
-+
-Active IQ Digital Advisor 的 Upgrade Advisor 元件可協助您規劃成功的升級作業。
-
-+
-所有擁有有效 *SupportEdge* 合約的 NetApp 客戶，均可從 Active IQ Digital Advisor 獲得由資料驅動的洞見與建議（功能因產品與支援層級而異）。
-
-* 您必須符合升級準備要求。
+* 您應該 link:prepare.html["準備升級"]。
+* 您應該 link:download-software-image.html["下載 ONTAP 軟體映像"] 適用於您的目標 ONTAP 版本。
 * 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
 +
 如果您有8個以上的節點、批次升級方法將用於自動不中斷升級。  在更新的版本中、如果使用批次方法、則會將LIF移轉至要升級之節點的HA合作夥伴。ONTAP  如果合作夥伴在同一個廣播網域中沒有任何連接埠、則LIF移轉會失敗。
@@ -44,19 +40,23 @@ Active IQ Digital Advisor 的 Upgrade Advisor 元件可協助您規劃成功的�
 * 如果您要在 MetroCluster FC 組態中升級 ONTAP 、則應該啟用叢集、以便自動進行非計畫性切換。
 
 
-.關於這項工作
-。 `cluster image validate` 命令會檢查叢集元件、以驗證升級是否可以不中斷地完成、然後提供每項檢查的狀態、以及執行軟體升級前必須採取的任何必要行動。
-
 
 NOTE: 修改的設定 `storage failover modify-auto-giveback` 在自動不中斷升級（ andu ）開始之前的命令選項、不會影響升級程序。在更新所需的接管/恢復期間、andu程序會忽略此選項的任何預設值。例如、設定 `-autogiveback` 如果在開始之前為 FALSE 、則不會在恢復之前中斷自動升級。
 
+
+
+== 步驟 1 ：將目標 ONTAP 軟體映像載入叢集套件儲存庫
+
+若要開始 ONTAP 軟體升級程序、您必須在叢集套件儲存庫中提供目標 ONTAP 軟體映像。
+
+.步驟
 . 刪除先前ONTAP 的版本：
 +
 [source, cli]
 ----
 cluster image package delete -version previous_ONTAP_Version
 ----
-. 下載目標ONTAP 版的更新軟體套件：
+. 將目標 ONTAP 軟體映像載入叢集套件儲存庫：
 +
 [source, cli]
 ----
@@ -71,7 +71,7 @@ Package download completed.
 Package processing completed.
 ----
 +
-如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您也需要下載升級所需的 ONTAP 中間版本軟體套件。例如、如果您要從 9.8 升級至 9.13.1 、則需要下載 ONTAP 9.12.1 的軟體套件、然後使用相同的命令下載 9.13.1 版軟體套件。
+如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，您也需要載入升級所需的 ONTAP 中間版本的軟體套件。例如、如果您要從 9.8 升級至 9.13.1 、則需要載入 ONTAP 9.12.1 的軟體套件、然後使用相同的命令載入 9.13.1 的軟體套件。
 
 . 驗證叢集套件儲存庫中是否有可用的軟體套件：
 +
@@ -87,7 +87,15 @@ Package Version  Package Build Time
 ---------------- ------------------
 9.13.1              MM/DD/YYYY 10:32:15
 ----
-. 確認叢集已準備好在不中斷營運的情況下升級：
+
+
+
+
+== 步驟 2 ：執行自動升級前檢查
+
+您也可以選擇在執行 ONTAP 軟體的自動升級之前、使用 `cluster image validate` 用於驗證叢集是否能成功升級的命令。  。 `cluster image validate` 命令會針對叢集元件執行一系列檢查、然後提供已執行的特定驗證清單、以及在繼續升級之前必須採取的任何修正動作清單。
+
+. 執行自動升級前檢查：
 +
 [source, cli]
 ----
@@ -112,6 +120,12 @@ WARNING: There are additional manual upgrade validation checks that must be perf
 cluster image show-update-progress
 ----
 . 完成驗證所識別的所有必要行動。
+
+
+
+
+== 步驟 3 ：升級 ONTAP 軟體
+
 . 產生軟體升級預估：
 +
 [source, cli]
@@ -232,34 +246,6 @@ metrocluster show
 
 
 
-
-
-
-== 在自動升級程序發生錯誤後、繼續升級（使用CLI）
-
-如果因為錯誤而導致自動升級暫停、您可以解決錯誤並恢復自動升級、也可以取消自動升級並手動完成程序。如果您選擇繼續自動升級、請勿手動執行任何升級步驟。
-
-.關於這項工作
-如果您想要手動完成升級、請使用 `cluster image cancel-update` 命令以取消自動化程序並手動繼續。如果您要繼續自動升級、請完成下列步驟。
-
-.步驟
-. 檢視升級錯誤：
-+
-[source, cli]
-----
-cluster image show-update-progress
-----
-. 解決錯誤。
-. 繼續更新：
-+
-[source, cli]
-----
-cluster image resume-update
-----
-
-
-.完成後
-link:task_what_to_do_after_upgrade.html["執行升級後檢查"]。
 
 .相關資訊
 * https://aiq.netapp.com/["產品Active IQ 發表"]
