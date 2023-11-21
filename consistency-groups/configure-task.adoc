@@ -13,10 +13,10 @@ summary: 建立單一一致性群組以進行應用程式工作負載管理和�
 [role="lead"]
 可以使用現有的磁碟區或新的 LUN 或磁碟區來建立一致性群組（視 ONTAP 版本而定）。磁碟區或 LUN 一次只能與一個一致性群組建立關聯。
 
-.開始之前
+.關於這項工作
 * 在 ONTAP 9.10.1 至 9.11.1 中、不支援在建立一致性群組之後修改其成員磁碟區。
 +
-從ONTAP 功能更新至功能更新版本9.12.1開始、您可以修改一致性群組的成員磁碟區。如需此程序的詳細資訊、請參閱 xref:modify-task.html[修改一致性群組]。
+從 ONTAP 9.12.1 開始、您可以修改一致性群組的成員磁碟區。如需此程序的詳細資訊、請參閱 xref:modify-task.html[修改一致性群組]。
 
 
 
@@ -26,6 +26,10 @@ summary: 建立單一一致性群組以進行應用程式工作負載管理和�
 
 在 ONTAP 9.10.1 至 9.12.1 中、您可以使用新的 LUN 建立一致性群組。從 ONTAP 9.13.1 開始、 System Manager 也支援使用新的 NVMe 命名空間或新的 NAS 磁碟區來建立一致性群組。（從 ONTAP 9.12.1 開始、 ONTAP REST API 也支援此功能。）
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
 .步驟
 . 選擇*儲存>一致性群組*。
 . 選取 *+Add* 、然後選取儲存物件的傳輸協定。
@@ -34,7 +38,7 @@ summary: 建立單一一致性群組以進行應用程式工作負載管理和�
 
 . 命名一致性群組。指定磁碟區或 LUN 的數量、以及每個磁碟區或 LUN 的容量。
 +
-.. **應用程式類型*：如果您使用ONTAP 的是更新版本的版本、請選取應用程式類型。如果未選取任何值、系統將預設指派類型為「**其他*」。深入瞭解中的標記一致性 xref:index.html#application-and-component-tags[應用程式與元件標籤]。如果您打算使用遠端保護原則建立一致性群組、則必須使用 * 其他 * 。
+.. **應用程式類型*：如果您使用ONTAP 的是更新版本的版本、請選取應用程式類型。如果未選取任何值、系統將預設指派類型為「**其他*」。深入瞭解中的標記一致性 xref:modify-tags-task.html[應用程式與元件標籤]。如果您打算使用遠端保護原則建立一致性群組、則必須使用 * 其他 * 。
 .. 對於 ** 新 LUN** ：選擇主機作業系統和 LUN 格式。輸入主機啟動器資訊。
 .. 對於 ** 新 NAS Volume ** ：根據 SVM 的 NAS 組態、選擇適當的匯出選項（ NFS 或 SMB/CIFS ）。
 .. 對於 ** 新的 NVMe 命名空間 ** ：選取主機作業系統和 NVMe 子系統。
@@ -45,12 +49,48 @@ summary: 建立單一一致性群組以進行應用程式工作負載管理和�
 . 請返回工作完成後顯示的主要一致性群組功能表、確認您的一致性群組已建立。如果您設定了保護原則、當您在適當的原則（遠端或本機）下看到綠色保護罩時、就會知道它已套用。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 建立新的一致性群組與新的磁碟區。具體參數取決於磁碟區是 SAN 、 NVMe 或 NFS 。
+
+.使用 NFS 磁碟區建立一致性群組
+. 建立一致性群組：
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volume-prefix_ -volume-count _number_ -size _size_ -export-policy _policy_name_`
+
+
+
+.使用 SAN 磁碟區建立一致性群組
+. 建立一致性群組：
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -lun _lun_name_ -size _size_ -lun-count _number_ -igroup _igroup_name_`
+
+
+
+.使用 NVMe 命名空間建立一致性群組
+. 建立一致性群組：
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_name_ -namespace _namespace_name_ -volume-count _number_ -namespace-count _number_ -size _size_ -subsystem _subsystem_name_`
+
+
+
+.完成後
+. 確認您的一致性群組已使用建立 `consistency-group show` 命令。
+
+
+--
+====
 
 
 == 使用現有磁碟區建立一致性群組
 
 您可以使用現有的磁碟區來建立一致性群組。
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
 .步驟
 . 選擇*儲存>一致性群組*。
 . 選擇「*+新增*」、然後選擇「*使用現有磁碟區*」。
@@ -68,6 +108,21 @@ NOTE: 如果使用現有磁碟區建立一致性群組、一致性群組就會�
 . 請返回主一致性群組功能表、確認您的一致性群組已建立、ONTAP 一旦完成此工作、就會顯示在該功能表中。如果您已選擇保護原則、請從功能表中選取您的一致性群組、以確認該原則已正確設定。如果您設定了保護原則、當您在適當的原則（遠端或本機）下看到綠色保護罩時、就會知道它已套用。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 建立與現有磁碟區一致的群組。
+
+.步驟
+. 發行 `consistency-group create` 命令。。 `-volumes` 參數接受以逗號分隔的磁碟區名稱清單。
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volumes_`
+
+. 使用檢視一致性群組 `consistency-group show` 命令。
+
+
+--
+====
 .後續步驟
 * xref:protect-task.html[保護一致性群組]
 * xref:modify-task.html[修改一致性群組]

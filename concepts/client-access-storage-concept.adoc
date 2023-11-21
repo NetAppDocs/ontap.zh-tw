@@ -1,7 +1,7 @@
 ---
 permalink: concepts/client-access-storage-concept.html 
 sidebar: sidebar 
-keywords: client authentication, authorization 
+keywords: client authentication, authorization, oauth 2.0, oauth2 
 summary: 利用信任的來源驗證用戶端機器和使用者的身分、藉此驗證其身分。ONTAP利用比較使用者的認證資料與檔案或目錄上設定的權限、即可授權使用者存取檔案或目錄。ONTAP 
 ---
 = 用戶端驗證與授權
@@ -61,3 +61,11 @@ summary: 利用信任的來源驗證用戶端機器和使用者的身分、藉�
 代表儲存物件的檔案或目錄中存在原生檔案層級安全性。您可以從用戶端設定檔案層級的安全性。無論使用SMB或NFS存取資料、檔案權限都有效。
 
 
+
+
+
+== OAuth 2.0 搭配 ONTAP REST API 用戶端
+
+開放授權（ OAuth 2.0 ）架構的支援從 ONTAP 9.14 開始提供。當用戶端使用 REST API 存取 ONTAP 時、您只能使用 OAuth 2.0 來進行授權和控制存取決策。不過、您可以使用任何 ONTAP 管理介面（包括 CLI 、系統管理員和 REST API ）來設定和啟用此功能。
+
+標準 OAuth 2.0 功能可與數個常用的授權伺服器一起支援。您可以使用以相互 TLS 為基礎的寄件者限制存取權杖、進一步增強 ONTAP 安全性。此外還有多種授權選項可供選擇、包括獨立的範圍、以及與 ONTAP REST 角色和本機使用者定義的整合。請參閱 link:../authentication/overview-oauth2.html["ONTAP OAuth 2.0 實作總覽"] 以取得更多資訊。

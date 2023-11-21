@@ -1,0 +1,213 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-authorization.html 
+keywords: scopes, self-contained scopes, active directory, ldap, rest role, local users, groups 
+summary: 有幾個選項可供您自訂 ONTAP 用戶端授權。授權決策最終取決於存取權杖中包含或衍生的 ONTAP REST 角色。 
+---
+= ONTAP 用戶端授權選項
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+有幾個選項可供您自訂 ONTAP 用戶端授權。授權決策最終取決於存取權杖中包含或衍生的 ONTAP REST 角色。
+
+
+CAUTION: 您只能使用 link:../authentication/overview-oauth2.html#selected-terminology["ONTAP REST 角色"] 設定 OAuth 2.0 授權時。不支援舊版 ONTAP 傳統角色。
+
+
+
+== 簡介
+
+ONTAP 中的 OAuth 2.0 實作設計為靈活且穩健、提供您保護 ONTAP 環境所需的選項。在高層級、定義 ONTAP 用戶端授權的主要組態類別有三種。這些組態選項是互斥的。
+
+ONTAP 會根據您的組態套用最適當的單一選項。請參閱 link:../authentication/oauth2-authorization.html#how-ontap-determines-access["ONTAP 如何決定存取"] 深入瞭解 ONTAP 如何處理您的組態定義、以做出存取決策。
+
+.OAuth 2.0 獨立範圍
+這些範圍包含一或多個自訂 REST 角色、每個角色都封裝在單一字串中。它們不受 ONTAP 角色定義的影響。您需要在授權伺服器上定義這些範圍字串。
+
+.本機 ONTAP 特有的 REST 角色和使用者
+根據您的組態、本機 ONTAP 身分識別定義可用於做出存取決策。選項包括：
+
+* 單一命名 REST 角色
+* 將使用者名稱與本機 ONTAP 使用者配對
+
+
+命名角色的範圍語法是 *ONTAP 角色 <URL-encoded-ONTAP-role-name> 。例如、如果角色為「 admin 」、範圍字串將為「 ontap 角色管理員」。
+
+.Active Directory 或 LDAP 群組
+如果檢查本機 ONTAP 定義、但無法做出存取決定、則會使用 Active Directory （「網域」）或 LDAP （「 nsswitch 」）群組。群組資訊可透過下列兩種方式之一來指定：
+
+* OAuth 2.0 範圍字串
++
+支援使用用戶端認證流程的機密應用程式、而該流程沒有使用者擁有群組成員資格。範圍應命名為 *ONTAP 群組 <URL-encoded-ONTAP-group-name> 。例如、如果群組為「開發」、範圍字串將為「 ontap 群組開發」。
+
+* 在「群組」請款中
++
+這是針對使用資源擁有者（密碼授予）流程的 ADFS 所發行的存取權杖。
+
+
+
+
+
+== 獨立 OAuth 2.0 範圍
+
+自我包含的範圍是存取權杖中攜帶的字串。每個角色都是完整的自訂角色定義、包括 ONTAP 做出存取決策所需的一切。範圍與 ONTAP 本身定義的任何其他角色是分開的。
+
+
+
+=== 範圍字串的格式
+
+在基礎層級、範圍會以連續字串表示、並由六個以冒號分隔的值組成。範圍字串中使用的參數如下所述。
+
+
+
+==== ONTAP 文字
+
+範圍必須以文字值開頭 `ontap` 以小寫形式顯示。這會將範圍識別為 ONTAP 特有的範圍。
+
+
+
+==== 叢集
+
+這會定義範圍所適用的 ONTAP 叢集。這些值可以包括：
+
+* 叢集 UUID
++
+識別單一叢集。
+
+* 星號（ *** ）
++
+表示範圍適用於所有叢集。
+
+
+
+您可以使用 ONTAP CLI 命令 `cluster identity show` 顯示叢集的 UUID 。如果未指定、範圍會套用至所有叢集。
+
+
+
+==== 角色
+
+包含在獨立範圍中的 REST 角色名稱。ONTAP 不會檢查此值、也不會與任何定義給 ONTAP 的現有 REST 角色相符。名稱用於記錄。
+
+
+
+==== 存取層級
+
+此值表示在範圍內使用 API 端點時、套用至用戶端應用程式的存取層級。下表說明了六個可能的值。
+
+[cols="25,75"]
+|===
+| 存取層級 | 說明 
+
+
+| 無 | 拒絕對指定端點的所有存取。 
+
+
+| 唯讀 | 僅允許使用 GET 進行讀取存取。 
+
+
+| read_create | 允許讀取存取、以及使用 POST 建立新的資源執行個體。 
+
+
+| Read_modify | 允許讀取存取權、以及使用修補程式更新現有資源的能力。 
+
+
+| read_create_modify | 允許刪除以外的所有存取。允許的作業包括 GET （讀取）、 POST （建立）和修補程式（更新）。 
+
+
+| 全部 | 允許完整存取。 
+|===
+
+
+==== SVM
+
+適用範圍之叢集內的 SVM 名稱。使用 *** 值（星號）表示所有 SVM 。
+
+
+CAUTION: ONTAP 9.14.1 不完全支援此功能。您可以忽略 SVM 參數、並使用星號做為預留位置。檢閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^] 檢查將來的 SVM 支援。
+
+
+
+==== REST API URI
+
+資源或一組相關資源的完整或部分路徑。字串必須以開頭 `/api`。如果您未指定值、範圍會套用至 ONTAP 叢集上的所有 API 端點。
+
+
+
+=== 範圍範例
+
+以下是一些自我包含範圍的範例。
+
+ONTAP ： * ： jjoes-role ： read_create_modify ： * ： /API/cluster:: 提供指派此角色的使用者讀取、建立及修改對的存取權 `/cluster` 端點：
+
+
+
+
+=== CLI 管理工具
+
+為了讓自我包含範圍的管理更容易且更容易出錯、 ONTAP 提供了 CLI 命令 `security oauth2 scope` 根據輸入參數產生範圍字串。
+
+命令 `security oauth2 scope` 根據您的意見、有兩種使用案例：
+
+* 範圍字串的 CLI 參數
++
+您可以使用此版本的命令來根據輸入參數產生範圍字串。
+
+* 範圍字串至 CLI 參數
++
+您可以使用此版本的命令、根據輸入範圍字串產生命令參數。
+
+
+
+.範例
+下列範例會產生範圍字串、並在下列命令範例之後包含輸出。此定義適用於所有叢集。
+
+[source, cli]
+----
+security oauth2 scope cli-to-scope -role joes-role -access readonly -api /api/cluster
+----
+`ontap:*:joes-role:readonly:*:/api/cluster`
+
+
+
+== ONTAP 如何決定存取
+
+若要正確設計及實作 OAuth 2.0 、您必須瞭解 ONTAP 如何使用您的授權組態來為用戶端做出存取決策。
+
+.步驟 1 ：自我包含的範圍
+如果存取權杖包含任何獨立的範圍、 ONTAP 會先檢查這些範圍。如果沒有獨立的範圍、請前往步驟 2 。
+
+如果存在一個或多個獨立的範圍、 ONTAP 會套用每個範圍、直到可以做出明確的 * 允許 * 或 * 拒絕 * 決策為止。如果做出明確的決定、處理程序就會結束。
+
+如果 ONTAP 無法做出明確的存取決策、請繼續執行步驟 2 。
+
+.步驟 2 ：檢查本機角色旗標
+ONTAP 會檢查旗標的價值 `use-local-roles-if-present`。此旗標的值會針對定義為 ONTAP 的每個授權伺服器分別設定。
+
+* 如果值為 `true` 繼續進行步驟 3 。
+* 如果值為 `false` 處理結束、存取遭拒。
+
+
+.步驟 3 ：具名的 ONTAP REST 角色
+如果存取權杖包含具名的 REST 角色、 ONTAP 會使用該角色來做出存取決策。這總是導致 * 允許 * 或 * 拒絕 * 決策和處理結束。
+
+如果沒有指定的 REST 角色或找不到角色、請繼續執行步驟 4 。
+
+.步驟 4 ：本機 ONTAP 使用者
+從存取權杖擷取使用者名稱、並嘗試將其與本機 ONTAP 使用者配對。
+
+如果符合本機 ONTAP 使用者、 ONTAP 會使用為使用者定義的角色來做出存取決策。這總是導致 * 允許 * 或 * 拒絕 * 決策和處理結束。
+
+如果本機 ONTAP 使用者不相符、或存取權杖中沒有使用者名稱、請繼續執行步驟 5 。
+
+.步驟 5 ：群組對角色對應
+從存取權杖擷取群組、並嘗試將其與群組配對。這些群組是使用 Active Directory 或等效的 LDAP 伺服器來定義。
+
+如果有群組相符項目、 ONTAP 會使用為群組定義的角色來做出存取決策。這總是導致 * 允許 * 或 * 拒絕 * 決策和處理結束。
+
+如果沒有符合的群組、或存取權杖中沒有群組、則會拒絕存取並結束處理。

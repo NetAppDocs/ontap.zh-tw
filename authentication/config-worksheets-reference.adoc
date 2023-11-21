@@ -17,7 +17,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
 
 == 建立或修改登入帳戶
 
-您可以使用提供這些值 `security login create` 命令：當您啟用登入帳戶以存取儲存虛擬機器（ SVM ）時。您可以使用提供相同的值 `security login modify` 命令：修改帳戶存取 SVM 的方式。
+您可以使用提供這些值 `security login create` 命令：當您啟用登入帳戶以存取儲存 VM 時。您可以使用提供相同的值 `security login modify` 命令：修改帳戶存取儲存 VM 的方式。
 
 [cols="3*"]
 |===
@@ -29,7 +29,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 `-vserver`
  a| 
-帳戶存取的SVM名稱。預設值為叢集的管理SVM名稱。
+帳戶存取的儲存 VM 名稱。預設值為叢集的管理儲存 VM 名稱。
  a| 
 
 
@@ -45,7 +45,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 `-application`
  a| 
-用於存取SVM的應用程式：
+用於存取儲存 VM 的應用程式：
 
 * `http`
 * `ontapi`
@@ -87,8 +87,8 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 指派給帳戶的存取控制角色：
 
-* 對於叢集（ admin SVM ）、預設值為 `admin`。
-* 對於資料 SVM 、預設值為 `vsadmin`。
+* 對於叢集（管理儲存 VM ）、預設值為 `admin`。
+* 對於資料儲存 VM 、預設值為 `vsadmin`。
 
  a| 
 
@@ -113,18 +113,12 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 `-second-authentication-method`
  a| 
-第二種驗證方法、適用於* ONTAP 《支援*》9.3 *的多因素驗證：
+多因素驗證的第二種驗證方法：
 
 * `none` 如果不使用多因素驗證、則為預設值
 * `publickey` 用於公開金鑰驗證 `authmethod` 為密碼或 nsswitch
 * `password` 用於使用者密碼驗證 `authmethod` 為公開金鑰
 * `nsswitch` 驗證方法為 publickey 時用於使用者密碼驗證
-+
-[NOTE]
-====
-從支援NS9.4開始ONTAP 、即可支援nsswitch。
-
-====
 
 
 驗證順序一律是公開金鑰、然後是密碼。
@@ -136,6 +130,106 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
 `-is-ldap-fastbind`
  a| 
 從「支援支援支援」9.11.1開始ONTAP 、設定為「真」時、會啟用LDAP快速連結以進行Nsswitch驗證；預設值為「假」。若要使用 LDAP 快速繫結、請使用 `-authentication-method` 值必須設定為 `nsswitch`。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["瞭解適用於Nsswitch驗證的LDAP fastbind。"]
+ a| 
+
+|===
+
+
+== 設定 Cisco 雙核心安全性資訊
+
+您可以使用提供這些值 `security login duo create` 命令：當您啟用 Cisco 雙核心雙因素驗證、並以 SSH 登入儲存 VM 時。
+
+[cols="3*"]
+|===
+
+
+| 欄位 | 說明 | 您的價值 
+
+
+ a| 
+`-vserver`
+ a| 
+套用雙核心驗證設定的儲存 VM （在 ONTAP CLI 中稱為 vserver ）。
+ a| 
+
+
+
+ a| 
+`-integration-key`
+ a| 
+您的整合金鑰是在向 DuoTM 註冊 SSH 應用程式時取得的。
+ a| 
+
+
+
+ a| 
+`-secret-key`
+ a| 
+您的秘密金鑰是在向 DuoTM 註冊 SSH 應用程式時取得的。
+ a| 
+
+
+
+ a| 
+`-api-host`
+ a| 
+API 主機名稱、是在使用 DuoTM 登錄 SSH 應用程式時取得的。例如：
+
+[listing]
+----
+api-<HOSTNAME>.duosecurity.com
+---- a| 
+
+
+
+ a| 
+`-fail-mode`
+ a| 
+若發生服務或組態錯誤而無法進行雙核心驗證、則會失敗 `safe` （允許存取）或 `secure` （拒絕存取）。預設值為 `safe`這表示如果由於無法存取雙核心 API 伺服器等錯誤而失敗、就會略過雙核心驗證。
+ a| 
+
+
+
+ a| 
+`-http-proxy`
+ a| 
+使用指定的 HTTP Proxy 。如果 HTTP Proxy 需要驗證、請在 Proxy URL 中加入認證。例如：
+
+[listing]
+----
+http-proxy=http://username:password@proxy.example.org:8080
+---- a| 
+
+
+
+ a| 
+`-autopush`
+ a| 
+也可以 `true` 或 `false`。預設為 `false`。如果 `true`，雙核會自動將推入登錄請求發送至用戶的電話，如果推入不可用，則會恢復至電話呼叫。請注意、這會有效停用密碼驗證。如果 `false`，系統會提示使用者選擇驗證方法。
+
+當設定為時 `autopush = true`、建議您進行設定 `max-prompts = 1`。
+ a| 
+
+
+
+ a| 
+`-max-prompts`
+ a| 
+如果使用者無法以第二個因素驗證、則 DUO 會提示使用者再次驗證。此選項可設定在拒絕存取之前、 DUO 顯示的提示數量上限。必須是 `1`、 `2`或 `3`。預設值為 `1`。
+
+例如、何時 `max-prompts = 1`，使用者必須在第一個提示字元上成功驗證，如果是的話 `max-prompts = 2`如果使用者在初始提示時輸入不正確的資訊、系統會提示使用者再次驗證。
+
+當設定為時 `autopush = true`、建議您進行設定 `max-prompts = 1`。
+
+為了獲得最佳體驗、只有公共金鑰驗證的使用者將永遠擁有 `max-prompts` 設定為 `1`。
+ a| 
+
+
+
+ a| 
+`-enabled`
+ a| 
+啟用雙核心雙因素驗證。設定為 `true` 依預設。啟用時、會根據設定的參數、在 SSH 登入期間強制執行雙核心雙因素驗證。當雙核心停用時（設為 `false`）、會忽略雙核心驗證。
  a| 
 
 |===
@@ -155,7 +249,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 `-vserver`
  a| 
-（選用）與角色相關聯的SVM名稱。
+（選用）與角色相關聯的儲存 VM 名稱（在 ONTAP CLI 中稱為 vserver ）。
  a| 
 
 
@@ -221,7 +315,7 @@ summary: 在建立登入帳戶及設定角色型存取控制（RBAC）之前、�
  a| 
 `-vserver`
  a| 
-（選用）帳戶存取的SVM名稱。
+（選用）帳戶存取的儲存 VM 名稱。
  a| 
 
 
@@ -284,7 +378,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
 
 == 安裝CA簽署的伺服器數位憑證
 
-您可以使用提供這些值 `security certificate generate-csr` 命令：當您產生數位憑證簽署要求（ CSR ）、以用於將 SVM 驗證為 SSL 伺服器時。
+您可以使用提供這些值 `security certificate generate-csr` 命令：當您產生數位憑證簽署要求（ CSR ）、用於將儲存 VM 驗證為 SSL 伺服器時。
 
 [cols="3*"]
 |===
@@ -312,7 +406,7 @@ OpenSSH公開金鑰。您應該以雙引號（"）括住金鑰。
  a| 
 `-country`
  a| 
-SVM所在國家/地區、以兩個字母的代碼表示。預設值為 `US`。請參閱手冊頁以取得代碼清單。
+儲存 VM 的國家 / 地區、以兩個字母的代碼表示。預設值為 `US`。請參閱手冊頁以取得代碼清單。
  a| 
 
 
@@ -320,7 +414,7 @@ SVM所在國家/地區、以兩個字母的代碼表示。預設值為 `US`。�
  a| 
 `-state`
  a| 
-SVM的州或省。
+儲存 VM 的州或省。
  a| 
 
 
@@ -328,7 +422,7 @@ SVM的州或省。
  a| 
 `-locality`
  a| 
-SVM的位置。
+儲存 VM 的位置。
  a| 
 
 
@@ -336,7 +430,7 @@ SVM的位置。
  a| 
 `-organization`
  a| 
-SVM的組織。
+儲存 VM 的組織。
  a| 
 
 
@@ -344,7 +438,7 @@ SVM的組織。
  a| 
 `-unit`
  a| 
-SVM組織中的單位。
+儲存 VM 組織中的單位。
  a| 
 
 
@@ -352,7 +446,7 @@ SVM組織中的單位。
  a| 
 `-email-addr`
  a| 
-SVM聯絡人管理員的電子郵件地址。
+儲存 VM 連絡管理員的電子郵件地址。
  a| 
 
 
@@ -364,7 +458,7 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 
 |===
-您可以使用提供這些值 `security certificate install` 當您安裝CA簽署的數位憑證以用於驗證叢集或SVM為SSL伺服器時、命令。下表僅顯示與帳戶組態相關的選項。
+您可以使用提供這些值 `security certificate install` 命令：安裝 CA 簽署的數位憑證、以用於驗證叢集或儲存 VM 作為 SSL 伺服器。下表僅顯示與帳戶組態相關的選項。
 
 [cols="3*"]
 |===
@@ -376,7 +470,7 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-vserver`
  a| 
-要安裝憑證的SVM名稱。
+要安裝憑證的儲存 VM 名稱。
  a| 
 
 
@@ -398,7 +492,7 @@ SVM聯絡人管理員的電子郵件地址。
 
 == 設定Active Directory網域控制器存取
 
-您可以使用提供這些值 `security login domain-tunnel create` 命令：當您已為資料 SVM 設定 SMB 伺服器、並且想要將 SVM 設定為閘道或 _tunnel_ 、以便 Active Directory 網域控制器存取叢集時。
+您可以使用提供這些值 `security login domain-tunnel create` 命令：當您已為資料儲存 VM 設定 SMB 伺服器、並且想要將儲存 VM 設定為閘道或 _tunnel_ 、以便 Active Directory 網域控制器存取叢集時。
 
 [cols="3*"]
 |===
@@ -410,11 +504,11 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-vserver`
  a| 
-已設定SMB伺服器的SVM名稱。
+已設定 SMB 伺服器的儲存 VM 名稱。
  a| 
 
 |===
-您可以使用提供這些值 `vserver active-directory create` 當您尚未設定 SMB 伺服器且想要在 Active Directory 網域上建立 SVM 電腦帳戶時的命令。
+您可以使用提供這些值 `vserver active-directory create` 當您尚未設定 SMB 伺服器且想要在 Active Directory 網域上建立儲存 VM 電腦帳戶時的命令。
 
 [cols="3*"]
 |===
@@ -426,7 +520,7 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-vserver`
  a| 
-您要為其建立Active Directory電腦帳戶的SVM名稱。
+要為其建立 Active Directory 電腦帳戶的儲存 VM 名稱。
  a| 
 
 
@@ -458,13 +552,8 @@ SVM聯絡人管理員的電子郵件地址。
 
 == 設定LDAP或NIS伺服器存取
 
-您可以使用提供這些值 `vserver services name-service ldap client create` 為 SVM 建立 LDAP 用戶端組態時的命令。
+您可以使用提供這些值 `vserver services name-service ldap client create` 為儲存 VM 建立 LDAP 用戶端組態時的命令。
 
-[NOTE]
-====
-從 ONTAP 9.2 開始 `-ldap-servers` 欄位會取代 `-servers` 欄位。此新欄位可以使用主機名稱或IP位址做為LDAP伺服器的值。
-
-====
 下表僅顯示與帳戶組態相關的選項：
 
 [cols="3*"]
@@ -477,7 +566,7 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-vserver`
  a| 
-用戶端組態的SVM名稱。
+用戶端組態的儲存 VM 名稱。
  a| 
 
 
@@ -491,17 +580,9 @@ SVM聯絡人管理員的電子郵件地址。
 
 
  a| 
-`-servers`
- a| 
-*《S169.0、9.1*》：用戶端連線之LDAP伺服器的IP位址清單（以英文分隔）ONTAP 。
- a| 
-
-
-
- a| 
 `-ldap-servers`
  a| 
-*《S122*》：用戶端所連接之LDAP伺服器的IP位址和主機名稱清單、以逗號分隔。ONTAP
+以逗號分隔的 IP 位址清單、以及用戶端所連線之 LDAP 伺服器的主機名稱。
  a| 
 
 
@@ -521,12 +602,12 @@ SVM聯絡人管理員的電子郵件地址。
 
 [NOTE]
 ====
-只有資料SVM存取才支援Start TLS。不支援存取管理SVM。
+支援 Start TLS 、僅能存取資料儲存 VM 。不支援存取管理儲存 VM 。
 
 ==== a| 
 
 |===
-您可以使用提供這些值 `vserver services name-service ldap create` 將 LDAP 用戶端組態與 SVM 建立關聯時的命令。
+您可以使用提供這些值 `vserver services name-service ldap create` 將 LDAP 用戶端組態與儲存 VM 建立關聯時的命令。
 
 [cols="3*"]
 |===
@@ -538,7 +619,7 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-vserver`
  a| 
-要與用戶端組態建立關聯的SVM名稱。
+要與用戶端組態建立關聯的儲存 VM 名稱。
  a| 
 
 
@@ -554,17 +635,12 @@ SVM聯絡人管理員的電子郵件地址。
  a| 
 `-client-enabled`
  a| 
-SVM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
+儲存 VM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
  a| 
 
 |===
-您可以使用提供這些值 `vserver services name-service nis-domain create` 在 SVM 上建立 NIS 網域組態時的命令。
+您可以使用提供這些值 `vserver services name-service nis-domain create` 在儲存 VM 上建立 NIS 網域組態時的命令。
 
-[NOTE]
-====
-從 ONTAP 9.2 開始 `-nis-servers` 欄位會取代 `-servers` 欄位。這個新欄位可以使用主機名稱或 IP 位址做為 NIS 伺服器的值。
-
-====
 [cols="3*"]
 |===
 
@@ -575,7 +651,7 @@ SVM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
  a| 
 `-vserver`
  a| 
-要在其中建立網域組態的SVM名稱。
+要在其中建立網域組態的儲存 VM 名稱。
  a| 
 
 
@@ -607,7 +683,7 @@ SVM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
  a| 
 `-nis-servers`
  a| 
-*《S122*》：網域組態所使用之NIS伺服器的IP位址和主機名稱清單、以英文分隔。ONTAP
+網域組態所使用之 NIS 伺服器的 IP 位址和主機名稱的逗號分隔清單。
  a| 
 
 |===
@@ -623,7 +699,7 @@ SVM 是否可以使用 LDAP 用戶端組態 (`true` 或 `false`）。
  a| 
 `-vserver`
  a| 
-要設定名稱服務查詢順序的SVM名稱。
+要設定名稱服務查詢順序的儲存 VM 名稱。
  a| 
 
 

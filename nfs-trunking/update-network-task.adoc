@@ -1,0 +1,105 @@
+---
+permalink: nfs-trunking/update-network-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, prepare, NFS trunking, LIF, trunking group, NIC 
+summary: 若要善用 NFS 主幹、您必須在兩個或多個 NIC 上駐留多個生命負載、以供每個主幹連線使用。 
+---
+= 更新您的網路以進行主幹連線
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFSv4.1 主幹需要主幹群組中的生命體位於同一個節點上、並在同一個節點上擁有主連接埠。所有的生命體都應該在同一個節點上的容錯移轉群組中進行設定。
+
+.關於這項工作
+一對一的生命與 NIC 對應可獲得最大的效能增益、但不需要啟用主幹。
+
+您可以有多個容錯移轉群組、但主幹的容錯移轉群組必須僅包含主幹群組中的那些生命體。
+
+您應該隨時調整主幹容錯移轉群組、以便從容錯移轉群組新增或移除連線（及基礎 NIC ）。
+
+.開始之前
+* 您必須知道與 NIC 相關聯的連接埠名稱、才能建立容錯移轉群組。
+* 連接埠必須全部位於同一個節點上。
+
+
+.步驟
+. 確認您打算使用的網路連接埠名稱和狀態：
++
+`network port show`
+
+. 建立主幹容錯移轉群組或修改現有的群組以進行主幹連線：
++
+`network interface failover-groups create -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+
++
+`network interface failover-groups modify -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+
++
+
+NOTE: 這並不需要容錯移轉群組、但強烈建議您使用。
+
++
+** `_svm_name_` 是包含 NFS 伺服器的 SVM 名稱。
+** `_ports_list_` 是要新增至容錯移轉群組的連接埠清單。
++
+連接埠會以格式新增 `_node_name:port_number_`例如、 `node1:e0c`。
+
++
+下列命令會建立容錯移轉群組 `fg3` 對於 SVM VS1 、並新增三個連接埠：
+
++
+`network interface failover-groups create -vserver vs1 -failover-group fg3 -targets cluster1-01:e0c,cluster1-01:e0d,cluster1-01:e0e`
+
++
+深入瞭解 link:../networking/configure_failover_groups_and_policies_for_lifs_overview.html["容錯移轉群組。"]
+
+
+
+. 視需要為主幹群組的成員建立額外的生命體：
++
+`network interface create -vserver _svm_name_ -lif _lif_name_ -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _IP_address_ [-service-policy _policy_] [-auto-revert {true|false}]`
+
++
+** `-home-node` - 在 LIF 上執行網路介面還原命令時、 LIF 會傳回的節點。
++
+您可以指定 LIF 是否應使用自動還原至主節點和主連接埠 `-auto-revert` 選項。
+
+** `-home-port` 是在 LIF 上執行網路介面還原命令時 LIF 傳回的實體或邏輯連接埠。
+** 您可以使用指定 IP 位址 `-address` 和 `-netmask` 選項：
+** 當您手動指派 IP 位址（不使用子網路）時、如果不同 IP 子網路上有用戶端或網域控制站、您可能需要設定通往閘道的預設路由。network route create 手冊頁包含有關在 SVM 中創建靜態路由的信息。
+** `-service-policy` - LIF 的服務原則。如果未指定原則、則會自動指派預設原則。使用 `network interface service-policy show` 命令以檢閱可用的服務原則。
+** `-auto-revert` - 指定在啟動、管理資料庫狀態變更或建立網路連線等情況下、資料 LIF 是否會自動還原至其主節點。* 預設設定為 FALSE* 、但您可以根據環境中的網路管理原則將其設為 true 。
++
+針對主幹群組中所需的每個額外 LIF 重複此步驟。
+
++
+下列命令會在節點 cluster1_01 的連接埠 e0c 上為 SVM VS1 建立 lif-a ：
+
++
+`network interface create -vserver vs1 -lif lif-A -service-policy default-intercluster -home-node cluster1_01 -home-port e0c -address 192.0.2.0`
+
++
+深入瞭解 link:../networking/create_lifs.html["LIF 建立："]
+
+
+
+. 確認已建立生命：
++
+`network interface show`
+
+. 確認已設定的IP位址可連線：
++
+[cols="25,75"]
+|===
+| 若要驗證... | 使用... 
+
+
+| IPV4位址 | `network ping` 
+
+
+| IPv6位址 | `network ping6` 
+|===
+

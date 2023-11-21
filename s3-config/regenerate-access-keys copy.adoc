@@ -1,0 +1,47 @@
+---
+permalink: s3-config/regenerate-access-keys.html 
+sidebar: sidebar 
+keywords: regenerate, s3, access keys, secret keys 
+summary: 可以重新產生用於存取 S3 用戶端的金鑰、並變更其有效性。 
+---
+= 重新產生金鑰並修改其保留期間
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當您建立使用者時、系統會自動為使用者的 S3 用戶端存取產生存取金鑰和秘密金鑰。如果金鑰過期或洩漏、您可以重新產生使用者的金鑰。
+
+如需建立存取金鑰的相關資訊、請參閱 link:../s3-config/create-s3-user-task.html["建立S3使用者"]。
+
+[role="tabbed-block"]
+====
+.CLI
+--
+. 執行以重新產生使用者的存取和秘密金鑰 `vserver object-store-server user regenerate-keys` 命令。
+. 根據預設、產生的金鑰會無限期有效。從 9.14.1 開始、您可以修改金鑰的保留期間、之後金鑰會自動過期。您可以使用以下格式新增保留期間： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W`
+例如、如果您想要輸入一天、兩小時、三分鐘和四秒的保留期間、請將值輸入為 `P1DT2H3M4S`。
++
+[listing]
+----
+vserver object-store-server user regenerate-keys -vserver svm_name -user user -key-time-to-live 0
+----
+. 儲存存取和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
+
+
+--
+.系統管理員
+--
+. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
+. 在*設定*索引標籤中、按一下 image:icon_pencil.gif["編輯圖示"] 在「* S3 *」方塊中。
+. 在 * 使用者 * 索引標籤中、確認沒有存取金鑰、或金鑰已過期。
+. 如果您需要重新產生金鑰、請按一下 image:icon_kabob.gif["更多圖示"] 按一下使用者旁邊的 * 重新產生 Key* 。
+. 根據預設、產生的金鑰在不確定的時間內有效。從 9.14.1 開始、您可以修改金鑰的保留期間、之後金鑰會自動過期。以天、小時、分鐘或秒為單位輸入保留期間。
+. 按一下「 * 儲存 * 」。金鑰即會重新產生。金鑰保留期間的任何變更都會立即生效。
+. 下載或儲存存取金鑰和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
+
+
+--
+====

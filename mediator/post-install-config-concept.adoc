@@ -31,8 +31,14 @@ ONTAP Mediator 伺服器支援數種可設定的安全性設定。  所有設定
 
 `systemctl restart ontap_mediator`
 
+
+
+== 修改 ONTAP Mediator 屬性
+
 可以設定下列屬性：
-附註：中的其他預設值 `ontap_mediator.config.yaml` 不應修改。
+
+
+NOTE: 中的其他預設值 `ontap_mediator.config.yaml` 不應修改。
 
 * * 用於安裝協力廠商 SSL 憑證的設定、以取代預設的自我簽署憑證 *
 +
@@ -98,4 +104,37 @@ password_nonletter_chars: 2    # min. non-letter characters (digits, specials, a
 ....
 low_space_threshold_mib: 10
 ....
+* * 控制 reserve_log_space.* 的設定
++
+ONTAP Mediator 伺服器預設安裝會為記錄檔建立個別的磁碟空間。  安裝程式會建立一個新的固定大小檔案、總共有 700 MB 的磁碟空間、以明確用於 Mediator 記錄。
+
++
+若要停用此功能並使用預設磁碟空間、請執行下列步驟：
+
++
+--
+.. 將 reserve_log_space 的值從下列檔案中的「 '1' 」變更為「 0' 」：
++
+`/opt/netapp/lib/ontap_mediator/tools/mediator_env`
+
+.. 重新啟動 Mediator ：
++
+... `cat /opt/netapp/lib/ontap_mediator/tools/mediator_env | grep "RESERVE_LOG_SPACE"`
++
+....
+RESERVE_LOG_SPACE=0
+....
+... `systemctl restart ontap_mediator`
+
+
+
+
+--
++
+若要重新啟用此功能、請將值從「 0 」變更為「 1 」、然後重新啟動 Mediator 。
+
++
+
+NOTE: 在磁碟空間之間切換不會清除現有記錄。  切換並重新啟動 Mediator 之後、所有先前的記錄都會備份、然後移至目前的磁碟空間。
+
 

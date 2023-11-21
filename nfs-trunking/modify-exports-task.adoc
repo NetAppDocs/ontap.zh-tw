@@ -1,0 +1,53 @@
+---
+permalink: nfs-trunking/modify-exports-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, NFS trunking, NIC, export, policies, rule, Linux, VMware, datastores, client 
+summary: 若要讓用戶端能夠利用主幹功能來進行現有的資料共用、您可能必須修改匯出原則和規則、以及它們所附加的磁碟區。 
+---
+= 修改資料匯出以供用戶端存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要讓用戶端能夠利用主幹功能來進行現有的資料共用、您可能必須修改匯出原則和規則、以及它們所附加的磁碟區。Linux 用戶端和 VMware 資料存放區有不同的匯出需求。
+
+用戶端匯出需求：
+
+* Linux 用戶端必須為每個主幹連線（亦即每個 LIF ）分別安裝一個裝載點和一個裝載點。
++
+如果您要升級至 ONTAP 9.14.1 、且已匯出 Volume 、則可以繼續在主幹群組中使用該 Volume 。
+
+* VMware 用戶端只需要單一裝載點即可匯出磁碟區、並指定多個生命量。
++
+VMware 用戶端需要在匯出原則中具有 root 存取權。
+
+
+
+.步驟
+. 確認現有的匯出原則已就緒：
++
+`vserver export-policy show`
+
+. 確認現有的匯出原則規則適用於主幹組態：
++
+`vserver export-policy rule show -policyname _policy_name_`
+
++
+請特別確認 `-clientmatch` 參數可正確識別要掛載匯出的具有主幹功能的 Linux 或 VMware 用戶端。
+
++
+如果需要調整、請使用修改規則 `vserver export-policy rule modify` 命令或建立新規則：
+
++
+`vserver export-policy rule create -vserver _svm_name_ -policyname _policy_name_ -ruleindex integer -protocol nfs4 -clientmatch { text | "text,text,…" } -rorule _security_type_ -rwrule _security_type_ -superuser _security_type_ -anon _user_ID_`
+
++
+深入瞭解 link:../nfs-config/add-rule-export-policy-task.html["建立匯出規則。"]
+
+. 驗證現有匯出的磁碟區是否在線上：
++
+`volume show -vserver _svm_name_`
+
+

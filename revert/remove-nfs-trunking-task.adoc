@@ -1,0 +1,25 @@
+---
+permalink: revert/remove-nfs-trunking-task.html 
+sidebar: sidebar 
+keywords: nfsv4.1, trunking, revert 
+summary: 如果您已啟用用戶端連線的主幹連線、並將先前版本還原為 ONTAP 9.12.1 、則必須在還原之前停用任何 NFSv4.1 伺服器上的主幹連線。 
+---
+= 從 ONTAP 9.14.1 或更新版本還原之前、請先移除 NFSv4.1 工作階段主幹組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已啟用用戶端連線的主幹連線、並將先前版本還原為 ONTAP 9.14.1 、則必須在還原之前停用任何 NFSv4.1 伺服器上的主幹連線。
+
+當您輸入時 `revert-to` 命令時、您會看到一則警告訊息、建議您在繼續之前停用主幹連線。
+
+還原至較早的 ONTAP 版本之後、使用中繼連線的用戶端會恢復為使用單一連線。他們的資料處理量將受到影響、但不會造成中斷。還原行為與將 SVM 的 NFSv4.1 主幹選項從啟用修改為停用相同。
+
+.步驟
+. 停用 NFSv4.1 伺服器上的主幹連線： +
+`vserver nfs modify -vserver _svm_name_ -v4.1-trunking disabled`
+. 確認 NFS 已依需求設定： +
+`vserver nfs show -vserver _svm_name_`
+

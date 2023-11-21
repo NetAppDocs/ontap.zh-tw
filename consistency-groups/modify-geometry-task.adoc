@@ -31,6 +31,12 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.13.1 開始、您可以使用系統管理員執行此作業。
+
 . 選擇*儲存>一致性群組*。
 . 選取您要新增子一致性群組的父一致性群組。
 . 在父一致性群組名稱旁、選取「 ** 更多 ** 」、然後選擇「新增子一致性群組」。
@@ -44,6 +50,27 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 . 選取 ** 新增 ** 。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 新增子一致性群組。
+
+.新增具有新磁碟區的子一致性群組
+. 建立新的一致性群組。提供一致性群組名稱、磁碟區首碼、磁碟區數量、磁碟區大小、儲存服務、 和匯出原則名稱：
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_ -parent-consistency-group _parent_consistency_group_ -volume-prefix _prefix_ -volume-count _number_ -size _size_ -storage-service _service_ -export-policy _policy_name_`
+
+
+
+.新增具有現有磁碟區的子一致性群組
+. 建立新的一致性群組。。 `volumes` 參數接受以逗號分隔的磁碟區名稱清單。
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _new_consistency_group_ -parent-consistency-group _parent_consistency_group_ -volumes _volume_`
+
+
+
+--
+====
 
 
 == 分離子一致性群組
@@ -53,9 +80,16 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 .開始之前
 * 分離子一致性群組會導致父一致性群組的快照無效且無法存取。Volume 精細快照仍有效。
 * 個別一致性群組的現有 Snapshot 複本仍然有效。
+* 如果現有的單一一致性群組名稱與您要分離的子一致性群組名稱相同、則此作業將會失敗。如果您遇到此案例、則在中斷連線時必須重新命名一致性群組。
 
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.13.1 開始、您可以使用系統管理員執行此作業。
+
 . 選擇*儲存>一致性群組*。
 . 選取包含要分離之子系的父一致性群組。
 . 在要分離的子一致性組旁邊，選擇 ** 更多 ** ，然後選擇 ** 分離父級 ** 。
@@ -63,9 +97,22 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 . 選擇 ** 分離 ** 。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 分離子一致性群組。
+
+. 分離一致性群組。您也可以使用重新命名分離的一致性群組 `-new-name` 參數。
++
+`consistency-group detach -vserver _SVM_name_ -consistency-group _child_consistency_group_ -parent-consistency-group _parent_consistency_group_ [-new-name _new_name_]`
 
 
-== 將單一一致性群組移至父一致性群組下
+
+--
+====
+
+
+== 將現有的單一一致性群組移至父一致性群組下
 
 從 ONTAP 9.13.1 開始、您可以將現有的單一一致性群組轉換成子一致性群組。您可以將一致性群組移至現有父一致性群組之下、或在移動作業期間建立新的父一致性群組。
 
@@ -76,6 +123,12 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.13.1 開始、您可以使用系統管理員執行此作業。
+
 . 選擇*儲存>一致性群組*。
 . 選取您要轉換的一致性群組。
 . 選擇「 ** 更多 ** 」、然後選擇「在不同一致性群組下移動」 ** 。
@@ -89,6 +142,27 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 . 選擇 ** 移動 ** 。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 將單一一致性群組移至父一致性群組下。
+
+.將一致性群組移至新的父一致性群組下
+. 建立新的父一致性群組。。 `-consistency-groups` 參數會將任何現有的一致性群組移轉至新父群組。
++
+`consistency-group attach -vserver _svm_name_ -consistency-group _parent_consistency_group_ -consistency-groups _child_consistency_group_`
+
+
+
+.將一致性群組移至現有一致性群組下
+. 移動一致性群組：
++
+`consistency-group add -vserver _SVM_name_ -consistency-group _consistency_group_ -parent-consistency-group _parent_consistency_group_`
+
+
+
+--
+====
 
 
 == 推廣子項一致性群組
@@ -101,6 +175,12 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.13.1 開始、您可以使用系統管理員執行此作業。
+
 . 選擇*儲存>一致性群組*。
 . 選取您要升級的一致性群組。
 . 選擇「 ** 更多 ** 」、然後選擇「升級至父一致性群組」。
@@ -108,6 +188,19 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 . 選擇 ** 升級 ** 。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 將單一一致性群組移至父一致性群組下。
+
+. 推廣一致性群組。此命令會建立一個父一致性群組和一個子一致性群組。
++
+`consistency-group promote -vserver _SVM_name_ -consistency-group _existing_consistency_group_ -new-name _new_child_consistency_group_`
+
+
+
+--
+====
 
 
 == 將父實體降級為單一一致性群組
@@ -119,8 +212,28 @@ NOTE: 您無法修改以遠端保護原則設定的一致性群組幾何。您�
 
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.13.1 開始、您可以使用系統管理員執行此作業。
+
 . 選擇*儲存>一致性群組*。
 . 選取您要降級的父一致性群組。
 . 選擇「 ** 更多 ** 」、然後選擇「降級為單一一致性群組」 ** 。
 . 系統將會發出警告訊息、告知您所有相關的子一致性群組都將被刪除、而其磁碟區將移至新的單一一致性群組之下。選擇 ** 降級 ** 以確認您瞭解其影響。
 
+
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 降級一致性群組。
+
+. 降級一致性群組。使用選用功能 `-new-name` 重新命名一致性群組的參數。
++
+`consistency-group demote -vserver _SVM_name_ -consistency-group _parent_consistency_group_ [-new-name _new_consistency_group_name_]`
+
+
+
+--
+====

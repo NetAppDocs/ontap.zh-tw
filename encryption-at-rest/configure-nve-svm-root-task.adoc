@@ -1,0 +1,73 @@
+---
+permalink: encryption-at-rest/configure-nve-svm-root-task.html 
+keywords: volume encryption, nve, svm root, encrypt 
+summary: NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。您可以從 ONTAP 9.14.1 開始、在 SVM 根目錄上設定 NVE 。 
+---
+= 在 SVM 根磁碟區上設定 NetApp Volume Encryption
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以在儲存 VM （ SVM ）根磁碟區上啟用 NetApp Volume Encryption （ NVE ）。透過 NVE 、根磁碟區會使用唯一金鑰進行加密、以提高 SVM 的安全性。
+
+.關於這項工作
+只有在建立 SVM 之後、才能在 SVM 根 Volume 上啟用 NVE 。
+
+.開始之前
+* SVM 根磁碟區不得位於使用 NetApp Aggregate Encryption （ NAE ）加密的 Aggregate 上。
+* 您必須已啟用 Onboard Key Manager 或外部金鑰管理程式的加密。
+* 您必須執行 ONTAP 9.14.1 或更新版本。
+* 若要移轉包含使用 NVE 加密的根 Volume 的 SVM 、您必須在移轉完成後、將 SVM 根 Volume 轉換為純文字 Volume 、然後重新加密 SVM 根 Volume 。
++
+** 如果 SVM 移轉的目的地集合體使用 NAE 、則根磁碟區預設會繼承 NAE 。
+
+
+* 如果 SVM 處於 SVM 災難恢復關係中：
++
+** 鏡射 SVM 上的加密設定不會複製到目的地。如果您在來源或目的地上啟用 NVE 、則必須在鏡射的 SVM 根 Volume 上個別啟用 NVE 。
+** 如果目的地叢集中的所有集合體都使用 NAE 、則 SVM 根 Volume 將使用 NAE 。
+
+
+
+
+.步驟
+您可以使用 ONTAP CLI 或系統管理員、在 SVM 根磁碟區上啟用 NVE 。
+
+[role="tabbed-block"]
+====
+.CLI
+--
+您可以在 SVM 根磁碟區就地啟用 NVE 、或是在集合體之間移動磁碟區。
+
+.將根磁碟區加密到位
+. 將根磁碟區轉換為加密磁碟區：
++
+`volume encryption conversion start -vserver _svm_name_ -volume _volume_`
+
+. 確認加密成功。。 `volume show -encryption-type volume` 顯示使用 NVE 的所有磁碟區清單。
+
+
+.移動 SVM 根 Volume 來加密它
+. 啟動磁碟區移動：
++
+`volume move start -vserver _svm_name_ -volume _volume_ -destination-aggregate _aggregate_ -encrypt-with-aggr-key false -encrypt-destination true`
+
++
+如需更多資訊、請參閱 `volume move`、請參閱 xref:../volumes/move-volume-task.html[移動Volume]。
+
+. 確認 `volume move` 操作成功 `volume move show` 命令。。 `volume show -encryption-type volume` 顯示使用 NVE 的所有磁碟區清單。
+
+
+--
+.系統管理員
+--
+. 瀏覽至 ** 儲存空間 ** > ** 磁碟區 ** 。
+. 在您要加密的 SVM 根磁碟區名稱旁、選取 image:icon_kabob.gif["三個垂直點"] 然後 ** 編輯 ** 。
+. 在「 ** 儲存與最佳化 ** 」標題下、選取「 ** 啟用加密 ** 」。
+. 選擇 ** 儲存 ** 。
+
+
+--
+====

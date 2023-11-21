@@ -1,0 +1,59 @@
+---
+permalink: nfs-trunking/index.html 
+sidebar: sidebar 
+keywords: NFSv4.1, trunking, Linux, VMware, FlexGroup, volumes, multipathing, AI/ML, rdma, data lake 
+summary: 從 ONTAP 9.14.1 開始、執行 V4.1 或更新版本的 NFS 用戶端可以利用工作階段主幹功能、開啟多個與 NFS 伺服器的連線、藉此提高資料傳輸速度、並透過多重路徑提供恢復能力 
+---
+= NFS 主幹總覽
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、 NFSv4.1 用戶端可以利用工作階段主幹功能、在 NFS 伺服器上開啟多個不同生命週期的連線、藉此提高資料傳輸速度、並透過多重路徑提供恢復能力。
+
+Trunking 對於將 FlexVol 磁碟區匯出至具備主幹功能的用戶端（尤其是 VMware 和 Linux 用戶端）、或透過 RDMA 、 TCP 或 pNFS 匯出至 NFS 而言非常有利。
+
+在 ONTAP 9.14.1 中、主幹僅限於單一節點上的生命負載、主幹無法跨越多個節點的生命負載。
+
+FlexGroup 磁碟區支援主幹。雖然這可以提供更好的效能、但只能在單一節點上設定 FlexGroup Volume 的多重路徑存取。
+
+本版本僅支援多重路徑的工作階段主幹。
+
+
+
+== 如何使用主幹
+
+若要善用主幹所提供的多重路徑優點、您需要一組生命（稱為 _truning group_ ）、這些生命體與包含啟用主幹的 NFS 伺服器的 SVM 相關聯。主幹群組中的生命體必須在叢集的同一個節點上有主連接埠、而且它們必須位於這些主連接埠上。最佳做法是主幹群組中的所有生命都是同一個容錯移轉群組的成員。
+
+ONTAP 可從指定的用戶端、每個節點最多支援 16 個中繼連線。
+
+當用戶端從啟用主幹連線的伺服器掛載匯出時、會在主幹群組中指定多個用於生命的 IP 位址。用戶端連線至第一個 LIF 後、只會將額外的生命體新增至 NFSv4.1 工作階段、並在符合主幹群組需求的情況下用於主幹。然後用戶端會根據自己的演算法（例如循環配置資源）、透過多個連線來散佈 NFS 作業。
+
+為了獲得最佳效能、您應該在專用於提供多重路徑匯出的 SVM 中設定主幹連線、而非單一路徑匯出。也就是說、您只應在 SVM 中的 NFS 伺服器上啟用主幹、該伺服器的匯出僅提供給啟用主幹的用戶端。
+
+
+
+== 支援的用戶端
+
+ONTAP NFSv4.1 伺服器支援主幹連線、可與任何能夠進行 NFSv4.1 工作階段主幹的用戶端連線。
+
+下列用戶端已通過 ONTAP 9.14.1 測試：
+
+* VMware - ESXi 7.0U3F 及更新版本
+* Linux - Red Hat Enterprise Linux （ RHEL ） 8.8 和 9.3
+
+
+
+NOTE: 在 NFS 伺服器上啟用主幹時、在不支援主幹的 NFS 用戶端上存取匯出共用的使用者可能會看到效能下降。這是因為 SVM 資料生命期的多個掛載只會使用單一 TCP 連線。
+
+
+
+== NFS 主幹與 nconnect 之間的差異
+
+從功能不支援的問題9.8開始ONTAP 、NFSv4.1啟用時、預設會提供nconnect功能。在具有 nconnect 功能的用戶端上、單一 NFS 裝載可透過單一 LIF 進行多個 TCP 連線（最多 16 個）。
+
+相反地、主幹是 _ 多重路徑 _ 功能、可在多個生命體上提供多個 TCP 連線。如果您能夠在環境中使用額外的 NIC 、則主幹可提供比 nconnect 更高的平行度和效能。
+
+深入瞭解 link:../nfs-admin/ontap-support-nfsv41-concept.html["n 連接。"]

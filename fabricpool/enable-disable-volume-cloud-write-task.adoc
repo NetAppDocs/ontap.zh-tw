@@ -1,0 +1,104 @@
+---
+permalink: fabricpool/enable-disable-volume-cloud-write-task.html 
+sidebar: sidebar 
+keywords: creating, volume, fabricpool, cloud write, enable, disable 
+summary: 從 ONTAP 9.14.1 開始、您可以在 FabricPool 的新磁碟區或現有磁碟區上啟用和停用雲端寫入模式、以允許 NFS 用戶端直接將資料寫入雲端。 
+---
+= 啟用和停用磁碟區、以直接寫入雲端
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以在 FabricPool 的新磁碟區或現有磁碟區上啟用和停用雲端寫入模式、讓 NFS 用戶端直接將資料寫入雲端、而無需等待分層掃描。SMB 用戶端仍會寫入雲端寫入磁碟區中的效能層。雲端寫入模式預設為停用。
+
+雲端寫入模式對移轉等案例很有幫助、例如、大量資料會傳輸到叢集、而叢集無法在本機層上支援。如果沒有雲端寫入模式、在移轉期間會傳輸較少的資料、然後分層、再重新傳輸和分層、直到移轉完成為止。使用雲端寫入模式時、不再需要這類管理、因為資料永遠不會傳輸到本機層。
+
+.開始之前
+* 您應該是叢集或 SVM 管理員。
+* 您必須處於進階權限層級。
+* 磁碟區必須是讀寫類型的磁碟區。
+* 磁碟區必須具有所有分層原則。
+
+
+
+
+== 在磁碟區建立期間啟用雲端寫入
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 建立磁碟區並啟用雲端寫入模式：
++
+[source, cli]
+----
+volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+----
++
+以下範例建立在 FabricPool 本機層（ aggr1 ）上啟用雲端寫入功能的名為 vol1 的磁碟區：
+
++
+[listing]
+----
+volume create -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+----
+
+
+
+
+== 在現有磁碟區上啟用雲端寫入
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改磁碟區以啟用雲端寫入模式：
++
+[source, cli]
+----
+volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+----
++
+以下範例修改 FabricPool 本機層（ aggr1 ）上啟用雲端寫入功能的名為 vol1 的磁碟區：
+
++
+[listing]
+----
+volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+----
+
+
+
+
+== 停用磁碟區上的雲端寫入功能
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 停用雲端寫入模式：
++
+[source, cli]
+----
+volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <aggregate name>
+----
++
+以下範例建立一個名為 vol1 且已啟用雲端寫入功能的磁碟區：
+
++
+[listing]
+----
+volume modify -volume vol1 -is-cloud-write-enabled false -aggregate aggr1
+----
+

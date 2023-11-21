@@ -1,0 +1,120 @@
+---
+permalink: s3-config/generate-access-keys-api.html 
+sidebar: sidebar 
+keywords: generate, ldap, s3, access keys, secret keys using API 
+summary: S3 使用者可使用 API 重新產生用於存取 S3 用戶端的金鑰。 
+---
+= 讓 LDAP 或網域使用者產生自己的 S3 存取金鑰
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、身為 ONTAP 管理員、您可以建立自訂角色、並將其授予本機或網域群組或輕量型目錄存取傳輸協定（ LDAP ）群組、讓屬於這些群組的使用者能夠產生自己的存取權和機密金鑰、以供 S3 用戶端存取。
+
+.開始之前
+請確認下列事項：
+
+. 已建立啟用 S3 的儲存 VM 、其中包含 S3 伺服器。請參閱 link:../s3-config/create-svm-s3-task.html["為S3建立SVM"]。
+. 該儲存 VM 中已建立一個儲存區。請參閱 link:../s3-config/create-bucket-task.html["建立儲存庫"]。
+. 在儲存 VM 上設定 DNS 。請參閱 link:../networking/configure_dns_services_manual.html["設定DNS服務"]。
+. 儲存 VM 上會安裝 LDAP 伺服器的自我簽署根憑證授權單位（ CA ）憑證。請參閱 link:../nfs-config/install-self-signed-root-ca-certificate-svm-task.html["在SVM上安裝自我簽署的根CA憑證"]。
+. LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱 link:../nfs-config/create-ldap-client-config-task.html["建立LDAP用戶端組態"] 和 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"]。
+
+
+
+
+== 設定使用者以產生存取金鑰
+
+. 將 LDAP 指定為儲存 VM 的名稱服務資料庫 _ 、以用於群組和 LDAP 密碼：
++
+[listing]
+----
+ns-switch modify -vserver <vserver-name> -database group -sources files,ldap
+ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
+----
++
+如需此命令的詳細資訊、請參閱 `vserver services name-service ns-switch modify` 命令。
+
+. 建立可存取 S3 使用者 REST API 端點的自訂角色：
+`security login rest-role create -vserver <vserver-name> -role <custom-role-name> -api "/api/protocols/s3/services/*/users" -access <access-type>`
+在此範例中 `s3-role` 角色是針對儲存 VM 上的使用者所產生 `svm-1`，授予所有存取權限、讀取、建立及更新。
++
+[listing]
+----
+security login rest-role create -vserver svm-1 -role s3role -api "/api/protocols/s3/services/*/users" -access all
+----
++
+如需此命令的詳細資訊、請參閱 `security login rest-role create` 命令。
+
+. 使用安全登入命令建立 LDAP 使用者群組、並新增新的自訂角色以存取 S3 使用者 REST API 端點。如需此命令的詳細資訊、請參閱 `security login create` 命令。
++
+[listing]
+----
+security login create -user-or-group-name <ldap-group-name> -application http -authentication-method nsswitch -role <custom-role-name> -is-ns-switch-group yes
+----
++
+在此範例中、是 LDAP 群組 `ldap-group-1` 是在中建立的 `svm-1`以及自訂角色 `s3role` 新增至 IT 以存取 API 端點、並在快速繫結模式中啟用 LDAP 存取。
+
++
+[listing]
+----
+security login create -user-or-group-name ldap-group-1 -application http -authentication-method nsswitch -role s3role -is-ns-switch-group yes -second-authentication-method none -vserver svm-1 -is-ldap-fastbind yes
+----
++
+如需詳細資訊、請參閱 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["使用LDAP快速連結進行Nsswitch驗證"]。
+
+
+
+將自訂角色新增至網域或 LDAP 群組、可讓該群組中的使用者有限存取 ONTAP `/api/protocols/s3/services/{svm.uuid}/users` 端點：透過叫用 API 、網域或 LDAP 群組使用者可以產生自己的存取權和秘密金鑰、以存取 S3 用戶端。他們只能為自己產生金鑰、而不能為其他使用者產生金鑰。
+
+
+
+== 做為 S3 或 LDAP 使用者、產生您自己的存取金鑰
+
+從 ONTAP 9.14.1 開始、如果您的系統管理員已授予您自行產生金鑰的角色、您就可以產生自己的存取權和秘密金鑰、以供存取 S3 用戶端。您只能使用下列 ONTAP REST API 端點自行產生金鑰。
+
+.HTTP 方法和端點
+此 REST API 呼叫使用下列方法和端點。如需此端點其他方法的相關資訊、請參閱參考資料 https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-a-copy-of-the-ontap-rest-api-reference-documentation["API 文件"]。
+
+[cols="25,75"]
+|===
+| HTTP方法 | 路徑 
+
+
+| 貼文 | /api/protocols / s3/services / ｛ SVM.uuid ｝ / 使用者 
+|===
+.Curl範例
+[source, curl]
+----
+curl --request POST \
+--location "https://$FQDN_IP /api/protocols/s3/services/{svm.uuid}/users " \
+--include \
+--header "Accept: */*" \
+--header "Authorization: Basic $BASIC_AUTH"
+----
+.Json輸出範例
+[listing]
+----
+{
+  "records": [
+    {
+      "access_key": "Pz3SB54G2B_6dsXQPrA5HrTPcf478qoAW6_Xx6qyqZ948AgZ_7YfCf_9nO87YoZmskxx3cq41U2JAH2M3_fs321B4rkzS3a_oC5_8u7D8j_45N8OsBCBPWGD_1d_ccfq",
+      "_links": {
+        "next": {
+          "href": "/api/resourcelink"
+        },
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "user-1",
+      "secret_key": "A20_tDhC_cux2C2BmtL45bXB_a_Q65c_96FsAcOdo14Az8V31jBKDTc0uCL62Bh559gPB8s9rrn0868QrF38_1dsV2u1_9H2tSf3qQ5xp9NT259C6z_GiZQ883Qn63X1"
+    }
+  ],
+  "num_records": "1"
+}
+
+----

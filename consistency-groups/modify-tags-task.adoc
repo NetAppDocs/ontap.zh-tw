@@ -1,0 +1,59 @@
+---
+permalink: consistency-groups/modify-tags-task.html 
+sidebar: sidebar 
+keywords: consistency groups, application tag, sql, oracle, component tag 
+summary: 應用程式與元件標籤是一種管理工具、可讓您篩選及識別一致性群組中的不同工作負載。 
+---
+= 修改應用程式和元件標籤
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.12.1 開始、一致性群組支援元件和應用程式標記。應用程式與元件標籤是一種管理工具、可讓您篩選及識別一致性群組中的不同工作負載。
+
+.關於這項工作
+一致性群組提供兩種類型的標籤：
+
+* **應用程式標籤*：這些標籤適用於個別與父一致性群組。應用程式標籤提供工作負載標記、例如MongoDB、Oracle或SQL Server。一致性群組的預設應用程式標記為「其他」。
+* **元件標籤*：階層式一致性群組中的子項目具有元件標籤、而非應用程式標籤。元件標籤的選項包括「data」（資料）、「logs」（記錄）或「other」（其他）。預設值為「其他」。
+
+
+您可以在建立一致性群組或建立一致性群組之後套用標記。
+
+
+IMPORTANT: 如果一致性群組具有SMBC關係、您必須使用*其他*做為應用程式或元件標記。
+
+.步驟
+從 ONTAP 9.12.1 開始、您可以使用系統管理員修改應用程式和元件標籤。從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 修改應用程式和元件標籤。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*儲存>一致性群組*。
+. 選取您要修改其標記的一致性群組。選取 image:icon_kabob.gif["三個堆疊點"] 在一致性群組的名稱旁邊、然後按 * 編輯 * 。
+. 在下拉式功能表中、選擇適當的應用程式或元件標籤。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 修改現有一致性群組的應用程式或元件標籤。
+
+.修改應用程式標籤
+. 應用程式標籤接受數量有限的預設字串。若要查看已接受的字串清單、請執行下列命令：
+`consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type ?`
+. 從輸出中選擇適當的字串、然後修改一致性群組：
+`consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type application_type`
+
+
+.修改元件標籤
+. 修改元件類型。元件類型可以是資料、記錄或其他。如果您使用的是 SM-BC 、則必須是「其他」。
+`consistency-group modify -vserver _svm_ -consistency-group _child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -application-component-type [data|logs|other]`
+
+
+--
+====

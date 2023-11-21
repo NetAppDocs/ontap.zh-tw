@@ -18,12 +18,16 @@ summary: 當您建立FPolicy原則時、會將外部引擎和一或多個事件�
 * 如果您打算設定原則使用FPolicy伺服器、則外部引擎必須存在。
 * 您計畫與FPolicy原則建立關聯的FPolicy事件必須至少存在一個。
 * 如果您要設定特殊權限資料存取、SVM上必須有SMB伺服器。
+* 若要設定原則的持續儲存區、引擎類型必須為 * 非同步 * 、原則必須為 * 非強制 * 。
++
+如需詳細資訊、請參閱 link:create-persistent-stores.html["建立持續儲存區"]。
+
 
 
 .步驟
 . 建立FPolicy原則：
 +
-`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name,... [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
+`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name, [-persistent-store PS_name] [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
 
 +
 ** 您可以將一或多個事件新增至FPolicy原則。

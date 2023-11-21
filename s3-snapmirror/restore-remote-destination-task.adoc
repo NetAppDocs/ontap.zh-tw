@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/restore-remote-destination-task.html 
 keywords: restore a bucket from the destination storage VM remote cluster, source bucket data lost or corrupt, snapmirror restore, restore data, restore to destination bucket, remote cluster, snapmirror restore back up, snapmirror, bucket, restore to new bucket, storage vm, snapmirror data loss 
-summary: 如果來源儲存區中的資料遺失或毀損、您可以從目的地儲存區還原資料、以重新填入資料。 
+summary: 如果來源貯體中的資料遺失或毀損、您可以從目的地貯體還原資料、重新填入資料。 
 ---
 = 從目的地儲存VM（遠端叢集）還原儲存區
 :toc: macro
@@ -19,10 +19,10 @@ summary: 如果來源儲存區中的資料遺失或毀損、您可以從目的�
 
 
 [role="lead"]
-如果來源儲存區中的資料遺失或毀損、您可以從目的地儲存區還原資料、以重新填入資料。
+如果來源貯體中的資料遺失或毀損、您可以從目的地貯體還原物件、重新填入資料。
 
 .關於這項工作
-您可以將目的地庫位還原至現有的庫位或新的庫位。還原作業的目標儲存區必須大於目的地儲存區的邏輯已用空間。
+您可以將目的地庫位還原至現有的庫位或新的庫位。還原作業的目標貯體必須大於目的地貯體的邏輯使用空間。
 
 如果您使用現有的儲存區、則在開始還原作業時必須是空的。  還原不會「回溯」儲存區的時間、而是將先前的內容填入一個空的儲存區。
 
@@ -32,7 +32,7 @@ summary: 如果來源儲存區中的資料遺失或毀損、您可以從目的�
 ====
 .系統管理員
 --
-還原備份資料：
+還原備份的資料：
 
 . 按一下「*保護>關係*」、然後選取「* S3 SnapMirror *」。
 . 按一下 image:icon_kabob.gif["更多圖示"] 然後選取*還原*。
@@ -48,7 +48,7 @@ summary: 如果來源儲存區中的資料遺失或毀損、您可以從目的�
 ** 若要還原成*新的Bucket *、請輸入下列值：
 +
 *** 用於託管新儲存區的叢集與儲存VM。
-*** 新的儲存庫名稱、容量和效能服務層級。
+*** 新儲存庫的名稱、容量和效能服務層級。
 請參閱 link:../s3-config/storage-service-definitions-reference.html["儲存服務層級"] 以取得更多資訊。
 *** _destination_ S3伺服器CA憑證的內容。
 
@@ -59,10 +59,20 @@ summary: 如果來源儲存區中的資料遺失或毀損、您可以從目的�
 . 按一下*保護>關係*以監控還原進度。
 
 
+.還原鎖定的貯體
+從 ONTAP 9.14.1 開始、您可以備份鎖定的貯體、並視需要進行還原。
+
+您可以將物件鎖定的貯體還原至新的或現有的貯體。您可以在下列案例中選取物件鎖定的貯體作為目的地：
+
+* * 還原至新的貯體 * ：啟用物件鎖定時、可建立同時啟用物件鎖定的貯體來還原貯體。當您還原鎖定的貯體時、會複寫原始貯體的物件鎖定模式和保留期間。您也可以為新的貯體定義不同的鎖定保留期間。此保留期間適用於來自其他來源的未鎖定物件。
+* * 還原至現有的貯體 * ：只要現有貯體已啟用版本設定和類似的物件鎖定模式、即可將物件鎖定貯體還原至現有的貯體。保留原始貯體的保有期。
+* * 還原未鎖定的貯體 * ：即使在某個貯體上未啟用物件鎖定、您仍可將其還原至已啟用物件鎖定且位於來源叢集上的貯體。當您還原貯體時、所有未鎖定的物件都會被鎖定、而且目的地貯體的保留模式和保有權也會適用於它們。
+
+
 --
 .CLI
 --
-. 如果您要還原至新的儲存庫、請建立新的儲存庫。如需詳細資訊、請參閱 link:create-cloud-backup-new-bucket-task.html["建立新儲存庫（雲端目標）的備份關係"]。
+. 建立新的目的地貯體以進行還原。如需詳細資訊、請參閱 link:create-cloud-backup-new-bucket-task.html["建立新儲存庫（雲端目標）的備份關係"]。
 . 為目的地貯體啟動還原作業：
 `snapmirror restore -source-path _svm_name_:/bucket/_bucket_name_  -destination-path _svm_name_:/bucket/_bucket_name_`
 

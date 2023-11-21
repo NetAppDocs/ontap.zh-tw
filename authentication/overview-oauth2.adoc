@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: authentication/overview-oauth2.html 
+keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc 
+summary: 從 ONTAP 9.14 開始、您可以選擇使用開放授權（ OAuth 2.0 ）架構來控制對 ONTAP 叢集的存取。您可以使用任何 ONTAP 管理介面（包括 ONTAP CLI 、系統管理員和 REST API ）來設定此功能。不過、 OAuth 2.0 授權和存取控制決策只能在用戶端使用 REST API 存取 ONTAP 時套用。 
+---
+= ONTAP OAuth 2.0 實作總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9.14 開始、您可以選擇使用開放授權（ OAuth 2.0 ）架構來控制對 ONTAP 叢集的存取。您可以使用任何 ONTAP 管理介面（包括 ONTAP CLI 、系統管理員和 REST API ）來設定此功能。不過、 OAuth 2.0 授權和存取控制決策只能在用戶端使用 REST API 存取 ONTAP 時套用。
+
+
+NOTE: OAuth 2.0 支援是 ONTAP 9.14.0 首次推出、因此可用度取決於您使用的 ONTAP 版本。請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^] 以取得更多資訊。
+
+
+
+== 功能與優勢
+
+以下說明搭配 ONTAP 使用 OAuth 2.0 的主要功能與優點。
+
+.支援 OAuth 2.0 標準
+OAuth 2.0 是業界標準授權架構。它可用來限制及控制使用簽署存取權杖來存取受保護資源的權限。使用 OAuth 2.0 有幾個好處：
+
+* 授權組態有許多選項
+* 切勿洩漏用戶端認證、包括密碼
+* 您可以根據組態將權杖設定為過期
+* 非常適合與 REST API 搭配使用
+
+
+.使用數個熱門授權伺服器進行測試
+ONTAP 實作的設計可與任何符合 OAuth 2.0 標準的授權伺服器相容。它已通過下列熱門伺服器或服務的測試、包括：
+
+* 驗證0
+* Active Directory Federation Service （ ADFS ）
+* Keycloak
+
+
+.支援多個並行授權伺服器
+您最多可以為單一 ONTAP 叢集定義八個授權伺服器。如此一來、您就能靈活地滿足各種安全環境的需求。
+
+.與 REST 角色整合
+ONTAP 授權決策最終取決於指派給使用者或群組的其餘角色。這些角色可在存取權杖中作為獨立範圍、或是根據本機 ONTAP 定義以及 Active Directory 或 LDAP 群組來執行。
+
+.使用寄件者限制存取權杖的選項
+您可以將 ONTAP 和授權伺服器設定為使用相互傳輸層安全性（ MTLS ）、以強化用戶端驗證。它保證 OAuth 2.0 存取權杖只能由最初核發的用戶端使用。此功能支援並符合數項常用的安全性建議、包括由 FAPI 和斜接建立的建議。
+
+
+
+== 實作與組態
+
+在較高層級、 OAuth 2.0 實作和組態有幾個層面、您應該在開始使用時考慮。
+
+.ONTAP 內的 OAuth 2.0 實體
+OAuth 2.0 授權架構定義了數個實體、可對應至資料中心或網路中的實際或虛擬元素。下表列出 OAuth 2.0 實體及其對 ONTAP 的調適。
+
+[cols="30,70"]
+|===
+| OAuth 2.0 實體 | 說明 
+
+
+| 資源 | REST API 端點、可透過內部 ONTAP 命令存取 ONTAP 資源。 
+
+
+| 資源擁有者 | 建立受保護資源或依預設擁有資源的 ONTAP 叢集使用者。 
+
+
+| 資源伺服器 | 受保護資源的主機、即 ONTAP 叢集。 
+
+
+| 用戶端 | 代表或取得資源擁有者權限、要求存取 REST API 端點的應用程式。 
+
+
+| 授權伺服器 | 通常是負責發行存取權杖和強制執行管理原則的專用伺服器。 
+|===
+.核心 ONTAP 組態
+您需要設定 ONTAP 叢集以啟用和使用 OAuth 2.0 。這包括建立與授權伺服器的連線、以及定義所需的 ONTAP 授權組態。您可以使用任何管理介面來執行此組態、包括：
+
+* 指令行介面ONTAP
+* 系統管理員
+* 靜態API ONTAP
+
+
+.環境與支援服務
+除了 ONTAP 定義之外、您也需要設定授權伺服器。如果您使用群組對角色對應、也需要設定 Active Directory 群組或 LDAP 等量。
+
+.支援的 ONTAP 用戶端
+從 ONTAP 9.14 開始、 REST API 用戶端可以使用 OAuth 2.0 存取 ONTAP 。在發出 REST API 呼叫之前、您需要從授權伺服器取得存取權杖。然後、用戶端使用 HTTP 授權要求標頭、將此權杖以 _bon承載 權杖的形式傳送至 ONTAP 叢集。視所需的安全性層級而定、您也可以在用戶端建立及安裝憑證、以使用以 MTLS 為基礎的寄件者限制權杖。
+
+
+
+== 選定的術語
+
+當您開始使用 ONTAP 探索 OAuth 2.0 部署時、熟悉其中一些詞彙是很有幫助的。請參閱 link:../authentication/overview-oauth2.html#additional-resources["其他資源"] 取得有關 OAuth 2.0 的詳細資訊連結。
+
+存取權杖:: 由授權伺服器發出的權杖、由 OAuth 2.0 用戶端應用程式用來發出存取受保護資源的要求。
+JSON Web Token:: 用於格式化存取權杖的標準。JSON 用於以精簡格式呈現 OAuth 2.0 宣告、並將宣告分為三個主要區段。
+寄件者限制的存取權杖:: 以相互傳輸層安全性（ MTLS ）傳輸協定為基礎的選用功能。藉由在權杖中使用額外的確認宣告、這可確保存取權杖僅供最初核發的用戶端使用。
+JSON Web 金鑰集:: JWKS 是 ONTAP 用來驗證用戶端所呈現 JWT Token 的公開金鑰集合。金鑰集通常可透過專用 URI 在授權伺服器上使用。
+範圍:: 範圍提供一種方法來限制或控制應用程式對受保護資源（例如 ONTAP REST API ）的存取。它們在存取權杖中以字串表示。
+ONTAP REST 角色:: REST 角色是 ONTAP 9.6 引進的、是 ONTAP RBAC 架構的核心部分。這些角色與 ONTAP 仍支援的舊版傳統角色不同。ONTAP 中的 OAuth 2.0 實作僅支援 REST 角色。
+HTTP 授權標頭:: HTTP 要求中包含的標頭、用於在進行 REST API 呼叫時識別用戶端及相關權限。視驗證和授權的執行方式而定、有多種類型或實作可供選擇。將 OAuth 2.0 存取權杖呈現給 ONTAP 時、該權杖會識別為 _stoning 權杖 _ 。
+HTTP 基本驗證:: ONTAP 仍支援早期的 HTTP 驗證技術。純文字認證（使用者名稱和密碼）會與冒號串連、並以 base64 編碼。字串會放在授權要求標頭中、並傳送至伺服器。
+FAPI:: OpenID Foundation 的工作群組、為金融產業提供通訊協定、資料架構及安全建議。API 原本稱為財務等級 API 。
+斜接:: 一家私人非營利公司、為美國空軍和美國政府提供技術與安全指引。
+
+
+
+
+== 其他資源
+
+以下提供幾項額外資源。您應該檢閱這些網站、以取得有關 OAuth 2.0 及相關標準的更多資訊。
+
+.通訊協定與標準
+* https://www.rfc-editor.org/info/rfc6749["RFC 6749 ： OAuth 2.0 授權架構"^]
+* https://www.rfc-editor.org/info/rfc7519["RFC 7519 ： JSON Web Token （ JWT ）"^]
+* https://www.rfc-editor.org/info/rfc7523["RFC 7523 ：適用於 OAuth 2.0 用戶端驗證和授權授與的 JSON Web Token （ JWT ）設定檔"^]
+* https://www.rfc-editor.org/info/rfc7662["RFC 7662 ： OAUTH 2.0 Token 反思"^]
+* https://www.rfc-editor.org/info/rfc7800["RFC 7800 ： JWTs 的持有證明金鑰"^]
+* https://www.rfc-editor.org/info/rfc8705["RFC 8705 ： OAuth 2.0 雙向 TLS 用戶端驗證和憑證繫結存取權杖"^]
+
+
+.組織
+* https://openid.net["OpenID Foundation"^]
+* https://openid.net/wg/fapi["FAPI 工作組"^]
+* https://www.mitre.org["斜接"^]
+* https://www.iana.org/assignments/jwt/jwt.xhtml["IANA - JWT"^]
+
+
+.產品與服務
+* https://auth0.com["驗證0"^]
+* https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview["ADFS 總覽"^]
+* https://www.keycloak.org["Keycloak"^]
+
+
+.其他工具與公用程式
+* https://jwt.io["JWT by Auth0"^]
+* https://www.openssl.org["Openssl"^]
+
+
+.NetApp 文件與資源
+* https://docs.netapp.com/us-en/ontap-automation["ONTAP 自動化"^] 文件
+

@@ -1,0 +1,178 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-deploy-ontap.html 
+keywords: certificate, install certificate, enable, enable oauth2 
+summary: 部署核心 OAuth 2.0 功能需要三個主要步驟。 
+---
+= 在 ONTAP 中部署 OAuth 2.0
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+部署核心 OAuth 2.0 功能需要三個主要步驟。
+
+
+
+== 開始之前
+
+您必須準備 OAuth 2.0 部署、才能設定 ONTAP 。例如、您需要評估授權伺服器、包括其憑證的簽署方式、以及它是否位於防火牆的後方。請參閱 link:../authentication/oauth2-prepare.html["準備使用 ONTAP 部署 OAuth 2.0"] 以取得更多資訊。
+
+
+
+== 步驟 1 ：安裝驗證伺服器憑證
+
+ONTAP 包含大量預先安裝的根 CA 憑證。因此、在許多情況下、 ONTAP 會立即辨識您的授權伺服器憑證、而無需額外設定。但視授權伺服器憑證的簽署方式而定、您可能需要安裝根 CA 憑證和任何中繼憑證。
+
+如有需要、請依照下列指示安裝憑證。您應該在叢集層級安裝所有必要的憑證。
+
+根據您存取 ONTAP 的方式、選擇正確的程序。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在 System Manager 中，選擇 *Cluster* >* Settings* 。
+. 向下捲動至 * 安全性 * 區段。
+. 單擊 * 證書 * 旁邊的 *->* 。
+. 在 * 信任的憑證授權單位 * 索引標籤下、按一下 * 新增 * 。
+. 按一下 * 匯入 * 並選取憑證檔案。
+. 完成環境的組態參數。
+. 按一下「 * 新增 * 」。
+
+
+--
+.CLI
+--
+. 開始安裝：
++
+`security certificate install -type server-ca`
+
+. 查看下列主控台訊息：
++
+`Please enter Certificate: Press <Enter> when done`
+
+. 使用文字編輯器開啟憑證檔案。
+. 複製整個憑證、包括下列幾行：
++
+`-----BEGIN CERTIFICATE-----`
+
++
+`-----END CERTIFICATE-----`
+
+. 在命令提示字元之後、將憑證貼到終端機。
+. 按 *Enter* 鍵完成安裝。
+. 使用下列其中一項來確認已安裝憑證：
++
+`security certificate show-user-installed`
+
++
+`security certificate show`
+
+
+
+--
+====
+
+
+== 步驟 2 ：設定授權伺服器
+
+您需要定義至少一個 ONTAP 授權伺服器。您應該根據組態和部署計畫來選擇參數值。檢閱 link:../authentication/oauth2-deployment-scenarios.html["OAuth2 部署案例"] 以判斷您的組態所需的確切參數。
+
+
+TIP: 若要修改授權伺服器定義、您可以刪除現有定義並建立新定義。
+
+以下提供的範例是根據第一個簡單部署案例、網址為： link:../authentication/oauth2-deployment-scenarios.html#local-validation["本機驗證"]。不使用 Proxy 就能使用獨立的範圍。
+
+根據您存取 ONTAP 的方式、選擇正確的程序。CLI 程序會使用您在發出命令之前需要置換的符號變數。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在 System Manager 中，選擇 *Cluster* >* Settings* 。
+. 向下捲動至 * 安全性 * 區段。
+. 按一下 * oAuth 2.0 授權 * 旁的 * + * 。
+. 選擇 * 更多選項 * 。
+. 提供部署所需的值、例如：
++
+** 名稱
+** 應用程式（ http ）
+** 提供者 JWKS URI
+** 發卡行 URI
+
+
+. 按一下「 * 新增 * 」。
+
+
+--
+.CLI
+--
+. 再次建立定義：
++
+[source, cli]
+----
+security oauth2 client create -config-name <NAME> -provider-jwks-uri <URI_JWKS> -application http -issuer <URI_ISSUER>
+----
++
+例如：
+
++
+[listing]
+----
+security oauth2 client create \
+-config-name auth0 \
+-provider-jwks-uri https://superzap.dev.netapp.com:8443/realms/my-realm/protocol/openid-connect/certs \
+-application http \
+-issuer https://superzap.dev.netapp.com:8443/realms/my-realm
+----
+
+
+--
+====
+
+
+== 步驟 3 ：啟用 OAuth 2.0
+
+最後一步是啟用 OAuth 2.0 。這是 ONTAP 叢集的全域設定。
+
+
+CAUTION: 在您確認 ONTAP 、授權伺服器及任何支援服務均已正確設定之前、請勿啟用 OAuth 2.0 處理。
+
+根據您存取 ONTAP 的方式、選擇正確的程序。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在 System Manager 中，選擇 *Cluster* >* Settings* 。
+. 向下捲動至 * 安全性區段 * 。
+. 按一下 *OAuth 2.0 授權 * 旁邊的 *->* 。
+. 啟用 * oAuth 2.0 授權 * 。
+
+
+--
+.CLI
+--
+. 啟用 OAuth 2.0 ：
++
+`security oauth2 modify -enabled true`
+
+. 確認 OAuth 2.0 已啟用：
++
+[listing]
+----
+security oauth2 show
+Is OAuth 2.0 Enabled: true
+----
+
+
+--
+====

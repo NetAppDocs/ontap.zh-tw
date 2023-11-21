@@ -1,0 +1,144 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-deployment-scenarios.html 
+keywords: oauth 2.0, deployment, configuration, parameters, local validation, remote introspection 
+summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項、您可以建立適合部署環境的授權伺服器。 
+---
+= OAuth 2.0 部署案例
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項、您可以建立適合部署環境的授權伺服器。
+
+
+
+== 組態參數摘要
+
+將授權伺服器定義為 ONTAP 時、有幾個組態參數可供使用。這些參數通常在所有管理介面中都受到支援。
+
+參數名稱可能會因 ONTAP 管理介面而稍有不同。例如、在設定遠端自我介紹時、會使用 CLI 命令參數來識別端點 `-introspection-endpoint`。但在 System Manager 中、對等欄位是 _Authorization server Token introspection URI_ 。為了容納所有 ONTAP 管理介面、我們提供參數的一般說明。確切的參數或欄位應根據上下文而顯而易見。
+
+[cols="25,75"]
+|===
+| 參數 | 說明 
+
+
+| 名稱 | ONTAP 已知的授權伺服器名稱。 
+
+
+| 應用程式 | 定義所適用的 ONTAP 內部應用程式。這必須是 * http * 。 
+
+
+| 發卡行 URI | 具有路徑的 FQDN 、可識別發出權杖的站台或組織。 
+
+
+| 提供者 JWKS URI | ONTAP 取得用於驗證存取權杖之 JSON 網頁金鑰集的路徑和檔案名稱 FQDN 。 
+
+
+| JWKS 重新整理時間間隔 | 決定 ONTAP 從提供者 JWKS URI 重新整理憑證資訊的頻率的時間間隔。此值以 ISO-8601 格式指定。 
+
+
+| introspection 端點 | ONTAP 透過自我介紹來執行遠端權杖驗證所使用的路徑 FQDN 。 
+
+
+| 用戶端ID | 授權伺服器上定義的用戶端名稱。包含此值時、您也需要根據介面提供相關的用戶端機密。 
+
+
+| 傳出 Proxy | 這是為了在 ONTAP 位於防火牆後方時提供對授權伺服器的存取。URI 必須為 cURL 格式。 
+
+
+| 如果存在、請使用本機角色 | 判斷是否使用本機 ONTAP 定義的布林旗標、包括具名 REST 角色和本機使用者。 
+
+
+| 移除使用者請款 | ONTAP 用來比對本機使用者的替代名稱。使用 `sub` 存取權杖中的欄位、以符合本機使用者名稱。 
+|===
+
+
+== 部署案例
+
+以下提供幾種常見的部署案例。它們是根據權杖驗證是由 ONTAP 在本機執行、還是由授權伺服器遠端執行來組織。每個案例都包含所需組態選項的清單。請參閱 link:../authentication/oauth2-deploy-ontap.html["在 ONTAP 中部署 OAuth 2.0"] 以取得組態命令的範例。
+
+
+TIP: 定義授權伺服器之後、您可以透過 ONTAP 管理介面顯示其組態。例如、使用命令 `security oauth2 client show` 使用 ONTAP CLI 。
+
+
+
+=== 本機驗證
+
+下列部署案例是以 ONTAP 在本機執行權杖驗證為基礎。
+
+.使用不含 Proxy 的自我控制範圍
+這是僅使用 OAuth 2.0 獨立範圍的最簡單部署。不會使用任何本機 ONTAP 身分識別定義。您需要包含下列參數：
+
+* 名稱
+* 應用程式（ http ）
+* 提供者 JWKS URI
+* 發卡行 URI
+
+
+您也需要在授權伺服器上新增範圍。
+
+.在 Proxy 中使用自我包含的範圍
+此部署案例使用 OAuth 2.0 獨立範圍。不會使用任何本機 ONTAP 身分識別定義。但是授權伺服器位於防火牆後方、因此您需要設定 Proxy 。您需要包含下列參數：
+
+* 名稱
+* 應用程式（ http ）
+* 提供者 JWKS URI
+* 傳出 Proxy
+* 發卡行 URI
+* 目標對象
+
+
+您也需要在授權伺服器上新增範圍。
+
+.使用本機使用者角色和預設使用者名稱對應搭配 Proxy
+此部署案例使用具有預設名稱對應的本機使用者角色。遠端使用者宣告使用的預設值 `sub` 因此、存取權杖中的這個欄位是用來比對本機使用者名稱。使用者名稱必須少於 40 個字元。授權伺服器位於防火牆後方、因此您也需要設定 Proxy 。您需要包含下列參數：
+
+* 名稱
+* 應用程式（ http ）
+* 提供者 JWKS URI
+* 如果存在、請使用本機角色 (`true`）
+* 傳出 Proxy
+* 發卡行
+
+
+您必須確定本機使用者已定義為 ONTAP 。
+
+.使用本機使用者角色和替代使用者名稱對應搭配 Proxy
+此部署案例使用具有替代使用者名稱的本機使用者角色、用於與本機 ONTAP 使用者配對。授權伺服器位於防火牆後方、因此您需要設定 Proxy 。您需要包含下列參數：
+
+* 名稱
+* 應用程式（ http ）
+* 提供者 JWKS URI
+* 如果存在、請使用本機角色 (`true`）
+* 遠端使用者請款
+* 傳出 Proxy
+* 發卡行 URI
+* 目標對象
+
+
+您必須確定本機使用者已定義為 ONTAP 。
+
+
+
+=== 遠端自我反思
+
+下列部署組態是以 ONTAP 透過自我反思遠端執行權杖驗證為基礎。
+
+.使用不含 Proxy 的自我控制範圍
+這是以 OAuth 2.0 獨立範圍為基礎的簡單部署。不會使用任何 ONTAP 身分識別定義。您必須包含下列參數：
+
+* 名稱
+* 應用程式（ http ）
+* introspection 端點
+* 用戶端ID
+* 發卡行 URI
+
+
+您需要在授權伺服器上定義範圍以及用戶端和用戶端機密。

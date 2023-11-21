@@ -15,6 +15,8 @@ summary: 從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定S
 
 您可以使用SnapLock 「不符法規時鐘」功能、將Snapshot複本鎖定一段特定期間、以便在達到到期時間之前將其刪除。鎖定Snapshot複本可防止資料竄改、避免受到勒索軟體威脅。如果磁碟區受到勒索軟體攻擊、您可以使用鎖定的Snapshot複本來恢復資料。
 
+從 ONTAP 9.14.1 開始、 Snapshot 複本鎖定功能可支援 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的長期保留 Snapshot 複本。Snapshot 複本鎖定是透過使用與相關的 SnapMirror 原則規則來設定保留期間來啟用 xref:Modify an existing policy to apply long-term retention[現有原則標籤]。此規則會覆寫在磁碟區上設定的預設保留期間。如果 SnapMirror 標籤沒有相關的保留期間、則會使用磁碟區的預設保留期間。
+
 .防竄改Snapshot複本要求與考量
 * 如果您使用的是 ONTAP CLI 、叢集中的所有節點都必須執行 ONTAP 9.12.1 或更新版本。如果您使用的是 System Manager 、則所有節點都必須執行 ONTAP 9.13.1 或更新版本。
 * link:https://docs.netapp.com/us-en/ontap/snaplock/install-license-task.html["SnapLock 授權必須安裝在叢集上"]。
@@ -284,3 +286,22 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 --
 ====
+
+
+=== 修改現有原則以套用長期保留
+
+從 ONTAP 9.14.1 開始、您可以新增規則來設定 Snapshot 複本的長期保留、以修改現有的 SnapMirror 原則。此規則用於覆寫 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的預設磁碟區保留期間。
+
+. 將規則新增至現有的 SnapMirror 原則：
++
+`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of Snapshot copies> -retention-period [<integer> days|months|years]`
+
++
+下列範例建立規則、將 6 個月的保留期間套用至現有的「 LockVault 」原則：
+
++
+[listing]
+----
+snapmirror policy add-rule -vserver vs1 -policy lockvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
+----
+

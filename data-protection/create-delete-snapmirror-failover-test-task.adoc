@@ -1,0 +1,58 @@
+---
+permalink: data-protection/create-delete-snapmirror-failover-test-task.html 
+sidebar: sidebar 
+keywords: create, delete, failover, dress rehearsal, SnapMirror 
+summary: 從 ONTAP 9.14.1 開始、您可以使用系統管理員建立磁碟區複本、在不中斷主動式 SnapMirror 關係的情況下測試 SnapMirror 容錯移轉和災難恢復。 
+---
+= 建立並刪除 SnapMirror 容錯移轉測試磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以使用系統管理員建立磁碟區複本、在不中斷主動式 SnapMirror 關係的情況下測試 SnapMirror 容錯移轉和災難恢復。完成測試後、您可以清除相關資料並刪除測試 Volume 。
+
+
+
+== 建立 SnapMirror 容錯移轉測試 Volume
+
+.關於這項工作
+* 您可以對同步和非同步 SnapMirror 關係執行容錯移轉測試。
+* 建立磁碟區複本以執行災難恢復測試。
+* 複製磁碟區會建立在與 SnapMirror 目的地相同的儲存 VM 上。
+* 您可以使用 FlexVol 和 FlexGroup SnapMirror 關係。
+* 如果所選關係已存在測試複本、則無法為該關係建立另一個複本。
+* 不支援 SnapLock 資料保險箱關係。
+
+
+.開始之前
+* 您必須是叢集管理員。
+* SnapMirror 授權必須安裝在來源叢集和目的地叢集上。
+
+
+.步驟
+. 在目的地叢集上、選取 * 保護 > 關係 * 。
+. 選取 image:icon_kabob.gif["Alt=功能表選項"] 在關係來源旁、選擇 * 測試容錯移轉 * 。
+. 在 * 測試容錯移轉 * 視窗中、選取 * 測試容錯移轉 * 。
+. 選取 * 儲存 > Volumes （磁碟區） * 、然後確認已列出測試容錯移轉磁碟區。
+. 選取 * 儲存 > 共用 * 。
+. 按一下 image:icon_add_blue_bg.gif["Alt= 新增共用功能表"] 然後選擇 * 共用 * 。
+. 在 * 新增共用 * 視窗的 * 共用名稱 * 欄位中、輸入共用的名稱。
+. 在 * 資料夾 * 欄位中、選取 * 瀏覽 * 、選取測試複製磁碟區、然後選取 * 儲存 * 。
+. 在 * 新增共用 * 視窗的底部、選擇 * 儲存 * 。
+. 在用戶端上開啟共用區、並確認測試磁碟區具有讀寫功能。
+
+
+
+
+== 清理容錯移轉資料並刪除測試磁碟區
+
+完成容錯移轉測試之後、您可以清除與測試 Volume 相關的所有資料、然後將其刪除。
+
+.步驟
+. 在目的地叢集上、選取 * 保護 > 關係 * 。
+. 選取 image:icon_kabob.gif["Alt=功能表選項"] 在關係來源旁、選擇 * 清除測試容錯移轉 * 。
+. 在 * 清除測試容錯移轉 * 視窗中、選取 * 清除 * 。
+. 選取 * 儲存 > 磁碟區 * 、並確認測試磁碟區已刪除。
+

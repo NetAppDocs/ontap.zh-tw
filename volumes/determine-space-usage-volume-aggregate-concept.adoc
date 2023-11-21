@@ -11,9 +11,9 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 
 
 [role="lead"]
-啟用ONTAP 功能時、可能會佔用您不知道的空間、或是超出預期的空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP
+在 ONTAP 中啟用功能可能會比您預期的佔用更多空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP
 
-由於磁碟區空間使用量或磁碟區、Aggregate或兩者的組合空間不足、因此磁碟區可能會耗盡空間。透過從不同角度查看以功能為導向的空間使用量明細、您可以評估您可能想要調整或關閉哪些功能、或採取其他行動（例如增加集合體或磁碟區的大小）。
+由於磁碟區空間使用量或磁碟區、Aggregate或兩者的組合空間不足、因此磁碟區可能會耗盡空間。透過從不同角度查看以功能為導向的空間使用量明細、您可以評估您可能想要調整或關閉哪些功能、或是應該採取其他行動（例如增加 Aggregate 或 Volume 的大小）。
 
 您可以從下列任一角度檢視空間使用詳細資料：
 
@@ -22,14 +22,17 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 此觀點提供磁碟區內空間使用量的詳細資料、包括Snapshot複本的使用量。
 
 +
-您可以使用看到磁碟區的空間使用量 `volume show-space` 命令。
+使用 `volume show-space` 命令以查看磁碟區的空間使用量。
+
++
+從 ONTAP 9.14.1 開始、在使用的磁碟區上 xref:enable-temperature-sensitive-efficiency-concept.html[對溫度敏感的儲存效率（ TSSE ）] 已啟用、所報告之磁碟區上使用的空間量 `volume show-space -physical used` 命令包含 TSSE 所節省的空間。
 
 * 集合體內的磁碟區佔用空間
 +
 此觀點提供每個磁碟區在包含Aggregate中使用的空間量詳細資料、包括磁碟區的中繼資料。
 
 +
-您可以使用來查看磁碟區的佔用空間和集合體 `volume show-footprint` 命令。
+使用 `volume show-footprint` 命令以查看具有 Aggregate 的 Volume 佔用空間。
 
 * Aggregate的空間使用量
 +
@@ -39,16 +42,16 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 支援整合層級中繼資料和效能的資料空間佔總磁碟空間的10% WAFL 。  用於維護集合體中磁碟區的空間來自WAFL 於此保護區、因此無法變更。
 
 +
-從VMware版9.12.1及更新版本開始ONTAP 、針對All Flash FAS 更新版本（AFF VMware）和FAS500f平台、WAFL 30TB以上的集合體的VMware保留資源將從10%降至5%、進而增加集合體的可用空間。
+從 ONTAP 9.12.1 開始、 AFF 平台和 FAS500f 平台的 WAFL 保留容量大於 30TB 、從 10% 降至 5% 。  從 ONTAP 9.14.1 開始、所有 FAS 平台上的集合體都會有相同的減少、因此可在集合體中增加 5% 的可用空間。
 
 +
-您可以使用查看 Aggregate 的空間使用量 `storage aggregate show-space` 命令。
+使用 `storage aggregate show-space` 命令查看 Aggregate 的空間使用量。
 
 
 
 某些功能（例如磁帶備份和重複資料刪除）會使用磁碟區的中繼資料空間、以及直接從集合體取得的中繼資料空間。這些功能顯示了不同的磁碟區與磁碟區佔用空間使用情況。
 
 .相關資訊
-link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["知識型文章：空間使用"]
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["知識庫文章：空間使用"]
+* link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升級ONTAP 至更新版的更新版、即可釋放5%的儲存容量"]
 
-link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升級ONTAP 至更新版的更新版、即可釋放5%的儲存容量"]

@@ -1,0 +1,43 @@
+---
+permalink: nvme/change-host-priority-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, host, priority, regular, high priority, allocate more I/O, allocate, higher, i/o, queue counts, queue-depths, queue, depth 
+summary: 從 ONTAP 9.14.1 開始、您可以讓 NVM 子系統優先分配特定主機的資源。 
+---
+= 變更 NVMe 主機優先順序
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以設定 NVMe 子系統、以優先分配特定主機的資源。根據預設、當主機新增至子系統時、會將其指派為一般優先順序。指派高優先順序的主機會分配較大的 I/O 佇列數和佇列深度。
+
+您可以使用 ONTAP 命令列介面（ CLI ）手動將預設優先順序從一般變更為高。  若要變更指派給主機的優先順序、您必須從子系統移除主機、然後將其重新新增。
+
+.步驟
+. 確認主機優先順序設定為一般：
++
+[source, cli]
+----
+vserver nvme show-host-priority
+----
+. 從子系統中移除主機：
++
+[source, cli]
+----
+vserver nvme subsystem host remove –vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 確認主機已從子系統中移除：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 將主機新增回具有高優先順序的子系統：
++
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> -host-nqn <Host_NQN_:subsystem._subsystem_name> -priority high
+----
+

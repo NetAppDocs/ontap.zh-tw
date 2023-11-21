@@ -1,0 +1,149 @@
+---
+permalink: s3-config/create-bucket-mcc-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, system manager, metrocluster, unmirrored, mirrored, aggregate 
+summary: 從 ONTAP 9.14.1 開始、您可以在 MetroCluster FC 和 IP 組態中的鏡射或無鏡射集合體上配置貯體。 
+---
+= 在 MetroCluster 組態中的鏡射或無鏡射 Aggregate 上建立貯體
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以在 MetroCluster FC 和 IP 組態中的鏡射或無鏡射集合體上配置貯體。
+
+.關於這項工作
+* 根據預設、儲存區會配置在鏡射的集合體上。
+* 中所述的相同資源配置準則 link:create-bucket-task.html["建立儲存庫"] 適用於在 MetroCluster 環境中建立貯體。
+* MetroCluster 環境 * 不 * 支援下列 S3 物件儲存功能：
++
+** S3 SnapMirror
+** S3 貯體生命週期管理
+** S3 物件鎖定在 * 符合性 * 模式
++
+
+NOTE: 支援 * Governance * 模式中的 S3 物件鎖定。
+
+** 本機 FabricPool 分層
+
+
+
+
+.開始之前
+包含S3伺服器的SVM必須已經存在。
+
+
+
+== 建立貯體的程序
+
+[role="tabbed-block"]
+====
+.CLI
+--
+. 如果您打算自行選取集合體和 FlexGroup 元件、請將權限等級設為進階（否則管理權限等級就足夠了）： `set -privilege advanced`
+. 建立儲存庫：
++
+`vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> [-size integer[KB|MB|GB|TB|PB]] [-use-mirrored-aggregates true/false]`
+
++
+設定 `-use-mirrored-aggregates` 選項 `true` 或 `false` 視您要使用鏡射或無鏡射的 Aggregate 而定。
+
++
+
+NOTE: 依預設 `-use-mirrored-aggregates` 選項設定為 `true`。
+
++
+** SVM 名稱必須是資料 SVM 。
+** 如果您未指定任何選項、ONTAP 則會建立一個5GB的儲存區、並將服務層級設為系統可用的最高層級。
+** 如果您想ONTAP 要根據效能或使用量來建立儲存庫、請使用下列其中一個選項：
++
+*** 服務層級
++
+包括 `-storage-service-level` 具有下列其中一個值的選項： `value`、 `performance`或 `extreme`。
+
+*** 分層
++
+包括 `-used-as-capacity-tier true` 選項。
+
+
+
+** 如果您要指定要在其上建立基礎FlexGroup 的流通量的集合體、請使用下列選項：
++
+*** 。 `-aggr-list` 參數指定用於 FlexGroup Volume 組成的集合體清單。
++
+清單中的每個項目都會在指定的Aggregate上建立一個組成項目。您可以多次指定集合體、以便在集合上建立多個成員。
+
++
+為了在FlexGroup 整個Singfuse Volume中提供一致的效能、所有的集合體都必須使用相同的磁碟類型和RAID群組組組態。
+
+*** 。 `-aggr-list-multiplier` 參數會指定在所列的集合體上重複的次數 `-aggr-list` 建立 FlexGroup Volume 時的參數。
++
+的預設值 `-aggr-list-multiplier` 參數為 4 。
+
+
+
+
+
+. 視需要新增QoS原則群組：
++
+`vserver object-store-server bucket modify -bucket _bucket_name_ -qos-policy-group _qos_policy_group_`
+
+. 確認儲存庫建立：
++
+`vserver object-store-server bucket show [-instance]`
+
+
+
+.範例
+以下範例為鏡射集合體上大小為 1TB 的 SVM VS1 建立貯體：
+
+[listing]
+----
+cluster-1::*> vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket  -size 1TB -use-mirrored-aggregates true
+----
+--
+.系統管理員
+--
+. 在啟用S3的儲存VM上新增儲存區。
++
+.. 按一下「*儲存設備>桶*」、然後按一下「*新增*」。
+.. 輸入名稱、選取儲存VM、然後輸入大小。
++
+根據預設、儲存區會配置在鏡射的 Aggregate 上。如果您想要在未鏡射的 Aggregate 上建立貯體、請選取 * 更多選項 * 、然後取消核取 * 保護 * 下的 * 使用 SyncMirror 垛層 * 方塊、如下圖所示：
+
++
+image:../media/SM_create_bucket_MCC.png["System Manager MetroCluster 貯體建立"]
+
++
+*** 如果您此時按一下*「儲存*」、就會以下列預設設定建立儲存區：
++
+**** 除非任何群組原則已經生效、否則不會授予使用者桶的存取權。
++
+
+NOTE: 您不應該使用S3 root使用者來管理ONTAP 物件儲存設備並分享其權限、因為它對物件儲存區的存取權限不受限制。而是使用您指派的管理權限來建立使用者或群組。
+
+**** 服務品質（效能）等級、是您系統可用的最高等級。
+
+
+*** 您可以按一下*更多選項*來設定使用者權限和效能層級、或是稍後再修改這些設定。
++
+**** 您必須先建立使用者和群組、才能使用*其他選項*來設定其權限。
+**** 如果您打算使用S3物件存放區FabricPool 來進行分層、請考慮選擇*用於分層*（使用低成本媒體、為階層式資料提供最佳效能）、而非效能服務層級。
+
+
+
+
+
+
+. 在S3用戶端應用程式（另一個ONTAP 支援系統或外部協力廠商應用程式）上、輸入下列命令來驗證新儲存庫的存取：
++
+** S3伺服器CA憑證。
+** 使用者的存取金鑰和秘密金鑰。
+** S3伺服器FQDN名稱和儲存區名稱。
+
+
+
+
+--
+====

@@ -1,0 +1,59 @@
+---
+permalink: nfs-trunking/create-server-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, create, NFS trunking, enabled, multipathing, svm 
+summary: 從 ONTAP 9.14.1 開始、可在執行 V4.1 或更新版本的 NFS 伺服器上啟用主幹。在建立 NFS 伺服器時、預設會啟用 NFSv4.1 及更新版本。 
+---
+= 建立啟用主幹的 NFS 伺服器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、可在 NFS 伺服器上啟用主幹。在建立 NFS 伺服器時、預設會啟用 NFSv4.1 。
+
+.開始之前
+SVM 必須：
+
+* 有足夠的儲存設備作為後盾、可滿足用戶端資料需求。
+* 已啟用 NFS 。
+* 專用於 NFS 主幹。不應在其上設定其他用戶端。
+
+
+.步驟
+. 如果不存在合適的 SVM 、請建立一個：
++
+`vserver create -vserver _svm_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style unix -language C.UTF-8`
+
+. 驗證新建立的SVM的組態和狀態：
++
+`vserver show -vserver _svm_name_`
+
++
+深入瞭解 link:../nfs-config/create-svms-data-access-task.html["建立 SVM 。"]
+
+. 建立 NFS 伺服器：
++
+`vserver nfs create -vserver _svm_name_ -v3 disabled -v4.0 disabled -v4.1 enabled -v4.1-trunking enabled -v4-id-domain _my_domain.com_`
+
+. 確認NFS正在執行：
++
+`vserver nfs status -vserver _svm_name_`
+
+. 確認NFS已設定為所需：
++
+`vserver nfs show -vserver _svm_name_`
+
++
+深入瞭解 link:../nfs-config/create-server-task.html["NFS 伺服器組態。"]
+
+
+
+.完成後
+視需要設定下列服務：
+
+* link:../nfs-config/configure-dns-host-name-resolution-task.html["DNS"]
+* link:../nfs-config/using-ldap-concept.html["LDAP"]
+* link:../nfs-config/kerberos-nfs-strong-security-concept.html["Kerberos"]
+

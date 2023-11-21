@@ -1,0 +1,87 @@
+---
+permalink: fabricpool/enable-disable-aggressive-read-ahead-task.html 
+bar: sidebar 
+keywords: creating, volume, fabricpool, aggressive read ahead, enable, on prem, on premises, disable 
+summary: 從 ONTAP 9.14.1 開始、您可以在 FabricPools 中啟用和停用主動式預先讀取模式、以支援媒體和娛樂、例如影片串流工作負載。 
+---
+= 啟用和停用主動式預先讀取模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以在 FabricPools 中啟用和停用主動式預先讀取模式、以支援媒體和娛樂、例如影片串流工作負載。所有支援 FabricPool 的內部部署平台上的 ONTAP 9.14.1 均提供主動式預先讀取模式。此功能預設為停用。
+
+.關於這項工作
+。 `aggressive-readahead-mode` 命令有兩個選項：
+
+* `none`：預先讀取已停用。
+* `file_prefetch`：系統會先將整個檔案讀取到用戶端應用程式的記憶體中。
+
+
+.開始之前
+* 您應該是叢集或 SVM 管理員。
+* 您必須處於進階權限層級。
+
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 建立磁碟區並啟用雲端寫入模式：
++
+[source, cli]
+----
+volume create -volume <volume name>  -aggressive-readahead-mode <none|file_prefetch>
+----
++
+以下範例建立一個名為 vol1 的 Volume 、其中啟用檔案預先擷取選項的主動式預先讀取功能：
+
++
+[listing]
+----
+volume create -volume vol1 -aggressive-readahead-mode file_prefetch
+----
+
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改磁碟區以停用主動式預先讀取模式：
++
+[source, cli]
+----
+volume modify -volume <volume name>  -aggressive-readahead-mode none
+----
++
+以下範例修改名為 vol1 的磁碟區、以停用主動式預先讀取模式：
+
++
+[listing]
+----
+volume modify -volume vol1 -aggressive-readahead-mode none
+----
+
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改磁碟區以停用主動式預先讀取模式：
++
+[source, cli]
+----
+volume show -fields aggressive-readahead-mode
+----
+

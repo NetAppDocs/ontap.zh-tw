@@ -99,8 +99,9 @@ vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 
 .關於這項工作
 * 從 ONTAP 9.8 開始、您可以使用 `volume move start` 在 SnapLock 或 FlexGroup 磁碟區上啟用加密。
-* 從ONTAP 功能區9.6開始、您可以使用Aggregate層級的加密功能、將金鑰指派給內含的Aggregate、以供移動的磁碟區使用。使用唯一金鑰加密的Volume稱為_NVE Volume。使用Aggregate層級金鑰加密的Volume稱為_NAE Volume（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
 * 從 ONTAP 9.4 開始、如果您在設定內建金鑰管理程式時啟用「 cc 模式」、就會使用建立磁碟區 `volume move start` 命令會自動加密。您不需要指定 `-encrypt-destination true`。
+* 從ONTAP 功能區9.6開始、您可以使用Aggregate層級的加密功能、將金鑰指派給內含的Aggregate、以供移動的磁碟區使用。使用唯一金鑰加密的磁碟區稱為 _NVE Volumes_ （意指它使用 NetApp Volume Encryption ）。使用Aggregate層級金鑰加密的Volume稱為_NAE Volume（適用於NetApp Aggregate Encryption）。NAE集合體不支援純文字磁碟區。
+* 從 ONTAP 9.14.1 開始、您可以使用 NVE 加密 SVM 根 Volume 。如需詳細資訊、請參閱 xref:configure-nve-svm-root-task.html[在 SVM 根磁碟區上設定 NetApp Volume Encryption]。
 
 
 .開始之前
@@ -121,35 +122,35 @@ link:delegate-volume-encryption-svm-administrator-task.html["委派權限以執�
  a| 
 NVE Volume的純文字磁碟區
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination true`
 
 
 
  a| 
 NAE磁碟區的NVE或純文字磁碟區（假設目的地已啟用Aggregate層級加密）
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key true`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-with-aggr-key true`
 
 
 
  a| 
 NAE Volume至NVE Volume
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-with-aggr-key false`
 
 
 
  a| 
 NAE磁碟區至純文字磁碟區
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-with-aggr-key false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination false -encrypt-with-aggr-key false`
 
 
 
  a| 
 從NVE磁碟區移至純文字磁碟區
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination false`
 
 |===
 +
@@ -241,4 +242,4 @@ vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 
 
 .結果
-如果您使用KMIP伺服器來儲存節點的加密金鑰、ONTAP 則當您加密磁碟區時、會自動將加密金鑰「推送」至伺服器。
+如果您使用 KMIP 伺服器來儲存節點的加密金鑰、 ONTAP 會在您加密磁碟區時自動將加密金鑰推送至伺服器。

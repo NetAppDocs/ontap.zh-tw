@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/snapmirror-svm-replication-concept.html 
 sidebar: sidebar 
-keywords: understand, snapmirror, svm, replication, SVM DR storage limits 
+keywords: understand, snapmirror, svm, replication, SVM disaster recovery storage limits 
 summary: 您可以使用SnapMirror在SVM之間建立資料保護關係。在此類型的資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM擁有的磁碟區中的資料。 
 ---
 = 關於SnapMirror SVM複寫
@@ -27,7 +27,7 @@ summary: 您可以使用SnapMirror在SVM之間建立資料保護關係。在此�
 ** 在正常的排程作業、更新和重新同步期間、不會從來源覆寫到目的地
 ** 在中斷作業期間不會刪除這些項目。
 ** 它們不會在反轉重新同步作業期間刪除。
-當您使用ONTAP 鏡射保存原則使用版本號9.9.1及更新版本來設定SVM DR關係時、該原則的行為如下：
+當您使用 ONTAP 9.9.1 及更新版本來使用 mirror 保存原則來設定 SVM 災難關係時、原則的行為如下：
 ** 來源的使用者定義Snapshot複本原則不會複製到目的地。
 ** 系統定義的Snapshot複本原則不會複製到目的地。
 ** 磁碟區與使用者和系統定義的Snapshot原則之間的關聯不會複製到目的地。
@@ -107,7 +107,7 @@ MirrorAndVault（統一複寫）
 
 [NOTE]
 ====
-SVM複寫不支援版本獨立性。在SVM DR組態中、目的地SVM必須與ONTAP 來源SVM叢集執行相同版本的叢集、才能支援容錯移轉和容錯回復作業。
+SVM複寫不支援版本獨立性。在 SVM 災難恢復組態中、目的地 SVM 必須位於執行與來源 SVM 叢集相同 ONTAP 版本的叢集上、才能支援容錯移轉和容錯回復作業。
 
 ====
 link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror ONTAP 關係的相容版本"]
@@ -120,7 +120,7 @@ SVM複寫關係的內容取決於下列欄位的互動：
 
 * 。 `-identity-preserve true` 的選項 `snapmirror create` 命令會複寫整個 SVM 組態。
 +
-。 `-identity-preserve false` 選項僅複寫 SVM 的磁碟區和驗證與授權組態、以及中列出的通訊協定和名稱服務設定 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在SVM DR關係中複寫的組態"]。
+。 `-identity-preserve false` 選項僅複寫 SVM 的磁碟區和驗證與授權組態、以及中列出的通訊協定和名稱服務設定 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM 災難恢復關係中複寫的組態"]。
 
 * 。 `-discard-configs network` 的選項 `snapmirror policy create` 命令會從 SVM 複寫中排除生命與相關網路設定、以供來源和目的地 SVM 位於不同子網路的情況使用。
 * 。 `-vserver-dr-protection unprotected` 的選項 `volume modify` 命令會將指定的 Volume 排除在 SVM 複寫之外。
@@ -142,9 +142,21 @@ SVM複寫關係的內容取決於下列欄位的互動：
 
 
  a| 
+部署類型
+ a| 
+* 單一來源至單一目的地
+* 從ONTAP 功能檔9.4開始、您只能將風扇輸出至兩個目的地。
++
+根據預設、每個來源SVM只允許一個身分識別保留真正的關係。
+
+
+
+
+
+ a| 
 關係類型
  a| 
-* SnapMirror災難恢復
+* SnapMirror 災難恢復
 * 從ONTAP SnapMirror 9.2開始、SnapMirror統一化複寫
 
 
@@ -158,25 +170,6 @@ SVM複寫關係的內容取決於下列欄位的互動：
 
 
  a| 
-版本獨立
- a| 
-不支援。
-
-
-
- a| 
-部署類型
- a| 
-* 單一來源至單一目的地
-* 從ONTAP 功能檔9.4開始、您只能將風扇輸出至兩個目的地。
-+
-根據預設、每個來源SVM只允許一個身分識別保留真正的關係。
-
-
-
-
-
- a| 
 自主勒索軟體保護
  a| 
 * 支援從ONTAP 支援的功能為從功能9.12.1開始。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/anti-ransomware/index.html["自主勒索軟體保護"]
@@ -185,13 +178,9 @@ SVM複寫關係的內容取決於下列欄位的互動：
 
 
  a| 
-Volume加密
+一致性群組非同步支援
  a| 
-* 來源上的加密磁碟區會在目的地上加密。
-* 必須在目的地上設定內建金鑰管理程式或KMIP伺服器。
-* 目的地會產生新的加密金鑰。
-* 如果目的地不包含支援Volume .Encryption的節點、則複寫會成功、但目的地磁碟區不會加密。
-
+從 ONTAP 9.14.1 開始、當一致性群組存在時、最多可支援 32 個 SVM 災難恢復關係。請參閱 link:https://docs.netapp.com/us-en/ontap/consistency-groups/protect-task.html["保護一致性群組"] 和 link:https://docs.netapp.com/us-en/ontap/consistency-groups/limits.html["一致性群組限制"] 以取得更多資訊。
 
 
 
@@ -205,41 +194,66 @@ FabricPool
  a| 
 MetroCluster
  a| 
-從ONTAP S209.11.1開始、MetroCluster 在一個支援功能組態中、SVM DR關係的兩側、都能做為額外SVM DR組態的來源。
+從 ONTAP 9.11.1 開始、 MetroCluster 組態中 SVM 災難恢復關係的兩端都可以做為額外 SVM 災難恢復組態的來源。
 
 從ONTAP 支援使用支援SnapMirror 9.5開始、MetroCluster SnapMirror SVM複寫功能可在各種組態上執行。
 
-* 無法將此組態作為SVM DR關係的目的地。MetroCluster
-* 只有MetroCluster 在一個SVM組態內的作用中SVM、才能成為SVM DR關係的來源。
+* MetroCluster 組態不能是 SVM 災難恢復關係的目的地。
+* 只有MetroCluster 在整個SVM組態中有作用中的SVM、才能成為SVM災難恢復關係的來源。
 +
 來源可以是切換前的同步來源SVM、或是切換後的同步目的地SVM。
 
-* 當某個不穩定的組態處於穩定狀態時、由於磁碟區不在線上、所以無法將來源SVM DR關係視為來源。MetroCluster MetroCluster
-* 當sync-source sVM是SVM DR關係的來源時、來源SVM DR關係資訊會複寫到MetroCluster 該合作夥伴。
-* 在切換和切換程序期間、複寫到SVM DR目的地可能會失敗。
+* 當某個支援區組態處於穩定狀態時、由於該磁碟區不在線上、所以無法將該支援區同步目的地SVM作為SVM災難恢復關係的來源。MetroCluster MetroCluster
+* 當同步來源 SVM 是 SVM 災難恢復關係的來源時、來源 SVM 災難恢復關係資訊會複寫到 MetroCluster 合作夥伴。
+* 在切換和切換程序期間、複寫至 SVM 災難恢復目的地可能會失敗。
 +
-不過、在切換或切換程序完成之後、下一個SVM DR排程更新將會成功。
+不過、切換或切換程序完成後、下一個 SVM 災難恢復排程更新將會成功。
 
 
+
+
+
+ a| 
+一致性群組
+ a| 
+從 ONTAP 9.14.1 開始支援。如需詳細資訊、請參閱 xref:../consistency-groups/protect.html[保護一致性群組]。
 
 
 
  a| 
 SS3 ONTAP
  a| 
-SVM DR不支援。
+SVM 災難恢復不支援。
 
 
 
  a| 
 SnapMirror同步
  a| 
-SVM DR不支援。
+SVM 災難恢復不支援。
+
+
+
+ a| 
+版本獨立
+ a| 
+不支援。
+
+
+
+ a| 
+Volume加密
+ a| 
+* 來源上的加密磁碟區會在目的地上加密。
+* 必須在目的地上設定內建金鑰管理程式或KMIP伺服器。
+* 目的地會產生新的加密金鑰。
+* 如果目的地不包含支援Volume .Encryption的節點、則複寫會成功、但目的地磁碟區不會加密。
+
 
 |===
 
 
-== 在SVM DR關係中複寫的組態
+== 在 SVM 災難恢復關係中複寫的組態
 
 下表顯示的互動 `snapmirror create -identity-preserve` 選項和 `snapmirror policy create -discard-configs network` 選項：
 
@@ -857,9 +871,9 @@ v3使用者
 |===
 
 
-== SVM DR儲存限制
+== SVM 災難恢復儲存限制
 
-下表顯示每個儲存物件所支援的建議最大磁碟區數和SVM DR關係數。您應該注意、限制通常取決於平台。請參閱 link:https://hwu.netapp.com/["Hardware Universe"^] 以瞭解特定組態的限制。
+下表顯示每個儲存物件所支援的磁碟區和 SVM 災難恢復關係的建議上限。您應該注意、限制通常取決於平台。請參閱 link:https://hwu.netapp.com/["Hardware Universe"^] 以瞭解特定組態的限制。
 
 [cols="2*"]
 |===
@@ -885,6 +899,6 @@ HA配對
  a| 
 叢集
  a| 
-128個SVM DR關係
+128 SVM 災難關係
 
 |===

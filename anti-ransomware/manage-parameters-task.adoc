@@ -4,7 +4,7 @@ permalink: anti-ransomware/manage-parameters-task.html
 keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
 summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體保護偵測參數。 
 ---
-= 管理 ARP 攻擊偵測參數
+= 管理自主勒索軟體保護攻擊偵測參數
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -14,7 +14,7 @@ summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
@@ -29,11 +29,13 @@ summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體
 
 在 ONTAP 9.10.1 中、如果 ARP 偵測到下列兩種情況、就會發出警告：
 
-* 在磁碟區中、有 20 多個檔案的副檔名先前未被觀察到
+* 超過 20 個檔案的副檔名先前未在磁碟區中觀察到
 * 高 Entropy 資料
 
 
 從 ONTAP 9.11.1 開始、如果符合 _ 僅 _ 一個條件、 ARP 就會發出威脅警告。例如、如果在 24 小時內觀察到超過 20 個檔案的副檔名、而這些副檔名先前未在磁碟區中觀察到、則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。（ 24 小時和 20 個檔案值為預設值、可加以修改。）
+
+從 ONTAP 9.14.1 開始、您可以在 ARP 觀察到新的副檔名、以及 ARP 建立快照時、設定警示。如需詳細資訊、請參閱 <<modify-alerts>>
 
 某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
 
@@ -78,7 +80,7 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 即使處於作用中模式、 ARP 仍會繼續修改偵測參數的基準值。如果您知道 Volume 活動的突波（一次性突波或是新常態特徵的突波）、您應該將其回報為安全的。手動回報這些突波的安全性、有助於提高 ARP 威脅評估的準確度。
 
-.一次性突波
+.回報一次性突波
 . 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
 +
 `security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
@@ -92,6 +94,67 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 
 
+
+
+== 設定 ARP 警示
+
+從 ONTAP 9.14.1 開始、 ARP 可讓您指定兩個 ARP 事件的警示：
+
+* 觀察磁碟區上的新副檔名
+* 建立 ARP Snapshot
+
+
+這兩個事件的警示可在個別磁碟區或整個 SVM 上設定。如果您啟用 SVM 的警示、則警示設定只會由啟用警示後建立的磁碟區繼承。根據預設、警示不會在任何磁碟區上啟用。
+
+事件警示可透過多重管理驗證來控制。如需詳細資訊、請參閱 xref:use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-ARP[使用 ARP 保護的磁碟區進行多重管理驗證]。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.設定磁碟區的警示
+. 瀏覽至 ** Volumes （磁碟區） ** 。選取您要修改設定的個別磁碟區。
+. 選擇「 ** 安全性 ** 」標籤、然後選擇「事件安全性設定 ** 」。
+. 若要接收關於「偵測到新的副檔名 ** 」和「建立的勒索軟體快照 ** 」的警示、請選取「 ** 嚴重性 ** 」標題下的下拉式功能表。將設定從「不產生事件」 ** 修改為「通知」 ** 。
+. 選擇 ** 儲存 ** 。
+
+
+.設定 SVM 的警示
+. 瀏覽至 ** 儲存 VM** 、然後選取您要啟用設定的 SVM 。
+. 在「 ** 安全性 ** 」標題下、找到「 ** 防勒索軟體 ** 」卡。選取 image:../media/icon_kabob.gif["三點"] 然後 ** 編輯勒索軟體事件嚴重性 ** 。
+. 若要接收關於「偵測到新的副檔名 ** 」和「建立的勒索軟體快照 ** 」的警示、請選取「 ** 嚴重性 ** 」標題下的下拉式功能表。將設定從「不產生事件」 ** 修改為「通知」 ** 。
+. 選擇 ** 儲存 ** 。
+
+
+--
+.CLI
+--
+.設定磁碟區的警示
+* 若要設定新副檔名的警示：
++
+`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+
+* 若要設定建立 ARP Snapshot 的警示：
++
+`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+
+* 使用確認您的設定 `anti-ransomware volume event-log show` 命令。
+
+
+.設定 SVM 的警示
+* 若要設定新副檔名的警示：
++
+`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+
+* 若要設定建立 ARP Snapshot 的警示：
++
+`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+
+* 使用確認您的設定 `security anti-ransomware vserver event-log show` 命令。
+
+
+--
+====
 .更多資訊
 * link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]
 

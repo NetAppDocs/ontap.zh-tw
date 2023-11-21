@@ -1,0 +1,243 @@
+---
+permalink: authentication/configure-cisco-duo-mfa-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, 2fa, hardware authentication device, Cisco, Duo 
+summary: 若要利用 Cisco Duo for SSH 的雙因素驗證（ 2FA ）來提升帳戶安全性、您必須設定 SSH 以供 Cisco Duo 使用。 
+---
+= 為 SSH 登入設定 Cisco 雙核心 2FA
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、您可以將 ONTAP 設定為在登入 SSH 期間使用 Cisco 雙核心進行雙重驗證（ 2FA ）。您可以在叢集層級設定雙核心、而且預設會套用至所有使用者帳戶。或者、您也可以在儲存 VM 層級（之前稱為 vserver ）設定雙核心、在這種情況下、它只適用於該儲存 VM 的使用者。如果您啟用和設定雙核心、它會作為額外的驗證方法、以補充所有使用者的現有方法。
+
+如果您為 SSH 登入啟用雙核心驗證、使用者下次使用 SSH 登入時、將需要註冊裝置。如需報名資訊、請參閱 Cisco Duo https://guide.duo.com/add-device["註冊文件"^]。
+
+您可以使用 ONTAP 命令列介面來執行 Cisco 雙核心的下列工作：
+
+* <<設定 Cisco Duo>>
+* <<變更 Cisco Duo 組態>>
+* <<移除 Cisco Duo 組態>>
+* <<查看 Cisco Duo 組態>>
+* <<移除 " 雙核心 " 群組>>
+* <<檢視雙核心群組>>
+* <<略過使用者的雙核心驗證>>
+
+
+
+
+== 設定 Cisco Duo
+
+您可以使用為整個叢集或特定儲存 VM （在 ONTAP CLI 中稱為 Vserver ）建立 Cisco 雙核心組態 `security login duo create` 命令。當您這麼做時、 Cisco Duo 會啟用此叢集或儲存 VM 的 SSH 登入。
+
+.步驟
+. 登入 Cisco Duo 管理面板。
+. 前往 * 應用程式 > UNIX 應用程式 * 。
+. 記錄您的整合金鑰、秘密金鑰和 API 主機名稱。
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 啟用此儲存 VM 的 Cisco Duo 驗證、以環境中的資訊取代方括號中的值：
++
+[source, cli]
+----
+security login duo create \
+-vserver <STORAGE_VM_NAME> \
+-integration-key <INTEGRATION_KEY> \
+-secret-key <SECRET_KEY> \
+-apihost <API_HOSTNAME>
+----
++
+如需此命令所需參數和選用參數的詳細資訊、請參閱 link:config-worksheets-reference.html["系統管理員驗證和RBAC組態工作表"^]。
+
+
+
+
+
+== 變更 Cisco Duo 組態
+
+您可以變更 Cisco Duo 驗證使用者的方式（例如、提供多少驗證提示、或使用什麼 HTTP Proxy ）。如果您需要變更儲存 VM 的 Cisco Duo 組態（在 ONTAP CLI 中稱為 Vserver ）、您可以使用 `security login duo modify` 命令。
+
+.步驟
+. 登入 Cisco Duo 管理面板。
+. 前往 * 應用程式 > UNIX 應用程式 * 。
+. 記錄您的整合金鑰、秘密金鑰和 API 主機名稱。
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 變更此儲存 VM 的 Cisco Duo 組態、以您環境中的更新資訊取代方括號中的值：
++
+[source, cli]
+----
+security login duo modify \
+-vserver <STORAGE_VM_NAME> \
+-integration-key <INTEGRATION_KEY> \
+-secret-key <SECRET_KEY> \
+-apihost <API_HOSTNAME> \
+-pushinfo true|false \
+-http-proxy <HTTP_PROXY_URL> \
+-autopush true|false \
+-prompts 1|2|3 \
+-max-unenrolled-logins <NUM_LOGINS> \
+-is-enabled true|false \
+-fail-mode safe|secure
+----
+
+
+
+
+== 移除 Cisco Duo 組態
+
+您可以移除 Cisco Duo 組態、這樣就不需要 SSH 使用者在登入時使用 DuoTM 進行驗證。若要移除儲存 VM 的 Cisco Duo 組態（在 ONTAP CLI 中稱為 Vserver ）、您可以使用 `security login duo delete` 命令。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 移除此儲存 VM 的 Cisco Duo 組態、以您的儲存 VM 名稱取代 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo delete  -vserver <STORAGE_VM_NAME>
+----
++
+這會永久刪除此儲存 VM 的 Cisco Duo 組態。
+
+
+
+
+
+== 查看 Cisco Duo 組態
+
+您可以使用檢視儲存 VM （在 ONTAP CLI 中稱為 vserver ）的現有 Cisco Duo 組態 `security login duo show` 命令。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 顯示此儲存 VM 的 Cisco Duo 組態。您也可以選擇使用 `vserver` 用於指定儲存 VM 的參數、請將儲存 VM 名稱取代為 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo show -vserver <STORAGE_VM_NAME>
+----
++
+您應該會看到類似下列的輸出：
+
++
+[source, cli]
+----
+Vserver: testcluster
+Enabled: true
+
+Status: ok
+INTEGRATION-KEY: DI89811J9JWMJCCO7IOH
+SKEY SHA Fingerprint:
+b79ffa4b1c50b1c747fbacdb34g671d4814
+API Host: api-host.duosecurity.com
+Autopush: true
+Push info: true
+Failmode: safe
+Http-proxy: 192.168.0.1:3128
+Prompts: 1
+Comments: -
+----
+
+
+
+
+== 建立雙核心群組
+
+您可以指示 Cisco DuoTM 僅在特定 Active Directory 、 LDAP 或本機使用者群組中加入使用者、以進行 DuoTM 驗證程序。如果您建立雙核心群組、系統只會提示該群組中的使用者進行雙核心驗證。您可以使用建立雙核心群組 `security login duo group create` 命令。建立群組時、您可以選擇性地將該群組中的特定使用者排除在雙核心驗證程序之外。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 建立 DuoTM 群組、以環境中的資訊取代方括號中的值。如果您省略 `-vserver` 參數、群組會在叢集層級建立：
++
+[source, cli]
+----
+security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您可以選用指定的使用者 `-exclude-users` 此參數不會包含在雙核心驗證程序中。
+
+
+
+
+
+== 檢視雙核心群組
+
+您可以使用檢視現有的 Cisco Duo 群組項目 `security login duo group show` 命令。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 顯示 DUO 群組項目、以環境中的資訊取代方括號中的值。如果您省略 `-vserver` 參數、群組會顯示在叢集層級：
++
+[source, cli]
+----
+security login duo group show -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您可以選用指定的使用者 `-exclude-users` 不會顯示參數。
+
+
+
+
+
+== 移除 " 雙核心 " 群組
+
+您可以使用移除雙核心群組項目 `security login duo group delete` 命令。如果您移除群組、該群組中的使用者將不再包含在雙核心驗證程序中。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 移除 DuoTM 群組項目、以環境中的資訊取代方括號中的值。如果您省略 `-vserver` 參數、群組會在叢集層級移除：
++
+[source, cli]
+----
+security login duo group delete -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME>
+----
++
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。
+
+
+
+
+
+== 略過使用者的雙核心驗證
+
+您可以將所有使用者或特定使用者排除在雙核心 SSH 驗證程序之外。
+
+
+
+=== 排除所有雙核心使用者
+
+您可以為所有使用者停用 Cisco 雙核心 SSH 驗證。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 停用 SSH 使用者的 Cisco Duo 驗證、以 vserver 名稱取代 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo -vserver <STORAGE_VM_NAME> -is-duo-enabled-false
+----
+
+
+
+
+=== 不包括雙核心群組使用者
+
+您可以從雙核心 SSH 驗證程序中排除屬於雙核心群組的特定使用者。
+
+.步驟
+. 使用 SSH 登入您的 ONTAP 帳戶。
+. 針對群組中的特定使用者停用 Cisco Duo 驗證。以群組名稱和使用者清單取代方括號中的值：
++
+[source, cli]
+----
+security login group modify -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您使用指定的使用者 `-exclude-users` 此參數不會包含在雙核心驗證程序中。
+
+
+
+
+
+=== 排除本機雙核心使用者
+
+您可以使用 Cisco 雙核心管理面板、排除特定的本機使用者使用雙核心驗證。如需相關指示、請參閱 https://duo.com/docs/administration-users#changing-user-status["Cisco Duo 文件"^]。

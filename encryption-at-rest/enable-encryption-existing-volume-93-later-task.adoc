@@ -1,0 +1,84 @@
+---
+permalink: encryption-at-rest/enable-encryption-existing-volume-93-later-task.html 
+sidebar: sidebar 
+keywords: enabling, encryption, existing, volume encryption conversion start, command 
+summary: 從 ONTAP 9.3 開始、您可以使用 Volume 加密轉換啟動命令來啟用現有磁碟區的「就地」加密、而無需將 volSume 移至其他位置。 
+---
+= 使用Volume Encryption Conversion start命令、在現有磁碟區上啟用加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從功能介紹9.3開始ONTAP 、您可以使用 `volume encryption conversion start` 命令可「就地」加密現有的磁碟區、而無需將磁碟區移至其他位置。
+
+.關於這項工作
+一旦開始轉換作業、就必須完成。如果您在作業期間遇到效能問題、可以執行 `volume encryption conversion pause` 暫停作業的命令、以及 `volume encryption conversion resume` 命令以恢復作業。
+
+從 ONTAP 9.14.1 開始、您可以使用 `volume encryption conversion start` 在 SVM 根磁碟區上。如需詳細資訊、請參閱 xref:configure-nve-svm-root-task.html[在 SVM 根磁碟區上設定 NetApp Volume Encryption]。
+
+
+NOTE: 您無法使用 `volume encryption conversion start` 轉換 SnapLock Volume 。
+
+.步驟
+. 在現有磁碟區上啟用加密：
++
+`volume encryption conversion start -vserver _svm_name_ -volume _volume_name_`
+
++
+如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//volume-encryption-conversion-start.html["命令參照"^]。
+
++
+下列命令可在現有磁碟區上啟用加密 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
+----
++
+系統會為磁碟區建立加密金鑰。磁碟區上的資料已加密。
+
+. 確認轉換作業的狀態：
++
+`volume encryption conversion show`
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令會顯示轉換作業的狀態：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 完成轉換作業後、請確認磁碟區已啟用加密：
++
+`volume show -is-encrypted true`
+
++
+如需完整的命令語法、請參閱命令的手冊頁。
+
++
+下列命令會顯示上的加密磁碟區 `cluster1`：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+.結果
+如果您使用 KMIP 伺服器來儲存節點的加密金鑰、 ONTAP 會在您加密磁碟區時自動將加密金鑰推送至伺服器。

@@ -1,0 +1,68 @@
+---
+permalink: nvme/manage-automated-discovery.html 
+sidebar: sidebar 
+keywords: nvme, tcp, nvme/tcp, disable, automated, discovery, controllers 
+summary: 從 ONTAP 9.13.1 開始、在 IP 架構中、使用 NVMe / TCP 傳輸協定的控制器的主機探索會依預設自動執行。  
+---
+= 管理 NVMe / TCP 控制器的自動主機探索
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.14.1 開始、在 IP 架構中、使用 NVMe / TCP 傳輸協定的控制器的主機探索會依預設自動執行。
+
+
+
+== 啟用 NVMe / TCP 控制器的自動主機探索
+
+如果您先前已停用自動主機探索、但您的需求已變更、則可以重新啟用。
+
+.步驟
+. 進入進階權限模式：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 啟用自動探索：
++
+[source, cli]
+----
+vserver nvme modify -vserver <vserver_name> -mdns-service-discovery-enabled true
+----
+. 確認已啟用 NVMe / TCP 控制器的自動探索。
++
+[source, cli]
+----
+vserver nvme show
+----
+
+
+
+
+== 停用 NVMe / TCP 控制器的自動主機探索
+
+如果您不需要主機自動探索 NVMe / TCP 控制器、也不需要偵測到網路上的多點傳送流量、則應該停用此功能。
+
+.步驟
+. 進入進階權限模式：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 停用自動探索：
++
+[source, cli]
+----
+vserver nvme modify -vserver <vserver_name> -mdns-service-discovery-enabled false
+----
+. 確認已停用 NVMe / TCP 控制器的自動探索。
++
+[source, cli]
+----
+vserver nvme show
+----
+

@@ -13,7 +13,7 @@ summary: 在儲存虛擬機器（SVM）上建立及設定FPolicy組態之前、�
 [role="lead"]
 在SVM上建立及設定FPolicy組態之前、您必須先瞭解設定FPolicy的特定需求、考量事項及最佳實務做法。
 
-FPolicy功能可透過命令列介面（CLI）或API進行設定。
+FPolicy 功能可透過命令列介面（ CLI ）或 REST API 進行設定。
 
 
 
@@ -43,6 +43,7 @@ NOTE: 從Sf9.8開始ONTAP 、ONTAP 這個解決方案提供用戶端LIF服務、
 
 
 
+* 從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定持續儲存區、以擷取 SVM 中非強制性非非同步原則的檔案存取事件。持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。不支援同步（強制或非強制）和非同步強制組態。
 
 
 
@@ -160,10 +161,19 @@ NOTE: 您必須處於診斷模式、才能收集與 FPolicy 相關的統計資�
 
 
 
+| aborted_requests | 在 SVM 上中止處理的畫面要求數 
+
+
+| event_count | 導致通知的事件清單 
+
+
 | max_requent_l滯 | 最大螢幕要求延遲時間 
 
 
 | 未處理的要求 | 處理中的畫面要求總數 
+
+
+| Processed_requests | 在 SVM 上執行 fpolicy 處理的畫面要求總數 
 
 
 | requy_histure_hist | 畫面要求延遲長條圖 
@@ -231,3 +241,5 @@ NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如�
 * 使用 Passthrough-read 停用所有原則、然後修改受影響的組態、使其不使用 passthrough Read 。
 * 停用叢集上的每個 FPolicy 原則、以停用叢集上的 FPolicy 功能。
 
+
+在還原至不支援持續儲存區的 ONTAP 版本之前、請先確定所有 Fpolicy 原則都沒有設定的持續儲存區。如果設定持續儲存區、還原將會失敗。

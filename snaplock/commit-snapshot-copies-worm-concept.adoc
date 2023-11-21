@@ -11,7 +11,7 @@ summary: 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault �
 
 
 [role="lead"]
-您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。您可以在SnapLock 這個景點執行所有的基本功能。SnapVault目的地磁碟區會自動以唯讀方式掛載、因此不需要明確將Snapshot複本提交至WORM、因此不支援使用SnapMirror原則在目的地磁碟區上建立排程的Snapshot複本。
+您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。您可以在資料保險箱目的地上執行所有的基本 SnapLock 工作。目的地磁碟區會自動以唯讀方式掛載、因此不需要明確將Snapshot複本提交至WORM、因此不支援使用SnapMirror原則在目的地磁碟區上建立排程的Snapshot複本。
 
 .開始之前
 * 來源叢集必須執行ONTAP 不含更新版本的版本。
@@ -35,7 +35,9 @@ NOTE: 您無法重新命名已提交至WORM狀態的Snapshot複本。
 
 NOTE: SnapLock 磁碟區不支援 LUN 。只有在非 SnapLock 磁碟區上建立的 Snapshot 複本會傳輸至 SnapLock 磁碟區、以作為 SnapLock 資料保險箱關係的一部分、才能在 SnapLock 磁碟區中支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過、 SnapMirror 來源磁碟區和包含 LUN 的目的地磁碟區都支援防竄改 Snapshot 複本。
 
-從 ONTAP 9.13.1 開始、您可以使用建立 FlexClone 、立即在 SnapLock for SnapVault 關係的目的地 SnapLock 磁碟區上還原鎖定的 Snapshot 複本 `snaplock-type` 選項設為「 non-SnapLock 」、並在執行磁碟區複本建立作業時、將 Snapshot 複本指定為「父快照」。深入瞭解 link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["使用 SnapLock 類型建立 FlexClone Volume"]。
+從 ONTAP 9.14.1 開始、您可以在 SnapMirror 關係的 SnapMirror 原則中指定特定 SnapMirror 標籤的保留期間、以便在規則中指定的保留期間內、保留從來源到目的地磁碟區的複寫 Snapshot 複本。如果未指定保留期間、則會使用目的地 Volume 的預設保留期間。
+
+從 ONTAP 9.13.1 開始、您可以使用建立 FlexClone 、在 SnapLock 資料保險箱關係的目的地 SnapLock 磁碟區上即時還原鎖定的 Snapshot 複本 `snaplock-type` 選項設為「 non-SnapLock 」、並在執行磁碟區複本建立作業時、將 Snapshot 複本指定為「父快照」。深入瞭解 link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["使用 SnapLock 類型建立 FlexClone Volume"]。
 
 對於部分組態、您應該注意下列事項：MetroCluster
 
@@ -44,13 +46,13 @@ NOTE: SnapLock 磁碟區不支援 LUN 。只有在非 SnapLock 磁碟區上建�
 * 您可以從SnapVault 資料服務SVM上的磁碟區、建立一個從同步來源SVM上DP磁碟區的不同步關係。
 
 
-下圖顯示初始化SnapVault 不實關係的程序：
+下圖顯示初始化 SnapLock 資料保險箱關係的程序 :
 
-image::../media/snapvault-steps-clustered.gif[此圖顯示初始化SnapVault 「相互關聯」的程序：識別目的地叢集,creating a destination volume,creating a policy]
+image::../media/snapvault-steps-clustered.gif[此圖例顯示初始化 SnapLock 資料保險箱關係的程序：識別目的地叢集,creating a destination volume,creating a policy]
 
 .步驟
 . 識別目的地叢集。
-. 在目的地叢集上、安裝SnapLock 該資訊安全許可證、初始化「完成時鐘」、如果您使用ONTAP 的是早於9.10.1的版本、請建立SnapLock 一個如所述的「不中斷彙總」 xref:workflow-concept.html[流程SnapLock]。
+. 在目的地叢集上、安裝 SnapLock 授權、初始化規範時鐘、如果您使用早於 9.10.1 的 ONTAP 版本、請建立 SnapLock Aggregate 、如所述 xref:workflow-concept.html[流程SnapLock]。
 . 在目的地叢集上、建立類型為的 SnapLock 目的地 Volume `DP` 大小與來源 Volume 相同或更大：
 +
 `*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`

@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
 keywords: ransomware, security, autonomous protection, arp, detect, detection, threat, attack, suspect, anti-ransomware, entropy, abnormal volume activity, antiransomware, extension conformity, ransomware protection strategy 
-summary: 從功能性的S廳9.10.1開始ONTAP 、自發勒索軟體保護（Arp）功能會在NAS（NFS和SMB）環境中使用工作負載分析功能、主動偵測可能表示勒索軟體攻擊的異常活動、並提出警示。 
+summary: 自主勒索軟體保護會在 NAS 環境中使用工作負載分析、偵測並警告可能是勒索軟體攻擊的異常活動。 
 ---
 = 自主勒索軟體保護總覽
 :toc: macro
@@ -27,7 +27,7 @@ summary: 從功能性的S廳9.10.1開始ONTAP 、自發勒索軟體保護（Arp�
 
 == 授權與能力
 
-ARP 需要授權、視您使用的 ONTAP 版本而定：
+ARP 需要授權。ARP 可與搭配使用 link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One 授權"^]。如果您沒有 ONTAP One 授權、則可使用其他授權來使用 ARP 、視您的 ONTAP 版本而定。
 
 [cols="2*"]
 |===
@@ -51,7 +51,7 @@ Mt_E_Mgmt（多租戶金鑰管理）
 * 如果您要從ONTAP VMware版本9.11.1或更新版本還原ONTAP 至VMware版本9.10.1、且已啟用具有反勒索軟體授權的Arp、您將會看到一則警告訊息、可能需要重新設定Arp。 link:../revert/anti-ransomware-license-task.html["瞭解如何還原Arp"]。
 
 
-您可以使用 ONTAP 系統管理員或 ONTAP CLI 、以每個磁碟區為基礎來設定 ARP 。
+您可以使用系統管理員或 ONTAP CLI 、以每個磁碟區為基礎來設定 ARP 。
 
 
 
@@ -69,15 +69,7 @@ Mt_E_Mgmt（多租戶金鑰管理）
 
 == ARP 偵測到什麼
 
-勒索軟體攻擊有兩種類型：
-
-* 加密資料、拒絕對檔案提供服務。
-除非支付贖金、否則攻擊者會保留對此資料的存取權。
-* 機密專屬資料遭竊。
-除非支付贖金、否則攻擊者有可能將此資料發佈至公有網域。
-
-
-ARP 採用防勒索軟體偵測機制來解決第一種類型的問題、該機制的基礎是：
+ARP 旨在防範阻斷服務攻擊、攻擊者會在支付贖金之前、先竊取資料。ARP 會根據下列條件提供反勒索軟體偵測：
 
 * 將傳入資料識別為加密或純文字。
 * 偵測到的分析
@@ -89,8 +81,10 @@ ARP 採用防勒索軟體偵測機制來解決第一種類型的問題、該機�
 
 
 
+在僅加密少數檔案、自動採取行動保護資料、並在發生可疑攻擊時發出警示、因此、ARP可以偵測大多數勒索軟體攻擊的擴散。
 
-NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體攻擊的安全性。雖然攻擊可能無法被偵測到、但如果防毒軟體無法偵測入侵、 NetApp ARP 就會成為重要的額外防禦層。在僅加密少數檔案、自動採取行動保護資料、並在發生可疑攻擊時發出警示、因此、ARP可以偵測大多數勒索軟體攻擊的擴散。
+
+NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體攻擊的安全性。雖然攻擊可能無法被偵測到、但如果防毒軟體無法偵測到入侵、 ARP 就會成為重要的額外防禦層。
 
 
 
@@ -98,8 +92,8 @@ NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體�
 
 ARP 有兩種模式：
 
-. 學習
-. 使用中
+. 學習（或「演習」模式）
+. 作用中（或「啟用」模式）
 
 
 當您啟用 ARP 時、它會以學習模式執行。在學習模式中、 ONTAP 系統會根據上述分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP 快照、以便在偵測到威脅時保護資料。
@@ -116,7 +110,7 @@ ARP 有兩種模式：
 
 在作用中模式中、 ARP 會根據從學習到的分析中測得的傳入資料來評估威脅可能性。當 ARP 偵測到威脅時、就會指派測量值：
 
-* ** 低 ** ：這是第一次在磁碟區中觀察到新的副檔名時指派的。
+* ** 低 ** ：磁碟區最早偵測到異常狀況（例如、磁碟區中觀察到新的副檔名）。
 * ** 中度 ** ：觀察到多個檔案副檔名之前從未見過的檔案。
 +
 ** 在 ONTAP 9.10.1 中、向上提報至中度的臨界值為 100 個以上的檔案。從 ONTAP 9.11.1 開始、檔案數量可修改、預設值為 20 。
@@ -124,11 +118,11 @@ ARP 有兩種模式：
 
 
 
-在威脅較低的情況下、 ONTAP 會偵測到異常狀況、並建立磁碟區的快照、以建立最佳的恢復點。ARP Snapshot 使用 `anti-ransomware-backup` 例如、標記和可透過其名稱識別 `Anti_ransomware_backup.2022-12-20_1248`。
+在威脅較低的情況下、 ONTAP 會偵測異常狀況、並建立磁碟區的快照、以建立最佳的恢復點。ARP Snapshot 使用 `anti-ransomware-backup` 例如、標記和可透過其名稱識別 `Anti_ransomware_backup.2022-12-20_1248`。
 
-ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。系統管理員的「事件」 ** 區段會記錄並顯示低層級的威脅、但 ONTAP 不會傳送低威脅的警示。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
+ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。低層級的威脅會記錄下來、並顯示在 System Manager 的 **EventS** 區段中。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示、不過您可以 xref:manage-parameters-task.html#modify-arp-alerts[修改警示設定] 從 ONTAP 9.14.1 開始。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
-您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show -vserver _svm_name_` 命令。
+您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show` 命令。
 
 ARP 快照會保留至少兩天。從 ONTAP 9.11.1 開始、您可以修改保留設定。如需詳細資訊、請參閱 xref:modify-automatic-shapshot-options-task.html[修改 Snapshot 複本選項]。
 

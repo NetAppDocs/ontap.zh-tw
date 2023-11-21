@@ -1,0 +1,35 @@
+---
+permalink: nvme/disable-vmid-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, vmid, disable, virtual machine,  unique identifier 
+summary: 如果您執行的是 NVMe 傳輸協定、而且已使用 DH-HMAC-CHAP 建立安全驗證、您可以選擇隨時停用它。 
+---
+= 停用 NVMe 主機虛擬機器識別碼
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根據預設、 ONTAP 從 ONTAP 9.14.1 開始支援 NVMe / FC 主機透過唯一識別碼來識別虛擬機器、並支援 NVMe / FC 主機監控虛擬機器資源使用率。  這可強化主機端報告和疑難排解。
+
+您可以使用 bootarg 來停用此功能。
+
+.步驟
+. 停用虛擬機器識別碼：
++
+[source, cli]
+----
+bootargs set fct_sli_appid_off <port>, <port>
+----
++
+以下範例停用連接埠 0g 和連接埠 0i 上的 VMID 。
+
++
+[listing]
+----
+bootargs set fct_sli_appid_off 0g,0i
+
+fct_sli_appid_off == 0g,0i
+----
+

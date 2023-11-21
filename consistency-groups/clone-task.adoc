@@ -11,8 +11,9 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 
 
 [role="lead"]
-從ONTAP 功能表9.12開始、您可以複製一致性群組、以建立一致性群組及其內容的複本。複製一致性群組會建立一致性群組組態的複本、其中繼資料（例如應用程式類型）、以及所有磁碟區及其內容（例如檔案、目錄、LUN或NVMe命名空間）。
+從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一致性群組及其內容的複本。複製一致性群組會建立一致性群組組態的複本、其中繼資料（例如應用程式類型）、以及所有磁碟區及其內容（例如檔案、目錄、LUN或NVMe命名空間）。
 
+.關於這項工作
 複製一致性群組時、您可以使用目前的組態來複製、但可以使用現有的磁碟區內容、或是根據現有的一致性群組Snapshot來複製。
 
 只有整個一致性群組才支援複製一致性群組。您無法在階層關係中複製個別子一致性群組：只能複製完整的一致性群組組態。
@@ -27,7 +28,7 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 
 .開始之前
 * 當您複製一致性群組時、ONTAP 如果未指定共用名稱、則不會為複製的磁碟區建立SMB共用區。* 如果未指定連接路徑、則不會掛載複製的一致性群組。
-* 如果您嘗試根據未反映一致性群組目前組態的Snapshot來複製一致性群組、則作業將會失敗。
+* 如果您嘗試根據不反映一致性群組目前組成磁碟區的 Snapshot 來複製一致性群組、作業將會失敗。
 * 複製一致性群組之後、您需要執行適當的對應作業。
 +
 請參閱 xref:../task_san_map_igroups_to_multiple_luns.html[將igroup對應至多個LUN] 或 xref:../san-admin/map-nvme-namespace-subsystem-task.html[將NVMe命名空間對應至子系統] 以取得更多資訊。
@@ -35,6 +36,10 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 * SnapMirror營運不中斷關係中的一致性群組或任何相關的DP磁碟區不支援複製一致性群組。
 
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
 .步驟
 . 選擇*儲存>一致性群組*。
 . 從「*一致性群組*」功能表中選取您要複製的一致性群組。
@@ -53,6 +58,20 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 . 返回「*一致性群組*」功能表、確認您的一致性群組已複製完成。
 
 
+--
+.CLI
+--
+從 ONTAP 9.14.1 開始、您可以使用 CLI 複製一致性群組。
+
+.複製一致性群組
+. 。 `consistency-group clone create` 命令會以目前的時間點狀態複製一致性群組。若要以 Snapshot 作為複製作業的基礎、請包含 `-source-snapshot` 參數。
++
+`consistency-group clone create -vserver _svm_name_ -consistency-group _clone_name_ -source-consistency-group _consistency_group_name_ [-source-snapshot _snapshot_name_]`
+
+
+
+--
+====
 .後續步驟
 * xref:../task_san_map_igroups_to_multiple_luns.html[將igroup對應至多個LUN]
 * xref:../san-admin/map-nvme-namespace-subsystem-task.html[將NVMe命名空間對應至子系統]

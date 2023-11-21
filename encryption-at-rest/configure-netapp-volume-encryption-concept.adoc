@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/configure-netapp-volume-encryption-concept.html 
 sidebar: sidebar 
-keywords: configure, netapp, volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
+keywords: volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
 summary: NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。只有儲存系統才能存取的加密金鑰、可確保在基礎裝置重新調整用途、退回、放錯位置或遭竊時、無法讀取Volume資料。 
 ---
 = 設定NetApp Volume Encryption總覽
@@ -25,15 +25,14 @@ NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置�
 
 從支援支援支援的版本起、如果您擁有Volume加密（VE）授權、並使用內建或外部金鑰管理程式、則根據預設會啟用Aggregate和Volume加密。ONTAP設定外部或內建金鑰管理程式時、靜止資料加密的設定方式會改變、以供全新的集合體和全新的磁碟區使用。全新的Aggregate依預設會啟用NetApp Aggregate Encryption（NAE）。非NAE Aggregate一部分的全新磁碟區預設會啟用NetApp Volume Encryption（NVE）。如果資料儲存虛擬機器（SVM）是使用多租戶金鑰管理、以自己的金鑰管理程式進行設定、則為該SVM建立的磁碟區會自動設定NVE。
 
-您可以在新的或現有的磁碟區上啟用加密。NVE支援完整的儲存效率功能、包括重複資料刪除與壓縮。
+您可以在新的或現有的磁碟區上啟用加密。NVE支援完整的儲存效率功能、包括重複資料刪除與壓縮。從 ONTAP 9.14.1 開始、您就可以了 xref:/configure-nve-svm-root-task.html[在現有 SVM 根磁碟區上啟用 NVE]。
 
 
 NOTE: 如果您使用SnapLock 的是功能區、則只能在新的空白SnapLock 版的功能區上啟用加密功能。您無法在現有SnapLock 的流通量上啟用加密功能。
 
 您可以在任何類型的Aggregate（HDD、SSD、混合式、陣列LUN）上使用NVE、搭配任何RAID類型、也可以在ONTAP 任何支援的支援功能中使用、包括ONTAP Select 用作支援的功能、包括用作支援的功能。您也可以使用NVE搭配硬體加密、在自我加密磁碟機上使用「雙重加密」資料。
 
-
-NOTE: FASA220、FASA800、FAS2720、FAS2750及更新版本的系統會將核心傾印儲存在其開機裝置上。AFF AFF在這些系統上啟用NVE時、核心傾印也會加密。
+啟用 NVE 時、核心傾印也會加密。
 
 
 
@@ -72,7 +71,7 @@ NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregat
 
 * 您可以使用_叢集範圍_來設定叢集中所有SVM的外部金鑰管理。叢集管理員可以存取儲存在伺服器上的每個金鑰。
 * 從ONTAP S9.6開始、您可以使用_SVM範圍_來設定叢集中命名SVM的外部金鑰管理。這最適合多租戶環境、每個租戶使用不同的SVM（或一組SVM）來提供資料。只有特定租戶的SVM管理員可以存取該租戶的金鑰。
-* 從功能升級到功能升級到ONTAP 功能升級、您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault與Google Cloud KMS] 僅保護資料Vserver的NVE金鑰。
+* 從功能升級到功能升級到ONTAP 功能升級、您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault與Google Cloud KMS] 僅保護資料 SVM 的 NVE 金鑰。從 9.12.0 開始、 AWS 的 KMS 都可以使用這項功能。
 
 
 您可以在同一個叢集中使用這兩個範圍。如果SVM已設定金鑰管理伺服器、ONTAP 則僅使用這些伺服器來保護金鑰。否則ONTAP 、利用為叢集設定的金鑰管理伺服器來保護金鑰。
@@ -144,7 +143,7 @@ RAID0、RAID4、RAID-DP、RAID-TEC
  a| 
 磁碟區
  a| 
-資料磁碟區和現有的根磁碟區。您無法加密SVM根磁碟區或MetroCluster 不支援中繼資料磁碟區上的資料。
+資料磁碟區和現有 SVM 根磁碟區。您無法加密 MetroCluster 中繼資料磁碟區上的資料。在早於 9.14.1 的 ONTAP 版本中、您無法使用 NVE 加密 SVM 根 Volume 上的資料。從 ONTAP 9.14.1 開始、 ONTAP 支援 xref:configure-nve-svm-root-task.html[SVM 根磁碟區上的 NVE]。
 
 
 

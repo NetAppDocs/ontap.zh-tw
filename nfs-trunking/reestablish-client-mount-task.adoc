@@ -1,0 +1,51 @@
+---
+permalink: nfs-trunking/reestablish-client-mount-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, NFS trunking, data, shares, Linux, VMware, mounts, client 
+summary: 若要將非主幹用戶端連線轉換為主幹連線、必須使用有關生命體的資訊、卸載及重新掛載 Linux 和 VMware 用戶端上的現有掛載。 
+---
+= 重新建立用戶端掛載
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要將非主幹用戶端連線轉換為主幹連線、必須使用有關生命體的資訊、卸載及重新掛載 Linux 和 VMware 用戶端上的現有掛載。
+
+在用戶端上輸入掛載命令時、您必須為主幹群組中的每個 LIF 輸入 IP 位址。
+
+深入瞭解 link:index.html#supported-clients["支援的用戶端"]。
+
+
+NOTE: 卸載 VMware 用戶端會中斷資料存放區上的任何 VM 。另一種方法是建立啟用主幹的新資料存放區、並使用 * Storage VMotion* 將 VM 從舊資料存放區移至新資料存放區。如需詳細資訊、請參閱 VMware 文件。
+
+[role="tabbed-block"]
+====
+.Linux 用戶端需求
+--
+主幹群組中的每個連線都需要個別的掛載點。
+
+使用類似下列命令來掛載匯出的磁碟區：
+
+`mount lif1_ip:/vol-test /mnt/test1 -o vers=4.1,max_connect=2`
+
+`mount lif2_ip:/vol-test /mnt/test2 -o vers=4.1,max_connect=2`
+
+。 `vers` 值應該是 `4.1` 或更新版本。
+
+。 `max_connect` 值應對應於主幹群組中的連線數目。
+
+--
+.VMware 用戶端需求
+--
+需要掛載陳述式、其中包含主幹群組中每個連線的 IP 位址。
+
+使用類似下列的命令掛載匯出的資料存放區：
+
+`#esxcli storage nfs41 -H lif1_ip, lif2_ip -s /mnt/sh are1 -v nfs41share`
+
+。 `-H` 值應對應於主幹群組中的連線。
+
+--
+====

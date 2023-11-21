@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
 keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
-summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來版本將提供對其他環境的支援。 
+summary: NAS 工作負載支援 ARP 。它最適合 NFS 儲存、 Windows 或 Linux 主目錄、視訊和影像工作負載上的資料庫。 
 ---
 = 自主勒索軟體保護的使用案例和考量
 :toc: macro
@@ -14,12 +14,12 @@ summary: 在目前的版本中、勒索軟體保護最適合NAS環境。未來�
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
 [role="lead"]
-從 ONTAP 9.10.1 開始、 NAS 工作負載可享有自主 Ransomwware 保護。在部署 ARP 之前、您應該瞭解建議的用途和支援的組態、以及效能影響。
+從 ONTAP 9.10.1 開始、 NAS 工作負載可使用自主 Ransomwware Protection （ ARP ）。在部署 ARP 之前、您應該瞭解建議的用途和支援的組態、以及效能影響。
 
 
 
@@ -65,22 +65,22 @@ ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本�
 下列 ONTAP 版本支援其他組態和磁碟區類型：
 
 |===
-|  | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+|  | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
 
 
-| 使用非同步 SnapMirror 保護磁碟區 | x | x |  |  
+| 使用非同步 SnapMirror 保護磁碟區 | ✓ | ✓ | ✓ |  |  
 
 
-| 使用非同步 SnapMirror 保護 SVM | x | x |  |  
+| 使用非同步 SnapMirror 保護 SVM | ✓ | ✓ | ✓ |  |  
 
 
-| SVM 已啟用資料移轉功能 | x | x |  |  
+| SVM 已啟用資料移轉功能 | ✓ | ✓ | ✓ |  |  
 
 
-| 資料量FlexGroup | x |  |  |  
+| 資料量FlexGroup | ✓ | ✓ |  |  |  
 
 
-| 多管理員驗證 | x |  |  |  
+| 多管理員驗證 | ✓ | ✓ |  |  |  
 |===
 .SnapMirror與ARP互通性
 從 ONTAP 9.12.1 開始、非同步 SnapMirror 目的地磁碟區支援 ARP 。SnapMirror Synchronous 不支援 ARP 。
@@ -137,7 +137,7 @@ ARP 不支援下列 Volume 組態：
 * 純SAN磁碟區
 * 資料量SnapLock
 * SnapMirror同步
-* 非同步 SnapMirror （在 ONTAP 9.10.1 至 9.12.1 中）。從 ONTAP 9.12.1 開始支援非同步 SnapMirror 。如需詳細資訊、請參閱 <<snapmirror>>）
+* 非同步 SnapMirror （僅在 ONTAP 9.10.1 和 9.11.1 中不受支援。從 ONTAP 9.12.1 開始支援非同步 SnapMirror 。如需詳細資訊、請參閱 <<snapmirror>>）
 * 受限磁碟區
 * 儲存VM的根磁碟區
 * 已停止儲存VM的磁碟區
@@ -165,8 +165,15 @@ ARP 不支援下列 Volume 組態：
 
 
 
-== 使用受自動勒索軟體保護（ ARP ）保護的磁碟區進行多重管理驗證
+== 使用 ARP 保護的磁碟區進行多重管理驗證
 
 從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解操作方法 link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"^]。
 
 您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。
+
+從 ONTAP 9.14.1 開始、 ARP 會提供建立 ARP 快照和觀察新副檔名的警示。這些事件的警示預設為停用。警示可在 Volume 或 SVM 層級設定。您可以使用在 SVM 層級建立 MAV 規則 `security anti-ransomware vserver event-log modify` 或是在 Volume 層級使用 `security anti-ransomware volume event-log modify`。
+
+.後續步驟
+* link:enable-task.html["啟用自發勒索軟體保護"]
+* link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"]
+

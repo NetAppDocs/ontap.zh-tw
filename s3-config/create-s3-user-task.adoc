@@ -15,36 +15,50 @@ summary: 所有ONTAP 的物件儲存區都需要使用者授權、才能限制�
 所有ONTAP 的物件儲存區都需要使用者授權、才能限制連線至授權用戶端。
 
 .開始之前。
-啟用S3的SVM必須已經存在。
+啟用 S3 的儲存 VM 必須已經存在。
 
 .關於這項工作
-S3使用者可以存取SVM中的任何儲存區、但不能存取多個SVM。
-
-建立S3使用者時、會產生存取金鑰和秘密金鑰。必須與使用者共用、以及物件存放區的FQDN和儲存區名稱。S3 使用者的金鑰可以與一起顯示 `vserver object-store-server user show` 命令。
+S3 使用者可以存取儲存 VM 中的任何儲存區。當您建立 S3 使用者時、也會為使用者產生存取金鑰和秘密金鑰。應與使用者共用這些資源、以及物件存放區的 FQDN 和貯體名稱。S3 使用者的金鑰可以使用檢視 `vserver object-store-server user show` 命令。
 
 您可以在儲存區原則或物件伺服器原則中、將特定的存取權限授予S3使用者。
 
 [NOTE]
 ====
-建立物件存放區伺服器時、會建立root使用者（UID 0）、這是具有存取所有儲存區權限的使用者。與其以ONTAP root使用者身分管理S3、最佳做法是建立具有特定權限的管理員使用者角色。
+當您建立新的物件存放區伺服器時、 ONTAP 會建立 root 使用者（ UID 0 ）、這是具有存取所有儲存區權限的使用者。NetApp 不建議以 root 使用者身分管理 ONTAP S3 、而是建議以特定權限建立管理員使用者角色。
 
 ====
 [role="tabbed-block"]
 ====
-.系統管理員
---
-. 編輯儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下儲存虛擬機器、按一下*設定*、然後按一下 image:icon_pencil.gif["鉛筆圖示"] 在S3下。
-. 新增使用者：按一下「*使用者*」、然後按一下「*新增*」。
-. 輸入名稱、然後按一下*「Save*（儲存*）」。
-. 請務必儲存存取金鑰和秘密金鑰、以便從S3用戶端存取。
-
-
---
 .CLI
 --
 . 建立S3使用者：
-`vserver object-store-server user create -vserver _svm_name_ -user _user_name_ [-comment _text_]`
-. 請務必儲存存取金鑰和秘密金鑰、以便從S3用戶端存取。
+`vserver object-store-server user create -vserver svm_name -user user_name -comment [-comment text] -key-time-to-live time`
++
+** 新增註解是選擇性的。
+** 從 ONTAP 9.14.1 開始、您可以定義金鑰在中有效的時間週期 `-key-time-to-live` 參數。您可以使用此格式新增保留期間、以指出存取金鑰過期的期間： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W`
+例如、如果您想要輸入一天、兩小時、三分鐘和四秒的保留期間、請將值輸入為 `P1DT2H3M4S`。除非另有說明、金鑰的有效時間不限。
++
+以下範例建立名稱為的使用者 `sm_user1` 在儲存 VM 上 `vs0`，關鍵保留期為一週。
+
++
+[listing]
+----
+vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to-live P1W
+----
+
+
+. 請務必儲存存取金鑰和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
+
+
+--
+.系統管理員
+--
+. 按一下「*儲存設備>儲存設備VM*」。選取您需要新增使用者的儲存 VM 、選取 * 設定 * 、然後按一下 image:icon_pencil.gif["鉛筆圖示"] 在S3下。
+. 若要新增使用者、請按一下 * 使用者 > 新增 * 。
+. 輸入使用者名稱。
+. 從 ONTAP 9.14.1 開始、您可以指定為使用者建立之存取金鑰的保留期間。您可以指定金鑰自動過期的保留期間（以天、小時、分鐘或秒為單位）。依預設、此值設為 `0` 這表示金鑰無限期有效。
+. 按一下「 * 儲存 * 」。系統會建立使用者、並為使用者產生存取金鑰和秘密金鑰。
+. 下載或儲存存取金鑰和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
 
 
 --

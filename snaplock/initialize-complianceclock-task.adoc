@@ -1,59 +1,72 @@
 ---
 permalink: snaplock/initialize-complianceclock-task.html 
 sidebar: sidebar 
-keywords: snaplock, complianceclock, initialize, worm, retention, period, node, ntp, reset, resynchronize 
-summary: 《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載SnapLock 一個Eslaggregate的每個節點上初始化系統的「Compliance時鐘」。在節點上初始化「完成時鐘」之後、就無法再次初始化。 
+keywords: snaplock, complianceclock, compliance clock, initialize, worm, retention, period, node, ntp, reset, resynchronize 
+summary: 《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載 SnapLock Aggregate 的每個節點上初始化系統相容性時鐘。  
 ---
-= 初始化「Compliance時鐘」
+= 初始化法規遵循時鐘
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-《支援支援時鐘」SnapLock 可防止竄改、進而改變WORM檔案的保留期間。您必須在裝載SnapLock 一個Singgregate的每個節點上初始化_system ComplianceClock_。在節點上初始化「完成時鐘」之後、就無法再次初始化。
+SnapLock 使用 _Volume Compliance Clock_ 來防止竄改、以免改變 WORM 檔案的保留期。您必須先在裝載 SnapLock Aggregate 的每個節點上初始化 _ 系統整合時鐘 _ 。
 
-.您需要的產品
+從 ONTAP 9.14.1 開始、您可以在沒有 SnapLock 磁碟區或沒有啟用 Snapshot 複本鎖定的磁碟區時、初始化或重新初始化系統相容時鐘。重新初始化的功能可讓系統管理員在系統初始化可能不正確的情況下重設系統相容性時鐘、或是修正系統上的時鐘漂移。在 ONTAP 9.13.1 版及更早版本中、一旦您初始化節點上的規範時鐘、就無法重新初始化它。
+
+.開始之前
+若要重新初始化法規遵循時鐘：
+
+* 叢集中的所有節點都必須處於健全狀態。
+* 所有磁碟區都必須處於線上狀態。
+* 恢復佇列中沒有任何磁碟區。
+* 無法存在 SnapLock 磁碟區。
+* 沒有啟用 Snapshot 複本鎖定的磁碟區。
+
+
+初始化法規遵循時鐘的一般需求：
+
 * 您必須是叢集管理員才能執行此工作。
 * 必須在節點上安裝此功能的不必要授權。SnapLock
 
 
 .關於這項工作
-系統完成時鐘的時間由_volume完成時鐘_繼承、此模式可控制磁碟區上WORM檔案的保留期間。當您建立新SnapLock 的功能區時、Volume Compliance時鐘 會自動初始化。
+系統相容時鐘的時間由 _Volume Compliance Clock_ 繼承、後者控制磁碟區上 WORM 檔案的保留時間。當您建立新的 SnapLock Volume 時、 Volume Compliance 時鐘會自動初始化。
 
 [NOTE]
 ====
-「完成時鐘」的初始設定是根據目前的系統時鐘而定。因此、您應該先確認系統時間和時區是否正確、再初始化「完成時鐘」。在節點上初始化「完成時鐘」之後、就無法再次初始化。
+系統相容時鐘的初始設定是以目前的硬體系統時鐘為基礎。因此、在每個節點上初始化系統相容性時鐘之前、您應該先確認系統時間和時區是否正確。在節點上初始化系統相容性時鐘之後、當啟用鎖定的 SnapLock 磁碟區或磁碟區存在時、就無法重新初始化它。
 
 ====
+.步驟
+您可以使用 ONTAP CLI 初始化法規遵循時鐘、或從 ONTAP 9.12.1 開始、使用系統管理員來初始化法規遵循時鐘。
+
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-從功能更新至功能更新至功能更新、您可以使用System Manager來初始化功能更新時鐘。ONTAP SnapLock
-
-.步驟
 . 瀏覽至*叢集>總覽*。
 . 在「*節點*」區段中、按一下「*初始化SnapLock 功能不一致時鐘*」。
-. 若要顯示「法規遵循時鐘」欄、並確認已初始化法規遵循時鐘、請在「*叢集>總覽>節點*」區段中、按一下「*顯示/隱藏*」、然後選取「* SnapLock 不符合法規遵循時鐘*」。
+. 要顯示 *Compliance Clock* 列並驗證是否已初始化 Compliance Clock, 請在 *Cluster > Overview > 節點 * 部分中單擊 *Show/Hide* 並選擇 SnapLock Compliance Clock* 。
 
 
 --
 --
 .CLI
-. 初始化系統符合時鐘：
+. 初始化系統相容時鐘：
 +
 `*snaplock compliance-clock initialize -node _node_name_*`
 
 +
-下列命令可初始化系統組態時鐘 `node1`：
+下列命令會初始化系統的 Compliance Clock On `node1`：
 
 +
 [listing]
 ----
 cluster1::> snaplock compliance-clock initialize -node node1
 ----
-. 出現提示時、請確認系統時鐘是否正確、以及您要初始化「ComplianceClock:
+. 出現提示時、請確認系統時鐘正確、且您想要初始化 Compliance Clock:
 +
 [listing]
 ----
@@ -73,9 +86,9 @@ Do you want to continue? (y|n): y
 ====
 
 
-== 為NTP組態的系統啟用「完成時鐘重新同步」
+== 啟用 NTP 組態系統的法規遵循時鐘重新同步
 
-設定NTP伺服器SnapLock 時、您可以啟用「支援不同步時鐘時間」同步功能。
+您可以在設定 NTP 伺服器時、啟用 SnapLock Compliance 時鐘時間同步功能。
 
 .您需要的產品
 * 此功能僅適用於進階權限層級。
@@ -85,17 +98,17 @@ Do you want to continue? (y|n): y
 
 
 .關於這項工作
-當支援不安全的時鐘精靈偵測到超出臨界值的偏移時、則會使用系統時間來重設系統和Volume ComplianceClocks ONTAP SnapLock 。24小時的時間會設為偏移臨界值。這表示只有在系統時鐘的偏差超過一天時、系統的「完成時鐘」才會同步處理至系統時鐘。
+當 SnapLock 安全時鐘精靈偵測到超出臨界值的偏移時、 ONTAP 會使用系統時間來重設系統和 Volume Compliance 時鐘。24小時的時間會設為偏移臨界值。這表示系統相容時鐘只有在偏差超過一天的情況下、才會與系統時鐘同步。
 
-此功能可偵測到不穩定的時鐘、並將「Compliance時鐘」變更為系統時間。SnapLock任何修改系統時間以強制「完成時鐘」同步至系統時間的嘗試都會失敗、因為只有在系統時間與NTP時間同步時、「完成時鐘」才會同步至系統時間。
+SnapLock 安全時鐘精靈會偵測到偏差、並將法規遵循時鐘變更為系統時間。任何試圖修改系統時間以強制 Compliance 時鐘與系統時間同步的嘗試都會失敗、因為 Compliance 時鐘只有在系統時間與 NTP 時間同步時、才會與系統時間同步。
 
 .步驟
-. 設定NTP伺服器時啟用SnapLock 「支援時鐘時間同步」功能：
+. 設定 NTP 伺服器時、請啟用 SnapLock Compliance 時鐘時間同步功能：
 +
 `*snaplock compliance-clock ntp*`
 
 +
-下列命令可啟用系統的「同步時鐘時間」同步功能：
+下列命令可啟用系統相容時鐘時間同步功能：
 
 +
 [listing]
@@ -108,7 +121,7 @@ cluster1::*> snaplock compliance-clock ntp modify -is-sync-enabled true
 `*snaplock compliance-clock ntp show*`
 
 +
-下列命令會檢查系統是否已啟用「符合時鐘時間同步」功能：
+下列命令會檢查是否已啟用系統相容時鐘時間同步功能：
 
 +
 [listing]

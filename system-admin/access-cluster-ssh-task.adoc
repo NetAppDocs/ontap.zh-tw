@@ -16,9 +16,9 @@ summary: 您可以向叢集發出SSH要求、以執行管理工作。SSH 預設�
 .您需要的產品
 * 您必須擁有設定為使用的使用者帳戶 `ssh` 作為存取方法。
 +
-。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9131_main/security-login-create.html#description["手冊頁"^] 包含其他資訊。
+。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9141_main/security-login-create.html#description["手冊頁"^] 包含其他資訊。
 
-* 如果您使用 Active Directory （ AD ）網域使用者帳戶來存取叢集、則必須透過啟用 CIFS 的儲存虛擬機器（ SVM ）來設定叢集的驗證通道、而且您的 AD 網域使用者帳戶也必須新增至具有的叢集 `ssh` 作為存取方法和 `domain` 作為驗證方法。
+* 如果您使用 Active Directory （ AD ）網域使用者帳戶來存取叢集、則必須透過啟用 CIFS 的儲存 VM 來設定叢集的驗證通道、而且您的 AD 網域使用者帳戶也必須新增至具有的叢集 `ssh` 作為存取方法和 `domain` 作為驗證方法。
 * 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
 +
 。 `network options ipv6 show` 命令會顯示是否已啟用 IPv6 。。 `system services firewall policy show` 命令會顯示防火牆原則。
@@ -54,6 +54,7 @@ AD使用者名稱和網域名稱不區分大小寫。不過ONTAP 、不區分使
 
 * 從 ONTAP 9.4 開始、您可以 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["啟用 SSH 多因素驗證"^] 適用於 LDAP 和 NIS 遠端使用者。
 * 從 ONTAP 9.13.1 開始、您可以選擇性地將憑證驗證新增至 SSH 驗證程序、以增強登入安全性。若要這麼做、 link:../authentication/manage-ssh-public-keys-and-certificates.html["將 X.509 憑證與公開金鑰建立關聯"^] 帳戶使用的。如果您同時使用 SSH 公開金鑰和 X.509 憑證登入、 ONTAP 會先檢查 X.509 憑證的有效性、然後再使用 SSH 公開金鑰進行驗證。如果該憑證已過期或撤銷、 SSH 公開金鑰會自動停用、則 SSH 登入會遭到拒絕。
+* 從 ONTAP 9.14.1 開始、您可以選擇性地將 Cisco 雙核心雙因素驗證新增至 SSH 驗證程序、以增強登入安全性。啟用 Cisco 雙核心驗證之後、首次登入時、使用者必須註冊裝置、以作為 SSH 工作階段的驗證者。請參閱 link:../authentication/configure-cisco-duo-mfa-task.html["為 SSH 登入設定 Cisco 雙核心 2FA"^] 如需設定 ONTAP 的 Cisco 雙核心 SSH 驗證的詳細資訊、
 
 
 .步驟

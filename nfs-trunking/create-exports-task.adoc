@@ -1,0 +1,65 @@
+---
+permalink: nfs-trunking/create-exports-task.html 
+sidebar: sidebar 
+keywords: servers, network, NFS trunking, NIC, export policies, rule, Linux, VMware, datastores, client 
+summary: 若要讓用戶端存取資料共用、您必須建立一個或多個磁碟區、而且該磁碟區必須具有至少一個規則的匯出原則。 
+---
+= 匯出資料以供用戶端存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要讓用戶端存取資料共用、您必須建立一個或多個磁碟區、而且該磁碟區必須具有至少一個規則的匯出原則。
+
+用戶端匯出需求：
+
+* Linux 用戶端必須為每個主幹連線（亦即每個 LIF ）分別安裝一個裝載點和一個裝載點。
+* VMware 用戶端只需要單一裝載點即可匯出磁碟區、並指定多個生命量。
++
+VMware 用戶端需要在匯出原則中具有 root 存取權。
+
+
+
+.步驟
+. 建立匯出原則：
++
+`vserver export-policy create -vserver _svm_name_ -policyname _policy_name_`
+
++
+原則名稱最長可達256個字元。
+
+. 確認已建立匯出原則：
++
+`vserver export-policy show -policyname _policy_name_`
+
++
+.範例
+下列命令會在名為VS1的SVM上建立並驗證名為exp1的匯出原則：
+
++
+`vs1::> vserver export-policy create -vserver vs1 -policyname exp1`
+
+. 建立匯出規則並將其新增至現有的匯出原則：
++
+`vserver export-policy rule create -vserver _svm_name_ -policyname _policy_name_ -ruleindex _integer_ -protocol nfs4 -clientmatch { _text | "text,text,…"_ } -rorule _security_type_ -rwrule _security_type_ -superuser _security_type_ -anon _user_ID_`
+
++
+。 `-clientmatch` 參數應識別可用於主幹的 Linux 或 VMware 用戶端、以裝載匯出。
+
++
+深入瞭解 link:../nfs-config/add-rule-export-policy-task.html["建立匯出規則。"]
+
+. 建立具有交會點的Volume：
++
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_-size {integer[KB|MB|GB|TB|PB]} -security-style unix -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ -policy _export_policy_name_`
+
++
+深入瞭解 link:../nfs-config/create-volume-task.html["正在建立 Volume 。"]
+
+. 確認已使用所需的交會點建立磁碟區：
++
+`volume show -vserver _svm_name_ -volume _volume_name_ -junction-path`
+
+

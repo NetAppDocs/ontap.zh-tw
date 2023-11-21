@@ -1,0 +1,43 @@
+---
+permalink: nfs-trunking/enable-server-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, enable, NFS, trunking, enabled, NAS, svm, 
+summary: 必須在執行 NFSv4.1 及更新版本的 NFS 伺服器上明確啟用 Trunking 。在建立 NFS 伺服器時、預設會啟用 NFSv4.1 及更新版本。 
+---
+= 在 NFS 伺服器上啟用主幹
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必須在 NFS 伺服器上明確啟用 Trunking 。在建立 NFS 伺服器時、預設會啟用 NFSv4.1 。
+
+啟用主幹連線後、請確認已視需要設定下列服務。
+
+* link:../nfs-config/configure-dns-host-name-resolution-task.html["DNS"]
+* link:../nfs-config/using-ldap-concept.html["LDAP"]
+* link:../nfs-config/kerberos-nfs-strong-security-concept.html["Kerberos"]
+
+
+.步驟
+. 啟用主幹連線、並確保已啟用 NFSv4.1 ：
++
+`vserver nfs create -vserver _svm_name_ -v4.1 enabled -v4.1-trunking enabled`
+
+. 確認NFS正在執行：
+`vserver nfs status -vserver _svm_name_`
+. 確認NFS已設定為所需：
++
+`vserver nfs show -vserver _svm_name_`
+
++
+深入瞭解 link:../nfs-config/create-server-task.html["NFS 伺服器組態。"]
+...如果您是從此 SVM 服務至 Windows 用戶端、請移動共用區、然後刪除伺服器。
+`vserver cifs show -vserver _svm_name_`
+
++
++
+`vserver cifs delete -vserver _svm_name_`
+
+

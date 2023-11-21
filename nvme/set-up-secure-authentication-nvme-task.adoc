@@ -1,0 +1,95 @@
+---
+permalink: nvme/set-up-secure-authentication-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, authentication, tcp, dh-hmac-hcap, chap, setting up, set up, in-band, in band 
+summary: 從 ONTAP 9.12.1 開始、 NVMe 主機和控制器之間的安全雙向驗證、都會透過 NVMe 使用 DH-HMAC-CHAP 驗證傳輸協定來支援。    
+---
+= 透過 NVMe 設定頻內驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.12.1 開始、您可以使用 ONTAP 命令列介面（ CLI ）、透過 NVMe / TCP 和 NVMe / FC 傳輸協定、使用 DH-HMAC-CHAP 驗證、在 NVMe 主機和控制器之間設定頻內（安全）雙向和單向驗證。  從 ONTAP 9.14.1 開始、可在系統管理員中設定頻內驗證。
+
+若要設定頻內驗證、每個主機或控制器都必須與 DH-HMAC-CHAP 金鑰相關聯、此金鑰是 NVMe 主機或控制器的 NQN 組合、以及系統管理員所設定的驗證密碼。  若要讓 NVMe 主機或控制器驗證其對等端點、它必須知道與對等端點相關的金鑰。
+
+在單向驗證中、會為主機設定秘密金鑰、但不會為控制器設定。  在雙向驗證中、會為主機和控制器設定秘密金鑰。
+
+SHA-256 是預設的雜湊功能、 2048 位元是預設的 DH 群組。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.14.1 開始、您可以使用系統管理員來設定頻內驗證、同時建立或更新 NVMe 子系統、建立或複製 NVMe 命名空間、或使用新的 NVMe 命名空間來新增一致性群組。
+
+.步驟
+. 在 System Manager 中、按一下 * 主機 > NVMe Subsystem* 、然後按一下 * 新增 * 。
+. 新增 NVMe 子系統名稱、然後選取儲存 VM 和主機作業系統。
+. 輸入主機 NQN 。
+. 選取主機 NQN 旁的 * 使用頻內驗證 * 。
+. 提供主機密碼和控制器密碼。
++
+DH-HMAC-CHAP 金鑰是 NVMe 主機或控制器的 NQN 組合、也是系統管理員設定的驗證密碼。
+
+. 為每個主機選取偏好的雜湊功能和 DH 群組。
++
+如果您未選取雜湊函數和 DH 群組、則 SHA-256 會指派為預設雜湊函數、而 2048 位元會指派為預設的 DH 群組。
+
+. 或者、按一下 * 新增 * 、並視需要重複步驟以新增更多主機。
+. 按一下「 * 儲存 * 」。
+. 若要確認已啟用頻內驗證、請按一下 * 系統管理員 > 主機 > NVMe 子系統 > Grid > Peek view* 。
++
+主機名稱旁的透明金鑰圖示表示已啟用單向模式。  主機名稱旁的不透明金鑰表示已啟用雙向模式。
+
+
+
+--
+.CLI
+--
+.步驟
+. 將DH-HMAP-CHAP驗證新增至NVMe子系統：
++
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -dhchap-host-secret <authentication_host_secret> -dhchap-controller-secret <authentication_controller_secret> -dhchap-hash-function <sha-256|sha-512> -dhchap-group <none|2048-bit|3072-bit|4096-bit|6144-bit|8192-bit>
+----
+. 確認DH-HMAC CHAP驗證傳輸協定已新增至您的主機：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
++
+[listing]
+----
+  [ -dhchap-hash-function {sha-256|sha-512} ]  Authentication Hash Function
+  [ -dhchap-dh-group {none|2048-bit|3072-bit|4096-bit|6144-bit|8192-bit} ]
+                                               Authentication Diffie-Hellman
+                                               Group
+  [ -dhchap-mode {none|unidirectional|bidirectional} ]
+                                               Authentication Mode
+
+----
+. 確認DH-HMAC CHAP驗證是在NVMe控制器建立期間執行：
++
+[source, cli]
+----
+vserver nvme subsystem controller show
+----
++
+[listing]
+----
+ [ -dhchap-hash-function {sha-256|sha-512} ]  Authentication Hash Function
+ [ -dhchap-dh-group {none|2048-bit|3072-bit|4096-bit|6144-bit|8192-bit} ]
+                                               Authentication Diffie-Hellman
+                                               Group
+ [ -dhchap-mode {none|unidirectional|bidirectional} ]
+                                               Authentication Mode
+----
+
+
+--
+====
