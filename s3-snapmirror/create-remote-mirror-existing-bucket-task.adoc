@@ -5,30 +5,30 @@ keywords: snapmirror create a mirror relationship for an existing bucket, existi
 summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從ONTAP 更新版本早於VMware版9.10.1的S3組態升級。 
 ---
 = 為現有的儲存區（遠端叢集）建立鏡射關係
-:toc: macro
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
-:toc: 
 :toclevels: 1
 :nofooter: 
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:toc-position: content
 
 
 [role="lead"]
 您可以隨時開始保護現有的S3儲存桶、例如、如果您從ONTAP 更新版本早於VMware版9.10.1的S3組態升級。
 
-.您的需求
+.關於這項工作
+您需要在來源叢集和目的地叢集上執行工作。
+
+.開始之前
 * 已完成有關版本、授權和S3伺服器組態的要求ONTAP 。
 * 來源與目的地叢集之間存在對等關係、且來源與目的地儲存VM之間存在對等關係。
 * 來源與目的地VM需要CA憑證。您可以使用由外部CA廠商簽署的自我簽署CA憑證或憑證。
 
 
-.關於這項工作
-您需要在來源叢集和目的地叢集上執行工作。
+.步驟
+您可以使用系統管理員或 ONTAP CLI 建立鏡射關係。
 
 [role="tabbed-block"]
 ====
@@ -36,7 +36,7 @@ summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從
 --
 . 如果這是此儲存VM的第一個S3 SnapMirror關係、請驗證來源和目的地儲存VM是否都有根使用者金鑰、如果沒有：
 +
-.. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
+.. 選取 * 儲存 > 儲存 VM* 、然後選取儲存 VM 。
 .. 在*設定*索引標籤中、按一下 image:icon_pencil.gif["編輯圖示"] 在「* S3 *」方塊中。
 .. 在「*使用者*」索引標籤中、確認root使用者有存取金鑰。
 .. 如果沒有、請按一下 image:icon_kabob.gif["更多圖示"] 在 *root* 旁邊，然後單擊 *Regenerate Key.*
@@ -44,14 +44,14 @@ summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從
 
 
 . 驗證來源與目的地儲存VM中的使用者與群組存取是否正確：
-按一下 * 儲存 > 儲存 VM 、 * 按一下儲存 VM 、按一下 * 設定 * 、然後按一下 image:icon_pencil.gif["編輯圖示"] 低於* S3 *。
+選擇 * 儲存 > 儲存 VM 、 * 、然後選擇儲存 VM 、再選擇 * 設定 * 。最後、請選擇 image:icon_pencil.gif["編輯圖示"] 低於* S3 *。
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html[" 新增S3使用者和群組"] 以取得更多資訊。
 
 . 在來源叢集上、如果您沒有現有的S3 SnapMirror原則、而且不想使用預設原則、請建立S3 SnapMirror原則：
 +
-.. 按一下「*保護>總覽*」、然後按一下「*本機原則設定*」。
-.. 按一下 image:../media/icon_arrow.gif["向右鍵"] 在* Protection Policies（保護政策）*旁邊、然後按一下* Add*（新增*）。
+.. 選取 * 保護 > 總覽 * 、然後按一下 * 本機原則設定 * 。
+.. 選取 image:../media/icon_arrow.gif["向右鍵"] 在* Protection Policies（保護政策）*旁邊、然後按一下* Add*（新增*）。
 .. 輸入原則名稱和說明。
 .. 選取原則範圍、叢集或SVM
 .. 選擇* Continuous *以建立S3 SnapMirror關係。
