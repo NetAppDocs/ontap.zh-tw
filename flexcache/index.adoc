@@ -1,25 +1,41 @@
 ---
 permalink: flexcache/index.html 
 sidebar: sidebar 
-keywords: flexcache, volumes, faster, data, access, configure, manage, volues 
+keywords: flexcache, volumes, faster, data, access, configure, manage, overview, origin volumes 
 summary: 您可以設定及管理FlexCache 功能區、以加速資料存取。 
 ---
-= 使用CLI進行磁碟區管理總覽FlexCache
+= FlexCache 總覽
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以設定及管理FlexCache 功能區、以加速資料存取。
+NetApp FlexCache 技術可加速資料存取、減少 WAN 延遲、並降低讀取密集工作負載的 WAN 頻寬成本、尤其是用戶端需要重複存取相同資料的地方。當您建立 FlexCache Volume 時、會建立已存在（來源） Volume 的遠端快取、該磁碟區只包含來源 Volume 的主動存取資料（熱資料）。
 
-如果符合下列條件、請使用下列程序來設定FlexCache 靜態磁碟區：
+當 FlexCache 磁碟區收到其所包含之熱資料的讀取要求時、其回應速度可能會比原始磁碟區快、因為資料不需要傳輸至最遠的範圍即可到達用戶端。  如果 FlexCache 磁碟區收到不常讀取資料（冷資料）的讀取要求、它會從原始磁碟區擷取所需資料、然後在處理用戶端要求之前儲存資料。隨後對該資料的讀取要求會直接從 FlexCache 磁碟區傳送。在第一次要求之後、資料不再需要在網路上傳輸、也不需要從負載沉重的系統中傳輸。  例如、假設您在叢集內的單一存取點遇到瓶頸、而這些資料是經常要求的資料。  您可以在叢集中使用 FlexCache 磁碟區、為熱資料提供多個掛載點、藉此減少瓶頸並提高效能。另一個例子是、假設您需要減少從多個叢集存取的磁碟區的網路流量。您可以使用 FlexCache Volume 在網路中的叢集之間、從來源磁碟區散佈熱資料。  如此可讓使用者更接近存取點、進而減少 WAN 流量。
 
-* 您正在執行ONTAP 的是版本不含更新版本的版本。
-* 您想要使用ONTAP 的是無法使用系統管理程式或自動化指令碼工具的功能、而是使用功能不全的命令列介面（CLI）。
-* 您想要使用最佳實務做法、而非探索每個可用選項。
-+
-如需命令語法的詳細資料、請參閱CLI說明和ONTAP 支援手冊頁。
+您也可以使用 FlexCache 技術來改善雲端和混合雲環境的效能。FlexCache Volume 可將內部部署資料中心的資料快取至雲端、協助您將工作負載移轉至混合雲。  您也可以使用 FlexCache 磁碟區、將資料從一個雲端供應商快取至另一個雲端供應商、或是在同一個雲端供應商的兩個區域之間、來移除雲端封閉環境。
 
-* 您擁有叢集管理員權限、而非SVM管理員權限。
+從功能升級到功能升級到ONTAP 功能升級 link:global-file-locking-task.html["啟用全域檔案鎖定"] 橫跨所有 FlexCache Volume 。全域檔案鎖定可防止使用者存取已由其他使用者開啟的檔案。  然後、原始磁碟區的更新會同時發佈到所有 FlexCache 磁碟區。
 
+從 ONTAP 9.9.1 開始、 FlexCache Volume 會保留找不到的檔案清單。  這有助於減少網路流量、因為當用戶端搜尋不存在的檔案時、不再需要傳送多通電話給來源伺服器。
+
+其他清單 link:supported-unsupported-features-concept.html["FlexCache Volume 及其原始磁碟區支援的功能"]也提供 ONTAP 版本支援的通訊協定清單。
+
+您可以在中深入瞭解 ONTAP FlexCache 技術的架構 link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743.pdf["TR-4743：FlexCache 《不ONTAP 實的"]。
+
+
+
+== 影片
+
+
+
+=== 如何減少WAN延遲、縮短全域資料的讀取時間FlexCache
+
+video::rbbH0l74RWc[youtube,width=848,height=480]
+
+
+=== 深入瞭ONTAP FlexCache 解VMware的效能優勢！
+
+video::bWi1-8Ydkpg[youtube,width=848,height=480]

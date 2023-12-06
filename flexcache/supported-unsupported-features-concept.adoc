@@ -2,7 +2,7 @@
 permalink: flexcache/supported-unsupported-features-concept.html 
 sidebar: sidebar 
 keywords: supported, unsupported, features, flexcache, volumes 
-summary: 您必須瞭解FlexCache 支援的功能、包括由《支援的功能》及其原始磁碟區。 
+summary: FlexCache 原始磁碟區和 FlexCache 磁碟區支援的功能和傳輸協定會有所不同。 
 ---
 = 支援且不支援FlexCache 的功能
 :allow-uri-read: 
@@ -11,7 +11,64 @@ summary: 您必須瞭解FlexCache 支援的功能、包括由《支援的功能�
 
 
 [role="lead"]
-您必須瞭解FlexCache 支援的功能、包括由《支援的功能》及其原始磁碟區。
+從 ONTAP 9.5 開始、您可以設定 FlexCache Volume 。  支援 FlexVol Volume 做為原始磁碟區、並支援 FlexGroup 磁碟區做為 FlexCache 磁碟區。  從 ONTAP 9.7 開始、 FlexVol Volume 和 FlexGroup Volume 都支援做為原始 Volume 。  來源 Volume 和 FlexCache Volume 支援的功能和傳輸協定會有所不同。
+
+
+
+== 支援的傳輸協定
+
+|===
+
+
+| 傳輸協定 | 支援來源磁碟區？ | 支援的功能是什麼？FlexCache 
+
+
+ a| 
+NFSv3.
+ a| 
+是的
+ a| 
+是的
+
+
+
+ a| 
+NFSv4.
+ a| 
+是的
+
+若要使用 NFSv4.x 通訊協定存取快取磁碟區、來源叢集和快取叢集都必須使用 ONTAP 9.10.1 或更新版本。原始叢集和 FlexCache 叢集可以有不同的 ONTAP 版本、但兩者都應該是 ONTAP 9.10.1 和更新版本、例如、原始伺服器可以有 ONTAP 9.10.1 、而且快取可以有 ONTAP 9.11.1 。
+ a| 
+是的
+
+從 ONTAP 9.10.1 開始支援。
+
+若要使用 NFSv4.x 通訊協定存取快取磁碟區、來源叢集和快取叢集都必須使用 ONTAP 9.10.1 或更新版本。原始叢集和 FlexCache 叢集可以有不同的 ONTAP 版本、但兩者都應該是 ONTAP 9.10.1 和更新版本、例如、原始伺服器可以有 ONTAP 9.10.1 、而且快取可以有 ONTAP 9.11.1 。
+
+
+
+ a| 
+NFSv4.2
+ a| 
+是的
+ a| 
+否
+
+
+
+ a| 
+中小企業
+ a| 
+是的
+ a| 
+是的
+
+支援從ONTAP 功能9.8開始。
+
+|===
+
+
+== 支援的功能
 
 |===
 
@@ -213,39 +270,6 @@ NetApp Volume Encryption（NVE）
 
 
  a| 
-NFSv3.
- a| 
-是的
- a| 
-是的
-
-
-
- a| 
-NFSv4.
- a| 
-是的
-
-若要使用 NFSv4.x 通訊協定存取快取磁碟區、來源叢集和快取叢集都必須使用 ONTAP 9.10.1 或更新版本。原始叢集和 FlexCache 叢集可以有不同的 ONTAP 版本、但兩者都應該是 ONTAP 9.10.1 和更新版本、例如、原始伺服器可以有 ONTAP 9.10.1 、而且快取可以有 ONTAP 9.11.1 。
- a| 
-是的
-
-從 ONTAP 9.10.1 開始支援。
-
-若要使用 NFSv4.x 通訊協定存取快取磁碟區、來源叢集和快取叢集都必須使用 ONTAP 9.10.1 或更新版本。原始叢集和 FlexCache 叢集可以有不同的 ONTAP 版本、但兩者都應該是 ONTAP 9.10.1 和更新版本、例如、原始伺服器可以有 ONTAP 9.10.1 、而且快取可以有 ONTAP 9.11.1 。
-
-
-
- a| 
-NFSv4.2
- a| 
-是的
- a| 
-否
-
-
-
- a| 
 SS3 ONTAP
  a| 
 是的
@@ -269,7 +293,9 @@ NOTE: 不支援FlexCache 檔案層級的QoS以供支援使用。
  a| 
 qtree
  a| 
-是的。從 ONTAP 9.6 開始、您可以建立和修改 qtree 。在來源上建立的 qtree 可在快取中存取。
+是的
+
+從 ONTAP 9.6 開始、您可以建立和修改 qtree 。在來源上建立的 qtree 可在快取中存取。
  a| 
 否
 
@@ -278,23 +304,16 @@ qtree
  a| 
 配額
  a| 
-是的。從 ONTAP 9.6 開始、使用者和群組都支援在 FlexCache 原始磁碟區上強制執行配額。
+是的
+
+從 ONTAP 9.6 開始、使用者和群組都支援在 FlexCache 原始磁碟區上強制執行配額。
  a| 
-不可以使用 FlexCache 寫入模式（預設模式）時、快取上的寫入會轉送到原始磁碟區。配額會在原點強制執行。
+否
+
+使用 FlexCache 寫入模式（預設模式）時、快取上的寫入會轉送到原始磁碟區。配額會在原點強制執行。
 
 
 NOTE: 從ONTAP 功能支援的不只是功能性的9.6、FlexCache 還能在功能區上支援遠端配額（rquota）。
-
-
-
- a| 
-中小企業
- a| 
-是的
- a| 
-是的
-
-支援從ONTAP 功能9.8開始。
 
 
 
@@ -436,3 +455,5 @@ Volume重新裝載
 否
 
 |===
+
+NOTE: 在9.5版之前的版本中、來源地不僅僅能將資料提供給執行以7-Mode運作的VMware 8.2.x系統上所建立的不實資料。ONTAP FlexVol FlexCache Data ONTAP從推出版的S25 9.5開始ONTAP 、來源FlexVol 地的不穩定區也能在FlexCache 功能區上提供資料給ONTAP 功能區上的不穩定區。如需從 7-mode FlexCache 移轉至 ONTAP 9 FlexCache 的相關資訊、請參閱 link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743pdf.pdf["NetApp 技術報告 4743 ： FlexCache in ONTAP"]。

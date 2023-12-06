@@ -14,16 +14,60 @@ summary: 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以�
 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以改善存取熱物件時的效能。如果您的資料中心位於不同的位置、您可以在FlexCache 遠端叢集上建立支援區、以加速資料存取。
 
 .關於這項工作
-這個地方的不只是一個地方、而是一個地方。FlexCache FlexGroup FlexVol
+從 ONTAP 9.5 開始、 FlexCache 支援 FlexVol Volume 做為原始磁碟區、 FlexGroup 磁碟區做為 FlexCache 磁碟區。  從 ONTAP 9.7 開始、 FlexVol Volume 和 FlexGroup Volume 都支援做為原始 Volume 。
 
-從ONTAP 使用支援的問題9.7開始、FlexGroup 從FlexCache 這個問題的源頭開始、我們也支援這些問題。
+.開始之前
+* 您必須執行 ONTAP 9.5 或更新版本
+* 如果您執行的是 ONTAP 9.6 或更早版本、則必須執行 link:add-license-task.html["新增 FlexCache 授權"]。
++
+ONTAP 9.7 或更新版本不需要 FlexCache 授權。
+
+
+
+
+NOTE: 如果HA配對正在使用 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/support-storage-encryption-concept.html["加密SAS或NVMe磁碟機（SED、NSE、FIPS）"]、您必須遵循主題中的指示 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/return-seds-unprotected-mode-task.html["將FIPS磁碟機或SED恢復為無保護模式"] 在初始化系統之前、HA配對內的所有磁碟機（開機選項4或9）。如果未這麼做、可能會在磁碟機重新調整用途時、導致未來的資料遺失。
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 如果 FlexCache 磁碟區與原始磁碟區位於不同的叢集、請建立叢集對等關係：
++
+.. 在本機叢集中、按一下*保護>總覽*。
+.. 展開 * 叢集間設定 * 、按一下 * 新增網路介面 * 、然後新增叢集的叢集間網路介面。
++
+在遠端叢集上重複此步驟。
+
+.. 在遠端叢集中、按一下*保護>總覽*。按一下 image:icon_kabob.gif["功能表選項圖示"] 在叢集對等端點區段中、按一下*產生密碼密碼*。
+.. 複製產生的通關密碼、然後貼到本機叢集中。
+.. 在本機叢集的「叢集對等端點」下、按一下「*對等叢集*」、然後對等本機和遠端叢集。
+
+
+. 如果 FlexCache 磁碟區與原始磁碟區位於同一個叢集、但位於不同的 SVM 、請建立「 FlexCache 」類型的叢集間 SVM 對等關係：
++
+在 Storage VM 對等端點下、按一下 image:icon_kabob.gif["功能表選項圖示"] 然後*對等儲存VM*來對等儲存VM。
+
+. 選擇*儲存>磁碟區*。
+. 選取*「Add*」。
+. 選取 * 更多選項 * 、然後選取 * 新增為遠端磁碟區的快取 * 。
++
+.. 如果您執行ONTAP 的是支援功能的9.8或更新版本、而您想要停用QoS或選擇自訂QoS原則、請按一下*更多選項*、然後在*儲存與最佳化*下選取*效能服務層級*。
+
+
+
+
+--
+.CLI
+--
 . 如果FlexCache 要建立的實體磁碟區位於不同的叢集、請建立叢集對等關係：
 +
 .. 在目的地叢集上、與資料保護來源叢集建立對等關係：
- +
-`cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs _peer_LIF_IPs_ -initial-allowed-vserver-peers _svm_name_,..|* -ipspace _ipspace_name_`
++
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name>,..|* -ipspace <ipspace_name>
+----
 +
 從ONTAP 功能支援的9.6開始、建立叢集對等關係時、預設會啟用TLS加密。支援TLS加密、以便在來源FlexCache 與實體磁碟區之間進行叢集間通訊。您也可以視需要停用叢集對等關係的TLS加密。
 
@@ -41,8 +85,11 @@ cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -i
 Warning: make a note of the passphrase - it cannot be displayed again.
 ----
 .. 在來源叢集上、驗證來源叢集到目的地叢集的驗證：
- +
-`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace _ipspace_`
++
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
 +
 [listing]
 ----
@@ -61,8 +108,11 @@ Clusters cluster02 and cluster01 are peered.
 . 如果 FlexCache 磁碟區與原始磁碟區位於不同的 SVM 、請與建立 SVM 對等關係 `flexcache` 應用程式：
 +
 .. 如果 SVM 位於不同的叢集中、請為對等 SVM 建立 SVM 權限：
- +
-`vserver peer permission create -peer-cluster _cluster_name_ -vserver _svm-name_ -applications flexcache`
++
+[source, cli]
+----
+vserver peer permission create -peer-cluster <cluster_name> -vserver <svm-name> -applications flexcache
+----
 +
 下列範例說明如何建立適用於所有本機SVM的SVM對等權限：
 
@@ -76,14 +126,19 @@ Warning: This Vserver peer permission applies to all local Vservers. After that 
 from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
 ----
 .. 建立 SVM 對等關係：
- +
-`vserver peer create -vserver local_SVM -peer-vserver _remote_SVM_ -peer-cluster _cluster_name_ -applications flexcache`
++
+[source, cli]
+----
+vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluster <cluster_name> -applications flexcache
+----
 
 
 . 建立FlexCache 一個流通量：
 +
-`volume flexcache create -vserver _cache_svm_ -volume _cache_vol_name_ -auto-provision-as flexgroup -size _vol_size_ -origin-vserver _origin_svm_ -origin-volume _origin_vol_name_`
-
+[source, cli]
+----
+volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name>
+----
 +
 以下範例建立FlexCache 一個現象區、並自動選取現有的集合體進行資源配置：
 
@@ -105,8 +160,11 @@ cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 
 . 驗證FlexCache 從「聲音量」和「原始」磁碟區的「聲音」關係FlexCache 。
 +
 .. 檢視叢集中的 FlexCache 關係：
- +
-`volume flexcache show`
++
+[source, cli]
+----
+volume flexcache show
+----
 +
 [listing]
 ----
@@ -132,6 +190,8 @@ vs_1           vol_1           vs_1             fc1            cluster1
 
 
 
+--
+====
 
 
 == 結果
@@ -140,5 +200,3 @@ vs_1           vol_1           vs_1             fc1            cluster1
 
 .相關資訊
 link:../peering/index.html["叢集與SVM對等關係"]
-
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]
