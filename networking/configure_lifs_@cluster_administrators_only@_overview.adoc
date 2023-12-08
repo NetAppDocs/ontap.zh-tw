@@ -4,7 +4,7 @@ permalink: networking/configure_lifs_@cluster_administrators_only@_overview.html
 keywords: configure, configuring, configuration, setup, set, up, introducing, introduction, overview, introducing lif configuration, configure lifs 
 summary: LIF組態簡介 
 ---
-= 總覽
+= 設定生命總覽
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -19,6 +19,12 @@ LIF（邏輯介面）代表叢集中節點的網路存取點。您可以在叢�
 叢集管理員可以建立、檢視、修改、移轉、還原、 或刪除lifs。SVM管理員只能檢視與SVM相關聯的LIF。
 
 LIF是具有相關特性的IP位址或WWPN、例如服務原則、主連接埠、主節點、容錯移轉至的連接埠清單、以及防火牆原則。您可以在叢集透過網路傳送和接收通訊的連接埠上設定LIF。
+
+對於 LIF 容錯移轉和恢復、每個節點的連接埠都必須屬於同一個廣播網域。若要檢查每個節點上的相關連接埠是否屬於同一個廣播網域、請參閱下列內容：
+
+* ONTAP 9.8 及更新版本： link:../networking/repair_port_reachability.html["修復連接埠連線能力"]
+* 更新版本：ONTAP link:../networking/add_or_remove_ports_from_a_broadcast_domain97.html["新增或移除廣播網域中的連接埠"]
+
 
 
 NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF服務原則取代。如需詳細資訊、請參閱 link:../networking/configure_firewall_policies_for_lifs.html["設定lifs的防火牆原則"]。

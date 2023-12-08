@@ -47,6 +47,11 @@ summary: 從 All Flash SAN Array （ ASA ）平台上的 ONTAP 9.11.1 開始、 
 ** 如果您有預先存在的iSCSI LIF、表示iSCSI LIF是在您將HA配對升級至ONTAP 更新版本之前所建立、而且您尚未在LIF上啟用iSCSI LIF容錯移轉功能。
 
 
+* iSCSI LIF 容錯移轉與移轉會發生在 LIF 主連接埠的廣播網域內。使用檢閱廣播網域組態 `network port broadcast-domain show` 命令。
++
+
+IMPORTANT: 確保與 iSCSI 生命期相關的廣播網域包含代表 HA 配對兩個節點的網路連接埠、以便視需要在兩個節點之間移轉 iSCSI 生命期並進行容錯移轉。
+
 
 
 

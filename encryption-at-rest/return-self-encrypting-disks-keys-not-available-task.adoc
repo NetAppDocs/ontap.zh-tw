@@ -82,8 +82,8 @@ NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在Ne
 .. 將磁碟重設為原廠設定的設定：
 `storage encryption disk revert-to-original-state -disk _disk_id_ -psid _disk_physical_secure_id_`
 使用命令驗證作業是否成功 `storage encryption disk show-status` 繼續下一步之前。
-.. 解除清理磁碟故障：
-`storage disk unfail -spare true -disk _disk_id_`
+.. 如果您執行的是 ONTAP 9.8P5 或更早版本、請跳至下一步。如果您執行的是 ONTAP 9.8P6 或更新版本、請將已清理的磁碟恢復故障。
+`storage disk unfail -disk _disk_id_`
 .. 檢查磁碟是否擁有擁有者：
 `storage disk show -disk _disk_id_`
  +
