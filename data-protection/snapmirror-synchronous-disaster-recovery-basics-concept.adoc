@@ -40,6 +40,19 @@ AFF
 
 
  a| 
+ASA
+ a| 
+80
+ a| 
+160
+ a| 
+200
+ a| 
+400
+
+
+
+ a| 
 FAS
  a| 
 40.
@@ -68,56 +81,98 @@ ONTAP Select
 
 == 支援的功能
 
-僅在AFF/ASA平台上支援不中斷營運的SnapMirror同步作業（Nn）ONTAP 。支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。
+下表說明 SnapMirror Synchronous 支援的功能、以及可提供支援的 ONTAP 版本。
 
-下列功能支援ONTAP SnapMirror同步技術（位於景點叢集中的所有節點均執行ONTAP 《支援》）：
-
-* NFSv4.2
-* NVMe / TCP
+[cols="3,1,4"]
+|===
 
 
-在支援支援NFSv3、FC及iSCSI的更新版本中ONTAP 、SnapMirror同步技術可在延遲不超過10毫秒的所有網路上支援NFSv3、FC及iSCSI傳輸協定。
-
-SnapMirror Synchronous支援FabricPool 以無、Snapshot或Auto等分層原則、在不同步的情況下、於不同步集合體上支援來源和目的地磁碟區。無法將目的地Volume的FabricPool 目的地集合體設為All Tiering原則。
-
-下列功能支援ONTAP SnapMirror同步技術（位於NetApp上）：
-
-* 複寫應用程式建立的Snapshot複本
-如果 Snapshot 複本在時標有適當的標籤 `snapshot create` SnapMirror Synchronous 使用 CLI 或 ONTAP API 來複寫使用者建立的 Snapshot 複本、或使用外部指令碼建立的 Snapshot 複本、然後停止應用程式。使用Snapshot原則建立的排程Snapshot複本不會複寫。如需複寫應用程式建立的Snapshot複本的詳細資訊、請參閱知識庫文章： link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用SnapMirror同步複寫應用程式建立的快照"^]。
-* FC-NVMe
-* LUN複製與NVMe命名空間複製
-也支援以應用程式建立的Snapshot複本做為後盾的LUN複本。
+| 功能 | 第一版支援 | 其他資訊 
 
 
-下列功能支援ONTAP SnapMirror同步技術（位於32個資料中心）、但前提是來源和目的地叢集中的所有節點都執行ONTAP 的是32個資料中心。9.6：
-
-* SVM DR
-+
-** SnapMirror同步來源也可以是SVM DR來源、例如以SM-S作為單一連線的連出組態、以及以SVM DR作為另一個連線。
-** SnapMirror同步來源不能是SVM DR目的地、因為SM-S不支援串聯DP來源。
-在目的地叢集中執行SVM DR反轉重新同步之前、您必須先釋出同步關係。
-** SnapMirror同步目的地不能是SVM DR來源、因為SVM DR不支援複寫DP磁碟區。
-反轉同步來源的同步會導致SVM DR排除目的地叢集中的DP磁碟區。
+| SnapMirror同步關係的主要磁碟區上的防毒軟體 | ONTAP 9.6 |  
 
 
-* NFSv4.0 和 NFSv4.1
-* SMB 2.0 或更新版本
-* 混合式傳輸協定存取（NFSv3和SMB）
-* SnapMirror同步關係的主要磁碟區上的防毒軟體
-* SnapMirror同步關係的主磁碟區硬式或軟式配額
-配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。
-* SnapMirror同步關係主要磁碟區的FPolicy
-* SnapMirror同步鏡射鏡射串聯
-SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係。
-* NAS的來源與目的地磁碟區之間的時間戳記同位元
-如果您已從ONTAP 還原9.5升級ONTAP 為還原9.6、則時間戳記只會複寫到來源Volume中的任何新檔案和修改的檔案。來源Volume中現有檔案的時間戳記不會同步。
-* 移除高中繼資料作業頻率限制
-* 使用TLS 1.2加密技術、確保傳輸中的敏感資料安全無虞
-* 複製自動刪除
+| 應用程式建立的 Snapshot 複本複寫 | 更新ONTAP | 如果 Snapshot 複本在時標有適當的標籤 `snapshot create` SnapMirror Synchronous 使用 CLI 或 ONTAP API 來複寫使用者建立的 Snapshot 複本、或使用外部指令碼建立的 Snapshot 複本、然後停止應用程式。使用Snapshot原則建立的排程Snapshot複本不會複寫。如需複寫應用程式建立的Snapshot複本的詳細資訊、請參閱知識庫文章： link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用SnapMirror同步複寫應用程式建立的快照"^]。 
 
 
-從 ONTAP 9.13.1 開始、 NDMP 支援 SnapMirror 同步。來源叢集和目的地叢集都必須執行 ONTAP 9.13.1 或更新版本、才能搭配 SnapMirror 同步使用 NDMP 。如需詳細資訊、請參閱 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用 NDMP 複本傳輸資料]。
+| 複製自動刪除 | ONTAP 9.6 |  
 
+
+| FabricPool 集合體的分層原則為「無」、「快照」或「自動」、可與 SnapMirror 同步來源和目的地搭配使用。 | 版本9.5 ONTAP | 無法將目的地Volume的FabricPool 目的地集合體設為All Tiering原則。 
+
+
+| FC | 版本9.5 ONTAP | 所有延遲不超過 10 毫秒的網路 
+
+
+| FC-NVMe | 更新ONTAP |  
+
+
+| SnapMirror同步關係主要磁碟區的FPolicy | ONTAP 9.6 |  
+
+
+| SnapMirror 同步關係的主捲上的硬配額和軟配額 | ONTAP 9.6 | 配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。 
+
+
+| iSCSI | 版本9.5 ONTAP |  
+
+
+| LUN複製與NVMe命名空間複製 | 更新ONTAP |  
+
+
+| 以應用程式建立的 Snapshot 複本作為後盾的 LUN 複本 | 更新ONTAP |  
+
+
+| 混合式傳輸協定存取（ NFS v3 和 SMB ） | ONTAP 9.6 |  
+
+
+| NDMP / NDMP 還原 | ONTAP 9.13.1.12.9.11.9.11. | 來源叢集和目的地叢集都必須執行 ONTAP 9.13.1 或更新版本、才能搭配 SnapMirror 同步使用 NDMP 。如需詳細資訊、請參閱 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用 NDMP 複本傳輸資料]。 
+
+
+| 僅適用於 AFF/ASA 平台上的無中斷 SnapMirror 同步作業（ Nn ）。 | ONTAP 9.12.1 | 支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。 
+
+
+| NFS v4.2 | 零點9.10.1 ONTAP |  
+
+
+| NFS v4.3 | 版本9.5 ONTAP |  
+
+
+| NFS v4.0 | ONTAP 9.6 |  
+
+
+| NFS v4.1 | ONTAP 9.6 |  
+
+
+| NVMe / TCP | 9.10.1 |  
+
+
+| 移除高中繼資料作業頻率限制 | ONTAP 9.6 |  
+
+
+| 使用TLS 1.2加密技術、確保傳輸中的敏感資料安全無虞 | ONTAP 9.6 |  
+
+
+| 單一檔案與部分檔案還原 | ONTAP 9.13.1.12.9.11.9.11. |  
+
+
+| SMB 2.0 或更新版本 | ONTAP 9.6 |  
+
+
+| SnapMirror同步鏡射鏡射串聯 | ONTAP 9.6 | SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係。 
+
+
+| SVM 災難恢復 | ONTAP 9.6 | * SnapMirror 同步來源也可以是 SVM 災難恢復來源、例如、將 SnapMirror Synchronous 視為單一階段的扇出組態、將 SVM 災難恢復視為另一階段。
+
+* SnapMirror 同步來源不能是 SVM 災難恢復目的地、因為 SnapMirror Synchronous 不支援串聯資料保護來源。
+您必須先釋放同步關係、才能在目的地叢集中執行 SVM 災難恢復反轉重新同步。
+
+* SnapMirror 同步目的地不能是 SVM 災難恢復來源、因為 SVM 災難恢復不支援 DP 磁碟區的複寫。
+同步來源的反轉重新同步會導致 SVM 災難恢復、但目的地叢集中的 DP Volume 除外。 
+
+
+| NAS的來源與目的地磁碟區之間的時間戳記同位元 | ONTAP 9.6 | 如果您已從ONTAP 還原9.5升級ONTAP 為還原9.6、則時間戳記只會複寫到來源Volume中的任何新檔案和修改的檔案。來源Volume中現有檔案的時間戳記不會同步。 
+|===
 
 
 == 不支援的功能
@@ -137,11 +192,11 @@ SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係
 LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
 * SnapCenter
 * 資料量SnapLock
-* SnapRestore
 * 可防竄改的Snapshot複本
 * 在目的地磁碟區上使用dump和SMtape進行磁帶備份或還原
 * 磁帶型還原至來源Volume
 * 來源磁碟區的處理量層（QoS下限）
+* Volume SnapRestore
 * VVOL
 
 
