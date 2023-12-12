@@ -69,3 +69,11 @@ xref:flexclone-volumes-files-luns-concept.html[FlexClone 技術] 利用 Snapshot
 ONTAP 磁碟分割技術也能提供更高的儲存效率。  RAID DP 技術可防止雙磁碟故障、而不會犧牲效能或增加磁碟鏡射成本。採用 ONTAP 9 的進階 SSD 分割功能可將可用容量增加將近 20% 。
 
 NetApp 提供與雲端內部部署 ONTAP 相同的儲存效率功能。當您將資料從內部部署 ONTAP 移轉至雲端時、現有的儲存效率會保留下來。例如、假設您有一個 SQL 資料庫、其中包含您想要從內部部署系統移至雲端的業務關鍵資料。  您可以在 BlueXP 中使用資料複寫功能來移轉資料、而且在移轉程序中、您可以針對雲端中的 Snapshot 複本啟用最新的內部部署原則。
+
+* * 對溫度敏感的儲存效率 *
++
+ONTAP 提供 link:https://docs.netapp.com/us-en/ontap/volumes/enable-temperature-sensitive-efficiency-concept.html["對溫度敏感的儲存效率"] 藉由評估磁碟區資料的存取頻率、並將該頻率對應至套用至該資料的壓縮程度、獲得更多效益。對於不常存取的冷資料、較大的資料區塊會被壓縮、而對於常用的熱資料（存取頻率較高且覆寫頻率較高）、較小的資料區塊會被壓縮、使程序更有效率。
+
+
+
+ONTAP 9.8 引進了對溫度敏感的儲存效率（ TSSE ）、並在新建立的精簡配置 AFF 磁碟區上自動啟用。

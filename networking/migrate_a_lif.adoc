@@ -34,10 +34,6 @@ summary: 將LIF移轉至同一個節點上的不同連接埠、或叢集中的�
 +
 移轉iSCSI LIF僅限於主節點或HA合作夥伴上的連接埠。
 
-+
-您也可以使用System Manager移轉iSCSI LIF。
-link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI LIF容錯移轉"]
-
 * 如果您的平台不是執行 ONTAP 9.11.1 版或更新版本的 All Flash SAN Array （ ASA ）平台、則無法將 iSCSI 生命體從一個節點移轉至另一個節點。
 +
 若要解決此限制、您必須在目的地節點上建立iSCSI LIF。深入瞭解 link:../san-admin/asa-iscsi-lif-fo-task.html#manage-iscsi-lifs-using-the-ontap-cli["建立iSCSI LIF"]。
@@ -62,6 +58,14 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["適用於ASA 各種平台的iSCSI 
 .步驟
 . 選擇*網路>總覽>網路介面*。
 . 選取 image:icon_kabob.gif["「kebob」圖示"] 您要變更的網路介面旁的*>移轉*。
++
+
+NOTE: 對於 iSCSI LIF 、請在 * 移轉介面 * 對話方塊中、選取 HA 合作夥伴的目的地節點和連接埠。
+
++
+如果您要永久移轉 iSCSI LIF 、請選取核取方塊。iSCSI LIF 必須先離線、才能永久移轉。此外、一旦iSCSI LIF永久移轉、就無法復原。沒有還原選項。
+
+. 按一下*移轉*。
 . 儲存您的變更。
 
 

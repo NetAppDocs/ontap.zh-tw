@@ -1,185 +1,65 @@
 ---
 permalink: san-admin/asa-iscsi-lif-fo-task.html 
 sidebar: sidebar 
-keywords: failover, iscsi, all flash san array, cli, system manager, auto-revert, revert network interface 
-summary: 從 All Flash SAN Array （ ASA ）平台上的 ONTAP 9.11.1 開始、 iSCSI LIF 容錯移轉功能可支援在 SFO 合作夥伴容錯移轉（ iSCSI LIF 從其主節點 / 連接埠移至 HA 合作夥伴節點 / 連接埠、然後再移回）及本機容錯移轉中、自動手動移轉 iSCSI 生命週期 （當 iSCSI LIF 從不良連接埠移至目前主節點上的健全連接埠、然後再移回時）。這項功能可加快在iSCSI上執行SAN工作負載的I/O恢復速度。 
+keywords: failover, iscsi, all san array, cli, system manager, auto-revert, revert network interface 
+summary: 升級至 ONTAP 9.11.1 或更新版本後、您應該手動在 ONTAP 9.10.1 或更新版本中建立的所有 iSCSI 生命體上啟用自動 LIF 容錯移轉。 
 ---
-= 適用於ASA 各種平台的iSCSI LIF容錯移轉
+= 啟用或停用自動 iSCSI LIF 容錯移轉
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從 All Flash SAN Array （ ASA ）平台上的 ONTAP 9.11.1 開始、 iSCSI LIF 容錯移轉功能可支援在 SFO 合作夥伴容錯移轉（ iSCSI LIF 從其主節點 / 連接埠移至 HA 合作夥伴節點 / 連接埠、然後再移回）及本機容錯移轉中、自動手動移轉 iSCSI 生命週期 （當 iSCSI LIF 從不良連接埠移至目前主節點上的健全連接埠、然後再移回時）。這項功能可加快在iSCSI上執行SAN工作負載的I/O恢復速度。
+升級至 ONTAP 9.11.1 或更新版本後、您應該手動在 ONTAP 9.10.1 或更新版本中建立的所有 iSCSI 生命體上啟用自動 LIF 容錯移轉。
 
+從 ONTAP 9.11.1 開始、您可以在 All Flash SAN Array 平台上、為 iSCSI 生命週期啟用自動 LIF 容錯移轉。如果發生儲存設備容錯移轉、 iSCSI LIF 會自動從其主節點或連接埠移轉至其 HA 合作夥伴節點或連接埠、然後在容錯移轉完成後再移回。  或者、如果 iSCSI LIF 連接埠變得不正常、 LIF 會自動移轉至目前主節點的健全連接埠、然後在連接埠再次正常運作後、再移回原始連接埠。  可讓在 iSCSI 上執行的 SAN 工作負載在發生容錯移轉後更快恢復 I/O 服務。
 
+在 ONTAP 9.11.1 及更新版本中、如果符合下列其中一項條件、則預設會針對自動 LIF 容錯移轉啟用新建立的 iSCSI 生命體：
 
-== 關於啟用iSCSI LIF容錯移轉
-
-[role="Lead"]
-您應該熟悉iSCSI LIF容錯移轉何時自動啟用、以及何時必須手動啟用、包括新建立的iSCSI LIF及現有的iSCSI LIF如何受到影響。
-
-* iSCSI LIF的自動移轉是LIF容錯移轉和自動還原、在特定事件中觸發、例如計畫性或非計畫性容錯移轉、實體乙太網路連結中斷、或節點從複寫資料庫（RDB）仲裁中捨棄。
-+
-** 將ASA 您的「支援功能」配對升級ONTAP 至「支援功能」9.11.1之後、如果指定的儲存VM中不存在iSCSI LIF、或指定儲存VM中所有現有的iSCSI LIF容錯移轉功能均已啟用、則此功能會自動在新建立的iSCSI LIF上啟用。
-** 對於在升級ONTAP 至版本更新至版本更新之前所建立的iSCSI LIF、若要使用iSCSI LIF容錯移轉功能、您必須使用ONTAP CLI來啟用它。（啟用容錯移轉功能和自動還原功能、表示將容錯移轉原則變更為 `sfo-partner-only` 並將自動還原值指定為 `true`）
-+
-<<使用ONTAP 支援的CLI來管理iSCSI LIF>>
-
-+
-如果您未在現有iSCSI LIF上啟用iSCSI LIF容錯移轉、當發生容錯移轉事件時、iSCSI LIF將不會容錯移轉。
-
-+
-此外、如果在升級至 ONTAP 9.11.1 或更新版本之後、您的儲存 VM 中已有 iSCSI 生命負載、但尚未啟用 iSCSI LIF 容錯移轉功能、而且您在同一個儲存 VM 中建立新的 iSCSI 生命負載、則新的 iSCSI 生命負載會採用相同的容錯移轉原則 (`disabled`）儲存 VM 中現有的 iSCSI 生命。
-
-
-
-* iSCSI LIF的手動移轉是LIF移轉與還原、由叢集管理員使用ONTAP RASCLI或System Manager啟動。
-+
-<<移轉及還原iSCSI LIF>>
-
-+
-您可以在下列情況下手動移轉及還原iSCSI LIF：
-
-+
-** 需要定期維護或更換時。
-** 如果您有預先存在的iSCSI LIF、表示iSCSI LIF是在您將HA配對升級至ONTAP 更新版本之前所建立、而且您尚未在LIF上啟用iSCSI LIF容錯移轉功能。
-
-
-* iSCSI LIF 容錯移轉與移轉會發生在 LIF 主連接埠的廣播網域內。使用檢閱廣播網域組態 `network port broadcast-domain show` 命令。
-+
-
-IMPORTANT: 確保與 iSCSI 生命期相關的廣播網域包含代表 HA 配對兩個節點的網路連接埠、以便視需要在兩個節點之間移轉 iSCSI 生命期並進行容錯移轉。
+* SVM 上沒有 iSCSI 生命
+* SVM 上的所有 iSCSI 生命都已啟用、可自動進行 LIF 容錯移轉
 
 
 
 
+== 啟用自動 iSCSI LIF 容錯移轉
 
-== iSCSI LIF容錯移轉的運作方式
-
-[role="Lead"]
-對於已啟用iSCSI LIF容錯移轉的LIF（自動或手動）、適用下列項目。
-
-* 用於使用的生命 `data-iscsi` 服務原則、容錯移轉原則僅限於 `sfo-partner-only`、 `local-only`和 `disabled`。
-* 當 iSCSI 的容錯移轉原則設為時、只能容錯移轉至 HA 合作夥伴 `sfo-partner-only`。
-* 當自動還原設定為時、會自動還原生命 `true` 當 LIF 的主連接埠健全且能夠裝載 LIF 時。
-* 在計畫性或非計畫性節點接管上、接管節點上的iSCSI LIF會容錯移轉至HA合作夥伴。LIF容錯移轉的連接埠由VIF Manager決定。
-* 一旦完成容錯移轉、iSCSI LIF就會正常運作。
-* 啟動恢復時、如果自動還原設為、 iSCSI LIF 會恢復至其主節點和連接埠 `true`。
-* 當裝載一個或多個iSCSI LIF的連接埠上的乙太網路連結中斷時、VIF Manager會將LIF從下一個連接埠移轉到同一個廣播網域中的其他連接埠。新連接埠可能位於同一個節點或其HA合作夥伴中。連結還原後、如果自動還原設為 `true`、 VIF Manager 會將 iSCSI 生命期還原回其主節點和主連接埠。
-* 當節點從複寫的資料庫（RDB）仲裁中退出時、VIF Manager會將iSCSI LIF從超出仲裁節點移轉至其HA合作夥伴。當節點恢復為仲裁、且自動還原設為時 `true`、 VIF Manager 會將 iSCSI 生命期還原回其主節點和主連接埠。
-
-
-
-
-== 移轉及還原iSCSI LIF
-
-[role="Lead"]
-您可以使用System Manager或ONTAP S還原CLI、將iSCSI LIF手動移轉至同一個節點上的不同連接埠、或移轉至HA合作夥伴上的不同連接埠、然後將LIF還原回其主節點和主連接埠。
-
-
-
-=== 使用System Manager移轉及還原iSCSI LIF
-
-[role="Lead"]
-您可以使用System Manager手動移轉及還原一個或多個iSCSI LIF（網路介面）至同一個節點上的另一個連接埠、或回復至HA合作夥伴上的連接埠。
-
-.開始之前
-您必須擁有ASA 一套不完整的平台HA配對、而且必須執行ONTAP 的是版本不含更新版本的版本。
-
-
-
-==== 移轉LIF
+根據預設、在 ONTAP 9.10.1 及更早版本中建立的 iSCSI 生命權不會啟用自動 LIF 容錯移轉。  如果 SVM 上的 iSCSI 生命期未啟用自動 LIF 容錯移轉、則新建立的生命期也不會啟用自動 LIF 容錯移轉。  如果未啟用自動 LIF 容錯移轉、且發生容錯移轉事件、則 iSCSI 生命將不會移轉。
 
 .步驟
-. 在System Manager中、按一下*網路>總覽>網路介面*
-. 選取您要移轉的LIF、然後按一下 image:icon_kabob.gif["kabob圖示"]，然後單擊*移轉*。
-. 在*移轉介面*對話方塊中、選取HA合作夥伴的目的地節點和連接埠。
+. 啟用 iSCSI LIF 的自動容錯移轉：
 +
+[source, cli]
+----
+network interface modify -vserver SVM_name -lif iscsi_lif –failover-policy sfo-partner-only -auto-revert true
+----
++
+若要更新 SVM 上的所有 iSCSI 生命期、請使用 `-lif*` 而非 `lif`。
 
-NOTE: 您可以勾選核取方塊、選擇永久移轉iSCSI LIF。瞭解iSCSI LIF必須離線才能永久移轉。此外、一旦iSCSI LIF永久移轉、就無法復原。沒有還原選項。
-
-. 按一下*移轉*。
 
 
 
 
-==== 回復LIF
+== 停用自動 iSCSI LIF 容錯移轉
+
+如果您先前已在 ONTAP 9.10.1 或更早版本所建立的 iSCSI 生命負載上啟用自動 iSCSI LIF 容錯移轉、您可以選擇將其停用。
 
 .步驟
-. 在System Manager中、按一下*網路>總覽>網路介面*。
-. 選取您要還原的 LIF 、然後按一下 image:icon_kabob.gif["kabob圖示"] 然後按一下*恢復網路介面*。
-. 在*恢復網路介面*對話方塊中、按一下*恢復*。
+. 停用 iSCSI LIF 的自動容錯移轉：
++
+[source, cli]
+----
+network interface modify -vserver SVM_name -lif iscsi_lif –failover-policy disabled -auto-revert false
+----
++
+若要更新 SVM 上的所有 iSCSI 生命期、請使用 `-lif*` 而非 `lif`。
 
 
 
+.相關資訊
+* link:../networking/create_a_lif.html["建立LIF"]
+* 手動 link:../networking/migrate_a_lif.html["移轉 LIF"]
+* 手動 link:../networking/revert_a_lif_to_its_home_port.html["將 LIF 還原至其主連接埠"]
+* link:.../networking/configure_failover_settings_on_a_lif.html["在LIF上設定容錯移轉設定"]
 
-=== 使用ONTAP RASCLI移轉及還原iSCSI LIF
-
-[role="Lead"]
-您可以使用ONTAP S還原CLI手動移轉、並將一或多個iSCSI LIF還原至同一個節點上的另一個連接埠、或還原至HA合作夥伴上的連接埠。
-
-.開始之前
-您必須擁有ASA 一套不完整的平台HA配對、而且必須執行ONTAP 的是版本不含更新版本的版本。
-
-|===
-
-
-| 如果您想要... | 使用此命令... 
-
-
-| 將iSCSI LIF移轉至其他節點/連接埠 | 請參閱 link:../networking/migrate_a_lif.html["移轉LIF"] 以取得可用的命令。 
-
-
-| 將iSCSI LIF還原回其主節點/連接埠 | 請參閱 link:../networking/revert_a_lif_to_its_home_port.html["將LIF還原至其主連接埠"] 以取得可用的命令。 
-|===
-
-
-== 使用ONTAP 支援的CLI來管理iSCSI LIF
-
-您可以使用ONTAP Sfuse CLI來管理iSCSI生命期、包括建立新的iSCSI生命期、以及為現有的生命期啟用iSCSI LIF容錯移轉功能。
-
-.開始之前
-您必須擁有ASA 一套不完整的平台HA配對、而且必須執行ONTAP 的是版本不含更新版本的版本。
-
-.關於這項工作
-請參閱 https://docs.netapp.com/us-en/ontap-cli-9141/index.html["《指令參考》ONTAP"^] 以取得完整清單 `network interface` 命令。
-
-|===
-
-
-| 如果您想要... | 使用此命令... 
-
-
-| 建立iSCSI LIF | `network interface create -vserver _SVM_name_ -lif _iscsi_lif_ -service-policy default-data-blocks -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _netmask_value_`
-
-如有需要、請參閱 link:../networking/create_a_lif.html["建立LIF"] 以取得更多資訊。 
-
-
-| 確認LIF已成功建立 | `network interface show -vserver _SVM_name_ -fields failover-policy,failover-group,auto-revert,is-home` 
-
-
-| 確認您是否可以覆寫iSCSI LIF上的自動還原預設值 | `network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ -auto-revert false` 
-
-
-| 在iSCSI LIF上執行儲存容錯移轉 | `storage failover takeover -ofnode _node_name_ -option normal`
-
-您會收到警告： `A takeover will be initiated. Once the partner node reboots, a giveback will be automatically initiated. Do you want to continue? {y/n}:`
-
-答 `y` 回應會顯示其 HA 合作夥伴的接管訊息。 
-
-
-| 針對預先存在的LIF啟用iSCSI LIF容錯移轉功能 | 對於在將叢集升級至ONTAP 更新版本之前所建立的iSCSI LIF、您可以啟用iSCSI LIF容錯移轉功能（將容錯移轉原則修改為） `sfo-partner-only` 並將自動還原功能修改為 `true`）：
-
-`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy sfo-partner-only -auto-revert true`
-
-此命令可在儲存VM中的所有iSCSI LIF上執行、方法是指定「-lif*」、並保持所有其他參數相同。 
-
-
-| 停用現有LIF的iSCSI LIF容錯移轉功能 | 對於在將叢集升級至ONTAP 更新版本之前所建立的iSCSI LIF、您可以停用iSCSI LIF容錯移轉功能和自動還原功能：
-
-`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy disabled -auto-revert false`
-
-此命令可在儲存VM中的所有iSCSI LIF上執行、方法是指定「-lif*」、並保持所有其他參數相同。 
-|===
