@@ -11,10 +11,24 @@ summary: 若要利用Kerberos型通訊的最強安全性、您可以在SMB伺服
 
 
 [role="lead"]
-若要利用Kerberos型通訊的最強安全性、您可以在SMB伺服器上啟用AES-256和AES-128加密。如果您不希望SMB伺服器選取AES加密類型、以便與Active Directory（AD）kdc進行Kerberos型通訊、您可以停用AES加密。預設會停用AES加密。
+若要利用以 Kerberos 為基礎的通訊所提供的最強大安全性、您應該在 SMB 伺服器上使用 AES-256 和 AES-128 加密。從 ONTAP 9.13.1 開始、預設會啟用 AES 加密。  如果您不希望SMB伺服器選取AES加密類型、以便與Active Directory（AD）kdc進行Kerberos型通訊、您可以停用AES加密。
 
-.關於這項工作
-從ONTAP 功能支援的9.12.1開始、AES加密會使用啟用和停用 `-advertised-enc-types` 選項、可讓您指定通告給AD Kdc的加密類型。預設設定為 `rc4` 和 `des`，但當指定AES類型時，將會啟用AES加密。您也可以使用選項來明確停用較弱的RC4和DES加密類型。在早期ONTAP 版本的版本中、您必須使用 `-is-aes-encryption-enabled` 啟用和停用AES加密的選項、無法指定加密類型。
+是否預設啟用 AES 加密、以及您是否可以選擇指定加密類型、取決於您的 ONTAP 版本。
+
+[cols="3"]
+|===
+| 版本ONTAP | AES 加密是由 ... | 您可以指定加密類型嗎？ 
+
+
+| 9.13.1 及更新版本 | 依預設 | 是的 
+
+
+| 9.12.1 | 手動 | 是的 
+
+
+| 9.11.1 及更早版本 | 手動 | 否 
+|===
+從ONTAP 功能支援的9.12.1開始、AES加密會使用啟用和停用 `-advertised-enc-types` 選項、可讓您指定通告給AD Kdc的加密類型。預設設定為 `rc4` 和 `des`，但當指定AES類型時，將會啟用AES加密。您也可以使用選項來明確停用較弱的RC4和DES加密類型。在 ONTAP 9.11.1 及更早版本中、您必須使用 `-is-aes-encryption-enabled` 啟用和停用AES加密的選項、無法指定加密類型。
 
 為了增強安全性、儲存虛擬機器（SVM）會在每次修改AES安全性選項時、變更AD中的機器帳戶密碼。變更密碼可能需要包含機器帳戶的組織單位（OU）的系統管理AD認證。
 
