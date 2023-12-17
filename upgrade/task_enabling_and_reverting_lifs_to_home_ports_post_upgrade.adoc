@@ -2,87 +2,45 @@
 permalink: upgrade/task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, after, post, enable, enabling, revert, reverting, lifs, home, ports 
-summary: 在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。在升級叢集之前和之後、您必須啟用並還原任何不在其主連接埠上的生命。 
+summary: 在升級重新開機期間、某些生命體可能會移轉至指派的容錯移轉連接埠。升級後、請啟用並還原不在其主連接埠上的生命體。 
 ---
-= 升級後、請確認所有生命體均位於主連接埠上
+= 在 ONTAP 升級之後、確認所有的生命體都位於主連接埠上
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。升級叢集之後、您必須啟用及還原任何不在主連接埠上的生命。
+在 ONTAP 升級程序中進行的重新開機期間、可能會將部分生命體從其主連接埠移轉至指派的容錯移轉連接埠。升級後、您需要啟用及還原不在其主連接埠上的任何生命。
 
-如果主連接埠正常運作、網路介面還原命令會將目前不在主連接埠上的LIF還原回主連接埠。LIF的主連接埠是在建立LIF時指定、您可以使用network interface show命令來判斷LIF的主連接埠。
+.步驟
+. 顯示所有生命的狀態：
++
+[source, cli]
+----
+network interface show -fields home-port,curr-port
+----
++
+如果 * 狀態管理員 * 為「關閉」或 * 為首頁 * 對於任何生命週期為「假」、請繼續下一步。
 
-. 顯示所有生命的狀態： `network interface show -fields home-port,curr-port`
+. 啟用資料生命：
 +
-此範例顯示儲存虛擬機器（SVM）的所有LIF狀態。
-
+[source, cli]
+----
+network interface modify {-role data} -status-admin up
+----
+. 將LIF還原至其主連接埠：
 +
-[listing]
+[source, cli]
 ----
-cluster1::> network interface show -fields home-port,curr-port
-vserver                          lif       home-port curr-port
--------------------------------- --------- --------- ---------
-C1_sti96-vsim-ucs539g_1622463615 clus_mgmt e0d       e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_cluster_mgmt_inet6 e0d e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_mgmt1 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_mgmt1_inet6 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_cluster_mgmt_inet6 e0d e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_mgmt1 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_mgmt1_inet6 e0c e0c
-Cluster                          sti96-vsim-ucs539g_clus1 e0a e0a
-Cluster                          sti96-vsim-ucs539g_clus2 e0b e0b
-Cluster                          sti96-vsim-ucs539h_clus1 e0a e0a
-Cluster                          sti96-vsim-ucs539h_clus2 e0b e0b
-vs0                              sti96-vsim-ucs539g_data1 e0d e0d
-vs0                              sti96-vsim-ucs539g_data1_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539g_data2 e0e e0e
-vs0                              sti96-vsim-ucs539g_data2_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539g_data3 e0f e0f
-vs0                              sti96-vsim-ucs539g_data3_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539g_data4 e0d e0d
-vs0                              sti96-vsim-ucs539g_data4_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539g_data5 e0e e0e
-vs0                              sti96-vsim-ucs539g_data5_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539g_data6 e0f e0f
-vs0                              sti96-vsim-ucs539g_data6_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data1 e0d e0d
-vs0                              sti96-vsim-ucs539h_data1_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539h_data2 e0e e0e
-vs0                              sti96-vsim-ucs539h_data2_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539h_data3 e0f e0f
-vs0                              sti96-vsim-ucs539h_data3_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data4 e0d e0d
-vs0                              sti96-vsim-ucs539h_data4_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539h_data5 e0e e0e
-vs0                              sti96-vsim-ucs539h_data5_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539h_data6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data6_inet6 e0f e0f
-35 entries were displayed.
+network interface revert *
 ----
+. 確認所有的生命都在其主連接埠中：
 +
-如果任何生命週期出現狀態為「關閉」或「為主目錄」狀態為「假」的「狀態管理」、請繼續下一步。
-
-. 啟用資料生命： `network interface modify {-role data} -status-admin up`
-+
-[listing]
+[source, cli]
 ----
-cluster1::> network interface modify {-role data} -status-admin up
-8 entries were modified.
+network interface show
 ----
-. 將LIF還原至其主連接埠： `network interface revert *`
-+
-此命令會將所有LIF還原回其主連接埠。
-
-+
-[listing]
-----
-cluster1::> network interface revert *
-8 entries were acted on.
-----
-. 確認所有的生命都在其主連接埠中： `network interface show`
 +
 此範例顯示SVM vs0的所有lifs都位於其主連接埠上。
 

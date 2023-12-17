@@ -2,7 +2,7 @@
 permalink: upgrade/task_updating_an_ontap_cluster_disruptively.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, disruptively 
-summary: 如果您可以讓叢集離線升級至新ONTAP 版的版本、則可以使用中斷升級方法。此方法有數個步驟：停用每個HA配對的儲存容錯移轉、重新啟動叢集中的每個節點、然後重新啟用儲存容錯移轉。 
+summary: 如果您可以讓叢集離線升級至新ONTAP 版的版本、則可以使用中斷升級方法。 
 ---
 = 使用 CLI 手動進行中斷 ONTAP 升級
 :allow-uri-read: 
@@ -22,15 +22,31 @@ summary: 如果您可以讓叢集離線升級至新ONTAP 版的版本、則可�
 
 在中斷升級中、因為停用每個HA配對的儲存容錯移轉、而且每個節點都會更新、所以需要停機。停用儲存容錯移轉時、每個節點都會做為單一節點叢集、也就是與節點相關的系統服務會中斷、只要系統重新開機即可。
 
-. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ： `set -privilege advanced`
+.步驟
+. 將權限等級從 admin 設定為進階、在提示繼續時輸入 * y* ：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 進階提示 (`*>`）。
 
-. 將新的 ONTAP 軟體映像設為預設映像： `system image modify {-node * -iscurrent false} -isdefault true`
+. 將新的 ONTAP 軟體映像設為預設映像：
++
+[source, cli]
+----
+system image modify {-node * -iscurrent false} -isdefault true
+----
 +
 此命令會使用延伸查詢、將目標ONTAP 的支援軟體映像（安裝為替代映像）變更為每個節點的預設映像。
 
-. 確認新的 ONTAP 軟體映像已設為預設映像： `system image show`
+. 確認新的 ONTAP 軟體映像已設為預設映像：
++
+[source, cli]
+----
+system image show
+----
 +
 在下列範例中、影像2是新ONTAP 的版本、並在兩個節點上設為預設影像：
 
@@ -81,7 +97,12 @@ node1
 停用叢集中每個 HA 配對的儲存容錯移轉： `storage failover modify -node * -enabled false`
 
 |===
-. 重新啟動叢集中的節點： `system node reboot -node nodename -ignore-quorum-warnings`
+. 重新啟動叢集中的節點：
++
+[source, cli]
+----
+system node reboot -node nodename -ignore-quorum-warnings
+----
 +
 
 IMPORTANT: 請勿一次重新開機超過一個節點。
@@ -89,11 +110,21 @@ IMPORTANT: 請勿一次重新開機超過一個節點。
 +
 節點會開機新ONTAP 的「介紹」影像。出現此畫面的功能登入提示、表示重新開機程序已完成。ONTAP
 
-. 使用新的 ONTAP 映像重新啟動節點或節點集之後、請將權限等級設為進階： `set -privilege advanced`
+. 使用新的 ONTAP 映像重新啟動節點或節點集之後、請將權限等級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 當系統提示您繼續時、請輸入 * y*
 
-. 確認新軟體正在執行： `system node image show`
+. 確認新軟體正在執行：
++
+[source, cli]
+----
+system node image show
+----
 +
 在下列範例中、image1是新ONTAP 的版本、並設為節點0上的目前版本：
 
@@ -114,18 +145,43 @@ node1
 ----
 . 確認升級成功完成：
 +
-.. 將權限層級設為進階： `set -privilege advanced`
-.. 確認每個節點的升級狀態為完成： `system node upgrade-revert show -node nodename`
+.. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 確認每個節點的升級狀態為完成：
++
+[source, cli]
+----
+system node upgrade-revert show -node nodename
+----
 +
 狀態應列示為「完成」。
 
 +
 如果狀態不完整、 link:http://mysupport.netapp.com/["請聯絡NetApp支援部門"] 立即。
 
-.. 返回管理權限層級： `set -privilege admin`
+.. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
 
 
-. 針對每個額外節點重複步驟2到7。
-. 如果叢集包含兩個以上的節點、請為叢集中的每個 HA 配對啟用儲存容錯移轉： `storage failover modify -node * -enabled true`
-. 如果叢集僅包含兩個節點、請啟用叢集高可用度： `cluster ha modify -configured true`
+. 針對每個額外節點重複步驟 2 至 8 。
+. 如果叢集包含兩個以上的節點、請為叢集中的每個 HA 配對啟用儲存容錯移轉：
++
+[source, cli]
+----
+storage failover modify -node * -enabled true
+----
+. 如果叢集僅包含兩個節點、請啟用叢集高可用度：
++
+[source, cli]
+----
+cluster ha modify -configured true
+----
 

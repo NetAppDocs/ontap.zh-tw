@@ -1,36 +1,24 @@
 ---
 permalink: upgrade/concept_upgrade_requirements_for_metrocluster_configurations.html 
 sidebar: sidebar 
-keywords: ontap, upgrade, update, requirements, metrocluster, mcc, general, normal, operations, switchover 
-summary: 如果您必須升級MetroCluster 某個版本的架構、您應該注意一些重要的需求。 
+keywords: ontap, upgrade, update, requirements, metrocluster, configuration, mcc, general, normal, operations, switchover 
+summary: 在 MetroCluster 組態上升級 ONTAP 軟體之前、叢集必須符合特定需求。 
 ---
-= 升級需求MetroCluster
+= MetroCluster 組態的 ONTAP 升級需求
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-當您升級 MetroCluster 組態時、您應該瞭解一些重要需求。
-
-
-
-== 執行 MetroCluster 組態主要和修補程式升級所需的方法
-
-無論您執行的 ONTAP 版本為何、 MetroCluster 組態的修補程式升級都可以透過自動不中斷升級（ andu ）程序來執行。
-
-只要您執行的是 ONTAP 9.3 或更新版本、就可以使用自動不中斷升級（ andu ）程序來執行 MetroCluster 組態的重大升級。在執行 ONTAP 9.2 或更早版本的叢集上、 MetroCluster 組態的主要升級必須使用 MetroCluster 組態專用的 NDU 程序來執行。
-
-
-
-== 一般要求
+在 MetroCluster 組態上升級 ONTAP 軟體之前、叢集必須符合特定需求。
 
 * 兩個叢集都必須執行相同版本ONTAP 的支援。
 +
 您ONTAP 可以使用version命令來驗證此版本。
 
-* 如果您正在執行重大升級、 MetroCluster 組態必須處於正常模式。
-* 如果您正在執行修補程式升級、 MetroCluster 組態可以是正常模式或切換模式。
+* 如果您正在執行重大 ONTAP 升級、 MetroCluster 組態必須處於正常模式。
+* 如果您正在執行修補程式 ONTAP 升級、 MetroCluster 組態可以是正常模式或切換模式。
 * 除了雙節點叢集之外、您可以在不中斷營運的情況下、同時升級兩個叢集。
 +
 若要在雙節點叢集中進行不中斷升級、叢集必須一次升級一個節點。
@@ -47,7 +35,7 @@ summary: 如果您必須升級MetroCluster 某個版本的架構、您應該注�
 
 
 
-== 正常作業的組態需求
+== MetroCluster 正常作業的組態需求
 
 * 來源SVM LIF必須在其主節點上處於開啟狀態。
 +
@@ -59,7 +47,7 @@ summary: 如果您必須升級MetroCluster 某個版本的架構、您應該注�
 
 
 
-== 切換的組態需求
+== MetroCluster 的組態需求
 
 * 所有生命都必須在其主節點上處於正常工作狀態。
 * 所有的集合體都必須在線上、但DR站台的根集合體除外。

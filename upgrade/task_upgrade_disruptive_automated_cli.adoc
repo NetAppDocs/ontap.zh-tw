@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: upgrade/task_upgrade_disruptive_automated_cli.html 
 keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
-summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本。 
+summary: 從 ONTAP 9.2 開始、您可以使用 ONTAP CLI 執行單節點叢集的自動更新。單節點叢集缺乏備援、因此升級作業會中斷運作。 
 ---
 = 自動中斷 ONTAP 升級（僅限單節點叢集）
 :hardbreaks:
@@ -18,10 +18,22 @@ summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本�
 [role="lead"]
 從 ONTAP 9.2 開始、您可以使用 ONTAP CLI 執行單節點叢集的自動更新。由於單節點叢集缺乏備援功能、因此更新作業一律會中斷營運。無法使用 System Manager 執行中斷升級。
 
-* 您必須滿足升級準備需求。
+* 您必須已滿意升級 link:prepare.html["準備"] 要求。
+
+
+.步驟
+. 刪除先前ONTAP 的版本：
 +
-.. 刪除先前ONTAP 的版本： `cluster image package delete -version previous_package_version`
-.. 下載目標ONTAP 版的更新軟體套件： `cluster image package get -url location`
+[source, cli]
+----
+cluster image package delete -version previous_package_version
+----
+. 下載目標ONTAP 版的更新軟體套件：
++
+[source, cli]
+----
+cluster image package get -url location
+----
 +
 [listing]
 ----
@@ -30,7 +42,12 @@ cluster1::> cluster image package get -url http://www.example.com/software/9.7/i
 Package download completed.
 Package processing completed.
 ----
-.. 驗證叢集套件儲存庫中是否有可用的軟體套件： `cluster image package show-repository`
+. 驗證叢集套件儲存庫中是否有可用的軟體套件：
++
+[source, cli]
+----
+cluster image package show-repository
+----
 +
 [listing]
 ----
@@ -39,7 +56,12 @@ Package Version  Package Build Time
 ---------------- ------------------
 9.7              M/DD/YYYY 10:32:15
 ----
-.. 確認叢集已準備好升級： `cluster image validate -version package_version_number`
+. 確認叢集已準備好升級：
++
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
 +
 [listing]
 ----
@@ -47,25 +69,48 @@ cluster1::> cluster image validate -version 9.7
 
 WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
 ----
-.. 監控驗證進度： `cluster image show-update-progress`
-.. 完成驗證所識別的所有必要行動。
-.. 您也可以產生軟體升級預估： `cluster image update -version package_version_number -estimate-only`
+. 監控驗證進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+. 完成驗證所識別的所有必要行動。
+. 您也可以產生軟體升級預估：
++
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
 +
 軟體升級預估會顯示每個要更新元件的詳細資料、以及預估的升級期間。
 
-.. 執行軟體升級： `cluster image update -version package_version_number`
+. 執行軟體升級：
++
+[source, cli]
+----
+cluster image update -version package_version_number
+----
 +
 
 NOTE: 如果遇到問題、更新會暫停、並提示您採取修正行動。您可以使用叢集映像show-update-progress命令來檢視任何問題和更新進度的詳細資料。修正問題之後、您可以使用叢集映像resume-update命令繼續更新。
 
-.. 顯示叢集更新進度： `cluster image show-update-progress`
+. 顯示叢集更新進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
 +
 節點會在更新過程中重新開機、重新開機時無法存取。
 
-.. 觸發通知： `autosupport invoke -node * -type all -message "Finishing_Upgrade"`
+. 觸發通知：
++
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_Upgrade"
+----
 +
 如果叢集未設定為傳送訊息、則通知複本會儲存在本機。
-
-
 
 

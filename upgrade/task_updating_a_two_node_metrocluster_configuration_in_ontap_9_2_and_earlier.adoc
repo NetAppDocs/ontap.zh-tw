@@ -2,35 +2,46 @@
 permalink: upgrade/task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, two-node, metrocluster, mcc, 9.2, earlier 
-summary: 如果您有執行 9.2 或更早版本的雙節點 MetroCluster 組態、請使用此程序進行 ONTAP 升級。 
+summary: 升級雙節點 MetroCluster 組態的方式會因 ONTAP 版本而異。請使用此程序從 ONTAP 9.2 或更早版本升級。 
 ---
-= 在 ONTAP 9.2 或更早版本中手動不中斷升級雙節點 MetroCluster 組態
+= 在 ONTAP 9.2 或更早版本中、不中斷升級雙節點 MetroCluster 組態
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以ONTAP 在不中斷營運的情況下升級支援雙節點MetroCluster 的功能。此方法有幾個步驟：啟動協調式切換、在「失敗」站台更新叢集、啟動切換、然後在另一個站台的叢集上重複此程序。
+升級雙節點 MetroCluster 組態的方式會因 ONTAP 版本而異。如果您執行的是 ONTAP 9.2 或更早版本、您應該使用此程序來執行手動不中斷升級、包括啟動交涉式切換、更新「失敗」站台上的叢集、啟動切換、然後在其他站台的叢集上重複該程序。
 
-[NOTE]
-====
-本程序僅適用於MetroCluster 執行ONTAP 版本為2個節點的不含更新版本的不含更新版本的不含更新版本的組態。
+如果您有執行 ONTAP 9.3 或更新版本的雙節點 MetroCluster 組態、請執行 xref:task_upgrade_andu_sm.html[使用 System Manager 自動升級]。
 
-如果您有執行 ONTAP 9.3 或更新版本的雙節點 MetroCluster 組態、請執行 xref:task_upgrade_andu_sm.html[使用System Manager自動進行不中斷升級]。
-
-====
-. 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
+.步驟
+. 將權限等級設為「進階」、在提示繼續時輸入 * y* ：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 進階提示 (`*>`）。
 
-. 在要升級的叢集上、安裝新的 ONTAP 軟體映像做為預設： `system node image update -package package_location -setdefault true -replace-package true`
+. 在要升級的叢集上、安裝新的 ONTAP 軟體映像做為預設：
++
+[source, cli]
+----
+system node image update -package package_location -setdefault true -replace-package true
+----
 +
 [listing]
 ----
 cluster_B::*> system node image update -package http://www.example.com/NewImage.tgz -setdefault true -replace-package true
 ----
-. 確認目標軟體映像已設為預設映像： `system node image show`
+. 確認目標軟體映像已設為預設映像：
++
+[source, cli]
+----
+system node image show
+----
 +
 以下範例顯示了這一點 `NewImage` 設為預設映像：
 
@@ -46,9 +57,24 @@ node_B_1
          NewImage  true    false   Y.Y.Y                MM/DD/YYYY TIME
 2 entries were displayed.
 ----
-. 如果目標軟體映像未設為預設映像、請加以變更： `system image modify {-node * -iscurrent false} -isdefault true`
-. 確認所有叢集 SVM 都處於健全狀況狀態： `metrocluster vserver show`
-. 在未更新的叢集上、啟動交涉的切入： `metrocluster switchover`
+. 如果目標軟體映像未設為預設映像、請加以變更：
++
+[source, cli]
+----
+system image modify {-node * -iscurrent false} -isdefault true
+----
+. 確認所有叢集 SVM 都處於健全狀況狀態：
++
+[source, cli]
+----
+metrocluster vserver show
+----
+. 在未更新的叢集上、啟動交涉的切入：
++
+[source, cli]
+----
+metrocluster switchover
+----
 +
 此作業可能需要數分鐘的時間。您可以使用MetroCluster flexoperationshow命令來驗證切換是否已完成。
 
@@ -67,8 +93,18 @@ Warning: negotiated switchover is about to start. It will stop all the data
          cluster "cluster_B".
 Do you want to continue? {y|n}: y
 ----
-. 確認所有叢集 SVM 都處於健全狀況狀態： `metrocluster vserver show`
-. 重新同步「儲存」叢集上的資料集合體： `metrocluster heal -phase aggregates`
+. 確認所有叢集 SVM 都處於健全狀況狀態：
++
+[source, cli]
+----
+metrocluster vserver show
+----
+. 重新同步「儲存」叢集上的資料集合體：
++
+[source, cli]
+----
+metrocluster heal -phase aggregates
+----
 +
 將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5或更新版本之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。
 
@@ -78,7 +114,12 @@ Do you want to continue? {y|n}: y
 cluster_A::> metrocluster heal -phase aggregates
 [Job 130] Job succeeded: Heal Aggregates is successful.
 ----
-. 確認修復作業已成功完成： `metrocluster operation show`
+. 確認修復作業已成功完成：
++
+[source, cli]
+----
+metrocluster operation show
+----
 +
 [listing]
 ----
@@ -89,14 +130,24 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 重新同步「儲存」叢集上的根集合體： `metrocluster heal -phase root-aggregates`
+. 重新同步「儲存」叢集上的根集合體：
++
+[source, cli]
+----
+metrocluster heal -phase root-aggregates
+----
 +
 [listing]
 ----
 cluster_A::> metrocluster heal -phase root-aggregates
 [Job 131] Job succeeded: Heal Root Aggregates is successful.
 ----
-. 確認修復作業已成功完成： `metrocluster operation show`
+. 確認修復作業已成功完成：
++
+[source, cli]
+----
+metrocluster operation show
+----
 +
 [listing]
 ----
@@ -107,10 +158,30 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 在停止的叢集上、從載入器提示字元啟動節點： `boot_ontap`
-. 等待開機程序完成、然後確認所有叢集 SVM 都處於健全狀況狀態： `metrocluster vserver show`
-. 從「影片」叢集執行切換： `metrocluster switchback`
-. 確認切換已成功完成： `metrocluster operation show`
+. 在停止的叢集上、從載入器提示字元啟動節點：
++
+[source, cli]
+----
+boot_ontap
+----
+. 等待開機程序完成、然後確認所有叢集 SVM 都處於健全狀況狀態：
++
+[source, cli]
+----
+metrocluster vserver show
+----
+. 從「影片」叢集執行切換：
++
+[source, cli]
+----
+metrocluster switchback
+----
+. 確認切換已成功完成：
++
+[source, cli]
+----
+metrocluster operation show
+----
 +
 [listing]
 ----
@@ -121,11 +192,21 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 確認所有叢集 SVM 都處於健全狀況狀態： `metrocluster vserver show`
+. 確認所有叢集 SVM 都處於健全狀況狀態：
++
+[source, cli]
+----
+metrocluster vserver show
+----
 . 在其他叢集上重複上述所有步驟。
 . 驗證MetroCluster 此功能是否正常：
 +
-.. 檢查組態： `metrocluster check run`
+.. 檢查組態：
++
+[source, cli]
+----
+metrocluster check run
+----
 +
 [listing]
 ----
@@ -147,9 +228,44 @@ operation, run "metrocluster switchover -simulate" or "metrocluster
 switchback -simulate", respectively.
 ----
 .. 如果您想要檢視更詳細的結果、請使用 MetroCluster check run 命令：
-.. 將權限層級設為進階： `set -privilege advanced`
-.. 模擬「變更作業： `metrocluster switchover -simulate`
-.. 檢閱「移動模擬： `metrocluster operation show`
++
+[source, cli]
+----
+metrocluster check aggregate show
+----
++
+[source, cli]
+----
+metrocluster check config-replication show
+----
++
+[source, cli]
+----
+metrocluster check lif show
+----
++
+[source, cli]
+----
+metrocluster check node show
+----
+.. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 模擬「變更作業：
++
+[source, cli]
+----
+metrocluster switchover -simulate
+----
+.. 檢閱「移動模擬：
++
+[source, cli]
+----
+metrocluster operation show
+----
 +
 [listing]
 ----
@@ -160,13 +276,19 @@ cluster_A::*> metrocluster operation show
      End time: MM/DD/YYYY TIME
        Errors: -
 ----
-.. 返回管理權限層級： `set -privilege admin`
+.. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
 .. 在其他叢集上重複這些子步驟。
 
 
 
 
-您應該執行任何升級後工作。
+.完成後
+執行任何 link:task_what_to_do_after_upgrade.html["升級後的工作"]。
 
 .相關資訊
 link:https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/concept_dr_workflow.html["災難恢復MetroCluster"]

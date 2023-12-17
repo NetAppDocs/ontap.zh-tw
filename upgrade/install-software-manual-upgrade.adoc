@@ -1,8 +1,8 @@
 ---
 permalink: upgrade/install-software-manual-upgrade.html 
 sidebar: sidebar 
-keywords: ontap, software, image, download, downloading, install, installing 
-summary: 下載 ONTAP 軟體套件以進行升級後、您必須先在本機安裝、才能開始升級 
+keywords: ontap, software, image, download, downloading, install, installing. manual, manually 
+summary: 下載 ONTAP 軟體套件以進行手動升級後、您必須先在本機安裝、才能開始升級 
 ---
 = 安裝 ONTAP 軟體套件以進行手動升級
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 下載 ONTAP 軟體套件以進行升級後、您必須先在本機安�
 
 
 [role="lead"]
-下載 ONTAP 軟體套件以進行升級後、您必須先在本機安裝、才能開始升級。
+下載 ONTAP 軟體套件以進行手動升級後、您必須先在本機安裝、才能開始升級。
 
 .步驟
 . 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
@@ -30,8 +30,10 @@ summary: 下載 ONTAP 軟體套件以進行升級後、您必須先在本機安�
 ** 雙節點 MetroCluster
 
  a| 
-`system node image update -node * -package _location_ -replace-package true -setdefault true -background true`
-
+[source, cli]
+----
+system node image update -node * -package _location_ -replace-package true -setdefault true -background true
+----
 _locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。請參閱 `system node image update` 詳細資訊請參閱手冊頁。
 
 此命令會同時在所有節點上安裝軟體映像。若要一次在每個節點上安裝映像、請勿指定 `-background` 參數。
@@ -43,8 +45,10 @@ _locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。請參
 ** 8 節點 MetroCluster 組態
 
  a| 
-`system node image update -node * -package location -replace-package true -background true -setdefault false`
-
+[source, cli]
+----
+system node image update -node * -package location -replace-package true -background true -setdefault false
+----
 您必須在兩個叢集上發出此命令。
 
 此命令會使用延伸查詢來變更目標軟體映像、此映像會安裝為每個節點的替代映像。
@@ -53,8 +57,10 @@ _locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。請參
 . 輸入 `y` 以在出現提示時繼續。
 . 確認軟體映像已安裝在每個節點上。
 +
-`system node image show-update-progress -node *`
-
+[source, cli]
+----
+system node image show-update-progress -node *
+----
 +
 此命令會顯示軟體映像安裝的目前狀態。您應該繼續執行此命令、直到所有節點回報*執行狀態***退出*、*退出狀態***成功*為止。
 

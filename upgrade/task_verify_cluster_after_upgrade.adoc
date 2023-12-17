@@ -2,7 +2,7 @@
 permalink: upgrade/task_verify_cluster_after_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, upgrade, verify, status, health, post, after 
-summary: 升級之後、您應該確認叢集。 
+summary: 升級 ONTAP 之後、請確認叢集版本、叢集健全狀況和儲存健全狀況。  對於 MetroCluster FC 組態、請確認已啟用自動非計畫性切換。 
 ---
 = 在 ONTAP 升級後驗證叢集
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 升級之後、您應該確認叢集。
 
 
 [role="lead"]
-升級 ONTAP 之後、您應該驗證叢集版本、叢集健全狀況和儲存健全狀況。  如果您的叢集是在 MetroCluster FC 組態中、您也需要驗證叢集是否已啟用、以便自動進行非計畫性切換。
+升級 ONTAP 之後、請確認叢集版本、叢集健全狀況和儲存健全狀況。  對於 MetroCluster FC 組態、也請確認叢集已啟用、可自動進行非計畫性切換。
 
 
 
@@ -23,12 +23,16 @@ summary: 升級之後、您應該確認叢集。
 
 . 驗證叢集版本是否為目標ONTAP 版本的發行版本：
 +
-`version`
-
+[source, cli]
+----
+version
+----
 . 如果叢集版本不是目標 ONTAP 版本、您應該驗證所有節點的升級狀態：
 +
-`system node upgrade-revert show`
-
+[source, cli]
+----
+system node upgrade-revert show
+----
 
 
 
@@ -39,8 +43,10 @@ summary: 升級之後、您應該確認叢集。
 
 . 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格：
 +
-`cluster show`
-
+[source, cli]
+----
+cluster show
+----
 +
 [listing]
 ----
@@ -55,8 +61,10 @@ node1                 true    true
 
 . 將權限層級設為進階：
 +
-`set -privilege advanced`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 驗證每個RDB程序的組態詳細資料。
 +
 ** 每個節點的關聯式資料庫時期和資料庫時期應相符。
@@ -115,7 +123,12 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `cluster kernel-service show`
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：
++
+[source, cli]
+----
+cluster kernel-service show
+----
 +
 [listing]
 ----
@@ -138,15 +151,15 @@ link:../system-admin/index.html["系統管理"]
 
 如果您的叢集是在 MetroCluster FC 組態中、您應該驗證在升級 ONTAP 之後、是否已啟用自動非計畫性切換。
 
-.關於這項工作
-
-NOTE: 此程序僅適用於MetroCluster 不含功能的FC組態。  如果您使用MetroCluster 的是一套靜態IP組態、請跳過此程序。
+如果您使用MetroCluster 的是一套靜態IP組態、請跳過此程序。
 
 .步驟
 . 檢查是否已啟用自動非計畫性切換：
 +
-`metrocluster show`
-
+[source, cli]
+----
+metrocluster show
+----
 +
 如果啟用自動非計畫性切換、命令輸出中會出現下列陳述：
 
@@ -157,9 +170,16 @@ AUSO Failure Domain  auso-on-cluster-disaster
 ----
 . 如果未出現該陳述、請啟用自動非計畫性切換：
 +
-`metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
-
-. 重複步驟1、確認已啟用自動非計畫性切換。
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+. 確認已啟用自動非計畫性切換：
++
+[source, cli]
+----
+metrocluster show
+----
 
 
 .相關資訊
