@@ -27,6 +27,8 @@ summary: 升級至 ONTAP 9.11.1 或更新版本後、您應該手動在 ONTAP 9.
 
 根據預設、在 ONTAP 9.10.1 及更早版本中建立的 iSCSI 生命權不會啟用自動 LIF 容錯移轉。  如果 SVM 上的 iSCSI 生命期未啟用自動 LIF 容錯移轉、則新建立的生命期也不會啟用自動 LIF 容錯移轉。  如果未啟用自動 LIF 容錯移轉、且發生容錯移轉事件、則 iSCSI 生命將不會移轉。
 
+深入瞭解 link:../networking/configure_lifs_@cluster_administrators_only@_overview.html#lif-failover-and-giveback["LIF 容錯移轉與恢復"]。
+
 .步驟
 . 啟用 iSCSI LIF 的自動容錯移轉：
 +
@@ -61,5 +63,5 @@ network interface modify -vserver SVM_name -lif iscsi_lif –failover-policy dis
 * link:../networking/create_a_lif.html["建立LIF"]
 * 手動 link:../networking/migrate_a_lif.html["移轉 LIF"]
 * 手動 link:../networking/revert_a_lif_to_its_home_port.html["將 LIF 還原至其主連接埠"]
-* link:.../networking/configure_failover_settings_on_a_lif.html["在LIF上設定容錯移轉設定"]
+* link:../networking/configure_failover_settings_on_a_lif.html["在LIF上設定容錯移轉設定"]
 

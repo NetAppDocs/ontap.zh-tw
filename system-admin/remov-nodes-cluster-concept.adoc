@@ -65,31 +65,60 @@ NOTE: 從叢集移除節點之前、使用者必須無法存取所有連接至�
 .步驟
 . 將權限層級變更為進階：
 +
-`*set -privilege advanced*`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 驗證叢集上的節點是否保留 epsilon ：
 +
-`*cluster show -epsilon true*`
-
-+
-.. 如果節點持有 epsilon 、請將其資格變更為 false 。
-+
-`*cluster modify -node <node_name> -eligibility false*`
-
-
-
-. 如果您要移除的節點是目前的主節點、請將主節點的叢集資格變更為、以啟用叢集中的另一個節點作為主節點 `false`：
-+
-`*cluster modify –eligibility false*`
-
-+
-主節點是一個節點、負責保存「mGMT」、「'VLDB」、「vifmgr'」、「'bcomd'」及「'crs」等程序。。 `cluster ring show` 進階命令會顯示目前的主節點。
-
-+
-[listing]
+[source, cli]
 ----
-cluster::*> cluster modify -node node1 -eligibility false
+cluster show -epsilon true
 ----
+. 如果叢集上的某個節點包含 epsilon 、而且該節點即將取消連接、請將 epsilon 移至不會取消連接的節點：
++
+.. 將 epsilon 從即將取消連接的節點移出
++
+[source, cli]
+----
+cluster modify -node <name_of_node_to_be_unjoined> -epsilon false
+----
+.. 將 epsilon 移至不會取消連接的節點：
++
+[source, cli]
+----
+cluster modify -node <node_name> -epsilon true
+----
+
+
+. 識別目前的主節點：
++
+[source, cli]
+----
+cluster ring show
+----
++
+主節點是一個節點、負責保存「mGMT」、「'VLDB」、「vifmgr'」、「'bcomd'」及「'crs」等程序。
+
+. 如果您要移除的節點是目前的主節點、請啟用叢集中的另一個節點、將其選為主節點：
++
+.. 讓目前的主節點無法參與叢集：
++
+[source, cli]
+----
+cluster modify – node <node_name> -eligibility false
+----
++
+當主節點不符合資格時、其餘節點之一會由叢集仲裁器選取為新的主節點。
+
+.. 讓先前的主節點符合資格再次參與叢集：
++
+[source, cli]
+----
+cluster modify – node <node_name> -eligibility true
+----
+
+
 . 登入遠端節點管理LIF或叢集管理LIF的節點、而非要移除的節點。
 . 從叢集移除節點：
 +
@@ -100,15 +129,19 @@ cluster::*> cluster modify -node node1 -eligibility false
  a| 
 ONTAP 9.3
  a| 
-`*cluster unjoin*`
-
+[source, cli]
+----
+cluster unjoin
+----
 
 
  a| 
 更新版本ONTAP
  a| 
-`*cluster remove-node*`
-
+[source, cli]
+----
+cluster remove-node*
+----
 |===
 +
 如果您有混合版本的叢集、而且要移除最後一個較低版本的節點、請使用 `-skip-last-low-version-node-check` 參數。
@@ -134,13 +167,15 @@ ONTAP 9.3
 . 如果您要重新規劃節點的用途、請清除節點組態並初始化所有磁碟：
 +
 .. 在開機程序期間、當系統提示時、按Ctrl-C可顯示開機功能表。
-.. 選取開機功能表選項*（4）Clean組態、然後初始化所有磁碟*。
+.. 選擇開機功能表選項（ 4 ）全新組態並初始化所有磁碟。
 
 
 . 返回管理權限層級：
 +
-`*set -privilege admin*`
-
+[source, cli]
+----
+set -privilege admin
+----
 . 重複上述步驟、從叢集移除容錯移轉合作夥伴。
 
 
