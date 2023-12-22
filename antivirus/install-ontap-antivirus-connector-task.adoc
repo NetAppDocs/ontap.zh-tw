@@ -1,0 +1,110 @@
+---
+permalink: antivirus/install-ontap-antivirus-connector-task.html 
+sidebar: sidebar 
+keywords: install, ontap, task, antivirus connector 
+summary: 在 VScan 伺服器上安裝 ONTAP 防毒連接器、以便在執行 ONTAP 的系統和 VScan 伺服器之間提供通訊。 
+---
+= 安裝 ONTAP 防毒連接器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 VScan 伺服器上安裝 ONTAP 防毒連接器、以啟用執行 ONTAP 的系統與 VScan 伺服器之間的通訊。安裝 ONTAP 防毒連接器後、防毒軟體就能與一或多個儲存虛擬機器（ SVM ）通訊。
+
+.關於這項工作
+* 請參閱 link:https://docs.netapp.com/us-en/ontap/antivirus/vscan-partner-solutions.html["VScan 合作夥伴解決方案"^] 頁面以取得有關支援的通訊協定、防毒廠商軟體版本、 ONTAP 版本、互通性需求和 Windows 伺服器的資訊。
+* 必須安裝 .NET 4.5.1 或更新版本。
+* ONTAP 防毒連接器可以在虛擬機器上執行。不過、為了獲得最佳效能、 NetApp 建議使用專用虛擬機器進行防毒掃描。
+* 您必須在安裝及執行 ONTAP 防毒連接器的 Windows 伺服器上啟用 SMB 2.0 。
+
+
+.開始之前
+* 從支援網站下載 ONTAP 防毒連接器設定檔、並將其儲存至硬碟上的目錄。
+* 確認您符合安裝 ONTAP 防毒連接器的要求。
+* 請確認您擁有安裝防毒 Connector 的系統管理員權限。
+
+
+.步驟
+. 執行適當的安裝檔案來啟動防毒連接器安裝精靈。
+. 選取 _Next_ 。「目的地資料夾」對話方塊隨即開啟。
+. 選取 _Next_ 將防毒 Connector 安裝到列出的資料夾、或選取 _Changle_ 安裝到不同的資料夾。
+. ONTAP AV Connector Windows 服務認證對話方塊隨即開啟。
+. 輸入您的 Windows 服務認證、或選取 * 新增 * 以選取使用者。對於 ONTAP 系統、此使用者必須是有效的網域使用者、而且必須存在於 SVM 的掃描器集區組態中。
+. 選擇*下一步*。「準備安裝程式」對話方塊隨即開啟。
+. 選擇 * 安裝 * 開始安裝、或選擇 * 上一步 * 來變更設定。
+狀態方塊隨即開啟並記錄安裝進度、接著顯示「 Installshield Wizard Completed 」（安裝精靈已完成）對話方塊。
+. 如果您要繼續設定 ONTAP 管理或資料生命、請選取「設定 ONTAP 生命期」核取方塊。
+您必須至少設定一個 ONTAP 管理或資料 LIF 、才能使用此 VScan 伺服器。
+. 如果您要檢視安裝記錄、請選取顯示 * Windows Installer 記錄 * 核取方塊。
+. 選擇 * 完成 * 結束安裝並關閉 Installshield 精靈。
+桌面上會儲存 *Configure ONTAP Lifs* 圖示、以設定 ONTAP 生命。
+. 將 SVM 新增至防毒 Connector 。
+您可以新增 ONTAP 管理 LIF 來將 SVM 新增至防毒連接器、此 LIF 會輪詢以擷取資料生命清單、或直接設定資料 LIF 或生命。
+如果已設定 ONTAP 管理 LIF 、您也必須提供意見調查資訊和 ONTAP 管理帳戶認證。
++
+** 確認已啟用 SVM 的管理 LIF 或 IP 位址 `management-https`。當您只是設定資料生命時、這不是必要的。
+** 確認您已為 HTTP 應用程式建立使用者帳戶、並指派（至少為唯讀）存取的角色 `/api/network/ip/interfaces` REST API ：
+如需建立使用者的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-role-create.html["建立安全登入角色"^] 和 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-create.html["建立安全登入"^] ONTAP 手冊頁。
+
+
+
+
+
+NOTE: 您也可以新增管理 SVM 的驗證通道 SVM 、將網域使用者當成帳戶使用。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-domain-tunnel-create.html["建立安全登入網域通道"^] ONTAP 手冊頁或使用 `/api/security/acccounts` 和 `/api/security/roles` REST API 可設定管理帳戶和角色。
+
+.步驟
+. 在 * 設定 ONTAP Lifs* 圖示上按一下滑鼠右鍵、此圖示會在您完成防毒連接器安裝時儲存在桌面上、然後選取 * 以系統管理員身分執行 * 。
+. 在「設定 ONTAP 生命」對話方塊中、選取偏好的組態類型、然後執行下列動作：
++
+[cols="35,65"]
+|===
+
+
+| 若要建立此類型的 LIF... | 執行下列步驟... 
+
+
+ a| 
+資料LIF
+ a| 
+.. 將「角色」設為「資料」
+.. 將「資料傳輸協定」設定為「 CIFS 」
+.. 將「防火牆原則」設定為「資料」
+.. 將「服務原則」設定為「 default-data-files 」
+
+
+
+
+ a| 
+管理層 LIF
+ a| 
+.. 將「 role * 」設為「 data 」
+.. 將「資料傳輸協定」設為「無」
+.. 將「防火牆原則」設定為「管理」
+.. 將「服務原則」設定為「預設管理」
+
+
+|===
++
+深入瞭解 link:https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html["建立 LIF"^]。
+
++
+建立 LIF 之後、請輸入您要新增之 SVM 的資料或管理 LIF 或 IP 位址。您也可以輸入叢集管理 LIF 。如果您指定叢集管理 LIF 、則該叢集中所有服務 SMB 的 SVM 都可以使用 VScan 伺服器。
+
++
+[NOTE]
+====
+當 VScan 伺服器需要 Kerberos 驗證時、每個 SVM 資料 LIF 都必須有唯一的 DNS 名稱、而且您必須在 Windows Active Directory 中將該名稱登錄為伺服器主要名稱（ SPN ）。當每個資料 LIF 無法使用唯一的 DNS 名稱或登錄為 SPN 時、 VScan 伺服器會使用 NT LAN Manager 機制進行驗證。如果您在連線 VScan 伺服器後新增或修改 DNS 名稱和 SPN 、則必須重新啟動 VScan 伺服器上的防毒連接器服務、才能套用變更。
+
+====
+. 若要設定管理 LIF 、請以秒為單位輸入輪詢持續時間。輪詢持續時間是防毒 Connector 檢查 SVM 或叢集 LIF 組態變更的頻率。預設的輪詢時間間隔為 60 秒。
+. 輸入 ONTAP 管理帳戶名稱和密碼以設定管理 LIF 。
+. 按一下 * 測試 * 以檢查連線能力並驗證驗證。驗證僅適用於管理 LIF 組態。
+. 按一下 * 更新 * 將 LIF 新增至要輪詢或連線的生命清單。
+. 按一下 * 儲存 * 以儲存登錄的連線。
+. 如果您要將連線清單匯出至登錄匯入或登錄匯出檔案、請按一下 * 匯出 * 。
+如果多部 VScan 伺服器使用相同的管理或資料生命負載、這項功能就很實用。
+
+
+請參閱 link:configure-ontap-antivirus-connector-task.html["設定 ONTAP 防毒連接器頁面"] 以取得組態選項。

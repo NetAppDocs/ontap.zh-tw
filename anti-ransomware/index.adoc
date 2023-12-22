@@ -93,11 +93,11 @@ ARP 有兩種模式：
 . 作用中（或「啟用」模式）
 
 
-當您啟用 ARP 時、它會以學習模式執行。在學習模式中、 ONTAP 系統會根據上述分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP 快照、以便在偵測到威脅時保護資料。
+當您啟用 ARP 時、它會以學習模式執行。在學習模式中、 ONTAP 系統會根據分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP 快照、以便在偵測到威脅時保護資料。
 
-建議您讓 ARP 處於學習模式至少 30 天、不過您可以隨時切換至使用中模式。切換太早可能導致誤報過多。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
+建議您將 ARP 留在學習模式 30 天。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
 
-在作用中模式中、如果檔案副檔名標示為異常、您應該評估警示。您可以對警示採取行動以保護資料、也可以將警示標記為誤報。當您標示為誤報時、 ONTAP 會更新 ARP 警示設定檔、使副檔名不會在後續加上旗標。命令 `security anti-ransomware volume workload-behavior show` 顯示在磁碟區中偵測到的副檔名。（如果您在學習模式早期執行此命令、並顯示正確的檔案類型表示、則不應將該資料當作移至作用中模式的基礎、因為 ONTAP 仍在收集其他計量。）
+在作用中模式中、如果檔案副檔名標示為異常、您應該評估警示。您可以對警示採取行動以保護資料、也可以將警示標記為誤報。將警示標記為誤報會更新警示設定檔。例如、如果警示是由新的副檔名觸發、而您將警示標記為誤判、則下次觀察到該副檔名時、您將不會收到警示。命令 `security anti-ransomware volume workload-behavior show` 顯示在磁碟區中偵測到的副檔名。（如果您在學習模式早期執行此命令、並顯示正確的檔案類型表示、則不應將該資料當作移至作用中模式的基礎、因為 ONTAP 仍在收集其他計量。）
 
 從 ONTAP 9.11.1 開始、您可以自訂 ARP 的偵測參數。如需詳細資訊、請參閱 xref:manage-parameters-task.html[管理 ARP 攻擊偵測參數]。
 
@@ -117,7 +117,7 @@ ARP 有兩種模式：
 
 在威脅較低的情況下、 ONTAP 會偵測異常狀況、並建立磁碟區的快照、以建立最佳的恢復點。ARP Snapshot 使用 `anti-ransomware-backup` 例如、標記和可透過其名稱識別 `Anti_ransomware_backup.2022-12-20_1248`。
 
-ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。低層級的威脅會記錄下來、並顯示在 System Manager 的 **EventS** 區段中。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示、不過您可以 xref:manage-parameters-task.html#modify-alerts[修改警示設定] 從 ONTAP 9.14.1 開始。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
+ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。低層級的威脅會記錄下來、並顯示在 System Manager 的 **EventS** 區段中。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示、但您可以從 ONTAP 9.14.1 開始 xref:manage-parameters-task.html#modify-alerts[修改警示設定]。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
 您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show` 命令。
 
