@@ -13,15 +13,21 @@ summary: 您可以將磁碟機新增至節點或磁碟櫃、以增加熱備援�
 [role="lead"]
 您可以將磁碟機新增至節點或磁碟櫃、以增加熱備援磁碟機的數量、或將空間新增至本機層（Aggregate）。
 
-.關於這項工作
-您的平台必須支援您要新增的磁碟機。
-
-https://hwu.netapp.com/["NetApp Hardware Universe"^]
+.開始之前
+您的平台必須支援您要新增的磁碟機。您可以使用確認 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
 在單一程序中應新增的磁碟機數量下限為六個。新增單一磁碟機可能會降低效能。
 
-.步驟
-. 請查看 NetApp 支援網站，以取得較新的磁碟機和磁碟櫃韌體、以及磁碟認證套件的檔案。
+.NetApp Hardware Universe 的步驟
+. 在「 ** 產品」 ** 下拉式功能表中、選取您的硬體組態
+. 選擇您的平台。
+. 選擇您正在執行的 ONTAP 版本、然後選擇「顯示結果」 ** 。
+. 在圖形下方、選取 ** 按一下此處以查看替代檢視 ** 。選擇符合您組態的檢視。
+影像： ../media/hardware -Universe-os-filter .png[ 硬體 Universe OS 篩選器功能表 ]
+
+
+.安裝磁碟機的步驟
+. 請檢查 link:https://mysupport.netapp.com/site/["NetApp 支援網站"^] 適用於較新的磁碟機和機櫃韌體、以及磁碟認證套件檔案。
 +
 如果您的節點或機櫃沒有最新版本、請在安裝新磁碟機之前先進行更新。
 
@@ -36,7 +42,7 @@ https://hwu.netapp.com/["NetApp Hardware Universe"^]
 NOTE: 新增磁碟機的正確插槽視平台機型和ONTAP 版本而定。在某些情況下、您需要依序將磁碟機新增至特定插槽。例如AFF 、在某個範例中、您可以在特定的時間間隔新增磁碟機、使叢集內的插槽閒置。而AFF 在功能不全的A220中、您可以將新的磁碟機新增至從外側到磁碟櫃中央的下一個空插槽。
 
 +
-請參閱 https://hwu.netapp.com/["NetApp Hardware Universe"^] 找出適合您組態的正確插槽。
+請參閱「開始使用前 ** 」中的步驟、以識別中的組態所需的正確插槽 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
 . 插入新磁碟機：
 +
@@ -56,7 +62,7 @@ NOTE: 新增磁碟機的正確插槽視平台機型和ONTAP 版本而定。在�
 . 在所有新磁碟機都被辨識之後、請確認已新增磁碟機、而且已正確指定其擁有權。
 
 
-.步驟
+.確認安裝的步驟
 . 顯示磁碟清單：
 +
 `storage aggregate show-spare-disks`
@@ -64,7 +70,7 @@ NOTE: 新增磁碟機的正確插槽視平台機型和ONTAP 版本而定。在�
 +
 您應該會看到新的磁碟機、這些磁碟機屬於正確的節點。
 
-. 選用ONTAP （僅限版本不含更新版本的版本）：零新增的磁碟機：
+. ** （可選）（僅適用於 ONTAP 9.3 及更早版本）， ** 將新增的磁碟機歸零：
 +
 `storage disk zerospares`
 
