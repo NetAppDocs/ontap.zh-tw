@@ -13,9 +13,26 @@ summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以�
 [role="lead"]
 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。
 
-.您需要的產品
-* 您必須已設定SAML驗證的IDP。
-* 您必須擁有IDP URI。
+
+
+== 啟用SAML驗證
+
+若要使用 System Manager 或 CLI 啟用 SAML 驗證、請執行下列步驟。如果您的叢集執行的是 ONTAP 9.7 或更早版本、則您需要遵循的系統管理員步驟會有所不同。請參閱系統上的 System Manager 線上說明。
+
+
+NOTE: 啟用 SAML 驗證之後、只有遠端使用者可以存取 System Manager GUI 。啟用SAML驗證後、本機使用者無法存取System Manager GUI。
+
+image:workflow_security_mfa_setup.gif["使用SAML設定多因素驗證的工作流程圖"]
+
+.開始之前
+* 必須設定您打算用於遠端驗證的IDP。
++
+[NOTE]
+====
+請參閱您已設定之IDP所提供的文件。
+
+====
+* 您必須擁有IDP的URI。
 
 
 .關於這項工作
@@ -42,7 +59,34 @@ summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以�
 * Shibboleth
 
 
+視您的環境而定、請執行下列步驟：
+
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 按一下*叢集>設定*。
+. 在「* SAML驗證*」旁、按一下 image:icon_gear.gif["齒輪圖示"]。
+. 請確認「*啟用SAML驗證*」核取方塊已勾選。
+. 輸入IDP URI的URL（包括 "https://"[]）。
+. 如有需要、請修改主機系統位址。
+. 確保使用正確的憑證：
++
+** 如果您的系統只對應一個類型為「server」的憑證、則該憑證會被視為預設憑證、不會顯示出來。
+** 如果您的系統已對應多個憑證做為「server」類型、則會顯示其中一個憑證。  若要選取不同的憑證、請按一下*變更*。
+
+
+. 按一下「 * 儲存 * 」。確認視窗會顯示已自動複製到剪貼簿的中繼資料資訊。
+. 移至您指定的IDP系統、然後從剪貼簿複製中繼資料、以更新系統中繼資料。
+. 返回確認視窗（在System Manager中）、然後勾選「I have configured the IDP with the host URI or medetid*（我已使用主機URI或中繼資料*設定IDP）」核取方塊。
+. 按一下*登出*以啟用SAML型驗證。  IDP系統會顯示驗證畫面。
+. 在IDP系統中、輸入您的SAML型認證資料。驗證認證之後、系統會將您導向至System Manager首頁。
+
+
+--
+.CLI
+--
 . 建立SAML組態、ONTAP 以便讓整個程序能夠存取IDP中繼資料：
 +
 `*security saml-sp create -idp-uri _idp_uri_ -sp-host _ontap_host_name_*`
@@ -122,16 +166,29 @@ admin1         http        password      backup           no     none
 
 
 
+--
+====
 
 
 == 停用SAML驗證
 
 若要停止使用外部身分識別供應商（IDP）驗證Web使用者、您可以停用SAML驗證。停用SAML驗證時、會使用已設定的目錄服務供應商（例如Active Directory和LDAP）進行驗證。
 
-.您需要的產品
-您必須從主控台登入。
+視您的環境而定、請執行下列步驟：
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 按一下*叢集>設定*。
+. 在「* SAML驗證*」下、按一下「*已啟用*」切換按鈕。
+. _ 選用 _ ：您也可以按一下  image:icon_gear.gif["齒輪圖示"] 在「* SAML驗證*」旁、然後取消核取「*啟用SAML驗證*」核取方塊。
+
+
+--
+.CLI
+--
 . 停用SAML驗證：
 +
 `*security saml-sp modify -is-enabled false*`
@@ -142,6 +199,8 @@ admin1         http        password      backup           no     none
 
 
 
+--
+====
 
 
 == 疑難排解SAML組態問題
