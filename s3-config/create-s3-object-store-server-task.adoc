@@ -61,31 +61,32 @@ NetApp最佳實務做法是、請勿使用此root使用者。任何使用root使
 --
 . 建立S3伺服器：
 +
-`vserver object-store-server create -vserver _svm_name_ -object-store-server _s3_server_fqdn_ -certificate-name _s3_server_name_ -comment _text_ [additional_options]`
+`vserver object-store-server create -vserver _svm_name_ -object-store-server _s3_server_fqdn_ -certificate-name _server_certificate_name_ -comment _text_ [additional_options]`
 
 +
 您可以在建立S3伺服器時或稍後隨時指定其他選項。
 
 +
-** SVM 名稱可以是 Data SVM 或 `Cluster` （系統 SVM 名稱）（如果您正在設定本機分層）。
+** 如果您正在設定本機分層、 SVM 名稱可以是資料 SVM 或系統 SVM （叢集）名稱。
+** 憑證名稱應為伺服器憑證的名稱（終端使用者或葉憑證）、而非伺服器 CA 憑證（中繼或根 CA 憑證）。
 ** 預設會在連接埠443上啟用HTTPS。您可以使用變更連接埠號碼 `-secure-listener-port` 選項。
 +
-啟用HTTPS時、需要CA憑證才能與SSL/TLS適當整合。
+啟用 HTTPS 時、必須有 CA 憑證才能與 SSL/TLS 正確整合。
 
-** HTTP預設為停用；啟用時、伺服器會偵聽連接埠80。您可以使用啟用 `-is-http-enabled` 或使用變更連接埠編號 `-listener-port` 選項。
+** HTTP 預設為停用。啟用時、伺服器會在連接埠 80 上接聽。您可以使用啟用 `-is-http-enabled` 或使用變更連接埠編號 `-listener-port` 選項。
 +
-啟用HTTP時、所有的要求和回應都會以純文字透過網路傳送。
+啟用 HTTP 時、要求和回應會以純文字透過網路傳送。
 
 
 
-. 驗證S3是否已根據需要進行設定：
+. 確認 S3 已設定：
 +
 `vserver object-store-server show`
 
 
 
 .範例
-下列命令可驗證所有物件儲存伺服器的組態值：
+此命令可驗證所有物件儲存伺服器的組態值：
 
 [listing]
 ----

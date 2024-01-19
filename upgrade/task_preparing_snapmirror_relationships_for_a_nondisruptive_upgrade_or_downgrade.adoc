@@ -4,20 +4,17 @@ sidebar: sidebar
 keywords: ontap, upgrade, snapmirror, operations, quisce 
 summary: 在升級 ONTAP 之前、您需要停用 SnapMirror 作業、而且每個對等的 SVM 在整個叢集上都必須有唯一的名稱 
 ---
-= 準備 SnapMirror 關係以進行 ONTAP 升級
+= 在升級 ONTAP 之前、請先停用 SnapMirror DP 作業
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在執行 SnapMirror 的叢集上升級 ONTAP 之前、 SnapMirror 作業必須針對包含目的地 Volume 的每個節點進行停用、而且每個對等 SVM 在整個叢集上都必須有唯一的名稱。最佳做法是為每個 SVM 使用唯一的完整網域名稱（ FQDN ）、例如「 'dataVerser.hq' 」或「 mirorVserver.offo' 」。
-
-您也應該瞭解、如果您要升級具有 DP SnapMirror 關係的叢集、則必須先升級目的地節點、然後再升級來源節點。
+在使用 SnapMirror 資料保護（ DP ）的叢集上升級 ONTAP 之前、 SnapMirror 作業必須針對包含目的地磁碟區的每個節點進行停用、而且每個對等 SVM 在整個叢集上都必須有唯一的名稱。最佳做法是為每個 SVM 使用唯一的完整網域名稱（ FQDN ）、例如「 'dataVerser.hq' 」或「 mirorVserver.offo' 」。
 
 
-
-== 在升級 ONTAP 之前、請先停用 SnapMirror 作業
+NOTE: SnapMirror 作業不需要停止使用 SnapMirror 延伸資料保護（ XDP ）的叢集。
 
 要防止 SnapMirror 傳輸失敗，您必須在升級 ONTAP 之前停止 SnapMirror 操作。或者、您也可以在特定目的地磁碟區上執行 SnapMirror 傳輸、並在升級來源節點之前升級所屬目的地節點、以便繼續進行所有其他目的地磁碟區的 SnapMirror 傳輸。下表說明暫停SnapMirror作業的兩個選項。
 

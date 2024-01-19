@@ -17,17 +17,29 @@ S3物件保留在_buckets中-它們不會像其他目錄內的目錄內的檔案
 包含 S3 伺服器的儲存 VM 必須已經存在。
 
 .關於這項工作
-在CLI中、當您建立儲存庫時、有兩種資源配置選項：
-
-* 讓ONTAP Select 底層的集合體和FlexGroup 元件不再存在（預設）
+* 從 ONTAP 9.14.1 開始、在 S3 FlexGroup 磁碟區上建立貯體時、已啟用自動調整大小功能。如此可避免在現有和新的 FlexGroup 磁碟區上建立貯體時過度分配容量。根據下列準則、 FlexGroup 磁碟區的大小會調整為所需的最小大小。所需的最小大小是 FlexGroup Volume 中所有 S3 儲存區的總大小。
 +
-** 透過自動選取集合體、即可為第一個儲存區建立及設定一個等量磁碟區。ONTAP FlexGroup它會自動選取適用於您平台的最高服務層級、或是您可以指定儲存服務層級。您稍後在儲存 VM 中新增的任何其他貯體、都會有相同的基礎 FlexGroup Volume 。
-** 或者、您也可以指定是否要使用儲存區進行分層、在這種情況ONTAP 下、VMware會嘗試選擇低成本的媒體、為階層式資料提供最佳效能。
+** 從 ONTAP 9.14.1 開始、如果在建立新的儲存區時建立 S3 FlexGroup Volume 、則會以所需的最小大小建立 FlexGroup Volume 。
+** 如果在 ONTAP 9.14.1 之前建立 S3 FlexGroup Volume 、則在 ONTAP 9.14.1 之後建立或刪除的第一個儲存區、會將 FlexGroup 磁碟區調整為所需的最小大小。
+** 如果 S3 FlexGroup Volume 是在 ONTAP 9.14.1 之前建立的、而且已有最低需求大小、則在 ONTAP 9.14.1 之後建立或刪除儲存區、會維持 S3 FlexGroup 磁碟區的大小。
 
 
-* 您可以選取基礎的Aggregate和FlexGroup 等元件（需要進階權限命令選項）
+* 儲存服務層級是預先定義的調適性服務品質（QoS）原則群組、具有_value_、_Performance _和_Extreme _預設層級。您也可以定義自訂QoS原則群組、並將其套用至儲存區、而非預設的儲存服務層級之一。如需儲存服務定義的詳細資訊、請參閱 link:storage-service-definitions-reference.html["儲存服務定義"]。如需效能管理的詳細資訊、請參閱 link:../performance-admin/index.html["效能管理"]。
+從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
+
+
+* 如果您正在設定本機容量分層、您可以在資料儲存 VM 中建立貯體和使用者、而不是在 S3 伺服器所在的系統儲存 VM 中建立。
+* 若要進行遠端用戶端存取、您必須在啟用S3的儲存VM中設定儲存區。如果您在未啟用S3的儲存VM中建立儲存貯體、則只能用於本機分層。
+* 從 ONTAP 9.14.1 開始、您就可以了 link:create-bucket-mcc-task.html["在 MetroCluster 組態中的鏡射或無鏡射 Aggregate 上建立貯體"]。
+* 在CLI中、當您建立儲存庫時、有兩種資源配置選項：
 +
-** 您可以選擇手動選取必須FlexGroup 在其中建立貯體和包含此等Volume的集合體、然後在每個集合體上指定成員數目。新增其他庫位時：
+** 讓ONTAP Select 底層的集合體和FlexGroup 元件不再存在（預設）
++
+*** 透過自動選取集合體、即可為第一個儲存區建立及設定一個等量磁碟區。ONTAP FlexGroup它會自動選取適用於您平台的最高服務層級、或是您可以指定儲存服務層級。您稍後在儲存 VM 中新增的任何其他貯體、都會有相同的基礎 FlexGroup Volume 。
+*** 或者、您也可以指定是否要使用儲存區進行分層、在這種情況ONTAP 下、VMware會嘗試選擇低成本的媒體、為階層式資料提供最佳效能。
+
+
+** 您可以選取基礎 Aggregate 和 FlexGroup 元件（需要進階權限命令選項）：您可以選擇手動選取必須建立儲存區和包含 FlexGroup 磁碟區的集合體、然後指定每個集合體的組成數量。新增其他庫位時：
 +
 *** 如果您為新的貯體指定集合體和成員、FlexGroup 將會為新的貯體建立新的功能區。
 *** 如果您未指定新儲存區的集合體和成員、則新儲存區將會新增至現有FlexGroup 的版本資訊區。
@@ -35,29 +47,17 @@ S3物件保留在_buckets中-它們不會像其他目錄內的目錄內的檔案
 +
 當您在建立貯體時指定集合體和成員時、不會套用預設或自訂的QoS原則群組。您可以稍後使用來執行 `vserver object-store-server bucket modify` 命令。
 
++
+請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9141/vserver-object-store-server-show.html["修改Vserver物件存放區伺服器儲存區"] 以取得更多資訊。
 
-
-
-
-
-
-從 ONTAP 9.14.1 開始、您就可以了 link:create-bucket-mcc-task.html["在 MetroCluster 組態中的鏡射或無鏡射 Aggregate 上建立貯體"]。
-
++
 *附註：*如果您是供應Cloud Volumes ONTAP 來自支援對象的鏟斗、則應使用CLI程序。強烈建議您手動選取基礎Aggregate、以確保它們僅使用一個節點。使用兩個節點的集合體可能會影響效能、因為節點將位於不同地理位置的可用度區域、因此容易受到延遲問題的影響。
 
-儲存服務層級是預先定義的調適性服務品質（QoS）原則群組、具有_value_、_Performance _和_Extreme _預設層級。您也可以定義自訂QoS原則群組、並將其套用至儲存區、而非預設的儲存服務層級之一。
 
-從ONTAP 供應儲存設備開始、預設會啟用QoS。您可以在資源配置程序期間或稍後停用QoS或選擇自訂QoS原則。
 
-如需儲存服務定義的詳細資訊、請參閱 link:storage-service-definitions-reference.html["儲存服務定義"]
 
-如果您正在設定本機容量分層、您可以在資料儲存 VM 中建立貯體和使用者、而不是在 S3 伺服器所在的系統儲存 VM 中建立。
 
-若要進行遠端用戶端存取、您必須在啟用S3的儲存VM中設定儲存區。如果您在未啟用S3的儲存VM中建立儲存貯體、則只能用於本機分層。
 
-如需效能管理的詳細資訊、請參閱 link:../performance-admin/index.html["效能管理"]
-
-請參閱 `vserver object-store-server bucket` 手冊頁、瞭解其他組態和顯示選項。
 
 
 
@@ -116,7 +116,7 @@ S3物件保留在_buckets中-它們不會像其他目錄內的目錄內的檔案
 
 
 .範例
-以下範例為大小為 1TB 的儲存 VM VS1 建立儲存貯體、並指定 Aggregate ：
+以下範例為儲存 VM 建立儲存區 `vs1` 大小 `1TB` 並指定 Aggregate ：
 
 [listing]
 ----
@@ -181,7 +181,7 @@ NOTE: 您必須先建立使用者和群組、才能設定權限。
 
 === 確認可存取貯體
 
-在 S3 用戶端應用程式（無論是 ONTAP S3 或外部第三方應用程式）上、您可以輸入下列命令、驗證您對新建立的儲存區的存取：
+在 S3 用戶端應用程式（無論是 ONTAP S3 或外部第三方應用程式）上、您可以輸入下列命令來驗證您對新建立的儲存區的存取：
 
 * S3伺服器CA憑證。
 * 使用者的存取金鑰和秘密金鑰。
