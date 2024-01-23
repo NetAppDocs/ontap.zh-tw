@@ -26,9 +26,6 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 .步驟
 . 從目的地叢集、確定SnapMirror關係為DP類型、鏡射狀態為Snapmirror、關係狀態為閒置、關係健全：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 snapmirror show -destination-path <SVM:volume>
@@ -66,9 +63,6 @@ Healthy: true
 
 ====
 . 從來源和目的地磁碟區、確保兩個磁碟區都有一個通用的Snapshot複本：
-+
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
 +
 [source, cli]
 ----
@@ -119,9 +113,6 @@ snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
 ----
 . 若要確保在轉換期間不會執行排程的更新、請停止現有的DP類型關係：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 snapmirror quiesce -source-path <SVM:volume> -destination-path <SVM:volume>
@@ -144,9 +135,6 @@ snapmirror quiesce -source-path <SVM:volume> -destination-path <SVM:volume>
 cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 打破現有的DP類型關係：
-+
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
 +
 [source, cli]
 ----
@@ -185,9 +173,6 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 ----
 . 刪除現有的DP類型關係：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 snapmirror delete -destination-path <SVM:volume>
@@ -209,10 +194,21 @@ snapmirror delete -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror delete -destination-path svm_backup:volA_dst
 ----
-. 您可以使用從保留的輸出 `snapmirror show` 建立新 XDP 類型關係的命令：
+. 在來源上釋放原始伺服器 SVM 災難恢復關係：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
+[source, cli]
+----
+snapmirror release -destination-path <SVM:volume> -relationship-info-only true
+----
++
+以下範例發佈 SVM 災難恢復關係：
 
++
+[listing]
+----
+cluster_src::> snapmirror release -destination-path svm_backup:volA_dst -relationship-info-only true
+----
+. 您可以使用從保留的輸出 `snapmirror show` 建立新 XDP 類型關係的命令：
 +
 [source, cli]
 ----
@@ -228,7 +224,7 @@ snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume>  -typ
 
 ====
 +
-以下範例在來源磁碟區之間建立 SnapMirror DR 關係 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup` 使用預設值 `MirrorAllSnapshots` 原則：
+以下範例在來源磁碟區之間建立 SnapMirror 災難恢復關係 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup` 使用預設值 `MirrorAllSnapshots` 原則：
 
 +
 [listing]
@@ -237,9 +233,6 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 -type XDP -schedule my_daily -policy MirrorAllSnapshots
 ----
 . 重新同步來源與目的地磁碟區：
-+
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
 +
 [source, cli]
 ----
@@ -263,9 +256,6 @@ snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
 . 如果停用自動刪除Snapshot複本、請重新啟用：
-+
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
 +
 [source, cli]
 ----
