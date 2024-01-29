@@ -1,0 +1,222 @@
+---
+permalink: release-notes/9121-reference.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.12.1' 
+summary: 瞭解 ONTAP 9.12.1 提供的新功能 
+---
+= ONTAP 9.12.1 的新功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+瞭解 ONTAP 9.12.1 提供的新功能。
+
+如需舊版 ONTAP 9 、硬體平台和交換器支援、已知問題和限制的詳細資訊、請參閱 _link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]_ 。您必須使用 NetApp 帳戶登入或建立 NetApp 帳戶、才能存取 ONTAP 9 版本資訊 _ 。
+
+若要升級 ONTAP 、請參閱 xref:../upgrade/prepare.html[準備升級 ONTAP]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[使用 SnapMirror Synchronous 支援較大的 FlexVol 磁碟區]  a| 
+SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB 增加至 300 TB 。來源叢集和目的地叢集都必須執行 ONTAP 9.12.1P2 或更新版本 _ 。
+
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[SnapMirror Synchronous 支援較大的檔案和 LUN 大小] | SnapMirror 同步組態支援的檔案和 LUN 大小上限、已從 16 TB 增加至 128 TB 。來源叢集和目的地叢集都必須執行 ONTAP 9.12.1 P2 或更新版本。 
+
+
+| xref:../consistency-groups/index.html[增強一致性群組的支援]  a| 
+* 您可以從一致性群組新增和移除磁碟區、複製一致性群組（包括從 Snapshot 複本）。
+* 一致性群組支援應用程式標記、可簡化資料保護與管理程序。
+* ONTAP REST API 支援使用 NFS/SMB 磁碟區或 NVMe 命名空間來設定一致性群組。
+
+
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html#supported-features[SnapMirror 同步 n] | SnapMirror Synchronous 支援 HA 接管與恢復、 Volume 搬移及其他維護相關作業的不中斷作業（ n ）。此功能僅適用於 AFF/ASA 平台。 
+
+
+| xref:../snaplock/commit-snapshot-copies-worm-concept.html[SnapLock for SnapVault 支援 FlexGroup Volume] | SnapLock for SnapVault 支援 FlexGroup Volume 
+
+
+| xref:../mediator/index.html[ONTAP Mediator 1.5 支援 SnapMirror 業務持續運作] | ONTAP Mediator 1.5 可用於監控 SnapMirror 業務連續性（ SM-BC ）關係。 
+
+
+| xref:../smbc/index.html[SnapMirror Business （ SM-BC ）持續性增強功能] | SM-BC 支援從快照進行部分 LUN 還原。此外、 SM-BC 將 QoS 延伸至不在 SM-BC 關係中的磁碟區。 
+
+
+| xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror 非同步的資料倉儲重建指標] | SnapMirror 非同步提供一個指標、顯示資料倉儲重新建置在災難恢復（ DR ）排練後所需的時間、並顯示完成百分比。 
+
+
+| SnapLock 選項可設定「未指定」絕對保留時間的最短保留時間 | SnapLock 包含一個選項、可在絕對保留時間設定為「未指定」時、設定最短保留時間。 
+
+
+| xref:../snaplock/snapshot-lock-concept.html[可防竄改的Snapshot複本] | 您可以在非 SnapLock 磁碟區上鎖定 Snapshot 複本、以提供保護、防範勒索軟體攻擊。鎖定 Snapshot 複本有助於確保不會意外或惡意刪除它們。 
+|===
+
+
+== 檔案存取通訊協定
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../smb-admin/configure-kerberos-aes-encryption-concept.html[停用 Kerberos 通訊的弱式加密類型] | 新的 SMB 安全選項可讓您停用 RC4 和 DES 、而非進階加密標準（ AES ）加密類型、以便與 Active Directory （ AD ） KDC 進行 Kerberos 型通訊。 
+
+
+| xref:../s3-multiprotocol/index.html[S3 用戶端存取 NAS 資料] | S3 用戶端可以存取與 NFS 和 SMB 用戶端相同的 NAS 資料、而無需重新格式化、因此更容易為需要物件資料的 S3 應用程式提供服務。 
+
+
+| xref:../nfs-admin/manage-nfsv4-storepool-controls-task.html[NFSv4.x 儲存工具] | 少數用戶端使用過多的 NFSv4.x 儲存資源、導致其他 NFSv4.x 用戶端因為 NFSv4.x 儲存資源無法使用而遭到封鎖。您可以選擇啟用拒絕和封鎖在其環境中使用大量 NFSv4.x storepool 資源的用戶端。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../mediator/index.html[MetroCluster IP 組態支援 ONTAP Mediator 1.5] | ONTAP Mediator 1.5 可用於監控 MetroCluster IP 組態。 
+
+
+| xref:../configure_ip_security_@ipsec@_over_wire_encryption.html[支援前端主機傳輸協定（例如 NFS 和 iSCSI ）的 IPsec 可在 MetroCluster IP 和 MetroCluster 網路附加組態中使用。] | 支援前端主機傳輸協定（例如 NFS 和 iSCSI ）的 IPsec 可在 MetroCluster IP 和 MetroCluster 網路附加組態中使用。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept-risks-limitations-automatic-switchover.html["SVM 上的 S3 、位於 MetroCluster IP 組態中未鏡射的 Aggregate 上"^] | 您可以在 MetroCluster IP 組態中啟用 MetroCluster 自動強制切換功能。這項功能是由內建人員輔助的非計畫性切換（MAUSO）功能的延伸。 
+|===
+若要瞭解 MetroCluster 組態的平台和交換器組態增強功能、請參閱 _link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]_ 。
+
+
+
+== 網路與安全通訊協定
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../ontap/system-admin/forward-command-history-log-file-destination-task.html[LIF 服務] | 您可以使用管理記錄轉送服務來控制將稽核記錄轉送到遠端 Syslog 服務的生命期 
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../s3-config/ontap-s3-supported-actions-reference.html[擴大支援 S3 行動]  a| 
+支援下列 Amazon S3 API 動作：
+
+* `CopyObject`
+* `UploadPartCopy`
+* `BucketPolicy` （取得、放置、刪除）
+
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:/san-admin/resize-lun-task.html[增加 AFF 和 FAS 平台的最大 LUN 大小] | 從 ONTAP 9.12.1P2 開始、 AFF 和 FAS 平台上支援的最大 LUN 大小從 16 TB 增加至 128 TB 。 
+
+
+| link:https://hwu.netapp.com/["增加 NVMe 限制"^]  a| 
+NVMe 傳輸協定支援下列項目：
+
+* 單一儲存 VM 和單一叢集中有 8K 個子系統
+* 12 個節點叢集 NVMe / FC 支援每個連接埠 256 個控制器、而 NVMe / TCP 則支援每個節點 2K 控制器。
+
+
+
+
+| xref:../nvme/setting-up-secure-authentication-nvme-tcp-task.html[NVMe / TCP 支援安全驗證] | NVMe 主機和控制器之間的安全、單向和雙向驗證、可透過使用 DHHMAC-CHAP 驗證傳輸協定的 NVMe / TCP 來支援。 
+
+
+| xref:../asa/support-limitations.html[MetroCluster IP 支援 NVMe] | 4 節點 MetroCluster IP 組態支援 NVMe / FC 傳輸協定。 
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 功能 | 說明 
+
+
+| xref:../anti-ransom/index.html[自主勒索軟體保護互通性增強功能]  a| 
+以下組態提供自主勒索軟體保護：
+
+* 受SnapMirror保護的磁碟區
+* SnapMirror保護SVM
+* 已啟用移轉的SVM（SVM資料移動性）
+
+
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html[MFA 支援搭配 FIDO2 和 PIV 使用 SSH （兩者均由 Yibkeys 使用）] | SSH 多因素驗證（ MFA ）可以使用硬體輔助的公開 / 私密金鑰交換與使用者名稱和密碼。Yubibkey 是插入 SSH 用戶端的實體權杖裝置、可提高 MFA 的安全性。 
+
+
+| xref:../system-admin/ontap-implements-audit-logging-concept.html[防竄改記錄] | 根據預設、所有 ONTAP 內部記錄都是防竄改的、可確保遭入侵的系統管理員帳戶不會隱藏惡意動作。 
+
+
+| xref:../error-messages/configure-ems-events-notifications-syslog-task.html[事件的 TLS 傳輸] | EMS 事件可以使用 TLS 通訊協定傳送至遠端 Syslog 伺服器、藉此加強有線保護、以進行中央外部稽核記錄。 
+|===
+
+
+== 儲存效率
+
+在 2022 年 10 月、 NetApp 將實作變更、以拒絕未透過與 TLSv1.2 或安全 SMTP 傳送的 AutoSupport 訊息傳輸。如需詳細資訊、請參閱 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU484["SU484 ： NetApp 會拒絕傳輸安全性不足的 AutoSupport 訊息"^]。
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../volumes/change-efficiency-mode-task.html[對溫度敏感的儲存效率]  a| 
+在新的 AFF C250 、 AFF C400 、 AFF C800 平台和磁碟區上、預設會啟用對溫度敏感的儲存效率。在現有磁碟區上、 TSSE 預設不會啟用、但可以使用 ONTAP CLI 手動啟用。
+
+
+
+| xref:../volumes/determine-space-usage-volume-aggregate-concept.html[增加可用的 Aggregate 空間] | 對於 All Flash FAS （ AFF ）和 FAS500f 平台、大於 30TB 的 WAFL 保留區會從 10% 降至 5% 、進而增加集合體的可用空間。 
+
+
+| xref:../concept_nas_file_system_analytics_overview.html[檔案系統分析：依大小而定的主要目錄] | 檔案系統分析現在可識別佔用空間最大的磁碟區目錄。 
+|===
+
+
+== 系統管理員
+
+從 ONTAP 9.12.1 開始、系統管理員已與 BlueXP 整合。有了 BlueXP 、系統管理員可以從單一控制面板管理混合式多雲端基礎架構、同時保留熟悉的 System Manager 儀表板。登入 System Manager 時、系統會提供系統管理員存取 BlueXP 中的 System Manager 介面或直接存取 System Manager 的選項。深入瞭解 xref:../ontap/sysmgr-integration-bluexp-concept.html[System Manager與BlueXP整合]。
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../snaplock/create-snaplock-volume-task.html[SnapLock 的系統管理員支援] | 系統管理員支援 SnapLock 作業、包括法規遵循時鐘初始化、 SnapLock Volume 建立及 WORM 檔案鏡射。 
+
+
+| xref:../system-admin/configure-saml-authentication-task.html[登入 System Manager 時支援 Cisco 雙核心的多重驗證] | 您可以將 Cisco DuoTM 設定為 SAML 身分識別供應商（ IDP ）、讓使用者在登入 System Manager 時能夠使用 Cisco DuoTM 進行驗證。 
+
+
+| xref:../networking/network_features_by_release.html[System Manager網路增強功能] | 在建立網路介面期間、System Manager可更有效地控制子網路和主連接埠的選擇。System Manager 也支援透過 RDMA 連線設定 NFS 。 
+|===

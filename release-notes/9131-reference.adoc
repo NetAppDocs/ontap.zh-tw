@@ -1,0 +1,195 @@
+---
+permalink: release-notes/9131-reference.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.13.1' 
+summary: 瞭解 ONTAP 9.13.1 提供的新功能 
+---
+= ONTAP 9.13.1 的新功能
+:allow-uri-read: 
+
+
+[role="lead"]
+瞭解 ONTAP 9.13.1 提供的新功能。
+
+如需舊版 ONTAP 9 、硬體平台和交換器支援、已知問題和限制的詳細資訊、請參閱 _link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]_ 。您必須使用 NetApp 帳戶登入或建立 NetApp 帳戶、才能存取 ONTAP 9 版本資訊 _ 。
+
+若要升級 ONTAP 、請參閱 xref:../upgrade/prepare.html[準備升級 ONTAP]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| link:../snaplock/index.html#multi-admin-verification-mav-support.md["多管理員驗證"]  a| 
+叢集管理員可以在叢集上明確啟用多重管理驗證、以在執行某些 SnapLock 作業之前要求仲裁核准。+
+
+
+
+| link:../consistency-groups/index.html["增強了對管理一致性群組的支援、包括 Volume Move 和幾何"]  a| 
+您可以在一致性群組之間移動磁碟區、修改階層式一致性群組的幾何形狀、並將容量洞見納入一致性群組。System Manager 支援使用新的 NAS 磁碟區或 NVMe 命名空間來建立一致性群組。
+
+
+
+| link:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html["使用 SnapMirror Synchronous 進行 NDMP 還原"] | SnapMirror 同步支援 NDMP 還原。 
+
+
+| 使用 SnapMirror Business Continuity 進行 NDMP 及不中斷營運的一致性群組擴充 | 您可以 link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["在不中斷營運的情況下、將磁碟區新增至一致性群組、並建立有效的 SM-BC 關係"] 和 link:../smbc/supported-configurations-reference.html#ndmp-restore["使用 NDMP 還原搭配 SM-BC"]。 
+
+
+| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["採用單一一致性群組的非同步 SnapMirror"] | 一致性群組支援非同步 SnapMirror 組態、可為單一一致性群組儲存 SnapMirror 備份。 
+|===
+
+
+== 檔案存取通訊協定
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| link:../nfs-admin/manage-nfsv4-storepool-controls-task.html["NFSv4.x storepool 支援"] | 少數用戶端使用過多的 NFSv4.x 儲存資源、導致其他 NFSv4.x 用戶端因為 NFSv4.x 儲存資源無法使用而遭到封鎖。您可以選擇啟用拒絕和封鎖在其環境中使用大量 NFSv4.x storepool 資源的用戶端。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/concept_nondisruptively_transitioning_from_a_four_node_mcc_fc_to_a_mcc_ip_configuration.html["使用 MetroCluster IP 和乙太網路附加儲存設備的共用交換器、從 MetroCluster FC 移轉至 MetroCluster IP"^] | 您可以使用共用交換器、在不中斷營運的情況下、從 MetroCluster FC 移轉至 MetroCluster IP 組態（ ONTAP 9.8 及更新版本）。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/concept_nondisruptively_transitioning_from_a_four_node_mcc_fc_to_a_mcc_ip_configuration.html["從八節點 MetroCluster FC 組態到 MetroCluster IP 組態的不中斷轉換"^] | 您可以不中斷地將工作負載和資料從現有的八節點 MetroCluster FC 組態移轉至新的 MetroCluster IP 組態。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html["使用切換和切換功能進行四節點 MetroCluster IP 組態升級"^] | 使用切換和切換來升級四節點 MetroCluster IP 組態中的控制器 `system controller replace` 命令。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_mediator.html#interoperability-of-ontap-mediator-with-other-applications-and-appliances["在環境關機時觸發中介協助的自動非計畫性切換（ MAUSO ）"^] | 如果某個站台因環境關機而正常關機、則會觸發 MAUSO 。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_refresh_4n_mcc_ip.html["支援八節點 MetroCluster IP 組態"^] | 您可以在八節點 MetroCluster IP 組態中升級控制器和儲存設備、方法是將組態擴充為暫時性的十二節點組態、然後移除舊的 DR 群組。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_replace_an_ip_switch.html["MetroCluster IP 組態轉換為共用儲存 MetroCluster 交換器組態"^] | 您可以將 MetroCluster IP 組態轉換為共用儲存 MetroCluster 交換器組態。 
+|===
+若要瞭解 MetroCluster 組態的平台和交換器組態增強功能、請參閱 _link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]_ 。
+
+
+
+== 網路與安全通訊協定
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| 增加資料 LIF 限制 | ONTAP 為 HA 配對和叢集增加資料 LIF 擴充限制、提供更大的靈活度。 
+
+
+| 使用 SSH 公開金鑰的 X.509 憑證 | ONTAP 可讓您將 X.509 憑證與帳戶的 SSH 公開金鑰建立關聯、讓您在登入 SSH 時、能夠更安全地進行憑證過期和撤銷檢查。 
+
+
+| 在 A800 和 FAS8700 平台上進行叢集設定時使用 IPv6 | 在 A800 和 FAS8700 平台上、您可以使用 ONTAP CLI 在僅 IPv6 的網路環境中建立和設定新叢集。 
+
+
+| xref:../authentication/grant-access-active-directory-users-groups-task.html[使用 Active Directory 進行 SSH 公開金鑰驗證] | 您可以使用 SSH 公開金鑰做為 Active Directory （ AD ）使用者的主要驗證方法、也可以在 AD 使用者之後使用 SSH 公開金鑰做為次要驗證方法。 
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp[採用 TOTP 的多因素驗證（時間型一次性密碼）] | 使用時間型一次性密碼（ TOTP ）設定具有多因素驗證的本機使用者帳戶。TOTP 永遠是第二種驗證方法。您可以使用 SSH 公開金鑰或使用者密碼做為主要驗證方法。 
+
+
+| xref:../nas-audit/create-fpolicy-event-task.html[FPolicy 檔案存取失敗通知] | FPolicy 支援存取遭拒事件的通知。由於缺乏權限而產生檔案作業的通知失敗、其中包括： NTFS 權限失敗、 Unix 模式位元失敗、 NFSv4 ACL 失敗。 
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../s3-config/create-bucket-lifecycle-rule-task.html[S3 貯體生命週期管理] | S3 物件到期動作定義貯體中的物件何時過期。這項功能可讓您管理物件版本、以符合保留要求、並有效管理整個 S3 物件儲存。 
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:..san-admin/create-nvme-namespace-subsystem-task.html[AIX 主機上的 NVMe / FC] | ONTAP 支援 AIX 主機上的 NVMe / FC 傳輸協定。請參閱 link:https://mysupport.netapp.com/matrix/["NetApp 互通性工具"^] 適用於支援的組態。 
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 功能 | 說明 
+
+
+| xref:../anti-ransomware/index.html[自主勒索軟體保護]  a| 
+* 多管理驗證功能與自主勒索軟體保護
+* 從學習模式自動轉換為使用中模式
+* FlexGroup 支援
+
+
+|===
+
+
+== 儲存效率
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| 變更系統管理員的主要資料減量比率報告  a| 
+System Manager 中顯示的主要資料減量比率不再包含計算中的 Snapshot 複本空間節約。它僅描述已用邏輯空間和已用實體空間之間的比率。在 ONTAP 之前的版本中、主要資料減量比率包括 Snapshot 複本大幅減少空間的優點。
+因此、當您升級至 ONTAP 9.13.1 時、您會發現回報的主要比率明顯降低。您仍可在「 ** 容量」 ** 詳細資料檢視中、查看 Snapshot 複本的資料減量比率。
+
+
+
+| xref:../volumes/enable-temperature-sensitive-efficiency-concept.html[對溫度敏感的儲存效率] | 對溫度敏感的儲存效率可增加連續實體區塊的連續包裝、以提高儲存效率。當系統升級至 ONTAP 9.13.1 時、已啟用溫度敏感儲存效率的磁碟區將會自動啟用連續封裝。 
+
+
+| 邏輯空間強制 | SnapMirror 目的地支援邏輯空間強制執行。 
+
+
+| xref:../volumes/manage-svm-capacity.html[儲存 VM 容量限制支援] | 您可以在儲存 VM （ SVM ）上設定容量限制、並在 SVM 接近百分比臨界值時啟用警示。 
+
+
+| xref:../performance-admin/guarantee-throughput-qos-task.html[調適性 QoS 原則範本] | Adaptive QoS 原則範本可讓您在 SVM 層級設定處理量層級。 
+|===
+
+
+== 系統管理員
+
+從 ONTAP 9.12.1 開始、系統管理員已與 BlueXP 整合。深入瞭解 xref:../sysmgr-integration-bluexp-concept.html[System Manager與BlueXP整合]。
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| 主要資料減量比率的報告變更  a| 
+System Manager 中顯示的主要資料減量比率不再包含計算中的 Snapshot 複本空間節約。它僅描述已用邏輯空間和已用實體空間之間的比率。在 ONTAP 之前的版本中、主要資料減量比率包括 Snapshot 複本大幅減少空間的優點。
+因此、當您升級至 ONTAP 9.13.1 時、您會發現回報的主要比率明顯降低。您仍可在容量詳細資料檢視中、查看 Snapshot 複本的資料減量比率。
+
+
+
+| xref:../snaplock/snapshot-lock-concept.html#enable-snapshot-copy-locking-when-creating-a-volume[防止竄改的Snapshot複本鎖定] | 您可以使用 System Manager 鎖定非 SnapLock 磁碟區上的 Snapshot 複本、以防止勒索軟體攻擊。 
+
+
+| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支援管理外部金鑰管理程式] | 您可以使用 System Manager 來管理外部金鑰管理員、以儲存及管理驗證和加密金鑰。 
+|===
