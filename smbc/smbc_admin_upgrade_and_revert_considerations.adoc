@@ -17,15 +17,25 @@ summary: 升級或還原 ONTAP 會影響您的 SM-BC 關係、尤其是移轉至
 
 
 
-== 升級ONTAP
+== 升級 ONTAP with SM-BC
 
-您必須先將來源叢集和目的地叢集上的所有節點升級ONTAP 為「版本9.8」或更新版本、才能設定及使用SMBC。
-xref:../upgrade/index.html[ONTAP 叢集上的升級軟體]
+若要使用 SM-BC 、來源叢集和目的地叢集上的所有節點都必須執行 ONTAP 9.8 或更新版本。
+
+當使用主動式 SM-BC 關係升級 ONTAP 時、您應該使用 xref:../upgrade/automated-upgrade-task.html[自動不中斷升級（ andu ）]。使用 andu 可確保您的 SM-BC 關係在升級過程中保持同步且健全。
+
+沒有設定步驟可準備 SMBC 部署以進行 ONTAP 升級。不過、建議您在升級之前和之後、檢查：
+
+* SM-BC 關係同步。
+* 事件日誌中沒有與 SnapMirror 相關的錯誤。
+* 這兩個叢集的 Mediator 都在線上且運作正常。
+* 所有主機都能正確看到所有路徑以保護 LUN 。
+
+
+
+NOTE: 當您將叢集從 ONTAP 9.8 或 9.9.1 升級至 ONTAP 9.10.1 及更新版本時、 ONTAP 會建立新的叢集 xref:../consistency-groups/index.html[一致性群組] 來源叢集和目的地叢集上的 SM-BC 關係都可以使用 System Manager 進行設定。
 
 
 NOTE: 。 `snapmirror quiesce` 和 `snampirror resume` SM-BC 不支援命令。
-
-當您將叢集從 9.8 或 9.9.1 升級至 9.10.1 時、 ONTAP 會在來源和目的地建立新的 SMBC 關係一致性群組。您可以在 System Manager 中的「 ** 一致性群組 ** 」選項下管理這些項目、或使用 ONTAP REST API 搭配一致性群組端點。
 
 
 
