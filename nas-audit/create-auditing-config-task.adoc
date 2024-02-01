@@ -71,11 +71,11 @@ summary: 在開始稽核檔案和目錄事件之前、您必須先在儲存虛�
 ----
 cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200MB
 ----
-下列範例會建立稽核組態、以大小為基礎的旋轉方式來稽核檔案作業和SMB登入及登出事件（預設值）。記錄格式為 `EVTX` （預設）。記錄檔大小限制為 `100 MB` （預設值）、且記錄輪調限制為 `5`：
+下列範例會建立稽核組態、以大小為基礎的旋轉方式來稽核檔案作業和SMB登入及登出事件（預設值）。記錄格式為 `EVTX` （預設）。記錄會儲存在中 `/cifs_event_logs` 目錄。記錄檔大小限制為 `100 MB` （預設值）、且記錄輪調限制為 `5`：
 
 [listing]
 ----
-cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-limit 5
+cluster1::> vserver audit create -vserver vs1 -destination /cifs_event_logs -rotate-limit 5
 ----
 下列範例建立稽核組態、以稽核檔案作業、CIFS登入和登出事件、以及使用時間型輪調的集中存取原則暫存事件。記錄格式為 `EVTX` （預設）。稽核記錄會每月於下午12：30循環一次一週中的所有天。日誌輪轉限制為 `5`：
 
