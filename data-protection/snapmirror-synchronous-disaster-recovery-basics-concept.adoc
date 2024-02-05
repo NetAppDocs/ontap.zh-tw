@@ -16,6 +16,10 @@ summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB�
 
 這項功能可滿足金融、醫療及其他管制產業的法規及國家要求、在需要零資料遺失的情況下進行同步複寫。
 
+
+
+== 允許 SnapMirror 同步作業
+
 每個HA配對的SnapMirror同步複寫作業數量上限取決於控制器機型。
 
 下表根據平台類型和ONTAP 版本列出每個HA配對所允許的SnapMirror同步作業數量。
@@ -115,6 +119,12 @@ ONTAP Select
 
 
 | SnapMirror 同步關係的主捲上的硬配額和軟配額 | ONTAP 9.6 | 配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。 
+
+
+| 叢集內同步關係 | ONTAP 9.13.1P6 | 來源和目的地磁碟區必須位於不同的 SVM 中。
+當來源和目的地磁碟區放置在不同的 HA 配對上時、就會提供高可用度。
+如果整個叢集當機、則只有在叢集恢復之前、才能存取磁碟區。
+叢集內 SnapMirror 同步關係將有助於達到同步的整體限制 xref:SnapMirror Synchronous operations allowed[每個 HA 配對的關係]。 
 
 
 | iSCSI | 版本9.5 ONTAP |  
@@ -230,4 +240,4 @@ SnapMirror 同步關係的狀態始終在中 `InSync` 正常作業期間的狀�
 如果關係狀態變為 `OutofSync` 對於在 StrictSync 模式下的 SnapMirror 同步關係、會停止對主要 Volume 的所有 I/O 作業。。 `OutofSync` 同步模式中的 SnapMirror 同步關係狀態不會中斷主要磁碟區的主要和 I/O 作業。
 
 .相關資訊
-http://www.netapp.com/us/media/tr-4733.pdf["NetApp技術報告4733：SnapMirror同步設定與最佳實務做法"^]
+http://www.netapp.com/us/media/tr-4733.pdf["NetApp 技術報告 4733 ： SnapMirror 同步組態與最佳實務做法"^]
