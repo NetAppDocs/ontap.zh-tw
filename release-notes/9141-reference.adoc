@@ -42,7 +42,7 @@ summary: 瞭解 ONTAP 9.14.1 提供的新功能。
 | link:https://hwu.netapp.com/["SnapMirror 非同步支援 20 個扇出目標"^] | 使用 ONTAP 9.14.1 時、 A700 及更高系統支援的 SnapMirror 非同步扇出目標數量從 16 個增加至 20 個。 
 
 
-| xref:../consistency-groups/configure-task.html[CLI 支援一致性群組] | 使用 ONTAP CLI 管理一致性群組 
+| xref:../consistency-groups/configure-task.html[CLI 支援一致性群組] | 使用 ONTAP CLI 管理一致性群組。 
 |===
 
 
@@ -64,7 +64,7 @@ summary: 瞭解 ONTAP 9.14.1 提供的新功能。
 | 更新 | 說明 
 
 
-| xref:../s3-config/index.html[S3 物件儲存支援鏡射和無鏡射的集合體] | 您可以在 MetroCluster IP 和 FC 組態中的鏡射或無鏡射集合體中、在 SVM 上啟用 S3 物件儲存伺服器。 
+| xref:../s3-config/index.html[S3 物件儲存支援鏡射和無鏡射的集合體] | 在 MetroCluster IP 和 FC 組態中的鏡射或無鏡射集合體中、啟用 SVM 上的 S3 物件儲存伺服器。 
 
 
 | xref:../s3-config/create-bucket-mcc-task.html[支援在 MetroCluster 叢集中的鏡射和非鏡射集合體上佈建 S3 儲存區] | 您可以在 MetroCluster 組態中的鏡射或無鏡射集合體上建立貯體。 
@@ -78,6 +78,9 @@ summary: 瞭解 ONTAP 9.14.1 提供的新功能。
 [cols="30%,70%"]
 |===
 | 更新 | 說明 
+
+
+| xref:../s3-config/create-bucket-task.html[S3 FlexGroup 磁碟區已啟用自動調整大小功能、以避免在磁碟區上建立儲存區時過度分配容量] | 在新的或現有的 FlexGroup 磁碟區上建立或刪除貯體時、會將這些磁碟區調整為所需的最小大小。所需的最小大小是 FlexGroup Volume 中所有 S3 儲存區的總大小。 
 
 
 | xref:../s3-config/index.html[S3 物件儲存支援鏡射和無鏡射的集合體] | 您可以在 MetroCluster IP 和 FC 組態中的鏡射或無鏡射集合體中、在 SVM 上啟用 S3 物件儲存伺服器。 
@@ -118,7 +121,7 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 | 更新 | 說明 
 
 
-| xref:../authentication/configure-cisco-duo-mfa-task.html[支援適用於 SSH 使用者的 Cisco 雙核心多因素驗證] | SSH 使用者可在登入時使用 Cisco Duo 進行驗證、作為驗證的第二個因素。 
+| xref:../authentication/configure-cisco-duo-mfa-task.html[支援適用於 SSH 使用者的 Cisco 雙核心多因素驗證] | SSH 使用者可在登入期間使用 Cisco Duo 進行驗證、作為驗證的第二個因素。 
 
 
 | link:../authentication/oauth2-deploy-ontap.html["OAuth 2.0 支援增強功能"] | ONTAP 9.14.1 擴充了 ONTAP 9.14.0 最初提供的核心權杖型驗證和 OAuth 2.0 支援。您可以使用 Active Directory 或 LDAP 來設定授權、並進行群組對角色對應。也支援寄件者限制的存取權杖、並根據相互 TLS （ MTLS ）來保護其安全。除了 Auth0 和 Keycloak 之外、 Microsoft Windows Active Directory Federation Service （ ADFS ）也支援身分識別提供者（ IDP ）。 
@@ -127,7 +130,7 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 | link:../authentication/oauth2-deploy-ontap.html["OAuth 2.0 授權架構"] | 新增開放式授權（ OAuth 2.0 ）架構、並為 ONTAP REST API 用戶端提供權杖型驗證。這可利用以 REST API 指令碼或 Ansible 為基礎的自動化工作流程、更安全地管理 ONTAP 叢集。支援標準 OAuth 2.0 功能、包括發卡行、對象、本機驗證、遠端自我反省、 遠端使用者宣告及 Proxy 支援。用戶端授權可以使用獨立的 OAuth 2.0 範圍或對應本機 ONTAP 使用者來設定。支援的身分識別提供者（ IDP ）包括使用多個並行伺服器的驗證 0 和 Keycloak 。 
 
 
-| xref:../anti-ransomware/manage-parameters-task.html[可調警示、提供自動勒索軟體保護] | 設定「自動勒索軟體保護」（ ARP ）、以便在偵測到新的副檔名或取得 ARP Snapshot 時接收通知、並收到可能發生勒索軟體事件的早期警告。 
+| xref:../anti-ransomware/manage-parameters-task.html[可調警示、提供自動勒索軟體保護] | 設定「自動勒索軟體保護」、以便在偵測到新的副檔名或取得 ARP Snapshot 時接收通知、並收到可能發生勒索軟體事件的早期警告。 
 
 
 | xref:https://docs.netapp.com/us-en/ontap/nas-audit/nas-audit/persistent-stores.html[FPolicy 支援持續儲存區、以減少延遲] | FPolicy 可讓您設定持續儲存區、以擷取 SVM 中非強制性非同步原則的檔案存取事件。持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。不支援同步和非同步強制組態。 
@@ -155,6 +158,14 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 對於 FabricPool 、的價值 `-physical-used` 是容量層和效能層的組合。
 如需特定命令、請參閱 https://docs.netapp.com/us-en/ontap-cli-9141/volume-show.html[`volume show`^] 和連結： https://docs.netapp.com/us-en/ontap-cli-9141/volume-show-space.html[`volume show space`^]。
 
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
 
 | xref:../flexgroup/manage-flexgroup-rebalance-task.html[主動式 FlexGroup 重新平衡] | FlexGroup Volume 支援自動將目錄中不斷成長的檔案移至遠端成員、以減少當地成員的 I/O 瓶頸。 
@@ -167,6 +178,14 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 
 
 | xref:../fabricpool/enable-disable-aggressive-read-ahead-task.html[FabricPool 積極預先讀取] | FabricPool 可在 FabricPool 磁碟區上提供主動式的檔案預先讀取功能、例如影片串流、確保不會遺失任何框架。 
+|===
+
+
+== SVM 管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
 
 | xref:../svm-migrate/index.html#supported-and-unsupported-features[SVM 資料移動性支援移轉包含使用者和群組配額及 qtree 的 SVM] | SVM 資料移動性新增了移轉 SVM 的支援、其中包含使用者和群組配額及 qtree 。 

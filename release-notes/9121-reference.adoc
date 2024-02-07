@@ -45,16 +45,13 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html#supported-features[SnapMirror 同步 n] | SnapMirror Synchronous 支援 HA 接管與恢復、 Volume 搬移及其他維護相關作業的不中斷作業（ n ）。此功能僅適用於 AFF/ASA 平台。 
 
 
-| xref:../snaplock/commit-snapshot-copies-worm-concept.html[SnapLock for SnapVault 支援 FlexGroup Volume] | SnapLock for SnapVault 支援 FlexGroup Volume 
-
-
 | xref:../mediator/index.html[ONTAP Mediator 1.5 支援 SnapMirror 業務持續運作] | ONTAP Mediator 1.5 可用於監控 SnapMirror 業務連續性（ SM-BC ）關係。 
 
 
 | xref:../smbc/index.html[SnapMirror Business （ SM-BC ）持續性增強功能] | SM-BC 支援從快照進行部分 LUN 還原。此外、 SM-BC 將 QoS 延伸至不在 SM-BC 關係中的磁碟區。 
 
 
-| xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror 非同步的資料倉儲重建指標] | SnapMirror 非同步提供一個指標、顯示資料倉儲重新建置在災難恢復（ DR ）排練後所需的時間、並顯示完成百分比。 
+| xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror 非同步的資料倉儲重建指標] | SnapMirror 非同步提供指標、顯示資料倉儲在災難恢復排練後所需的重建時間、並顯示完成百分比。 
 
 
 | SnapLock 選項可設定「未指定」絕對保留時間的最短保留時間 | SnapLock 包含一個選項、可在絕對保留時間設定為「未指定」時、設定最短保留時間。 
@@ -77,7 +74,10 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | xref:../s3-multiprotocol/index.html[S3 用戶端存取 NAS 資料] | S3 用戶端可以存取與 NFS 和 SMB 用戶端相同的 NAS 資料、而無需重新格式化、因此更容易為需要物件資料的 S3 應用程式提供服務。 
 
 
-| xref:../nfs-admin/manage-nfsv4-storepool-controls-task.html[NFSv4.x 儲存工具] | 少數用戶端使用過多的 NFSv4.x 儲存資源、導致其他 NFSv4.x 用戶端因為 NFSv4.x 儲存資源無法使用而遭到封鎖。您可以選擇啟用拒絕和封鎖在其環境中使用大量 NFSv4.x storepool 資源的用戶端。 
+| xref:../nfs-admin/ontap-support-nfsv42-concept.html[NFS擴充屬性] | 啟用 NFSv4.2 的 NFS 伺服器可從支援 xattr 的用戶端儲存及擷取 NFS 擴充屬性（ xattrs ）。 
+
+
+| xref:../nfs-admin/ontap-support-nfsv42-concept.html[NFSv4.2 稀疏檔案和空間保留支援] | NFSv4.2 用戶端可為稀疏檔案保留空間。空間也可以從檔案取消分配和取消保留。 
 |===
 
 
@@ -94,6 +94,9 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | xref:../configure_ip_security_@ipsec@_over_wire_encryption.html[支援前端主機傳輸協定（例如 NFS 和 iSCSI ）的 IPsec 可在 MetroCluster IP 和 MetroCluster 網路附加組態中使用。] | 支援前端主機傳輸協定（例如 NFS 和 iSCSI ）的 IPsec 可在 MetroCluster IP 和 MetroCluster 網路附加組態中使用。 
 
 
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept-risks-limitations-automatic-switchover.html["MetroCluster IP 組態中的 MetroCluster 自動強制切換功能"^] | 您可以在 MetroCluster IP 組態中啟用 MetroCluster 自動強制切換功能。這項功能是由內建人員輔助的非計畫性切換（MAUSO）功能的延伸。 
+
+
 | link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept-risks-limitations-automatic-switchover.html["SVM 上的 S3 、位於 MetroCluster IP 組態中未鏡射的 Aggregate 上"^] | 您可以在 MetroCluster IP 組態中啟用 MetroCluster 自動強制切換功能。這項功能是由內建人員輔助的非計畫性切換（MAUSO）功能的延伸。 
 |===
 若要瞭解 MetroCluster 組態的平台和交換器組態增強功能、請參閱 _link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]_ 。
@@ -107,7 +110,7 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | 更新 | 說明 
 
 
-| xref:../ontap/system-admin/forward-command-history-log-file-destination-task.html[LIF 服務] | 您可以使用管理記錄轉送服務來控制將稽核記錄轉送到遠端 Syslog 服務的生命期 
+| xref:../ontap/system-admin/forward-command-history-log-file-destination-task.html[LIF 服務] | 您可以使用 `management-log-forwarding` 用於控制將稽核記錄轉送到遠端 Syslog 服務的生命期的服務 
 |===
 
 
@@ -157,12 +160,14 @@ NVMe 傳輸協定支援下列項目：
 
 == 安全性
 
+在 2022 年 10 月、 NetApp 實施變更、以拒絕使用 Sv1.2 或安全 SMTP 的 HTTPS 所傳送的 AutoSupport 訊息傳輸。如需詳細資訊、請參閱 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU484["SU484 ： NetApp 會拒絕傳輸安全性不足的 AutoSupport 訊息"^]。
+
 [cols="30%,70%"]
 |===
 | 功能 | 說明 
 
 
-| xref:../anti-ransom/index.html[自主勒索軟體保護互通性增強功能]  a| 
+| xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[自主勒索軟體保護互通性增強功能]  a| 
 以下組態提供自主勒索軟體保護：
 
 * 受SnapMirror保護的磁碟區
@@ -172,7 +177,7 @@ NVMe 傳輸協定支援下列項目：
 
 
 
-| xref:../authentication/setup-ssh-multifactor-authentication-task.html[MFA 支援搭配 FIDO2 和 PIV 使用 SSH （兩者均由 Yibkeys 使用）] | SSH 多因素驗證（ MFA ）可以使用硬體輔助的公開 / 私密金鑰交換與使用者名稱和密碼。Yubibkey 是插入 SSH 用戶端的實體權杖裝置、可提高 MFA 的安全性。 
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html[支援使用 FIDO2 和 PIV 的 SSH （兩者均由 Yibkeyy 使用）的多因素驗證（ MFA ）] | SSH MFA 可以使用硬體輔助的公開 / 私密金鑰交換與使用者名稱和密碼。Yubibkey 是插入 SSH 用戶端的實體權杖裝置、可提高 MFA 的安全性。 
 
 
 | xref:../system-admin/ontap-implements-audit-logging-concept.html[防竄改記錄] | 根據預設、所有 ONTAP 內部記錄都是防竄改的、可確保遭入侵的系統管理員帳戶不會隱藏惡意動作。 
@@ -183,8 +188,6 @@ NVMe 傳輸協定支援下列項目：
 
 
 == 儲存效率
-
-在 2022 年 10 月、 NetApp 將實作變更、以拒絕未透過與 TLSv1.2 或安全 SMTP 傳送的 AutoSupport 訊息傳輸。如需詳細資訊、請參閱 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU484["SU484 ： NetApp 會拒絕傳輸安全性不足的 AutoSupport 訊息"^]。
 
 [cols="30%,70%"]
 |===
@@ -203,6 +206,39 @@ NVMe 傳輸協定支援下列項目：
 |===
 
 
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../flexgroup/manage-flexgroup-rebalance-task.html#flexgroup-rebalancing-considerations[重新平衡FlexGroup]  a| 
+您可以啟用自動不中斷營運的 FlexGroup Volume 重新平衡功能、以便在 FlexGroup 元件之間重新分配檔案。
+
+
+NOTE: 建議您不要在 FlexVol 轉 FlexGroup 之後使用自動 FlexGroup 重新平衡。您ONTAP 可以輸入、改用功能中斷的回溯檔案移動功能、如需更多資訊、請參閱《》（更新版本） `volume rebalance file-move` 命令。如需詳細資訊和命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9121//volume-rebalance-file-move-start.html["ONTAP 命令參考"^]。
+
+
+
+| xref:../snaplock/commit-snapshot-copies-worm-concept.html[SnapLock for SnapVault 支援 FlexGroup Volume] | SnapLock for SnapVault 支援 FlexGroup Volume 
+|===
+
+
+== SVM 管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../svm-migrate/index.html[SVM 資料移動性增強功能]  a| 
+叢集管理員可以使用 FAS 、 AFF 平台、在混合式集合體上、不中斷地將 SVM 從來源叢集重新定位到目的地叢集。
+新增了對破壞性 SMB 傳輸協定和自主勒索軟體保護的支援。
+
+|===
+
+
 == 系統管理員
 
 從 ONTAP 9.12.1 開始、系統管理員已與 BlueXP 整合。有了 BlueXP 、系統管理員可以從單一控制面板管理混合式多雲端基礎架構、同時保留熟悉的 System Manager 儀表板。登入 System Manager 時、系統會提供系統管理員存取 BlueXP 中的 System Manager 介面或直接存取 System Manager 的選項。深入瞭解 xref:../ontap/sysmgr-integration-bluexp-concept.html[System Manager與BlueXP整合]。
@@ -213,6 +249,9 @@ NVMe 傳輸協定支援下列項目：
 
 
 | xref:../snaplock/create-snaplock-volume-task.html[SnapLock 的系統管理員支援] | 系統管理員支援 SnapLock 作業、包括法規遵循時鐘初始化、 SnapLock Volume 建立及 WORM 檔案鏡射。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[纜線的硬體視覺化] | System Manager 使用者可以檢視叢集中硬體裝置之間纜線的連線資訊、以疑難排解連線問題。 
 
 
 | xref:../system-admin/configure-saml-authentication-task.html[登入 System Manager 時支援 Cisco 雙核心的多重驗證] | 您可以將 Cisco DuoTM 設定為 SAML 身分識別供應商（ IDP ）、讓使用者在登入 System Manager 時能夠使用 Cisco DuoTM 進行驗證。 
@@ -228,4 +267,16 @@ NVMe 傳輸協定支援下列項目：
 
 
 | xref:../task_admin_search_filter_sort.html[改善搜尋功能] | System Manager 具備改良的搜尋功能、可讓使用者透過系統管理員介面、直接從 NetApp 支援網站 搜尋及存取相關且內容相關的支援資訊和系統管理員產品文件。這可讓使用者取得所需的資訊、無需在支援網站的不同位置進行搜尋、即可採取適當的行動。 
+
+
+| xref:../task_admin_add_a_volume.html[Volume 資源配置的改善] | 儲存管理員可以在使用 System Manager 建立磁碟區時選擇 Snapshot 複本原則、而非使用預設原則。 
+
+
+| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加磁碟區的大小] | 儲存管理員可以在使用 System Manager 調整磁碟區大小時、檢視對資料空間和 Snapshot 複本保留的影響。 
+
+
+| xref:../disks-aggregates/create-ssd-storage-pool-task.html[儲存資源池] 和 xref:../disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html?[Flash Pool] 管理 | 儲存管理員可以使用 System Manager 將 SSD 新增至 SSD 儲存池、使用 SSD 儲存池分配單元建立 Flash Pool 本機層（ Aggregate ）、以及使用實體 SSD 建立 Flash Pool 本機層。 
+
+
+| xref:../nfs-rdma/index.html[System Manager 中的 NFS over RDMA 支援] | System Manager 支援 NFS over RDMA 的網路介面組態、並識別具備 ROCE 功能的連接埠。 
 |===

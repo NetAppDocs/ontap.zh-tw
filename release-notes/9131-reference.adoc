@@ -25,7 +25,7 @@ summary: 瞭解 ONTAP 9.13.1 提供的新功能
 
 
 | link:../snaplock/index.html#multi-admin-verification-mav-support["多管理員驗證"]  a| 
-叢集管理員可以在叢集上明確啟用多重管理驗證、以在執行某些 SnapLock 作業之前要求仲裁核准。+
+叢集管理員可以在叢集上明確啟用多重管理驗證、以在執行某些 SnapLock 作業之前要求仲裁核准。
 
 
 
@@ -37,10 +37,14 @@ summary: 瞭解 ONTAP 9.13.1 提供的新功能
 | link:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html["使用 SnapMirror Synchronous 進行 NDMP 還原"] | SnapMirror 同步支援 NDMP 還原。 
 
 
-| 使用 SnapMirror Business Continuity 進行 NDMP 及不中斷營運的一致性群組擴充 | 您可以 link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["在不中斷營運的情況下、將磁碟區新增至一致性群組、並建立有效的 SM-BC 關係"] 和 link:../smbc/supported-configurations-reference.html#ndmp-restore["使用 NDMP 還原搭配 SM-BC"]。 
+| SnapMirror Business Continuity （ SM-BC ）增強功能  a| 
+* link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["在不中斷營運的情況下、將磁碟區新增至一致性群組、並建立有效的 SM-BC 關係。"]
+* link:../smbc/supported-configurations-reference.html#ndmp-restore["使用 NDMP 還原搭配 SM-BC"]。
 
 
-| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["採用單一一致性群組的非同步 SnapMirror"] | 一致性群組支援非同步 SnapMirror 組態、可為單一一致性群組儲存 SnapMirror 備份。 
+
+
+| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["利用單一一致性群組來支援非同步 SnapMirror"] | 一致性群組支援非同步 SnapMirror 組態、可為單一一致性群組儲存 SnapMirror 備份。 
 |===
 
 
@@ -99,7 +103,7 @@ summary: 瞭解 ONTAP 9.13.1 提供的新功能
 | 使用 SSH 公開金鑰的 X.509 憑證 | ONTAP 可讓您將 X.509 憑證與帳戶的 SSH 公開金鑰建立關聯、讓您在登入 SSH 時、能夠更安全地進行憑證過期和撤銷檢查。 
 
 
-| 在 A800 和 FAS8700 平台上進行叢集設定時使用 IPv6 | 在 A800 和 FAS8700 平台上、您可以使用 ONTAP CLI 在僅 IPv6 的網路環境中建立和設定新叢集。 
+| 在 A800 和 FAS8700 平台上進行叢集設定時支援 IPv6 | 在 A800 和 FAS8700 平台上、您可以使用 ONTAP CLI 在僅 IPv6 的網路環境中建立和設定新叢集。 
 
 
 | xref:../authentication/grant-access-active-directory-users-groups-task.html[使用 Active Directory 進行 SSH 公開金鑰驗證] | 您可以使用 SSH 公開金鑰做為 Active Directory （ AD ）使用者的主要驗證方法、也可以在 AD 使用者之後使用 SSH 公開金鑰做為次要驗證方法。 
@@ -130,7 +134,7 @@ summary: 瞭解 ONTAP 9.13.1 提供的新功能
 | 更新 | 說明 
 
 
-| xref:..san-admin/create-nvme-namespace-subsystem-task.html[AIX 主機上的 NVMe / FC] | ONTAP 支援 AIX 主機上的 NVMe / FC 傳輸協定。請參閱 link:https://mysupport.netapp.com/matrix/["NetApp 互通性工具"^] 適用於支援的組態。 
+| xref:..san-admin/create-nvme-namespace-subsystem-task.html[支援 AIX 主機上的 NVMe / FC] | ONTAP 支援 AIX 主機上的 NVMe / FC 傳輸協定。請參閱 link:https://mysupport.netapp.com/matrix/["NetApp 互通性工具"^] 適用於支援的組態。 
 |===
 
 
@@ -142,11 +146,20 @@ summary: 瞭解 ONTAP 9.13.1 提供的新功能
 
 
 | xref:../anti-ransomware/index.html[自主勒索軟體保護]  a| 
-* 多管理驗證功能與自主勒索軟體保護
-* 從學習模式自動轉換為使用中模式
-* FlexGroup 支援
+* xref:../use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp[多管理驗證功能與自主勒索軟體保護]
+* xref:../anti-ransomware/enable-default-task.html[從學習模式自動轉換為使用中模式]
+* xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[FlexGroup 支援]包括分析及報告 FlexGroup 磁碟區和作業、包括擴充 FlexGroup 磁碟區、 FlexVol 至 FlexGroup 轉換、 FlexGroup 重新平衡。
 
 
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp[採用 TOTP 的多因素驗證（時間型一次性密碼）] | 使用時間型一次性密碼（ TOTP ）設定具有多因素驗證的本機使用者帳戶。TOTP 永遠是第二種驗證方法。您可以使用 SSH 公開金鑰或使用者密碼做為主要驗證方法。 
+
+
+| xref:../authentication/grant-access-active-directory-users-groups-task.html[使用 Active Directory 進行 SSH 公開金鑰驗證] | 您可以使用 SSH 公開金鑰做為 Active Directory （ AD ）使用者的主要驗證方法、也可以在 AD 使用者之後使用 SSH 公開金鑰做為次要驗證方法。 
+
+
+| 使用 SSH 公開金鑰的 X.509 憑證 | ONTAP 可讓您將 X.509 憑證與帳戶的 SSH 公開金鑰建立關聯、讓您在登入 SSH 時、能夠更安全地進行憑證過期和撤銷檢查。 
 |===
 
 
@@ -170,9 +183,52 @@ System Manager 中顯示的主要資料減量比率不再包含計算中的 Snap
 
 
 | xref:../volumes/manage-svm-capacity.html[儲存 VM 容量限制支援] | 您可以在儲存 VM （ SVM ）上設定容量限制、並在 SVM 接近百分比臨界值時啟用警示。 
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| 增加最大 inode 數量 | ONTAP 將繼續自動新增 inode （以每 32 KB 磁碟區空間 1 inode 的速度）、即使磁碟區成長超過 680 GB 。ONTAP 將繼續新增 inode 、直到達到 2,147,483,632 上限為止。 
+
+
+| xref:../volumes/create-flexclone-task.html#create-a-flexclone-volume-of-a-flexvol-or-flexgroup[支援在 FlexClone 建立期間指定 SnapLock 類型] | 在建立讀寫磁碟區的 FlexClone 時、您可以指定三種 SnapLock 類型之一、無論是法規遵循、企業或非 SnapLock 。 
+
+
+| xref:..//task_nas_file_system_analytics_enable.html#modify[依預設啟用檔案系統分析] | 將檔案系統分析設為在新磁碟區上預設啟用。 
+
+
+| xref:../flexgroup/create-svm-disaster-recovery-relationship-task.html[SVM 災難恢復與 FlexGroup Volume 的扇出關係]  a| 
+移除具有 FlexGroup 磁碟區的 SVM DR 的移除限制。
+SVM DR 搭配 FlexGroup 、可支援與八個站台之間的 SnapMirror 扇出關係。
+
+
+
+| xref:../flexgroup/manage-flexgroup-rebalance-task.html[單一 FlexGroup 重新平衡作業] | 您可以排程單一 FlexGroup 重新平衡作業、以便在您指定的未來日期和時間開始。 
+
+
+| xref:../fabricpool/benefits-storage-tiers-concept.html[FabricPool 讀取效能] | FabricPool 為單一和多串流工作負載提供更好的循序讀取效能、以利雲端駐留資料和分層處理量。這項改善可將較高的獲得和置入率傳送至後端物件存放區。如果您有內部部署物件存放區、則應考慮物件存放區服務的效能保留空間、並判斷是否需要限制 FabricPool 放置。 
 
 
 | xref:../performance-admin/guarantee-throughput-qos-task.html[調適性 QoS 原則範本] | Adaptive QoS 原則範本可讓您在 SVM 層級設定處理量層級。 
+|===
+
+
+== SVM 管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../svm-migrate/index.html[SVM資料移動性] | 增加移轉最多 200 個磁碟區的 SVM 的支援。 
+
+
+| 支援重新建立 SVM 目錄 | 新的 CLI 命令 `debug vserver refresh-vserver-dir -node _node_name_` 重新建立遺失的目錄和檔案。如需詳細資訊和命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9131/["ONTAP 命令參考"^]。 
 |===
 
 
@@ -194,5 +250,12 @@ System Manager 中顯示的主要資料減量比率不再包含計算中的 Snap
 | xref:../snaplock/snapshot-lock-concept.html#enable-snapshot-copy-locking-when-creating-a-volume[防止竄改的Snapshot複本鎖定] | 您可以使用 System Manager 鎖定非 SnapLock 磁碟區上的 Snapshot 複本、以防止勒索軟體攻擊。 
 
 
-| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支援管理外部金鑰管理程式] | 您可以使用 System Manager 來管理外部金鑰管理員、以儲存及管理驗證和加密金鑰。 
+| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支援外部金鑰管理員] | 您可以使用 System Manager 來管理外部金鑰管理員、以儲存及管理驗證和加密金鑰。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[疑難排解硬體問題]  a| 
+System Manager 使用者可以在「硬體」頁面中檢視其他硬體平台的視覺化說明、包括 ASA 平台和 AFF C 系列平台。
+ONTAP 9.12.1 、 ONTAP 9.11.1 和 ONTAP 9.10.1 的最新修補版本也支援 AFF C 系列平台。
+視覺化功能可識別平台的問題或疑慮、為使用者提供快速的硬體問題疑難排解方法。
+
 |===

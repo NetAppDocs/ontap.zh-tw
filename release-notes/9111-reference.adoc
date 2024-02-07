@@ -29,9 +29,6 @@ summary: 瞭解 ONTAP 9.11.1 的新功能。
 | xref:../encryption-at-rest/configure-cluster-key-server-task.html[叢集外部金鑰伺服器] | 為提供叢集式 KMIP 伺服器解決方案的 NetApp 合作夥伴新增叢集式外部金鑰管理伺服器支援。如此可新增主要和次要 KMIP 伺服器、避免加密金鑰資料重複。如需支援的合作夥伴、請參閱 link:https://imt.netapp.com/matrix/#welcome["互通性對照表工具"^]。 
 
 
-| xref:../snaplock/snaplock-concept.html[SnapLock 支援 FlexGroup Volume] | SnapLock 支援儲存在 FlexGroup 磁碟區上的資料。FlexGroup Volume 支援適用於 SnapLock Compliance 和 SnapLock Enterprise 模式。SnapLock 不支援在 FlexGroup 磁碟區上執行下列作業： SnapLock for SnapVault 、事件型保留和法定保留。 
-
-
 | xref:../task_dp_create_custom_data_protection_policies.html[System Manager 中的 SnapMirror 非同步原則]  a| 
 您可以使用 System Manager 來新增預先建立和自訂的鏡射和資料保險箱原則、顯示舊版原則、以及在保護磁碟區和儲存 VM 時、覆寫保護原則中定義的傳輸排程。您也可以使用 System Manager 來編輯 Volume 和儲存 VM 的保護關係。
 
@@ -160,7 +157,21 @@ ONTAP API 支援下列動作： `CreateBucket`、 `DeleteBucket`、 `DeleteObjec
 | xref:../volumes/view-footprint-savings-task.html[檢視實體佔用空間的節約效益] | 當您在磁碟區上啟用對溫度敏感的儲存效率時、您可以使用 volume show-f佔 地面積命令來顯示實體佔用空間的節約效益。 
 
 
-| xref:../file-system-analytics/activity-tracking-task.html[使用檔案系統分析（ FSA ）追蹤 Hot 物件的活動] | 活動追蹤會在 SVM 層級進行彙總、追蹤讀寫 IOPS 和流量、提供即時且可據以行動的資料洞見。 
+| xref:../flexgroup/supported-unsupported-config-concept.html[SnapLock 支援 FlexGroup Volume] | SnapLock 支援儲存在 FlexGroup 磁碟區上的資料。FlexGroup Volume 支援適用於 SnapLock Compliance 和 SnapLock Enterprise 模式。 
+
+
+| xref:../svm-migrate/index.html[SVM資料移動性] | 將支援的 AFF 陣列數量增加到三個、並在來源和目的地同時執行 ONTAP 9.11.1 或更新版本時、新增對 SnapMirror 關係的支援。此外也推出外部金鑰管理（ KMIP ）、可用於雲端和內部部署安裝。 
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../file-system-analytics/activity-tracking-task.html[檔案系統分析中 SVM 層級的活動追蹤] | 活動追蹤會在 SVM 層級進行彙總、追蹤讀寫 IOPS 和流量、提供即時且可據以行動的資料洞見。 
 
 
 | xref:../flexcache/enable-file-access-time-updates-task.html[啟用檔案存取時間更新] | 啟用時、只有在目前存取時間的存留時間超過使用者指定的持續時間時、 FlexCache 原始磁碟區的存取時間才會更新。 
@@ -169,10 +180,18 @@ ONTAP API 支援下列動作： `CreateBucket`、 `DeleteBucket`、 `DeleteObjec
 | xref:../flexgroup/manage-client-async-dir-delete-task.html[非同步目錄刪除] | 當儲存管理員授予 NFS 和 SMB 用戶端在磁碟區上的權限時、就可以使用非同步刪除功能。啟用非同步刪除時、 Linux 用戶端可以使用 mv 命令、 Windows 用戶端可以使用 rename 命令來刪除目錄並將其移至隱藏位置 `.ontaptrashbin` 目錄。 
 
 
-| xref:../flexgroup/supported-unsupported-config-concept.html[SnapLock 支援 FlexGroup Volume] | SnapLock 支援儲存在 FlexGroup 磁碟區上的資料。FlexGroup Volume 支援適用於 SnapLock Compliance 和 SnapLock Enterprise 模式。 
+| xref:../snaplock/snaplock-concept.html[SnapLock 支援 FlexGroup Volume] | SnapLock 支援儲存在 FlexGroup 磁碟區上的資料。FlexGroup Volume 支援適用於 SnapLock Compliance 和 SnapLock Enterprise 模式。SnapLock 不支援在 FlexGroup 磁碟區上執行下列作業： SnapLock for SnapVault 、事件型保留和法定保留。 
+|===
 
 
-| xref:../svm-migrate/index.html[SVM資料移動性] | 將支援的 AFF 陣列數量增加到三個、並在來源和目的地同時執行 ONTAP 9.11.1 或更新版本時、新增對 SnapMirror 關係的支援。此外也推出外部金鑰管理（ KMIP ）、可用於雲端和內部部署安裝。 
+== SVM 管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+| xref:../svm-migrate/index.html[SVM資料移動性] | 將支援的 AFF 陣列數量增加到三個、並在來源和目的地同時執行 ONTAP 9.11.1 或更新版本時、新增對 SnapMirror 關係的支援。此外、我們也推出外部金鑰管理（ KMIP ）、可用於雲端和內部部署安裝。 
 |===
 
 
