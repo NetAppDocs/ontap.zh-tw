@@ -1,0 +1,68 @@
+---
+permalink: system-admin/install-license-task.html 
+sidebar: sidebar 
+keywords: install, license, enable, add, record, ontap one, software, entitlement, keys, codes, cluster, administrator, nlf 
+summary: 您可以使用 System Manager （是安裝 NLF 的首選方法）來安裝 NetApp 許可證文件和許可證密鑰，也可以使用 ONTAP CLI 來安裝許可證密鑰。在 ONTAP 9.10.1 及更新版本中、功能是以 NetApp 授權檔案（ NLF ）啟用、而在 ONTAP 9.10.1 之前的版本中、 ONTAP 功能則是以授權金鑰啟用。  
+---
+= 安裝 ONTAP 授權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 System Manager （是安裝 NLF 的首選方法）來安裝 NetApp 許可證文件和許可證密鑰，也可以使用 ONTAP CLI 來安裝許可證密鑰。在 ONTAP 9.10.1 及更新版本中、功能是以 NetApp 授權檔案（ NLF ）啟用、而在 ONTAP 9.10.1 之前的版本中、 ONTAP 功能則是以授權金鑰啟用。
+
+.步驟
+如果您已經下載了 NetApp 授權檔或授權金鑰、可以使用系統管理員或 ONTAP CLI 來安裝 NLF 和 28 個字元的授權金鑰。
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8 及更新版本
+--
+. 選擇*叢集>設定*。
+. 在 * Licenses* 下、選取 image:icon_arrow.gif["箭頭圖示"]。
+. 選擇*瀏覽*。選擇您下載的 NetApp 授權檔案。
+. 如果您有想要新增的授權金鑰、請選取*使用28個字元的授權金鑰*、然後輸入金鑰。
+
+
+--
+.System Manager - ONTAP 9.7 及更早版本
+--
+. 選取 * 組態 > 叢集 > 授權 * 。
+. 在 * Licenses* 下、選取 image:icon_arrow.gif["箭頭圖示"]。
+. 在「*套件*」視窗中、按一下「*新增*」。
+. 在「*新增授權套件*」對話方塊中、按一下「*選擇檔案*」以選取您下載的NetApp授權檔案、然後按一下「*新增*」將檔案上傳至叢集。
+
+
+--
+.CLI
+--
+. 新增一或多個授權金鑰：
++
+[source, cli]
+----
+system license add
+----
++
+下列範例會從本機節點「 /mroot/etc/lic_file 」安裝授權（如果檔案存在於此位置）：
+
++
+[listing]
+----
+cluster1::> system license add -use-license-file true
+----
++
+下列範例將包含 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 和 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 金鑰的授權清單新增至叢集：
+
++
+[listing]
+----
+cluster1::> system license add -license-code AAAAAAAAAAAAAAAAAAAAAAAAAAAA, BBBBBBBBBBBBBBBBBBBBBBBBBBBB
+----
+
+
+--
+====
+.相關資訊
+https://docs.netapp.com/us-en/ontap-cli-9141/system-license-add.html["系統授權新增命令的手冊頁"]。

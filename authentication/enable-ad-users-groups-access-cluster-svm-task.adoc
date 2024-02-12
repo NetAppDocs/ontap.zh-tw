@@ -26,21 +26,29 @@ summary: 您必須先設定AD網域控制器存取叢集或SVM、AD帳戶才能�
 |===
 
 
-| 工作階段金鑰演算法 | 提供於... 
+| 工作階段金鑰演算法 | 可從 ... 開始使用。 
 
 
-| HMA-SHA256、以進階加密標準（AES）為基礎 | 更新版本ONTAP 
+| HMA-SHA256、以進階加密標準（AES）為基礎
+
+如果您的叢集執行的是 ONTAP 9.9.1 或更早版本、而且您的網域控制器會強制執行 AES 來提供安全的 Netlogon 服務、則連線會失敗。在這種情況下、您需要重新設定網域控制器、改為接受與 ONTAP 的強大金鑰連線。 | 零點9.10.1 ONTAP 
 
 
 | DE和HMC-MD5（設定強式金鑰時） | 所有ONTAP 的版本 
 |===
-如果您想要在ONTAP 建立更新版本的支援網路登入安全通道時使用AES工作階段金鑰、您必須使用下列命令來啟用這些金鑰：
+如果您想要在 Netlogon 安全通道建立期間使用 AES 工作階段金鑰、則需要驗證 SVM 上是否已啟用 AES 。
 
-`cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true`
+* 從 ONTAP 9.14.1 開始、在建立 SVM 時、預設會啟用 AES 、而且您不需要修改 SVM 的安全設定、即可在 Netlogon 安全通道建立期間使用 AES 工作階段金鑰。
+* 在 ONTAP 9.10.1 至 9.13.1 中、建立 SVM 時、預設會停用 AES 。您需要使用下列命令來啟用 AES ：
++
+[listing]
+----
+cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true
+----
 
-預設值為「 'FALSE' 」。
 
-在9.10.1之前的版本中、如果網域控制器針對安全的Netlogon服務強制執行AES、連線就會失敗。ONTAP網域控制器必須設定為在ONTAP 這些版本中接受使用下列功能的強大金鑰連線。
+
+NOTE: 當您升級至 ONTAP 9.14.1 或更新版本時、以舊版 ONTAP 建立的現有 SVM 的 AES 設定將不會自動變更。您仍需要更新此設定的值、才能在這些 SVM 上啟用 AES 。
 
 
 

@@ -11,13 +11,13 @@ summary: 從功能介紹9.3開始ONTAP 、授權已簡化、可在ONTAP 各個�
 
 
 [role="lead"]
-從功能介紹9.3開始ONTAP 、授權已簡化、可在ONTAP 各個執行個體之間進行複寫。在版本支援的部分、SnapMirror授權可同時支援資料保存和鏡射關係。ONTAP使用者現在可以購買SnapMirror授權、以支援ONTAP 針對備份和災難恢復使用案例進行的功能性複寫。
+從功能介紹9.3開始ONTAP 、授權已簡化、可在ONTAP 各個執行個體之間進行複寫。在版本支援的部分、SnapMirror授權可同時支援資料保存和鏡射關係。ONTAP您可以使用 SnapMirror 授權來支援備份和災難恢復使用案例的 ONTAP 複寫。
 
-在發行版不含更新版本之前、我們提供兩份授權、以支援不同的複寫使用案例。ONTAP需要使用支援功能來設定各個執行個體之間的_Vault_關係、其中DP執行個體可以保留較多的Snapshot複本、以支援保留時間較長的備份使用案例。SnapVault ONTAP需要SnapMirror授權來設定ONTAP 各個執行個體之間的鏡射關係、每ONTAP 個執行個體都會維持相同數量的Snapshot複本（也就是鏡射映像）、以支援可能進行叢集容錯移轉的災難恢復使用案例。SnapMirror和SnapVault 不完整的授權仍可繼續用於ONTAP 支援發行的版本不只是支援。
+在 ONTAP 9.3 版本之前、需要另外一個 SnapVault 授權來設定 ONTAP 執行個體之間的 _Vault_ 關係、其中 DP 執行個體可以保留更多的 Snapshot 複本、以支援保留時間較長的備份使用案例、 此外、還需要 SnapMirror 授權來設定 ONTAP 執行個體之間的 _mirror 關係、每個 ONTAP 執行個體都會維護相同數量的 Snapshot 複本（即 _mirror _ 映像）、以支援災難恢復使用案例、使叢集容錯移轉成為可能。SnapMirror 和 SnapVault 授權繼續用於 ONTAP 8.x 和 9.x 版本、並受到支援。
 
-不再銷售不再支援的不支援功能仍可繼續運作、同時支援更新版本的更新版本。SnapVault ONTAPSnapMirror授權仍可繼續使用、並可用於代替SnapVault 功能、並可用於鏡射和資料保險箱組態。
+雖然 SnapVault 授權持續運作且同時支援 ONTAP 8.x 與 9.x 版本、 SnapMirror 授權可用於取代 SnapVault 授權、並可用於鏡射與資料保險箱組態。
 
-對於非同步複寫、ONTAP 從ONTAP 使用支援功能的支援功能支援功能的支援功能、一開始使用單一統一化複寫引擎來設定延伸資料保護模式（XDP）原則、其中SnapMirror授權可設定為鏡射原則、資料保存原則或鏡射保存原則。來源叢集和目的地叢集都需要SnapMirror授權。如果已安裝SnapMirror授權、則不需要使用此功能。SnapVaultSnapMirror非同步永久授權包含在資料保護套裝組合中、您可以為ONTAP 自己的叢集購買。資料保護套裝組合價格是根據叢集的原始容量而計算。
+對於非同步複寫、ONTAP 從ONTAP 使用支援功能的支援功能支援功能的支援功能、一開始使用單一統一化複寫引擎來設定延伸資料保護模式（XDP）原則、其中SnapMirror授權可設定為鏡射原則、資料保存原則或鏡射保存原則。來源叢集和目的地叢集都需要SnapMirror授權。如果已安裝SnapMirror授權、則不需要使用此功能。SnapVaultSnapMirror 非同步永久授權包含在安裝在新 AFF 和 FAS 系統上的 ONTAP One 軟體套件中。
 
 資料保護組態限制是由多項因素決定、包括ONTAP 您的版次、硬體平台和安裝的授權。如需詳細資訊、請參閱 https://hwu.netapp.com/["Hardware Universe"^]。
 
@@ -29,10 +29,10 @@ summary: 從功能介紹9.3開始ONTAP 、授權已簡化、可在ONTAP 各個�
 
 * 來源叢集和目的地叢集都需要SnapMirror同步授權。
 +
-SnapMirror同步授權可透過Premium套裝組合或Data Protection套裝組合啟用。
+SnapMirror Synchronous 授權是的一部分 https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html["ONTAP 單一授權套件"]。
 
 +
-如果您的系統是在 2019 年 6 月之前隨 Premium 或 Flash 產品組合一起購買，您可以從 NetApp 支援網站下載 NetApp 主金鑰，以取得必要的 SnapMirror Synchronous 授權： https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["主要授權金鑰"]
+如果您的系統是在 2019 年 6 月之前隨 Premium 或 Flash 產品組合一起購買，您可以從 NetApp 支援網站下載 NetApp 主金鑰，以取得必要的 SnapMirror Synchronous 授權： https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["主要授權金鑰"]。
 
 * 來源叢集和目的地叢集都需要SnapMirror授權。
 
@@ -41,354 +41,22 @@ SnapMirror同步授權可透過Premium套裝組合或Data Protection套裝組合
 
 == SnapMirror Cloud授權
 
-SnapMirror Cloud授權從ONTAP 功能不中斷的9.8開始、可將ONTAP Snapshot複本從功能不同步複寫到物件儲存端點。複寫目標可以使用內部部署物件存放區、S3和S3相容的公有雲物件儲存服務來設定。SnapMirror Cloud關係可從ONTAP 支援的對象儲存目標、從不完整的系統到預先符合資格的物件儲存目標、皆可獲得支援。通過支援的物件儲存目標包括：不支援的S3、不支援的AWS S3 Standard、S3 Standard-IA和S3 One ZA-IA、Microsoft Azure Blob Premium、Hot and Cool、以及GCP Standard和Nearline儲存設備。ONTAP ONTAP StorageGRID
+SnapMirror Cloud授權從ONTAP 功能不中斷的9.8開始、可將ONTAP Snapshot複本從功能不同步複寫到物件儲存端點。複寫目標可以使用內部部署物件存放區、S3和S3相容的公有雲物件儲存服務來設定。SnapMirror Cloud關係可從ONTAP 支援的對象儲存目標、從不完整的系統到預先符合資格的物件儲存目標、皆可獲得支援。
 
-SnapMirror Cloud不提供獨立式授權、只有購買混合雲產品組合才能使用。混合雲產品組合是以期限為基礎的訂閱授權、依容量定價。每ONTAP 個叢集只需要一份授權。容量定義為任何受SnapMirror Cloud保護的磁碟區內的「已使用」容量（非原始容量）。使用者將根據SnapMirror Cloud備份之叢集上的磁碟區總使用容量來購買此授權。截至2021年10月為止、混合雲產品組合僅包含SnapMirror Cloud授權（先前的混合雲產品組合包含FabricPool 一個不含版本資訊的授權、自2021年10月起從產品組合中移除）。除了SnapMirror Cloud之外、也需要非同步SnapMirror授權、而且只有在購買Data Protection產品組合時才能使用。
+SnapMirror Cloud 不提供獨立授權。每ONTAP 個叢集只需要一份授權。除了 SnapMirror Cloud 授權之外、還需要非同步 SnapMirror 授權。
 
 您需要下列授權才能建立SnapMirror雲端關係：
 
-* SnapMirror授權（透過資料保護套裝組合或優質套裝組合購買）和SnapMirror Cloud授權（透過混合雲套裝組合購買）都是直接複寫到物件儲存端點的必要項目。
+* SnapMirror 授權和 SnapMirror Cloud 授權、可直接複寫至物件儲存區端點。
 * 在設定多重原則複寫工作流程（例如、磁碟對磁碟對雲端）時、所有ONTAP 的SnapMirror執行個體都需要SnapMirror授權、而SnapMirror Cloud授權則只有直接複寫到物件儲存端點的來源叢集才需要。
 
 
-SnapMirror Cloud是終端使用者授權、可向NetApp或NetApp核准經銷商合作夥伴購買。SnapMirror Cloud授權可提供終端使用者權利、但無法啟用非同步ONTAP 的物件式儲存複寫功能。若要針對ONTAP SnapMirror Cloud叫用功能完善的API、必須使用授權應用程式提供的獨特API金鑰。用於協調SnapMirror Cloud複寫的授權與授權應用程式包括System Manager、也可從多個協力廠商應用程式供應商取得。這些獲授權的應用程式會內嵌獨特的API金鑰、以叫用ONTAP 功能完善的API。必須結合SnapMirror Cloud終端使用者授權與授權的第三方備份應用程式、才能協調及啟用SnapMirror Cloud複寫。
-
-從ONTAP 推出支援SnapMirror Cloud複寫的《System Manager》（系統管理程式）開始、您就可以使用System Manager。如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html["備份到雲端"]。
+從 ONTAP 9.9.1 開始、您就可以了 https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html["使用 System Manager 進行 SnapMirror Cloud 複寫"]。
 
 授權的SnapMirror Cloud第三方應用程式清單已發佈在NetApp網站上。
 
+資料保護最佳化（ DPO ）授權不再銷售、而且目前平台不支援 DPO ；不過、如果您在支援的平台上安裝 DPO 授權、 NetApp 會持續提供支援、直到該平台的可用性結束為止。
 
+ONTAP One 授權套件不隨附 DPO 、如果系統上安裝了 DPO 授權、您就無法升級至 ONTAP One 授權套件。
 
-== 資料保護最佳化（DPO）
-
-從推出更新版的《支援資料》9.1開始ONTAP 、ONTAP FAS8200隨附了全新的「支援資料」功能、作為資料保護產品組合解決方案的一部分。這套新的硬體與軟體套裝組合包含全新的DP_Optimized（DPO）授權、可為ONTAP 次要工作負載提供獨特的功能。隨著ONTAP 推出的《2020年資料管理》（英文）9.3的推出、DPO授權將每個節點的磁碟區數量從1、000個增加到1、500個。此外、還隨ONTAP 附於《支援資料保護產品組合》的更新組態、以FAS2620的組態為基礎。
-
-DPO授權是專為ONTAP 將做為SnapMirror複寫次要目標的不二叢集所設計。除了增加DPO控制器上每個節點的最大磁碟區數、DPO授權也修改了控制器QoS設定、以支援更大的複寫流量、而犧牲應用程式I/O因此、DPO授權絕不能安裝在支援應用程式I/O的叢集上、因為應用程式效能會受到影響。之後、以FAS8200和FAS2620為基礎的資料保護套裝軟體即是以解決方案的形式提供、並隨附以客戶環境為基礎的程式設計免費授權。購買解決方案套裝組合時、系統會針對複寫至DPO次要的特定較舊叢集、提供免費的SnapMirror授權。雖然資料保護解決方案叢集需要DPO授權、但下列平台清單中的主要叢集將會提供免費的SnapMirror授權。未列入此清單的主要叢集需要購買SnapMirror授權。DPO硬體與軟體套裝組合是以FAS2620與FAS8200系統為基礎、兩者皆為EOA狀態、且不再提供。
-
-* FAS3000 系列
-* FAS6000 系列
-* FAS8000 系列
-
-
-
-
-== 資料保護最佳化（DPO）授權
-
-隨附於《支援資料保護》ONTAP 的硬體與軟體解決方案套裝組合、僅以FAS8200與FAS2620為基礎。隨著這些平台成熟、新平台也推出新的需求、以支援ONTAP 針對二線複寫使用案例的功能。因此ONTAP 、2018年11月推出全新的獨立式DPO授權、並隨附於發行版的《》（英文）《21》（英文）。
-
-獨立式DPO授權同時在FAS 支援的支援範圍包括：既是支援的、也是AFF 支援的；您可以購買預先設定的新叢集、或是新增至已部署的叢集、作為現場軟體升級。由於這些新的DPO授權並非硬體與軟體解決方案套裝組合的一部分、因此價格較低、而且未提供適用於主要叢集的免費SnapMirror授權。使用零點式DPO授權設定的次要叢集也必須購買SnapMirror授權、而複寫到DPO次要叢集的所有主要叢集都必須購買SnapMirror授權。
-
-DPO在多個版本的支援中提供更多ONTAP 的支援功能。ONTAP
-
-[cols="6*"]
-|===
-
-
-| 功能 | 9.3. | 9.4. | 9.5. | 9.6% | 9.7以上 
-
-
-| 最大Vols /節點  a| 
-1500
- a| 
-1500
- a| 
-1500
- a| 
-1500/2500
- a| 
-1500/2500
-
-
-
- a| 
-並行重複工作階段上限
- a| 
-100
- a| 
-200
- a| 
-200
- a| 
-200
- a| 
-200
-
-
-
- a| 
-工作負載偏差*
- a| 
-用戶端應用程式
- a| 
-應用程式/小型
- a| 
-SnapMirror
- a| 
-SnapMirror
- a| 
-SnapMirror
-
-
-
- a| 
-適用於HDD的跨Volume Aggregate重複資料刪除技術
- a| 
-否
- a| 
-是的
- a| 
-是的
- a| 
-是的
- a| 
-是的
-
-|===
-* SnapMirror回退（工作負載偏置）功能的優先順序詳細資料：
-* 用戶端：叢集I/O優先順序設定為用戶端工作負載（正式作業應用程式）、而非SnapMirror流量。
-* 相等：SnapMirror複寫要求的優先順序與正式作業應用程式的I/O相同。
-* SnapMirror：所有SnapMirror I/O要求的優先順序都比正式作業應用程式的I/O高。
-
-
-*表1：ONTAP 各個版本的各個節點的FlexVolumes上限*
-
-[cols="7*"]
-|===
-
-
-|  | 9.2-9.5、不含DPO | 9.2-9.5（含DPO） | 9.6不含DPO | 9.6（採用DPO） | 9.7--9.9.1（不含DPO） | 9.9-9.9.1（含DPO） 
-
-
- a| 
-FAS2620
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2650
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2720
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2750
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-A200
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-A220
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS882/8300
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-1000
- a| 
-2500
-
-
-
- a| 
-A300
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A400
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-FAS8700/9000
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-1000
- a| 
-2500
-
-
-
- a| 
-a700
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A700s
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A800
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-|===
-如需FlexVol 組態的最新版支援最大支援版的資訊、請參閱 https://hwu.netapp.com/["Hardware Universe"^]。
-
-
-
-== 所有新DPO安裝的考量事項
-
-* 啟用後、DPO授權功能將無法停用或復原。
-* 安裝DPO授權需要重新開機ONTAP 才能啟用還原或容錯移轉。
-* DPO解決方案適用於二線儲存工作負載、可能會影響DPO叢集上的應用程式工作負載效能
-* NetApp儲存平台機型的精選清單支援DPO授權。
-* DPO功能因ONTAP 發行版本而異。請參閱相容性表以供參考。
-* 全新FAS 的功能不AFF 符合DPO的資格。無法為上述未列出的叢集購買DPO授權。
-
+如需支援平台的相關資訊、請參閱 https://hwu.netapp.com/["Hardware Universe"^]。

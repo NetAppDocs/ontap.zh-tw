@@ -1,0 +1,130 @@
+---
+permalink: system-admin/manage-license-task.html 
+sidebar: sidebar 
+keywords: manage, license, delete, view, record, software, entitlement, keys, codes, cluster, administrator, nlf 
+summary: 您可以使用系統管理員或 ONTAP CLI 來管理系統上安裝的授權、包括檢視授權狀態、授權序號、以及移除授權。 
+---
+= 管理 ONTAP 授權（僅限叢集管理員）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用系統管理員或 ONTAP CLI 來管理系統上安裝的授權、包括檢視授權序號、檢查授權狀態、以及移除授權。
+
+
+
+== 檢視授權的詳細資料
+
+.步驟
+如何檢視授權的詳細資料、取決於您使用的 ONTAP 版本、以及您是使用系統管理員還是使用 ONTAP CLI 。
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8 及更新版本
+--
+. 若要檢視特定功能授權的詳細資料、請選取 * 叢集 > 設定 * 。
+. 在 * Licenses* 下、選取 image:icon_arrow.gif["箭頭圖示"]。
+. 選擇 * 功能 * 。
+. 找到您要檢視的授權功能、然後選取 image:icon_dropdown_arrow.gif["展開圖示"] 以檢視授權詳細資料。
+
+
+--
+.System Manager - ONTAP 9.7 及更早版本
+--
+. 選取 * 組態 > 叢集 > 授權 * 。
+. 在*授權*視窗中、執行適當的動作：
+. 按一下*詳細資料*索引標籤。
+
+
+--
+.CLI
+--
+. 顯示已安裝授權的詳細資料：
++
+[source, cli]
+----
+system license show
+----
+
+
+--
+====
+
+
+== 刪除授權
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8 及更新版本
+--
+. 若要刪除授權、請選取 * 叢集 > 設定 * 。
+. 在 * Licenses* 下、選取 image:icon_arrow.gif["箭頭圖示"]。
+. 選擇 * 功能 * 。
+. 選取您要刪除的授權功能、然後 * 刪除舊金鑰 * 。
+
+
+--
+.System Manager - ONTAP 9.7 及更早版本
+--
+. 選取 * 組態 > 叢集 > 授權 * 。
+. 在*授權*視窗中、執行適當的動作：
++
+|===
+| 如果您想要... | 執行此動作... 
+
+
+ a| 
+刪除節點或主要授權上的特定授權套件
+ a| 
+按一下*詳細資料*索引標籤。
+
+
+
+ a| 
+刪除叢集中所有節點的特定授權套件
+ a| 
+按一下「*套件*」索引標籤。
+
+|===
+. 選取您要刪除的軟體授權套件、然後按一下*刪除*。
++
+一次只能刪除一個授權套件。
+
+. 選取確認核取方塊、然後按一下*刪除*。
+
+
+--
+.CLI
+--
+. 刪除授權：
++
+[source, cli]
+----
+system license delete
+----
++
+下列範例從叢集刪除名為CIFS的授權、序號為1-81-81-00000000000000000000000000000000000123456：
+
++
+[listing]
+----
+cluster1::> system license delete -serial-number 1-81-0000000000000000000123456 -package CIFS
+----
++
+下列範例會從叢集刪除已安裝授權核心產品組合下的所有授權、序號為123456789：
+
++
+[listing]
+----
+cluster1::> system license delete { -serial-number 123456789 -installed-license "Core Bundle" }
+----
+
+
+--
+====
+.相關資訊
+https://docs.netapp.com/us-en/ontap/system-admin/commands-manage-feature-licenses-reference.html["用於管理授權的 ONTAP CLI 命令"]
+
+https://docs.netapp.com/us-en/ontap/concepts/manual-pages.html["指令數ONTAP"^]

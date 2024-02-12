@@ -1,66 +1,143 @@
 ---
 permalink: system-admin/manage-licenses-concept.html 
 sidebar: sidebar 
-keywords: manage, license, enable, add, record, software, entitlement, keys, codes, risk, usage, cluster, administrator, nlf 
-summary: 授權是一或多個軟體授權的記錄。在從功能升級到功能升級到版本9.9.1的過程中、授權會以28個字元的字串形式提供、每個功能只有一個金鑰。ONTAP ONTAP ONTAP在介紹全新的授權格式時ONTAP 、將NetApp授權檔案（NLF）稱為NetApp授權檔案（NLF）、僅供叢集範圍內的功能使用、例如FabricPool ： 
+keywords: manage, license, ontap one, enable, add, record, software, entitlement, keys, codes, risk, usage, cluster, administrator, nlf 
+summary: 授權是一或多個軟體授權的記錄。在從功能升級到功能升級到版本9.9.1的過程中、授權會以28個字元的字串形式提供、每個功能只有一個金鑰。ONTAP ONTAP ONTAPONTAP 9.2 中引進了一種稱為 NetApp 授權檔案（ NLF ）的新授權格式、僅適用於叢集範圍的功能。 
 ---
-= 管理授權總覽（僅限叢集管理員）
+= ONTAP 授權總覽
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-授權是一或多個軟體授權的記錄。在從功能更新到功能更新到版本9.9.1的過程中、授權金鑰會以28個字元的字串形式提供、每個功能有一個金鑰。ONTAP ONTAP ONTAP更新授權金鑰格式的NetApp授權檔案（NLF）已於ONTAP 《》中推出、僅供叢集範圍內的功能使用、例如FabricPool ：
-
-從功能完整的支援升級到功能完整的升級版、所有授權均以NLF形式提供。ONTAP根據ONTAP 您的購買情況、LIF授權可啟用一或多項功能。您可以搜尋系統（控制器）序號，從 NetApp 支援網站擷取 NLF 授權。
-
-您可以在 NetApp 支援網站的「*My Support（我的支援）*> *Software Licenses（軟體授權）*」下找到初始或附加軟體訂單的授權（需登入）。如需授權更換的詳細資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["更新AFF/FAS系統授權的主機板後更換程序"]。
-
-利用支援功能的支援、您可以透過下列方式管理功能授權：ONTAP
-
-* 顯示已安裝授權的相關資訊 (`system license show`）
-* 顯示叢集上需要授權的套件及其目前授權狀態 (`system license status show`）
-* 從叢集或您指定序號的節點刪除授權 (`system license delete`）
-* 顯示或移除過期或未使用的授權 (`system license clean-up`）
-
-
-利用此功能、您可以透過下列方式監控功能使用量和授權風險：ONTAP
-
-* 以每個節點為基礎、顯示叢集中的功能使用摘要 (`system feature-usage show-summary`）
-+
-摘要包含計數器資訊、例如功能使用的週數、以及上次使用功能的日期和時間。
-
-* 以每節點和每週為單位顯示叢集中的功能使用狀態 (`system feature-usage show-history`）
-+
-功能使用狀態可以是 `not-used`、 `configured`或 `in-use`。如果無法取得使用資訊、則會顯示狀態 `not-available`。
-
-* 顯示每個授權套件的授權權利風險狀態 (`system license entitlement-risk show`）
-+
-風險狀態可以是 `low`、 `medium`、 `high`、 `unlicensed`或 `unknown`。風險狀態也包含在AutoSupport 資訊資訊中。授權權利風險不適用於基礎授權套件。
-
-+
-授權權利風險的評估是使用多種因素、其中可能包括但不限於下列因素：
-
-+
-** 每個套件的授權狀態
-** 每個授權的類型、到期狀態、以及整個叢集的授權一致性
-** 使用與授權套件相關的功能
-如果評估程序判斷叢集有授權權利風險、命令輸出也會建議修正行動。
+授權是一或多個軟體授權的記錄。從 ONTAP 9.10.1 開始、所有授權都會以 NetApp 授權檔案（ NLF ）的形式交付、這是一個可啟用多項功能的單一檔案。  自 2023 年 5 月起、所有 AFF 系統（ A 系列和 C 系列）和 FAS 系統均隨附 ONTAP One 軟體套件或 ONTAP 基礎軟體套件、每套均以單一 NLF 形式提供、取代 ONTAP 9.10.1 中首次推出的獨立 NLF 套件。
 
 
 
+== ONTAP One 隨附授權
+
+ONTAP One 包含所有可用的授權功能。其中包含前一代核心套件、資料保護套裝組合、安全性與法規遵循套件、混合雲套裝組合和加密套件的內容組合、如表所示。加密功能不適用於受限制的國家 / 地區。
+
+|===
+
+
+| 以前的套件名稱 | 隨附 ONTAP 金鑰 
+
+
+.5+| 核心套裝組合 | FlexClone 
+
+
+| SnapRestore 
+
+
+| NFS 、 SMB 、 S3 
+
+
+| FC 、 iSCSI 
+
+
+| NVMe 
+
+
+.3+| 安全性與法規遵循套裝組合 | 自主勒索軟體保護 
+
+
+| MKM 
+
+
+| SnapLock 
+
+
+.3+| 資料保護套裝組合 | SnapMirror （非同步、同步、業務持續性） 
+
+
+| SnapCenter 
+
+
+| S3 SnapMirror for NetApp 目標 
+
+
+.2+| 混合雲套裝組合 | SnapMirror雲端 
+
+
+| 適用於非 NetApp 目標的 S3 SnapMirror 
+
+
+.2+| 加密套件 | NetApp Volume Encryption 
+
+
+| 信任平台模組 
+|===
+
+
+== ONTAP One 不含授權
+
+ONTAP One 不包含任何 NetApp 的雲端服務、包括：
+
+* BlueXP 分層
+* Cloud Insights
+* BlueXP 備份
+* 資料治理
+
+
+
+
+== 適用於現有系統的 ONTAP One
+
+如果您現有的系統目前支援 NetApp 、但尚未升級至 ONTAP One 、則這些系統上的現有授權仍有效、並繼續如預期運作。例如，如果 SnapMirror 許可證已經安裝在現有系統上，則無需升級到 ONTAP One 即可獲得新的 SnapMirror 許可證。但是，如果現有系統上沒有安裝 SnapMirror 許可證，則獲得該許可證的唯一方法是以額外的費用升級到 ONTAP One 。
+
+自 2023 年 6 月起、使用 28 個字元授權金鑰的 ONTAP 系統也可以使用 link:https://kb.netapp.com/onprem/ontap/os/How_to_get_an_ONTAP_One_license_when_the_system_has_28_character_keys["升級至 ONTAP One 或 ONTAP Base 相容性套件"]。
+
+
+
+== ONTAP Base 隨附授權
+
+ONTAP Base 是選用的軟體套件、是 ONTAP One for ONTAP 系統的替代方案。這適用於不需要 SnapMirror 和 SnapCenter 等資料保護技術、以及不需使用自治勒索軟體等安全功能的特定使用案例、例如專用測試或開發環境的非正式作業系統。無法將其他授權新增至 ONTAP Base 。如果您需要額外的授權、例如 SnapMirror 、則必須升級至 ONTAP One 。
+
+|===
+
+
+| 以前的套件名稱 | 隨附 ONTAP 金鑰 
+
+
+.5+| 核心套裝組合 | FlexClone 
+
+
+| SnapRestore 
+
+
+| NFS 、 SMB 、 S3 
+
+
+| FC 、 iSCSI 
+
+
+| NVMe 
+
+
+.3+| 加密套件 | NetApp Volume Encryption 
+
+
+| 信任平台模組 
+
+
+| 靜態資料加密 
+|===
+
+
+== 其他授權交付方法
+
+在從功能更新到功能更新到版本9.9.1的過程中、授權金鑰會以28個字元的字串形式提供、每個功能有一個金鑰。ONTAP ONTAP ONTAP如果您使用的是 ONTAP 8.2 至 ONTAP 9.9.1 、則可使用 ONTAP CLI 來安裝授權金鑰。
 
 [NOTE]
 ====
-附註： ONTAP 9.10.1 也支援使用系統管理員或 CLI 的 28 個字元授權金鑰。不過、如果某項功能安裝了NLF授權、您就無法在NLF授權上安裝28個字元的授權金鑰、以取得相同的功能。如需使用System Manager安裝NLF或授權金鑰的相關資訊、請參閱「啟用新功能」。
+ONTAP 9.10.1 支援使用系統管理員或 CLI 安裝 28 個字元的授權金鑰。不過、如果針對某項功能安裝了 NLF 授權、您就無法在 NetApp 授權檔案上安裝 28 個字元的授權金鑰、以取得相同的功能。如需使用 System Manager 安裝 NLF 或授權金鑰的相關資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安裝 ONTAP 授權"]。
 
 ====
 .相關資訊
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_Data_ONTAP_8.2_and_8.3_licensing_overview_and_references%3F["什麼是Data ONTAP 「版本8.2」和「版本8.3」授權總覽和參考資料？"^]
+https://kb.netapp.com/onprem/ontap/os/How_to_get_an_ONTAP_One_license_when_the_system_has_NLFs_already["當系統已有 NLF 時、如何取得 ONTAP One 授權"]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_verify_Data_ONTAP_Software_Entitlements_and_related_License_Keys_using_the_Support_Site["如何使用Data ONTAP Support網站驗證支援功能和相關授權金鑰"^]
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_verify_Data_ONTAP_Software_Entitlements_and_related_License_Keys_using_the_Support_Site["如何使用支援網站來驗證 ONTAP 軟體授權與相關授權金鑰"^]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Licensing_updates_in_Data_ONTAP_9.2["常見問題集：Data ONTAP 更新版本資訊（英文）"^]
-
-http://mysupport.netapp.com/licensing/ontapentitlementriskstatus["NetApp：Data ONTAP 不確定權利風險狀態"^]
+http://mysupport.netapp.com/licensing/ontapentitlementriskstatus["NetApp ： ONTAP 權利金風險狀態"^]

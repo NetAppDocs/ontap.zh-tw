@@ -1,39 +1,46 @@
 ---
 permalink: data-protection/install-snapmirror-cloud-license-task.html 
 sidebar: sidebar 
-keywords: install, snapmirror, cloud, license, asynchronous, replicate, replication, snapshot 
-summary: SnapMirror Cloud從ONTAP 功能不中斷的9.8開始、提供從ONTAP 功能不同步複製到物件儲存端點的Snapshot複本。SnapMirror Cloud關係只能使用預先認證的協力廠商備份應用程式進行設定。若要設定ONTAP 物件儲存複寫功能、ONTAP 必須在設定複寫到物件儲存區端點的來源叢集上、同時提供SnapMirror和SnapMirror Cloud授權。 
+keywords: install, snapmirror, cloud, license, api, s3, ontap one, asynchronous, replicate, replication, snapshot 
+summary: SnapMirror Cloud 關係可以使用預先合格的協力廠商備份應用程式來協調。從 ONTAP 9.9.1 開始、您也可以使用系統管理員來協調 SnapMirror 雲端複寫。使用系統管理程式協調內部部署 ONTAP 到物件儲存備份時、需要 SnapMirror 和 SnapMirror 雲端容量授權。您還需要申請並安裝 SnapMirror Cloud API 授權。 
 ---
-= 安裝SnapMirror Cloud授權
+= 安裝 SnapMirror Cloud 授權
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-SnapMirror Cloud從ONTAP 功能不中斷的9.8開始、提供從ONTAP 功能不同步複寫到物件儲存端點的非同步快照複寫功能。SnapMirror Cloud關係只能使用預先認證的協力廠商備份應用程式進行設定。若要設定ONTAP 物件儲存複寫功能、ONTAP 必須在設定複寫到物件儲存區端點的來源叢集上、同時提供SnapMirror和SnapMirror Cloud授權。
+SnapMirror Cloud 關係可以使用預先合格的協力廠商備份應用程式來協調。從 ONTAP 9.9.1 開始、您也可以使用系統管理員來協調 SnapMirror 雲端複寫。使用系統管理程式協調內部部署 ONTAP 到物件儲存備份時、需要 SnapMirror 和 SnapMirror 雲端容量授權。您還需要申請並安裝 SnapMirror Cloud API 授權。
 
 .關於這項工作
-SnapMirror Cloud授權是單一執行個體叢集範圍的授權、這表示不需要在叢集中的每個節點上安裝。這是一種以期限為基礎的授權、可同時強制執行條款與備份容量。除了此終端使用者授權之外、SnapMirror Cloud還需要經過授權與核准的備份應用程式、才能設定ONTAP 及叫用用於複寫的SnapMirror API。SnapMirror Cloud終端使用者授權和授權應用程式都是使用SnapMirror Cloud複寫的必要條件。
+SnapMirror Cloud 和 S3 SnapMirror 授權是叢集授權、而非節點授權、因此未隨附 ONTAP One 授權套件。這些授權包含在個別的 ONTAP One 相容性套件中。如果您想要啟用 SnapMirror Cloud 、則需要申請此套件。
 
-SnapMirror Cloud授權是透過購買混合式雲端產品組合來取得、您可以以1 TB為單位購買1年或3年。混合雲產品組合包含SnapMirror Cloud授權。每個授權都有唯一的序號。混合雲產品組合的購買量取決於容量、混合雲產品組合的購買容量會套用至SnapMirror Cloud授權。
-
-SnapMirror Cloud授權可透過ONTAP 下列方法安裝在叢集上：使用效益指令行或系統管理程式。
+此外、系統管理程式將 SnapMirror Cloud 備份協調至物件儲存設備需要 SnapMirror Cloud API 金鑰。此 API 授權為單一執行個體叢集範圍的授權、表示不需要在叢集中的每個節點上安裝。
 
 .步驟
-. 從 NetApp 支援網站下載兩份適用於 SnapMirror Cloud 的 NetApp 授權檔案（NLF）。
-+
-https://mysupport.netapp.com/site/global/dashboard["NetApp支援"]
+您需要申請並下載 ONTAP One 相容性套件和 SnapMirror Cloud API 授權、然後使用 System Manager 進行安裝。
 
-. 使用System Manager將SnapMirror Cloud NLF檔案上傳至叢集：
+. 找出並記錄您要授權的叢集的叢集 UUID 。
 +
-.. 按一下「*組態*>*授權*」。
-.. 在*叢集設定*窗格中、按一下*授權*。
-.. 在「*套件*」視窗中、按一下「*新增*」。
-.. 在「*新增授權套件*」對話方塊中、按一下「*選擇檔案*」以選取您下載的NLF、然後按一下「*新增*」將檔案上傳至叢集。
+當您提交要求為叢集訂購 ONTAP One 相容性套件時、必須提供叢集 UUID 。
+
+. 請聯絡您的 NetApp 銷售團隊、並索取 ONTAP One 相容性套件。
+. 請遵循 NetApp 支援網站 提供的指示、申請 SnapMirror Cloud API 授權。
++
+link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["申請SnapMirror Cloud API授權金鑰"^]
+
+. 收到並下載授權檔案後、請使用系統管理員將 ONTAP 雲端相容性 NLF 和 SnapMirror 雲端 API NLF 上傳至叢集：
++
+.. 按一下*叢集>設定*。
+.. 在 * 設定 * 視窗中、按一下 * 授權 * 。
+.. 在 * Licenses* 視窗中、按一下 image:icon_add.gif["新增圖示"]。
+.. 在「*新增授權*」對話方塊中、按一下「*瀏覽*」以選取您下載的NLF、然後按一下「*新增*」將檔案上傳至叢集。
 
 
 
 
 .相關資訊
+https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html#add-a-cloud-object-store["使用SnapMirror將資料備份到雲端"]
+
 http://mysupport.netapp.com/licenses["NetApp軟體授權搜尋"]
