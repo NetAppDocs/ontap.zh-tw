@@ -117,7 +117,7 @@ cluster1::> vserver object-store-server bucket policy statement create -vserver 
 ----
 cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
 ----
-從 ONTAP 9.14.1 開始、您可以指定貯體原則的變數。以下範例為儲存 VM 建立物件儲存區伺服器貯體原則聲明 `svm1` 和 `bucket1`和指定 `${aws:username}` 做為原則資源的變數。評估原則時、原則變數會以要求內容使用者名稱取代、並可依照該使用者的設定來執行原則動作。例如、評估下列原則陳述時、 `${aws:username}` 替換為執行 S3 作業的使用者。如果是使用者 `user1` 執行作業時、會授予該使用者存取權 `bucket1` 做為 `bucket1/user1/*`。
+從 ONTAP 9.14.1 開始、您可以指定貯體原則的變數。以下範例為儲存 VM 建立伺服器儲存區原則聲明 `svm1` 和 `bucket1`和指定 `${aws:username}` 做為原則資源的變數。評估原則時、原則變數會以要求內容使用者名稱取代、並可依照該使用者的設定來執行原則動作。例如、評估下列原則陳述時、 `${aws:username}` 替換為執行 S3 作業的使用者。如果是使用者 `user1` 執行作業時、會授予該使用者存取權 `bucket1` 做為 `bucket1/user1/*`。
 
 [listing]
 ----

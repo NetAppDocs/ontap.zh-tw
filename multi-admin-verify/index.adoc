@@ -47,9 +47,13 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 根據角色型存取控制（RBAC）規則、評估MAV規則。因此、執行或核准受保護作業的系統管理員必須已擁有這些作業的最低RBAC權限。 link:../authentication/manage-access-control-roles-concept.html["深入瞭解RBAC。"]
 
+
+
+=== 系統定義的規則
+
 啟用多管理員驗證時、系統定義的規則（也稱為_guard rail _規則）會建立一組MAV作業、以控制規避MAV程序本身的風險。這些作業無法從規則表格中移除。啟用MAV之後、以星號（*）指定的作業在執行之前、必須先經過一或多位管理員的核准、* show*命令除外。
 
-* `security multi-admin-verify modify*`
+* `security multi-admin-verify modify` 作業 *
 +
 控制多管理員驗證功能的組態。
 
@@ -66,6 +70,10 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 控制核准程序。
 
 
+
+
+
+=== 受規則保護的命令
 
 除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
 
@@ -123,6 +131,22 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 從 ONTAP 9.13.1 開始、可以保護下列命令：
 
 * `volume snaplock modify`
+
+
+從 ONTAP 9.14.1 開始、可以保護下列命令：
+
+* `volume recovery-query modify`
+* `volume recovery-query purge`
+* `volume recovery-query purge-all`
+* `vserver modify`
+
+
+從 ONTAP 9.13.1 開始、可以保護下列命令：
+
+* `volume snaplock modify`
+* `security anti-ransomware volume attack clear-suspect`
+* `security anti-ransomware volume disable`
+* `security anti-ransomware volume pause`
 
 
 

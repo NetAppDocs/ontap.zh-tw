@@ -18,7 +18,7 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 [role="lead"]
 當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 S3 SnapMirror 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。
 
-.您的需求
+.開始之前
 * 您擁有物件存放區提供者的有效帳戶認證和組態資訊。
 * 已在來源系統上設定叢集間網路介面和IPspace。
 * •來源儲存 VM 的 DNS 組態必須能夠解析目標的 FQDN 。
@@ -74,7 +74,12 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 .. 在*權限*下、按一下*新增*。驗證權限是選用的、但建議使用。
 +
 *** *主體*和*效果*：選取對應於使用者群組設定的值、或接受預設值。
-*** *Actions* - 確保顯示以下值： `GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** *Actions* - 確保顯示以下值：
++
+[listing]
+----
+`GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+----
 *** * 資源 * - 使用預設值 `_(bucketname, bucketname/*)` 或其他您需要的價值。
 +
 請參閱 link:../task_object_provision_manage_bucket_access.html["管理使用者對儲存區的存取權"] 以取得這些欄位的詳細資訊。
@@ -149,7 +154,7 @@ src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore -policy _policy_name_`
 +
 參數：
-* `-destination-path` –您在上一個步驟中建立的物件存放區名稱和固定值 `objstore`。
+* `-destination-path` - 您在上一個步驟中建立的物件存放區名稱和固定值 `objstore`。
   +
 您可以使用所建立的原則、或接受預設值。
 

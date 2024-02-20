@@ -14,6 +14,8 @@ summary: S3 使用者可使用 API 重新產生用於存取 S3 用戶端的金�
 [role="lead"]
 從 ONTAP 9.14.1 開始、身為 ONTAP 管理員、您可以建立自訂角色、並將其授予本機或網域群組或輕量型目錄存取傳輸協定（ LDAP ）群組、讓屬於這些群組的使用者能夠產生自己的存取權和機密金鑰、以供 S3 用戶端存取。
 
+您必須在儲存 VM 上執行幾個組態步驟、才能建立自訂角色、並將其指派給啟動 API 以產生存取金鑰的使用者。
+
 .開始之前
 請確認下列事項：
 
@@ -21,7 +23,9 @@ summary: S3 使用者可使用 API 重新產生用於存取 S3 用戶端的金�
 . 該儲存 VM 中已建立一個儲存區。請參閱 link:../s3-config/create-bucket-task.html["建立儲存庫"]。
 . 在儲存 VM 上設定 DNS 。請參閱 link:../networking/configure_dns_services_manual.html["設定DNS服務"]。
 . 儲存 VM 上會安裝 LDAP 伺服器的自我簽署根憑證授權單位（ CA ）憑證。請參閱 link:../nfs-config/install-self-signed-root-ca-certificate-svm-task.html["在SVM上安裝自我簽署的根CA憑證"]。
-. LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱 link:../nfs-config/create-ldap-client-config-task.html["建立LDAP用戶端組態"] 和 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"]。
+. LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱 link:../nfs-config/create-ldap-client-config-task.html["建立LDAP用戶端組態"] 和。
+. 將用戶端組態與虛擬伺服器建立關聯。請參閱 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"] 和 https://docs.netapp.com/us-en/ontap-cli-9141//vserver-services-name-service-ldap-create.html["Vserver服務名稱服務LDAP建立"]。
+. 如果您使用的是資料儲存 VM 、請在 VM 上建立管理網路介面（ LIF ）、以及 LIF 的服務原則。請參閱 https://docs.netapp.com/us-en/ontap-cli-9141/network-interface-create.html["建立網路介面"] 和 https://docs.netapp.com/us-en/ontap-cli-9141//network-interface-service-policy-create.html["建立網路介面服務原則"] 命令。
 
 
 
@@ -89,11 +93,13 @@ security login create -user-or-group-name ldap-group-1 -application http -authen
 .Curl範例
 [source, curl]
 ----
-curl --request POST \
+curl
+--request POST \
 --location "https://$FQDN_IP /api/protocols/s3/services/{svm.uuid}/users " \
 --include \
 --header "Accept: */*" \
 --header "Authorization: Basic $BASIC_AUTH"
+--data '{"name":"_name_"}'
 ----
 .Json輸出範例
 [listing]

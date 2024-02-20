@@ -15,7 +15,7 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 任何具備適當RBAC功能的系統管理員都可以在啟用MAV之前建立規則、但一旦啟用MAV、對規則集的任何修改都需要MAV核准。
 
-您可以從 ONTAP 9.11.1 開始建立下列命令的規則。
+您可以建立規則、以保護從 ONTAP 9.11.1 開始的下列命令。
 
 [cols="2*"]
 |===
@@ -61,21 +61,29 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 `vserver peer delete`
 
 |===
-您可以從 ONTAP 9.13.1 開始建立下列命令的規則：
+您可以從 ONTAP 9.13.1 開始建立規則來保護下列命令：
 
 * `volume snaplock modify`
 
 
-此外、在啟用MAV時、下列命令預設會受到保護、但您可以修改規則、以移除這些命令的保護。
+您可以建立規則、以保護從 ONTAP 9.14.1 開始的下列命令：
+
+* `volume recovery-query modify`
+* `volume recovery-query purge`
+* `volume recovery-query purge-all`
+* `vserver modify`
+
+
+除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
 
 * `security login password`
 * `security login unlock`
 * `set`
 
 
-MAV 系統預設命令的規則– `security multi-admin-verify` 命令–不可變更。
+MAV 系統預設命令的規則 `security multi-admin-verify` link:../multi-admin-verify/index.html#how-multi-admin-verification-works["命令"]、不可變更。
 
-建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。例如、在預設的 Set 命令中、 `-query` 設為 `-privilege diag`，表示只有在指定 -priv特權 診斷時，才會為 set 命令產生要求。
+建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。例如、在預設的 Set 命令中、 `-query` 設為 `-privilege diag`，表示只有在下列情況下才會為 set 命令產生要求 `-privilege diag` 已指定。
 
 [listing]
 ----
@@ -86,7 +94,7 @@ Vserver Operation                              Approvers Groups
 vs01    set                                    -         -
           Query: -privilege diagnostic
 ----
-根據預設、規則會指定對應的 `security multi-admin-verify request create _“protected_operation”_` 輸入受保護的作業時、會自動產生命令。您可以修改此預設值、要求使用 `request create` 請分別輸入命令。
+根據預設、規則會指定對應的 `security multi-admin-verify request create _“protected_operation”_` 輸入受保護的作業時、會自動產生命令。您可以修改此預設值、要求使用 `request create` 命令需另行輸入。
 
 根據預設、規則會繼承下列全域MAV設定、不過您可以指定規則特定的例外狀況：
 
@@ -138,11 +146,11 @@ NOTE: 全部 `security multi-admin-verify rule` 命令必須先獲得 MAV 管理
 
 
 | 修改目前系統管理員的認證資料  a| 
-`security login modify _<parameters>_`
+`security login modify <parameters>`
 
 *範例*：下列規則需要核准才能刪除根Volume。
 
-`security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0`
+`security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0"`
 
 
 
