@@ -13,13 +13,16 @@ summary: NVMe支援會因ONTAP 您的版本的支援、平台和組態而異。
 [role="lead"]
 從 ONTAP 9.4 開始 link:https://docs.netapp.com/us-en/ontap/san-admin/manage-nvme-concept.html["非揮發性記憶體高速（ NVMe ）"] 傳輸協定適用於 SAN 環境。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。
 
-NVMe 支援和限制會因您的 ONTAP 版本、平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
+NVMe 支援和限制會因您的 ONTAP 版本、平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。如需支援的限制、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
+
+
+NOTE: 每個叢集的最大節點數可在 * 支援的平台混合 * 下的 Hardware Universe 中使用。
 
 
 
 == 組態
 
-* 您可以使用單一架構或 Multifabric 、透過單一節點或 HA 配對來設定 NVMe 組態。
+* 您可以使用單一架構或 Multifabric 來設定 NVMe 組態。
 * 您應該為每個支援SAN的SVM設定一個管理LIF。
 * 不支援使用異質FC交換器架構、但內嵌刀鋒交換器除外。
 +
@@ -110,39 +113,6 @@ SCSI 、 NAS 和 NVMe 通訊協定可以存在於同一個儲存虛擬機器（ 
 
 
 
-== 每個叢集的平台和節點
-
-NVMe / FC 和 NVMe / TCP 通訊協定支援如下。
-
-
-NOTE: 下列採用 32GB FC HBA 的平台支援 NVMe / FC 。
-
-[cols="3*"]
-|===
-
-
-| 從ONTAP 無到無...開始 | 平台 | 每個叢集的最大節點數 
-
-
-| 9.12.1  a| 
-* FAS
-* AFF
-* ASA
-
-| 12. 
-
-
-| 9.9.1  a| 
-* AFF
-* ASA
-
-| 4. 
-
-
-| 9.4. | 僅限 AFF | 4. 
-|===
-
-
 == 命名空間
 
 使用 NVMe 命名空間時、您應該注意下列事項：
@@ -173,8 +143,6 @@ NOTE: 下列採用 32GB FC HBA 的平台支援 NVMe / FC 。
 * NVMe LIF和命名空間必須裝載在同一個節點上。
 * NVMe服務必須在建立NVMe LIF之前建立。
 
-
-請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得NVMe限制的完整清單。
 
 .相關資訊
 link:https://www.netapp.com/pdf.html?item=/media/10680-tr4080.pdf["現代 SAN 的最佳實務做法"]

@@ -13,14 +13,13 @@ summary: 如果您不想使用ONTAP 來自各地的最佳實務建議來新增�
 [role="lead"]
 如果您不想使用ONTAP 來自各地的最佳實務建議來新增本機層（建立集合體）、您可以手動執行程序。
 
-您遵循的程序取決於您使用的介面、系統管理員或CLI。
+.開始之前
+磁碟必須由節點擁有、才能在本機層（Aggregate）中使用。  如果您的叢集未設定為使用自動磁碟擁有權指派、您必須 link:manual-assign-disks-ownership-prep-task.html["手動指派擁有權"]。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-*使用System Manager手動新增本機層*
-
 從ONTAP 《銷售資訊》9.11.1開始、如果您不想使用System Manager建議的組態來建立本機層、可以指定您想要的組態。
 
 .步驟
@@ -62,8 +61,6 @@ summary: 如果您不想使用ONTAP 來自各地的最佳實務建議來新增�
 --
 .CLI
 --
-*使用CLI手動建立Aggregate *
-
 在手動建立Aggregate之前、您應該先檢閱磁碟組態選項並模擬建立。
 
 然後、您可以核發 `storage aggregate create` 命令並驗證結果。
