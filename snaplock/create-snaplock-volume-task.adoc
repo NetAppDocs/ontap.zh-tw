@@ -15,8 +15,8 @@ summary: '您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本�
 
 .您需要的產品
 * 此資訊必須在線上。SnapLock
-* 必須在節點上安裝此功能的不必要授權。SnapLock
-* 必須初始化節點上的「完成時鐘」。
+* SnapLock link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["必須安裝授權"] 在節點上。
+* link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["節點上的規範時鐘必須初始化"]。
 
 
 .關於這項工作
@@ -54,8 +54,10 @@ SnapLock 磁碟區不支援 LUN 。只有在非 SnapLock 磁碟區上建立的 S
 --
 . 建立SnapLock 一個流通量：
 +
-`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_* -snaplock-type compliance|enterprise`
-
+[source, cli]
+----
+volume create -vserver <SVM_name> -volume <volume_name> -aggregate <aggregate_name> -snaplock-type <compliance|enterprise>
+----
 +
 如需選項的完整清單、請參閱命令的手冊頁。SnapLock Volume 無法使用下列選項： `-nvfail`、 `-atime-update`、 `-is-autobalance-eligible`、 `-space-mgmt-try-first`和 `vmalign`。
 

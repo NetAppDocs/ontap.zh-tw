@@ -15,6 +15,10 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 任何具備適當RBAC功能的系統管理員都可以在啟用MAV之前建立規則、但一旦啟用MAV、對規則集的任何修改都需要MAV核准。
 
+
+
+== 受規則保護的命令
+
 您可以建立規則、以保護從 ONTAP 9.11.1 開始的下列命令。
 
 [cols="2*"]
@@ -61,9 +65,12 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 `vserver peer delete`
 
 |===
-您可以從 ONTAP 9.13.1 開始建立規則來保護下列命令：
+您可以建立規則、以保護從 ONTAP 9.13.1 開始的下列命令：
 
 * `volume snaplock modify`
+* `security anti-ransomware volume attack clear-suspect`
+* `security anti-ransomware volume disable`
+* `security anti-ransomware volume pause`
 
 
 您可以建立規則、以保護從 ONTAP 9.14.1 開始的下列命令：
@@ -74,14 +81,14 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 * `vserver modify`
 
 
+MAV 系統預設命令的規則 `security multi-admin-verify` link:../multi-admin-verify/index.html#system-defined-rules["命令"]、不可變更。
+
 除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
 
 * `security login password`
 * `security login unlock`
 * `set`
 
-
-MAV 系統預設命令的規則 `security multi-admin-verify` link:../multi-admin-verify/index.html#how-multi-admin-verification-works["命令"]、不可變更。
 
 建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。例如、在預設的 Set 命令中、 `-query` 設為 `-privilege diag`，表示只有在下列情況下才會為 set 命令產生要求 `-privilege diag` 已指定。
 

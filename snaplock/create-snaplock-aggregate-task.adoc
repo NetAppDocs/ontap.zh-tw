@@ -15,8 +15,8 @@ summary: '您使用的是 Volume `-snaplock-type` 指定法規遵循或企業 Sn
 
 .開始之前
 * 您必須是叢集管理員才能執行此工作。
-* 必須在節點上安裝此功能的不必要授權。SnapLock
-* 必須初始化節點上的「完成時鐘」。
+* SnapLock link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["必須安裝授權"] 在節點上。
+* link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["節點上的規範時鐘必須初始化"]。
 * 如果您已將磁碟分割為「root」、「data1」和「dat2」、則必須確保備援磁碟可用。
 
 
@@ -41,8 +41,10 @@ summary: '您使用的是 Volume `-snaplock-type` 指定法規遵循或企業 Sn
 .步驟
 . 建立SnapLock 一個不只一個的集合體：
 +
-`*storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_ -snaplock-type compliance|enterprise*`
-
+[source, cli]
+----
+storage aggregate create -aggregate <aggregate_name> -node <node_name> -diskcount <number_of_disks> -snaplock-type <compliance|enterprise>
+----
 +
 命令的手冊頁包含完整的選項清單。
 

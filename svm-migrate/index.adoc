@@ -116,7 +116,7 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 
 * 您必須是叢集管理員。
 * link:https://docs.netapp.com/us-en/ontap/peering/create-cluster-relationship-93-later-task.html["來源叢集和目的地叢集必須相互對等"^]。
-* 來源叢集和目的地叢集必須安裝 SnapMirror Synchronous 授權。
+* 來源叢集和目的地叢集必須具有 SnapMirror Synchronous link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["已安裝授權"]。
 * 來源叢集中的所有節點都必須執行 ONTAP 9.10.1 或更新版本。如需特定的 ONTAP 陣列控制器支援、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
 * 來源叢集中的所有節點都必須執行相同的 ONTAP 版本。
 * 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本。
@@ -387,30 +387,4 @@ SVM 移轉支援使用 FabricPools 上的磁碟區進行、適用於下列平台
 
 
 | 從 Snapshot 複本還原檔案 | 允許 | 允許 | 不支援 
-|===
-下表指出移轉 SVM 內支援的檔案作業、以移轉狀態為基礎：
-
-[cols="2,1,1,1"]
-|===
-
-
-| 檔案作業 3+| SVM 移轉狀態 
-
-
-|  | *正在進行中* | * 暫停 * | *轉換* 
-
-
-| 非同步刪除 | 不允許 | 不允許 | 不支援 
-
-
-| 複製建立 / 刪除 / 分割 | 允許 | 允許 | 不支援 
-
-
-| 複本修改 / 銷毀 | 不允許 | 不允許 | 不支援 
-
-
-| 移動 | 不允許 | 不允許 | 不支援 
-
-
-| 保留 | 允許 | 允許 | 不支援 
 |===
