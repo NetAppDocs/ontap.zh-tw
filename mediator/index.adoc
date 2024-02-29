@@ -100,3 +100,38 @@ NOTE: 核心版本必須符合作業系統版本。
 
 
 NOTE: 不支援升級至特定 ONTAP Mediator 版本所支援作業系統版本以外的核心。  （這可能表示已測試的 SCST 模組無法編譯）。
+
+
+
+== 啟用 UEFI 安全開機時、請登錄安全金鑰
+
+如果啟用 UEFI 安全開機、若要安裝 ONTAP Mediator 、您必須先登錄安全金鑰、才能啟動 ONTAP Mediator 服務。若要判斷系統是否已啟用 UEFI 且已開啟安全開機、請執行下列步驟：
+
+.步驟
+. 如果未安裝 mokutil 、請執行下列命令：
++
+`yum install mokutil`
+
+. 若要判斷系統上是否已啟用 UEFI 安全開機、請執行下列命令：
++
+`mokutil --sb-state`
+
++
+結果顯示此系統上是否已啟用 UEFI 安全開機。
+
++
+
+NOTE: ONTAP Mediator 1.2.0 和舊版不支援此模式。
+
+
+
+
+
+== 停用 UEFI 安全開機
+
+您也可以選擇在安裝 ONTAP Mediator 之前停用 UEFI 安全開機。
+
+.步驟
+. 在實體機器 BIOS 設定中、停用「 UEFI 安全開機」選項。
+. 在 VM 的 VMware 設定中、停用 vSphere 6.x 的「安全啟動」選項或 vSphere 7.x 的「安全開機」選項
+

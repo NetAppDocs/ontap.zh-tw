@@ -4,7 +4,7 @@ permalink: networking/worksheet_for_nas_path_failover_configuration_manual.html
 keywords: ipspace configuration, broadcast domain configuration, subnet configuration, SVM configuration, LIF configuration, DNS configuration, dynamic DNS configuration, worksheet for nas path failover configuration for ontap 9.8 and later, complete all sections of the worksheet before configuring nas path failover for ontap 9.7 and earlier, ipspace configuration, broadcast domain configuration, mtu, maximum transmission unit, mtu is 1500 mtu is 9000, subnet configuration, storage virtual machine configuration, svm configuration, lif configuration, dynamic dns configuration, dns configuration 
 summary: 在設定ONTAP NAS路徑容錯移轉以供支援《支援支援支援問卷》9.0 - 9.7之前、請先完成工作表的所有部分 
 ---
-= NAS路徑容錯移轉組態工作表ONTAP （適用於《》）9.0 - 9.7
+= NAS 路徑容錯移轉組態工作表（ ONTAP 9.7 及更早版本）
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -362,14 +362,17 @@ DNS網域名稱
 | 是的 |  
 
 
-| DNS 伺服器的 IP 位址
+ a| 
+DNS 伺服器的 IP 位址
 
-* 提供 NFS 或 SMB 伺服器名稱解析的 DNS 伺服器 IP 位址清單。
-列出的DNS伺服器必須包含所需的服務位置記錄（SRV),才能找到SMB伺服器要加入之網域的Active Directory LDAP伺服器和網域控制器。
+* 將為 NFS 或 SMB 伺服器提供名稱解析的 DNS 伺服器 IP 位址清單。
+* 列出的DNS伺服器必須包含所需的服務位置記錄（SRV),才能找到SMB伺服器要加入之網域的Active Directory LDAP伺服器和網域控制器。
 「服務」記錄用於將服務名稱對應至提供該服務之伺服器的DNS電腦名稱。如果ONTAP 無法透過本機DNS查詢取得服務位置記錄、則無法建立SMB伺服器。
 確保ONTAP 功能完整的Active Directory SRVs記錄、最簡單的方法就是將Active Directory整合的DNS伺服器設定為SVM DNS伺服器。
 您可以使用非Active Directory整合的DNS伺服器、前提是DNS管理員已手動將含有Active Directory網域控制器相關資訊的SRV記錄新增至DNS區域。
-*如需Active Directory整合式SRV記錄的相關資訊、請參閱主題 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet上的DNS Active Directory支援運作方式"^]。 | 是的 |  
+* 如需Active Directory整合式SRV記錄的相關資訊、請參閱主題 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet上的DNS Active Directory支援運作方式"^]。
+
+| 是的 |  
 |===
 
 

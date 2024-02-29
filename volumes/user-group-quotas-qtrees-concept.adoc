@@ -14,19 +14,34 @@ summary: 樹狀結構配額會限制qtree的整體大小。若要防止個別使
 樹狀結構配額會限制qtree的整體大小。若要防止個別使用者或群組佔用整個qtree、請為該qtree指定使用者或群組配額。
 
 .qtree中的使用者配額範例
-假設您有下列配額檔案：
+假設您有下列配額規則：
 
 [listing]
 ----
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
 
-#Quota target type            disk files thold sdisk sfile
-#-----------  ----            ---- ----- ----- ----- -----
-*             user@/vol/vol1  50M   -     45M
-jsmith        user@/vol/vol1  80M   -     75M
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off          50MB        -       -        -       45MB
+user   jsmith    ""      off          80MB        -       -        -       75MB
 ----
-請注意、特定使用者kjones佔用的關鍵qtree qt1空間太多、而qt1位於vol2。您可以將下列行新增至配額檔案、以限制此使用者的空間：
+您注意到某位使用者 kjones 佔用大量空間、位於 vol1 中的關鍵 qtree （ project1 ）。您可以新增下列配額規則來限制此使用者的空間：
 
 [listing]
 ----
-kjones        user@/vol/vol2/qt1  20M  -   15M
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target "kjones" -qtree "proj1" -disk-limit 20m -threshold 15m
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
+
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off          50MB        -       -        -       45MB
+user   jsmith    ""      off          80MB        -       -        -       75MB
+user   kjones    proj1   off          20MB        -       -        -       15MB
 ----

@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: networking/add_or_remove_ports_from_a_broadcast_domain.html 
-keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, add or remove ports from a broadcast domain 
+keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, add or remove ports from a broadcast domain, system manager, reassign, broadcast domain, port, unassign, move, change 
 summary: 不需要或建議從廣播網域手動新增和移除連接埠 
 ---
-= 新增或移除廣播網域中的連接埠
+= 從廣播網域新增或移除連接埠（ ONTAP 9.8 及更新版本）
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -19,3 +19,32 @@ summary: 不需要或建議從廣播網域手動新增和移除連接埠
 如果網路連接埠連線能力已變更、無論是透過實體網路連線或交換器組態、而且網路連接埠屬於不同的廣播網域、請參閱下列主題：
 
 link:repair_port_reachability.html["修復連接埠連線能力"]
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.14.1 開始、您可以使用系統管理員在廣播網域之間重新指派乙太網路連接埠。建議您將每個乙太網路連接埠指派給廣播網域。因此、如果您從廣播網域取消指派乙太網路連接埠、則必須將其重新指派給不同的廣播網域。
+
+.步驟
+若要重新指派乙太網路連接埠、請執行下列步驟：
+
+. 選擇 * 網路 > 總覽 * 。
+. 在 * 廣播網域 * 區段中、選取 image:icon_kabob.gif["功能表圖示"] 在網域名稱旁。
+. 在下拉式功能表中、選取*編輯*。
+. 在 * 編輯廣播網域 * 頁面上、取消選取您要重新指派給其他網域的乙太網路連接埠。
+. 對於每個取消選取的連接埠、會顯示 * 重新指派乙太網路連接埠 * 視窗。選取您要重新指派連接埠的廣播網域，然後選取 * 重新指派 * 。
+. 選取您要指派給目前廣播網域的所有連接埠、然後儲存變更。
+
+
+--
+.CLI
+--
+您無法使用 CLI 手動新增或移除廣播網域的連接埠。
+
+如果網路連接埠連線能力已變更、無論是透過實體網路連線或交換器組態、而且網路連接埠屬於不同的廣播網域、請參閱下列主題：
+
+link:repair_port_reachability.html["修復連接埠連線能力"]
+
+--
+====

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/networking_reference.html 
-keywords: network, components, cluster, networking, ontap 9 networking reference, network management reference, how to configure and manage physical and virtual network ports, lifs, routing, and host-resolution services in clusters, vlans and interface groups, ipv4 and ipv6, optimize network traffic, load balancing, monitor the cluster using snmp 
+keywords: network, components, cluster, networking, ontap 9 networking reference, network management reference, how to configure and manage physical and virtual network ports, lifs, routing, and host-resolution services in clusters, vlans and interface groups, ipv4 and ipv6, optimize network traffic, load balancing, monitor the cluster using snmp, system manager 
 summary: 歡迎使用ONTAP 《VMware®網路參考文件入口網站》（英文） 
 ---
 = 網路管理總覽
@@ -14,12 +14,46 @@ summary: 歡迎使用ONTAP 《VMware®網路參考文件入口網站》（英文
 
 
 [role="lead"]
-您可以使用下列資訊來執行基本的儲存網路管理。您可以設定實體和虛擬網路連接埠（VLAN和介面群組）、使用IPv4和IPv6建立生命、管理叢集中的路由和主機解析服務、使用負載平衡來最佳化網路流量、以及使用SNMP監控叢集。
+您可以使用下列資訊、使用 System Manager 或 CLI 執行基本的儲存網路管理。您可以設定實體和虛擬網路連接埠（VLAN和介面群組）、使用IPv4和IPv6建立生命、管理叢集中的路由和主機解析服務、使用負載平衡來最佳化網路流量、以及使用SNMP監控叢集。
 
-除非另有說明、否則這些程序適用於ONTAP 所有版本的更新版本。
+除非另有說明、否則 CLI 程序適用於 ONTAP 9 的所有版本。
 
-您應在下列情況下使用這些程序：
+從功能表9.8開始ONTAP 、您可以使用System Manager來顯示圖形、顯示網路的元件和組態。從 ONTAP 9.12 開始、您可以在網路介面網格上檢視 LIF 和子網路關聯。
+不過、如果您使用的是傳統系統管理員（僅適用於 ONTAP 9.7 及更早版本）、請參閱本主題：
 
-* 您想要瞭解ONTAP 各種的不完整網路管理功能。
-* 您想要使用CLI、而非System Manager。
+* https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/concept_managing_network.html["管理網路"^]
 
+
+新的網路視覺化功能可讓使用者在圖形介面中查看主機、連接埠、SVM、磁碟區等之間的網路連線路徑。
+
+選取*網路>總覽*或選取時、就會顯示圖形 image:icon_arrow.gif["藍色箭頭"] 從儀表板的*網路*區段。
+
+下圖顯示下列元件類別：
+
+* 主機
+* 儲存連接埠
+* 網路介面
+* 儲存VM
+* 資料存取元件
+
+
+每個區段都會顯示其他詳細資料、您可以將滑鼠游標暫留或選取以執行網路管理和組態工作。
+
+
+
+== 範例
+
+以下是您可以與圖形互動的多種方式範例、用以檢視每個元件的詳細資料、或是啟動管理網路的行動：
+
+* 按一下主機即可查看其組態：連接埠、網路介面、儲存 VM 及與其相關的資料存取元件。
+* 將滑鼠游標移到儲存VM中的磁碟區數目上、即可選取磁碟區以檢視其詳細資料。
+* 選取iSCSI介面以檢視其上週的效能。
+* 按一下 image:icon_kabob.gif["垂直三點"] 在元件旁、啟動修改該元件的動作。
+* 快速判斷網路中可能發生的問題所在位置、不正常元件旁會顯示「X」。
+
+
+
+
+== System Manager網路視覺化影片
+
+video::8yCC4ZcqBGw[youtube,width=848,height=480]

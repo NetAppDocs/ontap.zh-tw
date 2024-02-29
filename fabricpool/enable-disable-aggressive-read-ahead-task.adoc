@@ -25,6 +25,10 @@ summary: 從 ONTAP 9.14.1 開始、您可以在 FabricPools 中啟用和停用�
 * 您必須處於進階權限層級。
 
 
+
+
+== 在磁碟區建立期間啟用主動式預先讀取模式
+
 .步驟
 . 將權限層級設為進階：
 +
@@ -48,6 +52,10 @@ volume create -volume vol1 -aggressive-readahead-mode file_prefetch
 ----
 
 
+
+
+== 停用主動預先讀取模式
+
 .步驟
 . 將權限層級設為進階：
 +
@@ -55,7 +63,7 @@ volume create -volume vol1 -aggressive-readahead-mode file_prefetch
 ----
 set -privilege advanced
 ----
-. 修改磁碟區以停用主動式預先讀取模式：
+. 停用主動式預先讀取模式：
 +
 [source, cli]
 ----
@@ -71,6 +79,10 @@ volume modify -volume vol1 -aggressive-readahead-mode none
 ----
 
 
+
+
+== 檢視磁碟區上的主動式預先讀取模式
+
 .步驟
 . 將權限層級設為進階：
 +
@@ -78,7 +90,7 @@ volume modify -volume vol1 -aggressive-readahead-mode none
 ----
 set -privilege advanced
 ----
-. 修改磁碟區以停用主動式預先讀取模式：
+. 檢視積極的預先讀取模式：
 +
 [source, cli]
 ----

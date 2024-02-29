@@ -34,12 +34,19 @@ summary: 您可以使用預設配額、將配額套用至指定配額類型的�
 
 == 預設使用者配額範例
 
-下列配額檔案會使用預設的使用者配額、對vol1的每個使用者套用50 MB的限制：
+以下配額規則使用預設的使用者配額、針對 vol1 對每位使用者套用 50 MB 的限制：
 
 [listing]
 ----
-#Quota target type           disk  files  thold  sdisk  sfile
-#-----------  ----           ----  -----  -----  -----  -----
-*             user@/vol/vol1  50M
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target "" -qtree "" -disk-limit 50m
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
+
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off          50MB        -       -        -          -
 ----
 如果系統上的任何使用者輸入命令、導致該使用者的資料在vol1中佔用超過50 MB的資料（例如、從編輯器寫入檔案）、則命令會失敗。

@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: networking/create_a_subnet.html 
-keywords: move, moving, broadcast, domain, ipspace, create a subnet, network subnet create, network subnet show -ipspace 
-summary: 建立子網路 
+keywords: move, moving, broadcast, domain, ipspace, create a subnet, network subnet create, network subnet show -ipspace, force-update-lif-associations, network subnet rename 
+summary: 建立子網路來配置或保留特定的IP位址區塊、以供ONTAP 進行靜態網路組態 
 ---
 = 建立子網路
 :hardbreaks:
@@ -20,6 +20,14 @@ summary: 建立子網路
 
 .開始之前
 您必須是叢集管理員才能執行此工作。
+
+您要新增子網路的廣播網域和IPspace必須已經存在。
+
+.關於這項工作
+* 所有子網路名稱在IPspace內必須是唯一的。
+* 將IP位址範圍新增至子網路時、您必須確保網路中沒有重疊的IP位址、以免不同的子網路或主機嘗試使用相同的IP位址。
+* 如果您在定義子網路時指定閘道、則當使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。如果您不使用子網路、或是定義子網路時未指定閘道、則需要使用 `route create` 手動將路由新增至 SVM 的命令。
+
 
 .程序
 您遵循的程序取決於您使用的介面- System Manager或CLI：
@@ -53,22 +61,44 @@ summary: 建立子網路
 --
 使用CLI建立子網路。
 
-.步驟
-. 建立子網路。
+....
+network subnet create -subnet-name subnet_name -broadcast-domain <broadcast_domain_name> [- ipspace <ipspace_name>] -subnet <subnet_address> [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
+....
+* `subnet_name` 為您要建立的第 3 層子網路名稱。
 +
-`network subnet create -broadcast-domain _ipspace1_ -ipspace _ipspace1_ -subnet-name _ipspace1_ -subnet _10.0.0.0/24_ -gateway _10.0.0.1_ -ip-ranges _"10.0.0.128-10.0.0.130,10.0.0.132"_`
+名稱可以是像「Mgmt」這樣的文字字串、也可以是特定的子網路IP值、例如192.0/24。
 
+* `broadcast_domain_name` 是子網路所在的廣播網域名稱。
+* `ipspace_name` 是廣播網域所屬的 IPspace 名稱。
 +
-子網路名稱可以是子網路 IP 值、例如 `192.0.2.0/24` 或字串、例如 `ipspace1` 就像本範例所用的一樣。
+除非您指定此選項的值、否則會使用「預設」IPspace。
 
-. 驗證子網路組態是否正確。
+* `subnet_address` 是子網路的 IP 位址和遮罩、例如 192.0.2.0/24 。
+* `gateway_address` 是子網路預設路由的閘道、例如 192.0.2.1 。
+* `ip_address_list` 是將分配給子網路的 IP 位址清單或範圍。
 +
-此範例的輸出顯示了有關ipspace1 IPspace中名為ipspace1的子網路資訊。子網路屬於廣播網域名稱ipspace1。您可以將此子網路中的IP位址指派給在ipspace1 IPspace中所建立之SVM的資料LIF。
+IP位址可以是個別位址、IP位址範圍、或是以逗號分隔的清單組合。
 
+* 價值 `true` 可設定為 `-force-update-lif-associations` 選項。
 +
-`network subnet show -ipspace _ipspace1_`
+如果任何服務處理器或網路介面目前正在使用指定範圍內的IP位址、則此命令會失敗。將此值設為true、可將任何手動定址的介面與目前子網路建立關聯、並允許命令成功執行。
 
 
+
+下列命令會在預設IPspace的廣播網域預設-1中建立子網路子網路1。它會新增一個IPV4子網路IP位址和遮罩、閘道和一系列IP位址：
+
+....
+network subnet create -subnet-name sub1 -broadcast-domain Default-1 -subnet 192.0.2.0/24 - gateway 192.0.2.1 -ip-ranges 192.0.2.1-192.0.2.100, 192.0.2.122
+....
+下列命令會在「預設」IPspace的廣播網域預設中建立子網路子網路2。它新增多種IPv6位址：
+
+....
+network subnet create -subnet-name sub2 -broadcast-domain Default -subnet 3FFE::/64 - gateway 3FFE::1 -ip-ranges "3FFE::10-3FFE::20"
+....
+.完成後
+您可以使用子網路中的位址、將SVM和介面指派給IPspace。
+
+如果您需要變更現有子網路的名稱、請使用 `network subnet rename` 命令。
 
 --
 ====

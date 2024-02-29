@@ -26,3 +26,121 @@ summary: 當節點出現問題時、會發生核心傾印、系統會建立核�
 
 * 刪除不再需要的核心傾印檔案
 
+
+
+
+== 管理核心傾印的命令
+
+您可以使用 `system node coredump config` 管理核心傾印組態的命令 `system node coredump` 管理核心傾印檔案的命令、以及 `system node coredump reports` 管理應用程式核心報告的命令。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+設定核心傾印
+ a| 
+`system node coredump config modify`
+
+
+
+ a| 
+顯示核心傾印的組態設定
+ a| 
+`system node coredump config show`
+
+
+
+ a| 
+顯示核心傾印的基本資訊
+ a| 
+`system node coredump show`
+
+
+
+ a| 
+重新開機節點時、手動觸發核心傾印
+ a| 
+`system node reboot` 兩者兼具 `-dump` 和 `-skip-lif-migration-before-reboot` 參數
+
+[NOTE]
+====
+連結： https://docs.netapp.com/us-en/ontap-cli-9141//system-node-reboot.html#parameters[`skip-lif-migration-before-reboot`] 參數指定在重新開機之前略過 LIF 移轉。
+
+====
+
+
+ a| 
+當您關閉節點時、手動觸發核心傾印
+ a| 
+`system node halt` 兩者兼具 `-dump` 和 `-skip-lif-migration-before-shutdown` 參數
+
+[NOTE]
+====
+連結： https://docs.netapp.com/us-en/ontap-cli-9141/system-node-halt.html#parameters[`skip-lif-migration-before-shutdown`] 參數指定在關機之前略過 LIF 移轉。
+
+====
+
+
+ a| 
+儲存指定的核心傾印
+ a| 
+`system node coredump save`
+
+
+
+ a| 
+儲存指定節點上所有未儲存的核心傾印
+ a| 
+`system node coredump save-all`
+
+
+
+ a| 
+使用AutoSupport 您指定的核心傾印檔案來產生及傳送一個不確定的訊息
+ a| 
+`system node autosupport invoke-core-upload`
+
+[NOTE]
+====
+。 `-uri` 選用參數會指定 AutoSupport 訊息的替代目的地。
+
+====
+
+
+ a| 
+顯示核心傾印的狀態資訊
+ a| 
+`system node coredump status`
+
+
+
+ a| 
+刪除指定的核心傾印
+ a| 
+`system node coredump delete`
+
+
+
+ a| 
+刪除節點上所有未儲存的核心傾印或所有已儲存的核心檔案
+ a| 
+`system node coredump delete-all`
+
+
+
+ a| 
+顯示應用程式核心傾印報告
+ a| 
+`system node coredump reports show`
+
+
+
+ a| 
+刪除應用程式核心傾印報告
+ a| 
+`system node coredump reports delete`
+
+|===
+.相關資訊
+link:https://docs.netapp.com/us-en/ontap/concepts/manual-pages.html["指令數ONTAP"^]

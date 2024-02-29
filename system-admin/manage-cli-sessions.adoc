@@ -1,0 +1,126 @@
+---
+permalink: system-admin/manage-cli-sessions.html 
+sidebar: sidebar 
+keywords: record, cli, script, start, stop, session 
+summary: 您可以將CLI工作階段記錄到具有指定名稱和大小限制的檔案中、然後將檔案上傳至FTP或HTTP目的地。 
+---
+= 管理 CLI 工作階段
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+您可以將CLI工作階段記錄到具有指定名稱和大小限制的檔案中、然後將檔案上傳至FTP或HTTP目的地。您也可以顯示或刪除先前錄製的CLI工作階段所在的檔案。
+
+
+
+== 記錄CLI工作階段
+
+當您停止錄製或結束CLI工作階段、或檔案達到指定的大小限制時、CLI工作階段的記錄即告結束。預設檔案大小限制為1 MB。檔案大小上限為2 GB。
+
+記錄CLI工作階段很有用、例如、如果您正在疑難排解某個問題、想要儲存詳細資訊、或是想要在特定時間點建立永久的空間使用記錄。
+
+.步驟
+. 開始將目前的 CLI 工作階段錄製到檔案中：
++
+[source, cli]
+----
+system script start
+----
++
+如需使用的詳細資訊、請參閱 `system script start` 命令，請參見手冊頁。
+
++
+將CLI工作階段記錄到指定的檔案中。ONTAP
+
+. 繼續進行CLI工作階段。
+. 完成後、停止錄製工作階段：
++
+[source, cli]
+----
+system script stop
+----
++
+如需使用的詳細資訊、請參閱 `system script stop` 命令，請參見手冊頁。
+
++
+停止記錄您的CLI工作階段。ONTAP
+
+
+
+
+
+== 用於管理CLI工作階段記錄的命令
+
+您可以使用 `system script` 用於管理 CLI 工作階段記錄的命令。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+開始將目前的CLI工作階段錄製到指定的檔案
+ a| 
+`system script start`
+
+
+
+ a| 
+停止錄製目前的CLI工作階段
+ a| 
+`system script stop`
+
+
+
+ a| 
+顯示有關CLI工作階段記錄的資訊
+ a| 
+`system script show`
+
+
+
+ a| 
+將CLI工作階段的記錄上傳至FTP或HTTP目的地
+ a| 
+`system script upload`
+
+
+
+ a| 
+刪除CLI工作階段的記錄
+ a| 
+`system script delete`
+
+|===
+.相關資訊
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]
+
+
+
+== 用於管理CLI工作階段自動逾時期間的命令
+
+超時值指定CLI工作階段在自動終止之前保持閒置的時間。CLI逾時值為整個叢集範圍。也就是叢集中的每個節點都使用相同的CLI逾時值。
+
+根據預設、CLI工作階段的自動逾時期間為30分鐘。
+
+您可以使用 `system timeout` 用於管理 CLI 工作階段自動逾時期間的命令。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+顯示CLI工作階段的自動逾時期間
+ a| 
+`system timeout show`
+
+
+
+ a| 
+修改CLI工作階段的自動逾時期間
+ a| 
+`system timeout modify`
+
+|===
+.相關資訊
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令數ONTAP"^]

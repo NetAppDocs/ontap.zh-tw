@@ -4,7 +4,7 @@ permalink: networking/create_a_broadcast_domain97.html
 keywords: create, creation, creating, add, adding, broadcast, domain, create a broadcast domain, broadcast domains group network ports in the cluster that belong to the same layer 2 network 
 summary: 廣播網域會將叢集中屬於同一個第2層網路的網路連接埠分組 
 ---
-= 建立廣播網域
+= 建立廣播網域（ ONTAP 9.7 及更早版本）
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,14 +14,21 @@ summary: 廣播網域會將叢集中屬於同一個第2層網路的網路連接�
 
 
 [role="lead"]
-在更新的版本中、您可以建立廣播網域、將屬於同一層網路的叢集中網路連接埠分組。ONTAP然後、SVM便可使用這些連接埠。
+在更新的版本中、您可以建立廣播網域、將屬於同一層網路的叢集中網路連接埠分組。ONTAP然後、SVM便可使用這些連接埠。您必須為自訂IPspace建立廣播網域。在IPspace中建立的SVM會使用廣播網域中的連接埠。
+
+
+NOTE: 這項工作與ONTAP 不ONTAP 適用於《產品介紹》9.0 - 9.7、而非《產品介紹》9.8有關。
 
 .開始之前
+您必須是叢集管理員才能執行此工作。
+
 從ONTAP 功能更新到功能更新到功能更新、從功能更新到功能更新到功能更新到功能更新到功能更新到功能更新。如果您執行ONTAP 的是更新版本的版本、則不需要執行這些步驟。
 
 在更新版本的版本中、您計畫新增至廣播網域的連接埠不得屬於其他廣播網域。ONTAP
 
 .關於這項工作
+LIF容錯移轉的連接埠必須是LIF的容錯移轉群組成員。當您建立廣播網域時ONTAP 、Isover會自動建立名稱相同的容錯移轉群組。容錯移轉群組包含指派給廣播網域的所有連接埠。
+
 * 所有廣播網域名稱在IPspace內必須是唯一的。
 * 新增至廣播網域的連接埠可以是實體網路連接埠、VLAN或介面群組（ifgrps）。
 * 如果您要使用的連接埠屬於另一個廣播網域、但未使用、請使用 `network port broadcast-domain remove-ports` 從現有廣播網域移除連接埠的命令。

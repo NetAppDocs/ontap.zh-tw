@@ -14,18 +14,37 @@ summary: 為叢集中的每個SVM建立IPspace
 
 
 [role="lead"]
-您可以使用IPspace為叢集中的每個SVM建立不同的IP位址空間。這樣做可讓管理性分隔網路網域中的用戶端存取叢集資料、同時使用相同IP位址子網路範圍中重疊的IP位址。
+IPspaces是儲存虛擬機器（SVM）所在的不同IP位址空間。當您需要SVM擁有自己的安全儲存、管理和路由時、可以建立IPspaces。您可以使用IPspace為叢集中的每個SVM建立不同的IP位址空間。這樣做可讓管理性分隔網路網域中的用戶端存取叢集資料、同時使用相同IP位址子網路範圍中重疊的IP位址。
+
+.關於這項工作
+整個叢集的IP空間上限為512個。對於包含具有 6 GB RAM 的節點的叢集、叢集範圍限制會減至 256 個 IPspace 。請參閱Hardware Universe 《參考資訊（英文）：判斷您的平台是否有其他限制。
+
+https://hwu.netapp.com/["NetApp Hardware Universe"^]
+
+
+NOTE: IPspace名稱不能為「ALL」、因為「ALL」是系統保留的名稱。
 
 .開始之前
 您必須是叢集管理員才能執行此工作。
 
 .步驟
-建立IPspace。
+. 建立IPspace：
++
+....
+network ipspace create -ipspace ipspace_name
+....
++
+`ipspace_name` 為您要建立的 IPspace 名稱。下列命令會在叢集上建立IPspace ipspace1：
 
-`network ipspace create -ipspace ipspace1`
-
++
+....
+network ipspace create -ipspace ipspace1
+....
+. 顯示 IPspaces ：
++
 `network ipspace show`
 
++
 ....
 IPspace             Vserver List          Broadcast Domains
 ------------------- --------------------- ----------------------------
@@ -33,4 +52,21 @@ Cluster             Cluster               Cluster
 Default             Cluster1              Default
 ipspace1            ipspace1              -
 ....
++
 IPspace隨系統SVM一起建立、用於IPspace。系統SVM可傳輸管理流量。
+
+
+
+.完成後
+如果您在MetroCluster 具有不含任何組態的叢集中建立IPspace、則必須手動將IPspace物件複寫到合作夥伴叢集。在IPspace複寫之前建立並指派給IPspace的任何SVM、將不會複寫到合作夥伴叢集。
+
+廣播網域會自動在「預設」IPspace中建立、並可使用下列命令在IPspaces之間移動：
+
+....
+network port broadcast-domain move
+....
+例如、如果您想要使用下列命令、將廣播網域從「預設」移至「ips1」：
+
+....
+network port broadcast-domain move -ipspace Default -broadcast-domain Default -to-ipspace ips1
+....
