@@ -21,7 +21,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 .步驟
 . 反轉原始資料保護關係：
 +
-`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -63,7 +63,7 @@ cluster_dst::> vserver stop svm_backup
 ----
 . 更新反轉的關係：
 +
-`snapmirror update -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror update -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -84,7 +84,7 @@ cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 ----
 . 從原始來源SVM或原始來源叢集、停止針對反向關係進行排程傳輸：
 +
-`snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror quiesce -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -105,7 +105,7 @@ cluster_src::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-
 ----
 . 當完成最後的更新、且關係指出關係狀態為「靜止」時、請從原始來源SVM或原始來源叢集執行下列命令、以中斷反向關係：
 +
-`snapmirror break -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror break -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -126,7 +126,7 @@ cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 ----
 . 從原始來源SVM或原始來源叢集刪除反向的資料保護關係：
 +
-`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror delete -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -147,7 +147,7 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 . 從原始目的地SVM或原始目的地叢集釋放反向關係。
 +
-`snapmirror release -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror release -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
 [NOTE]
@@ -163,6 +163,21 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
+. 從原始目的地重新建立原始資料保護關係：
++
+`snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
+
++
+如需完整的命令語法、請參閱手冊頁。
+
++
+以下範例重新建立原始來源磁碟區之間的關係、 `volA` 開啟 `svm1`和原始目的地 Volume 、 `volA_dst` 開啟 `svm_backup`：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
 . 如有需要、請啟動原始目的地SVM：
 +
 `vserver start -vserver _SVM_`
@@ -177,21 +192,6 @@ cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-
 [listing]
 ----
 cluster_dst::> vserver start svm_backup
-----
-. 從原始目的地重新建立原始資料保護關係：
-+
-`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
-+
-如需完整的命令語法、請參閱手冊頁。
-
-+
-以下範例重新建立原始來源磁碟區之間的關係、 `volA` 開啟 `svm1`和原始目的地 Volume 、 `volA_dst` 開啟 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
 
 

@@ -11,9 +11,17 @@ summary: 支援FC-NVMe、FC、iSCSI和FCoE拓撲、可將主機電腦連線至�
 
 
 [role="lead"]
-下列各節說明支援的FC-NVMe、FC、iSCSI和FCoE拓撲、可將主機電腦連線至節點、並列出SAN元件支援的限制。
+儲存區域網路（ SAN ）是由透過 iSCSI 或 FC 等 SAN 傳輸協定連接至主機的儲存解決方案所組成。您可以設定 SAN 、讓儲存解決方案透過一或多個交換器連接到主機。  如果您使用 iSCSI 、也可以設定 SAN 、讓儲存解決方案直接連接到主機、而無需使用交換器。
 
-您應將此資訊與基本SAN組態文件搭配使用：
+在 SAN 中、使用不同作業系統（例如 Windows 、 Linux 或 UNIX ）的多個主機可以同時存取儲存解決方案。  您可以使用 link:../san-admin/selective-lun-map-concept.html["選擇性 LUN 對應"] 和 link:../san-admin/create-port-sets-binding-igroups-task.html["連接埠集"] 限制主機與儲存設備之間的資料存取。
 
+對於 iSCSI 、儲存解決方案與主機之間的網路拓撲稱為網路。  對於 FC 、 FC/NVMe 和 FCoE 、儲存解決方案和主機之間的網路拓撲稱為架構。若要建立備援功能、防止資料存取遺失、您應該在多網路或多架構組態中設定 SAN 搭配 HA 配對。  使用單一節點或單一網路 / 架構的組態並非完全備援、因此不建議使用。
+
+設定 SAN 之後、您就可以了 link:../san-admin/provision-storage.html["為 iSCSI 或 FC 配置儲存設備"]或是您可以 link:../san-admin/create-nvme-namespace-subsystem-task.html["為 FC/NVMe 配置儲存設備"]。  然後、您可以連線至主機、開始服務資料。
+
+SAN 傳輸協定支援會因您的 ONTAP 版本、平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。
+
+.相關資訊
 * link:../san-admin/index.html["SAN管理總覽"]
+* link:../nvme/support-limitations.html["NVMe 組態、支援和限制"]
 
