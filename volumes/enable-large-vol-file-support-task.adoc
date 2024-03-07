@@ -25,8 +25,10 @@ summary: 您可以在建立新磁碟區時啟用大型磁碟區和檔案的支�
 .步驟
 . 建立已啟用大容量和檔案支援的 Volume ：
 +
-`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
-
+[source, cli]
+----
+volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true
+----
 
 
 .範例
@@ -40,10 +42,13 @@ volume create -vserver vs1 -volume big_vol1 -aggregate aggr1 -is-large-size-enab
 
 == 修改現有的 Volume
 
+.步驟
 . 修改磁碟區以啟用大容量和檔案支援：
 +
-`volume modify -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
-
+[source, cli]
+----
+volume modify -vserver _svm_name_ -volume _volume_name_ -is-large-size-enabled true
+----
 
 
 .範例
@@ -51,7 +56,7 @@ volume create -vserver vs1 -volume big_vol1 -aggregate aggr1 -is-large-size-enab
 
 [listing]
 ----
-volume modify -vserver vs2 -volume data_vol -aggregate aggr1 -is-large-size-enabled true
+volume modify -vserver vs2 -volume data_vol -is-large-size-enabled true
 ----
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap/volumes/create-volume-task.html["建立Volume"]

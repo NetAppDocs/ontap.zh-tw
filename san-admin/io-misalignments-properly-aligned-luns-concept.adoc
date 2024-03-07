@@ -31,131 +31,18 @@ image::../media/bsag-cmode-lbpb.gif[LUN 上實體區塊中的邏輯區塊]
 
 == 使用LUN OS類型實現I/O對齊
 
-若要讓 I/O 與作業系統分割配置一致、您應該使用建議的 ONTAP LUN `ostype` 最符合您作業系統的價值。
+對於 ONTAP 9.7 或更早版本、您應該使用建議的 ONTAP LUN `ostype` 最符合您作業系統的值、以符合您的作業系統分割配置、達到 I/O 一致性。
 
 主機作業系統所採用的分割區配置是造成I/O錯誤的主要因素。某些 ONTAP LUN `ostype` 值使用特殊偏移值「前置字元」來啟用主機作業系統所使用的預設分割配置。
 
-[NOTE]
-====
-在某些情況下、可能需要使用自訂的分割表來達成I/O對齊。不過、對於 `ostype` 值大於 "`prefix'" 的值 `0`，自訂分割區可能會產生未對齊的 I/O
 
-====
-LUN `ostype` 下表中的值應根據您的作業系統而使用。
+NOTE: 在某些情況下、可能需要使用自訂的分割表來達成I/O對齊。不過、對於 `ostype` 值大於 "`prefix'" 的值 `0`，自訂分割區可能會產生未對齊的 I/O
 
-[cols="4*"]
-|===
-| LUN `ostype` | 前置字元（位元組） | 前置詞（區段） | 作業系統 
+如需 ONTAP 9.7 或更早版本中已配置 LUN 的詳細資訊、請參閱知識庫文章 link:https://kb.netapp.com/onprem/ontap/da/SAN/How_to_identify_unaligned_IO_on_LUNs["如何識別 LUN 上未對齊的 IO"^]。
 
 
- a| 
-`windows`
- a| 
-32、256
- a| 
-63.
- a| 
-Windows 2000、2003（MBR-格式）
+NOTE: 根據預設、在 ONTAP 9.8 或更新版本中配置的新 LUN 、其前置碼和後置碼大小為零、適用於所有 LUN OS 類型。依預設、 I/O 應與支援的主機作業系統一致。
 
-
-
- a| 
-`windows_gpt`
- a| 
-17、408
- a| 
-34.
- a| 
-Windows 2003（GPT格式）
-
-
-
- a| 
-`windows_2008`
- a| 
-0%
- a| 
-0%
- a| 
-Windows 2008及更新版本
-
-
-
- a| 
-`linux`
- a| 
-0%
- a| 
-0%
- a| 
-所有Linux發行版本
-
-
-
- a| 
-`xen`
- a| 
-0%
- a| 
-0%
- a| 
-Citrix XenServer
-
-
-
- a| 
-`vmware`
- a| 
-0%
- a| 
-0%
- a| 
-VMware ESX
-
-
-
- a| 
-`solaris`
- a| 
-1MB
- a| 
-2 、 048
- a| 
-Solaris
-
-
-
- a| 
-`solaris_efi`
- a| 
-17、408
- a| 
-34.
- a| 
-Solaris
-
-
-
- a| 
-`hpux`
- a| 
-0%
- a| 
-0%
- a| 
-HP-UX
-
-
-
- a| 
-`aix`
- a| 
-0%
- a| 
-0%
- a| 
-AIX
-
-|===
 
 
 == Linux的特殊I/O對齊考量
