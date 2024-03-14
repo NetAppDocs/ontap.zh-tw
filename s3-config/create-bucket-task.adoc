@@ -158,7 +158,10 @@ NOTE: 您不應該使用S3 root使用者來管理ONTAP 物件儲存設備並分�
 
 如果您想要啟用物件的版本設定以供稍後恢復、請選取 * 啟用版本管理 * 。如果您啟用貯體上的物件鎖定、預設會啟用版本設定。如需物件版本設定的相關資訊、請參閱 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在適用於 Amazon 的 S3 儲存區中使用版本設定"]。
 
-從 9.14.1 開始、 S3 儲存區支援物件鎖定。如果您想要保護貯體中的物件不被刪除或覆寫、請選取 * 啟用物件鎖定 * 。鎖定功能可在所有或特定版本的物件上啟用、而且只有在叢集節點初始化 SnapLock 規範時鐘時才會啟用。請遵循下列步驟：
+從 9.14.1 開始、 S3 儲存區支援物件鎖定。S3 物件鎖定需要標準 SnapLock 授權。本授權隨附於 https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html["ONTAP One"]。
+在 ONTAP One 之前、 SnapLock 授權已包含在安全性與法規遵循套件中。安全性與法規遵循套件已不再提供、但仍有效。雖然目前並不需要、但現有客戶可以選擇 https://docs.netapp.com/us-en/ontap/system-admin/download-nlf-task.html["升級至 ONTAP One"]。
+如果您要啟用貯體上的物件鎖定、您應該 https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html["確認已安裝 SnapLock 授權"]。如果未安裝 SnapLock 授權、您必須 https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安裝"] 您可以先啟用物件鎖定。
+當您確認已安裝 SnapLock 授權時、若要保護您的儲存區中的物件、避免遭到刪除或覆寫、請選取 * 啟用物件鎖定 * 。鎖定功能可在所有或特定版本的物件上啟用、而且只有在叢集節點初始化 SnapLock 規範時鐘時才會啟用。請遵循下列步驟：
 
 . 如果未在叢集的任何節點上初始化 SnapLock 規範時鐘、則會出現 * 初始化 SnapLock 規範時鐘 * 按鈕。按一下 * 初始化 SnapLock Compliance Clock* 、初始化叢集節點上的 SnapLock 規範時鐘。
 . 選取 * Governance * 模式以啟動時間鎖定、允許對物件執行寫入一次、讀取多（ WORM ）權限。即使在 _Governance 模式中、具有特定權限的系統管理員使用者也可以刪除物件。
