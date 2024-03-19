@@ -19,19 +19,27 @@ summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空�
 .步驟
 . 使LUN離線。
 +
-`lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline`
-
-. 設定 `-space-allocation` 參數至 `enabled`：
+[source, cli]
+----
+lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline
+----
+. 啟用空間分配：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
-
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled
+----
 . 確認已啟用空間分配：
 +
-`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
-
+[source, cli]
+----
+lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation
+----
 . 使LUN上線：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online`
-
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online
+----
 . 在主機上、重新掃描所有磁碟、以確保變更為 `-space-allocation` 已正確探索選項。
 
