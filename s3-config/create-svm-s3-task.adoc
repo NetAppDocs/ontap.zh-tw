@@ -59,15 +59,19 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 --
 . 確認叢集上的S3已獲得授權：
 +
-`system license show -package s3`
-
+[source, cli]
+----
+system license show -package s3
+----
 +
 如果沒有、請聯絡您的銷售代表。
 
 . 建立SVM：
 +
-`vserver create -vserver _svm_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style unix -language C.UTF-8 -ipspace _ipspace_name_`
-
+[source, cli]
+----
+vserver create -vserver _svm_name_ -subtype default -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style unix -language C.UTF-8 -data-services _data-s3-server_ -ipspace _ipspace_name_
+----
 +
 ** 使用的 UNIX 設定 `-rootvolume-security-style` 選項。
 ** 使用預設的 C.UTF-8 `-language` 選項。
@@ -76,8 +80,10 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 
 . 驗證新建立的SVM的組態和狀態：
 +
-`vserver show -vserver _svm_name_`
-
+[source, cli]
+----
+vserver show -vserver _svm_name_
+----
 +
 。 `Vserver Operational State` 欄位必須顯示 `running` 州/省。如果顯示 `initializing` 狀態、表示有些中繼作業（例如建立根磁碟區）失敗、您必須刪除 SVM 並重新建立它。
 
@@ -88,7 +94,7 @@ summary: 雖然S3可與其他傳輸協定共存於SVM中、但您可能想要建
 
 [listing]
 ----
-cluster-1::> vserver create -vserver svm1.example.com -rootvolume root_svm1 -aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -ipspace ipspaceA
+cluster-1::> vserver create -vserver svm1.example.com -rootvolume root_svm1 -aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -data-services _data-s3-server_ -ipspace ipspaceA
 
 [Job 2059] Job succeeded:
 Vserver creation completed
