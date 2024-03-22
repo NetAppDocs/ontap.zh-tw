@@ -102,6 +102,11 @@ summary: 管理介面支援查詢和UNIX樣式的模式和萬用字元、可讓�
 例如、命令 `volume modify {-volume \*tmp*} -state offline` 將名稱包含字串的所有磁碟區設為離線 `tmp`。
 
 |===
-如果您想將查詢字元剖析為文字、則必須將字元括在雙引號中（例如「 ｛ 插入 ｝ 」、「」）.`", "`*`", or "`$`」 ）、以取得正確的結果。
+如果您要將查詢字元剖析為文字、則必須將字元括在雙引號中（例如、 `"<10"`、 `"0..100"`、 `"\*abc*"`或 `"a|b"`）以取得正確的結果。
+
+您必須以雙引號括住原始檔案名稱、以避免特殊字元的解譯。這也適用於 clusterShell 使用的特殊字元。
 
 您可以在單一命令列中使用多個查詢運算子。例如、命令 `volume show -size >1GB -percent-used <50 -vserver !vs1` 顯示所有大小大於 1 GB 、使用率低於 50% 的磁碟區、而非名稱為「 'VS1' 」的儲存虛擬機器（ SVM ）中的磁碟區。
+
+.相關資訊
+link:../system-admin/keyboard-shortcuts-edit-cli-commands-reference.html["用於編輯CLI命令的鍵盤快速鍵"]
