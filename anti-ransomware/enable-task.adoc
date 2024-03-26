@@ -27,20 +27,26 @@ summary: 在學習模式中啟用自主勒索軟體保護功能、分析工作�
 NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
 
 .開始之前
-* 您必須為 NFS 或 SMB （或兩者）啟用儲存 VM 。
+* 您必須為 NFS 或 SMB （或兩者）啟用儲存 VM （ SVM ）。
 * 。 xref:index.html[正確授權] 必須為您的 ONTAP 版本安裝。
 * 您必須設定具有 NAS 工作負載的用戶端。
-* 您要設定 ARP 的磁碟區必須有作用中的保護 link:../concepts/namespaces-junction-points-concept.html["交會路徑"^]。
+* 您想要設定 ARP 的磁碟區需要受到保護、而且必須有作用中的磁碟區 link:../concepts/namespaces-junction-points-concept.html["交會路徑"^]。
 * 磁碟區必須低於 100% 滿。
 * 建議您將 EMS 系統設定為傳送電子郵件通知、其中包括 ARP 活動通知。如需詳細資訊、請參閱 link:../error-messages/configure-ems-events-send-email-task.html["設定EMS事件以傳送電子郵件通知"^]。
 * 從 ONTAP 9.13.1 開始、我們建議您啟用多重管理驗證（ MAV ）、以便在進行自主勒索軟體保護（ ARP ）組態時、需要兩個或更多已驗證的使用者管理員。如需詳細資訊、請參閱 link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"^]。
 
 
-.步驟
+
+
+== 啟用 ARP
+
+您可以使用系統管理員或 ONTAP CLI 來啟用 ARP 。
+
 [role="tabbed-block"]
 ====
 .系統管理員
 --
+.步驟
 . 選取 * 儲存 > 磁碟區 * 、然後選取您要保護的磁碟區。
 . 在 * Volumes * （卷）總覽的 * Security （安全性） * 標籤中、在 * Anti-勒索 ware* （ * 反勒索軟體）方塊中、選取 * Status （狀態） * 以在學習模式中從 Disabled （已停用）切換為 Enabled （已啟用）。
 . 學習期間結束時、請將ARP切換至作用中模式。
@@ -62,19 +68,15 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 --
 .CLI
 --
+如果您是在現有磁碟區上啟用 ARP 、而不是在新磁碟區上啟用 ARP 、則使用 CLI 啟用 ARP 的程序會有所不同。
+
 .在現有磁碟區上啟用 ARP
 . 修改現有磁碟區以在學習模式中啟用勒索軟體保護：
 +
 `security anti-ransomware volume dry-run -volume _vol_name_ -vserver _svm_name_`
 
 +
-您也可以使用啟用勒索軟體保護 `volume modify` 命令：
-
-+
-`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state dry-run`
-
-+
-如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
+如果您執行的是 ONTAP 9.13.1 或更新版本、則會啟用調適性學習、以便自動完成變更至作用中狀態。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`
@@ -101,7 +103,7 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 `volume create -volume _vol_name_ -vserver _svm_name_  -aggregate _aggr_name_ -size _nn_ -anti-ransomware-state dry-run -junction-path /_path_name_`
 
 +
-如果您升級至 ONTAP 9.13.1 或更新版本、則會啟用調適學習功能、以便自動完成對作用中狀態的變更。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
+如果您執行的是 ONTAP 9.13.1 或更新版本、則會啟用調適性學習、以便自動完成變更至作用中狀態。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`

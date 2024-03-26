@@ -89,11 +89,11 @@ NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體�
 
 ARP 有兩種模式：
 
-. 學習（或「演習」模式）
-. 作用中（或「啟用」模式）
+* * 學習 * （或「乾跑」模式）
+* * Active * （或「啟用」模式）
 
 
-當您啟用 ARP 時、它會以學習模式執行。在學習模式中、 ONTAP 系統會根據分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP 快照、以便在偵測到威脅時保護資料。
+當您啟用 ARP 時、它會以 _ 學習模式 _ 執行。在學習模式中、 ONTAP 系統會根據分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。一旦 ARP 切換至作用中模式、 ONTAP 就會建立 ARP Snapshot 複本、以便在偵測到威脅時保護資料。
 
 建議您將 ARP 留在學習模式 30 天。從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化、這可能會在 30 天前發生。
 
@@ -103,7 +103,7 @@ ARP 有兩種模式：
 
 
 
-== 威脅評估和 ARP 快照
+== 威脅評估與 ARP Snapshot 複本
 
 在作用中模式中、 ARP 會根據從學習到的分析中測得的傳入資料來評估威脅可能性。當 ARP 偵測到威脅時、就會指派測量值：
 
@@ -115,23 +115,23 @@ ARP 有兩種模式：
 
 
 
-在威脅較低的情況下、 ONTAP 會偵測異常狀況、並建立磁碟區的快照、以建立最佳的恢復點。ARP Snapshot 使用 `anti-ransomware-backup` 例如、標記和可透過其名稱識別 `Anti_ransomware_backup.2022-12-20_1248`。
+在威脅較低的情況下、 ONTAP 會偵測異常狀況、並建立磁碟區的 Snapshot 複本、以建立最佳的還原點。ONTAP 會使用預先填入 ARP Snapshot 複本的名稱 `Anti-ransomware-backup` 例如、讓它易於識別 `Anti_ransomware_backup.2022-12-20_1248`。
 
 ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。低層級的威脅會記錄下來、並顯示在 System Manager 的 **EventS** 區段中。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示、但您可以從 ONTAP 9.14.1 開始 xref:manage-parameters-task.html#modify-alerts[修改警示設定]。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
 您可以在 System Manager 的「 ** 事件」 ** 區段或與一起檢視威脅的相關資訊、無論其層級為何 `security anti-ransomware volume show` 命令。
 
-ARP 快照會保留至少兩天。從 ONTAP 9.11.1 開始、您可以修改保留設定。如需詳細資訊、請參閱 xref:modify-automatic-shapshot-options-task.html[修改 Snapshot 複本選項]。
+ARP Snapshot 複本會保留至少兩天。從 ONTAP 9.11.1 開始、您可以修改保留設定。如需詳細資訊、請參閱 xref:modify-automatic-shapshot-options-task.html[修改 Snapshot 複本選項]。
 
 
 
 == 如何在ONTAP 勒索軟體攻擊後恢復資料
 
-如果懷疑有攻擊、系統會在該時間點製作Volume Snapshot複本、並鎖定該複本。如果稍後確認攻擊、則可將磁碟區還原至此 Snapshot 、將資料遺失降至最低。
+如果懷疑有攻擊、系統會在該時間點製作Volume Snapshot複本、並鎖定該複本。如果稍後確認攻擊、則可使用 ARP Snapshot 複本還原磁碟區。
 
 鎖定的Snapshot複本無法以正常方式刪除。不過、如果您稍後決定將攻擊標示為誤判、則鎖定的複本將會刪除。
 
-瞭解受影響的檔案和攻擊時間之後、就能選擇性地從各種Snapshot複本中還原受影響的檔案、而不只是將整個磁碟區還原成其中一個快照。
+在瞭解受影響的檔案和攻擊時間之後、您可以選擇性地從各種 Snapshot 複本恢復受影響的檔案、而不只是將整個 Volume 還原為 Snapshot 複本之一。
 
 因此、Arp建置在獲證實ONTAP 的資料保護和災難恢復技術之上、以因應勒索軟體攻擊。如需恢復資料的詳細資訊、請參閱下列主題。
 

@@ -26,17 +26,15 @@ summary: 如果您預期會發生不尋常的工作負載事件、您可以隨�
 
 NOTE: 請勿使用 ARP 停用功能來暫停分析。這樣做會停用磁碟區上的Arp、並會遺失所有有關已學習工作負載行為的現有資訊。這需要重新啟動學習期間。
 
-.開始之前
-* 在學習或作用中模式下執行的是ARP。
-
-
 .步驟
+您可以使用系統管理員或 ONTAP CLI 來暫停 ARP 。
+
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 . 選取 * 儲存 > 磁碟區 * 、然後選取您要暫停 ARP 的磁碟區。
-. 在「Volumes（磁碟區）」總覽的「Security（安全性）」索引標籤中、按一下「* anti-勒索 軟體*（*防勒索軟體*）」方塊中的「暫停防勒索軟體*」。
+. 在 Volumes （磁碟區）總覽的 ** Security （ ** 安全性） ** 索引標籤中、在 * Anti-勒索 ware* 方塊中選取 * Pause anti-勒索 ware* 。
 +
 
 NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、暫停作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
@@ -54,28 +52,31 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
 +
 `security anti-ransomware volume resume -vserver _svm_name_ -volume _vol_name_`
 
-
-
-從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、暫停作業會提示您取得一或多個額外管理員的核准。必須從與 MAV 核准群組相關的所有管理員處收到核准、否則作業將會失敗。
-
+. * 如果您使用 MAV （從 ONTAP 9.13.1 開始的 ARP 提供）來保護您的 ARP 設定、 * 暫停作業會提示您取得一或多位其他管理員的核准。必須從與 MAV 核准群組相關的所有管理員處收到核准、否則作業將會失敗。
++
 如果您使用的是 MAV 、而預期的暫停作業需要額外核准、則每位 MAV 群組核准者都會執行下列動作：
 
-. 顯示要求：
++
+.. 顯示要求：
 +
 `security multi-admin-verify request show`
 
-. 核准申請：
+.. 核准申請：
 +
 `security multi-admin-verify request approve -index[_number returned from show request_]`
 
 +
 最後一個群組核准者的回應表示該磁碟區已修改、而且 ARP 狀態已暫停。
 
-
-
++
 如果您使用的是 MAV 、而且您是 MAV 群組核准者、您可以拒絕暫停作業要求：
 
++
 `security multi-admin-verify request veto -index[_number returned from show request_]`
+
+
+
+
 
 --
 ====
