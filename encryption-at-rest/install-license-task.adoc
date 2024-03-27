@@ -2,7 +2,7 @@
 permalink: encryption-at-rest/install-license-task.html 
 sidebar: sidebar 
 keywords: install, license, VE license, NVE, encryption, encrypt data 
-summary: VE授權可讓您在叢集中的所有節點上使用此功能。您必須先安裝授權、才能使用NVE加密資料。 
+summary: VE授權可讓您在叢集中的所有節點上使用此功能。您必須先確認已安裝授權、才能使用 NVE 加密資料。 
 ---
 = 安裝授權
 :allow-uri-read: 
@@ -11,42 +11,19 @@ summary: VE授權可讓您在叢集中的所有節點上使用此功能。您必
 
 
 [role="lead"]
-VE授權可讓您在叢集中的所有節點上使用此功能。您必須先安裝授權、才能使用NVE加密資料。
+VE授權可讓您在叢集中的所有節點上使用此功能。使用 NVE 加密資料之前、必須先取得此授權。隨附於 link:https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+
+在 ONTAP One 之前、 VE 授權已包含在加密套件中。加密套件已不再提供、但仍然有效。雖然目前並不需要、但現有客戶可以選擇 link:https://docs.netapp.com/us-en/ontap/system-admin/download-nlf-task.html["升級至 ONTAP One"]。
 
 .開始之前
 * 您必須是叢集管理員才能執行此工作。
-* 您必須已從銷售代表處收到 VE 授權金鑰。
+* 您必須已從銷售代表處收到 VE 授權金鑰、或已安裝 ONTAP 。
 
 
 .步驟
-. 安裝節點的VE授權：
-+
-`system license add -license-code _license_key_`
-
-+
-下列命令會隨金鑰一起安裝授權 `AAAAAAAAAAAAAAAAAAAAAAAAAAAA`。
-
-+
-[listing]
-----
-cluster1::> system license add -license-code AAAAAAAAAAAAAAAAAAAAAAAAAAAA
-----
-. 顯示叢集上的所有授權、確認已安裝授權：
-+
-`system license show`
-
-+
-如需完整的命令語法、請參閱命令的手冊頁。
-
-+
-下列命令會顯示上的所有授權 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> system license show
-----
+* link:https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html["確認已安裝 VE 授權"]。
 +
 VE 授權套件名稱為 `VE`。
 
+* 如果未安裝授權、 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["使用系統管理器或 ONTAP CLI 進行安裝"]。
 
