@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/concept_upgrade_methods.html 
 sidebar: sidebar 
-keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive 
+keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive, rolling upgrade, rolling update, batch upgrades, batch upgrade, rolling, batch 
 summary: 您用來升級的方法取決於您的組態。  如果有、最好使用System Manager進行自動化不中斷升級（andu）。 
 ---
 = ONTAP 軟體升級方法
@@ -15,13 +15,35 @@ summary: 您用來升級的方法取決於您的組態。  如果有、最好使
 
 您可以使用循環升級程序或批次升級程序來執行升級。兩者皆不中斷營運。
 
+對於自動升級、 ONTAP 會自動在每個節點上安裝目標 ONTAP 映像、驗證叢集元件、確保叢集可以不中斷地升級、然後根據節點數量在背景執行批次或滾動升級。對於手動升級、管理員會手動確認叢集中的每個節點都已準備好進行升級、然後執行步驟來執行循環升級。
+
 .ONTAP 滾動升級
-在循環升級程序中、節點會離線並升級、而其合作夥伴則會接管其儲存設備。當節點升級完成時、合作夥伴節點會將控制權交回原始擁有節點、並在合作夥伴節點上重複此程序。每個額外的HA配對都會依序升級、直到所有HA配對都執行目標版本為止。對於節點少於 8 個的叢集而言、循環升級程序是預設程序。
+對於節點少於 8 個的叢集而言、循環升級程序是預設程序。  在循環升級程序中、節點會離線並升級、而其合作夥伴則會接管其儲存設備。當節點升級完成時、合作夥伴節點會將控制權交回原始擁有節點、並在合作夥伴節點上重複此程序。每個額外的HA配對都會依序升級、直到所有HA配對都執行目標版本為止。
 
 .ONTAP 批次升級
-在批次升級程序中、叢集分成多批次、每批次包含多個 HA 配對。在第一批中、每個 HA 配對的一個節點都會升級、然後是其 HA 合作夥伴。接著會依序重複其餘批次的程序。批次升級程序是 8 個以上節點叢集的預設程序。
+批次升級程序是 8 個以上節點叢集的預設程序。  在批次升級程序中、叢集分為兩批。  每個批次都包含多個 HA 配對。在第一批中、每個 HA 配對的第一個節點會與批次中所有其他 HA 配對的第一個節點同時升級。
 
-對於自動升級、 ONTAP 會自動在每個節點上安裝目標 ONTAP 映像、驗證叢集元件、確保叢集可以不中斷地升級、然後根據節點數量在背景執行批次或滾動升級。對於手動升級、管理員會手動確認叢集中的每個節點都已準備好進行升級、然後執行步驟來執行循環升級。
+在以下範例中、每個批次中有兩個 HA 配對。  批次升級開始時、節點 A 和節點 C 會同時升級。
+
+image::../media/batch_upgrade_set_1_ieops-1607.png[批次升級步驟 1]
+
+每個 HA 配對的第一個節點升級完成後、批次 1 中的合作夥伴節點會同時升級。
+
+在以下範例中、節點 A 和節點 C 升級之後、節點 B 和節點 D 會同時升級。
+
+image::../media/batch_upgrade_set_2_ieops-1619.png[批次升級步驟 2]
+
+接著會針對批次 2 中的節點重複此程序；每個 HA 配對的第一個節點會與批次中所有其他 HA 配對的第一個節點同時升級。
+
+在以下範例中、節點 E 和節點 G 會同時升級。
+
+image::../media/batch_upgrade_set_3_ieops-1612.png[批次升級步驟 3]
+
+每個 HA 配對的第一個節點升級完成後、批次 2 中的合作夥伴節點會同時升級。
+
+在下列範例中、節點 F 和節點 H 會同時升級、以完成批次升級程序。
+
+image::../media/batch_upgrade_set_4_ieops-1620.png[批次升級步驟 4]
 
 
 
