@@ -1,0 +1,43 @@
+---
+permalink: insights-configure-native-fpolicy-task.html 
+sidebar: sidebar 
+keywords: system manager, fpolicy, file extensions, native, best practice, best practise, configure, disallow 
+summary: 從 ONTAP 9.11.1 開始、當您收到建議實作原生 FPolicy 的 System Manager Insight 時、您可以在儲存 VM 和 Volume 上進行設定。  
+---
+= 設定原生 FPolicy
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9.11.1 開始、當您收到建議實作原生 FPolicy 的 System Manager Insight 時、您可以在儲存 VM 和 Volume 上進行設定。
+
+.開始之前
+當您存取 System Manager Insights 時、在 * 套用最佳實務做法 * 下、您可能會收到訊息、表示未設定原生 FPolicy 。
+
+若要深入瞭解 FPolicy 組態類型、請參閱 https://docs.netapp.com/us-en/ontap/nas-audit/fpolicy-config-types-concept.html["FPolicy組態類型"]。
+
+.步驟
+. 在System Manager中、按一下左側導覽欄中的* Insights *。
+. 在 * 套用最佳實務 * 下、找出 * 未設定原生 FPolicy * 。
+. 在採取行動之前、請先閱讀下列訊息：
++
+[IMPORTANT]
+====
+* 封鎖延伸可能會導致非預期的結果。 * 從 ONTAP 9.11.1 開始、您可以使用系統管理員為儲存 VM 啟用原生 FPolicy 。
+使用 FPolicy 原生模式、您可以允許或不允許特定的副檔名。System Manager 建議使用超過 3000 個不允許的檔案副檔名、這些副檔名曾在過去的勒索軟體攻擊中使用過。  您環境中的合法檔案可能會使用其中一些副檔名、而封鎖這些副檔名可能會導致非預期的問題。
+
+因此、強烈建議您修改擴充功能清單、以符合您環境的需求。請參閱 https://kb.netapp.com/onprem/ontap/da/NAS/How_to_remove_a_file_extension_from_a_native_FPolicy_configuration_created_by_System_Manager_using_System_Manager_to_recreate_the_policy["如何從系統管理員使用系統管理員建立的原生 FPolicy 組態中移除副檔名、以重新建立原則"^]。
+
+====
+. 按一下 *Fix* 。
+. 選取您要套用原生 FPolicy 的儲存 VM 。
+. 針對每個儲存 VM 、選取要接收原生 FPolicy 的磁碟區。
+. 按一下「*設定*」。
+
