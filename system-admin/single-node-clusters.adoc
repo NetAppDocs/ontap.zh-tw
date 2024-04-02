@@ -1,0 +1,172 @@
+---
+permalink: system-admin/single-node-clusters.html 
+sidebar: sidebar 
+keywords: ways, configure, iscsi, san, hosts, single, nodes 
+summary: 單節點叢集是在獨立節點上執行的叢集的特殊實作。  不建議使用單節點叢集、因為它們不提供備援。  如果節點故障、資料存取就會遺失。 
+---
+= 管理單節點叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+單節點叢集是在獨立節點上執行的叢集的特殊實作。  不建議使用單節點叢集、因為它們不提供備援。  如果節點故障、資料存取就會遺失。
+
+[NOTE]
+====
+為了容錯與不中斷營運、強烈建議您使用來設定叢集 link:../concepts/high-availability-pairs-concept.html["高可用度（ HA 配對）"]。
+
+====
+如果您選擇設定或升級單節點叢集、您應該瞭解下列事項：
+
+* 單一節點叢集不支援根磁碟區加密。
+* 如果您移除節點以擁有單節點叢集、則應修改叢集連接埠、將叢集連接埠修改為資料連接埠、然後在資料連接埠上建立資料生命體、以提供資料流量。
+* 對於單節點叢集、您可以在軟體設定期間指定組態備份目的地。設定完成後、您可以使用ONTAP 各種指令來修改這些設定。
+* 如果有多個主機連線至節點、則每個主機都可以使用不同的作業系統設定、例如 Windows 或 Linux 。如果從主機到控制器有多個路徑、則必須在主機上啟用ALUA。
+
+
+
+
+== 使用單一節點設定iSCSI SAN主機的方法
+
+您可以將 iSCSI SAN 主機設定為直接連線至單一節點、或透過一或多個 IP 交換器進行連線。節點可與交換器建立多個 iSCSI 連線。
+
+.直接附加的單節點組態
+在直接附加的單節點組態中、一個或多個主機會直接連線至節點。
+
+image::../media/scrn_en_drw_fc-302020-direct-sing-on.png[直接連接控制器的圖表、其中有一或多個主機直接連接至節點]
+
+.單一網路單節點組態
+在單一網路單節點組態中、一台交換器會將單一節點連接至一或多個主機。由於只有一台交換器、因此此組態並未完全備援。
+
+image::../media/r-oc-set-iscsi-singlenetwork-singlenode.gif[直接附加的單一網路單一節點組態]
+
+.多網路單節點組態
+在多網路單節點組態中、兩個或多個交換器會將單一節點連接至一或多個主機。由於有多個交換器、因此此組態完全備援。
+
+image::../media/scrn-en-drw-iscsi-multinw-singlen.gif[多網路單一節點組態]
+
+
+
+== 使用單一節點設定FC和FC-NVMe SAN主機的方法
+
+您可以透過一個或多個架構、使用單一節點來設定FC和FC-NVMe SAN主機。需要N連接埠ID虛擬化（NPIV）、而且必須在網路中的所有FC交換器上啟用。如果不使用FC交換器、則無法將FC或FC-NVE SAN主機直接連接至單一節點。
+
+.單一架構單節點組態
+在單一架構單節點組態中、有一部交換器可將單一節點連接至一或多部主機。由於只有一台交換器、因此此組態並未完全備援。
+
+在單一架構單節點組態中、如果您只有從主機到節點的單一路徑、則不需要多重路徑軟體。
+
+.多種單節點組態
+在Mertifabric單節點組態中、有兩個或多個交換器可將單一節點連接至一或多個主機。為了簡化操作、下圖顯示只有兩個Fabric的Mertifabric單節點組態、但您可以在任何Mertifabric組態中使用兩個或多個Fabric。在本圖中、儲存控制器安裝在上機箱中、底部機箱可以是空的、也可以是IOMX模組、如同本範例所示。
+
+圖示中的FC目標連接埠（0A、0c、0b、0d）為範例。實際的連接埠編號會因儲存節點的機型和是否使用擴充介面卡而有所不同。
+
+image::../media/scrn_en_drw_fc-62xx-multi-singlecontroller.png[Mertifabric單節點組態的圖表]
+
+.相關資訊
+http://www.netapp.com/us/media/tr-4684.pdf["NetApp 技術報告 4684 ：使用 NVMe 實作及設定現代化 SAN"^]
+
+
+
+== 單節點叢集的 ONTAP 升級
+
+從 ONTAP 9.2 開始、您可以使用 ONTAP CLI 執行單節點叢集的自動更新。由於單節點叢集缺乏備援功能、因此更新作業一律會中斷營運。無法使用 System Manager 執行中斷升級。
+
+.開始之前
+您必須完成升級 link:../upgrade/prepare.html["準備"] 步驟。
+
+.步驟
+. 刪除先前ONTAP 的版本：
++
+[source, cli]
+----
+cluster image package delete -version previous_package_version
+----
+. 下載目標ONTAP 版的更新軟體套件：
++
+[source, cli]
+----
+cluster image package get -url location
+----
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.7/image.tgz
+
+Package download completed.
+Package processing completed.
+----
+. 驗證叢集套件儲存庫中是否有可用的軟體套件：
++
+[source, cli]
+----
+cluster image package show-repository
+----
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.7              M/DD/YYYY 10:32:15
+----
+. 確認叢集已準備好升級：
++
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.7
+
+WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
+----
+. 監控驗證進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+. 完成驗證所識別的所有必要行動。
+. 您也可以產生軟體升級預估：
++
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
++
+軟體升級預估會顯示每個要更新元件的詳細資料、以及預估的升級期間。
+
+. 執行軟體升級：
++
+[source, cli]
+----
+cluster image update -version package_version_number
+----
++
+
+NOTE: 如果遇到問題、更新會暫停、並提示您採取修正行動。您可以使用叢集映像show-update-progress命令來檢視任何問題和更新進度的詳細資料。修正問題之後、您可以使用叢集映像resume-update命令繼續更新。
+
+. 顯示叢集更新進度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
++
+節點會在更新過程中重新開機、重新開機時無法存取。
+
+. 觸發通知：
++
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_Upgrade"
+----
++
+如果叢集未設定為傳送訊息、則通知複本會儲存在本機。
+
+

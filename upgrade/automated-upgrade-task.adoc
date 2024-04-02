@@ -38,6 +38,10 @@ IMPORTANT: 修改的設定 `storage failover modify-auto-giveback` 在自動不�
 
 * 如果您要在 MetroCluster FC 組態中升級 ONTAP 、則應該啟用叢集、以便自動進行非計畫性切換。
 * 如果您不打算監控升級程序的進度、您應該 link:../error-messages/configure-ems-notifications-sm-task.html["要求EMS通知可能需要手動介入的錯誤"]。
+* 如果您有單節點叢集、請遵循 link:../system-admin/single-node-clusters.html["自動中斷升級"] 流程。
++
+單節點叢集的升級會造成中斷。
+
 
 
 .步驟
@@ -332,6 +336,112 @@ metrocluster show
 
 --
 ====
+
+
+== 在自動升級程序發生錯誤之後繼續 ONTAP 軟體升級
+
+如果自動 ONTAP 軟體升級因錯誤而暫停、您應該解決此錯誤、然後繼續升級。  解決錯誤之後、您可以選擇繼續自動升級程序、或手動完成升級程序。如果您選擇繼續自動升級、請勿手動執行任何升級步驟。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 視您執行的版本而定ONTAP 、請執行下列其中一個步驟：
++
+|===
+
+
+| 如果您正在執行... | 然後... 
+
+
+ a| 
+部分9.8或更新版本ONTAP
+ a| 
+按一下 * 叢集 * > * 總覽 *
+
+
+
+ a| 
+ONTAP 9.7 、 9.6 或 9.5
+ a| 
+按一下*組態*>*叢集*>*更新*。
+
+
+
+ a| 
+更新版本ONTAP
+ a| 
+** 按一下「*組態*>*叢集更新*」。
+** 在 * 總覽 * 窗格的右角、按一下三個藍色垂直點、然後選取 * ONTAP Update* 。
+
+
+|===
+. 繼續自動升級或取消升級、然後手動繼續。
++
+|===
+
+
+| 如果您想要... | 然後... 
+
+
+ a| 
+繼續自動升級
+ a| 
+按一下*恢復*。
+
+
+
+ a| 
+取消自動升級並手動繼續
+ a| 
+按一下*取消*。
+
+|===
+
+
+--
+.CLI
+--
+. 檢視升級錯誤：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+. 解決錯誤。
+. 繼續升級：
++
+|===
+
+
+| 如果您想要... | 輸入下列命令... 
+
+
+ a| 
+繼續自動升級
+ a| 
+[source, cli]
+----
+cluster image resume-update
+----
+
+
+ a| 
+取消自動升級並手動繼續
+ a| 
+[source, cli]
+----
+cluster image cancel-update
+----
+|===
+
+
+--
+====
+.完成後
+link:task_what_to_do_after_upgrade.html["執行升級後檢查"]。
+
 
 
 == 影片：輕鬆升級
