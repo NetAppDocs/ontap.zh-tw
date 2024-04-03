@@ -15,6 +15,8 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 任何具備適當RBAC功能的系統管理員都可以在啟用MAV之前建立規則、但一旦啟用MAV、對規則集的任何修改都需要MAV核准。
 
+每個作業只能建立一個 MAV 規則、例如、您無法建立多個 `volume-snapshot-delete` 規則。任何所需的規則限制都必須包含在單一規則中。
+
 
 
 == 受規則保護的命令
@@ -75,9 +77,9 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 您可以建立規則、以保護從 ONTAP 9.14.1 開始的下列命令：
 
-* `volume recovery-query modify`
-* `volume recovery-query purge`
-* `volume recovery-query purge-all`
+* `volume recovery-queue modify`
+* `volume recovery-queue purge`
+* `volume recovery-queue purge-all`
 * `vserver modify`
 
 
@@ -90,7 +92,13 @@ MAV 系統預設命令的規則 `security multi-admin-verify` link:../multi-admi
 * `set`
 
 
-建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。例如、在預設的 Set 命令中、 `-query` 設為 `-privilege diag`，表示只有在下列情況下才會為 set 命令產生要求 `-privilege diag` 已指定。
+
+
+== 規則限制
+
+建立規則時、您可以選擇性地指定 `-query` 將要求限制在命令功能子集的選項。。 `-query` 選項也可用於限制組態元素、例如 SVM 、 Volume 和 Snapshot 名稱。
+
+例如、在中 `volume snapshot delete` 命令、 `-query` 可設為 `-snapshot !hourly*,!daily*,!weekly*`表示以每小時、每日或每週屬性為前置的 Volume Snapshot 不受 MAV 保護。
 
 [listing]
 ----
@@ -98,9 +106,12 @@ smci-vsim20::> security multi-admin-verify rule show
                                                Required  Approval
 Vserver Operation                              Approvers Groups
 ------- -------------------------------------- --------- -------------
-vs01    set                                    -         -
-          Query: -privilege diagnostic
+vs01    volume snapshot delete                 -         -
+          Query: -snapshot !hourly*,!daily*,!weekly*
 ----
+
+NOTE: 任何排除的組態元素都不會受到 MAV 保護、任何管理員都可以刪除或重新命名。
+
 根據預設、規則會指定對應的 `security multi-admin-verify request create _“protected_operation”_` 輸入受保護的作業時、會自動產生命令。您可以修改此預設值、要求使用 `request create` 命令需另行輸入。
 
 根據預設、規則會繼承下列全域MAV設定、不過您可以指定規則特定的例外狀況：
