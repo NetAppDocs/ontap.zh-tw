@@ -1,0 +1,39 @@
+---
+permalink: s3-config/use-cases.html 
+sidebar: sidebar 
+keywords: s3 use cases, ontap 9 
+summary: 用戶端存取 ONTAP S3 服務的主要使用案例有三種。 
+---
+= 使用案例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+用戶端存取ONTAP 不支援的S3服務主要有三種使用案例：
+
+* 適用於使用作為遠端不支援功能（雲端）層的不支援功能S3的系統ONTAP ONTAP FabricPool
++
+包含容量層的S3伺服器和儲存區（適用於_Cold資料）位於不同於效能層的叢集（適用於_hot_資料）。
+
+* 適用於使用作為本地資訊技術的不支援功能的不支援功能ONTAP ONTAP FabricPool
++
+包含容量層的S3伺服器和儲存區位於同一個叢集上、但與效能層位於不同的HA配對上。
+
+* 適用於外部S3用戶端應用程式
++
+支援S3用戶端應用程式、可在非NetApp系統上執行。ONTAP
+
+
+
+最佳實務做法是ONTAP 使用HTTPS來存取不支援的S3儲存桶。啟用HTTPS時、需要安全性憑證才能與SSL/TLS適當整合。然後需要用戶端使用者的存取權限和秘密金鑰、才能使用ONTAP S3驗證使用者、並授權使用者在ONTAP S3內執行作業的存取權限。用戶端應用程式也應該能夠存取根CA憑證ONTAP （即由S3伺服器簽署的憑證）、以便驗證伺服器、並在用戶端與伺服器之間建立安全連線。
+
+使用者是在啟用S3的SVM中建立、其存取權限可在儲存區或SVM層級加以控制、也就是可以授予他們在SVM中存取一或多個儲存區的權限。
+
+根據預設ONTAP 、HTTPS會在不支援支援的S3伺服器上啟用。您可以停用HTTPS並啟用HTTP以進行用戶端存取、此時不需要使用CA憑證進行驗證。不過、啟用HTTP且停用HTTPS時、所有與ONTAP 該S3伺服器的通訊都會以純文字透過網路傳送。
+
+如需其他資訊、請參閱 https://www.netapp.com/pdf.html?item=/media/17219-tr4814pdf.pdf["技術報告：S3的ONTAP 最佳實務做法"]
+
+.相關資訊
+link:../flexgroup/index.html["資料區管理FlexGroup"]
