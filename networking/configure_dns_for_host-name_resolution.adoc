@@ -51,31 +51,8 @@ vserver services name-service dns create -vserver <vs1.example.com> -domains <ex
 
 NOTE: vserver services name-service DNS create命令會執行自動組態驗證、並在ONTAP 無法聯絡名稱伺服器時回報錯誤訊息。
 
-. 在SVM擁有的LIF上啟用DNS：
-+
-|===
 
 
-| 如果您是 | 使用此命令： 
-
-
- a| 
-修改現有的LIF區域名稱
- a| 
-`network interface modify -lif lifname -dns-zone`
-
-
-
- a| 
-建立新的LIF區域名稱
- a| 
-`network interface create -lif lifname -dns-zone`
-
-|===
-+
-....
-vserver services name-service dns create -vserver <vs1> -domains <example.com> -name-servers <192.0.2.201, 192.0.2.202> -state <enabled> network interface modify -lif <datalif1> -dns-zone <zonename.whatever.com>
-....
 . 使用驗證名稱伺服器的狀態 `vserver services name-service dns check` 命令。
 +
 ....
@@ -86,6 +63,8 @@ vs1.example.com   10.0.0.50  up        Response time (msec): 2
 vs1.example.com   10.0.0.51  up        Response time (msec): 2
 ....
 
+
+如需與 DNS 相關的服務原則資訊、請參閱 link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ONTAP"]。
 
 
 

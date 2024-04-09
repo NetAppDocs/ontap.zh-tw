@@ -40,11 +40,86 @@ link:repair_port_reachability.html["修復連接埠連線能力"]
 --
 .CLI
 --
-您無法使用 CLI 手動新增或移除廣播網域的連接埠。
-
 如果網路連接埠連線能力已變更、無論是透過實體網路連線或交換器組態、而且網路連接埠屬於不同的廣播網域、請參閱下列主題：
 
 link:repair_port_reachability.html["修復連接埠連線能力"]
+
+或者、您也可以使用手動新增或移除廣播網域的連接埠 `network port broadcast-domain add-ports` 或 `network port broadcast-domain remove-ports` 命令。
+
+.開始之前
+* 您必須是叢集管理員才能執行此工作。
+* 您打算新增至廣播網域的連接埠不得屬於其他廣播網域。
+* 已屬於介面群組的連接埠無法個別新增至廣播網域。
+
+
+.關於這項工作
+新增和移除網路連接埠時、適用下列規則：
+
+|===
+
+
+| 新增連接埠時... | 移除連接埠時... 
+
+
+| 連接埠可以是網路連接埠、VLAN或介面群組（ifgrps）。 | 不適用 
+
+
+| 這些連接埠會新增至廣播網域的系統定義容錯移轉群組。 | 這些連接埠會從廣播網域中的所有容錯移轉群組中移除。 
+
+
+| 連接埠的MTU會更新為廣播網域中設定的MTU值。 | 連接埠的MTU不變。 
+
+
+| 連接埠的IPspace會更新為廣播網域的IPspace值。 | 這些連接埠會移至「預設」IPspace、且不含廣播網域屬性。 
+|===
+
+NOTE: 如果您使用移除介面群組的最後一個成員連接埠 `network port ifgrp remove-port` 命令時、會導致介面群組連接埠從廣播網域中移除、因為廣播網域中不允許使用空的介面群組連接埠。
+
+.步驟
+. 使用顯示目前指派或未指派給廣播網域的連接埠 `network port show` 命令。
+. 從廣播網域新增或移除網路連接埠：
++
+[cols="40,60"]
+|===
+
+
+| 如果您想要... | 使用... 
+
+
+ a| 
+新增連接埠至廣播網域
+ a| 
+`network port broadcast-domain add-ports`
+
+
+
+ a| 
+從廣播網域移除連接埠
+ a| 
+`network port broadcast-domain remove-ports`
+
+|===
+. 確認已從廣播網域新增或移除連接埠：
++
+`network port show`
+
+
+
+如需這些命令的詳細資訊、請參閱 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["指令ONTAP"^]。
+
+= 新增和移除連接埠的範例
+
+下列命令會將節點叢集上的連接埠e0g與節點叢集上的連接埠e0g新增至預設IPspace中的廣播網域bcast1：
+
+`cluster-1::> network port broadcast-domain add-ports -broadcast-domain bcast1 -ports cluster-1-01:e0g,cluster1-02:e0g`
+
+下列命令會在叢集IPspace中新增兩個叢集連接埠以廣播網域叢集：
+
+`cluster-1::> network port broadcast-domain add-ports -broadcast-domain Cluster -ports cluster-2-03:e0f,cluster2-04:e0f -ipspace Cluster`
+
+下列命令會從預設IPspace的廣播網域bcast1中移除節點叢集1上的連接埠e0e：
+
+`cluster-1::> network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01:e0e`
 
 --
 ====
