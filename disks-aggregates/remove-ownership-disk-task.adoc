@@ -13,6 +13,9 @@ summary: 將磁碟擁有權資訊寫入磁碟。ONTAP從節點移除備用磁碟
 [role="lead"]
 將磁碟擁有權資訊寫入磁碟。ONTAP從節點移除備用磁碟或其機櫃之前、您應該先移除其擁有權資訊、以便將其適當整合至其他節點。
 
+
+NOTE: 如果磁碟已分割成根資料分割區、且您執行的是 ONTAP 9.10.1 或更新版本、請聯絡 NetApp 技術支援部門、以取得移除擁有權的協助。如需詳細資訊、請參閱 link:https://kb.netapp.com/onprem/ontap/hardware/Error%3A_command_failed%3A_Failed_to_remove_the_owner_of_disk["知識庫文章：無法移除磁碟擁有者"]。
+
 .您需要的產品
 您要移除擁有權的磁碟必須符合下列需求：
 
@@ -51,21 +54,12 @@ summary: 將磁碟擁有權資訊寫入磁碟。ONTAP從節點移除備用磁碟
 ....
 storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 ....
-. 如果磁碟已分割以進行根資料分割、請移除分割區的擁有權：
+. 如果磁碟是針對根資料分割進行分割、而且您執行的是 ONTAP 9.9.1 或更早版本、請移除分割區的所有權：
 +
 --
-.. 若為ONTAP 版本9.10.1及更新版本、請輸入：
-+
-`storage disk removeowner -disk _disk_name_`
-
-.. 若為ONTAP 版本號9.9.1或更早版本、請輸入兩個命令：
-+
 `storage disk removeowner -disk _disk_name_ -root true`
 
-+
 `storage disk removeowner -disk _disk_name_ -data true`
-
-
 
 這兩個分割區不再由任何節點擁有。
 

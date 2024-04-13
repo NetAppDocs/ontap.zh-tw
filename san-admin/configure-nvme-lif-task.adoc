@@ -13,22 +13,17 @@ summary: 設定NVMe LIF時、必須符合特定需求。
 [role="lead"]
 設定NVMe LIF時、必須符合特定需求。
 
-.您需要的產品
-NVMe必須受您建立LIF的FC介面卡支援。受支援的介面卡列於_SUR__ Hardware Universe 。
-
-https://hwu.netapp.com["NetApp Hardware Universe"^]
+.開始之前
+NVMe必須受您建立LIF的FC介面卡支援。中列出支援的介面卡 https://hwu.netapp.com["Hardware Universe"^]。
 
 .關於這項工作
+從 ONTAP 9.12.1 及更新版本開始、您最多可在 12 個節點上、為每個節點設定兩個 NVMe 生命週期。  在 ONTAP 9.11.1 及更早版本中、您最多可以在兩個節點上、為每個節點設定兩個 NVMe 生命期。
+
 建立NVMe LIF時適用下列規則：
 
 * NVMe可以是資料生命里的唯一資料傳輸協定。
 * 您應該為每個支援SAN的SVM設定一個管理LIF。
-* 適用對象：ONTAP
-+
-** 每個節點最多只能在四個節點上設定兩個NVMe LIF。
-** 您必須在包含命名空間的節點和節點的HA合作夥伴上設定NVMe LIF。
-
-
+* 對於 ONTAP 9.5 或更新版本、您必須在包含命名空間的節點和節點的 HA 合作夥伴上設定 NVMe LIF 。
 * 僅適用於下列項目：ONTAP
 +
 ** NVMe LIF和命名空間必須裝載在同一個節點上。
