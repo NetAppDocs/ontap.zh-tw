@@ -2,7 +2,7 @@
 permalink: peering/create-cluster-relationship-93-later-task.html 
 sidebar: sidebar 
 keywords: create, cluster, peer, relationship 
-summary: 您可以使用叢集對等項create命令、在本機與遠端叢集之間建立對等關係。建立對等關係之後、您可以在遠端叢集上執行叢集對等建立、將其驗證至本機叢集。 
+summary: 您可以使用叢集對等建立命令或 System Manager 、在本機叢集和遠端叢集之間建立對等關係。建立對等關係之後、您可以在遠端叢集上重複此工作、將其驗證至本機叢集。 
 ---
 = 建立叢集對等關係
 :allow-uri-read: 
@@ -19,10 +19,34 @@ summary: 您可以使用叢集對等項create命令、在本機與遠端叢集�
 
 
 .步驟
+使用ONTAP 「系統管理程式」或ONTAP 「系統資訊管理系統」CLI執行此工作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在本機叢集中、按一下 * 叢集 > 設定 * 。
+. 在 * 叢集間設定 * 區段中、按一下 * 新增網路介面 * 、然後新增叢集的叢集間網路介面。
++
+在遠端叢集上重複此步驟。
+
+. 在遠端叢集中、按一下 * 叢集 > 設定 * 。
+. 按一下 image:icon_kabob.gif["功能表選項圖示"] 在 * 叢集對等點 * 區段中、選取 * 產生通行密碼 * 。
+. 選取遠端 ONTAP 叢集版本。
+. 複製產生的複雜密碼。
+. 在本機叢集中的 * 叢集對等端 * 下、按一下 image:icon_kabob.gif["功能表選項圖示"] 然後選擇 * 對等叢集 * 。
+. 在 * 對等叢集 * 視窗中、貼上複雜密碼、然後按一下 * 起始叢集對等 * 。
+
+
+--
+.CLI
+--
 . 在目的地叢集上、建立與來源叢集的對等關係：
 +
-`cluster peer create -generate-passphrase -offer-expiration _MM/DD/YYYY HH:MM:SS_|1...7days|1...168hours -peer-addrs _peer_LIF_IPs_ -initial-allowed-vserver-peers _svm_name_,..|* -ipspace _ipspace_`
-
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS>|1...7days|1...168hours -peer-addrs <peer_LIF_IPs > -initial-allowed-vserver-peers <svm_name>|* -ipspace <ipspace>
+----
 +
 如果您同時指定兩者 `-generate-passphrase` 和 `-peer-addrs`，僅在中指定其叢集間的生命體 `-peer-addrs` 可以使用產生的密碼。
 
@@ -82,8 +106,10 @@ Warning: make a note of the passphrase - it cannot be displayed again.
 ----
 . 在來源叢集上、驗證來源叢集到目的地叢集的驗證：
 +
-`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace ipspace`
-
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -108,8 +134,10 @@ Clusters cluster02 and cluster01 are peered.
 
 . 確認已建立叢集對等關係：
 +
-`cluster peer show -instance`
-
+[source, cli]
+----
+cluster peer show -instance
+----
 +
 [listing]
 ----
@@ -129,8 +157,10 @@ cluster01::> cluster peer show -instance
 ----
 . 檢查對等關係中節點的連線能力和狀態：
 +
-`cluster peer health show`
-
+[source, cli]
+----
+cluster peer health show
+----
 +
 [listing]
 ----
@@ -155,6 +185,8 @@ cluster01-02
 ----
 
 
+--
+====
 
 
 == 其他方法可在ONTAP 不一樣的情況下執行
