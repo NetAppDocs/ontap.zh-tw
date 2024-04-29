@@ -2,7 +2,7 @@
 permalink: fabricpool/requirements-concept.html 
 sidebar: sidebar 
 keywords: considerations, requirements, using, fabricpool 
-summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。 
+summary: 為了協助確保您最佳化 FabricPool 組態、您應該熟悉使用 FabricPool 的幾項考量和要求。 
 ---
 = 使用方面的考量與要求FabricPool
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
 
 
 [role="lead"]
-您應該熟悉FabricPool 有關使用NetApp的幾項考量與要求。
+為了協助確保您最佳化 FabricPool 組態、您應該熟悉使用 FabricPool 的幾項考量和要求。
 
 
 
@@ -137,6 +137,17 @@ HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、B
 http://www.netapp.com/us/media/tr-4598.pdf["NetApp技術報告4598：FabricPool 《關於ONTAP 最佳實務的資訊》9"^]
 
 
+
+
+
+== 使用 StorageGRID 一致性控制時的其他考量事項
+
+StorageGRID 的一致性控制會影響 StorageGRID 用來追蹤物件的中繼資料
+分佈在節點之間、以及用戶端要求的物件可用度。NetApp 建議使用
+作為 FabricPool 目標之貯體的預設、新寫入後讀取一致性控制。
+
+
+NOTE: 請勿將可用的一致性控制用於做為 FabricPool 目標的貯體。
 
 
 

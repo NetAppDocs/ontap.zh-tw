@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/index.html 
 keywords: s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror data protection, hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, Fan-in deployments, data protection, s3 snapmirror policy, peering 
-summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體 
+summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體。 
 ---
 = S3 SnapMirror總覽
 :hardbreaks:
@@ -97,6 +97,11 @@ S3 SnapMirror 以其他 NetApp 物件儲存目標（ ONTAP S3 、 StorageGRID �
 
 
 
+
+
+
+
+NOTE: 請注意、當兩個 S3 儲存區處於 SnapMirror 關係中時、如果設定了生命週期原則、使物件的目前版本過期（刪除）、則會將相同的動作複寫到合作夥伴儲存區。即使合作夥伴儲存庫為唯讀或被動式、也會發生這種情況。
 
 * root 使用者金鑰
 S3 SnapMirror 關係需要儲存 VM 根使用者存取金鑰； ONTAP 預設不會指派。第一次建立S3 SnapMirror關係時、您必須確認來源與目的地儲存VM上是否存在金鑰、如果沒有、則重新產生金鑰。如果您需要重新產生這些金鑰、您必須確保使用存取和秘密金鑰配對的所有用戶端和SnapMirror物件儲存組態、都會以新的金鑰更新。
