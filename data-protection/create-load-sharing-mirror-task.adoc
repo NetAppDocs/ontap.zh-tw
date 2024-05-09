@@ -27,9 +27,6 @@ HA 配對的兩個節點都會失敗。負載共用鏡像不適合由單一 HA �
 .步驟
 . 建立LSM的目的地Volume：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -size <size>
@@ -54,9 +51,6 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 . link:create-replication-job-schedule-task.html["建立複製工作排程"]。
 . 在SVM根磁碟區與LSM目的地磁碟區之間建立負載共用鏡射關係：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
@@ -77,16 +71,10 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 
 . 初始化負載共用鏡像：
 +
-執行此命令之前、您必須以必要的值取代尖括號中的變數。
-
-+
 [source, cli]
 ----
 snapmirror initialize-ls-set -source-path <SVM:volume>
 ----
-+
-初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。
-
 +
 如需完整的命令語法、請參閱手冊頁。
 
