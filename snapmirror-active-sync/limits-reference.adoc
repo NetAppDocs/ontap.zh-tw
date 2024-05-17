@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/limits-reference.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
+summary: 使用 SnapMirror 主動式同步時、還有幾項額外的限制和限制。 
+---
+= SnapMirror 主動同步的物件限制
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+準備使用 SnapMirror 主動式同步時、請注意下列物件限制。
+
+
+
+== 叢集中的一致性群組
+
+使用 SnapMirror 主動同步的叢集一致性群組限制是根據關係計算、並取決於所使用的 ONTAP 版本。限制與平台無關。
+
+|===
+| 版本ONTAP | 最大關係數 
+
+
+| 更新版本ONTAP | 50 
+
+
+| 零點9.10.1 ONTAP | 20. 
+
+
+| 部分9.9.1 ONTAP | 5. 
+|===
+
+
+== 每個一致性群組的磁碟區
+
+每個一致性群組與 SnapMirror 主動式同步的最大磁碟區數量不受平台限制。
+
+|===
+| 版本ONTAP | 一致性群組關係中支援的磁碟區數量上限 
+
+
+| ONTAP 9.15.1 及更新版本 | 80 
+
+
+| ONTAP 9.10.1-9.14.1 | 16. 
+
+
+| 部分9.9.1 ONTAP | 12. 
+|===
+
+
+== 磁碟區
+
+SnapMirror 主動同步中的 Volume 限制是根據端點數量而非關係數量來計算。具有 12 個磁碟區的一致性群組、可在主叢集和次叢集上提供 12 個端點。SnapMirror 主動同步和 SnapMirror 同步關係都有助於端點總數。
+
+下表列出每個平台的最大端點數。
+
+|===
+| 美國否 | 平台 3+| 每個 HA 的端點用於 SnapMirror 主動同步 3+| 每個 HA 的整體同步和 SnapMirror 主動同步端點 
+
+
+|  |  | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP 
+
+
+| 1. | AFF | 400 | 200 | 60 | 400 | 200 | 80 
+
+
+| 2. | ASA | 400 | 200 | 60 | 80 | 200 | 400 
+|===
+
+
+== SAN物件限制
+
+下表包含 SAN 物件限制。無論平台為何、限制都適用。
+
+|===
+| SnapMirror 主動同步關係中的物件 | 數 
+
+
+| 每個磁碟區的LUN數量 | 256 
+
+
+| 每個節點的LUN對應  a| 
+* 4096 （ ONTAP 9.10 及更新版本）
+* 2048 （ ONTAP 9.9.1 及更早版本）
+
+
+
+
+| 每個叢集的LUN對應  a| 
+* 8192 （ ONTAP 9.10 及更新版本）
+* 4096 （ ONTAP 9.9.1 及更早版本）
+
+
+
+
+| 每個 SVM 的生命（ SnapMirror 主動同步關係中至少有一個 Volume ） | 256 
+
+
+| 每個節點的叢集間生命量 | 4. 
+
+
+| 每個叢集的叢集間生命量 | 8. 
+|===
+.相關資訊
+* link:https://hwu.netapp.com/["Hardware Universe"^]
+* link:../consistency-groups/limits.html["一致性群組限制"^]
+

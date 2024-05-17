@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/create-relationship-fails-task.html 
+keywords: SnapMirror active sync, SMBC, troubleshooting, SnapMirror Synchronous, consistency group, initialize, snapmirror active sync 
+summary: 建立SnapMirror關係和一致性群組初始化失敗。 
+---
+= 無法建立SnapMirror關係並初始化一致性群組
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.問題：
+[role="lead"]
+建立SnapMirror關係和一致性群組初始化失敗。
+
+.解決方案：
+確保您未超過每個叢集的一致性群組限制。SnapMirror 主動式同步中的一致性群組限制與平台不相關、且會因 ONTAP 版本而異。請參閱 link:limits-reference.html["物件限制"] 以取得 ONTAP 版本的特定指引。
+
+.錯誤：
+如果一致性群組卡在初始化中、請使用 ONTAP REST API 、系統管理員或命令來檢查一致性群組初始化的狀態 `sn show -expand`。
+
+
+IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。
+
+.解決方案：
+如果一致性群組無法初始化、請移除 SnapMirror 作用中同步關係、刪除一致性群組、然後重新建立關係並將其初始化。此工作流程視ONTAP 您使用的版本而有所不同。
+
+|===
+
+
+| 如果您使用的是 ONTAP 9.9.1 | 如果您使用ONTAP 的是版本不含更新版本的版本 
+
+
+ a| 
+. link:remove-configuration-task.html["移除 SnapMirror 主動式同步組態"]
+. link:protect-task.html["建立一致性群組關係、然後初始化一致性群組關係"]
+
+ a| 
+. 在 * 保護 > 關係 * 下、找到一致性群組上的 SnapMirror 作用中同步關係。選取 image:../media/icon_kabob.gif["三個堆疊式垂直點圖示"]，然後按 * 刪除 * 刪除 SnapMirror 活動同步關係。
+. link:../consistency-groups/delete-task.html["刪除一致性群組"]
+. link:../consistency-groups/configure-task.html["設定一致性群組"]
+
+
+|===

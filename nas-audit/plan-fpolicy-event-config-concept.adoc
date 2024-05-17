@@ -23,7 +23,7 @@ summary: 在設定FPolicy事件之前、您必須先瞭解建立FPolicy事件的
 * 事件名稱
 * 要監控的傳輸協定
 +
-FPolicy可以監控SMB、NFSv3和NFSv4檔案存取作業。
+FPolicy 可監控 SMB 、 NFSv3 、 NFSv4 、以及從 ONTAP 9.15.1 開始的 NFSv4.1 檔案存取作業。
 
 * 要監控的檔案作業
 +
@@ -108,6 +108,11 @@ _傳輸協定_
 ====
 如果您指定 `-protocol`、然後您必須在中指定有效值 `-file-operations` 參數。隨著傳輸協定版本變更、有效值可能會變更。
 
+====
+[NOTE]
+====
+從 ONTAP 9.15.1 開始、 NFSv4 可讓您擷取 NFSv4.0 和 NFSv4.1 事件。
+
 ==== a| 
 `-protocol` `protocol`
 
@@ -174,15 +179,6 @@ _篩選_
 設定此篩選器後、FPolicy伺服器只會在嘗試開啟檔案時收到通知、以便在其中寫入內容。
 
 * `write-with-size-change` 選項可篩選用戶端寫入要求、並變更大小。
-
- a| 
-`-filters` `filter`、 ...
-
-
-
- a| 
-_Filters"（續）
-
 * `setattr-with-owner-change` 用於篩選用戶端設定檔要求以變更檔案或目錄擁有者的選項。
 * `setattr-with-group-change` 用於篩選用戶端集點要求以變更檔案或目錄群組的選項。
 * `setattr-with-sacl-change` 用於篩選用戶端集點要求以變更檔案或目錄上的 SACL 的選項。

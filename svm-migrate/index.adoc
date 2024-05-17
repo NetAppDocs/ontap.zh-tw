@@ -115,8 +115,8 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 在開始 SVM 移轉之前、您必須符合下列先決條件：
 
 * 您必須是叢集管理員。
-* link:https://docs.netapp.com/us-en/ontap/peering/create-cluster-relationship-93-later-task.html["來源叢集和目的地叢集必須相互對等"^]。
-* 來源叢集和目的地叢集必須同步 SnapMirror link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["已安裝授權"]。本授權隨附於 link:https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+* link:../peering/create-cluster-relationship-93-later-task.html["來源叢集和目的地叢集必須相互對等"]。
+* 來源叢集和目的地叢集必須同步 SnapMirror link:../system-admin/install-license-task.html["已安裝授權"]。本授權隨附於 link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
 * 來源叢集中的所有節點都必須執行 ONTAP 9.10.1 或更新版本。如需特定的 ONTAP 陣列控制器支援、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
 * 來源叢集中的所有節點都必須執行相同的 ONTAP 版本。
 * 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本。
@@ -150,6 +150,8 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 == 支援和不支援的功能
 
 下表顯示 SVM 資料移動性支援的 ONTAP 功能、以及提供支援的 ONTAP 版本。
+
+如需 SVM 移轉中來源與目的地之間 ONTAP 版本互通性的相關資訊、請參閱 link:../data-protection/compatible-ontap-versions-snapmirror-concept.html#snapmirror-svm-disaster-recovery-relationships["SnapMirror ONTAP 關係的相容版本"]。
 
 [cols="3,1,4"]
 |===
@@ -222,8 +224,8 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 ====
 在 SVM 移轉之前：
 
-* link:https://docs.netapp.com/us-en/ontap/nas-audit/enable-disable-auditing-svms-task.html["必須在目的地叢集上啟用稽核記錄重新導向"]。
-* link:https://docs.netapp.com/us-en/ontap/nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必須在目的地叢集上建立來源 SVM 的稽核記錄目的地路徑"]。
+* link:../nas-audit/enable-disable-auditing-svms-task.html["必須在目的地叢集上啟用稽核記錄重新導向"]。
+* link:../nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必須在目的地叢集上建立來源 SVM 的稽核記錄目的地路徑"]。
 
 
 
@@ -257,7 +259,7 @@ SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 
 
 
-| SnapMirror Cloud 關係 | ONTAP 9.12.1 | 從 ONTAP 9.12.1 開始、當您移轉具有 SnapMirror 雲端關係的 SVM 時、目的地叢集必須具有 link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror Cloud授權"] 而且它必須有足夠的可用容量、才能支援將鏡射磁碟區中的容量移至雲端。 
+| SnapMirror Cloud 關係 | ONTAP 9.12.1 | 從 ONTAP 9.12.1 開始、當您移轉具有 SnapMirror 雲端關係的 SVM 時、目的地叢集必須具有 link:../data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror Cloud授權"] 而且它必須有足夠的可用容量、才能支援將鏡射磁碟區中的容量移至雲端。 
 
 
 | SnapMirror 非同步目的地 | ONTAP 9.12.1 |  
@@ -283,7 +285,7 @@ SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 | SnapLock | 不支援 |  
 
 
-| SnapMirror營運不中斷 | 不支援 |  
+| SnapMirror 主動同步 | 不支援 |  
 
 
 | SnapMirror SVM 對等關係 | ONTAP 9.12.1 |  

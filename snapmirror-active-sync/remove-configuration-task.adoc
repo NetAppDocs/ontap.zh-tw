@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/remove-configuration-task.html 
+keywords: SM-BC, SMBC, removing, protection relationship, snapmirror active sync 
+summary: 您可以移除零 RTO SnapMirror 同步保護、並刪除 SnapMirror 主動同步關係組態。 
+---
+= 移除 SnapMirror 主動式同步組態
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要零 RTO SnapMirror 同步保護、您可以刪除 SnapMirror 主動同步關係。
+
+
+
+== 移除非對稱組態
+
+* 刪除 SnapMirror 主動同步關係之前、必須先取消對應目的地叢集中的所有 LUN 。
+* 在LUN未對應且重新掃描主機之後、SCSI目標會通知主機LUN資源清冊已變更。零RTO次要磁碟區上的現有LUN會在零RTO關係刪除後變更、以反映新的身分識別。主機會將次要Volume LUN視為與來源Volume LUN無關的新LUN。
+* 在刪除關聯之後、次要磁碟區仍會保留DP磁碟區。您可以核發 `snapmirror break` 將它們轉換為讀取 / 寫入的命令。
+* 當關係未反轉時、在容錯移轉狀態中不允許刪除關係。
+
+
+.步驟
+. 從次要叢集移除來源端點與目的地端點之間的 SnapMirror 作用中同步一致性群組關係：
++
+`destination::>snapmirror delete -destination-path vs1_dst:/cg/cg_dst`
+
+. 從主叢集、釋出一致性群組關係、以及為關係建立的 Snapshot 複本：
++
+`source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst`
+
+. 執行主機重新掃描以更新LUN庫存。
+. 從ONTAP 功能性的9.10.1開始、刪除SnapMirror關係並不會刪除一致性群組。如果您要刪除一致性群組、則必須使用System Manager或ONTAP REST API。請參閱 xref:../consistency-groups/delete-task.adoc[刪除一致性群組] 以取得更多資訊。
+
+
+
+
+== 移除對稱的主動 / 主動式組態
+
+您可以使用系統管理員或 ONTAP CLI 移除對稱組態。在這兩個介面中、都有不同的步驟 xref:index.html#key-concepts[統一且不一致的組態]。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.統一組態的步驟
+. 在主要站台上、從 igroup 移除遠端主機並終止複寫。
++
+.. 瀏覽至 ** 主機 ** > * SAN 啟動器群組 * 。
+.. 選擇要修改的 igroup ，然後選擇 ** 編輯 ** 。
+.. 移除遠端啟動器並終止 igroup 複寫。選擇 ** 儲存 ** 。
+
+
+. 在次要站台上、取消對應 LUN 以刪除複寫的關係。
++
+.. 瀏覽至 ** 主機 ** > ** SAN 啟動器群組 ** 。
+.. 選擇帶有 SnapMirror 關係的 igroup ，然後選擇 ** 刪除 ** 。
+.. 在對話方塊中、選擇「 ** 取消對應相關的 LUN** 」方塊、然後選擇「 ** 刪除」。
+.. 瀏覽至 ** 保護 ** > ** 關係 ** 。
+.. 選擇 SnapMirror 主動同步關係，然後選擇 ** 版本 ** 以刪除關係。
+
+
+
+
+.非統一組態的步驟
+. 在主要站台上、從 igroup 移除遠端主機並終止複寫。
++
+.. 瀏覽至 ** 主機 ** > * SAN 啟動器群組 * 。
+.. 選擇要修改的 igroup ，然後選擇 ** 編輯 ** 。
+.. 移除遠端啟動器並終止 igroup 複寫。選擇 ** 儲存 ** 。
+
+
+. 在次要站台上、移除 SnapMirror 主動同步關係。
++
+.. 瀏覽至 ** 保護 ** > ** 關係 ** 。
+.. 選擇 SnapMirror 主動同步關係，然後選擇 ** 版本 ** 以刪除關係。
+
+
+
+
+--
+.CLI
+--
+.統一組態的步驟
+. 將所有 VM 工作負載移至 SnapMirror 主動式同步的本地主機到來源叢集。
+. 在來源叢集上、從 igroup 移除啟動器、並修改 igroup 組態以終止 igroup 複寫。
++
+`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_
+SiteA::> igroup modify -vserver _svm_name_ -igroup _igroup_name_ -replication-peer "-"`
+
+. 在次要站台上、刪除 LUN 對應並移除 igroup 組態：
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
+SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+
+. 在次要站台上、刪除 SnapMirror 主動同步關係。
++
+`SiteB::> snapmirror delete -destination-path _destination_path_`
+
+. 在主站點上，從主站點釋放 SnapMirror 主動同步關係。
++
+`SiteA::> snapmirror release -destination-path _destination_path_`
+
+. 重新探索路徑、確認主機只能使用本機路徑。
+
+
+.非統一組態的步驟
+. 將所有 VM 工作負載移至 SnapMirror 主動式同步的本地主機到來源叢集。
+. 在來源叢集上、從 igroup 移除啟動器。
++
+`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_`
+
+. 在次要站台上、刪除 LUN 對應並移除 igroup 組態：
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
+SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+
+. 在次要站台上、刪除 SnapMirror 主動同步關係。
++
+`SiteB::> snapmirror delete -destination-path _destination_path_`
+
+. 在主站點上，從主站點釋放 SnapMirror 主動同步關係。
++
+`SiteA::> snapmirror release -destination-path _destination_path_`
+
+. 重新探索路徑、確認主機只能使用本機路徑。
+
+
+--
+====

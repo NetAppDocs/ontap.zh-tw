@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/planned-failover-task.html 
+keywords: SM-BC, testing failover, planned failover, maintenance, quorum, snapmirror active sync 
+summary: 您可以執行計畫性容錯移轉、以測試災難恢復組態、或在主叢集上執行維護。 
+---
+= 在 SnapMirror 主動同步關係中執行叢集的計畫性容錯移轉
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SnapMirror 主動式同步關係中的 ONTAP 叢集計畫性容錯移轉中、您可以切換主要和次要叢集的角色、讓次要叢集從主要叢集接管。在容錯移轉期間、次要叢集通常會在不中斷用戶端作業的情況下、於本機處理輸入和輸出要求。
+
+您可能想要執行規劃的容錯移轉、以測試災難恢復組態的健全狀況、或是在主叢集上執行維護。
+
+.關於這項工作
+計畫性的容錯移轉是由次要叢集的系統管理員啟動。此作業需要切換主要和次要角色、以便次要叢集從主要叢集接管。然後、新的主叢集便可開始在本機處理輸入和輸出要求、而不會中斷用戶端作業。
+
+.開始之前
+* SnapMirror 主動同步關係必須同步。
+* 當不中斷營運進行中時、您無法啟動計畫性的容錯移轉。不中斷營運包括 Volume 搬移、集合重新定位和儲存容錯移轉。
+* ONTAP Mediator 必須設定、連線、並且達到仲裁。
+
+
+.步驟
+您可以使用 ONTAP CLI 或系統管理員來執行規劃的容錯移轉。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+
+IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。
+
+. 在 System Manager 中、選取「 ** 保護」 > 「總覽」 > 「關係」 ** 。
+. 識別您要容錯移轉的 SnapMirror 作用中同步關係。在其名稱旁邊、選取 `...` 在關係名稱旁、選取「 ** 容錯移轉 ** 」。
+. 若要監控容錯移轉的狀態、請使用 `snapmirror failover show` 在 ONTAP CLI 中。
+
+
+--
+.CLI
+--
+. 從目的地叢集啟動容錯移轉作業：
++
+`destination::>snapmirror failover start -destination-path   vs1_dst:/cg/cg_dst`
+
+. 監控容錯移轉的進度：
++
+`destination::>snapmirror failover show`
+
+. 當容錯移轉作業完成時、您可以從目的地監控 SnapMirror 同步保護關係狀態：
++
+`destination::>snapmirror show`
+
+
+
+--
+====

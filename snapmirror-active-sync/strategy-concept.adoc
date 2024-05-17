@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/strategy-concept.html 
+keywords: snapmirror, snapmirror business continuity, sm-bc, deployment, recommendations 
+summary: 瞭解 SnapMirror 主動同步的部署和最佳實務做法。 
+---
+= SnapMirror 主動同步的部署策略和最佳實務做法
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您的資料保護策略必須清楚識別需要保護的工作負載威脅、才能確保業務持續運作。資料保護策略中最重要的步驟、就是讓企業應用程式資料配置清楚、讓您可以決定如何散佈磁碟區、並保護業務持續運作。由於容錯移轉是以每個應用程式為基礎、在一致性群組層級進行、因此請務必將必要的資料磁碟區新增至一致性群組。
+
+
+
+== SVM 組態
+
+此圖擷取 SnapMirror 主動同步的建議儲存 VM （ SVM ）組態。
+
+image:snapmirror-svm-layout.png["SnapMirror 主動同步部署中的 SVM 圖表"]
+
+* 對於資料磁碟區：
++
+** 隨機讀取工作負載與循序寫入隔離、因此根據資料庫大小、資料和記錄檔通常會放置在不同的磁碟區上。
++
+*** 對於大型關鍵資料庫、單一資料檔案位於 FlexVol 1 上、其對應的記錄檔位於 FlexVol 2 上。
+*** 為了獲得更好的整合效果、會將中小型非關鍵資料庫分組、讓所有資料檔案都位於 FlexVol 1 上、而其對應的記錄檔則位於 FlexVol 2 上。不過、您將會因為這項分組而喪失應用程式層級的精細度。
+
+
+** 另一個變體是將所有檔案放在同一個 FlexVol 3 中、 LUN 1 中有資料檔案、 LUN 2 中有其記錄檔。
+
+
+* 如果您的環境已虛擬化、您將會在資料存放區中共享各種企業應用程式的所有 VM 。一般而言、 VM 和應用程式二進位檔會使用 SnapMirror 以非同步方式複寫。
+

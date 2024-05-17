@@ -1,0 +1,116 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/upgrade-revert-task.html 
+keywords: upgrade, revert, snapmirror active sync, SMBC, SM-BC 
+summary: 升級或還原 ONTAP 會影響 SnapMirror 主動式同步關係、尤其是移轉至 ONTAP 9.9.1 或更新版本、或 9.7 及更新版本時。 
+---
+= 使用 SnapMirror 主動同步升級和還原 ONTAP
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.9.1 開始支援 SnapMirror 主動同步。升級和還原 ONTAP 叢集會影響 SnapMirror 主動式同步關係、視您要升級或還原的 ONTAP 版本而定。
+
+
+
+== 使用 SnapMirror 主動同步升級 ONTAP
+
+若要使用 SnapMirror 主動式同步、來源叢集和目的地叢集上的所有節點都必須執行 ONTAP 9.9.1 或更新版本。
+
+使用主動式 SnapMirror 主動式同步關係升級 ONTAP 時、您應該使用 xref:../upgrade/automated-upgrade-task.html[自動不中斷升級（ andu ）]。使用 andu 可確保 SnapMirror 主動同步關係在升級過程中保持同步且正常。
+
+沒有設定步驟可準備 SnapMirror 主動同步部署以進行 ONTAP 升級。不過、建議您在升級之前和之後、檢查：
+
+* SnapMirror 主動同步關係是同步的。
+* 事件日誌中沒有與 SnapMirror 相關的錯誤。
+* 這兩個叢集的 Mediator 都在線上且運作正常。
+* 所有主機都能正確看到所有路徑以保護 LUN 。
+
+
+
+NOTE: 當您將叢集從 ONTAP 9.9.1 或 9.9.1 升級至 ONTAP 9.10.1 及更新版本時、 ONTAP 會建立新的叢集 xref:../consistency-groups/index.html[一致性群組] 在來源叢集和目的地叢集上、都能使用 System Manager 來設定 SnapMirror 主動式同步關係。
+
+
+NOTE: 。 `snapmirror quiesce` 和 `snampirror resume` SnapMirror 主動同步不支援命令。
+
+
+
+== 從 ONTAP 9.10.1 還原至 ONTAP 9.9.1
+
+若要將關係從 9.10.1 還原至 9.9.1 、必須刪除 SnapMirror 主動式同步關係、然後刪除 9.10.1 一致性群組執行個體。無法刪除具有作用中 SnapMirror 作用中同步關係的一致性群組。任何先前在9.9.1或更早版本中與另一個Smart Container或Enterprise App相關聯的更新至9.10.1的版次、將不再與還原相關聯。FlexVol刪除一致性群組不會刪除組成磁碟區或磁碟區精細快照。請參閱 link:../consistency-groups/delete-task.html["刪除一致性群組"] 如需 ONTAP 9.10.1 及更新版本中此工作的詳細資訊、請參閱。
+
+
+
+== 從 ONTAP 9.9.1 還原
+
+
+NOTE: 相較於 ONTAP 9.9.1 之前的版本、混合式 ONTAP 叢集不支援 SnapMirror 主動式同步。
+
+當您從 ONTAP 9.9.1 還原至較早版本的 ONTAP 時、您必須注意下列事項：
+
+* 如果叢集主控 SnapMirror 作用中同步目的地、則除非關係中斷並刪除、否則不允許還原至 ONTAP 9.8 或更早版本。
+* 如果叢集主控 SnapMirror 作用中同步來源、則在關係解除之前、不允許還原至 ONTAP 9.8 或更早版本。
+* 還原至 ONTAP 9.8 或更早版本之前、必須刪除所有使用者建立的自訂 SnapMirror 主動同步原則。
+
+
+若要符合這些要求、請參閱 link:remove-configuration-task.html["移除 SnapMirror 主動式同步組態"]。
+
+.步驟
+. 確認您是否準備好還原、從 SnapMirror 主動同步關係中的其中一個叢集輸入下列命令：
++
+`cluster::> system node revert-to -version 9.7 -check-only`
+
++
+下列輸出範例顯示叢集尚未準備好回復、並提供清理指示。
+
++
+[listing]
+----
+cluster::> system node revert-to -version 9.7 -check-only
+Error: command failed: The revert check phase failed. The following issues must be resolved before revert can be completed. Bring the data LIFs down on running vservers. Command to list the running vservers: vserver show -admin-state running Command to list the data LIFs that are up: network interface show -role data -status-admin up Command to bring all data LIFs down: network interface modify {-role data} -status-admin down
+Disable snapshot policies.
+    Command to list snapshot policies: "snapshot policy show".
+    Command to disable snapshot policies: "snapshot policy modify -vserver
+   * -enabled false"
+
+   Break off the initialized online data-protection (DP) volumes and delete
+   Uninitialized online data-protection (DP) volumes present on the local
+   node.
+    Command to list all online data-protection volumes on the local node:
+   volume show -type DP -state online -node <local-node-name>
+    Before breaking off the initialized online data-protection volumes,
+   quiesce and abort transfers on associated SnapMirror relationships and
+   wait for the Relationship Status to be Quiesced.
+    Command to quiesce a SnapMirror relationship: snapmirror quiesce
+    Command to abort transfers on a SnapMirror relationship: snapmirror
+   abort
+    Command to see if the Relationship Status of a SnapMirror relationship
+   is Quiesced: snapmirror show
+    Command to break off a data-protection volume: snapmirror break
+    Command to break off a data-protection volume which is the destination
+   of a SnapMirror relationship with a policy of type "vault": snapmirror
+   break -delete-snapshots
+    Uninitialized data-protection volumes are reported by the "snapmirror
+   break" command when applied on a DP volume.
+    Command to delete volume: volume delete
+
+   Delete current version snapshots in advanced privilege level.
+    Command to list snapshots: "snapshot show -fs-version 9.9.1"
+    Command to delete snapshots: "snapshot prepare-for-revert -node
+   <nodename>"
+
+   Delete all user-created policies of the type active-strict-sync-mirror
+   and active-sync-mirror.
+   The command to see all active-strict-sync-mirror and active-sync-mirror
+   type policies is:
+    snapmirror policy show -type
+   active-strict-sync-mirror,active-sync-mirror
+   The command to delete a policy is :
+    snapmirror policy delete -vserver <SVM-name> -policy <policy-name>
+----
+. 一旦您符合還原檢查的要求、請參閱 link:../revert/index.html["還原ONTAP"]。
+

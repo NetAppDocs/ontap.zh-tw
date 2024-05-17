@@ -33,7 +33,7 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 +
 請參閱 xref:../task_san_map_igroups_to_multiple_luns.html[將igroup對應至多個LUN] 或 xref:../san-admin/map-nvme-namespace-subsystem-task.html[將NVMe命名空間對應至子系統] 以取得更多資訊。
 
-* SnapMirror營運不中斷關係中的一致性群組或任何相關的DP磁碟區不支援複製一致性群組。
+* SnapMirror 主動式同步關係中的一致性群組或任何相關的 DP 磁碟區不支援複製一致性群組。
 
 
 [role="tabbed-block"]
@@ -61,7 +61,12 @@ summary: 從 ONTAP 9.12.1 開始、您可以複製一致性群組、以建立一
 --
 .CLI
 --
-從 ONTAP 9.14.1 開始、您可以使用 CLI 複製一致性群組。
+從 ONTAP 9.14.1 開始、您可以使用具有叢集管理認證的 CLI 來複製一致性群組。
+
+.開始之前
+* 您必須處於管理權限層級、才能執行此工作。
+* 在 ONTAP 9.14.1 中、您必須是叢集或 SVM 管理員、才能執行此工作。從 ONTAP 9.15.1 開始、任何管理權限層級的使用者都可以執行此工作。
+
 
 .複製一致性群組
 . 。 `consistency-group clone create` 命令會以目前的時間點狀態複製一致性群組。若要以 Snapshot 作為複製作業的基礎、請包含 `-source-snapshot` 參數。

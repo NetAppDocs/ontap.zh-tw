@@ -23,7 +23,7 @@ summary: 應用程式與元件標籤是一種管理工具、可讓您篩選及�
 您可以在建立一致性群組或建立一致性群組之後套用標記。
 
 
-IMPORTANT: 如果一致性群組具有SMBC關係、您必須使用*其他*做為應用程式或元件標記。
+IMPORTANT: 如果一致性組具有 SnapMirror 活動同步關係，則必須使用 * 其他 * 作爲應用程序或組件標記。
 
 .步驟
 從 ONTAP 9.12.1 開始、您可以使用系統管理員修改應用程式和元件標籤。從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 修改應用程式和元件標籤。
@@ -43,6 +43,11 @@ IMPORTANT: 如果一致性群組具有SMBC關係、您必須使用*其他*做為
 --
 從 ONTAP 9.14.1 開始、您可以使用 ONTAP CLI 修改現有一致性群組的應用程式或元件標籤。
 
+.開始之前
+* 您必須處於管理權限層級、才能執行此工作。
+* 在 ONTAP 9.14.1 中、您必須是叢集或 SVM 管理員、才能執行此工作。從 ONTAP 9.15.1 開始、任何管理權限層級的使用者都可以執行此工作。
+
+
 .修改應用程式標籤
 . 應用程式標籤接受數量有限的預設字串。若要查看已接受的字串清單、請執行下列命令：
 `consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type ?`
@@ -51,7 +56,7 @@ IMPORTANT: 如果一致性群組具有SMBC關係、您必須使用*其他*做為
 
 
 .修改元件標籤
-. 修改元件類型。元件類型可以是資料、記錄或其他。如果您使用的是 SM-BC 、則必須是「其他」。
+. 修改元件類型。元件類型可以是資料、記錄或其他。如果您使用的是 SnapMirror 主動式同步、則必須是「其他」。
 `consistency-group modify -vserver _svm_ -consistency-group _child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -application-component-type [data|logs|other]`
 
 

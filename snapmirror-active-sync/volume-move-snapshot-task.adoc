@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/volume-move-snapshot-task.html 
+keywords: SM-BC, SMBC, volume move, troubleshooting, consistency group, Snapshot copy, snapmirror active sync 
+summary: 在磁碟區移動作業之後、磁碟區移動作業的參考Snapshot複本會顯示為SnapMirror關係的最新版本。 
+---
+= Volume Move參考Snapshot複本顯示為最新的
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.問題：
+[role="lead"]
+在一致性群組磁碟區上執行 Volume Move 作業之後、 Volume Move 參考 Snapshot 複本可能會錯誤地顯示為 SnapMirror 關係的最新版本。
+
+您可以使用下列命令檢視最新的Snapshot複本：
+
+`snapmirror show -fields newest-snapshot status -expand`
+
+.解決方案：
+手動執行 `snapmirror resync` 或是在磁碟區移動作業完成後、等待下一次自動重新同步作業。

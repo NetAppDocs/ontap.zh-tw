@@ -1,0 +1,68 @@
+---
+permalink: san-admin/enable-space-allocation.html 
+sidebar: sidebar 
+keywords: enable, space allocation, space reclamation, unmap 
+summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空間不足、且磁碟區中的LUN無法接受寫入時、將會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。 
+---
+= 啟用 SAN 的空間分配
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的 FC 或 iSCSI 主機支援 SCSI 精簡配置、您可以啟用空間分配。  啟用空間分配且磁碟區空間不足時、磁碟區中的 LUN 會保持連線、並設為唯讀模式。  然後主機會收到 LUN 無法再接受寫入的通知。  如果您的主機不支援空間分配或未啟用空間分配、當磁碟區空間不足且無法自動擴充時、 ONTAP 會使 LUN 離線。
+
+此外、啟用空間分配時、主機端空間管理會識別主機檔案系統上已刪除的資料區塊、並自動發出一或多個資料區塊 `SCSI UNMAP` 命令釋放儲存系統上對應的區塊、並允許 ONTAP 回收空間。
+
+.開始之前
+若要啟用空間分配、您的主機必須支援 SCSI 精簡配置。SCSI 精簡配置使用 SCSI SBC-3 標準中定義的邏輯區塊資源配置。只有支援此標準的主機才能在ONTAP 支援中使用SCSI精簡配置。
+
+啟用空間分配時、下列主機目前支援SCSI精簡配置：
+
+* Citrix XenServer 6.5及更新版本
+* ESXi 5.0 及更新版本
+* Oracle Linux 6.2 UEK 核心及更新版本
+* Red Hat Enterprise Linux 6.2及更新版本
+* SUSE Linux Enterprise Server 11 及更新版本
+* Solaris 11.1 及更新版本
+* Windows
+
+
+NVMe 主機不支援空間分配。
+
+.關於這項工作
+從 ONTAP 9.15.1 開始、新建立的 VMware 和 Hyper-V LUN 預設會啟用空間分配、並停用 VMware 和 Hyper-V 未使用的所有新建立 LUN 的空間分配
+
+
+NOTE: 當您將叢集升級至 ONTAP 9.15.1 時、在軟體升級之前建立的所有 LUN 的空間分配設定、無論主機類型為何、在升級之後都會保持不變。  例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
+
+您必須將 LUN 離線才能啟用空間分配、然後您必須在主機上執行探索、主機才能識別已啟用空間分配。
+
+.步驟
+. 使 LUN 離線：
++
+[source, cli]
+----
+lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline
+----
+. 啟用空間分配：
++
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled
+----
+. 確認已啟用空間分配：
++
+[source, cli]
+----
+lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation
+----
+. 使LUN上線：
++
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online
+----
+. 在主機上、重新掃描所有磁碟、以確保變更為 `-space-allocation` 已正確探索選項。
+

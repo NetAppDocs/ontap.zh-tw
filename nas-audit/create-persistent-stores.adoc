@@ -1,34 +1,53 @@
 ---
 permalink: nas-audit/create-persistent-stores.html 
 sidebar: sidebar 
-keywords: create, persistent store, fpolicy 
-summary: 從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定持續儲存區、以擷取 SVM 中非強制性非非同步原則的檔案存取事件。持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。不支援同步和非同步強制組態。 
+keywords: create, persistent store, fpolicy, asynchronous, non, mandatory 
+summary: 從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定持續儲存區、以擷取非強制非非強制非同步原則的檔案存取事件。 
 ---
-= 建立持續儲存區
+= 建立 FPolicy 持續儲存區
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定 link:persistent-stores.html["持續儲存區"] 擷取 SVM 中非強制性非非同步原則的檔案存取事件。持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。不支援同步（強制或非強制）和非同步強制組態。
+持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。從 ONTAP 9.14.1 開始、 FPolicy 可讓您進行設定 link:persistent-stores.html["持續儲存區"] 擷取 SVM 中非強制性非非同步原則的檔案存取事件。不支援同步（強制或非強制）和非同步強制組態。
 
-.最佳實務做法
-* 在使用持續儲存功能之前、請確保您的合作夥伴應用程式支援此組態。
-* 持續儲存區 Volume 是以每個 SVM 為基礎進行設定。對於每個啟用 FPolicy 的 SVM 、您都需要一個持續儲存區 Volume 。
-* 建立磁碟區時指定的持續儲存區磁碟區名稱和交會路徑應相符。
-* 在具有預期由 Fpolicy 監控最大流量的生命期的節點上建立持續儲存區磁碟區。
-* 將 Snapshot 原則設為 `none` 而非 `default`。這是為了確保不會意外還原快照而導致目前事件遺失、並防止可能的重複事件處理。
-* 讓外部使用者傳輸協定存取（ CIFS/NFS ）無法存取持續儲存區磁碟區、以避免意外毀損或刪除持續存在的事件記錄。為達成此目的、在啟用 FPolicy 之後、請在 ONTAP 中卸載磁碟區以移除連接路徑、這會使使用者傳輸協定存取無法存取。
+從 ONTAP 9.15.1 開始、 FPolicy 永續性儲存區組態已簡化。。 `persistent-store create` 命令可自動建立 SVM 的 Volume 、並設定持續儲存區的 Volume 。
+
+根據 ONTAP 版本的不同、有兩種方法可以建立持續儲存區：
+
+* ONTAP 9.15.1 或更新版本：當您建立持續儲存區時、 ONTAP 會自動同時建立及設定其 Volume 。如此可簡化 FPolicy 持續儲存區組態、並實作所有最佳實務做法。
+* ONTAP 9.14.1 ：手動建立和設定磁碟區、然後為新建立的磁碟區建立持續儲存區。
+
+
+每個 SVM 只能設定一個持續儲存區。此單一持續儲存區必須用於該 SVM 上的所有 FPolicy 組態、即使這些原則來自不同的合作夥伴。
+
+
+
+== 建立持續儲存區（ ONTAP 9.15.1 或更新版本）
+
+從 ONTAP 9.15.1 開始、請使用 `fpolicy persistent-store create` 命令來建立具有內嵌磁碟區建立和組態的 FPolicy 持續儲存區。ONTAP 會自動封鎖磁碟區、使其無法存取外部使用者傳輸協定（ CIFS/NFS ）。
+
+.開始之前
+* 您要建立持續儲存區的 SVM 必須至少有一個集合體。
+* 您應該可以存取 SVM 可用的集合體、並擁有足夠的權限來建立 Volume 。
 
 
 .步驟
-. 在 SVM 上建立一個空的磁碟區、以便為持續儲存區進行資源配置：
+. 建立持續儲存區、以自動建立和設定磁碟區：
 +
-`volume create -vserver <SVM Name> -volume <volume> -state <online> -junction-path <path> -policy <default> -unix-permissions <777> -size <value> -aggregate <aggregate name> -snapshot-policy <none>`
+`vserver fpolicy persistent-store create -vserver <vserver> -persistent-store <name> -volume <volume_name> -size <size> -autosize-mode <off|grow|grow_shrink>`
 
 +
-** 持續儲存區磁碟區的大小取決於您要持續處理未傳送至外部伺服器（合作夥伴應用程式）的事件所需的時間。
+** 。 `vserver` 參數是 SVM 的名稱。
+** 。 `persistent-store` 參數是持續儲存區的名稱。
+** 。 `volume` 參數是持續儲存區磁碟區的名稱。
++
+
+NOTE: 如果您想要使用現有的空白磁碟區、請使用 `volume show` 命令來尋找它、並在 Volume 參數中指定它。
+
+** 。 `size` 參數是根據您想要保留未傳送至外部伺服器（合作夥伴應用程式）的事件的持續時間。
 +
 例如、如果您想要在每秒有 30K 通知的叢集中保留 30 分鐘的事件容量：
 
@@ -38,7 +57,57 @@ summary: 從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定持續儲存區、以
 +
 若要找出大約的通知率、您可以聯絡 FPolicy 合作夥伴應用程式、或使用 FPolicy 計數器 `requests_dispatched_rate`。
 
-** 系統管理員使用者若擁有足夠的 RBAC 權限（以建立磁碟區）、則應使用 Volume CLI 命令或 REST API 建立所需大小的磁碟區、並提供該磁碟區的名稱做為 `-volume` 在持續儲存區中、建立 CLI 命令或 REST API 。
++
+
+NOTE: 如果您使用現有的 Volume 、則 Size 參數為選用項目。如果您確實為 size 參數提供值、它會以您指定的大小修改 Volume 。
+
+** 。 `autosize-mode` 參數指定 Volume 的自動調整模式。支援的自動調整大小模式包括：
++
+*** Off （關） - 磁碟區不會因應使用空間量而增加或縮小大小。
+*** 擴充 - 當磁碟區中的使用空間超過擴充臨界值時、磁碟區會自動增加。
+*** GROW _ 收縮：磁碟區會隨著使用空間的數量而增加或縮小大小。
+
+
+
+
+. 建立 FPolicy 原則、並將持續儲存區名稱新增至該原則。如需詳細資訊、請參閱 link:create-fpolicy-policy-task.html["建立FPolicy原則"]。
+
+
+
+
+== 建立持續儲存區（ ONTAP 9.14.1 ）
+
+您可以建立磁碟區、然後建立持續儲存區以使用該磁碟區。接著、您可以封鎖新建立的 Volume 、使其無法存取外部使用者傳輸協定（ CIFS/NFS ）。
+
+.步驟
+. 在 SVM 上建立一個空的磁碟區、以便為持續儲存區進行資源配置：
++
+`volume create -vserver <SVM Name> -volume <volume> -state <online> -policy <default> -unix-permissions <777> -size <value> -aggregate <aggregate name> -snapshot-policy <none>`
+
++
+系統管理員使用者若擁有足夠的 RBAC 權限（以建立 Volume ）、就會建立所需大小的 Volume （使用 Volume CLI 命令或 REST API ）、並提供該 Volume 的名稱做為 `-volume` 在持續儲存區中、建立 CLI 命令或 REST API 。
+
++
+** 。 `vserver` 參數是 SVM 的名稱。
+** 。 `volume` 參數是持續儲存區磁碟區的名稱。
+** 。 `state` 參數應設為線上、以便使用 Volume 。
+** 。 `policy` 如果您已設定 FPolicy 服務原則、則參數會設為 FPolicy 服務原則。如果沒有、您可以使用 `volume modify` 命令稍後新增原則。
+** 。 `unix-permissions` 參數為選用項目。
+** 。 `size` 參數是根據您想要保留未傳送至外部伺服器（合作夥伴應用程式）的事件的持續時間。
++
+例如、如果您想要在每秒有 30K 通知的叢集中保留 30 分鐘的事件容量：
+
++
+所需 Volume 大小 = 30000 x 30 x 60 x 0.6KB （平均通知記錄大小） = 32400000 KB = ~32 GB
+
++
+若要找出大約的通知率、您可以聯絡 FPolicy 合作夥伴應用程式、或使用 FPolicy 計數器 `requests_dispatched_rate`。
+
+** FlexVol Volume 需要 Aggregate 參數、否則不需要。
+** 。 `snapshot-policy` 參數必須設定為無。如此可確保不會意外還原快照、導致目前事件遺失、並防止可能的重複事件處理。
++
+如果您想要使用現有的空白磁碟區、請使用 `volume show` 命令來尋找它和 `volume modify` 命令進行任何必要的變更。確保原則、大小和 `snapshot-policy` 持續儲存區的參數已正確設定。
+
 
 
 . 建立持續儲存區：
@@ -46,10 +115,10 @@ summary: 從 ONTAP 9.14.1 開始、 FPolicy 可讓您設定持續儲存區、以
 `vserver fpolicy persistent store create -vserver <SVM> -persistent-store <PS_name> -volume <volume>`
 
 +
-** Persistent-store ：持續儲存區名稱
-** Volume ：持續儲存區 Volume
+** 。 `vserver` 參數是 SVM 的名稱。
+** 。 `persistent-store` 參數是持續儲存區的名稱。
+** 。 `volume` 參數是持續儲存區磁碟區的名稱。
 
 
-. 建立持續儲存區之後、您可以建立 FPolicy 原則、並將持續儲存區名稱新增至該原則。
-如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/nas-audit/create-fpolicy-policy-task.html["建立FPolicy原則"]。
+. 建立 FPolicy 原則、並將持續儲存區名稱新增至該原則。如需詳細資訊、請參閱 link:create-fpolicy-policy-task.html["建立FPolicy原則"]。
 

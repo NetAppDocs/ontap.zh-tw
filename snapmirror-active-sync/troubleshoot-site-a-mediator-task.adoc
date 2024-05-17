@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/troubleshoot-site-a-mediator-task.html 
+keywords: SM-BC, SMBC, troubleshooting, connectivity, consensus, snapmirror active sync 
+summary: 疑難排解站台 A 與 ONTAP 調解器停機和站台 B 停機之間的連結。 
+---
+= 站台 A 與協調器向下和站台 B 向下連結
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 SnapMirror 主動式同步時、您可能會失去 ONTAP Mediator 或對等叢集之間的連線能力。您可以檢查 SnapMirror 主動同步關係不同部分的連線、可用度和共識狀態、然後強制恢復連線、藉此診斷問題。
+
+[cols="3"]
+|===
+| 要檢查的項目 | CLI 命令 | 指標 
+
+
+| 站台A的中介者 | `snapmirror mediator show` | 連線狀態會顯示為 `unreachable` 
+
+
+| 站台B連線能力 | `cluster peer show` | 可用度顯示為 `unavailable` 
+
+
+| SnapMirror 主動式同步 Volume 的一致狀態 | `volume show _volume_name_ -fields smbc-consensus` | 。 `sm-bc consensus` 欄位隨即顯示 `Awaiting-consensus` 
+|===
+如需診斷及解決此問題的其他資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Link_between_Site_A_and_Mediator_down_and_Site_B_down_when_using_SM-BC["使用 SnapMirror 主動同步時、站台 A 與 Mediator 停機和站台 B 停機之間的連結"^]。

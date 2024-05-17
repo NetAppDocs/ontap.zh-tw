@@ -1,0 +1,155 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/convert-active-sync-task.html 
+keywords: SM-BC, SMBC, convert, SnapMirror synchronous, existing, snapmirror active sync 
+summary: 將 SnapMirror 關係轉換為 SnapMirror 主動同步。 
+---
+= 將現有的 SnapMirror 關係轉換為 SnapMirror 主動同步關係
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已設定 SnapMirror 保護、則可將關係轉換為 SnapMirror 主動同步。從 ONTAP 9.15.1 開始、您可以將關係轉換為使用對稱式主動 / 主動式保護。
+
+
+
+== 將現有的 SnapMirror 關係轉換成非對稱 SnapMirror 主動同步關係
+
+如果來源叢集與目的地叢集之間存在 SnapMirror 同步關係、您可以將其轉換為非對稱 SnapMirror 主動同步關係。這可讓您將鏡射的磁碟區與一致性群組建立關聯、確保在多個磁碟區工作負載之間維持零 RPO 。此外、如果您需要在建立 SnapMirror 主動同步關係之前、先還原到某個時間點、則可以保留現有的 SnapMirror 快照。
+
+.關於這項工作
+* 您必須是主叢集和次叢集上的叢集和 SVM 管理員。
+* 您無法變更SnapMirror原則、將零RPO轉換為零RTO同步。
+* 在發行之前、您必須確定 LUN 已取消對應 `snapmirror create` 命令。
++
+如果次要磁碟區上的現有 LUN 已對應、則會對應 `AutomatedFailover` 原則已設定為 `snapmirror create` 命令會觸發錯誤。
+
+
+
+.開始之前
+* 主叢集與次叢集之間必須存在零 RPO SnapMirror 同步關係。
+* 必須先取消對應目的地磁碟區上的所有 LUN 、才能建立零 RTO SnapMirror 關係。
+* SnapMirror 主動同步僅支援 SAN 傳輸協定（非 NFS/CIFS ）。確保沒有為NAS存取安裝一致性群組的任何成員。
+
+
+.步驟
+. 從次叢集、對現有關係執行 SnapMirror 更新：
++
+`SiteB::>snapmirror update -destination-path vs1_dst:vol1`
+
+. 驗證SnapMirror更新是否成功完成：
++
+`SiteB::>snapmirror show`
+
+. 暫停每個零 RPO 同步關係：
++
+`SiteB::>snapmirror quiesce -destination-path vs1_dst:vol1`
+
++
+`SiteB::>snapmirror quiesce -destination-path vs1_dst:vol2`
+
+. 刪除零RPO同步關係：
++
+`SiteB::>snapmirror delete -destination-path vs1_dst:vol1`
+
++
+`SiteB::>snapmirror delete -destination-path vs1_dst:vol2`
+
+. 釋放來源SnapMirror關係、但保留常見的Snapshot複本：
++
+`SiteA::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol1`
+
++
+`SiteA::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol2`
+
+. 建立零 RTO SnapMirror 同步關係：
++
+`SiteB::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol1:@vol1,vol2:@vol2 -policy AutomatedFailover`
+
+. 重新同步一致性群組：
++
+`SiteB::> snapmirror resync -destination-path vs1_dst:/cg/cg_dst`
+
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+
+
+
+
+== 將現有 SnapMirror 關係轉換為對稱式主動 / 主動式
+
+從 ONTAP 9.15.1 開始、您可以將現有的 SnapMirror 關係轉換為 SnapMirror 主動同步對稱主動 / 主動關係。
+
+.開始之前
+* 您必須執行 ONTAP 9.15.1 或更新版本。
+* 主叢集與次叢集之間必須存在零 RPO SnapMirror 同步關係。
+* 必須先取消對應目的地磁碟區上的所有 LUN 、才能建立零 RTO SnapMirror 關係。
+* SnapMirror 主動同步僅支援 SAN 傳輸協定（非 NFS/CIFS ）。確保沒有為NAS存取安裝一致性群組的任何成員。
+
+
+.步驟
+. 從次叢集、對現有關係執行 SnapMirror 更新：
++
+`SiteB::>snapmirror update -destination-path vs1_dst:vol1`
+
+. 驗證SnapMirror更新是否成功完成：
++
+`SiteB::>snapmirror show`
+
+. 暫停每個零 RPO 同步關係：
++
+`SiteB::>snapmirror quiesce -destination-path vs1_dst:vol1`
+
++
+`SiteB::>snapmirror quiesce -destination-path vs1_dst:vol2`
+
+. 刪除零RPO同步關係：
++
+`SiteB::>snapmirror delete -destination-path vs1_dst:vol1`
+
++
+`SiteB::>snapmirror delete -destination-path vs1_dst:vol2`
+
+. 釋放來源SnapMirror關係、但保留常見的Snapshot複本：
++
+`SiteA::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol1`
+
++
+`SiteA::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol2`
+
+. 使用 AutomatedFailoverDuplex 原則建立零 RTO SnapMirror 同步關係：
++
+`SiteB::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol1:@vol1,vol2:@vol2 -policy AutomatedFailoverDuplex`
+
+. 如果現有主機是本機的主要叢集、請將主機新增至次要叢集、並建立連線、以各自存取每個叢集。
+. 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
++
+
+NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
+
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+
+. 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
++
+`SiteA::> igroup initiator add-proximal-vserver -vserver _svm_name_ -initiator _host_ -proximal-vserver _server_`
+
+. 為新主機新增一個新的 igroup 和啟動器、並設定主機與本機站台的相似性。Ennable igroup 複寫可複寫組態、並反轉遠端叢集上的主機位置。
++
+``
+SiteA::> igroup modify -vserver vsA -igroup ig1 -replication-peer vsB
+SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -proximal-vserver vsB
+``
+
+. 探索主機上的路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN
+. 部署應用程式、並將 VM 工作負載分散至叢集。
+. 重新同步一致性群組：
++
+`SiteB::> snapmirror resync -destination-path vs1_dst:/cg/cg_dst`
+
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+

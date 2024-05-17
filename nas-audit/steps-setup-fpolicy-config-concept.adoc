@@ -2,7 +2,7 @@
 permalink: nas-audit/steps-setup-fpolicy-config-concept.html 
 sidebar: sidebar 
 keywords: steps, setting, fpolicy configuration 
-summary: 在FPolicy能夠監控檔案存取之前、必須先在需要FPolicy服務的儲存虛擬機器（SVM）上建立並啟用FPolicy組態。 
+summary: 在 FPolicy 能夠監控檔案存取之前、必須在需要 FPolicy 服務的 SVM 上建立並啟用 FPolicy 組態。 
 ---
 = 設定FPolicy組態的步驟為何
 :allow-uri-read: 
@@ -19,9 +19,22 @@ summary: 在FPolicy能夠監控檔案存取之前、必須先在需要FPolicy服
 +
 FPolicy外部引擎可識別與特定FPolicy組態相關聯的外部FPolicy伺服器（FPolicy伺服器）。如果使用內部的「原生」FPolicy引擎來建立原生檔案封鎖組態、則不需要建立FPolicy外部引擎。
 
++
+從 ONTAP 9.15.1 開始、您可以使用 `protobuf` 引擎格式。設定為時 `protobuf`、通知訊息會使用Google Prototbuf以二進位格式編碼。將引擎格式設定為之前 `protobuf`，請確保 FPolicy 伺服器也支援 `protobuf` 反序列化。如需詳細資訊、請參閱 link:plan-fpolicy-external-engine-config-concept.html["規劃FPolicy外部引擎組態"]
+
 . 建立FPolicy事件。
 +
 FPolicy事件說明FPolicy原則應監控的項目。事件包括要監控的傳輸協定和檔案作業、並可包含篩選器清單。事件使用篩選器來縮小FPolicy外部引擎必須傳送通知的受監控事件清單。事件也會指定原則是否監控Volume作業。
+
+. 建立 FPolicy 持續儲存區（選用）。
++
+從 ONTAP 9.14.1 開始、 FPolicy 可讓您進行設定 link:persistent-stores.html["持續儲存區"] 擷取 SVM 中非強制性非非同步原則的檔案存取事件。不支援同步（強制或非強制）和非同步強制組態。
+
++
+持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。
+
++
+從 ONTAP 9.15.1 開始、 FPolicy 永續性儲存區組態已簡化。。 `persistent-store-create` 命令可自動建立 SVM 的 Volume 、並設定持續儲存區的 Volume 。
 
 . 建立FPolicy原則。
 +

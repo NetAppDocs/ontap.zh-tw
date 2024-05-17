@@ -1,0 +1,196 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/protect-task.html 
+keywords: SM-BC, snapmirror business continuity, consistency group, remote protection, destination 
+summary: 設定業務持續性保護包括在ONTAP 來源叢集上選取LUN、然後將其新增至一致性群組。 
+---
+= 使用 SnapMirror 主動同步進行保護
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+SnapMirror 主動式同步提供非對稱式保護、從 ONTAP 9.15.1 開始提供對稱式主動 / 主動式保護。
+
+
+
+== 設定非對稱式保護
+
+使用 SnapMirror 主動同步設定非對稱式保護包括在 ONTAP 來源叢集上選取 LUN 、並將其新增至一致性群組。
+
+.開始之前
+* 您必須擁有 SnapMirror 同步授權。
+* 您必須是叢集或儲存VM管理員。
+* 一致性群組中的所有組成磁碟區都必須位於單一儲存 VM （ SVM ）中。
++
+** LUN可位於不同的磁碟區。
+
+
+* 來源與目的地叢集不能相同。
+* 您無法在 ASA 叢集和非 ASA 叢集之間建立 SnapMirror 主動式同步一致性群組關係。
+* SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂IPspace。
+* 一致性群組的名稱必須是唯一的。
+* 次要（目的地）叢集上的磁碟區必須是 DP 類型。
+* 主要和次要 SVM 必須處於對等關係中。
+
+
+.步驟
+您可以使用 ONTAP CLI 或系統管理員來設定一致性群組。
+
+從 ONTAP 9.10.1 開始、 ONTAP 在 System Manager 中提供一致性群組端點和功能表、提供額外的管理公用程式。如果您使用的是 ONTAP 9.10.1 或更新版本、請參閱 link:../consistency-groups/configure-task.html["設定一致性群組"] 然後 link:../consistency-groups/protect-task.html["設定保護"] 建立 SnapMirror 主動式同步關係。
+
+
+IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在主叢集上、瀏覽至 * 保護 > 總覽 > 保護業務持續運作 > 保護 LUN* 。
+. 選取您要保護的 LUN 、並將其新增至保護群組。
+. 選取目的地叢集和SVM。
+. *依預設會選取「初始化關係」*。按一下「*儲存*」開始保護。
+. 請前往*儀表板>效能*以驗證LUN的IOPS活動。
+. 在目的地叢集上、使用System Manager驗證是否已同步保護營運不中斷關係：*保護>關係*。
+
+
+--
+.CLI
+--
+. 從目的地叢集建立一致性群組關係。
+`destination::> snapmirror create -source-path _source-path_ -destination-path _destination-path_ -cg-item-mappings _volume-paths_ -policy _policy-name_`
++
+您可以使用對應最多 12 個組成 Volume `cg-item-mappings` 上的參數 `snapmirror create` 命令。
+
++
+以下範例建立兩個一致性群組： `cg_src_ on the source with `vol1` 和 `vol2` 以及鏡射目的地一致性群組、 `cg_dst`。
+
++
+`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver`
+
+. 從目的地叢集初始化一致性群組。
++
+`destination::>snapmirror initialize -destination-path _destination-consistency-group_`
+
+. 確認初始化作業已成功完成。狀態應為 `InSync`。
++
+`snapmirror show`
+
+. 在每個叢集上建立一個 igroup 、以便將 LUN 對應至應用程式主機上的啟動器。
+`lun igroup create -igroup _name_ -protocol _fcp|iscsi_ -ostype _os_ -initiator _initiator_name_`
+. 在每個叢集上、將 LUN 對應至 igroup ：
++
+`lun map -path _path_name_ -igroup _igroup_name_`
+
+. 使用驗證 LUN 對應是否成功完成 `lun map` 命令。然後、您可以在應用程式主機上探索新的 LUN 。
+
+
+--
+====
+
+
+== 設定對稱式主動 / 主動式保護
+
+您可以使用系統管理員或 ONTAP CLI 建立對稱保護。在這兩個介面中、都有不同的步驟 xref:index.html#key-concepts[統一且不一致的組態]。
+
+.開始之前
+* 兩個叢集都必須執行 ONTAP 9.15.1 或更新版本。
+* 對稱的主動 / 主動式組態需要 `AutomatedFailoverDuplex` 保護原則。或者、您也可以 xref:../data-protection/create-custom-replication-policy-concept.html[建立自訂 SnapMirror 原則] 已提供 `-type` 是 `automated-failover-duplex`。
+
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.統一組態的步驟
+. 在主要站台上、 link:../consistency-groups/configure-task.html#create-a-consistency-group-with-new-luns-or-volumes["使用新的 LUN 建立一致性群組。"^]
++
+.. 建立一致性群組時、請指定主機啟動器以建立 igroup 。
+.. 選中核取方塊以 ** 啟用 SnapMirror** 、然後選擇 `AutomatedFailoverDuplex` 原則。
+.. 在出現的對話方塊中、選取「 ** 複寫啟動器群組 ** 」核取方塊來複寫 igroup 。在 ** 編輯近端設定 ** 中、為主機設定近端 SVM 。
+.. 選擇 ** 儲存 ** 。
+
+
+
+
+.非統一組態的步驟
+. 在主要站台上、 link:../consistency-groups/configure-task.html#create-a-consistency-group-with-new-luns-or-volumes["使用新的 LUN 建立一致性群組。"^]
++
+.. 建立一致性群組時、請指定主機啟動器以建立 igroup 。
+.. 選中核取方塊以 ** 啟用 SnapMirror** 、然後選擇 `AutomatedFailoverDuplex` 原則。
+.. 選取「 ** 儲存 ** 」以建立 LUN 、一致性群組、 igroup 、 SnapMirror 關係及 igroup 對應。
+
+
+. 在次要站台上、建立一個 igroup 並對應 LUN 。
++
+.. 瀏覽至 ** 主機 ** > ** SAN 啟動器群組 ** 。
+.. 選取「 **+Add** 」以建立新的群組群組。
+.. 提供一個 ** 名稱 ** ，選擇 ** 主機作業系統 ** ，然後選擇 ** 啟動器群組成員 ** 。
+.. 選擇 ** 儲存 ** 。
+
+
+. 將新的 igroup 對應到目的地 LUN 。
++
+.. 瀏覽至 ** 儲存空間 ** > ** LUN** 。
+.. 選取要對應到 igroup 的所有 LUN 。
+.. 選擇「 ** 更多 ** 」、然後選擇「對應至啟動器群組」 ** 。
+
+
+
+
+--
+.CLI
+--
+.統一組態的步驟
+. 建立新的 SnapMirror 關係、將應用程式中的所有磁碟區分組。請務必指定 `AutomatedFailOverDuplex` 建立雙向同步複寫的原則。
++
+`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+
+. 請等待、確認作業已成功完成 `Mirrored State` 以顯示為 `SnapMirrored` 和 `Relationship Status` 做為 `Insync`。
++
+`snapmirror show -destination-path _destination_path_`
+
+. 在主機上、根據您的需求、設定主機連線能力、並存取每個叢集。
+. 建立 igroup 組態。設定本機叢集上啟動器的慣用路徑。指定選項、可將組態複寫至對等叢集的反向關聯。
++
+`SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -replication-peer _peer_svm_name_ -initiators _host_ -proximal-vserver local`
+
++
+`SiteA::> igroup add -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_ -proximal-vserver _peer_svm_`
+
+. 在主機上探索路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN 。
+. 部署應用程式並在叢集之間分散 VM 工作負載、以達到所需的負載平衡。
+
+
+.非統一組態的步驟
+. 建立新的 SnapMirror 關係、將應用程式中的所有磁碟區分組。請務必指定「 AutomatedFailOverDuplex' 」原則來建立雙向同步複寫。
++
+`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+
+. 請等待、確認作業已成功完成 `Mirrored State` 以顯示為 `SnapMirrored` 和 `Relationship Status` 做為 `Insync`。
++
+`snapmirror show -destination-path _destination_path_`
+
+. 在主機上、根據您的需求、設定主機連線能力、並存取每個叢集。
+. 在來源叢集和目的地叢集上建立 igroup 組態。
++
+`# primary site
+SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_1_name_`
+
++
+`# secondary site
+SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_2_name_`
+
+. 在主機上探索路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN 。
+. 部署應用程式並在叢集之間分散 VM 工作負載、以達到所需的負載平衡。
+
+
+--
+====

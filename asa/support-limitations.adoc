@@ -22,34 +22,52 @@ All Flash SAN Array （ ASA ）組態限制與支援因 ONTAP 版本而異。
 
 
 
-== 每個叢集的 SAN 通訊協定和節點
+== 每個叢集的 SAN 傳輸協定和支援節點數
 
-ASA 支援每個叢集的 SAN 通訊協定和節點如下：
+支援的 SAN 傳輸協定和每個叢集的最大節點數取決於您是否有非 MetroCluster 或 MetroCluster 組態：
+
+[role="tabbed-block"]
+====
+.非MetroCluster組態
+--
+下表顯示 ASA 對 SAN 通訊協定的支援、以及非 MetroCluster 組態中每個叢集支援的節點數：
 
 [cols="3*"]
 |===
-
-
 | 從ONTAP 無到無...開始 | 傳輸協定支援 | 每個叢集的最大節點數 
 
 
-| 9.12.1  a| 
-* NVMe （支援 4 節點 MetroCluster IP 組態和非 MetroCluster IP 組態）
-* FC
-* iSCSI
+| 9.11.1.  a| 
+* NVMe / TCP
+* NVMe / FC
 
-| 12. 
+ a| 
+12.
 
 
-| 9.9.1  a| 
-* NVMe （非 MetroCluster IP 組態支援）
+
+| 9.10.1  a| 
+* NVMe / TCP
+
+ a| 
+2.
+
+
+
+.2+| 9.9.1  a| 
+* NVMe / FC
+
+ a| 
+2.
+
+
+
+ a| 
 * FC
 * iSCSI
 
  a| 
-* 12 個節點（適用於非 MetroCluster IP 組態）
-* 8 個節點（適用於 MetroCluster IP 組態）
-
+12.
 
 
 
@@ -57,15 +75,60 @@ ASA 支援每個叢集的 SAN 通訊協定和節點如下：
 * FC
 * iSCSI
 
-| 4. 
+ a| 
+2.
+
 |===
+--
+.IP組態MetroCluster
+--
+下表顯示 ASA 對 SAN 通訊協定的支援、以及 MetroCluster IP 組態中每個叢集支援的節點數：
+
+[cols="3*"]
+|===
+| 從ONTAP 無到無...開始 | 傳輸協定支援 | 每個叢集的最大節點數 
+
+
+| 9.15.1..  a| 
+* NVMe / TCP
+
+| 四節點 MetroCluster IP 組態中的每個叢集 2 個節點 
+
+
+| 9.12.1  a| 
+* NVMe / FC
+
+ a| 
+四節點 MetroCluster IP 組態中的每個叢集 2 個節點
+
+
+
+| 9.9.1  a| 
+* FC
+* iSCSI
+
+ a| 
+8 節點 MetroCluster IP 組態中的每個叢集 4 個節點
+
+
+
+| 9.7%  a| 
+* FC
+* iSCSI
+
+ a| 
+四節點 MetroCluster IP 組態中的每個叢集 2 個節點
+
+|===
+--
+====
 
 
 == 支援持續連接埠
 
 從 ONTAP 9.8 開始、在設定為使用 FC 傳輸協定的 All Flash SAN 陣列（ ASA ）上、預設會啟用持續連接埠。持續連接埠僅適用於FC、且需要由全球連接埠名稱（WWPN）識別的區域成員資格。
 
-持續連接埠可在HA合作夥伴的對應實體連接埠上建立陰影LIF、藉此降低接管的影響。接管節點時、合作夥伴節點上的陰影LIF會採用原始LIF的身分識別、包括WWPNe。在將接管節點的路徑狀態變更為故障之前、陰影LIF會顯示為通往主機MPIO堆疊的主動/最佳化路徑、並會移動I/O。如此可減少I/O中斷、因為即使在儲存容錯移轉作業期間、主機仍會看到相同數量的目標路徑。
+持續連接埠可在高可用度（ HA ）合作夥伴的對應實體連接埠上建立陰影 LIF 、藉此降低移轉的影響。接管節點時、合作夥伴節點上的陰影LIF會採用原始LIF的身分識別、包括WWPNe。在將接管節點的路徑狀態變更為故障之前、陰影LIF會顯示為通往主機MPIO堆疊的主動/最佳化路徑、並會移動I/O。如此可減少I/O中斷、因為即使在儲存容錯移轉作業期間、主機仍會看到相同數量的目標路徑。
 
 對於持續連接埠、HA配對內的下列FCP連接埠特性應該相同：
 

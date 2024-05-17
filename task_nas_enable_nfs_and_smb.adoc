@@ -18,29 +18,29 @@ summary: 修改儲存VM、讓NFS和SMB伺服器能夠為Linux和Windows用戶端
 [role="lead"]
 建立或修改儲存VM、以啟用NFS和SMB伺服器、將資料提供給Linux和Windows用戶端。
 
-此程序可讓新的或現有的儲存VM同時提供NFS和SMB傳輸協定。假設您的環境中所需的任何網路、驗證或安全服務都有組態詳細資料可供使用。
+啟用新的或現有的儲存 VM 、以使用此程序同時提供 NFS 和 SMB 傳輸協定。
 
-image:workflow_nas_enable_nfs_and_smb.gif["使用NFS和SMB為Linux和Windows伺服器啟用NAS的工作流程圖"]
+image:workflow_nas_enable_nfs_and_smb.png["使用NFS和SMB為Linux和Windows伺服器啟用NAS的工作流程圖"]
+
+.開始之前
+請確定您已記下環境中所需的任何網路、驗證或安全服務的組態詳細資料。
 
 .步驟
 . 在儲存VM上啟用NFS和SMB。
 +
 .. 對於新的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下*新增*、輸入儲存虛擬機器名稱、然後在* SMB/CIFS、NFS、S2*索引標籤中、選取*啟用SMB/CIFS/CIFS *和*啟用NFS*。
+.. 輸入下列資訊：
 +
-*** 輸入下列資訊：
-+
-**** 系統管理員名稱與密碼
-**** 伺服器名稱
-**** Active Directory網域
+*** 系統管理員名稱與密碼
+*** 伺服器名稱
+*** Active Directory網域
 
 
-*** 確認組織單位。
-*** 確認DNS值。
-*** 確認預設語言。
-*** 新增網路介面。
-*** 更新儲存VM管理員帳戶資訊（選用）。
-
-
+.. 確認組織單位。
+.. 確認DNS值。
+.. 確認預設語言。
+.. 新增網路介面。
+.. 更新儲存VM管理員帳戶資訊（選用）。
 .. 對於現有的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、選取儲存虛擬機器、然後按一下*設定*。如果尚未啟用NFS或SMB、請完成下列子步驟。
 +
 *** 按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
@@ -78,9 +78,44 @@ image:workflow_nas_enable_nfs_and_smb.gif["使用NFS和SMB為Linux和Windows伺�
 .. 在名稱服務交換器檔案中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] 在*名稱服務交換器*下。
 
 
-. 如有必要、請設定Kerberos：按一下 image:icon_arrow.gif["箭頭圖示"] 在Kerberos方塊中、然後按一下*「Add*（新增*）」。
+. 必要時設定驗證與加密：
++
+[role="tabbed-block"]
+====
+.設定 TLS for NFS 用戶端
+--
+
+NOTE: 9.15.1 提供 ONTAP over TLS 的公開預覽功能。ONTAP 9.15.1 的正式作業工作負載不支援 NFS over TLS 作為預覽產品。
+
+.步驟
+.. 請參閱 link:nfs-admin/tls-nfs-strong-security-concept.html["需求"^] 在開始之前使用 NFS over TLS 。
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
+.. 在 *NFS* 方塊中、按一下 * NFS over TLS settings* 。
+.. 在 *NFS over TLS settings* （ *NFS over TLS 設置 * ）區域中，選擇要爲其啓用 TLS 的 NFS 網絡接口。
+.. 按一下 image:icon_kabob.gif["選項圖示"] 適用於該介面。
+.. 按一下「*啟用*」。
+.. 在 * 網路介面 TLS 組態 * 對話方塊中、選取下列其中一個選項、以包含用於 TLS 的憑證：
++
+*** * 安裝的憑證 * ：從下拉式清單中選擇先前安裝的憑證。
+*** * 新憑證 * ：選擇憑證的一般名稱。
+*** * 外部 CA 簽署的憑證 * ：請依照指示將憑證和私密金鑰的內容貼到方塊中。
+
+
+.. 按一下「 * 儲存 * 」。
+
+
+--
+.設定 Kerberos
+--
+.步驟
+.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
+.. 按一下 image:icon_arrow.gif["箭頭圖示"] 在Kerberos方塊中、然後按一下*「Add*（新增*）」。
+
+
+--
+====
 . 如有需要、請對應UNIX和Windows使用者名稱：按一下 image:icon_arrow.gif["箭頭圖示"] 在「*名稱對應*」下、然後按一下「*新增*」。
 +
-只有當您的網站有Windows和UNIX使用者帳戶並未隱含對應時、才應使用此程序、亦即每個Windows使用者名稱的小寫版本都與UNIX使用者名稱相符時。此程序可使用LDAP、NIS或本機使用者來完成。如果您有兩組使用者不相符、則應設定名稱對應。
+只有當您的網站具有未隱含對應的 Windows 和 UNIX 使用者帳戶、亦即每個 Windows 使用者名稱的小寫版本與 UNIX 使用者名稱相符時、才應該這麼做。您可以使用 LDAP 、 NIS 或本機使用者來對應使用者名稱。如果您有兩組使用者不相符、則應設定名稱對應。
 
 

@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/architecture-concept.html 
+keywords: SM-BC, SMBC, snapmirror active sync 
+summary: 瞭解 SnapMirror 主動式同步的架構、確保您正確設定應用程式的保護。 
+---
+= SnapMirror 主動同步架構
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 主動式同步架構可在兩個叢集上啟用作用中工作負載、並可同時從兩個叢集提供主要工作負載。某些國家的金融機構法規要求企業也必須定期從次要資料中心進行服務、也就是 SnapMirror 主動同步所支援的「 Tick-Tock 」部署。
+
+藉由將儲存虛擬機器（ SVM ）內不同磁碟區的應用程式特定 LUN 新增至一致性群組、可在來源儲存系統和目的地儲存系統之間建立資料保護關係、以保護業務持續運作。在正常作業下、企業應用程式會寫入主要一致性群組、該群組會同步將此 I/O 複寫到鏡射一致性群組。
+
+image:snapmirror-active-sync-architecture.png["SnapMirror 主動式架構"]
+
+雖然資料保護關係中存在兩個獨立的資料複本、但由於 SnapMirror 作用中同步維持相同的 LUN 身分識別、因此應用程式主機將此視為具有多個路徑的共用虛擬裝置、同時一次只寫入一個 LUN 複本。當故障導致主儲存系統離線時、 ONTAP 會偵測到此故障並使用調解器重新確認；如果 ONTAP 或調解器都無法 ping 通主站台、 ONTAP 就會執行自動容錯移轉作業。此程序只會容錯移轉特定應用程式、而不需要先前為容錯移轉所需的手動介入或指令碼。
+
+其他要考量的重點：
+
+* 支援不受保護的無鏡射磁碟區、以確保業務持續運作。
+* 對於受保護的磁碟區來說、僅支援其他一種 SnapMirror 非同步關係、以確保營運不中斷。
+* 串聯拓撲不支援保護業務持續運作。
+
+
+
+
+== 資訊媒體ONTAP
+
+ONTAP Mediator 安裝在第三個故障網域中、不同於兩個 ONTAP 叢集。其關鍵角色是扮演 SnapMirror 主動同步複本的被動見證者。如果有網路分割區或某個複本無法使用、 SnapMirror 主動式同步會使用 Mediator 來判斷哪一個複本繼續提供 I/O 服務、同時在另一個複本上停止 I/O 。此設定有三個主要元件：
+
+* 主 ONTAP 叢集託管 SnapMirror 主動同步主 CG
+* 主控鏡像 CG 的次要 ONTAP 叢集
+* 資訊媒體ONTAP
+
+
+ONTAP Mediator 在 SnapMirror 主動同步組態中扮演著重要角色、扮演被動仲裁見證者的角色、確保仲裁維護、並在故障期間協助資料存取。它可作為控制器的 Ping Proxy 、以判斷對等控制器的活躍度。雖然 Mediator 並未主動觸發切入作業、但它可在網路通訊問題期間、讓仍在運作的節點檢查其合作夥伴的狀態、以提供重要的功能。ONTAP Mediator 扮演仲裁見證者的角色、提供對等叢集的替代路徑（有效做為 Proxy ）。
+
+此外、叢集也能在仲裁程序中取得此資訊。它利用節點管理 LIF 和叢集管理 LIF 來進行通訊。它透過多條路徑建立備援連線、以區分站台故障和交換器間連結（ ISL ）故障。當叢集因為事件而失去與 ONTAP Mediator 軟體及其所有節點的連線時、就會被視為無法連線。這會觸發警示、並可自動容錯移轉至次要站台的鏡射一致性群組（ CG ）、確保用戶端的 I/O 不中斷。複寫資料路徑仰賴心跳機制、如果網路故障或事件持續超過一段時間、可能會導致心跳故障、導致關係不同步。不過、如果存在備援路徑、例如 LIF 容錯移轉至另一個連接埠、就能維持心跳並防止此類中斷。
+
+總結來說、 ONTAP Mediator 的用途如下：
+
+* 建立仲裁
+* 透過自動容錯移轉（ AUFO ）提供持續可用度
+* 計畫性容錯移轉（ PFO ）
+
+
+
+NOTE: ONTAP Mediator 1.7 可管理十個叢集配對、以確保營運不中斷。
+
+
+NOTE: 當 ONTAP Mediator 無法使用時、您無法執行計畫性或自動容錯移轉。應用程式資料會持續同步複寫、不會中斷、不會遺失任何資料。
+
+
+
+== 營運
+
+下圖說明了 SnapMirror 主動同步的高層設計。
+
+image:workflow_san_snapmirror_business_continuity.png["SnapMirror 主動同步架構圖表"]
+
+此圖顯示主資料中心儲存 VM （ SVM ）上裝載的企業應用程式。SVM 包含五個磁碟區、其中三個是一致性群組的一部分。一致性群組中的三個磁碟區會鏡射到次要資料中心。在一般情況下、所有寫入作業都會執行至主要資料中心；實際上、此資料中心是 I/O 作業的來源、而次要資料中心則是目的地。
+
+在主要資料中心發生災難時、 ONTAP 會指示次要資料中心做為主要資料中心、為所有 I/O 作業提供服務。只會提供在一致性群組中鏡射的磁碟區。任何與 SVM 上其他兩個磁碟區相關的作業都會受到災難事件影響。
+
+
+
+== 對稱式主動 / 主動式
+
+SnapMirror 主動式同步提供非對稱式解決方案。
+
+在 _ 非對稱組態 _ 中、主要儲存複本會公開主動最佳化的路徑、並主動為用戶端 I/O 提供服務次要站台使用遠端路徑進行 I/O次要站台的儲存路徑被視為主動 - 非最佳化。從次要站台代理寫入 LUN 的存取權。
+
+在對稱式主動 / 主動式組態中、主動最佳化路徑會在兩個站台上公開、是主機特有的、而且可設定、這表示兩側的主機都能存取使用中 I/O 的本機儲存設備
+
+image:snapmirror-active-sync-symmetric.png["對稱作用中組態的圖表"]
+
+對稱式主動 / 主動式是專為叢集式應用程式所設計、包括 VMware Metro Storage Cluster 、 Oracle RAC 、以及 Windows Failover Clustering with SQL 。

@@ -1,0 +1,100 @@
+---
+permalink: authentication/enable-disable-dynamic-authorization.html 
+sidebar: sidebar 
+keywords: dynamic, authorization, framework, security, login, ssh 
+summary: 設定動態授權架構、以提高 SSH 登入的安全性、並限制在可疑情況下執行某些命令。 
+---
+= 啟用或停用動態授權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.15.1 開始、系統管理員可以在中設定及啟用動態授權 `visibility` 測試組態的模式、或在中 `enforced` 模式、可啟動透過 SSH 連線的 CLI 使用者組態。如果您不再需要動態授權、可以停用它。當您停用動態授權時、組態設定會保持可用狀態、如果您決定重新啟用、您可以稍後再使用。
+
+如需的參數詳細資訊、請參閱 `security dynamic-authorization modify` 命令、請參閱 ONTAP 手冊頁。
+
+
+
+== 啟用動態授權以進行測試
+
+您可以在可見度模式中啟用動態授權、藉此測試功能、並確保使用者不會被意外鎖定。在此模式中、信任分數會針對每個受限活動進行檢查、但不會強制執行。但是、任何會被拒絕或受到其他驗證挑戰的活動都會記錄下來。最佳實務做法是先在此模式中測試您想要的設定、然後再執行設定。
+
+
+NOTE: 即使您尚未設定任何其他動態授權設定、也可以依照此步驟第一次啟用動態授權。請參閱 link:configure-dynamic-authorization.html["自訂動態授權"^] 針對設定其他動態授權設定的步驟、將其自訂至您的環境。
+
+.步驟
+. 設定全域設定並將功能狀態變更為、即可在可見度模式中啟用動態授權 `visibility`。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。更新括弧 <> 中的值以符合您的環境。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state visibility* \
+-lower-challenge-boundary <percent> \
+-upper-challenge-boundary <percent> \
+-suppression-interval <interval> \
+-vserver <storage_VM_name>
+----
+. 使用檢查結果 `show` 顯示全域組態的命令：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 在強制模式中啟用動態授權
+
+您可以在強制模式中啟用動態授權。一般而言、在使用可見度模式完成測試之後、您會使用此模式。在此模式中、每個受限活動都會檢查信任分數、如果符合限制條件、則會強制執行活動限制。也會強制執行抑制間隔、以防止在指定時間間隔內發生其他驗證挑戰。
+
+
+NOTE: 此步驟假設您先前已在中設定並啟用動態授權 `visibility` 強烈建議使用模式。
+
+.步驟
+. 在中啟用動態授權 `enforced` 模式、將其狀態變更為 `enforced`。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。更新括弧 <> 中的值以符合您的環境。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state enforced* \
+-vserver <storage_VM_name>
+----
+. 使用檢查結果 `show` 顯示全域組態的命令：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 停用動態授權
+
+如果不再需要新增的驗證安全性、您可以停用動態授權。
+
+.步驟
+. 將動態授權狀態變更為、以停用動態授權 `disabled`。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。更新括弧 <> 中的值以符合您的環境。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state disabled* \
+-vserver <storage_VM_name>
+----
+. 使用檢查結果 `show` 顯示全域組態的命令：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 下一步
+
+（選用）視您的環境而定、請參閱 link:configure-dynamic-authorization.html["自訂動態授權"^] 設定其他動態授權設定。

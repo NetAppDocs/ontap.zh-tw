@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: multi-admin-verify/index.html 
-keywords: ontap, mav, RBAC, protected, operation, multi-admin, administrator, verification, approval, rules 
-summary: 從版本號《支援》9.11.1開始ONTAP 、您可以使用多管理員驗證（MAV）來確保特定作業（例如刪除磁碟區或Snapshot複本）只能在指定管理員核准後執行。  
+keywords: ontap, mav, multi admin verify, RBAC, protected, operation, multi-admin, administrator, verification, approval, rules 
+summary: 從 ONTAP 9.11.1 開始、請使用多重管理驗證（ MAV ）來確保某些作業只能在指定管理員核准後執行 
 ---
 = 多管理員驗證總覽
 :allow-uri-read: 
@@ -22,17 +22,20 @@ summary: 從版本號《支援》9.11.1開始ONTAP 、您可以使用多管理�
 
 初始設定之後、這些元素只能由MAV核准群組（MAV系統管理員）中的系統管理員修改。
 
-啟用多管理員驗證時、每項受保護的作業都需要三個步驟才能完成：
+啟用多重管理驗證時、完成每項受保護的作業都需要下列步驟：
 
-* 當使用者啟動作業時 link:request-operation-task.html["已產生要求。"]
-* 在執行之前、請至少先執行一項 link:manage-requests-task.html["MAV管理員必須核准。"]
-* 核准後、使用者即完成作業。
+. 當使用者啟動作業時 link:request-operation-task.html["已產生要求。"]
+. 在執行之前、請至少先執行一項 link:manage-requests-task.html["MAV管理員必須核准。"]
+. 核准後、使用者即完成作業。
 
-
-多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。  如果您想要一起使用自動化和MAV、建議您針對特定的MAV作業使用查詢。例如、您可以申請 `volume delete` MAV 規則僅適用於不涉及自動化的磁碟區、您可以指定具有特定命名方案的磁碟區。
 
 
 NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員驗證功能、請聯絡NetApp支援部門、並提及下列知識庫文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在無法使用MAV管理時停用多管理員驗證"^]。
+
+多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。  如果您想要同時使用自動化和 MAV 、建議您針對特定的 MAV 作業使用查詢。例如、您可以申請 `volume delete` MAV 規則僅適用於不涉及自動化的磁碟區、您可以指定具有特定命名方案的磁碟區。
+
+
+NOTE: Cloud Volumes ONTAP 無法使用多重管理驗證。
 
 
 
@@ -45,7 +48,7 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 * _規則engine _以識別及控制受保護作業的執行。
 
 
-根據角色型存取控制（RBAC）規則、評估MAV規則。因此、執行或核准受保護作業的系統管理員必須已擁有這些作業的最低RBAC權限。 link:../authentication/manage-access-control-roles-concept.html["深入瞭解RBAC。"]
+根據角色型存取控制（RBAC）規則、評估MAV規則。因此、執行或核准受保護作業的系統管理員必須已擁有這些作業的最低RBAC權限。 link:../authentication/manage-access-control-roles-concept.html["深入瞭解RBAC"]。
 
 
 
@@ -53,15 +56,15 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 啟用多管理員驗證時、系統定義的規則（也稱為_guard rail _規則）會建立一組MAV作業、以控制規避MAV程序本身的風險。這些作業無法從規則表格中移除。啟用MAV之後、以星號（*）指定的作業在執行之前、必須先經過一或多位管理員的核准、* show*命令除外。
 
-* `security multi-admin-verify modify` 作業 *
+* `security multi-admin-verify modify` 營運 `*`
 +
 控制多管理員驗證功能的組態。
 
-* `security multi-admin-verify approval-group` 營運 *
+* `security multi-admin-verify approval-group` 營運 `*`
 +
 以多管理員驗證認證身分證明來控制系統管理員群組的成員資格。
 
-* `security multi-admin-verify rule` 營運 *
+* `security multi-admin-verify rule` 營運 `*`
 +
 控制需要多管理員驗證的命令集。
 
@@ -75,73 +78,210 @@ NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員�
 
 === 受規則保護的命令
 
-除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
+除了系統定義的作業之外、當啟用多重管理驗證時、下列命令預設會受到保護、但您可以修改規則、以移除這些命令的保護。
 
 * `security login password`
 * `security login unlock`
 * `set`
 
 
-下列命令可在ONTAP 更新版本的版本中獲得保護。
+每個 ONTAP 版本都提供更多命令、讓您可以選擇使用多重管理驗證規則來保護這些命令。請選擇您的 ONTAP 版本、以取得可保護的命令完整清單。
 
-[cols="2*"]
-|===
+[role="tabbed-block"]
+====
+.9.15.1..
+--
+* `cluster date modify` ^3^
+* `cluster log-forwarding create` ^3^
+* `cluster log-forwarding delete` ^3^
+* `cluster log-forwarding modify` ^3^
+* `cluster peer delete`
+* `cluster time-service ntp server create` ^3^
+* `cluster time-service ntp server delete` ^3^
+* `cluster time-service ntp server key create` ^3^
+* `cluster time-service ntp server key delete` ^3^
+* `cluster time-service ntp server key modify` ^3^
+* `cluster time-service ntp server modify` ^3^
+* `event config modify`
+* `lun delete` ^3^
+* `security anti-ransomware volume attack clear-suspect` ^1^
+* `security anti-ransomware volume disable` ^1^
+* `security anti-ransomware volume pause` ^1^
+* `security audit modify` ^3^
+* `security ipsec config modify` ^3^
+* `security ipsec policy create` ^3^
+* `security ipsec policy delete` ^3^
+* `security ipsec policy modify` ^3^
+* `security login create`
+* `security login delete`
+* `security login modify`
+* `security saml-sp create` ^3^
+* `security saml-sp delete` ^3^
+* `security saml-sp modify` ^3^
+* `snaplock legal-hold end` ^3^
+* `storage aggregate delete` ^3^
+* `storage encryption disk destroy` ^3^
+* `storage encryption disk modify` ^3^
+* `storage encryption disk revert-to-original-state` ^3^
+* `storage encryption disk sanitize` ^3^
+* `system bridge run-cli` ^3^
+* `system controller flash-cache secure-erase run` ^3^
+* `system controller service-event delete` ^3^
+* `system health alert delete` ^3^
+* `system health alert modify` ^3^
+* `system health policy definition modify` ^3^
+* `system node autosupport modify` ^3^
+* `system node autosupport trigger modify` ^3^
+* `system node coredump delete` ^3^
+* `system node coredump delete-all` ^3^
+* `system node hardware nvram-encryption modify` ^3^
+* `system node run`
+* `system node systemshell`
+* `system script delete` ^3^
+* `system service-processor ssh add-allowed-addresses` ^3^
+* `system service-processor ssh remove-allowed-addresses` ^3^
+* `system smtape restore` ^3^
+* `system switch ethernet log disable-collection` ^3^
+* `system switch ethernet log modify` ^3^
+* `timezone` ^3^
+* `volume create` ^3^
+* `volume delete`
+* `volume encryption conversion start` ^3^
+* `volume encryption rekey start` ^3^
+* `volume file privileged-delete` ^3^
+* `volume flexcache delete`
+* `volume modify` ^3^
+* `volume recovery-queue modify` ^2^
+* `volume recovery-queue purge` ^2^
+* `volume recovery-queue purge-all` ^2^
+* `volume snaplock modify` ^1^
+* `volume snapshot autodelete modify`
+* `volume snapshot create` ^3^
+* `volume snapshot delete`
+* `volume snapshot modify` ^3^
+* `volume snapshot policy add-schedule`
+* `volume snapshot policy create`
+* `volume snapshot policy delete`
+* `volume snapshot policy modify`
+* `volume snapshot policy modify-schedule`
+* `volume snapshot policy remove-schedule`
+* `volume snapshot rename` ^3^
+* `volume snapshot restore`
+* `vserver audit create` ^3^
+* `vserver audit delete` ^3^
+* `vserver audit disable` ^3^
+* `vserver audit modify` ^3^
+* `vserver audit rotate-log` ^3^
+* `vserver delete` ^3^
+* `vserver modify` ^2^
+* `vserver object-store-server audit create` ^3^
+* `vserver object-store-server audit delete` ^3^
+* `vserver object-store-server audit disable` ^3^
+* `vserver object-store-server audit modify` ^3^
+* `vserver object-store-server audit rotate-log` ^3^
+* `vserver options` ^3^
+* `vserver peer delete`
+* `vserver security file-directory apply` ^3^
+* `vserver security file-directory remove-slag` ^3^
+* `vserver vscan disable` ^3^
+* `vserver vscan on-access-policy create` ^3^
+* `vserver vscan on-access-policy delete` ^3^
+* `vserver vscan on-access-policy disable` ^3^
+* `vserver vscan on-access-policy modify` ^3^
+* `vserver vscan scanner-pool create` ^3^
+* `vserver vscan scanner-pool delete` ^3^
+* `vserver vscan scanner-pool modify` ^3^
 
 
- a| 
-`cluster peer delete`
-
-`event config modify`
-
-`security login create`
-
-`security login delete`
-
-`security login modify`
-
-`system node run`
-
-`system node systemshell`
-
-`volume delete`
-
-`volume flexcache delete`
- a| 
-`volume snapshot autodelete modify`
-
-`volume snapshot delete`
-
-`volume snapshot policy add-schedule`
-
-`volume snapshot policy create`
-
-`volume snapshot policy delete`
-
-`volume snapshot policy modify`
-
-`volume snapshot policy modify-schedule`
-
-`volume snapshot policy remove-schedule`
-
-`volume snapshot restore`
-
-`vserver peer delete`
-
-|===
-從 ONTAP 9.13.1 開始、可以保護下列命令：
-
-* `volume snaplock modify`
-* `security anti-ransomware volume attack clear-suspect`
-* `security anti-ransomware volume disable`
-* `security anti-ransomware volume pause`
+--
+.9.14.1.
+--
+* `cluster peer delete`
+* `event config modify`
+* `security anti-ransomware volume attack clear-suspect` ^1^
+* `security anti-ransomware volume disable` ^1^
+* `security anti-ransomware volume pause` ^1^
+* `security login create`
+* `security login delete`
+* `security login modify`
+* `system node run`
+* `system node systemshell`
+* `volume delete`
+* `volume flexcache delete`
+* `volume recovery-queue modify` ^2^
+* `volume recovery-queue purge` ^2^
+* `volume recovery-queue purge-all` ^2^
+* `volume snaplock modify` ^1^
+* `volume snapshot autodelete modify`
+* `volume snapshot delete`
+* `volume snapshot policy add-schedule`
+* `volume snapshot policy create`
+* `volume snapshot policy delete`
+* `volume snapshot policy modify`
+* `volume snapshot policy modify-schedule`
+* `volume snapshot policy remove-schedule`
+* `volume snapshot restore`
+* `vserver modify` ^2^
+* `vserver peer delete`
 
 
-從 ONTAP 9.14.1 開始、可以保護下列命令：
+--
+.9.13.1.12.9.12.9.
+--
+* `cluster peer delete`
+* `event config modify`
+* `security anti-ransomware volume attack clear-suspect` ^1^
+* `security anti-ransomware volume disable` ^1^
+* `security anti-ransomware volume pause` ^1^
+* `security login create`
+* `security login delete`
+* `security login modify`
+* `system node run`
+* `system node systemshell`
+* `volume delete`
+* `volume flexcache delete`
+* `volume snaplock modify` ^1^
+* `volume snapshot autodelete modify`
+* `volume snapshot delete`
+* `volume snapshot policy add-schedule`
+* `volume snapshot policy create`
+* `volume snapshot policy delete`
+* `volume snapshot policy modify`
+* `volume snapshot policy modify-schedule`
+* `volume snapshot policy remove-schedule`
+* `volume snapshot restore`
+* `vserver peer delete`
 
-* `volume recovery-queue modify`
-* `volume recovery-queue purge`
-* `volume recovery-queue purge-all`
-* `vserver modify`
+
+--
+.9.12.1/9.11.1
+--
+* `cluster peer delete`
+* `event config modify`
+* `security login create`
+* `security login delete`
+* `security login modify`
+* `system node run`
+* `system node systemshell`
+* `volume delete`
+* `volume flexcache delete`
+* `volume snapshot autodelete modify`
+* `volume snapshot delete`
+* `volume snapshot policy add-schedule`
+* `volume snapshot policy create`
+* `volume snapshot policy delete`
+* `volume snapshot policy modify`
+* `volume snapshot policy modify-schedule`
+* `volume snapshot policy remove-schedule`
+* `volume snapshot restore`
+* `vserver peer delete`
+
+
+--
+====
+. 9.13.1 全新的規則保護命令
+. 適用於 9.14.1 的全新規則保護命令
+. 9.15.1 的新規則保護命令
 
 
 
@@ -172,7 +312,7 @@ MAV管理員應具備具備叢集管理員權限的RBAC角色。
 MAV系統管理員無法核准自己執行受保護作業的要求。因此：
 
 * 不應在只有一位系統管理員的叢集上啟用MAV。
-* 如果MAV群組中只有一個人、則MAV管理員無法進入受保護的作業；一般管理員必須輸入這些作業、MAV管理員只能核准。
+* 如果 MAV 群組中只有一個人、則 MAV 管理員無法啟動受保護的作業；一般管理員必須啟動受保護的作業、且 MAV 管理員只能核准。
 * 如果您想讓MAV管理員能夠執行受保護的作業、則MAV管理員人數必須大於所需的核准人數。
 例如、如果受保護的作業需要兩次核准、而您希望MAV系統管理員執行這些核准、則MAV系統管理員群組中必須有三位人員。
 
@@ -193,7 +333,8 @@ MAV系統管理員可以接收電子郵件警示中的核准要求（使用EMS�
 
 如果申請者在該作業的同一個核准群組中、他們會在申請獲得核准時收到一封電子郵件。
 
-*附註：*申請者無法核准自己的申請、即使他們是在核准群組中。但他們可以收到電子郵件通知。不在核准群組中的申請者（即非MAV系統管理員）不會收到電子郵件通知。
+
+NOTE: 申請者即使在核准群組中、也無法核准自己的申請。他們可以收到電子郵件通知。不在核准群組中的申請者（即非MAV系統管理員）不會收到電子郵件通知。
 
 
 

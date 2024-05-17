@@ -2,7 +2,7 @@
 permalink: nas-audit/plan-fpolicy-external-engine-config-concept.html 
 sidebar: sidebar 
 keywords: plan, fpolicy, external engine, configuration 
-summary: 在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭解建立外部引擎的意義、以及可用的組態參數。此資訊可協助您判斷要為每個參數設定哪些值。 
+summary: 在設定 FPolicy 外部引擎之前、您必須先瞭解建立外部引擎的意義、以及哪些參數可供使用。 
 ---
 = 規劃FPolicy外部引擎組態
 :allow-uri-read: 
@@ -11,18 +11,30 @@ summary: 在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭�
 
 
 [role="lead"]
-在設定FPolicy外部引擎（外部引擎）之前、您必須先瞭解建立外部引擎的意義、以及可用的組態參數。此資訊可協助您判斷要為每個參數設定哪些值。
+設定 FPolicy 外部引擎之前、您必須先瞭解建立外部引擎的意義、以及哪些組態參數可供使用。此資訊可協助您判斷要為每個參數設定哪些值。
 
 
 
 == 建立FPolicy外部引擎時所定義的資訊
 
-外部引擎組態定義FPolicy建立及管理外部FPolicy伺服器（FPolicy伺服器）連線所需的資訊、包括下列資訊：
+外部引擎組態定義 FPolicy 需要建立及管理外部 FPolicy 伺服器連線的資訊、包括：
 
 * SVM名稱
 * 引擎名稱
 * 主要和次要FPolicy伺服器的IP位址、以及連接至FPolicy伺服器時要使用的TCP連接埠號碼
 * 引擎類型為非同步或同步
+* 引擎格式是否為 `xml` 或 `protobuf`
++
+從 ONTAP 9.15.1 開始、您可以使用 `protobuf` 引擎格式。設定為時 `protobuf`、通知訊息會使用Google Prototbuf以二進位格式編碼。將引擎格式設定為之前 `protobuf`，請確保 FPolicy 伺服器也支援 `protobuf` 反序列化。
+
++
+由於支援的 probuf 格式從 ONTAP 9.15.1 開始、因此您必須先考慮外部引擎格式、才能還原至舊版 ONTAP 。如果您恢復為 ONTAP 9.15.1 之前的版本、請與 FPolicy 合作夥伴合作、以：
+
++
+** 從變更每個引擎格式 `protobuf` 至 `xml`
+** 刪除引擎格式為的引擎 `protobuf`
+
+
 * 如何驗證節點與FPolicy伺服器之間的連線
 +
 如果您選擇設定相互SSL驗證、則也必須設定提供SSL憑證資訊的參數。
@@ -130,6 +142,17 @@ _主要FPolicy伺服器_
 * `synchronous`
 * `asynchronous`
 
+
+
+
+ a| 
+外部引擎格式_
+
+指定外部引擎格式是 XML 還是 protobuf 。
+
+從 ONTAP 9.15.1 開始、您可以使用原型引擎格式。設為 probuf 時、通知訊息會使用 Google Prototbuf 以二進位格式編碼。在將引擎格式設定為 protobuf 之前、請確定 FPolicy 伺服器也支援 protobuf 反序列化。
+ a| 
+`- extern-engine-format` {`protobuf` 或 `xml`}
 
 
 

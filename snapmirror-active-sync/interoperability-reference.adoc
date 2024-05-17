@@ -1,0 +1,141 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/interoperability-reference.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
+summary: SnapMirror 主動同步可與 ONTAP 中的多種作業系統和其他功能相容。 
+---
+= SnapMirror 主動同步互通性
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 主動式同步可與 ONTAP 中的許多作業系統、應用程式主機及其他功能相容。
+
+
+
+== 應用程式主機
+
+SnapMirror 主動式同步支援應用程式主機、包括 Hyper-V 、 Red Hat Enterprise Linux （ RHEL ）、 VMware 、 VMware vSphere Metro Storage Cluster （ VMSC ）、 Windows Server 、以及 ONTAP 9.14.1 、 Windows Server 容錯移轉叢集。
+
+
+
+== 作業系統
+
+SnapMirror 主動同步可支援多種作業系統、包括：
+
+* AIX （從 ONTAP 9.11.1 開始）
+* HP-UX （從 ONTAP 9.10.1 開始）
+* Solaris 11.4 （從 ONTAP 9.10.1 開始）
+
+
+
+
+=== AIX
+
+從 ONTAP 9.11.1 開始、 SnapMirror 主動同步支援 AIX 。在AIX組態下、主要叢集是「作用中」叢集。
+
+在AIX組態中、容錯移轉會中斷運作。每次容錯移轉時、您都必須在主機上執行重新掃描、才能恢復I/O作業。
+
+若要針對具有 SnapMirror 作用中 SYN 的 AIX 主機進行設定、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_configure_an_AIX_host_for_SnapMirror_Business_Continuity_(SM-BC)["如何設定用於 SnapMirror 主動同步的 AIX 主機"^]。
+
+
+
+=== HP-UX
+
+從 ONTAP 9.10.1 開始、支援適用於 HP-UX 的 SnapMirror 主動式同步。
+
+.使用 HP-UX 自動進行非計畫性容錯移轉
+當主要叢集與次要叢集之間的連線中斷、且主要叢集與中介器之間的連線中斷時、隔離主叢集上的自動非計畫性容錯移轉（ AUFO ）事件可能是由雙事件故障所造成。這是罕見的事件、與其他AUFO事件不同。
+
+* 在這種情況下、在 HP-UX 主機上恢復 I/O 可能需要 120 秒以上的時間。視執行的應用程式而定、這可能不會導致任何I/O中斷或錯誤訊息。
+* 若要進行修正、您必須重新啟動 HP-UX 主機上的應用程式、使中斷容錯度低於 120 秒。
+
+
+
+
+=== Solaris
+
+從 ONTAP 9.10.1 開始、 SnapMirror 主動式同步支援 Solaris 11.4 。
+
+為了確保在 SnapMirror 主動式同步環境中發生非計畫性站台容錯移轉切換時、 Solaris 用戶端應用程式不會中斷運作、請修改預設的 Solaris OS 設定。若要使用建議的設定來設定 Solaris 、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris 主機支援 SnapMirror 主動式同步中的建議設定"^]。
+
+
+
+== ONTAP 互通性
+
+SnapMirror 主動式同步功能與 ONTAP 元件整合、可擴充其資料保護功能。
+
+
+
+=== FabricPool
+
+SnapMirror 主動式同步支援 FabricPool 上的來源和目的地磁碟區、其分層原則為「無」、「快照」或「自動」。SnapMirror 主動同步不支援使用「全部」分層原則的 FabricPool 集合體。
+
+
+
+=== 連出組態
+
+在中 xref:../data-protection/supported-deployment-config-concept.html[連出組態]、您的來源磁碟區可以鏡射至 SnapMirror 主動同步目的地端點、以及一或多個 SnapMirror 非同步關係。
+
+image:fanout-diagram.png["扇出組態的圖表"]
+
+SnapMirror 主動同步支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態] 使用 `MirrorAllSnapshots` 原則、從 ONTAP 9.11.1 開始 `MirrorAndVault` 原則。SnapMirror 主動式同步不支援扇出組態 `XDPDefault` 原則。
+
+從 ONTAP 9.15.1 開始、 SnapMirror 主動式同步可在容錯移轉事件之後、自動在扇出式階段重新設定。如果從主要站台到次要站台的容錯移轉成功、則會自動重新設定第三站台、將次要站台視為來源站台。重新設定是由計畫性或非計畫性的容錯移轉所觸發。在容錯回復至主要站台時、也會進行重新設定。
+
+如需在舊版 ONTAP 中管理您的扇出組態的相關資訊、請參閱 xref:recover-unplanned-failover-task.adoc[在連出組態中恢復保護]。
+
+
+
+=== NDMP 還原
+
+從 ONTAP 9.13.1 開始、您可以使用 xref:../tape-backup/transfer-data-ndmpcopy-task.html[NDMP 來複製及還原資料] 使用 SnapMirror 主動式同步。使用 NDMP 可讓您將資料移至 SnapMirror 主動式同步來源、以完成還原而不需暫停保護。這在扇出組態中特別有用。
+
+
+
+=== SnapCenter
+
+SnapCenter 支援 SnapMirror 主動式同步、從開始 link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]。SnapCenter 可建立可用於保護及恢復應用程式與虛擬機器的即時資料、以提供應用程式層級精細度的隨時可用儲存解決方案。
+
+
+
+=== SnapRestore
+
+SnapMirror 主動式同步支援部分和單一檔案 SnapRestore 。
+
+.單一檔案 SnapRestore
+從ONTAP 功能性的9.11.1開始、 xref:../data-protection/restore-single-file-snapshot-task.html[單一檔案SnapRestore 的功能] 支援 SnapMirror 主動式同步磁碟區。您可以將單一檔案從從 SnapMirror 作用中同步來源複寫到目的地的 Snapshot 複本還原。由於磁碟區可以包含一或多個 LUN 、因此此功能可協助您實作不中斷營運的還原作業、以精細的方式還原單一 LUN 、而不會中斷其他 LUN 。單一檔案 SnapRestore 有兩個選項：就地和異地。
+
+.部分檔案 SnapRestore
+從 ONTAP 9.12.1 開始、 link:../data-protection/restore-part-file-snapshot-task.html["部分 LUN 還原"] 支援 SnapMirror 主動式同步磁碟區。您可以從應用程式建立的 Snapshot 複本還原資料、這些複本已在 SnapMirror 主動式同步來源（ Volume ）和目的地（ Snapshot 複本）磁碟區之間複寫。如果您需要還原在同一個 LUN 上儲存多個資料庫的主機上的資料庫、則可能需要部分 LUN 或檔案還原。使用此功能時、您必須知道資料和位元組數的起始位元組偏移。
+
+
+
+=== 大型LUN和大型磁碟區
+
+大型 LUN 和大型磁碟區（大於 100 TB ）的支援取決於您所使用的 ONTAP 版本和平台。
+
+[role="tabbed-block"]
+====
+.ONTAP 9.12.1P2 及更新版本
+--
+* 對於 ONTAP 9.12.1 P2 及更新版本、 SnapMirror 主動式同步支援大型 LUN 、以及 ASA 和 AFF （包括 C 系列）上大於 100TB 的大型磁碟區。
+
+
+
+NOTE: 對於 ONTAP 9.12.1P2 版及更新版本、您必須確保主要和次要叢集都是 All Flash SAN Array （ ASA ）或 All Flash Array （ AFF ）、而且兩者都已安裝 ONTAP 9.12.1 P2 或更新版本。如果次要叢集執行的版本早於 ONTAP 9.12.1P2 、或陣列類型與主要叢集不同、則當主要磁碟區的容量大於 100 TB 時、同步關係可能會不同步。
+
+--
+.ONTAP 9.9.1 - 9.12.1P1
+--
+* 對於 ONTAP 9.9.1 和 9.12.1 P1 （含）之間的 ONTAP 版本、大型 LUN 和大於 100TB 的大型磁碟區僅在 All Flash SAN 陣列上受支援。
+
+
+
+NOTE: 對於 ONTAP 9.9.1 和 9.12.1 P2 之間的 ONTAP 版本、您必須確保主叢集和次叢集都是 All Flash SAN 陣列、而且兩者都已安裝 ONTAP 9.9.1 或更新版本。如果次要叢集執行的版本早於 ONTAP 9.9.1 、或不是 All Flash SAN 陣列、則當主要磁碟區成長超過 100 TB 時、同步關係可能會不同步。
+
+--
+====

@@ -11,7 +11,7 @@ summary: NVMe支援會因ONTAP 您的版本的支援、平台和組態而異。
 
 
 [role="lead"]
-從 ONTAP 9.4 開始 link:https://docs.netapp.com/us-en/ontap/san-admin/manage-nvme-concept.html["非揮發性記憶體高速（ NVMe ）"] 傳輸協定適用於 SAN 環境。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。
+從 ONTAP 9.4 開始 link:../san-admin/manage-nvme-concept.html["非揮發性記憶體高速（ NVMe ）"] 傳輸協定適用於 SAN 環境。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。
 
 NVMe 支援和限制會因您的 ONTAP 版本、平台和組態而異。如需特定組態的詳細資訊、請參閱 link:https://imt.netapp.com/matrix/["NetApp 互通性對照表工具"]。如需支援的限制、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
 
@@ -47,10 +47,21 @@ NOTE: 每個叢集的最大節點數可在 * 支援的平台混合 * 下的 Hard
 | 從ONTAP 無到無...開始 | NVMe 支援 
 
 
-| 9.12.1  a| 
-NVMe / FC 上的 4 節點 MetroCluster IP 組態。
+| 9.15.1..  a| 
+* NVMe / TCP 上的四節點 MetroCluster IP 組態
 
-* NVMe不支援9.12.1之前的版本。MetroCluster
+
+
+
+| 9.14.1.  a| 
+* 設定子系統的主機優先順序（主機層級 QoS ）
+
+
+
+
+| 9.12.1  a| 
+* NVMe / FC 上的四節點 MetroCluster IP 組態
+* ONTAP 9.12.1 之前的前端 NVMe 網路不支援 MetroCluster 組態。
 * NVMe / TCP 不支援 MetroCluster 組態。
 
 
@@ -60,7 +71,7 @@ NVMe / FC 上的 4 節點 MetroCluster IP 組態。
 
 
 | 9.9.1  a| 
-* 命名空間與 LUN 共存於同一個磁碟區。
+* 命名空間與 LUN 共存於同一個磁碟區
 
 
 
@@ -72,7 +83,6 @@ SCSI 、 NAS 和 NVMe 通訊協定可以存在於同一個儲存虛擬機器（ 
 
 +
 在 ONTAP 9.8 之前、 NVMe 可以是 SVM 上唯一的傳輸協定。
-*
 
 
 
@@ -88,7 +98,10 @@ SCSI 、 NAS 和 NVMe 通訊協定可以存在於同一個儲存虛擬機器（ 
 
 
 
-| 9.5. | 多重路徑 HA 配對容錯移轉 / 恢復。 
+| 9.5.  a| 
+* 多重路徑HA配對容錯移轉/恢復
+
+
 |===
 
 

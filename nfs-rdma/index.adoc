@@ -15,14 +15,28 @@ NFS over RDMA採用RDMA介面卡、可在儲存系統記憶體與主機系統記
 
 NFS over RDMA組態是專為具有延遲敏感或高頻寬工作負載（例如機器學習和分析）的客戶所設計。NVIDIA已透過RDMA延伸NFS、以啟用GPU Direct Storage（GDS）。GDS會繞過CPU和主記憶體、使用RDMA直接在儲存系統和GPU記憶體之間傳輸資料、進一步加速啟用GPU的工作負載。
 
-從 ONTAP 9.14.1 開始、 NFSv4.1 傳輸協定支援透過 RDMA 的 NFS 組態。
+從 ONTAP 9.10.1 開始、 NFSv4.0 傳輸協定支援透過 RDMA 進行 NFS 組態、可搭配 Mellanox CX-5 或 CX-6 介面卡使用、以使用 Roce 傳輸協定第 2 版來支援 RDMA 。GDS僅支援使用NVIDIA Tesla和Ampere-Family GPU搭配Mellanox NIC卡和MOFED軟體。請參閱需求中的圖表、以瞭解後續 ONTAP 版本中的 NFS 版本支援。
 
-從 ONTAP 9.10.1 NFS over RDMA 組態開始、 NFSv4.0 通訊協定可與 Mellanox CX-5 或 CX-6 介面卡搭配使用、以使用 Roce 傳輸協定第 2 版來支援 RDMA 。GDS僅支援使用NVIDIA Tesla和Ampere-Family GPU搭配Mellanox NIC卡和MOFED軟體。
 
-NFS over RDMA支援僅限於節點本機流量。支援所有成員位於同一個節點的標準FlexVols或FlexGroups、且必須從同一個節點上的LIF存取。NFS掛載大小超過64k、導致NFS在RDMA組態上的效能不穩定。
+NOTE: NFS 掛載大小大於 64k 會導致 NFS over RDMA 組態的效能不穩定。
 
 .需求
-* 儲存系統必須執行ONTAP 的是版本不含更新版本的版本
+* 儲存系統必須執行 ONTAP 9.10.1 或更新版本。
+* 請確定您執行的 ONTAP 版本正確、適用於您要使用的 NFS 版本。
++
+[cols="2"]
+|===
+| NFS版本 | 支援ONTAP 
+
+
+| NFSv4.0 | 更新版本ONTAP 
+
+
+| NFSv4.1 | ONTAP 9.14.1 及更新版本 
+
+
+| NFSv3. | ONTAP 9.15.1 及更新版本 
+|===
 +
 ** 您可以使用System Manager從ONTAP 版本S59.12.1開始、透過RDMA設定NFS。在《S209.10.1》和《9.11.1》中ONTAP 、您需要使用CLI透過RDMA來設定NFS。
 
@@ -36,16 +50,16 @@ NFS over RDMA支援僅限於節點本機流量。支援所有成員位於同一�
 
 
 | 9.10.1 及更新版本  a| 
-** A400
-** a700
-** A800
+** 解答400 AFF
+** AFF A700
+** 解答800 AFF
 
 
 
 
 | ONTAP 9.14.1 及更新版本  a| 
 ** AFF C 系列
-** A900
+** 解答900 AFF
 
 
 |===
@@ -57,7 +71,7 @@ NFS over RDMA支援僅限於節點本機流量。支援所有成員位於同一�
 
 NOTE: 透過RDMA的NFS不支援介面群組。
 
-.下一步
+.後續步驟
 * xref:./configure-nics-task.adoc[透過RDMA設定NFS的NIC]
 * xref:./configure-lifs-task.adoc[透過RDMA設定NFS的LIF]
 * xref:./configure-nfs-task.adoc[NFS over RDMA的NFS設定]
@@ -66,8 +80,8 @@ NOTE: 透過RDMA的NFS不支援介面群組。
 .相關資訊
 * link:../concepts/rdma-concept.html["RDMA"]
 * xref:../nfs-trunking/index.html[NFS 主幹總覽]
-* link:https://datatracker.ietf.org/doc/html/rfc7530["RFC 7530：NFS版本4傳輸協定"]
-* link:https://datatracker.ietf.org/doc/html/rfc8166["RFC 8166：遠端程序呼叫版本1的遠端直接記憶體存取傳輸"]
-* link:https://datatracker.ietf.org/doc/html/rfc8167["RFC 8167：雙向遠端程序呼叫RFC-over RDMA傳輸"]
-* link:https://datatracker.ietf.org/doc/html/rfc8267["RFC 8267：NFS上層繫結至RPC-over RDMA版本1"]
+* https://datatracker.ietf.org/doc/html/rfc7530["RFC 7530：NFS版本4傳輸協定"^]
+* https://datatracker.ietf.org/doc/html/rfc8166["RFC 8166：遠端程序呼叫版本1的遠端直接記憶體存取傳輸"^]
+* https://datatracker.ietf.org/doc/html/rfc8167["RFC 8167：雙向遠端程序呼叫RFC-over RDMA傳輸"^]
+* https://datatracker.ietf.org/doc/html/rfc8267["RFC 8267：NFS上層繫結至RPC-over RDMA版本1"^]
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_nas_enable_linux_nfs.html 
-keywords: ontap, netapp, provision nas storage, linux, enable, nfs, modify storage VM, configure DNS, configure name server, configure Kerberos 
+keywords: ontap, netapp, provision nas storage, linux, enable, nfs, modify storage VM, configure DNS, configure name server, configure Kerberos, configure TLS, TLS, NMFS over TLS 
 summary: 修改儲存VM、以啟用NFS伺服器、將資料提供給Linux用戶端。 
 ---
 = 使用NFS為Linux伺服器啟用NAS儲存設備
@@ -18,21 +18,24 @@ summary: 修改儲存VM、以啟用NFS伺服器、將資料提供給Linux用戶�
 [role="lead"]
 建立或修改儲存VM、以啟用NFS伺服器、將資料提供給Linux用戶端。
 
-此程序可為 NFS 傳輸協定啟用新的或現有的儲存 VM 。假設您的環境中所需的任何網路、驗證或安全服務都有組態詳細資料可供使用。
+使用此程序為 NFS 傳輸協定啟用新的或現有的儲存 VM 。
 
-image:workflow_nas_enable_linux_nfs.gif["使用NFS為Linux伺服器啟用NAS的工作流程圖"]
+image:workflow_nas_enable_linux_nfs.png["使用NFS為Linux伺服器啟用NAS的工作流程圖"]
+
+.開始之前
+請確定您已記下環境中所需的任何網路、驗證或安全服務的組態詳細資料。
 
 .步驟
 . 在儲存 VM 上啟用 NFS 。
 +
-.. 對於新的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、按一下*新增*、輸入儲存虛擬機器名稱、然後在* SMB/CIFS、NFS、S三*索引標籤中、選取*啟用NFS*。
+** 對於新的儲存 VM ：按一下 * 儲存 > 儲存 VM* 、按一下 * 新增 * 、輸入儲存 VM 名稱、然後在 *SMB/CIFS 、 NFS 、 S2* 標籤中、選取 * 啟用 NFS* 。
 +
-*** 確認預設語言。
-*** 新增網路介面。
-*** 更新儲存VM管理員帳戶資訊（選用）。
+... 確認預設語言。
+... 新增網路介面。
+... 更新儲存VM管理員帳戶資訊（選用）。
 
 
-.. 對於現有的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、選取儲存虛擬機器、按一下*設定*、然後按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
+** 對於現有的儲存虛擬機器：按一下*儲存設備>儲存虛擬機器*、選取儲存虛擬機器、按一下*設定*、然後按一下 image:icon_gear.gif["設定圖示"] 在* NFS*下。
 
 
 . 開啟儲存VM根磁碟區的匯出原則：
@@ -51,13 +54,43 @@ image:workflow_nas_enable_linux_nfs.gif["使用NFS為Linux伺服器啟用NAS的�
 . 視需要設定名稱服務。
 +
 .. 按一下「*儲存設備>儲存設備VM*」、選取儲存設備VM、按一下「*設定*」、然後按一下「適用」 image:icon_gear.gif["設定圖示"] LDAP或NIS。
-.. 在名稱服務交換器檔案中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] 在「名稱服務交換器」方塊中。
+.. 按一下 image:icon_pencil.gif["編輯圖示"] 在「名稱服務交換器」方塊中、加入任何變更。
 
 
-. 如有必要、請設定Kerberos：
+. 必要時設定加密：
+
+
+[role="tabbed-block"]
+====
+.設定 TLS for NFS 用戶端
+--
+
+NOTE: 9.15.1 提供 ONTAP over TLS 的公開預覽功能。ONTAP 9.15.1 的正式作業工作負載不支援 NFS over TLS 作為預覽產品。
+
+.步驟
+. 請參閱 link:nfs-admin/tls-nfs-strong-security-concept.html["需求"^] 在開始之前使用 NFS over TLS 。
+. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
+. 在 *NFS* 方塊中、按一下 * NFS over TLS settings* 。
+. 在 *NFS over TLS settings* （ *NFS over TLS 設置 * ）區域中，選擇要爲其啓用 TLS 的 NFS 網絡接口。
+. 按一下 image:icon_kabob.gif["選項圖示"] 適用於該介面。
+. 按一下「*啟用*」。
+. 在 * 網路介面 TLS 組態 * 對話方塊中、選取下列其中一個選項、以包含用於 TLS 的憑證：
 +
-.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
-.. 按一下 image:icon_arrow.gif["箭頭圖示"] 在Kerberos方塊中、然後按一下*「Add*（新增*）」。
+** * 安裝的憑證 * ：從下拉式清單中選擇先前安裝的憑證。
+** * 新憑證 * ：選擇憑證的一般名稱。
+** * 外部 CA 簽署的憑證 * ：請依照指示將憑證和私密金鑰的內容貼到方塊中。
 
 
+. 按一下「 * 儲存 * 」。
 
+
+--
+.設定 Kerberos
+--
+.步驟
+. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
+. 按一下 image:icon_arrow.gif["箭頭圖示"] 在Kerberos方塊中、然後按一下*「Add*（新增*）」。
+
+
+--
+====

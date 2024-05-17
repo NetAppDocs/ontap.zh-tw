@@ -1,0 +1,198 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/convert-relationships-task.html 
+keywords: SM-BC, SMBC, convert, SnapMirror synchronous, zero RPO, zero recovery time objective, zero RTO, existing, snapmirror active sync 
+summary: 在 SnapMirror 主動式同步組態中、在對稱保護和非對稱保護之間轉換。 
+---
+= 轉換 SnapMirror 主動同步關係類型
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.15.1 開始、您可以在不同類型的 SnapMirror 主動同步保護之間進行轉換：從非對稱到對稱主動 / 主動、反之亦然。
+
+
+
+== 轉換成對稱的主動 / 主動關係
+
+您可以將 SnapMirror 主動式同步關係與時間同步保護轉換為使用對稱式主動 / 主動式。
+
+.開始之前
+* 兩個叢集都必須執行 ONTAP 9.15.1 或更新版本。
+* 對稱的主動 / 主動式組態需要 `AutomatedFailoverDuplex` 保護原則。或者、您也可以 xref:../data-protection/create-custom-replication-policy-concept.html[建立自訂 SnapMirror 原則] 已提供 `-type` 是 `automated-failover-duplex`。
+
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.統一組態的步驟
+. 移除目的地 igroup ：
++
+.. 在目的地叢集上、瀏覽至 ** 主機 ** > ** SAN 啟動器群組 ** 。
+.. 選擇帶有 SnapMirror 關係的 igroup ，然後選擇 ** 刪除 ** 。
+.. 在對話方塊中、選擇「 ** 取消對應相關的 LUN** 」方塊、然後選擇「 ** 刪除」。
+
+
+. 編輯 SnapMirror 主動同步關係。
++
+.. 瀏覽至 ** 保護 ** > ** 關係 ** 。
+.. 選擇要修改的關係旁邊的 kabob 菜單，然後選擇 ** 編輯 ** 。
+.. 將 ** 保護原則 ** 修改為 AutomatedFailoverDuplex 。
+.. 選擇 `AutoMatedFailoverDuplex` 提示對話方塊以修改主機鄰近設定。對於啓動器，請選擇適當的選項 ** 啓動器近端 ** ，然後選擇 ** 保存 ** 。
+.. 選擇 ** 儲存 ** 。
+
+
+. 在 ** 保護 ** 功能表中、確認關係顯示為時作業成功 `InSync`。
+
+
+.非統一組態的步驟
+. 移除目的地 igroup ：
++
+.. 在次要站台上、瀏覽至 ** 主機 ** > ** SAN 啟動器群組 ** 。
+.. 選擇帶有 SnapMirror 關係的 igroup ，然後選擇 ** 刪除 ** 。
+.. 在對話方塊中、選擇「 ** 取消對應相關的 LUN** 」方塊、然後選擇「 ** 刪除」。
+
+
+. 建立新的 igroup ：
++
+.. 在目的地站台上的 **SAN 啟動器群組 ** 功能表中、選取 ** 新增 ** 。
+.. 提供一個 ** 名稱 ** ，選擇 ** 主機作業系統 ** ，然後選擇 ** 啟動器群組成員 ** 。
+.. 選擇 ** 儲存 ** 。
+
+
+. 將新的 igroup 對應到目的地 LUN 。
++
+.. 瀏覽至 ** 儲存空間 ** > ** LUN** 。
+.. 選取要對應到 igroup 的所有 LUN 。
+.. 選擇「 ** 更多 ** 」、然後選擇「對應至啟動器群組」 ** 。
+
+
+. 編輯 SnapMirror 主動同步關係。
++
+.. 瀏覽至 ** 保護 ** > ** 關係 ** 。
+.. 選擇要修改的關係旁邊的 kabob 菜單，然後選擇 ** 編輯 ** 。
+.. 將 ** 保護原則 ** 修改為 AutomatedFailoverDuplex 。
+.. 選取 AutoMatedFailoverDuplex 會起始修改主機鄰近設定的選項。對於啓動器，請選擇適當的選項 ** 啓動器近端 ** ，然後選擇 ** 保存 ** 。
+.. 選擇 ** 儲存 ** 。
+
+
+. 在 ** 保護 ** 功能表中、確認關係顯示為時作業成功 `InSync`。
+
+
+--
+.CLI
+--
+.統一組態的步驟
+. 從修改 SnapMirror 原則 `AutomatedFailover` 至 `AutomatedFailoverDuplex`：
++
+`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+
+. 修改原則會觸發重新同步。等待重新同步完成、並確認關係是否屬實 `Insync`：
++
+`snapmirror show -destination-path _destination_path_`
+
+. 如果現有主機是本機的主要叢集、請將主機新增至第二個叢集、並建立連線、以各自存取每個叢集。
+. 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
++
+
+NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
+
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+
+. 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
++
+`SiteA::> igroup initiator add-proximal-vserver -vserver _svm_name_ -initiator _host_ -proximal-vserver _server_`
+
+. 為新主機新增一個新的 igroup 和啟動器、並設定主機與本機站台的相似性。Ennable igroup 複寫可複寫組態、並反轉遠端叢集上的主機位置。
++
+``
+SiteA::> igroup modify -vserver vsA -igroup ig1 -replication-peer vsB
+SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -proximal-vserver vsB
+``
+
+. 探索主機上的路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN
+. 部署應用程式、並將 VM 工作負載分散至叢集。
+
+
+.非統一組態的步驟
+. 從修改 SnapMirror 原則 `AutomatedFailover` 至 `AutomatedFailoverDuplex`：
++
+`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+
+. 修改原則會觸發重新同步。等待重新同步完成、並確認關係是否屬實 `Insync`：
++
+`snapmirror show -destination-path _destination_path_`
+
+. 如果現有主機是主叢集的本機主機、請將該主機新增至第二個叢集、並建立連線能力、以各自存取每個叢集。
+. 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
++
+
+NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
+
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+
+. 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
++
+`SiteA::> igroup initiator add-proximal-vserver -vserver _Svm_name_ -initiator _host_ -proximal-vserver _server_`
+
+. 在次要站台上、為新主機新增一個新的 igroup 和 initiator 、並設定主機與本機站台的相似性。將 LUN 對應至 igroup 。
++
+``
+SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_
+SiteB::> igroup add -vserver _svm_name_ -igroup  _igroup_name_ -initiator _host_name_
+SiteB::> lun mapping create -igroup  _igroup_name_ -path _path_name_
+``
+
+. 探索主機上的路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN
+. 部署應用程式、並將 VM 工作負載分散至叢集。
+
+
+--
+====
+
+
+== 從對稱的主動 / 主動關係轉換為非對稱關係
+
+如果您已設定對稱式主動 / 主動式保護、則可以使用 ONTAP CLI 將關係轉換為非對稱式保護。
+
+.步驟
+. 將所有 VM 工作負載移至來源叢集的本機主機。
+. 移除未管理 VM 執行個體的主機的 igroup 組態、並修改 igroup 組態以終止 igroup 複寫。
++
+`code`
+
+. 在次要站台上、取消對應 LUN 。
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>`
+
+. 在次要站台上、刪除對稱的主動 / 主動關係。
++
+`SiteB::> snapmirror delete -destination-path _destination_path_`
+
+. 在主要站台上、釋放對稱的主動 / 主動關係。
+`SiteA::> snapmirror release -destination-path _destination_path_ -relationship-info-only true`
+. 從次要站台、使用建立與同一組磁碟區的關係 `AutomatedFailover` 原則重新同步關係。
++
+``
+SiteB::> snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source:@destination_ -policy AutomatedFailover
+SiteB::> snapmirror resync -destination-path vs1:/cg/cg1_dst
+``
+
++
+
+NOTE: 次要站台上的一致性群組需求 link:../consistency-groups/delete-task.html["待刪除"] 重新建立關係之前。目的地 Volume link:https://kb.netapp.com/onprem/ontap/dp/SnapMirror/How_to_change_a_volume_type_from_RW_to_DP["必須轉換為 DP 類型"^]。
+
+. 確認關係鏡射狀態為 `Snapmirrored` 關係狀態為 `Insync`。
++
+`snapmirror show -destination-path _destination_path_`
+
+. 重新探索主機的路徑。
+

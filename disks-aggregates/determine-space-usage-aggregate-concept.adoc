@@ -2,7 +2,7 @@
 permalink: disks-aggregates/determine-space-usage-aggregate-concept.html 
 sidebar: sidebar 
 keywords: space, usage, aggregate, local tier, volume 
-summary: 您可以檢視一或多個本機層（Aggregate）中所有磁碟區所使用的空間量、以便採取行動來釋出更多空間。 
+summary: 您可以檢視一或多個本機層（集合體）中的所有磁碟區使用多少空間、以便採取行動釋放更多空間。 
 ---
 = 判斷本機層中的空間使用量（Aggregate）
 :allow-uri-read: 
@@ -11,16 +11,33 @@ summary: 您可以檢視一或多個本機層（Aggregate）中所有磁碟區�
 
 
 [role="lead"]
-您可以檢視一或多個本機層（Aggregate）中所有磁碟區所使用的空間量、以便採取行動來釋出更多空間。
+您可以檢視一或多個本機層（集合體）中的所有磁碟區使用多少空間、以便採取行動釋放更多空間。
 
-支援整合層級中繼資料和效能的資料空間佔總磁碟空間的10% WAFL 。  用於維護集合體中磁碟區的空間來自WAFL 於此保護區、因此無法變更。
+WAFL 會保留總磁碟空間的百分比、以供彙總層級的中繼資料和效能使用。  用於維護集合體中磁碟區的空間來自WAFL 於此保護區、因此無法變更。
+
+在小於 30 TB 的集合體中、 WAFL 會保留總磁碟空間的 10% 、以用於集合體層級的中繼資料和效能。
+
+從 ONTAP 9.12.1 開始、在 30 TB 或更大的集合體中、用於集合體層級中繼資料和效能的保留磁碟空間量會減少、因此可在集合體中增加 5% 的可用空間。此空間節約的可用度會因您的平台和 ONTAP 版本而異。
+
+[cols="30,30,40"]
+|===
+| ONTAP 保留的磁碟空間共 30 TB 以上 | 適用於平台 | 在 ONTAP 版本中 
 
 
-NOTE: 從 ONTAP 9.12.1 及更新版本開始、 AFF 平台和 FAS500f 平台的 WAFL 保留容量大於 30TB 、從 10% 降至 5% 。  從 ONTAP 9.14.1 開始、所有 FAS 平台上的集合體都會有相同的減少、因此可在集合體中增加 5% 的可用空間。
+| 5% | 所有 AFF 和 FAS 平台 | ONTAP 9.14.1 及更新版本 
 
+
+| 5% | AFF 平台與 FAS500f 平台 | 更新版本ONTAP 
+
+
+| 10% | 所有平台 | 更新版本ONTAP 
+|===
 您可以使用檢視一個或多個集合體中所有磁碟區的空間使用量 `aggregate show-space` 命令。這有助於您查看哪些磁碟區在其內含的集合體中佔用的空間最大、以便您採取行動來釋出更多空間。
 
 Aggregate中已用空間會直接受FlexVol 其包含的各種空間所影響。您為了增加磁碟區空間而採取的措施、也會影響集合體中的空間。
+
+
+NOTE: 從 ONTAP 9.15.1 開始、有兩個新的中繼資料計數器可供使用。加上對多個現有計數器所做的變更、您可以更清楚地瞭解分配的使用者資料量。請參閱 link:../volumes/determine-space-usage-volume-aggregate-concept.html["判斷磁碟區或Aggregate中的空間使用量"] 以取得更多資訊。
 
 下列資料列會包含在中 `aggregate show-space` 命令輸出：
 

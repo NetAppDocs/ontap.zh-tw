@@ -1,0 +1,155 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/prerequisites-reference.html 
+keywords: SM-BC, SMBC, prerequisites, planning, software, hardware, licensing, protocols, network, snapmirror active sync 
+summary: 在規劃 SnapMirror 主動同步解決方案部署時、您應該考量幾項先決條件。 
+---
+= 先決條件
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+規劃 SnapMirror 主動式同步部署時、請確保您符合各種硬體、軟體和系統組態需求。
+
+
+
+== 硬體
+
+* 僅支援雙節點HA叢集
+* 兩個叢集都必須是 AFF （包括 AFF C 系列）或 All Flash SAN Array （ ASA ；包含 C 系列）。不支援混合。
+
+
+
+
+== 軟體
+
+* ONTAP 9.9.1 或更新版本
+* 不適用1.2版或更新版本的資訊ONTAP
+* 執行ONTAP 下列其中一項功能的Linux伺服器或虛擬機器：
+
+
+[cols="30,70"]
+|===
+
+
+| ONTAP Mediator 版本 | 支援的Linux版本 
+
+
+ a| 
+1.1.7
+ a| 
+* Red Hat Enterprise Linux ： 8.5 、 8.6 、 8.7 、 8.8 、 8.9 、 9.0 、 9.1 、 9.2 和 9.3
+* Rocky Linux 8 和 9
+
+
+
+
+ a| 
+1.6.
+ a| 
+* Red Hat Enterprise Linux ： 8.4 、 8.5 、 8.6 、 8.7 、 8.8 、 9.0 、 9.1 、 9.2
+* Rocky Linux 8 和 9
+
+
+
+
+ a| 
+1.5.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS：7.6、7.7、7.8、7.9
+
+
+
+
+ a| 
+1.4.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS：7.6、7.7、7.8、7.9
+
+
+
+
+ a| 
+1.3.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
+* CentOS：7.6、7.7、7.8、7.9
+
+
+
+
+ a| 
+1.2.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
+* CentOS ： 7.6 、 7.7 、 7.8
+
+
+|===
+
+
+== 授權
+
+* SnapMirror 同步授權必須套用至兩個叢集。
+* SnapMirror 授權必須套用至兩個叢集。
++
+
+NOTE: 如果您的 ONTAP 儲存系統是在 2019 年 6 月之前購買、請參閱 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP -主要授權金鑰"^] 取得所需的 SnapMirror 同步授權。
+
+
+
+
+
+== 網路環境
+
+* 叢集間延遲往返時間（ RTT ）必須少於 10 毫秒。
+* 從 ONTAP 9.14.1 開始、 link:https://kb.netapp.com/onprem/ontap/da/SAN/What_are_SCSI_Reservations_and_SCSI_Persistent_Reservations["SCSI-3 持續保留"] 支援 SnapMirror 主動式同步。
+
+
+
+
+== 支援的傳輸協定
+
+* 僅支援 SAN 通訊協定（不支援 NFS/SMB ）。
+* 僅支援光纖通道和 iSCSI 傳輸協定。
+* SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂IPspace。
+
+
+
+
+== NTFS安全型態
+
+SnapMirror 主動式同步磁碟區 * 不 * 支援 NTFS 安全樣式。
+
+
+
+== 資訊媒體ONTAP
+
+* ONTAP Mediator 必須從外部配置、並連接至 ONTAP 、才能進行透明的應用程式容錯移轉。
+* 為了使功能完整、並啟用自動非計畫性容錯移轉、外部ONTAP 的整套功能應該以ONTAP 支援叢集的方式配置和設定。
+* ONTAP Mediator 必須安裝在第三個故障網域中、與兩個 ONTAP 叢集分開。
+* 安裝 ONTAP Mediator 時、您應該使用由主流可靠 CA 簽署的有效憑證來取代自我簽署的憑證。
+* 如需ONTAP 更多有關《新聞》的資訊、請參閱 link:../mediator/index.html["準備安裝ONTAP 《不知道如何安裝》服務"]。
+
+
+
+
+== 讀寫目的地磁碟區
+
+* 讀寫目的地磁碟區不支援 SnapMirror 主動同步關係。在使用讀寫磁碟區之前、您必須先建立磁碟區層級的SnapMirror關係、然後刪除關係、將其轉換成DP磁碟區。如需詳細資訊、請參閱 link:convert-active-sync-task.html["將現有的 SnapMirror 關係轉換成 SnapMirror 主動同步"]。
+
+
+
+
+== 更多資訊
+
+* link:https://hwu.netapp.com/["Hardware Universe"^]
+* link:../mediator/mediator-overview-concept.html["ONTAP Mediator 概述"^]
+

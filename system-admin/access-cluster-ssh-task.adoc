@@ -11,9 +11,9 @@ summary: 您可以向叢集發出SSH要求、以執行管理工作。SSH 預設�
 
 
 [role="lead"]
-您可以向叢集發出SSH要求、以執行管理工作。SSH 預設為啟用。
+您可以向 ONTAP 叢集發出 SSH 要求、以執行管理工作。SSH 預設為啟用。
 
-.您需要的產品
+.開始之前
 * 您必須擁有設定為使用的使用者帳戶 `ssh` 作為存取方法。
 +
 。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。。 `security login` https://docs.netapp.com/us-en/ontap-cli-9141/security-login-create.html#description["手冊頁"^] 包含其他資訊。
@@ -54,11 +54,12 @@ AD使用者名稱和網域名稱不區分大小寫。不過ONTAP 、不區分使
 
 * 從 ONTAP 9.4 開始、您可以 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["啟用 SSH 多因素驗證"^] 適用於 LDAP 和 NIS 遠端使用者。
 * 從 ONTAP 9.13.1 開始、您可以選擇性地將憑證驗證新增至 SSH 驗證程序、以增強登入安全性。若要這麼做、 link:../authentication/manage-ssh-public-keys-and-certificates.html["將 X.509 憑證與公開金鑰建立關聯"^] 帳戶使用的。如果您同時使用 SSH 公開金鑰和 X.509 憑證登入、 ONTAP 會先檢查 X.509 憑證的有效性、然後再使用 SSH 公開金鑰進行驗證。如果該憑證已過期或撤銷、 SSH 公開金鑰會自動停用、則 SSH 登入會遭到拒絕。
-* 從 ONTAP 9.14.1 開始、您可以選擇性地將 Cisco 雙核心雙因素驗證新增至 SSH 驗證程序、以增強登入安全性。啟用 Cisco 雙核心驗證之後、首次登入時、使用者必須註冊裝置、以作為 SSH 工作階段的驗證者。請參閱 link:../authentication/configure-cisco-duo-mfa-task.html["為 SSH 登入設定 Cisco 雙核心 2FA"^] 如需設定 ONTAP 的 Cisco 雙核心 SSH 驗證的詳細資訊、
+* 從 ONTAP 9.14.1 開始、 ONTAP 系統管理員就可以 link:../authentication/configure-cisco-duo-mfa-task.html["將 Cisco 雙核心雙因素驗證新增至 SSH 驗證程序"^] 以增強登入安全性。啟用 Cisco 雙核心驗證之後、首次登入時、使用者必須註冊裝置、以作為 SSH 工作階段的驗證者。
+* 從 ONTAP 9.15.1 開始、系統管理員就可以 link:../authentication/dynamic-authorization-overview.html["設定動態授權"^] 根據使用者的信任分數、為 SSH 使用者提供額外的自適應驗證。
 
 
 .步驟
-. 從管理主機輸入 `ssh` 命令的格式如下：
+. 從可存取 ONTAP 叢集網路的主機、輸入 `ssh` 命令的格式如下：
 +
 ** `*ssh _username@hostname_or_IP_ [_command_]*`
 ** `*ssh -l _username hostname_or_IP_ [_command_]*`

@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: concepts/ontap-and-vmware.html 
+keywords: vmware, vsphere, vcenter, ontap tools for vmware vsphere, otv, vvol, persistent reservation, scsi 
+summary: 您可以將 ONTAP 及相關 NetApp 產品與 VMware vSphere 整合。視您的技術環境和業務需求而定、有多種選項可供選擇。 
+---
+= ONTAP 和 VMware vSphere
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將 ONTAP 及相關 NetApp 產品與 VMware vSphere 整合。視您的技術環境和業務需求而定、有多種選項可供選擇。
+
+
+
+== 選定的概念和術語
+
+當您開始在 VMware 環境中使用 ONTAP 和相關 NetApp 產品時、首先熟悉一些關鍵術語和概念是很有幫助的。
+
+邏輯單元編號:: LUN 是用於識別儲存區域網路（ SAN ）中的邏輯單元 _ 的編號。這些可定址的裝置通常是透過小型電腦系統介面（ SCSI ）傳輸協定或其封裝衍生工具之一存取的邏輯磁碟。
+VMware vSphere 虛擬 Volume:: 虛擬磁碟區（ vVol ）可為虛擬機器所使用的儲存設備提供磁碟區層級抽象化。它包含多項優點、可替代傳統 LUN 的使用方式。
+持續保留:: 與以前的 SCSI-2 保留相比、 SCSI-3 支援持續保留。它們允許多個用戶端啟動器與單一目標通訊、同時鎖定其他節點。即使重設匯流排以進行錯誤恢復、保留仍會持續存在。
+
+
+
+NOTE: 從 ONTAP 9.15.1 開始、您可以使用 SCSI-3 為虛擬磁碟區建立持續保留。此功能僅支援搭配 Windows Server 容錯移轉叢集（ WSFC ）使用適用於 VMware vSphere 9 的 ONTAP 工具。
+
+Windows Server 容錯移轉叢集:: Microsoft WSFC 是 Windows Server 作業系統的一項功能、可提供容錯能力和高可用度。一組伺服器節點（實體或虛擬）會以叢集的形式結合在一起、以在發生故障時提供恢復能力。WSFC 通常用於部署基礎架構服務、包括資料庫、檔案和命名空間伺服器。
+VMware vSphere 儲存 API - 儲存感知:: Vasa 是一組 API 、可將儲存陣列與 vCenter 整合以進行管理。此架構以多個元件為基礎、包括處理 VMware vSphere 與儲存系統之間通訊的 _VASA Provider] 。透過 ONTAP 、提供者將實作為 VMware vSphere ONTAP 工具的一部分。
+VMware vSphere 儲存 API - 陣列整合:: VAAI 是一組 API 、可在 VMware vSphere ESXi 主機和儲存裝置之間進行通訊。API 包含一組主機用來將儲存作業卸載到陣列的原始作業。VAAI 可大幅改善儲存密集工作的效能。
+NetApp SnapCenter:: SnapCenter 是一個集中化且可擴充的平台、可為使用 ONTAP 儲存系統的應用程式、資料庫、主機檔案系統和虛擬機器提供資料保護。它採用原生 ONTAP 技術、包括 Snapshot 、 SnapRestore 、 FlexClone 、 SnapMirror 和 SnapVault 。
+
+
+
+
+== NetApp 外掛程式和相關技術
+
+NetApp 提供強大的支援、可整合 ONTAP 及相關產品與 VMware vSphere 技術。
+
+
+
+=== VMware vSphere適用的工具ONTAP
+
+適用於 VMware vSphere 的 ONTAP 工具是一套整合 ONTAP 和 vSphere 的工具。它實作 VASA API 架構的供應商功能。ONTAP 工具也包括 vCenter 外掛程式、適用於 VMware Site Recovery Manager 的儲存複寫介面卡（ SRA ）、以及可用於建置自動化應用程式的 REST API 伺服器。
+
+
+
+=== 適用於VMware VAAI的NFS外掛程式
+
+NetApp NFS 外掛程式 for VMware VAAI 可讓您存取 VAAI 功能。此外掛程式可安裝在 ESXi 主機上、並可讓主機將 VAAI 與 ONTAP 上的 NFS 資料存放區搭配使用。它提供多種作業、包括複製、空間保留和快照卸載。
+
+
+
+=== VMware Site Recovery Manager
+
+VMware Site Recovery Manager （ SRM ）提供災難恢復功能。SRM 與 ONTAP 工具整合、可讓 VMware vSphere 存取及運用 ONTAP 資料管理功能。
+
+
+
+=== vSphere Metro Storage 叢集
+
+vSphere Metro Storage Cluster （ VMSC ）是一項技術、可在延伸叢集部署中啟用和支援 vSphere 。NetApp MetroCluster 和 SnapMirror 主動同步（以前稱爲 SMBC ）支持 VMSC 解決方案。這些解決方案可在網域發生故障時、提供增強的營運持續性。恢復模式是根據您的特定組態選擇而定。
+
+
+
+=== VMware vSphere的插件SnapCenter
+
+SnapCenter Plug-in for VMware vSphere （ SCV ）是一種 Linux 型虛擬應用程式、可與 SnapCenter 伺服器一起部署、也可做為獨立應用程式部署。在這兩種情況下、選擇控制閥都能為 VM 、資料存放區和 VMDK 提供備份與還原作業。這些作業速度快、節省空間、一致當機、而且 VM 一致。
+
+
+
+== 取得更多資訊
+
+有幾種額外資源可協助您準備在 VMware vSphere 環境中部署 ONTAP 。
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/["適用於 VMware vSphere 的 ONTAP 工具文件"^]
+* https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-overview.html["企業應用程式： VMware vSphere 搭配 ONTAP"^]
+* https://kb.netapp.com/onprem/ontap/da/SAN/What_are_SCSI_Reservations_and_SCSI_Persistent_Reservations["NetApp KB ：什麼是 SCSI 保留和 SCSI 持續保留？"^]
+* https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/index.html["VMware vSphere文件的VMware外掛程式SnapCenter"^]
+

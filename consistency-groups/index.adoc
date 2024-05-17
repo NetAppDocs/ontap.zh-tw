@@ -23,15 +23,15 @@ summary: 一致性群組是以單一單元形式組織的磁碟區集合、有�
 
 一致性群組可支援FlexVol 任何不受傳輸協定（NAS、SAN或NVMe）限制的SESSESE Volume、並可透過ONTAP 「RESSREST API」或「System Manager」（系統管理程式）的「* Storage（儲存設備）> Consistency Groups（一致性群組）*」功能表項目從 ONTAP 9.14.1 開始、一致性群組可透過 ONTAP CLI 進行管理。
 
-一致性群組可以是個別實體（即磁碟區集合）、也可以是由其他一致性群組所組成的階層式關係。個別磁碟區可以擁有自己的 Volume 精細 Snapshot 原則。此外、整個群組的 Snapshot 原則也可能一致。一致性群組只能有一個SnapMirror營運不中斷（SM至BC）關係和共享的SM至BC原則、可用來恢復整個一致性群組。
+一致性群組可以是個別實體（即磁碟區集合）、也可以是由其他一致性群組所組成的階層式關係。個別磁碟區可以擁有自己的 Volume 精細 Snapshot 原則。此外、整個群組的 Snapshot 原則也可能一致。一致性群組只能有一個 SnapMirror 作用中同步關係和共用 SnapMirror 原則、可用於恢復整個一致性群組。
 
 下圖說明如何使用個別一致性群組。託管的應用程式資料 `SVM1` 橫跨兩個磁碟區： `vol1` 和 `vol2`。一致性群組上的 Snapshot 原則每 15 分鐘擷取一次資料的 Snapshot 複本。
 
 image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
 
-較大的應用程式工作負載可能需要多個一致性群組。在這些情況下，您可以建立階層式一致性群組，其中單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端的SM至BC保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
+較大的應用程式工作負載可能需要多個一致性群組。在這些情況下，您可以建立階層式一致性群組，其中單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端 SnapMirror 主動式同步保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
 
-在下列範例中、應用程式裝載於 `SVM1`。系統管理員已建立父一致性群組、 `SVM1_app`包括兩個子一致性群組： `SVM1appDataCG` 的資料和 `SVM1app_logCG` 記錄。每個子一致性群組都有自己的 Snapshot 原則。中的磁碟區快照複本 `SVM1appDataCG` 每15分鐘進行一次。的快照 `SVM1app_logCG` 每小時進行一次。父一致性群組 `SVM1_app` 具有SM至BC原則、可複寫資料、確保在發生災難時仍能繼續提供服務。
+在下列範例中、應用程式裝載於 `SVM1`。系統管理員已建立父一致性群組、 `SVM1_app`包括兩個子一致性群組： `SVM1appDataCG` 的資料和 `SVM1app_logCG` 記錄。每個子一致性群組都有自己的 Snapshot 原則。中的磁碟區快照複本 `SVM1appDataCG` 每15分鐘進行一次。的快照 `SVM1app_logCG` 每小時進行一次。父一致性群組 `SVM1_app` 擁有 SnapMirror 主動式同步原則、可複寫資料、確保在發生災難時仍能繼續提供服務。
 
 image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其相關磁碟區的圖表"]
 
@@ -67,9 +67,9 @@ NOTE: 在 ONTAP 9.13.1 中、您只能使用 REST API 擷取歷史指標。從 O
 一致性群組透過以下方式提供保護：
 
 * Snapshot原則
-* xref:../smbc/index.html[SnapMirror營運不中斷（SMBC）]
+* xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]
 * <<mcc>> （從ONTAP 版本號《2019年9月11日》開始）
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[非同步 SnapMirror] （從 ONTAP 9.13.1 開始）
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror 非同步] （從 ONTAP 9.13.1 開始）
 * link:../data-protection/snapmirror-svm-replication-concept.html["SVM 災難恢復"] （從 ONTAP 9.14.1 開始）
 
 
@@ -77,10 +77,10 @@ NOTE: 在 ONTAP 9.13.1 中、您只能使用 REST API 擷取歷史指標。從 O
 
 若要在一致性群組上設定保護、請參閱 link:protect-task.html["保護一致性群組"]。
 
-若要使用遠端保護、您必須符合的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror營運不中斷部署]。
+若要使用遠端保護、您必須符合的要求 xref:../snapmirror-active-sync/prerequisites-reference.html[SnapMirror 主動同步]。
 
 
-NOTE: 無法在掛載用於NAS存取的磁碟區上建立SMBC關係。
+NOTE: SnapMirror 主動同步關係無法在掛載用於 NAS 存取的磁碟區上建立。
 
 
 
@@ -107,68 +107,68 @@ NOTE: 建議您至少保留 20% 的可用空間以容納鏡射的集合體、以
 
 == 升級考量
 
-在 ONTAP 9.8 和 9.9.1 中使用 SM-BC 建立的一致性群組、將會在系統管理員的 * 儲存 > 一致性群組 * 下自動升級、並在升級至 ONTAP 9.10.1 或更新版本時、在 ONTAP REST API 中進行管理。如需從 ONTAP 9.8 或 9.9.1 升級的詳細資訊、請參閱 link:../smbc/smbc_admin_upgrade_and_revert_considerations.html["SM至BC升級與還原考量"]。
+升級至 ONTAP 9.10.1 或更新版本時、使用 SnapMirror 主動式同步建立的電阻群組（先前稱為 SnapMirror Business Continuity ） 在 ONTAP 9.8 和 9.9.1 中、系統管理員或 ONTAP REST API 的 * 儲存 > 一致性群組 * 會自動升級、並可管理、如需從 ONTAP 9.8 或 9.9.1 升級的詳細資訊、請參閱 link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror 主動式同步升級與還原考量"]。
 
 在 REST API 中建立的一致性群組 Snapshot 複本可透過 System Manager 的一致性群組介面、以及透過一致性群組 REST API 端點進行管理。從 ONTAP 9.14.1 開始、一致性群組快照也可透過 ONTAP CLI 進行管理。
 
 
-NOTE: 使用 ONTAPI 命令建立的 Snapshot 複本 `cg-start` 和 `cg-commit` 可辨識為一致性群組快照、因此無法透過系統管理員的一致性群組介面或 ONTAP REST API 中的一致性群組端點進行管理。從 ONTAP 9.14.1 開始、如果您使用非同步 SnapMirror 原則、這些 Snapshot 複本就可以鏡射到目的地 Volume 。如需詳細資訊、請參閱 xref:protect-task.html#configure-asynchronous-snapmirror-protection[設定非同步 SnapMirror 保護]。
+NOTE: 使用 ONTAPI 命令建立的 Snapshot 複本 `cg-start` 和 `cg-commit` 可辨識為一致性群組快照、因此無法透過系統管理員的一致性群組介面或 ONTAP REST API 中的一致性群組端點進行管理。從 ONTAP 9.14.1 開始、如果您使用的是 SnapMirror 非同步原則、這些 Snapshot 複本就可以鏡射到目的地 Volume 。如需詳細資訊、請參閱 xref:protect-task.html#configure-asynchronous-snapmirror-protection[設定 SnapMirror 非同步保護]。
 
 
 
 == 各版本支援的功能
 
-[cols="3,1,1,1,1,1"]
+[cols="3,1,1,1,1,1,1"]
 |===
-|  | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+|  | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
 
 
-| 階層式一致性群組 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 階層式一致性群組 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 利用 Snapshot 複本提供本機保護 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 利用 Snapshot 複本提供本機保護 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| SnapMirror營運不中斷 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| SnapMirror 主動同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 支援 MetroCluster | ✓ | ✓ | ✓ | ✓ |  
+| 支援 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 兩階段認可（僅限 REST API ） | ✓ | ✓ | ✓ | ✓ |  
+| 兩階段認可（僅限 REST API ） | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 應用程式與元件標籤 | ✓ | ✓ | ✓ |  |  
+| 應用程式與元件標籤 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 複製一致性群組 | ✓ | ✓ | ✓ |  |  
+| 複製一致性群組 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 新增和移除磁碟區 | ✓ | ✓ | ✓ |  |  
+| 新增和移除磁碟區 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用新的 NAS 磁碟區建立 CGS | ✓ | ✓ | 僅REST API |  |  
+| 使用新的 NAS 磁碟區建立 CGS | ✓ | ✓ | ✓ | 僅REST API |  |  
 
 
-| 使用新的 NVMe 命名空間建立 CGS | ✓ | ✓ | 僅REST API |  |  
+| 使用新的 NVMe 命名空間建立 CGS | ✓ | ✓ | ✓ | 僅REST API |  |  
 
 
-| 在子一致性群組之間移動磁碟區 | ✓ | ✓ |  |  |  
+| 在子一致性群組之間移動磁碟區 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 修改一致性群組幾何 | ✓ | ✓ |  |  |  
+| 修改一致性群組幾何 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 監控 | ✓ | ✓ |  |  |  
+| 監控 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 非同步 SnapMirror （僅限單一一致性群組） | ✓ | ✓ |  |  |  
+| SnapMirror 非同步（僅限單一一致性群組） | ✓ | ✓ | ✓ |  |  |  
 
 
-| SVM 災難恢復（僅限單一一致性群組） | ✓ |  |  |  |  
+| SVM 災難恢復（僅限單一一致性群組） | ✓ | ✓ |  |  |  |  
 
 
-| CLI 支援 | ✓ |  |  |  |  
+| CLI 支援 | ✓ | ✓ |  |  |  |  
 |===
 
 
@@ -177,7 +177,7 @@ NOTE: 使用 ONTAPI 命令建立的 Snapshot 複本 `cg-start` 和 `cg-commit` �
 video::j0jfXDcdyzE[youtube,width=848,height=480]
 .更多資訊
 * link:https://docs.netapp.com/us-en/ontap-automation/["自動化文件ONTAP"^]
-* xref:../smbc/index.html[SnapMirror營運不中斷]
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[非同步SnapMirror災難恢復基礎]
+* xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror 非同步災難恢復基礎知識]
 * link:https://docs.netapp.com/us-en/ontap-metrocluster/["本文檔MetroCluster"]
 

@@ -1,0 +1,116 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/add-remove-consistency-group-task.html 
+keywords: SM-BC, SMBC, volume, consistency group, remove volume, add volume, snapmirror active sync 
+summary: 如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。 
+---
+= 新增或移除磁碟區至一致性群組
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+隨著應用程式工作負載需求的變更、您可能需要從一致性群組新增或移除磁碟區、以確保營運不中斷。在主動 SnapMirror 主動同步關係中新增和移除磁碟區的程序、取決於您使用的 ONTAP 版本。
+
+在大多數情況下、這是一項破壞性程序、需要您中斷 SnapMirror 關係、修改一致性群組、然後恢復保護。從 ONTAP 9.13.1 開始、將磁碟區新增至具有主動 SnapMirror 關係的一致性群組、是一項不中斷營運的作業。
+
+.關於這項工作
+* 在 ONTAP 9.9.1 中、您可以使用 ONTAP CLI 將磁碟區新增或移除至一致性群組。
+* 從功能性的9.10.1開始ONTAP 、建議您自行管理 link:../consistency-groups/index.html["一致性群組"] 透過System Manager或ONTAP 透過靜止API。
++
+如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
+
+* 從 ONTAP 9.13.1 開始、您可以透過來源或目的地的主動 SnapMirror 關係、不中斷地將磁碟區新增至一致性群組。
++
+移除磁碟區是一項破壞性作業。您必須先中斷 SnapMirror 關係、才能繼續移除磁碟區。
+
+
+
+[role="tabbed-block"]
+====
+.ONTAP 9.9.1-9.13.0
+--
+.開始之前
+* 您無法在中開始修改一致性群組 `InSync` 州/省。
+* 目的地Volume應為DP類型。
+* 您新增以擴充一致性群組的新磁碟區必須在來源與目的地磁碟區之間有一對通用的Snapshot複本。
+
+
+.步驟
+兩個磁碟區對應中顯示的範例： `vol_src1` <--> `vol_dst1` 和 `vol_src2` <--> `vol_dst2`、端點之間的一致性群組關係 `vs1_src:/cg/cg_src` 和 `vs1_dst:/cg/cg_dst`。
+
+. 在來源叢集和目的地叢集上、使用命令驗證來源叢集和目的地叢集之間是否有通用的 Snapshot `snapshot show -vserver _svm_name_ -volume _volume_name_ -snapshot _snapmirror_`
++
+`source::>snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
+
++
+`destination::>snapshot show -vserver vs1_dst -volume vol_dst3 -snapshot snapmirror*`
+
+. 如果沒有常見的Snapshot複本、請建立FlexVol 並初始化一個SnapMirror關係：
++
+`destination::>snapmirror initialize -source-path vs1_src:vol_src3 -destination-path vs1_dst:vol_dst3`
+
+. 刪除一致性群組關係：
++
+`destination::>snapmirror delete -destination-path vs1_dst:vol_dst3`
+
+. 釋放來源SnapMirror關係、並保留常見的Snapshot複本：
++
+`source::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol_dst3`
+
+. 取消對應LUN並刪除現有的一致性群組關係：
++
+`destination::>lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>`
+
++
+
+NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主機I/O提供服務
+
++
+`destination::>snapmirror delete -destination-path vs1_dst:/cg/cg_dst`
+
++
+`source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst -relationship-info-only true`
+
+. ** 如果您使用的是 ONTAP 9.10.1 至 9.13.0 ，則 ** 刪除並重新建立來源上的一致性群組，並使用正確的組合。請依照中的步驟進行 xref:../consistency-groups/delete-task.html[刪除一致性群組] 然後 xref:../consistency-groups/configure-task.html[設定單一一致性群組]。在版本更新的版本中、您必須在System Manager或使用REST API執行刪除和建立作業、而無需執行CLI程序。ONTAP ONTAP
++
+** 如果您使用的是 ONTAP 9.9.1 、請跳至下一個步驟。 **
+
+. 使用新的組成方式在目的地上建立新的一致性群組：
++
+`destination::>snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1, vol_src2:@vol_dst2, vol_src3:@vol_dst3`
+
+. 重新同步零RTO一致性群組關係、以確保其同步：
++
+`destination::>snapmirror resync -destination-path vs1_dst:/cg/cg_dst`
+
+. 重新對應您在步驟5中未對應的LUN：
++
+`destination::> lun map -vserver vs1_dst -path _lun_path_ -igroup _igroup_name_`
+
+. 重新掃描主機LUN I/O路徑、以還原LUN的所有路徑。
+
+
+--
+.ONTAP 9.13.1 及更新版本
+--
+從 ONTAP 9.13.1 開始、您可以使用主動式 SnapMirror 主動同步關係、以不中斷營運的方式將磁碟區新增至一致性群組。SnapMirror 主動同步支援從來源或目的地新增磁碟區。
+
+
+IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。
+
+如需從來源一致性群組新增磁碟區的詳細資訊、請參閱 xref:../consistency-groups/modify-task.html[修改一致性群組]。
+
+.從目的地叢集新增磁碟區
+. 在目標叢集上、選取「 ** 保護 ** 」 > 「 ** 關係」。
+. 找到您要新增磁碟區的 SnapMirror 組態。選取 image:icon_kabob.gif["烤串圖示"] 然後 ** 展開 ** 。
+. 選取要將其磁碟區新增至一致性群組的磁碟區關係
+. 選擇 ** 展開 ** 。
+
+
+--
+====

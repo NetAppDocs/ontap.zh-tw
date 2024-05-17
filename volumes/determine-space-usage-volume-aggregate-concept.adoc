@@ -2,7 +2,7 @@
 permalink: volumes/determine-space-usage-volume-aggregate-concept.html 
 sidebar: sidebar 
 keywords: determine, space usage, volume, aggregate 
-summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是超出預期的空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP 
+summary: ONTAP 可協助您根據磁碟區、彙總內的磁碟區佔用空間、以及集合體來決定空間使用量。 
 ---
 = 判斷磁碟區或Aggregate中的空間使用量
 :allow-uri-read: 
@@ -11,7 +11,11 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 
 
 [role="lead"]
-在 ONTAP 中啟用功能可能會比您預期的佔用更多空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP
+在某些情況下、在 ONTAP 中啟用功能可能會佔用比您預期的更多空間。提供三種檢視空間的觀點、協助您判斷空間的使用方式：磁碟區、磁碟區在集合體內的佔用空間、以及集合體。ONTAP
+
+
+
+== 檢視空間分配
 
 由於磁碟區空間使用量或磁碟區、Aggregate或兩者的組合空間不足、因此磁碟區可能會耗盡空間。透過從不同角度查看以功能為導向的空間使用量明細、您可以評估您可能想要調整或關閉哪些功能、或是應該採取其他行動（例如增加 Aggregate 或 Volume 的大小）。
 
@@ -36,7 +40,7 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 
 * Aggregate的空間使用量
 +
-此觀點包括集合體中所有磁碟區的磁碟區佔用空間總計、保留給Aggregate Snapshot複本的空間、以及其他Aggregate中繼資料。
+此觀點包括集合體中所有磁碟區的磁碟區佔用空間總計、保留給 Aggregate Snapshot 複本的空間、以及其他 Aggregate 中繼資料。
 
 +
 支援整合層級中繼資料和效能的資料空間佔總磁碟空間的10% WAFL 。  用於維護集合體中磁碟區的空間來自WAFL 於此保護區、因此無法變更。
@@ -55,3 +59,27 @@ summary: 啟用ONTAP 功能時、可能會佔用您不知道的空間、或是�
 * link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["知識庫文章：空間使用"^]
 * link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升級ONTAP 至更新版的更新版、即可釋放5%的儲存容量"^]
 
+
+
+
+== Volume 中繼資料和資料度量報告
+
+過去、有幾個磁碟區空間度量報告了使用的總資料量、這些資料是由兩個度量（中繼資料和使用者資料）所組成。從 ONTAP 9.15.1 開始、中繼資料和使用者資料度量會分別報告。我們推出兩個新的中繼資料計數器來支援此功能：
+
+* 總中繼資料
++
+此計數器提供磁碟區內的中繼資料總大小。它不包含 Aggregate 駐留 Volume 中繼資料。另外報告有助於判斷使用者分配的邏輯資料。
+
+* 總中繼資料佔用空間
++
+此計數器是 Volume 駐留中繼資料和 Aggregate 駐留 Volume 中繼資料的總和。它可提供集合體內磁碟區的中繼資料總佔用空間。另外報告有助於判斷使用者分配的實體資料。
+
+
+
+此外、已更新數個現有計數器、以移除中繼資料元件、並僅顯示使用者資料：
+
+* 使用者資料
+* Volume 資料佔用空間
+
+
+這些變更可更準確地檢視使用者所使用的資料。這有幾項優點、包括能夠更精確地做出計費決策。

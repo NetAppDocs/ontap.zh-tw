@@ -1,0 +1,326 @@
+---
+permalink: authentication/configure-dynamic-authorization.html 
+sidebar: sidebar 
+keywords: dynamic, authorization, framework, security, login, ssh 
+summary: 設定動態授權架構、以提高 SSH 登入的安全性、並限制在可疑情況下執行某些命令。 
+---
+= 自訂動態授權
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+身為管理員、您可以自訂動態授權組態的不同層面、以提高遠端系統管理員 SSH 連線至 ONTAP 叢集的安全性。
+
+您可以根據安全需求自訂下列動態授權設定：
+
+* <<設定動態授權全域設定>>
+* <<設定動態授權信任分數元件>>
+* <<設定自訂信任分數提供者>>
+* <<設定受限命令>>
+* <<設定動態授權群組>>
+
+
+
+
+== 設定動態授權全域設定
+
+您可以設定動態授權的全域設定、包括要保護的儲存 VM 、驗證挑戰的抑制時間間隔、以及信任分數設定。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization modify` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 設定動態授權的全域設定。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。更新括弧 <> 中的值以符合您的環境：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+-lower-challenge-boundary <percent> \
+-upper-challenge-boundary <percent> \
+-suppression-interval <interval> \
+-vserver <storage_VM_name>
+----
+. 檢視產生的組態：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 設定受限命令
+
+啟用動態授權時、此功能會包含一組預設的限制命令。您可以修改此清單以符合您的需求。請參閱 link:../multi-admin-verify/index.html["多重管理驗證（ MAV ）文件"] 以取得受限命令的預設清單資訊。
+
+
+
+=== 新增受限制的命令
+
+您可以將命令新增至受限於動態授權的命令清單。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization rule create` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 新增命令。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization rule create \
+-query <query> \
+*-operation <text>* \
+-index <integer> \
+-vserver <storage_VM_name>
+----
+. 檢視所產生的限制命令清單：
++
+[source, console]
+----
+security dynamic-authorization rule show
+----
+
+
+
+
+=== 移除受限制的命令
+
+您可以從受限於動態授權的命令清單中移除命令。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization rule delete` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 移除命令。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization rule delete \
+*-operation <text>* \
+-vserver <storage_VM_name>
+----
+. 檢視所產生的限制命令清單：
++
+[source, console]
+----
+security dynamic-authorization rule show
+----
+
+
+
+
+== 設定動態授權群組
+
+根據預設、動態授權會在您啟用後立即套用至所有使用者和群組。不過、您可以使用建立群組 `security dynamic-authorization group create` 因此動態授權僅適用於這些特定使用者。
+
+
+
+=== 新增動態授權群組
+
+您可以新增動態授權群組。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization group create` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 建立群組。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization group create \
+*-group-name <group-name>* \
+-vserver <storage_VM_name> \
+-exclude-users <user1,user2,user3...>
+
+----
+. 檢視產生的動態授權群組：
++
+[source, console]
+----
+security dynamic-authorization group show
+----
+
+
+
+
+=== 移除動態授權群組
+
+您可以移除動態授權群組。
+
+.步驟
+. 刪除群組。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization group delete \
+*-group-name <group-name>* \
+-vserver <storage_VM_name>
+----
+. 檢視產生的動態授權群組：
++
+[source, console]
+----
+security dynamic-authorization group show
+----
+
+
+
+
+== 設定動態授權信任分數元件
+
+您可以設定最大分數權重、以變更評分準則的優先順序、或移除風險評分的特定準則。
+
+
+NOTE: 最佳做法是保留預設分數權重值、並在需要時才進行調整。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization trust-score-component modify` 命令、請參閱 ONTAP 手冊頁。
+
+以下是您可以修改的元件、以及其預設分數和百分比權重：
+
+[cols="4*"]
+|===
+| 準則 | 元件名稱 | 預設原始分數權重 | 預設百分比權重 
+
+
+| 信任的裝置 | `trusted-device` | 20. | 50 
+
+
+| 使用者登入驗證記錄 | `authentication-history` | 20. | 50 
+|===
+.步驟
+. 修改信任分數元件。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component modify \
+*-component <component-name>* \
+*-weight <integer>* \
+-vserver <storage_VM_name>
+----
+. 檢視產生的信任分數元件設定：
++
+[source, console]
+----
+security dynamic-authorization trust-score-component show
+----
+
+
+
+
+=== 重設使用者的信任分數
+
+如果使用者因系統原則而遭拒存取、且能夠證明其身分識別、則系統管理員可以重設使用者的信任分數。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization user-trust-score reset` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 新增命令。請參閱 <<設定動態授權信任分數元件>> 取得您可以重設的信任分數元件清單。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization user-trust-score reset \
+*-username <username>* \
+*-component <component-name>* \
+-vserver <storage_VM_name>
+----
+
+
+
+
+=== 顯示您的信任分數
+
+使用者可以顯示自己的登入工作階段信任分數。
+
+.步驟
+. 顯示您的信任分數：
++
+[source, console]
+----
+security login whoami
+----
++
+您應該會看到類似下列的輸出：
+
++
+[listing]
+----
+User: admin
+Role: admin
+Trust Score: 50
+----
+
+
+
+
+== 設定自訂信任分數提供者
+
+如果您已經收到外部信任分數提供者的評分方法、可以將自訂提供者新增至動態授權組態。
+
+.開始之前
+* 自訂信任分數提供者必須傳回 JSON 回應。必須符合下列語法需求：
++
+** 傳回信任分數的欄位必須是純量欄位、而非陣列的元素。
+** 傳回信任分數的欄位可以是巢狀欄位、例如 `trust_score.value`。
+** JSON 回應中必須有一個欄位可傳回數值信任分數。如果無法原生使用、您可以撰寫包裝函式指令碼來傳回此值。
+
+
+* 提供的值可以是信任分數或風險分數。差異在於信任分數以遞增順序排列、分數較高則代表較高的信任層級、而風險分數則以遞減順序排列。例如、分數範圍為 0 至 100 的信任分數為 90 、表示分數非常值得信賴、可能會導致「允許」而不需要其他挑戰、 雖然分數範圍為 0 到 100 的風險分數為 90 、表示風險高、可能導致「拒絕」、而不會有額外的挑戰。
+* 自訂信任分數提供者必須透過 ONTAP REST API 存取。
+* 自訂信任分數提供者必須使用其中一個支援的參數進行設定。不支援需要不在支援參數清單中的組態的自訂信任分數提供者。
+
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization trust-score-component create` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 新增自訂信任分數提供者。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component create \
+-component <text> \
+*-provider-uri <text>* \
+-score-field <text> \
+-min-score <integer> \
+*-max-score <integer>* \
+*-weight <integer>* \
+-secret-access-key "<key_text>" \
+-provider-http-headers <list<header,header,header>> \
+-vserver <storage_VM_name>
+----
+. 檢視產生的信任分數提供者設定：
++
+[source, console]
+----
+security dynamic-authorization trust-score-component show
+----
+
+
+
+
+=== 設定自訂信任分數提供者標記
+
+您可以使用標記與外部信任分數提供者通訊。這可讓您將 URL 中的資訊傳送給信任分數提供者、而不會洩漏敏感資訊。
+
+如需有關的參數和預設值的詳細資訊 `security dynamic-authorization trust-score-component create` 命令、請參閱 ONTAP 手冊頁。
+
+.步驟
+. 啟用信任分數提供者標記。更新括弧 <> 中的值以符合您的環境。如果您不使用 `-vserver` 參數、命令會在叢集層級執行。必須使用粗體參數：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component create \
+*-component <component_name>* \
+-weight <initial_score_weight> \
+-max-score <max_score_for_provider> \
+*-provider-uri <provider_URI>* \
+-score-field <REST_API_score_field> \
+*-secret-access-key "<key_text>"*
+----
++
+例如：
+
++
+[source, console]
+----
+security dynamic-authorization trust-score-component create -component comp1 -weight 20 -max-score 100 -provider-uri https://<url>/trust-scores/users/<user>/<ip>/component1.html?api-key=<access-key> -score-field score -access-key "MIIBBjCBrAIBArqyTHFvYdWiOpLkLKHGjUYUNSwfzX"
+----
+

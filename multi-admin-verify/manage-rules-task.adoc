@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: multi-admin-verify/manage-rules-task.html 
-keywords: ontap, mav, multi, admin, verification, administrator, protected, operation, rules, manage 
+keywords: ontap, mav, multi, admin, multi admin verify, verification, administrator, protected, operation, rules, manage 
 summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核准的作業。只要啟動作業、就會攔截受保護的作業、並產生核准要求 
 ---
 = 管理受保護的作業規則
@@ -17,75 +17,11 @@ summary: 您可以建立多管理員驗證（MAV）規則、以指定需要核�
 
 每個作業只能建立一個 MAV 規則、例如、您無法建立多個 `volume-snapshot-delete` 規則。任何所需的規則限制都必須包含在單一規則中。
 
-
-
-== 受規則保護的命令
-
-您可以建立規則、以保護從 ONTAP 9.11.1 開始的下列命令。
-
-[cols="2*"]
-|===
-
-
- a| 
-`cluster peer delete`
-
-`event config modify`
-
-`security login create`
-
-`security login delete`
-
-`security login modify`
-
-`system node run`
-
-`system node systemshell`
-
-`volume delete`
-
-`volume flexcache delete`
- a| 
-`volume snapshot autodelete modify`
-
-`volume snapshot delete`
-
-`volume snapshot policy add-schedule`
-
-`volume snapshot policy create`
-
-`volume snapshot policy delete`
-
-`volume snapshot policy modify`
-
-`volume snapshot policy modify-schedule`
-
-`volume snapshot policy remove-schedule`
-
-`volume snapshot restore`
-
-`vserver peer delete`
-
-|===
-您可以建立規則、以保護從 ONTAP 9.13.1 開始的下列命令：
-
-* `volume snaplock modify`
-* `security anti-ransomware volume attack clear-suspect`
-* `security anti-ransomware volume disable`
-* `security anti-ransomware volume pause`
-
-
-您可以建立規則、以保護從 ONTAP 9.14.1 開始的下列命令：
-
-* `volume recovery-queue modify`
-* `volume recovery-queue purge`
-* `volume recovery-queue purge-all`
-* `vserver modify`
-
+您可以建立規則來保護 link:../multi-admin-verify/index.html#rule-protected-commands["這些命令"]。您可以從 ONTAP 版本開始保護每個命令、在此版本中、命令的保護功能會先開始提供。
 
 MAV 系統預設命令的規則 `security multi-admin-verify` link:../multi-admin-verify/index.html#system-defined-rules["命令"]、不可變更。
 
-除了系統定義的命令之外、在啟用多管理員驗證時、預設會保護下列命令、但您可以修改規則、以移除這些命令的保護。
+除了系統定義的作業之外、當啟用多重管理驗證時、下列命令預設會受到保護、但您可以修改規則、以移除這些命令的保護。
 
 * `security login password`
 * `security login unlock`
