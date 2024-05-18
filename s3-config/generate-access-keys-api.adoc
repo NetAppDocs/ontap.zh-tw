@@ -24,8 +24,8 @@ summary: S3 使用者可使用 API 重新產生用於存取 S3 用戶端的金�
 . 在儲存 VM 上設定 DNS 。請參閱 link:../networking/configure_dns_services_manual.html["設定DNS服務"]。
 . 儲存 VM 上會安裝 LDAP 伺服器的自我簽署根憑證授權單位（ CA ）憑證。請參閱 link:../nfs-config/install-self-signed-root-ca-certificate-svm-task.html["在SVM上安裝自我簽署的根CA憑證"]。
 . LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱 link:../nfs-config/create-ldap-client-config-task.html["建立LDAP用戶端組態"] 和。
-. 將用戶端組態與虛擬伺服器建立關聯。請參閱 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"] 和 https://docs.netapp.com/us-en/ontap-cli-9141//vserver-services-name-service-ldap-create.html["Vserver服務名稱服務LDAP建立"]。
-. 如果您使用的是資料儲存 VM 、請在 VM 上建立管理網路介面（ LIF ）、以及 LIF 的服務原則。請參閱 https://docs.netapp.com/us-en/ontap-cli-9141/network-interface-create.html["建立網路介面"] 和 https://docs.netapp.com/us-en/ontap-cli-9141//network-interface-service-policy-create.html["建立網路介面服務原則"] 命令。
+. 將用戶端組態與虛擬伺服器建立關聯。請參閱 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"] 和 https://docs.netapp.com/us-en/ontap-cli//vserver-services-name-service-ldap-create.html["Vserver服務名稱服務LDAP建立"]。
+. 如果您使用的是資料儲存 VM 、請在 VM 上建立管理網路介面（ LIF ）、以及 LIF 的服務原則。請參閱 https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["建立網路介面"] 和 https://docs.netapp.com/us-en/ontap-cli//network-interface-service-policy-create.html["建立網路介面服務原則"] 命令。
 
 
 
@@ -40,7 +40,7 @@ ns-switch modify -vserver <vserver-name> -database group -sources files,ldap
 ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
 ----
 +
-如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9141/vserver-services-name-service-ns-switch-modify.html["Vserver服務名稱服務ns交換器修改"] 命令。
+如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-ns-switch-modify.html["Vserver服務名稱服務ns交換器修改"] 命令。
 
 . 建立可存取 S3 使用者 REST API 端點的自訂角色：
 `security login rest-role create -vserver <vserver-name> -role <custom-role-name> -api "/api/protocols/s3/services/*/users" -access <access-type>`
@@ -51,9 +51,9 @@ ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
 security login rest-role create -vserver svm-1 -role s3role -api "/api/protocols/s3/services/*/users" -access all
 ----
 +
-如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9141/security-login-rest-role-create.html["建立安全登入REST角色"] 命令。
+如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/security-login-rest-role-create.html["建立安全登入REST角色"] 命令。
 
-. 使用安全登入命令建立 LDAP 使用者群組、並新增新的自訂角色以存取 S3 使用者 REST API 端點。如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli-9141//security-login-create.html["建立安全登入"] 命令。
+. 使用安全登入命令建立 LDAP 使用者群組、並新增新的自訂角色以存取 S3 使用者 REST API 端點。如需此命令的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli//security-login-create.html["建立安全登入"] 命令。
 +
 [listing]
 ----
