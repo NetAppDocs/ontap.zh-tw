@@ -1,0 +1,41 @@
+---
+permalink: s3-config/manage-bucket-size-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, size, system manager, cli 
+summary: 您可以視需要增加或減少貯體的大小。 
+---
+= 管理貯體大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必要時、您可以增加或減少現有貯體的大小。
+
+.步驟
+您可以使用系統管理員或 ONTAP CLI 來管理貯體大小。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇 * 儲存 > 鏟斗 * 、並找出您要修改的鏟斗。
+. 按一下 image:icon_kabob.gif["kabob圖示"] 在貯體名稱旁選取 * 編輯 * 。
+. 在 * 編輯貯體 * 視窗中、變更貯體的容量。
+. * 儲存 * 。
+
+
+--
+.CLI
+--
+. 變更貯體容量：
++
+[source, cli]
+----
+vserver object-store-server bucket modify -vserver <SVM_name> -bucket <bucket_name> -size {<integer>[KB|MB|GB|TB|PB]}
+----
+
+
+--
+====
