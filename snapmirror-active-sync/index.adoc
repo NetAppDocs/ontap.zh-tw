@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/index.html 
-keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync 
+keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync, TR-4878 
 summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、讓應用程式能以透明方式容錯移轉、確保在發生災難時營運不中斷。 
 ---
 = SnapMirror 主動式同步總覽
@@ -14,11 +14,11 @@ summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、
 
 
 [role="lead"]
-SnapMirror 主動式同步（最初以 SnapMirror Business Continuity [SM-BC] 發行）可讓業務服務持續運作、即使整個站台發生故障、也能支援應用程式使用次要複本進行透明容錯移轉。需要手動介入或自訂指令碼、才能使用 SnapMirror 主動同步觸發容錯移轉。
+SnapMirror 主動式同步（也稱為 SnapMirror Business Continuity [SM-BC] ）可讓業務服務持續運作、即使整個站台發生故障、也能支援應用程式使用次要複本進行透明容錯移轉。需要手動介入或自訂指令碼、才能使用 SnapMirror 主動同步觸發容錯移轉。
 
-SnapMirror 主動同步從 ONTAP 9.9.1 開始提供。AFF 叢集、 All Flash SAN Array （ ASA ）叢集、 C 系列（ AFF 或 ASA ）支援 SnapMirror 主動同步。主叢集和次叢集的類型必須相同： ASA 或 AFF 。SnapMirror 主動式同步功能可保護應用程式與 iSCSI 或 FCP LUN 。
+從 ONTAP 9.9.1 開始、 AFF 叢集、 All Flash SAN Array （ ASA ）叢集和 C 系列（ AFF 或 ASA ）支援 SnapMirror 主動式同步。主叢集和次叢集的類型必須相同： ASA 或 AFF 。SnapMirror 主動式同步功能可保護應用程式與 iSCSI 或 FCP LUN 。
 
-從 ONTAP 9.15.1 開始、 SnapMirror 主動式同步支援 A xref:architecture-concept.html[對稱式主動 / 主動式功能]，可從受保護 LUN 的兩個複本啟用讀寫 I/O 作業，並提供雙向同步複寫功能，讓兩個 LUN 複本都能在本機執行 I/O 作業。
+從 ONTAP 9.15.1 開始、 SnapMirror 主動式同步支援 A xref:architecture-concept.html[對稱式主動 / 主動式功能]，可從受保護 LUN 的兩個複本啟用讀寫 I/O 作業，並提供雙向同步複寫功能，讓兩個 LUN 複本都能在本機執行 I/O 作業。在 ONTAP 9.15.1 之前、 SnapMirror 主動式同步僅支援非對稱式主動 / 主動式組態、其中次要站台上的資料會代理至 LUN 。
 
 
 NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已與 ONTAP 產品文件整合。ONTAP SnapMirror 主動式同步文件現在包含 TR-4878 ： SnapMirror 主動式同步的內容。
@@ -30,7 +30,7 @@ NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已
 SnapMirror 主動式同步提供下列優點：
 
 * 業務關鍵應用程式的持續可用度。
-* 能夠從主要和次要站台交替代管關鍵應用程式。
+* 能夠從主要和次要站台交替主控關鍵應用程式。
 * 使用一致性群組來簡化應用程式管理、以確保依寫入順序的一致性。
 * 測試每個應用程式的容錯移轉功能。
 * 即時建立鏡射複本、不會影響應用程式可用度。
@@ -67,7 +67,7 @@ SnapMirror 主動式同步支援非對稱式、並從 ONTAP 9.15.1 開始支援�
 
 * 對等 ONTAP 叢集
 * 對等 ONTAP 叢集節點
-* 一致性群組（即容錯移轉單元）；針對每個一致性群組、會提供下列資訊：
+* 一致性群組（定義 SnapMirror 主動式同步關係中的容錯移轉單元）；針對每個一致性群組、會提供下列資訊：
 +
 ** 複寫狀態：未初始化、同步或不同步
 ** 主複本所在的叢集
@@ -85,7 +85,7 @@ NOTE: 從 ONTAP 9.15.1 開始、系統管理員會顯示來自任一叢集的 Sn
 一種手動操作、可變更 SnapMirror 主動式同步關係中的複本角色。主要站台會變成次要站台、次要站台則成為主要站台。
 
 .一級和一級偏差
-SnapMirror 主動式同步採用一項主要原則、優先選用主要複本、以便在網路分割區的情況下提供 I/O 服務。
+SnapMirror 主動式同步採用一項主要原則、優先選用主要複本、以便在網路分割區中提供 I/O 服務。
 
 primer-bias 是一種特殊的仲裁實作、可改善 SnapMirror 主動式同步保護資料集的可用度。如果主複本可用、當 ONTAP Mediator 無法從兩個叢集連線時、主偏置即會生效。
 
@@ -104,8 +104,6 @@ SnapMirror 主動式同步支援自動重新同步、讓複本恢復至不同步
 從 ONTAP 9.15.1 開始、 SnapMirror 主動式同步支援 link:interoperability-reference.html#fan-out-configurations["自動重新設定排風扇組態"]。
 
 .統一且不一致的組態
-使用對稱式主動 / 主動式 _ 建立保護時、程序取決於您的組態：
-
 * ** 統一主機存取 ** 表示兩個站台的主機都會連線到兩個站台上儲存叢集的所有路徑。跨站台路徑會跨越距離延伸。
 * ** 非統一主機存取 ** 表示每個站台中的主機僅連線至同一個站台中的叢集。不連接跨站台路徑和延伸路徑。
 
