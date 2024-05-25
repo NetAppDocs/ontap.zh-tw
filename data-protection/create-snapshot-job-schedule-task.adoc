@@ -2,7 +2,7 @@
 permalink: data-protection/create-snapshot-job-schedule-task.html 
 sidebar: sidebar 
 keywords: create, snapshot, job, schedule 
-summary: Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用工作排程cron create命令來建立工作排程。 
+summary: Snapshot原則至少需要一個Snapshot複本工作排程。使用 System Manager 或工作排程 cron create 命令來建立工作排程。 
 ---
 = 建立Snapshot工作排程
 :allow-uri-read: 
@@ -11,18 +11,40 @@ summary: Snapshot原則至少需要一個Snapshot複本工作排程。您可以�
 
 
 [role="lead"]
-Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用 `job schedule cron create` 建立工作排程的命令。
+Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用 System Manager 或 `job schedule cron create` 建立工作排程的命令。
 
 .關於這項工作
 根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱。
 
 如果您同時指定日期和星期的值、則會將這些值視為獨立的值。例如、包含日期規格的 cron 排程 `Friday` 以及月份規格 `13` 每週五及每月第 13 天都會執行、不只是每週五的第 13 天。
 
+
+
+== 建立 Snapshot 複本工作排程
+
 .步驟
+您可以使用系統管理員或 ONTAP CLI 建立 Snapshot 複本工作排程。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至 * 保護 > 概述 * 、然後展開 * 本機原則設定 * 。
+. 在 * 排程 * 窗格中、按一下 image:icon_arrow.gif["箭頭"]。
+. 在 * 排程 * 視窗中、按一下 image:icon_add.gif["此外"]。
+. 在 * 新增排程 * 視窗中、輸入排程名稱、然後選擇內容和排程類型。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
 . 建立工作排程：
 +
-`job schedule cron create -name _job_name_ -month month -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
@@ -30,8 +52,10 @@ Snapshot原則至少需要一個Snapshot複本工作排程。您可以使用 `jo
 從功能性的9.10.1開始ONTAP 、您可以在工作排程中加入Vserver：
 
 +
-`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[listing, subs="+quotes"]
+----
+job schedule cron create -name <job_name> *-vserver <Vserver_name>* -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 以下範例建立名為的工作排程 `myweekly` 週六上午 3 ： 00 開始：
 
@@ -49,3 +73,6 @@ cluster1::> job schedule cron create -name myweekly -dayofweek "Saturday" -hour 
 job schedule cron create -name myweeklymulti -dayofweek "Monday,Wednesday,Sunday" -hour 3,9,12 -minute 0,20,50
 ----
 
+
+--
+====

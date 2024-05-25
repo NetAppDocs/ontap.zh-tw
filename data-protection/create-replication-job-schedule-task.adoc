@@ -2,7 +2,7 @@
 permalink: data-protection/create-replication-job-schedule-task.html 
 sidebar: sidebar 
 keywords: create, replication, job, schedule 
-summary: 您可以使用工作排程cron create命令來建立複寫工作排程。工作排程會決定SnapMirror何時自動更新排程指派的資料保護關係。 
+summary: 您可以使用 System Manager 或工作排程 cron create 命令來建立複寫工作排程。 
 ---
 = 建立複寫工作排程
 :allow-uri-read: 
@@ -11,16 +11,34 @@ summary: 您可以使用工作排程cron create命令來建立複寫工作排程
 
 
 [role="lead"]
-您可以使用 `job schedule cron create` 建立複寫工作排程的命令。工作排程會決定SnapMirror何時自動更新排程指派的資料保護關係。
+工作排程會決定SnapMirror何時自動更新排程指派的資料保護關係。您可以使用 System Manager 或 `job schedule cron create` 建立複寫工作排程的命令。
 
 .關於這項工作
 您可以在建立資料保護關係時指派工作排程。如果您未指派工作排程、則必須手動更新關係。
 
 .步驟
+您可以使用系統管理員或 ONTAP CLI 建立複寫工作排程。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至 * 保護 > 概述 * 、然後展開 * 本機原則設定 * 。
+. 在 * 排程 * 窗格中、按一下 image:icon_arrow.gif["箭頭"]。
+. 在 * 排程 * 視窗中、按一下 image:icon_add.gif["此外"]。
+. 在 * 新增排程 * 視窗中、輸入排程名稱、然後選擇內容和排程類型。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
 . 建立工作排程：
 +
-`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
@@ -28,14 +46,14 @@ summary: 您可以使用工作排程cron create命令來建立複寫工作排程
 從功能性的9.10.1開始ONTAP 、您可以在工作排程中加入Vserver：
 
 +
-`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[listing, subs="+quotes"]
+----
+job schedule cron create -name <job_name> *-vserver <Vserver_name>* -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
-[NOTE]
-====
-Volume SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 5 分鐘。Volume SnapMirror 關係中 FlexGroup Volume 的最低支援排程（ RPO ）為 30 分鐘。
 
-====
+NOTE: Volume SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 5 分鐘。Volume SnapMirror 關係中 FlexGroup Volume 的最低支援排程（ RPO ）為 30 分鐘。
+
 +
 以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
@@ -45,3 +63,6 @@ Volume SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 5
 cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
 
+
+--
+====
