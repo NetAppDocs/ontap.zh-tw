@@ -2,7 +2,7 @@
 permalink: mediator/manage-task.html 
 sidebar: sidebar 
 keywords: mediator, service, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator service, uninstall scst 
-summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使用者名稱或密碼。您也可以解除安裝 ONTAP Mediator 服務。 
+summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控制、健全狀況驗證、 SCST 維護、以及憑證管理和疑難排解。 
 ---
 = 管理ONTAP 「協調器」服務
 :allow-uri-read: 
@@ -11,23 +11,25 @@ summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使�
 
 
 [role="lead"]
-安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使用者名稱或密碼。您也可以解除安裝 ONTAP Mediator 服務。
+管理 ONTAP Mediator 服務、包括變更使用者認證、停止及重新啟用服務、驗證其健全狀況、以及安裝或解除安裝 SCST 以進行主機維護。您也可以管理憑證、例如重新產生自我簽署的憑證、以信任的協力廠商憑證取代它們、以及疑難排解憑證相關問題。
 
 
 
 == 變更使用者名稱
 
-.關於這些工作
-這些工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+您可以使用下列程序變更使用者名稱。
+
+.關於這項工作
+在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
 `/usr/local/bin/mediator_username`
 
-.程序
+.步驟
 選擇下列其中一個選項來變更使用者名稱：
 
-* 執行命令中介er_change_user、並回應下列範例所示的提示：
+* * 選項（ a ） * ：執行命令 `mediator_change_user` 並回應下列範例所示的提示：
 +
 ....
  [root@mediator-host ~]# mediator_change_user
@@ -38,33 +40,36 @@ summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使�
  The account username has been modified successfully.
  [root@mediator-host ~]#
 ....
-* 執行下列命令：
+* * 選項（ b ） * ：執行下列命令：
 +
 `MEDIATOR_USERNAME=mediator MEDIATOR_PASSWORD=mediator2 MEDIATOR_NEW_USERNAME=mediatoradmin mediator_change_user`
 
 +
-....
- [root@mediator-host ~]# MEDIATOR_USERNAME= mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME= mediatoradmin mediator_change_user
+[listing]
+----
+ [root@mediator-host ~]# MEDIATOR_USERNAME=mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME=mediatoradmin mediator_change_user
  The account username has been modified successfully.
  [root@mediator-host ~]#
-....
+----
 
 
 
 
 == 變更密碼
 
+您可以使用下列程序變更密碼。
+
 .關於這項工作
-這項工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
 `/usr/local/bin/mediator_change_password`
 
-.程序
+.步驟
 選擇下列其中一個選項來變更密碼：
 
-* 執行 `mediator_change_password` 命令並回應提示、如下列範例所示：
+* * 選項（ a ） * ：執行 `mediator_change_password` 命令並回應提示、如下列範例所示：
 +
 ....
  [root@mediator-host ~]# mediator_change_password
@@ -76,9 +81,9 @@ summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使�
  The password has been updated successfully.
  [root@mediator-host ~]#
 ....
-* 執行下列命令：
+* * 選項（ b ） * ：執行下列命令：
 +
-`MEDIATOR_USERNAME= mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password`
+`MEDIATOR_USERNAME=mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password`
 
 +
 範例顯示密碼已從「 media1 」變更為「 media2 」。
@@ -98,15 +103,15 @@ summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使�
 若要停止 ONTAP Mediator 服務、請執行下列步驟：
 
 .步驟
-. 停止 ONTAP Mediator 。
+. 停止 ONTAP Mediator ：
 +
 `systemctl stop ontap_mediator`
 
-. 停止 SCST 。
+. 停止 SCST ：
 +
 `systemctl stop mediator-scst`
 
-. 停用 ONTAP Mediator 和 SCST 。
+. 停用 ONTAP Mediator 和 SCST ：
 +
 `systemctl diable ontap_mediator mediator-scst`
 
@@ -119,15 +124,15 @@ summary: 安裝ONTAP 完「Ischimator」服務之後、您可能需要變更使�
 若要重新啟用 ONTAP Mediator 服務、請執行下列步驟：
 
 .步驟
-. 啟用 ONTAP Mediator 和 SCST 。
+. 啟用 ONTAP Mediator 和 SCST ：
 +
 `systemctl enable ontap_mediator mediator-scst`
 
-. 啟動 SCST 。
+. 啟動 SCST ：
 +
 `systemctl start mediator-scst`
 
-. 啟動 ONTAP Mediator 。
+. 啟動 ONTAP Mediator ：
 +
 `systemctl start ontap_mediator`
 
@@ -293,21 +298,21 @@ scst-3.3.0.tar.bz2
 .. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
 
 
-. （選用）如果已啟用安全開機、請在重新開機之前執行下列步驟：
+. 或者、如果已啟用安全開機、請在重新開機之前執行下列步驟：
 +
-.. 決定「 scst_vdisk 」、「 scst 」和「 iscsim_scst 」模組的每個檔案名稱。
+.. 決定「 scst_vdisk 」、「 scst 」和「 iscsim_scst 」模組的每個檔案名稱：
 +
 ....
 [root@localhost ~]# modinfo -n scst_vdisk
 [root@localhost ~]# modinfo -n scst
 [root@localhost ~]# modinfo -n iscsi_scst
 ....
-.. 決定核心版本。
+.. 決定核心版本：
 +
 ....
 [root@localhost ~]# uname -r
 ....
-.. 使用核心簽署每個檔案。
+.. 使用核心簽署每個檔案：
 +
 ....
 [root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
@@ -330,7 +335,7 @@ _module-filename_
 
 
 
-. 執行重新開機。
+. 執行重新開機：
 +
 `reboot`
 
@@ -340,11 +345,13 @@ _module-filename_
 
 == 解除安裝ONTAP 「BMC Service」
 
+如有必要、您可以移除ONTAP 「資訊調解器」服務。
+
 .開始之前
-如有必要、您可以移除ONTAP 「資訊調解器」服務。在ONTAP 您移除「內化器」服務之前、必須先中斷「內化器」與「內化器」的連線。
+在您移除 ONTAP Mediator 服務之前、必須先中斷 ONTAP Mediator 與 ONTAP 的連線。
 
 .關於這項工作
-這項工作是在ONTAP 安裝了《支援者》服務的Linux主機上執行。
+您需要在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
@@ -371,16 +378,18 @@ _module-filename_
 
 == 重新產生暫時自我簽署的憑證
 
+您可以使用下列程序重新產生暫時自我簽署的憑證。
+
 .關於這項工作
 * 您可以在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
 * 只有在安裝 ONTAP Mediator 之後、由於主機的主機名稱或 IP 位址變更而產生的自我簽署憑證已過時時、才能執行此工作。
-* 當暫時自我簽署的憑證已由信任的協力廠商憑證取代之後、您不會使用此工作來重新產生憑證。  如果沒有自我簽署的憑證、將導致此程序失敗。
+* 當暫時自我簽署的憑證已由信任的協力廠商憑證取代之後、您不會使用此工作來重新產生憑證。如果沒有自我簽署的憑證、將導致此程序失敗。
 
 
 .步驟
 若要為目前主機重新產生新的暫時自我簽署憑證、請執行下列步驟：
 
-. 重新啟動 ONTAP Mediator ：
+. 重新啟動 ONTAP Mediator 服務：
 +
 `./make_self_signed_certs.sh overwrite`
 
@@ -408,3 +417,282 @@ subject=C = US, ST = California, L = San Jose, O = "NetApp, Inc.", OU = ONTAP Co
 Getting CA Private Key
 ----
 
+
+
+
+== 以信任的協力廠商憑證取代自我簽署的憑證
+
+您可以使用信任的協力廠商憑證來取代自我簽署的憑證。
+
+.關於這項工作
+* 您可以在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
+* 如果產生的自我簽署憑證需要由從信任的次級憑證授權單位（ CA ）取得的憑證所取代、您可以執行此工作。若要達成此目標、您應該可以存取信任的公開金鑰基礎架構（ PKI ）授權。
+
+
+
+
+=== 步驟 1 ：從發行 CA 憑證的協力廠商取得憑證
+
+您可以使用下列程序從 PKI 授權單位取得憑證。
+
+以下範例示範如何取代自我簽署的憑證參與者、也就是 `ca.key`、 `ca.csr`、 `ca.srl`和 `ca.crt` 位於 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/` 與第三方憑證參與者合作。
+
+
+NOTE: 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可以使用與此程序不同的方式、從 PKI 授權單位取得憑證。根據您的業務需求調整程序。
+
+.步驟
+. 建立私密金鑰 `ca.key` 和組態檔案 `openssl_ca.cnf` 這將由 PKI 授權單位用來產生憑證。
++
+.. 產生私密金鑰 `ca.key`：
++
+* 範例 *
+
++
+`openssl genrsa -aes256 -out ca.key 4096`
+
+.. 組態檔案 `openssl_ca.cnf` （位於 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`）定義產生的憑證必須具有的內容。
+
+
+. 使用私密金鑰和組態檔案來建立憑證簽署要求 `ca.csr``：
++
+*範例：*
+
++
+`openssl req -key <private_key_name>.key -new -out <certificate_csr_name>.csr -config <config_file_name>.cnf`
+
++
+[listing]
+----
+[root@scs000216655 server_config]# openssl req -key ca.key -new -config openssl_ca.cnf -out ca.csr
+Enter pass phrase for ca.key:
+[root@scs000216655 server_config]# cat ca.csr
+-----BEGIN CERTIFICATE REQUEST-----
+MIIE6TCCAtECAQAwgaMxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlh
+...
+erARKhY9z0e8BHPl3g==
+-----END CERTIFICATE REQUEST-----
+----
+. 傳送憑證簽署要求 `ca.csr` 提供給 PKI 授權單位以供其簽署。
++
+PKI 授權單位會驗證要求並簽署 `.csr`，生成證書 `ca.crt`。
+
++
+
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須新增憑證 `ca.crt` 至 ONTAP 叢集。請參閱 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html#ontap-mediator["為 SMBC 設定 ONTAP Mediator 和叢集"]。
+
+
+
+
+
+=== 步驟 2 ：使用協力廠商 CA 認證簽署以產生伺服器憑證
+
+伺服器憑證必須由私密金鑰簽署 `ca.key` 和第三方憑證 `ca.crt`。此外、組態檔案 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf` 包含特定屬性、可指定由 OpenSSL 發行的伺服器憑證所需的內容。
+
+下列命令可產生伺服器憑證。
+
+.步驟
+若要產生伺服器憑證、請從資料夾執行下列命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`：
+
+`openssl req -config openssl_server.cnf -extensions v3_req -nodes -newkey rsa:4096 -sha512 -keyout ontap_mediator_server.key -out ontap_mediator_server.csr`
+
+`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA ca.crt -CAkey ca.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
+
+`-CAcreateserial` 選項用於產生檔案 `ca.srl`。
+
+
+
+=== 步驟 3 ：在 ONTAP Mediator 組態中取代新的協力廠商 CA 憑證和伺服器憑證
+
+憑證組態會提供給位於的組態檔案中的 ONTAP Mediator 服務 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。檔案包含下列屬性：
+
+[listing]
+----
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
+----
+* `cert_path` 和 `key_path` 為伺服器憑證變數。
+* `ca_cert_path`、 `ca_key_path`和 `ca_serial_path` 為 CA 憑證變數。
+
+
+.步驟
+. 更換 `ca.*` 具有協力廠商憑證的檔案。
+. 重新啟動 ONTAP Mediator ：
++
+`systemctl restart ontap_mediator`
+
+
+
+
+
+=== 步驟 4 ：選擇性地為協力廠商憑證使用不同的路徑或名稱
+
+您可以使用其他名稱的協力廠商憑證 `ca.*` 或是將協力廠商憑證儲存在不同的位置。
+
+.步驟
+. 設定檔案 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 以覆寫中的預設變數值 `ontap_mediator.config.yaml` 檔案：
++
+例如、如果您取得 `intermediate.crt` 並儲存其私密金鑰 `intermediate.key` 和憑證簽署要求 `intermediate.csr` 在某個位置 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`，則 user_config 檔案應如下所示：
+
++
+[listing]
+----
+[root@scs000216655 server_config]# cat  ontap_mediator.user_config.yaml
+
+# This config file can be used to override the default settings in ontap_mediator.config.yaml
+# To override a setting, copy the property key from ontap_mediator.config.yaml to this file and
+# set the property to the desired value. e.g.,
+#
+# The default value for 'default_mailboxes_per_target' is 4 in ontap_mediator.config.yaml
+#
+# To override this value with 6 mailboxes per target, add the following key/value pair
+# below this comment:
+#
+# 'default_mailboxes_per_target': 6
+#
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
+----
+. 在組態檔中更新憑證時、請重新啟動 ONTAP Mediator ：
++
+`systemctl restart ontap_mediator`
+
+
+
+
+
+== 疑難排解憑證相關問題
+
+您可以檢查憑證的某些內容。
+
+
+
+=== 驗證憑證過期
+
+使用下列命令識別憑證有效範圍：
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+        Validity
+            Not Before: Feb 22 19:57:25 2024 GMT
+            Not After : Feb 15 19:57:25 2029 GMT
+----
+
+
+=== 驗證 CA 認證中的 X509v3 延伸
+
+使用下列命令來驗證 CA 認證中的 X509v3 延伸。
+
+中定義的內容 `*v3_ca*` 在中 `openssl_ca.cnf` 顯示為 `X509v3 extensions` 在中 `ca.crt`。
+
+[listing, subs="+quotes"]
+----
+[root@scs000216982 server_config]# pwd
+/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@scs000216982 server_config]# cat openssl_ca.cnf
+...
+[ v3_ca ]
+*subjectKeyIdentifier = hash*
+*authorityKeyIdentifier = keyid:always,issuer*
+*basicConstraints = critical, CA:true*
+*keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
+
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+        *X509v3 extensions:*
+            X509v3 Subject Key Identifier:
+                9F:06:FA:47:00:67:BA:B2:D4:82:70:38:B8:48:55:B5:24:DB:FC:27
+            X509v3 Authority Key Identifier:
+                keyid:9F:06:FA:47:00:67:BA:B2:D4:82:70:38:B8:48:55:B5:24:DB:FC:27
+
+            X509v3 Basic Constraints: critical
+                CA:TRUE
+            X509v3 Key Usage: critical
+                Digital Signature, Certificate Sign, CRL Sign
+----
+
+
+=== 驗證伺服器憑證和主體替代名稱中的 X509v3 副檔名
+
+。 `v3_req` 中定義的內容 `openssl_server.cnf` 組態檔案會顯示為 `X509v3 extensions` 在憑證中。
+
+在下列範例中、您可以取得中的變數 `alt_names` 執行命令的區段 `hostname -A` 和 `hostname -I` 在安裝 ONTAP Mediator 的 Linux VM 上。
+
+請洽詢您的網路管理員、以取得正確的變數值。
+
+[listing]
+----
+[root@scs000216982 server_config]# pwd
+/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@scs000216982 server_config]# cat openssl_server.cnf
+...
+[ v3_req ]
+basicConstraints       = CA:false
+extendedKeyUsage       = serverAuth
+keyUsage               = keyEncipherment, dataEncipherment
+subjectAltName         = @alt_names
+
+[ alt_names ]
+DNS.1 = abc.company.com
+DNS.2 = abc-v6.company.com
+IP.1 = 1.2.3.4
+IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
+
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+
+        X509v3 extensions:
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Extended Key Usage:
+                TLS Web Server Authentication
+            X509v3 Key Usage:
+                Key Encipherment, Data Encipherment
+            X509v3 Subject Alternative Name:
+                DNS:abc.company.com, DNS:abc-v6.company.com, IP Address:1.2.3.4, IP Address:abcd:abcd:abcd:abcd:abcd:abcd
+----
+
+
+=== 確認私密金鑰與憑證相符
+
+您可以驗證特定私密金鑰是否與憑證相符。
+
+請分別在金鑰和憑證上使用下列 OpenSSL 命令：
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl rsa -noout -modulus -in intermediate.key | openssl md5
+Enter pass phrase for intermediate.key:
+(stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
+[root@scs000216982 server_config]# openssl x509 -noout -modulus -in intermediate.crt | openssl md5
+(stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
+----
+如果是 `-modulus` 這兩種配對的屬性都表示私密金鑰與憑證配對是相容的、可以彼此搭配使用。
+
+
+
+=== 確認伺服器憑證是從特定 CA 憑證建立
+
+您可以使用下列命令來驗證伺服器憑證是從特定 CA 憑證建立的。
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
+ontap_mediator_server.crt: OK
+----
+如果正在使用線上憑證狀態傳輸協定（ OCSP ）驗證、請使用命令 link:https://www.openssl.org/docs/manmaster/man1/openssl-verify.html^["openssl 驗證"]。

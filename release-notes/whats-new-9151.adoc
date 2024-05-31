@@ -1,0 +1,217 @@
+---
+permalink: release-notes/whats-new-9151.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.15.1' 
+summary: 瞭解 ONTAP 9.15.1 提供的新功能。 
+---
+= ONTAP 9.15.1 的新增功能
+:allow-uri-read: 
+
+
+[role="lead"]
+瞭解 ONTAP 9.15.1 提供的新功能。
+
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+
+瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+
+瞭解的全新增強支援 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["FAS 、 ASA 和 AFF 平台及支援的交換器"^]。
+
+瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
+
+若要升級至最新版的 ONTAP 、請參閱 link:../upgrade/prepare.html["準備升級 ONTAP"]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步支援對稱式主動 / 主動式部署]
+ a| 
+SnapMirror 主動式同步（前身為 SnapMirror Business Continuity ）現在支援對稱式主動 / 主動式部署、可透過雙向同步複寫、從受保護 LUN 的兩個複本進行讀寫 I/O 作業。
+
+
+
+ a| 
+使用 SnapMirror 非同步增加一致性群組中磁碟區的限制
+ a| 
+使用 SnapMirror 非同步保護的一致性群組現在支援一致性群組中最多 80 個磁碟區。
+
+
+
+ a| 
+xref:../consistency-groups/configure-task.html[支援系統管理權限層級、以使用一致性群組進行 REST API 和 CLI 作業]
+ a| 
+系統管理權限層級現在支援一致性群組的 CLI 和 REST API 作業。
+
+
+
+ a| 
+xref:../concepts/ontap-and-vmware.html[使用 Windows Server 容錯移轉叢集持續保留 VMware 虛擬磁碟區]
+ a| 
+ONTAP 目前支援 VMware 虛擬磁碟區（ vVols ）、以及傳統 LUN 的持續保留。從 ONTAP 9.15.1 開始、您也可以使用 vVol 建立持續保留。ONTAP Tools for VMware vSphere 9 已實作此功能的支援。只有 Windows Server 容錯移轉叢集（ WSFC ）是一組叢集式 Windows 虛擬機器、才支援此功能。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../nas-audit/create-persistent-stores.html[簡化的 FPolicy 持續儲存區建立與組態]
+ a| 
+您可以使用建立 FPolicy 持續儲存區、並同時自動化其磁碟區建立與組態 `persistent-store create` 命令。
+
+增強功能 `persistent-store create` 命令也允許使用 autosup-mode 參數、此參數可讓磁碟區根據使用的空間量來增加或縮小大小。
+
+
+
+ a| 
+xref:../nfs-rdma/index.html[支援採用 RDMA 的 NFSv3]
+ a| 
+NFS over RDMA 組態現在支援 NFSv3 。
+
+
+
+ a| 
+xref:../nas-audit/supported-file-operation-filter-fpolicy-nfsv4-concept.html[FPolicy 支援 NFS 4.1 傳輸協定]
+ a| 
+FPolicy 支援 NFS 4.1 傳輸協定。
+
+
+
+ a| 
+xref:../nas-audit/plan-fpolicy-external-engine-config-concept.html[FPolicy 的原型引擎格式支援]
+ a| 
+Prototbuf 是 Google 的語言中立機制、用於序列化結構化資料。它比 XML 更小、更快、更簡單、有助於改善 FPolicy 效能。
+
+您可以使用 probuf 外部引擎格式。設為 probuf 時、通知訊息會使用 Google Prototbuf 以二進位格式編碼。在將外部引擎格式設定為 protobuf 之前、請確定 FPolicy 伺服器也支援 protobuf 反序列化。
+
+
+
+ a| 
+xref:../authentication/dynamic-authorization-overview.html[SSH 連線的動態授權]
+ a| 
+ONTAP 9.15.1 提供動態授權的初始架構、可讓您指派安全性信任分數給系統管理員使用者、並在其活動看起來可疑時、透過額外的授權檢查來挑戰他們、以加強管理 ONTAP 系統的安全性。  您可以利用動態授權做為資料導向的 Zero Trust 安全架構的一部分。
+
+
+
+ a| 
+支援用於 S3 儲存、 FlexCache 和叢集對等加密的 TLS 1.3
+ a| 
+自 ONTAP 9.11.1 開始支援 TLS 1.3 進行管理存取、但 ONTAP 9.15.1 現在支援 S3 儲存、 FlexCache 和叢集對等加密。某些應用程式（例如 FabricPool 、 Microsoft Azure Page Blobs 儲存設備和 SnapMirror Cloud ）在 9.15.1 版中仍僅限使用 TLS 1.2 。
+
+
+
+ a| 
+xref:../nfs-admin/tls-nfs-strong-security-concept.html[TLS 支援 NFS 連線]
+ a| 
+9.15.1 提供 ONTAP over TLS 的公開預覽功能。ONTAP 9.15.1 的正式作業工作負載不支援 NFS over TLS 作為預覽產品。
+
+NFS over TLS 提供從儲存裝置到用戶端的資料傳輸加密功能。TLS 比 Kerberos 更新、更方便、可簡化組態和管理。
+
+
+
+ a| 
+xref:../multi-admin-verify/index.html#rule-protected-commands[符合資格的規則保護命令集已延伸、可進行多重管理驗證]
+ a| 
+系統管理員可以建立多重管理驗證規則、以保護叢集組態、 LUN 刪除、系統組態、 IPsec 和 SAML 的安全組態、磁碟區快照作業、虛擬伺服器組態和其他命令。
+
+
+
+ a| 
+xref:../system-admin/requirements-autosupport-reference.html[使用含 TLS 的 SMTP 傳輸 AutoSupport 訊息]
+ a| 
+雖然建議將 AutoSupport 訊息傳輸至 NetApp 的是 HTTPS 、但未加密的 SMTP 也可以使用。有了 ONTAP 9.15.1 、客戶現在可以選擇將 TLS 與 SMTP 搭配使用。SMTPS 傳輸協定會加密電子郵件流量和選用的電子郵件伺服器認證、藉此建立安全的傳輸通道。使用明確的 TLS 、因此在建立 TCP 連線後會啟動 TLS 。如果訊息複本傳送至本機電子郵件地址、則會使用相同的組態。
+
+|===
+
+
+== 儲存效率
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../volumes/determine-space-usage-volume-aggregate-concept.html[磁碟區空間度量報告變更]
+ a| 
+我們引進了兩個新的計數器、僅顯示正在使用的中繼資料。此外、已調整數個現有計數器、以移除中繼資料並僅顯示使用者資料。這些變更共同提供更清楚的檢視、讓您瞭解分隔成兩種資料類型的度量。客戶可以使用這些計數器來實作更準確的計費模式、方法是從總計中扣除中繼資料、並僅考慮實際的使用者資料。
+
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../flexcache/flexcache-writeback-enable-task.html[FlexCache 寫回支援]
+ a| 
+在快取磁碟區上啟用回寫功能時、寫入要求會傳送至本機快取、而非原始磁碟區、為邊緣運算環境和具有大量寫入工作負載的快取提供更好的效能。
+
+
+
+ a| 
+xref:../task_nas_file_system_analytics_enable.html[檔案系統分析的效能提升]
+ a| 
+ONTAP 強制規定、在啟用檔案系統分析時、必須釋放容量的 5-8% 、以減輕 Volume 和檔案系統分析的潛在效能問題。
+
+
+
+ a| 
+FlexClone Volume 加密金鑰
+ a| 
+FlexClone Volume 會被指派獨立於 FlexVol Volume （主機）加密金鑰的專用加密金鑰。
+
+|===
+
+
+== 系統管理員
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../snaplock/commit-snapshot-copies-worm-concept.html[系統管理員支援設定 SnapLock 資料保險箱關係]
+ a| 
+當來源和目的地同時執行 ONTAP 9.15.1 或更新版本時、可使用系統管理員來設定 SnapLock 資料保險箱關係。
+
+
+
+ a| 
+xref:../task_cp_dashboard_tour.html[System Manager 儀表板的效能增強功能]
+ a| 
+System Manager 儀表板健全狀況、容量、網路和效能檢視上的資訊包括更完整的說明、包括效能指標的增強功能、可協助您識別並疑難排解延遲或效能問題。
+
+|===
+
+
+== 升級
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../upgrade/automated-upgrade-task.html[在自動不中斷升級期間、支援 LIF 移轉至 HA 合作夥伴節點]
+ a| 
+如果在自動不中斷升級期間、 LIF 移轉至其他批次群組失敗、則會將生命體移轉至同一個批次群組中的 HA 合作夥伴節點。
+
+|===
