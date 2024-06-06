@@ -36,6 +36,15 @@ System Manager提供簡單易用的工作流程、可設定新叢集及設定儲
 
 
 
+* 您應該收集下列資訊：
++
+** 叢集管理IP位址
+** 網路子網路遮罩
+** 網路閘道 IP 位址
+** 網域名稱服務（ DNS ）伺服器 IP 位址
+** 網路時間傳輸協定伺服器 IP 位址
+
+
 
 
 image:workflow_configure_ontap_on_new_cluster.gif["在ONTAP 新叢集上設定功能的工作流程"]
@@ -74,8 +83,15 @@ image:workflow_configure_ontap_on_new_cluster.gif["在ONTAP 新叢集上設定�
 +
 System Manager會自動探索叢集中的其餘節點。
 
-. 設定所有節點的叢集管理網路和節點管理IP位址、以初始化儲存系統。
+. 在 * 初始化儲存系統 * 下、輸入叢集名稱和管理員密碼。
+. 在 * 網路 * 下、輸入叢集管理 IP 位址、子網路遮罩和閘道。
+. 如果您想要使用網域名稱服務來解析主機名稱、請選取 * 使用網域名稱服務（ DNS ） * 、然後輸入 DNS 伺服器資訊。
+. 如果您想要使用網路時間傳輸協定（ NTP ）在整個叢集上保持時間同步、請在 * 其他 * 下選取 * 使用時間服務（ NTP ） * 、然後輸入 NTP 伺服器資訊。
+. 按一下*提交*。
 
+
+.下一步
+初始化叢集之後、您可以 link:./software_setup/task_check_cluster_with_config_advisor.html["執行 Active IQ Config Advisor 來驗證您的組態、並檢查常見的組態錯誤"]。
 
 
 

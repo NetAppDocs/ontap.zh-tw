@@ -11,26 +11,16 @@ summary: 從功能不只9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟�
 
 
 [role="lead"]
-從功能不只9.8開始ONTAP 、您可以在ONTAP 一個叢集中啟用一個功能不易用的儲存服務（S3）物件儲存伺服器ONTAP 。
+從 ONTAP 9.8 開始、您可以在 ONTAP 叢集中啟用 ONTAP Simple Storage Service （ S3 ）物件儲存伺服器、使用熟悉的管理工具、例如 ONTAP System Manager 、快速配置高效能物件儲存設備、以便在 ONTAP 中進行開發與作業、並充分利用 ONTAP 的儲存效率與安全性。
 
-支援兩種內部部署使用案例情境、以提供S3物件儲存服務：ONTAP
+ONTAP 中 S3 的主要使用案例包括：
 
-* 將資料層移至本機叢集（層級移至本機資源庫）或遠端叢集（雲端層）上的資源桶。FabricPool
-* S3用戶端應用程式可存取本機叢集或遠端叢集上的儲存區。
+* 使用 FabricPool 將非使用中資料分層至 ONTAP 的儲存區、以便進行 ONTAP 對 ONTAP 分層。同時支援分層至中的貯體 link:enable-ontap-s3-access-local-fabricpool-task.html["本機叢集"] 、或分層至上的貯體 link:enable-ontap-s3-access-remote-fabricpool-task.html["遠端叢集"] 。分層至 ONTAP S3 可讓您使用較便宜的 ONTAP 系統來處理非使用中資料、並節省新的 Flash 容量成本、而無需額外的 FabricPool 授權或新技術來管理。
+* 從 ONTAP 9.12.1 開始、 S3 傳輸協定也可以在中啟用、而 S3 link:../s3-multiprotocol/index.html["多重傳輸協定 NAS 磁碟區"] 傳輸協定已預先設定為使用 NAS 傳輸協定。當在多重傳輸協定 NAS 磁碟區中啟用 S3 傳輸協定時、用戶端應用程式可以使用 S3 、 NFS 和 SMB 讀取和寫入資料、這會開啟多種其他使用案例。最常見的使用案例之一是 NAS 用戶端將資料寫入磁碟區和 S3 用戶端、讀取相同資料並執行分析、商業智慧、機器學習和光學字元辨識等專業工作。
 
 
-從 ONTAP 9.14.1 開始、您可以在 MetroCluster IP 和 FC 組態的鏡射或無鏡射集合體中、在 SVM 上啟用 S3 物件儲存伺服器。
 
-從ONTAP 《S209.12.1.版」開始、您可以在SVM上啟用S3物件儲存伺服器、並以MetroCluster 無鏡射的Aggregate進行支援、以利執行不鏡射的IP組態。如需MetroCluster 更多有關在不鏡射的Aggregate在靜態IP組態中的限制資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/considerations_unmirrored_aggrs.html?q=unmirrored+aggregates["無鏡射Aggregate的考量"]。
-
-如果您想要以下列方式設定S3物件儲存設備、請使用這些程序：
-
-* 您想要從執行ONTAP 支援的現有叢集提供S3物件儲存。
-+
-如果您想要在現有叢集上使用S3功能、而不需要額外的硬體和管理、那麼支援該功能就很合適。ONTAP然而、 NetApp StorageGRID 軟體仍是物件儲存的 NetApp 旗艦解決方案。如需詳細資訊、請參閱 link:https://docs.netapp.com/sgws-114/index.jsp["本文檔StorageGRID"^]。
-
-* 您擁有叢集管理員權限、而非SVM管理員權限。
-
+NOTE: 如果您想在現有的 ONTAP 叢集上啟用 S3 功能、而不需要額外的硬體和管理功能、則 ONTAP S3 是適當的選擇。NetApp StorageGRID 是 NetApp 的物件儲存旗艦解決方案。StorageGRID 建議用於需要充分利用 S3 行動、進階 ILM 功能或 ONTAP 系統無法達到的容量的原生 S3 應用程式。如需詳細資訊，請參閱 link:https://docs.netapp.com/us-en/storagegrid-118/index.html["本文檔StorageGRID"^]。
 
 
 
