@@ -2,7 +2,7 @@
 permalink: san-admin/enable-space-allocation.html 
 sidebar: sidebar 
 keywords: enable, space allocation, space reclamation, unmap 
-summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空間不足、且磁碟區中的LUN無法接受寫入時、將會通知主機。此選項也可讓ONTAP 支援功能在主機刪除資料時自動回收空間。 
+summary: 啟用空間分配、讓主機和儲存系統能夠在空間管理上合作。 
 ---
 = 啟用 SAN 的空間分配
 :allow-uri-read: 
@@ -11,12 +11,18 @@ summary: 如果您將空間分配選項設為啟用、ONTAP 則當磁碟區空�
 
 
 [role="lead"]
-如果您的 FC 或 iSCSI 主機支援 SCSI 精簡配置、您可以啟用空間分配。  啟用空間分配且磁碟區空間不足時、磁碟區中的 LUN 會保持連線、並設為唯讀模式。  然後主機會收到 LUN 無法再接受寫入的通知。  如果您的主機不支援空間分配或未啟用空間分配、當磁碟區空間不足且無法自動擴充時、 ONTAP 會使 LUN 離線。
+啟用空間分配、讓主機和儲存系統在 LUN 空間管理上合作。啟用 `space-allocation` 設定可提供下列優點：
 
-此外、啟用空間分配時、主機端空間管理會識別主機檔案系統上已刪除的資料區塊、並自動發出一或多個資料區塊 `SCSI UNMAP` 命令釋放儲存系統上對應的區塊、並允許 ONTAP 回收空間。
+* * ONTAP 可以與沒有可用空間來服務寫入 * 的主機通訊：這種通訊方式更適合主機處理空間不足的情況。LUN 仍保持連線、但無法服務寫入 IO 、直到空間可用為止。仍可執行讀取 IO 。對主機作業系統的確切影響取決於主機組態。在某些情況下、作業系統會重試寫入 IO 、直到成功為止。在其他情況下、檔案系統可能會離線。
++
+
+NOTE: 如果是 `space-allocation` 未啟用此設定、 LUN 會進入的狀態 `space-error` 當它達到低空間臨界值且所有 IO 都失敗時。需要將 LUN 變更回 `online` 空間問題解決後的狀態。主機上也可能需要重新掃描 LUN 裝置、才能將路徑和裝置還原至作業狀態。
+
+* * 主機可以執行 `SCSI UNMAP` （有時稱為 `TRIM`）作業 * ：這些作業可讓主機識別 LUN 上不再需要的資料區塊、因為這些區塊不再包含有效的資料。識別通常發生在檔案刪除之後。然後、儲存系統就可以取消分配這些資料區塊、以便在其他地方使用這些空間。這種分配方式可大幅提升整體儲存效率、尤其是在資料週轉率高的檔案系統方面。
+
 
 .開始之前
-若要啟用空間分配、您的主機必須支援 SCSI 精簡配置。SCSI 精簡配置使用 SCSI SBC-3 標準中定義的邏輯區塊資源配置。只有支援此標準的主機才能在ONTAP 支援中使用SCSI精簡配置。
+啟用空間分配需要主機組態、以便在無法完成寫入時正確處理空間分配錯誤。善用 `SCSI UNMAP` 需要可以使用 SCSI SBC-3 標準中定義的邏輯區塊資源配置的組態。
 
 啟用空間分配時、下列主機目前支援SCSI精簡配置：
 
@@ -37,32 +43,18 @@ NVMe 主機不支援空間分配。
 
 NOTE: 當您將叢集升級至 ONTAP 9.15.1 時、在軟體升級之前建立的所有 LUN 的空間分配設定、無論主機類型為何、在升級之後都會保持不變。  例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
 
-您必須將 LUN 離線才能啟用空間分配、然後您必須在主機上執行探索、主機才能識別已啟用空間分配。
-
 .步驟
-. 使 LUN 離線：
-+
-[source, cli]
-----
-lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline
-----
 . 啟用空間分配：
 +
-[source, cli]
-----
-lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled
-----
+`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
+
 . 確認已啟用空間分配：
 +
-[source, cli]
-----
-lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation
-----
-. 使LUN上線：
+`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
+
+. 確認主機作業系統上已啟用空間分配。
 +
-[source, cli]
-----
-lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online
-----
-. 在主機上、重新掃描所有磁碟、以確保變更為 `-space-allocation` 已正確探索選項。
+
+NOTE: 某些主機組態（尤其是 ESX ）可以自動辨識設定變更、而不需要使用者介入。其他組態可能需要重新掃描裝置。某些檔案系統和磁碟區管理員可能需要額外的特定設定、才能使用進行空間回收 `SCSI UNMAP`。可能需要重新掛載檔案系統或完整的作業系統重新開機。請參閱特定作業系統的說明文件以取得指引。
+
 
