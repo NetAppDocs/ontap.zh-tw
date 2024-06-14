@@ -25,7 +25,7 @@ summary: 您可以新增或移除磁碟區、或在子一致性群組之間移�
 * 如果調整在整體範圍內、您可以一次最多新增 16 個磁碟區至一致性群組 xref:limits.html[一致性群組限制]。
 * 從 ONTAP 9.13.1 開始、您可以使用主動式 SnapMirror 主動同步或非同步 SnapMirror 保護原則、不中斷地將磁碟區新增至一致性群組。
 * 當您將磁碟區新增至受 SnapMirror 主動式同步保護的一致性群組時、 SnapMirror 主動式同步關係狀態會變更為「展開」、直到為新磁碟區設定鏡像和保護為止。如果在完成此程序之前發生主叢集上的災難、一致性群組會在容錯移轉作業中還原為其原始組成。
-* 在 ONTAP 9.12.1 及更早版本中、您無法在 SnapMirror 主動式同步關係中將磁碟區新增至一致性群組。您必須先中斷 SnapMirror 主動同步關係、修改一致性群組、然後使用 SnapMirror 主動同步還原保護。
+* 在 ONTAP 9.12.1 及更早版本中、您無法在 SnapMirror 主動式同步關係中將磁碟區新增至一致性群組。您必須先刪除 SnapMirror 主動同步關係、修改一致性群組、然後使用 SnapMirror 主動同步還原保護。
 * 從 ONTAP 9.12.1 開始、 ONTAP REST API 支援新增 _new_ 或現有磁碟區至一致性群組。如需ONTAP 更多有關靜態API的資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-a-copy-of-the-ontap-rest-api-reference-documentation["REST API參考文件ONTAP"^]。
 +
 從 ONTAP 9.13.1 開始、系統管理員就支援此功能。
@@ -107,7 +107,7 @@ NOTE: 僅包含 `-parent-consistency-group` 如果一致性群組處於階層關
 不會刪除從一致性群組移除的磁碟區。它們在叢集中仍處於作用中狀態。
 
 .關於這項工作
-* 您無法從 SnapMirror 主動同步或 SVM 災難恢復關係中的一致性群組移除 Volume 。您必須先中斷 SnapMirror 主動同步關係、才能修改一致性群組、然後重新建立關係。
+* 您無法從 SnapMirror 主動同步或 SVM 災難恢復關係中的一致性群組移除 Volume 。您必須先刪除 SnapMirror 作用中同步關係、才能修改一致性群組、然後重新建立關係。
 * 如果一致性群組在移除作業之後沒有磁碟區、則會刪除一致性群組。
 * 從一致性群組移除磁碟區時、一致性群組的現有快照仍會保留、但視為無效。現有的 Snapshot 無法用來還原一致性群組的內容。Volume精細的Snapshot仍有效。
 * 如果您從叢集刪除磁碟區、它會自動從一致性群組中移除。
