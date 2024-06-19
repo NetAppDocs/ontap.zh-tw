@@ -4,22 +4,20 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade advisor, advisor, active iq, create an upgrade plan, estimate upgrade, 
 summary: Active IQ Digital Advisor 中的 Upgrade Advisor（升級顧問）服務提供智慧情報，能夠協助您規劃升級作業，將不確定性與風險降至最低。 
 ---
-= 建立 ONTAP 升級計畫
+= 使用Upgrade Advisor規劃升級
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-建立升級計畫是最佳實務。如果您有作用中的 link:https://www.netapp.com/us/services/support-edge.aspx["部門服務SupportEdge"^] 合約 link:https://docs.netapp.com/us-en/active-iq/upgrade_advisor_overview.html["Active IQ Digital Advisor"^]，您可以使用 Upgrade Advisor 來產生升級計畫。否則、您應該自行建立計畫。
-
-
-
-== 使用Upgrade Advisor規劃升級
+如果您有作用中的 link:https://www.netapp.com/us/services/support-edge.aspx["部門服務SupportEdge"^] 合約 link:https://docs.netapp.com/us-en/active-iq/upgrade_advisor_overview.html["Active IQ Digital Advisor"^]建議您使用 Upgrade Advisor 來產生升級計畫。
 
 Active IQ Digital Advisor 中的 Upgrade Advisor（升級顧問）服務提供智慧情報，能夠協助您規劃升級作業，將不確定性與風險降至最低。
 
 可識別環境中的問題、這些問題可透過升級至更新版本的更新版本的資訊來解決。Active IQ ONTAPUpgrade Advisor服務可協助您規劃成功升級、並提供升級ONTAP 時可能需要注意的問題報告。
+
+如果您沒有適用於 Active IQ Digital Advisor 的主動式支援邊緣服務合約、則應該如此 link:prepare.html["準備升級、無需升級顧問"]。
 
 .步驟
 . https://aiq.netapp.com/["產品Active IQ 發表"^]
@@ -30,13 +28,7 @@ Active IQ Digital Advisor 中的 Upgrade Advisor（升級顧問）服務提供�
 . 檢閱建議的升級路徑和 link:https://docs.netapp.com/us-en/active-iq/upgrade_advisor_overview.html["產生您的升級計畫"^]。
 
 
+.下一步
+* 您應該檢閱 link:../release-notes/index.html["發行說明ONTAP"] 對於 Upgrade Advisor 建議用於叢集的目標 ONTAP 版本、您應該遵循 Upgrade Advisor 所產生的計畫來升級叢集。
+* 您應該 link:reboot-sp-bmc.html["重新啟動 SP 或 BMC"] 升級開始之前。
 
-
-== ONTAP 升級需要多久時間？
-
-您應該規劃至少 30 分鐘來完成 ONTAP 升級的準備步驟、 60 分鐘來升級每個 HA 配對、至少 30 分鐘來完成升級後的步驟。
-
-
-NOTE: 如果您使用NetApp加密搭配外部金鑰管理伺服器和金鑰管理互通性傳輸協定（KMIP）、則每個HA配對的升級時間應超過一小時。
-
-這些升級持續時間準則是根據一般組態和工作負載而定。您可以使用這些準則來預估在環境中執行不中斷升級所需的時間。升級程序的實際持續時間取決於您的個別環境和節點數量。

@@ -1,0 +1,57 @@
+---
+permalink: concepts/introducing-ontap-interfaces-concept.html 
+sidebar: sidebar 
+keywords: ontap interfaces, interfaces, system manager, bluexp, cli, rest api, ontapi 
+summary: ONTAP 資料管理軟體提供許多介面、可用來管理 ONTAP 保護的資料。 
+---
+= ONTAP 使用者介面
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 資料管理軟體提供多種介面、可用於管理 ONTAP 叢集。這些介面選項提供不同層級的存取和功能、並可根據您的環境、靈活地管理 ONTAP 叢集。
+
+您可以使用任何這些介面來管理 ONTAP 叢集、並執行資料管理作業
+
+
+
+== 系統管理程式ONTAP
+
+ONTAP 系統管理員是一種網路型使用者介面、可提供簡化且直覺的方式來管理叢集。您可以管理一般作業、例如儲存組態、資料保護、網路設定與管理。System Manager 也提供風險與叢集效能監控與洞見、協助您因應叢集問題、並在問題發生前先行處理。 link:../concept_administration_overview.html["深入瞭解"]。
+
+ONTAP System Manager 介面在 ONTAP 9.7 中重新設計、提供更精簡、更直覺的使用者體驗。本說明文件網站中的程序說明重新設計的 System Manager 介面、每次 ONTAP 版本都會持續提供更多選項。
+
+
+NOTE: 舊版系統管理員介面在 ONTAP 文件中稱為「系統管理員傳統」。系統管理員傳統介面可用的最後一個 ONTAP 版本是 ONTAP 9.7 。
+
+
+
+== 藍圖
+
+從 ONTAP 9.12.1 開始、您可以使用 BlueXP 網路型介面、從單一控制面管理混合式多雲端基礎架構、同時保留熟悉的 System Manager 儀表板。BlueXP 可讓您建立及管理雲端儲存設備（例如 Cloud Volumes ONTAP ）、使用 NetApp 的資料服務（例如雲端備份）、以及控制許多內部部署和邊緣儲存設備。將內部部署的 ONTAP 系統新增至 BlueXP 、可讓您從單一介面管理所有儲存設備和資料資產。 https://docs.netapp.com/us-en/bluexp-family/["深入瞭解"^]。
+
+
+
+== 指令行介面ONTAP
+
+。 link:../system-admin/index.html["ONTAP 命令列介面（ CLI ）"] 是一種文字型介面、可讓您使用與叢集、節點、 SVM 等進行互動 link:../concepts/manual-pages.html["命令"]。CLI 命令的可用依據為 link:../system-admin/cluster-svm-administrators-concept.html["角色類型"]。您可以透過 SSH 或主控台連線至叢集中的節點、來存取 ONTAP CLI 。
+
+
+
+== 靜態API ONTAP
+
+從 ONTAP 9.6 開始、您可以存取 RESTful API 、以程式設計方式管理及自動化叢集作業。使用 API 執行各種 ONTAP 管理工作、例如建立和管理磁碟區、快照和集合體、以及監控叢集效能。您可以使用 Curl 等公用程式或任何支援 REST 用戶端的程式設計語言（例如 Python 、 PowerShell 和 Java ）、直接存取 ONTAP REST API 。 https://docs.netapp.com/us-en/ontap-automation/get-started/ontap_automation_options.html["深入瞭解"^]。
+
+
+NOTE: ONTAPI 是 ONTAP REST API 之前的專屬 ONTAP API 。在未來的 ONTAP 版本中、將停用 ONTAPI 介面。如果您使用的是 ONTAPI 、您應該規劃 https://docs.netapp.com/us-en/ontap-automation/migrate/ontapi_disablement.html["移轉至 ONTAP REST API"^]。
+
+
+
+== NetApp 工具套件與架構
+
+NetApp 針對特定開發語言和環境提供用戶端工具套件、可抽象化 ONTAP REST API 、並讓建立自動化程式碼變得更容易。
+https://docs.netapp.com/us-en/ontap-automation/get-started/ontap_automation_options.html#client-software-toolkits["深入瞭解"^]。
+
+除了這些工具套件之外、您還可以使用架構來建立及部署自動化程式碼。 https://docs.netapp.com/us-en/ontap-automation/get-started/ontap_automation_options.html#automation-frameworks["深入瞭解"^]。
