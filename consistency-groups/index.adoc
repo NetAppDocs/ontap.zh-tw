@@ -64,6 +64,8 @@ NOTE: 在 ONTAP 9.13.1 中、您只能使用 REST API 擷取歷史指標。從 O
 
 == 保護一致性群組
 
+一致性群組提供應用程式一致的保護、確保資料在多個磁碟區或生命體之間的一致性。建立一致性群組的 Snapshot 複本時、一致性群組上會建立「 Fence 」。Fence 會啟動 I/O 佇列、直到 Snapshot 作業完成為止、確保資料在一致性群組中所有實體之間的時間點一致性。當發生這種情況時、隔離作業可能會導致延遲短暫增加(`-snapshot-consistency-type` 設為 `crash` (`-snapshot-consistency-type` 永遠如此 `crash` 適用於具有一致性群組的排程原則型 Snapshot 作業）。
+
 一致性群組透過以下方式提供保護：
 
 * Snapshot原則

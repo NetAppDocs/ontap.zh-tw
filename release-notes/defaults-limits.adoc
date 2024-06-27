@@ -38,10 +38,10 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | RAID Aggregate | 從 ONTAP 9.12.1 開始、如果任何 Aggregate 降級、系統控制器預設不會在 24 小時後關機。如果使用者變更 `raid.timeout` 選項、系統控制器將在到期後繼續關機 `raid.timeout` 小時。 | 9.12.1 
 
 
-| TLS 1.1 預設為停用 | ONTAP 的新安裝預設會停用 TLS 1.1 。升級至 ONTAP 9.12.0 及更新版本且已啟用 TLS 1.1 的系統不會受到影響、因為升級會將 TLS 1.1 保持在啟用狀態。依預設停用時、可視需要手動啟用 TLS 1.1 。 | 零件9.12.0 ONTAP 
+| TLS 1.1 預設為停用 | ONTAP 的新安裝預設會停用 TLS 1.1 。升級至 ONTAP 9.12.0 及更新版本且已啟用 TLS 1.1 的系統不會受到影響、因為升級會將 TLS 1.1 保持在啟用狀態。不過、如果您要升級啟用 FIPS 的叢集、則從 ONTAP 9.11.1 開始、 FIPS 不支援 TLS 1.1 、因此 TLS 1.1 將會自動停用。依預設停用時、可視需要手動啟用 TLS 1.1 。 | 零件9.12.0 ONTAP 
 
 
-| TLS 1.0 預設為停用 | ONTAP 的新安裝預設會停用 TLS 1.0 。升級至 ONTAP 9.8 及更新版本、且已啟用 TLS 1.0 的系統不受影響、因為升級將使 TLS 1.0 保持啟用狀態。依預設停用時、可視需要手動啟用 TLS 1.0 。 | 部分9.8 ONTAP 
+| TLS 1.0 預設為停用 | ONTAP 的新安裝預設會停用 TLS 1.0 。升級至 ONTAP 9.8 及更新版本、且已啟用 TLS 1.0 的系統不受影響、因為升級將使 TLS 1.0 保持啟用狀態。不過、如果您要升級已啟用 FIPS 的叢集、則 FIPS 1.0 不支援從 ONTAP 9.8 開始的 TLS 1.0 、因此 TLS 1.0 會自動停用。依預設停用時、可視需要手動啟用 TLS 1.0 。 | 部分9.8 ONTAP 
 |===
 
 
@@ -52,11 +52,10 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 功能 | 限制變更 | 版本變更… 
 
 
-| SnapMirror 主動式同步：對稱式主動 / 主動式 | SnapMirror Active Sync 支援一致性群組中的 80 個磁碟區 | ONTAP 9.15.1.1 
+| SnapMirror 主動同步 | SnapMirror Active Sync 支援一致性群組中的 80 個磁碟區 | ONTAP 9.15.1.1 
 
 
-| SnapMirror
-非同步 | 使用 SnapMirror 非同步保護的一致性群組可在一致性群組中支援多達 80 個磁碟區。 | ONTAP 9.15.1.1 
+| SnapMirror 非同步 | 使用 SnapMirror 非同步保護的一致性群組可在一致性群組中支援多達 80 個磁碟區。 | ONTAP 9.15.1.1 
 
 
 | 檔案系統分析 | 為了減輕效能問題、 ONTAP 強制在啟用檔案系統分析時、必須釋放容量的 5-8% 。 | ONTAP 9.15.1.1 
@@ -91,7 +90,7 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | FlexVol Volume 的 SVM-DR 關係 | 對於 FlexVol Volume 、 SVM-DR 關係的最大數量已從 64 個增加至 128 個（每個叢集 128 個 SVM ）。 | 零點9.11.1. ONTAP 
 
 
-| SnapMirror同步 | 每個 HA 配對允許的 SnapMirror 同步作業數量上限從 200 個增加到 400 個。 | 零點9.11.1. ONTAP 
+| SnapMirror 同步 | 每個 HA 配對允許的 SnapMirror 同步作業數量上限從 200 個增加到 400 個。 | 零點9.11.1. ONTAP 
 
 
 | NAS FlexVol Volume | NAS FlexVol 磁碟區的叢集限制已從 12k 增加至 15k 。 | 零點9.10.1 ONTAP 

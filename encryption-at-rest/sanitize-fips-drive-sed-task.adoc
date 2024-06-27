@@ -90,4 +90,22 @@ Info: Starting sanitize on 1 disk.
       View the status of the operation using the
       storage encryption disk show-status command.
 ----
+. 解除清理磁碟故障：
+`storage disk unfail -spare true -disk _disk_id_`
+. 檢查磁碟是否擁有擁有者：
+`storage disk show -disk _disk_id_`
+ +
+ 如果磁碟沒有擁有者、請指派一個擁有者。
+`storage disk assign -owner node -disk _disk_id_`
+. 輸入要清理磁碟的節點節點節點的節點節點節點：
++
+`system node run -node _node_name_`
+
++
+執行 `disk sanitize release` 命令。
+
+. 離開 nodesdroand 。再次解除磁碟故障：
+`storage disk unfail -spare true -disk _disk_id_`
+. 確認磁碟現在已成為備援磁碟、並可在集合體中重複使用：
+`storage disk show -disk _disk_id_`
 
