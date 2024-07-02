@@ -13,7 +13,7 @@ summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的�
 [role="lead"]
 主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create` 建立 SnapMirror DR 、 SnapVault 或統一化複寫資料保護關係的命令。
 
-.您需要的產品
+.開始之前
 * 來源與目的地叢集和SVM必須進行對等關係。
 +
 https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["叢集與SVM對等關係"]
@@ -99,6 +99,8 @@ options replication.create_data_protection_rels.enable on
 在不含更新版本的版本中、目的地Volume最多可包含251個Snapshot複本。ONTAP在0、9.4及更新版本中、目的地Volume最多可包含1019個Snapshot複本。ONTAP
 
 從ONTAP 支援SnapMirror 9.5開始、即支援SnapMirror同步關係。
+
+從 ONTAP 9.14.1 開始 `-backoff-level` 、選項會新增至 `snapmirror create`、和命令、 `snapmirror modify` `snapmirror restore` 讓您可以指定每個關係的回溯層級。只有 FlexVol SnapMirror 關係才支援此選項。選用命令會指定因用戶端作業而導致的 SnapMirror 備份層級。退貨值可以是高、中或無。預設值為高。
 
 .步驟
 . 從目的地叢集建立複寫關係：

@@ -47,7 +47,7 @@ xref:deduplication-concept.html[重複資料刪除] 以三種不同方式減少�
 xref:compression-concept.html[壓縮] 將資料區塊合併在壓縮群組中、每個資料區塊都儲存為單一區塊、藉此減少磁碟區所需的實體儲存容量。收到讀取或覆寫要求時、只會讀取一小群區塊、而非整個檔案。此程序可最佳化讀取和覆寫效能、並在壓縮檔案的大小上提供更大的擴充性。
 
 +
-壓縮可以在線上或後處理中執行。  即時壓縮可在資料寫入磁碟之前、先壓縮記憶體中的資料、立即節省空間。後處理壓縮會先將區塊以未壓縮的方式寫入磁碟、然後在排程時間壓縮資料。您需要手動啟用壓縮。
+壓縮可以在線上或後處理中執行。即時壓縮可在資料寫入磁碟之前、先壓縮記憶體中的資料、立即節省空間。後處理壓縮會先將區塊以未壓縮的方式寫入磁碟、然後在排程時間壓縮資料。在 AFF 系統上、預設會啟用此功能。您需要在所有其他系統上手動啟用壓縮。
 
 * * Compaction *
 +
@@ -62,10 +62,14 @@ xref:flexclone-volumes-files-luns-concept.html[FlexClone 技術] 利用 Snapshot
 
 * * 對溫度敏感的儲存效率 *
 +
-ONTAP 提供 link:../volumes/enable-temperature-sensitive-efficiency-concept.html["對溫度敏感的儲存效率"] 藉由評估磁碟區資料的存取頻率、並將該頻率對應至套用至該資料的壓縮程度、獲得更多效益。對於不常存取的冷資料、較大的資料區塊會被壓縮、而對於常用的熱資料（存取頻率較高且覆寫頻率較高）、較小的資料區塊會被壓縮、使程序更有效率。
+ONTAP 可評估磁碟區資料的存取頻率、並將該頻率對應至套用至該資料的壓縮程度、進而提供 link:../volumes/enable-temperature-sensitive-efficiency-concept.html["對溫度敏感的儲存效率"] 更多效益。對於不常存取的冷資料、會壓縮較大的資料區塊。對於經常存取且更常被覆寫的熱資料、會壓縮較小的資料區塊、使程序更有效率。
 
 +
-ONTAP 9.8 引進了對溫度敏感的儲存效率（ TSSE ）、並在新建立的精簡配置 AFF 磁碟區上自動啟用。
+ONTAP 9.8 引進的溫度敏感儲存效率（ TSSE ）、會在新建立的精簡配置 AFF 磁碟區上自動啟用。ONTAP 9.15.1 使用硬體卸載處理器、但未在中啟用 link:builtin-storage-efficiency-concept.html["AFF A70 、 AFF A90 和 AFF A1K 平台"] 。
+
+* * CPU 或專用卸載處理器儲存效率 *
++
+從 ONTAP 9.15.1 開始、 ONTAP 在 AFF A70 、 AFF A90 和 AFF A1K 平台上提供 link:builtin-storage-efficiency-concept.html["CPU 或專用卸載處理器儲存效率"] 和資料壓縮功能。儲存效率會自動啟用、無需組態。
 
 
 
