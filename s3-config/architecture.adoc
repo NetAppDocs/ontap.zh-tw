@@ -2,7 +2,7 @@
 permalink: s3-config/architecture.html 
 sidebar: sidebar 
 keywords: s3 architecture, ontap 9 
-summary: 在整個過程中、儲存庫的基礎架構是一個實體磁碟區、它是由多個組成成員磁碟區組成的單一命名空間、但會以單一磁碟區的形式進行管理。ONTAP FlexGroup 
+summary: 在 ONTAP 中、貯體的基礎架構是 FlexGroup Volume 、它是由多個組成成員磁碟區組成的單一命名空間、但以單一磁碟區管理。 
 ---
 = 架構
 :allow-uri-read: 
@@ -11,17 +11,53 @@ summary: 在整個過程中、儲存庫的基礎架構是一個實體磁碟區�
 
 
 [role="lead"]
-在整個過程中、儲存庫的基礎架構是一個包含多個組成成員磁碟區的單一命名空間、但會以單一磁碟區的形式進行管理。ONTAP FlexGroup
+在 ONTAP 中、貯體的基礎架構是一種 link:https://docs.netapp.com/us-en/ontap/flexgroup/definition-concept.html["流通量FlexGroup"]單一命名空間、由多個組成成員磁碟區組成、但以單一磁碟區管理。
 
-image:fg-overview-s3-config.gif["以一組稱為「成員」的不全功能資料區表示的資料量FlexGroup FlexVol"]
+image::../media/fg-overview-s3-config.gif[以一組稱為「成員」的不全功能資料區表示的資料量FlexGroup FlexVol]
 
-儲存區僅受限於基礎硬體的實體最大值、架構最大值可能較高。如果FlexGroup 空間不足、鏟斗可以利用不靈活的尺寸來自動擴充FlexGroup 一個包含在內的部分。每FlexGroup 個等量資料區的容量上限為1000個桶、或FlexGroup 是其中1/3個用作參考資料區的容量（以因應儲存區的資料成長）。
+透過授權使用者和用戶端應用程式、即可存取儲存庫。
+
+image::../media/s3-svm-layout.png[S3 SVM 貯體存取]
 
 [NOTE]
 ====
-不允許NAS或SAN傳輸協定存取FlexGroup 包含S3儲存區的S庫。
+當儲存區僅用於 S3 應用程式（包括用作 FabricPool 端點）時、基礎 FlexGroup Volume 僅支援 S3 傳輸協定。
+
+從 ONTAP 9.12.1 開始、 S3 傳輸協定也可以在中啟用、而 S3 link:../s3-multiprotocol/index.html["多重傳輸協定 NAS 磁碟區"] 傳輸協定已預先設定為使用 NAS 傳輸協定。在多重傳輸協定 NAS 磁碟區中啟用 S3 傳輸協定時、用戶端應用程式可以使用 NFS 、 SMB 和 S3 來讀寫資料。
 
 ====
-透過授權使用者和用戶端應用程式、即可存取儲存庫。
 
-image:s3-svm-layout.png["S3 SVM 貯體存取"]
+
+== 貯體限制
+
+最小貯體大小為 95GB 。+ 最大鏟斗尺寸限制為 FlexGroup 最大尺寸 60PB 。
+
+每個 FlexGroup 磁碟區最多可有 1000 個貯體、每個叢集最多可有 12,000 個貯體（使用 12 個 FlexGroup 磁碟區）。
+
+
+
+== 使用 ONTAP 9.14.1 及更新版本自動調整 FlexGroup 規模
+
+從 ONTAP 9.14.1 開始、預設的 FlexGroup 大小是根據基礎儲存區的大小而定。FlexGroup Volume 會隨著貯體的新增或移除而自動增加或縮小。
+
+例如、如果初始 Bucket_A 的資源配置為 100GB 、則 FlexGroup 將會精簡配置為 100GB 。如果另外建立兩個儲存區、儲存容量為 300 GB 的 Bucket_B 、以及容量為 500 GB 的 Bucket_C 、則 FlexGroup 磁碟區將成長至 900 GB 。
+
+（ 100GB 的 Bucket_A + 300GB 的 Bucket_B + 500GB 的 Bucket_C = 900GB ）。
+
+如果刪除 Bucket_A 、基礎 FlexGroup 磁碟區將縮減至 800GB 。
+
+
+
+== ONTAP 9.13.1 及更早版本中的固定預設 FlexGroup 大小
+
+為了提供貯體擴充的容量、 FlexGroup Volume 上所有貯體的總使用容量應小於叢集上可用儲存集合體的 FlexGroup 磁碟區容量上限 33% 。如果無法達成此目標、則所建立的新貯體將配置在新的自動建立 FlexGroup Volume 上。
+
+在 ONTAP 9.14.1 之前、 FlexGroup 大小會根據其環境固定為預設大小：
+
+* ONTAP 中的 1.6PB
+* ONTAP Select 中的 100TB
+
+
+如果叢集沒有足夠的容量來配置預設大小的 FlexGroup Volume 、 ONTAP 會將預設大小減半、直到在現有環境中進行佈建為止。
+
+例如、在 300TB 環境中、 FlexGroup Volume 會自動配置為 200TB （ 1.6PB 、 800TB 和 400TB FlexGroup 磁碟區對於環境而言太大）。

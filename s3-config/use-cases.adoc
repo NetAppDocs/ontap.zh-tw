@@ -11,29 +11,14 @@ summary: 用戶端存取 ONTAP S3 服務的主要使用案例有三種。
 
 
 [role="lead"]
-用戶端存取ONTAP 不支援的S3服務主要有三種使用案例：
+ONTAP 中 S3 的主要使用案例包括：
 
-* 適用於使用作為遠端不支援功能（雲端）層的不支援功能S3的系統ONTAP ONTAP FabricPool
-+
-包含容量層的S3伺服器和儲存區（適用於_Cold資料）位於不同於效能層的叢集（適用於_hot_資料）。
-
-* 適用於使用作為本地資訊技術的不支援功能的不支援功能ONTAP ONTAP FabricPool
-+
-包含容量層的S3伺服器和儲存區位於同一個叢集上、但與效能層位於不同的HA配對上。
-
-* 適用於外部S3用戶端應用程式
-+
-支援S3用戶端應用程式、可在非NetApp系統上執行。ONTAP
+* 使用 FabricPool 將非使用中資料分層至 ONTAP 中的儲存區、讓 ONTAP 能夠進行 ONTAP 分層。這兩項功能都支援分層至中的貯 link:enable-ontap-s3-access-local-fabricpool-task.html["本機叢集"]體、或分層至上的某個貯體 link:enable-ontap-s3-access-remote-fabricpool-task.html["遠端叢集"]。分層至 ONTAP S3 可讓您使用較便宜的 ONTAP 系統來處理非使用中資料、並節省新的 Flash 容量成本、而無需額外的 FabricPool 授權或新技術來管理。
+* 從 ONTAP 9.12.1 開始、 S3 傳輸協定也可以在中啟用、而 S3 link:../s3-multiprotocol/index.html["多重傳輸協定 NAS 磁碟區"] 傳輸協定已預先設定為使用 NAS 傳輸協定。當在多重傳輸協定 NAS 磁碟區中啟用 S3 傳輸協定時、用戶端應用程式可以使用 S3 、 NFS 和 SMB 讀取和寫入資料、這會開啟多種其他使用案例。最常見的使用案例之一是 NAS 用戶端將資料寫入磁碟區和 S3 用戶端、讀取相同資料並執行分析、商業智慧、機器學習和光學字元辨識等專業工作。
 
 
 
-最佳實務做法是ONTAP 使用HTTPS來存取不支援的S3儲存桶。啟用HTTPS時、需要安全性憑證才能與SSL/TLS適當整合。然後需要用戶端使用者的存取權限和秘密金鑰、才能使用ONTAP S3驗證使用者、並授權使用者在ONTAP S3內執行作業的存取權限。用戶端應用程式也應該能夠存取根CA憑證ONTAP （即由S3伺服器簽署的憑證）、以便驗證伺服器、並在用戶端與伺服器之間建立安全連線。
-
-使用者是在啟用S3的SVM中建立、其存取權限可在儲存區或SVM層級加以控制、也就是可以授予他們在SVM中存取一或多個儲存區的權限。
-
-根據預設ONTAP 、HTTPS會在不支援支援的S3伺服器上啟用。您可以停用HTTPS並啟用HTTP以進行用戶端存取、此時不需要使用CA憑證進行驗證。不過、啟用HTTP且停用HTTPS時、所有與ONTAP 該S3伺服器的通訊都會以純文字透過網路傳送。
-
-如需其他資訊、請參閱 https://www.netapp.com/pdf.html?item=/media/17219-tr4814pdf.pdf["技術報告：S3的ONTAP 最佳實務做法"]
+NOTE: 如果您想在現有的 ONTAP 叢集上啟用 S3 功能、而不需要額外的硬體和管理功能、則 ONTAP S3 是適當的選擇。NetApp StorageGRID 是 NetApp 的物件儲存旗艦解決方案。StorageGRID 建議用於需要充分利用 S3 行動、進階 ILM 功能或 ONTAP 系統無法達到的容量的原生 S3 應用程式。如需詳細資訊，請參閱 link:https://docs.netapp.com/us-en/storagegrid-118/index.html["本文檔StorageGRID"^]。
 
 .相關資訊
 link:../flexgroup/index.html["資料區管理FlexGroup"]
