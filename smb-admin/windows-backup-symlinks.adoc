@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: smb-admin/windows-backup-symlinks.html 
+keywords: windows, windows server, backup, backup application, symbolic link, symlink, unix, unix-style 
+summary: 當在 Windows 上執行的備份應用程式遇到 Unix 樣式的符號連結（ symlink ）時、會追蹤連結並備份資料。從 ONTAP 9.15.1 開始、您可以選擇備份 symlinks 而非資料。ONTAP FlexGroups 和 FlexVols 完全支援此功能。 
+---
+= Windows 備份應用程式和 Unix 風格的符號連結
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+當在 Windows 上執行的備份應用程式遇到 Unix 樣式的符號連結（ symlink ）時、會追蹤連結並備份資料。從 ONTAP 9.15.1 開始、您可以選擇備份 symlinks 而非資料。ONTAP FlexGroups 和 FlexVols 完全支援此功能。
+
+
+
+== 總覽
+
+在您變更 ONTAP 在 Windows 備份作業期間處理符號連結的方式之前、您應該先熟悉這些優點、主要概念和組態選項。
+
+
+
+=== 效益
+
+當此功能停用或無法使用時、系統會周遊每個 symlink 、並備份其連結的資料。因此、有時可能會備份不必要的資料、在某些情況下、應用程式可能會在迴圈中結束。備份 symlinks 可避免這些問題。由於 symlink 檔案與大多數情況下的資料相比非常小、因此備份所需的時間較短。由於 IO 作業減少、叢集的整體效能也可以改善。
+
+
+
+=== Windows 伺服器環境
+
+此功能支援在 Windows 上執行的備份應用程式。使用前、您應該先瞭解環境的相關技術層面。
+
+.延伸屬性
+Windows 支援延伸屬性（ EA ）、這些屬性共同構成與檔案相關的額外中繼資料（選擇性）。這些屬性由多種應用程式使用、例如 Windows Subsystem for Linux 、如所述 https://learn.microsoft.com/en-us/windows/wsl/file-permissions["WSL 的檔案權限"^]。從 ONTAP 讀取資料時、應用程式可以要求每個檔案的延伸屬性。
+
+啟用此功能時、會在延伸屬性中傳回符號連結。因此、備份應用程式必須提供用於儲存中繼資料的標準 EA 支援。部分 Windows 公用程式支援並保留延伸屬性。不過、如果備份軟體不支援備份及還原延伸屬性、則不會保留與每個檔案相關的中繼資料、也無法正確處理符號連結。
+
+.Windows 組態
+在 Microsoft Windows 伺服器上執行的備份應用程式可獲得特殊權限、讓它們略過一般檔案安全性。這通常是透過將應用程式新增至 Backup Operators 群組來完成。應用程式接著可視需要備份及還原檔案、並執行其他相關的系統作業。備份應用程式使用的 SMB 傳輸協定有細微的變更、 ONTAP 可以在讀取和寫入資料時偵測到這些變更。
+
+
+
+=== 需求
+
+symlink 備份功能有多項需求、包括：
+
+* 您的叢集正在執行 ONTAP 9.15.1 或更新版本。
+* 已獲授特殊備份權限的 Windows 備份應用程式。
+* 備份應用程式也必須支援延伸屬性、並在備份作業期間要求這些屬性。
+* ONTAP symlink 備份功能已針對適用的資料 SVM 啟用。
+
+
+
+
+=== 組態選項
+
+除了 ONTAP CLI 之外、您也可以使用 REST API 來管理此功能。如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap-automation/whats-new.html["ONTAP REST API 與自動化的新功能"^] 。決定 ONTAP 處理 Unix 型符號連結的方式的組態、必須針對每個 SVM 分別執行。
+
+
+
+== 啟用 ONTAP 中的 symlink 備份功能
+
+已使用 ONTAP 9.15.1 將組態選項導入現有的 CLI 命令。您可以使用此選項來啟用或停用 Unix 樣式的 symlink 處理。
+
+.開始之前
+查看基本 <<需求>>。此外：
+
+* 能夠將 CLI 權限提升至進階層級。
+* 判斷您要修改的資料 SVM 。SVM `vs1` 用於範例命令。
+
+
+.步驟
+. 設定進階權限等級。
++
+[source, cli]
+----
+set privilege advanced
+----
+. 啟用 symlink 檔案備份。
++
+[source, cli]
+----
+vserver cifs options modify -vserver vs1 -is-backup-symlink-enabled true
+----
+
