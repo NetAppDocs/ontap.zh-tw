@@ -28,7 +28,7 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 
 
 .關於這項工作
-您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
+您必須以格式指定元素來源路徑 `<hostip:>/lun/<name>`、其中「 'lun' 」是實際字串「 'lun' 」、 `name` 是元素 Volume 的名稱。
 
 元素Volume大致相當ONTAP 於一個實體LUN。當元素軟體與ONTAP SnapMirror之間的資料保護關係初始化時、SnapMirror會建立一個名稱為Element Volume的LUN。如果LUN符合從Element軟體複製到ONTAP SnapMirror的要求、SnapMirror會將資料複寫到現有LUN。
 
@@ -43,7 +43,7 @@ summary: 您可以使用SnapMirror將元素Volume的Snapshot複本複製到ONTAP
 .步驟
 . 從目的地叢集建立從元素來源到ONTAP 目的地的複寫關係：
 +
-`snapmirror create -source-path _hostip:_/lun/name -destination-path _SVM:volume_|_cluster://SVM/volume_ -type XDP -schedule schedule -policy _policy_`
+`snapmirror create -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume> -type XDP -schedule schedule -policy <policy>`
 
 +
 如需完整的命令語法、請參閱手冊頁。

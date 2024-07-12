@@ -1,8 +1,8 @@
 ---
 permalink: smb-admin/configure-multichannel-performance-task.html 
 sidebar: sidebar 
-keywords: ontap, configure, smb, multichannel, multiple, connection, client, session, throughput, fault, tolerance, configure smb multichannel for performance and redundancy, performance, redundancy 
-summary: 從支援支援支援的9.4開始ONTAP 、您可以設定SMB多通道、ONTAP 在單一SMB工作階段中、在支援的情況下提供多個連接功能。這樣做可改善處理量和容錯能力。 
+keywords: ontap, smb, multichannel, configure, multiple, connection, client, session, throughput, fault, tolerance, configure smb multichannel for performance and redundancy, performance, redundancy 
+summary: 設定 SMB 多重通道、在單一 SMB 工作階段中提供 ONTAP 與用戶端之間的多重連線、以改善處理量和容錯能力。 
 ---
 = 設定SMB多通道以獲得效能與備援
 :allow-uri-read: 
@@ -33,24 +33,44 @@ SMB工作階段中的同時連線數目取決於您已部署的NIC：
 
 您也可以修改下列參數（進階權限）：
 
-* *`-max-connections-per-session`*
+* `-max-connections-per-session`
 +
 每個多通道工作階段允許的最大連線數。預設為32個連線。
 
 +
 如果您想要啟用比預設值更多的連線、則必須對用戶端組態進行類似的調整、也就是預設的32個連線。
 
-* *`-max-lifs-per-session`*
+* `-max-lifs-per-session`
 +
 每個多通道工作階段所通告的網路介面數量上限。預設為256個網路介面。
 
 
 
 .步驟
-. 將權限層級設為進階： `set -privilege advanced`
-. 在SMB伺服器上啟用SMB多通道： `vserver cifs options modify -vserver _vserver_name_ -is-multichannel-enabled true`
-. 驗證ONTAP 此功能是否回報SMB多通道工作階段： `vserver cifs session show _options_`
-. 返回管理權限層級： `set -privilege admin`
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 在SMB伺服器上啟用SMB多通道：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <vserver_name> -is-multichannel-enabled true
+----
+. 驗證ONTAP 此功能是否回報SMB多通道工作階段：
++
+[source, cli]
+----
+vserver cifs session show
+----
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
 
 
 .範例

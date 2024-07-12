@@ -38,10 +38,10 @@ link:create-port-sets-binding-igroups-task.html["PortSets"] 可與 SLM 搭配使
 +
 [source, cli]
 ----
-lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ [-destination-aggregate _aggregate_name_|-destination-volume _volume_name_]
+lun mapping add-reporting-nodes -vserver <vserver_name> -path <lun_path> -igroup <igroup_name> [-destination-aggregate <aggregate_name>|-destination-volume <volume_name>]
 ----
 +
-如果您有一致的命名慣例、可以使用同時修改多個 LUN 對應 `_igroup_prefix*_` 而非 `_igroup_name_`。
+如果您有一致的命名慣例，則可以使用而非來同時修改多個 LUN 對應 `igroup_prefix*` `igroup_name`。
 
 . 重新掃描主機以探索新增的路徑。
 . 如果您的作業系統需要它、請將新路徑新增至多重路徑網路I/O（MPIO）組態。
@@ -56,7 +56,7 @@ lun mapping show -fields reporting-nodes
 +
 [source, cli]
 ----
-lun mapping remove-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ -remote-nodes
+lun mapping remove-reporting-nodes -vserver <vserver_name> -path <lun_path> -igroup <igroup_name> -remote-nodes
 ----
 . 驗證LUN是否已從現有LUN對應中移除：
 +

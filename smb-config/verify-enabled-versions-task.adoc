@@ -56,13 +56,7 @@ vserver cifs options show
 +
 [source, cli]
 ----
-vserver cifs options modify -vserver vserver_name smb_version true
-----
-** 若要停用 SMB 版本：
-+
-[source, cli]
-----
-vserver cifs options modify -vserver vserver_name smb_version false
+vserver cifs options modify -vserver <vserver_name> -<smb_version> true
 ----
 +
 的可能值 `smb_version`：
@@ -72,32 +66,33 @@ vserver cifs options modify -vserver vserver_name smb_version false
 *** `-smb2-enabled`
 *** `-smb3-enabled`
 *** `-smb31-enabled`
-
-
-
-
 +
 下列命令可在 SVM vs1.example.com 上啟用 SMB 3.1 ：
+`cluster1::*> vserver cifs options modify -vserver vs1.example.com -smb31-enabled true`
 
 
 
-[listing]
+** 若要停用 SMB 版本：
++
+[source, cli]
 ----
-cluster1::*> vserver cifs options modify -vserver vs1.example.com -smb31-enabled true
+vserver cifs options modify -vserver <vserver_name> -<smb_version> false
 ----
+
+
 . 如果SMB伺服器位於Active Directory網域中、請視需要啟用或停用SMB傳輸協定以進行DC連線：
 +
 ** 若要啟用 SMB 版本：
 +
 [source, cli]
 ----
-vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections true
+vserver cifs security modify -vserver <vserver_name> -smb2-enabled-for-dc-connections true
 ----
 ** 若要停用 SMB 版本：
 +
 [source, cli]
 ----
-vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections false
+vserver cifs security modify -vserver <vserver_name> -smb2-enabled-for-dc-connections false
 ----
 
 

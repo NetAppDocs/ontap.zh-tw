@@ -16,12 +16,12 @@ summary: 您必須先將目的地Volume設定為可寫入、才能將資料從�
 您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用 `snapmirror quiesce` 停止排程傳輸至目的地的命令 `snapmirror abort` 命令以停止進行中的傳輸、以及 `snapmirror break` 可讓目的地寫入的命令。
 
 .關於這項工作
-您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
+您必須以格式指定元素來源路徑 `<hostip:>/lun/<name>`、其中「 'lun' 」是實際字串「 'lun' 」、 `name` 是元素 Volume 的名稱。
 
 .步驟
 . 停止排程的目的地傳輸：
 +
-`snapmirror quiesce -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror quiesce -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -36,7 +36,7 @@ cluster_dst::> snapmirror quiesce -source-path 10.0.0.11:/lun/0005 -destination-
 ----
 . 停止持續傳輸至目的地：
 +
-`snapmirror abort -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror abort -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -51,7 +51,7 @@ cluster_dst::> snapmirror abort -source-path 10.0.0.11:/lun/0005 -destination-pa
 ----
 . 打破SnapMirror DR關係：
 +
-`snapmirror break -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror break -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 如需完整的命令語法、請參閱手冊頁。

@@ -19,7 +19,7 @@ summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除磁碟
 .步驟
 . 靜止複寫關係：
 +
-`snapmirror quiesce -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror quiesce -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 [listing]
@@ -28,7 +28,7 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . （選用）如果您需要將目的地磁碟區設為讀寫磁碟區、請中斷複寫關係。如果您打算刪除目的地Volume、或是不需要讀取/寫入磁碟區、可以跳過此步驟：
 +
-`snapmirror break -source-path SVM:volume|cluster://SVM/volume, …​ -destination-path SVM:volume|cluster://SVM/volume, …​`
+`snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume>, …​ -destination-path <SVM:volume>|<cluster://SVM/volume>, …​`
 
 +
 [listing]
@@ -37,7 +37,7 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 ----
 . 刪除複寫關係：
 +
-`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror delete -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -58,7 +58,7 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 ----
 . 來自來源SVM的版本複寫關係資訊：
 +
-`snapmirror release -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
+`snapmirror release -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
 
 +
 如需完整的命令語法、請參閱手冊頁。

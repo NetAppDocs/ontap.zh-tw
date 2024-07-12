@@ -179,7 +179,7 @@ NOTE: 如果您要升級 MetroCluster 組態、您應該先在叢集 A 上執行
 +
 [source, cli]
 ----
-cluster image package delete -version previous_ONTAP_Version
+cluster image package delete -version <previous_ONTAP_Version>
 ----
 .. 將目標 ONTAP 軟體映像載入叢集套件儲存庫：
 +
@@ -216,7 +216,7 @@ Package Version  Package Build Time
 +
 [source, cli]
 ----
-cluster image validate -version package_version_number
+cluster image validate -version <package_version_number>
 ----
 +
 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您只需使用目標 ONTAP 套件進行驗證。  您不需要個別驗證中間升級映像。  例如、如果您要從 9.8 升級至 9.13.1 、請使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
@@ -242,7 +242,7 @@ cluster image show-update-progress
 +
 [source, cli]
 ----
-cluster image update -version package_version_number -estimate-only
+cluster image update -version <package_version_number> -estimate-only
 ----
 +
 
@@ -255,7 +255,7 @@ NOTE: 如果您要升級 MetroCluster 組態、可以在叢集 A 或叢集 B 上
 +
 [source, cli]
 ----
-cluster image update -version package_version_number
+cluster image update -version <package_version_number>
 ----
 +
 ** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。

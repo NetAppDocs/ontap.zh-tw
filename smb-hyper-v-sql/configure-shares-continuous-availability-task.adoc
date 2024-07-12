@@ -2,7 +2,7 @@
 permalink: smb-hyper-v-sql/configure-shares-continuous-availability-task.html 
 sidebar: sidebar 
 keywords: configure, shares, continuous, availability, hyper, v, sql, server, virutal, machine, database, file 
-summary: 您可以修改現有的共用區、使其成為持續可用的共用區、讓Hyper-V和SQL Server應用程式伺服器在不中斷營運的情況下存取Hyper-V虛擬機器和組態檔、以及SQL Server資料庫檔案。 
+summary: 修改共用以持續可用的共用 Hyper-V 和 SQL Server 應用程式伺服器、以進行不中斷的存取 
 ---
 = 設定現有共用以確保持續可用度
 :allow-uri-read: 
@@ -42,45 +42,52 @@ summary: 您可以修改現有的共用區、使其成為持續可用的共用�
 .步驟
 . 顯示目前的共用參數設定和目前設定的共用內容清單：
 +
-`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_*`
-
-. 如有必要、請修改共用參數以停用 symlink 、並使用將離線檔案設為手動 `vserver cifs share properties modify` 命令。
-+
-您可以設定的值來停用符號連結 `-symlink` 參數至 `""`。
-
+[source, cli]
+----
+vserver cifs share show -vserver <vserver_name> -share-name <share_name>
+----
+. 如有必要、請使用命令修改共用參數以停用 symlink 、並將離線檔案設為手動 `vserver cifs share modify` 。
 +
 ** 您可以設定的值來停用符號連結 `-symlink` 參數至 `""`。
 ** 您可以設定 `-offline-files` 指定參數至正確的設定 `manual`。
 
 
-. 新增 `continuously-available` 共用屬性、如有需要、也可共用 `oplocks` 共享內容：
+. 新增 Share 屬性、並視需要新增 `continuously-available` `oplocks` Share 屬性：
 +
-`*vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties continuously-available[,oplock]*`
-
+[source, cli]
+----
+vserver cifs share properties add -vserver <vserver_name> -share-name <share_name> -share-properties continuously-available[,oplock]
+----
 +
 如果是 `oplocks` 尚未設定共用屬性、您必須將其與一起新增 `continuously-available` 共用屬性。
 
 . 移除持續可用共用區上不支援的任何共用內容：
 +
-`*vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties properties[,...]*`
-
+[source, cli]
+----
+vserver cifs share properties remove -vserver <vserver_name> -share-name <share_name> -share-properties properties[,...]
+----
 +
 您可以使用以逗號分隔的清單來指定共用屬性、以移除一或多個共用屬性。
 
 . 確認 `-symlink` 和 `-offline-files` 參數設定正確：
 +
-`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_ -fields symlink-properties,offline-files*`
-
+[source, cli]
+----
+vserver cifs share show -vserver <vserver_name> -share-name <share_name> -fields symlink-properties,offline-files
+----
 . 確認已設定的共用內容清單正確無誤：
 +
-`*vserver cifs shares properties show -vserver _vserver_name_ -share-name share_name*`
-
+[source, cli]
+----
+vserver cifs share properties show -vserver <vserver_name> -share-name <share_name>
+----
 
 
 .範例
-以下範例說明如何在儲存虛擬機器（SVM）VS1上、針對NDOS設定名為「shafre1」的現有共用區、並搭配SMB上的應用程式伺服器：
+以下範例說明如何在儲存虛擬機器（ SVM ）「 VS1 」上、針對 NDOS 設定名為「 share1 」的現有共享區、並透過 SMB 設定應用程式伺服器：
 
-* 透過設定、共用區上的 symlinks 會停用 `-symlink` 參數至 "" 。
+* 將參數設定為、即可在共用區上停用 symlinks `-symlink` `""`。
 * 。 `-offline-file` 參數已修改並設為 `manual`。
 * 。 `continuously-available` 共用屬性即會新增至共用。
 * 。 `oplocks` 共用屬性已在共用屬性清單中、因此不需要新增。

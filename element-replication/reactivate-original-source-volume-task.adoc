@@ -16,7 +16,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 .關於這項工作
 以下程序假設原始來源Volume中的基準線完整無缺。如果基準不完整、您必須先建立並初始化您要從中處理資料的磁碟區與原始來源磁碟區之間的關係、然後再執行程序。
 
-您必須在表單中指定元素來源路徑 `_hostip:_/lun/_name_`，其中 "`lun" 是實際字串 "`lun" 和 `name` 是元素 Volume 的名稱。
+您必須以格式指定元素來源路徑 `<hostip:>/lun/<name>`、其中「 'lun' 」是實際字串「 'lun' 」、 `name` 是元素 Volume 的名稱。
 
 從ONTAP 功能表9.4開始、當ONTAP 您從功能表來源重新啟動時、系統會自動複寫在從功能表目的地處理資料時所建立的LUN Snapshot複本。
 
@@ -30,7 +30,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 .步驟
 . 刪除原始資料保護關係：
 +
-`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -policy _policy_`
+`snapmirror delete -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name> -policy <policy>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -45,7 +45,7 @@ cluster_dst::> snapmirror delete -source-path 10.0.0.11:/lun/0005 -policy Mirror
 ----
 . 反轉原始資料保護關係：
 +
-`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -policy _policy_`
+`snapmirror resync -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name> -policy <policy>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -63,7 +63,7 @@ cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 ----
 . 更新反轉的關係：
 +
-`snapmirror update -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
+`snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -84,7 +84,7 @@ cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 ----
 . 停止針對反向關係進行排程的轉帳：
 +
-`snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
+`snapmirror quiesce -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -99,7 +99,7 @@ cluster_dst::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-
 ----
 . 停止針對反向關係進行中的轉帳：
 +
-`snapmirror abort -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
+`snapmirror abort -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -114,7 +114,7 @@ cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-pa
 ----
 . 打破反向關係：
 +
-`snapmirror break -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_`
+`snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -129,7 +129,7 @@ cluster_dst::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 ----
 . 刪除反轉的資料保護關係：
 +
-`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip_:/lun/_name_ -policy _policy_`
+`snapmirror delete -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name> -policy <policy>`
 
 +
 如需完整的命令語法、請參閱手冊頁。
@@ -144,7 +144,7 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 . 重新建立原始資料保護關係：
 +
-`snapmirror resync -source-path _hostip_:/lun/_name_ -destination-path _SVM:volume|cluster://SVM/volume_`
+`snapmirror resync -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 如需完整的命令語法、請參閱手冊頁。

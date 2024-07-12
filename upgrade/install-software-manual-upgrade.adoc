@@ -32,9 +32,9 @@ summary: 下載 ONTAP 軟體套件以進行手動升級後、您必須先在本�
  a| 
 [source, cli]
 ----
-system node image update -node * -package _location_ -replace-package true -setdefault true -background true
+system node image update -node * -package <location> -replace-package true -setdefault true -background true
 ----
-_locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。請參閱 `system node image update` 詳細資訊請參閱手冊頁。
+`<location>` 可以是 Web 伺服器或本機資料夾、視 ONTAP 版本而定。有關詳細信息，請參見 `system node image update` 手冊頁。
 
 此命令會同時在所有節點上安裝軟體映像。若要一次在每個節點上安裝映像、請勿指定 `-background` 參數。
 
@@ -47,7 +47,7 @@ _locity_可以是Web伺服器或本機資料夾、視ONTAP 版本而定。請參
  a| 
 [source, cli]
 ----
-system node image update -node * -package location -replace-package true -background true -setdefault false
+system node image update -node * -package <location> -replace-package true -background true -setdefault false
 ----
 您必須在兩個叢集上發出此命令。
 
