@@ -9,11 +9,13 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 
 
 [role="lead"]
-瞭解 ONTAP 9 版本中實作的一些限制和預設值變更。NetApp 致力於協助客戶瞭解每個 ONTAP 版本所改變的最重要限制。
+瞭解 ONTAP 9 版本中實作的一些限制和預設值變更。NetApp 致力於協助客戶瞭解每個 ONTAP 版本中最重要的預設值、並限制變更。
 
 
 
-== ONTAP 預設值
+== 變更為 ONTAP 預設值
+
+在升級至新的 ONTAP 版本之前、您應該注意 ONTAP 預設設定的任何變更、這些變更可能會影響您的自動化或業務營運。
 
 [cols="25%,50%,25%"]
 |===
@@ -35,7 +37,7 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 用於 Kerberos 型通訊的 AES 加密 | 預設會針對與 SMB 伺服器的 Kerberos 型通訊啟用驗證的 AES 加密。如果您的環境不支援 AES 加密、您可以手動停用 AES 加密。 | ONTAP 9.13.1.12.9.11.9.11. 
 
 
-| RAID Aggregate | 從 ONTAP 9.12.1 開始、如果任何 Aggregate 降級、系統控制器預設不會在 24 小時後關機。如果使用者變更 `raid.timeout` 選項、系統控制器將在到期後繼續關機 `raid.timeout` 小時。 | 9.12.1 
+| RAID Aggregate | 從 ONTAP 9.12.1 開始、如果任何 Aggregate 降級、系統控制器預設不會在 24 小時後關機。如果使用者變更 `raid.timeout` 選項、系統控制器將在到期後繼續關機 `raid.timeout` 小時。 | ONTAP 9.12.1 
 
 
 | TLS 1.1 預設為停用 | ONTAP 的新安裝預設會停用 TLS 1.1 。升級至 ONTAP 9.12.0 及更新版本且已啟用 TLS 1.1 的系統不會受到影響、因為升級會將 TLS 1.1 保持在啟用狀態。不過、如果您要升級啟用 FIPS 的叢集、則從 ONTAP 9.11.1 開始、 FIPS 不支援 TLS 1.1 、因此 TLS 1.1 將會自動停用。依預設停用時、可視需要手動啟用 TLS 1.1 。 | 零件9.12.0 ONTAP 
@@ -45,7 +47,9 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 |===
 
 
-== ONTAP 限制
+== ONTAP 限制變更
+
+在升級至新的 ONTAP 版本之前、您應該注意 ONTAP 限制的任何變更、這些變更可能會影響您的自動化或業務營運。
 
 [cols="25%,50%,25%"]
 |===
@@ -75,7 +79,7 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | FlexVol 和 FlexGroup Volume 大小限制 | AFF 和 FAS 平台上支援的 FlexVol 和 FlexGroup 磁碟區組成大小上限、從 100 TB 增加到 300 TB 。 | ONTAP 9.12.1P2 
 
 
-| LUN 大小限制 | AFF 和 FAS 平台上支援的 LUN 大小上限從 16 TB 增加至 128 TB 。SnapMirror 組態（同步和非同步）中支援的 LUN 大小上限、從 16 TB 增加至 128 TB 。 | ONTAP 9.12.1P2 
+| LUN 大小限制 | AFF 和 FAS 平台上支援的 LUN 大小上限從 16 TB 增加至 128 TB 。SnapMirror 組態中支援的 LUN 大小上限（同步與非同步）從 16 TB 增加至 128 TB 。 | ONTAP 9.12.1P2 
 
 
 | FlexVol Volume 大小限制 | AFF 和 FAS 平台支援的最大磁碟區大小從 100 TB 增加至 300 TB 。SnapMirror 同步組態中支援的 FlexVol 磁碟區大小上限、從 100 TB 增加至 300 TB 。 | ONTAP 9.12.1P2 
@@ -93,17 +97,17 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | SnapMirror 同步 | 每個 HA 配對允許的 SnapMirror 同步作業數量上限從 200 個增加到 400 個。 | 零點9.11.1. ONTAP 
 
 
-| NAS FlexVol Volume | NAS FlexVol 磁碟區的叢集限制已從 12k 增加至 15k 。 | 零點9.10.1 ONTAP 
+| NAS FlexVol Volume | NAS FlexVol 磁碟區的叢集限制已從 12 、 000 個增加至 15 、 000 個。 | 零點9.10.1 ONTAP 
 
 
-| SAN FlexVol 磁碟區 | SAN FlexVol 磁碟區的叢集限制已從 12k 增加至 15k 。 | 零點9.10.1 ONTAP 
+| SAN FlexVol 磁碟區 | SAN FlexVol 磁碟區的叢集限制已從 12 、 000 個增加至 15 、 000 個。 | 零點9.10.1 ONTAP 
 
 
 | FlexGroup Volume 的 SVM-DR  a| 
 * FlexGroup 磁碟區最多支援 32 個 SVM-DR 關係。
 * 單一 SVM 在 SVM-DR 關係中支援的最大磁碟區數量為 300 、其中包括 FlexVol 磁碟區和 FlexGroup 組成數量。
 * FlexGroup 中的最大組成數不可超過 20 個。
-* SVM-DR 磁碟區限制為每個節點 500 個、每個叢集 1000 個（包括 FlexVol 磁碟區和 FlexGroup 組成）。
+* SVM-DR 磁碟區限制為每個節點 500 個、每個叢集 1000 個（包括 FlexVol 磁碟區和 FlexGroup 成分）。
 
 | 零點9.10.1 ONTAP 
 
@@ -111,14 +115,14 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 稽核啟用的 SVM | 叢集中支援的啟用稽核的 SVM 數量上限已從 50 個增加到 400 個。 | 部分9.9.1 ONTAP 
 
 
-| SnapMirror同步 | 每個 HA 配對支援的 SnapMirror 同步端點數量上限從 80 增加至 160 。 | 部分9.9.1 ONTAP 
+| SnapMirror 同步 | 每個 HA 配對支援的 SnapMirror 同步端點數量上限從 80 個增加至 160 個。 | 部分9.9.1 ONTAP 
 
 
 | FlexGroup SnapMirror 拓撲 | FlexGroup Volume 支援兩個或多個扇出關係、例如 A 至 B 、 A 至 C與 FlexVol Volume 類似、 FlexGroup 扇出功能最多可支援 8 個扇出式支腳、並可串聯至兩個層級、例如 A 至 B 至 C | 部分9.9.1 ONTAP 
 
 
-| SnapMirror 並行傳輸 | 非同步磁碟區層級 SnapMirror 並行傳輸的最大數量已從 100 個增加至 200 個。在高階系統上、雲端對雲端 SnapMirror 傳輸已從 32 個增加至 200 個、而在低階系統上、則從 6 個增加至 20 個 SnapMirror 傳輸。 | 部分9.8 ONTAP 
+| SnapMirror 並行傳輸 | 非同步磁碟區層級並行傳輸的最大數量已從 100 個增加到 200 個。在高階系統上、雲端對雲端 SnapMirror 傳輸已從 32 個增加至 200 個、而在低階系統上、則從 6 個增加至 20 個 SnapMirror 傳輸。 | 部分9.8 ONTAP 
 
 
-| FlexVol Volume 限制 | 對於 All Flash SAN 陣列、 FlexVol 磁碟區所耗用的空間已從 100 TB 增加至 300 TB 。 | 部分9.8 ONTAP 
+| FlexVol Volume 限制 | FlexVol 磁碟區的空間已從 100 TB 增加至 300 TB 、適用於 ASA 平台。 | 部分9.8 ONTAP 
 |===
