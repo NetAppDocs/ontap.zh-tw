@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/system-auditing.html 
+keywords: tr-4569, ontap hardening guide, security, log forwarding, log encryption, events, syslog, audit, event notification 
+summary: 將 ONTAP 事件卸載到遠端系統記錄伺服器、確保事件稽核的完整性。 
+---
+= 儲存管理系統稽核
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+將 ONTAP 事件卸載到遠端系統記錄伺服器、確保事件稽核的完整性。此伺服器可能是像 Splunk 這樣的安全性資訊事件管理系統。
+
+
+
+== 傳送系統記錄
+
+從支援與可用度的角度來看、記錄與稽核資訊對組織來說是非常寶貴的。此外、記錄（ Syslog ）和稽核報告和輸出中所包含的資訊和詳細資料、通常都是敏感的性質。為了維持安全控管和狀態、組織必須以安全的方式管理記錄和稽核資料。
+
+若要將資料外洩的範圍或佔用空間限制在單一系統或解決方案、就必須卸載syslog資訊。因此、NetApp建議將系統記錄資訊安全地卸載到安全的儲存或保留位置。
+
+
+
+=== 建立記錄轉送目的地
+
+使用 `cluster log-forwarding create` 命令建立記錄轉送目的地以進行遠端記錄。
+
+.參數
+使用下列參數來設定 `cluster log-forwarding create` 命令：
+
+* * 目的地主機 *此名稱是要將記錄轉送到的伺服器的主機名稱或 IPv4 或 IPv6 位址。
++
+[listing]
+----
+-destination <Remote InetAddress>
+----
+* * 目的地連接埠。 *這是目的地伺服器接聽的連接埠。
++
+[listing]
+----
+[-port <integer>]
+----
+* * 記錄轉送通訊協定。 *此傳輸協定用於傳送訊息至目的地。
++
+[listing]
+----
+[-protocol \{udp-unencrypted|tcp-unencrypted|tcp-encrypted}]
+----
++
+記錄轉送通訊協定可以使用下列其中一個值：
+
++
+** `udp-unencrypted`。沒有安全性的使用者資料包傳輸協定。
+** `tcp-unencrypted`。無安全性的 TCP 。
+** `tcp-encrypted`。傳輸層安全性（ TLS ）的 TCP 。
+
+
+* * 驗證目的地伺服器身分識別。 *當此參數設為 true 時、會驗證其憑證、以驗證記錄轉送目的地的身分識別。只有在通訊協定欄位中選取值時、才能將值設為 true `tcpencrypted` 。
++
+[listing]
+----
+[-verify-server \{true|false}]
+----
+* * 系統記錄工具。 *此值是用於轉送記錄的 Syslog 功能。
++
+[listing]
+----
+[-facility <Syslog Facility>]
+----
+* * 跳過連線測試。 *通常、 `cluster log-forwarding create` 命令會傳送網際網路控制訊息傳輸協定（ ICMP ） ping 來檢查目的地是否可連線、如果無法連線則會失敗。將此值設定為 `true` 略過 ping 檢查、以便在無法到達目的地時設定目的地。
++
+[listing]
+----
+[-force [true]]
+----
+
+
+
+NOTE: NetApp 建議您使用 `cluster log-forwarding` 命令強制連線至某種 `-tcp-encrypted` 類型。
+
+
+
+== 事件通知
+
+保護離開系統的資訊和資料、對於維護和管理系統的安全狀態至關重要。ONTAP 解決方案所產生的事件、提供豐富的解決方案所遇到的問題、處理的資訊等資訊。這些資料的活力、突顯了以安全的方式管理及移轉資料的必要性。
+
+命令會 `event notification create` 將事件篩選器定義的一組事件的新通知傳送至一或多個通知目的地。下列範例說明事件通知組態和 `event notification show` 命令、該命令會顯示設定的事件通知篩選器和目的地。
+
+[listing]
+----
+cluster1::> event notification create -filter-name filter1 -destinations
+ email_dest,syslog_dest,snmp-traphost
+
+cluster1::> event notification show
+ID     Filter Name       Destinations
+-----  ----------------  -----------------
+1 filter1 email_dest, syslog_dest, snmp-traphost
+----

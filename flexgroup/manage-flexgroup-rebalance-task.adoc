@@ -48,6 +48,9 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 +
 如果檔案正在移動、而且正在目的地進行架構、則會限制Snapshot複本。  在進行檔案重新平衡時、不允許執行Snapshot複本還原作業。
 
++
+啟用此選項之後建立的任何 Snapshot 複本、都 `granular-data` 無法複寫至執行 ONTAP 9.11.1 及更早版本的系統、因為 ONTAP 9.11.1 及更早版本不支援多個部分 inode 。
+
 * SnapMirror作業
 +
 應在排定的SnapMirror作業之間進行資訊重新平衡。FlexGroup如果在SnapMirror操作開始之前重新定位某個檔案、如果該檔案移動在24分鐘SnapMirror重試期間內未完成、SnapMirror作業可能會失敗。  在SnapMirror傳輸開始之後開始的任何新檔案重新配置都不會失敗。

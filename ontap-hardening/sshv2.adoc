@@ -1,0 +1,90 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/sshv2.html 
+keywords: tr-4569, ontap hardening guide, security, security ssh modify, SSH key exchange algorithms, SSH ciphers, SSH MAC algorithms, passwords for user sessions, public key for machine access 
+summary: 以您指定的組態設定取代現有的叢集或 SVM 的 SSH 金鑰交換演算法、加密演算法或 MAC 演算法組態。 
+---
+= SSHv2 管理
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+此命令會 `security ssh modify` 以您指定的組態設定取代叢集或 SVM 的 SSH 金鑰交換演算法、加密演算法或 MAC 演算法的現有組態。
+
+[TIP]
+====
+NetApp 建議：
+
+* 使用密碼進行使用者工作階段。
+* 使用公開金鑰存取機器。
+
+
+====
+
+
+== 支援的密碼與金鑰交換
+
+[cols="42%,58%"]
+|===
+| 密碼 | 金鑰交換 
+
+
+| AES256-ctr | Diffie-Hellman-group-exchange － sha 256 （ SHA-2 ） 
+
+
+| aes192-ctr | Diffie-Hellman-group-exchange － sha 1 （ SHA-1 ） 
+
+
+| AES128/ctr | Diffie-Hellman-group14-sha 1 （ SHA-1 ） 
+
+
+| AES256-CBC | Diffie-Hellman-group1-sha （ SHA-1 ） 
+
+
+| aes192-CBC | - 
+
+
+| AES128/CBC | - 
+
+
+| AES128/GCM | - 
+
+
+| AES256-GCM | - 
+
+
+| 3DES-CBC | - 
+|===
+
+
+== 支援的 AES 和 3DES 對稱加密
+
+ONTAP 也支援下列類型的 AES 和 3DES 對稱加密（也稱為加密）：
+
+* HMAC-sha1
+* HMAC-sha1-96
+* HMAC-MD5
+* HMAC-MD5-96
+* HMAC-ripemd160
+* umac-64
+* umac-64
+* umac-128
+* HMAC-SHA2-256
+* HMAC-SHA2-512
+* HMAC-sha1-ETM
+* HMAC-sha1-96-ETM
+* HMAC-SHA2-256-ETM
+* HMAC-SHA2-512-ETM
+* HMAC-MD5-ETM
+* HMAC-MD5-96-ETM
+* HMAC-ripemd160-ETM
+* umac-64-ETM
+* umac-128/ETM
+
+
+
+NOTE: SSH 管理組態適用於 ONTAP 和平台 BMC 。

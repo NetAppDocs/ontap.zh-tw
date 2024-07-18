@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/storage-encryption.html 
+keywords: tr-4569, ontap hardening guide, security, encryption, FIPS, FIPS 140-2, NVE, NAE, NSE, CSfC, NetApp Storage Encryption, NetApp Volume Encryption, NetApp Aggregate Encryption, Onboard Key Manager, External Key Manager, CryptoMod, FIPS-140-2, data at rest encryption 
+summary: 硬體型 NetApp 儲存加密或軟體型 NetApp 磁碟區加密 /NetApp Aggregate Encryption 可保護敏感資料。 
+---
+= 儲存加密
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+為了在磁碟遭竊、退回或重新規劃用途時保護敏感資料、請使用硬體型 NetApp 儲存加密或軟體型 NetApp Volume 加密 /NetApp Aggregate 加密。這兩種機制均已通過 FIPS 140-2 驗證、若將硬體型機制搭配軟體型機制使用、則解決方案符合商業解決方案分類（ CSfC ）方案的資格。它可在硬體和軟體層、為機密和機密資料提供強化的安全保護。
+
+當磁碟遭竊、退回或重新使用時、靜止資料加密對於保護敏感資料非常重要。
+
+ONTAP 9 有三種符合聯邦資訊處理標準（ FIPS ） 140-2 標準的靜態資料加密解決方案：
+
+* NetApp 儲存加密（ NSE ）是使用自我加密磁碟機的硬體解決方案。
+* NetApp Volume Encryption （ NVE ）是一種軟體解決方案、可加密任何磁碟機類型上的任何資料磁碟區、並為每個磁碟區啟用唯一的金鑰。
+* NetApp Aggregate Encryption （ NAE ）是一種軟體解決方案、可加密任何磁碟機類型上的任何資料磁碟區、並為每個集合啟用唯一金鑰。
+
+
+NSE 、 NVE 和 NAE 可以使用外部金鑰管理或內建金鑰管理程式（ OKM ）。使用 NSE 、 NVE 和 NAE 不會影響 ONTAP 儲存效率功能。不過、 NVE 磁碟區會排除在 Aggregate 重複資料刪除之外。Nae Volume 參與並受益於 Aggregate 重複資料刪除技術。
+
+OKM 為 NSE 、 NVE 或 NAE 的靜態資料提供獨立加密解決方案。
+
+NVE 、 NAE 和 OKM 使用 ONTAP CryptoMod.CryptoModis會列在CMVP FIPS 140-2驗證模組清單中。請參閱。 link:https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4144["FIPS 140-2 Cert# 4144"^]
+
+若要開始 OKM 組態、請使用 `security key-manager onboard enable` 命令。若要設定外部金鑰管理互通性通訊協定（ KMIP ）金鑰管理員、請使用 `security key-manager external enable` 命令。從 ONTAP 9.6 開始、外部金鑰管理員可支援多處佔用。使用此 `-vserver <vserver name>` 參數為特定 SVM 啟用外部金鑰管理。在 9.6 之前、 `security key-manager setup` 命令用於設定 OKM 和外部金鑰管理員。為了進行內建金鑰管理、此組態會引導操作員或管理員完成複雜密碼設定、以及設定 OKM 的其他參數。
+
+以下範例提供部分組態：
+
+[listing]
+----
+cluster1::> security key-manager setup
+Welcome to the key manager setup wizard, which will lead you through
+the steps to add boot information.
+
+Enter the following commands at any time
+"help" or "?" if you want to have a question clarified,
+"back" if you want to change your answers to previous questions, and
+"exit" if you want to quit the key manager setup wizard. Any changes
+you made before typing "exit" will be applied.
+
+Restart the key manager setup wizard with "security key-manager setup". To accept a default
+or omit a question, do not enter a value.
+
+Would you like to configure onboard key management? {yes, no} [yes]:
+Enter the cluster-wide passphrase for onboard key management. To continue the configuration, enter the passphrase, otherwise
+type "exit":
+Re-enter the cluster-wide passphrase:
+After configuring onboard key management, save the encrypted configuration data
+in a safe location so that you can use it if you need to perform a manual recovery
+operation. To view the data, use the “security key-manager backup show” command.
+----
+從 ONTAP 9.4 開始、您可以使用 `-enable-cc-mode` 的「真」選項 `security key-manager setup` 、要求使用者在重新開機後輸入複雜密碼。對於 ONTAP 9.6 及更新版本、命令語法為 `security key-manager onboard enable -cc-mode-enabled yes`。
+
+從 ONTAP 9.4 開始、您可以使用 `secure-purge` 具有進階權限的功能、在啟用 NVE 的磁碟區上不中斷地「清理」資料。清理加密磁碟區上的資料可確保無法從實體媒體恢復資料。以下命令可安全地清除 SVM VS1 上 vol1 上刪除的檔案：
+
+[listing]
+----
+cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
+----
+從 ONTAP 9.7 開始、如果有 VE 授權、設定 OKM 或外部金鑰管理員、且不使用 NSE 、則預設會啟用 NAE 和 NVE 。根據預設、 NAE 集合體上會建立 Nae Volume 、而非 NAE 集合體預設會建立 NVE Volume 。您可以輸入下列命令來覆寫：
+
+[listing]
+----
+cluster1::*> options -option-name encryption.data_at_rest_encryption.disable_by_default true
+----
+從 ONTAP 9.6 開始、您可以使用 SVM 範圍來設定叢集中資料 SVM 的外部金鑰管理。這最適合多租戶環境、其中每個租戶使用不同的 SVM （或 SVM 組）來提供資料。只有特定租戶的SVM管理員可以存取該租戶的金鑰。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/enable-external-key-management-96-later-nve-task.html["在 ONTAP 9.6 及更新版本中啟用外部金鑰管理"] ONTAP 文件中的。
+
+從 ONTAP 9.11.1 開始、您可以在 SVM 上指定主要和次要金鑰伺服器、以設定與叢集式外部金鑰管理伺服器的連線。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/configure-cluster-key-server-task.html["設定叢集式外部金鑰伺服器"] ONTAP 文件中的。
+
+從 ONTAP 9.13.1 開始、您可以在系統管理員中設定外部金鑰管理伺服器。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/manage-external-key-managers-sm-task.html["管理外部金鑰管理員"] ONTAP 文件中的。

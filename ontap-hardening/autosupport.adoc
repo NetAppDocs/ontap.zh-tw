@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/autosupport.html 
+keywords: tr-4569, ontap hardening guide, security, proactively monitor, NetApp Digital Advisor, logs, context-sensitive data, configuration and status data, performance data, use https 
+summary: ONTAP 的 AutoSupport 功能可讓您主動監控系統的健全狀況。 
+---
+= NetApp AutoSupport
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+ONTAP 的 AutoSupport 功能可讓您主動監控系統健全狀況、並自動傳送訊息和詳細資料給 NetApp 技術支援、貴組織的內部支援團隊或支援合作夥伴。根據預設、第一次設定儲存系統時、會啟用傳送給 NetApp 技術支援的 AutoSupport 訊息。此外、 AutoSupport 會在啟用後 24 小時、開始傳送訊息給 NetApp 技術支援。此 24 小時期間是可設定的。若要利用與組織內部支援團隊的通訊、必須完成郵件主機組態。
+
+只有叢集管理員可以執行 AutoSupport 管理（組態）。SVM 管理員無法存取 AutoSupport 。可停用此功能。AutoSupport不過、 NetApp 建議您啟用此功能、因為如果儲存系統發生問題、 AutoSupport 有助於加速問題識別與解決。根據預設、即使您停用 AutoSupport 、系統仍會收集 AutoSupport 資訊並將其儲存在本機。
+
+如需 AutoSupport 訊息的詳細資訊、包括各種訊息所包含的內容、以及傳送不同類型訊息的位置、請參閱 link:https://activeiq.netapp.com/custom-dashboard/search["NetApp Active IQ Digital Advisor"^] 文件。
+
+AutoSupport 訊息包含敏感資料、包括但不限於下列項目：
+
+* 記錄檔
+* 與特定子系統相關的內容相關資料
+* 組態與狀態資料
+* 效能資料
+
+
+支援HTTPS、HTTP和SMTP傳輸傳輸傳輸傳輸傳輸協定。AutoSupport由於資訊內容敏感、NetApp強烈建議使用HTTPS作為預設傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸傳輸協定、以將資訊傳送給NetApp支援部門。AutoSupport AutoSupport
+
+此外、您應該運用 `system node autosupport modify` 命令來指定 AutoSupport 資料的目標（例如 NetApp 技術支援、組織內部營運或合作夥伴）。此命令也可讓您指定要傳送的特定 AutoSupport 詳細資料（例如效能資料、記錄檔等）。
+
+若要完全停用 AutoSupport 、請使用 `system node autosupport modify -state disable` 命令。

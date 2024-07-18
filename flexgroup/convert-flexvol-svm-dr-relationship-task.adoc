@@ -30,6 +30,12 @@ summary: 從ONTAP SVM-DR FlexVol 來源開始、您可以將一個Svm-DR Volume�
 ----
 snapmirror update -destination-path <destination_svm_name>: -source-path <source_svm_name>:
 ----
++
+[NOTE]
+====
+您必須在選項中的 SVM 名稱之後輸入一個冒號（：） `-destination-path` 。
+
+====
 . 確保SVM-DR關係處於Snapor不可 中斷的狀態：
 +
 [source, cli]
@@ -51,6 +57,12 @@ volume conversion start -vserver <svm_name> -volume <vol_name> -check-only true
 ----
 snapmirror quiesce -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必須在選項中的 SVM 名稱之後輸入一個冒號（：） `-destination-path` 。
+
+====
 . 從來源叢集開始轉換：
 +
 [source, cli]
@@ -68,9 +80,9 @@ volume show <vol_name> -fields volume-style-extended,state
 ----
 cluster-1::*> volume show my_volume -fields volume-style-extended,state
 
-vserver   volume     state    volume-style-extended
--------       ---------     ------    ---------------------
-vs0     my_volume  online  flexgroup
+vserver       volume     state    volume-style-extended
+-------       ---------  ------    ---------------------
+vs0           my_volume  online  flexgroup
 ----
 . 從目的地叢集繼續傳輸關係：
 +
@@ -78,12 +90,24 @@ vs0     my_volume  online  flexgroup
 ----
 snapmirror resume -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必須在選項中的 SVM 名稱之後輸入一個冒號（：） `-destination-path` 。
+
+====
 . 從目的地叢集執行更新、將轉換傳播到目的地：
 +
 [source, cli]
 ----
 snapmirror update -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必須在選項中的 SVM 名稱之後輸入一個冒號（：） `-destination-path` 。
+
+====
 . 確保SVM-DR關係處於Snap/快照狀態、且不會中斷：
 +
 [source, cli]
@@ -102,7 +126,7 @@ volume show <vol_name> -fields volume-style-extended,state
 cluster-2::*> volume show my_volume -fields volume-style-extended,state
 
 vserver    volume       state     volume-style-extended
--------       -------           ------     ---------------------
-vs0_dst   my_volume  online  flexgroup
+-------    -------      ------    ---------------------
+vs0_dst    my_volume    online    flexgroup
 ----
 
