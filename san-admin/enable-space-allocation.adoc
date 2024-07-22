@@ -1,7 +1,7 @@
 ---
 permalink: san-admin/enable-space-allocation.html 
 sidebar: sidebar 
-keywords: enable, space allocation, space reclamation, unmap 
+keywords: enable, space allocation, space reclamation, unmap, lun 
 summary: 啟用空間分配、讓主機和儲存系統能夠在空間管理上合作。 
 ---
 = 啟用 SAN 的空間分配
@@ -11,7 +11,11 @@ summary: 啟用空間分配、讓主機和儲存系統能夠在空間管理上�
 
 
 [role="lead"]
-啟用空間分配、讓主機和儲存系統在 LUN 空間管理上合作。啟用 `space-allocation` 設定可提供下列優點：
+啟用空間分配、讓主機和儲存系統在 LUN 空間管理上合作。
+
+從 ONTAP 9.15.1 開始、新建立的 LUN 預設會啟用空間分配。在舊版 ONTAP （ 9.14.1 及更早版本）中、空間分配預設為停用。
+
+啟用此 `space-allocation` 設定可帶來下列好處：
 
 * * ONTAP 可以與沒有可用空間來服務寫入 * 的主機通訊：這種通訊方式更適合主機處理空間不足的情況。LUN 仍保持連線、但無法服務寫入 IO 、直到空間可用為止。仍可執行讀取 IO 。對主機作業系統的確切影響取決於主機組態。在某些情況下、作業系統會重試寫入 IO 、直到成功為止。在其他情況下、檔案系統可能會離線。
 +
@@ -38,20 +42,21 @@ NOTE: 如果是 `space-allocation` 未啟用此設定、 LUN 會進入的狀態 
 NVMe 主機不支援空間分配。
 
 .關於這項工作
-從 ONTAP 9.15.1 開始、新建立的 VMware 和 Hyper-V LUN 預設會啟用空間分配、並停用 VMware 和 Hyper-V 未使用的所有新建立 LUN 的空間分配
-
-
-NOTE: 當您將叢集升級至 ONTAP 9.15.1 時、在軟體升級之前建立的所有 LUN 的空間分配設定、無論主機類型為何、在升級之後都會保持不變。  例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
+當您將叢集升級至 ONTAP 9.15.1 時、在軟體升級之前建立的所有 LUN 的空間分配設定、無論主機類型為何、在升級之後都會保持不變。例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
 
 .步驟
 . 啟用空間分配：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
-
+[source, cli]
+----
+`lun modify -vserver <vserver_name> -volume <volume_name> -lun <lun_name> -space-allocation enabled
+----
 . 確認已啟用空間分配：
 +
-`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
-
+[source, cli]
+----
+lun show -vserver <vserver_name> -volume <volume_name> -lun <lun_name> -fields space-allocation
+----
 . 確認主機作業系統上已啟用空間分配。
 +
 

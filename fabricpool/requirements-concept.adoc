@@ -17,7 +17,16 @@ summary: 為了協助確保您最佳化 FabricPool 組態、您應該熟悉使�
 
 == 一般考量與要求
 
-* 您必須至少執行ONTAP 才能使用FabricPool 的是才能使用的景點。
+
+
+=== ONTAP 9.2
+
+您必須執行 ONTAP 9.2 或更新版本的 FabricPool 。
+
+
+
+=== ONTAP 9.4
+
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
 ** 。 `auto` link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則"]
@@ -27,12 +36,24 @@ summary: 為了協助確保您最佳化 FabricPool 組態、您應該熟悉使�
 ** 搭配使用FabricPool ONTAP Select
 
 
+
+
+
+
+=== 版本9.5 ONTAP
+
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
 ** 指定分層完整度臨界值
 ** 使用IBM Cloud Object Storage做為FabricPool 雲端層以利實現效益
 ** 雲端層的NetApp Volume Encryption（NVE）、預設為啟用。
 
+
+
+
+
+
+=== ONTAP 9.6
 
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
@@ -46,6 +67,12 @@ summary: 為了協助確保您最佳化 FabricPool 組態、您應該熟悉使�
 ** 使用Google Cloud Platform做FabricPool 為雲端層以利實現效能不打造
 ** 不需雲端層資料複本即可移動Volume
 
+
+
+
+
+
+=== 更新ONTAP
 
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
@@ -64,35 +91,68 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 
 
 
+
+
+
+
+=== 部分9.8 ONTAP
+
 * 您必須執行ONTAP 更新版本的版本才能FabricPool 使用下列功能：
 +
-** 雲端移轉控制功能、可讓您覆寫預設的分層原則
-** 將資料提升至效能層級
+** 雲端擷取
 ** FabricPool with SnapLock Enterprise 。FabricPool with SnapLock Enterprise 需要功能產品差異要求（ FPVR ）。若要建立 FPVR 、請聯絡您的銷售團隊。
 ** 最短冷卻期最長183天
 ** 使用使用者建立的自訂標記進行物件標記
-** 硬碟平台和集合體上的FabricPools
+** HDD FabricPool 集合體
 +
-HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、BSA和mSATA磁碟、包括下列機型：
+HDD FabricPools 僅在具有 6 個或更多 CPU 核心的系統上支援 SAS 、 FSA 、 BSA 和 mSATA 磁碟。
 
-+
-*** FAS9000
-*** FAS8700
-*** FAS8300
-*** FAS8200
-*** FAS8080
-*** FAS8060
-*** FAS8040
-*** FAS2750
-*** FAS2720
-*** FAS2650
-*** FAS2620
 +
 檢查 https://hwu.netapp.com/Home/Index["Hardware Universe"^] 適用於支援的最新機型。
 
 
 
 
+
+
+
+=== 零點9.10.1 ONTAP
+
+* 您必須執行 ONTAP 9.10.1 或更新版本、才能使用下列 FabricPool 功能：
++
+** 設定節流
+** 對溫度敏感的儲存效率（ TSSE ）。
+
+
+
+
+
+
+=== ONTAP 9.12.1
+
+* 您必須執行 ONTAP 9.12.1 或更新版本、才能使用下列 FabricPool 功能：
++
+** SVM 移轉
+** 支援 FabricPool 、 FlexGroup 和 SVM-DR 搭配使用。（在 9.12.1 之前、這兩項功能都能一起運作、但並非全部三項功能都能一起運作。）
+
+
+
+
+
+
+=== ONTAP 9.14.1.
+
+* 您必須執行 ONTAP 9.14.1 或更新版本、才能使用下列 FabricPool 功能：
++
+** 雲端寫入
+** 積極預先讀取
+
+
+
+
+
+
+== 平台
 
 * 除了下列項目、所有能夠執行支援支援的平台均支援此功能：FabricPool ONTAP
 +
@@ -102,45 +162,74 @@ HDD FabricPools僅在具有6個或更多CPU核心的系統上支援SAS、FSA、B
 ** FAS2520
 
 
-* 支援下列Aggregate類型：FabricPool
-+
-** 在支援的系統上、您只能使用All Flash（All SSD）Aggregate來執行支援。AFF FabricPool
-** 在支援的系統上、您可以使用All Flash（All SSD）或HDD Aggregate來支援FAS FabricPool
- +
-您無法使用Flash Pool Aggregate、其中包含SSD和HDD。
-** 在本產品的不只是部分、您也可以使用SSD或HDD Aggregate來執行功能。Cloud Volumes ONTAP ONTAP Select FabricPool
-+
-不過、建議使用SSD Aggregate。
 
 
 
-* 支援使用下列物件存放區做為雲端層：FabricPool
-+
-** NetApp StorageGRID 產品介紹10.3或更新版本
-** NetApp ONTAP SS3（ONTAP 適用於9.8及更新版本）
-** Alibaba雲端物件儲存設備
-** Amazon Web Services Simple Storage Service（AWS S3）
-** Google Cloud Storage
-** IBM Cloud 物件儲存設備
-** 適用於雲端的Microsoft Azure Blob儲存設備
+
+== 本機層（集合體）
+
+支援下列Aggregate類型：FabricPool
+
+* 在 AFF 系統上、您只能將 SSD 集合體用於 FabricPool 。
+* 在 FAS 系統上、您可以使用 FabricPool 的 SSD 或 HDD 集合體。
+* 在本產品的不只是部分、您也可以使用SSD或HDD Aggregate來執行功能。Cloud Volumes ONTAP ONTAP Select FabricPool建議使用 SSD 集合體。
 
 
+[NOTE]
+====
+不支援同時包含 SSD 和 HDD 的 Flash Pool Aggregate 。
+
+====
+
+
+== 雲端階層
+
+支援使用下列物件存放區做為雲端層：FabricPool
+
+* Alibaba雲端物件儲存服務（標準、非常用存取）
+* Amazon S3 （標準、 Standard-IA 、 One Zone-IA 、 Intelligent Tiering 、 Glacier 即時擷取）
+* Amazon商業雲端服務（C2S）
+* Google Cloud Storage （多區域、區域、近線、 Coldline 、歸檔）
+* IBM Cloud物件儲存設備（Standard、Vault、Cold Vault、Flex）
+* Microsoft Azure Blob儲存設備（熱與冷）
+* NetApp ONTAP SS3（ONTAP 適用於9.8及更新版本）
+* NetApp StorageGRID （ StorageGRID 10.3 及更新版本）
+
+
+[NOTE]
+====
+不支援 Glacier Flexible Retrieval 和 Glacier Deep Archive 。
+
+====
 * 您打算使用的物件存放區「'Bucke'」（容器）必須已設定完成、至少必須有10 GB的儲存空間、且不得重新命名。
 * 使用FabricPool 物件儲存區的HA配對需要叢集間的LIF才能與物件儲存區通訊。
 * 您無法在附加雲端層之後、將其從本機層分離；不過、您可以使用 link:create-mirror-task.html["FabricPool 鏡射"] 將本機層附加至不同的雲端層。
-* 如果您使用處理量層（ QoS 最小）、則必須將磁碟區上的分層原則設定為 `none` 將 Aggregate 附加至 FabricPool 之前。
-+
-其他分層原則則可防止將Aggregate附加FabricPool 到無法使用的物件上。啟用 FabricPool 時、 QoS 原則不會強制執行處理量層。
-
-* 您應該遵循最佳實務準則FabricPool 、在特定情境中使用「介紹」功能。
-+
-http://www.netapp.com/us/media/tr-4598.pdf["NetApp技術報告4598：FabricPool 《關於ONTAP 最佳實務的資訊》9"^]
 
 
 
 
+== 儲存效率ONTAP
 
-== 使用 StorageGRID 一致性控制時的其他考量事項
+將資料移至雲端層時、會保留壓縮、重複資料刪除和壓縮等儲存效率、進而降低所需的物件儲存容量和傳輸成本。
+
+
+NOTE: 從 ONTAP 9.15.1 開始、 FabricPool 支援 Intel QuickAssist 技術（ QAT4 ）、可提供更具競爭力、更高效能、更節省儲存效率。
+
+本機層支援 Aggregate 內嵌重複資料刪除、但相關的儲存效率不會轉移到儲存在雲端層的物件。
+
+當使用 All Volume 分層原則時、由於資料可能會在應用額外的儲存效率之前分層、因此與背景重複資料刪除程序相關的儲存效率可能會降低。
+
+
+
+== BlueXP 分層授權
+
+FabricPool 在將第三方物件儲存供應商（例如 Amazon S3 ）附加為 AFF 和 FAS 系統的雲端階層時、需要以容量為基礎的授權。當使用 StorageGRID 或 ONTAP S3 作為雲端層、或使用 Cloud Volumes ONTAP 、 Amazon FSX for NetApp ONTAP 或 Azure NetApp Files 分層時、不需要 BlueXP 分層授權。
+
+BlueXP 授權（包括預先存在的 FabricPool 授權的附加元件或延伸功能）會在中啟動 link:https://docs.netapp.com/us-en/bluexp-tiering/concept-cloud-tiering.html["BlueXP 數位錢包"^]。
+
+
+
+== StorageGRID 一致性控制
 
 StorageGRID 的一致性控制會影響 StorageGRID 用來追蹤物件的中繼資料
 分佈在節點之間、以及用戶端要求的物件可用度。NetApp 建議使用
@@ -151,19 +240,22 @@ NOTE: 請勿將可用的一致性控制用於做為 FabricPool 目標的貯體�
 
 
 
-== 使用Cloud Volumes ONTAP 方面的其他考量
-
-無論您使用的物件存放區供應商為何、均不需要使用「不含任何資訊」授權。Cloud Volumes ONTAP FabricPool
-
-
-
 == SAN傳輸協定存取的分層資料的其他考量事項
 
-在分層SAN傳輸協定存取的資料時、NetApp建議使用私有雲端、例如StorageGRID 由於連線考量、所以使用像是「物件」的私有雲端。
+當 SAN 通訊協定存取的分層資料時、 NetApp 建議使用私有雲、例如 ONTAP S3 或 StorageGRID 、因為連線能力考量。
 
-*重要*
 
-請注意、在 Windows 主機的 SAN 環境中使用 FabricPool 時、如果物件儲存設備在將資料分層至雲端的時間過長時無法使用、則 Windows 主機上的 NetApp LUN 上的檔案可能會變得無法存取或消失。請參閱知識庫文章 link:https://kb.netapp.com/onprem/ontap/os/During_FabricPool_S3_object_store_unavailable_Windows_SAN_host_reported_filesystem_corruption["在 FabricPool S3 物件存放區無法使用期間、 Windows SAN 主機回報檔案系統毀損"^]。
+IMPORTANT: 請注意、在 Windows 主機的 SAN 環境中使用 FabricPool 時、如果物件儲存設備在將資料分層至雲端的時間過長時無法使用、則 Windows 主機上的 NetApp LUN 上的檔案可能會變得無法存取或消失。請參閱知識庫文章 link:https://kb.netapp.com/onprem/ontap/os/During_FabricPool_S3_object_store_unavailable_Windows_SAN_host_reported_filesystem_corruption["在 FabricPool S3 物件存放區無法使用期間、 Windows SAN 主機回報檔案系統毀損"^]。
+
+
+
+== 服務品質
+
+* 如果您使用處理量層（ QoS 最小）、則必須將磁碟區上的分層原則設定為 `none` 將 Aggregate 附加至 FabricPool 之前。
++
+其他分層原則則可防止將Aggregate附加FabricPool 到無法使用的物件上。啟用 FabricPool 時、 QoS 原則不會強制執行處理量層。
+
+
 
 
 

@@ -1,0 +1,57 @@
+---
+permalink: upgrade/snapmirror-cascade-relationship-blocked.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, 9.9.1. 9.10.1, update, cascade, LTR, long term retention, snapshots, considerations, secondary storage 
+summary: 如果您的叢集上已設定 SnapMirror 串聯關係、則可能需要在升級之前停用長期保留（ LTR ）快照 
+---
+= 在 ONTAP 升級之前停用長期保留快照
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您要從 ONTAP 9.9.1 或更早版本升級至 ONTAP 9.10.1 或更高版本、且叢集上已設定 SnapMirror 串聯關係、則在升級之前、您應該停用串聯中磁碟區的長期保留（ LTR ）快照。ONTAP 9.10.1 或更新版本不支援在啟用 LTR 快照的情況下串聯磁碟區。升級後使用此組態可能會導致遺失備份和快照。
+
+您必須在下列案例中採取行動：
+
+* 長期保留（ LTR ）快照是在「 A > B > C 」 SnapMirror 串聯的「 B 」磁碟區或較大串聯的另一個中間 SnapMirror 目的地磁碟區上設定。
+* Ltr 快照是以套用至 SnapMirror 原則規則的排程來定義。此規則不會從來源磁碟區複寫快照、而是直接在目的地磁碟區上建立快照。
++
+
+NOTE: 有關計劃和 SnapMirror 策略的詳細信息，請參閱知識庫文章。
+
+
+
+.步驟
+. 從層疊中捲上的 SnapMirror 原則中移除 LTR 規則：
++
+[listing]
+----
+Secondary::> snapmirror policy remove-rule -vserver <> -policy <> -snapmirror-label <>
+----
+. 重新新增 SnapMirror 標籤的規則、但不含 LTR 排程：
++
+[listing]
+----
+Secondary::> snapmirror policy add-rule -vserver <> -policy <> -snapmirror-label <> -keep <>
+----
++
+
+NOTE: 從 SnapMirror 原則規則中移除 LTR 快照、表示 SnapMirror 會從來源 Volume 中擷取具有指定標籤的快照。您也可能需要在來源磁碟區的快照原則上新增或修改排程、才能建立適當標記的快照。
+
+. 如有必要、請修改（或建立）來源磁碟區快照原則的排程、以允許使用 SnapMirror 標籤建立快照：
++
+[listing]
+----
+Primary::> volume snapshot policy modify-schedule -vserver <> -policy <> -schedule <> -snapmirror-label <>
+----
++
+[listing]
+----
+Primary::> volume snapshot policy add-schedule -vserver <> -policy <> -schedule <> -snapmirror-label <> -count <>
+----
+
+
+
+NOTE: 仍可在 SnapMirror 串聯組態中的最終 SnapMirror 目的地磁碟區上啟用 Ltr 快照。
