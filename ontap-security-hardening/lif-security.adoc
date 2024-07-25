@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/lif-security.html 
+keywords: tr-4569, ontap hardening guide, Data LIF, Cluster LIF, Node management LIF, Cluster management LIF, Intercluster LIF, requires private IP subnet, requires secure network, default firewall policy, is the firewall customizable, under no circumstance should any LIF roles be exposed to the internet 
+summary: 瞭解每個 LIF 角色的安全特性。 
+---
+= LIF安全性
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+LIF 是 IP 位址或全球連接埠名稱（ WWPN ）、具有相關特性、例如角色、主連接埠、主節點、容錯移轉至的連接埠清單、以及防火牆原則。您可以在叢集透過網路傳送和接收通訊的連接埠上設定LIF。瞭解每個 LIF 角色的安全性特性非常重要。
+
+
+
+== LIF 角色
+
+LIF 角色可以是：
+
+* * Data LIF* ：與 SVM 相關的 LIF 、用於與用戶端通訊。
+* * 叢集 LIF* ： LIF 用於在叢集中的節點之間傳輸叢集內的流量。
+* * 節點管理 LIF* ：提供專用 IP 位址的 LIF 、用於管理叢集中的特定節點。
+* * 叢集管理 LIF* ：為整個叢集提供單一管理介面的 LIF 。
+* * 叢集間 LIF* ：用於跨叢集通訊、備份及複寫的 LIF 。
+
+
+
+
+== 每個 LIF 角色的安全特性
+
+[cols="21%,13%,14%,18%,18%,16%"]
+|===
+|  | 資料LIF | 叢集LIF | 節點管理 LIF | 叢集管理LIF | 叢集間 LIF 
+
+
+| 需要私有 IP 子網路？ | 否 | 是的 | 否 | 否 | 否 
+
+
+| 需要安全的網路？ | 否 | 是的 | 否 | 否 | 是的 
+
+
+| 預設防火牆原則 | 非常嚴格 | 完全開放 | 中 | 中 | 非常嚴格 
+
+
+| 防火牆是否可自訂？ | 是的 | 否 | 是的 | 是的 | 是的 
+|===
+[IMPORTANT]
+====
+* 由於叢集 LIF 完全開啟、而且沒有可設定的防火牆原則、因此它必須位於安全隔離網路上的私有 IP 子網路上。
+* 在任何情況下、 LIF 角色都不應暴露在網際網路上。
+
+
+====
+如需更多關於保護生命安全的資訊，請參閱 link:../networking/configure_firewall_policies_for_lifs.html["設定lifs的防火牆原則"]。

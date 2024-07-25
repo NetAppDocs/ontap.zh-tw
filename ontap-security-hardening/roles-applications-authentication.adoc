@@ -1,0 +1,323 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/roles-applications-authentication.html 
+keywords: tr-4569, ontap hardening guide, security, RBAC, roles, role, based access control, RBAC, login, application, authentication 
+summary: 角色、應用程式和驗證 
+---
+= 角色、應用程式和驗證
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+ONTAP 讓注重安全性的企業能夠透過不同的登入應用程式和方法、對不同的管理員提供精細的存取。這有助於客戶建立以資料為中心的零信任模式。
+
+這些角色可供管理員和儲存虛擬機器管理員使用。指定登入應用程式方法和登入驗證方法。
+
+
+
+== 角色
+
+透過角色型存取控制（ RBAC ）、使用者只能存取其工作角色和功能所需的系統和選項。ONTAP 中的 RBAC 解決方案可將使用者的系統管理存取權限限制為其定義角色所授予的層級、讓系統管理員能夠依指派的角色來管理使用者。ONTAP 提供數個預先定義的角色。操作員和管理員可以建立、修改或刪除自訂存取控制角色、也可以指定特定角色的帳戶限制。
+
+
+
+=== 叢集管理員的預先定義角色
+
+|===
+
+
+| 此角色... | 具有此存取層級... | 至下列命令或命令目錄 
+
+
+ a| 
+`admin`
+ a| 
+全部
+ a| 
+所有命令目錄 (`DEFAULT`）
+
+
+
+ a| 
+`admin-no-fsa` （從 ONTAP 9.12.1 開始提供）
+ a| 
+讀取/寫入
+ a| 
+* 所有命令目錄 (`DEFAULT`）
+* `security login rest-role`
+* `security login role`
+
+
+
+
+ a| 
+唯讀
+ a| 
+* `security login rest-role create`
+* `security login rest-role delete`
+* `security login rest-role modify`
+* `security login rest-role show`
+* `security login role create`
+* `security login role create`
+* `security login role delete`
+* `security login role modify`
+* `security login role show`
+* `volume activity-tracking`
+* `volume analytics`
+
+
+
+
+ a| 
+無
+ a| 
+`volume file show-disk-usage`
+
+
+
+ a| 
+`autosupport`
+ a| 
+全部
+ a| 
+* `set`
+* `system node autosupport`
+
+
+
+
+ a| 
+無
+ a| 
+所有其他命令目錄 (`DEFAULT`）
+
+
+
+ a| 
+`backup`
+ a| 
+全部
+ a| 
+`vserver services ndmp`
+
+
+
+ a| 
+唯讀
+ a| 
+`volume`
+
+
+
+ a| 
+無
+ a| 
+所有其他命令目錄 (`DEFAULT`）
+
+
+
+ a| 
+`readonly`
+ a| 
+全部
+ a| 
+* `security login password`
++
+僅用於管理自己的使用者帳戶本機密碼和金鑰資訊
+
+* `set`
+
+
+
+
+ a| 
+無
+ a| 
+`security`
+
+
+
+ a| 
+唯讀
+ a| 
+所有其他命令目錄 (`DEFAULT`）
+
+
+
+ a| 
+`none`
+ a| 
+無
+ a| 
+所有命令目錄 (`DEFAULT`）
+
+|===
+
+NOTE: 。 `autosupport` 角色會指派給預先定義的 `autosupport` 帳戶、由 AutoSupport OnDemand 使用。ONTAP 可防止您修改或刪除 `autosupport` 帳戶。ONTAP 也會防止您指派 `autosupport` 其他使用者帳戶的角色。
+
+
+
+=== 儲存虛擬機器（ SVM ）管理員的預先定義角色
+
+|===
+
+
+| 角色名稱 | 功能 
+
+
+ a| 
+`vsadmin`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 管理磁碟區、但磁碟區移動除外
+* 管理配額、 qtree 、 Snapshot 複本和檔案
+* 管理LUN
+* 執行 SnapLock 作業、但特權刪除除外
+* 設定通訊協定： NFS 、 SMB 、 iSCSI 、 FC 、 FCoE 、 NVMe / FC 和 NVMe / TCP
+* 設定服務： DNS 、 LDAP 和 NIS
+* 監控工作
+* 監控網路連線和網路介面
+* 監控 SVM 的健全狀況
+
+
+
+
+ a| 
+`vsadmin-volume`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 管理磁碟區、包括磁碟區移動
+* 管理配額、 qtree 、 Snapshot 複本和檔案
+* 管理LUN
+* 設定通訊協定： NFS 、 SMB 、 iSCSI 、 FC 、 FCoE 、 NVMe / FC 和 NVMe / TCP
+* 設定服務： DNS 、 LDAP 和 NIS
+* 監控網路介面
+* 監控 SVM 的健全狀況
+
+
+
+
+ a| 
+`vsadmin-protocol`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 設定通訊協定： NFS 、 SMB 、 iSCSI 、 FC 、 FCoE 、 NVMe / FC 和 NVMe / TCP
+* 設定服務： DNS 、 LDAP 和 NIS
+* 管理LUN
+* 監控網路介面
+* 監控 SVM 的健全狀況
+
+
+
+
+ a| 
+`vsadmin-backup`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 管理 NDMP 作業
+* 將還原的磁碟區設為讀取 / 寫入
+* 管理 SnapMirror 關係和 Snapshot 複本
+* 檢視磁碟區和網路資訊
+
+
+
+
+ a| 
+`vsadmin-snaplock`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 管理磁碟區、但磁碟區移動除外
+* 管理配額、 qtree 、 Snapshot 複本和檔案
+* 執行 SnapLock 作業、包括特權刪除
+* 設定通訊協定： NFS 和 SMB
+* 設定服務： DNS 、 LDAP 和 NIS
+* 監控工作
+* 監控網路連線和網路介面
+
+
+
+
+ a| 
+`vsadmin-readonly`
+ a| 
+* 管理自己的使用者帳戶本機密碼和金鑰資訊
+* 監控 SVM 的健全狀況
+* 監控網路介面
+* 檢視磁碟區和 LUN
+* 檢視服務與通訊協定
+
+
+|===
+
+
+== 應用程式方法
+
+應用程式方法會指定登入方法的存取類型。可能的值包括 `console, http, ontapi, rsh, snmp, service-processor, ssh,` 和 `telnet`。
+
+設定此參數可 `service-processor` 授予使用者對服務處理器的存取權。當此參數設為 `service-processor`時、必須將參數設為、 `-authentication-method` `password` 因為服務處理器僅支援密碼驗證。SVM 使用者帳戶無法存取服務處理器。因此，當此參數設為時，操作員和管理員無法使用 `-vserver` 此參數 `service-processor`。
+
+要進一步限制對的訪問 `service-processor` ，請使用命令 `system service-processor ssh add-allowed-addresses`。此命令 `system service-processor api-service` 可用於更新組態和憑證。
+
+基於安全考量、依預設會停用 Telnet 和遠端 Shell （ RSH ）、因為 NetApp 建議使用安全 Shell （ SSH ）來進行安全遠端存取。如果需要 Telnet 或 RSH 、或是有獨特的需求、則必須啟用這些功能。
+
+此 `security protocol modify` 命令會修改現有的 RSH 和 Telnet 叢集範圍組態。在叢集中啟用 RSH 和 Telnet 、方法是將啟用欄位設定為 `true`。
+
+
+
+== 驗證方法
+
+驗證方法參數指定用於登入的驗證方法。
+
+[cols="33%,67%"]
+|===
+| 驗證方法 | 說明 
+
+
+| `cert` | SSL 憑證驗證 
+
+
+| `community` | SNMP 社群字串 
+
+
+| `domain` | Active Directory 驗證 
+
+
+| `nsswitch` | LDAP 或 NIS 驗證 
+
+
+| `password` | 密碼 
+
+
+| `publickey` | 公開金鑰驗證 
+
+
+| `usm` | SNMP 使用者安全模式 
+|===
+
+NOTE: 由於傳輸協定安全性弱點、不建議使用 NIS 。
+
+從 ONTAP 9.3 開始、連結式雙因素驗證可用於使用密碼做為兩種驗證方法的本機 SSH `admin` 帳戶 `publickey` 。除了命令中的欄位之外 `-authentication-method` `security login` 、還新增了一個名為的新欄位 `-second-authentication-method` 。可以將公鑰或密碼指定爲 `-authentication-method` 或 `-second-authentication-method`。不過、在 SSH 驗證期間、訂單一律為公開金鑰、並提供部分驗證、接著是密碼提示以進行完整驗證。
+
+[listing]
+----
+[user@host01 ~]$ ssh ontap.netapp.local
+Authenticated with partial success.
+Password:
+cluster1::>
+----
+從 ONTAP 9.4 開始、 `nsswitch` 可以用做第二種驗證方法 `publickey`。
+
+從 ONTAP 9.12.1 開始、 FIDO2 也可用於使用 YubiKey 硬體驗證裝置或其他 FIDO2 相容裝置進行 SSH 驗證。
+
+從 ONTAP 9.13.1 開始：
+
+* `domain` 帳戶可以用作第二種驗證方法 `publickey`。
+* 時間型一次性密碼 (`totp`）是由演算法所產生的暫時密碼、該演算法會使用目前時間作為第二種驗證方法的驗證因素之一。
+* SSH 公開金鑰和憑證均支援公開金鑰撤銷、這些憑證將在 SSH 期間檢查是否到期 / 撤銷。
+
+
+如需 ONTAP System Manager 、 Active IQ Unified Manager 和 SSH 的多因素驗證（ MFA ）詳細資訊、請參閱 link:http://www.netapp.com/us/media/tr-4647.pdf["TR-4647 ： ONTAP 9 中的多因素驗證"^]。

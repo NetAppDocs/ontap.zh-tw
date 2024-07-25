@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/configure-smb-signing-sealing.html 
+keywords: tr-4569, ontap hardening guide, security, SMB signing, SMB sealing 
+summary: 若要設定及啟用 SMB 簽署、請使用「 vserver CIFS security modify 」命令、並驗證「 -is -Sign-required 」參數是否設定為「 true 」。 
+---
+= 設定並啟用 CIFS SMB 簽署與封裝
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+您可以設定及啟用 SMB 簽署、以確保儲存系統與用戶端之間的流量不會受到重播或攔截式攻擊的影響、進而保護資料架構的安全性。SMB 簽署可驗證 SMB 訊息是否具有有效的簽章、以保護其安全。
+
+.關於這項工作
+檔案系統和架構的常見威脅模式、在於 SMB 傳輸協定。為了解決這個問題、 ONTAP 9 解決方案採用業界標準的 SMB 簽署與密封。SMB 簽署可確保儲存系統與用戶端之間的流量不會因為重播或攔截式攻擊而受到影響、進而保護資料架構的安全性。驗證 SMB 訊息是否有有效的簽章、即可完成此作業。
+
+雖然 SMB 簽署依預設為停用、以提高效能、但 NetApp 強烈建議您啟用此功能。此外、 ONTAP 解決方案支援 SMB 加密、也稱為密封。這種方法可讓資料以每個共享區的方式安全傳輸。預設會停用SMB加密。不過、 NetApp 建議您啟用 SMB 加密。
+
+現在 SMB 2.0 及更新版本均支援 LDAP 簽署和封裝。簽署（防止竄改）和密封（加密）可在 SVM 和 Active Directory 伺服器之間實現安全通訊。SMB 3.0 及更新版本均支援加速 AES 新指令（ Intel AES NI ）加密。Intel AES NI 可改善 AES 演算法、並透過支援的處理器系列來加速資料加密。
+
+.步驟
+. 若要設定及啟用 SMB 簽署，請使用 `vserver cifs security modify` 命令並確認 `-is-signing-required` 參數已設定為 `true`。請參閱下列組態範例：
++
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -kerberos-clock-skew 3 -kerberos-ticket-age 8 -is-signing-required true
+----
+. 若要設定及啟用 SMB 密封與加密，請使用 `vserver cifs security modify` 命令並確認 `-is-smb-encryption-required` 參數已設定為 `true`。請參閱下列組態範例：
++
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -is-smb-encryption-required true
+
+cluster1::> vserver cifs security show -vserver vs1 -fields is-smb-encryption-required
+vserver  is-smb-encryption-required
+-------- -------------------------
+vs1      true
+----
+

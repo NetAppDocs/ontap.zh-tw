@@ -1,0 +1,226 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/sysadmin-methods.html 
+keywords: tr-4569, ontap hardening guide, security, access, encryption, MFA, multi-factor authentication, ssh, MOTD, CLI timeout, SAML access for System Manager, Insights 
+summary: 部署這些方法以進行健全的 ONTAP 系統管理。 
+---
+= 系統管理方法
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+這些是強化 ONTAP 系統管理的重要參數。
+
+
+
+== 命令列存取
+
+建立安全的系統存取權、是維護安全解決方案的重要一環。最常見的命令列存取選項是 SSH 、 Telnet 和 RSH 。其中、 SSH 是最安全、業界標準的遠端命令列存取最佳實務做法。NetApp 強烈建議使用 SSH 命令列存取 ONTAP 解決方案。
+
+
+
+=== SSH 組態
+
+此 `security ssh show` 命令會顯示叢集和 SVM 的 SSH 金鑰交換演算法、加密演算法和 MAC 演算法組態。金鑰交換方法使用這些演算法和密碼來指定一次性工作階段金鑰的產生方式、以進行加密和驗證、以及伺服器驗證的執行方式。
+
+[listing]
+----
+cluster1::> security ssh show
+
+Vserver       Ciphers       Key Exchange Algorithms     MAC Algorithms
+--------  ----------------  --------------------------  --------------
+nsadhanacluster-2
+                aes256-ctr,   diffie-helman-group-      hmac-sha2-256
+                aes192-ctr,	   exchange-sha256,         hmac-sha2-512
+                aes128-ctr    ecdh-sha2-nistp384
+vs0             aes128-gcm    curve25519-sha256         hmac-sha1
+vs1             aes256-ctr,   diffie-hellman-group-     hmac-sha1-96
+                aes192-ctr,   exchange-sha256           hmac-sha2-256
+                aes128-ctr,   ecdh-sha2-nistp384        hmac-sha2-256-
+				3des-cbc,     ecdh-sha2-nistp512        etm
+				aes128-gcm                              hmac-sha2-512
+3 entries were displayed.
+
+----
+
+
+=== 登入橫幅
+
+登入橫幅可讓組織向任何營運者、管理員甚至是誤解者展示可接受使用的條款與條件、並指出哪些人可以存取系統。此方法有助於建立對系統存取與使用的期望。命令會 `security login banner modify` 修改登入橫幅。登入橫幅會在 SSH 和主控台裝置登入程序中的驗證步驟之前顯示。橫幅文字必須使用雙引號（「」）、如下列範例所示。
+
+[listing]
+----
+cluster1::> security login banner modify -vserver cluster1 -message “Authorized users ONLY!”
+----
+
+
+=== 登入橫幅參數
+
+[cols="19%,81%"]
+|===
+| 參數 | 說明 
+
+
+| `vserver` | 使用此參數以修改後的橫幅指定 SVM 。使用叢集管理 SVM 的名稱來修改叢集層級訊息。叢集層級的訊息會作為未定義訊息的資料 SVM 的預設值。 
+
+
+| `message`  a| 
+此選用參數可用於指定登入橫幅訊息。如果叢集已設定登入橫幅訊息、則所有資料 SVM 也會使用叢集登入橫幅。設定資料 SVM 的登入橫幅會覆寫叢集登入橫幅的顯示。若要重設資料 SVM 登入橫幅以使用叢集登入橫幅、請將此參數與值 "-" 一起使用。
+
+如果您使用此參數、登入橫幅不得包含換行（也稱為行尾 [EOLS] 或換行符號）。若要以新行輸入登入橫幅訊息、請勿指定任何參數。系統會提示您以互動方式輸入訊息。以互動方式輸入的訊息可以包含新行。
+
+非 ASCII 字元必須使用 Unicode UTF-8 。
+
+
+
+| `uri`  a| 
+`(ftp|http)://(hostname|IPv4`
+
+使用此參數指定登入橫幅下載來源的 URI 。
+
+訊息長度不得超過 2048 位元組。非ASCII字元必須以UNICODE UTF-8格式提供。
+
+|===
+
+
+=== 當日訊息
+
+命令會 `security login motd modify` 更新當天的訊息（ MOTD ）。
+
+MOTD 有兩種類別：叢集層級 MOTD 和資料 SVM 層級 MOTD 。登入資料 SVM 叢集 Shell 的使用者可能會看到兩則訊息：叢集層級 MOTD 、以及該 SVM 的 SVM 層級 MOTD 。
+
+叢集管理員可視需要個別啟用或停用每個 SVM 上的叢集層級 MOTD 。如果叢集管理員停用 SVM 的叢集層級 MOTD 、則登入 SVM 的使用者不會看到叢集層級的訊息。只有叢集管理員才能啟用或停用叢集層級的訊息。
+
+[cols="22%,78%"]
+|===
+| MOTD 參數 | 說明 
+
+
+| Vserver | 使用此參數可指定修改 MOTD 的 SVM 。使用叢集管理 SVM 的名稱來修改叢集層級訊息。 
+
+
+| 訊息  a| 
+此選用參數可用於指定訊息。如果您使用此參數、則 MOTD 不能包含換行。如果您未指定參數以外的任何參數 `-vserver` 、系統會提示您以互動方式輸入訊息。以互動方式輸入的訊息可以包含新行。非ASCII字元必須以UNICODE UTF-8格式提供。訊息可以包含使用下列轉義序列動態產生的內容：
+
+* `\\` - 單一反彈字元
+* `\b` - 無輸出（僅支援與 Linux 相容）
+* `\C` - 叢集名稱
+* `\d` - 登入節點上設定的目前日期
+* `\t` - 登入節點上設定的目前時間
+* `\I` - 傳入 LIF IP 位址（列印主控台以供 `console` 登入）
+* `\l` - 登入裝置名稱（列印登入主控台 `console` ）
+* `\L` - 使用者在叢集中任何節點上的上次登入
+* `\m` - 機器架構
+* `\n` - 節點或資料 SVM 名稱
+* `\N` - 登入的使用者名稱
+* `\o` - 與 \O 相同提供Linux相容性。
+* `\O` - 節點的 DNS 網域名稱。請注意、輸出取決於網路組態、可能是空的。
+* `\r` - 軟體版本編號
+* `\s` - 作業系統名稱
+* `\u` - 本機節點上的作用中叢集 Shell 工作階段數目。對於叢集管理：所有叢集Shell使用者。針對資料 SVM 管理：僅適用於該資料 SVM 的作用中工作階段。
+* `\U` - 與相同 `\u`、但有 `user` 或 `users` 附加
+* `\v` - 有效的叢集版本字串
+* `\W` - 跨叢集的作用中工作階段、供登入的使用者使用 (`who`）
+
+
+|===
+如需在 ONTAP 中設定當日訊息的詳細資訊，請參閱 link:https://docs.netapp.com/us-en/ontap/system-admin/manage-banner-motd-concept.html["當日訊息上的 ONTAP 文件"]。
+
+
+
+=== CLI 工作階段逾時
+
+預設 CLI 工作階段逾時為 30 分鐘。逾時對於防止過時的工作階段和工作階段工作階段暫存是很重要的。
+
+使用 `system timeout show` 命令檢視目前的 CLI 工作階段逾時。若要設定逾時值、請使用 `system timeout modify -timeout <minutes>` 命令。
+
+
+
+== 透過 NetApp ONTAP 系統管理員存取網路
+
+如果 ONTAP 管理員偏好使用圖形化介面而非 CLI 來存取和管理叢集、請使用 NetApp ONTAP 系統管理員。ONTAP 隨附 Web 服務、預設為啟用、並可使用瀏覽器存取。如果使用 DNS 、 IPv4 或 IPv6 位址、請將瀏覽器指向主機名稱（透過 `https://cluster-management-LIF`）。
+
+如果叢集使用自我簽署的數位憑證、瀏覽器可能會顯示警告、指出該憑證不受信任。您可以確認繼續存取的風險、或在叢集上安裝憑證授權單位（ CA ）簽署的數位憑證、以進行伺服器驗證。
+
+從 ONTAP 9.3 開始、安全聲明標記語言（ SAML ）驗證是 ONTAP 系統管理員的選項。
+
+
+
+=== ONTAP 系統管理員的 SAML 驗證
+
+SAML 2.0 是廣泛採用的產業標準、可讓任何符合 SAML 標準的第三方身分識別供應商（ IDP ）、使用企業所選擇的 IDP 所特有的機制來執行 MFA 、並做為單一登入（ SSO ）的來源。
+
+SAML 規格中定義了三種角色：主體、 IDP 和服務供應商。在 ONTAP 實作中、主要是叢集管理員透過 ONTAP 系統管理員或 NetApp Active IQ Unified Manager 存取 ONTAP 。IDP 是第三方 IDP 軟體。從 ONTAP 9.3 開始、支援 Microsoft Active Directory 聯合服務（ ADFS ）和開放原始碼 Shibboleth IDP 。從 ONTAP 9.12.1 開始、 Cisco 雙核心支援 IDP 。服務供應商是 ONTAP 系統管理員或 Active IQ Unified Manager 網路應用程式所使用的 ONTAP 內建 SAML 功能。
+
+與 SSH 雙因素組態程序不同的是、啟動 SAML 驗證之後、 ONTAP 系統管理員或 ONTAP 服務處理器存取需要所有現有系統管理員透過 SAML IDP 進行驗證。叢集使用者帳戶無需變更。啟用 SAML 驗證時、會將的新驗證方法新 `saml` 增至具有與應用程式管理員角色的現有使用者 `http` `ontapi` 。
+
+啟用 SAML 驗證之後、需要 SAML IDP 存取的其他新帳戶應在 ONTAP 中定義、並以系統管理員角色及和應用程式的 SAML 驗證方法定義 `http` `ontapi` 。如果在某個時間點停用 SAML 驗證、則這些新帳戶需要 `password` 以和應用程式的管理員角色來定義驗證方法 `http` `ontapi` 、並將用於本機 ONTAP 驗證的主控台應用程式新增至 ONTAP 系統管理員。
+
+啟用 SAML IDP 之後、 IDP 會使用 IDP 可用的方法（例如輕量型目錄存取傳輸協定（ LDAP ）、 Active Directory （ AD ）、 Kerberos 、密碼等）來執行 ONTAP 系統管理員存取的驗證。可用的方法對 IDP 是唯一的。在 ONTAP 中設定的帳戶必須具有對應至 IDP 驗證方法的使用者 ID 。
+
+已通過 NetApp 驗證的 IDP 為 Microsoft ADFS 、 Cisco Duo 和開放原始碼 Shibboleth IDP 。
+
+從 ONTAP 9.14.1 開始、 Cisco 雙核心可作為 SSH 的第二個驗證因素。
+
+如需更多關於 MFA for ONTAP System Manager 、 Active IQ Unified Manager 和 SSH 的資訊、請參閱 link:http://www.netapp.com/us/media/tr-4647.pdf["TR-4647 ： ONTAP 9 中的多因素驗證"^]。
+
+
+
+=== ONTAP System Manager 洞見
+
+從 ONTAP 9.11.1 開始、 ONTAP 系統管理員提供深入見解、協助叢集管理員簡化日常工作。安全性洞見是以本技術報告的建議為基礎。
+
+[cols="43%,57%"]
+|===
+| Security Insight | 決心 
+
+
+| 已啟用 Telnet | NetApp建議使用安全Shell（SSH）進行安全遠端存取。 
+
+
+| 已啟用遠端 Shell （ RSH ） | NetApp 建議使用 SSH 進行安全的遠端存取。 
+
+
+| AutoSupport 使用的是不安全的傳輸協定 | AutoSupport 未設定為透過連結： HTTPS 傳送。 
+
+
+| 叢集層級的叢集上未設定登入橫幅 | 如果未針對叢集設定登入橫幅、則會發出警告。 
+
+
+| SSH 使用不安全的密碼 | 如果 SSH 使用不安全的密碼、則會發出警告。 
+
+
+| 設定的 NTP 伺服器太少 | 如果設定的 NTP 伺服器數量少於三個、則會發出警告。 
+
+
+| 預設管理使用者未鎖定 | 如果不使用任何預設的系統管理帳戶（ admin 或 diag ）登入系統管理員、而且這些帳戶未鎖定、建議您將其鎖定。 
+
+
+| 勒索軟體防禦：磁碟區沒有 Snapshot 原則 | 一個或多個磁碟區未附加適當的 Snapshot 原則。 
+
+
+| 勒索軟體防禦—停用 Snapshot 自動刪除 | 已為一或多個磁碟區設定 Snapshot 自動刪除。 
+
+
+| 磁碟區並未受到勒索軟體攻擊的監控 | 多個磁碟區支援自主勒索軟體保護、但尚未設定。 
+
+
+| SVM 未設定為自動勒索軟體保護 | 多個 SVM 支援自主勒索軟體保護、但尚未設定。 
+
+
+| 未設定原生 FPolicy | 未針對 NAS SVM 設定 FPolicy 。 
+
+
+| 啟用自動勒索軟體保護作用中模式 | 數個磁碟區已完成其學習模式、您可以開啟作用中模式 
+
+
+| 停用全域 FIPS 140-2 規範 | 未啟用全域 FIPS 140-2 規範。 
+
+
+| 未設定叢集以接收通知 | 電子郵件、 Webhooks 或 SNMP traphosts 未設定為接收通知。 
+|===
+如需 ONTAP System Manager 深入分析的詳細資訊，請參閱 link:https://docs.netapp.com/us-en/ontap/insights-system-optimization-task.html#view-optimization-insights["ONTAP System Manager Insights 文件"]。

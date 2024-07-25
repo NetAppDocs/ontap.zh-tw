@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/ntp.html 
+keywords: tr-4569, ontap hardening guide, time synchronize, NTP servers, symmetric authentication, cluster time-service ntp server create 
+summary: 您必須設定網路時間傳輸協定（ NTP ）伺服器、使叢集時間至少與三個外部 NTP 伺服器同步。 
+---
+= 網路時間傳輸協定
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+雖然 ONTAP 可讓您手動設定叢集上的時區、日期和時間、但您必須設定網路時間傳輸協定（ NTP ）伺服器、使叢集時間至少與三個外部 NTP 伺服器同步。
+
+當叢集時間不準確時、可能會發生問題。雖然 ONTAP 可讓您手動設定叢集上的時區、日期和時間、但您必須設定網路時間傳輸協定（ NTP ）伺服器、使叢集時間與外部 NTP 伺服器同步。
+
+從使用S25 9.5開始ONTAP 、您可以使用對稱驗證來設定NTP伺服器。
+
+您最多可以使用命令建立 10 個外部 NTP 伺服器的關聯 `cluster time-service ntp server create` 。為了提供備援和時間服務品質、您應將至少三部外部NTP伺服器與叢集建立關聯。
+
+如需 ONTAP 中 NTP 組態的詳細資訊、請參閱 link:../system-admin/manage-cluster-time-concept.html["管理叢集時間（僅限叢集管理員）"]。
