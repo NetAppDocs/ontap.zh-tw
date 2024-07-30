@@ -37,7 +37,7 @@ summary: 如果您要在節點上使用NVMe傳輸協定、則必須針對NVMe專
  a| 
 . 在System Manager中、按一下* Storage > Storage VM*。
 . 按一下您要設定的儲存VM。
-. 按一下*設定*索引標籤、然後按一下 image:icon_gear.gif["設定圖示"] 在NVMe傳輸協定旁。
+. 按一下 * 設定 * 索引標籤、然後按一下 image:icon_gear.gif["動作圖示"] NVMe 通訊協定旁的。
 . 選取*啟用NVMe/FC*或*啟用NVMe/TCP*和*儲存*。
 
 
@@ -124,13 +124,13 @@ vserver nvme show -vserver <SVM_name>
 +
 [source, cli]
 ----
-network interface create -vserver <SVM_name> -lif <lif_name> -role data -data-protocol fc-nvme -home-node <home_node> -home-port <home_port>
+network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <ip address> -role data -data-protocol fc-nvme -home-node <home_node> -home-port <home_port>
 ----
 ** ONTAP 9.10.1 或更新版本、 FC 或 TCP ：
 +
 [source, cli]
 ----
-network interface create -vserver <SVM_name> -lif <lif_name> -service-policy <default-data-nvme-tcp | default-data-nvme-fc> -data-protocol <fcp | fc-nvme | nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
+network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <ip address> -service-policy <default-data-nvme-tcp | default-data-nvme-fc> -data-protocol <fcp | fc-nvme | nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
 ----
 
 

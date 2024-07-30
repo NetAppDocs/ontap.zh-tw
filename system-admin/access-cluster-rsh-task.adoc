@@ -20,14 +20,6 @@ summary: 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安�
 +
 。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。如需詳細資訊、請參閱 `security login` 手冊頁。
 
-* Rsh必須已在叢集或節點管理生命體所使用的管理防火牆原則中啟用、以便讓RSHH要求能夠通過防火牆。
-+
-依預設、 RSH 會停用。。 `system services firewall policy show` 命令 `-service rsh` 參數顯示是否已在防火牆原則中啟用 RSH 。如需詳細資訊、請參閱 `system services firewall policy` 手冊頁。
-
-* 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
-+
-。 `network options ipv6 show` 命令會顯示是否已啟用 IPv6 。。 `system services firewall policy show` 命令會顯示防火牆原則。
-
 
 
 .關於這項工作
@@ -42,18 +34,33 @@ summary: 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安�
 +
 如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
 
+* rsh 命令需要進階權限。
 
 
 .步驟
-. 從管理主機輸入下列命令：
+. 確認已啟用 RSH 安全性通訊協定：
 +
-`*rsh _hostname_or_IP_ -l _username:passwordcommand_*`
+`security protocol show`
 
 +
-`_hostname_or_IP_` 是叢集管理 LIF 或節點管理 LIF 的主機名稱或 IP 位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+.. 如果啟用了 RSH 安全性通訊協定、請繼續下一步。
+.. 如果未啟用 RSH 安全性通訊協定、請使用下列命令加以啟用：
++
+`security protocol modify -application rsh -enabled true`
+
+
+
+. 確認管理階層中存在該 `management-rsh-server` 服務：
++
+`network interface show -services management-rsh-server`
 
 +
-`_command_` 是您要透過 RSH 執行的命令。
+.. 如果 `management-rsh-server` 服務存在、請繼續下一步。
+.. 如果 `management-rsh-server` 服務不存在、請使用下列命令來新增服務：
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-rsh-server`
+
+
 
 
 
