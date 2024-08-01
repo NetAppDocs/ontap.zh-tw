@@ -32,11 +32,33 @@ summary: 您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Vo
 
 在執行還原之前、會停用為目的地Volume定義的任何配額規則。您可以使用 `volume quota modify` 還原作業完成後重新啟動配額規則的命令。
 
+當磁碟區中的資料遺失或毀損時、您可以從先前的Snapshot複本還原資料、以復原資料。
+
+此程序會以舊版Snapshot複本的資料取代來源磁碟區上的目前資料。您應該在目的地叢集上執行此工作。
+
 .步驟
+您可以使用系統管理員或 ONTAP CLI 還原磁碟區的內容。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 按一下「*保護>關係*」、然後按一下來源Volume名稱。
+. 按一下 image:icon_kabob.gif["功能表選項圖示"] 、然後選取 * 還原 * 。
+. 在*來源*下、預設會選取來源Volume。如果您要選擇來源以外的磁碟區、請按一下*其他Volume *。
+. 在*目的地*下、選擇您要還原的Snapshot複本。
+. 如果來源與目的地位於不同的叢集上、請在遠端叢集上按一下*保護>關係*、以監控還原進度。
+
+
+--
+.CLI
+--
 . 列出目的地Volume中的Snapshot複本：
 +
-`volume snapshot show -vserver <SVM> -volume <volume>`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM> -volume <volume>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -69,11 +91,9 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 如需完整的命令語法、請參閱手冊頁。
 
 +
-[NOTE]
-====
-您必須從原始來源SVM或原始來源叢集執行此命令。
 
-====
+NOTE: 您必須從原始來源SVM或原始來源叢集執行此命令。
+
 +
 下列命令可還原原始來源 Volume 的內容 `primary1` 從Snapshot複本 `daily.2013-01-25_0010` 在原始目的地 Volume 中 `secondary1`：
 
@@ -91,6 +111,8 @@ Do you want to continue? {y|n}: y
 . 重新掛載還原的磁碟區、然後重新啟動所有使用該磁碟區的應用程式。
 
 
+--
+====
 
 
 == 其他方法可在ONTAP 不一樣的情況下執行
@@ -98,9 +120,6 @@ Do you want to continue? {y|n}: y
 [cols="2"]
 |===
 | 若要執行這些工作... | 請參閱此內容... 
-
-
-| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"^] 
 
 
 | System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-restore-snapvault/index.html["使用SnapVault 功能概述進行Volume還原"^] 

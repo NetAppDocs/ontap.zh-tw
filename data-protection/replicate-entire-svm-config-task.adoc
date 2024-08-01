@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/replicate-entire-svm-config-task.html 
 sidebar: sidebar 
-keywords: replicate, entire, svm, configuration, snapmirror, snap mirror, replication, mirror vault policy, snapshot 
-summary: 您可以使用SnapMirror create命令的-idente-preserve true選項來複寫整個SVM組態。 
+keywords: replicate, entire, svm, storage vm, disaster, protection, configuration, snapmirror, snap mirror, replication, mirror vault policy, snapshot 
+summary: 您可以建立 SVM 災難恢復（ SVM DR ）關係、將一個 SVM 組態複寫到另一個。在主要站台發生災難時、您可以快速啟動目的地 SVM 。 
 ---
 = 複寫整個SVM組態
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以使用SnapMirror create命令的-idente-preserve true選項來
 
 
 [role="lead"]
-您可以使用 `-identity-preserve true` 的選項 `snapmirror create` 複寫整個 SVM 組態的命令。
+您可以建立 SVM 災難恢復（ SVM DR ）關係、將一個 SVM 組態複寫到另一個。在主要站台發生災難時、您可以快速啟動目的地 SVM 。
 
 .開始之前
 來源與目的地叢集和SVM必須進行對等關係。
@@ -24,11 +24,31 @@ summary: 您可以使用SnapMirror create命令的-idente-preserve true選項來
 
 從ONTAP 使用鏡射資料庫原則的S9.9開始、您可以在來源和目的地SVM上建立不同的Snapshot原則、而目的地上的Snapshot複本不會被來源上的Snapshot複本覆寫。如需詳細資訊、請參閱 link:snapmirror-svm-replication-concept.html["瞭解SnapMirror SVM複寫"]。
 
+請從目的地完成此程序。如果您需要建立新的保護原則、例如、當來源儲存 VM 已設定 SMB 時、您應該使用 System Manager 來建立原則、並在 * 新增保護原則 * 視窗中選取 * Identity Preserve * 選項。如需詳細資訊、請參閱 link:create-custom-replication-policy-concept.html["建立自訂資料保護原則"]。
+
 .步驟
+您可以從系統管理員或 ONTAP CLI 執行此工作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在目的地叢集上、按一下*保護>關係*。
+. 在 * 關係 * 下、按一下 * 保護 * 、然後選擇 * 儲存 VM （ DR ） * 。
+. 選取保護原則。如果您已建立自訂保護原則、請選取該原則、然後選擇您要複寫的來源叢集和儲存VM。您也可以輸入新的儲存VM名稱來建立新的目的地儲存VM。
+. 如有需要、請變更目的地設定以覆寫身分保留、並選擇納入或排除網路介面和傳輸協定。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
 . 建立目的地SVM：
 +
-`vserver create -vserver _SVM_name_ -subtype dp-destination`
-
+[source, cli]
+----
+vserver create -vserver <SVM_name> -subtype dp-destination
+----
 +
 SVM名稱在來源叢集和目的地叢集之間必須是唯一的。
 
@@ -46,17 +66,17 @@ cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 
 . 建立複寫工作排程：
 +
-`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 適用於 `-month`、 `-dayofweek`和 `-hour`，您可以指定 `all` 可分別在每月、每週的某一天和每小時運行作業。
 
 +
-[NOTE]
-====
-SVM SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 15 分鐘。SVM SnapMirror 關係中 FlexGroup Volume 的最低支援排程（ RPO ）為 30 分鐘。
 
-====
+NOTE: SVM SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）為 15 分鐘。SVM SnapMirror 關係中 FlexGroup Volume 的最低支援排程（ RPO ）為 30 分鐘。
+
 +
 以下範例建立名為的工作排程 `my_weekly` 週六上午 3 ： 00 開始：
 
@@ -67,14 +87,14 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek saturday -hou
 ----
 . 從目的地SVM或目的地叢集建立複寫關係：
 +
-`snapmirror create -source-path _SVM_name_: -destination-path _SVM_name_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true`
-
+[source, cli]
+----
+snapmirror create -source-path <SVM_name>: -destination-path <SVM_name>: -type <DP|XDP> -schedule <schedule> -policy <policy> -identity-preserve true
+----
 +
-[NOTE]
-====
-您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：
 
-====
+NOTE: 您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：
+
 +
 以下範例使用預設值建立 SnapMirror DR 關係 `MirrorAllSnapshots` 原則：
 
@@ -109,22 +129,27 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 . 停止目的地SVM：
 +
-`vserver stop`
-
+[source, cli]
+----
+vserver stop -vserver <SVM_name>
+----
 +
-`_SVM name_`
-
-+
-下列範例會停止名為DV1的目的地SVM：
+下列範例會停止名為 SVM_backup 的目的地 SVM ：
 
 +
 [listing]
 ----
-cluster_dst::> vserver stop -vserver dvs1
+cluster_dst::> vserver stop -vserver svm_backup
 ----
-. 從目的地SVM或目的地叢集、初始化SVM複寫關係：+
+. 從目的地SVM或目的地叢集、初始化SVM複寫關係：
 +
-`snapmirror initialize -source-path _SVM_name_: -destination-path _SVM_name_:`
+[source, cli]
+----
+snapmirror initialize -source-path <SVM_name>: -destination-path <SVM_name>:
+----
++
+
+NOTE: 您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-path` 和 `-destination-path` 選項：
 
 +
 以下範例初始化來源 SVM 之間的關係、 `svm1`以及目的地 SVM 、 `svm_backup`：
@@ -135,3 +160,6 @@ cluster_dst::> vserver stop -vserver dvs1
 cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
 ----
 
+
+--
+====

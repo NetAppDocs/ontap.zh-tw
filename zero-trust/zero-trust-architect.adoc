@@ -99,7 +99,7 @@ ONTAP 的 FPolicy 功能搭配 FPolicy 合作夥伴的 NetApp 聯盟合作夥伴
 
 NVE 也提供一項稱為的功能 https://blog.netapp.com/flash-memory-summit-award/["安全清除"^] 、可在將敏感檔案寫入非機密磁碟區時、以密碼方式移除資料外洩的有毒資料。
 
-可以是 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-466E3BFC-F7FA-4B79-A8C9-2540C3BF1408.html["內建金鑰管理程式（OKM）"^]內建於 ONTAP 的金鑰管理員、也可以與 NSE 和 NVE 搭配使用、以安全地儲存金鑰 https://mysupport.netapp.com/matrix/imt.jsp?components=69551;&solution=1156&isHWU&src=IMT["已核准"^] https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-DD718B42-038D-4009-84FF-20BBD6530BC2.html["外部金鑰管理員"^] 資料。
+可將 link:../encryption-at-rest/support-storage-encryption-concept.html["內建金鑰管理程式（OKM）"]內建於 ONTAP 的金鑰管理員或協力廠商搭配 NSE 和 NVE 使用、以安全地儲存金鑰 https://mysupport.netapp.com/matrix/imt.jsp?components=69551;&solution=1156&isHWU&src=IMT["已核准"^] link:../encryption-at-rest/support-storage-encryption-concept.html["外部金鑰管理員"] 資料。
 
 image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[適用於 AFF 和 FAS 流程圖的雙層加密解決方案]
 
@@ -109,13 +109,13 @@ image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[適用於 A
 
 ==== 資料傳輸中加密
 
-ONTAP 資料傳輸加密功能可保護使用者資料存取和控制面板存取。使用者資料存取可透過 SMB 3.0 加密來加密 Microsoft CIFS 共用存取、或透過 krb5P for NFS Kerberos 5 來加密。使用 CIFS 、 NFS 和 iSCSI 也可以加密使用者資料存取 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面存取是以傳輸層安全性（ TLS ）加密。ONTAP 提供 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 控制平面存取的法規遵循模式、可啟用 FIPS 核准的演算法、並停用未經 FIPS 核准的演算法。資料複寫是使用加密 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-csp/GUID-D58CC065-5EB5-4887-9A64-714755CC5B51.html["叢集對等加密"^]的。這可為 ONTAP SnapVault 和 SnapMirror 技術提供加密。
+ONTAP 資料傳輸加密功能可保護使用者資料存取和控制面板存取。使用者資料存取可透過 SMB 3.0 加密來加密 Microsoft CIFS 共用存取、或透過 krb5P for NFS Kerberos 5 來加密。使用 CIFS 、 NFS 和 iSCSI 也可以加密使用者資料存取 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面存取是以傳輸層安全性（ TLS ）加密。ONTAP 提供 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 控制平面存取的法規遵循模式、可啟用 FIPS 核准的演算法、並停用未經 FIPS 核准的演算法。資料複寫是使用加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["叢集對等加密"]的。這可為 ONTAP SnapVault 和 SnapMirror 技術提供加密。
 
 
 
 === 監控並記錄所有存取
 
-建立 RBAC 原則之後、您必須部署主動監控、稽核及警示。NetApp ONTAP 的 FPolicy Zero Trust Engine 搭配提供資料導向的 Zero https://www.netapp.com/partners/partner-connect["NetApp FPolicy 合作夥伴生態系統"^]Trust 模式所需的控制功能。NetApp ONTAP 是安全性豐富的資料管理軟體、 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cifs-nfs-audit/GUID-F1F54C15-057A-460E-A5E1-21FFBB9773FA.html["FPolicy"^] 是領先業界的 ONTAP 功能、可提供精細的檔案型事件通知介面。NetApp FPolicy 合作夥伴可以使用此介面、在 ONTAP 中提供更多資料存取的照明。ONTAP 的 FPolicy 功能搭配 FPolicy 合作夥伴的 NetApp 聯盟合作夥伴生態系統、可讓您識別組織資料的存在位置、以及哪些人可以存取。這是透過使用者行為分析來完成、可識別資料存取模式是否有效。使用者行為分析可用於警示異常或可疑的資料存取、而這種存取方式不符合正常模式、並在必要時採取行動拒絕存取。
+建立 RBAC 原則之後、您必須部署主動監控、稽核及警示。NetApp ONTAP 的 FPolicy Zero Trust Engine 搭配提供資料導向的 Zero https://www.netapp.com/partners/partner-connect["NetApp FPolicy 合作夥伴生態系統"^]Trust 模式所需的控制功能。NetApp ONTAP 是安全性豐富的資料管理軟體、 link:../nas-audit/two-parts-fpolicy-solution-concept.html["FPolicy"] 是領先業界的 ONTAP 功能、可提供精細的檔案型事件通知介面。NetApp FPolicy 合作夥伴可以使用此介面、在 ONTAP 中提供更多資料存取的照明。ONTAP 的 FPolicy 功能搭配 FPolicy 合作夥伴的 NetApp 聯盟合作夥伴生態系統、可讓您識別組織資料的存在位置、以及哪些人可以存取。這是透過使用者行為分析來完成、可識別資料存取模式是否有效。使用者行為分析可用於警示異常或可疑的資料存取、而這種存取方式不符合正常模式、並在必要時採取行動拒絕存取。
 
 FPolicy 合作夥伴正從使用者行為分析轉向機器學習（ ML ）和人工智慧（ AI ）、以提高事件的逼真度、減少誤報（如果有）。所有事件都應記錄到 Syslog 伺服器或安全資訊與事件管理（ SIEM ）系統、而此系統也可以採用 ML 和 AI 。
 

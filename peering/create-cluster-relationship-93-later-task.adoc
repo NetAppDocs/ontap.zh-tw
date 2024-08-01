@@ -2,7 +2,7 @@
 permalink: peering/create-cluster-relationship-93-later-task.html 
 sidebar: sidebar 
 keywords: create, cluster, peer, relationship 
-summary: 您可以使用叢集對等建立命令或 System Manager 、在本機叢集和遠端叢集之間建立對等關係。建立對等關係之後、您可以在遠端叢集上重複此工作、將其驗證至本機叢集。 
+summary: 將資料複製到遠端叢集以進行資料備份和災難恢復、藉此在本機叢集和遠端叢集之間建立叢集對等關係、然後保護資料。 
 ---
 = 建立叢集對等關係
 :allow-uri-read: 
@@ -11,10 +11,18 @@ summary: 您可以使用叢集對等建立命令或 System Manager 、在本機�
 
 
 [role="lead"]
-您可以使用 `cluster peer create` 命令建立本機叢集與遠端叢集之間的對等關係。建立對等關係之後、即可執行 `cluster peer create` 在遠端叢集上、將其驗證至本機叢集。
+在您將資料複寫到遠端叢集以進行資料備份和災難恢復之前、您應該先在本機叢集和遠端叢集之間建立叢集對等關係。
+
+有多種預設保護原則可供使用。如果您想要使用自訂原則、必須先建立保護原則。
 
 .開始之前
-* 您必須在叢集中每個要處理的節點上建立叢集間生命體。
+* 如果您使用 ONTAP CLI 、則必須使用下列其中一種方法、在叢集中的每個節點上建立叢集間的生命體：
++
+** link:configure-intercluster-lifs-share-data-ports-task.html["在共享的資料連接埠上設定叢集間LIF"]
+** link:configure-intercluster-lifs-use-dedicated-ports-task.html["在專用資料連接埠上設定叢集間的生命"]
+** link:configure-intercluster-lifs-use-ports-own-networks-task.html["在自訂IPspaces中設定叢集間LIF"]
+
+
 * 叢集必須執行ONTAP 的是不含更新版本的版本。（如果叢集執行ONTAP 的是版本號為2或更早的版本、請參閱中的程序 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2494079["此歸檔文件"^]）
 
 
@@ -26,7 +34,7 @@ summary: 您可以使用叢集對等建立命令或 System Manager 、在本機�
 .系統管理員
 --
 . 在本機叢集中、按一下 * 叢集 > 設定 * 。
-. 在 * 叢集間設定 * 區段中、按一下 * 新增網路介面 * 、然後新增叢集的叢集間網路介面。
+. 在 * 叢集間設定 * 區段中、按一下 * 新增網路介面 * 、然後輸入 IP 位址和子網路遮罩、以新增叢集間網路介面。
 +
 在遠端叢集上重複此步驟。
 
@@ -45,7 +53,7 @@ summary: 您可以使用叢集對等建立命令或 System Manager 、在本機�
 +
 [source, cli]
 ----
-cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS>|1...7days|1...168hours -peer-addrs <peer_LIF_IPs > -initial-allowed-vserver-peers <svm_name>|* -ipspace <ipspace>
+cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS|1...7days|1...168hours> -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name|*> -ipspace <ipspace>
 ----
 +
 如果您同時指定兩者 `-generate-passphrase` 和 `-peer-addrs`，僅在中指定其叢集間的生命體 `-peer-addrs` 可以使用產生的密碼。
@@ -194,9 +202,6 @@ cluster01-02
 [cols="2"]
 |===
 | 若要執行這些工作... | 請參閱此內容... 
-
-
-| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_prepare_mirror.html["準備鏡射和保存"^] 
 
 
 | System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-disaster-prep/index.html["Volume災難恢復準備總覽"^] 

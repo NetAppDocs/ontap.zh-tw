@@ -2,7 +2,7 @@
 permalink: data-protection/make-destination-volume-writeable-task.html 
 sidebar: sidebar 
 keywords: destination, volume, writeable, write, serve data, snapmirror, quiesce, pause, abort, transfers 
-summary: 您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用SnapMirror quiesce命令來停止排程的目的地傳輸、使用SnapMirror abort-command來停止進行中的傳輸、以及使用SnapMirror中斷命令來使目的地可寫入。 
+summary: 您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。 
 ---
 = 使目的地Volume可寫入
 :allow-uri-read: 
@@ -11,16 +11,39 @@ summary: 您必須先將目的地Volume設定為可寫入、才能將資料從�
 
 
 [role="lead"]
-您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。您可以使用 `snapmirror quiesce` 停止排程傳輸至目的地的命令 `snapmirror abort` 命令以停止進行中的傳輸、以及 `snapmirror break` 可讓目的地寫入的命令。
+您必須先將目的地Volume設定為可寫入、才能將資料從磁碟區提供給用戶端。若要在來源無法使用時從鏡射目的地提供資料、請停止排程傳輸至目的地、然後中斷SnapMirror關係、使目的地可寫入。
 
 .關於這項工作
 您必須從目的地SVM或目的地叢集執行此工作。
 
 .步驟
+您可以使用系統管理員或 ONTAP CLI 、將目的地磁碟區設為可寫入。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取保護關係：按一下 * 保護 > 關係 * 、然後按一下所需的磁碟區名稱。
+. 單擊。 image:icon_kabob.gif["功能表選項圖示"]
+. 停止排程的傳輸：按一下*暫停*。
+. 使目的地可寫入：按一下*中斷*。
+. 移至主*關係*頁面、確認關係狀態顯示為「中斷」。
+
+
+.後續步驟：
+將目的地 Volume 設為可寫入後、您需要 link:resynchronize-relationship-task.html["反向重新同步複寫關係"] 執行此操作。
+
+當停用的來源磁碟區再次可用時、您應該再次反轉重新同步關係、將目前資料複製到原始來源磁碟區。此程序會取代原始來源Volume上的資料。
+
+--
+.CLI
+--
 . 停止排程的目的地傳輸：
 +
-`snapmirror quiesce -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror quiesce -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -34,17 +57,17 @@ cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_b
 ----
 . 停止持續傳輸至目的地：
 +
-`snapmirror abort -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror abort -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
 +
-[NOTE]
-====
-SnapMirror同步關係不需要執行此步驟（ONTAP 從支援的版本號為9.5開始）。
 
-====
+NOTE: SnapMirror同步關係不需要執行此步驟（ONTAP 從支援的版本號為9.5開始）。
+
 +
 下列範例會停止來源磁碟區之間的持續傳輸 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup`：
 
@@ -55,8 +78,10 @@ cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_bac
 ----
 . 打破SnapMirror DR關係：
 +
-`snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror break -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 如需完整的命令語法、請參閱手冊頁。
 
@@ -68,8 +93,14 @@ cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_bac
 ----
 cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+.後續步驟：
+將目的地 Volume 設為可寫入後、您需要 link:resynchronize-relationship-task.html["重新同步複寫關係"] 執行此操作。
 
 
+
+--
+====
 
 
 == 其他方法可在ONTAP 不一樣的情況下執行
@@ -77,9 +108,6 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 [cols="2"]
 |===
 | 若要執行這些工作... | 請參閱此內容... 
-
-
-| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_serve_data_from_destination.html["從SnapMirror目的地提供資料"^] 
 
 
 | System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-disaster-recovery/index.html["Volume災難恢復總覽"^] 

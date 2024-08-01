@@ -77,8 +77,10 @@ NOTE: 如果您使用的是、只有在從舊版 Snapshot 複本還原之前、�
 
 . 列出Volume中的Snapshot複本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM> -volume <volume>
+----
 +
 下列範例顯示中的 Snapshot 複本 `vol1`：
 
@@ -90,7 +92,7 @@ clus1::> volume snapshot show -vserver vs1 -volume vol1
 
 Vserver Volume Snapshot                State    Size  Total% Used%
 ------- ------ ---------- ----------- ------   -----  ------ -----
-vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
                daily.2013-01-25_0010   valid   92KB      0%    0%
                hourly.2013-01-25_0105  valid   228KB     0%    0%
                hourly.2013-01-25_0205  valid   236KB     0%    0%
@@ -102,8 +104,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原磁碟區內容：
 +
-`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
+----
 +
 下列範例還原的內容 `vol1`：
 
@@ -117,8 +121,10 @@ cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.20
 .如果未識別出系統攻擊、請進行還原
 . 列出Volume中的Snapshot複本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM> -volume <volume>
+----
 +
 下列範例顯示中的 Snapshot 複本 `vol1`：
 
@@ -130,7 +136,7 @@ clus1::> volume snapshot show -vserver vs1 -volume vol1
 
 Vserver Volume Snapshot                State    Size  Total% Used%
 ------- ------ ---------- ----------- ------   -----  ------ -----
-vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
                daily.2013-01-25_0010   valid   92KB      0%    0%
                hourly.2013-01-25_0105  valid   228KB     0%    0%
                hourly.2013-01-25_0205  valid   236KB     0%    0%
@@ -142,8 +148,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原磁碟區內容：
 +
-`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
+----
 +
 下列範例還原的內容 `vol1`：
 
@@ -152,6 +160,8 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
+
+
 . 重複步驟 1 和 2 、使用所需的 Snapshot 複本還原磁碟區。
 
 

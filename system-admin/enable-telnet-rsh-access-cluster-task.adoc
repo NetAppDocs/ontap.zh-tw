@@ -1,8 +1,8 @@
 ---
 permalink: system-admin/enable-telnet-rsh-access-cluster-task.html 
 sidebar: sidebar 
-keywords: enable, telnet, rsh, access, cluster, mgmt, management, firewall, policy 
-summary: 最佳安全做法是在預先定義的管理防火牆原則（mgmt）中停用遠端登入和RSH。若要讓叢集接受遠端登入或RSHE要求、您必須建立新的管理防火牆原則、並啟用「遠端登入」或「RSHH」、然後將新原則與叢集管理LIF建立關聯。 
+keywords: enable, telnet, rsh, access, cluster, mgmt, management, service, policy 
+summary: 最佳安全性做法是預設停用 Telnet 和 RSH 。若要讓叢集能夠接受 Telnet 或 RSH 要求、您必須在預設管理服務原則中啟用該服務。 
 ---
 = 啟用對叢集的遠端登入或RSH存取
 :hardbreaks:
@@ -12,23 +12,55 @@ summary: 最佳安全做法是在預先定義的管理防火牆原則（mgmt）�
 
 
 [role="lead"]
-最佳安全性做法是在預先定義的管理防火牆原則中停用 Telnet 和 RSH (`mgmt`）。若要讓叢集接受遠端登入或RSHE要求、您必須建立新的管理防火牆原則、並啟用「遠端登入」或「RSHH」、然後將新原則與叢集管理LIF建立關聯。
+最佳安全性做法是預設停用 Telnet 和 RSH 。若要讓叢集能夠接受 Telnet 或 RSH 要求、您必須在預設管理服務原則中啟用該服務。
 
 .關於這項工作
-ONTAP 可防止您變更預先定義的防火牆原則、但您可以複製預先定義的原則來建立新原則 `mgmt` 管理防火牆原則、然後在新原則下啟用 Telnet 或 RSH 。不過、由於遠端登入和RSHH並非安全傳輸協定、因此您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
+* rsh不是安全的傳輸協定。
++
+您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
 
-請執行下列步驟以啟用遠端登入或RSHE存取叢集：
+* 支援每個節點最多50個並行的RSH工作階段。ONTAP
++
+如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
+
++
+如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
+
+* rsh 命令需要進階權限。
+
 
 .步驟
-. 進入進階權限模式：
-`*set advanced*`
-. 啟用安全性傳輸協定（ RSH 或 Telnet ）：
-`*security protocol modify -application _security_protocol_ -enabled true*`
-. 根據建立新的管理防火牆原則 `mgmt` 管理防火牆原則：
-`*system services firewall policy clone -policy mgmt -destination-policy _policy-name_*`
-. 在新的管理防火牆原則中啟用 Telnet 或 RSH ：
-`*system services firewall policy create -policy _policy-name_ -service _security_protocol_ -action allow -ip-list _ip_address/netmask_*`
-若要允許所有 IP 位址、您應該指定 `-ip-list 0.0.0.0/0`
-. 將新原則與叢集管理 LIF 建立關聯：
-`*network interface modify -vserver _cluster_management_LIF_ -lif cluster_mgmt -firewall-policy _policy-name_*`
+. 確認已啟用 RSH 或 Telnet 安全性通訊協定：
++
+`security protocol show`
+
++
+.. 如果啟用了 RSH 或 Telnet 安全性通訊協定、請繼續下一步。
+.. 如果未啟用 RSH 或 Telnet 安全性通訊協定、請使用下列命令加以啟用：
++
+`security protocol modify -application <rsh/telnet> -enabled true`
+
+
+
+. 確認 `management-rsh-server` 或 `management-telnet-server` 服務存在於管理階層中：
++
+`network interface show -services management-rsh-server`
+
++
+或
+
++
+`network interface show -services management-telnet-server`
+
++
+.. 如果 `management-rsh-server` 或 `management-telnet-server` 服務存在、請繼續下一步。
+.. 如果 `management-rsh-server` 或 `management-telnet-server` 服務不存在、請使用下列命令加以新增：
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-rsh-server`
+
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-telnet-server`
+
+
+
 

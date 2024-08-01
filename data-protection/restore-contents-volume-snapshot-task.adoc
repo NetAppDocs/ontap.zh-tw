@@ -11,15 +11,31 @@ summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原磁
 
 
 [role="lead"]
-您可以使用 `volume snapshot restore` 從 Snapshot 複本還原 Volume 內容的命令。
+您可以從Snapshot複本還原磁碟區、將磁碟區還原至較早的時間點。您可以使用 `volume snapshot restore` 命令、從 Snapshot 複本還原磁碟區的內容。
 
 .關於這項工作
 如果磁碟區具有SnapMirror關係、請在從Snapshot複本還原之後、立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
 
+.步驟
+您可以使用系統管理員或 ONTAP CLI 。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 按一下「*儲存設備*」、然後選取一個磁碟區。
+. 在 * Snapshot Copies * （快照複本 * ）下、按一下 image:icon_kabob.gif["功能表選項圖示"] 您要還原的 Snapshot 複本旁的、然後選取 * Restore * （還原 * ）。
+
+
+--
+.CLI
+--
 . 列出Volume中的Snapshot複本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM> -volume <volume>
+----
 +
 下列範例顯示中的 Snapshot 複本 `vol1`：
 
@@ -31,7 +47,7 @@ clus1::> volume snapshot show -vserver vs1 -volume vol1
 
 Vserver Volume Snapshot                State    Size  Total% Used%
 ------- ------ ---------- ----------- ------   -----  ------ -----
-vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
                daily.2013-01-25_0010   valid   92KB      0%    0%
                hourly.2013-01-25_0105  valid   228KB     0%    0%
                hourly.2013-01-25_0205  valid   236KB     0%    0%
@@ -43,8 +59,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 從Snapshot複本還原磁碟區內容：
 +
-`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
+----
 +
 下列範例還原的內容 `vol1`：
 
@@ -54,3 +72,6 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
 
+
+--
+====

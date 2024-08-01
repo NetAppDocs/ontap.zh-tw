@@ -13,10 +13,17 @@ summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的�
 [role="lead"]
 主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create` 建立 SnapMirror DR 、 SnapVault 或統一化複寫資料保護關係的命令。
 
+從ONTAP 功能完善的9.11.1開始、您可以使用System Manager來選取預先建立和自訂的鏡像和資料保存原則、顯示和選取舊有原則、以及在保護磁碟區和儲存VM時、覆寫保護原則中定義的傳輸排程。此功能也可在ONTAP 《》ONTAP 的更新版修補程式《》中找到。
+
+[NOTE]
+====
+如果您使用ONTAP 的是更新ONTAP 版本的更新版本的更新版本的更新版本的更新版本、且您使用System Manager設定SnapMirror、則如果ONTAP 您打算升級至版本的更新版本的更新版本、則應使用更新版本的更新版本的更新版本。9.9.1P13或更新版本的ONTAP 更新版本以及更新版本的更新版本的更新版本ONTAP ONTAP 。
+
+====
 .開始之前
 * 來源與目的地叢集和SVM必須進行對等關係。
 +
-https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["叢集與SVM對等關係"^]
+link:../peering/index.html["叢集與SVM對等關係"]
 
 * 目的地Volume上的語言必須與來源Volume上的語言相同。
 
@@ -103,6 +110,23 @@ options replication.create_data_protection_rels.enable on
 從 ONTAP 9.14.1 開始 `-backoff-level` 、選項會新增至 `snapmirror create`、和命令、 `snapmirror modify` `snapmirror restore` 讓您可以指定每個關係的回溯層級。只有 FlexVol SnapMirror 關係才支援此選項。選用命令會指定因用戶端作業而導致的 SnapMirror 備份層級。退貨值可以是高、中或無。預設值為高。
 
 .步驟
+您可以使用系統管理員或 ONTAP CLI 來建立複寫關係。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取要保護的磁碟區或LUN：按一下「*儲存設備>磁碟區*」或「*儲存設備> LUN*」、然後按一下所需的磁碟區或LUN名稱。
+. 單擊。 image:icon_protect.gif["保護圖示"]
+. 選取目的地叢集和儲存VM。
+. 預設會選取非同步原則。若要選取同步原則、請按一下*更多選項*。
+. 按一下*保護*。
+. 按一下所選磁碟區或LUN的* SnapMirror（本機或遠端）*索引標籤、確認保護設定正確。
+
+
+--
+.CLI
+--
 . 從目的地叢集建立複寫關係：
 +
 執行此命令之前、您必須以必要的值取代尖括號中的變數。
@@ -116,11 +140,9 @@ snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type
 如需完整的命令語法、請參閱手冊頁。
 
 +
-[NOTE]
-====
-。 `schedule` 建立 SnapMirror 同步關係時、參數不適用。
 
-====
+NOTE: 。 `schedule` 建立 SnapMirror 同步關係時、參數不適用。
+
 +
 以下範例使用預設值建立 SnapMirror DR 關係 `MirrorLatest` 原則：
 
@@ -202,18 +224,18 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy SnapCenterSync
 ----
 +
-[NOTE]
-====
-預先定義的原則 `SnapCenterSync` 屬於類型 `Sync`。此原則會複寫使用建立的任何 Snapshot 複本 `snapmirror-label` 的「 app_sistent 」。
 
-====
+NOTE: 預先定義的原則 `SnapCenterSync` 屬於類型 `Sync`。此原則會複寫使用建立的任何 Snapshot 複本 `snapmirror-label` 的「 app_sistent 」。
+
 
 
 .完成後
 使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。
 
+--
+====
 .相關資訊
-* link:https://docs.netapp.com/us-en/ontap/data-protection/create-delete-snapmirror-failover-test-task.html["建立並刪除 SnapMirror 容錯移轉測試磁碟區"]。
+* link:create-delete-snapmirror-failover-test-task.html["建立並刪除 SnapMirror 容錯移轉測試磁碟區"]。
 
 
 
@@ -223,9 +245,6 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 [cols="2"]
 |===
 | 若要執行這些工作... | 請參閱此內容... 
-
-
-| 重新設計的System Manager（ONTAP 提供更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_configure_mirror.html["設定鏡射與資料保險箱"^] 
 
 
 | System Manager Classic（ONTAP 適用於更新版本的更新版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-backup-snapvault/index.html["Volume備份：SnapVault 使用功能概述"^] 
