@@ -20,14 +20,6 @@ summary: 您可以向叢集發出遠端登入要求、以執行管理工作。�
 +
 。 `-application` 的參數 `security login` 命令會指定使用者帳戶的存取方法。如需詳細資訊、請參閱 `security login` 手冊頁。
 
-* 叢集或節點管理生命里所使用的管理防火牆原則中、必須已啟用遠端登入、以便透過防火牆來處理遠端登入要求。
-+
-預設會停用Telnet。。 `system services firewall policy show` 命令 `-service telnet` 參數顯示是否已在防火牆原則中啟用 Telnet 。如需詳細資訊、請參閱 `system services firewall policy` 手冊頁。
-
-* 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
-+
-。 `network options ipv6 show` 命令會顯示是否已啟用 IPv6 。。 `system services firewall policy show` 命令會顯示防火牆原則。
-
 
 
 .關於這項工作
@@ -43,15 +35,33 @@ summary: 您可以向叢集發出遠端登入要求、以執行管理工作。�
 如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
 
 * 如果您想ONTAP 要從Windows主機存取此功能、可以使用第三方公用程式、例如Putty。
+* rsh 命令需要進階權限。
 
 
 .步驟
-. 從管理主機輸入下列命令：
+. 確認已啟用 Telnet 安全性傳輸協定：
 +
-`*telnet _hostname_or_IP_*`
+`security protocol show`
 
 +
-`_hostname_or_IP_` 是叢集管理 LIF 或節點管理 LIF 的主機名稱或 IP 位址。建議使用叢集管理LIF。您可以使用IPv4或IPv6位址。
+.. 如果已啟用 Telnet 安全性通訊協定、請繼續下一步。
+.. 如果未啟用 Telnet 安全性通訊協定、請使用下列命令加以啟用：
++
+`security protocol modify -application telnet -enabled true`
+
+
+
+. 確認管理階層中存在該 `management-telnet-server` 服務：
++
+`network interface show -services management-telnet-server`
+
++
+.. 如果 `management-telnet-server` 服務存在、請繼續下一步。
+.. 如果 `management-telnet-server` 服務不存在、請使用下列命令來新增服務：
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-telnet-server`
+
+
 
 
 
