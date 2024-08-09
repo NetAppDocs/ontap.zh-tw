@@ -23,26 +23,10 @@ NOTE: 如果您在具有 Flash Cache 模組的系統上使用 NSE 、您也應�
 
 
 
-== ONTAP 9.8 及更新版本、含加密的根磁碟區
-
-
-NOTE: 如果您執行的是 ONTAP 9.8 或更新版本、且根磁碟區未加密、請遵循 ONTAP 9.6 或更新版本的程序。
-
-如果您執行ONTAP 的是更新版本的版本、而且根磁碟區已加密、則必須使用開機功能表設定內建金鑰管理還原密碼。如果您要更換開機媒體、也必須執行此程序。
-
-. 將節點開機至開機功能表、然後選取選項 `(10) Set onboard key management recovery secrets`。
-. 輸入 `y` 以使用此選項。
-. 出現提示時、輸入叢集的內建金鑰管理通關密碼。
-. 出現提示時、輸入備份金鑰資料。
-+
-節點會返回開機功能表。
-
-. 從開機功能表中、選取選項 `(1) Normal Boot`。
-
-
-
-
 == 更新版本ONTAP
+
+
+IMPORTANT: 如果您執行的是 ONTAP 9.8 或更新版本、而且根磁碟區已加密、請遵循的程序 <<ontap-9-8>>。
 
 . 確認金鑰需要還原： +
 `security key-manager key query -node _node_`
@@ -62,6 +46,22 @@ cluster1::> security key-manager onboard sync
 Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
 ----
 . 在通關密碼提示字元下、輸入叢集的內建金鑰管理通關密碼。
+
+
+
+
+== ONTAP 9.8 或更新版本、含加密的根磁碟區
+
+如果您執行ONTAP 的是更新版本的版本、而且根磁碟區已加密、則必須使用開機功能表設定內建金鑰管理還原密碼。如果您要更換開機媒體、也必須執行此程序。
+
+. 將節點開機至開機功能表、然後選取選項 `(10) Set onboard key management recovery secrets`。
+. 輸入 `y` 以使用此選項。
+. 出現提示時、輸入叢集的內建金鑰管理通關密碼。
+. 出現提示時、輸入備份金鑰資料。
++
+節點會返回開機功能表。
+
+. 從開機功能表中、選取選項 `(1) Normal Boot`。
 
 
 

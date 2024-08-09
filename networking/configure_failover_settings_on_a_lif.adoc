@@ -60,7 +60,7 @@ network interface modify -vserver <vserver_name> -lif <lif_name> -failover-polic
 下列命令會將容錯移轉原則設定為廣播網域範圍、並使用容錯移轉群組fg3中的連接埠做為SVM VS3上LIF資料1的容錯移轉目標：
 
 ....
-network interface modify -vserver vs3 -lif data1 failover-policy broadcast-domain-wide - failover-group fg3
+network interface modify -vserver vs3 -lif data1 -failover-policy broadcast-domain-wide -failover-group fg3
 
 network interface show -vserver vs3 -lif * -fields failover-group,failover-policy
 
@@ -71,5 +71,5 @@ vs3     data1          broadcast-domain-wide  fg3
 下列命令會停用SVM VS3上LIF資料1的容錯移轉：
 
 ....
-network interface modify -vserver vs3 -lif data1 failover-policy disabled
+network interface modify -vserver vs3 -lif data1 -failover-policy disabled
 ....

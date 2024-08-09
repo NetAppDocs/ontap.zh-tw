@@ -91,13 +91,13 @@ summary: 您可以移除零 RTO SnapMirror 同步保護、並刪除 SnapMirror �
 . 將所有 VM 工作負載移至 SnapMirror 主動式同步的本地主機到來源叢集。
 . 在來源叢集上、從 igroup 移除啟動器、並修改 igroup 組態以終止 igroup 複寫。
 +
-`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_
-SiteA::> igroup modify -vserver _svm_name_ -igroup _igroup_name_ -replication-peer "-"`
+`SiteA::> igroup remove -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -initiator <host2>
+SiteA::> igroup modify -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -replication-peer "-"`
 
 . 在次要站台上、刪除 LUN 對應並移除 igroup 組態：
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
-SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <>
+SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 
 . 在次要站台上、刪除 SnapMirror 主動同步關係。
 +
@@ -105,7 +105,7 @@ SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
 
 . 在主站點上，從主站點釋放 SnapMirror 主動同步關係。
 +
-`SiteA::> snapmirror release -destination-path _destination_path_`
+`SiteA::> snapmirror release -destination-path <destination_path>`
 
 . 重新探索路徑、確認主機只能使用本機路徑。
 
@@ -114,20 +114,20 @@ SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
 . 將所有 VM 工作負載移至 SnapMirror 主動式同步的本地主機到來源叢集。
 . 在來源叢集上、從 igroup 移除啟動器。
 +
-`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_`
+`SiteA::> igroup remove -vserver <svm_name> -igroup <igroup_name> -initiator <host2>`
 
 . 在次要站台上、刪除 LUN 對應並移除 igroup 組態：
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
-SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <>
+SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 
 . 在次要站台上、刪除 SnapMirror 主動同步關係。
 +
-`SiteB::> snapmirror delete -destination-path _destination_path_`
+`SiteB::> snapmirror delete -destination-path <destination_path>`
 
 . 在主站點上，從主站點釋放 SnapMirror 主動同步關係。
 +
-`SiteA::> snapmirror release -destination-path _destination_path_`
+`SiteA::> snapmirror release -destination-path <destination_path>`
 
 . 重新探索路徑、確認主機只能使用本機路徑。
 

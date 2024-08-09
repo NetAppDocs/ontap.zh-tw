@@ -258,7 +258,7 @@ NOTE: 。 `autosupport` 角色會指派給預先定義的 `autosupport` 帳戶�
 
 應用程式方法會指定登入方法的存取類型。可能的值包括 `console, http, ontapi, rsh, snmp, service-processor, ssh,` 和 `telnet`。
 
-設定此參數可 `service-processor` 授予使用者對服務處理器的存取權。當此參數設為 `service-processor`時、必須將參數設為、 `-authentication-method` `password` 因為服務處理器僅支援密碼驗證。SVM 使用者帳戶無法存取服務處理器。因此，當此參數設為時，操作員和管理員無法使用 `-vserver` 此參數 `service-processor`。
+設定此參數可 `service-processor` 授予使用者對服務處理器的存取權。當此參數設為 `service-processor`時、參數必須設為、 `-authentication-method` `password` 因為服務處理器僅支援 `password` 驗證。SVM 使用者帳戶無法存取服務處理器。因此，當此參數設為時，操作員和管理員無法使用 `-vserver` 此參數 `service-processor`。
 
 要進一步限制對的訪問 `service-processor` ，請使用命令 `system service-processor ssh add-allowed-addresses`。此命令 `system service-processor api-service` 可用於更新組態和憑證。
 
@@ -300,7 +300,7 @@ NOTE: 。 `autosupport` 角色會指派給預先定義的 `autosupport` 帳戶�
 
 NOTE: 由於傳輸協定安全性弱點、不建議使用 NIS 。
 
-從 ONTAP 9.3 開始、連結式雙因素驗證可用於使用密碼做為兩種驗證方法的本機 SSH `admin` 帳戶 `publickey` 。除了命令中的欄位之外 `-authentication-method` `security login` 、還新增了一個名為的新欄位 `-second-authentication-method` 。可以將公鑰或密碼指定爲 `-authentication-method` 或 `-second-authentication-method`。不過、在 SSH 驗證期間、訂單一律為公開金鑰、並提供部分驗證、接著是密碼提示以進行完整驗證。
+從 ONTAP 9.3 開始、連結式雙因素驗證可用於使用和做為兩種驗證方法的本機 SSH `admin` 帳戶 `publickey` `password` 。除了命令中的欄位之外 `-authentication-method` `security login` 、還新增了一個名為的新欄位 `-second-authentication-method` 。 `publickey`或 `password` 可以指定為 `-authentication-method` 或 `-second-authentication-method`。不過、在 SSH 驗證期間、訂單一律 `publickey` 採用部分驗證、接著是完整驗證的密碼提示。
 
 [listing]
 ----

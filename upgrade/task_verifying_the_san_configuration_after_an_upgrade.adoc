@@ -15,29 +15,39 @@ summary: 在 ONTAP 升級之後、在 SAN 環境中、請在升級成功重新�
 
 . 確認每個啟動器都已連接至正確的LIF。
 +
-您應該將啟動器清單與您在升級準備期間所做的清單進行比較。
+您應該將啟動器清單與您在升級準備期間所做的清單進行比較。如果您執行的是 ONTAP 9.11.1 或更新版本、請使用系統管理員來檢視連線狀態、因為它的顯示比 CLI 更清晰。
 
 +
-[cols="2*"]
-|===
-| 適用於... | 輸入... 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.. 在System Manager中、按一下*主機> SAN啟動器群組*。
++
+此頁面會顯示啟動器群組（igroup）清單。如果清單很大、您可以按一下頁面右下角的頁碼來檢視清單的其他頁面。
+
++
+這些欄會顯示有關階層的各種資訊。從9.11.1開始、也會顯示igroup的連線狀態。將游標暫留在狀態警示上以檢視詳細資料。
 
 
- a| 
-iSCSI
- a| 
+
+--
+.CLI
+--
+** 列出 iSCSI 啟動器：
++
 [source, cli]
 ----
 iscsi initiator show -fields igroup,initiator-name,tpgroup
 ----
-
-
- a| 
-FC
- a| 
+** 列出 FC 啟動器：
++
 [source, cli]
 ----
 fcp initiator show -fields igroup,wwpn,lif
 ----
-|===
+
+
+--
+====
 

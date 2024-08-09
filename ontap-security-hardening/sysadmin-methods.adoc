@@ -50,11 +50,11 @@ vs1             aes256-ctr,   diffie-hellman-group-     hmac-sha1-96
 
 === 登入橫幅
 
-登入橫幅可讓組織向任何營運者、管理員甚至是誤解者展示可接受使用的條款與條件、並指出哪些人可以存取系統。此方法有助於建立對系統存取與使用的期望。命令會 `security login banner modify` 修改登入橫幅。登入橫幅會在 SSH 和主控台裝置登入程序中的驗證步驟之前顯示。橫幅文字必須使用雙引號（「」）、如下列範例所示。
+登入橫幅可讓組織向任何營運者、管理員甚至是誤解者展示可接受使用的條款與條件、並指出哪些人可以存取系統。此方法有助於建立對系統存取與使用的期望。命令會 `security login banner modify` 修改登入橫幅。登入橫幅會在 SSH 和主控台裝置登入程序中的驗證步驟之前顯示。橫幅文字必須使用雙引號（ " " " ）、如下例所示。
 
 [listing]
 ----
-cluster1::> security login banner modify -vserver cluster1 -message “Authorized users ONLY!”
+cluster1::> security login banner modify -vserver cluster1 -message "Authorized users ONLY!"
 ----
 
 
@@ -142,7 +142,7 @@ MOTD 有兩種類別：叢集層級 MOTD 和資料 SVM 層級 MOTD 。登入資�
 
 == 透過 NetApp ONTAP 系統管理員存取網路
 
-如果 ONTAP 管理員偏好使用圖形化介面而非 CLI 來存取和管理叢集、請使用 NetApp ONTAP 系統管理員。ONTAP 隨附 Web 服務、預設為啟用、並可使用瀏覽器存取。如果使用 DNS 、 IPv4 或 IPv6 位址、請將瀏覽器指向主機名稱（透過 `https://cluster-management-LIF`）。
+如果 ONTAP 管理員偏好使用圖形化介面而非 CLI 來存取和管理叢集、請使用 NetApp ONTAP 系統管理員。ONTAP 隨附 Web 服務、預設為啟用、並可使用瀏覽器存取。如果使用 DNS 、 IPv4 或 IPv6 位址、請將瀏覽器指向主機名稱（透過 `+https://cluster-management-LIF+`）。
 
 如果叢集使用自我簽署的數位憑證、瀏覽器可能會顯示警告、指出該憑證不受信任。您可以確認繼續存取的風險、或在叢集上安裝憑證授權單位（ CA ）簽署的數位憑證、以進行伺服器驗證。
 
@@ -158,7 +158,7 @@ SAML 規格中定義了三種角色：主體、 IDP 和服務供應商。在 ONT
 
 與 SSH 雙因素組態程序不同的是、啟動 SAML 驗證之後、 ONTAP 系統管理員或 ONTAP 服務處理器存取需要所有現有系統管理員透過 SAML IDP 進行驗證。叢集使用者帳戶無需變更。啟用 SAML 驗證時、會將的新驗證方法新 `saml` 增至具有與應用程式管理員角色的現有使用者 `http` `ontapi` 。
 
-啟用 SAML 驗證之後、需要 SAML IDP 存取的其他新帳戶應在 ONTAP 中定義、並以系統管理員角色及和應用程式的 SAML 驗證方法定義 `http` `ontapi` 。如果在某個時間點停用 SAML 驗證、則這些新帳戶需要 `password` 以和應用程式的管理員角色來定義驗證方法 `http` `ontapi` 、並將用於本機 ONTAP 驗證的主控台應用程式新增至 ONTAP 系統管理員。
+啟用 SAML 驗證之後、需要 SAML IDP 存取的其他新帳戶應在 ONTAP 中定義、並以系統管理員角色及和應用程式的 SAML 驗證方法定義 `http` `ontapi` 。如果在某個時間點停用 SAML 驗證、則這些新帳戶需要 `password` 以和應用程式的管理員角色來定義驗證方法、並將應用程式新增至 ONTAP 系統管理員以 `http` `ontapi` `console` 進行本機 ONTAP 驗證。
 
 啟用 SAML IDP 之後、 IDP 會使用 IDP 可用的方法（例如輕量型目錄存取傳輸協定（ LDAP ）、 Active Directory （ AD ）、 Kerberos 、密碼等）來執行 ONTAP 系統管理員存取的驗證。可用的方法對 IDP 是唯一的。在 ONTAP 中設定的帳戶必須具有對應至 IDP 驗證方法的使用者 ID 。
 
@@ -203,7 +203,7 @@ SAML 規格中定義了三種角色：主體、 IDP 和服務供應商。在 ONT
 | 勒索軟體防禦：磁碟區沒有 Snapshot 原則 | 一個或多個磁碟區未附加適當的 Snapshot 原則。 
 
 
-| 勒索軟體防禦—停用 Snapshot 自動刪除 | 已為一或多個磁碟區設定 Snapshot 自動刪除。 
+| 勒索軟體防禦：停用 Snapshot 自動刪除 | 已為一或多個磁碟區設定 Snapshot 自動刪除。 
 
 
 | 磁碟區並未受到勒索軟體攻擊的監控 | 多個磁碟區支援自主勒索軟體保護、但尚未設定。 

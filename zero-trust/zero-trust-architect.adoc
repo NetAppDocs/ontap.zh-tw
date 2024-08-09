@@ -95,7 +95,7 @@ ONTAP 的 FPolicy 功能搭配 FPolicy 合作夥伴的 NetApp 聯盟合作夥伴
 
 ==== 靜態資料加密
 
-每天都有新的要求、可在組織重新調整磁碟機用途、退回故障磁碟機、或透過銷售或交易方式升級到較大磁碟機時、降低儲存系統風險和基礎架構漏洞。 身為資料的管理員和操作者、儲存工程師必須在資料的整個生命週期內、安全地管理及維護資料。 https://www.netapp.com/us/media/ds-3898.pdf["NetApp 儲存加密（ NSE ）  ； #44 ； NetApp Volume 加密（ NVE ）  ； #44 ；以及 NetApp Aggregate 加密"^] 協助您隨時加密所有資料、無論資料是否有毒、而且不會影響日常作業。 https://www.netapp.com/us/media/ds-3213-en.pdf["NSE"^] 是 ONTAP 硬體靜態資料解決方案、使用 FIPS 140-2 第 2 級驗證的自我加密磁碟機。 https://www.netapp.com/us/media/ds-3899.pdf["NVE 和 NAE"^] 是 ONTAP 軟體閒置資料解決方案，可利用 https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4144["FIPS 140-2 第 1 級驗證 NetApp 密碼編譯模組"^]。有了 NVE 和 NAE 、硬碟或固態硬碟都可用於靜態資料加密。此外、 NSE 磁碟機也可用於提供原生的分層加密解決方案、提供加密備援和額外的安全性。如果有一層被破壞、則第二層仍會保護資料安全。這些功能讓 ONTAP 成為 https://www.netapp.com/us/media/sb-3952.pdf["Quantum 就緒加密"^]的理想選擇。
+每天都有新的要求、可在組織重新調整磁碟機用途、退回故障磁碟機、或透過銷售或交易方式升級到較大磁碟機時、降低儲存系統風險和基礎架構漏洞。 身為資料的管理員和操作者、儲存工程師必須在資料的整個生命週期內、安全地管理及維護資料。 https://www.netapp.com/us/media/ds-3898.pdf["NetApp 儲存加密（ NSE ）  ； #44 ； NetApp Volume 加密（ NVE ）  ； #44 ；以及 NetApp Aggregate 加密"^] 協助您隨時加密所有資料、無論資料是否有毒、而且不會影響日常作業。 https://www.netapp.com/us/media/ds-3213-en.pdf["NSE"^] 是 ONTAP 硬體 link:../encryption-at-rest/index.html["靜態資料"] 解決方案、使用 FIPS 140-2 第 2 級驗證的自我加密磁碟機。 https://www.netapp.com/us/media/ds-3899.pdf["NVE 和 NAE"^] 是使用的 ONTAP 軟體 link:../encryption-at-rest/index.html["靜態資料"] 解決方案 https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4144["FIPS 140-2 第 1 級驗證 NetApp 密碼編譯模組"^]。有了 NVE 和 NAE 、硬碟或固態硬碟都可用於靜態資料加密。此外、 NSE 磁碟機也可用於提供原生的分層加密解決方案、提供加密備援和額外的安全性。如果有一層被破壞、則第二層仍會保護資料安全。這些功能讓 ONTAP 成為 https://www.netapp.com/us/media/sb-3952.pdf["Quantum 就緒加密"^]的理想選擇。
 
 NVE 也提供一項稱為的功能 https://blog.netapp.com/flash-memory-summit-award/["安全清除"^] 、可在將敏感檔案寫入非機密磁碟區時、以密碼方式移除資料外洩的有毒資料。
 
@@ -109,7 +109,7 @@ image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[適用於 A
 
 ==== 資料傳輸中加密
 
-ONTAP 資料傳輸加密功能可保護使用者資料存取和控制面板存取。使用者資料存取可透過 SMB 3.0 加密來加密 Microsoft CIFS 共用存取、或透過 krb5P for NFS Kerberos 5 來加密。使用 CIFS 、 NFS 和 iSCSI 也可以加密使用者資料存取 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面存取是以傳輸層安全性（ TLS ）加密。ONTAP 提供 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 控制平面存取的法規遵循模式、可啟用 FIPS 核准的演算法、並停用未經 FIPS 核准的演算法。資料複寫是使用加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["叢集對等加密"]的。這可為 ONTAP SnapVault 和 SnapMirror 技術提供加密。
+ONTAP 資料傳輸加密功能可保護使用者資料存取和控制面板存取。使用者資料存取可透過 SMB 3.0 加密來加密 Microsoft CIFS 共用存取、或透過 krb5P for NFS Kerberos 5 來加密。使用 CIFS 、 NFS 和 iSCSI 也可以加密使用者資料存取 link:../networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"] 。控制平面存取是以傳輸層安全性（ TLS ）加密。ONTAP 提供 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 控制平面存取的法規遵循模式、可啟用 FIPS 核准的演算法、並停用未經 FIPS 核准的演算法。資料複寫是使用加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["叢集對等加密"]的。這可為 ONTAP SnapVault 和 SnapMirror 技術提供加密。
 
 
 
