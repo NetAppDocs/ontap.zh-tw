@@ -1,0 +1,229 @@
+---
+permalink: flexcache-writeback/flexcache-writeback-enable-task.html 
+sidebar: sidebar 
+keywords: creating, manage, disable, view, flexcache, flex cache, writeback, write-back, write back 
+summary: 在 FlexCache 磁碟區上啟用 FlexCache 回寫模式、為邊緣運算環境和具有大量寫入工作負載的快取提供更好的效能。 
+---
+= 啟用及管理 FlexCache 回寫
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.15.1 開始、您可以在 FlexCache 磁碟區上啟用 FlexCache 回寫模式、為邊緣運算環境和具有大量寫入工作負載的快取提供更好的效能。您也可以決定是否在 FlexCache 磁碟區上啟用回寫功能、或在必要時停用磁碟區上的回寫功能。
+
+在快取磁碟區上啟用回寫時、寫入要求會傳送至本機快取、而非原始磁碟區。
+
+.開始之前
+您必須處於進階權限模式。
+
+
+
+== 建立啟用回寫功能的新 FlexCache Volume
+
+.步驟
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 、在啟用回寫功能的情況下建立新的 FlexCache Volume 。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 如果 FlexCache 磁碟區與原始磁碟區位於不同的叢集、請建立叢集對等關係：
++
+.. 在本機叢集上、按一下 * 保護 > 概述 * 。
+.. 展開 * 叢集間設定 * 、按一下 * 新增網路介面 * 、然後將叢集間介面新增至叢集。
++
+在遠端叢集上重複此步驟。
+
+.. 在遠端叢集上、按一下 * 保護 > 概述 * 。按一下 image:icon_kabob.gif["功能表選項圖示"] 「叢集對等點」區段、然後按一下「 * 產生複雜密碼 * 」。
+.. 複製產生的通關密碼、然後貼到本機叢集中。
+.. 在本機叢集上、按一下叢集對等項下的 * 對等叢集 * 、然後對本機叢集和遠端叢集進行對等處理。
+
+
+. 如果 FlexCache 磁碟區與原始磁碟區位於不同的叢集、請建立 SVM 對等關係：
++
+在 * 儲存 VM Peers * 下、按一下、然後按一下 image:icon_kabob.gif["功能表選項圖示"] * Peer Storage VMS* 來對等儲存 VM 。
+
++
+如果 FlexCache 磁碟區位於同一個叢集、則無法使用系統管理員建立 SVM 對等關係。
+
+. 選擇*儲存>磁碟區*。
+. 選取*「Add*」。
+. 選取 * 更多選項 * 、然後選取 * 新增為遠端磁碟區的快取 * 。
+. 選取 * 啟用 FlexCache 回寫 * 。
+
+
+--
+.CLI
+--
+. 如果FlexCache 要建立的實體磁碟區位於不同的叢集、請建立叢集對等關係：
++
+.. 在目的地叢集上、與資料保護來源叢集建立對等關係：
++
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name>,..|* -ipspace <ipspace_name>
+----
++
+從ONTAP 功能支援的9.6開始、建立叢集對等關係時、預設會啟用TLS加密。支援TLS加密、以便在來源FlexCache 與實體磁碟區之間進行叢集間通訊。您也可以視需要停用叢集對等關係的TLS加密。
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers *
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: *
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
+.. 在來源叢集上、驗證來源叢集到目的地叢集的驗證：
++
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
++
+[listing]
+----
+cluster01::> cluster peer create -peer-addrs 192.140.112.101,192.140.112.102
+
+Notice: Use a generated passphrase or choose a passphrase of 8 or more characters.
+        To ensure the authenticity of the peering relationship, use a phrase or sequence of characters that would be hard to guess.
+
+Enter the passphrase:
+Confirm the passphrase:
+
+Clusters cluster02 and cluster01 are peered.
+----
+
+
+. 如果 FlexCache 磁碟區與原始磁碟區位於不同的 SVM 、請與建立 SVM 對等關係 `flexcache` 應用程式：
++
+.. 如果 SVM 位於不同的叢集中、請為對等 SVM 建立 SVM 權限：
++
+[source, cli]
+----
+vserver peer permission create -peer-cluster <cluster_name> -vserver <svm-name> -applications flexcache
+----
++
+下列範例說明如何建立適用於所有本機SVM的SVM對等權限：
+
++
+[listing]
+----
+cluster1::> vserver peer permission create -peer-cluster cluster2 -vserver "*" -applications flexcache
+
+Warning: This Vserver peer permission applies to all local Vservers. After that no explict
+"vserver peer accept" command required for Vserver peer relationship creation request
+from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
+----
+.. 建立 SVM 對等關係：
++
+[source, cli]
+----
+vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluster <cluster_name> -applications flexcache
+----
+
+
+. 建立啟用回寫功能的 FlexCache Volume ：
++
+[source, cli]
+----
+volume flexcache create -vserver <cache_vserver_name> -volume <cache_flexgroup_name> -aggr-list <list_of_aggregates> -origin-volume <origin flexgroup> -origin-vserver <origin_vserver name> -junction-path <junction_path> -is-writeback-enabled true
+----
+
+
+--
+====
+
+
+== 在現有的 FlexCache 磁碟區上啟用 FlexCache 回寫
+
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 、在現有的 FlexCache 磁碟區上啟用 FlexCache 回寫功能。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取現有的 FlexCache 磁碟區。
+. 在磁碟區的「總覽」頁面上、按一下右上角的 * 編輯 * 。
+. 在 * 編輯 Volume * 視窗中、選取 * 啟用 FlexCache 回寫 * 。
+
+
+--
+.CLI
+--
+. 在現有的 FlexCache 磁碟區上啟用回寫：
++
+[source, cli]
+----
+volume flexcache config modify -volume <cache_flexgroup_name> -is-writeback-enabled true
+----
+
+
+--
+====
+
+
+== 檢查是否已啟用 FlexCache 回寫
+
+.步驟
+您可以使用系統管理員或 ONTAP CLI 來判斷 FlexCache 回寫功能是否已啟用。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取一個磁碟區。
+. 在卷 * Overview （概述） * 中，找到 FlexCache details* ，然後檢查 FlexCache 捲上的 FlexCache 回寫是否設置爲 *Enabled* （已啓用 * ）。
+
+
+--
+.CLI
+--
+. 檢查是否啟用 FlexCache 回寫：
++
+[source, cli]
+----
+volume flexcache config show -volume cache -fields is-writeback-enabled
+----
+
+
+--
+====
+
+
+== 停用 FlexCache 磁碟區的回寫功能
+
+在刪除 FlexCache 磁碟區之前、您需要停用 FlexCache 回寫功能。
+
+.步驟
+您可以使用系統管理員或 ONTAP CLI 來停用 FlexCache 回寫功能。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取已啟用 FlexCache 回寫功能的現有 FlexCache 磁碟區。
+. 在磁碟區的「總覽」頁面上、按一下右上角的 * 編輯 * 。
+. 在 * 編輯 Volume * 視窗中、取消選取 * 啟用 FlexCache 回寫 * 。
+
+
+--
+.CLI
+--
+. 停用回寫：
++
+[source, cli]
+----
+volume flexcache config modify -volume <cache_vol_name> -is-writeback-enabled false
+----
+
+
+--
+====

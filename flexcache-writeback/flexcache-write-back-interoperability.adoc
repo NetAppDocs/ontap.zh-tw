@@ -1,0 +1,75 @@
+---
+permalink: flexcache-writeback/flexcache-write-back-interoperability.html 
+sidebar: sidebar 
+keywords: tr-4743, flexcache writeback, flexcache write-back, interoperability, client, technical report, netapp tr, ontap tr 
+summary: 在回寫模式下部署 FlexCache 時、請瞭解這些互通性考量事項 
+---
+= FlexCache Writeback 互通性
+:allow-uri-read: 
+
+
+[role="lead"]
+在回寫模式下部署 FlexCache 時、請瞭解這些互通性考量事項。
+
+
+
+== 版本ONTAP
+
+若要使用回寫式作業模式、快取和原始伺服器 * 必須 * 執行 ONTAP 9.15.1 或更新版本。
+
+
+NOTE: 不需要啟用回寫式快取的叢集可以執行舊版 ONTAP 、但該叢集只能以繞寫模式運作。
+
+您可以在環境中混合使用 ONTAP 版本。
+
+[cols="1*,1*,1*"]
+|===
+| 叢集 | 版本ONTAP | 是否支援回寫？ 
+
+
+| * 來源 * | ONTAP 9.15.1.1 | 不適用 
+
+
+| * 叢集 1* | ONTAP 9.15.1.1 | 是的 
+
+
+| * 叢集 2 * | ONTAP 9.14.1. | 否 
+|===
+[cols="1*,1*,1*"]
+|===
+| 叢集 | 版本ONTAP | 是否支援回寫？ 
+
+
+| * 來源 * | ONTAP 9.14.1. | 不適用 
+
+
+| * 叢集 1* | ONTAP 9.15.1.1 | 否 
+
+
+| * 叢集 2 * | ONTAP 9.15.1.1 | 否 
+|===
+
+NOTE: 在 <<example2-table>>中、兩個叢集都無法啟用回寫模式、因為原始伺服器並未執行 ONTAP 9.15.1 或更新版本、這是一項嚴格的要求。
+
+
+
+== 用戶端互通性
+
+ONTAP 通常支援的任何用戶端都可以存取 FlexCache Volume 、無論它是以寫入或回寫模式運作。有關受支持客戶端的最新列表，請參閱 NetApp 的 https://imt.netapp.com/matrix/#welcome["互通性對照表"^]。
+
+雖然用戶端版本並不重要、但用戶端必須是新的、足以支援 NFSv3 、 NFSv4.0 、 NFSv4.1 、 SMB2.x 或 SMB3.xSMB1 和 NFSv2 是過時的通訊協定、不受支援。
+
+
+
+== 寫回和寫回
+
+如所示 <<example1-table>>、以回寫模式操作的 FlexCache 可以與以繞寫模式操作的快取共存。我們建議您將繞過寫入與回寫與您的特定工作負載進行比較。
+
+
+TIP: 如果工作負載在回寫和回寫之間的效能相同、請使用繞寫功能。
+
+
+
+== ONTAP 功能互通性
+
+如需 FlexCache 功能互通性的最新清單、請參閱 link:../flexcache/supported-unsupported-features-concept.html["FlexCache Volume 支援和不支援的功能"]。
