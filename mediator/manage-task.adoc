@@ -429,11 +429,22 @@ Getting CA Private Key
 
 == 以信任的協力廠商憑證取代自我簽署的憑證
 
-您可以使用信任的協力廠商憑證來取代自我簽署的憑證。
+
+CAUTION: 只有特定 ONTAP 版本的 ONTAP Mediator 才支援協力廠商憑證。請參閱、 link:https://mysupport.netapp.com/site/bugs-online/product/ONTAP/JiraNgage/CONTAP-243278["NetApp Bug Online Bug ID CONTAP-243278"^]
+
+如果支援、您可以使用信任的第三方憑證來取代自我簽署的憑證。
 
 .關於這項工作
 * 您可以在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
 * 如果產生的自我簽署憑證需要由從信任的次級憑證授權單位（ CA ）取得的憑證所取代、您可以執行此工作。若要達成此目標、您應該可以存取信任的公開金鑰基礎架構（ PKI ）授權。
+* 下圖顯示每個 ONTAP Mediator 憑證的用途。
++
+image:mediator-cert-purposes.png["ONTAP Mediator 憑證用途"]
+
+* 下圖顯示 Web 伺服器設定和 ONTAP Mediator 伺服器設定的組態。
++
+image:mediator-certs-index.png["Web 伺服器設定和 ONTAP Mediator 伺服器設定組態"]
+
 
 
 
@@ -460,7 +471,7 @@ NOTE: 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可�
 .. 組態檔案 `openssl_ca.cnf` （位於 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`）定義產生的憑證必須具有的內容。
 
 
-. 使用私密金鑰和組態檔案來建立憑證簽署要求 `ca.csr``：
+. 使用私密金鑰和組態檔案來建立憑證簽署要求 `ca.csr`：
 +
 *範例：*
 
@@ -481,11 +492,11 @@ erARKhY9z0e8BHPl3g==
 ----
 . 傳送憑證簽署要求 `ca.csr` 提供給 PKI 授權單位以供其簽署。
 +
-PKI 授權單位會驗證要求並簽署 `.csr`，生成證書 `ca.crt`。
+PKI 授權單位會驗證要求並簽署 `.csr`、產生憑證 `ca.crt`。此外、您需要從 PKI 授權單位取得 `root_ca.crt` 簽署憑證的憑證 `ca.crt` 。
 
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須新增憑證 `ca.crt` 至 ONTAP 叢集。請參閱 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html#ontap-mediator["為 SMBC 設定 ONTAP Mediator 和叢集"]。
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html#ontap-mediator["為 SMBC 設定 ONTAP Mediator 和叢集"]
 
 
 
@@ -498,13 +509,23 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須新�
 下列命令可產生伺服器憑證。
 
 .步驟
-若要產生伺服器憑證、請從資料夾執行下列命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`：
-
+. 若要產生伺服器憑證簽署要求（ CSR ）、請從資料夾執行下列命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config` ：
++
 `openssl req -config openssl_server.cnf -extensions v3_req -nodes -newkey rsa:4096 -sha512 -keyout ontap_mediator_server.key -out ontap_mediator_server.csr`
 
+. [[step 2 _intermal_info] 若要從 CSR 產生伺服器憑證、請從資料夾執行下列命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config` ：
++
+
+NOTE:  `ca.crt`和 `ca.key` 檔案是從 PKI 授權單位取得的。如果您使用不同的憑證名稱、例如 `intermediate.crt` 、和 `intermediate.key`、請分別以和取代 `ca.crt` `ca.key` `intermediate.crt` 和 `intermediate.key` 。
+
++
 `openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA ca.crt -CAkey ca.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
 
-`-CAcreateserial` 選項用於產生檔案 `ca.srl`。
++
+** 此 `-CAcreateserial` 選項用於產生 `ca.srl` 或 `intermediate.srl` 檔案、視您使用的憑證名稱而定。
+
+
+
 
 
 
@@ -525,7 +546,36 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 
 
 .步驟
-. 更換 `ca.*` 具有協力廠商憑證的檔案。
+. 以協力廠商憑證取代所有 `ca.*` 檔案。
+. 從和憑證建立憑證鏈結 `ca.crt` `ontap_mediator_server.crt` ：
++
+`cat ontap_mediator_server.crt ca.crt > ontap_mediator_server_chain.crt`
+
+. 更新 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini` 檔案。
++
+更新、和的值 `mediator_cert` `mediator_key` `ca_certificate`：
+
++
+`set-placeholder = mediator_cert = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server_chain.crt`
+
++
+`set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
+
++
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+
++
+**  `mediator_cert`值是檔案的路徑 `ontap_mediator_server_chain.crt` 。
+**  `mediator_key value`是檔案中的金鑰路徑 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
+**  `ca_certificate`值是檔案的路徑 `root_ca.crt` 。
+
+
+. 確認新產生憑證的下列屬性已正確設定：
++
+** Linux 群組擁有者： `netapp:netapp`
+** Linux 權限： `600`
+
+
 . 重新啟動 ONTAP Mediator ：
 +
 `systemctl restart ontap_mediator`
@@ -539,9 +589,13 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 您可以使用其他名稱的協力廠商憑證 `ca.*` 或是將協力廠商憑證儲存在不同的位置。
 
 .步驟
-. 設定檔案 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 以覆寫中的預設變數值 `ontap_mediator.config.yaml` 檔案：
+. 設定 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 檔案以覆寫檔案中的預設變數值 `ontap_mediator.config.yaml` 。
 +
-例如、如果您取得 `intermediate.crt` 並儲存其私密金鑰 `intermediate.key` 和憑證簽署要求 `intermediate.csr` 在某個位置 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`，則 user_config 檔案應如下所示：
+如果您是從 PKI 授權單位取得，並將其私密金鑰儲存在該位置，則 `intermediate.crt` `intermediate.key` `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config` `ontap_mediator.user_config.yaml` 檔案應如下例所示：
+
++
+
+NOTE: 如果您使用 `intermediate.crt` 來簽署 `ontap_mediator_server.crt` 憑證、  `intermediate.srl` 則會產生檔案。如需詳細資訊、請參閱 <<step_2_intermediate_info,步驟 2 ：使用協力廠商 CA 認證簽署以產生伺服器憑證>> 。
 
 +
 [listing]
@@ -564,7 +618,48 @@ key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_med
 ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
 ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
 ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
+
 ----
++
+.. 如果您使用的是憑證結構、其中 `root_ca.crt` 的憑證提供 `intermediate.crt` 簽署憑證的憑證 `ontap_mediator_server.crt` 、請從和憑證建立憑證鏈結 `intermediate.crt` `ontap_mediator_server.crt` ：
++
+
+NOTE: 您應該已經從程序稍早的 PKI 授權單位取得 `intermediate.crt` 和 `ontap_mediator_server.crt` 憑證。
+
++
+`cat ontap_mediator_server.crt intermediate.crt > ontap_mediator_server_chain.crt`
+
+.. 更新 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini` 檔案。
++
+更新、和的值 `mediator_cert` `mediator_key` `ca_certificate`：
+
++
+`set-placeholder = mediator_cert = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server_chain.crt`
+
++
+`set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
+
++
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+
++
+***  `mediator_cert`值是檔案的路徑 `ontap_mediator_server_chain.crt` 。
+*** 該 `mediator_key` 值是檔案中的金鑰路徑 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
+***  `ca_certificate`值是檔案的路徑 `root_ca.crt` 。
++
+
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html#ontap-mediator["為 SMBC 設定 ONTAP Mediator 和叢集"]
+
+
+
+.. 確認新產生憑證的下列屬性已正確設定：
++
+*** Linux 群組擁有者： `netapp:netapp`
+*** Linux 權限： `600`
+
+
+
+
 . 在組態檔中更新憑證時、請重新啟動 ONTAP Mediator ：
 +
 `systemctl restart ontap_mediator`

@@ -22,7 +22,15 @@ summary: 根據預設、ONTAP 叢集對等加密功能會在所有在支援支�
 ----
 cluster peer modify <source_cluster> -auth-status-admin use-authentication -encryption-protocol-proposed none
 ----
-** 若要移除加密與驗證、請輸入：
+** 若要移除加密與驗證：
++
+... 修改叢集對等原則以允許未驗證的存取：
++
+[source, cli]
+----
+cluster peer policy modify -is-unauthenticated-access-permitted true
+----
+... 修改加密與驗證存取：
 +
 [source, cli]
 ----
@@ -30,7 +38,10 @@ cluster peer modify <source_cluster> -auth-status no-authentication
 ----
 
 
-. 出現提示時、請輸入通關密碼。
+
+
+. 出現提示時、請輸入複雜密碼。
+. 重新輸入密碼以確認密碼。
 . 在來源叢集上、停用與目的地叢集通訊的加密：
 +
 ** 若要移除加密、但保留驗證、請輸入：
@@ -39,7 +50,15 @@ cluster peer modify <source_cluster> -auth-status no-authentication
 ----
 cluster peer modify <destination_cluster> -auth-status-admin use-authentication -encryption-protocol-proposed none
 ----
-** 若要移除加密與驗證、請輸入：
+** 若要移除加密與驗證：
++
+... 修改叢集對等原則以允許未驗證的存取：
++
+[source, cli]
+----
+cluster peer policy modify -is-unauthenticated-access-permitted true
+----
+... 修改加密與驗證存取：
 +
 [source, cli]
 ----
@@ -47,5 +66,7 @@ cluster peer modify <destination_cluster> -auth-status no-authentication
 ----
 
 
-. 出現提示時、請輸入在目的地叢集上輸入的相同通關密碼。
+
+
+. 出現提示時、請輸入並重新輸入您在目的地叢集上使用的相同密碼。
 
