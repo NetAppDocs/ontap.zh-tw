@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/resynchronize-relationship-task.html 
 sidebar: sidebar 
-keywords: resynchronize, replication, relationship 
+keywords: resynchronize, replication, relationship, snapmirror, mirror, snapshot copy, restore, disaster recovery, DR, resync, protection relationship, data protection 
 summary: 當您將目的地磁碟區設為可寫入、更新失敗後、因為來源與目的地磁碟區上不存在通用的Snapshot複本、或是想要變更關係的複寫原則、您需要重新同步複寫關係。 
 ---
 = 重新同步複寫關係
@@ -20,27 +20,28 @@ summary: 當您將目的地磁碟區設為可寫入、更新失敗後、因為�
 * 屬於扇出或串聯組態一部分的磁碟區可能需要較長的時間才能重新同步。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
 
 
-此程序會以非同步關係取代原始來源磁碟區中的資料、以便您重新開始從原始來源磁碟區處理資料、並恢復原始保護關係。
-
 [NOTE]
 ====
 System Manager 不支援反向重新同步處理至無法處理的關係。您可以使用 ONTAP CLI 執行具有無法消除的重新同步作業。
 
 ====
-當您執行反向重新同步作業時、來源磁碟區上比一般 Snapshot 複本中資料新的任何資料都會被刪除。
-
 .步驟
-您可以使用 System Manager 或 ONTAP CLI 重新同步複寫關係。將目的地磁碟區設為可寫入後、您可以使用 System Manager 來反向重新同步複寫關係。如果您使用 ONTAP CLI 、無論您是將目的地磁碟區設為可寫入、或是正在更新複寫關係、程序都一樣。
+您可以使用系統管理員或 ONTAP CLI 來執行此工作。如果您使用 ONTAP CLI 、無論您是將目的地磁碟區設為可寫入、或是正在更新複寫關係、程序都一樣。
 
 [role="tabbed-block"]
 ====
 .System Manager 回復重新同步
 --
+link:make-destination-volume-writeable-task.html["中斷關係"]將目的地設為可寫入後、請反向重新同步關係：
+
 . 在目的地叢集上、按一下*保護>關係*。
-. 將游標移至您要反轉的中斷關係上、按一下 image:icon_kabob.gif["kabob圖示"]、然後選取 * 反轉重新同步 * 。
+. 將游標移至您要反轉的中斷關係上、按一下 image:icon_kabob.gif["功能表選項圖示"]、然後選取 * 反轉重新同步 * 。
 . 在 * 反向重新同步關係 * 視窗中、按一下 * 反向重新同步 * 。
 . 在*關係*下、檢視*傳輸狀態*的關係、以監控反轉重新同步進度。
 
+
+.後續步驟
+當原始來源再次可用時、您可以中斷反轉的關係、並執行另一個反向重新同步作業、以重新建立原始關係。反向重新同步程序會將任何變更從提供資料的站台複製到原始來源、並使原始來源重新讀取。
 
 --
 .System Manager 重新同步

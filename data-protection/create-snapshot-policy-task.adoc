@@ -27,10 +27,31 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 。 `snapmirror-label` 選項適用於 SnapMirror 複寫。如需詳細資訊、請參閱 link:define-rule-policy-task.html["定義原則規則"]。
 
 .步驟
+您可以使用系統管理員或 ONTAP CLI 建立 Snapshot 複本原則。此程序僅在本機叢集上建立 Snapshot 複本原則。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至 * 保護 > 概述 * 並展開 * 本機原則設定 * 。
+. 在 * Snapshot Policis* 窗格中，單擊image:icon_arrow.gif["箭頭圖示"]。
+. 在 *Snapshot Policis* 選項卡中，單擊image:icon_add.gif["新增圖示"]。
+. 在 * 新增 Snapshot 原則 * 視窗中、輸入原則名稱、然後選擇範圍。
+. 按一下 image:icon_add.gif["新增圖示"]。
+. 若要選取排程、請按一下目前顯示的排程名稱、按一下image:icon_dropdown_arrow.gif["下拉式圖"]、然後選擇不同的排程。
+. 輸入要保留的最大 Snapshot 複本、並視需要輸入 SnapMirror 標籤和 SnapLock 保留期間。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
 . 建立Snapshot原則：
 +
-`volume snapshot policy create -vserver _SVM_ -policy _policy_name_ -enabled true|false -schedule1 _schedule1_name_ -count1 _copies_to_retain_ -prefix1 _snapshot_prefix_ -snapmirror-label1 _snapshot_label_ ... -schedule5 _schedule5_name_ -count5 _copies_to_retain_-prefix5 _snapshot_prefix_ -snapmirror-label5 _snapshot_label_`
-
+[source, cli]
+----
+volume snapshot policy create -vserver <SVM> -policy <policy_name> -enabled true|false -schedule1 <schedule1_name> -count1 <copies_to_retain> -prefix1 <snapshot_prefix> -snapmirror-label1 <snapshot_label> ... -schedule5 <schedule5_name> -count5 <copies_to_retain> -prefix5 <snapshot_prefix> -snapmirror-label5 <snapshot_label>
+----
 +
 以下範例建立名為的 Snapshot 原則 `snap_policy_daily` 在上執行 `daily` 排程。原則最多有五個 Snapshot 複本、每個副本都有名稱 `daily`.`_timestamp_` 和 SnapMirror 標籤 `daily`：
 
@@ -40,3 +61,6 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 cluster1::> volume snapshot policy create -vserver vs0 -policy snap_policy_daily -schedule1 daily -count1 5 -snapmirror-label1 daily
 ----
 
+
+--
+====
