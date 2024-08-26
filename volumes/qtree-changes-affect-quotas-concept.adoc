@@ -1,10 +1,10 @@
 ---
 permalink: volumes/qtree-changes-affect-quotas-concept.html 
 sidebar: sidebar 
-keywords: how, qtree, changes, affect, quotas 
+keywords: how, qtree, quota, delete qtree, rename qtree, tree quotas, security, style of a qtree, security style, style 
 summary: 刪除、重新命名或變更qtree的安全樣式時、ONTAP 根據目前套用的配額而定、由效能提升套用的配額可能會有所變更。 
 ---
-= qtree變更如何影響配額總覽
+= qtree變更如何影響配額
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -12,3 +12,44 @@ summary: 刪除、重新命名或變更qtree的安全樣式時、ONTAP 根據目
 
 [role="lead"]
 刪除、重新命名或變更qtree的安全樣式時、ONTAP 根據目前套用的配額而定、由效能提升套用的配額可能會有所變更。
+
+
+
+== qtree 刪除和樹狀配額
+
+刪除qtree時、ONTAP 所有適用於該qtree的配額（無論是明確的或衍生的配額）都不再由停止套用。
+
+配額規則是否持續、取決於您刪除qtree的位置：
+
+* 如果您使用ONTAP 還原刪除qtree、則會自動刪除該qtree的配額規則、包括樹狀結構配額規則、以及為該qtree設定的任何使用者和群組配額規則。
+* 如果您使用CIFS或NFS用戶端刪除qtree、則必須刪除該qtree的任何配額規則、以免在重新初始化配額時發生錯誤。如果您建立的新qtree名稱與刪除的qtree名稱相同、則在重新初始化配額之前、現有的配額規則不會套用至新的qtree。
+
+
+
+
+== 重新命名qtree如何影響配額
+
+當您使用ONTAP 還原重新命名qtree時、該qtree的配額規則會自動更新。如果使用CIFS或NFS用戶端重新命名qtree、則必須更新該qtree的任何配額規則。
+
+
+NOTE: 如果您使用 CIFS 或 NFS 用戶端重新命名 qtree 、且在重新初始化配額之前、並未使用新名稱更新該 qtree 的配額規則、配額將不會套用至 qtree 。qtree 的明確配額、包括樹狀配額和 qtree 的使用者或群組配額、可能會轉換成衍生配額。
+
+
+
+== qtree 安全樣式和使用者配額
+
+您可以使用NTFS或混合式安全性樣式、在qtree上套用存取控制清單（ACL）、但不能使用UNIX安全性樣式。變更 qtree 的安全樣式可能會影響配額的計算方式。變更qtree的安全性樣式之後、您應該一律重新初始化配額。
+
+如果將qtree的安全樣式從NTFS或混合變更為UNIX、則會忽略該qtree中檔案的任何ACL、並根據UNIX使用者ID來收取檔案使用量。
+
+如果您將qtree的安全樣式從UNIX變更為混合式或NTFS、則先前隱藏的ACL會變成可見的。此外、任何被忽略的ACL都會再次生效、NFS使用者資訊也會被忽略。如果以前沒有ACL、則NFS資訊會繼續用於配額計算。
+
+
+NOTE: 若要確保在變更qtree的安全性樣式之後、適當計算UNIX和Windows使用者的配額使用量、您必須重新初始化包含qtree的磁碟區配額。
+
+.範例
+下列範例顯示qtree安全性樣式的變更如何導致不同的使用者因使用特定qtree中的檔案而被收費。
+
+假設 NTFS 安全性在 qtree A 上有效、而 ACL 則賦予 Windows 使用者 `corp\joe` 5MB 檔案的擁有權。使用者 `corp\joe`需為 qtree A 收取 5MB 的磁碟空間使用費
+
+現在您可以將qtree A的安全樣式從NTFS變更為UNIX。重新初始化配額之後、 Windows 使用者 `corp\joe`就不會再為此檔案收費、而是會向對應於檔案 UID 的 UNIX 使用者收取檔案費用。UID 可以是對應至的 UNIX 使用者 `corp\joe`或 root 使用者。

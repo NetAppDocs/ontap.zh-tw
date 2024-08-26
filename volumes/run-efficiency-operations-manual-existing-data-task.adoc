@@ -2,19 +2,19 @@
 permalink: volumes/run-efficiency-operations-manual-existing-data-task.html 
 sidebar: sidebar 
 keywords: run, efficiency, operations, manually, existing, data 
-summary: 您可以在非溫度敏感儲存效率磁碟區中的資料上手動執行效率作業、然後再啟用ONTAP 重複資料刪除、資料壓縮或使用ONTAP 低於版本號不超過版本號的資料壓縮功能。您可以使用Volume Eff家 能start -scan、old-data命令來執行這些作業。 
+summary: 在啟用重複資料刪除、資料壓縮或資料壓縮之前、請先手動對非溫度敏感儲存效率磁碟區中的資料執行效率作業。 
 ---
-= 在現有資料上手動執行效率作業
+= 手動對現有資料執行效率作業
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以在非溫度敏感儲存效率磁碟區中的資料上手動執行效率作業、然後再啟用ONTAP 重複資料刪除、資料壓縮或使用ONTAP 低於版本號不超過版本號的資料壓縮功能。您可以使用執行這些作業 `volume efficiency start -scan-old-data` 命令。
+在啟用重複資料刪除、資料壓縮或資料壓縮之前、您可以手動對非溫度敏感儲存效率磁碟區中的資料執行效率作業。您可以使用 ONTAP 9 8 之前的 ONTAP 版本來執行這些作業。
 
 .關於這項工作
-此 `-compression` 選項不適用於 `-scan-old-data` 對溫度敏感的儲存效率磁碟區。非作用中的資料壓縮會自動在 ONTAP 9.8 及更新版本中、針對溫度敏感的儲存效率磁碟區、在預先存在的資料上執行。
+此作業是使用 `volume efficiency start`命令搭配 `-scan-old-data`參數來執行。此 `-compression` 選項不適用於 `-scan-old-data` 對溫度敏感的儲存效率磁碟區。非作用中的資料壓縮會自動在 ONTAP 9.8 及更新版本中、針對溫度敏感的儲存效率磁碟區、在預先存在的資料上執行。
 
 如果您只在磁碟區上啟用重複資料刪除、則重複資料刪除功能會在資料上執行。如果您在磁碟區上啟用重複資料刪除、資料壓縮及資料壓縮、則資料壓縮會先執行、然後再執行重複資料刪除和資料壓縮。
 
@@ -24,7 +24,7 @@ summary: 您可以在非溫度敏感儲存效率磁碟區中的資料上手動�
 
 [NOTE]
 ====
-後處理壓縮無法在AFF 不穩定平台上執行。系統會產生一則EMS訊息、通知您已跳過此作業。
+後處理程序壓縮無法在 AFF 平台上執行。系統會產生一則EMS訊息、通知您已跳過此作業。
 
 ====
 .步驟
@@ -35,4 +35,8 @@ summary: 您可以在非溫度敏感儲存效率磁碟區中的資料上手動�
 +
 `volume efficiency start -vserver vs1 -volume VolA -scan-old-data true [-compression | -dedupe | -compaction ] true`
 
+
+
+.相關資訊
+* link:run-efficiency-operations-manual-task.html["手動執行效率作業"]
 

@@ -2,7 +2,7 @@
 permalink: volumes/space-reservation-flexclone-files-luns-concept.html 
 sidebar: sidebar 
 keywords: how, space reservation, works, flexclone files, flexclone luns 
-summary: FlexClone檔案和FlexClone LUN預設會繼承父檔案和父LUN的空間保留屬性。不過、FlexVol 如果無法使用空間、您可以從父檔案建立已停用空間保留功能的FlexClone檔案和FlexClone LUN、以及啟用空間保留功能的父LUN。 
+summary: 使用 FlexClone 檔案和 FlexClone LUN 時、您應該瞭解 space reservation 屬性的運作方式。 
 ---
 = 空間保留與FlexClone檔案和FlexClone LUN的搭配運作方式
 :allow-uri-read: 
@@ -11,6 +11,8 @@ summary: FlexClone檔案和FlexClone LUN預設會繼承父檔案和父LUN的空�
 
 
 [role="lead"]
-FlexClone檔案和FlexClone LUN預設會繼承父檔案和父LUN的空間保留屬性。不過、FlexVol 如果無法使用空間、您可以從父檔案建立已停用空間保留功能的FlexClone檔案和FlexClone LUN、以及啟用空間保留功能的父LUN。
+使用 FlexClone 檔案和 FlexClone LUN 時、您應該瞭解 space reservation 屬性的運作方式。
 
-如果FlexVol 此實體磁碟區沒有足夠的空間來建立與父磁碟區相同的FlexClone檔案或FlexClone LUN空間保留、則複製作業將會失敗。
+根據預設、 FlexClone 檔案和 LUN 會分別從父檔案和父 LUN 繼承空間保留屬性。不過、如果 FlexVol volume 缺少空間、您可以在停用空間保留的情況下建立 FlexClone 檔案和 FlexClone LUN 。即使個別父項中的屬性已啟用、也可能發生這種情況。
+
+請注意、如果 FlexVol volume 沒有足夠的空間來建立 FlexClone 檔案或 FlexClone LUN 、且其保留空間與父 LUN 相同、則複製作業將會失敗。

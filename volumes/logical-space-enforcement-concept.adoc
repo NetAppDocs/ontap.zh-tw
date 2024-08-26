@@ -2,18 +2,18 @@
 permalink: volumes/logical-space-enforcement-concept.html 
 sidebar: sidebar 
 keywords: what, logical, space, enforcement, does 
-summary: 當您在ONTAP 更新版本的支援中啟用邏輯空間時、ONTAP 流通量區會計算磁碟區中邏輯使用的區塊、以判斷該磁碟區中仍有多少空間可用。如果磁碟區中沒有可用空間、系統會傳回ENOSPC（空間不足）錯誤訊息。 
+summary: 當您在 ONTAP 9 調高及更新版本中啟用邏輯空間強制時、當磁碟區已滿或接近滿時、系統會通知使用者。 
 ---
-= 邏輯空間強制的作用
+= 邏輯空間強制
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-當您在ONTAP 更新版本的支援中啟用邏輯空間時、ONTAP 流通量區會計算磁碟區中邏輯使用的區塊、以判斷該磁碟區中仍有多少空間可用。如果磁碟區中沒有可用空間、系統會傳回ENOSPC（空間不足）錯誤訊息。
+強制執行邏輯空間可確保在磁碟區已滿或即將滿時通知使用者。當您在ONTAP 更新版本的支援中啟用邏輯空間時、ONTAP 流通量區會計算磁碟區中邏輯使用的區塊、以判斷該磁碟區中仍有多少空間可用。如果磁碟區中沒有可用空間、系統會傳回ENOSPC（空間不足）錯誤訊息。
 
-強制執行邏輯空間可確保在磁碟區已滿或即將滿時通知使用者。邏輯空間強制會傳回三種警示類型、通知您磁碟區中的可用空間：
+邏輯空間強制會傳回三種警示類型、通知您磁碟區中的可用空間：
 
 * `Monitor.vol.full.inc.sav`：使用卷中 98% 的邏輯空間時會觸發此警報。
 * `Monitor.vol.nearFull.inc.sav`：使用捲中 95% 的邏輯空間時會觸發此警示。

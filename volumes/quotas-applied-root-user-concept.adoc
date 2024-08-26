@@ -1,8 +1,8 @@
 ---
 permalink: volumes/quotas-applied-root-user-concept.html 
 sidebar: sidebar 
-keywords: how, quotas are applied, root user 
-summary: UNIX用戶端上的root使用者（UID=0）受限於樹狀結構配額、但不受使用者配額或群組配額限制。這可讓root使用者代表其他使用者採取行動、否則配額就會阻止這些使用者。 
+keywords: quotas applied, root user 
+summary: UNIX 用戶端上的根使用者（ UID=0 ）受樹狀目錄配額限制、但不受使用者或群組配額限制。這可讓root使用者代表其他使用者採取行動、否則配額就會阻止這些使用者。 
 ---
 = 如何將配額套用至root使用者
 :allow-uri-read: 
@@ -11,12 +11,16 @@ summary: UNIX用戶端上的root使用者（UID=0）受限於樹狀結構配額�
 
 
 [role="lead"]
-UNIX用戶端上的root使用者（UID=0）受限於樹狀結構配額、但不受使用者配額或群組配額限制。這可讓root使用者代表其他使用者採取行動、否則配額就會阻止這些使用者。
+UNIX 用戶端上的根使用者（ UID=0 ）受樹狀目錄配額限制、但不受使用者或群組配額限制。這可讓root使用者代表其他使用者採取行動、否則配額就會阻止這些使用者。
 
-當 root 執行檔案或目錄擁有權變更或其他作業（例如 UNIX ）時 `chown` 命令）代表權限較低的使用者、 ONTAP 會根據新擁有者來檢查配額、但不會報告錯誤或停止作業、即使新擁有者的強制配額限制已超過。當系統管理動作（例如恢復遺失的資料）導致暫時超過配額時、此功能就很有用。
+當 root 使用者 `chown`代表 Privileges 較少的使用者執行檔案或目錄擁有權變更或其他作業（例如 UNIX 命令）時、 ONTAP 會根據新擁有者檢查配額、但不會報告錯誤或停止作業、即使新擁有者的強制配額限制已超過。當系統管理動作（例如恢復遺失的資料）導致暫時超過配額時、此功能就很有用。
 
 [NOTE]
 ====
 不過、在進行所有權傳輸之後、如果使用者在配額仍超過時嘗試分配更多磁碟空間、用戶端系統將會報告磁碟空間錯誤。
 
 ====
+.相關資訊
+* link:../volumes/quotas-applied-concept.html["配額的套用方式"]
+* link:../volumes/quotas-applied-users-multiple-ids-concept.html["如何將配額套用至具有多個ID的使用者"]
+

@@ -1,21 +1,22 @@
 ---
 permalink: volumes/set-fractional-reserve-concept.html 
 sidebar: sidebar 
-keywords: considerations, setting, fractional, reserve 
-summary: 部分保留（也稱為LUN覆寫保留）可讓您關閉FlexVol 對空間保留LUN和文件的覆寫保留（Overwrite Reserve）。這有助於將儲存使用率最大化、但如果您的環境因為空間不足而導致寫入作業失敗、則必須瞭解此組態所帶來的需求。 
+keywords: considerations, setting, fractional, reserve, lun overwrite reserve 
+summary: 部分保留可讓您關閉 FlexVol volume 中空間保留 LUN 和檔案的覆寫保留、以協助最大化儲存使用率。 
 ---
-= 設定部分保留的考量事項
+= 設定部分保留時的考量事項
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-部分保留（也稱為_LUN覆寫保留區_）可讓您關閉FlexVol 針對空間保留LUN和位於一個實體磁碟區中檔案的覆寫保留。這有助於將儲存使用率最大化、但如果您的環境因為空間不足而導致寫入作業失敗、則必須瞭解此組態所帶來的需求。
+部分保留（也稱為_LUN覆寫保留區_）可讓您關閉FlexVol 針對空間保留LUN和位於一個實體磁碟區中檔案的覆寫保留。這有助於最大化儲存使用率。
 
-百分比保留設定是以百分比表示、唯一有效的值是 `0` 和 `100` 百分比。「部分保留」設定是Volume的屬性。
 
-將部分保留設為 `0` 提高儲存使用率。然而、如果磁碟區的可用空間不足、存取位於磁碟區中資料的應用程式可能會發生資料中斷、即使將磁碟區保證設定為 `volume`。不過、只要有適當的Volume組態和使用、就能將寫入失敗的機率降至最低。ONTAP 為將部分保留設為的磁碟區提供「盡力」寫入保證 `0` 當滿足下列所有要求時：
+CAUTION: 如果您的環境因空間不足而導致寫入作業失敗而受到負面影響、您必須瞭解此組態可能會造成的需求。
+
+百分比保留設定是以百分比表示 `0`、唯一有效的值是和 `100`百分比。「部分保留」設定是Volume的屬性。設定部分保留以 `0`提高儲存使用率。然而、如果磁碟區的可用空間不足、存取位於磁碟區中資料的應用程式可能會發生資料中斷、即使將磁碟區保證設定為 `volume`。不過、只要有適當的Volume組態和使用、就能將寫入失敗的機率降至最低。ONTAP 為部分保留設定為 `0`達到下列要求時的磁碟區提供「盡力」寫入保證：
 
 * 重複資料刪除功能未在使用中
 * 壓縮未在使用中

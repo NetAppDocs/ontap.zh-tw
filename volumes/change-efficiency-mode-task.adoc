@@ -1,8 +1,8 @@
 ---
 permalink: volumes/change-efficiency-mode-task.html 
 sidebar: sidebar 
-keywords: storage, efficiency, mode, change, efficient, default 
-summary: '您可以使用 `volume efficiency modify` 變更 AFF 磁碟區上設定的儲存效率模式的命令。您可以從變更模式 `default` 至 `efficient` 或者、您也可以在尚未設定 Volume 效率的情況下、設定效率模式。' 
+keywords: storage, efficiency, mode, change, efficient, default, volume 
+summary: '您可以將 AFF 磁碟區的儲存效率模式從變更 `default`為 `efficient`、或是在尚未設定磁碟區效率時、設定效率模式。' 
 ---
 = 變更Volume Eff效率 模式
 :allow-uri-read: 
@@ -11,11 +11,13 @@ summary: '您可以使用 `volume efficiency modify` 變更 AFF 磁碟區上設�
 
 
 [role="lead"]
-從 ONTAP 9.10.1 開始、僅針對 AFF 系統引進兩種 Volume 層級的儲存效率模式、 _ 預設 _ 和 _ 效率 _ 。這兩種模式可選擇檔案壓縮（預設）、這是建立新 AFF 磁碟區時的預設模式、或是對溫度敏感的儲存效率（效率）、以達到對溫度敏感的儲存效率。您可以使用 `volume efficiency modify` 變更 AFF 磁碟區上設定的儲存效率模式的命令。您可以從變更模式 `default` 至 `efficient` 或者、您也可以在尚未設定 Volume 效率的情況下、設定效率模式。
+從 ONTAP 9 。 10.1 開始、 Volume 層級的儲存效率模式 _ 預設 _ 和 _ 效率 _ 僅支援 AFF 系統。這些模式可在檔案壓縮（預設）（建立新的 AFF 磁碟區時為預設模式）或對溫度敏感的儲存效率（有效率）之間進行選擇、以提高對溫度敏感的儲存效率。您可以使用 `volume efficiency modify`命令將 AFF 磁碟區的儲存效率模式從變更 `default`為 `efficient`、或是在尚未設定磁碟區效率時、設定效率模式。
 
 .步驟
 . 變更Volume Eff效率 模式：
 +
-`volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-efficiency-mode <default|efficient>`
-
+[listing]
+----
+volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-efficiency-mode <default|efficient>
+----
 

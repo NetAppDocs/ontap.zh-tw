@@ -2,7 +2,7 @@
 permalink: volumes/quotas-applied-users-multiple-ids-concept.html 
 sidebar: sidebar 
 keywords: how, quotas are applied, users, multiple ids 
-summary: 使用者可以使用多個ID來表示。您可以將識別碼清單指定為配額目標、為這類使用者設定單一使用者配額。任何這些ID所擁有的檔案都必須受到使用者配額的限制。 
+summary: 使用者可以使用多個ID來表示。您可以指定識別碼清單做為配額目標、為這類使用者定義單一使用者配額。任何這些ID所擁有的檔案都必須受到使用者配額的限制。 
 ---
 = 如何將配額套用至具有多個ID的使用者
 :allow-uri-read: 
@@ -11,14 +11,13 @@ summary: 使用者可以使用多個ID來表示。您可以將識別碼清單指
 
 
 [role="lead"]
-使用者可以使用多個ID來表示。您可以將識別碼清單指定為配額目標、為這類使用者設定單一使用者配額。任何這些ID所擁有的檔案都必須受到使用者配額的限制。
+使用者可以使用多個ID來表示。您可以指定識別碼清單做為配額目標、為這類使用者定義單一使用者配額。任何這些ID所擁有的檔案都必須受到使用者配額的限制。
 
-假設使用者擁有UNIX UID 20和Windows ID corp\john_smith和workation\jsmith。對於此使用者、您可以指定配額目標為唯一識別碼和Windows識別碼清單的配額。當此使用者寫入儲存系統時、無論寫入來自於UID 20、corp\john_smith或工程\jsmith、都會套用指定的配額。
+假設使用者具有 UNIX UID `20` 、 Windows ID `corp\john_smith` 和 `engineering\jsmith`。對於此使用者、您可以指定配額目標為唯一識別碼和Windows識別碼清單的配額。當此使用者寫入儲存系統時、無論寫入是來自 UID `20`、 `corp\john_smith`或 `engineering\jsmith`、都會套用指定的配額。
 
-[NOTE]
-====
-即使 ID 屬於同一位使用者、也會將個別的配額規則視為個別的目標。例如、對於同一個使用者、您可以指定一個配額、將UID 20限制為1 GB的磁碟空間、並指定另一個配額、將corp\john_Smith限制為2 GB的磁碟空間、即使這兩個ID代表相同的使用者。將配額分別套用至UID 20和corp\john_Smith。ONTAP
+請注意、即使 ID 屬於同一位使用者、個別的配額規則也會視為個別的目標。例如、對於同一位使用者、您可以指定一個配額 `20`、將 UID 限制為 1GB 磁碟空間、而另一個配額則將 corp\john_smith 限制為 2GB 磁碟空間、即使兩個 ID 代表相同的使用者。ONTAP 會將配額套用至 UID `20` `corp\john_smith` 、並個別套用。在這種情況下 `engineering\jsmith`、即使將限制套用至相同使用者使用的其他 ID 、也不會套用任何限制。
 
-在這種情況下、即使相同使用者使用的其他ID受到限制、也不會對工程\jsmith套用任何限制。
+.相關資訊
+* link:../volumes/quotas-applied-concept.html["配額的套用方式"]
+* link:../volumes/quotas-applied-root-user-concept.html["如何將配額套用至root使用者"]
 
-====

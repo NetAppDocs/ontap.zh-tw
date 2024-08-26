@@ -1,8 +1,8 @@
 ---
 permalink: volumes/enable-inline-data-compaction-fas-systems-task.html 
 sidebar: sidebar 
-keywords: enable, inline, data, compaction, fas systems 
-summary: 您FAS 可以使用WAFL 「支援精簡節點Shell」命令、透過Flash Pool（混合式）Aggregate或HDD Aggregate在Volume或Aggregate層級控制即時資料精簡。根據預設FAS 、不適用於不完整系統的資料壓縮功能會停用。 
+keywords: enable, inline, data compaction, fas systems, hdd aggregate, volume efficiency 
+summary: 利用磁碟區或集合體層級的 Flash Pool （混合式）集合體或 HDD 集合體、在 FAS 系統上實現即時資料壓縮。 
 ---
 = 為FAS 不實系統啟用即時資料壓縮功能
 :allow-uri-read: 
@@ -11,24 +11,40 @@ summary: 您FAS 可以使用WAFL 「支援精簡節點Shell」命令、透過Fla
 
 
 [role="lead"]
-您可以使用在磁碟區或集合體層級使用 Flash Pool （混合式）集合體或 HDD 集合體、來控制 FAS 系統上的內嵌資料壓縮 `volume efficiency` 叢集 Shell 命令。根據預設FAS 、不適用於不完整系統的資料壓縮功能會停用。
+您可以使用 `volume efficiency`叢集 Shell 命令、在具有 Flash Pool （混合式）集合體或磁碟機集合體的 FAS 系統上啟用內嵌資料壓縮功能。根據預設FAS 、不適用於不完整系統的資料壓縮功能會停用。
 
 .關於這項工作
 如果您在 Aggregate 層級啟用資料壓縮、則會在任何以 Volume 空間保證建立的新磁碟區上啟用資料壓縮 `none` 在 Aggregate 中。在HDD Aggregate上的磁碟區上啟用資料壓縮功能、會使用額外的CPU資源。
 
 .步驟
-. 變更為進階權限等級： +
-`set -privilege advanced`
-. 檢查所需節點的磁碟區和集合體資料壓縮狀態： +
-`volume efficiency show -volume _volume_name_` +
-. 在 Volume 上啟用資料壓縮： +
-`volume efficiency modify -volume _volume_name_ -data-compaction true`
+. 變更為進階權限層級：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 檢查所需節點的磁碟區和集合體資料壓縮狀態：
++
+[source, cli]
+----
+volume efficiency show -volume <volume_name>
+----
+. 在 Volume 上執行資料壓縮：
++
+[source, cli]
+----
+volume efficiency modify -volume <volume_name> -data-compaction true
+----
 +
 [NOTE]
 ====
-如果將 Aggregate 或 Volume 的資料壓縮設為 `false` 、則壓縮作業會失敗。啟用壓縮並不會壓縮現有資料、只會壓縮新的系統寫入內容。此 `volume efficiency start` 命令包含有關如何壓縮現有資料的詳細資訊（在 ONTAP 9.1 及更新版本中）。+ 如需更多資訊、請參閱 https://docs.netapp.com/us-en/ontap-cli["指令參考資料ONTAP"^]。
+如果將 Aggregate 或 Volume 的資料壓縮設為 `false` 、則壓縮作業會失敗。啟用壓縮並不會壓縮現有資料、只會壓縮新的系統寫入內容。此 `volume efficiency start` 命令包含有關如何壓縮現有資料的詳細資訊（在 ONTAP 9.1 及更新版本中）。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-cli["指令參考資料ONTAP"^]。
 
 ====
 . 檢視壓縮統計資料：
-`volume efficiency show -volume _volume_name_`
++
+[source, cli]
+----
+volume efficiency show -volume <volume_name>
+----
 
