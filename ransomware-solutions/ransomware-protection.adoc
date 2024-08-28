@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: ransomware-solutions/ransomware-protection.html 
+keywords: tr-4572, technical report, ransomware, protect, protection, netapp ransomware protection, netapp tr, ontap tr 
+summary: NetApp 的勒索軟體保護包括即時 AI 型偵測與回應。 
+---
+= NetApp ONTAP 內建的內建 AI 型偵測與回應功能
+:allow-uri-read: 
+
+
+[role="lead"]
+隨著勒索軟體威脅越來越複雜、您的防禦機制也越來越複雜。NetApp 的自動勒索軟體保護（ ARP ）是由 AI 提供、內建於 ONTAP 的智慧型異常偵測功能。開啟此功能、為您的網路恢復能力增添另一層防禦。
+
+ARP 和 ARP/AI 可透過 ONTAP 內建管理介面、系統管理員進行設定、並以每個磁碟區為基礎啟用。
+
+
+
+== 自主勒索軟體保護（Arp）
+
+自主勒索軟體保護（ ARP ）是自 9.10.1 起的另一個原生內建 ONTAP 解決方案、從 NAS 儲存磁碟區工作負載檔案活動和資料 Entropy 來自動偵測潛在的勒索軟體。ARP 為系統管理員提供即時偵測、洞見和資料還原點、提供前所未有的隨裝即用勒索軟體偵測功能。
+
+對於支援 ARP 的 ONTAP 9 ． 15.1 版和更早版本、 ARP 會以學習模式開始學習一般工作負載資料活動。對於大多數環境而言、這可能需要七天的時間。學習模式完成後、 ARP 會自動切換至使用中模式、並開始尋找可能是勒索軟體的異常工作負載活動。
+
+如果偵測到異常活動、就會立即擷取自動快照複本、以最少受感染的資料、盡可能提供最接近攻擊時間的還原點。同時、系統會產生自動警示（可設定）、讓系統管理員能夠查看異常的檔案活動、以便判斷該活動是否確實是惡意活動、並採取適當的行動。
+
+如果活動是預期的工作負載、管理員可以輕鬆地將其標示為誤判。ARP 會將這項變更視為正常的工作負載活動、不再將其標示為潛在的未來攻擊。
+
+若要啟用 ARP 、link:../system-admin/manage-licenses-concept.html["ONTAP One"]需要授權。
+
+.深入瞭解
+* link:../anti-ransomware/index.html["自主勒索軟體保護"]
+
+
+
+
+== 自主勒索軟體保護 /AI （ ARP/AI ）
+
+ARP/AI 在 ONTAP 9 15.1 中推出技術預覽、將 NAS 儲存系統的隨裝即時偵測功能帶入更高層級。全新 AI 驅動的偵測技術已針對超過一百萬個檔案和各種已知的勒索軟體攻擊進行訓練。除了 ARP 中使用的訊號之外、 ARP/AI 也會偵測標頭加密。AI 電源和額外訊號可讓 ARP/AI 提供超過 99% 的偵測準確度。SE Labs 已驗證這項功能、這是一項可給予 ARP/AI 最高 AAA 評等的測試實驗室。
+
+由於模型持續在雲端進行訓練、因此 ARP/AI 不需要學習模式。它會在開啟時作用。持續訓練也意味著 ARP/AI 一律會在發生新的勒索軟體攻擊類型時加以驗證。ARP/AI 也隨附自動更新功能、可為所有客戶提供新參數、讓勒索軟體偵測功能保持在最新狀態。ARP 的所有其他偵測、洞見和資料恢復點功能、都會保留給 ARP/AI 。
+
+若要啟用 ARP/AI 、link:../system-admin/manage-licenses-concept.html["ONTAP One"]需要授權。
+
+.深入瞭解
+* https://community.netapp.com/t5/Tech-ONTAP-Blogs/NetApp-s-AI-based-real-time-ransomware-detection-solution-achieves-AAA-rating/ba-p/453379["部落格： NetApp 的 AI 即時勒索軟體偵測解決方案達到 AAA 評等"^]
+
