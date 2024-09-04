@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-local-mirror-new-bucket-task.html 
 keywords: snapmirror, create local, new bucket, create a mirror relationship for an existing bucket 
-summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個叢集上的S3 SnapMirror目的地。您可以將資料鏡射至不同儲存VM中的儲存區、或將資料鏡射至來源所在的儲存VM。 
+summary: 建立新的 S3 儲存區時、您可以立即將其保護到同一個叢集上的 SnapMirror S3 目的地。您可以將資料鏡射至不同儲存VM中的儲存區、或將資料鏡射至來源所在的儲存VM。 
 ---
 = 為新的儲存區（本機叢集）建立鏡射關係
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個
 
 
 [role="lead"]
-當您建立新的S3儲存區時、可以立即將其保護至同一個叢集上的S3 SnapMirror目的地。您可以將資料鏡射至不同儲存VM中的儲存區、或將資料鏡射至來源所在的儲存VM。
+建立新的 S3 儲存區時、您可以立即將其保護到同一個叢集上的 SnapMirror S3 目的地。您可以將資料鏡射至不同儲存VM中的儲存區、或將資料鏡射至來源所在的儲存VM。
 
 .開始之前
 * 已完成有關版本、授權和S3伺服器組態的要求ONTAP 。
@@ -28,7 +28,7 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個
 ====
 .系統管理員
 --
-. 如果這是此儲存VM的第一個S3 SnapMirror關係、請驗證來源和目的地儲存VM是否都有根使用者金鑰、如果沒有：
+. 如果這是此儲存 VM 的第一個 SnapMirror S3 關係、請驗證來源與目的地儲存 VM 的根使用者金鑰是否存在、如果沒有、請重新產生根使用者金鑰：
 +
 .. 按一下「*儲存設備>儲存設備VM*」、然後選取儲存設備VM。
 .. 在 * 設定 * 索引標籤中、按一下 image:icon_pencil.gif["編輯圖示"] S3 磚。
@@ -40,14 +40,14 @@ summary: 當您建立新的S3儲存區時、可以立即將其保護至同一個
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組"] 以取得更多資訊。
 
-. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則、請建立S3 SnapMirror原則：
+. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
 +
 .. 按一下 * 保護 > 總覽 * 、然後按一下 * 本機原則設定 * 。
 .. 按一下 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
 +
 *** 輸入原則名稱和說明。
 *** 選取原則範圍、叢集或SVM
-*** 選擇* Continuous *以建立S3 SnapMirror關係。
+*** 針對 SnapMirror S3 關係選取 * 持續 * 。
 *** 輸入您的* Throttle *和* Recovery Point Objective *值。
 
 
@@ -106,7 +106,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 --
 .CLI
 --
-. 如果這是此SVM的第一個S3 SnapMirror關係、請驗證來源和目的地SVM是否都有根使用者金鑰、如果不符合下列條件、請重新產生這些金鑰：
+. 如果這是此 SVM 的第一個 SnapMirror S3 關係、請確認來源和目的地 SVM 的根使用者金鑰都存在、如果根使用者金鑰不存在、請重新產生這些金鑰：
 `vserver object-store-server user show`
 +
 確認root使用者有存取金鑰。如果沒有、請輸入：
@@ -127,13 +127,13 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ....
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ....
-. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則、請建立S3 SnapMirror原則：
+. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 參數：
 
 +
-** `continuous` – S3 SnapMirror 關係的唯一原則類型（必要）。
+** `continuous`– SnapMirror S3 關係的唯一原則類型（必要）。
 ** `-rpo` –指定恢復點目標的時間（以秒爲單位）（可選）。
 ** `-throttle` –指定處理量 / 頻寬的上限（以千位元組 / 秒為單位）（選用）。
 +
@@ -157,7 +157,7 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 
 
-. 建立 S3 SnapMirror 關係：
+. 建立 SnapMirror S3 關係：
 `snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]``
 +
 您可以使用所建立的原則、或接受預設值。

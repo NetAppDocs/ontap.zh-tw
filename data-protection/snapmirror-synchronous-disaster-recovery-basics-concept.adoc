@@ -2,9 +2,9 @@
 permalink: data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html 
 sidebar: sidebar 
 keywords: snapmirror, synchronous, disaster, recovery 
-summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB記憶體的SnapMirror同步（SM-S）技術、都能在所有ONTAP Select 的SnapMirror平台和支援所有的不穩定平台上運作。SnapMirror同步技術是一種每節點授權功能、可在磁碟區層級提供同步資料複寫。 
+summary: 從 ONTAP 9 5 開始、 SnapMirror 同步（ SM-S ）技術在所有至少有 16 GB 記憶體的 FAS 和 AFF 平台、以及所有 ONTAP Select 平台上均受到支援。SnapMirror 同步技術是一項每個節點的授權功能、可在 Volume 層級提供同步資料複寫。 
 ---
-= SnapMirror同步災難恢復基礎知識
+= SnapMirror 同步災難恢復基礎知識
 :hardbreaks:
 :allow-uri-read: 
 :icons: font
@@ -12,7 +12,7 @@ summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB�
 
 
 [role="lead"]
-從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB記憶體的SnapMirror同步（SM-S）技術、都能在所有ONTAP Select 的SnapMirror平台和支援所有的不穩定平台上運作。SnapMirror同步技術是一種每節點授權功能、可在磁碟區層級提供同步資料複寫。
+從 ONTAP 9 5 開始、 SnapMirror 同步（ SM-S ）技術在所有至少有 16 GB 記憶體的 FAS 和 AFF 平台、以及所有 ONTAP Select 平台上均受到支援。SnapMirror 同步技術是一項每個節點的授權功能、可在 Volume 層級提供同步資料複寫。
 
 這項功能可滿足金融、醫療及其他管制產業的法規及國家要求、在需要零資料遺失的情況下進行同步複寫。
 
@@ -20,9 +20,9 @@ summary: 從ONTAP 推出SnapMirror 9.5開始、所有FAS 包含AFF 至少16 GB�
 
 == 允許 SnapMirror 同步作業
 
-每個HA配對的SnapMirror同步複寫作業數量上限取決於控制器機型。
+每個 HA 配對的 SnapMirror 同步複寫作業數上限取決於控制器機型。
 
-下表根據平台類型和ONTAP 版本列出每個HA配對所允許的SnapMirror同步作業數量。
+下表列出每個 HA 配對所允許的 SnapMirror 同步作業數、視平台類型和 ONTAP 版本而定。
 
 |===
 
@@ -85,7 +85,7 @@ ONTAP Select
 
 == 支援的功能
 
-下表說明 SnapMirror Synchronous 支援的功能、以及可提供支援的 ONTAP 版本。
+下表說明 SnapMirror 同步支援的功能、以及提供支援的 ONTAP 版本。
 
 [cols="3,1,4"]
 |===
@@ -94,16 +94,16 @@ ONTAP Select
 | 功能 | 第一版支援 | 其他資訊 
 
 
-| SnapMirror同步關係的主要磁碟區上的防毒軟體 | ONTAP 9.6 |  
+| SnapMirror 同步關係主要磁碟區上的防毒軟體 | ONTAP 9.6 |  
 
 
-| 應用程式建立的 Snapshot 複本複寫 | 更新ONTAP | 如果 Snapshot 複本在時標有適當的標籤 `snapshot create` SnapMirror Synchronous 使用 CLI 或 ONTAP API 來複寫使用者建立的 Snapshot 複本、或使用外部指令碼建立的 Snapshot 複本、然後停止應用程式。使用Snapshot原則建立的排程Snapshot複本不會複寫。如需複寫應用程式建立的Snapshot複本的詳細資訊、請參閱知識庫文章： link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用SnapMirror同步複寫應用程式建立的快照"^]。 
+| 應用程式建立的 Snapshot 複本複寫 | 更新ONTAP | 如果在 `snapshot create`操作時使用 CLI 或 ONTAP API 將 Snapshot 複本標記為適當的標籤、則 SnapMirror 同步會在停止應用程式之後、複寫使用者建立的 Snapshot 複本或使用外部指令碼建立的 Snapshot 複本。使用Snapshot原則建立的排程Snapshot複本不會複寫。有關複製應用程序創建的 Snapshot 副本的詳細信息，請參閱知識庫文章：link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用 SnapMirror 同步複寫應用程式建立的快照"^]。 
 
 
 | 複製自動刪除 | ONTAP 9.6 |  
 
 
-| FabricPool 集合體的分層原則為「無」、「快照」或「自動」、可與 SnapMirror 同步來源和目的地搭配使用。 | 版本9.5 ONTAP | 無法將目的地Volume的FabricPool 目的地集合體設為All Tiering原則。 
+| SnapMirror 同步來源和目的地支援 FabricPool 集合體的分層原則為「無」、「快照」或「自動」。 | 版本9.5 ONTAP | 無法將目的地Volume的FabricPool 目的地集合體設為All Tiering原則。 
 
 
 | FC | 版本9.5 ONTAP | 所有延遲不超過 10 毫秒的網路 
@@ -115,15 +115,13 @@ ONTAP Select
 | 檔案複製 | 更新ONTAP |  
 
 
-| SnapMirror同步關係主要磁碟區的FPolicy | ONTAP 9.6 |  
+| SnapMirror 同步關係主要 Volume 上的 FPolicy | ONTAP 9.6 |  
 
 
-| SnapMirror 同步關係的主捲上的硬配額和軟配額 | ONTAP 9.6 | 配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。 
+| SnapMirror 同步關係的主要 Volume 上的硬配額和軟配額 | ONTAP 9.6 | 配額規則不會複寫到目的地、因此配額資料庫不會複寫到目的地。 
 
 
-| 叢集內同步關係 | ONTAP 9.14.1. | 當來源和目的地磁碟區放置在不同的 HA 配對上時、就會提供高可用度。
-如果整個叢集當機、則只有在叢集恢復之前、才能存取磁碟區。
-叢集內 SnapMirror 同步關係將有助於達到同步的整體限制 xref:SnapMirror Synchronous operations allowed[每個 HA 配對的關係]。 
+| 叢集內同步關係 | ONTAP 9.14.1. | 當來源和目的地磁碟區放置在不同的 HA 配對上時、就會提供高可用度。如果整個叢集當機、則只有在叢集恢復之前、才能存取磁碟區。叢集內 SnapMirror 同步關係將有助於達到同步xref:SnapMirror synchronous operations allowed[每個 HA 配對的關係]的整體限制。 
 
 
 | iSCSI | 版本9.5 ONTAP |  
@@ -141,7 +139,7 @@ ONTAP Select
 | NDMP / NDMP 還原 | ONTAP 9.13.1.12.9.11.9.11. | 來源叢集和目的地叢集都必須執行 ONTAP 9.13.1 或更新版本、才能搭配 SnapMirror 同步使用 NDMP 。如需詳細資訊、請參閱 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用 NDMP 複本傳輸資料]。 
 
 
-| 僅適用於 AFF/ASA 平台上的無中斷 SnapMirror 同步作業（ Nn ）。 | ONTAP 9.12.1 | 支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。 
+| 僅限在 AFF / ASA 平台上執行不中斷的 SnapMirror 同步作業（ n ）。 | ONTAP 9.12.1 | 支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。 
 
 
 | NFS v4.2 | 零點9.10.1 ONTAP |  
@@ -171,16 +169,10 @@ ONTAP Select
 | SMB 2.0 或更新版本 | ONTAP 9.6 |  
 
 
-| SnapMirror同步鏡射鏡射串聯 | ONTAP 9.6 | SnapMirror同步關係的目的地Volume關係必須是非同步SnapMirror關係。 
+| SnapMirror 同步鏡射鏡射串聯 | ONTAP 9.6 | 來自 SnapMirror 同步關係目的地 Volume 的關係必須是 SnapMirror 非同步關係。 
 
 
-| SVM 災難恢復 | ONTAP 9.6 | * SnapMirror 同步來源也可以是 SVM 災難恢復來源、例如、將 SnapMirror Synchronous 視為單一階段的扇出組態、將 SVM 災難恢復視為另一階段。
-
-* SnapMirror 同步來源不能是 SVM 災難恢復目的地、因為 SnapMirror Synchronous 不支援串聯資料保護來源。
-您必須先釋放同步關係、才能在目的地叢集中執行 SVM 災難恢復反轉重新同步。
-
-* SnapMirror 同步目的地不能是 SVM 災難恢復來源、因為 SVM 災難恢復不支援 DP 磁碟區的複寫。
-同步來源的反轉重新同步會導致 SVM 災難恢復、但目的地叢集中的 DP Volume 除外。 
+| SVM 災難恢復 | ONTAP 9.6 | * SnapMirror 同步來源也可以是 SVM 災難恢復來源、例如、將 SnapMirror 同步化為單一連線的開機組態、以及將 SVM 災難恢復視為另一方的開機組態。* SnapMirror 同步來源不能是 SVM 災難恢復目的地、因為 SnapMirror 同步不支援串聯資料保護來源。您必須先釋放同步關係、才能在目的地叢集中執行 SVM 災難恢復反轉重新同步。* SnapMirror 同步目的地不能是 SVM 災難恢復來源、因為 SVM 災難恢復不支援 DP 磁碟區的複寫。同步來源的反轉重新同步會導致 SVM 災難恢復、但目的地叢集中的 DP Volume 除外。 
 
 
 | 磁帶型還原至來源磁碟區 | ONTAP 9.13.1.12.9.11.9.11. |  
@@ -192,14 +184,14 @@ ONTAP Select
 
 == 不支援的功能
 
-下列功能不支援同步SnapMirror關係：
+SnapMirror 同步關係不支援下列功能：
 
 * 一致性群組
 * DP_最佳化（DPO）系統
 * 資料量FlexGroup
 * 資料量FlexCache
 * 全域節流
-* 在連出組態中、只有一種關係可以是SnapMirror同步關係；來源磁碟區的所有其他關係必須是非同步SnapMirror關係。
+* 在扇出組態中、只有一個關係可以是 SnapMirror 同步關係；來源磁碟區的所有其他關係都必須是 SnapMirror 非同步關係。
 * LUN 搬移
 * 內部組態MetroCluster
 * 混合式SAN與NVMe存取
@@ -217,26 +209,21 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
 
 == 操作模式
 
-SnapMirror Synchronous有兩種作業模式、分別取決於所使用的SnapMirror原則類型：
+SnapMirror 同步會根據所使用的 SnapMirror 原則類型、提供兩種作業模式：
 
-* *同步模式*
-在同步模式中、應用程式 I/O 作業會平行傳送至主要和次要
-儲存系統：如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤情況得到修正時、SnapMirror同步技術會自動與二線儲存設備重新同步、並以同步模式從一線儲存設備恢復複寫至二線儲存設備。
-在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
-* * StrictSync模式*
-SnapMirror Synchronous可選擇性地在StrictSync模式中運作。如果由於任何原因未完成對二線儲存設備的寫入、應用程式I/O就會失敗、因此可確保一線與二線儲存設備完全相同。只有在 SnapMirror 關係恢復後、應用程式對主要的 I/O 才會恢復 `InSync` 狀態。如果主儲存設備故障、則可在容錯移轉後、在二線儲存設備上恢復應用程式I/O、而不會遺失資料。
-在StrictSync模式中、RPO永遠為零、RTO極低。
+* *同步模式*在同步模式下、應用程式I/O作業會平行傳送至主要和次要儲存系統。如果由於任何原因而未完成對二線儲存設備的寫入、則允許應用程式繼續寫入一線儲存設備。當錯誤狀況得到修正時、 SnapMirror 同步技術會自動與次要儲存設備重新同步、並以同步模式從主要儲存設備恢復複寫至次要儲存設備。在同步模式中、RPO=0和RTO非常低、直到發生二線複寫故障、導致RPO和RTO無法確定、但等於修復導致二線複寫失敗並完成重新同步的問題所需時間。
+* *StrictSync 模式 * SnapMirror 同步可以選擇在 StrictSync 模式下運行。如果由於任何原因未完成對二線儲存設備的寫入、應用程式I/O就會失敗、因此可確保一線與二線儲存設備完全相同。只有在 SnapMirror 關係恢復為 `InSync`狀態後、主應用程式的 I/O 才會恢復。如果主儲存設備故障、則可在容錯移轉後、在二線儲存設備上恢復應用程式I/O、而不會遺失資料。在StrictSync模式中、RPO永遠為零、RTO極低。
 
 
 
 
 == 關係狀態
 
-SnapMirror 同步關係的狀態始終在中 `InSync` 正常作業期間的狀態。如果 SnapMirror 傳輸因任何原因而失敗、則目的地不會與來源同步、因此可前往 `OutofSync` 狀態。
+SnapMirror 同步關係的狀態在 `InSync`正常操作期間始終處於狀態。如果 SnapMirror 傳輸因任何原因而失敗、則目的地不會與來源同步、 `OutofSync`因此可以進入狀態。
 
-對於 SnapMirror 同步關係、系統會自動檢查關係狀態  `InSync` 或 `OutofSync`）固定時間間隔。如果關係狀態為 `OutofSync`、 ONTAP 會自動觸發自動重新同步程序、將關係恢復至 `InSync` 狀態。只有在傳輸因任何作業（例如來源或目的地的非計畫性儲存容錯移轉或網路中斷）而失敗時、才會觸發自動重新同步。使用者啟動的作業、例如 `snapmirror quiesce` 和 `snapmirror break` 請勿觸發自動重新同步。
+對於 SnapMirror 同步關係，系統會 `InSync` `OutofSync`以固定的時間間隔自動檢查關係狀態或）。如果關係狀態為 `OutofSync`、 ONTAP 會自動觸發自動重新同步程序、將關係恢復至 `InSync`狀態。只有在傳輸因任何作業（例如來源或目的地的非計畫性儲存容錯移轉或網路中斷）而失敗時、才會觸發自動重新同步。使用者啟動的作業 `snapmirror quiesce`、例如和、 `snapmirror break`不會觸發自動重新同步。
 
-如果關係狀態變為 `OutofSync` 對於在 StrictSync 模式下的 SnapMirror 同步關係、會停止對主要 Volume 的所有 I/O 作業。。 `OutofSync` 同步模式中的 SnapMirror 同步關係狀態不會中斷主要磁碟區的主要和 I/O 作業。
+如果 `OutofSync`在 StrictSync 模式中 SnapMirror 同步關係的關係狀態變成、則會停止對主要 Volume 的所有 I/O 作業。 `OutofSync`同步模式中的 SnapMirror 同步關係狀態不會中斷主要磁碟區的主要和 I/O 作業、
 
 .相關資訊
 http://www.netapp.com/us/media/tr-4733.pdf["NetApp 技術報告 4733 ： SnapMirror 同步組態與最佳實務做法"^]

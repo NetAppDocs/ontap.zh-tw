@@ -13,7 +13,7 @@ summary: 您可以使用連出部署、將資料保護延伸到多個次要系�
 [role="lead"]
 您可以使用_fan-Out_部署、將資料保護延伸到多個次要系統。您可以使用_Cascade部署、將資料保護延伸至第三系統。
 
-連出和串聯部署都支援SnapMirror DR、SnapVault SnapMirror或統一化複寫的任何組合；不過、SnapMirror同步關係（從ONTAP 版本9.5開始支援）僅支援一或多個非同步SnapMirror關係的連出部署、不支援串聯部署。只有一種連出組態關係可以是SnapMirror同步關係、來源磁碟區的所有其他關係都必須是非同步SnapMirror關係。 xref:../snapmirror-active-sync/recover-unplanned-failover-task.html[SnapMirror 主動同步] （從 ONTAP 9.3.1 開始支援）也支援開機組態。
+扇出和串聯部署都支援 SnapMirror DR 、 SnapVault 或統一複寫的任何組合；不過 SnapMirror 同步關係（從 ONTAP 9 開始支援）僅支援有一或多個 SnapMirror 非同步關係的扇出部署、不支援串聯部署。在扇出組態中、只有一個關係可以是 SnapMirror 同步關係、來源磁碟區的所有其他關係都必須是 SnapMirror 非同步關係。xref:../snapmirror-active-sync/recover-unplanned-failover-task.html[SnapMirror 主動同步]（從 ONTAP 9 3.1 開始支援）也支援開機組態。
 
 
 NOTE: 您可以使用_fan-In部署、在多個主要系統和單一次要系統之間建立資料保護關係。每個關係都必須在次要系統上使用不同的磁碟區。
@@ -37,7 +37,7 @@ image:sm-mirror-mirror-fanout.png["資料保護部署：多重鏡射鏡射展開
 
 image:sm-mirror-vault-fanout.png["資料保護部署：鏡射儲存庫展開"]
 
-從Sf2 9.5開始ONTAP 、您可以使用SnapMirror同步關係進行連出部署；不過、連出組態中只有一種關係可以是SnapMirror同步關係、來源Volume的所有其他關係都必須是非同步SnapMirror關係。
+從 ONTAP 9 開始、您可以使用 SnapMirror 同步關係進行開機部署；不過、在開機組態中、只有一個關係可以是 SnapMirror 同步關係、來源 Volume 的所有其他關係都必須是 SnapMirror 非同步關係。
 
 image:ssm-fanout.gif["資料保護部署：採用 SnapMirror 同步關係的扇出部署"]
 
@@ -49,7 +49,7 @@ SnapMirror支援_鏡射鏡射_、_鏡射-保存庫_、_資料保存鏡射_和_�
 
 鏡射鏡射鏡射串聯部署包含一系列關係、其中來源磁碟區會鏡射至次要磁碟區、而次要磁碟區則會鏡射至第三個磁碟區。如果次要Volume無法使用、您可以在不執行新的基礎傳輸的情況下、同步主要和第三個Volume之間的關係。
 
-從ONTAP 支援SnapMirror 9.6開始、鏡射鏡射串聯部署支援SnapMirror同步關係。只有主要和次要磁碟區可以處於SnapMirror同步關係中。二線磁碟區與三線磁碟區之間的關係必須是非同步的。
+從 ONTAP 9 6 開始、鏡射鏡射串聯部署支援 SnapMirror 同步關係。只有主要和次要磁碟區可以處於 SnapMirror 同步關係中。二線磁碟區與三線磁碟區之間的關係必須是非同步的。
 
 image:sm-mirror-mirror-cascade.png["SnapMirror部署：鏡射鏡射鏡射串聯鏈"]
 

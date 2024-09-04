@@ -4,7 +4,7 @@ permalink: s3-snapmirror/index.html
 keywords: s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror data protection, hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, Fan-in deployments, data protection, s3 snapmirror policy, peering 
 summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡射與備份功能、來保護位於S3物件儲存區的貯體。 
 ---
-= S3 SnapMirror總覽
+= SnapMirror S3 概述
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,9 +16,9 @@ summary: 從S59.10.1開始ONTAP 、ONTAP 您可以使用熟悉的SnapMirror鏡�
 
 
 [role="lead"]
-從 ONTAP 9.10.1 開始、您可以使用 SnapMirror 鏡射和備份功能、保護 ONTAP S3 物件儲存區中的貯體。與標準 SnapMirror 不同的是、 S3 SnapMirror 可將鏡像和備份複製到 AWS S3 等非 NetApp 目的地。
+從 ONTAP 9.10.1 開始、您可以使用 SnapMirror 鏡射和備份功能、保護 ONTAP S3 物件儲存區中的貯體。與標準 SnapMirror 不同、 SnapMirror S3 可將鏡像與備份複製到非 NetApp 目的地、例如 AWS S3 。
 
-S3 SnapMirror支援從ONTAP Sirs3儲存庫到下列目的地的主動鏡像和備份層：
+SnapMirror S3 支援從 ONTAP S3 儲存區到下列目的地的主動鏡射和備份層：
 
 [cols="50,25,25"]
 |===
@@ -53,7 +53,7 @@ SS3 ONTAP
 
 
 
-== S3 SnapMirror需求
+== SnapMirror S3 要求
 
 * 版本ONTAP
 +
@@ -65,8 +65,8 @@ ONTAP 9.10.1 或更新版本必須在來源叢集和目的地叢集上執行。
 
 +
 ** ONTAP S3 傳輸協定與儲存設備
-** S3 SnapMirror 鎖定其他 NetApp 物件儲存目標（ ONTAP S3 、 StorageGRID 和 Cloud Volumes ONTAP ）
-** S3 SnapMirror 以協力廠商物件儲存區為目標、包括 AWS S3 （在中提供 link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One 相容性套件"]）
+** SnapMirror S3 目標為其他 NetApp 物件存放區目標（ ONTAP S3 、 StorageGRID 和 Cloud Volumes ONTAP ）
+** SnapMirror S3 目標協力廠商物件儲存區、包括 AWS S3 （可在中取得link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One 相容性套件"]）
 
 
 * SS3 ONTAP
@@ -90,7 +90,7 @@ ONTAP 9.10.1 或更新版本必須在來源叢集和目的地叢集上執行。
 
 * SnapMirror原則
 +
-** 所有S3 SnapMirror關係都需要S3專屬的SnapMirror原則、但您可以針對多個關係使用相同的原則。
+** 所有 SnapMirror S3 關係都需要 S3 專屬的 SnapMirror 原則、但您可以針對多個關係使用相同的原則。
 ** 您可以建立自己的原則或接受預設的*連續*原則、其中包含下列值：
 +
 *** 節流（處理量/頻寬上限）-無限。
@@ -104,8 +104,7 @@ ONTAP 9.10.1 或更新版本必須在來源叢集和目的地叢集上執行。
 
 NOTE: 請注意、當兩個 S3 儲存區處於 SnapMirror 關係中時、如果設定了生命週期原則、使物件的目前版本過期（刪除）、則會將相同的動作複寫到合作夥伴儲存區。即使合作夥伴儲存庫為唯讀或被動式、也會發生這種情況。
 
-* root 使用者金鑰
-S3 SnapMirror 關係需要儲存 VM 根使用者存取金鑰； ONTAP 預設不會指派。第一次建立S3 SnapMirror關係時、您必須確認來源與目的地儲存VM上是否存在金鑰、如果沒有、則重新產生金鑰。如果您需要重新產生這些金鑰、您必須確保使用存取和秘密金鑰配對的所有用戶端和SnapMirror物件儲存組態、都會以新的金鑰更新。
+* 根使用者金鑰 SnapMirror S3 關係需要 Storage VM 根使用者存取金鑰； ONTAP 預設不會指派這些金鑰。第一次建立 SnapMirror S3 關係時、您必須驗證來源與目的地儲存 VM 上是否存在金鑰、如果沒有、請重新產生金鑰。如果您需要重新產生這些金鑰、您必須確保使用存取和秘密金鑰配對的所有用戶端和SnapMirror物件儲存組態、都會以新的金鑰更新。
 
 
 如需S3伺服器組態的相關資訊、請參閱下列主題：
@@ -124,9 +123,9 @@ S3 SnapMirror 關係需要儲存 VM 根使用者存取金鑰； ONTAP 預設不�
 
 == 支援的 SnapMirror 關係
 
-S3 SnapMirror支援連出和串聯關係。如需概觀、請參閱 link:../data-protection/supported-deployment-config-concept.html["橫向和串聯資料保護部署"]。
+SnapMirror S3 支援扇出和串聯關係。如需總覽link:../data-protection/supported-deployment-config-concept.html["橫向和串聯資料保護部署"]、請參閱。
 
-S3 SnapMirror 不支援採用風扇部署（多個來源貯體和單一目的地貯體之間的資料保護關係）。S3 SnapMirror 可支援從多個叢集到單一次要叢集的多個儲存區鏡像、但每個來源儲存區都必須在次要叢集上擁有自己的目的地儲存區。
+SnapMirror S3 不支援以風扇方式部署（多個來源貯體和單一目的地貯體之間的資料保護關係）。SnapMirror S3 可支援從多個叢集到單一次要叢集的多個儲存區鏡像、但每個來源儲存區都必須在次要叢集上擁有自己的目的地儲存區。
 
 
 

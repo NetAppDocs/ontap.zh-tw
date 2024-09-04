@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-cloud-backup-new-bucket-task.html 
 keywords: create, backup, relationship, new, bucket 
-summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 S3 SnapMirror 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。 
+summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 SnapMirror S3 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。 
 ---
 = 建立新儲存庫（雲端目標）的備份關係
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 
 
 [role="lead"]
-當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 S3 SnapMirror 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。
+當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 SnapMirror S3 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。
 
 .開始之前
 * 您擁有物件存放區提供者的有效帳戶認證和組態資訊。
@@ -54,14 +54,14 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 
 
 
-. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則、請建立S3 SnapMirror原則：
+. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
 +
 .. 按一下「*保護>總覽*」、然後按一下「*本機原則設定*」。
 .. 按一下 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
 +
 *** 輸入原則名稱和說明。
 *** 選取原則範圍、叢集或SVM
-*** 選擇* Continuous *以建立S3 SnapMirror關係。
+*** 針對 SnapMirror S3 關係選取 * 持續 * 。
 *** 輸入您的* Throttle *和* Recovery Point Objective *值。
 
 
@@ -96,13 +96,9 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 --
 .CLI
 --
-. 如果這是此SVM的第一個S3 SnapMirror關係、請驗證來源和目的地SVM是否都有根使用者金鑰、如果不符合下列條件、請重新產生這些金鑰：
-`vserver object-store-server user show`
- +
-確認 root 使用者有存取金鑰。如果沒有、請輸入：
-`vserver object-store-server user regenerate-keys -vserver svm_name -user _root_`
- +
-如果金鑰已經存在、請勿重新產生金鑰。
+. 如果這是此 SVM 的第一個 SnapMirror S3 關係、請確認來源和目的地 SVM 的根使用者金鑰都存在、如果沒有、請重新產生這些金鑰：
+`vserver object-store-server user show` + 確認根使用者有存取金鑰。如果沒有、請輸入：
+`vserver object-store-server user regenerate-keys -vserver svm_name -user _root_` + 如果金鑰已經存在、請勿重新產生金鑰。
 . 在來源 SVM 中建立貯體：
 `vserver object-store-server bucket create -vserver _svm_name_ -bucket _bucket_name_ [-size _integer_[KB|MB|GB|TB|PB]] [-comment _text_] [_additional_options_]`
 . 將存取規則新增至預設儲存區原則：
@@ -113,13 +109,10 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您沒有現有的S3 SnapMirror原則、但不想使用預設原則、請建立S3 SnapMirror原則：
+. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
-參數：
-* `type continuous` – S3 SnapMirror 關係的唯一原則類型（必要）。
-* `-rpo` –指定恢復點目標的時間（以秒爲單位）（可選）。
-* `-throttle` –指定處理量 / 頻寬的上限（以千位元組 / 秒為單位）（選用）。
+參數： * `type continuous` – SnapMirror S3 關係唯一的原則類型（必要）。* `-rpo` –指定恢復點目標的時間（以秒為單位）（選用）。* `-throttle` –指定處理量 / 頻寬的上限、單位為千位元組 / 秒（選用）。
 
 +
 .範例
@@ -132,7 +125,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 +
 請參閱 `security certificate install` 詳細資訊請參閱手冊頁。
 
-. 定義 S3 SnapMirror 目的地物件儲存區：
+. 定義 SnapMirror S3 目的地物件存放區：
 `snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type {AWS_S3|SGWS} -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_number_ -access-key target_access_key -secret-password _target_secret_key_`
 +
 參數：
@@ -150,7 +143,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 建立 S3 SnapMirror 關係：
+. 建立 SnapMirror S3 關係：
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore -policy _policy_name_`
 +
 參數：

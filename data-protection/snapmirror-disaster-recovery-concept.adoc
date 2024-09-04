@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: asynchronous, snapmirror, disaster, recovery basics 
 summary: SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位於地理位置遠端站台的二線儲存設備而設計。顧名思義、SnapMirror會在二線儲存設備中建立工作資料的複本或鏡射、以便在主站台發生災難時、繼續提供資料。 
 ---
-= 非同步SnapMirror災難恢復基礎
+= SnapMirror 非同步災難恢復基礎知識
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -40,7 +40,7 @@ image:snapmirror-for-dp-pg.gif["SnapMirror資料保護關係圖示"]
 +
 link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
-* 從 ONTAP 9.13.1 開始，您可以使用非同步 SnapMirror 來保護 xref:../consistency-groups/index.html[一致性群組]。從 ONTAP 9.14.1 開始、您可以使用非同步 SnapMirror 、使用一致性群組關係、將 Volume 精細快照複寫到目的地叢集。如需更多資訊、請參閱 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[設定非同步 SnapMirror 保護]。
+* 從 ONTAP 9 ． 13.1 開始，您可以使用 SnapMirror 異步來保護xref:../consistency-groups/index.html[一致性群組]。從 ONTAP 9 。 14.1 開始、您可以使用 SnapMirror 非同步功能、使用一致性群組關係、將 Volume 精細的快照複寫到目的地叢集。如需更多資訊、請參閱 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[設定 SnapMirror 非同步保護]。
 
 
 
@@ -82,7 +82,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
      Transfer Restartability: always
  Network Compression Enabled: false
              Create Snapshot: true
-                     Comment: Asynchronous SnapMirror policy for mirroring all snapshots
+                     Comment: SnapMirror asynchronous policy for mirroring all snapshots
                               and the latest active file system.
        Total Number of Rules: 2
                   Total Keep: 2

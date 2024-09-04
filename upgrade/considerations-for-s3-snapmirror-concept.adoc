@@ -2,39 +2,39 @@
 permalink: upgrade/considerations-for-s3-snapmirror-concept.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, update, considerations, s3, snapmirror, license 
-summary: 如果您使用的是 S3 SnapMirror 、您應該在升級 ONTAP 之前先檢查授權 
+summary: 如果您使用的是 SnapMirror S3 、您應該在升級 ONTAP 之前先檢查授權 
 ---
-= 驗證 S3 SnapMirror 組態的授權
+= 驗證 SnapMirror S3 組態的授權
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在升級 ONTAP 之前、如果您使用 S3 SnapMirror 、而且要升級至 ONTAP 9.12.1 或更新版本、則應確認您擁有適當的 SnapMirror 授權。
+在升級 ONTAP 之前、如果您使用的是 SnapMirror S3 、而您要升級至 ONTAP 9 。 12.1 或更新版本、則應確認您擁有適當的 SnapMirror 授權。
 
-升級 ONTAP 之後、 ONTAP 9.11.1 及更早版本與 ONTAP 9.12.1 及更高版本之間所發生的授權變更、可能會導致 S3 SnapMirror 關係失敗。
-
-
-
-== 更新版本ONTAP
-
-* 當複製到 NetApp 託管的目的地儲存區（ ONTAP S3 或 StorageGRID ）時、 S3 SnapMirror 會在推出軟體套件之前、先檢查資料保護套件中的 SnapMirror 同步授權 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
-* 當複寫至非 NetApp 目的地儲存庫時、 S3 SnapMirror 會檢查 SnapMirror Cloud 授權、此授權包含在軟體套件推出之前提供的混合雲套件中 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
-
+升級 ONTAP 之後、在 ONTAP 9 ． 11.1 及更早版本與 ONTAP 9 ． 12.1 及更高版本之間所發生的授權變更、可能會導致 SnapMirror S3 關係失敗。
 
 
 
 == 更新版本ONTAP
 
-* 當複製到 NetApp 託管的目的地儲存區（ ONTAP S3 或 StorageGRID ）時、 S3 SnapMirror 會檢查 S3 SnapMirror 授權、此授權包含在軟體套件推出前提供的資料保護套件中 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
-* 當複寫至非 NetApp 目的地儲存庫時、 S3 SnapMirror 會檢查 S3 SnapMirror 外部授權、此授權包含在混合雲套件中、在軟體套件和之前提供 link:../system-admin/manage-licenses-concept.html["ONTAP One"] link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One 相容性套件"]。
+* 當複寫至 NetApp 主控的目的地貯體（ ONTAP S3 或 StorageGRID ）時、 SnapMirror S3 會在推出link:../system-admin/manage-licenses-concept.html["ONTAP One"]軟體套件之前、先檢查資料保護套件中所含的 SnapMirror 同步授權。
+* 當複寫至非 NetApp 目的地貯體時、 SnapMirror S3 會檢查混合雲套件中的 SnapMirror 雲端授權、而混合雲套件link:../system-admin/manage-licenses-concept.html["ONTAP One"]是在軟體套件推出之前提供的。
 
 
 
 
-== 現有 S3 SnapMirror 關係
+== 更新版本ONTAP
 
-現有的 S3 SnapMirror 關係應在從 ONTAP 9.11.1 或更早版本升級至 ONTAP 9.12.1 或更高版本之後繼續運作、即使叢集沒有新的授權。
+* 當複寫至 NetApp 主控的目的地貯體（ ONTAP S3 或 StorageGRID ）時、 SnapMirror S3 會檢查 SnapMirror S3 授權、此授權包含在link:../system-admin/manage-licenses-concept.html["ONTAP One"]軟體套件推出前提供的資料保護套件中。
+* 當複寫至非 NetApp 目的地貯體時、 SnapMirror S3 會檢查混合雲套件中的 SnapMirror S3 外部授權、此套件是在link:../system-admin/manage-licenses-concept.html["ONTAP One"]軟體套件和之前提供的link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One 相容性套件"]。
 
-如果叢集未安裝適當的授權、建立新的 S3 SnapMirror 關係將會失敗。
+
+
+
+== 現有的 SnapMirror S3 關係
+
+現有的 SnapMirror S3 關係應在從 ONTAP 9 ． 11.1 或更早版本升級至 ONTAP 9 ． 12.1 或更高版本之後繼續運作、即使叢集沒有新的授權。
+
+如果叢集未安裝適當的授權、建立新的 SnapMirror S3 關係將會失敗。
