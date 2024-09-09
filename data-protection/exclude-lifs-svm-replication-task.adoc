@@ -95,7 +95,7 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LI
 ====
 . 從目的地SVM或目的地叢集、執行下列命令以建立複寫關係：
 +
-`snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true|false`
+`snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true|false -discard-configs true|false`
 
 +
 [NOTE]
@@ -109,7 +109,7 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LI
 +
 [listing]
 ----
-cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy DR_exclude_LIFs -identity-preserve true
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_weekly -policy DR_exclude_LIFs -identity-preserve true
 ----
 +
 以下範例建立SnapMirror統一化複寫關係、排除lifs：
@@ -117,7 +117,7 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 +
 [listing]
 ----
-cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy unified_exclude_LIFs -identity-preserve true
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_weekly -policy unified_exclude_LIFs -identity-preserve true -discard-configs true
 ----
 . 停止目的地SVM：
 +
@@ -127,12 +127,12 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 `_SVM name_`
 
 +
-下列範例會停止名為DV1的目的地SVM：
+下列範例會停止名為 SVM_backup 的目的地 SVM ：
 
 +
 [listing]
 ----
-cluster_dst::> vserver stop -vserver dvs1
+cluster_dst::> vserver stop -vserver svm_backup
 ----
 . 從目的地SVM或目的地叢集初始化複寫關係：
 +
