@@ -45,7 +45,7 @@ summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體
 .步驟
 . 檢視現有的攻擊偵測參數：
 +
-`security anti-ransomware volume attack-detection-parameters show -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>`
 
 +
 ....
@@ -80,14 +80,14 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .回報一次性突波
 . 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
 +
-`security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>`
 
 
 
 .修改基準突波
 . 如果回報的喘振應視為正常應用程式行為、請回報喘振、以修改基準喘振值。
 +
-`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`
 
 
 
@@ -129,11 +129,11 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .設定磁碟區的警示
 * 若要設定新副檔名的警示：
 +
-`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+`security anti-ransomware volume event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
 
 * 若要設定建立 ARP Snapshot 的警示：
 +
-`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+`security anti-ransomware volume event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
 * 使用確認您的設定 `anti-ransomware volume event-log show` 命令。
 
@@ -141,17 +141,17 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .設定 SVM 的警示
 * 若要設定新副檔名的警示：
 +
-`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
 
 * 若要設定建立 ARP Snapshot 的警示：
 +
-`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
 * 使用確認您的設定 `security anti-ransomware vserver event-log show` 命令。
 
 
 --
 ====
-.更多資訊
+.相關資訊
 * link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]。
 

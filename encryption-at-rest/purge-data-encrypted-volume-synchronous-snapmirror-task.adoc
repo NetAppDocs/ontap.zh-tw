@@ -37,38 +37,38 @@ NOTE: 若要在SAN主機上執行安全清除、您必須刪除包含您要清�
 
 . 在非同步關係中準備好要安全清除的目的地Volume：
 +
-`volume encryption secure-purge start -vserver SVM_name -volume volume_name -prepare true`
+`volume encryption secure-purge start -vserver <SVM_name> -volume <volume_name> -prepare true`
 
 +
 針對 SnapMirror 同步關係中的其他磁碟區重複此步驟。
 
 . 如果您要安全清除的檔案位於Snapshot複本中、請刪除Snapshot複本：
 +
-`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot _snapshot_`
+`snapshot delete -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot>`
 
 . 如果安全清除檔案位於基礎或通用Snapshot複本中、請更新SnapMirror以將通用Snapshot複本移至下一頁：
 +
-`snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
+`snapmirror update -source-snapshot <snapshot_name> -destination-path <destination_path>`
 
 +
 共有兩個常見的Snapshot複本、因此必須發出兩次此命令。
 
 . 如果安全清除檔案位於應用程式一致的 Snapshot 複本中、請刪除 SnapMirror 同步關係中兩個磁碟區上的 Snapshot 複本：
 +
-`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot _snapshot_`
+`snapshot delete -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot>`
 
 +
 在兩個磁碟區上執行此步驟。
 
 . 安全地清除刪除的檔案：
 +
-`volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_`
+`volume encryption secure-purge start -vserver <SVM_name> -volume <volume_name>`
 
 +
 在 SnapMirror 同步關係中的每個磁碟區上重複此步驟。
 
 +
-下列命令可安全清除SMV「'VS1'」上「'vol1'」上的刪除檔案。
+下列命令可安全清除SVM「'VS1'」上「'vol1'」上的刪除檔案。
 
 +
 [listing]

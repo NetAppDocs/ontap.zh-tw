@@ -14,39 +14,10 @@ summary: 最佳安全性做法是預設停用 Telnet 和 RSH 。若要讓叢集�
 [role="lead"]
 最佳安全性做法是預設停用 Telnet 和 RSH 。若要讓叢集能夠接受 Telnet 或 RSH 要求、您必須在預設管理服務原則中啟用該服務。
 
-隨著時間的推移、 ONTAP 管理生命負載所支援流量類型的方式也隨之改變。
+Telnet 和 RSH 不是安全的通訊協定；您應該考慮使用 SSH 來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。如需詳細資訊、請 link:./access-cluster-ssh-task.html["使用 SSH 存取叢集"]參閱。
 
-* ONTAP 9 的同一版本和更早的版本使用 LIF 角色和防火牆服務
-* ONTAP 9 6 及更新版本使用 LIF 服務原則
-+
-** ONTAP 9 簡介推出 LIF 服務原則
-** ONTAP 9 6 中以 LIF 服務原則取代 LIF 角色
-** ONTAP 9 。 10.1 以 LIF 服務原則取代防火牆服務
-
-
-
-
-您設定的方法取決於您所使用的 ONTAP 版本。
-
-若要深入瞭解：
-
-* 防火牆原則、請參閱link:https://docs.netapp.com/us-en/ontap-cli//system-services-firewall-policy-show.html["命令： firewall-police-show"^]
-* LIF 角色、請參閱link:../networking/lif_roles95.html["LIF 角色（ ONTAP 9.5 及更早版本）"]
-* LIF 服務原則、請參閱link:../networking/lifs_and_service_policies96.html["生命與服務原則（ ONTAP 9.6 及更新版本）"]
-
-
-Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。如需詳細資訊、請參閱link:./access-cluster-ssh-task.html["使用 SSH 存取叢集"]
-
-[role="tabbed-block"]
-====
-.部分9.6或更新版本ONTAP
---
 .關於這項工作
-* rsh不是安全的傳輸協定。
-+
-您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
-
-* 支援每個節點最多50個並行的RSH工作階段。ONTAP
+* ONTAP 每個節點最多可支援 50 個並行 Telnet 或 RSH 工作階段。
 +
 如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
 
@@ -56,6 +27,10 @@ Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取
 * rsh 命令需要進階權限。
 
 
+[role="tabbed-block"]
+====
+.部分9.6或更新版本ONTAP
+--
 .步驟
 . 確認已啟用 RSH 或 Telnet 安全性通訊協定：
 +

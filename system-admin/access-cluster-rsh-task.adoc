@@ -13,33 +13,8 @@ summary: 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安�
 [role="lead"]
 您可以向叢集發出RSHE要求以執行管理工作。rsh並非安全傳輸協定、預設為停用。
 
-隨著時間的推移、 ONTAP 管理生命負載所支援流量類型的方式也隨之改變。
+Telnet 和 RSH 不是安全的通訊協定；您應該考慮使用 SSH 來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。如需詳細資訊、請 link:./access-cluster-ssh-task.html["使用 SSH 存取叢集"]參閱。
 
-* ONTAP 9 的同一版本和更早的版本使用 LIF 角色和防火牆服務
-* ONTAP 9 6 及更新版本使用 LIF 服務原則
-+
-** ONTAP 9 簡介推出 LIF 服務原則
-** ONTAP 9 6 中以 LIF 服務原則取代 LIF 角色
-** ONTAP 9 。 10.1 以 LIF 服務原則取代防火牆服務
-
-
-
-
-您設定的方法取決於您所使用的 ONTAP 版本。
-
-若要深入瞭解：
-
-* 防火牆原則、請參閱link:https://docs.netapp.com/us-en/ontap-cli//system-services-firewall-policy-show.html["命令： firewall-police-show"^]
-* LIF 角色、請參閱link:../networking/lif_roles95.html["LIF 角色（ ONTAP 9.5 及更早版本）"]
-* LIF 服務原則、請參閱link:../networking/lifs_and_service_policies96.html["生命與服務原則（ ONTAP 9.6 及更新版本）"]
-
-
-Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。如需詳細資訊、請參閱link:./access-cluster-ssh-task.html["使用 SSH 存取叢集"]
-
-[role="tabbed-block"]
-====
-.部分9.6或更新版本ONTAP
---
 .開始之前
 您必須符合下列條件、才能使用RSH存取叢集：
 
@@ -50,10 +25,6 @@ Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取
 
 
 .關於這項工作
-* rsh不是安全的傳輸協定。
-+
-您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
-
 * 支援每個節點最多50個並行的RSH工作階段。ONTAP
 +
 如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
@@ -64,6 +35,10 @@ Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取
 * rsh 命令需要進階權限。
 
 
+[role="tabbed-block"]
+====
+.部分9.6或更新版本ONTAP
+--
 .步驟
 . 確認已啟用 RSH 安全性通訊協定：
 +
@@ -91,31 +66,11 @@ Telnet 和 RSH 不是安全的通訊協定、您應該考慮使用 SSH 來存取
 
 
 
-.RSH申請範例
-下列範例顯示已設定 RSH 存取權限的使用者「 Joe 」如何發出 RSHE 要求來執行 `cluster show` 命令：
-
-[listing]
-----
-
-admin_host$ rsh 10.72.137.28 -l joe:password cluster show
-
-Node                  Health  Eligibility
---------------------- ------- ------------
-node1                 true    true
-node2                 true    true
-2 entries were displayed.
-
-admin_host$
-----
 --
 .不含更新版本ONTAP
 --
 .開始之前
 您必須符合下列條件、才能使用RSH存取叢集：
-
-* 您必須擁有一個叢集本機使用者帳戶、並將其設定為使用RSH作為存取方法。
-+
-安全登入命令的 -application 參數會指定使用者帳戶的存取方法。如需詳細資訊、請參閱安全性登入手冊頁。
 
 * Rsh必須已在叢集或節點管理生命體所使用的管理防火牆原則中啟用、以便讓RSHH要求能夠通過防火牆。
 +
@@ -124,20 +79,6 @@ admin_host$
 * 如果您使用IPv6連線、則必須在叢集上設定並啟用IPv6、而且防火牆原則必須已設定IPv6位址。
 +
 此 `network options ipv6 show`命令會顯示是否已啟用 IPv6 。 `system services firewall policy show`命令會顯示防火牆原則。
-
-
-
-.關於這項工作
-* rsh不是安全的傳輸協定。
-+
-您應該考慮使用SSH來存取叢集。SSH提供安全的遠端Shell和互動式網路工作階段。
-
-* 支援每個節點最多50個並行的RSH工作階段。ONTAP
-+
-如果叢集管理LIF位於節點上、則會與節點管理LIF共用此限制。
-
-+
-如果傳入連線速度高於每秒10次、服務會暫時停用60秒。
 
 
 
@@ -154,22 +95,21 @@ admin_host$
 
 
 
+--
+====
 .RSH申請範例
-以下範例顯示已設定 RSH 存取權限的使用者「 Joe 」如何發出 RSH 要求來執行 cluster show 命令：
+下列範例顯示已設定 RSH 存取權限的使用者「 Joe 」如何發出 RSHE 要求來執行 `cluster show` 命令：
 
 [listing]
 ----
+
 admin_host$ rsh 10.72.137.28 -l joe:password cluster show
 
-Node  Health Eligibility
-----  ------ -----------
-node1 true   true
-node2 true   true
-
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
 2 entries were displayed.
 
-admin_host
-
+admin_host$
 ----
---
-====
