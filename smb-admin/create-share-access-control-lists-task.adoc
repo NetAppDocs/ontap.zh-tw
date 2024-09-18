@@ -2,7 +2,7 @@
 permalink: smb-admin/create-share-access-control-lists-task.html 
 sidebar: sidebar 
 keywords: configuring, configure, permission, share, creating, create, control, list, acl, smb, enable, level, access, user, group, create smb share access control lists 
-summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限、可讓您控制使用者和群組對共用區的存取層級。 
+summary: '透過建立 SMB 共用的存取控制清單 (ACL) 來設定共用權限、可讓您控制使用者和群組對共用的存取層級。' 
 ---
 = 建立SMB共用存取控制清單
 :allow-uri-read: 
@@ -21,7 +21,7 @@ summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限�
 在工作群組模式中、本機網域名稱是SMB伺服器名稱。
 
 .步驟
-. 刪除預設的共用ACL：'vserver CIFS共用存取控制刪除-vserver _vserver_name_-share_share_name_-user-or group Everyon'
+. 刪除預設的共用 ACL:`vserver CIFS 共用存取控制刪除 -vserver <vserver_name> -share <share_name> -user-or -group Everyone
 . 設定新ACL：
 +
 |===
@@ -31,28 +31,28 @@ summary: 建立SMB共用區的存取控制清單（ACL）來設定共用權限�
  a| 
 Windows使用者
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\user_name_ -permission _access_right_`
+`vserver cifs share access-control create -vserver <vserver_name> -share <share_name> -user-group-type windows -user-or-group <Windows_domain_name\user_name> -permission <access_right>`
 
 
 
  a| 
 Windows群組
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\group_name_ -permission _access_right_`
+`vserver cifs share access-control create -vserver <vserver_name> -share <share_name> -user-group-type windows -user-or-group <Windows_domain_name\group_name> -permission <access_right>`
 
 
 
  a| 
 UNIX使用者
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type _unix-user_ -user-or-group _UNIX_user_name_ -permission access_right`
+`vserver cifs share access-control create -vserver <vserver_name> -share <share_name> -user-group-type <unix-user> -user-or-group <UNIX_user_name> -permission <access_right>`
 
 
 
  a| 
 UNIX群組
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type _unix-group_ -user-or-group _UNIX_group_name_ -permission access_right`
+`vserver cifs share access-control create -vserver <vserver_name> -share <share_name> -user-group-type <unix-group> -user-or-group <UNIX_group_name> -permission <access_right>`
 
 |===
 . 使用驗證套用至共用的 ACL 是否正確 `vserver cifs share access-control show` 命令。
@@ -72,7 +72,7 @@ Vserver          Name        Name                    Type        Permission
 vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
 vs1.example.com  sales       DOMAIN\Sales Team     windows     Change
 ----
-下列命令提供 `Read` 「vs2.example.com」「SVM：
+下列命令會授予 `Read`「工程」 UNIX 群組在「 vs2.example.com 」 SVM 上「 eng 」共用區的權限：
 
 [listing]
 ----
@@ -85,7 +85,7 @@ Vserver          Name        Name                     Type        Permission
 vs2.example.com  c$          BUILTIN\Administrators   windows     Full_Control
 vs2.example.com  eng         engineering              unix-group  Read
 ----
-下列命令會提供 `Change` 允許本機Windows群組名為「老虎團隊」和 `Full_Control` 本機Windows使用者在「VS1」「SVM：
+下列命令會授予 `Change`本機 Windows 群組「 Tiger Team 」的權限、並授予 `Full_Control`本機 Windows 使用者「 Sue Chang 」在「 VS1 」 SVM 上的「 datavol5 」共用區的權限：
 
 [listing]
 ----

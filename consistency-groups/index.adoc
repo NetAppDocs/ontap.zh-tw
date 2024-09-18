@@ -27,13 +27,13 @@ summary: 一致性群組是以單一單元形式組織的磁碟區集合、有�
 
 下圖說明如何使用個別一致性群組。託管的應用程式資料 `SVM1` 橫跨兩個磁碟區： `vol1` 和 `vol2`。一致性群組上的 Snapshot 原則每 15 分鐘擷取一次資料的 Snapshot 複本。
 
-image:../media/consistency-group-single-diagram.gif["單一一致性群組與其組成磁碟區及本機Snapshot原則的圖表"]
+image:consistency-group-single-diagram.gif["單一一致性群組及其組成磁碟區和本機 Snapshot 原則"]
 
 較大的應用程式工作負載可能需要多個一致性群組。在這些情況下，您可以建立階層式一致性群組，其中單一一致性群組會成為父一致性群組的子元件。父一致性群組最多可包含五個子一致性群組。如同個別一致性群組、遠端 SnapMirror 主動式同步保護原則可套用至一致性群組（父群組和子群組）的整個組態、以恢復應用程式工作負載。
 
 在下列範例中、應用程式裝載於 `SVM1`。系統管理員已建立父一致性群組、 `SVM1_app`包括兩個子一致性群組： `SVM1appDataCG` 的資料和 `SVM1app_logCG` 記錄。每個子一致性群組都有自己的 Snapshot 原則。中的磁碟區快照複本 `SVM1appDataCG` 每15分鐘進行一次。的快照 `SVM1app_logCG` 每小時進行一次。父一致性群組 `SVM1_app` 擁有 SnapMirror 主動式同步原則、可複寫資料、確保在發生災難時仍能繼續提供服務。
 
-image:../media/consistency-group-nested-diagram.gif["嵌套式一致性群組與其相關磁碟區的圖表"]
+image:consistency-group-nested-diagram.gif["嵌套式一致性群組及其關聯的磁碟區"]
 
 從功能支援的版本起、一致性群組即為支援ONTAP xref:clone-task.html[複製] 並修改一致性的成員 xref:modify-task.html[新增或移除磁碟區] 在System Manager和ONTAP the靜止API中。從 ONTAP 9.12.1 開始、 ONTAP REST API 也支援：
 
