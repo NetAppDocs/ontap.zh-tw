@@ -1,0 +1,78 @@
+---
+permalink: data-protection/default-protection-policies-concept.html 
+sidebar: sidebar 
+keywords: snapmirror, policy, default, replicate, protection, predefined 
+summary: ONTAP 包含多個預設保護原則、以及預先定義的排程、可在建立資料保護關係時使用。 
+---
+= 預設保護原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 包含數個預設的保護原則、可用於資料保護關係。您使用的原則取決於保護關係類型。
+
+如果預設原則不符合您的資料保護關係需求，您可以link:create-custom-replication-policy-concept.html["建立自訂原則"]。
+
+
+
+== 預設保護原則和說明清單
+
+以下說明預設保護原則及其相關的原則類型。
+
+[cols="3,4,1"]
+|===
+| 名稱 | 說明 | 原則類型 
+
+
+| 非同步 | 統一化的 SnapMirror 非同步和資料保險箱原則、可鏡射最新的作用中檔案系統、以及每日和每週快照、每小時傳輸排程。 | 非同步 
+
+
+| AutomatedFailov | SnapMirror 同步原則、提供零 RTO 保證、讓用戶端 I/O 不會因複寫失敗而中斷。 | 同步 
+
+
+| AutomatedFailOverDuplex | SnapMirror 同步原則、提供零 RTO 保證和雙向同步複寫。 | 同步 
+
+
+| CloudBackupDefault | 具有每日規則的資料保險箱原則。 | 非同步 
+
+
+| 持續 | S3 貯體鏡射原則。 | 持續 
+
+
+| DailyBackup | 具有每日規則和每日傳輸排程的資料保險箱原則。 | 非同步 
+
+
+| DPDefault | 用於鏡射所有 Snapshot 複本和最新作用中檔案系統的 SnapMirror 非同步原則。 | 非同步 
+
+
+| MirrorAllSnapshots | 用於鏡射所有快照和最新作用中檔案系統的 SnapMirror 非同步原則。 | 非同步 
+
+
+| MirrorAllSnapshotsDiscardNetwork | 用於鏡射所有快照和最新作用中檔案系統的 SnapMirror 非同步原則（不包括網路組態）。 | 非同步 
+
+
+| MirrorAndVault | 統一化的 SnapMirror 非同步和資料保險箱原則、用於鏡射最新的作用中檔案系統、以及每日和每週快照。 | 非同步 
+
+
+| MirrorAndVaultDiscardNetwork | 統一化的 SnapMirror 非同步和資料保險箱原則、用於鏡射最新的作用中檔案系統、以及不含網路組態的每日和每週快照。 | 非同步 
+
+
+| MirrorLatest | 用於鏡射最新作用中檔案系統的 SnapMirror 非同步原則。 | 非同步 
+
+
+| SnapCenterSync | 使用應用程式建立的 Snapshot 組態、 SnapMirror 同步 for SnapCenter 的原則。 | 同步 
+
+
+| StrictSync | SnapMirror 同步原則：用戶端存取會在複寫失敗時中斷。 | 同步 
+
+
+| 同步 | SnapMirror 同步原則、不會在複寫失敗時中斷用戶端存取。 | 同步 
+
+
+| Unified7年 | 統一化 SnapMirror 原則、保留 7 年。 | 非同步 
+
+
+| XDPDefault | 包含每日和每週規則的資料保險箱原則。 | 非同步 
+|===
