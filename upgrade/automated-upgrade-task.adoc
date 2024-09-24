@@ -30,7 +30,7 @@ IMPORTANT: 修改的設定 `storage failover modify-auto-giveback` 在自動不�
 * 您應該 link:prepare.html["準備升級"]。
 * 您應該 link:download-software-image.html["下載 ONTAP 軟體映像"] 適用於您的目標 ONTAP 版本。
 +
-如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，您需要下載您的特定所需的兩個 ONTAP 映像 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升級途徑"]。
+如果您正在執行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，則需要下載您的特定所需的兩個 ONTAP 映像link:../upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升級途徑"]。
 
 * 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
 +
@@ -199,7 +199,7 @@ Package download completed.
 Package processing completed.
 ----
 +
-如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，您也需要載入升級所需的 ONTAP 中間版本的軟體套件。例如、如果您要從 9.8 升級至 9.13.1 、則需要載入 ONTAP 9.12.1 的軟體套件、然後使用相同的命令載入 9.13.1 的軟體套件。
+如果您執行的link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]是、您也需要載入用於升級所需 ONTAP 中間版本的軟體套件。例如、如果您要從 9.8 升級至 9.13.1 、則需要載入 ONTAP 9.12.1 的軟體套件、然後使用相同的命令載入 9.13.1 的軟體套件。
 
 .. 驗證叢集套件儲存庫中是否有可用的軟體套件：
 +
@@ -222,7 +222,7 @@ Package Version  Package Build Time
 cluster image validate -version <package_version_number>
 ----
 +
-如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、您只需使用目標 ONTAP 套件進行驗證。  您不需要個別驗證中間升級映像。  例如、如果您要從 9.8 升級至 9.13.1 、請使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
+如果您執行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]的是、則只需使用目標 ONTAP 套件進行驗證。您不需要個別驗證中間升級映像。例如、如果您要從 9.8 升級至 9.13.1 、請使用 9.13.1 套件進行驗證。您不需要個別驗證 9.12.1 套件。
 
 +
 [listing]
@@ -261,7 +261,7 @@ NOTE: 如果您要升級 MetroCluster 組態、可以在叢集 A 或叢集 B 上
 cluster image update -version <package_version_number>
 ----
 +
-** 如果您執行的是 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
+** 如果您要執行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]、請將目標 ONTAP 版本用於 package_version_number 。例如、如果您要從 ONTAP 9.8 升級至 9.13.1 、請使用 9.13.1 做為 package_version_number 。
 ** 根據預設、 ONTAP 會使用 link:concept_upgrade_methods.html["批次升級程序"] 升級具有八個或更多節點的叢集。  如有需要、您可以使用 `-force-rolling` 此參數可覆寫預設程序、並使用循環升級程序、讓叢集一次升級一個節點。
 ** 完成每次接管與恢復之後、升級會等待8分鐘、讓用戶端應用程式從接管與恢復期間發生的I/O暫停中恢復。如果您的環境需要更多或更少的時間來穩定用戶端、您可以使用 `-stabilize-minutes` 指定不同穩定時間量的參數。
 ** 如果 MetroCluster 組態的節點數量超過 4 個、則自動升級會在兩個站台的 HA 配對上同時開始。  對於雙節點 MetroCluster 組態、升級會從未初始化升級的站台開始。第一次升級完成後、其餘站台的升級便會開始。
