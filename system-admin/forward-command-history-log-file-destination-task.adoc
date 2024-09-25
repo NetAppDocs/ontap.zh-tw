@@ -1,7 +1,7 @@
 ---
 permalink: system-admin/forward-command-history-log-file-destination-task.html 
 sidebar: sidebar 
-keywords: forward, audit, log, destination, cluster, forwarding, splunk 
+keywords: forward, audit, log, destination, cluster, forwarding, splunk, RFC-3164, RFC-5424 
 summary: 您最多可將稽核記錄轉送至10個目的地。例如、您可以將記錄轉送至Splunk或syslog伺服器、以供監控、分析或備份之用。 
 ---
 = 管理稽核記錄目的地
@@ -16,12 +16,20 @@ summary: 您最多可將稽核記錄轉送至10個目的地。例如、您可以
 .關於這項工作
 若要設定轉送、您必須提供syslog或Splunk主機的IP位址、其連接埠號碼、傳輸傳輸傳輸傳輸協定、以及用於轉送記錄的syslog工具。 https://datatracker.ietf.org/doc/html/rfc5424["深入瞭解syslog工具"^]。
 
-您可以選取下列其中一個傳輸值：
+您可以使用 `-protocol`參數選取下列其中一個傳輸值：
 
 未加密的udp:: 無安全性的使用者資料包傳輸協定（預設）
 TCP未加密:: 傳輸控制傳輸協定、無安全性
 TCP加密:: 傳輸層安全性（ TLS ） + 的傳輸控制傳輸協定
 選取 TCP 加密傳輸協定時、可使用 * 驗證伺服器 * 選項。
+
+
+預設連接埠為 514 （用於 UDP ）、 6514 （用於 TCP ）、但您可以指定任何符合網路需求的連接埠。
+
+您可以使用 `-message-format`命令選取下列其中一種訊息格式：
+
+舊版 NetApp:: RFC-3164 Syslog 格式的變化（格式： <PRIVAL> TAIMP 主機名稱： MSG ）
+RFC-5424:: 根據 RFC-5424 格式的系統記錄格式（格式： <PRIVAL> 資料處理時間戳主機名稱： MSG ）
 
 
 您可以從ONTAP 「系統ONTAP 管理程式」從「功能性CLI」轉寄稽核記錄、從「功能性功能」開始、從「功能性功能」開始。
@@ -45,7 +53,7 @@ cluster1::> cluster log-forwarding create -destination 192.168.123.96
 -port 514 -facility user
 
 cluster1::> cluster log-forwarding create -destination 192.168.123.98
--port 514 -protocol tcp-encrypted -facility user
+-port 6514 -protocol tcp-encrypted -facility user
 ----
 +
 ** 如果是 `cluster log-forwarding create` 命令無法 ping 目的主機以驗證連線、命令失敗並顯示錯誤。雖然不建議使用、但請使用 `-force` 使用命令的參數會略過連線驗證。
@@ -62,12 +70,12 @@ cluster1::> cluster log-forwarding show
 Destination Host          Port   Protocol        Server Facility
 ------------------------- ------ --------        ------ --------
 192.168.123.96            514    udp-unencrypted false  user
-192.168.123.98            514    tcp-encrypted   true   user
+192.168.123.98            6514   tcp-encrypted   true   user
 2 entries were displayed.
 ----
 
 
-如需詳細資料、請參閱手冊頁。
+有關詳細信息，請參見 `cluster log-forwarding create` 手冊頁。
 
 --
 ====

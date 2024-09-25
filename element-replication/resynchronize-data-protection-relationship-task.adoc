@@ -1,37 +1,8 @@
 ---
 permalink: element-replication/resynchronize-data-protection-relationship-task.html 
-sidebar: sidebar 
-keywords: resynchronize, replication, relationship 
-summary: 當您將目的地磁碟區設為可寫入、更新失敗後、因為來源與目的地磁碟區上不存在通用的Snapshot複本、或是想要變更關係的複寫原則、您需要重新同步複寫關係。 
+redirect: element-software/storage/task-element-replication-resynchronize-data-protection-relationship.html 
 ---
-= 重新同步複寫關係
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
-
-[role="lead"]
-當您將目的地磁碟區設為可寫入、更新失敗後、因為來源與目的地磁碟區上不存在通用的Snapshot複本、或是想要變更關係的複寫原則、您需要重新同步複寫關係。
-
-.關於這項工作
-雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。
-
-您必須以格式指定元素來源路徑 `<hostip:>/lun/<name>`、其中「 'lun' 」是實際字串「 'lun' 」、 `name` 是元素 Volume 的名稱。
-
-.步驟
-. 重新同步來源與目的地磁碟區：
-+
-`snapmirror resync -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume> -type XDP -policy <policy>`
-
-+
-如需完整的命令語法、請參閱手冊頁。
-
-+
-以下範例重新同步來源 Volume 之間的關係 `0005` 在 IP 位址 10.0.0.11 和目的地 Volume `volA_dst` 開啟 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror resync -source-path 10.0.0.11:/lun/0005 -policy MirrorLatest -destination-path svm_backup:volA_dst
-----
 
