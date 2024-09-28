@@ -17,7 +17,7 @@ summary: 透過SMB存取、即使存取NTFS安全型磁碟區中的資料、也�
 您必須自訂名稱服務資料庫組態、以符合您的名稱服務基礎架構。
 
 .關於這項工作
-SVM會使用名稱服務ns-交換器資料庫來決定查詢指定名稱服務資料庫來源的順序。ns-交換器來源可以是「Files」、「NIS」或「LDAP」的任意組合。針對Groups資料庫、ONTAP Ses庫 會嘗試從所有已設定的來源取得群組成員資格、然後使用整合的群組成員資格資訊進行存取檢查。如果其中一個來源在取得UNIX群組資訊時無法使用、ONTAP 則無法取得完整的UNIX認證、後續的存取檢查可能會失敗。因此、您必須一律在ns交換器設定中、檢查是否已針對群組資料庫設定所有的ns交換器來源。
+SVM會使用名稱服務ns-交換器資料庫來決定查詢指定名稱服務資料庫來源的順序。ns 交換器來源可以是、 `nis`或 `ldap`的任意組合 `files`。針對Groups資料庫、ONTAP Ses庫 會嘗試從所有已設定的來源取得群組成員資格、然後使用整合的群組成員資格資訊進行存取檢查。如果其中一個來源在取得UNIX群組資訊時無法使用、ONTAP 則無法取得完整的UNIX認證、後續的存取檢查可能會失敗。因此、您必須一律在ns交換器設定中、檢查是否已針對群組資料庫設定所有的ns交換器來源。
 
 預設是讓 SMB 伺服器將所有 Windows 使用者對應至儲存在本機中的預設 UNIX 使用者 `passwd` 資料庫。如果您想要使用預設組態、則可選擇設定NIS或LDAP UNIX使用者與群組名稱服務或LDAP使用者對應、以供SMB存取。
 
@@ -82,9 +82,9 @@ vs1             netgroup       true            files
 vs1             namemap        true            files
 ----
 .. 建立 NIS 名稱服務組態： +
-`vserver services name-service nis-domain create -vserver _vserver_name_ -domain _NIS_domain_name_ -servers _NIS_server_IPaddress_,... -active true+`
+`vserver services name-service nis-domain create -vserver <vserver_name> -domain <NIS_domain_name> -servers <NIS_server_IPaddress>,...`
 +
-`vserver services name-service nis-domain create -vserver vs1 -domain example.com -servers 10.0.0.60 -active true`
+`vserver services name-service nis-domain create -vserver vs1 -domain example.com -servers 10.0.0.60`
 
 +
 [NOTE]
@@ -92,7 +92,7 @@ vs1             namemap        true            files
 從 ONTAP 9.2 開始 `-nis-servers` 取代欄位 `-servers`。此新欄位可取得 NIS 伺服器的主機名稱或 IP 位址。
 
 ====
-.. 確認 NIS 名稱服務已正確設定且為作用中： `vserver services name-service nis-domain show vserver _vserver_name_`
+.. 確認 NIS 名稱服務已正確設定： `vserver services name-service nis-domain show vserver <vserver_name>`
 +
 `vserver services name-service nis-domain show vserver vs1`
 
@@ -100,9 +100,9 @@ vs1             namemap        true            files
 [listing]
 ----
 
-Vserver       Domain              Active Server
-------------- ------------------- ------ ---------------
-vs1           example.com         true   10.0.0.60
+Vserver       Domain              Server
+------------- ------------------- ---------------
+vs1           example.com         10.0.0.60
 ----
 
 
