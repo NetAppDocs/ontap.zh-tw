@@ -4,7 +4,7 @@ permalink: concept_metrocluster_manage_nodes.html
 keywords: system manager, manage, metrocluster, clusters, nodes, mcc, HA, config, peering, peers, pairing, pairs 
 summary: 從功能性的9.8開始ONTAP 、您可以MetroCluster 使用System Manager來管理功能性的運作。 
 ---
-= 使用System Manager進行現場管理總覽MetroCluster
+= MetroCluster IP 站台管理：系統管理員
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,24 +16,15 @@ summary: 從功能性的9.8開始ONTAP 、您可以MetroCluster 使用System Man
 
 
 [role="lead"]
-從功能介紹9.8開始ONTAP 、您可以使用System Manager作為簡化介面、來管理MetroCluster 功能介紹的設定。
+MetroCluster 組態會同步鏡射不同位置的兩個 ONTAP 叢集之間的資料和組態。從 ONTAP 9 開始、您可以使用系統管理員做為管理 MetroCluster IP 組態的簡化介面。
 
-支援的支援功能可讓兩個叢集彼此鏡射資料、因此當一個叢集當機時、資料不會遺失。MetroCluster
 
-通常、組織會在兩個不同的地理位置設定叢集。每個位置的系統管理員都會設定叢集並加以設定。然後、其中一位系統管理員可以在叢集之間設定對等關係、以便共用資料。
+NOTE: 您只能在 MetroCluster IP 組態中使用系統管理員來執行 MetroCluster 作業。在 MetroCluster FC 組態中、您仍然可以使用系統管理員來管理 MetroCluster 組態中的每個節點、但無法執行任何 MetroCluster 專屬的作業。
 
-該組織也可以在ONTAP 第三個位置安裝一個「不知道」。  此功能可監控每個叢集的狀態。ONTAP當其中一個叢集偵測到無法與合作夥伴叢集通訊時、它會查詢監視器、以判斷錯誤是叢集系統或網路連線的問題。
+一般而言、您可以在兩個不同的地理位置站台中、在 MetroCluster 組態中設定和設定叢集。接著您可以設定叢集之間的對等關係、以便它們同步及共用資料。對等網路中的兩個叢集提供雙向災難恢復（ DR ）、每個叢集都可以是另一個叢集的來源和備份。在八個節點或四個節點的 MetroCluster IP 組態中、每個站台都包含設定為一或兩個高可用度（ HA ）配對的儲存控制器。
 
-如果網路連線發生問題、系統管理員會執行疑難排解方法來修正錯誤並重新連線。如果合作夥伴叢集關閉、另一個叢集會啟動切換程序、以控制兩個叢集的資料I/O。
+您可以link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html["安裝 ONTAP Mediator 服務"^]在第三個位置監控節點及其 DR 合作夥伴的狀態。ONTAP Mediator 服務可在發生災難時、實作 Mediator 輔助的非計畫性重新作業（ MAUSO ）。
 
-您也可以執行切換、將其中一個叢集系統關閉以進行計畫性維護。  合作夥伴叢集會處理兩個叢集的所有資料I/O作業、直到您啟動執行維護作業的叢集、然後執行切換作業為止。
+您也可以執行交涉式的轉換、將其中一個叢集關閉以進行規劃的維護。合作夥伴叢集會處理兩個叢集的所有資料 I/O 作業、直到您啟動執行維護的叢集並執行切換作業為止。
 
-您可以管理下列作業：
-
-* link:task_metrocluster_setup.html["設定IP MetroCluster 站台"]
-* link:task_metrocluster_peering.html["設定IP MetroCluster 速度"]
-* link:task_metrocluster_configure.html["設定IP MetroCluster 站台"]
-* link:task_metrocluster_switchover_switchback.html["執行IP MetroCluster 位址切換和切換"]
-* link:task_metrocluster_troubleshooting.html["疑難排解IP MetroCluster 位址組態的問題"]
-* link:task_metrocluster_ANDU_upgrade.html["在ONTAP 叢集上升級功能MetroCluster"]
-
+您可以在中找到使用系統管理員設定及管理 MetroCluster IP 組態link:https://docs.netapp.com/us-en/ontap-metrocluster/index.html["本文檔MetroCluster"^]的程序。
