@@ -196,3 +196,72 @@ summary: 支援的動作。ONTAP
 * 建立群組
 * 刪除群組
 
+
+
+
+== S3 依版本採取的行動
+
+.ONTAP 9.14.1.
+ONTAP 9 。 14.1 新增 S3 物件鎖定支援。
+
+* GetObjectLockConfiguration
+* GetObjectRetention
+* PutObjectLockConfiguration
+* PutObjectRetention
+
+
+.ONTAP 9.13.1.12.9.11.9.11.
+ONTAP 9 。 13.1 新增貯體生命週期管理支援。
+
+* 刪除 BucketLifecycleConfiguration
+* GetBucketLifecycleConfiguration
+* PuttBucketLifecycleConfiguration
+
+
+.ONTAP 9.12.1
+ONTAP 9 。 12.1 新增貯體原則的支援、以及複製物件的能力。
+
+* 刪除BucketPolicy
+* GetBucketPolicy
+* PuttBucketPolicy
+* CopyObject
+* 上傳PartCopy
+
+
+.零點9.11.1. ONTAP
+ONTAP 9 。 11.1 新增版本管理、預先簽署的 URL 、區塊上傳的支援、以及一般 S3 行動的支援、例如使用 S3 API 建立和刪除區段。
+
+* ONTAP S3 現在支援使用 x-amz-content-sha256 的區塊上傳簽署要求： stream-AWS4-HMAC-SHA256 有效負載
+* ONTAP S3 現在支援使用預先簽署的 URL 來共用物件的用戶端應用程式、或允許其他使用者在不需要使用者認證的情況下上傳物件。
+* 建立庫位
+* 刪除Bucket
+* GetBucketVersion
+* listBucketVerions
+* 推桿
+* PuttBucketVersion
+* 刪除物件
+* ListObjectVerions
+
+
+
+NOTE: 由於基礎 FlexGroup 在第一個儲存區建立之前不會建立、因此必須先在 ONTAP 中建立儲存區、外部用戶端才能使用 CreateBucket 建立儲存區。
+
+.零點9.10.1 ONTAP
+ONTAP 9 。 10.1 新增對 S3 SnapMirror 和 GetBucketLocation 的支援。
+
+* GetBucketLocation
+
+
+.部分9.9.1 ONTAP
+ONTAP 9 9.1 為 ONTAP S3 新增物件中繼資料和標記支援。
+
+* PutObject 和 CreateMultpartUpload 現在包含使用 <key> 的金鑰值配對。例如： 'x-amz-meta-project: ONTAP _S3" 。
+* GetObject 和 HeadObject 現在會傳回使用者定義的中繼資料。
+
+
+標籤也可搭配貯體使用。不同於中繼資料、標記可以使用下列方式獨立讀取物件：
+
+* PuttObjectTagging
+* GetObjectTagging
+* 刪除ObjectTagging
+
