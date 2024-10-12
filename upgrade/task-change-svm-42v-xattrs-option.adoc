@@ -1,0 +1,46 @@
+---
+permalink: upgrade/task-change-svm-42v-xattrs-option.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, svm, xattr, nfsv4.2 
+summary: 在升級 ONTAP 9 ． 12 ． 1 及更新版本之前、請務必為 NFSv4.2 延伸屬性選項提供明確的值、以避免發生 NFS 回應錯誤。 
+---
+= 為 v4.2-xattis 選項指派明確的值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您有 NFSv4.2 用戶端、則在從某些版本和 ONTAP 9 的修補程式升級之前、您必須為 NFSv4.2 延伸屬性選項提供明確的值、以避免在升級後發生 NFS 回應錯誤。
+
+如果 `v4.2-xattrs`在 ONTAP 升級至受影響版本之前從未明確指派此選項值、則不會通知 NFSv4.2 用戶端伺服器的延伸屬性選項已變更。這會因為用戶端和伺服器不相符而導致特定通話發生 NFS 回應錯誤 `xattrs`。
+
+.開始之前
+如果符合下列條件、您需要為 NFSv4.2 延伸屬性選項指派明確的值：
+
+* 您正在使用 NFSv4.2 搭配使用 ONTAP 9 ． 11.1 或更早版本建立的 SVM
+* 您正在從下列任何受影響的版本和修補程式升級 ONTAP ：
++
+** 9.12.1RC1 至 9.12.1P11
+** 9.13.1RC1 至 9.13.1P8
+** 9.14.1RC1 至 9.14.1P1
+
+
+
+
+.關於這項工作
+您必須執行 ONTAP 9 。 12.1 或更新版本、才能使用本程序所述的命令來設定值。
+
+如果已設定為 `enabled`、則 `v4.2-xattrs`仍應明確設定為、 `enabled`以避免未來中斷。如果您設定 `v4.2-xattrs`為停用、 NFSv4.2 用戶端在重新掛載或將選項設定為 `enabled`之前、都可以接收「無效的引數」回應 `v4.2-xattrs`。
+
+.步驟
+* 為選項指派明確的值 `v4.2-xattrs`：
++
+[source, cli]
+----
+nfs modify -v4.2-xattrs <enabled/disabled> -vserver <vserver_name>
+----
+
+
+.相關資訊
+https://kb.netapp.com/on-prem/ontap/da/NAS/NAS-Issues/CONTAP-120160["NFS v4.2-xtrs 欄位會在升級後翻轉"^]

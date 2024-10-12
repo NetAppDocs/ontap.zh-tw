@@ -16,6 +16,8 @@ summary: 若要讓S3用戶端使用者能夠存取NAS資料、您必須將S3使�
 .開始之前
 用戶端存取的使用者名稱（Linux/UNIX、Windows和S3用戶端使用者）必須已經存在。
 
+您應該知道一些 S3 功能是link:index.html#nas-functionality-not-currently-supported-by-s3-nas-buckets["S3 NAS 儲存區不支援"]。
+
 .關於這項工作
 將S3使用者名稱對應至對應的Linux/UNIX或Windows使用者、可在S3用戶端存取NAS檔案時、對這些檔案進行授權檢查。S3到NAS的對應是透過提供S3使用者名稱_Pattern_來指定、此名稱可以用單一名稱或POSIX規則運算式來表示、也可以用Linux/UNIX或Windows使用者名稱_Replacement來表示。
 
@@ -72,7 +74,7 @@ vserver name-mapping create -direction s3-unix -position 2 -pattern s3_user_1 -r
 `vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -effect {deny|allow}  -action list_of_actions -principal list_of_users_or_groups -resource [-sid alphanumeric_text]`
 +
 ** `-effect {deny|allow}` -指定當使用者要求採取行動時、是否允許或拒絕存取。
-** `-action <Action>, ...` -指定允許或拒絕的資源作業。物件存放區伺服器目前支援S3 NAS儲存區的一組資源作業包括：GetObject、PuttObject、Delete Object、ListBucket、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PuttObjectTagging、刪除ObjectTagging、GetBucketLocation、 GetBuckettions版本管理、PuttBucket版本 管理和ListBucketVerions。此參數可接受萬用字元。
+** `-action <Action>, ...`- 指定允許或拒絕的資源作業。物件存放區伺服器目前支援 S3 NAS 貯體的資源作業集包括： GetObject 、 PutObject 、 DeleteObject 、 ListBucket 、 GetBucketAcl 、 GetObjectAcl 和 GetBucketLocation 。此參數可接受萬用字元。
 ** `-principal <Objectstore Principal>, ...` -根據此參數中指定的物件存放區伺服器使用者或群組、驗證要求存取的使用者。
 +
 *** 將字首群組/新增至群組名稱、即可指定物件存放區伺服器群組。
