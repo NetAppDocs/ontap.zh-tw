@@ -15,23 +15,95 @@ summary: 本文說明如何稽核ONTAP 資料與管理事件、以供在SS3環�
 
 當您在SVM上建立及啟用S3稽核組態時、S3事件會記錄在記錄檔中。您可以指定要記錄的下列事件：
 
-* 物件存取（資料）事件
-+
-GetObject、PuttObject和刪除物件
 
-* 管理事件
-+
-PuttBucket與刪除Bucket
 
+== 物件存取（資料）事件（依版本）
+
+9.11.1 ：
+
+* listBucketVerions
+* ListBucket （ 9.10.1 的 ListObjects 已重新命名為此項目）
+* ListAllMyb鏟 斗（已將 9.10.1 的清單鏟斗重新命名為此）
+
+
+9.10.1 ：
+
+* 標題物件
+* GetObject
+* PuttObject
+* 刪除物件
+* 列表桶
+* 清單物件
+* MPUpload
+* MPUploadPart
+* MPComplete
+* MPAbort
+* GetObjectTagging
+* 刪除ObjectTagging
+* PuttObjectTagging
+* ListUploads
+* 清單零件
+
+
+
+
+== 依版本管理事件
+
+9.15.1 ：
+
+* GetBucketCORS
+* PuttBucketCORS
+* DeleteBucketCORS
+
+
+9.14.1 ：
+
+* GetObjectRetention
+* PutObjectRetention
+* PutBucketObjectLockConfiguration
+* GetBucketObjectLockConfiguration
+
+
+9.13.1 ：
+
+* PutBucketLifecycle
+* 刪除 BucketLifecycle
+* GetBucketLifecycle
+
+
+9.12.1 ：
+
+* GetBucketPolicy
+* CopyObject
+* 上傳PartCopy
+* PuttBucketPolicy
+* 刪除BucketPolicy
+
+
+9.11.1 ：
+
+* GetBucketVersion
+* PuttBucketVersion
+
+
+9.10.1 ：
+
+* 標題庫
+* GetBucketAcl
+* GetObjectAcl
+* 推桿
+* 刪除Bucket
+* ModifyObjectTagging
+* GetBucketLocation
 
 
 記錄格式為JavaScript物件標記法（Json）。
 
 S3和NFS稽核組態的總限制為每個叢集50個SVM。
 
-需要下列授權套裝組合：
+需要下列授權：
 
-* 核心產品組合、ONTAP 適用於SS3傳輸協定與儲存設備
+* ONTAP One （原為核心產品組合的一部分）、適用於 ONTAP S3 傳輸協定和儲存設備
 
 
 如需詳細資訊、請參閱 link:../nas-audit/auditing-process-concept.html["如何執行不稽核程序ONTAP"]。
