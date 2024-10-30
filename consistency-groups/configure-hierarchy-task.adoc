@@ -63,14 +63,15 @@ summary: 建立階層式一致性群組、以進行大型應用程式工作負�
 * 在 ONTAP 9.14.1 中、您必須是叢集或 SVM 管理員、才能執行此工作。從 ONTAP 9.15.1 開始、任何管理權限層級的使用者都可以執行此工作。
 
 
+在 CLI 中建立具有新磁碟區的階層式一致性群組時、您必須個別建立每個子一致性群組。
+
 .步驟
 . 使用建立新的一致性群組 `consistency-group create` 命令。
 +
-。 `volume-count` 參數設定每個子一致性群組中的磁碟區數量。您可以建立最多五個子一致性群組的父一致性群組。
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency_group_name> -parent-consistency-group <parent_consistency_group_name> -volume-prefix <volume_prefix> -volume-count <number_of_volumes> -size <size>`
 
-+
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_name_ -parent-consistency-group _parent_consistency_group_name_ -cg-count _number_of_child_consistency_groups_ -volume _volume_prefix_ -volume-count _number_ -size _size_ -export-policy _policy_name_ -storage-service extreme`
-
+. 當 CLI 提示時、請確認您要建立新的父一致性群組。輸入。 `y`
+. 或者、重複步驟 1 以建立更多子一致性群組。
 
 
 --
@@ -115,7 +116,7 @@ summary: 建立階層式一致性群組、以進行大型應用程式工作負�
 .步驟
 . 配置新的父一致性群組、並將磁碟區指派給新的子一致性群組：
 +
-`consistency-group create -vserver _svm_name_ -consistency-group _child_consistency_group_name_ -parent-consistency-group _parent_consistency_group_name_ -volumes _volume_names_`
+`consistency-group create -vserver <svm_name> -consistency-group <child_consistency_group_name> -parent-consistency-group <parent_consistency_group_name> -volumes <volume_names>`
 
 . 輸入 `y` 確認您要建立新的父和子一致性群組。
 

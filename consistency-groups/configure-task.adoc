@@ -62,21 +62,21 @@ summary: 建立單一一致性群組以進行應用程式工作負載管理和�
 .使用 NFS 磁碟區建立一致性群組
 . 建立一致性群組：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volume-prefix_ -volume-count _number_ -size _size_ -export-policy _policy_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -volume-prefix <prefix_for_new_volume_names> -volume-count <number> -size <size> -export-policy <policy_name>`
 
 
 
 .使用 SAN 磁碟區建立一致性群組
 . 建立一致性群組：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -lun _lun_name_ -size _size_ -lun-count _number_ -igroup _igroup_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -lun <lun_name> -size <size> -lun-count <number> -lun-os-type <LUN_operating_system_format> -igroup <igroup_name>`
 
 
 
 .使用 NVMe 命名空間建立一致性群組
 . 建立一致性群組：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_name_ -namespace _namespace_name_ -volume-count _number_ -namespace-count _number_ -size _size_ -subsystem _subsystem_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency_group_name> -namespace <namespace_name> -volume-count <number> -namespace-count <number> -size <size> -subsystem <subsystem_name>`
 
 
 
@@ -130,7 +130,7 @@ NOTE: 如果使用現有磁碟區建立一致性群組、一致性群組就會�
 .步驟
 . 發行 `consistency-group create` 命令。。 `-volumes` 參數接受以逗號分隔的磁碟區名稱清單。
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volumes_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -volume <volumes>`
 
 . 使用檢視一致性群組 `consistency-group show` 命令。
 

@@ -6,16 +6,60 @@ summary: 您必須識別LIF、用於建立節點與備份應用程式之間的�
 ---
 = 設定LIF
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
 您必須識別LIF、用於建立節點與備份應用程式之間的資料連線和控制連線。識別LIF之後、您必須確認是否已針對LIF設定防火牆和容錯移轉原則。
 
 
-NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF服務原則取代。如需詳細資訊、請參閱 link:../networking/configure_firewall_policies_for_lifs.html["設定lifs的防火牆原則"]。
+NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF服務原則取代。如需更多資訊、請參閱 link:../networking/manage_supported_traffic.html["管理支援的流量"]。
 
+[role="tabbed-block"]
+====
+.ONTAP 9 。 10.1 或更新版本
+--
+.步驟
+. 使用命令搭配 `-service-policy`參數、識別節點上託管的叢集間 LIF `network interface show` 。
++
+`network interface show -service-policy default-intercluster`
+
+. 確保叢集間 LIF 包含 `backup-ndmp-control`以下服務：
++
+`network interface service-policy show`
+
+. 確保已針對叢集間的生命體設定適當的容錯移轉原則：
++
+.. 確認叢集間的生命體的容錯移轉原則已設定為 `local-only` 使用 `network interface show -failover` 命令。
++
+[listing]
+----
+cluster1::> network interface show -failover
+            Logical          Home              Failover     Failover
+Vserver     Interface        Node:Port         Policy       Group
+--------    ---------------  ----------------- ------------ --------
+cluster1    IC1               cluster1-1:e0a    local-only   Default
+                                                    Failover Targets:
+                                                    .......
+            IC2               cluster1-2:e0b    local-only   Default
+                                                    Failover Targets:
+                                                    .......
+cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
+                                                    Failover Targets:
+                                                    .......
+----
+.. 如果未適當設定容錯移轉原則、請使用修改容錯移轉原則 `network interface modify` 命令 `-failover-policy` 參數。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+
+
+--
+.ONTAP 9 9 或更早版本
+--
 .步驟
 . 使用識別節點上託管的叢集間 LIF `network interface show` 命令 `-role` 參數。
 +
@@ -45,7 +89,7 @@ Vserver     Policy       Service    Allowed
 cluster1    intercluster dns        -
                          http       -
                          https      -
-                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmp       0.0.0.0/0, ::/0
                          ndmps      -
                          ntp        -
                          rsh        -
@@ -74,10 +118,10 @@ cluster1::> network interface show -failover
             Logical          Home              Failover     Failover
 Vserver     Interface        Node:Port         Policy       Group
 --------    ---------------  ----------------- ------------ --------
-cluster1    **IC1               cluster1-1:e0a    local-only   Default**
+cluster1    IC1               cluster1-1:e0a    local-only   Default
                                                     Failover Targets:
                                                     .......
-            **IC2               cluster1-2:e0b    local-only   Default**
+            IC2               cluster1-2:e0b    local-only   Default
                                                     Failover Targets:
                                                     .......
 cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
@@ -93,3 +137,6 @@ cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy
 
 
 
+
+--
+====
