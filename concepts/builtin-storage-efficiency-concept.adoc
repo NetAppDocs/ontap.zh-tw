@@ -11,12 +11,29 @@ summary: 從 ONTAP 9.15.1 開始、 AFF A70 、 AFF A90 和 AFF A1K 平台內建
 
 
 [role="lead"]
-從 ONTAP 9.15.1 開始、 ONTAP 在 AFF A70 、 AFF A90 和 AFF A1K 平台上提供儲存效率和資料壓縮功能。視平台而定、壓縮是使用主 CPU 或專用卸載處理器來執行。儲存效率會自動啟用、無需組態。在新建立的精簡配置磁碟區上、儲存效率預設為啟用、並套用至現有資料、包括從其他平台移至 AFF A70 、 AFF A90 或 AFF A1K 平台的磁碟區。
+從 ONTAP 9 ． 15.1 開始、 ONTAP 可在 AFF A70 、 AFF A90 、 AFF A1K 、 FAS70 和 FAS90 平台上提供儲存效率和資料壓縮。
 
-對溫度敏感的儲存效率不適用於 AFF A70 、 AFF A90 和 AFF A1K 平台。壓縮並非以這些平台上的熱或冷資料為基礎、因此開始壓縮時就不會等到資料變冷。
+視平台而定、升級時適用下列項目：
 
-AFF A70 、 AFF A90 和 AFF A1K 平台的儲存效率採用連續的實體區塊包裝、進一步改善壓縮資料的儲存效率。
+* 壓縮是使用主 CPU 或專用卸載處理器來執行。
+* 依預設、所有精簡配置的磁碟區或只有現有的磁碟區都會啟用儲存效率。
++
+對於 FF A70 、 AFF A90 或 AFF A1K 平台、儲存效率會自動啟用、無需組態。這適用於所有新建立的精簡配置磁碟區和現有資料、包括從其他平台移至 AFF A70 、 AFF A90 或 AFF A1K 平台的磁碟區。
 
-使用 Volume Move 或 SnapMirror 技術移轉至 AFF A70 、 AFF A90 或 AFF A1K 平台的資料會自動轉換為 32k 內嵌壓縮。從 AFF A70 、 A90 或 A1K 平台移轉至舊版平台的資料儲存效率、會根據目的地平台的效率功能而自動轉換。
++
+對於 FAS70 或 FAS90 平台、儲存效率預設只會在升級前啟用儲存效率的現有精簡配置磁碟區上啟用。您可以使用 CLI 或 REST API 方法、在新建立的磁碟區上啟用儲存效率。
 
-如需將控制器升級至 AFF A70 、 AFF A90 或 AFF A1K 的相關資訊，請參閱 https://docs.netapp.com/us-en/ontap-systems-upgrade/choose_controller_upgrade_procedure.html["ONTAP 硬體升級文件"^]。
+* 使用 Volume Move 或 SnapMirror 技術移轉的資料會自動轉換為 32k 內嵌壓縮：
++
+對於 AFF A70 、 AFF A90 或 AFF A1K 平台、資料會自動轉換。
+
++
+對於 FAS70 或 FAS90 平台、資料只有在原始平台上啟用壓縮時才會轉換。
+
+
+
+對溫度敏感的儲存效率不適用於 AFF A70 、 AFF A90 、 AFF A1K 、 FAS70 和 FAS90 平台。壓縮並非以這些平台上的熱或冷資料為基礎、因此開始壓縮時就不會等到資料變冷。
+
+AFF A70 、 AFF A90 、 AFF A1K 、 FAS70 和 FAS90 平台的儲存效率使用連續的實體區塊包裝、進一步改善壓縮資料的儲存效率。
+
+如需將控制器升級至 AFF A70 、 AFF A90 、 AFF A1K 、 FAS70 或 FAS90 的相關資訊，請參閱 https://docs.netapp.com/us-en/ontap-systems-upgrade/choose_controller_upgrade_procedure.html["ONTAP 硬體升級文件"^]。
