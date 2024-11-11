@@ -1,0 +1,117 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/create-s3-snapshot.html 
+keywords: s3 snapshots, snapshot create 
+summary: 您可以手動產生 S3 快照，或設定快照原則，自動為您建立 S3 快照。 
+---
+= 建立 S3 快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以手動產生 S3 快照，或設定快照原則，自動為您建立 S3 快照。快照可做為物件的靜態複本，用於資料備份與還原。為了判斷快照保留的保有權，您可以建立快照原則，以利在指定的時間間隔自動建立快照。
+
+S3 快照可協助您在啟用或不啟用物件版本設定的情況下，保護 S3 儲存區中的物件資料。
+
+
+TIP: 當 S3 儲存區中的物件版本設定未啟用時，快照在建立資料保護方面特別有用，因為快照會做為時間點記錄，您可以在舊版物件無法使用時用於還原作業。
+
+.關於這項工作
+* 下列命名規則適用於快照（手動和自動快照）：
++
+** S3 快照名稱最多可包含 30 個字元
+** S3 快照名稱只能由小寫字母，數字，點（ . ）和連字號（ - ）組成
+** S3 快照名稱必須以字母或數字結尾
+** S3 快照名稱不能包含子字串 `s3snap`
+
+
+* 在 S3 傳輸協定的內容中，貯體命名限制將貯體名稱限制為 63 個字元。由於 ONTAP S3 快照透過 S3 傳輸協定以儲存區形式呈現，因此快照儲存區名稱也會受到類似的限制。根據預設，原始貯體名稱會用作基礎貯體名稱。
+* 為了更容易識別哪個快照屬於哪個儲存區，快照儲存區名稱包含基礎儲存區名稱，以及預先固定在快照名稱前面的特殊字串 `-s3snap-`。快照庫位名稱格式化為 `<base_bucket_name>-s3snap-<snapshot_name>`。
++
+例如，執行下列命令在上 `bucket-a`建立 `snap1`快照儲存區時，會建立名稱為的快照儲存區 `bucket-a-s3snap-snap1`，如果您有權存取基本儲存區，則可透過 S3 用戶端存取該儲存區。
+
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -bucket bucket-a -snapshot snap1
+----
+* 您無法建立快照，以產生超過 63 個字元的快照儲存區名稱。
+* 自動快照名稱包含原則排程名稱和時間戳記，類似於傳統 Volume 快照的命名慣例。例如，排程的快照名稱可以是 `daily-2024-01-01-0015`和 `hourly-2024-05-22-1105`。
+
+
+
+
+== 手動建立 S3 快照
+
+您可以使用 ONTAP CLI 手動建立 S3 快照。此程序僅會在本機叢集上建立快照。
+
+.步驟
+. 建立 S3 快照：
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <bucket_name> -snapshot <snapshot_name>
+----
++
+以下範例建立一個名為 `vs0`儲存 VM 和儲存 `website-data`區的快照 `pre-update`：
+
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver vs0 -bucket website-data -snapshot pre-update
+----
+
+
+
+
+== 將 S3 快照原則指派給貯體
+
+當您在 S3 儲存區層級設定快照原則時， ONTAP 會自動為您建立排程的 S3 快照。與傳統的快照原則一樣， S3 快照最多可設定五個排程。
+
+Snapshot 原則通常會指定建立快照的排程，每個排程要保留的複本數，以及排程前置碼。例如，策略可以每天中午 12:10 創建一個 S3 快照，保留兩個最新的副本，並將其命名 `daily-<timestamp>`。
+
+預設的快照原則可保留：
+
+* 每小時六個快照
+* 每日兩個快照
+* 每週兩次快照
+
+
+.開始之前
+* 將快照原則指派給 S3 儲存區之前，必須先建立快照原則。
+
+
+
+NOTE: S3 快照原則遵循與其他 ONTAP 快照原則相同的規則。不過，任何快照排程中設定了保留期間的快照原則，無法指派給 S3 儲存區。
+
+有關爲自動生成快照創建快照策略的詳細信息，請參閱link:../data-protection/configure-custom-snapshot-policies-concept.html["設定自訂快照原則總覽"]。
+
+.步驟
+. 在您的貯體上指派快照原則：
++
+[listing]
+----
+vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> -snapshot-policy <policy_name>
+----
++
+或
+
++
+[listing]
+----
+vserver object-store-server bucket modify -vserver <svm_name> -bucket <bucket_name> -snapshot-policy <policy_name>
+----
+
+
+
+NOTE: 如果您需要將叢集還原為早於 ONTAP 9 。 16.1 的 ONTAP 版本，請確定所有貯體的值 `snapshot-policy`都設定為 `none`（或 `-`）。
+
+.相關資訊
+link:../s3-snapshots/index.html["S3 Snapshot 總覽"]

@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/webauthn-mfa-overview.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key 
+summary: 從 ONTAP 9 。 16.1 開始，您可以為 ONTAP 使用者啟用 WebAuthn MFA 。 
+---
+= WebAuthn 多因素驗證總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9 。 16.1 開始，系統管理員可以為登入系統管理員的使用者啟用 WebAuthn 多因素驗證（ MFA ）。這可讓系統管理員以 FIDO2 金鑰（例如 YibiKey ）作為第二種驗證形式登入。根據預設，新的和現有的 ONTAP 使用者會停用 WebAuthn MFA 。
+
+第一種驗證方法使用下列驗證類型的使用者和群組可支援 WebAuthn MFA ：
+
+* 使用者：密碼，網域或 nsswitch
+* 群組：網域或 nsswitch
+
+
+當您將 WebAuthn MFA 啟用為使用者的第二種驗證方法之後，系統會要求使用者在登入 System Manager 時登錄硬體驗證者。註冊後，私密金鑰會儲存在驗證者中，而公開金鑰則儲存在 ONTAP 中。
+
+ONTAP 支援每位使用者一個 WebAuthn 認證。如果使用者遺失驗證者，需要更換驗證者，則 ONTAP 管理員需要刪除使用者的 WebAuthn 認證，以便使用者在下次登入時註冊新的驗證者。
+
+
+NOTE: 啟用 WebAuthn MFA 做為第二種驗證方法的使用者"https://192.168.100.200"[]，必須使用 FQDN （例如"https://myontap.example.com"[]）而非 IP 位址（例如）來存取 System Manager 。對於啟用 WebAuthn MFA 的使用者，會拒絕使用 IP 位址登入 System Manager 的嘗試。

@@ -24,6 +24,12 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 功能 | 預設變更 | 版本變更… 
 
 
+| NAS 稽核 | 和參數的上限 `file-session-io-grouping-count`和 `file-session-io-grouping-duration`參數已增加，因此您可以選擇性地選擇較少，更合併的 NAS 稽核事件通知。這項優點是 SVM 具備高 IO 率，可減少對目的地 Volume 的儲存影響。nfs_file_Session_io_grouping_count_MAX ： 20000 至 120000 nfs_file_Session_io_grouping_dimal_MAX ： 600 至 3600 | ONTAP 9.16.1. 
+
+
+| FAS 系統每個節點的最大磁碟區數 | 對於每個控制器具有大於 200GB RAM 的 FAS 系統，每個節點所支援的磁碟區數量上限從 1000 個增加到 2500 個。在舊版 ONTAP 中，link:../data-protection/dpo-systems-feature-enhancements-reference.html["資料保護最佳化（DPO）"]需要授權，才能將 ONTAP FAS 系統支援從每個節點 1000 個磁碟區增加到 2500 個磁碟區。 | ONTAP 9.16.1. 
+
+
 | `vserver object-store-server user show` 命令 | 在 ONTAP 9.15.1 之前的版本中 `vserver object-store-server user show` 命令會傳回 S3 使用者的秘密金鑰。此命令將不再傳回 S3 使用者的秘密金鑰資料。 | ONTAP 9.15.1.1 
 
 
@@ -56,6 +62,9 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 [cols="25%,50%,25%"]
 |===
 | 功能 | 限制變更 | 版本變更… 
+
+
+| qtree 延伸效能監控 | 您可以在單一 ONTAP 叢集中啟用最多 50,000 個 qtree 的延伸效能監控。 | ONTAP 9.16.1. 
 
 
 | SnapMirror 主動同步 | SnapMirror Active Sync 支援一致性群組中的 80 個磁碟區 | ONTAP 9.15.1.1 

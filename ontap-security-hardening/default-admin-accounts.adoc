@@ -9,7 +9,7 @@ summary: 限制管理和診斷帳戶的存取
 :allow-uri-read: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -47,87 +47,6 @@ autosupport      console     password  autosupport      no     no
 6 entries were displayed.
 
 ----
-
-
-== 移除預設的管理帳戶
-
-該 `admin` 帳戶具有管理員角色、並允許使用所有應用程式進行存取。
-
-.步驟
-. 建立另一個管理層級帳戶。
-+
-若要完全移除預設 `admin` 帳戶、您必須先建立另一個使用登入應用程式的管理員層級帳戶 `console` 。
-
-+
-
-NOTE: 進行這些變更可能會造成一些不必要的影響。請務必先測試可能影響非正式作業叢集解決方案安全狀態的新設定。
-
-+
-範例：
-
-+
-[listing]
-----
-cluster1::*> security login create -user-or-group-name NewAdmin -application console -authentication-method password -vserver cluster1
-----
-+
-[listing]
-----
-cluster1::*> security login show -vserver cluster1
-
-Vserver: cluster1
-                             Authentication             Acct   Is-Nsswitch
-User/Group Name  Application Method    Role Name        Locked Group
----------------- ----------- --------- ---------------- ------ -----------
-NewAdmin         console     password  admin            no     no
-admin            console     password  admin            no     no
-admin            http        password  admin            no     no
-admin            ontapi      password  admin            no     no
-admin            service-processor password admin       no     no
-admin            ssh         password  admin            no     no
-autosupport      console     password  autosupport      no     no
-7 entries were displayed.
-----
-. 建立新的管理員帳戶後、請使用帳戶登入來測試該帳戶的存取權限 `NewAdmin` 。登入時 `NewAdmin` 、請將帳戶設定為與預設或先前的管理帳戶（例如、、、或）具有相同的登入應用程式 `http` `ontapi` `service-processor` `ssh`。此步驟可確保維持存取控制。
-+
-範例：
-
-+
-[listing]
-----
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application ssh -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application http -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application ontapi -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application service-processor -authentication-method password
-----
-. 在測試所有功能之後、您可以先停用所有應用程式的管理帳戶、然後再從 ONTAP 移除。此步驟是最後一項測試、可確認沒有任何仰賴先前管理帳戶的遺留功能。
-+
-[listing]
-----
-cluster1::*> security login lock -vserver cluster1 -user-or-group-name admin -application *
-----
-. 若要移除預設的管理帳戶及其所有項目、請執行下列命令：
-+
-[listing]
-----
-cluster1::*> security login delete -vserver cluster1 -user-or-group-name admin -application *
-cluster1::*> security login show -vserver cluster1
-
-Vserver: cluster1
-                             Authentication             Acct   Is-Nsswitch
-User/Group Name  Application Method    Role Name        Locked Group
----------------- ----------- --------- ---------------- ------ -----------
-NewAdmin         console     password  admin            no     no
-NewAdmin         http        password  admin            no     no
-NewAdmin         ontapi      password  admin            no     no
-NewAdmin         service-processor password admin       no     no
-NewAdmin         ssh         password  admin            no     no
-autosupport      console     password  autosupport      no     no
-7 entries were displayed.
-
-----
-
-
 
 
 == 設定診斷（診斷）帳戶密碼

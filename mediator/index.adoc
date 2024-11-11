@@ -13,16 +13,41 @@ summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所�
 [role="lead"]
 若要安裝 ONTAP Mediator 服務、您必須確保符合所有先決條件、擷取安裝套件並在主機上執行安裝程式。此程序用於安裝或升級現有安裝。
 
-.關於這項工作
 * 從使用NetApp 9.7開始ONTAP 、您可以使用ONTAP 任何版本的《不知道》來監控MetroCluster 一個靜態IP組態。
 * 從 ONTAP 9.8 開始、您可以使用任何版本的 ONTAP Mediator 來監控 SnapMirror 主動式同步關係。
 
 
-.開始之前
-您必須符合下列先決條件。
 
 
-NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、因此無法順利安裝。您可以使用命令檢查是否已啟用 FIPS 模式 `fips-mode-setup --check` 。您可以使用命令停用 FIPS 模式 `fips-mode-setup --disable` 。停用 FIPS 模式後重新開機、以成功安裝 ONTAP Mediator 服務。
+== 安裝與升級考量
+
+在您升級或安裝 ONTAP Mediator 之前，請先檢閱下列考量事項。
+
+
+CAUTION: ONTAP Mediator 1.8 及更早版本與 Red Hat Enterprise Linux FIPS 模式不相容，因此無法成功安裝。您可以使用命令檢查是否已啟用 FIPS 模式 `fips-mode-setup --check` 。您可以使用命令停用 FIPS 模式 `fips-modesetup --disable` 。停用 FIPS 模式後重新開機，即可成功安裝 ONTAP Mediator 1.8 或更早版本。
+
+* 您應該將 ONTAP Mediator 升級至最新版本。舊版 ONTAP Mediator 可與所有 ONTAP 版本向下相容，但最新版本則包含所有協力廠商元件的安全性修補程式。
+* 當您升級至新的 ONTAP Mediator 版本時，除非有更高版本，否則安裝程式會自動升級至建議的 SCST 版本。如需手動安裝較高 SCST 版本的說明，請參閱link:manage-task.html["管理 Mediator 服務"]。如需支援的版本，請參閱link:whats-new-concept.html#scst-support-matrix["SCST 支援對照表"]。
++
+
+CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTAP Mediator 。
+
+* 如果您安裝 `yum-utils` 套件中、您可以使用 `needs-restarting` 命令。
+
+
+
+
+=== 作業系統需求
+
+您的作業系統必須符合下列需求：
+
+* 64位元實體安裝或虛擬機器
+* 8 GB RAM
+* 1 GB 磁碟空間（用於應用程式安裝、伺服器記錄檔和資料庫）
+* 使用者：root存取權
+
+
+下表顯示每個版本的 ONTAP Mediator 所支援的作業系統。
 
 [cols="30,70"]
 |===
@@ -32,9 +57,23 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
 
 
  a| 
+1.9
+ a| 
+* Red Hat Enterprise Linux
++
+** 相容： 8.4 ， 8.5 ， 8.6 ， 8.7 ， 8.9 ， 9.1 和 9.3 ^1^
+** 建議： 8.8 ， 8.10 ， 9.0 ， 9.2 和 9.4
+
+
+* Rocky Linux 8 和 9
+
+
+
+
+ a| 
 1.8
  a| 
-* Red Hat Enterprise Linux ： 8.6 、 8.7 、 8.8 、 8.9 、 8.10 、 9.2 、 9.3 和 9.4
+* Red Hat Enterprise Linux ： 8.4 ， 8.5 ， 8.6 ， 8.7 ， 8.8 ， 8.9 ， 8.10 ， 9.0 ， 9.1 ， 9.2 ， 9.3 和 9.4
 * Rocky Linux 8 和 9
 
 
@@ -43,7 +82,7 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
  a| 
 1.1.7
  a| 
-* Red Hat Enterprise Linux ： 8.5 、 8.6 、 8.7 、 8.8 、 8.9 、 9.0 、 9.1 、 9.2 和 9.3
+* Red Hat Enterprise Linux ： 8.4 ， 8.5 ， 8.6 ， 8.7 ， 8.8 ， 8.9 ， 9.0 ， 9.1 ， 9.2 和 9.3
 * Rocky Linux 8 和 9
 
 
@@ -61,7 +100,7 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
  a| 
 1.5.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3 ， 8.4 ， 8.5
 * CentOS：7.6、7.7、7.8、7.9
 
 
@@ -70,7 +109,7 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
  a| 
 1.4.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3 ， 8.4 ， 8.5
 * CentOS：7.6、7.7、7.8、7.9
 
 
@@ -79,7 +118,7 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
  a| 
 1.3.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
+* Red Hat Enterprise Linux ： 7.6 、 7.7 、 7.8 、 7.9 、 8.0 、 8.1 、 8.2 、 8.3
 * CentOS：7.6、7.7、7.8、7.9
 
 
@@ -88,53 +127,75 @@ NOTE: ONTAP Mediator 服務與 Red Hat Enterprise Linux FIPS 模式不相容、�
  a| 
 1.2.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
-* CentOS ： 7.6 、 7.7 、 7.8
+* Red Hat Enterprise Linux ： 7.6 、 7.7 、 7.8 、 7.9 、 8.0 、 8.1.
+* CentOS：7.6、7.7、7.8、7.9
 
 
 |===
-
-NOTE: 核心版本必須符合作業系統版本。
-
-* 64位元實體安裝或虛擬機器
-* 8 GB RAM
-* 1 GB 磁碟空間（用於應用程式安裝、伺服器記錄檔和資料庫）
-* 使用者：root存取權
+. 相容表示 RHEL 不再支援此版本，但仍可安裝 ONTAP Mediator 。
 
 
-除了核心以外的任何程式庫套件都可以安全更新、但可能需要重新開機才能在 ONTAP Mediator 應用程式中生效。  需要重新開機時、建議使用服務時間。
-
-如果您安裝 `yum-utils` 套件中、您可以使用 `needs-restarting` 命令。
-
-如果核心核心更新為 ONTAP Mediator 版本對照表仍支援的版本、則可將其更新。必須重新開機、因此需要服務時段。
-
-重新開機前必須先解除安裝 SCST 核心模組、然後在重新開機後重新安裝。
 
 
-NOTE: 不支援升級至特定 ONTAP Mediator 版本所支援作業系統版本以外的核心。（這可能表示已測試的 SCST 模組無法編譯）。
+=== 作業系統升級考量與核心相容性
 
+* 除了核心以外，所有程式庫套件都可以安全更新，但可能需要重新開機才能套用 ONTAP Mediator 應用程式中的變更。需要重新開機時、建議使用服務時間。
+* 您應該讓作業系統核心保持在最新狀態。核心核心可升級至中所列支援的版本link:whats-new-concept.html#scst-support-matrix["ONTAP Mediator 版本對照表"]。必須重新開機，因此您應該規劃停機的維護時間。
++
+** 您必須先解除安裝 SCST 核心模組，才能重新開機，然後在之後重新安裝。
+** 在開始核心作業系統升級之前，您必須準備好支援的 SCST 版本，才能重新安裝。
+
+
+
+
+[NOTE]
+====
+* 核心版本必須符合作業系統版本。
+* 不支援升級至特定 ONTAP Mediator 版本所支援作業系統版本以外的核心。（這可能表示已測試的 SCST 模組無法編譯）。
+
+
+====
 
 
 == 啟用 UEFI 安全開機時、請登錄安全金鑰
 
-如果啟用 UEFI 安全開機、若要安裝 ONTAP Mediator 、您必須先登錄安全金鑰、才能啟動 ONTAP Mediator 服務。若要判斷系統是否已啟用 UEFI 且已開啟安全開機、請執行下列步驟：
+若要在啟用 UEFI 安全開機的情況下安裝 ONTAP Mediator ，您必須先註冊安全金鑰，才能啟動服務。金鑰是在 SCST 安裝的編譯步驟期間產生，並儲存為您機器上的私密公開金鑰配對。使用 `mokutil`公用程式將公開金鑰新增為電腦擁有者金鑰（ Mok ）至 UEFI 韌體，讓系統信任並載入簽署的模組。請將複雜密碼儲存 `mokutil`在安全的位置，因為重新啟動系統以啟動莫克語時，需要這樣做。
+
+若要判斷系統是否已啟用 UEFI 且已開啟安全開機、請執行下列步驟：
 
 .步驟
-. 如果未安裝 mokutil 、請執行下列命令：
+. 如果 `mokutil`未安裝，請執行下列命令：
 +
 `yum install mokutil`
 
-. 若要判斷系統上是否已啟用 UEFI 安全開機、請執行下列命令：
+. 檢查您的系統是否已啟用 UEFI 安全開機：
 +
 `mokutil --sb-state`
 
 +
-結果顯示此系統上是否已啟用 UEFI 安全開機。
+結果會指出此系統上是否已啟用 UEFI 安全開機。
+
++
+[NOTE]
+====
+** 系統會提示您建立必須儲存在安全位置的複雜密碼。您需要使用此密碼來啟用 UEFI Boot Manager 中的金鑰。
+** ONTAP Mediator 1.2.0 及更早版本不支援此模式。
+
+
+====
+. 將公開金鑰新增至莫克清單：
++
+`mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
 
 +
 
-NOTE: ONTAP Mediator 1.2.0 和舊版不支援此模式。
+NOTE: 您可以將私密金鑰保留在其預設位置，或將其移至安全位置。不過，公開金鑰必須保留在其現有位置，以供 Boot Manager 使用。如需詳細資訊，請參閱下列 README.module-Signing 檔案：
 
++
+`[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
+README.module-signing  scst_module_key.der  scst_module_key.priv`
+
+. 重新啟動主機，並使用裝置的 UEFI Boot Manager 來核准新的 Mok 。您需要步驟 2 中提供的密碼 `mokutil`。
 
 
 

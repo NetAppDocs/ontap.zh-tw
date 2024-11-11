@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/delete-s3-snapshot.html 
+keywords: s3 snapshots, delete S3 snapshots 
+summary: 您可以刪除不再需要的 S3 快照，並釋放貯體中的儲存空間。 
+---
+= 刪除 S3 快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以刪除不再需要的 S3 快照，並釋放儲存空間。您可以手動移除 S3 快照，或修改 S3 儲存區附加的快照原則，以變更排程中要保留的快照數量。
+
+S3 貯體的 Snapshot 原則遵循與傳統 ONTAP 快照原則相同的刪除規則。有關創建快照策略的詳細信息，請參閱link:../data-protection/create-snapshot-policy-task.html["建立快照原則"]。
+
+.關於這項工作
+* 如果在多個快照中擷取物件版本（在版本化儲存庫中）或物件（在非版本化儲存庫中），則只有在刪除保護物件的最後一個快照之後，物件才會從檔案系統中移除。
+* 如果您需要刪除包含快照物件的 S3 儲存區，請確定已刪除該儲存區中所有物件的所有快照。
+* 如果您需要將叢集還原為早於 ONTAP 9 。 16.1 的 ONTAP 版本，請確定您已刪除所有儲存區的所有 S3 快照。您可能也需要執行 `vserver object-store-server bucket clear-snapshot-metadata`命令，以移除 S3 儲存區的快照中繼資料。如需相關資訊、請 link:../s3-snapshots/delete-s3-snapshot.html#clear-s3-snapshots-metadata["清除 S3 快照中繼資料"]參閱。
+* 當您分批刪除快照時，可以移除多個快照中擷取的大量物件，有效釋放的空間比個別快照刪除所造成的空間更多。因此，您可以為儲存物件回收更多空間。
+
+
+.步驟
+. 若要刪除特定 S3 快照，請執行下列命令：
++
+[listing]
+----
+vserver object-store-server bucket snapshot delete -vserver <svm_name> -bucket <bucket_name> -snapshot <snapshot_name>
+----
+. 若要移除貯體中的所有 S3 快照，請執行下列命令：
++
+[listing]
+----
+vserver object-store-server bucket snapshot delete -vserver <svm_name> -bucket <bucket_name> -snapshot *
+----
+
+
+
+
+== 清除 S3 快照中繼資料
+
+使用 S3 快照時，也會在貯體中產生快照中繼資料。即使從貯體移除所有快照，快照中繼資料仍會繼續存在。快照中繼資料的存在會封鎖下列作業：
+
+* 叢集還原為 ONTAP 9 之前的 ONTAP 版本
+* 在貯體上組態 S3 SnapMirror
+
+
+在執行這些作業之前，您應該清除貯體中的所有快照中繼資料。
+
+.開始之前
+在開始清除中繼資料之前，請確定已從儲存區移除所有 S3 快照。
+
+.步驟
+. 若要清除貯體中的快照中繼資料，請執行下列命令：
+
+
+[listing]
+----
+vserver object-store-server bucket clear-snapshot-metadata -vserver <svm_name> -bucket <bucket_name>
+----

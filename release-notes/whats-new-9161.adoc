@@ -1,0 +1,218 @@
+---
+permalink: release-notes/whats-new-9161.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.16.1' 
+summary: 瞭解 ONTAP 9.16.1 中提供的新功能。 
+---
+= ONTAP 9.16.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+瞭解 ONTAP 9.16.1 中提供的新功能。
+
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+
+瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+
+瞭解的全新增強支援 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["FAS 、 ASA 和 AFF 平台及支援的交換器"^]。
+
+瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
+
+若要升級至最新版的 ONTAP ，請參閱link:../upgrade/create-upgrade-plan.html["準備升級 ONTAP"]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html[支援從移轉的磁碟區進行 SnapMirror 雲端備份]
+ a| 
+SnapMirror 雲端支援使用更有效率的同步程序，將移轉至雲端的磁碟區備份。這項新功能可支援從雲端中移轉的磁碟區到相同目的地物件儲存區端點的 SnapMirror 雲端備份，而無需執行重新基準化作業。支援 FlexVol 和 FlexGroup 磁碟區。
+
+
+
+ a| 
+xref:../encryption-at-rest/migrate-keys-between-key-managers.html[支援金鑰管理員之間的加密金鑰移轉]
+ a| 
+當您從 ONTAP 板載金鑰管理程式切換到叢集層級的外部金鑰管理程式時，可以使用 ONTAP 命令列介面（ CLI ），輕鬆地將加密金鑰從一個金鑰管理程式移轉到另一個金鑰管理程式。
+
+|===
+
+
+== 網路
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../networking/configure_virtual_ip_@vip@_lifs.html#set-up-border-gateway-protocol-bgp[BGP 對等群組的 MD5 驗證支援]
+ a| 
+ONTAP 支援 BGP 對等群組上的 MD5 驗證，以保護 BGP 工作階段。啟用 MD5 時， BGP 工作階段只能在獲授權的對等點之間建立和處理，以防止未獲授權的使用者可能中斷工作階段。
+
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[IPsec 硬體卸載支援]
+ a| 
+IP 安全性（ IPsec ）是資料傳輸安全選項，可用來保護用戶端和 ONTAP 節點之間的所有 IP 流量。此傳輸協定最初是以 ONTAP 9 8 提供，並僅以軟體形式實作。從 ONTAP 9 ． 16.1 開始，您可以選擇將某些運算密集的作業（例如加密和完整性檢查）卸載到儲存節點上安裝的支援網路介面控制器（ NIC ）卡。使用此硬體卸載選項可大幅改善受 IPsec 保護的網路流量的效能和處理量。
+
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../s3-multiprotocol/index.html[多重傳輸協定 S3 貯體支援多重部分上傳]
+ a| 
+使用 Multifart 上傳，您可以將單一物件作為一組零件上傳至 S3 多重傳輸協定貯體。
+
+
+
+ a| 
+xref:../s3-config/cors-integration.html[支援 ONTAP S3 儲存區的跨來源資源共享（ CORS ）]
+ a| 
+透過跨來源資源共享（ CORS ），充分發揮網路應用程式的潛力。CORS 可讓用戶端應用程式在一個網域和另一個網域中的資源之間順暢互動。透過整合 CORS 支援，您可以透過選擇性的跨來源存取資源，讓 ONTAP S3 型網路應用程式更具能力。
+
+
+
+ a| 
+xref:../s3-snapshots/index.html[ONTAP 支援拍攝 ONTAP S3 儲存區的快照]
+ a| 
+您可以為 ONTAP S3 儲存區產生唯讀的時間點快照。使用 S3 快照功能，您可以手動建立快照，或透過快照原則自動產生快照。此外，您可以檢視，瀏覽及刪除 S3 快照，並透過 S3 用戶端還原快照內容。
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../san-admin/enable-space-allocation.html[NVMe 空間取消分配預設為啟用]
+ a| 
+根據預設， NVMe 命名空間會啟用空間分配（也稱為「打孔」和「取消對應」）。空間取消分配可讓主機從命名空間取消分配未使用的區塊，以回收空間。這可大幅提升整體儲存效率，尤其是檔案系統的資料週轉率高。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../multi-admin-verify/index.html#rule-protected-commands[符合資格的規則保護命令集已延伸、可進行多重管理驗證]
+ a| 
+系統管理員可以建立多重管理驗證規則來保護一致性群組，包括建立，刪除及修改作業，建立及刪除一致性群組快照及其他命令。
+
+
+
+ a| 
+xref:../anti-ransomware/index.html[利用 AI 增強功能（ ARP/AI ）提供自主勒索軟體保護]
+ a| 
+ARP 已升級為全新的 AI 功能，讓 IT 能夠偵測並回應勒索軟體攻擊，精確程度達 99% ，而且容易回收。由於 AI 受過全方位資料集的訓練，因此在 FlexVol 磁碟區上執行 ARP 不再需要學習一段時間，而且 ARP/AI 會立即以作用中模式啟動。ARP/AI 也隨附自動更新功能，可確保持續提供保護並抵抗最新威脅。
+
+
+NOTE: ARP/AI 功能目前僅支援 NAS 。雖然自動更新功能會顯示系統管理員中部署的新安全檔案可用度，但這些更新僅適用於 NAS 工作負載保護。
+
+
+
+ a| 
+xref:../nvme/set-up-tls-secure-channel-nvme-task.html[支援傳輸至 NVMe 儲存裝置及從 NVMe 儲存裝置傳送資料流量的傳輸中加密]
+ a| 
+ONTAP 現在支援透過網路傳送至 NVMe 儲存裝置及從 NVMe 儲存裝置傳送的資料流量在執行中加密。
+
+
+
+ a| 
+支援 FabricPool 物件存放區通訊的 TLS 1.3
+ a| 
+ONTAP 支援 FabricPool 物件存放區通訊的 TLS 1.3 。
+
+
+
+ a| 
+xref:../authentication/overview-oauth2.html[Microsoft Entra ID 的 OAuth 2.0]
+ a| 
+OAuth 2.0 支援是由 ONTAP 9 .14.1 首次推出，已經過強化，可支援採用標準 OAuth 2.0 宣告的 Microsoft Entra ID 授權伺服器（前身為 Azure AD ）。此外，新的群組和角色對應功能也支援以 UUID 樣式值為基礎的 Entra ID 標準群組宣告。我們也推出新的外部角色對應功能，此功能已經過 Entra ID 測試，但可搭配任何支援的授權伺服器使用。
+
+|===
+
+
+== 儲存效率
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../volumes/qtrees-partition-your-volumes-concept.html[延伸 qtree 效能監控，包括延遲指標和歷史統計資料]
+ a| 
+較早的 ONTAP 版本針對 qtree 使用量提供強大的即時指標，例如每秒 I/O 作業數，以及多個類別的處理量（包括讀取和寫入）。從 ONTAP 9 。 16.1 開始，您也可以存取即時延遲統計資料，以及檢視歸檔的歷史資料。這些新功能可讓 IT 儲存管理員更深入地瞭解系統效能，並能更長時間分析趨勢。如此一來，您就能針對資料中心和雲端儲存資源的營運與規劃，做出更明智且資料導向的決策。
+
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[支援 FlexGroup 進階容量分配]
+ a| 
+啟用時，進階容量平衡功能會在 FlexGroup 成員磁碟區之間分配資料，當大型檔案增加且佔用一個成員磁碟區上的空間時。
+
+
+
+ a| 
+xref:../svm-migrate/index.html[SVM 資料移動性支援，可移轉 MetroCluster 組態]
+ a| 
+ONTAP 現在支援將 SVM 從非 MetroCluster HA 配對移轉至 MetroCluster 組態，或從 MetroCluster 組態移轉至非 MetroCluster HA 配對。您無法將 SVM 從一個 MetroCluster 組態移轉至另一個 MetroCluster 組態
+
+|===
+
+
+== 系統管理員
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../authentication-access-control/webauthn-mfa-overview.html[支援 System Manager 中的網路釣魚防護 WebAuthn 多重驗證]
+ a| 
+ONTAP 9 。 16.1 支援 WebAuthn MFA 登入，可讓您在登入系統管理員時使用硬體安全金鑰作為第二種驗證方法。
+
+
+
+ a| 
+支援無線綁定的 FSX 部署
+ a| 
+如果您的 Amazon FSX for NetApp ONTAP 部署偵測到您位於無線區域，請前往登入頁面，進入系統管理員，讓您使用系統管理員來管理適用於 ONTAP 的 FSX 。
+
+|===

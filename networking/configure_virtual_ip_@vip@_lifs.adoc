@@ -4,17 +4,17 @@ permalink: networking/configure_virtual_ip_@vip@_lifs.html
 keywords: 'configure, configuration, configuring, setup, setting, set, up, virtual, vip, ip, lif, data, configure virtual IP (vip) lifs, set up border gateway protocol (bgp), use-peer-as-next-hop, asn-prepend-type, asn-prepend-count, community, network bgp peer-group, med, multi-exit discriminator, create a virtual ip (vip) data lif, commands for managing the BGP, network bgp, manage bgp configuration, manage bgp default values, manage bgp peer groups' 
 summary: 跨子網路的容錯移轉LIF 
 ---
-= 設定虛擬IP（VIP）LIF
+= 設定 ONTAP 虛擬 IP （ VIP ）生命
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 
 
 [role="lead"]
-某些新一代資料中心使用網路層3機制、需要在子網路之間容錯移轉生命期。從ONTAP 支援的範例中開始、將會支援VIP資料生命期及相關的路由傳輸協定邊界閘道傳輸協定（BGP）、ONTAP 讓路由資訊中心能夠參與這些新一代網路。
+有些新一代資料中心使用第 3 層（ IP ）網路機制，需要在子網路之間容錯移轉。ONTAP 支援虛擬 IP （ VIP ）資料生命體，以及相關的路由傳輸協定，邊界閘道傳輸協定（ BGP ），以滿足這些新一代網路的容錯移轉需求。
 
 .關於這項工作
 VIP資料LIF並非任何子網路的一部分、可從以相同IPspace裝載BGP LIF的所有連接埠存取。VIP資料LIF可消除主機對個別網路介面的相依性。由於多個實體介面卡會傳輸資料流量、因此整個負載不會集中在單一介面卡和相關子網路上。VIP資料LIF是透過路由傳輸協定邊界閘道傳輸協定（BGP）通告給對等路由器。
@@ -31,7 +31,7 @@ VIP資料生命量具備下列優點：
 
 在建立VIP生命期之前、您必須先設定BGP、這是用於向對等路由器宣告VIP LIF存在的路由傳輸協定。
 
-從概念9.9.1開始ONTAP 、VIP BGP會使用BGP對等群組來提供預設路由自動化功能、以簡化組態設定。
+從 ONTAP 9 9.1 開始， VIP 提供選用的預設路由自動化功能，使用 BGP 對等群組來簡化組態。
 
 當BGP對等端點位於同一子網路時、使用BGP對等端點做為下一跳路由器、即可輕鬆學習預設路由。ONTAP若要使用此功能、請設定 `-use-peer-as-next-hop` 屬性至 `true`。依預設、此屬性為 `false`。
 
@@ -41,32 +41,48 @@ VIP資料生命量具備下列優點：
 對等路由器必須設定為接受來自BGP LIF的BGP連線、以取得所設定的自治系統編號（ASN）。
 
 
-NOTE: 不處理來自路由器的任何傳入路由宣告、因此您應該設定對等路由器、使其不傳送任何路由更新到叢集。ONTAP
+NOTE: 不處理來自路由器的任何傳入路由宣告、因此您應該設定對等路由器、使其不傳送任何路由更新到叢集。ONTAP如此可縮短與對等通訊完全正常運作所需的時間，並減少 ONTAP 內部的記憶體使用量。
 
 .關於這項工作
-設定BGP包括選擇性地建立BGP組態、建立BGP LIF、以及建立BGP對等群組。當在指定節點上建立第一個BGP對等群組時、使用預設值自動建立預設BGP組態。ONTAPBGP LIF用於與對等路由器建立BGP TCP工作階段。對於對等路由器而言、BGP LIF是下一跳、可到達VIP LIF。BGP LIF已停用容錯移轉。BGP對等群組會針對對等群組的IPspace中的所有SVM通告VIP路由。
+設定BGP包括選擇性地建立BGP組態、建立BGP LIF、以及建立BGP對等群組。當在指定節點上建立第一個BGP對等群組時、使用預設值自動建立預設BGP組態。ONTAP
 
-從 ONTAP 9.8 開始、這些欄位已新增至 `network bgp peer-group` 命令：
+BGP LIF用於與對等路由器建立BGP TCP工作階段。對於對等路由器而言、BGP LIF是下一跳、可到達VIP LIF。BGP LIF已停用容錯移轉。BGP 對等群組會在對等群組使用的 IPspace 中，為所有 SVM 通告 VIP 路由。對等群組使用的 IPspace 是從 BGP LIF 繼承而來。
 
-* -ASN預先輸入類型
-* -ASN預先準備端點數
-* 社群
+從 ONTAP 9 。 16.1 開始， BGP 對等群組支援 MD5 驗證，以保護 BGP 工作階段。啟用 MD5 時， BGP 工作階段只能在獲授權的對等點之間建立和處理，以防止未獲授權的使用者可能中斷工作階段。
+
+下列欄位已新增至 `network bgp peer-group create`和 `network bgp peer-group modify`命令：
+
+* `-md5-enabled <true/false>`
+* `-md5-secret <md5 secret in string or hex format>`
 
 
-這些BGP屬性可讓您設定BGP對等群組的AS路徑和社群屬性。
+這些參數可讓您使用 MD5 簽章來設定 BGP 對等群組，以增強安全性。下列需求適用於使用 MD5 驗證：
+
+* 您只能在參數設定為 `true`時指定 `-md5-secret`參數 `-md5-enabled`。
+* 您必須先全域啟用 IPsec ，才能啟用 MD5 BGP 驗證。BGP LIF 不一定要有作用中的 IPsec 組態。請參閱 link:configure_ip_security_@ipsec@_over_wire_encryption.html["透過有線加密設定IP安全性（IPsec）"]。
+* NetApp 建議您先在路由器上設定 MD5, 然後再在 ONTAP 控制器上進行設定。
+
 
 從功能變數9.9開始ONTAP 、新增了下列欄位：
 
-* -ASN 或 -peer-ASN （ 4 位元組值）
-屬性本身不是新的、但現在使用 4 位元組整數。
-* 中型
-* -use對等即下一跳
+* `-asn`或 `-peer-asn`（ 4 位元組值）屬性本身不是新的，但現在使用 4 位元組整數。
+* `-med`
+* `-use-peer-as-next-hop`
 
 
 您可以利用多重出口鑑別器（MED-）支援、針對路徑優先順序進行進階路由選擇。BGP更新訊息中的選用屬性Medion、可讓路由器為流量選取最佳路由。MEDA是無符號32位元整數（0 - 4294967295）、偏好較低的值。
 
+從 ONTAP 9.8 開始、這些欄位已新增至 `network bgp peer-group` 命令：
 
-NOTE: 雖然支援上述BGP屬性、但路由器卻不需要遵守這些屬性。ONTAPNetApp強烈建議您確認路由器支援哪些屬性、並據此設定BGP對等群組。如需詳細資料、請參閱路由器提供的BGP文件。
+* `-asn-prepend-type`
+* `-asn-prepend-count`
+* `-community`
+
+
+這些BGP屬性可讓您設定BGP對等群組的AS路徑和社群屬性。
+
+
+NOTE: 雖然 ONTAP 支援上述 BGP 屬性，但路由器不需要遵守這些屬性。NetApp 強烈建議您確認路由器支援哪些屬性，並據此設定 BGP 對等群組。如需詳細資料、請參閱路由器提供的BGP文件。
 
 .步驟
 . 登入進階權限層級：
@@ -78,9 +94,17 @@ NOTE: 雖然支援上述BGP屬性、但路由器卻不需要遵守這些屬性�
 .. 建立BGP組態：
 +
 ....
-network bgp config create -node {node_name | local} -asn asn_integer -holdtime
-hold_time -routerid local_router_IP_address
+network bgp config create -node {node_name | local} -asn <asn_number> -holdtime
+<hold_time> -routerid <router_id>
 ....
++
+[NOTE]
+====
+*** 此 `-routerid`參數接受點分十進制 32 位元值，只需在 AS 網域內唯一即可。NetApp 建議您使用保證唯一性的節點管理 IP （ v4 ）位址 `<router_id>`。
+*** 雖然 ONTAP BGP 支援 32 位元 ASN 數字，但僅支援標準十進位標記法。不支援私有 ASN 的點狀 ASN 表示法，例如 65000.1 ，而非 4259840001 。
+
+
+====
 +
 2位元組ASN的範例：
 
@@ -98,20 +122,27 @@ network bgp config create -node node1 -asn 85502 -holdtime 180 -routerid 1.1.1.1
 .. 修改預設BGP組態：
 +
 ....
-network bgp defaults modify -asn asn_integer -holdtime hold_time
-network bgp defaults modify -asn 65502
+network bgp defaults modify -asn <asn_number> -holdtime <hold_time>
+network bgp defaults modify -asn 65502 -holdtime 60
 ....
 +
-*** `asn_integer` 指定 ASN 。從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是16位元數（1 - 65534個可用值）。從ONTAP 支援BGP的ASN 9.9.1開始、支援4位元組的非負整數（1 - 4294967295）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
-*** `hold_time` 指定保留時間（以秒為單位）。預設值為180s。
+*** `<asn_number>`指定 ASN 編號。從支援BGP的ASN 9.8開始ONTAP 、支援2位元組非負整數。這是一個 16 位元數字（ 1 到 65534 個可用值）。從 ONTAP 9 9.1 開始， BGP 的 ASN 支援 4 位元組非負整數（ 1 至 4294967295 ）。預設ASN為65501。ASN 23456保留用於ONTAP 建立不宣告4位元組ASN功能的對等端點、以供建立不含
+*** `<hold_time>`指定保留時間（以秒為單位）。預設值為 180s 。
++
+
+NOTE: ONTAP 僅支援一個全域 `<asn_number>`， `<hold_time>`，和 `<router_id>`，即使您為多個 IPspace 設定 BGP 也一樣。BGP 和所有 IP 路由資訊完全隔離在一個 IPspace 內。IPspace 相當於虛擬路由和轉送（ VRF ）執行個體。
+
 
 
 
 
 . 為系統SVM建立BGP LIF：
 +
+對於預設 IPspace ， SVM 名稱是叢集名稱。對於其他 IPspace ， SVM 名稱與 IPspace 名稱相同。
+
++
 ....
-network interface create -vserver system_svm -lif lif_name -service-policy default-route-announce -home-node home_node -home-port home_port -address ip_address -netmask netmask
+network interface create -vserver <system_svm> -lif <lif_name> -service-policy default-route-announce -home-node <home_node> -home-port <home_port> -address <ip_address> -netmask <netmask>
 ....
 +
 您可以使用 `default-route-announce` BGP LIF 的服務原則或任何包含「管理 BGP 」服務的自訂服務原則。
@@ -125,29 +156,60 @@ network interface create -vserver cluster1 -lif bgp1 -service-policy default-rou
 範例1：建立沒有自動預設路由的對等群組
 
 +
-在此情況下、管理員必須建立通往BGP對等端點的靜態路由。
+在這種情況下，管理員需要建立通往 BGP 對等點的靜態路由。
 
 +
 ....
-network bgp peer-group create -peer-group group_name -ipspace ipspace_name -bgp-lif bgp_lif -peer-address peer-router_ip_address -peer-asn 65502 -route-preference integer
--asn-prepend-type <ASN_prepend_type> -asn-prepend-count integer -med integer -community BGP community list <0-65535>:<0-65535>
+network bgp peer-group create -peer-group <group_name> -ipspace <ipspace_name> -bgp-lif <bgp_lif> -peer-address <peer-router_ip_address> -peer-asn <peer_asn_number> {-route-preference <integer>} {-asn-prepend-type <ASN_prepend_type>} {-asn-prepend-count <integer>} {-med <integer>} {-community BGP community list <0-65535>:<0-65535>}
 ....
 +
 ....
-network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65502 -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
+network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65503 -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
 ....
 +
 範例2：使用自動預設路由建立對等群組
 
 +
 ....
-network bgp peer-group create -peer-group group_name -ipspace ipspace_name -bgp-lif bgp_lif -peer-address peer-router_ip_address -peer-asn 65502 -use-peer-as-next-hop true -route-preference integer -asn-prepend-type <ASN_prepend_type> -asn-prepend-count integer -med integer -community BGP community list <0-65535>:<0-65535>
+network bgp peer-group create -peer-group <group_name> -ipspace <ipspace_name> -bgp-lif <bgp_lif> -peer-address <peer-router_ip_address> -peer-asn <peer_asn_number> {-use-peer-as-next-hop true} {-route-preference <integer>} {-asn-prepend-type <ASN_prepend_type>} {-asn-prepend-count <integer>} {-med <integer>} {-community BGP community list <0-65535>:<0-65535>}
 ....
 +
 ....
-network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65502 -use-peer-as-next-hop true -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
+network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65503 -use-peer-as-next-hop true -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
+....
++
+範例 3 ：建立啟用 MD5 的對等群組
+
++
+.. 啟用IPsec：
++
+`security ipsec config modify -is-enabled true`
+
+.. 建立啟用 MD5 的 BGP 對等群組：
++
+....
+network bgp peer-group create -ipspace Default -peer-group <group_name> -bgp-lif bgp_lif -peer-address <peer_router_ip_address> {-md5-enabled true} {-md5-secret <md5 secret in string or hex format>}
+....
++
+使用十六進位金鑰的範例：
+
++
+....
+network bgp peer-group create -ipspace Default -peer-group peer1 -bgp-lif bgp_lif1 -peer-address 10.1.1.100 -md5-enabled true -md5-secret 0x7465737420736563726574
+....
++
+使用字串的範例：
+
++
+....
+network bgp peer-group create -ipspace Default -peer-group peer1 -bgp-lif bgp_lif1 -peer-address 10.1.1.100 -md5-enabled true -md5-secret "test secret"
 ....
 
+
+
+
+
+NOTE: 建立 BGP 對等群組之後，執行命令時會列出虛擬乙太網路連接埠（以 v0a.v0z ， v1a... 開頭） `network port show`。此介面的 MTU 一律以 1500 報告。用於流量的實際 MTU 是從實體連接埠（ BGP LIF ）衍生而來，此連接埠是在流量傳送時決定的。
 
 
 
@@ -168,8 +230,8 @@ VIP資料LIF是透過路由傳輸協定邊界閘道傳輸協定（BGP）通告�
 . 建立VIP資料LIF：
 +
 ....
-network interface create -vserver svm_name -lif lif_name -role data -data-protocol
-{nfs|cifs|iscsi|fcache|none|fc-nvme} -home-node home_node -address ip_address -is-vip true
+network interface create -vserver <svm_name> -lif <lif_name> -role data -data-protocol
+{nfs|cifs|iscsi|fcache|none|fc-nvme} -home-node <home_node> -address <ip_address> -is-vip true -failover-policy broadcast-domain-wide
 ....
 +
 如果您未使用指定主連接埠、則會自動選取 VIP 連接埠 `network interface create` 命令。
@@ -210,19 +272,19 @@ Node        Vserver  bgp status
 | 如果您想要... | 使用此命令... 
 
 
-| 建立BGP組態 | 建立網路BGP組態 
+| 建立BGP組態 | `network bgp config create` 
 
 
-| 修改BGP組態 | 修改網路BGP組態 
+| 修改BGP組態 | `network bgp config modify` 
 
 
-| 刪除BGP組態 | 刪除網路BGP組態 
+| 刪除BGP組態 | `network bgp config delete` 
 
 
-| 顯示BGP組態 | 網路BGP組態顯示 
+| 顯示BGP組態 | `network bgp config show` 
 
 
-| 顯示VIP LIF SVM的BGP狀態 | 網路BGP vserver狀態顯示 
+| 顯示VIP LIF SVM的BGP狀態 | `network bgp vserver-status show` 
 |===
 
 
@@ -234,10 +296,10 @@ Node        Vserver  bgp status
 | 如果您想要... | 使用此命令... 
 
 
-| 修改BGP預設值 | 網路BGP預設值會修改 
+| 修改BGP預設值 | `network bgp defaults modify` 
 
 
-| 顯示BGP預設值 | 顯示網路BGP預設值 
+| 顯示BGP預設值 | `network bgp defaults show` 
 |===
 
 
@@ -249,19 +311,39 @@ Node        Vserver  bgp status
 | 如果您想要... | 使用此命令... 
 
 
-| 建立BGP對等群組 | 建立BGP對等群組 
+| 建立BGP對等群組 | `network bgp peer-group create` 
 
 
-| 修改BGP對等群組 | 網路BGP對等群組修改 
+| 修改BGP對等群組 | `network bgp peer-group modify` 
 
 
-| 刪除BGP對等群組 | 網路BGP對等群組刪除 
+| 刪除BGP對等群組 | `network bgp peer-group delete` 
 
 
-| 顯示BGP對等群組資訊 | 網路BGP對等群組顯示 
+| 顯示BGP對等群組資訊 | `network bgp peer-group show` 
 
 
-| 重新命名BGP對等群組 | 網路BGP對等群組重新命名 
+| 重新命名BGP對等群組 | `network bgp peer-group rename` 
+|===
+
+
+=== 使用 MD5 管理 BGP 對等群組
+
+從 ONTAP 9 。 16.1 開始，您可以在現有的 BGP 對等群組上啟用或停用 MD5 驗證。
+
+
+NOTE: 如果您在現有的 BGP 對等群組上啟用或停用 MD5 ，則 BGP 連線會終止並重新建立，以套用 MD5 組態變更。
+
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+| 在現有的 BGP 對等群組上啟用 MD5 | `network bgp peer-group modify -ipspace Default -peer-group <group_name> -bgp-lif <bgp_lif> -peer-address <peer_router_ip_address> -md5-enabled true -md5-secret <md5 secret in string or hex format>` 
+
+
+| 在現有的 BGP 對等群組上停用 MD5 | `network bgp peer-group modify -ipspace Default -peer-group <group_name> -bgp-lif <bgp_lif> -md5-enabled false` 
 |===
 .相關資訊
 https://docs.netapp.com/us-en/ontap-cli["指令參考資料ONTAP"^]

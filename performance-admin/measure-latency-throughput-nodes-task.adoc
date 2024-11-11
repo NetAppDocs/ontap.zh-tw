@@ -13,7 +13,7 @@ summary: 您可以使用network test-path命令來識別網路瓶頸、或預先
 [role="lead"]
 您可以使用 `network test-path` 用於識別網路瓶頸或預先限定節點之間的網路路徑的命令。您可以在叢集間節點或叢集內節點之間執行命令。
 
-.您需要的產品
+.開始之前
 * 您必須是叢集管理員才能執行此工作。
 * 此工作需要進階權限層級命令。
 * 對於叢集間路徑、必須對來源與目的地叢集進行對等處理。
@@ -76,14 +76,19 @@ RemoteDataTransfer
 [listing]
 ----
 cluster1::> network test-path -source-node node1 -destination-cluster cluster2 -destination-node node3 -session-type AsyncMirrorRemote
+----
++
+範例輸出（輸出詳細資料可能會因您的 ONTAP 版本而異）：
+
++
+[listing]
+----
 Test Duration:      10.88 secs
 Send Throughput:    18.23 MB/sec
 Receive Throughput: 18.23 MB/sec
 MB sent:            198.31
 MB received:        198.31
 Avg latency in ms:  2301.47
-Min latency in ms:  61.14
-Max latency in ms:  3056.86
 ----
 . 返回管理權限：
 +

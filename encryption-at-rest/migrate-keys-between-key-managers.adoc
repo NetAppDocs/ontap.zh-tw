@@ -1,0 +1,157 @@
+---
+permalink: encryption-at-rest/migrate-keys-between-key-managers.html 
+sidebar: sidebar 
+keywords: onboard key manager, external key manager, configure, migrate keys, store keys, authentication keys, encryption keys 
+summary: 您可以使用 ONTAP 內建金鑰管理程式或外部金鑰管理程式，或兩者（在某種情況下）來管理資料加密金鑰。 
+---
+= 在金鑰管理員之間移轉 ONTAP 資料加密金鑰
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ONTAP 內建金鑰管理程式或外部金鑰管理程式（或兩者）來管理資料加密金鑰。外部金鑰管理員只能在儲存 VM 層級啟用。在 ONTAP 叢集層級，您可以啟用內建金鑰管理程式或外部金鑰管理程式。
+
+[cols="2,2"]
+|===
+| 如果您在 ... | 您可以使用 ... 
+
+
+| 僅叢集層級  a| 
+內建金鑰管理程式或外部金鑰管理程式
+
+
+
+| 僅 SVM 層級 | 僅限外部金鑰管理員 
+
+
+ a| 
+叢集和 SVM 層級
+ a| 
+下列其中一個按鍵管理器組合：
+
+* 選項1
++
+叢集層級：內建金鑰管理程式
+
++
+SVM 層級：外部金鑰管理程式
+
+* 選項2
++
+叢集層級：外部金鑰管理程式
+
++
+SVM 層級：外部金鑰管理程式
+
+
+
+|===
+
+
+== 在 ONTAP 叢集層級的關鍵管理員之間移轉金鑰
+
+從 ONTAP 9 。 16.1 開始，您可以使用 ONTAP 命令列介面（ CLI ），在叢集層級的關鍵管理員之間移轉金鑰。
+
+[role="tabbed-block"]
+====
+.從內建金鑰管理程式到外部金鑰管理程式
+--
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 建立非作用中的外部金鑰管理程式組態：
++
+[source, cli]
+----
+security key-manager external create-config
+----
+. 切換至外部金鑰管理程式：
++
+[source, cli]
+----
+security key-manager keystore enable -vserver <svm_name> -type KMIP
+----
+. 刪除機載金鑰管理程式組態：
++
+[source, cli]
+----
+security key-manager keystore delete-config -vserver <svm_name> -type OKM
+----
+. 將權限等級設為admin：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+--
+.從外部金鑰管理程式到內建金鑰管理程式
+--
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 建立非使用中的機載金鑰管理程式組態：
++
+[source, cli]
+----
+security key-manager onboard create-config
+----
+. 啟用內建金鑰管理程式組態：
++
+[source, cli]
+----
+security key-manager keystore enable -vserver <svm_name> -type OKM
+----
+. 刪除外部金鑰管理程式組態
++
+[source, cli]
+----
+security key-manager keystore delete-config -vserver <svm_name> -type KMIP
+----
+. 將權限等級設為admin：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+--
+====
+
+
+== 在 ONTAP 叢集和儲存 VM 層級的關鍵管理程式之間移轉金鑰
+
+您可以使用 ONTAP 命令列介面（ CLI ），在叢集層級的金鑰管理程式與儲存 VM 層級的金鑰管理程式之間移轉金鑰。
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 移轉金鑰：
++
+[source, cli]
+----
+security key-manager key migrate -from-vserver <svm_name> -to-vserver <svm_name>
+----
+. 將權限等級設為admin：
++
+[source, cli]
+----
+set -privilege admin
+----
+

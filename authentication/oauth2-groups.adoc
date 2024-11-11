@@ -1,0 +1,190 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-groups.html 
+keywords: oauth 2.0, oauth2, identity mapping, group uuid, group name, group mapping, external roles, role mapping 
+summary: ONTAP 提供數個選項，可根據您的授權伺服器來設定群組。然後，這些群組便可對應至 ONTAP 用來判斷存取權限的角色。 
+---
+= 與小組合作
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAP 提供數個選項，可根據您的授權伺服器來設定群組。然後，這些群組便可對應至 ONTAP 用來判斷存取權限的角色。
+
+
+
+== 如何識別群組
+
+當您在授權伺服器上設定群組時，會使用名稱或 UUID 來識別並攜帶 OAuth 2.0 存取權杖。在設定 ONTAP 之前，您必須瞭解授權伺服器如何處理群組。
+
+
+NOTE: 如果存取權杖中包含多個群組， ONTAP 會嘗試使用每個群組，直到有相符項目為止。
+
+
+
+=== 群組名稱
+
+許多授權伺服器會使用名稱來識別和代表群組。以下是 Active Directory Federation Service （ ADFS ）所產生的 JSON 存取權杖片段，其中包含數個群組。如需詳細資訊、請參閱 <<使用名稱管理群組>> 。
+
+[listing]
+----
+  ...
+  "sub": "User1_TestDev@NICAD5.COM",
+  "group": [
+    "NICAD5\\Domain Users",
+    "NICAD5\\Development Group",
+    "NICAD5\\Production Group"
+  ],
+  "apptype": "Confidential",
+  "appid": "3bff3b2b-8e40-44ba-7c11-d73c3b76e3e8",
+  ...
+----
+
+
+=== 群組 UUID
+
+某些授權伺服器會使用 UUID 來識別和代表群組。以下是 Microsoft Entra ID 所產生的 JSON 存取權杖片段，其中包含數個群組。如需詳細資訊、請參閱 <<使用 UUID 管理群組>> 。
+
+[listing]
+----
+  ...
+  "appid": "4aff4b4b-8e40-44ba-7c11-d73c3b76e3d7",
+  "appidacr": "1",
+  "groups": [
+    "8ea4c5b0-bcad-4e66-8f1e-cd395474a448",
+    "a8558fc2-a1b2-4cb7-cc41-59bd831840cc"],
+  "name": "admin007 with group membership",
+  ...
+----
+
+
+== 使用名稱管理群組
+
+如果您的授權伺服器使用名稱來識別群組，則必須確定每個群組都已定義為 ONTAP 。視您的安全環境而定，您可能已經定義了群組。
+
+以下是將群組定義為 ONTAP 的 CLI 命令範例。請注意，它使用範例存取權杖中的命名群組。您必須處於 ONTAP * 管理 * 權限層級，才能發出命令。
+
+.範例
+[listing]
+----
+security login create -user-or-group-name "NICAD5\\Domain Users" -application http -authentication-method domain -role admin
+----
+
+NOTE: 您也可以使用 ONTAP REST API 來設定此功能。如需詳細資訊、請參閱 https://docs.netapp.com/us-en/ontap-automation/["自動化ONTAP"^] 。
+
+
+
+== 使用 UUID 管理群組
+
+如果您的授權伺服器代表使用 UUID 值的群組，則需要先執行兩個步驟的組態，才能使用群組。從 ONTAP 9 。 16.1 開始，我們提供兩項對應功能，並已使用 Microsoft Entra ID 進行測試。您必須處於 ONTAP * 管理 * 權限層級，才能發出 CLI 命令。
+
+
+NOTE: 您也可以使用 ONTAP REST API 來設定這些功能。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-automation/["自動化ONTAP"^]文件網站。
+
+.相關資訊
+* https://docs.netapp.com/us-en/ontap-cli/["ONTAP CLI 命令"^]
+
+
+
+
+=== 將群組 UUID 對應至群組名稱
+
+如果您使用的授權伺服器代表使用 UUID 值的群組，則需要將群組 UUID 對應至群組名稱。主要的 ONTAP CLI 作業如下所述。
+
+
+
+==== 建立
+
+您可以使用命令來定義新的群組對應組態 `security login group create`。群組 UUID 和名稱應與授權伺服器上的組態相符。
+
+.參數
+用於建立群組對應的參數如下所述。
+
+[cols="30,70"]
+|===
+| 參數 | 說明 
+
+
+| `vserver` | 選擇性地指定群組所關聯的 SVM （ Vserver ）名稱。如果省略，群組就會與 ONTAP 叢集相關聯。 
+
+
+| `name` | ONTAP 將使用的群組唯一名稱。 
+
+
+| `type` | 此值表示群組來源的身分識別提供者。 
+
+
+| `uuid` | 指定授權伺服器所提供之群組的通用唯一識別碼。 
+|===
+以下是將群組定義為 ONTAP 的 CLI 命令範例。請注意，它使用範例存取權杖中的 UUID 群組。
+
+.範例
+[listing]
+----
+security login group create -vserver ontap-cls-1 -name IAM_Dev -type entra -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
+----
+建立群組之後，會為群組產生唯一的唯讀整數識別碼。
+
+
+
+==== 其他 CLI 作業
+
+此命令支援多項額外作業，包括：
+
+* 顯示
+* 修改
+* 刪除
+
+
+您可以使用 `show`選項來擷取為群組所產生的唯一群組 ID 。如需詳細資訊，請參閱 ONTAP 命令參考文件。
+
+
+
+=== 將群組 UUID 對應至角色
+
+如果您使用的授權伺服器代表使用 UUID 值的群組，則可以將群組對應至角色。主要的 ONTAP CLI 作業如下所述。此外，您必須處於 ONTAP * 管理 * 權限層級，才能發出命令。
+
+
+NOTE: 您需要先<<將群組 UUID 對應至群組名稱>>擷取為群組產生的唯一整數 ID 。您需要 ID 才能將群組對應至角色。
+
+
+
+==== 建立
+
+您可以使用命令定義新的角色對應 `security login group role-mapping create`。
+
+.參數
+用於將群組對應至角色的參數如下所述。
+
+[cols="30,70"]
+|===
+| 參數 | 說明 
+
+
+| `group-id` | 指定使用命令為群組產生的唯一 ID `security login group create` 。 
+
+
+| `role` | 群組對應的 ONTAP 角色名稱。 
+|===
+.範例
+[listing]
+----
+security login group role-mapping create -group-id 1 -role admin
+----
+
+
+==== 其他 CLI 作業
+
+此命令支援多項額外作業，包括：
+
+* 顯示
+* 修改
+* 刪除
+
+
+如需詳細資訊，請參閱 ONTAP 命令參考文件。

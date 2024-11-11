@@ -120,7 +120,7 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 * 來源叢集中的所有節點都必須執行 ONTAP 9.10.1 或更新版本。如需特定的 ONTAP 陣列控制器支援、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
 * 來源叢集中的所有節點都必須執行相同的 ONTAP 版本。
 * 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本。
-* 目的地叢集必須與來源叢集相同或不超過兩個主要較新的有效叢集版本（ ECV ）。
+* 目的地叢集 ONTAP 版本必須與來源叢集相同或不超過兩個主要更新版本。
 * 來源叢集和目的地叢集必須支援相同的 IP 子網路、才能進行資料 LIF 存取。
 * 來源 SVM 必須包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
 * 目的地上必須有足夠的空間放置 Volume
@@ -207,10 +207,10 @@ SVM 移轉支援使用 FabricPools 上的磁碟區進行、適用於下列平台
 | 負載共享鏡像 | 不支援 |  
 
 
-| SVM MetroCluster | 不支援 | 雖然 SVM 移轉不支援 MetroCluster SVM 移轉、但您可能可以使用 SnapMirror 非同步複寫至link:https://www.netapp.com/media/83785-tr-4966.pdf["在 MetroCluster 組態中移轉 SVM"]。您應該知道、在 MetroCluster 組態中移轉 SVM 的程序、是一種不中斷營運的方法。 
+| SVM MetroCluster | ONTAP 9.16.1. | 您可以將 SVM 從非 MetroCluster HA 配對移轉至 MetroCluster 組態，或從 MetroCluster 組態移轉至非 MetroCluster HA 配對。您無法將 SVM 從一個 MetroCluster 組態移轉至另一個 MetroCluster 組態。[ 附註 ] SVM 移轉不支援在早於 ONTAP 9 。 16.1 的版本中進行 MetroCluster SVM 移轉。您可能可以使用 SnapMirror 非同步複寫至link:https://www.netapp.com/media/83785-tr-4966.pdf["在 MetroCluster 組態中移轉 SVM"^]。請注意，在 MetroCluster 組態中使用 SnapMirror 非同步方式來移轉 SVM 是 _ 顛覆性 _ 移轉方法。 
 
 
-| NetApp Aggregate Encryption（NAE） | 不支援 | 不支援從未加密來源移轉至加密目的地。 
+| NetApp Aggregate Encryption（NAE） | 不支援 | 任何使用 NAE 的端點都不支援移轉。 
 
 
 | NDMP 組態 | 不支援 |  
@@ -222,7 +222,7 @@ SVM 移轉支援使用 FabricPools 上的磁碟區進行、適用於下列平台
 | NFS 和 SMB 稽核記錄 | ONTAP 9.13.1.12.9.11.9.11.  a| 
 [NOTE]
 ====
-稽核記錄重新導向僅適用於雲端模式。若為內部部署 SVM 移轉並啟用稽核、您應停用來源 SVM 的稽核、然後執行移轉。
+若為內部部署 SVM 移轉並啟用稽核、您應停用來源 SVM 的稽核、然後執行移轉。
 
 ====
 在 SVM 移轉之前：
@@ -262,7 +262,7 @@ SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 
 
 
-| SnapMirror 雲端關係 | ONTAP 9.12.1 | 從 ONTAP 9 。 12.1 開始、當您移轉具有 SnapMirror 雲端關係的 SVM 時、目的地叢集必須link:../data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror 雲端授權"]已安裝、而且必須有足夠的可用容量來支援將鏡射磁碟區中的容量移轉至雲端。 
+| SnapMirror 雲端關係 | ONTAP 9.12.1 | 從 ONTAP 9 。 12.1 開始，當您移轉內部部署具有 SnapMirror 雲端關係的 SVM 時，目的地叢集必須已安裝，而且必須有link:../data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror 雲端授權"]足夠的容量來支援將鏡射磁碟區中的容量移轉至雲端。 
 
 
 | SnapMirror 非同步目的地 | ONTAP 9.12.1 |  
@@ -300,16 +300,16 @@ SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 | SnapMirror 同步 | 不支援 |  
 
 
-| Snapshot複本 | 零點9.10.1 ONTAP |  
+| 快照 | 零點9.10.1 ONTAP |  
 
 
-| 防止竄改的Snapshot複本鎖定 | ONTAP 9.14.1. | 防竄改 Snapshot 複本鎖定與 SnapLock 並不相同。SnapLock 仍不受支援。 
+| 防竄改快照鎖定 | ONTAP 9.14.1. | 防竄改的快照鎖定與 SnapLock 並不相同。SnapLock Enterprise 和 SnapLock Compliance 仍不受支援。 
 
 
 | 虛擬 IP 生命 / BGP | 不支援 |  
 
 
-| Virtual Storage Console 7.0 及更新版本 | 不支援 | VSC 是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["VMware vSphere虛擬應用裝置適用的工具ONTAP"^] 從 VSC 7.0 開始。 
+| Virtual Storage Console 7.0 及更新版本 | 不支援 |  
 
 
 | Volume複製 | 不支援 |  
@@ -369,17 +369,17 @@ SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
 | 限制 | 不允許 | 允許 | 不支援 
 
 
-| 快照複製屬性會修改 | 允許 | 允許 | 不支援 
+| 快照屬性會修改 | 允許 | 允許 | 不支援 
 
 
-| Snapshot 複本自動刪除修改 | 允許 | 允許 | 不支援 
+| Snapshot 自動刪除修改 | 允許 | 允許 | 不支援 
 
 
-| 建立 Snapshot 複本 | 允許 | 允許 | 不支援 
+| Snapshot 建立 | 允許 | 允許 | 不支援 
 
 
-| 刪除 Snapshot 複本 | 允許 | 允許 | 不支援 
+| 快照刪除 | 允許 | 允許 | 不支援 
 
 
-| 從 Snapshot 複本還原檔案 | 允許 | 允許 | 不支援 
+| 從快照還原檔案 | 允許 | 允許 | 不支援 
 |===

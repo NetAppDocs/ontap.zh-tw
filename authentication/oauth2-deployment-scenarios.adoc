@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: authentication/oauth2-deployment-scenarios.html 
 keywords: oauth 2.0, deployment, configuration, parameters, local validation, remote introspection 
-summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項、您可以建立適合部署環境的授權伺服器。 
+summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項，您可以使用多種部署案例之一，定義適合您環境的授權伺服器。 
 ---
 = OAuth 2.0 部署案例
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使�
 
 
 [role="lead"]
-將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項、您可以建立適合部署環境的授權伺服器。
+將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使用。根據這些選項，您可以使用多種部署案例之一，定義適合您環境的授權伺服器。
 
 
 
@@ -22,7 +22,8 @@ summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使�
 
 將授權伺服器定義為 ONTAP 時、有幾個組態參數可供使用。這些參數通常在所有管理介面中都受到支援。
 
-參數名稱可能會因 ONTAP 管理介面而稍有不同。例如、在設定遠端自我介紹時、會使用 CLI 命令參數來識別端點 `-introspection-endpoint`。但在 System Manager 中、對等欄位是 _Authorization server Token introspection URI_ 。為了容納所有 ONTAP 管理介面、我們提供參數的一般說明。確切的參數或欄位應根據上下文而顯而易見。
+
+NOTE: 個別參數或欄位使用的名稱可能會因 ONTAP 管理介面而異。為了因應管理介面的差異，表格中的每個參數都會使用單一通用名稱。根據上下文，與特定介面搭配使用的確切名稱應該是顯而易見的。
 
 [cols="25,75"]
 |===
@@ -56,7 +57,10 @@ summary: 將授權伺服器定義為 ONTAP 時、有幾個組態選項可供使�
 | 如果存在、請使用本機角色 | 判斷是否使用本機 ONTAP 定義的布林旗標、包括具名 REST 角色和本機使用者。 
 
 
-| 移除使用者請款 | ONTAP 用來比對本機使用者的替代名稱。使用 `sub` 存取權杖中的欄位、以符合本機使用者名稱。 
+| 遠端使用者請款 | ONTAP 用來比對本機使用者的替代名稱。使用 `sub` 存取權杖中的欄位、以符合本機使用者名稱。 
+
+
+| 目標對象 | 此欄位定義可使用存取權杖的端點。 
 |===
 
 

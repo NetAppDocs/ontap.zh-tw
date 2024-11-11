@@ -1,0 +1,112 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/enable-webauthn-mfa-task.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key, enable, system manager 
+summary: 您可以為 System Manager 使用者啟用 WebAuthn MFA 。 
+---
+= 為 ONTAP 系統管理員使用者或群組啟用 WebAuthn MFA
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+身為 ONTAP 管理員，您可以新增已啟用 WebAuthn MFA 選項的新使用者或群組，或是啟用現有使用者或群組的選項，為系統管理員使用者或群組啟用 WebAuthn MFA 。
+
+
+NOTE: 將 WebAuthn MFA 啟用為使用者或群組的第二種驗證方法之後，下次登入 System Manager 時，系統會要求使用者（或該群組中的所有使用者）登錄硬體 FIDO2 裝置。此登錄由使用者的本機作業系統處理，通常包括插入安全金鑰，建立金鑰，以及輕觸安全金鑰（如果支援）。
+
+
+
+== 建立新使用者或群組時，請啟用 WebAuthn MFA
+
+您可以使用系統管理員或 ONTAP CLI ，建立啟用 WebAuthn MFA 的新使用者或群組。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*叢集>設定*。
+. 選取 * 使用者和角色 * 旁邊的箭頭圖示。
+. 在 * 使用者 * 下選取 * 新增 * 。
+. 指定使用者或群組名稱，然後在 * 角色 * 的下拉式功能表中選取角色。
+. 指定使用者或群組的登入方法和密碼。
++
+WebAuthn MFA 支援使用者的「密碼」，「網域」或「 nsswitch 」登入方法，以及群組的「網域」或「 nsswitch 」登入方法。
+
+. 在 *MFA for HTTP* 欄中，選取 * Enabled* 。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+. 啟用 WebAuthn MFA ，建立新的使用者或群組。
++
+在下列範例中，選擇第二種驗證方法的「 publickey 」即可啟用 WebAuthn MFA ：
+
++
+[source, console]
+----
+security login create -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method publickey \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 為現有的使用者或群組啟用 WebAuthn MFA
+
+您可以為現有的使用者或群組啟用 WebAuthn MFA 。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*叢集>設定*。
+. 選取 * 使用者和角色 * 旁邊的箭頭圖示。
+. 在使用者和群組清單中，選取您要編輯之使用者或群組的選項功能表。
++
+WebAuthn MFA 支援使用者的「密碼」，「網域」或「 nsswitch 」登入方法，以及群組的「網域」或「 nsswitch 」登入方法。
+
+. 在該使用者的 * MFA for HTTP* 欄中，選取 * Enabled* 。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+. 修改現有的使用者或群組，為該使用者或群組啟用 WebAuthn MFA 。
++
+在下列範例中，選擇第二種驗證方法的「 publickey 」即可啟用 WebAuthn MFA ：
+
++
+[source, console]
+----
+security login modify -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method publickey \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 深入瞭解
+
+請造訪 ONTAP 手冊頁面以取得下列命令：
+
+* https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["建立安全登入"^]
+* https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["修改安全登入"^]
+

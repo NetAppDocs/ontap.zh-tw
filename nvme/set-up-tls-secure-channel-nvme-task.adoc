@@ -1,0 +1,64 @@
+---
+permalink: nvme/set-up-tls-secure-channel-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, encryption, in-flight, tls secure channel, tcp, tls, encrypt, enable, set up 
+summary: 從 ONTAP 9 。 16.1 開始，您可以啟用和停用 NVMe / TCP 連線的 TLS 安全通道。 
+---
+= 為 NVMe / TCP 設定 TLS 安全通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9 。 16.1 開始，您可以為 NVMe / TCP 連線設定 TLS 安全通道。您可以使用系統管理員或 ONTAP CLI 來新增啟用 TLS 的 NVMe 子系統，或是為現有的 NVMe 子系統啟用 TLS 。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9 開始。 16.1 開始，您可以使用系統管理員來設定 NVMe / TCP 連線的 TLS ，同時建立或更新 NVMe 子系統，建立或複製 NVMe 命名空間，或使用新的 NVMe 命名空間來新增一致性群組。
+
+.步驟
+. 在 System Manager 中、按一下 * 主機 > NVMe Subsystem* 、然後按一下 * 新增 * 。
+. 新增 NVMe 子系統名稱、然後選取儲存 VM 和主機作業系統。
+. 輸入主機 NQN 。
+. 選取主機 NQN 旁的 * 需要傳輸層安全性（ TLS ） * 。
+. 提供預先共用金鑰（ PSK ）。
+. 按一下「 * 儲存 * 」。
+. 若要確認 TLS 安全通道已啟用，請選取 * 系統管理員 > 主機 > NVMe 子系統 > Grid > Peek view* 。
+
+
+--
+.CLI
+--
+.步驟
+. 新增支援 TLS 安全通道的 NVMe 子系統主機。您可以使用引數提供預先共用金鑰（ PSK ） `tls-configured-psk`，或使用下列引數使用產生的 PSK `tls-generated-psk` ：
++
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> {-tls-configured-psk <key_text> | -tls-generated-psk true}
+----
+. 確認 NVMe 子系統主機已設定為 TLS 安全通道。您可以選擇性地使用 `tls-key-type`引數僅顯示使用該金鑰類型的主機：
++
+[source, cli]
+----
+vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated}
+----
+. 確認 NVMe 子系統主機控制器已設定為 TLS 安全通道。您可以選擇性地使用任何 `tls-key-type`， `tls-identity`或 `tls-cipher`引數來僅顯示具有這些 TLS 屬性的控制器：
++
+[source, cli]
+----
+vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
+----
+
+
+--
+====
+.深入瞭解
+請造訪 ONTAP 手冊頁面以取得下列命令：
+
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-add.html["Vserver NVMe子系統主機新增"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-show.html["Vserver NVMe子系統主機展示"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-controller-show.html["Vserver NVMe子系統控制器顯示"^]
+

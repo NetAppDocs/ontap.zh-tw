@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: enable, storage, rebalance, modify, stop, status, flexgroup, volume 
 summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷營運的情況下、將檔案從FlexGroup 某個部分的一個部分移至另一個部分、藉此重新平衡功能。 
 ---
-= 重新平衡FlexGroup 功能
+= 透過移動檔案重新平衡 FlexGroup 磁碟區
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -23,6 +23,8 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 只有叢集中的所有節點都執行 ONTAP 9.12.1 或更新版本時、才能使用重新平衡。您必須在執行重新平衡作業的任何 FlexGroup 磁碟區上啟用精細資料功能。  啟用該功能後、除非您刪除此磁碟區或從啟用設定之前所建立的 Snapshot 複本還原、否則無法還原至 ONTAP 9.11.1 及更早版本。
 
 從 ONTAP 9.14.1 開始、 ONTAP 引進一種演算法、可在不需使用者互動的情況下、不中斷運作且主動地移動已啟用精細資料的磁碟區中的檔案。此演算法在非常特定且目標明確的案例中運作、以減輕效能瓶頸。  此演算法可能會執行的案例包括叢集中某個節點上特定檔案集的嚴重寫入負載、或是在非常熱的父目錄中持續成長的檔案。
+
+從 ONTAP 9 。 16.1 開始，您也可以link:enable-adv-capacity-flexgroup-task.html["進階容量平衡"]在 FlexGroup 成員磁碟區之間重新分配大型檔案的資料。
 
 
 
@@ -95,6 +97,10 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 * 當您FlexGroup 使用建立完這個功能時 `volume create` 命令
 * 藉由修改現有FlexGroup 的支援功能、以啟用使用的設定 `volume modify` 命令
 * 使用初始化還原平衡時、會自動設定此功能FlexGroup `volume rebalance` 命令
++
+
+NOTE: 如果您使用的是 ONTAP 9 。 16.1 或更新版本，並且link:enable-adv-capacity-flexgroup-task.html["FlexGroup 進階容量平衡"]是使用 ONTAP CLI 中的選項或使用系統管理員來啟用 `granular-data advanced`，則 FlexGroup 重新平衡也會啟用。
+
 
 
 .步驟
@@ -118,7 +124,12 @@ NOTE: 只有當 FlexGroup 狀態超出平衡時、才能使用 * 重新平衡 * 
 --
 .CLI
 --
-. 開始自動重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
+. 開始自動重新平衡：
++
+[source, cli]
+----
+volume rebalance start -vserver <SVM name> -volume <volume name>
+----
 +
 您也可以指定下列選項：
 
@@ -178,7 +189,12 @@ NOTE: 只有當 FlexGroup 狀態超出平衡時、才能使用 * 重新平衡 * 
 --
 .CLI
 --
-. 修改自動重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
+. 修改自動重新平衡：
++
+[source, cli]
+----
+volume rebalance modify -vserver <SVM name> -volume <volume name>
+----
 +
 您可以指定下列一或多個選項：
 
@@ -225,7 +241,12 @@ NOTE: 只有當 FlexGroup 狀態超出平衡時、才能使用 * 重新平衡 * 
 --
 .CLI
 --
-. 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
+. 停止FlexGroup 重新平衡：
++
+[source, cli]
+----
+volume rebalance stop -vserver <SVM name> -volume <volume name>
+----
 
 
 --
@@ -249,7 +270,12 @@ NOTE: 只有當 FlexGroup 狀態超出平衡時、才能使用 * 重新平衡 * 
 --
 .CLI
 --
-. 檢視FlexGroup 畫面重新平衡作業的狀態： `volume rebalance show`
+. 檢視FlexGroup 畫面重新平衡作業的狀態：
++
+[source, cli]
+----
+volume rebalance show
+----
 +
 重新平衡狀態範例：
 

@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/disable-webauthn-mfa-task.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key, disable, system manager 
+summary: 如果您已為 System Manager 使用者啟用 WebAuthn MFA ，您可以隨時將其停用。 
+---
+= 停用 ONTAP System Manager 使用者的 WebAuthn MFA
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+身為 ONTAP 管理員，您可以使用系統管理員或 ONTAP CLI 編輯使用者或群組，為使用者或群組停用 WebAuthn MFA 。
+
+
+
+== 停用現有使用者或群組的 WebAuthn MFA
+
+您可以隨時停用現有使用者或群組的 WebAuthn MFA 。
+
+
+NOTE: 如果停用已登錄的認證，則會保留認證。如果您在未來再次啟用認證，則會使用相同的認證，因此使用者在登入時不需要重新登錄。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*叢集>設定*。
+. 選取 * 使用者和角色 * 旁邊的箭頭圖示。
+. 在使用者和群組清單中，選取您要編輯的使用者或群組。
+. 在該使用者的 * MFA for HTTP* 欄中，選取 * 停用 * 。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+. 修改現有的使用者或群組，以停用該使用者或群組的 WebAuthn MFA 。
++
+在下列範例中，選擇「無」作為第二種驗證方法，即可停用 WebAuthn MFA 。
+
++
+[source, console]
+----
+security login modify -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method none \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 深入瞭解
+
+請造訪 ONTAP 手冊頁面以取得此命令：
+
+* https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["修改安全登入"^]
+

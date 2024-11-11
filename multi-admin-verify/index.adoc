@@ -4,7 +4,7 @@ permalink: multi-admin-verify/index.html
 keywords: ontap, mav, multi admin verify, RBAC, protected, operation, multi-admin, administrator, verification, approval, rules 
 summary: 從 ONTAP 9.11.1 開始、請使用多重管理驗證（ MAV ）來確保某些作業只能在指定管理員核准後執行 
 ---
-= 多管理員驗證總覽
+= ONTAP 多管理驗證總覽
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -25,14 +25,14 @@ summary: 從 ONTAP 9.11.1 開始、請使用多重管理驗證（ MAV ）來確�
 啟用多重管理驗證時、完成每項受保護的作業都需要下列步驟：
 
 . 當使用者啟動作業時 link:request-operation-task.html["已產生要求。"]
-. 在執行之前、請至少先執行一項 link:manage-requests-task.html["MAV管理員必須核准。"]
-. 核准後、使用者即完成作業。
+. 在執行作業之前，請至少先執行一個link:manage-requests-task.html["MAV管理員必須核准。"]
+. 核准後，系統會提示使用者並完成作業。
 
 
 
 NOTE: 如果您需要在未經MAV管理員核准的情況下停用多管理員驗證功能、請聯絡NetApp支援部門、並提及下列知識庫文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在無法使用MAV管理時停用多管理員驗證"^]。
 
-多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。  如果您想要同時使用自動化和 MAV 、建議您針對特定的 MAV 作業使用查詢。例如、您可以申請 `volume delete` MAV 規則僅適用於不涉及自動化的磁碟區、您可以指定具有特定命名方案的磁碟區。
+多管理員驗證不適用於涉及大量自動化的磁碟區或工作流程、因為每項自動化工作都需要核准才能完成作業。如果您想要同時使用自動化和 MAV ，建議您針對特定的 MAV 作業使用查詢。例如，您只能將 MAV 規則套用 `volume delete`至不涉及自動化的磁碟區，而且可以使用特定的命名方案來指定這些磁碟區。
 
 
 NOTE: Cloud Volumes ONTAP 無法使用多重管理驗證。
@@ -89,6 +89,122 @@ NOTE: Cloud Volumes ONTAP 無法使用多重管理驗證。
 
 [role="tabbed-block"]
 ====
+.9.16.1.
+--
+* `cluster date modify` ^3^
+* `cluster log-forwarding create` ^3^
+* `cluster log-forwarding delete` ^3^
+* `cluster log-forwarding modify` ^3^
+* `cluster peer delete`
+* `cluster time-service ntp server create` ^3^
+* `cluster time-service ntp server delete` ^3^
+* `cluster time-service ntp server key create` ^3^
+* `cluster time-service ntp server key delete` ^3^
+* `cluster time-service ntp server key modify` ^3^
+* `cluster time-service ntp server modify` ^3^
+* `event config modify`
+* `lun delete` ^3^
+* `security anti-ransomware volume attack clear-suspect` ^1^
+* `security anti-ransomware volume disable` ^1^
+* `security anti-ransomware volume event-log modify`^2^
+* `security anti-ransomware volume pause` ^1^
+* `security anti-ransomware vserver event-log modify`^2^
+* `security audit modify` ^3^
+* `security ipsec config modify` ^3^
+* `security ipsec policy create` ^3^
+* `security ipsec policy delete` ^3^
+* `security ipsec policy modify` ^3^
+* `security login create`
+* `security login delete`
+* `security login modify`
+* `security key-manager onboard update-passphrase`^3^
+* `security saml-sp create` ^3^
+* `security saml-sp delete` ^3^
+* `security saml-sp modify` ^3^
+* `snaplock legal-hold end` ^3^
+* `storage aggregate delete` ^3^
+* `storage aggregate offline`^4^
+* `storage encryption disk destroy` ^3^
+* `storage encryption disk modify` ^3^
+* `storage encryption disk revert-to-original-state` ^3^
+* `storage encryption disk sanitize` ^3^
+* `system bridge run-cli` ^3^
+* `system controller flash-cache secure-erase run` ^3^
+* `system controller service-event delete` ^3^
+* `system health alert delete` ^3^
+* `system health alert modify` ^3^
+* `system health policy definition modify` ^3^
+* `system node autosupport modify` ^3^
+* `system node autosupport trigger modify` ^3^
+* `system node coredump delete` ^3^
+* `system node coredump delete-all` ^3^
+* `system node hardware nvram-encryption modify` ^3^
+* `system node run`
+* `system node systemshell`
+* `system script delete` ^3^
+* `system service-processor ssh add-allowed-addresses` ^3^
+* `system service-processor ssh remove-allowed-addresses` ^3^
+* `system smtape restore` ^3^
+* `system switch ethernet log disable-collection` ^3^
+* `system switch ethernet log modify` ^3^
+* `timezone` ^3^
+* `volume create` ^3^
+* `volume delete`
+* `volume encryption conversion start`^4^
+* `volume encryption rekey start`^4^
+* `volume file privileged-delete` ^3^
+* `volume flexcache delete`
+* `volume modify` ^3^
+* `volume recovery-queue modify` ^2^
+* `volume recovery-queue purge` ^2^
+* `volume recovery-queue purge-all` ^2^
+* `volume snaplock modify` ^1^
+* `volume snapshot autodelete modify`
+* `volume snapshot create` ^3^
+* `volume snapshot delete`
+* `volume snapshot modify` ^3^
+* `volume snapshot policy add-schedule`
+* `volume snapshot policy create`
+* `volume snapshot policy delete`
+* `volume snapshot policy modify`
+* `volume snapshot policy modify-schedule`
+* `volume snapshot policy remove-schedule`
+* `volume snapshot rename` ^3^
+* `volume snapshot restore`
+* `vserver audit create` ^3^
+* `vserver audit delete` ^3^
+* `vserver audit disable` ^3^
+* `vserver audit modify` ^3^
+* `vserver audit rotate-log` ^3^
+* `vserver create`^2^
+* `vserver consistency-group create`^4^
+* `vserver consistency-group delete`^4^
+* `vserver consistency-group modify`^4^
+* `vserver consistency-group snapshot create`^4^
+* `vserver consistency-group snapshot delete`^4^
+* `vserver delete` ^3^
+* `vserver modify` ^2^
+* `vserver object-store-server audit create` ^3^
+* `vserver object-store-server audit delete` ^3^
+* `vserver object-store-server audit disable` ^3^
+* `vserver object-store-server audit modify` ^3^
+* `vserver object-store-server audit rotate-log` ^3^
+* `vserver options` ^3^
+* `vserver peer delete`
+* `vserver security file-directory apply` ^3^
+* `vserver security file-directory remove-slag` ^3^
+* `vserver stop`^4^
+* `vserver vscan disable` ^3^
+* `vserver vscan on-access-policy create` ^3^
+* `vserver vscan on-access-policy delete` ^3^
+* `vserver vscan on-access-policy disable` ^3^
+* `vserver vscan on-access-policy modify` ^3^
+* `vserver vscan scanner-pool create` ^3^
+* `vserver vscan scanner-pool delete` ^3^
+* `vserver vscan scanner-pool modify` ^3^
+
+
+--
 .9.15.1..
 --
 * `cluster date modify` ^3^
@@ -287,9 +403,10 @@ NOTE: Cloud Volumes ONTAP 無法使用多重管理驗證。
 . 9.13.1 全新的規則保護命令
 . 適用於 9.14.1 的全新規則保護命令
 . 9.15.1 的新規則保護命令
+. 9.16.1 的新規則保護命令
 
 
-* 此命令僅適用於 CLI 、無法用於 System Manager 。
+* 此命令僅適用於 CLI ，在某些版本中不適用於 System Manager 。
 
 
 
@@ -341,7 +458,7 @@ MAV系統管理員可以接收電子郵件警示中的核准要求（使用EMS�
 如果申請者在該作業的同一個核准群組中、他們會在申請獲得核准時收到一封電子郵件。
 
 
-NOTE: 申請者即使在核准群組中、也無法核准自己的申請。他們可以收到電子郵件通知。不在核准群組中的申請者（即非MAV系統管理員）不會收到電子郵件通知。
+NOTE: 申請者即使在核准群組中，也無法核准自己的申請（雖然他們可以針對自己的申請取得電子郵件通知）。不在核准群組中的申請者（即非MAV系統管理員）不會收到電子郵件通知。
 
 
 

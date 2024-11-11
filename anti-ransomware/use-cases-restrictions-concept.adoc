@@ -16,7 +16,7 @@ summary: NAS 工作負載支援 ARP 。它最適合 NFS 儲存、 Windows 或 Li
 
 
 [role="lead"]
-從 ONTAP 9.10.1 開始、 NAS 工作負載可使用自主 Ransomwware Protection （ ARP ）。在部署 ARP 之前、您應該瞭解建議的用途和支援的組態、以及效能影響。
+從 ONTAP 9 。 10.1 開始， NAS 工作負載可使用自主勒索軟體保護（ ARP ）。在部署 ARP 之前、您應該瞭解建議的用途和支援的組態、以及效能影響。
 
 
 
@@ -48,7 +48,7 @@ ARP 適用於：
 ARP 不適用於：
 
 * 高檔案建立或刪除頻率的工作負載（數秒內就有數十萬個檔案、例如測試 / 開發工作負載）。
-* ARP 的威脅偵測取決於其辨識出檔案建立、重新命名或刪除活動異常激增的能力。如果應用程式本身是檔案活動的來源、則無法有效地區別於勒索軟體活動。
+* ARP 的威脅偵測功能取決於它是否能夠辨識出檔案建立，重新命名或刪除活動異常激增的情況。如果應用程式本身是檔案活動的來源、則無法有效地區別於勒索軟體活動。
 * 應用程式或主機加密資料的工作負載。
 ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本身正在加密資料、則此功能的有效性將會降低。不過、此功能仍可根據檔案活動（刪除、覆寫或建立、或以新副檔名建立或重新命名）和檔案類型運作。
 
@@ -57,39 +57,44 @@ ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本�
 
 === 支援的組態
 
-從 ONTAP 9.10.1 開始、內部部署 ONTAP 系統中的 NFS 和 SMB 磁碟區可使用 ARP 。
+從 ONTAP 9 。 10.1 開始，內部部署 ONTAP 系統中的 NFS 和 SMB FlexVol 磁碟區可使用 ARP 。
 
 下列 ONTAP 版本支援其他組態和磁碟區類型：
 
 |===
-|  | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+|  | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
 
 
-| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ |  |  
+| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ |  |  
+| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 資料量FlexGroup | ✓ | ✓ | ✓ |  |  |  
+| FlexGroup Volumes * | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 多管理員驗證 | ✓ | ✓ | ✓ |  |  |  
+| 多管理員驗證 | ✓ | ✓ | ✓ | ✓ |  |  |  
+
+
+| ARP/AI 提供自動更新 | ✓ |  |  |  |  |  |  
 |===
+*ARP/AI 不支援 FlexGroup 磁碟區。升級至 ONTAP 9 。 16.1 之後，啟用 ARP 的 FlexGroup 磁碟區會繼續以 ARP/AI 之前使用的相同 ARP 模型運作。
+
 
 
 ==== SnapMirror與ARP互通性
 
-從 ONTAP 9 ． 12.1 開始、 SnapMirror 非同步目的地磁碟區支援 ARP 。SnapMirror Synchronous 不支援 ARP 。
+從 ONTAP 9 ． 12.1 開始、 SnapMirror 非同步目的地磁碟區支援 ARP 。SnapMirror 同步不支援 ARP** 。
 
-如果SnapMirror來源磁碟區已啟用Arp、SnapMirror目的地磁碟區會自動取得來源磁碟區的Arp組態狀態（學習、啟用等）、Arp訓練資料、以及由Arp建立的Snapshot快照。不需要明確啟用。
+如果 SnapMirror 來源磁碟區已啟用 ARP ， SnapMirror 目的地磁碟區會自動取得來源磁碟區的 ARP 組態狀態（學習，啟用等）， ARP 訓練資料和 ARP 建立的快照。不需要明確啟用。
 
-雖然目的地Volume是由唯讀（RO）Snapshot複本所組成、但不會對其資料進行任何ARP處理。不過、當SnapMirror目的地Volume轉換為讀寫（RW）時、會自動在RW-轉換的目的地Volume上啟用ARP。除了已記錄在來源Volume上的內容、目的地Volume不需要任何額外的學習程序。
+雖然目的 Volume 是由唯讀（ RO ）快照組成，但不會對其資料進行 ARP 處理。不過、當SnapMirror目的地Volume轉換為讀寫（RW）時、會自動在RW-轉換的目的地Volume上啟用ARP。除了已記錄在來源Volume上的內容、目的地Volume不需要任何額外的學習程序。
 
-在版本號9.10.1和9.11.1中ONTAP 、SnapMirror不會將Arp組態狀態、訓練資料和Snapshot複本從來源磁碟區傳輸到目的地磁碟區。因此、當SnapMirror目的地Volume轉換為RW時、在轉換後、必須在學習模式中明確啟用目的地Volume上的ARP。
+在 ONTAP 9 ． 10.1 和 9 ． 11 ． 1 中， SnapMirror 不會將 ARP 組態狀態，訓練資料和快照從來源磁碟區傳輸至目的地磁碟區。因此、當SnapMirror目的地Volume轉換為RW時、在轉換後、必須在學習模式中明確啟用目的地Volume上的ARP。
 
 
 
@@ -115,9 +120,9 @@ ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本�
 
 
 .VM 內部的變更
-如果勒索軟體攻擊是針對 VM 內部的 VM 和檔案進行變更、而未在 VM 外部進行變更、則如果 VM 的預設 Entropy 低（例如 .txt 、 .docx 或 .mp4 檔案）、 ARP 會偵測到威脅。雖然 ARP 在這種情況下會建立保護性的 Snapshot 、但不會產生威脅警示、因為 VM 外部的副檔名並未遭到竄改。
+如果勒索軟體攻擊是針對 VM 內部的 VM 和檔案進行變更、而未在 VM 外部進行變更、則如果 VM 的預設 Entropy 低（例如 .txt 、 .docx 或 .mp4 檔案）、 ARP 會偵測到威脅。雖然 ARP 在這種情況下會建立保護性快照，但不會產生威脅警示，因為 VM 外部的副檔名並未遭到竄改。
 
-如果檔案預設為高 Entropy （例如 .gzip 或密碼保護的檔案）、則 ARP 的偵測功能會受到限制。ARP 仍可在此執行個體中取得主動式快照、但如果檔案副檔名未遭到外部竄改、則不會觸發警示。
+如果檔案預設為高 Entropy （例如 .gzip 或密碼保護的檔案）、則 ARP 的偵測功能會受到限制。在這種情況下， ARP 仍可採取主動式快照，但如果檔案副檔名未遭到外部竄改，則不會觸發警示。
 
 
 
@@ -131,7 +136,7 @@ ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本�
 
 ARP 不支援下列 Volume 組態：
 
-* FlexGroup Volume （ ONTAP 9.10.1 至 9.12.1 ）。從 ONTAP 9.13.1 開始、支援 FlexGroup 磁碟區）
+* FlexGroup Volume （ ONTAP 9.10.1 至 9.12.1 ）。從 ONTAP 9 ． 13.1 開始， FlexGroup 磁碟區受到支援，但僅限於 ARP/AI 之前使用的 ARP 模型）
 * FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
 * 離線磁碟區
 * 純SAN磁碟區
@@ -171,7 +176,7 @@ ARP 不支援下列 Volume 組態：
 
 您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。
 
-從 ONTAP 9.14.1 開始、 ARP 會提供建立 ARP 快照和觀察新副檔名的警示。這些事件的警示預設為停用。警示可在 Volume 或 SVM 層級設定。您可以使用在 SVM 層級建立 MAV 規則 `security anti-ransomware vserver event-log modify` 或是在 Volume 層級使用 `security anti-ransomware volume event-log modify`。
+從 ONTAP 9 ． 14.1 開始， ARP 會提供建立 ARP 快照和觀察新副檔名的警示。這些事件的警示預設為停用。警示可在 Volume 或 SVM 層級設定。您可以在 SVM 層級使用或在 Volume 層級 `security anti-ransomware volume event-log modify`使用建立 MAV 規則 `security anti-ransomware vserver event-log modify`。
 
 .後續步驟
 * link:enable-task.html["啟用自發勒索軟體保護"]

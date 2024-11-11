@@ -1,0 +1,43 @@
+---
+permalink: nvme/disable-tls-secure-channel-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, encryption, in-flight, tcp, tls secure channel, tls, encrypt, disable, turn off 
+summary: 從 ONTAP 9 。 16.1 開始，您可以啟用或停用 NVMe / TCP 連線的 TLS 安全通道。 
+---
+= 停用 NVMe / TCP 的 TLS 安全通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9 。 16.1 開始，您可以為 NVMe / TCP 連線設定 TLS 安全通道。如果您已為 NVMe / TCP 連線設定 TLS 安全通道，您可以選擇隨時停用它。
+
+.步驟
+. 從子系統移除主機以停用 TLS 安全通道：
++
+[source, cli]
+----
+vserver nvme subsystem host remove -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 確認已從主機移除 TLS 安全通道：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 將主機新增回沒有 TLS 安全通道的子系統：
++
+[source, cli]
+----
+vserver nvme subsystem host add vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+
+
+.深入瞭解
+請造訪 ONTAP 手冊頁面以取得下列命令：
+
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-add.html["Vserver NVMe子系統主機新增"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-remove.html["Vserver NVMe子系統主機移除"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-show.html["Vserver NVMe子系統主機展示"^]
+

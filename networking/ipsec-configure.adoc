@@ -1,41 +1,29 @@
 ---
 sidebar: sidebar 
-permalink: networking/configure_ip_security_@ipsec@_over_wire_encryption.html 
-keywords: ipsec, security, internet protocol, on wire, in transit, encrypt, encryption, secure, enable ipsec, security ipsec config show, ipsec config modify, ipsec config show, security ipsec policy create, protocols, local-ports, remote-ports, spd, security policy database,ipsec identities 
-summary: 為了確保資料持續安全且加密、ONTAP 即使在傳輸過程中、也能在傳輸模式下使用IPsec傳輸協定 
+permalink: networking/ipsec-configure.html 
+keywords: ip security, ipsec, data-in-motion, in-flight, encryption, security ipsec config show, ipsec config modify, ipsec config show, security ipsec policy create, local-ports, remote-ports, spd, security policy database,ipsec identities 
+summary: 在 ONTAP 叢集上設定及啟動 IPsec 進行中加密需要執行數項工作。 
 ---
-= 透過有線加密設定IP安全性（IPsec）
+= 在 ONTAP 中設定 IP 安全性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 
 
 [role="lead"]
-ONTAP 在傳輸模式中使用網際網路傳輸協定安全性（ IPsec ）、確保資料即使在傳輸過程中也能持續安全且加密。IPsec為所有IP流量提供資料加密、包括NFS、iSCSI和SMB傳輸協定。
+在 ONTAP 叢集上設定及啟動 IPsec 進行中加密需要執行數項工作。
 
-從ONTAP 推出支援支援功能的支援功能支援支援功能的功能範例、從功能性支援功能支援功能的支援功能範例起、MetroCluster 可從功能性支援功能的支援功能範例中選擇支援功能MetroCluster 。
-支援的IPsec MetroCluster 僅限於前端主機流量、MetroCluster 不受支援於叢集間的LIF。
 
-從ONTAP 版本號《21：1：2：1：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2：2以前只有PSDK受IPsec支援。
-
-從ONTAP 靜止9.9.1開始、IPsec使用的加密演算法已通過FIPS 140-2驗證。這些演算法是由ONTAP NetApp的《NetApp Cryptographic Module in the F地 加密模組」所產生、此模組可執行FIPS 140-2驗證。
-
-從 ONTAP 9.8 開始、 ONTAP 在傳輸模式中支援 IPsec 。
-
-設定好IPsec之後、用戶端與ONTAP 支援中心之間的網路流量會受到預防措施的保護、以對抗重播和攔截式（MITM）攻擊。
-
-對於NetApp SnapMirror和叢集對等流量加密、叢集對等加密（CPe）、仍建議使用傳輸層安全性（TLS）來透過IPsec進行傳輸、以確保傳輸過程安全無虞。這是因為TLS的效能優於IPsec。
-
-雖然叢集已啟用IPsec功能、但網路需要安全原則資料庫（SPD）項目來符合要保護的流量、並在流量傳輸之前指定保護詳細資料（例如密碼套件和驗證方法）。每個用戶端也需要對應的SPD項目。
+NOTE: 設定 IPsec 之前，請務必先檢閱link:../networking/ipsec-prepare.html["準備使用 IP 安全性"]。例如，您可能需要決定是否使用以 ONTAP 9 開頭的可用 IPsec 硬體卸載功能。 16.1
 
 
 
 == 在叢集上啟用IPsec
 
-您可以在叢集上啟用IPsec、以確保資料持續安全且加密、即使在傳輸過程中也是如此。
+您可以在叢集上啟用 IPsec ，以確保資料在傳輸過程中持續加密且安全。
 
 .步驟
 . 探索是否已啟用IPsec：
@@ -48,6 +36,9 @@ ONTAP 在傳輸模式中使用網際網路傳輸協定安全性（ IPsec ）、�
 . 啟用IPsec：
 +
 `security ipsec config modify -is-enabled true`
+
++
+您可以使用布爾參數來啟用 IPsec 硬體卸載功能 `is-offload-enabled`。
 
 . 再次執行探索命令：
 +
@@ -91,7 +82,7 @@ NOTE: 可共享證書的產品。ONTAP不需要在憑證與lifs之間建立一�
 
 
 
-有關 ONTAP 中證書的詳細信息，請參閱 ONTAP 9 文檔中的安全證書命令。
+如需ONTAP 更多有關資訊、請參閱ONTAP 《》介紹文件中的安全認證命令。
 
 
 
@@ -117,7 +108,7 @@ NOTE: 用戶端必須使用預先共用金鑰（PSK）來支援網際網路金�
 ... 如果您輸入一個 PSK 、請包含參數、然後按 <enter> 鍵提示您輸入並驗證預先共用金鑰。
 +
 
-NOTE: `local-identity` 和 `remote-identity` 如果主機和用戶端都使用強化天鵝、而且沒有為主機或用戶端選取萬用字元原則、則參數是選用的。
+NOTE:  `local-identity`如果主機和用戶端都使用強化天鵝，而且沒有為主機或用戶端選取萬用字元原則，則和 `remote-identity`參數是選用的。
 
 ... 如果您輸入 PKI 、也需要輸入 `cert-name`、 `local-identity`、 `remote-identity` 參數。如果遠端端憑證身分不明、或是需要多個用戶端身分識別、請輸入特殊身分識別 `ANYTHING`。
 
@@ -133,7 +124,7 @@ Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32 -local-ports 2049 -protocols tcp -auth-method PKI -cert-name my_nfs_server_cert -local-identity CN=netapp.ipsec.lif1.vs0 -remote-identity ANYTHING
 ....
-除非 ONTAP 和用戶端都設定了相符的 IPsec 原則、而且雙方都有驗證認證（可以是 PSK 或憑證）、否則 IP 流量無法在用戶端和伺服器之間傳輸。如需詳細資訊、請參閱用戶端端 IPsec 組態。
+除非 ONTAP 和用戶端都設定了相符的 IPsec 原則、而且雙方都有驗證認證（可以是 PSK 或憑證）、否則 IP 流量無法在用戶端和伺服器之間傳輸。
 
 
 
@@ -147,7 +138,8 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 在不受限的情況下、可透過修改SPD項目或在SPD原則建立期間來指定身分識別。ONTAPSPD可以是IP位址或字串格式身分識別名稱。
 
 .步驟
-若要修改現有的 SPD 身分識別設定、請使用下列命令：
+. 使用下列命令修改現有的 SPD 身分識別設定：
+
 
 `security ipsec policy modify`
 
@@ -210,11 +202,12 @@ NOTE: 在子網路組態中使用單一原則項目時、該子網路中的IPsec
 
 
 
-== IPsec統計資料
+== 顯示 IPsec 統計資料
 
-透過協商、ONTAP 可在「穩定SVM IP位址」和「用戶端IP位址」之間建立稱為「IKE安全性關聯」（SA）的安全通道。兩個端點都安裝了IPsec SAS、以執行實際的資料加密與解密工作。
+透過協商、ONTAP 可在「穩定SVM IP位址」和「用戶端IP位址」之間建立稱為「IKE安全性關聯」（SA）的安全通道。兩個端點都安裝了IPsec SAS、以執行實際的資料加密與解密工作。您可以使用統計資料命令來檢查IPsec SAS和IKE SAS的狀態。
 
-您可以使用統計資料命令來檢查IPsec SAS和IKE SAS的狀態。
+
+NOTE: 如果您使用 IPsec 硬體卸載功能，則會使用命令顯示數個新的計數器 `security ipsec config show-ipsecsa`。
 
 .命令範例
 IKE SA命令範例：

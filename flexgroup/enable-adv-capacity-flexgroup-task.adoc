@@ -1,0 +1,144 @@
+---
+permalink: flexgroup/enable-adv-capacity-flexgroup-task.html 
+sidebar: sidebar 
+keywords: flexgroup advanced capacity balancing, flexgroup granular data distribution, gdd, flexgroup, volume, balancing 
+summary: 從 ONTAP 9 。 16.1 開始，我們引進進階容量平衡功能，可在一個成員磁碟區上的大型檔案增加和佔用空間時，在 FlexGroup 成員磁碟區之間提供資料發佈。 
+---
+= 重新分配檔案資料以平衡 ONTAP FlexGroup 磁碟區
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9 。 16.1 開始，您可以啟用進階容量平衡，以便在一個成員磁碟區上的大型檔案增加和佔用空間時，在 FlexGroup 成員磁碟區之間進行資料發佈。
+
+進階容量平衡功能可擴充 ONTAP 9 。 12.1 中引進的精細資料功能，讓 ONTAP 能夠link:manage-flexgroup-rebalance-task.html["重新平衡 FlexGroup 磁碟區"]將檔案移至其他成員。從 ONTAP 9 。 16.1 開始，當使用選項啟用進階容量平衡時 `-granular-data advanced`，「基本」檔案重新平衡功能和進階容量功能都會啟動。
+
+[NOTE]
+====
+預設會停用檔案重新平衡和進階容量平衡。啟用這些功能後，就無法停用這些功能。如果您需要停用容量平衡，則必須從啟用進階容量平衡之前所建立的快照進行還原。
+
+====
+進階容量平衡是由高達 10GB 或 1% 磁碟區可用空間的新寫入所觸發。
+
+
+
+== 檔案的散佈方式
+
+如果建立或擴充足夠大的檔案來觸發進階容量平衡，則檔案會在成員 FlexGroup 磁碟區中以介於 1GB 和 10GB 之間的分段形式散佈。
+
+啟用進階容量平衡時， ONTAP 不會追溯等量分割現有的大型檔案。如果在啟用進階容量平衡之後，現有的大型檔案仍會繼續成長，則現有大型檔案中的新內容可能會根據檔案大小和可用空間，跨成員 FlexGroup 磁碟區進行等量分割。
+
+進階容量平衡的一種方式是使用成員磁碟區上的可用空間量來決定等量區塊寬度。進階容量平衡功能可建立檔案等量磁碟區，其可用空間為可用空間的 1% 。這表示如果有更多可用空間，條紋就會開始變大，而隨著 FlexGroup 的填滿，條紋也會變小。
+
+除了成員磁碟區上的可用空間之外，進階容量平衡還會使用其他幾個因素來判斷等量磁碟區寬度：
+
+* 最小等量磁碟區寬度：所選的最小等量磁碟區寬度為 1GB 。
+* 最大等量磁碟區寬度：最大的可能等量磁碟區寬度為 10GB 。
+* 精細度：條帶永遠以 1GB 的倍數建立。
+
+
+
+
+== 支援的傳輸協定
+
+下列通訊協定支援進階容量平衡：
+
+* NFSv3 、 NFSv4 、 NFSv4.1
+* pNFS
+* 中小企業
+
+
+
+
+== 啟用進階容量平衡
+
+預設會停用進階容量平衡。您必須啟用進階容量平衡，才能自動平衡 FlexGroup 容量。請記住，啟用此功能後，您就無法停用此功能，但您可以從啟用進階容量平衡之前建立的快照中還原。
+
+.開始之前
+* 叢集中的所有節點都必須執行ONTAP 版本不符合要求的9.16.1或更新版本。
+* 如果已啟用進階容量平衡，則無法還原至早於 ONTAP 9 的版本。 16.1 。如果您需要還原，則必須先從啟用進階容量平衡之前所建立的快照還原。
+* 如果已(`vserver nfs -vstorage enabled`在 SVM 上啟用 NFS 複製卸載），您就無法在 FlexGroup 磁碟區上啟用進階容量平衡。同樣地，如果您在 SVM 中的任何 FlexGroup 磁碟區上啟用進階容量平衡，就無法啟用 NFS 複製卸載。
+* FlexCache 回寫不支援進階容量平衡。
+
+
+.關於這項工作
+在使用其中一個精細資料選項（基本或進階）建立 DP 目的地 Volume 期間，目的地會將設定顯示為「停用」，直到 SnapMirror 傳輸完成為止。傳輸完成後， DP 目的地會將精細資料顯示為「啟用」。
+
+
+
+=== 在 FlexGroup 建立期間啟用進階容量平衡
+
+.步驟
+建立新的 FlexGroup Volume 時，您可以使用系統管理員或 ONTAP CLI 來啟用進階容量平衡。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至 * 儲存 > 磁碟區 * image:icon_add_blue_bg.gif["新增圖示"]，然後按一下。
+. 在 * 新增 Volume * 視窗中，輸入磁碟區名稱和大小。然後按一下「 * 更多選項 * 」。
+. 在 * 儲存與最佳化 * 下，選取 * 在叢集（ FlexGroup ） * 之間散佈磁碟區資料。
+. 選取 * 進階容量平衡 * 。
+. 完成磁碟區設定，然後按一下 * 儲存 * 。
+
+
+--
+.CLI
+--
+. 建立已啟用進階容量平衡的磁碟區：
++
+[source, cli]
+----
+volume create -vserver <svm name> -volume <volume name> -size <volume size> -auto-provision-as flexgroup -junction-path /<path> -granular-data advanced
+----
++
+範例：
+
++
+[listing]
+----
+volume create -vserver vs0 -volume newvol -size 1TB -auto-provision-as flexgroup -junction-path /newvol -granular-data advanced
+----
+
+
+--
+====
+
+
+=== 在現有的 FlexGroup 磁碟區上啟用進階容量平衡
+
+.步驟
+您可以使用系統管理員或 ONTAP CLI 來啟用進階容量平衡。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至 * 儲存 > 磁碟區 * ，按一下image:icon_kabob.gif["功能表選項圖示"]，然後選擇 * 編輯 > 磁碟區 * 。
+. 在 * 編輯 Volume * 視窗的 * 儲存與最佳化 * 下，選取 * 進階容量平衡 * 。
+. 按一下「 * 儲存 * 」。
+
+
+--
+.CLI
+--
+. 修改現有的 FlexGroup Volume 以啟用進階容量平衡：
++
+[source, cli]
+----
+volume modify -vserver <svm name> -volume <volume name> -granular-data advanced
+----
++
+範例：
+
++
+[listing]
+----
+volume modify -vserver vs0 -volume newvol  -granular-data advanced
+----
+
+
+--
+====

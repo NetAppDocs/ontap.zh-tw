@@ -16,6 +16,11 @@ summary: 如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP
 .您需要的產品
 您必須在ONTAP 遠端叢集上擁有該伺服器的名稱及其相關生命的IP位址。
 
+[NOTE]
+====
+用戶端應用程式會將伺服器名稱用作完整網域名稱（ FQDN ）。在 ONTAP 之外，請確認 DNS 記錄指向正在使用的 SVM 資料生命。
+
+====
 本機叢集上必須有叢集間的LIF。
 
 link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["建立叢集間的生命體、以進行遠端FabricPool 分層"]
@@ -72,7 +77,7 @@ link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["
 +
 如此一來、ONTAP 即可在不中斷的情況下、存取位於現象中心S3物件儲存區的資料。
 
-** 設定 `-is-certificate-validation-enabled` 參數至 `false` 停用 ONTAP S3 的憑證檢查。
+** 將參數設定 `-is-certificate-validation-enabled`為 `false`停用 ONTAP S3 的憑證檢查。使用(`-is-certificate-validation-enabled true`第三方憑證授權單位的簽署憑證是建議的最佳做法。
 
 
 +

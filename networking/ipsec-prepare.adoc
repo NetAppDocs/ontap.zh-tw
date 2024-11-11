@@ -1,0 +1,138 @@
+---
+sidebar: sidebar 
+permalink: networking/ipsec-prepare.html 
+keywords: ip security, ipsec, data-in-motion, in-flight encryption, ONTAP ipsec evolution, security policy database, spd, hardware offload, nic 
+summary: 從 ONTAP 9 8 開始，您可以選擇使用 IP 安全性（ IPsec ）來保護網路流量。IPsec 是 ONTAP 提供的數種資料傳輸或傳輸中加密選項之一。在正式作業環境中使用 IPsec 之前，您應該做好設定的準備。 
+---
+= 準備使用 IP 安全性
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9 8 開始，您可以選擇使用 IP 安全性（ IPsec ）來保護網路流量。IPsec 是 ONTAP 提供的數種資料傳輸或傳輸中加密選項之一。在正式作業環境中使用 IPsec 之前，您應該做好設定的準備。
+
+
+
+== ONTAP 中的 IP 安全實作
+
+IPsec 是由 IETF 維護的網際網路標準。它提供資料加密與完整性，以及 IP 層級網路端點之間流量傳輸的驗證。
+
+使用 ONTAP 時， IPsec 可保護 ONTAP 和各種用戶端之間的所有 IP 流量，包括 NFS ， SMB 和 iSCSI 傳輸協定。除了隱私權和資料完整性之外，網路流量還能防範多種攻擊，例如重播和攔截式攻擊。ONTAP 使用 IPsec 傳輸模式實作。它利用網際網路金鑰交換（ IKE） 傳輸協定第 2 版，在 ONTAP 和使用 IPv4 或 IPv6 的用戶端之間協商金鑰資料。
+
+當叢集上啟用 IPsec 功能時，網路需要 ONTAP 安全性原則資料庫（ SPD ）中的一或多個項目，才能符合各種流量特性。這些項目會對應至處理及傳送資料所需的特定保護詳細資料（例如密碼套件和驗證方法）。每個用戶端也需要對應的 SPD 項目。
+
+對於某些類型的流量，最好使用另一個資料傳輸加密選項。例如，對於 NetApp SnapMirror 和叢集對等流量的加密，一般建議使用傳輸層安全性（ TLS ）傳輸協定，而非 IPsec 。這是因為 TLS 在大多數情況下都能提供更好的效能。
+
+.相關資訊
+* https://www.ietf.org/["網際網路工程工作團隊"^]
+* https://www.rfc-editor.org/info/rfc4301["RFC 4301-Security Architecture for the Internet Protocol （網際網路傳輸協定的安全架構）"^]
+
+
+
+
+== ONTAP IPsec 實作的演進
+
+ONTAP 9 第一次推出 IPsec 。 8實作持續進化並改善，如下所述。
+
+
+NOTE: 從特定 ONTAP 版本開始引進某項功能時，除非另有說明，否則後續版本也會支援該功能。
+
+.ONTAP 9.16.1.
+加密和完整性檢查等多項密碼編譯作業可卸載至支援的 NIC 卡。如需詳細資訊、請參閱 <<IPsec 硬體卸載功能>> 。
+
+.ONTAP 9.12.1
+MetroCluster IP 和 MetroCluster 網路附加組態提供 IPsec 前端主機傳輸協定支援。MetroCluster 叢集所提供的 IPsec 支援僅限於前端主機流量， MetroCluster 叢集間的生命體不受支援。
+
+.零點9.10.1 ONTAP
+除了預先共用金鑰（ PSK ）之外，憑證也可用於 IPsec 驗證。在 ONTAP 9 .10.1 之前，僅支援驗證 PSK 。
+
+.部分9.9.1 ONTAP
+IPsec 使用的加密演算法已通過 FIPS 140-2 驗證。這些演算法由 ONTAP 中的 NetApp 密碼編譯模組處理，該模組執行 FIPS 140-2 驗證。
+
+.部分9.8 ONTAP
+根據傳輸模式實作， IPsec 的支援一開始就可用。
+
+
+
+== IPsec 硬體卸載功能
+
+如果您使用的是 ONTAP 9 。 16.1 或更新版本，您可以選擇將某些運算密集的作業（例如加密和完整性檢查）卸載到儲存節點上安裝的網路介面控制器（ NIC ）卡。使用此硬體卸載選項可大幅改善受 IPsec 保護的網路流量的效能和處理量。
+
+
+
+=== 要求與建議
+
+在使用 IPsec 硬體卸載功能之前，您應該考量幾項需求。
+
+.支援的乙太網路卡
+您只需要在儲存節點上安裝及使用支援的乙太網路卡。ONTAP 9 支援下列乙太網路卡：
+
+* X50131A （ 2p ， 40G/100g/200g/400G 乙太網路控制器 CX7 ）
+* X60243A （ 4p ， 10G/25G 乙太網路控制器 CX7 ）
+
+
+.叢集範圍
+IPsec 硬體卸載功能是針對叢集進行全域設定。例如，此命令會 `security ipsec config`套用至叢集中的所有節點。
+
+.一致的組態
+支援的 NIC 卡應安裝在叢集中的所有節點上。如果支援的 NIC 卡只能在某些節點上使用，則當容錯移轉後，如果部分生命負載未裝載於具有卸載功能的 NIC 上，您就會發現效能大幅降低。
+
+.停用反重播
+您應該在 ONTAP （預設組態）和 IPsec 用戶端停用 IPsec 反重新執行保護。如果未停用，將不支援分割和多重路徑（備援路由）。
+
+
+
+=== 限制
+
+在使用 IPsec 硬體卸載功能之前，您應該考慮幾項限制。
+
+.IPv6
+IPsec 硬體卸載功能不支援 IP 版本 6 。只有 IPsec 軟體實作支援 IPv6 。
+
+.延伸序號
+硬體卸載功能不支援 IPsec 延伸序列號。僅使用正常的 32 位元序列號。
+
+.連結集合體
+IPsec 硬體卸載功能不支援連結集合。因此，它無法與透過 ONTAP CLI 命令所管理的介面或連結集合群組搭配使用 `network port ifgrp`。
+
+
+
+=== ONTAP CLI 中的組態支援
+
+ONTAP 9 。 16.1 中更新了三個現有的 CLI 命令，以支援以下所述的 IPsec 硬體卸載功能。如需詳細資訊，請參閱link:../networking/ipsec-configure.html["在 ONTAP 中設定 IP 安全性"]。
+
+[cols="40,60"]
+|===
+| 指令ONTAP | 更新 
+
+
+| `security ipsec config show` | 布林參數 `Offload Enabled`顯示目前的 NIC 卸載狀態。 
+
+
+| `security ipsec config modify` | 此參數 `is-offload-enabled`可用於啟用或停用 NIC 卸載功能。 
+
+
+| `security ipsec config show-ipsecsa` | 新增了四個新的計數器，以位元組和封包顯示傳入和傳出流量。 
+|===
+
+
+=== ONTAP REST API 中的組態支援
+
+ONTAP 9 中更新了兩個現有的 REST API 端點。 16.1 可支援 IPsec 硬體卸載功能，如下所述。
+
+[cols="40,60"]
+|===
+| REST端點 | 更新 
+
+
+| `/api/security/ipsec` | 此參數 `offload_enabled`已新增，可透過修補方法使用。 
+
+
+| `/api/security/ipsec/security_association` | 新增兩個計數器值，以追蹤卸載功能處理的總位元組和封包數。 
+|===
+如需 ONTAP REST API 的詳細資訊， https://docs.netapp.com/us-en/ontap-automation/whats-new.html["更新功能ONTAP"^]請參閱 ONTAP 自動化文件網站上的。您也應該檢閱 ONTAP https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API 參考資料"^] 文件，瞭解有關 IPsec 端點的詳細資訊。

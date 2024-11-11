@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: authentication/oauth2-as-servers.html 
-keywords: oauth 2.0, oauth2, access token, grant type, jwt 
+keywords: oauth 2.0, oauth2, authorization servers, features, access tokens, grant types, jwt 
 summary: 授權伺服器會在 OAuth 2.0 授權架構中執行多項重要功能、做為中央元件。 
 ---
 = 授權伺服器和存取權杖
@@ -70,6 +70,33 @@ ONTAP 可能位於防火牆後方。在這種情況下、您需要將 Proxy 識�
 
 .授權伺服器數量
 您最多可以定義八個授權伺服器到單一 ONTAP 叢集。只要發卡行或發卡行 / 受眾聲明是唯一的、同一授權伺服器就可以多次定義到同一個 ONTAP 叢集。例如、使用 Keycloak 時、使用不同領域時、這種情況永遠都會發生。
+
+
+
+== ONTAP 支援的 OAuth 2.0 功能
+
+OAUTH 2.0 的支援最初隨 ONTAP 9 提供。 14.1 之後的版本將持續增強。ONTAP 支援的 OAuth 2.0 功能如下所述。
+
+
+NOTE: 隨特定 ONTAP 版本推出的功能將會持續到未來的版本。
+
+
+
+=== ONTAP 9.16.1.
+
+ONTAP 9 。 16.1 擴充標準 OAuth 2.0 功能，以納入原生 Entra ID 群組的 Entra ID 專屬副檔名。這涉及在存取權杖中使用 GUID ，而非名稱。此外，此版本還新增外部角色對應支援，可利用存取權杖中的「角色」欄位，將原生身分識別提供者角色對應至 ONTAP 角色。
+
+
+
+=== ONTAP 9.14.1.
+
+從 ONTAP 9 。 14.1 開始，授權伺服器可透過下列標準 OAuth 2.0 功能來支援使用的應用程式：
+
+* OAuth 2.0 標準欄位包括「 iss 」，「 aud 」和「 exp 」，如和 https://www.rfc-editor.org/rfc/rfc7519["RFC 7519 ： JSON Web Token （ JWT ）"^]中所述 https://www.rfc-editor.org/rfc/rfc6749["RFC6749 ： OAuth 2.0 授權架構"^]。這也支援透過存取權杖中的欄位來唯一識別使用者，例如「 UPN 」，「 AppID 」，「 Sub" ，「使用者名稱」或「 Preferred _UserName 」。
+* 針對具有「群組」欄位的群組名稱，針對特定於供應商的 ADFS 副檔名。
+* Azure 廠商專屬的群組 UUID 延伸功能，並具有「群組」欄位。
+* 使用 OAuth 2.0 存取權杖範圍內的獨立角色和具名角色來提供授權支援的 ONTAP 延伸功能。其中包括「範圍」和「 scp 」欄位，以及範圍內的群組名稱。
+
 
 
 

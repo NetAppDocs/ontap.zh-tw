@@ -2,7 +2,7 @@
 permalink: nvme/set-up-secure-authentication-nvme-task.html 
 sidebar: sidebar 
 keywords: manage, nvme, secure, authentication, tcp, dh-hmac-hcap, chap, setting up, set up, in-band, in band 
-summary: 從 ONTAP 9.12.1 開始、 NVMe 主機和控制器之間的安全雙向驗證、都會透過 NVMe 使用 DH-HMAC-CHAP 驗證傳輸協定來支援。    
+summary: 從 ONTAP 9.12.1 開始、 NVMe 主機和控制器之間的安全雙向驗證、都會透過 NVMe 使用 DH-HMAC-CHAP 驗證傳輸協定來支援。 
 ---
 = 透過 NVMe 設定頻內驗證
 :allow-uri-read: 
@@ -11,11 +11,11 @@ summary: 從 ONTAP 9.12.1 開始、 NVMe 主機和控制器之間的安全雙向
 
 
 [role="lead"]
-從 ONTAP 9.12.1 開始、您可以使用 ONTAP 命令列介面（ CLI ）、透過 NVMe / TCP 和 NVMe / FC 傳輸協定、使用 DH-HMAC-CHAP 驗證、在 NVMe 主機和控制器之間設定頻內（安全）雙向和單向驗證。  從 ONTAP 9.14.1 開始、可在系統管理員中設定頻內驗證。
+從 ONTAP 9.12.1 開始、您可以使用 ONTAP 命令列介面（ CLI ）、透過 NVMe / TCP 和 NVMe / FC 傳輸協定、使用 DH-HMAC-CHAP 驗證、在 NVMe 主機和控制器之間設定頻內（安全）雙向和單向驗證。從 ONTAP 9.14.1 開始、可在系統管理員中設定頻內驗證。
 
-若要設定頻內驗證、每個主機或控制器都必須與 DH-HMAC-CHAP 金鑰相關聯、此金鑰是 NVMe 主機或控制器的 NQN 組合、以及系統管理員所設定的驗證密碼。  若要讓 NVMe 主機或控制器驗證其對等端點、它必須知道與對等端點相關的金鑰。
+若要設定頻內驗證、每個主機或控制器都必須與 DH-HMAC-CHAP 金鑰相關聯、此金鑰是 NVMe 主機或控制器的 NQN 組合、以及系統管理員所設定的驗證密碼。若要讓 NVMe 主機或控制器驗證其對等端點、它必須知道與對等端點相關的金鑰。
 
-在單向驗證中、會為主機設定秘密金鑰、但不會為控制器設定。  在雙向驗證中、會為主機和控制器設定秘密金鑰。
+在單向驗證中、會為主機設定秘密金鑰、但不會為控制器設定。在雙向驗證中、會為主機和控制器設定秘密金鑰。
 
 SHA-256 是預設的雜湊功能、 2048 位元是預設的 DH 群組。
 
@@ -42,7 +42,7 @@ DH-HMAC-CHAP 金鑰是 NVMe 主機或控制器的 NQN 組合、也是系統管�
 . 按一下「 * 儲存 * 」。
 . 若要確認已啟用頻內驗證、請按一下 * 系統管理員 > 主機 > NVMe 子系統 > Grid > Peek view* 。
 +
-主機名稱旁的透明金鑰圖示表示已啟用單向模式。  主機名稱旁的不透明金鑰表示已啟用雙向模式。
+主機名稱旁的透明金鑰圖示表示已啟用單向模式。主機名稱旁的不透明金鑰表示已啟用雙向模式。
 
 
 

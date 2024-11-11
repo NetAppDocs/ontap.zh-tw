@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/list-restore-s3-snapshot.html 
+keywords: s3 snapshots, list, restore, browse S3 snapshots 
+summary: ONTAP S3 快照功能可讓您檢視，瀏覽及還原來自 S3 用戶端的儲存區 S3 快照內容。 
+---
+= 檢視及還原 S3 快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP S3 快照功能可讓您檢視及瀏覽 S3 用戶端中的儲存區之 S3 快照內容。此外，您可以從 S3 快照還原 S3 用戶端上的單一物件，一組物件或整個儲存區。
+
+.開始之前
+若要檢視，瀏覽及還原貯體上的 ONTAP S3 快照，應該已建立快照，而 S3 基礎貯體應可透過 S3 傳輸協定用戶端存取。
+
+
+
+== 列出並檢視 S3 快照
+
+您可以檢視 S3 快照詳細資料，進行比較，並識別錯誤。使用 ONTAP CLI ，您可以列出在 S3 儲存區上建立的所有快照。
+
+.步驟
+. 列出 S3 快照：
++
+[listing]
+----
+vserver object-store-server bucket snapshot show
+----
++
+您可以檢視快照名稱，儲存 VM ，貯體，建立時間，以及 `instance-uuid`為叢集上所有貯體所建立的 S3 快照。
+
+. 您也可以指定貯體名稱，以檢視為該特定貯體所建立的所有 S3 快照名稱，建立時間及其名稱 `instance-uuid`。
++
+[listing]
+----
+vserver object-store-server bucket snapshot show -vserver <svm_name> -bucket <bucket_name>
+----
+
+
+
+
+== 瀏覽 S3 快照內容
+
+如果您發現環境中有任何故障或問題，您可以瀏覽 S3 儲存區快照的內容以識別錯誤。您也可以瀏覽 S3 快照，判斷要還原的無錯誤內容。
+
+S3 快照會以快照區形式呈現給 S3 用戶端。Snapshot 儲存區名稱格式化為 `<base_bucket_name>-s3snap-<snapshot_name>`。您可以使用 S3 API 作業，查看儲存 VM 中的所有快照儲存區 `ListBuckets`。
+
+S3 快照儲存區會繼承基礎儲存區的存取原則，並僅支援唯讀作業。如果您有權存取基本貯體，也可以在 S3 快照貯體上執行唯讀 S3 API 作業，例如 `HeadObject`，， `GetObject` `GetObjectTagging` `ListObjects`，， `ListObjectVersions`， `GetObjectAcl`和 `CopyObject`。
+
+
+NOTE:  `CopyObject`只有當 S3 快照儲存區是來源儲存區的快照複本，而非快照的儲存目的地時，才會支援該作業。
+
+有關這些操作的詳細信息，請link:../s3-config/ontap-s3-supported-actions-reference.html["支援的動作ONTAP"]參閱。
+
+
+
+== 還原 S3 快照的內容
+
+您可以在 S3 用戶端上執行還原作業，將內容從快照儲存區複製到原始或不同的儲存區，以恢復單一物件，一組物件或整個儲存區。您可以瀏覽快照，以判斷應該複製哪些快照內容。
+
+您可以使用命令來還原整個貯體，具有前置詞的物件或單一物件 `aws s3 cp`。
+
+.步驟
+. 拍攝基礎 S3 儲存區的快照。
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <base_bucket_name> -snapshot <snapshot_name>
+----
+. 使用快照還原基本貯體：
++
+** 還原整個貯體。請使用格式的 Snapshot 儲存區名稱 `<base_bucket_name>-s3snap-<snapshot_name>`。
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name> s3://<base-bucket>  --recursive
+----
+** 使用前置碼還原目錄中的物件 `dir1`：
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name>/dir1 s3://<base_bucket_name>/dir1 --recursive
+----
+** 還原一個名爲的對象 `web.py`：
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3:// <snapshot-bucket-name>/web.py s3://<base_bucket_name>/web.py
+----
+
+
+

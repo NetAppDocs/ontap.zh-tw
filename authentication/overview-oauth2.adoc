@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: authentication/overview-oauth2.html 
-keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc 
+keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc, entra id 
 summary: 從 ONTAP 9.14 開始、您可以選擇使用開放授權（ OAuth 2.0 ）架構來控制對 ONTAP 叢集的存取。您可以使用任何 ONTAP 管理介面（包括 ONTAP CLI 、系統管理員和 REST API ）來設定此功能。不過、 OAuth 2.0 授權和存取控制決策只能在用戶端使用 REST API 存取 ONTAP 時套用。 
 ---
 = ONTAP OAuth 2.0 實作總覽
@@ -34,13 +34,24 @@ OAuth 2.0 是業界標準授權架構。它可用來限制及控制使用簽署�
 * 非常適合與 REST API 搭配使用
 
 
-.使用數個熱門授權伺服器進行測試
-ONTAP 實作的設計可與任何符合 OAuth 2.0 標準的授權伺服器相容。它已通過下列熱門伺服器或服務的測試、包括：
+.使用熱門授權伺服器進行測試
+ONTAP OAuth 2.0 實作已針對數個熱門伺服器或服務進行測試，其依據為 ONTAP 版本，如下所示：
 
-* 驗證0
-* Active Directory Federation Service （ ADFS ）
-* Keycloak
+* ONTAP 9 。 16.1 （支援群組 UUID 至名稱對應和外部角色）：
++
+** Microsoft Entra ID
 
+
+* ONTAP 9 。 14.1 （支援標準 OAuth 2.0 功能）
++
+** 驗證0
+** Active Directory Federation Service （ ADFS ）
+** Keycloak
+
+
+
+
+如需每個 ONTAP 版本可用功能的詳細資訊，請參閱link:../authentication/oauth2-as-servers.html["授權伺服器和存取權杖"]。
 
 .支援多個並行授權伺服器
 您最多可以為單一 ONTAP 叢集定義八個授權伺服器。如此一來、您就能靈活地滿足各種安全環境的需求。
@@ -135,6 +146,7 @@ FAPI:: OpenID Foundation 的工作群組、為金融產業提供通訊協定、�
 
 .產品與服務
 * https://auth0.com["驗證0"^]
+* https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id["entra ID"^]
 * https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview["ADFS 總覽"^]
 * https://www.keycloak.org["Keycloak"^]
 

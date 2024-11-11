@@ -1,0 +1,90 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-external-roles.html 
+keywords: oauth 2.0, oauth2, external roles, external role mapping 
+summary: 外部角色是在設定供 ONTAP 使用的識別供應商處定義。您可以使用 ONTAP CLI 建立及管理這些外部角色與 ONTAP 角色之間的對應關係。 
+---
+= 外部角色對應
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+外部角色是在設定供 ONTAP 使用的識別供應商處定義。您可以使用 ONTAP CLI 建立及管理這些外部角色與 ONTAP 角色之間的對應關係。
+
+
+NOTE: 您也可以使用 ONTAP REST API 來設定外部角色對應功能。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-automation/["自動化ONTAP"^]。
+
+.相關資訊
+* https://docs.netapp.com/us-en/ontap-cli/["ONTAP CLI 命令"^]。
+
+
+
+
+== 存取權杖中的外部角色
+
+以下是包含兩個外部角色的 JSON 存取權杖片段。
+
+[listing]
+----
+  ...
+  "appidacr": "1",
+  "family_name": "User",
+  "name": "Test User 1",
+  "oid": "4c2215c7-6d52-40a7-ce71-096fa41379ba",
+  "roles": [
+    "Global Administrator",
+    "Application Administrator"
+  ],
+  "ver": "1.0",
+  ...
+----
+
+
+== 組態
+
+您可以使用 ONTAP 命令列介面來管理外部角色對應功能。
+
+
+
+=== 建立
+
+您可以使用命令定義角色對應組態 `security login external-role-mapping create`。您必須處於 ONTAP * 管理 * 權限層級，才能發出此命令及相關選項。
+
+.參數
+用於建立群組對應的參數如下所述。
+
+[cols="30,70"]
+|===
+| 參數 | 說明 
+
+
+| `external-role` | 在外部身分識別提供者定義的角色名稱。 
+
+
+| `provider` | 身分識別提供者的名稱。這應該是系統的識別碼。 
+
+
+| `ontap-role` | 表示外部角色對應的現有 ONTAP 角色。 
+|===
+.範例
+[listing]
+----
+security login external-role-mapping create -external-role "Global Administrator" -provider entra -ontap-role admin
+----
+
+
+=== 其他 CLI 作業
+
+此命令支援多項額外作業，包括：
+
+* 顯示
+* 修改
+* 刪除
+
+
+如需詳細資訊，請參閱 ONTAP 命令參考文件或 ONTAP CLI 手冊頁。

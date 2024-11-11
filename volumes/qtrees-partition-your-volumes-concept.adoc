@@ -1,22 +1,171 @@
 ---
 permalink: volumes/qtrees-partition-your-volumes-concept.html 
 sidebar: sidebar 
-keywords: use, qtrees, partition, flexvol volumes 
-summary: qtree可讓FlexVol 您將您的需求區塊分割成較小的區段、以便個別管理。您可以使用qtree來管理配額、安全樣式和CIFS oplocks。 
+keywords: volumes, volume partitioning, qtrees, flexvol volumes, performance, metrics, extended performance monitoring 
+summary: qtree 可讓您將 FlexVol 磁碟區分割成可個別管理的較小區段。qtree 啟用的磁碟區分割功能可在依專案，使用者或群組管理儲存時，提供更精細的控制等級。您可以使用 qtree 來更有效地管理配額，安全樣式和 CIFS oplocks 。 
 ---
-= qtree 與 FlexVol volume 分割
+= qtree 與 ONTAP FlexVol volume 分割
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-qtree可讓FlexVol 您將您的需求區塊分割成較小的區段、以便個別管理。您可以使用qtree來管理配額、安全樣式和CIFS oplocks。
+qtree 可讓您將 FlexVol 磁碟區分割成可個別管理的較小區段。qtree 啟用的磁碟區分割功能可在依專案，使用者或群組管理儲存時，提供更精細的控制等級。您可以使用 qtree 來更有效地管理配額，安全樣式和 CIFS oplocks 。
 
-針對每個磁碟區建立名為_qtree0_的預設qtree。ONTAP如果您未將資料放入qtree中、則資料位於qtree0中。
 
-qtree名稱不得超過64個字元。
+NOTE: ONTAP 會為每個名為 *qtree0* 的磁碟區建立預設 qtree 。如果您沒有將資料放在特定 qtree 中，則資料會放在 qtree0 中。
 
-目錄無法在qtree之間移動。只能在qtree之間移動檔案。
 
-如果您在相同FlexVol 的SCVMM或SCVMM集區上建立qtree層級和Volume層級的共用、qtree就會在FlexVol 該共享區上顯示為目錄。因此、您必須小心不要意外刪除。
+
+== 一般限制
+
+在正式作業環境中使用 qtree 之前，您應該瞭解 qtree 的限制。此外，使用延伸 qtree 效能監控功能時，請檢閱<<營運與限制>>。
+
+* qtree 名稱不得超過 64 個字元。
+* qtree 名稱中使用的某些特殊字元，例如逗號和空格，可能會導致其他 ONTAP 功能發生問題，因此應避免使用。
+* 您無法在不同的 qtree 之間移動目錄。只能在qtree之間移動檔案。
+* 如果您在相同FlexVol 的SCVMM或SCVMM集區上建立qtree層級和Volume層級的共用、qtree就會在FlexVol 該共享區上顯示為目錄。您應小心避免意外刪除這些檔案。
+
+
+
+
+== 用於管理和設定qtree的命令
+
+您可以使用 ONTAP CLI 管理和設定 qtree 。根據您要執行的操作，您應該使用下列命令來管理 qtree 。
+
+[NOTE]
+====
+此命令 `volume rehost`可能會導致針對同一個磁碟區的其他並行管理作業失敗。
+
+====
+|===
+
+
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立qtree
+ a| 
+`volume qtree create`
+
+
+
+ a| 
+顯示已篩選的qtree清單
+ a| 
+`volume qtree show`
+
+
+
+ a| 
+刪除qtree
+ a| 
+`volume qtree delete`
+
+
+NOTE: 除非 qtree 為空或使用旗標，否則此命令將會失敗 `-force true`。
+
+
+
+ a| 
+修改qtree的UNIX權限
+ a| 
+`volume qtree modify -unix-permissions`
+
+
+
+ a| 
+修改qtree的CIFS oplocks設定
+ a| 
+`volume qtree oplocks`
+
+
+
+ a| 
+修改qtree的安全性設定
+ a| 
+`volume qtree security`
+
+
+
+ a| 
+重新命名qtree
+ a| 
+`volume qtree rename`
+
+
+
+ a| 
+顯示qtree的統計資料
+ a| 
+`volume qtree statistics`
+
+
+
+ a| 
+重設qtree的統計資料
+ a| 
+`volume qtree statistics -reset`
+
+|===
+
+
+== 延伸 qtree 效能監控
+
+從 ONTAP 9 。 16.1 開始，您可以使用 ONTAP REST API 來存取延伸的 qtree 監控功能，包括延遲指標和歷史統計資料。
+
+ONTAP REST API 包含與 qtree 相關的數個端點。在 ONTAP 9 0.16.1 之前，客戶可以存取 qtree 的即時統計資料，包括每秒 IO 作業（ IOP ），以及讀取，寫入和其他作業的處理量。
+
+從 ONTAP 9 開始提供的延伸 qtree 效能監控功能可讓您監控 NFSv3 ， NFSv4.0 ， NFSv4.1 ， NFSv4.2 ， pNFS （技術上是 NFSv4.1 和 NFSv4.2 的一部分）和 CIFS 的即時延遲統計資料，以及 IOPs 和處理量。它也會收集和歸檔統計資料，以便檢視歷史效能資料。
+
+這項延伸監控功能可讓儲存管理員更深入瞭解系統效能。您可以使用此資料來識別高使用率的 qtree ，潛在瓶頸和其他領域，以改善服務品質。能夠分析這些指標，包括較長時間的趨勢，讓您做出更明智的資料導向決策。
+
+
+
+=== 營運與限制
+
+在正式作業環境中使用延伸 qtree 效能監控功能之前，您應該考量幾個營運特性，包括限制。
+
+.需要重新掛載
+啟用 qtree 延伸監控之後，您需要重新掛載受影響的磁碟區才能啟動此功能。
+
+.統計資料的可用性
+啟用延伸效能監控之後，統計資料就無法立即使用。這包括 IOPS ，處理量和延遲統計資料。最多可能需要五分鐘的時間，才能顯示 qtree 的資料。
+
+.每個叢集的 qtree
+您可以在 ONTAP 叢集中啟用最多 50,000 個 qtree 的延伸效能監控。
+
+
+
+=== 使用 ONTAP REST API 存取延伸計量
+
+從 ONTAP 9 。 16.1 開始，您可以透過 ONTAP REST API 存取延伸 qtree 效能監控功能。基本功能分為幾類，如下所述。
+
+.啟用和停用延伸效能監控
+您可以存取端點 `/api/storage/qtrees`的內容 `ext_performance_monitoring.enabled`，以啟用或停用延伸監控功能。根據您是要建立新的 qtree ，還是要設定現有的 qtree ，可以使用 POST 和修補方法。
+
+.擷取全域監控指標和設定
+端點已新增數個新的全域內容 `/api/storage/qtrees`。您可以使用「取得」方法擷取這些欄位。
+
+.擷取特定 qtree 的度量
+您可以使用端點的 Get 方法 `/api/storage/qtrees/{volume.uuid}/{id}/metrics`，擷取特定 qtree 的新統計資料和度量內容，如特定 Volume 所定義。
+
+
+
+=== 升級與還原
+
+如果您在 ONTAP 9 。 16.1 中啟用此功能，則可在不受限制的情況下升級至後續的 ONTAP 版本。不過，有兩種情況需要考量。
+
+.升級至 9.16.1 ，並處理混合版本叢集
+除非叢集的有效叢集版本（ ECV ）為 9.16.1 ，否則無法使用擴充效能監控功能（也就是 `ext_performance_monitoring.enabled`無法設定為 `true`）。
+
+.從 9.16.1 恢復
+如果任何 qtree 的屬性設為 `true`，則 `ext_performance_monitoring.enabled`不允許從 9.16.1 回復為 9.15.1 。還原作業遭到封鎖。最佳實務做法是在還原至較早的 ONTAP 版本之前，先將所有 qtree 設 `ext_performance_monitoring.enabled`為 `false`。
+
+
+
+=== 深入瞭解
+
+如需 ONTAP REST API 的詳細資訊，請參閱 ONTAP 自動化文件，包括 https://docs.netapp.com/us-en/ontap-automation/whats-new.html["更新功能ONTAP"^]。如需 ONTAP REST API qtree 端點的詳細資訊，請參閱 ONTAP https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API 參考資料"^] 文件。

@@ -1,0 +1,123 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/arp-ai-automatic-updates.html 
+keywords: ransomware, arp, automatic, ai, update, upgrade, autonomous ransomware protection 
+summary: 透過自動或手動更新安全套件，隨時掌握最新的 ARP/AI 防護功能，防範勒索軟體威脅。 
+---
+= 利用 AI （ ARP/AI ）更新自主勒索軟體保護
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+為了隨時掌握最新的勒索軟體威脅防護， ARP/AI 提供在一般 ONTAP 發行時程之外自動更新。
+
+從 ONTAP 9 。 16.1 開始，除了系統和韌體更新之外，系統管理員軟體下載也提供 ARP/AI 的安全性更新。如果您的 ONTAP 叢集已在link:../update/enable-automatic-updates-task.html["自動系統與韌體更新"]中註冊，當 ARP/AI 安全性更新可用時，系統會自動通知您。您也可以變更<<選取 ARP/AI 的更新偏好選項,更新偏好設定>>，讓 ONTAP 自動安裝安全性更新。
+
+如果您想要<<使用最新的安全套件手動更新 ARP/AI,手動更新 ARP/AI>>，可以從 NetApp 支援網站下載更新，然後使用系統管理員進行安裝。
+
+
+IMPORTANT: ARP/AI 功能目前僅支援 NAS 。雖然自動更新功能會顯示系統管理員中部署的新安全檔案可用度，但這些更新僅適用於 NAS 工作負載保護。
+
+.關於這項工作
+對於 ONTAP 9 。 16.1 及更新版本，您只能使用系統管理員更新 ARP/AI 。
+
+
+
+== 選取 ARP/AI 的更新偏好選項
+
+在 System Manager 中，如果您已註冊自動韌體和系統更新，則會將「啟用安全檔案的自動更新」頁面上的設定設為 `Show notifications`。如果您希望 ONTAP 自動套用最新的更新，可以將更新設定變更為 `Automatically update`。如果您使用黑網站或偏好手動執行更新，您可以選擇顯示通知或自動關閉安全性更新。
+
+.開始之前
+如需自動安全性更新，請參閱 https://docs.netapp.com/us-en/ontap/system-admin/setup-autosupport-task.html["應啟用 AutoSupport 和 AutoSupport OnDemand ，傳輸傳輸協定應設定為 HTTPS"]。
+
+.步驟
+. 在 System Manager 中，按一下 * 叢集 > 設定 > 軟體更新 * 。
+. 在 * 軟體更新 * 區段中，選擇image:icon_arrow.gif["箭頭圖示"]。
+. 從 * 軟體更新 * 頁面，選取 * 所有其他更新 * 索引標籤。
+. 選取 * 所有其他更新 * 索引標籤，然後按一下 * 更多 * 。
+. 選取 * 編輯自動更新設定 * 。
+. 從「自動更新設定」頁面，選取 * 安全檔案 * 。
+. 指定要對安全檔案採取的行動（ ARP/AI 更新）。
++
+您可以選擇自動更新，顯示通知或自動關閉更新。
+
++
+
+NOTE: 若要自動更新安全性更新，應啟用 AutoSupport 和 AutoSupport OnDemand ，並將傳輸通訊協定設定為 HTTPS 。
+
+. 接受條款與條件、然後選取 * 儲存 * 。
+
+
+
+
+== 使用最新的安全套件手動更新 ARP/AI
+
+視您是否已向 Active IQ Unified Manager 註冊而定，請遵循適當的程序。
+
+
+NOTE: 請務必僅安裝比目前版本更新的 ARP 更新，以免任何非預期的 ARP 降級。
+
+[role="tabbed-block"]
+====
+.ONTAP 9 。 16.1 及更新版本，搭配數位顧問
+--
+.步驟
+. 在 System Manager 中、前往 * 儀表板 * 。
++
+在 * 狀況 * 區段中，如果叢集有任何建議的安全性更新，則會顯示一則訊息。
+
+. 按一下警示訊息。
+. 在建議更新清單中的安全性更新旁，選取 * 動作 * 。
+. 按一下 * 更新 * 立即安裝更新、或按 * 排程 * 排程稍後更新。
++
+如果已排程更新、您可以 * 編輯 * 或 * 取消 * 。
+
+
+
+--
+.ONTAP 9 。 16.1 及更新版本，不含數位顧問
+--
+.步驟
+. 瀏覽至 link:https://mysupport.netapp.com/site/downloads["NetApp 支援網站"^] 並登入。
+. 選取您要用來更新叢集 ARP/AI 的安全套件。
+. 將檔案複製到網路上的 HTTP 或 FTP 伺服器，或複製到可使用 ARP/AI 的叢集可存取的本機資料夾。
+. 在 System Manager 中，按一下 * 叢集 > 設定 > 軟體更新 * 。
+. 在 * 軟體更新 * 中，選取 * 所有其他更新 * 索引標籤。
+. 在 * 手動更新 * 窗格中，按一下 * 新增安全檔案 * ，然後使用下列其中一個偏好設定來新增檔案：
++
+** * 從伺服器下載 * ：輸入安全檔案套件的 URL 。
+** * 從本機用戶端上傳 * ：瀏覽至下載的 TGZ 檔案。
++
+
+IMPORTANT: 請確定檔案名稱以開頭，並具有 `.tgz`副檔名 `ontap_security_file_arpai_`。
+
+
+
+. 按一下 * 新增 * 以套用更新。
+
+
+--
+====
+
+
+== 驗證 ARP/AI 更新
+
+若要檢視已關閉或安裝失敗的自動更新歷程記錄，請執行下列步驟：
+
+. 在 System Manager 中，按一下 * 叢集 > 設定 > 軟體更新 * 。
+. 在 * 軟體更新 * 區段中，選擇image:icon_arrow.gif["箭頭圖示"]。
+. 在 * 軟體更新 * 頁面中，選取 * 所有其他更新 * 索引標籤，然後按一下 * 更多 * 。
+. 選取 * 檢視所有自動更新 * 。
+
+
+.相關資訊
+* link:enable-arp-ai-with-au.html["啟用 ARP/AI"]
+* https://mysupport.netapp.com/site/user/email-subscription["軟體更新的電子郵件訂閱"^]
+

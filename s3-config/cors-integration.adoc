@@ -1,0 +1,255 @@
+---
+permalink: s3-config/cors-integration.html 
+sidebar: sidebar 
+keywords: cors, cross-origin resource sharing, domain, same origin, s3, s3 api, buckets, nas 
+summary: 從 ONTAP 9 。 16.1 開始，您可以使用網頁瀏覽器安全地存取 S3 儲存區。透過實作跨來源資源共享（ CORS ）安全建議，可在 ONTAP 中提供存取權。 
+---
+= 與 ONTAP 的跨來源資源共享（ CORS ）整合
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9 。 16.1 開始，您可以設定跨來源資源共用（ CORS ），以允許來自不同網域的用戶端 Web 應用程式存取您的 ONTAP 儲存區。這可讓您使用網頁瀏覽器安全存取貯體物件。
+
+CORS 是以 HTTP 為基礎的架構，可讓一個網頁中定義的指令碼存取不同網域中伺服器的資源。此架構用於安全地繞過 _ 相同來源原則 _ ，這是網路安全的早期基礎。主要概念與術語如下所述。
+
+.來源
+來源可精確定義資源的位置和身分識別。其表示為下列值的組合：
+
+* URI 方案（傳輸協定）
+* 主機名稱（網域名稱或 IP 位址）
+* 連接埠號碼
+
+
+以下是來源的簡單範例： `https://www.mycompany.com:8001`。當與 CORS 搭配使用來源時，它會識別提出要求的用戶端。
+
+.相同來源原則
+同一來源原則（ SOP ）是適用於瀏覽器型指令碼的安全概念和限制。只要兩個網頁位於同一個來源，原則就能讓最初從網頁載入的指令碼存取另一個網頁中的資料。這項限制可防止惡意指令碼存取不同來源頁面中的資料。
+
+.常見 CORS 使用案例
+CORS 有幾種一般使用案例。大部分涉及定義完善的跨網域存取執行個體，例如 AJAX 要求，載入字型，樣式表和指令碼，以及跨網域驗證。CORS 也可作為單頁應用程式（ SPA ）的一部分來實作。
+
+.HTTP 標頭
+CORS 是使用插入 HTTP 要求和回應的標頭來實作。例如，有數個回應標頭可實作存取控制，並指出允許哪些作業，包括方法和標頭。HTTP 要求中存在 _origority_ 標頭，將其定義為跨網域要求。CORS 伺服器會使用來源值來找出有效的 CORS 組態。
+
+.HTTP 預航要求
+這是一項選擇性要求，可用來初步判斷伺服器是否支援 CORS ，包括特定方法和標頭。根據回應， CORS 要求可以完成，也可以不完成。
+
+.ONTAP 鏟斗
+貯體是根據定義完善的命名空間儲存及存取的物件容器。ONTAP 貯體有兩種類型：
+
+* 可透過 NAS 和 S3 傳輸協定存取的 NAS 貯體
+* 只能透過 S3 傳輸協定存取的 S3 貯體
+
+
+
+
+== ONTAP 中的 CORS 實作
+
+默認情況下， CORS 在 ONTAP 9 ． 16.1 和更高版本中啓用。您需要在每個要啟用的 SVM 上設定 CORS 。
+
+
+NOTE: 沒有管理選項可停用 ONTAP 叢集的 CORS 。不過，您可以透過不定義任何規則或刪除所有現有規則來有效停用它。
+
+
+
+=== 可能的使用案例
+
+ONTAP CORS 實作可啟用多種可能的跨網域資源存取拓撲，包括：
+
+* ONTAP S3 貯體（位於相同或不同的 SVM 或叢集內）
+* ONTAP NAS 貯體（位於相同或不同的 SVM 或叢集內）
+* ONTAP S3 和 NAS 貯體（位於相同或不同的 SVM 或叢集內）
+* ONTAP 貯體和外部廠商貯體
+* 不同時區的貯體
+
+
+
+
+=== 高階檢視
+
+以下說明 CORS 如何讓您深入瞭解 ONTAP S3 儲存區。
+
+image:s3-cors.png["使用 CORS 存取 S3 儲存區"]
+
+
+
+=== 定義 CORS 規則
+
+您必須在 ONTAP 中定義 CORS 規則，才能啟動及使用此功能。
+
+
+
+==== 組態動作
+
+ONTAP 支援三個主要組態規則動作：
+
+* 顯示
+* 建立
+* 刪除
+
+
+ONTAP 中定義的 CORS 規則有多種屬性，包括 SVM 和儲存庫，以及允許的來源，方法和標頭。
+
+
+
+==== 系統管理選項
+
+在 ONTAP 叢集上管理 CORS 時，您有多種選項可供選擇。
+
+.指令行介面ONTAP
+您可以使用命令列介面來設定 CORS 。如需詳細資訊、請參閱 <<使用 CLI 管理 CORS>> 。
+
+.靜態API ONTAP
+您可以使用 ONTAP REST API 來設定 CORS 。沒有新增任何端點來支援 CORS 功能。您可以改用下列現有端點：
+
+`/api/protocols/s3/services/{svm.uuid}/buckets/{bucket.uuid}`
+
+如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-automation/["自動化ONTAP"^]文件網站。
+
+.S3 API
+您可以使用 S3 API 在 ONTAP 貯體上建立及刪除 CORS 組態。S3 用戶端管理員需要足夠的 Privileges ，包括：
+
+* 存取或秘密金鑰認證
+* 設定在儲存區上的原則，以允許透過 s3api 存取
+
+
+
+
+=== 升級與還原
+
+如果您計畫使用 CORS 來存取 ONTAP S3 儲存區，您應該注意到幾個管理問題。
+
+.升級
+當所有節點都升級至 9.16.1 時，便支援 CORS 功能。在混合模式叢集中，只有有效叢集版本（ ECV ）為 9.16.1 或更新版本時，才能使用此功能。
+
+.還原
+從使用者的角度來看，所有 CORS 組態都應該先移除，叢集還原才能繼續進行。在內部，此作業會刪除所有 CORS 資料庫。系統會要求您執行命令，以清除及還原這些資料結構。
+
+
+
+== 使用 CLI 管理 CORS
+
+您可以使用 ONTAP CLI 來管理 CORS 規則。主要作業如下所述。您必須處於 ONTAP * 管理 * 權限層級，才能發出 CORS 命令。
+
+
+
+=== 建立
+
+您可以使用命令來定義 CORS 規則 `vserver object-store-server bucket cors-rule create`。
+
+.參數
+用於建立規則的參數如下所述。
+
+[cols="30,70"]
+|===
+| 參數 | 說明 
+
+
+ a| 
+`vserver`
+ a| 
+指定主控建立規則之物件儲存區伺服器儲存區的 SVM （ Vserver ）名稱。
+
+
+
+ a| 
+`bucket`
+ a| 
+物件存放區伺服器上為其建立規則的貯體名稱。
+
+
+
+ a| 
+`index`
+ a| 
+可選參數，指出建立規則的物件儲存區伺服器貯體索引。
+
+
+
+ a| 
+`rule id`
+ a| 
+物件存放區伺服器貯體規則的唯一識別碼。
+
+
+
+ a| 
+`allowed-origins`
+ a| 
+允許產生跨來源要求的來源清單。
+
+
+
+ a| 
+`allowed-methods`
+ a| 
+跨來源要求中所允許的 HTTP 方法清單。
+
+
+
+ a| 
+`allowed-headers`
+ a| 
+跨來源要求中所允許的 HTTP 方法清單。
+
+
+
+ a| 
+`expose-headers`
+ a| 
+額外標頭清單會傳送 CORS 回應，客戶可從其應用程式存取。
+
+
+
+ a| 
+`max-age-in-seconds`
+ a| 
+選用參數，指定瀏覽器應快取特定資源的預航回應的時間量。
+
+|===
+.範例
+[listing]
+----
+vserver object-store-server bucket cors-rule create -vserver vs1 -bucket bucket1 -allowed-origins www.myexample.com -allowed-methods GET,DELETE
+----
+
+
+=== 顯示
+
+您可以使用命令 `vserver object-store-server bucket cors-rule show`來顯示目前規則及其內容的清單。
+
+
+NOTE: 包含參數 `-instance`可擴充每個規則的顯示資料。您也可以指定想要的欄位。
+
+.範例
+[listing]
+----
+server object-store-server bucket cors-rule show -instance
+----
+
+
+=== 刪除
+
+您可以使用 delete 命令來移除 CORS 規則的執行個體。您需要 `index`規則的值，因此這是以兩個步驟執行的作業：
+
+. 發出 `show`命令以顯示規則並擷取其索引。
+. 使用索引值發出刪除。
+
+
+.範例
+[listing]
+----
+vserver object-store-server bucket cors-rule delete -vserver vs1 -bucket bucket1 -index 1
+----
+
+
+=== 修改
+
+沒有 CLI 命令可用來修改現有 CORS 規則。若要修改規則，您必須執行下列動作：
+
+. 刪除現有規則。
+. 使用所需的選項建立新規則。
+

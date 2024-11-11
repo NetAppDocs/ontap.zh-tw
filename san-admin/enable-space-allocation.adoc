@@ -1,37 +1,74 @@
 ---
 permalink: san-admin/enable-space-allocation.html 
 sidebar: sidebar 
-keywords: enable, space allocation, space reclamation, unmap, lun 
+keywords: enable, space allocation, space reclamation, unmap, lun, hole punching, namespace, nvme, san 
 summary: 啟用空間分配、讓主機和儲存系統能夠在空間管理上合作。 
 ---
-= 啟用 SAN 的空間分配
+= 啟用 SAN 通訊協定的 ONTAP 空間分配
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-啟用空間分配、讓主機和儲存系統在 LUN 空間管理上合作。
+ONTAP 空間分配可協助您防止 LUN 或 NVMe 命名空間用盡時離線，並讓 SAN 主機回收空間。
 
-從 ONTAP 9.15.1 開始、新建立的 LUN 預設會啟用空間分配。在舊版 ONTAP （ 9.14.1 及更早版本）中、空間分配預設為停用。
+ONTAP 對空間分配的支援是根據您的 SAN 傳輸協定和 ONTAP 版本而定。從 ONTAP 9 。 16.1 開始，預設會針對所有新建立的 LUN 和命名空間，啟用 iSCSI ， FC 和 NVMe 通訊協定的空間分配。
 
-啟用此 `space-allocation` 設定可帶來下列好處：
+[cols="2,2,4a"]
+|===
+| 版本ONTAP | 通訊協定 | 空間分配是 ... 
 
-* * ONTAP 可以與沒有可用空間來服務寫入 * 的主機通訊：這種通訊方式更適合主機處理空間不足的情況。LUN 仍保持連線、但無法服務寫入 IO 、直到空間可用為止。仍可執行讀取 IO 。對主機作業系統的確切影響取決於主機組態。在某些情況下、作業系統會重試寫入 IO 、直到成功為止。在其他情況下、檔案系統可能會離線。
+
+| 9.16.1 或更新版本  a| 
+* iSCSI
+* FC
+* NVMe
+
+ a| 
+預設會針對新建立的 LUN 和命名空間啟用
+
+
+
+.2+| 9.15.1..  a| 
+* iSCSI
+* FC
+
+ a| 
+預設會啟用新建立的 LUN
+
+
+
+| NVMe | 不支援 
+
+
+.2+| 9.14.1 及更早版本  a| 
+* iSCSI
+* FC
+
+ a| 
+對於新建立的 LUN ，預設為停用
+
+
+
+| NVMe | 不支援 
+|===
+啟用空間分配時：
+
+* 如果 LUN 或命名空間用盡， ONTAP 會與主機通訊，表示沒有可用的空間可用於寫入作業。因此， LUN 或命名空間仍保持在線上狀態，讀取作業仍會繼續提供服務。視主機組態而定，主機會重試寫入作業，直到成功或主機檔案系統離線為止。當 LUN 或命名空間有額外可用空間時，寫入作業就會恢復。
 +
+如果未啟用空間分配，當 LUN 或命名空間用盡時，所有 I/O 作業都會失敗， LUN 或命名空間會離線；必須解決空間問題，才能恢復正常作業。主機上也可能需要重新掃描 LUN 裝置、才能將路徑和裝置還原至作業狀態。
 
-NOTE: 如果是 `space-allocation` 未啟用此設定、 LUN 會進入的狀態 `space-error` 當它達到低空間臨界值且所有 IO 都失敗時。需要將 LUN 變更回 `online` 空間問題解決後的狀態。主機上也可能需要重新掃描 LUN 裝置、才能將路徑和裝置還原至作業狀態。
-
-* * 主機可以執行 `SCSI UNMAP` （有時稱為 `TRIM`）作業 * ：這些作業可讓主機識別 LUN 上不再需要的資料區塊、因為這些區塊不再包含有效的資料。識別通常發生在檔案刪除之後。然後、儲存系統就可以取消分配這些資料區塊、以便在其他地方使用這些空間。這種分配方式可大幅提升整體儲存效率、尤其是在資料週轉率高的檔案系統方面。
+* 主機可以執行 SCSI 或 NVMe `UNMAP` （有時稱為 `TRIM`）作業。取消對應作業可讓主機識別不再需要的資料區塊，因為這些區塊不再包含有效資料。識別通常發生在檔案刪除之後。然後、儲存系統就可以取消分配這些資料區塊、以便在其他地方使用這些空間。這種分配方式可大幅提升整體儲存效率、尤其是在資料週轉率高的檔案系統方面。
 
 
 .開始之前
-啟用空間分配需要主機組態、以便在無法完成寫入時正確處理空間分配錯誤。善用 `SCSI UNMAP` 需要可以使用 SCSI SBC-3 標準中定義的邏輯區塊資源配置的組態。
+啟用空間分配需要主機組態、以便在無法完成寫入時正確處理空間分配錯誤。若要使用 SCSI 或 NVMe `UNMAP` ，則需要使用符合 SCSI SBC-3 標準定義的邏輯區塊資源配置。
 
-啟用空間分配時、下列主機目前支援SCSI精簡配置：
+當您啟用空間分配時，下列主機目前支援精簡配置：
 
 * Citrix XenServer 6.5及更新版本
-* ESXi 5.0 及更新版本
+* VMware ESXi 5.0 及更新版本
 * Oracle Linux 6.2 UEK 核心及更新版本
 * Red Hat Enterprise Linux 6.2及更新版本
 * SUSE Linux Enterprise Server 11 及更新版本
@@ -39,10 +76,8 @@ NOTE: 如果是 `space-allocation` 未啟用此設定、 LUN 會進入的狀態 
 * Windows
 
 
-NVMe 主機不支援空間分配。
-
 .關於這項工作
-當您將叢集升級至 ONTAP 9.15.1 時、在軟體升級之前建立的所有 LUN 的空間分配設定、無論主機類型為何、在升級之後都會保持不變。例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
+當您將叢集升級至 ONTAP 9 ． 15.1 或更新版本時，無論主機類型為何，在軟體升級之前建立的所有 LUN 的空間分配設定在升級後都會保持不變。例如、如果在 ONTAP 9.13.1 中為停用空間分配的 VMware 主機建立 LUN 、則在升級至 ONTAP 9.15.1 之後、該 LUN 上的空間分配仍會停用。
 
 .步驟
 . 啟用空間分配：
@@ -60,6 +95,36 @@ lun show -vserver <vserver_name> -volume <volume_name> -lun <lun_name> -fields s
 . 確認主機作業系統上已啟用空間分配。
 +
 
-NOTE: 某些主機組態（尤其是 ESX ）可以自動辨識設定變更、而不需要使用者介入。其他組態可能需要重新掃描裝置。某些檔案系統和磁碟區管理員可能需要額外的特定設定、才能使用進行空間回收 `SCSI UNMAP`。可能需要重新掛載檔案系統或完整的作業系統重新開機。請參閱特定作業系統的說明文件以取得指引。
+NOTE: 某些主機組態，包括某些版本的 VMware ESXi ，可以自動辨識設定變更，而且不需要使用者介入。其他組態可能需要重新掃描裝置。某些檔案系統和磁碟區管理員可能需要額外的特定設定，才能使用進行空間回收 `SCSI UNMAP`。可能需要重新掛載檔案系統或完整的作業系統重新開機。請參閱特定主機的文件以取得指引。
 
 
+
+
+
+== VMware ESXi 8.x 及更新版本 NVMe 主機的主機組態
+
+如果您的 VMware 主機使用 NVMe 傳輸協定執行 ESXi 8.x 或更新版本，則在 ONTAP 中啟用空間分配之後，您應該在主機上執行下列步驟。
+
+.步驟
+. 在 ESXi 主機上，確認 DSM 已停用：
++
+`esxcfg-advcfg -g /SCSi/NVmeUseDsmTp4040`
+
++
+預期值為 0 。
+
+. 啟用 NVMe DSM ：
++
+`esxcfg-advcfg -s 1 /Scsi/NvmeUseDsmTp4040`
+
+. 確認 DSM 已啟用：
++
+`esxcfg-advcfg -g /SCSi/NVmeUseDsmTp4040`
+
++
+預期值為 1 。
+
+
+
+.相關連結
+深入瞭解 link:https://docs.netapp.com/us-en/ontap-sanhost/nvme_esxi_8.html["ESXi 8.x 搭配 ONTAP 的 NVMe 主機組態"^]。
