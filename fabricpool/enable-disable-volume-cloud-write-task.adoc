@@ -37,7 +37,7 @@ set -privilege advanced
 +
 [source, cli]
 ----
-volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+volume create -vserver <svm name> -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
 ----
 +
 以下範例建立在 FabricPool 本機層（ aggr1 ）上啟用雲端寫入功能的名為 vol1 的磁碟區：
@@ -45,7 +45,7 @@ volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggreg
 +
 [listing]
 ----
-volume create -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+volume create -vserver vs1 -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
 ----
 
 
@@ -64,15 +64,15 @@ set -privilege advanced
 +
 [source, cli]
 ----
-volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+volume modify -vserver <svm name> -volume <volume name> -is-cloud-write-enabled true
 ----
 +
-以下範例修改 FabricPool 本機層（ aggr1 ）上啟用雲端寫入功能的名為 vol1 的磁碟區：
+以下範例修改名為 vol1 的磁碟區，以啟用雲端寫入：
 
 +
 [listing]
 ----
-volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+volume modify -vserver vs1 -volume vol1 -is-cloud-write-enabled true
 ----
 
 
@@ -87,18 +87,18 @@ volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
 ----
 set -privilege advanced
 ----
-. 停用雲端寫入模式：
+. 停用磁碟區上的雲端寫入模式：
 +
 [source, cli]
 ----
-volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <aggregate name>
+volume modify -vserver <svm name> -volume <volume name> -is-cloud-write-enabled false
 ----
 +
-以下範例建立一個名為 vol1 且已啟用雲端寫入功能的磁碟區：
+以下範例停用名為 vol1 的磁碟區上的雲端寫入模式：
 
 +
 [listing]
 ----
-volume modify -volume vol1 -is-cloud-write-enabled false -aggregate aggr1
+volume modify -vserver vs1 -volume vol1 -is-cloud-write-enabled false
 ----
 
