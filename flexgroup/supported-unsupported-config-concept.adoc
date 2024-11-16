@@ -15,6 +15,20 @@ summary: 您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、�
 
 
 
+== ONTAP 9.16.1 開始支援的功能
+
+* xref:enable-adv-capacity-flexgroup-task.html[進階容量平衡]
+
+
+
+
+== ONTAP 9.15.1 開始支援的功能
+
+* xref:provision-automatically-task.html[自動資源配置增強功能]
+
+
+
+
 == ONTAP 9.14.1 開始支援的功能
 
 * Snapshot 複本標記：支援使用建立、修改及刪除 FlexGroup 磁碟區上 Snapshot 複本的 Snapshot 複本標記（ SnapMirror 標籤和註解） `volume snapshot` 命令。
@@ -24,32 +38,32 @@ summary: 您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、�
 
 == ONTAP 9.13.1 開始支援的功能
 
-* FlexGroup 磁碟區的自主勒索軟體保護（ ARP ）、包括下列支援的功能：
+* xref:../anti-ransomware/index.html[自主勒索軟體保護（Arp）]對於 FlexGroup Volume ，包括下列支援功能：
 +
-** FlexGroup 擴充作業：新成員繼承了自主勒索軟體保護屬性。
+** FlexGroup 擴充作業：新的成員磁碟區會繼承自主勒索軟體保護屬性。
 ** FlexVol 轉 FlexGroup 轉換：使用主動式勒索軟體保護的 FlexVols 可轉換。
 ** FlexGroup 重新平衡：在中斷和不中斷營運的重新平衡作業中、支援自主勒索軟體保護。
 
 
 * 排程單一 FlexGroup 重新平衡作業。
-* SnapMirror 與 FlexGroup 磁碟區上的 SVM DR 展開關係。支援展開至八個站台。
+* xref:create-snapmirror-cascade-fanout-reference.html[SnapMirror 扇出]與 FlexGroup 磁碟區上的 SVM DR 的關係。支援展開至八個站台。
 
 
 
 
 == 支援功能、從ONTAP 功能部件支援的版本起、從功能部件支援的版本
 
-* 重新平衡FlexGroup
+* xref:manage-flexgroup-rebalance-task.html[重新平衡FlexGroup]
 * 適用於本產品的SnapLock SnapVault
 * FabricPool 、 FlexGroup 和 SVM DR 搭配運作。（在早於 ONTAP 9.12.1 的版本中、其中任何兩項功能都能一起運作、但並非全部三項功能都能一起運作。）
-* 使用 ONTAP 9.12.1 P2 及更新版本時、 AFF 和 FAS 平台上的 FlexGroup Volume 組成容量最大可達 300 TB 。
+* xref:../volumes/enable-large-vol-file-support-task.html[大容量支援]將 FlexGroup Volume 成員大小從最大 100TB 增加至最大 300TB 。
 
 
 
 
 == 支援功能、從ONTAP 功能部件支援的版本起、從功能部件支援的版本
 
-* 資料量SnapLock
+* xref:../snaplock/index.html[資料量SnapLock]
 +
 不支援下列功能搭配使用下列功能的功能：SnapLock FlexGroup
 
@@ -61,37 +75,26 @@ summary: 您應該注意ONTAP 到支援且FlexGroup 不支援ONTAP 的功能、�
 
 
 
-您可以在SnapLock 整個過程中設定不一樣的功能。FlexGroup您無法在SnapLock 組成層級設定靜態。
+您可以在SnapLock 整個過程中設定不一樣的功能。FlexGroup您無法在成員磁碟區層級設定 SnapLock 。
 
-xref:../snaplock/snaplock-concept.adoc[什麼是呢SnapLock]
-
-* 用戶端非同步目錄刪除
-+
-xref:manage-client-async-dir-delete-task.adoc[管理用戶端權限、以非同步方式刪除目錄]
-
+* xref:manage-client-async-dir-delete-task.adoc[用戶端非同步目錄刪除]
 
 
 
 
 == 支援功能、從ONTAP 功能部件支援的版本從功能部件支援的版本
 
-* 將SVM-DR來源中的供應區轉換FlexVol 為FlexGroup 供應區
-+
-xref:convert-flexvol-svm-dr-relationship-task.adoc[在FlexVol SVM-DR關係中、將一個SSDVolume轉換為FlexGroup 一個SSDVolume]
-
-* SVM DR FlexClone 支援 FlexGroup Volume
-+
-xref:../volumes/create-flexclone-task.adoc[深入瞭解如何建立FlexClone Volume。]
-
+* xref:convert-flexvol-svm-dr-relationship-task.adoc[在 SVM DR 關係中，將 FlexVol volume 轉換為 FlexGroup Volume]
+* xref:../volumes/create-flexclone-task.adoc[SVM DR FlexClone 支援 FlexGroup Volume]
 
 
 
 
 == 支援功能、從ONTAP 支援的功能僅從支援的功能
 
-* SVM 災難恢復
+* xref:create-svm-disaster-recovery-relationship-task.html[SVM 災難恢復]
 +
-不FlexGroup 支援複製SVM-DR關係中的某個實體磁碟區。
+不支援複製 SVM DR 關係中的 FlexGroup Volume 。
 
 * SnapMirror可將2個以上的關係（A到B、A到C）展開、最多可有8個扇出式分支。
 +
@@ -118,8 +121,8 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 如需詳細資訊、請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_To_Convert_a_Transitioned_FlexVol_to_FlexGroup["如何將轉換FlexVol 的功能從一個功能轉變FlexGroup 為一個功能"]。
 
 * NFSv4.2
-* 非同步刪除檔案和目錄
-* 檔案系統分析（FSA）
+* xref:fast-directory-delete-asynchronous-task.html[非同步刪除檔案和目錄]
+* xref:../concept_nas_file_system_analytics_overview.html[檔案系統分析（FSA）]
 * VMware vSphere資料存放區FlexGroup
 * 其他支援使用NDMP備份及還原磁帶、包括下列功能：
 +
@@ -136,10 +139,10 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 == 支援功能、從ONTAP 支援的功能從支援的功能
 
-* FlexClone Volume
+* xref:../volumes/flexclone-efficient-copies-concept.html[FlexClone Volume]
 * NFSv4 和 NFSv4.1
 * pNFS
-* 使用NDMP進行磁帶備份與還原
+* xref:../ndmp/index.html[使用NDMP進行磁帶備份與還原]
 +
 您必須注意FlexGroup 下列事項、才能在支援的情況下支援支援有關的功能：
 
@@ -166,7 +169,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 == 支援功能、從ONTAP 支援的功能僅從支援的功能
 
 * 持續可用的SMB共用
-* 內部組態MetroCluster
+* https://docs.netapp.com/us-en/ontap-metrocluster/index.html["內部組態MetroCluster"^]
 * 重新命名 FlexGroup Volume (`volume rename` 命令）
 * 縮減或縮減 FlexGroup Volume 的大小 (`volume size` 命令）
 * 彈性調整規模
@@ -230,7 +233,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 * Volume加密
 * Aggregate即時重複資料刪除技術（跨Volume重複資料刪除技術）
-* NetApp Volume加密（NVE）
+* xref:../encryption-at-rest/encrypt-volumes-concept.html[NetApp Volume加密（NVE）]
 
 
 
@@ -259,7 +262,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 
 
-== 不支援ONTAP 的組態。9.
+== ONTAP 9 中不支援的 FlexGroup Volume 組態
 
 |===
 
@@ -268,22 +271,20 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[為FlexGroups建立SnapMirr
 
 
  a| 
-* pNFS（ONTAP 從9.0到9.6）
+* xref:../nfs-admin/enable-disable-pnfs-task.html[pNFS]（ ONTAP 9 6 及更早版本）
 * SMB 1.0
-* SMB透明容錯移轉（ONTAP 支援從9.0到9.5）
-* SAN
+* xref:../smb-hyper-v-sql/witness-protocol-transparent-failover-concept.html[SMB 透明容錯移轉]（ ONTAP 9 技術及更早版本）
+* xref:../volumes/san-volumes-concept.html[SAN]
 
  a| 
-* 適用的資料量（例如：SnapLock ONTAP
-* SM磁帶
-* SnapMirror 同步
+* xref:../snaplock/index.html[資料量SnapLock]（ ONTAP 9 ： 10.1 及更早版本）
+* xref:../tape-backup/smtape-engine-concept.html[SM磁帶]
+* xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[SnapMirror 同步]
 * 包含 FabricPools （ ONTAP 9.11.1 及更早版本）的 FlexGroup 磁碟區 SVM DR
 
  a| 
-* 遠端Volume陰影複製服務（VSS）
-* SVM資料移動性
+* xref:../smb-hyper-v-sql/share-based-backups-remote-vss-concept.html[遠端Volume陰影複製服務（VSS）]
+* xref:../svm-migrate/index.html[SVM資料移動性]
 
 
 |===
-.相關資訊
-https://docs.netapp.com/ontap-9/index.jsp["供應說明文件中心 ONTAP"]
