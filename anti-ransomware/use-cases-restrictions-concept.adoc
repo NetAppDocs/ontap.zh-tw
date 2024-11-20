@@ -172,9 +172,9 @@ ARP 不支援下列 Volume 組態：
 
 == 使用 ARP 保護的磁碟區進行多重管理驗證
 
-從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解操作方法 link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"^]。
+從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解如何link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"]。
 
-您需要定義 MAV 群組的管理員、並為建立 MAV 規則 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` 您要保護的 ARP 命令。MAV 群組中的每位管理員都必須核准每個新的規則要求和 link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"^] 在 MAV 設定中。
+您需要為 MAV 群組定義系統管理員，並為您要保護的， `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` ARP 命令建立 MAV 規則 `security anti-ransomware volume disable`。MAV 群組中的每位管理員都必須核准每個新規則要求，並link:../multi-admin-verify/enable-disable-task.html["再次新增 MAV 規則"]在 MAV 設定內進行。
 
 從 ONTAP 9 ． 14.1 開始， ARP 會提供建立 ARP 快照和觀察新副檔名的警示。這些事件的警示預設為停用。警示可在 Volume 或 SVM 層級設定。您可以在 SVM 層級使用或在 Volume 層級 `security anti-ransomware volume event-log modify`使用建立 MAV 規則 `security anti-ransomware vserver event-log modify`。
 
