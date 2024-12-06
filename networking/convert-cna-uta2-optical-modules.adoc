@@ -1,0 +1,29 @@
+---
+permalink: networking/convert-cna-uta2-optical-modules.html 
+sidebar: sidebar 
+keywords: change, cna/uta2, target, adapter, optical, modules 
+summary: 您應該變更統一化目標介面卡（CNA/UTA2）上的光學模組、以支援您為介面卡選取的特性設定模式。 
+---
+= 轉換 ONTAP 系統的 CNA/UTA2 光學模組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您應該變更統一化目標介面卡（CNA/UTA2）上的光學模組、以支援您為介面卡選取的特性設定模式。
+
+.步驟
+. 驗證卡中使用的目前SFP+。接著、將目前的SFP+替換為適當的SFP+、以符合偏好的特性設定（FC或CNA）。
+. 從X1143A-R6介面卡移除目前的光纖模組。
+. 針對您偏好的個人化模式（FC或CNA）光纖插入正確的模組。
+. 確認您已安裝正確的SFP+：
++
+[source, cli]
+----
+network fcp adapter show -instance -node -adapter
+----
++
+支援的SFP+模組和Cisco品牌銅線（雙軸纜線）纜線列於中 https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+

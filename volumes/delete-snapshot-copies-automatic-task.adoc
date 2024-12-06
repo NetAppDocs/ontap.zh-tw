@@ -2,27 +2,27 @@
 permalink: volumes/delete-snapshot-copies-automatic-task.html 
 sidebar: sidebar 
 keywords: delete, snapshot, copies, automatically, flexclone luns, automatic, lun, luns 
-summary: 您可以定義自動刪除快照複本和 FlexClone LUN 的原則、以協助管理空間使用率。 
+summary: 您可以定義自動刪除快照和 FlexClone LUN 的原則，以協助管理空間使用率。 
 ---
-= 自動刪除Snapshot複本
+= 啟用自動快照和 LUN 刪除來管理空間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以定義並啟用原則、以自動刪除Snapshot複本和FlexClone LUN。自動刪除Snapshot複本和FlexClone LUN可協助您管理空間使用率。
+您可以定義並啟用原則，以自動刪除快照和 FlexClone LUN 。自動刪除快照和 FlexClone LUN 可協助您管理空間使用率。
 
 .關於這項工作
-您可以從讀寫父磁碟區自動刪除Snapshot複本、以及從讀寫父磁碟區刪除FlexClone LUN。您無法設定從唯讀磁碟區自動刪除Snapshot複本、例如SnapMirror目的地磁碟區。
+您可以從讀寫父磁碟區自動刪除讀寫磁碟區和 FlexClone LUN 中的快照。您無法設定從唯讀磁碟區自動刪除快照，例如 SnapMirror 目的地磁碟區。
 
 .步驟
-. 定義並啟用原則、以使用自動刪除 Snapshot 複本 `volume snapshot autodelete modify` 命令。
+. 使用命令定義並啟用自動刪除快照的原則 `volume snapshot autodelete modify`。
 +
 請參閱 `volume snapshot autodelete modify` 手冊頁、以取得可搭配此命令使用之參數的相關資訊、以定義符合您需求的原則。
 
 +
-下列命令可自動刪除 Snapshot 複本、並將觸發器設為 `snap_reserve` 對於屬於 vs0.example.com 儲存虛擬機器（ SVM ）一部分的 vol3 Volume ：
+下列命令可自動刪除快照，並將 vol3 磁碟區的觸發設為 `snap_reserve`，這是 vs0.example.com 儲存虛擬機器（ SVM ）的一部分：
 
 +
 [listing]
@@ -31,7 +31,7 @@ cluster1::> volume snapshot autodelete modify -vserver vs0.example.com
 -volume vol3 -enabled true -trigger snap_reserve
 ----
 +
-下列命令可自動刪除標示為自動刪除vol3 Volume（屬於vs0.example.com儲存虛擬機器（SVM）的Snapshot複本和FlexClone LUN：
+下列命令可自動刪除標示為自動刪除 vol3 磁碟區的快照和 FlexClone LUN ，而 vol3 磁碟區是 vs0.example.com 儲存虛擬機器（ SVM ）的一部分：
 
 +
 [listing]
@@ -43,9 +43,9 @@ oldest_first -destroy-list lun_clone,file_clone
 +
 [NOTE]
 ====
-Aggregate層級的Snapshot複本的運作方式與Volume層級的Snapshot複本不同、ONTAP 而且會由NetApp自動管理。刪除Aggregate Snapshot複本的選項一律啟用、有助於管理空間使用率。
+Aggregate 層級快照的運作方式與 Volume 層級快照不同，並由 ONTAP 自動管理。刪除 Aggregate 快照的選項一律會啟用，有助於管理空間使用率。
 
-如果觸發器參數設為 `snap_reserve` 對於 Aggregate 、 Snapshot 複本會保留到保留空間超過臨界容量為止。因此、即使觸發器參數未設定為 `snap_reserve`，快照複本在命令中使用的空間將列爲 `0` 因為這些 Snapshot 複本會自動刪除。此外、Snapshot複本在Aggregate中所使用的空間會被視為可用空間、並會包含在命令的可用空間參數中。
+如果將 Aggregate 的觸發參數設為 `snap_reserve`，則會保留快照，直到保留空間超過臨界值容量為止。因此，即使觸發參數未設定為，命令中快照複本所使用的空間也 `snap_reserve`會列為， `0`因為這些快照會自動刪除。此外，快照在集合體中使用的空間也會視為可用空間，並包含在命令的可用空間參數中。
 
 ====
 

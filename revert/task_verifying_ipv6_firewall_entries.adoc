@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: revert, reverting, reversion, ipv6, firewall, entries, verify 
 summary: 從ONTAP 任何版本的更新版本還原、可能會導致防火牆原則中的某些服務缺少預設IPv6防火牆項目。您必須確認所需的防火牆項目已還原至您的系統。 
 ---
-= 驗證IPv6防火牆項目
+= 在 ONTAP 還原後驗證 IPv6 防火牆項目
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,7 +13,13 @@ summary: 從ONTAP 任何版本的更新版本還原、可能會導致防火牆�
 [role="lead"]
 從ONTAP 任何版本的更新版本還原、可能會導致防火牆原則中的某些服務缺少預設IPv6防火牆項目。您必須確認所需的防火牆項目已還原至您的系統。
 
-. 將所有防火牆原則與預設原則進行比較、以確認其正確無誤： `system services firewall policy show`
+.步驟
+. 將所有防火牆原則與預設原則進行比較、以確認其正確無誤：
++
+[source, cli]
+----
+system services firewall policy show
+----
 +
 下列範例顯示預設原則：
 
@@ -44,18 +50,16 @@ data
 .
 .
 ----
-. 建立新的防火牆原則、手動新增任何遺失的預設 IPv6 防火牆項目： `system services firewall policy create`
+. 建立新的防火牆原則、手動新增任何遺失的預設 IPv6 防火牆項目：
 +
-[listing]
+[source, cli]
 ----
-cluster1::*> system services firewall policy create -policy newIPv6
--service ssh -action allow -ip-list ::/0
+system services firewall policy create -policy <policy_name> -service ssh -action allow -ip-list <ip_list>
 ----
-. 將新原則套用至 LIF 以允許存取網路服務： `network interface modify`
+. 將新原則套用至 LIF 以允許存取網路服務：
 +
-[listing]
+[source, cli]
 ----
-cluster1::*> network interface modify -vserver VS1 -lif LIF1
--firewall-policy newIPv6
+network interface modify -vserve <svm_name> -lif <lif_name> -firewall-policy <policy_name>
 ----
 

@@ -4,34 +4,56 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, snapshot, copies, prepare, preparing, disable, delete 
 summary: 在還原至先前ONTAP 版本的版本之前、您必須先停用所有Snapshot複製原則、並刪除在升級至目前版本之後所建立的任何Snapshot複本。 
 ---
-= 在還原之前先準備Snapshot複本
+= 在還原 ONTAP 叢集之前準備快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在還原至先前ONTAP 版本的版本之前、您必須先停用所有Snapshot複製原則、並刪除在升級至目前版本之後所建立的任何Snapshot複本。
+在從任何版本的 ONTAP 9 還原 ONTAP 叢集之前，您必須停用所有 Snapshot 複本原則，並刪除升級至目前版本後所建立的任何 Snapshot 複本。
 
 如果要在SnapMirror環境中還原、您必須先刪除下列鏡射關係：
 
 * 所有負載共用鏡射關係
 * 任何資料保護鏡射資料關係、都是ONTAP 以穩健的資料保護方式建立
 * 如果叢集是ONTAP 在還原8.3.x中重新建立、則所有資料保護都會鏡射關係
-+
-.. 停用所有資料 SVM 的 Snapshot 複製原則： `volume snapshot policy modify -vserver * -enabled false`
-.. 停用每個節點集合體的Snapshot複製原則：
-+
-... 使用run節點odenameaggr狀態命令來識別節點的集合體。
-... 停用每個 Aggregate 的 Snapshot 複本原則： `run -node nodename aggr options aggr_name nosnap on`
-... 對其餘每個節點重複此步驟。
 
 
-.. 停用每個節點根磁碟區的Snapshot複本原則：
+.步驟
+. 停用所有資料 SVM 的 Snapshot 複製原則：
 +
-... 使用run-nodenodenamevol狀態命令識別節點的根Volume。
+[source, cli]
+----
+volume snapshot policy modify -vserver * -enabled false
+----
+. 停用每個節點集合體的Snapshot複製原則：
 +
-您可以在vol狀態命令輸出的「Options（選項）」欄中、以root這個字來識別根Volume。
+.. 識別節點的集合體：
++
+[source, cli]
+----
+run -node <nodename> -command aggr status
+----
+.. 停用每個 Aggregate 的 Snapshot 複本原則：
++
+[source, cli]
+----
+run -node <nodename> -command aggr options aggr_name nosnap on
+----
+.. 對其餘每個節點重複此步驟。
+
+
+. 停用每個節點根磁碟區的Snapshot複本原則：
++
+.. 識別節點的根磁碟區：
++
+[source, cli]
+----
+run-node <node_name> -command vol status
+----
++
+您可以在命令輸出的「 * 選項 * 」欄中，使用「 root 」字來識別根 Volume `vol status` 。
 
 +
 [listing]
@@ -42,20 +64,40 @@ vs1::> run -node node1 vol status
            vol0 online          raid_dp, flex     root, nvfail=on
                                 64-bit
 ----
-... 停用根磁碟區上的 Snapshot 複本原則： `run -node nodename vol options root_volume_name nosnap on`
-... 對其餘每個節點重複此步驟。
-
-
-.. 刪除升級至目前版本後所建立的所有Snapshot複本：
+.. 停用根磁碟區上的 Snapshot 複本原則：
 +
-... 將權限層級設為進階： `set -privilege advanced`
-... 停用快照：``snapshot policy modify -vserver * -enabled false``
-... 刪除節點較新版本的 Snapshot 複本： `volume snapshot prepare-for-revert -node nodename`
+[source, cli]
+----
+run -node <node_name> vol options root_volume_name nosnap on
+----
+.. 對其餘每個節點重複此步驟。
+
+
+. 刪除升級至目前版本後所建立的所有Snapshot複本：
++
+.. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 停用快照：
++
+[source, cli]
+----
+snapshot policy modify -vserver * -enabled false
+----
+.. 刪除節點較新版本的 Snapshot 複本：
++
+[source, cli]
+----
+volume snapshot prepare-for-revert -node <node_name>
+----
 +
 此命令會刪除每個資料磁碟區、根Aggregate和根磁碟區上較新版本的Snapshot複本。
 
 +
-如果無法刪除任何Snapshot複本、則命令會失敗、並通知您在刪除Snapshot複本之前必須採取的任何必要行動。您必須先完成必要的動作、然後重新執行Volume Snapshot Prepare for還原命令、再繼續下一步。
+如果無法刪除任何Snapshot複本、則命令會失敗、並通知您在刪除Snapshot複本之前必須採取的任何必要行動。您必須完成必要的動作，然後重新執行 `volume snapshot prepare-for-revert`命令，才能繼續下一步。
 
 +
 [listing]
@@ -65,18 +107,28 @@ cluster1::*> volume snapshot prepare-for-revert -node node1
 Warning: This command will delete all Snapshot copies that have the format used by the current version of ONTAP. It will fail if any Snapshot copy polices are enabled, or
          if any Snapshot copies have an owner. Continue? {y|n}: y
 ----
-... 確認已刪除 Snapshot 複本： `volume snapshot show -node nodename`
+.. 確認已刪除 Snapshot 複本：
 +
-如果仍有任何較新版本的 Snapshot 複本、請強制將其刪除： `volume snapshot delete {-fs-version 9.0 -node nodename -is-constituent true} -ignore-owners -force`
-
-... 對其餘每個節點重複此步驟c。
-... 返回管理權限層級： `set -privilege admin`
-
-
-
-
+[source, cli]
+----
+volume snapshot show -node nodename
+----
+.. 如果仍有任何較新版本的 Snapshot 複本、請強制將其刪除：
 +
+[source, cli]
+----
+volume snapshot delete {-fs-version 9.0 -node nodename -is-constituent true} -ignore-owners -force
+----
+.. 對其餘每個節點重複這些步驟。
+.. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+
+
 
 NOTE: 您必須在MetroCluster 雙叢集上執行這些步驟、以進行不必要的組態設定。
-
-

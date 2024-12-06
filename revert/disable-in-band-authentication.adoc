@@ -1,0 +1,35 @@
+---
+permalink: revert/disable-in-band-authentication.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, authentication, tcp, dh-hmac-hcap, chap, disable, in-band, in band 
+summary: 如果您從 ONTAP 9.12.1 還原，則必須先停用頻內驗證，才能還原。 
+---
+= 從 ONTAP 9.12.1 還原之前，請先停用 NVMe 頻內驗證
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您執行的是 NVMe 傳輸協定，則必須先停用頻內驗證，才能從 ONTAP 9.12.1 還原叢集。如果未停用使用 DH-HMAC-CHAP 的頻內驗證、還原將會失敗。
+
+.步驟
+. 從子系統移除主機、以停用DH-HMAP-CHAP驗證：
++
+[source, cli]
+----
+vserver nvme subsystem host remove -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 確認DH-HMAP-CHAP驗證傳輸協定已從主機移除：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 無需驗證即可將主機重新新增回子系統：
++
+[source, cli]
+----
+vserver nvme subsystem host add vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+

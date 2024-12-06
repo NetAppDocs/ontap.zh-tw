@@ -4,46 +4,74 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, systems, deduplication, deduplicated, volumes 
 summary: 從ONTAP 任何版本的更新版本還原之前、您必須先確保磁碟區內有足夠的可用空間、以便進行還原作業。 
 ---
-= 驗證已刪除重複資料的磁碟區是否有足夠的可用空間、再進行還原
+= 在還原 ONTAP 之前，請先確認已刪除重複資料的磁碟區可用空間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從ONTAP 任何版本的更新版本還原之前、您必須先確保磁碟區內有足夠的可用空間、以便進行還原作業。
+在從任何版本的 ONTAP 9 還原 ONTAP 叢集之前，您必須確保這些磁碟區包含足夠的可用空間，以便進行還原作業。
 
 磁碟區必須有足夠的空間來容納透過內嵌偵測零區塊所達成的節約效益。請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_see_space_savings_from_deduplication%2C_compression%2C_and_compaction_in_ONTAP_9["如何在ONTAP 支援資料刪除技術、壓縮技術和實壓技術的過程中、查看如何節省空間。9"]。
 
 如果您已在要還原的磁碟區上啟用重複資料刪除和資料壓縮、則必須在還原重複資料刪除之前還原資料壓縮。
 
-. 使用Volume Eff效率show命令搭配-Fields選項、即可檢視在磁碟區上執行的效率作業進度。
+.步驟
+. 檢視在磁碟區上執行的效率作業進度：
 +
-下列命令會顯示效率作業的進度： `volume efficiency show -fields vserver,volume,progress`
-
-. 使用Volume Eff效率Stop命令搭配-all選項、即可停止所有作用中和佇列中的重複資料刪除作業。
+[source, cli]
+----
+volume efficiency show -fields vserver,volume,progress
+----
+. 停止所有作用中和佇列中的重複資料刪除作業：
 +
-下列命令會停止 Volume Vola 上所有作用中和佇列中的重複資料刪除作業： `volume efficiency stop -vserver vs1 -volume VolA -all`
-
-. 使用set -priv榮幸 進階命令、以進階權限層級登入。
-. 使用Volume Eff效率Revete-to命令搭配-version選項、將Volume的效率中繼資料降級為ONTAP 特定版本的支援。
+[source, cli]
+----
+volume efficiency stop -vserver <svm_name> -volume <volume_name> -all
+----
+. 將權限層級設為進階：
 +
-下列命令會將 Volume Vola 上的效率中繼資料還原為 ONTAP 9.x ： `volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x`
+[source, cli]
+----
+set -privilege advanced
+----
+. 將磁碟區的效率中繼資料降級至 ONTAP 的目標版本：
++
+[source, cli]
+----
+volume efficiency revert-to -vserver <svm_name> -volume <volume_name> -version <version>
+----
++
+以下範例將 Volume Vola 上的效率中繼資料還原為 ONTAP 9.x
 
++
+[listing]
+----
+volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x
+----
 +
 
 NOTE: Volume Eff效率Rever-to命令會還原執行此命令之節點上的磁碟區。此命令不會還原節點之間的磁碟區。
 
-. 使用Volume Eff效率show命令搭配-op-STATUS選項、即可監控降級進度。
+. 監控降級進度：
 +
-下列命令會監控並顯示降級狀態： `volume efficiency show -vserver vs1 -op-status Downgrading`
-
-. 如果還原失敗、請使用Volume Eff效率show命令搭配-instance選項、瞭解還原失敗的原因。
+[source, cli]
+----
+volume efficiency show -vserver <svm_name> -op-status Downgrading
+----
+. 如果還原失敗，請顯示執行個體，瞭解還原失敗的原因。
 +
-下列命令會顯示所有欄位的詳細資訊： `volume efficiency show -vserver vs1 -volume vol1 - instance`
-
-. 還原作業完成後、返回管理權限層級： `set -privilege admin`
+[source, cli]
+----
+volume efficiency show -vserver <svm_name> -volume <volume_name> - instance
+----
+. 還原作業完成後、返回管理權限層級：
 +
-link:../volumes/index.html["邏輯儲存管理"]
+[source, cli]
+----
+set -privilege admin
+----
 
 
+深入瞭解 link:../volumes/index.html["邏輯儲存管理"]。

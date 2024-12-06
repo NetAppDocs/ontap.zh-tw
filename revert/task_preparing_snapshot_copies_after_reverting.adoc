@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, snapshot, copy, copies, policy, policies, enable, restart 
 summary: 還原ONTAP 至舊版的版本的功能後、您必須啟用Snapshot複製原則、才能再次建立Snapshot複本。 
 ---
-= 還原後啟用Snapshot複製原則
+= 在 ONTAP 還原後啟用 Snapshot 複製原則
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,17 +15,22 @@ summary: 還原ONTAP 至舊版的版本的功能後、您必須啟用Snapshot複
 
 您正在重新啟用在還原至ONTAP 舊版的還原之前停用的Snapshot排程。
 
+.步驟
 . 啟用所有資料SVM的Snapshot複製原則：
 +
-`volume snapshot policy modify -vserver * -enabled true`
-
-+
-`snapshot policy modify pg-rpo-hourly -enable true`
-
-. 針對每個節點、使用run節點odenamevol選項root_vol_namenosnap Off命令來啟用根磁碟區的Snapshot複本原則。
-+
-[listing]
+[source, cli]
 ----
-cluster1::> run -node node1 vol options vol0 nosnap off
+volume snapshot policy modify -vserver * -enabled true
+----
++
+[source, cli]
+----
+snapshot policy modify pg-rpo-hourly -enable true
+----
+. 針對每個節點，啟用根 Volume 的 Snapshot 複本原則：
++
+[source, cli]
+----
+run -node <node_name> vol options <volume_name> nosnap off
 ----
 

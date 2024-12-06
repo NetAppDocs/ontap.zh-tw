@@ -2,18 +2,22 @@
 permalink: revert/concept_revert_paths.html 
 sidebar: sidebar 
 keywords: ontap, downgrade, revert, paths 
-summary: 您可以還原的版本因節點上目前執行的版本而異。ONTAP ONTAP 
+summary: 您可以直接將 ONTAP 軟體還原為比目前 ONTAP 版本更早的一個版本。您不應還原為不支援的 ONTAP 版本。 
 ---
-= 還原路徑
+= 支援的 ONTAP 還原路徑
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以還原的版本因節點上目前執行的版本而異。ONTAP ONTAP您可以使用 `system image show` 命令來判斷每個節點上執行的 ONTAP 版本。
+您可以直接將 ONTAP 軟體還原為比目前 ONTAP 版本更早的一個版本。例如，如果您執行的是 9.15.1 ，則無法直接還原為 9.13.1 。您必須還原至 9.14.1 ，然後從 9.14.1 到 9.13.1 分別執行還原。
 
-這些準則僅提及內部部署ONTAP 的內部版本資訊。如需在ONTAP 雲端還原功能的相關資訊、請參閱 https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-updating-ontap-cloud.html#reverting-or-downgrading["還原Cloud Volumes ONTAP 或降級功能"^]。
+不支援還原至 ONTAP 9.4 或更早版本。您不應還原為不支援的 ONTAP 版本。
+
+您可以使用 `system image show`命令來判斷每個節點上執行的 ONTAP 版本。
+
+下列支援的還原路徑僅適用於內部部署 ONTAP 版本。如需在雲端中還原 ONTAP 的相關資訊，請參閱 https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-updating-ontap-cloud.html#reverting-or-downgrading["還原Cloud Volumes ONTAP 或降級功能"^]。
 
 [cols="2*"]
 |===
@@ -62,58 +66,15 @@ ONTAP 9.12.1
 
  a| 
 部分9.8 ONTAP
- a| 
-更新ONTAP
-
+| 更新ONTAP 
 
 
  a| 
 更新ONTAP
- a| 
-ONTAP 9.6
-
+| ONTAP 9.6 
 
 
  a| 
 ONTAP 9.6
- a| 
-版本9.5 ONTAP
-
-
-
- a| 
-版本9.5 ONTAP
- a| 
-ONTAP 9.4
-
-
-
- a| 
-ONTAP 9.4
- a| 
-ONTAP 9.3
-
-
-
- a| 
-ONTAP 9.3
- a| 
-ONTAP 9.2
-
-
-
- a| 
-ONTAP 9.2
- a| 
-ONTAP 9.1
-
-
-
- a| 
-提供功能ONTAP ONTAP
- a| 
-Data ONTAP 8.3.x
-
+| 版本9.5 ONTAP 
 |===
-
-NOTE: 如果您需要從ONTAP 29版9.1改為9.0版、請遵循 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2876873["降級程序"^] 請參閱此處說明。

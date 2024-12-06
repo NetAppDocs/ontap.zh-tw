@@ -1,0 +1,24 @@
+= 
+:allow-uri-read: 
+
+
+.步驟
+. 從子系統移除主機、以停用DH-HMAP-CHAP驗證：
++
+[source, cli]
+----
+vserver nvme subsystem host remove -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 確認DH-HMAP-CHAP驗證傳輸協定已從主機移除：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 無需驗證即可將主機重新新增回子系統：
++
+[source, cli]
+----
+vserver nvme subsystem host add vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+

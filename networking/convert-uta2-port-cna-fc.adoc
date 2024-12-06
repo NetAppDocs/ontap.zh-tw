@@ -1,0 +1,87 @@
+---
+permalink: networking/convert-uta2-port-cna-fc.html 
+sidebar: sidebar 
+keywords: change, uta2, port, cna mode, fc mode 
+summary: 當您需要變更連接埠與其網路的實體媒體，或是支援 FC 啟動器和目標時，請將 UTA2 特性設定從 CNA 模式變更為 FC 模式。 
+---
+= 在 ONTAP 中隱藏 UTA2 連接埠
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將 UTA2 連接埠從融合式網路介面卡（ CNA ）模式轉換為光纖通道（ FC ）模式，反之亦然。
+
+當您需要變更連接埠與其網路的實體媒體，或是支援 FC 啟動器和目標時，您應該將 UTA2 特性設定從 CNA 模式變更為 FC 模式。
+
+[role="tabbed-block"]
+====
+.從 CNA 模式到 FC 模式
+--
+.步驟
+. 使介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin down
+----
+. 變更連接埠模式：
++
+[source, cli]
+----
+ucadmin modify -node <node_name> -adapter <adapter_name> -mode fcp
+----
+. 重新啟動節點、然後將介面卡上線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin up
+----
+. 請通知您的管理員或VIF管理程式、視情況刪除或移除連接埠：
++
+** 如果連接埠作為LIF的主連接埠、介面群組（ifgrp）或主機VLAN的成員、則管理員應執行下列動作：
++
+*** 移動LIF、從ifgrp移除連接埠、或分別刪除VLAN。
+*** 執行命令以手動刪除連接埠 `network port delete`。如果 `network port delete`命令失敗，系統管理員應解決錯誤，然後再次執行命令。
+
+
+** 如果連接埠不是LIF的主連接埠、不是ifgrp的成員、也不是主控VLAN、則VIF管理程式應在重新開機時從記錄中移除連接埠。如果 VIF 管理程式未移除連接埠，則管理員必須在重新開機後使用命令手動移除該連接埠 `network port delete`。
+
+
+. 確認您已安裝正確的SFP+：
++
+[source, cli]
+----
+network fcp adapter show -instance -node -adapter
+----
++
+對於CNA、您應該使用10Gb乙太網路SFP。對於FC、您應該先使用8 GB SFP或16 GB SFP、再變更節點上的組態。
+
+
+
+--
+.從 FC 模式到 CNA 模式
+--
+.步驟
+. 使介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin down
+----
+. 變更連接埠模式：
++
+[source, cli]
+----
+ucadmin modify -node <node_name> -adapter <adapter_name> -mode cna
+----
+. 重新啟動節點
+. 確認您已安裝正確的 SFP+ 。
++
+對於CNA、您應該使用10Gb乙太網路SFP。
+
+
+
+--
+====

@@ -4,130 +4,87 @@ sidebar: sidebar
 keywords: fc, target, port, configuration, recommendations 
 summary: 若要獲得最佳效能和最高可用度、您應該使用建議的FC目標連接埠組態。 
 ---
-= FC目標連接埠組態建議
+= FC 目標連接埠組態建議
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-若要獲得最佳效能和最高可用度、您應該使用建議的FC目標連接埠組態。
+FC 目標連接埠可設定及用於 FC-NVMe 傳輸協定，其方式與 FC 傳輸協定的設定和使用方式完全相同。FC-NVMe 傳輸協定的支援會因您的平台和 ONTAP 版本而異。使用 NetApp Hardware Universe 驗證支援。
 
-下表顯示內建FC和FC-NVMe目標連接埠的慣用連接埠使用順序。對於擴充介面卡、FC連接埠應該分散、使它們不會使用相同的ASIC來進行連線。中列出了偏好的插槽順序 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得ONTAP 控制器所使用的版本。
-
-以下機型支援FC-NVMe：
-
-* 部分A300 AFF
-+
-[NOTE]
-====
-不支援FC-NVMe的部分板載連接埠。AFF
-
-====
-* AFF A700
-* S4A700s AFF
-* 解答800 AFF
+為獲得最佳效能和最高可用度，您應針對特定平台使用中所列的建議目標連接埠組態 https://hwu.netapp.com["NetApp Hardware Universe"^]。
 
 
-[NOTE]
-====
-FAS2520 系統沒有板載 FC 端口，不支持附加適配器。
 
-====
+== 具有共享 ASIC 的 FC 目標連接埠組態
+
+下列平台具有連接埠配對，可與共享的應用程式專用集成電路（ ASIC ）搭配使用。如果您在這些平台上使用擴充介面卡，您應該設定 FC 連接埠，使它們不會使用相同的 ASIC 進行連線。
+
 [cols="3*"]
 |===
-| 控制器 | 連接埠配對與共享ASIC | 目標連接埠數量：偏好的連接埠 
+| 控制器 | 連接埠配對與共享ASIC | 目標連接埠數量：建議的連接埠 
 
 
  a| 
-FAS9000、AFF FASA700、AFF S4A700s和AFF S4A800
- a| 
-無
- a| 
-所有資料連接埠都位於擴充介面卡上。請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^] 以取得更多資訊。
+* FAS8200
+* 部分A300 AFF
 
-
-
- a| 
-8080、8080和8040
- a| 
-0E+0f
-
-0g+0小時
- a| 
-1：0E
-
-2：0E、0g
-
-3：0E、0g、0小時
-
-4：0E、0g、0f、0小時
-
-
-
- a| 
-FAS8200與AFF FASA300
  a| 
 0g+0小時
  a| 
-1：0g
-
-2：0 g、0小時
+1 ： 0g 2 ： 0g ， 0 小時
 
 
 
  a| 
-8020.
- a| 
-0C+0d
- a| 
-1：0C
-
-2：0C、0d
-
-
+* FAS2720
+* FAS2750
+* VA220 AFF
 
  a| 
-62xx
+0C+0d 0e+0f
  a| 
-0A+0b
-
-0C+0d
- a| 
-1：0A
-
-2：0A、0c
-
-3：0A、0c、0b
-
-4：0A、0c、0b、0d
-
-
-
- a| 
-32xx
- a| 
-0C+0d
- a| 
-1：0C
-
-2：0C、0d
-
-
-
- a| 
-FAS2554、FAS2552、FAS2600系列、FAS2720、FAS2750、AFF 百出A200和AFF 百出A220
- a| 
-0C+0d
-
-0E+0f
- a| 
-1：0C
-
-2 ： 0C 、 0e
-
-3：0C、0e、0d
-
-4：0C、0e、0d、0f
+1 ： 0C 2 ： 0C ， 0e 3 ： 0C ， 0e ， 0d 4 ： 0C ， 0e ， 0d ， 0f
 
 |===
+
+
+== FC目標連接埠支援的速度
+
+FC目標連接埠可設定為以不同速度執行。指定主機使用的所有目標連接埠都應設定為相同的速度。您應該設定目標連接埠速度、使其符合所連接裝置的速度。請勿將自動協商功能用於連接埠速度。設定為自動協商的連接埠、在接管/恢復或其他中斷之後、重新連線可能需要較長時間。
+
+您可以設定內建連接埠和擴充介面卡、以下列速度執行。每個控制器和擴充介面卡連接埠都可視需要個別設定、以獲得不同的速度。
+
+[cols="4*"]
+|===
+| 4 Gb連接埠 | 8 Gb 連接埠 | 16 GB連接埠 | 32 GB 連接埠 
+
+
+ a| 
+* 4 GB
+* 2 GB
+* 1 GB
+
+ a| 
+* 8 GB
+* 4 GB
+* 2 GB
+
+ a| 
+* 16 GB
+* 8 GB
+* 4 GB
+
+ a| 
+* 32 GB
+* 16 GB
+* 8 GB
+
+
+|===
+[NOTE]
+====
+UTA2連接埠可視需要使用8 GB SFP+介面卡來支援8、4和2 GB速度。
+
+====

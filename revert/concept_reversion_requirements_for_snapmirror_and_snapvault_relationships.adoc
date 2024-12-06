@@ -2,16 +2,16 @@
 permalink: revert/concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html 
 sidebar: sidebar 
 keywords: ontap, revert, reverting, reversion, requirements, snapmirror, snapvault, relationships 
-summary: 系統節點還原至命令會通知您任何SnapMirror和SnapVault SnapMirror關係、這些關係必須刪除或重新設定、才能完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。 
+summary: 系統節點還原至命令會通知您任何需要刪除或重新設定的 SnapMirror 和 SnapVault 關係，以便完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。 
 ---
-= SnapMirror和SnapVault 彼此之間的還原要求
+= ONTAP 還原 SnapMirror 和 SnapVault 關係的需求
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-系統節點還原至命令會通知您任何SnapMirror和SnapVault SnapMirror關係、這些關係必須刪除或重新設定、才能完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。
+ `system node revert-to`命令會通知您任何需要刪除或重新設定的 SnapMirror 和 SnapVault 關係，以便完成還原程序。不過、在您開始還原之前、請務必瞭解這些需求。
 
 * 所有SnapVault 的資料保護鏡射關係必須先靜止、然後再中斷。
 +
@@ -41,5 +41,5 @@ NOTE: 根磁碟區上的單一檔案Snapshot還原（SFSR）和部分檔案Snaps
 +
 您可以等待還原作業完成、也可以中止還原作業。
 
-* 任何不完整的單一檔案與Snapshot還原作業、都必須使用SnapMirror還原命令加以移除。
+* 任何不完整的單一檔案和 Snapshot 還原作業都必須使用命令來移除 `snapmirror restore`。
 

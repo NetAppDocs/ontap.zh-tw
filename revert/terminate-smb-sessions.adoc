@@ -1,0 +1,75 @@
+---
+permalink: revert/terminate-smb-sessions.html 
+sidebar: sidebar 
+keywords: ontap, revert, reversion, reverting, downgrade, downgrading, preparation 
+summary: 各種組態設定可能會影響叢集升級的準備程度。 
+---
+= 在還原 ONTAP 之前終止某些 SMB 工作階段
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從任何版本的 ONTAP 9 還原 ONTAP 叢集之前，您應該先識別並妥善終止任何非持續可用的 SMB 工作階段。
+
+使用SMB 3.0傳輸協定的Hyper-V或Microsoft SQL Server用戶端可存取持續可用的SMB共用區、不需要在升級或降級之前終止。
+
+.步驟
+. 找出任何無法持續使用的既有SMB工作階段：
++
+[source, cli]
+----
+vserver cifs session show -continuously-available No -instance
+----
++
+此命令會顯示任何無法持續可用的 SMB 工作階段的詳細資訊。您應該先終止這些程式、再繼續ONTAP 執行「停止降級」。
+
++
+[listing]
+----
+cluster1::> vserver cifs session show -continuously-available No -instance
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 4160072788
+Incoming Data LIF IP Address: 198.51.100.5
+      Workstation IP address: 203.0.113.20
+    Authentication Mechanism: NTLMv2
+                Windows User: CIFSLAB\user1
+                   UNIX User: nobody
+                 Open Shares: 1
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 8m 39s
+                   Idle Time: 7m 45s
+            Protocol Version: SMB2_1
+      Continuously Available: No
+1 entry was displayed.
+----
+. 如有必要、請識別您所識別的每個 SMB 工作階段所開啟的檔案：
++
+[source, cli]
+----
+vserver cifs session file show -session-id session_ID
+----
++
+[listing]
+----
+cluster1::> vserver cifs session file show -session-id 1
+
+Node:       node1
+Vserver:    vs1
+Connection: 4160072788
+Session:    1
+File    File      Open Hosting                               Continuously
+ID      Type      Mode Volume          Share                 Available
+------- --------- ---- --------------- --------------------- ------------
+1       Regular   rw   vol10           homedirshare          No
+Path: \TestDocument.docx
+2       Regular   rw   vol10           homedirshare          No
+Path: \file1.txt
+2 entries were displayed.
+----
+

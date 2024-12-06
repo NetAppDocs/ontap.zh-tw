@@ -1,25 +1,34 @@
 ---
 permalink: revert/task_things_to_verify_before_revert.html 
 sidebar: sidebar 
-keywords: ontap, revert, reversion, reverting, downgrade, downgrading, preparation 
-summary: 各種組態設定可能會影響叢集升級的準備程度。 
+keywords: ontap, revert, reversion, reverting, downgrade, downgrading, preparation, pre-revert, checks, verification, cluster health, storage health, system time, jobs 
+summary: 還原 ONTAP 之前，您應該先確認叢集健全狀況，儲存健全狀況和系統時間。您也應該確認叢集上沒有執行任何工作。 
 ---
-= 還原之前需要驗證的事項
+= 在還原 ONTAP 叢集之前執行的系統驗證
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-還原之前、您應該先確認叢集健全狀況、儲存健全狀況和系統時間。  您也應該刪除任何正在執行的叢集工作、並正常終止任何無法持續使用的SMB工作階段。
+還原 ONTAP 叢集之前，您應該先確認叢集健全狀況，儲存健全狀況和系統時間。您也應該確認叢集上沒有執行任何工作。
 
 
 
 == 驗證叢集健全狀況
 
-還原叢集之前、您應該先確認節點狀況良好且符合參與叢集的資格、而且叢集已達到仲裁。
+在還原 ONTAP 叢集之前，您應該先確認節點狀況良好且符合參與叢集的資格，而且叢集已達到仲裁。
 
-. 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格： `cluster show`
+.步驟
+. 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格：
++
+[source, cli]
+----
+cluster show
+----
++
+在此範例中，所有節點都是健全且符合參與叢集的資格。
+
 +
 [listing]
 ----
@@ -32,8 +41,12 @@ node1                 true    true
 +
 如果有任何節點不健全或不符合資格、請檢查EMS記錄是否有錯誤、並採取修正行動。
 
-. 將權限等級設為進階： +
-`set -privilege advanced`
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 輸入 `y` 以繼續。
 
@@ -53,29 +66,37 @@ node1                 true    true
  a| 
 管理應用程式
  a| 
-`cluster ring show -unitname mgmt`
-
+[source, cli]
+----
+cluster ring show -unitname mgmt
+----
 
 
  a| 
 Volume位置資料庫
  a| 
-`cluster ring show -unitname vldb`
-
+[source, cli]
+----
+cluster ring show -unitname vldb
+----
 
 
  a| 
 虛擬介面管理程式
  a| 
-`cluster ring show -unitname vifmgr`
-
+[source, cli]
+----
+cluster ring show -unitname vifmgr
+----
 
 
  a| 
 SAN管理精靈
  a| 
-`cluster ring show -unitname bcomd`
-
+[source, cli]
+----
+cluster ring show -unitname bcomd
+----
 |===
 +
 此範例顯示Volume位置資料庫程序：
@@ -94,9 +115,18 @@ node3     vldb     154      154      14847    node0     secondary
 ----
 
 
-. 返回管理權限層級： +
-`set -privilege admin`
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `event log show  -severity informational -message-name scsiblade.*`
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：
++
+[source, cli]
+----
+event log show  -severity informational -message-name scsiblade.*
+----
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 
@@ -118,8 +148,9 @@ link:../system-admin/index.html["系統管理"]
 
 == 驗證儲存設備健全狀況
 
-還原叢集之前、您應該先確認磁碟、集合體和磁碟區的狀態。
+還原 ONTAP 叢集之前，您應該先確認磁碟，集合體和磁碟區的狀態。
 
+.步驟
 . 驗證磁碟狀態：
 +
 [cols="2*"]
@@ -130,7 +161,12 @@ link:../system-admin/index.html["系統管理"]
  a| 
 中斷的磁碟
  a| 
-.. 顯示任何毀損的磁碟： `storage disk show -state broken`
+.. 顯示任何毀損的磁碟：
++
+[source, cli]
+----
+storage disk show -state broken
+----
 .. 移除或更換任何損壞的磁碟。
 
 
@@ -139,12 +175,22 @@ link:../system-admin/index.html["系統管理"]
  a| 
 正在進行維護或重建的磁碟
  a| 
-.. 顯示任何處於維護、擱置或重建狀態的磁碟： `storage disk show -state maintenance|pending|reconstructing`
+.. 顯示任何處於維護、擱置或重建狀態的磁碟：
++
+[source, cli]
+----
+storage disk show -state maintenance|pending|reconstructing
+----
 .. 請等待維護或重建作業完成後再繼續。
 
 
 |===
-. 顯示實體與邏輯儲存設備的狀態（包括儲存集合體）、以確認所有集合體均處於線上狀態： `storage aggregate show -state !online`
+. 顯示實體與邏輯儲存設備的狀態，包括儲存區集合體，以確認所有集合體均為線上狀態： +
++
+[source, cli]
+----
+storage aggregate show -state !online
+----
 +
 此命令會顯示_非_線上的集合體。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
 
@@ -154,7 +200,12 @@ link:../system-admin/index.html["系統管理"]
 cluster1::> storage aggregate show -state !online
 There are no entries matching your query.
 ----
-. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上： `volume show -state !online`
+. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上：
++
+[source, cli]
+----
+volume show -state !online
+----
 +
 執行重大升級或還原之前和之後、所有磁碟區都必須處於線上狀態。
 
@@ -164,7 +215,12 @@ There are no entries matching your query.
 cluster1::> volume show -state !online
 There are no entries matching your query.
 ----
-. 確認沒有不一致的磁碟區： `volume show -is-inconsistent true`
+. 確認沒有不一致的磁碟區：
++
+[source, cli]
+----
+volume show -is-inconsistent true
+----
 +
 請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
 
@@ -177,10 +233,21 @@ link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
 
 == 驗證系統時間
 
-還原之前、您應該先確認NTP已設定、而且時間已在叢集之間同步。
+在還原 ONTAP 叢集之前，您應該確認已設定 NTP ，而且時間已在整個叢集上同步。
 
-. 確認叢集與 NTP 伺服器相關聯： `cluster time-service ntp server show`
-. 驗證每個節點的日期和時間是否相同： `cluster date show`
+.步驟
+. 確認叢集與 NTP 伺服器相關聯：
++
+[source, cli]
+----
+cluster time-service ntp server show
+----
+. 驗證每個節點的日期和時間是否相同：
++
+[source, cli]
+----
+cluster date show
+----
 +
 [listing]
 ----
@@ -199,9 +266,18 @@ node3     4/6/2013 20:54:38   GMT
 
 == 確認沒有工作正在執行
 
-還原ONTAP 此功能之前、您必須先確認叢集工作的狀態。如果有任何Aggregate、Volume、NDMP（傾印或還原）或Snapshot工作（例如建立、刪除、移動、修改、複寫、 和掛載工作）正在執行或排入佇列、您必須允許工作成功完成或停止佇列的項目。
+還原 ONTAP 叢集之前，您應該先確認叢集工作的狀態。如果有任何 Aggregate ， Volume ， NDMP （傾印或還原）或 Snapshot 工作（例如建立，刪除，移動，修改，複寫及掛載工作）正在執行或佇列中，您應該允許工作順利完成或停止佇列中的項目。
 
-. 檢閱任何執行中或佇列中的 Aggregate 、 Volume 或 Snapshot 工作清單： `job show`
+.步驟
+. 檢閱任何執行中或佇列中的 Aggregate 、 Volume 或 Snapshot 工作清單：
++
+[source, cli]
+----
+job show
+----
++
+在此範例中，有兩個工作排入佇列：
+
 +
 [listing]
 ----
@@ -214,17 +290,19 @@ Job ID Name                 Vserver    Node           State
 8630   Certificate Expiry Check
                             cluster1   -              Queued
        Description: Certificate Expiry Check
-.
-.
-.
 ----
-. 刪除任何執行中或佇列中的 Aggregate 、 Volume 或 Snapshot 複製工作： `job delete -id job_id`
+. 刪除任何執行中或佇列中的 Aggregate 、 Volume 或 Snapshot 複製工作：
 +
-[listing]
+[source, cli]
 ----
-cluster1::> job delete -id 8629
+job delete -id <job_id>
 ----
-. 確認沒有任何 Aggregate 、 Volume 或 Snapshot 工作正在執行或排入佇列： `job show`
+. 確認沒有任何 Aggregate 、 Volume 或 Snapshot 工作正在執行或排入佇列：
++
+[source, cli]
+----
+job show
+----
 +
 在此範例中、所有執行中和佇列中的工作都已刪除：
 
@@ -244,65 +322,3 @@ Job ID Name                 Vserver    Node           State
 2 entries were displayed
 ----
 
-
-
-
-== 應終止的SMB工作階段
-
-還原之前、您應該先識別並順利終止任何無法持續使用的SMB工作階段。
-
-使用SMB 3.0傳輸協定的Hyper-V或Microsoft SQL Server用戶端可存取持續可用的SMB共用區、不需要在升級或降級之前終止。
-
-. 找出任何無法持續使用的既有SMB工作階段： `vserver cifs session show -continuously-available No -instance`
-+
-此命令會顯示任何無法持續可用的 SMB 工作階段的詳細資訊。您應該先終止這些程式、再繼續ONTAP 執行「停止降級」。
-
-+
-[listing]
-----
-cluster1::> vserver cifs session show -continuously-available No -instance
-
-                        Node: node1
-                     Vserver: vs1
-                  Session ID: 1
-               Connection ID: 4160072788
-Incoming Data LIF IP Address: 198.51.100.5
-      Workstation IP address: 203.0.113.20
-    Authentication Mechanism: NTLMv2
-                Windows User: CIFSLAB\user1
-                   UNIX User: nobody
-                 Open Shares: 1
-                  Open Files: 2
-                  Open Other: 0
-              Connected Time: 8m 39s
-                   Idle Time: 7m 45s
-            Protocol Version: SMB2_1
-      Continuously Available: No
-1 entry was displayed.
-----
-. 如有必要、請識別您所識別的每個 SMB 工作階段所開啟的檔案： `vserver cifs session file show -session-id session_ID`
-+
-[listing]
-----
-cluster1::> vserver cifs session file show -session-id 1
-
-Node:       node1
-Vserver:    vs1
-Connection: 4160072788
-Session:    1
-File    File      Open Hosting                               Continuously
-ID      Type      Mode Volume          Share                 Available
-------- --------- ---- --------------- --------------------- ------------
-1       Regular   rw   vol10           homedirshare          No
-Path: \TestDocument.docx
-2       Regular   rw   vol10           homedirshare          No
-Path: \file1.txt
-2 entries were displayed.
-----
-
-
-
-
-== NVMe 頻內驗證
-
-如果您要從 ONTAP 9.12.1 或更新版本還原至 ONTAP 9.12.0 或更新版本、則必須執行此操作 link:../nvme/disable-secure-authentication-nvme-task.html["停用頻內驗證"] 還原之前。  如果未停用使用 DH-HMAC-CHAP 的頻內驗證、還原將會失敗。

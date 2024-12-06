@@ -2,22 +2,31 @@
 permalink: revert/task_verify_health.html 
 sidebar: sidebar 
 keywords: ontap, revert, reverting, reversion, downgrade, downgrading, verifying, verify, cluster, health 
-summary: 還原或降級叢集後、您應確認節點狀況良好且符合參與叢集的資格、而且叢集已達到仲裁數。 
+summary: 還原 ONTAP 叢集之後，您應該確認節點狀況良好且符合參與叢集的資格，而且叢集已達到仲裁。 
 ---
-= 降級或還原後、請驗證叢集與儲存設備的健全狀況
+= ONTAP 還原後，請驗證叢集和儲存設備健全狀況
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-降級或還原叢集後、您應確認節點狀況良好且符合參與叢集的資格、而且叢集已達到仲裁數。您也應該確認磁碟、集合體和磁碟區的狀態。
+還原 ONTAP 叢集之後，您應該確認節點狀況良好且符合參與叢集的資格，而且叢集已達到仲裁。您也應該確認磁碟、集合體和磁碟區的狀態。
 
 
 
 == 驗證叢集健全狀況
 
-. 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格： `cluster show`
+.步驟
+. 驗證叢集中的節點是否處於線上狀態、並符合參加叢集的資格：
++
+[source, cli]
+----
+cluster show
+----
++
+在此範例中，叢集健全，所有節點都有資格參與叢集。
+
 +
 [listing]
 ----
@@ -30,8 +39,12 @@ node1                 true    true
 +
 如果有任何節點不健全或不符合資格、請檢查EMS記錄是否有錯誤、並採取修正行動。
 
-. 將權限等級設為進階： +
-`set -privilege advanced`
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 輸入 `y` 以繼續。
 
@@ -51,34 +64,40 @@ node1                 true    true
  a| 
 管理應用程式
  a| 
-`cluster ring show -unitname mgmt`
-
+[source, cli]
+----
+cluster ring show -unitname mgmt
+----
 
 
  a| 
 Volume位置資料庫
  a| 
-`cluster ring show -unitname vldb`
-
+[source, cli]
+----
+cluster ring show -unitname vldb
+----
 
 
  a| 
 虛擬介面管理程式
  a| 
-`cluster ring show -unitname vifmgr`
-
+[source, cli]
+----
+cluster ring show -unitname vifmgr
+----
 
 
  a| 
 SAN管理精靈
  a| 
-`cluster ring show -unitname bcomd`
-
+[source, cli]
+----
+cluster ring show -unitname bcomd
+----
 |===
 +
 此範例顯示Volume位置資料庫程序：
-
-
 
 +
 [listing]
@@ -92,8 +111,20 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 返回管理權限層級： `set -privilege admin`
-. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中： `event log show  -severity informational -message-name scsiblade.*`
+
+
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+. 如果您是在SAN環境中運作、請確認每個節點都位於SAN仲裁中：
++
+[source, cli]
+----
+event log show  -severity informational -message-name scsiblade.*
+----
 +
 每個節點的最新scsimblet事件訊息應指出SCSI刀鋒處於仲裁狀態。
 
@@ -117,6 +148,7 @@ link:../system-admin/index.html["系統管理"]
 
 還原或降級叢集之後、您應該確認磁碟、集合體和磁碟區的狀態。
 
+.步驟
 . 驗證磁碟狀態：
 +
 [cols="2*"]
@@ -127,7 +159,12 @@ link:../system-admin/index.html["系統管理"]
  a| 
 中斷的磁碟
  a| 
-.. 顯示任何毀損的磁碟： `storage disk show -state broken`
+.. 顯示任何毀損的磁碟：
++
+[source, cli]
+----
+storage disk show -state broken
+----
 .. 移除或更換任何損壞的磁碟。
 
 
@@ -136,12 +173,22 @@ link:../system-admin/index.html["系統管理"]
  a| 
 正在進行維護或重建的磁碟
  a| 
-.. 顯示任何處於維護、擱置或重建狀態的磁碟： `storage disk show -state maintenance|pending|reconstructing`
+.. 顯示任何處於維護、擱置或重建狀態的磁碟：
++
+[source, cli]
+----
+storage disk show -state maintenance|pending|reconstructing
+----
 .. 請等待維護或重建作業完成後再繼續。
 
 
 |===
-. 顯示實體與邏輯儲存設備的狀態（包括儲存集合體）、以確認所有集合體均處於線上狀態： `storage aggregate show -state !online`
+. 顯示實體與邏輯儲存設備的狀態（包括儲存集合體）、以確認所有集合體均處於線上狀態：
++
+[source, cli]
+----
+storage aggregate show -state !online
+----
 +
 此命令會顯示_非_線上的集合體。執行重大升級或還原之前和之後、所有集合體都必須處於線上狀態。
 
@@ -151,7 +198,12 @@ link:../system-admin/index.html["系統管理"]
 cluster1::> storage aggregate show -state !online
 There are no entries matching your query.
 ----
-. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上： `volume show -state !online`
+. 顯示任何非連線的磁碟區、以驗證所有磁碟區是否都在線上：
++
+[source, cli]
+----
+volume show -state !online
+----
 +
 執行重大升級或還原之前和之後、所有磁碟區都必須處於線上狀態。
 
@@ -161,7 +213,12 @@ There are no entries matching your query.
 cluster1::> volume show -state !online
 There are no entries matching your query.
 ----
-. 確認沒有不一致的磁碟區： `volume show -is-inconsistent true`
+. 確認沒有不一致的磁碟區：
++
+[source, cli]
+----
+volume show -is-inconsistent true
+----
 +
 請參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["顯示WAFL 不一致的Volume"] 如何解決不一致的磁碟區。
 
@@ -169,3 +226,9 @@ There are no entries matching your query.
 
 .相關資訊
 link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
+
+
+
+== 驗證用戶端存取（SMB和NFS）
+
+對於已設定的傳輸協定、請測試SMB和NFS用戶端的存取、以驗證叢集是否可存取。

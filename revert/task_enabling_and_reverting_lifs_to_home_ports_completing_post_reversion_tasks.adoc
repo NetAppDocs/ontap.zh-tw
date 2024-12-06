@@ -4,18 +4,24 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, downgrade, downgrading, enable, enabling, lifs, home, ports 
 summary: 在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。還原叢集之後、您必須啟用及還原任何不在主連接埠上的生命。 
 ---
-= 還原後、啟用並還原生命傳輸至主連接埠
+= 在 ONTAP 還原後，啟用並還原至主連接埠
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。還原叢集之後、您必須啟用及還原任何不在主連接埠上的生命。
+在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。還原 ONTAP 叢集之後，您必須啟用並還原不在其主連接埠上的任何生命。
 
 如果主連接埠正常運作、網路介面還原命令會將目前不在主連接埠上的LIF還原回主連接埠。LIF的主連接埠是在建立LIF時指定、您可以使用network interface show命令來判斷LIF的主連接埠。
 
-. 顯示所有生命的狀態： `network interface show`
+.步驟
+. 顯示所有生命的狀態：
++
+[source, cli]
+----
+network interface show
+----
 +
 此範例顯示儲存虛擬機器（SVM）的所有LIF狀態。
 
@@ -40,24 +46,24 @@ vs0
 +
 如果任何生命週期顯示的狀態為「狀態管理」狀態為「關閉」或「為主目錄」狀態為「假」、請繼續下一步。
 
-. 啟用資料生命： `network interface modify {-role data} -status-admin up`
+. 啟用資料生命：
 +
-[listing]
+[source, cli]
 ----
-cluster1::> network interface modify {-role data} -status-admin up
-8 entries were modified.
+network interface modify {-role data} -status-admin up
 ----
-. 將LIF還原至其主連接埠： `network interface revert *`
+. 將LIF還原至其主連接埠：
 +
-此命令會將所有LIF還原回其主連接埠。
-
+[source, cli]
+----
+network interface revert *
+----
+. 確認所有的生命都在其主連接埠中：
 +
-[listing]
+[source, cli]
 ----
-cluster1::> network interface revert *
-8 entries were acted on.
+network interface show
 ----
-. 確認所有的生命都在其主連接埠中： `network interface show`
 +
 此範例顯示SVM vs0的所有lifs都位於其主連接埠上。
 

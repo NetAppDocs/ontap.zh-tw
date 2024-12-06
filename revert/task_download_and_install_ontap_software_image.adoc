@@ -11,71 +11,73 @@ summary: 您必須先下載ONTAP 此功能、然後才能安裝。
 
 
 [role="lead"]
-您必須先從 NetApp 支援網站下載 ONTAP 軟體，然後才能安裝。
+在還原目前的 ONTAP 軟體之前，您必須先從 NetApp 支援網站下載目標軟體版本，然後再進行安裝。
 
 
 
-== 下載軟體映像
+== 下載 ONTAP 軟體映像
 
-若要從 ONTAP 9.4 及更新版本降級或回復至舊版，您可以從 NetApp 支援網站將 ONTAP 軟體映像檔複製到本機資料夾。若要降級或回復ONTAP 至版本不符合更新版本的版本、您必須將ONTAP 此版本的更新版本複製到網路上的HTTP伺服器或FTP伺服器。
+軟體映像是特定於平台機型。您必須取得適用於叢集的正確映像。NetApp 支援網站上提供適用於您平台機型的軟體映像檔、韌體版本資訊及最新韌體。軟體映像包含ONTAP 系統韌體的最新版本、在發佈特定版本的資訊時、即可取得此版本。
 
-請注意下列重要資訊：
 
-* 軟體映像是特定於平台機型。
+NOTE: 如果您要從 ONTAP 9.5 或更新版本還原具有 NetApp Volume Encryption 的系統，則必須為非受限國家 / 地區下載 ONTAP 軟體映像，其中包括 NetApp Volume Encryption 。如果您將 ONTAP 軟體映像用於受限國家 / 地區，以還原採用 NetApp Volume Encryption 的系統，系統會出現問題，您將無法存取您的磁碟區。
+
+.步驟
+. 在 link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"^]NetApp 支援網站的區域中找到目標 ONTAP 軟體。
+. 從 NetApp 支援網站複製軟體映像（例如 97_q_image.tgz ）
 +
-您必須取得適用於叢集的正確映像。NetApp 支援網站上提供適用於您平台機型的軟體映像檔、韌體版本資訊及最新韌體。
+您可以將映像複製到 HTTP 伺服器或 FTP 伺服器上要提供映像的目錄，或是複製到本機資料夾。
 
-* 軟體映像包含ONTAP 系統韌體的最新版本、在發佈特定版本的資訊時、即可取得此版本。
-* 如果您要降級採用ONTAP NetApp Volume Encryption的系統、從版本更新至版本更新版本、則必須下載ONTAP 不受限國家/地區的版次軟體映像、其中包括NetApp Volume Encryption。
+
+
+
+
+== 安裝 ONTAP 軟體映像
+
+從 NetApp 支援網站下載目標 ONTAP 軟體映像之後，請將其安裝在叢集節點上。
+
+.步驟
+. 將權限層級設為進階：
 +
-如果您使用ONTAP 受限國家/地區的還原軟體映像來降級或還原採用NetApp Volume Encryption的系統、系統會出現問題、而且您無法存取磁碟區。
-
-+
-.. 在 link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"^]NetApp 支援網站的區域中找到目標 ONTAP 軟體。
-.. 複製軟體映像。
-+
-*** 若為 ONTAP 9.3 或較舊版本，請從 NetApp 支援網站將軟體映像檔（例如 93_q_image.tgz）複製到將要使用該映像檔的 HTTP 伺服器或 FTP 伺服器上的目錄中。
-*** 若為 ONTAP 9.4 或更新版本，請從 NetApp 支援網站將軟體映像檔（例如 97_q_image.tgz）複製到將要使用該映像檔的 HTTP 伺服器或 FTP 伺服器上的目錄中，或複製到本機資料夾。
-
-
-
-
-
-
-
-
-== 安裝軟體映像
-
-您必須在叢集節點上安裝目標軟體映像。
-
-* 如果您使用NetApp Volume Encryption從ONTAP 更新版本降級或還原系統、則必須為ONTAP 非受限國家/地區下載包含NetApp Volume Encryption在內的「更新版本」軟體映像。
-+
-如果您使用ONTAP 受限國家/地區的還原軟體映像來降級或還原採用NetApp Volume Encryption的系統、系統會出現問題、而且您無法存取磁碟區。
-
-+
-.. 將權限等級設為「進階」、在提示繼續時輸入 * y* ： `set -privilege advanced`
+[source, cli]
+----
+set -privilege advanced
+----
 +
 進階提示 (`*>`）。
 
-.. 在節點上安裝軟體映像。
+. 出現提示時，輸入 `y`以繼續。
+. 安裝軟體映像：
 +
-此命令可同時下載並安裝所有節點上的軟體映像。若要在每個節點上一次下載並安裝映像、請勿指定-background參數。
-
+** 對於標準組態或雙節點 MetroCluster 組態，請輸入下列命令：
 +
-*** 如果您要降級或還原非 MetroCluster 組態或雙節點 MetroCluster 組態：``system node image update -node * -package location -replace-package true -setdefault true -background true``
+[source, cli]
+----
+system node image update -node * -package location -replace-package true -setdefault true -background true
+----
 +
-此命令會使用延伸查詢、將安裝為替代映像的目標軟體映像變更為節點的預設映像。
+此命令可同時下載並安裝所有節點上的軟體映像。若要在每個節點上一次下載並安裝映像，請勿指定 `-background`參數。此命令也會使用延伸查詢，將安裝為替代映像的目標軟體映像變更為節點的預設映像。
 
-*** 如果您要重新建立或還原四個或八個節點的 MetroCluster 組態、則必須在兩個叢集上發出下列命令： `system node image update -node * -package location -replace-package true true -background true -setdefault false`
+** 對於四節點或八節點 MetroCluster 組態，請在兩個叢集上輸入下列命令：
 +
-此命令會使用延伸查詢來變更目標軟體映像、此映像會安裝為每個節點的替代映像。
-
-
-
-.. 輸入 `y` 以在出現提示時繼續。
-.. 確認軟體映像已下載並安裝在每個節點上： `system node image show-update-progress -node *`
+[source, cli]
+----
+system node image update -node * -package location -replace-package true true -background true -setdefault false
+----
 +
-此命令會顯示軟體映像下載與安裝的目前狀態。您應該繼續執行此命令、直到所有節點回報「執行狀態」為「已結束」、以及「結束成功狀態」。
+此命令可同時下載並安裝所有節點上的軟體映像。若要在每個節點上一次下載並安裝映像，請勿指定 `-background`參數。此命令也會使用延伸查詢來變更目標軟體映像，該映像會安裝為每個節點上的替代映像。
+
+
+
+. 輸入 `y` 以在出現提示時繼續。
+. 確認軟體映像已下載並安裝在每個節點上：
++
+[source, cli]
+----
+system node image show-update-progress -node *
+----
++
+此命令會顯示軟體映像下載與安裝的目前狀態。您應該繼續執行此命令，直到所有節點回報「已結束」的 * 執行狀態 * ，以及「成功」的 * 結束狀態 * 為止。
 
 +
 系統節點映像更新命令可能會失敗、並顯示錯誤或警告訊息。解決任何錯誤或警告之後、您可以再次執行命令。
@@ -101,6 +103,4 @@ Status of most recent operation:
         Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node1.
 2 entries were acted on.
 ----
-
-
 

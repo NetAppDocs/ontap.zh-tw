@@ -4,15 +4,26 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, set, setting, autocommit, periods, snaplock 
 summary: 若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設定為小時、而非天。在嘗試回復之前、您必須檢查SnapLock 您的功能驗證資料、並視需要從數天改為數小時。 
 ---
-= 在還原之前、請先設定SnapLock 自動提交期間以供使用
+= 在還原 ONTAP 之前，請先設定 SnapLock 磁碟區的自動認可期間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-若要從ONTAP 還原9、SnapLock 必須將自動提交期間的值設定為小時、而非天。在嘗試回復之前、您必須檢查SnapLock 您的功能驗證資料、並視需要從數天改為數小時。
+從任何版本的 ONTAP 9 還原 ONTAP 叢集之前， SnapLock 磁碟區的自動認可期間值必須以小時為單位，而非以天為單位。您應該檢查 SnapLock 磁碟區的自動認可值，並視需要從數天修改為數小時。
 
-. 驗證叢集中是否有 SnapLock 磁碟區具有不受支援的自動認可期間：``volume snaplock show -autocommit-period *days``
-. 將不支援的自動認可期間修改為小時： `volume snaplock modify -vserver vserver_name -volume volume_name -autocommit-period value hours`
+.步驟
+. 驗證叢集中是否有 SnapLock 磁碟區具有不受支援的自動認可期間：
++
+[source, cli]
+----
+volume snaplock show -autocommit-period *days
+----
+. 將不支援的自動認可期間修改為小時
++
+[source, cli]
+----
+volume snaplock modify -vserver <vserver_name> -volume <volume_name> -autocommit-period value hours
+----
 

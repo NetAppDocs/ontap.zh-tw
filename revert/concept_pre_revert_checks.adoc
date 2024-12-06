@@ -4,78 +4,52 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, revision, plan, planning, pre-checks 
 summary: 視您的環境而定、在開始還原之前、您必須考量某些因素。 
 ---
-= 還原前檢查
+= ONTAP 版本所需的還原前工作
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-視您的環境而定、您需要考量特定因素才能回復。請先檢閱下表、瞭解您需要考量哪些特殊考量。
+視您的 ONTAP 版本而定，您可能需要在開始還原程序之前執行其他準備工作。
 
 [cols="2*"]
 |===
-| 請自問... | 如果您的答案是*是*、請執行此動作... 
+| 如果您從 ... | 開始還原程序之前，請執行下列步驟 ... 
 
 
-| 我的叢集是否執行SnapMirror？  a| 
-* link:concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html["檢閱還原具有 SnapMirror 同步關係之系統的考量事項"]
-* link:concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html["檢閱SnapMirror和SnapVault 彼此之間的還原要求"]
+| 任何 ONTAP 9 版本  a| 
+* link:terminate-smb-sessions.html["終止非持續可用的 SMB 工作階段"]。
+* link:concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html["檢閱SnapMirror和SnapVault 彼此之間的還原要求"]。
+* link:task_reverting_systems_with_deduplicated_volumes.html["確認已刪除的重複磁碟區有足夠的可用空間"]。
+* link:task_preparing_snapshot_copies_before_reverting.html["準備快照"]。
+* link:task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html["將 SnapLock 磁碟區的自動認可期間設為小時"]。
+* 如果您有 MetroCluster 組態link:task_disable_asuo.html["停用自動非計畫性切換"]，。
 
 
 
 
-| 我的叢集是否執行SnapLock 不正常？ | link:task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html["設定自動提交期間"] 
+| ONTAP 9.16.1.  a| 
+* 如果您設定了 TLS 來進行 NVMe / TCP 連線link:task-disable-tls-nvme-host.html["停用 NVMe 主機上的 TLS 組態"]，。
+* 如果您已啟用延伸 qtree 效能監控，link:disable-extended-qtree-performance-monitoring.html["停用它"]。
+* 如果您使用 CORS 來存取 ONTAP S3 儲存區link:remove-cors-configuration.html["移除 CORS 組態"]，。
 
 
-| 我是否有 FlexClone 磁碟區分割？ | link:task_reverting_the_physical_block_sharing_in_split_flexclone_volumes.html["反轉實體區塊共用"] 
 
 
-| 我有FlexGroup 什麼用的呢？ | link:task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["停用qtree功能"] 
+| ONTAP 9.14.1. | 如果您已啟用用戶端連線的主幹連線，link:remove-nfs-trunking-task.html["停用任何 NFSv4.1 伺服器上的主幹連線"]。 
 
 
-| 我的CIFS伺服器是否處於工作群組模式？ | link:task_identifying_and_moving_cifs_servers_in_workgroup_mode.html["以工作群組模式移動或刪除CIFS伺服器"] 
+| ONTAP 9.12.1  a| 
+* 如果您已設定 S3 用戶端存取 NAS 資料，link:remove-nas-bucket-task.html["移除 S3 NAS 貯體組態。"]
+* 如果您執行的是 NVMe 傳輸協定，並已設定頻內驗證，請參閱link:disable-in-band-authentication.html["停用頻內驗證"]。
+* 如果您有 MetroCluster 組態link:task-disable-ipsec.html["停用 IPsec"]，。
 
 
-| 我是否已刪除重複資料刪除的磁碟區？ | link:task_reverting_systems_with_deduplicated_volumes.html["驗證Volume是否包含足夠的可用空間"] 
 
 
-| 我有快照複本嗎？ | link:task_preparing_snapshot_copies_before_reverting.html["準備快照複本"] 
+| ONTAP 9.11.1. | 如果您已設定了自動勒索軟體保護（ ARP ），link:anti-ransomware-license-task.html["檢查 ARP 授權"]。 
 
 
-| 我是否要回復ONTAP 到版本8.3.x？ | link:identify-user-sha2-hash-user-accounts.html["識別使用SHA-2雜湊功能的使用者帳戶"] 
-
-
-| 反勒索軟體保護功能是否設定為ONTAP 適用於VMware 9.11.1或更新版本？ | link:anti-ransomware-license-task.html["檢查反勒索軟體授權"] 
-
-
-| S3 的多重傳輸協定存取是否設定為適用於 ONTAP 9.12.1 或更新版本？ | link:remove-nas-bucket-task.html["移除S3 NAS儲存區組態"] 
-
-
-| 是否已針對 ONTAP 9.14.1 或更新版本設定 NFSv4.1 工作階段主幹？ | link:remove-nfs-trunking-task.html["移除 NFSv4.1 工作階段主幹組態"] 
-
-
-| ONTAP 9 是針對 NVMe 主機設定 TLS 安全通道。 16.1 或更新版本嗎？ | link:task-disable-tls-nvme-host.html["從 NVMe 主機組態移除 TLS"] 
-
-
-| qtree 是否正在使用延伸效能監控？ | link:../volumes/qtrees-partition-your-volumes-concept.html["qtree 與 ONTAP FlexVol volume 分割"] 
-
-
-| 是否已設定跨來源資源共享（ CORS ）？ | link:../s3-config/cors-integration.html["CORS 與 ONTAP 整合"] 
-|===
-
-
-== 還原前檢查MetroCluster
-
-根據您的需求、您需要考量特定因素才能回復。MetroCluster請先檢閱下表、瞭解您需要考量哪些特殊考量。
-
-[cols="2*"]
-|===
-| 請自問... | 如果您的答案是*是*、請執行此動作... 
-
-
-| 我是否有雙節點MetroCluster 或四節點的不全功能組態？ | link:task_disable_asuo.html["停用自動非計畫性切換"] 
-
-
-| 我的MetroCluster 4節點或8節點的不完整支援IP或光纖附加組態是否執行ONTAP 了更新版本的版本號？ | link:task-disable-ipsec.html["停用IPsec"] 
+| ONTAP 9.6 | 如果您有 SnapMirror 同步關係，link:concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html["準備要還原的關係"]。 
 |===
