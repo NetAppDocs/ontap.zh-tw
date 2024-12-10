@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: convert, exist, dp-type, relationship, xdp 
 summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。 
 ---
-= 將現有的DP類型關係轉換為XDP
+= 在 ONTAP 中，將現有的 DP 類型關係轉換為 XDP
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -59,7 +59,7 @@ Healthy: true
 +
 [NOTE]
 ====
-您可能會發現保留的複本很有幫助 `snapmirror show` 命令輸出可追蹤現有的關聯設定。
+您可能會發現保留命令輸出複本有助於[`snapmirror show`追蹤現有的關聯性設定。深入瞭解 ONTAP 命令參照中的連結： https://docs 。 NetApp 。 ONTAP - SnapMirror-show.html[`snapmirror show`] 命令。
 
 ====
 . 從來源和目的地磁碟區、確保兩個磁碟區都有一個通用的Snapshot複本：
@@ -118,7 +118,7 @@ snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
 snapmirror quiesce -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 +
-如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["手冊頁"^]。
+深入瞭解 ONTAP 命令參考資料中的 link:https://docs NetApp ． ONTAP － SnapMirror-quiesce.html[`snapmirror quiesce`] 命令。
 
 +
 [NOTE]
@@ -141,7 +141,7 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 snapmirror break -destination-path <SVM:volume>
 ----
 +
-如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["手冊頁"^]。
+瞭解有關 ONTAP 命令參考中的 link:https://docs NetApp ． ONTAP － SnapMirror-break.html^] 命令的更多信息[`snapmirror-break`。
 
 +
 [NOTE]
@@ -178,7 +178,7 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 snapmirror delete -destination-path <SVM:volume>
 ----
 +
-如需完整的命令語法、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["手冊頁"^]。
+深入瞭解 ONTAP 命令參照中的連結： https://docs 。 NetApp 。 ONTAP - SnapMirror-delete.html[`snapmirror-delete`^] 命令。
 
 +
 [NOTE]
@@ -215,7 +215,7 @@ cluster_src::> snapmirror release -destination-path svm_backup:volA_dst -relatio
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume>  -type XDP -schedule <schedule> -policy <policy>
 ----
 +
-新關係必須使用相同的來源和目的地Volume。如需完整的命令語法、請參閱手冊頁。
+新關係必須使用相同的來源和目的地Volume。如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
 
 +
 [NOTE]
@@ -239,7 +239,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 +
-若要改善重新同步時間、您可以使用 `-quick-resync` 選項、但您應該注意儲存效率節約可能會損失。如需完整的命令語法、請參閱手冊頁： link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html#parameters.html["SnapMirror重新同步命令"^]。
+若要改善重新同步時間，您可以使用此 `-quick-resync`選項，但您應該注意儲存效率的節約可能會遺失。深入瞭解 ONTAP 命令參照中的連結： https://docs 。 NetApp 。 ONTAP 。 SnapMirror ： resync 。 html#parameters.html[`snapmirror resync`^ 命令。
 
 +
 [NOTE]

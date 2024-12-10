@@ -148,6 +148,10 @@ ipspace1
 
 . 在您要用來存取資料的連接埠上建立一個或多個生命體。
 +
+
+CAUTION: NetApp 建議為資料 SVM 上的所有生命建立子網路物件。這對 MetroCluster 組態尤其重要，因為每個子網路物件都有相關的廣播網域，因此子網路物件可讓 ONTAP 判斷目的地叢集上的容錯移轉目標。有關說明，請參閱link:../networking/create_a_subnet.html["建立子網路"]。
+
++
 ....
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
 ....
