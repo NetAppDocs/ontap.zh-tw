@@ -13,8 +13,91 @@ summary: 從VMware 9.8開始ONTAP 、如果您是進階權限層級的叢集管�
 [role="lead"]
 從 ONTAP 9.8 開始、如果您是進階權限層級的叢集管理員、您可以使用組合、主動將資料從雲端層級提升至效能層級 `tiering-policy` 和 `cloud-retrieval-policy` 設定：
 
-
-
-== 關於這項工作
-
+.關於這項工作
 如果您想要停止在磁碟區上使用 FabricPool 、或是有的話、可以執行此動作 `snapshot-only` 分層原則、而且您想要將還原的 Snapshot 複本資料帶回效能層。
+
+
+
+== 將FabricPool 所有資料從一個數據區提升至效能層
+
+您可以主動擷取雲端層中 FabricPool 磁碟區上的所有資料，並將其提升至效能層級。
+
+.步驟
+. 使用 `volume modify` 要設定的命令 `tiering-policy` 至 `none` 和 `cloud-retrieval-policy` 至 `promote`。
++
+[listing]
+----
+volume modify -vserver <vserver-name> -volume <volume-name> -tiering-policy none -cloud-retrieval-policy promote
+----
+
+
+
+
+== 將檔案系統資料提升至效能層級
+
+您可以主動從雲端層中還原的Snapshot複本擷取作用中檔案系統資料、並將其提升至效能層級。
+
+.步驟
+. 使用 `volume modify` 要設定的命令 `tiering-policy` 至 `snapshot-only` 和 `cloud-retrieval-policy` 至 `promote`。
++
+[listing]
+----
+volume modify -vserver <vserver-name> -volume <volume-name> -tiering-policy snapshot-only cloud-retrieval-policy promote
+----
+
+
+
+
+== 檢查效能層促銷的狀態
+
+您可以檢查效能層級促銷的狀態、以判斷作業何時完成。
+
+.步驟
+. 使用Volume `object-store` 命令 `tiering` 檢查效能層級促銷狀態的選項。
++
+[listing]
+----
+volume object-store tiering show [ -instance | -fields <fieldname>, ... ] [ -vserver <vserver name> ] *Vserver
+[[-volume] <volume name>] *Volume [ -node <nodename> ] *Node Name [ -vol-dsid <integer> ] *Volume DSID
+[ -aggregate <aggregate name> ] *Aggregate Name
+----
++
+[listing]
+----
+volume object-store tiering show v1 -instance
+
+                                  Vserver: vs1
+                                   Volume: v1
+                                Node Name: node1
+                              Volume DSID: 1023
+                           Aggregate Name: a1
+                                    State: ready
+                      Previous Run Status: completed
+                 Aborted Exception Status: -
+               Time Scanner Last Finished: Mon Jan 13 20:27:30 2020
+                 Scanner Percent Complete: -
+                      Scanner Current VBN: -
+                         Scanner Max VBNs: -
+      Time Waiting Scan will be scheduled: -
+                           Tiering Policy: snapshot-only
+     Estimated Space Needed for Promotion: -
+                        Time Scan Started: -
+  Estimated Time Remaining for scan to complete: -
+                    Cloud Retrieve Policy: promote
+----
+
+
+
+
+== 觸發排定的移轉和分層
+
+從功能性的9.8開始ONTAP 、您可以隨時觸發分層掃描要求、而不必等待預設分層掃描。
+
+.步驟
+. 使用 `volume object-store` 命令 `trigger` 申請移轉和分層的選項。
++
+[listing]
+----
+volume object-store tiering trigger [ -vserver <vserver name> ] *VServer Name [-volume] <volume name> *Volume Name
+----
+

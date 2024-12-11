@@ -55,10 +55,14 @@ summary: 您可以重新託管定義為 SnapMirror 關係一部分的 Volume 。
 
 . 從來源叢集移除SnapMirror關係資訊：
 +
-`snapmirror release relationship-info-only true`
+`snapmirror release -relationship-info-only true`
 
 +
-設定 `relationship-info-only` 參數至 `true` 移除來源關係資訊、而不刪除 Snapshot 複本。
+設定 `-relationship-info-only`參數以 `true`移除來源關係資訊，而不刪除快照。
+
+. 如果已掛載磁碟區，請將其卸載：
++
+`volume unmount -vserver <source_svm> -volume <vol_name>`
 
 . 切換至進階權限層級：
 +
@@ -66,7 +70,7 @@ summary: 您可以重新託管定義為 SnapMirror 關係一部分的 Volume 。
 
 . 在目的地SVM上重新裝載磁碟區：
 +
-`volume rehost -vserver source_svm -volume vol_name -destination-vserver destination_svm`
+`volume rehost -vserver <source_svm> -volume <vol_name> -destination-vserver <destination_svm>`
 
 . 如果SVM對等關係不存在、請在來源SVM和目的地SVM之間建立SVM對等關係：
 +

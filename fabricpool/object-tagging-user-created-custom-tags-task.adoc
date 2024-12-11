@@ -1,7 +1,7 @@
 ---
 permalink: fabricpool/object-tagging-user-created-custom-tags-task.html 
 sidebar: sidebar 
-keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort 
+keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort, fabricpool sorting, fabricpool data 
 summary: 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件標記功能、讓您能夠分類及排序物件、以便更輕鬆地管理。如果您是具有管理權限層級的使用者、可以建立新的物件標記、以及修改、刪除和檢視現有標記。 
 ---
 = 使用使用者建立的自訂標記總覽進行物件標記
@@ -12,3 +12,173 @@ summary: 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件
 
 [role="lead"]
 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件標記功能、讓您能夠分類及排序物件、以便更輕鬆地管理。如果您是具有管理權限層級的使用者、可以建立新的物件標記、以及修改、刪除和檢視現有標記。
+
+
+
+== 在磁碟區建立期間指派新標記
+
+當您想要將一或多個標記指派給新物件、並從您建立的新磁碟區分層時、可以建立新的物件標記。您可以使用標記來協助分類及排序分層物件、以利資料管理。從ONTAP 功能介紹9.8開始、您可以使用System Manager建立物件標籤。
+
+.關於這項工作
+您只能在FabricPool 連接StorageGRID 到不只是一個的資料集上設定標籤。這些標記會在Volume移動期間保留。
+
+* 每個磁碟區最多可有 4 個標記。
+* 在 CLI 中，每個物件標籤都必須是以等號分隔的金鑰值配對。
+* 在 CLI 中，多個標籤必須以逗號分隔。
+* 每個標記值最多可包含 127 個字元。
+* 每個標記鍵都必須以字母字元或底線開頭。
++
+金鑰只能包含英數字元和底線、最多允許127個字元。
+
+
+
+您可以使用ONTAP 物件標籤來指派物件標籤。ONTAP
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至*儲存設備> Tiers*。
+. 找出含有您要標記之磁碟區的儲存層。
+. 按一下「* Volumes *（*磁碟區*）
+. 找到您要標記的磁碟區、然後在「*物件標籤*」欄中選取「*按一下以輸入標籤*」。
+. 輸入金鑰和值。
+. 按一下「 * 套用 * 」。
+
+
+--
+.CLI
+--
+. 使用 `volume create` 命令 `-tiering-object-tags` 選項可建立具有指定標記的新 Volume 。您可以使用以逗號分隔的配對來指定多個標記：
++
+[listing]
+----
+volume create [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [,<key2=value2>,<key3=value3>,<key4=value4> ]
+----
++
+下列範例會建立一個名為fp_dvolume1的磁碟區、其中包含三個物件標籤。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=abc,content=data
+----
+
+
+--
+====
+
+
+== 修改現有標記
+
+您可以變更標記的名稱、取代物件存放區中現有物件上的標記、或是新增不同的標記至您打算稍後新增的新物件。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至*儲存設備> Tiers*。
+. 找出含有您要修改之標記的磁碟區儲存層。
+. 按一下「* Volumes *（*磁碟區*）
+. 找到含有您要修改之標記的磁碟區、然後在*物件標記*欄中按一下標記名稱。
+. 修改標記。
+. 按一下「 * 套用 * 」。
+
+
+--
+.CLI
+--
+. 使用 `volume modify` 命令 `-tiering-object-tags` 修改現有標記的選項。
++
+[listing]
+----
+volume modify [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [ ,<key2=value2>,
+<key3=value3>,<key4=value4> ]
+----
++
+下列範例將現有標記類型=abc的名稱變更為類型=xyz。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
+----
+
+
+--
+====
+
+
+== 刪除標記
+
+您可以刪除不再需要在磁碟區或物件存放區中的物件上設定的物件標記。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 瀏覽至*儲存設備> Tiers*。
+. 找出含有您要刪除標記的磁碟區儲存層。
+. 按一下「* Volumes *（*磁碟區*）
+. 找到含有您要刪除標記的磁碟區、然後在「*物件標記*」欄中按一下標記名稱。
+. 若要刪除標記、請按一下垃圾桶圖示。
+. 按一下「 * 套用 * 」。
+
+
+--
+.CLI
+--
+. 使用 `volume modify` 命令 `-tiering-object-tags` 選項後面接著空白值 (`""`）刪除現有標記。
++
+下列範例會刪除fp_dvolum1上的現有標記。
+
++
+[listing]
+----
+vol modify -volume fp_volume1 -vserver vs0 -tiering-object-tags ""
+----
+
+
+--
+====
+
+
+== 檢視Volume上的現有標記
+
+您可以檢視磁碟區上現有的標記、查看哪些標記可供使用、然後再將新標記附加至清單。
+
+.步驟
+. 使用 `volume show`帶有選項的命令 `tiering-object-tags`可查看捲上的現有標記。
++
+[listing]
+----
+volume show [ -vserver <vserver name> ] -volume <volume_name> -fields tiering-object-tags
+----
+
+
+
+
+== 檢查FabricPool 物件標記狀態的資訊
+
+您可以檢查一FabricPool 或多個版本的功能是否已完成標記。
+
+.步驟
+. 使用 `vol show`命令搭配 `-fields needs-object-retagging`選項、查看標記是否正在進行、是否已完成、或是否未設定標記。
++
+[listing]
+----
+vol show -fields needs-object-retagging  [ -instance | -volume <volume name>]
+----
++
+將顯示下列其中一個值：
+
++
+** `true`：對象標記掃描程序尚未運行或需要再次運行此卷
+** `false`：物件標記掃描器已完成此 Volume 的標記
+** `+<->+`：對象標記掃描儀不適用於此卷。這種情況發生在未駐留在FabricPools上的磁碟區。
+
+
+

@@ -50,35 +50,35 @@ NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在Ne
 您也可以參閱知識庫文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 支援的情況下取消磁碟分割"^]
 
 +
-`disk unpartition _disk_name_`
+`disk unpartition <disk_name>`
 
 . 清除指定的磁碟：
 +
-`disk sanitize start [-p _pattern1_|-r [-p _pattern2_|-r [-p _pattern3_|-r]]] [-c _cycle_count_] _disk_list_`
+`disk sanitize start [-p <pattern1>|-r [-p <pattern2>|-r [-p <pattern3>|-r]]] [-c <cycle_count>] <disk_list>`
 
 +
 
 NOTE: 切勿關閉節點的電源、中斷儲存連線、或是在清理時移除目標磁碟。如果在格式化階段中斷掃毒、則必須重新啟動格式化階段、並允許在磁碟經過消毒並準備好返回備用集區之前完成。如果您需要中止清理程序、可以使用來中止 `disk sanitize abort` 命令。如果指定的磁碟正在進行資料抹除的格式化階段、則在該階段完成之前不會發生中止。
 
 +
- `-p` `_pattern1_` `-p` `_pattern2_` `-p` `_pattern3_` 指定一個由一到三個使用者定義的十六進位位位元組覆寫模式的週期、可連續套用至正在進行清理的磁碟。預設模式為三次通過、第一次使用的是0x55、第二次使用的是0xAA、第三次使用的是0x3c。
+ `-p` `<pattern1>` `-p` `<pattern2>` `-p` `<pattern3>`指定一個由一到三個使用者定義的十六進位位位元組覆寫模式的週期，可連續套用至正在進行清理的磁碟。預設模式為三次通過、第一次使用的是0x55、第二次使用的是0xAA、第三次使用的是0x3c。
 
 +
 `-r` 以隨機覆寫取代任何或所有 Pass 的模式覆寫。
 
 +
-`-c` `_cycle_count_` 指定套用指定覆寫模式的次數。預設值為一個週期。最大值為七個週期。
+`-c` `<cycle_count>`指定套用指定覆寫模式的次數。預設值為一個週期。最大值為七個週期。
 
 +
-`_disk_list_` 指定要清理的備用磁碟 ID 的空間分隔清單。
+`<disk_list>`指定要清理的備用磁碟 ID 的空間分隔清單。
 
 . 如有需要、請檢查磁碟清理程序的狀態：
 +
-`disk sanitize status [_disk_list_]`
+`disk sanitize status [<disk_list>]`
 
 . 在資料抹除程序完成後、將每個磁碟的磁碟恢復為備援狀態：
 +
-`disk sanitize release _disk_name_`
+`disk sanitize release <disk_name>`
 
 . 結束維護模式。
 
@@ -87,7 +87,7 @@ NOTE: 切勿關閉節點的電源、中斷儲存連線、或是在清理時移�
 .使用&#8220清理磁碟；節點和#8221；命令（所有ONTAP 版本均為9）
 [%collapsible]
 ====
-對於ONTAP 所有版本的支援功能、當使用nodesl解除 命令啟用磁碟資料抹除功能時、部分低階ONTAP 的支援功能會停用。在節點上啟用磁碟資料抹除之後、就無法停用。
+在節點上使用 nodesdesh 命令啟用磁碟清理功能之後，就無法停用該功能。
 
 .開始之前
 * 磁碟必須是備用磁碟；磁碟必須由節點擁有、但不能用於本機層（Aggregate）。
@@ -113,11 +113,11 @@ NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在Ne
 
 --
 +
-`disk unpartition _disk_name_`
+`disk unpartition <disk_name>`
 
 . 輸入要清理磁碟的節點節點節點的節點節點節點：
 +
-`system node run -node _node_name_`
+`system node run -node <node_name>`
 
 . 啟用磁碟資料抹除：
 +
@@ -132,7 +132,7 @@ NOTE: 取消磁碟分割的命令只能在診斷層級使用、而且只能在Ne
 
 . 清除指定的磁碟：
 +
-`disk sanitize start [-p pattern1|-r [-p pattern2|-r [-p pattern3|-r]]] [-c cycle_count] disk_list`
+`disk sanitize start [-p <pattern1>|-r [-p <pattern2>|-r [-p <pattern3>|-r]]] [-c <cycle_count>] <disk_list>`
 
 +
 
@@ -144,30 +144,27 @@ NOTE: 請勿關閉節點電源、中斷儲存連線或移除目標
 在階段完成之前不會發生中止。
 
 +
-`-p pattern1 -p pattern2 -p pattern3` 指定一到三個使用者定義十六進位元組的週期
-覆寫可連續套用至正在進行清理的磁碟的模式。預設值
-模式是三次、第一次使用 0x55 、第二次使用 0xAA 、第二次使用 0x3c
-第三次通過。
+`-p <pattern1> -p <pattern2> -p <pattern3>`指定一個由一到三個使用者定義的十六進位位位元組覆寫模式的週期，可連續套用至正在進行清理的磁碟。預設模式為三次通過、第一次使用的是0x55、第二次使用的是0xAA、第三次使用的是0x3c。
 
 +
 `-r` 以隨機覆寫取代任何或所有 Pass 的模式覆寫。
 
 +
-`-c cycle_count` 指定套用指定覆寫模式的次數。
+`-c <cycle_count>`指定套用指定覆寫模式的次數。
 
 +
 預設值為一個週期。最大值為七個週期。
 
 +
-`disk_list` 指定要清理的備用磁碟 ID 的空間分隔清單。
+`<disk_list>`指定要清理的備用磁碟 ID 的空間分隔清單。
 
 . 若要檢查磁碟資料抹除程序的狀態：
 +
-`disk sanitize status [disk_list]`
+`disk sanitize status [<disk_list>]`
 
 . 在資料抹除程序完成後、將磁碟恢復為備援狀態：
 +
-`disk sanitize release _disk_name_`
+`disk sanitize release <disk_name>`
 
 . 返回nodesdro重 管理權限層級：
 +
@@ -201,11 +198,11 @@ NOTE: 請勿關閉節點電源、中斷儲存連線或移除目標
 
 .. 將未指派的已消毒磁碟指派給每個磁碟的適當節點：
 +
-`storage disk assign -disk _disk_name_ -owner _node_name_`
+`storage disk assign -disk <disk_name> -owner <node_name>`
 
 .. 將每個磁碟的磁碟恢復為備援狀態：
 +
-`storage disk unfail -disk _disk_name_ -s -q`
+`storage disk unfail -disk <disk_name> -s -q`
 
 .. 返回管理模式：
 +
