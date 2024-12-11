@@ -1,0 +1,135 @@
+---
+permalink: fabricpool/fabricpool-object-deletion.html 
+sidebar: sidebar 
+keywords: fabricpool, fabric pool, tiering, delete, defrag, unreclaimed, threshold 
+summary: FabricPool 會在 ONTAP 不再參照某個百分比的物件區塊之後刪除物件。 
+---
+= FabricPool 物件刪除與重組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FabricPool 不會刪除附加物件存放區的區塊。相反地， FabricPool 會在 ONTAP 不再參照某個百分比的物件區塊之後，刪除物件。
+
+例如，在分層到 Amazon S3 的 4 MB 物件中，有 1 ， 024 個 4KB 區塊。在 ONTAP 參考不到 2054KB 區塊（ 1024 個區塊的 20% ）之前，不會發生磁碟重組和刪除。當足夠（ 1 ， 024 ）的區塊沒有參照時，會刪除其原始的 4 MB 物件，並建立新物件。
+
+您可以自訂未回收空間臨界值百分比，並將其設為不同物件存放區的不同預設層級。預設設定為：
+
+|===
+
+
+| 物件存放區 | ONTAP 9.3 及更早版本 | ONTAP 9.4 至 9.7 | 更新版本ONTAP | Cloud Volumes ONTAP 
+
+
+ a| 
+Amazon S3
+ a| 
+0%
+ a| 
+20%
+ a| 
+20%
+ a| 
+30%
+
+
+
+ a| 
+Google Cloud Storage
+ a| 
+不適用
+ a| 
+12%
+ a| 
+20%
+ a| 
+35%
+
+
+
+ a| 
+Microsoft Azure Blob儲存設備
+ a| 
+不適用
+ a| 
+15%
+ a| 
+25%
+ a| 
+35%
+
+
+
+ a| 
+NetApp ONTAP 產品系列S3
+ a| 
+不適用
+ a| 
+不適用
+ a| 
+40%
+ a| 
+不適用
+
+
+
+ a| 
+NetApp StorageGRID
+ a| 
+0%
+ a| 
+40%
+ a| 
+40%
+ a| 
+不適用
+
+|===
+
+
+== 未回收空間臨界值
+
+變更預設的未回收空間臨界值設定，將會增加或減少已接受的物件重組量。減少分散會減少雲端層使用的實體容量，而犧牲額外的物件儲存資源（讀寫）。
+
+
+
+=== 臨界值減量
+
+為了避免額外支出，請考慮在使用物件存放區定價方案時，降低未回收空間的臨界值，以降低儲存成本，但增加讀取成本。範例包括 Amazon 的 Standard-IA 和 Azure Blob Storage 的 Cool 。
+
+舉例來說，如果使用標準 IA 等定價方案，或是使用標準定價方案時，由於法律原因而節省的 10 年前專案數量，可能會比使用標準定價方案時更便宜。雖然此類磁碟區的讀取成本較高，包括物件重組所需的讀取，但不太可能經常發生。
+
+
+
+=== 臨界值增加
+
+或者，如果物件分散會導致使用的物件儲存區容量大幅超過 ONTAP 所參照資料所需的容量，請考慮增加未回收空間臨界值。例如，在最糟的情況下，使用 20% 的未回收空間臨界值，所有物件都會平均分割至允許的最大範圍，這表示可能會有 80% 的雲端層總容量被 ONTAP 取消參照。例如：
+
+2TB 由 ONTAP 引用 + 8TB （未被 ONTAP 引用） = 10TB 總容量（由雲端層使用）。
+
+在這種情況下，增加未回收空間臨界值或增加磁碟區最小冷卻天數，以減少未參照區塊所使用的容量，可能會有好處。
+
+[NOTE]
+====
+隨著物件重組並提高儲存效率，當參考區塊寫入新的，效率更高的物件時，基礎檔案可能會變得更零碎。因此，大幅增加未回收空間臨界值會導致物件提高儲存效率，但可能會降低連續讀取效能。
+
+====
+
+
+== 變更未回收空間臨界值
+
+您可以自訂不同物件存放區的未回收空間臨界值百分比。
+
+.開始之前
+需要進階權限等級。
+
+.步驟
+. 若要變更預設的未回收空間臨界值，請自訂並執行下列命令：
++
+[source, cli]
+----
+storage aggregate object-store modify -aggregate <name> -object-store-name <name> -unreclaimedspace-threshold <%> (0%-99%)
+----
+

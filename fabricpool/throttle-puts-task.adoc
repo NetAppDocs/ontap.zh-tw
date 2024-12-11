@@ -1,0 +1,35 @@
+---
+permalink: fabricpool/throttle-puts-task.html 
+sidebar: sidebar 
+keywords: throttle, fabricpool, fabric pool, tiering, put, rate, limit 
+summary: 「放置節流」可讓儲存管理員針對每個節點的最大置放率設定上限。 
+---
+= 油門 FabricPool 放置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+身為儲存管理員，您可以使用 Put th化 設定每個節點最大置放率的上限。
+
+當網路資源或物件存放區端點受到資源限制時，「放置節流」功能很有用。雖然資源限制很少，但在低功率物件儲存區或 FabricPool 使用量的第一天， TB 或 PB 的冷資料開始分層時，可能會發生資源限制。
+
+Put 節流是根據節點而定。最小的放量節流設定速率限制為每秒 8 MB將輸入速率限制設為低於 8 MB / 秒的值，將會在該節點上產生 8 MB / 秒的處理量。同時分層的多個節點可能會佔用更多頻寬，並可能佔用容量極有限的網路連結。
+
+[NOTE]
+====
+FabricPool 讓營運不再與其他應用程式競爭資源。FabricPool Put 作業會由用戶端應用程式和其他 ONTAP 工作負載（例如 SnapMirror ）自動置於較低的優先順序（「霸凌」）。使用節流 `put-rate-limit`可能有助於減少與 FabricPool 分層相關聯的網路流量，但它與並行 ONTAP 流量無關。
+
+====
+.開始之前
+需要進階權限等級。
+
+.步驟
+. FabricPool 使用 ONTAP CLI 執行的節流操作：
++
+[source, cli]
+----
+storage aggregate object-store put-rate-limit modify -node <name> -default <true|false> -putrate-bytes-limit <integer>[KB|MB|GB|TB|PB]
+----
+

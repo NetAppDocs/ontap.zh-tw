@@ -2,7 +2,7 @@
 permalink: flexgroup/create-qtrees-task.html 
 sidebar: sidebar 
 keywords: create, qtrees, flexgroup, volume, flex group, segment, smb oplock, 
-summary: 從ONTAP 使用者名「0、3、3、3、3、2、3、2、3、3、2、3、FlexGroupqtree可讓FlexGroup 您將您的需求區塊分割成較小的區段、以便個別管理。 
+summary: 您可以使用 FlexGroup 磁碟區來建立 qtree ，以便將 FlexGroup 磁碟區分割成更小，個別管理的區段。 
 ---
 = 建立含有FlexGroup 大量資料的qtree
 :allow-uri-read: 
@@ -14,16 +14,17 @@ summary: 從ONTAP 使用者名「0、3、3、3、3、2、3、2、3、3、2、3�
 從ONTAP 使用者名「0、3、3、3、3、2、3、2、3、3、2、3、FlexGroupqtree可讓FlexGroup 您將您的需求區塊分割成較小的區段、以便個別管理。
 
 .關於這項工作
-* 如果您想要回復ONTAP 到版本號為2、9.2或更早版本、且已在FlexGroup 該卷中建立一或多個qtree、或是修改了預設qtree的屬性（安全樣式和SMB oplocks）、 您必須先刪除所有非預設qtree、然後停用每FlexGroup 個版本上的qtree功能、再回復ONTAP 到版本9.2或更早版本。
-+
-link:../revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["還原之前、請先停用FlexGroup 完所有的qtree功能"]。
-
 * 如果來源FlexGroup 的SnapMirror Volume有qtree與SnapMirror的關係、則目的地叢集必須執行ONTAP 更新版本的《支援ONTAP qtree的支援》（一種版本的《支援qtree的》）。
 * 從ONTAP 版本S9.5開始、FlexGroup 支援qtree統計資料以供支援使用。
 
 
 .步驟
-. 在 FlexGroup Volume 中建立 qtree ： `volume qtree create -vserver vserver_name -volume volume_name -qtree qtree name`
+. 在 FlexGroup Volume 中建立 qtree ：
++
+[source, cli]
+----
+volume qtree create -vserver <vserver_name> -volume <volume_name> -qtree <qtree_name>
+----
 +
 您可以選擇性地指定qtree的安全樣式、SMB oplocks、UNIX權限及匯出原則。
 

@@ -1,8 +1,8 @@
 ---
-sidebar: sidebar 
 permalink: system-admin/requirements-autosupport-reference.html 
-keywords: requirements, autosupport, messages, http, https, smtp, smtps 
-summary: 您需要使用 HTTPS 搭配 TLSv1.2 或安全的 SMTP 來傳送 AutoSupport 訊息、以提供最佳的安全性並支援最新的 AutoSupport 功能。 
+sidebar: sidebar 
+keywords: requirements, autosupport, messages, https, smtp, smtps, tls, email, proxy, certificate, validation 
+summary: 您必須搭配使用 HTTPS 搭配 TLSv1.2 或 SMTPS ，才能交付 AutoSupport 訊息，以提供最佳的安全性並支援最新的 AutoSupport 功能。 
 ---
 = 準備使用 AutoSupport
 :allow-uri-read: 
@@ -17,69 +17,57 @@ summary: 您需要使用 HTTPS 搭配 TLSv1.2 或安全的 SMTP 來傳送 AutoSu
 
 == 將 AutoSupport 訊息傳送至 NetApp
 
-AutoSupport 訊息可使用 HTTP 或 SMTP 傳輸協定傳送至 NetApp 。若要改善安全性、您可以將 TLS 與 HTTP 搭配使用。從 ONTAP 9.15.1 開始、您也可以搭配 SMTP 使用 TLS 。
+AutoSupport 訊息可使用 HTTPS 或 SMTP 傳輸協定傳送至 NetApp 。從 ONTAP 9.15.1 開始、您也可以搭配 SMTP 使用 TLS 。
 
 
-TIP: 盡可能使用 HTTP 搭配 TLS （ HTTPS ）。
+TIP: 請盡可能使用 HTTPS 與 AutoSupport OnDemand 通訊，並上傳大型檔案。
 
 另請注意下列事項：
 
 * AutoSupport 訊息只能設定一個傳送通道至 NetApp 。您無法使用兩種通訊協定將 AutoSupport 訊息傳送至 NetApp 。
 * 此功能可限制每個傳輸協定的最大檔案大小。AutoSupport如果 AutoSupport 訊息的大小超過設定的限制、 AutoSupport 會盡可能傳送訊息、但會發生截斷。
-* 您可以視需要變更檔案大小上限。請參閱命令 `system node autosupport modify` 以取得更多資訊。
+* 您可以視需要變更檔案大小上限。深入瞭解[`system node autosupport modify` ONTAP 命令參照中的 ^] 命令。
 * 這兩種通訊協定都可以根據名稱解析的位址系列、透過 IPv4 或 IPv6 傳輸。
 * 由 ONTAP 建立的 TCP 連線 AutoSupport 是暫時性的、而且是短暫的。
 
 
 
 
-=== HTTP
+=== HTTPS
 
 這提供最強大的功能。請注意下列事項：
 
 * 支援 AutoSupport OnDemand 和大型檔案傳輸。
-* 首先嘗試 HTTP Put 要求。如果在傳輸期間要求失敗、要求會在停止處重新啟動。
-* 如果伺服器不支援 Put 、則改用 HTTP POST 方法。
-* HTTP 傳輸的預設限制為 50 MB 。
-* 不安全的 HTTP 傳輸協定使用連接埠 80 。
+* 首先嘗試 HTTPS Put 要求。如果在傳輸期間要求失敗、要求會在停止處重新啟動。
+* 如果伺服器不支援 Put 、則改用 HTTPS POST 方法。
+* HTTPS 傳輸的預設限制為 50 MB 。
+* HTTPS傳輸協定使用連接埠443。
 
 
 
 
 === SMTP
 
-一般而言、只有在某種原因不允許或不支援 HTTPS/HTTP 時、才應使用 SMTP 。請注意下列事項：
+一般而言，只有在不允許或不支援 HTTPS 時，才應使用 SMTP 。請注意下列事項：
 
 * 不支援 AutoSupport OnDemand 和大型檔案傳輸。
 * 如果已設定 SMTP 登入認證、則會以未加密和清除的方式傳送。
-* HTTP 傳輸的預設限制為 5 MB 。
+* 傳輸的預設限制為 5 MB 。
 * 不安全的 SMTP 傳輸協定使用連接埠 25 。
 
 
+.使用 TLS 改善 SMTP 安全性
+使用 SMTP 時，所有流量都不會加密，而且很容易攔截和讀取。從 ONTAP 9.15.1 開始、您也可以使用 TLS 搭配 SMTP （ SMTPS ）。在這種情況下、會使用 _explicit tls_ 、在建立 TCP 連線之後啟動安全通道。
 
-
-=== 使用 TLS 提高安全性
-
-當使用 HTTP 或 SMTP 時、所有流量都不會加密、而且很容易被攔截和讀取。使用 HTTP 時、您應該一律將通訊協定設定為也使用 TLS （ HTTPS ）。
-
-
-NOTE: 從 ONTAP 9.15.1 開始、您也可以使用 TLS 搭配 SMTP （ SMTPS ）。在這種情況下、會使用 _explicit tls_ 、在建立 TCP 連線之後啟動安全通道。
-
-.用於安全通訊協定的連接埠
-下列連接埠通常用於這些通訊協定的安全版本：
-
-* HTTPS - 連接埠 443
-* SMTPS - 連接埠 587
-
-
-.憑證驗證
-透過 TLS 、從伺服器下載的憑證會由 ONTAP 根據根 CA 憑證進行驗證。在使用 HTTPS 或 SMTPS 之前、您必須確定根憑證已安裝在 ONTAP 中。請參閱 <<安裝伺服器憑證>> 以取得更多資訊。
+下列連接埠通常用於 SMTPS ：連接埠 587
 
 
 
 == 其他組態考量
 
 在設定 AutoSupport 時、還有一些其他考量。
+
+有關這些注意事項的命令的詳細資訊，請參閱link:../system-admin/setup-autosupport-task.html["設定AutoSupport 功能"]。
 
 
 
@@ -94,17 +82,17 @@ NOTE: 如果您使用 SMTP （或 SMTPS ）將訊息傳送至 NetApp 、而且�
 
 === HTTP Proxy
 
-視您的網路組態而定、 HTTPS 傳輸協定可能需要額外的 Proxy URL 組態。如果使用 HTTPS 將 AutoSupport 訊息傳送給技術支援人員、而且您有 Proxy 、則必須識別 Proxy 的 URL 。如果 Proxy 使用預設（連接埠 3128 ）以外的連接埠、您可以指定該 Proxy 的連接埠。您也可以選擇性地指定 Proxy 驗證的使用者名稱和密碼。
+視您的網路組態而定， HTTPS 傳輸協定可能需要額外的 Proxy URL 組態。如果使用 HTTPS 將 AutoSupport 訊息傳送給技術支援人員、而且您有 Proxy 、則必須識別 Proxy 的 URL 。如果 Proxy 使用的連接埠不是預設的連接埠（連接埠 3128 ），您可以指定該 Proxy 的連接埠。您也可以選擇性地指定 Proxy 驗證的使用者名稱和密碼。
 
 
 
 == 安裝伺服器憑證
 
-如果您使用 TLS （ HTTPS 或 SMTPS ）、則必須確定 ONTAP 可以驗證伺服器憑證。此驗證是根據簽署伺服器憑證的 CA 來執行。
+透過 TLS （ HTTPS 或 SMTPS ），從伺服器下載的憑證會由 ONTAP 根據根 CA 憑證進行驗證。在使用 HTTPS 或 SMTPS 之前，您必須確定根憑證已安裝在 ONTAP 中，而且 ONTAP 可以驗證伺服器憑證。此驗證是根據簽署伺服器憑證的 CA 來執行。
 
-ONTAP 包含大量預先安裝的根 CA 憑證。因此、在許多情況下、 ONTAP 會立即辨識您伺服器的憑證、而無需額外的組態。但視伺服器憑證的簽署方式而定、您可能需要安裝根 CA 憑證和任何中繼憑證。
+ONTAP 包含大量預先安裝的根 CA 憑證。在許多情況下， ONTAP 會立即辨識您伺服器的憑證，無需額外設定。視伺服器憑證的簽署方式而定，您可能需要安裝根 CA 憑證和任何中繼憑證。
 
-如有需要、請依照下列指示安裝憑證。您應該在叢集層級安裝所有必要的憑證。
+如有需要，請使用下列程序來安裝憑證。您應該在叢集層級安裝所有必要的憑證。
 
 .步驟
 [role="tabbed-block"]
@@ -125,29 +113,41 @@ ONTAP 包含大量預先安裝的根 CA 憑證。因此、在許多情況下、 
 --
 . 開始安裝：
 +
-`security certificate install -type server-ca`
-
+[source, cli]
+----
+security certificate install -type server-ca
+----
 . 查看下列主控台訊息：
 +
-`Please enter Certificate: Press <Enter> when done`
-
+[listing]
+----
+Please enter Certificate: Press <Enter> when done
+----
 . 使用文字編輯器開啟憑證檔案。
 . 複製整個憑證、包括下列幾行：
 +
-`-----BEGIN CERTIFICATE-----`
-
+[listing]
+----
+-----BEGIN CERTIFICATE-----
+----
 +
-`-----END CERTIFICATE-----`
-
+[listing]
+----
+-----END CERTIFICATE-----
+----
 . 在命令提示字元之後、將憑證貼到終端機。
 . 按 *Enter* 鍵完成安裝。
-. 使用下列其中一項來確認已安裝憑證：
+. 執行下列其中一個命令，確認已安裝憑證：
 +
-`security certificate show-user-installed`
-
+[source, cli]
+----
+security certificate show-user-installed
+----
 +
-`security certificate show`
-
+[source, cli]
+----
+security certificate show
+----
 
 
 --
