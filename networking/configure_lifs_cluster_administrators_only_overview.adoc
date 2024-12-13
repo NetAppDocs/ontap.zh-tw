@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_lifs_cluster_administrators_only_overview.html 
+keywords: configure, configuring, configuration, setup, set, up, introducing, introduction, overview, introducing lif configuration, configure lifs 
+summary: LIF組態簡介 
+---
+= 設定生命總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+LIF（邏輯介面）代表叢集中節點的網路存取點。您可以在叢集透過網路傳送和接收通訊的連接埠上設定LIF。
+
+叢集管理員可以建立、檢視、修改、移轉、還原、 或刪除lifs。SVM管理員只能檢視與SVM相關聯的LIF。
+
+LIF是具有相關特性的IP位址或WWPN、例如服務原則、主連接埠、主節點、容錯移轉至的連接埠清單、以及防火牆原則。您可以在叢集透過網路傳送和接收通訊的連接埠上設定LIF。
+
+
+NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF服務原則取代。如需詳細資訊、請參閱 link:../networking/configure_firewall_policies_for_lifs.html["設定lifs的防火牆原則"]。
+
+LIF可裝載於下列連接埠：
+
+* 不屬於介面群組的實體連接埠
+* 介面群組
+* VLAN
+* 裝載VLAN的實體連接埠或介面群組
+* 虛擬IP（VIP）連接埠
++
+從支援的版本起、VIP LIF就會在VIP連接埠上提供支援。ONTAP
+
+
+
+在LIF上設定FC等SAN傳輸協定時、它會與WWPN相關聯。
+
+link:../san-admin/index.html["SAN管理"^]
+
+下圖說明ONTAP 了一個作業系統中的連接埠階層架構：
+
+image:ontap_nm_image13.png["連接埠階層映像"]
+
+
+
+== LIF 容錯移轉與恢復
+
+LIF 會在 LIF 從其主節點或連接埠移至其 HA 合作夥伴節點或連接埠時進行容錯移轉。LIF 容錯移轉可由 ONTAP 自動觸發、或由叢集管理員手動針對某些事件觸發、例如實體乙太網路連結中斷或節點從複寫資料庫（ RDB ）仲裁中刪除。發生 LIF 容錯移轉時、 ONTAP 會繼續在合作夥伴節點上執行正常作業、直到容錯移轉的原因解決為止。當主節點或連接埠恢復健全狀況時、 LIF 會從 HA 合作夥伴還原回其主節點或連接埠。  此還原稱為贈品。
+
+對於 LIF 容錯移轉和恢復、每個節點的連接埠都必須屬於同一個廣播網域。若要檢查每個節點上的相關連接埠是否屬於同一個廣播網域、請參閱下列內容：
+
+* ONTAP 9.8 及更新版本： link:../networking/repair_port_reachability.html["修復連接埠連線能力"]
+* 更新版本：ONTAP link:../networking/add_or_remove_ports_from_a_broadcast_domain97.html["新增或移除廣播網域中的連接埠"]
+
+
+若為已啟用 LIF 容錯移轉的生命（自動或手動）、則適用下列項目：
+
+* 對於使用資料服務原則的生命、您可以檢查容錯移轉原則限制：
++
+** ONTAP 9.6 及更新版本： link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ONTAP"]
+** ONTAP 9.5 及更早版本： link:lif_roles95.html["LIF角色在ONTAP 更新版本的版本中"]
+
+
+* 當自動還原設定為時、會自動還原生命 `true` 當 LIF 的主連接埠健全且能夠裝載 LIF 時、
+* 在計畫性或非計畫性節點接管上、接管節點上的 LIF 會容錯移轉至 HA 合作夥伴。LIF容錯移轉的連接埠由VIF Manager決定。
+* 容錯移轉完成後、 LIF 會正常運作。
+* 啟動恢復時、如果將自動還原設定為、 LIF 會還原回其主節點和連接埠 `true`。
+* 當乙太網路連結在裝載一或多個生命體的連接埠上中斷時、 VIF Manager 會將生命體從停機連接埠移轉到同一個廣播網域中的不同連接埠。新連接埠可能位於同一個節點或其HA合作夥伴中。連結還原後、如果自動還原設為 `true`、 VIF Manager 會將生命恢復回其主節點和主連接埠。
+* 當節點從複寫資料庫（ RDB ）仲裁中移出時、 VIF Manager 會將生命從仲裁節點移出移轉至其 HA 合作夥伴。當節點恢復為仲裁、且自動還原設為時 `true`、 VIF Manager 會將生命恢復回其主節點和主連接埠。
+

@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: networking/display_interface_group_information_cluster_administrators_only.html 
+keywords: 'display, view, show, interface, group, information, display interface group information (cluster administrators only), verify interface group configuration, network port ifgrp show' 
+summary: 驗證介面群組組態 
+---
+= 顯示介面群組資訊（僅限叢集管理員）
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以顯示介面群組的相關資訊、以判斷其組態。
+
+.關於這項工作
+將顯示下列資訊：
+
+* 介面群組所在的節點
+* 介面群組中包含的網路連接埠清單
+* 介面群組名稱
+* 發佈功能（MAC、IP、連接埠或連續）
+* 介面群組的媒體存取控制（MAC）位址
+* 連接埠活動狀態；也就是所有彙總連接埠都處於作用中狀態（完全參與）、某些連接埠為作用中狀態（部分參與）、或無作用中狀態
+
+
+.步驟
+使用顯示介面群組的相關資訊 `network port ifgrp show` 命令。
+
+您可以透過指定來顯示每個節點的詳細資訊 `-instance` 參數。您可以使用指定欄位名稱來顯示特定資訊 `-fields` 參數。
+
+下列命令會顯示叢集中所有介面群組的相關資訊：
+
+....
+network port ifgrp show
+         Port     Distribution                    Active
+Node     IfGrp    Function     MAC Address        Ports   Ports
+-------- -------- ------------ -----------------  ------- --------
+cluster-1-01
+         a0a      ip           02:a0:98:06:10:b2  full    e7a, e7b
+cluster-1-02
+         a0a      sequential   02:a0:98:06:10:ca  full    e7a, e7b
+cluster-1-03
+         a0a      port         02:a0:98:08:5b:66  full    e7a, e7b
+cluster-1-04
+         a0a      mac          02:a0:98:08:61:4e  full    e7a, e7b
+....
+下列命令會顯示單一節點的詳細介面群組資訊：
+
+....
+network port ifgrp show -instance -node cluster-1-01
+
+                 Node: cluster-1-01
+ Interface Group Name: a0a
+Distribution Function: ip
+        Create Policy: multimode
+          MAC Address: 02:a0:98:06:10:b2
+   Port Participation: full
+        Network Ports: e7a, e7b
+             Up Ports: e7a, e7b
+           Down Ports: -
+....

@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_ipspaces_cluster_administrators_only_overview.html 
+keywords: ipspace, ipspaces, introduction, introducing, overview, ipv4, ipv6, routing, route, domain, configure ipspaces overview, example, sample, ipspace, example of using ipspaces, sample using ipspaces, hosts.equiv, standard, property, properties, ipspace, special, ipspaces, svm, cluster, default, understanding, cluster, initialization, initialized, introducing, introduction, overview, standard properties of ipspaces, introducing the default and cluster ipspaces created during cluster initialization, default ipspace, cluster ipspace, system svm 
+summary: IPspace可定義儲存虛擬機器（SVM）所在的獨特IP位址空間 
+---
+= 設定 IPspace 總覽
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+IPspaces可讓您設定單ONTAP 一的支援叢集、讓用戶端從多個管理性獨立的網路網域存取、即使這些用戶端使用相同的IP位址子網路範圍也一樣。如此可將用戶端流量區隔、以確保隱私與安全。
+
+IPspace可定義儲存虛擬機器（SVM）所在的獨特IP位址空間。為IPspace定義的連接埠和IP位址僅適用於該IPspace。IPspace內的每個SVM都會有一個不同的路由表、因此不會發生跨SVM或跨IPspace流量路由傳送。
+
+
+NOTE: IPspace可在其路由網域上同時支援IPv6位址。
+
+如果您要管理單一組織的儲存設備、則不需要設定IPspaces。如果您要在單ONTAP 一的一套叢集上管理多家公司的儲存設備、而且您確定您的客戶都沒有衝突的網路組態、那麼您也不需要使用IPspaces。在許多情況下、使用儲存虛擬機器（SVM）及其各自獨特的IP路由表、可用來分隔獨特的網路組態、而非使用IPspace。
+
+
+
+== 使用IPspaces的範例
+
+使用IPspaces的常見應用程式、是儲存服務供應商（SSP）需要將公司A和B的客戶連接ONTAP 到SSP內部部署上的一個支援叢集、而兩家公司都使用相同的私有IP位址範圍。
+
+SSP會在叢集上為每位客戶建立SVM、並提供從兩個SVM到公司A網路的專用網路路徑、以及從其他兩個SVM到公司B網路的專用網路路徑。
+
+下圖顯示這種部署類型、如果兩家公司都使用非私有IP位址範圍、就能正常運作。不過、圖例顯示兩家公司使用相同的私有IP位址範圍、這會造成問題。
+
+image:ontap_nm_image9.jpeg["IPSpace範例"]
+
+兩家公司都使用私有IP位址子網路10.0.0.0、造成下列問題：
+
+* 如果兩家公司決定為其各自的SVM使用相同的IP位址、則位於SSP位置之叢集中的SVM會有衝突的IP位址。
+* 即使兩家公司同意使用不同的IP位址來處理SVM、也可能發生問題。
+* 例如，如果網路中的任何用戶端與B網路中的用戶端具有相同的IP位址，則發往A位址空間中用戶端的封包可能會路由傳送到B位址空間中的用戶端，反之亦然。
+* 如果兩家公司決定使用互不相容的位址空間（例如、A使用10.0.0.0、網路遮罩為255.128.0.0、B使用10.128.0.0、網路遮罩為255.128.8.0）、 SSP需要在叢集上設定靜態路由、以便將流量適當路由傳送到A和B的網路。
+* 此解決方案既不可擴充（因為靜態路由）、也不安全（廣播流量會傳送至叢集的所有介面）。為了克服這些問題、SSP會在叢集上定義兩個IPspace、每個公司一個。由於不路由跨IP空間的流量、因此即使所有SVM都設定在10.0.0.0位址空間中、每家公司的資料仍會安全地路由至其各自的網路、如下圖所示：
+
+
+image:ontap_nm_image10.jpeg["IPSpace範例"]
+
+此外、各種組態檔案（例如）所參照的 IP 位址 `/etc/ hosts` 檔案 `/etc/hosts.equiv` 檔案、和 `the /etc/rc` 檔案、與該 IPspace 相關。因此、IPspaces可讓SSP針對多個SVM的組態和驗證資料、設定相同的IP位址、而不會發生衝突。
+
+
+
+== IPspaces的標準屬性
+
+首次建立叢集時、預設會建立特殊的IPspaces。此外、還會針對每個IPspace建立特殊的儲存虛擬機器（SVM）。
+
+初始化叢集時會自動建立兩個IPspace：
+
+* 「預設」IPspace
++
+此IPspace是連接埠、子網路和SVM的容器、用於提供資料。如果您的組態不需要用戶端個別的IPspace、則可在此IPspace中建立所有SVM。此IPspace也包含叢集管理和節點管理連接埠。
+
+* 「叢集」IPspace
++
+此IPspace包含叢集中所有節點的所有叢集連接埠。它會在建立叢集時自動建立。可連線至內部私有叢集網路。當其他節點加入叢集時、這些節點的叢集連接埠會新增至「叢集」IPspace。
+
+
+
+每個IPspace都有一個「系統」SVM。當您建立IPspace時、會建立名稱相同的預設系統SVM：
+
+* 「叢集」IPspace的系統SVM會在內部私有叢集網路上的叢集節點之間傳輸叢集流量。
++
+它由叢集管理員管理、名稱為「叢集」。
+
+* 「預設」IPspace的系統SVM會傳輸叢集和節點的管理流量、包括叢集之間的叢集間流量。
++
+它由叢集管理員管理、使用與叢集相同的名稱。
+
+* 您所建立的自訂IPspace系統SVM會承載該SVM的管理流量。
++
+它由叢集管理員管理、使用與IPspace相同的名稱。
+
+
+
+一個IPspace中可以存在一個或多個用於用戶端的SVM。每個用戶端SVM都有自己的資料磁碟區和組態、並獨立管理其他SVM。
