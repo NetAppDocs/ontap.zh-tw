@@ -30,6 +30,8 @@ summary: 掃描器原則會決定掃描器集區是否處於作用中狀態。�
 ** `Primary` 指定掃描儀池處於活動狀態。
 ** `Secondary` 指定只有在沒有連接主要掃描器集區中的 VScan 伺服器時、掃描器集區才為作用中。
 ** `Idle` 指定掃描器集區為非作用中。
+
+
 +
 以下範例顯示掃描器集區的名稱 `SP` 在上 `vs1` SVM 處於作用中狀態：
 
@@ -38,8 +40,6 @@ summary: 掃描器原則會決定掃描器集區是否處於作用中狀態。�
 ----
 cluster1::> vserver vscan scanner-pool apply-policy -vserver vs1 -scanner-pool SP  -scanner-policy primary
 ----
-
-
 . 確認掃描器集區處於作用中狀態：
 +
 `vserver vscan scanner-pool show -vserver data_SVM|cluster_admin_SVM -scanner-pool scanner_pool`
