@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: tr-4743, flexcache writeback, flexcache write-back, use cases, workloads, technical report, netapp tr, ontap tr 
 summary: 這些寫入設定檔最適合啟用回寫的 FlexCache 。您應該測試工作負載、以瞭解回寫或繞過寫入是否能提供最佳效能。 
 ---
-= FlexCache 寫回使用案例
+= ONTAP FlexCache 回寫式使用案例
 :allow-uri-read: 
 
 
@@ -21,17 +21,19 @@ NOTE: 回寫並不取代回寫功能。雖然回寫是針對大量寫入工作�
 .檔案大小
 檔案大小比與呼叫檔案之間所發出的寫入次數來得小 `OPEN` `CLOSE` 。小型檔案本來就有較少的 `WRITE` 通話、因此不太適合回寫。大型檔案在與通話之間可能有更多寫入 `OPEN` `CLOSE` 、但這並不保證。
 
+請參閱link:../flexcache-writeback/flexcache-write-back-guidelines.html["FlexCache 回寫準則"]頁面，以取得最新的檔案大小建議。
+
 .寫入大小
-從用戶端寫入時、除了寫入呼叫之外、還涉及其他 NAS 呼叫：
+從用戶端寫入時，除了寫入呼叫之外，還會涉及其他修改 NAS 呼叫。其中包括但不限於：
 
 * `CREATE`
 * `OPEN`
 * `CLOSE`
-* `READDIR/READDIRPLUS`
-*  `SETATTR`： `SETATTR` 僅在快取中修改、或處理的通話 `mtime` `atime` `ctime` 。
+* `SETATTR`
+* `SET_INFO`
 
 
-這些通話必須在原始伺服器處理、並觸發在啟用回寫式快取中所累積的任何不乾淨資料的回寫。檔案的 IO 將會停止、直到回寫完成為止。
+`SETATTR`以及 `SET_INFO` `owner`在快取中處理的設定， `atime`， `ctime`， `group`或 `size`呼叫 `mtime`。其餘的通話必須在原始伺服器處理，並觸發寫入已啟用回寫快取的任何髒資料的回寫。檔案的 IO 將會停止、直到回寫完成為止。
 
 知道這些通話必須經過 WAN 、有助於識別適合回寫的工作負載。一般而言、在 `OPEN` `CLOSE`不發出上述其中一個通話的情況下、在與通話之間所能完成的寫入次數越多、效能回寫所提供的效能就越高。
 
@@ -48,7 +50,7 @@ TIP: 如果寫入後讀取是工作負載的關鍵部分、您應該將快取設
 
 == 延遲考量
 
-當 FlexCache 以回寫模式運作時、延遲增加對 NAS 用戶端更有幫助。不過、回寫的成本、有一點比低延遲環境中所獲得的優勢還要高。在某些 NetApp 測試中、回寫效益是從快取與原始伺服器之間的最低延遲開始、時間為 8 毫秒。這種延遲會因工作負載而異、因此請務必進行測試、以瞭解您的效益回報點。
+當 FlexCache 以回寫模式運作時、延遲增加對 NAS 用戶端更有幫助。不過、回寫的成本、有一點比低延遲環境中所獲得的優勢還要高。在某些 NetApp 測試中，回寫效益是從快取與原始伺服器之間的最低延遲開始，時間為 8 毫秒。這種延遲會因工作負載而異，因此請務必測試以瞭解工作負載的報酬點。
 
 下圖顯示 NetApp 實驗室測試中回寫的退回點。 `x`軸為檔案大小、 `y` 軸為經過時間。此測試使用 NFSv3 、以 256 KB 和 64 毫秒的 WAN 延遲進行掛載 `rsize` `wsize` 。此測試是使用小型 ONTAP Select 執行個體來執行快取和原始伺服器、以及單一執行緒寫入作業。您的結果可能有所不同。
 

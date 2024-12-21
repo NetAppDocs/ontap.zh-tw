@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: promoting, fabricpool, mirror 
 summary: 您可以將物件存放區鏡像重新指派為主要物件存放區、方法是加以提升。當物件存放區鏡射成為主要鏡射時、原始主要鏡射會自動變成鏡射。 
 ---
-= 推廣FabricPool 鏡像
+= 升級 ONTAP FabricPool 鏡像
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -22,6 +22,20 @@ summary: 您可以將物件存放區鏡像重新指派為主要物件存放區�
 您可以使用不同雲端供應商的物件存放區來取代原始物件存放區。例如、您的原始鏡像可能是AWS物件存放區、但您可以用Azure物件存放區來取代它。
 
 .步驟
+. 使用命令確認 FabricPool 鏡像已同步 `storage aggregate object-store show-resync-status`。如果將此鏡射同步、則不會顯示任何項目。FabricPool如果鏡像未同步，請等待重新同步完成。
++
+[listing]
+----
+aggregate1::> storage aggregate object-store show-resync-status -aggregate aggr1
+----
++
+[listing]
+----
+                                               Complete
+      Aggregate    Primary       Mirror        Percentage
+      ---------    -----------   ----------    ----------
+      aggr1        my-store-1     my-store-2     40%
+----
 . 使用來提升物件存放區鏡射 `storage aggregate object-store modify -aggregate` 命令。
 +
 [listing]

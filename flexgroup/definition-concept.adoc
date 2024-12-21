@@ -2,7 +2,7 @@
 permalink: flexgroup/definition-concept.html 
 sidebar: sidebar 
 keywords: flexgroup, volume 
-summary: 支援垂直擴充的NAS容器、可提供高效能、以及自動分配負載和擴充性。FlexGroup一個包含多個可自動且透明地共用流量的組成要素的市場區段。FlexGroup 
+summary: 支援垂直擴充的NAS容器、可提供高效能、以及自動分配負載和擴充性。FlexGroupFlexGroup Volume 包含多個成員磁碟區（組成區），可自動且透明地共用流量。 
 ---
 = 什麼是呢FlexGroup
 :allow-uri-read: 
@@ -11,16 +11,26 @@ summary: 支援垂直擴充的NAS容器、可提供高效能、以及自動分�
 
 
 [role="lead"]
-支援垂直擴充的NAS容器、可提供高效能、以及自動分配負載和擴充性。FlexGroup一個包含多個可自動且透明地共用流量的組成要素的市場區段。FlexGroup_ 組成 _ 是組成 FlexGroup Volume 的基礎 FlexVol 磁碟區。
+支援垂直擴充的NAS容器、可提供高效能、以及自動分配負載和擴充性。FlexGroupFlexGroup Volume 包含多個成員磁碟區（組成區），可自動且透明地共用流量。_Member Volumes 是組成 FlexGroup Volume 的基礎 FlexVol Volume 。
 
-image:fg-overview-flexgroup.gif["以一組稱為「成員」的不全功能資料區表示的資料量FlexGroup FlexVol"]
+image:fg-overview-flexgroup.gif["FlexGroup Volume 是一組稱為成員磁碟區或組成區的 FlexVol 磁碟區"]
 
 NetApp提供下列優點：FlexGroup
 
 * 高擴充性
 +
-在29個節點的叢集上、適用於1個更新版本的更新版本FlexGroup 中、僅需ONTAP 20 PB即可容納4、000億個檔案。
+只要成員磁碟區數量不超過節點或叢集限制，就可以在叢集上佈建多個 FlexGroup 磁碟區。
 
++
+從 ONTAP 9.12.1P2 開始，單一 FlexGroup 磁碟區的最大容量為 60PB ， 10 節點叢集上有 4000 億個檔案link:../volumes/enable-large-vol-file-support-task.html["已啟用大容量支援"]。如果不支援大容量磁碟區，則單一 FlexGroup 磁碟區的最大容量為 20PB 。
+
+
+
+[NOTE]
+====
+雖然單一 FlexGroup 磁碟區的最大容量為 60PB （ 200 個成員磁碟區 x 300TB = 60PB ），但當成員磁碟區的使用容量維持在 80% 以下（ 200 個成員磁碟區 x 240TB = 48PB ）時，則可達到最佳效能。
+
+====
 * 高效能
 +
 利用叢集資源、支援處理處理量高且延遲低的工作負載。FlexGroup

@@ -1,0 +1,32 @@
+---
+permalink: flexcache-writeback/faq-flexcache-write-back.html 
+sidebar: sidebar 
+keywords: tr-4743, flexcache writeback, flexcache write-back, flexcache, write-back, write back, faq, frequently asked questions, ontap tr, netapp tr 
+summary: 關於 FlexCache 回寫的常見問題集 
+---
+= 關於 ONTAP FlexCache 回寫的常見問題集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您正在尋找問題的快速解答，這個常見問題集將有助於您解決問題。
+
+.我想使用回寫功能。我需要執行哪個版本的 ONTAP ？
+快取和原始伺服器都必須執行 ONTAP 9.15.1 或更新版本。建議您執行最新的 P 版本。工程設計持續改善啟用回寫式快取的效能與功能。
+
+.存取原始伺服器的用戶端是否會影響存取啟用回寫式快取的用戶端？
+是的。原始伺服器對資料擁有與任何快取相同的權限。如果在需要將檔案從快取中移出的檔案上執行作業，或是要撤銷鎖定 / 資料委派，快取中的用戶端可能會看到存取檔案的延遲。
+
+.我是否可以將 QoS 套用至啟用回寫功能的 FlexCaches ？
+是的。每個快取和來源都可以套用個別的 QoS 原則。這對任何回寫啟動的叢集間流量沒有直接影響。間接來說，您可以透過 QoS 限制啟用回寫式快取的前端流量，來減緩叢集間回寫式流量。
+
+.啟用回寫式 FlexCaches 是否支援多重傳輸協定 NAS ？
+是的。啟用回寫式 FlexCaches 可完整支援多重傳輸協定。目前，以寫入或回寫模式操作的 FlexCache 不支援 NFSv4.2 和 S3 。
+
+.啟用回寫式 FlexCaches 是否支援 SMB 替代資料串流？
+支援 SMB 替代資料串流（ ADS ），但不會透過回寫來加速。寫給廣告的內容會轉寄給來源，導致 WAN 延遲的損失。寫入也會從快取中移出廣告所在的主檔案。
+
+.建立快取後，是否可以在寫入模式和回寫模式之間切換快取？
+是的。您只需要切換連結中的旗標即可 `is-writeback-enabled`： ../../e-writeback FlexCache / FlexCache-writeback-enable-task.html[`flexcache modify` 命令 ] 。
