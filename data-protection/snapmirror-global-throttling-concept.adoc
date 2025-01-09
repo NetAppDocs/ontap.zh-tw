@@ -22,7 +22,7 @@ SnapMirror全域節流可限制傳入和/或傳出SnapMirror和SnapVault SnapMir
 
 [NOTE]
 ====
-在版本更新的版本中、節流器不會影響ONTAP `volume move` 傳輸或負載共享鏡像傳輸。從ONTAP 功能升級到功能升級版、您可以指定選項來調節Volume Move作業的節流。如需詳細資訊、請參閱 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 更新版本的更新版本中調節體積移動。"]
+在 ONTAP 9.9.1 及更早版本中，油門對傳輸或負載分配鏡射傳輸沒有影響 `volume move`。從 ONTAP 9.10.0 開始，您可以指定一個選項來節流 Volume Move 作業。如需詳細資訊、請參閱link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 更新版本的更新版本中調節體積移動。"]
 
 ====
 全域節流可搭配SnapMirror和SnapVault SnapMirror傳輸的個別關係節流功能。在每個關係傳輸的總頻寬超過全域節流的值之前、會強制執行每個關係節流、之後會強制執行全域節流。節流值 `0` 表示全域節流已停用。
@@ -47,13 +47,13 @@ cluster_dst::> options -option-name replication.throttle.enable on
 ----
 . 指定目的地叢集上傳入傳輸所使用的最大總頻寬：
 +
-`options -option-name replication.throttle.incoming.max_kbs _KBps_`
+`options -option-name replication.throttle.incoming.max_kbs <KBps>`
 
 +
-建議的最小節流頻寬為4 KB、最大值為2 Tbps。此選項的預設值為 `unlimited`，這意味着使用的總帶寬沒有限制。
+建議的最小節流頻寬為每秒 4 KB （ KBps ），最大值為每秒 2 TB （ Tbps ）。此選項的預設值為 `unlimited`，表示使用的總頻寬不受限制。
 
 +
-下列範例說明如何將傳入傳輸所使用的最大總頻寬設定為100 Mbps：
+以下範例說明如何將傳入傳輸所使用的最大總頻寬設定為每秒 100 MB （ Mbps ）：
 
 +
 [listing]
@@ -63,15 +63,15 @@ cluster_dst::> options -option-name replication.throttle.incoming.max_kbs 12500
 +
 [NOTE]
 ====
-100 Mbps = 12500 KB
+每秒 100 MB （ Mbps ） = 每秒 12500 KB （ KBps ）
 
 ====
 . 指定來源叢集上傳出傳輸所使用的最大總頻寬：
 +
-`options -option-name replication.throttle.outgoing.max_kbs _KBps_`
+`options -option-name replication.throttle.outgoing.max_kbs <KBps>`
 
 +
-建議的最小節流頻寬為4 KB、最大值為2 Tbps。此選項的預設值為 `unlimited`，這意味着使用的總帶寬沒有限制。參數值位於 KBps 中。
+建議的最小節流頻寬為4 KB、最大值為2 Tbps。此選項的預設值為 `unlimited`，表示使用的總頻寬不受限制。參數值以千位元組 / 秒（ KBps ）為單位。
 
 +
 下列範例說明如何將傳出傳輸所使用的最大總頻寬設定為100 Mbps：

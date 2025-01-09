@@ -54,6 +54,9 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 
 這些檔案中的變數是用來控制 ONTAP Mediator 服務所使用的憑證檔案。
 
+
+NOTE: 在 ONTAP Mediator 1.8 及更早版本中， CA 憑證為 `ca.crt`。從 ONTAP Mediator 1.9 開始，所需的憑證為 `intermediate.crt`。
+
 下表列出的預設變數會包含在檔案中 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。
 
 [cols="2*"]
@@ -67,13 +70,13 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 | `key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
 
 
-| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt` 
 
 
-| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key` 
+| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key` 
 
 
-| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl` 
+| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl` 
 
 
 | `cert_valid_days` | `1095` 
@@ -98,7 +101,7 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 | `mediator_key` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
 
 
-| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt` 
 |===
 如果您修改這些屬性，請重新啟動 ONTAP Mediator 服務以套用變更。如需如何以協力廠商憑證取代預設憑證的詳細指示，請參閱link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["以信任的第三方憑證取代自我簽署的憑證"]。
 

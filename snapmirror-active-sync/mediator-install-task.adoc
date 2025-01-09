@@ -83,6 +83,9 @@ xref:../san-admin/provision-storage.html[建立LUN並對應igroup]
 
 安裝 ONTAP Mediator 並確認叢集組態後、您必須初始化 ONTAP Mediator 以進行叢集監控。您可以使用系統管理員或 ONTAP CLI 來初始化 ONTAP Mediator 。
 
+
+NOTE: 在 ONTAP Mediator 1.8 及更早版本中， CA 憑證為 `ca.crt`。從 ONTAP Mediator 1.9 開始，所需的憑證為 `intermediate.crt`。
+
 [role="tabbed-block"]
 ====
 .系統管理員
@@ -104,8 +107,8 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 
 . 您可以使用兩種方式提供「憑證」輸入：
 +
-** * 選項（ a ） * ：選取 * Import * （匯入 * ）以瀏覽至 `.crt` 檔案並匯入。
-** * 選項（ b ） * ：複製的內容 `.crt` 檔案並貼到 * 憑證 * 欄位中。
+** * 選項（ a ） * ：選取 * Import （匯入） * 以瀏覽至 `intermediate.crt`檔案並將其匯入。
+** * 選項（ b ） * ：複製檔案內容 `intermediate.crt`，並將其貼到 * 憑證 * 欄位。
 +
 正確輸入所有詳細資料後、所提供的憑證會安裝在所有對等叢集上。
 
@@ -141,7 +144,7 @@ image:successful-mediator-installation.png["中介新增成功"]。
 +
 [listing]
 ----
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -161,7 +164,7 @@ p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -283,7 +286,7 @@ image:configure-mediator-system-manager.png["系統管理員中介新增"]
 您可以使用 ONTAP CLI 以協力廠商憑證取代自我簽署的憑證、從主要或次要叢集重新初始化 ONTAP Mediator 。
 
 .步驟
-. 移除自我簽署的 `ca.crt` 當您為所有叢集使用自我簽署的憑證時、會較早安裝。在以下範例中、有兩個叢集：
+. 當您為所有叢集使用自我簽署憑證時，請移除先前安裝的自我 `intermediate.crt`簽署憑證。在以下範例中、有兩個叢集：
 +
 * 範例 *
 
@@ -319,12 +322,12 @@ Info: [Job 136] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 請參閱中所述的步驟 link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"] ，瞭解如何從次級 CA 取得憑證 ( 稱為 `ca.crt`) 。以信任的協力廠商憑證取代自我簽署的憑證
+. 請參閱中所述的步驟link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"]，以取得如何從次級 CA 取得憑證的指示，稱為 `intermediate.crt`。以信任的協力廠商憑證取代自我簽署的憑證
 +
 
-NOTE: 。 `ca.crt` 具有某些屬性、這些屬性是從需要傳送至檔案中定義的 PKI 授權單位的要求所衍生而來 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`。
+NOTE: 具有從需要發送到文件中定義的 PKI 授權機構的請求中獲得的 `intermediate.crt`某些屬性 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`。
 
-. 新增第三方 ONTAP Mediator CA 憑證 `ca.crt` 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置：
+. 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置新增第三方 ONTAP Mediator CA 憑證 `intermediate.crt`：
 +
 * 範例 *
 
@@ -332,7 +335,7 @@ NOTE: 。 `ca.crt` 具有某些屬性、這些屬性是從需要傳送至檔案�
 [listing]
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -340,7 +343,7 @@ BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
 p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
 -----END CERTIFICATE-----
 ----
-. 新增 `ca.crt` 檔案至對等叢集。對所有對等叢集重複此步驟：
+. 將檔案新增 `intermediate.crt`至對等叢集。對所有對等叢集重複此步驟：
 +
 * 範例 *
 

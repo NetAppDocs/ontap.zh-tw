@@ -20,7 +20,7 @@ summary: 在 SnapMirror 主動式同步組態中、在對稱保護和非對稱�
 
 == 轉換成對稱的主動 / 主動關係
 
-您可以將 SnapMirror 主動式同步關係與時間同步保護轉換為使用對稱式主動 / 主動式。
+您可以使用非同步保護來轉換 SnapMirror 主動式同步關係，以使用對稱式主動 / 主動式。
 
 .開始之前
 * 兩個叢集都必須執行 ONTAP 9.15.1 或更新版本。
@@ -91,11 +91,11 @@ summary: 在 SnapMirror 主動式同步組態中、在對稱保護和非對稱�
 .統一組態的步驟
 . 從修改 SnapMirror 原則 `AutomatedFailover` 至 `AutomatedFailoverDuplex`：
 +
-`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+`snapmirror modify -destination-path <destination_path> -policy AutomatedFailoverDuplex`
 
 . 修改原則會觸發重新同步。等待重新同步完成、並確認關係是否屬實 `Insync`：
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 如果現有主機是本機的主要叢集、請將主機新增至第二個叢集、並建立連線、以各自存取每個叢集。
 . 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
@@ -104,11 +104,11 @@ summary: 在 SnapMirror 主動式同步組態中、在對稱保護和非對稱�
 NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
 
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
 +
-`SiteA::> igroup initiator add-proximal-vserver -vserver _svm_name_ -initiator _host_ -proximal-vserver _server_`
+`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
 
 . 為新主機新增一個新的 igroup 和啟動器、並設定主機與本機站台的相似性。Ennable igroup 複寫可複寫組態、並反轉遠端叢集上的主機位置。
 +
@@ -124,11 +124,11 @@ SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -pr
 .非統一組態的步驟
 . 從修改 SnapMirror 原則 `AutomatedFailover` 至 `AutomatedFailoverDuplex`：
 +
-`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+`snapmirror modify -destination-path <destination_path> -policy AutomatedFailoverDuplex`
 
 . 修改原則會觸發重新同步。等待重新同步完成、並確認關係是否屬實 `Insync`：
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 如果現有主機是主叢集的本機主機、請將該主機新增至第二個叢集、並建立連線能力、以各自存取每個叢集。
 . 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
@@ -137,18 +137,18 @@ SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -pr
 NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
 
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
 +
-`SiteA::> igroup initiator add-proximal-vserver -vserver _Svm_name_ -initiator _host_ -proximal-vserver _server_`
+`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
 
 . 在次要站台上、為新主機新增一個新的 igroup 和 initiator 、並設定主機與本機站台的相似性。將 LUN 對應至 igroup 。
 +
 ``
-SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_
-SiteB::> igroup add -vserver _svm_name_ -igroup  _igroup_name_ -initiator _host_name_
-SiteB::> lun mapping create -igroup  _igroup_name_ -path _path_name_
+SiteB::> igroup create -vserver <svm_name> -igroup <igroup>
+SiteB::> igroup add -vserver <svm_name> -igroup  <igroup> -initiator <host_name>
+SiteB::> lun mapping create -igroup  <igroup> -path <path_name>
 ``
 
 . 探索主機上的路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN
@@ -165,30 +165,30 @@ SiteB::> lun mapping create -igroup  _igroup_name_ -path _path_name_
 
 .步驟
 . 將所有 VM 工作負載移至來源叢集的本機主機。
-. 移除未管理 VM 執行個體的主機的 igroup 組態、並修改 igroup 組態以終止 igroup 複寫。
+. 移除未管理 VM 執行個體的主機的 igroup 組態，然後修改 igroup 組態以終止 igroup 複寫。
 +
-`code`
+`igroup modify -vserver <svm_name> -igroup <igroup> -replication-peer -`
 
 . 在次要站台上、取消對應 LUN 。
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在次要站台上、刪除對稱的主動 / 主動關係。
 +
-`SiteB::> snapmirror delete -destination-path _destination_path_`
+`SiteB::> snapmirror delete -destination-path <destination_path>`
 
-. 在主要站台上、釋放對稱的主動 / 主動關係。
-`SiteA::> snapmirror release -destination-path _destination_path_ -relationship-info-only true`
-. 從次要站台、使用建立與同一組磁碟區的關係 `AutomatedFailover` 原則重新同步關係。
+. 在主要站台上，釋放對稱的主動 / 主動關係。
+`SiteA::> snapmirror release -destination-path <destination_path> -relationship-info-only true`
+. 從次要站台，使用原則建立與同一組磁碟區的關係 `AutomatedFailover`，以重新同步關係。
 +
 ``
-SiteB::> snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source:@destination_ -policy AutomatedFailover
-SiteB::> snapmirror resync -destination-path vs1:/cg/cg1_dst
+SiteB::> snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source:@destination> -policy AutomatedFailover
+SiteB::> snapmirror resync -destination-path vs1:/cg/cg1_dst -policy <policy_type>
 ``
 
 +
 
-NOTE: 次要站台上的一致性群組需求 link:../consistency-groups/delete-task.html["待刪除"] 重新建立關係之前。目的地 Volume link:https://kb.netapp.com/onprem/ontap/dp/SnapMirror/How_to_change_a_volume_type_from_RW_to_DP["必須轉換為 DP 類型"^]。
+NOTE: 重新建立關聯之前，次要站台上的一致性群組需要link:../consistency-groups/delete-task.html["待刪除"]使用。目的地 Volume link:https://kb.netapp.com/onprem/ontap/dp/SnapMirror/How_to_change_a_volume_type_from_RW_to_DP["必須轉換為 DP 類型"^]。若要將磁碟區轉換為 DP ，請使用非原則執行 `snapmirror resync`命令-`AutomatedFailover`： `MirrorAndVault`， `MirrorAllSnapshots`或 `Sync`。
 
 . 確認關係鏡射狀態為 `Snapmirrored` 關係狀態為 `Insync`。
 +

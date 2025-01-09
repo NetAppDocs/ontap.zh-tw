@@ -466,25 +466,29 @@ image:mediator-certs-index.png["Web 伺服器設定和 ONTAP Mediator 伺服器�
 
 您可以使用下列程序從 PKI 授權單位取得憑證。
 
-以下範例示範如何取代自我簽署的憑證參與者、也就是 `ca.key`、 `ca.csr`、 `ca.srl`和 `ca.crt` 位於 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/` 與第三方憑證參與者合作。
+以下範例示範如何以位於的協力廠商憑證參與者取代自我簽署的憑證參與者 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/`。
+
+[NOTE]
+====
+* 在 ONTAP Mediator 1.8 及更早版本中，使用的 CA 檔案包括： `ca.key`，， `ca.csr` `ca.srl`和 `ca.crt`。從 ONTAP Mediator 1.9 開始，所需的檔案為 `intermediate.key`， `intermediate.csr`， `intermediate.srl`和 `intermediate.crt`。
+* 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可以使用與此程序不同的方式、從 PKI 授權單位取得憑證。根據您的業務需求調整程序。
 
 
-NOTE: 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可以使用與此程序不同的方式、從 PKI 授權單位取得憑證。根據您的業務需求調整程序。
-
+====
 .步驟
-. 建立私密金鑰 `ca.key` 和組態檔案 `openssl_ca.cnf` 這將由 PKI 授權單位用來產生憑證。
+. 建立私密金鑰 `intermediate.key`和組態檔 `openssl_ca.cnf`，供 PKI 授權單位用來產生憑證。
 +
-.. 產生私密金鑰 `ca.key`：
+.. 產生私密金鑰 `intermediate.key`：
 +
 * 範例 *
 
 +
-`openssl genrsa -aes256 -out ca.key 4096`
+`openssl genrsa -aes256 -out intermediate.key 4096`
 
 .. 組態檔案 `openssl_ca.cnf` （位於 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`）定義產生的憑證必須具有的內容。
 
 
-. 使用私密金鑰和組態檔案來建立憑證簽署要求 `ca.csr`：
+. 使用私密金鑰和組態檔案來建立憑證簽署要求 `intermediate.csr`：
 +
 *範例：*
 
@@ -494,22 +498,22 @@ NOTE: 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可�
 +
 [listing]
 ----
-[root@scs000216655 server_config]# openssl req -key ca.key -new -config openssl_ca.cnf -out ca.csr
-Enter pass phrase for ca.key:
-[root@scs000216655 server_config]# cat ca.csr
+[root@scs000216655 server_config]# openssl req -key intermediate.key -new -config openssl_ca.cnf -out intermediate.csr
+Enter pass phrase for intermediate.key:
+[root@scs000216655 server_config]# cat intermediate.csr
 -----BEGIN CERTIFICATE REQUEST-----
 MIIE6TCCAtECAQAwgaMxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlh
 ...
 erARKhY9z0e8BHPl3g==
 -----END CERTIFICATE REQUEST-----
 ----
-. 傳送憑證簽署要求 `ca.csr` 提供給 PKI 授權單位以供其簽署。
+. 將憑證簽署要求傳送 `intermediate.csr`至 PKI 授權單位以供其簽署。
 +
-PKI 授權單位會驗證要求並簽署 `.csr`、產生憑證 `ca.crt`。此外、您需要從 PKI 授權單位取得 `root_ca.crt` 簽署憑證的憑證 `ca.crt` 。
+PKI 授權單位會驗證要求並簽署 `.csr`、產生憑證 `intermediate.crt`。此外、您需要從 PKI 授權單位取得 `root_intermediate.crt` 簽署憑證的憑證 `intermediate.crt` 。
 
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
 
 
 
@@ -517,7 +521,7 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 
 === 步驟 2 ：使用協力廠商 CA 認證簽署以產生伺服器憑證
 
-伺服器憑證必須由私密金鑰簽署 `ca.key` 和第三方憑證 `ca.crt`。此外、組態檔案 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf` 包含特定屬性、可指定由 OpenSSL 發行的伺服器憑證所需的內容。
+伺服器憑證必須由私密金鑰和協力廠商憑證 `intermediate.crt`簽署 `intermediate.key`。此外，組態檔案還 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf`包含特定屬性，可指定由 OpenSSL 發行的伺服器憑證所需的內容。
 
 下列命令可產生伺服器憑證。
 
@@ -529,10 +533,10 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 . [[step 2 _intermal_info] 若要從 CSR 產生伺服器憑證、請從資料夾執行下列命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config` ：
 +
 
-NOTE:  `ca.crt`和 `ca.key` 檔案是從 PKI 授權單位取得的。如果您使用不同的憑證名稱、例如 `intermediate.crt` 、和 `intermediate.key`、請分別以和取代 `ca.crt` `ca.key` `intermediate.crt` 和 `intermediate.key` 。
+NOTE: 這些檔案是從 PKI 授權單位取得的。如果您使用的是不同的憑證名稱，請以相關的檔案名稱取代 `intermediate.crt`和 `intermediate.key`。
 
 +
-`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA ca.crt -CAkey ca.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
+`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA intermediate.crt -CAkey intermediate.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
 
 +
 ** 此 `-CAcreateserial` 選項用於產生 `ca.srl` 或 `intermediate.srl` 檔案、視您使用的憑證名稱而定。
@@ -550,19 +554,19 @@ NOTE:  `ca.crt`和 `ca.key` 檔案是從 PKI 授權單位取得的。如果您�
 ----
 cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
 key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
-ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
-ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
-ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
 ----
 * `cert_path` 和 `key_path` 為伺服器憑證變數。
 * `ca_cert_path`、 `ca_key_path`和 `ca_serial_path` 為 CA 憑證變數。
 
 
 .步驟
-. 以協力廠商憑證取代所有 `ca.*` 檔案。
-. 從和憑證建立憑證鏈結 `ca.crt` `ontap_mediator_server.crt` ：
+. 以協力廠商憑證取代所有 `intermediate.*` 檔案。
+. 從和憑證建立憑證鏈結 `intermediate.crt` `ontap_mediator_server.crt` ：
 +
-`cat ontap_mediator_server.crt ca.crt > ontap_mediator_server_chain.crt`
+`cat ontap_mediator_server.crt intermediate.crt > ontap_mediator_server_chain.crt`
 
 . 更新 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini` 檔案。
 +
@@ -575,12 +579,12 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
 
 +
 **  `mediator_cert`值是檔案的路徑 `ontap_mediator_server_chain.crt` 。
 **  `mediator_key value`是檔案中的金鑰路徑 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-**  `ca_certificate`值是檔案的路徑 `root_ca.crt` 。
+**  `ca_certificate`值是檔案的路徑 `root_intermediate.crt` 。
 
 
 . 確認新產生憑證的下列屬性已正確設定：
@@ -599,7 +603,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 
 === 步驟 4 ：選擇性地為協力廠商憑證使用不同的路徑或名稱
 
-您可以使用其他名稱的協力廠商憑證 `ca.*` 或是將協力廠商憑證儲存在不同的位置。
+您可以使用名稱不同於其他名稱的協力廠商憑證 `intermediate.*`，或是將協力廠商憑證儲存在不同的位置。
 
 .步驟
 . 設定 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 檔案以覆寫檔案中的預設變數值 `ontap_mediator.config.yaml` 。
@@ -634,7 +638,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 
 ----
 +
-.. 如果您使用的是憑證結構、其中 `root_ca.crt` 的憑證提供 `intermediate.crt` 簽署憑證的憑證 `ontap_mediator_server.crt` 、請從和憑證建立憑證鏈結 `intermediate.crt` `ontap_mediator_server.crt` ：
+.. 如果您使用的是憑證結構、其中 `root_intermediate.crt` 的憑證提供 `intermediate.crt` 簽署憑證的憑證 `ontap_mediator_server.crt` 、請從和憑證建立憑證鏈結 `intermediate.crt` `ontap_mediator_server.crt` ：
 +
 
 NOTE: 您應該已經從程序稍早的 PKI 授權單位取得 `intermediate.crt` 和 `ontap_mediator_server.crt` 憑證。
@@ -653,15 +657,15 @@ NOTE: 您應該已經從程序稍早的 PKI 授權單位取得 `intermediate.crt
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
 
 +
 ***  `mediator_cert`值是檔案的路徑 `ontap_mediator_server_chain.crt` 。
 *** 該 `mediator_key` 值是檔案中的金鑰路徑 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-***  `ca_certificate`值是檔案的路徑 `root_ca.crt` 。
+***  `ca_certificate`值是檔案的路徑 `root_intermediate.crt` 。
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
 
 
 
@@ -693,7 +697,7 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 
 [listing]
 ----
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -707,7 +711,7 @@ Certificate:
 
 使用下列命令來驗證 CA 認證中的 X509v3 延伸。
 
-中定義的內容 `*v3_ca*` 在中 `openssl_ca.cnf` 顯示為 `X509v3 extensions` 在中 `ca.crt`。
+中 `openssl_ca.cnf`定義的內容 `*v3_ca*`會顯示為 `X509v3 extensions` `intermediate.crt`。
 
 [listing, subs="+quotes"]
 ----
@@ -722,7 +726,7 @@ Certificate:
 *basicConstraints = critical, CA:true*
 *keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -766,7 +770,7 @@ DNS.2 = abc-v6.company.com
 IP.1 = 1.2.3.4
 IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -807,7 +811,7 @@ Enter pass phrase for intermediate.key:
 
 [listing]
 ----
-[root@scs000216982 server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
+[root@scs000216982 server_config]# openssl verify -CAfile intermediate.crt ontap_mediator_server.crt
 ontap_mediator_server.crt: OK
 ----
 如果正在使用線上憑證狀態通訊協定 (OCSP) 驗證，請使用命令 link:https://www.openssl.org/docs/manmaster/man1/openssl-verify.html["openssl 驗證"^]。

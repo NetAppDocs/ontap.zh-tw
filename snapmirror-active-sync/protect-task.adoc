@@ -151,19 +151,21 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 .統一組態的步驟
 . 建立新的 SnapMirror 關係、將應用程式中的所有磁碟區分組。請務必指定 `AutomatedFailOverDuplex` 建立雙向同步複寫的原則。
 +
-`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+`snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
 
+. 初始化 SnapMirror 關係：
+`snapmirror initialize -destination-path <destination-consistency-group>`
 . 請等待、確認作業已成功完成 `Mirrored State` 以顯示為 `SnapMirrored` 和 `Relationship Status` 做為 `Insync`。
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 在主機上、根據您的需求、設定主機連線能力、並存取每個叢集。
 . 建立 igroup 組態。設定本機叢集上啟動器的慣用路徑。指定選項、可將組態複寫至對等叢集的反向關聯。
 +
-`SiteA::> igroup create -vserver _svm_name_  -os-type _os_type_ -igroup _igroup_name_ -replication-peer _peer_svm_name_ -initiator _host_`
+`SiteA::> igroup create -vserver <svm_name> -os-type <os_type> -igroup <igroup_name> -replication-peer <peer_svm_name> -initiator <host>`
 
 +
-`SiteA::> igroup add -vserver _svm_name_ -igroup _igroup_name_ -os-type _os_type_ -initiator _host_`
+`SiteA::> igroup add -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -initiator <host>`
 
 . 在主機上探索路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN 。
 . 部署應用程式並在叢集之間分散 VM 工作負載、以達到所需的負載平衡。
@@ -172,21 +174,23 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 .非統一組態的步驟
 . 建立新的 SnapMirror 關係、將應用程式中的所有磁碟區分組。請務必指定「 AutomatedFailOverDuplex' 」原則來建立雙向同步複寫。
 +
-`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+`snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
 
+. 初始化 SnapMirror 關係：
+`snapmirror initialize -destination-path <destination-consistency-group>`
 . 請等待、確認作業已成功完成 `Mirrored State` 以顯示為 `SnapMirrored` 和 `Relationship Status` 做為 `Insync`。
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 在主機上、根據您的需求、設定主機連線能力、並存取每個叢集。
 . 在來源叢集和目的地叢集上建立 igroup 組態。
 +
 `# primary site
-SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_1_name_`
+SiteA::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <host_1_name_>`
 
 +
 `# secondary site
-SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_2_name_`
+SiteB::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <host_2_name>`
 
 . 在主機上探索路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN 。
 . 部署應用程式並在叢集之間分散 VM 工作負載、以達到所需的負載平衡。
