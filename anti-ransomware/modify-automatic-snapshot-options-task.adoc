@@ -19,19 +19,31 @@ summary: 修改自動產生的勒索軟體保護快照設定，以因應可疑�
 從 ONTAP 9 ． 11.1 開始，您可以使用 CLI 來控制自動產生的勒索軟體保護（ ARP ）快照保留設定，以因應可疑的勒索軟體攻擊。
 
 .開始之前
-您只能修改節點 SVM 上的 ARP 快照選項。
+您只能在節點 SVM 上修改 ARP 快照選項link:../system-admin/types-svms-concept.html["SVM 類型"]，而不能在其他上修改。
 
 .步驟
-. 若要顯示所有目前的 ARP 快照設定，請輸入：
-`vserver options -vserver <svm_name> -option-name arw*`
+. 顯示所有目前的 ARP 快照設定：
++
+[source, cli]
+----
+options -option-name arw*
+----
 +
 
-NOTE: 。 `vserver options` 命令是隱藏的命令。若要檢視手冊頁、請輸入 `man vserver options` 在 ONTAP CLI 中。
+NOTE: 要查看手冊頁，請在 ONTAP CLI 中輸入 `man options`。
 
-. 若要顯示選取的目前 ARP 快照設定，請輸入：
-`vserver options -vserver <svm_name> -option-name <arw_setting_name>`
-. 若要修改 ARP 快照設定，請輸入：
-`vserver options -vserver <svm_name> -option-name <arw_setting_name> -option-value <arw_setting_value>`
+. 顯示選取的目前 ARP 快照設定：
++
+[source, cli]
+----
+options -option-name <arw_setting_name>
+----
+. 修改 ARP 快照設定：
++
+[source, cli]
+----
+options -option-name <arw_setting_name> -option-value <arw_setting_value>
+----
 +
 可修改下列設定：
 
@@ -42,17 +54,17 @@ NOTE: 。 `vserver options` 命令是隱藏的命令。若要檢視手冊頁、�
 
 
 | `arw.snap.max.count`  a| 
-指定任何指定時間磁碟區中可以存在的最大 ARP 快照數。刪除較舊的複本，以確保 ARP 快照總數在指定的上限內。此 `-option-value`參數接受介於 3 和 8 之間的整數（含 3 和 8 ）。預設值為 6 。
+指定任何指定時間磁碟區中可以存在的最大 ARP 快照數。刪除較舊的複本，以確保 ARP 快照總數在指定的上限內。
 
 
 
 | `arw.snap.create.interval.hours`  a| 
-指定 ARP 快照之間的時間間隔（以小時計）。當懷疑有資料 Entropy 型攻擊，且最近建立的 ARP 快照比指定時間間隔還早時，就會建立新的 ARP 快照。此 `-option-value`參數接受 1 到 48 之間的整數（含 1 到 48 ）。預設值為 4 。
+指定 ARP 快照之間的時間間隔（以小時計）。當懷疑有資料 Entropy 型攻擊，且最近建立的 ARP 快照比指定時間間隔還早時，就會建立新的 ARP 快照。
 
 
 
 | `arw.snap.normal.retain.interval.hours`  a| 
-指定保留 ARP 快照的持續時間（以小時計）。當 ARP 快照達到保留臨界值時，會在刪除之前建立任何其他 ARP 快照複本。超過保留臨界值的 ARP 快照不可能有多個。此 `-option-value`參數接受介於 4 到 96 之間的整數（含 4 到 96 ）。預設值為 48 。
+指定保留 ARP 快照的持續時間（以小時計）。當 ARP 快照達到保留臨界值時，會在刪除之前建立任何其他 ARP 快照複本。超過保留臨界值的 ARP 快照不可能有多個。
 
 
 
@@ -60,22 +72,22 @@ NOTE: 。 `vserver options` 命令是隱藏的命令。若要檢視手冊頁、�
 指定可以保留 ARP 快照的最長持續時間（以天為單位）。如果磁碟區未回報任何攻擊，則會刪除任何早於此持續時間的 ARP 快照。
 
 
-NOTE: 如果偵測到中度威脅，就會忽略 ARP 快照的最大保留時間間隔。針對威脅所建立的 ARP 快照會保留，直到您回應威脅為止。當您將威脅標示為誤判時， ONTAP 會刪除該磁碟區的 ARP 快照。此 `-option-value`參數接受 1 到 365 之間的整數（含 1 到 365 ）。預設值為 5 。
+NOTE: 如果偵測到中度威脅，就會忽略 ARP 快照的最大保留時間間隔。針對威脅所建立的 ARP 快照會保留，直到您回應威脅為止。當您將威脅標示為誤判時， ONTAP 會刪除該磁碟區的 ARP 快照。
 
 
 
 | `arw.snap.create.interval.hours.post.max.count`  a| 
-指定當磁碟區已包含最大 ARP 快照數時，每個 ARP 快照之間的間隔（以小時為單位）。達到最大數量時，會刪除 ARP 快照，以便為新的複本提供空間。使用此選項可降低新的 ARP 快照建立速度，以保留較舊的複本。如果磁碟區已包含 ARP 快照的最大數量，則此選項中指定的時間間隔將用於下一次建立 ARP 快照，而非 `arw.snap.create.interval.hours`。此 `-option-value`參數接受 4 到 48 之間的整數（含 4 到 48 ）。預設值為 8 。
+指定當磁碟區已包含最大 ARP 快照數時，每個 ARP 快照之間的間隔（以小時為單位）。達到最大數量時，會刪除 ARP 快照，以便為新的複本提供空間。使用此選項可降低新的 ARP 快照建立速度，以保留較舊的複本。如果磁碟區已包含 ARP 快照的最大數量，則此選項中指定的時間間隔將用於下一次建立 ARP 快照，而非 `arw.snap.create.interval.hours`。
 
 
 
 | `arw.surge.snap.interval.days`  a| 
-指定為回應 IO 突波而建立的 ARP 快照之間的間隔（以天為單位）。當 IO 流量激增且上次建立的 ARP 快照快照比此指定時間間隔還早時， ONTAP 會建立 ARP 快照突波複本。此選項也會指定 ARP 喘振快照的保留期間（以天為單位）。此 `-option-value`參數接受 1 到 365 之間的整數（含 1 到 365 ）。預設值為 5 。
+指定為回應 IO 突波而建立的 ARP 快照之間的間隔（以天為單位）。當 IO 流量激增且上次建立的 ARP 快照快照比此指定時間間隔還早時， ONTAP 會建立 ARP 快照突波複本。此選項也會指定 ARP 喘振快照的保留期間（以天為單位）。
 
 
 
 | `arw.snap.new.extns.interval.hours`  a| 
-此選項指定偵測到新副檔名時所建立的 ARP 快照之間的間隔時間（小時）。當觀察到新的副檔名時，會建立新的 ARP 快照；觀察到新副檔名時所建立的上一個快照，會比此指定時間間隔還早。在經常建立新副檔名的工作負載上，此時間間隔有助於控制 ARP 快照的頻率。此選項與不相關 `arw.snap.create.interval.hours`，可指定資料 Entropy 型 ARP 快照的間隔。此 `-option-value`參數接受介於 24 和 8760 之間的整數。預設值為 48 。
+此選項指定偵測到新副檔名時所建立的 ARP 快照之間的間隔時間（小時）。當觀察到新的副檔名時，會建立新的 ARP 快照；觀察到新副檔名時所建立的上一個快照，會比此指定時間間隔還早。在經常建立新副檔名的工作負載上，此時間間隔有助於控制 ARP 快照的頻率。此選項與不相關 `arw.snap.create.interval.hours`，可指定資料 Entropy 型 ARP 快照的間隔。
 
 |===
 

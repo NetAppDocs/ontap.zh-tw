@@ -11,17 +11,13 @@ summary: NFS over RDMA採用RDMA介面卡、可在儲存系統記憶體與主機
 
 
 [role="lead"]
-NFS over RDMA採用RDMA介面卡、可在儲存系統記憶體與主機系統記憶體之間直接複製資料、避免CPU中斷與負荷。
+NFS over RDMA 採用具備 RDMA 功能的網路介面卡，可在儲存系統記憶體和主機系統記憶體之間直接複製資料，避免 CPU 中斷和額外負荷。
 
-NFS over RDMA組態是專為具有延遲敏感或高頻寬工作負載（例如機器學習和分析）的客戶所設計。NVIDIA已透過RDMA延伸NFS、以啟用GPU Direct Storage（GDS）。GDS會繞過CPU和主記憶體、使用RDMA直接在儲存系統和GPU記憶體之間傳輸資料、進一步加速啟用GPU的工作負載。
+NFS over RDMA組態是專為具有延遲敏感或高頻寬工作負載（例如機器學習和分析）的客戶所設計。ONTAP NFS over RDMA 可用於任何 NFS 型工作負載。此外， NVIDIA 已透過 RDMA 擴充 NFS ，以啟用 GPU 直接儲存（ GDS ）。GDS會繞過CPU和主記憶體、使用RDMA直接在儲存系統和GPU記憶體之間傳輸資料、進一步加速啟用GPU的工作負載。
 
-從 ONTAP 9.10.1 開始、 NFSv4.0 傳輸協定支援透過 RDMA 進行 NFS 組態、可搭配 Mellanox CX-5 或 CX-6 介面卡使用、以使用 Roce 傳輸協定第 2 版來支援 RDMA 。GDS僅支援使用NVIDIA Tesla和Ampere-Family GPU搭配Mellanox NIC卡和MOFED軟體。請參閱需求中的圖表、以瞭解後續 ONTAP 版本中的 NFS 版本支援。
-
-
-NOTE: NFS 掛載大小大於 64k 會導致 NFS over RDMA 組態的效能不穩定。
+從 ONTAP 9.10.1 開始， NFSv4.0 傳輸協定支援 NFS over RDMA 組態。後續的 ONTAP 版本推出了對其他 NFS 版本的支援。
 
 .需求
-* 儲存系統必須執行 ONTAP 9.10.1 或更新版本。
 * 請確定您執行的 ONTAP 版本正確、適用於您要使用的 NFS 版本。
 +
 [cols="2"]
@@ -41,8 +37,8 @@ NOTE: NFS 掛載大小大於 64k 會導致 NFS over RDMA 組態的效能不穩�
 ** 您可以使用System Manager從ONTAP 版本S59.12.1開始、透過RDMA設定NFS。在《S209.10.1》和《9.11.1》中ONTAP 、您需要使用CLI透過RDMA來設定NFS。
 
 
-* HA配對中的兩個節點都必須是相同版本。
-* 儲存系統控制器必須支援 RDMA
+* 高可用度（ HA ）配對中的兩個節點都必須是相同版本。
+* 儲存系統控制器必須支援 RDMA ：
 +
 [cols="2"]
 |===
@@ -80,7 +76,8 @@ NOTE: NFS 掛載大小大於 64k 會導致 NFS over RDMA 組態的效能不穩�
 
 |===
 * 資料生命期必須設定為支援RDMA。
-* 用戶端必須使用支援Mellanox RDMA的NIC卡和Mellanox OFED（MOFED）網路軟體。如需介面卡支援的相關資訊link:https://hwu.netapp.com/["NetApp Hardware Universe"^]，請參閱。NFS over RDMA 支援的介面卡會在說明欄位中顯示「 roce 」。
+* 有關目標 RNIC 支持的信息，請參閱 https://hwu.netapp.com/["NetApp Hardware Universe"^]。
+* 如需有關支援的 Client 作業系統 for NFS over RDMA 的資訊，請參閱 https://imt.netapp.com/matrix/["NetApp互通性對照表IMT （僅限部分）"^]。如需 Roce v2 支援的 RNIC ，請參閱各自的 RNIC 廠商文件。
 
 
 

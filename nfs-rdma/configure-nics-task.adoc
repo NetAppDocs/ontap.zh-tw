@@ -17,20 +17,41 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 
 == 儲存平台組態
 
-需要在伺服器上安裝X1148 RDMA介面卡。如果您使用HA組態、則必須在容錯移轉合作夥伴上有對應的X1148介面卡、以便在容錯移轉期間繼續RDMA服務。NIC必須具備ROCE功能。
+有關目標 RNIC 支持的信息，請參閱 https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-從 ONTAP 9.10.1 開始、您可以使用命令檢視 RDMA 卸載通訊協定清單：
-`network port show -rdma-protocols roce`
+如果您使用高可用度（ HA ）組態，兩個節點都必須使用相同的 RNIC 來支援 RDMA 容錯移轉。NIC 必須具備 ROCE 功能。
+
+* 從 ONTAP 9.10.1 開始、您可以使用命令檢視 RDMA 卸載通訊協定清單：
++
+[source, cli]
+----
+network port show -rdma-protocols roce
+----
+* 從 ONTAP 9.16.1 開始，建議使用優先流量控制（ PFC ）。使用命令設定 PFC `network port modify` ：
++
+[source, cli]
+----
+network port modify -node <nodename> -port <portname> -flowcontrol-admin pfc -pfc-queues-admin 3
+----
+* 在 ONTAP 9.16.1 之前，建議您使用預設的全域流程控制（ GFC ）。如果流程控制設定已變更，請使用命令來設定 GFC `network port modify` ：
++
+[source, cli]
+----
+network port modify -node <nodename> -port <portname> -flowcontrol-admin full
+----
+
 
 
 
 == 用戶端系統組態
 
-用戶端必須使用支援Mellanox RDMA的NIC卡（例如 X1148）和Mellanox OFED網路軟體。如需支援的機型和版本、請參閱Mellanox文件。雖然用戶端和伺服器可以直接連線、但由於交換器的容錯移轉效能改善、因此建議使用交換器。
+如需有關支援的 Client 作業系統 for NFS over RDMA 的資訊，請參閱 https://imt.netapp.com/matrix/["NetApp互通性對照表IMT （僅限部分）"^]。如需 Roce v2 支援的 RNIC ，請參閱各自的 RNIC 廠商文件。
 
-必須使用巨型框架來設定用戶端、伺服器、任何交換器和交換器上的所有連接埠。同時確保優先順序流程控制在任何交換器上都有效。
+雖然用戶端和伺服器可以直接連線，但建議使用交換器來改善容錯移轉效能。
 
-一旦確認此組態、您就可以掛載NFS。
+必須使用巨型框架來設定用戶端，伺服器，任何交換器和交換器上的所有連接埠。用戶端和交換器上的流程控制組態應符合 ONTAP 的流程控制組態。從 ONTAP 9.16.1 開始，最佳做法是在 ONTAP ，交換器和用戶端上啟用和設定優先順序流程控制。在 ONTAP 9.16.1 之前，建議使用全域流程控制。
+
+確認此組態之後，您可以使用 RDMA 掛載 NFS 匯出。
 
 [role="tabbed-block"]
 ====
@@ -52,24 +73,24 @@ NFS over RDMA需要用戶端系統和儲存平台的NIC組態。
 --
 . 使用下列命令檢查NFS伺服器上是否已啟用RDMA存取：
 +
-`vserver nfs show-vserver _SVM_name_`
+`vserver nfs show-vserver <SVM_name>`
 
 +
 根據預設、 `-rdma` 應啟用。如果不是、請在NFS伺服器上啟用RDMA存取：
 
 +
-`vserver nfs modify -vserver _SVM_name_ -rdma enabled`
+`vserver nfs modify -vserver <SVM_name> -rdma enabled`
 
 . 透過NFSv4.0透過RDMA掛載用戶端：
 +
 .. proto參數的輸入取決於伺服器IP傳輸協定版本。如果是IPV4、請使用 `proto=rdma`。如果是IPv6、請使用 `proto=rdma6`。
 .. 將NFS目標連接埠指定為 `port=20049` 而非標準連接埠2049：
 +
-`mount -o vers=4,minorversion=0,proto=rdma,port=20049 _Server_IP_address_:/_volume_path_ _mount_point_`
+`mount -o vers=4,minorversion=0,proto=rdma,port=20049 <Server_IP_address>:/<volume_path> <mount_point>`
 
 
 
-. * 選用 * ：如果您需要卸載用戶端、請執行命令 `unmount _mount_path_`
+. * 選用 * ：如果您需要卸載用戶端，請執行命令 `unmount <mount_path>`
 
 
 --

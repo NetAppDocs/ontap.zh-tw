@@ -30,7 +30,7 @@ summary: 若要利用 Cisco Duo for SSH 的雙因素驗證（ 2FA ）來提升�
 
 == 設定 Cisco Duo
 
-您可以使用命令為整個叢集或特定儲存 VM （在 ONTAP CLI 中稱為 Vserver ）建立 Cisco 雙核心組態 `security login duo create`。當您這麼做時、 Cisco Duo 會啟用此叢集或儲存 VM 的 SSH 登入。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-create.html["指令參考資料ONTAP"^]需詳細 `security login duo create`資訊，請參閱。
+您可以使用命令為整個叢集或特定儲存 VM （在 ONTAP CLI 中稱為 Vserver ）建立 Cisco 雙核心組態[`security login duo create`。當您這麼做時、 Cisco Duo 會啟用此叢集或儲存 VM 的 SSH 登入。深入瞭解[`security login duo create` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 登入 Cisco Duo 管理面板。
@@ -47,16 +47,13 @@ security login duo create \
 -secret-key <SECRET_KEY> \
 -apihost <API_HOSTNAME>
 ----
-+
-如需有關命令的詳細link:config-worksheets-reference.html["系統管理員驗證和RBAC組態工作表"^]資訊，請參閱。
-
 
 
 
 
 == 變更 Cisco Duo 組態
 
-您可以變更 Cisco Duo 驗證使用者的方式（例如、提供多少驗證提示、或使用什麼 HTTP Proxy ）。如果您需要變更儲存 VM 的 Cisco 雙核心組態（在 ONTAP CLI 中稱為 vserver ），您可以使用 `security login duo modify`命令。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-modify.html["指令參考資料ONTAP"^]需詳細 `security login duo modify`資訊，請參閱。
+您可以變更 Cisco Duo 驗證使用者的方式（例如、提供多少驗證提示、或使用什麼 HTTP Proxy ）。如果您需要變更儲存 VM 的 Cisco 雙核心組態（在 ONTAP CLI 中稱為 vserver ），您可以使用[`security login duo modify`命令。深入瞭解[`security login duo modify` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 登入 Cisco Duo 管理面板。
@@ -75,8 +72,7 @@ security login duo modify \
 -pushinfo true|false \
 -http-proxy <HTTP_PROXY_URL> \
 -autopush true|false \
--prompts 1|2|3 \
--max-unenrolled-logins <NUM_LOGINS> \
+-max-prompts 1|2|3 \
 -is-enabled true|false \
 -fail-mode safe|secure
 ----
@@ -86,7 +82,7 @@ security login duo modify \
 
 == 移除 Cisco Duo 組態
 
-您可以移除 Cisco Duo 組態、這樣就不需要 SSH 使用者在登入時使用 DuoTM 進行驗證。若要移除儲存 VM 的 Cisco 雙核心組態（在 ONTAP CLI 中稱為 vserver ），您可以使用 `security login duo delete`命令。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-delete.html["指令參考資料ONTAP"^]需詳細 `security login duo delete`資訊，請參閱。
+您可以移除 Cisco Duo 組態、這樣就不需要 SSH 使用者在登入時使用 DuoTM 進行驗證。若要移除儲存 VM 的 Cisco 雙核心組態（在 ONTAP CLI 中稱為 vserver ），您可以使用[`security login duo delete`命令。深入瞭解[`security login duo delete` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 使用 SSH 登入您的 ONTAP 帳戶。
@@ -105,7 +101,7 @@ security login duo delete  -vserver <STORAGE_VM_NAME>
 
 == 查看 Cisco Duo 組態
 
-您可以使用命令檢視儲存 VM （在 ONTAP CLI 中稱為 vserver ）的現有 Cisco 雙核心組態 `security login duo show`。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-show.html["指令參考資料ONTAP"^]需詳細 `security login duo show`資訊，請參閱。
+您可以使用命令檢視儲存 VM （在 ONTAP CLI 中稱為 vserver ）的現有 Cisco 雙核心組態[`security login duo show`。深入瞭解[`security login duo show` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 使用 SSH 登入您的 ONTAP 帳戶。
@@ -142,7 +138,7 @@ Comments: -
 
 == 建立雙核心群組
 
-您可以指示 Cisco DuoTM 僅在特定 Active Directory 、 LDAP 或本機使用者群組中加入使用者、以進行 DuoTM 驗證程序。如果您建立雙核心群組、系統只會提示該群組中的使用者進行雙核心驗證。您可以使用命令建立雙核心群組[`security login duo group create`。建立群組時、您可以選擇性地將該群組中的特定使用者排除在雙核心驗證程序之外。深入瞭解 ONTAP 命令參照中的連結： https://docs 。 NetApp 。 ONTAP - CLI/security-login-duo-group-create.html[`security login duo group create`^] 命令。
+您可以指示 Cisco DuoTM 僅在特定 Active Directory 、 LDAP 或本機使用者群組中加入使用者、以進行 DuoTM 驗證程序。如果您建立雙核心群組、系統只會提示該群組中的使用者進行雙核心驗證。您可以使用命令建立雙核心群組[`security login duo group create`。建立群組時、您可以選擇性地將該群組中的特定使用者排除在雙核心驗證程序之外。深入瞭解[`security login duo group create` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 使用 SSH 登入您的 ONTAP 帳戶。
@@ -150,10 +146,10 @@ Comments: -
 +
 [source, cli]
 ----
-security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -excluded-users <USER1, USER2>
 ----
 +
-雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您可以選用指定的使用者 `-exclude-users` 此參數不會包含在雙核心驗證程序中。
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您使用選用參數指定的使用者 `-excluded-users`將不會納入雙核心驗證程序。
 
 
 
@@ -161,7 +157,7 @@ security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NA
 
 == 檢視雙核心群組
 
-您可以使用命令來檢視現有的 Cisco 雙核心群組項目 `security login duo group show`。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-group-show.html["指令參考資料ONTAP"^]需詳細 `security login duo group show`資訊，請參閱。
+您可以使用命令來檢視現有的 Cisco 雙核心群組項目[`security login duo group show`。深入瞭解[`security login duo group show` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 使用 SSH 登入您的 ONTAP 帳戶。
@@ -169,10 +165,10 @@ security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NA
 +
 [source, cli]
 ----
-security login duo group show -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+security login duo group show -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -excluded-users <USER1, USER2>
 ----
 +
-雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您可以選用指定的使用者 `-exclude-users` 不會顯示參數。
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您使用選用參數指定的使用者 `-excluded-users`將不會顯示。
 
 
 
@@ -180,7 +176,7 @@ security login duo group show -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME
 
 == 移除 " 雙核心 " 群組
 
-您可以使用命令移除雙核心群組項目 `security login duo group delete`。如果您移除群組、該群組中的使用者將不再包含在雙核心驗證程序中。如link:https://docs.netapp.com/us-en/ontap-cli//security-login-duo-group-delete.html["指令參考資料ONTAP"^]需詳細 `security login duo group delete`資訊，請參閱。
+您可以使用命令移除雙核心群組項目[`security login duo group delete`。如果您移除群組、該群組中的使用者將不再包含在雙核心驗證程序中。深入瞭解[`security login duo group delete` ONTAP 命令參照中的 ^] 命令。
 
 .步驟
 . 使用 SSH 登入您的 ONTAP 帳戶。
@@ -213,7 +209,7 @@ security login duo group delete -vserver <STORAGE_VM_NAME> -group-name <GROUP_NA
 +
 [source, cli]
 ----
-security login duo -vserver <STORAGE_VM_NAME> -is-duo-enabled-false
+security login duo modify -vserver <STORAGE_VM_NAME> -is-enabled false
 ----
 
 
@@ -229,10 +225,10 @@ security login duo -vserver <STORAGE_VM_NAME> -is-duo-enabled-false
 +
 [source, cli]
 ----
-security login group modify -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+security login duo group modify -group-name <GROUP_NAME> -excluded-users <USER1, USER2>
 ----
 +
-雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您使用指定的使用者 `-exclude-users` 此參數不會包含在雙核心驗證程序中。
+雙核心群組的名稱必須符合 Active Directory 、 LDAP 或本機群組。您使用參數指定的使用者 `-excluded-users`將不會包含在雙核心驗證程序中。
 
 
 

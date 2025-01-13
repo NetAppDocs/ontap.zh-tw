@@ -2,26 +2,28 @@
 sidebar: sidebar 
 permalink: anti-ransomware/respond-abnormal-task.html 
 keywords: abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, ransomware attack, abnormal activity notification, ransomware alert, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, ransomware ems 
-summary: 瞭解如何回應 ARP 通知、以瞭解勒索軟體攻擊是否正在進行中。 
+summary: 瞭解 ONTAP 中的 ARP 通知，並判斷勒索軟體是否發生攻擊，以及如何回應。 
 ---
 = 回應異常活動
-:hardbreaks:
-:toclevels: 1
 :allow-uri-read: 
-:toclevels: 1
-:nofooter: 
 :icons: font
-:linkattrs: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷該活動是否可接受（誤判）、或攻擊是否看起來惡意。
+當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷該活動是否可接受（誤判）、或攻擊是否看起來惡意。將攻擊分類後，您可以清除可疑檔案的警告和注意事項。
+
+當 ONTAP 偵測到異常時，也會建立link:index.html#threat-assessment-and-arp-snapshots["ARP 快照"]磁碟區以建立最佳的恢復點。依預設， ARP 快照會保留兩到五天。
+
+當您將攻擊分類時，這些 ARP 快照會立即刪除（ ONTAP 9.15.1 及更早版本），或保留在分類作業（ ONTAP 9.16.1 及更新版本）所起始的簡短期間內。
+
+
+NOTE: 從 ONTAP 9.11.1 開始，您可以修改xref:modify-automatic-snapshot-options-task.html[保留設定]用於 ARP 快照的。
 
 .關於這項工作
 當Arp偵測到高資料Entropy、異常Volume活動與資料加密、以及異常檔案副檔名的任何組合時、會顯示可疑檔案的清單。
 
-發出警告時、請以下列兩種方式之一來指定檔案活動：
+發出 ARP 警告時，請以下列兩種方式之一來指定檔案活動：
 
 * * 誤判 *
 +
@@ -44,7 +46,7 @@ NOTE: 如果您還原整個磁碟區、則沒有要清除的通知。
 ARP 必須以作用中模式執行。
 
 .步驟
-您可以使用系統管理員或 ONTAP CLI 來回應異常工作。
+您可以使用系統管理員或 ONTAP CLI 來回應異常活動。
 
 [role="tabbed-block"]
 ====
@@ -54,13 +56,12 @@ ARP 必須以作用中模式執行。
 +
 警告會顯示在 * 事件 * 功能表的 * 總覽 * 窗格中。
 
-. 當顯示「偵測到異常 Volume 活動」訊息時，請檢視可疑檔案。
+. 當出現偵測到異常 Volume 活動的訊息時，請檢視可疑的檔案類型。
 +
-在 * 安全 * 標籤中、選取 * 檢視可疑的檔案類型 * 。
+在 * 安全 * 標籤中，選取選項以檢閱可疑的檔案類型。
 
 . 在 * 可疑檔案類型 * 對話方塊中，檢查每種檔案類型，並將其標記為「誤判」或「可能的勒索軟體攻擊」。
-
-
++
 [cols="25,75"]
 |===
 
@@ -68,24 +69,42 @@ ARP 必須以作用中模式執行。
 | 如果您選取此值... | 請採取此行動… 
 
 
-| 誤判  a| 
-選擇 * 更新 * 和 * 清除可疑檔案類型 * 、以記錄您的決定並恢復正常的 ARP 監控。
-
+ a| 
+誤判
+ a| 
+.. 選擇 * 更新 * 和 * 清除可疑檔案類型 * 來記錄您的決定。
++
 
 NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、則清除可疑的作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
 
++
+此動作會清除可疑檔案的警告通知。接著， ARP 會恢復對磁碟區的正常監控。對於 ONTAP 9.15.1 及更早版本，清除可疑的檔案類型之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
 
 
-| 可能的勒索軟體攻擊 | 回應攻擊並還原受保護的資料。然後選擇 * 更新 * 和 * 清除可疑的檔案類型 * 來記錄您的決定並恢復正常的 ARP 監控。
-如果還原整個磁碟區、則沒有可疑的檔案類型可清除。 
+
+
+
+ a| 
+可能的勒索軟體攻擊
+ a| 
+.. 回應攻擊和link:recover-data-task.html["還原受保護的資料"]。
+.. 選擇 * 更新 * 和 * 清除可疑檔案類型 * 、以記錄您的決定並恢復正常的 ARP 監控。
+
+
+此動作會清除攻擊報告。如果您還原了整個磁碟區，則沒有可疑的檔案類型通知可清除。對於 ONTAP 9.15.1 及更早版本，還原磁碟區之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+
 |===
+
+
 --
 .CLI
 --
 . 當您收到可疑勒索軟體攻擊的通知時、請確認攻擊的時間和嚴重性：
 +
-`security anti-ransomware volume show -vserver _svm_name_ -volume _vol_name_`
-
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <vol_name>
+----
 +
 範例輸出：
 
@@ -102,55 +121,76 @@ Number of Attacks: 1
 您也可以檢查EMS訊息：
 
 +
-`event log show -message-name callhome.arw.activity.seen`
-
+[source, cli]
+----
+event log show -message-name callhome.arw.activity.seen
+----
 . 產生攻擊報告並記下輸出位置：
 +
-`security anti-ransomware volume attack generate-report -volume _vol_name_ -dest-path _file_location_/`
+[source, cli]
+----
+security anti-ransomware volume attack generate-report -vserver <svm_name> -volume <vol_name> -dest-path <[svm_name:]vol_name/[sub-dir-name]>`
+----
++
+命令範例：
 
++
+[listing]
+----
+security anti-ransomware volume attack generate-report -vserver vs0 -volume vol1 -dest-path vs0:vol1
+----
 +
 範例輸出：
 
 +
-`Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"`
-
+[listing]
+----
+Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
+----
 . 在管理用戶端系統上檢視報告。例如：
 +
 ....
-[root@rhel8 mnt]# cat report_file_vs0_vol1_14-09-2021_01-21-08
-
-19  "9/14/2021 01:03:23"   test_dir_1/test_file_1.jpg.lckd
-20  "9/14/2021 01:03:46"   test_dir_2/test_file_2.jpg.lckd
-21  "9/14/2021 01:03:46"   test_dir_3/test_file_3.png.lckd`
+cat report_file_vs0_vol1_14-09-2021_01-21-08
 ....
 . 根據您對副檔名的評估、採取下列其中一項行動：
 +
 ** 誤判
 +
-輸入下列命令以記錄您的決定、將新的副檔名新增至允許的項目清單、並恢復正常的反勒索軟體監控：
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
+執行下列命令以記錄您的決定，將新的擴充功能新增至允許的擴充功能清單，並恢復正常的勒索軟體保護監控：
 
 +
-使用下列其中一個參數來識別副檔名：
-`[-seq-no _integer_]` 可疑清單中檔案的序號。
-`[-extension _text_, … ]` 副檔名
-`[-start-time _date_time_ -end-time _date_time_]` 要清除之檔案範圍的開始和結束時間、格式為「 MM/DD/YYYY HH ： MM ： SS 」。
+[source, cli]
+----
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive true
+----
++
+使用下列選用參數，僅將特定副檔名識別為誤報：
+
++
+*** `[-extension <text>, … ]`：檔案副檔名
++
+此 `clear-suspect`作業會清除可疑檔案的警告通知。接著， ARP 會恢復對磁碟區的正常監控。對於 ONTAP 9.15.1 及更早版本，清除可疑的檔案類型之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+
+
 
 ** 可能的勒索軟體攻擊
 +
-回應攻擊和 link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。恢復資料後、輸入下列命令以記錄您的決定、並恢復正常的 ARP 監控：
+回應攻擊和link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。恢復資料後，請執行下列命令來記錄您的決定，並恢復正常的 ARP 監控：
 
 +
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
+[source, cli]
+----
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
++
+請使用下列選用參數，僅將特定的擴充功能識別為可能的勒索軟體：
 
 +
-使用下列其中一個參數來識別副檔名：
-`[-seq-no _integer_]` 可疑清單中檔案的序號
-`[-extension _text_, … ]` 副檔名
-`[-start-time _date_time_ -end-time _date_time_]` 要清除之檔案範圍的開始和結束時間、格式為「 MM/DD/YYYY HH ： MM ： SS 」。
-
+*** `[-extension <text>, … ]`：檔案副檔名
 +
-如果還原整個磁碟區、則沒有可疑的檔案類型可清除。將移除 ARP 建立的備份快照、並清除攻擊報告。
+此 `clear-suspect`作業會清除攻擊報告。如果您還原了整個磁碟區，則沒有可疑的檔案類型通知可清除。對於 ONTAP 9.15.1 及更早版本，還原磁碟區之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+
+
 
 
 
@@ -158,12 +198,16 @@ Number of Attacks: 1
 +
 .. 顯示要求：
 +
-`security multi-admin-verify request show`
-
+[source, cli]
+----
+security multi-admin-verify request show
+----
 .. 核准恢復正常反勒索軟體監控的要求：
 +
-`security multi-admin-verify request approve -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request approve -index[<number returned from show request>]
+----
 +
 最後一個群組核准者的回應表示已修改磁碟區、並記錄誤報。
 
@@ -171,12 +215,15 @@ Number of Attacks: 1
 
 . 如果您使用的是 MAV 、而您是 MAV 群組核准者、您也可以拒絕明確可疑的要求：
 +
-`security multi-admin-verify request veto -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request veto -index[<number returned from show request>]
+----
 
 
 --
 ====
-.更多資訊
+.相關資訊
 * link:https://kb.netapp.com/onprem%2Fontap%2Fda%2FNAS%2FUnderstanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot#["KB ：瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]。
+* link:modify-automatic-snapshot-options-task.html["修改自動快照選項"]。
 
