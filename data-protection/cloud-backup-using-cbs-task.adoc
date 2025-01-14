@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: data-protection/cloud-backup-using-cbs-task.html 
-keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
-summary: 從推出《支援服務》9.9.1開始ONTAP 、您可以使用System Manager使用Cloud Backup備份雲端中的資料。 
+keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, BlueXP back and recovery service, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
+summary: 從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP  備份與還原服務來備份雲端中的資料。 
 ---
-= 使用Cloud Backup備份資料
+= 使用 BlueXP  備份與還原服務備份資料
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,9 +16,11 @@ summary: 從推出《支援服務》9.9.1開始ONTAP 、您可以使用System Ma
 
 
 [role="lead"]
-從推出《支援服務》9.9.1開始ONTAP 、您可以使用System Manager使用Cloud Backup備份雲端中的資料。
+從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP  備份與還原服務（前身為 Cloud Backup Service ）來備份雲端中的資料。
 
-Cloud Backup支援FlexVol 以邊讀寫磁碟區和資料保護（DP）磁碟區。從 ONTAP 9 。 12.1 開始，雲端備份支援 FlexGroup Volume 和 SnapLock Volume 。
+BlueXP  備份與還原服務支援 FlexVol 讀寫磁碟區和資料保護（ DP ）磁碟區。從 ONTAP 9.12.1 開始， BlueXP  備份與還原服務支援 FlexGroup Volume 與 SnapLock Volume 。
+
+深入瞭解 link:https://docs.netapp.com/us-en/bluexp-backup-recovery/index.html["BlueXP 備份與還原"^]。
 
 .開始之前
 您應該執行下列程序、在BlueXP中建立帳戶。對於服務帳戶、您需要建立「帳戶管理員」角色。（其他服務帳戶角色不具備從System Manager建立連線所需的權限。）
@@ -36,7 +38,7 @@ NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功�
 
 
 
-. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在Cloud Backup Service BlueXP中訂閱支援功能"^] （需要適當的授權）。
+. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在 BlueXP  中訂閱 BlueXP  備份與還原服務"^]（需要適當的授權）。
 . link:https://docs.netapp.com/us-en/occm/task_managing_cloud_central_accounts.html#creating-and-managing-service-accounts["使用BlueXP產生存取金鑰和秘密金鑰"^]。
 
 
@@ -48,7 +50,7 @@ NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功�
 
 .步驟
 . 在System Manager中、前往* Protection Overview *。
-. 在* Cloud Backup Service 《*》下、提供下列詳細資料：
+. 在 * BlueXP  備份與還原 * 下，提供下列詳細資料：
 +
 ** 用戶端ID
 ** 用戶端秘密金鑰
@@ -59,19 +61,19 @@ NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功�
 
 
 
-== 啟用雲端備份
+== 啟用 BlueXP 備份與還原
 
-在使用BluedXP註冊叢集之後、您需要啟用Cloud Backup並開始第一次備份至雲端。
+在 BlueXP  註冊叢集之後，您需要啟用 BlueXP  備份與還原，並起始第一次備份至雲端。
 
 .步驟
-. 在System Manager中、按一下* Protection（保護）> Overview（概覽）*、然後捲動至* Cloud Backup Service 《*》*區段。
+. 在系統管理器中，單擊 * 保護 > 概述 * ，然後滾動至 BlueXP  備份和恢復 * 部分。
 . 輸入* Client ID*和* Client Secret *。
 +
 
 NOTE: 從《Sof the S21》（英文）9.10.1開始ONTAP 、按一下*深入瞭解雲端使用成本*、即可瞭解雲端的使用成本。
 
-. 按一下「*連線並啟用Cloud Backup Service Sext*」。
-. 視您所選的供應商而定、在*啟用Cloud Backup Service S仰賴*頁面上提供下列詳細資料。
+. 按一下 * 連線並啟用 BlueXP  備份與還原 * 。
+. 在 *Enable backup and recovery * （啓用 BlueXP  備份和恢復 * ）頁面上，根據您選擇的提供商提供以下詳細信息。
 +
 [cols="35,65"]
 |===
@@ -151,12 +153,12 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 
 
 
-== 編輯用於雲端備份的保護原則
+== 編輯用於 BlueXP  備份與還原的保護原則
 
-您可以變更雲端備份所使用的保護原則。
+您可以變更 BlueXP  備份與還原所使用的保護原則。
 
 .步驟
-. 在System Manager中、按一下* Protection（保護）> Overview（概覽）*、然後捲動至* Cloud Backup Service 《*》*區段。
+. 在系統管理器中，單擊 * 保護 > 概述 * ，然後滾動至 BlueXP  備份和恢復 * 部分。
 . 單擊，然後單擊 image:icon_kabob.gif["功能表選項圖示"]* 編輯 * 。
 . 選擇*保護原則*：
 +
@@ -202,13 +204,13 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 
 * 叢集不能位於MetroCluster 一個不符合需求的環境中。
 * 不支援SVM-DR。
-* 無法使用Cloud Backup備份FlexGroups。
+* 無法使用 BlueXP  備份與還原來備份 FlexGroups 。
 
 
 .步驟
 . 配置磁碟區或LUN時、請在System Manager的* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
-. 選取Cloud Backup原則類型。
-. 如果未啟用Cloud Backup、請選取*啟用Cloud Backup Service 還原*。
+. 選取 BlueXP  備份與還原原則類型。
+. 如果未啟用 BlueXP  備份與還原服務，請選取 * 啟用使用 BlueXP  備份與還原服務 * 的備份。
 
 
 
@@ -219,10 +221,10 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 
 .步驟
 . 選取現有的磁碟區或LUN、然後按一下*保護*。
-. 在「*保護磁碟區*」頁面上、針對Cloud Backup Service 保護原則指定*使用S還原*備份。
+. 在 * 保護 Volumes （磁碟區） * 頁面上，針對保護原則指定 * 使用 BlueXP  備份與還原服務 * 進行備份。
 . 按一下*保護*。
 . 在* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
-. 選取*啟用Cloud Backup Service S編*。
+. 選取 * 連線並啟用 BlueXP  備份與還原 * 。
 
 
 
