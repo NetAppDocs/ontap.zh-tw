@@ -31,10 +31,10 @@ BlueXP  備份與還原服務支援 FlexVol 讀寫磁碟區和資料保護（ D
 ** Microsoft Azure
 ** Amazon Web Services（AWS）
 ** Google Cloud Platform（GCP）
-** 《》（《》）StorageGRID ONTAP
+** StorageGRID （ ONTAP 9.10.1 ）
 +
 
-NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功能支援的功能支援功能、但前提是部署了內部部署的是BlueXP。  BlueXP連接器必須安裝在內部部署環境中、並可透過BlueXP軟體即服務（SaaS）應用程式取得。
+NOTE: 從 ONTAP 9.10.1 開始，您可以選擇 StorageGRID 做為雲端備份供應商，但前提是 BlueXP  必須部署在內部部署。BlueXP連接器必須安裝在內部部署環境中、並可透過BlueXP軟體即服務（SaaS）應用程式取得。
 
 
 
@@ -66,13 +66,13 @@ NOTE: 從ONTAP 功能支援的版本起、StorageGRID 您可以選擇使用功�
 在 BlueXP  註冊叢集之後，您需要啟用 BlueXP  備份與還原，並起始第一次備份至雲端。
 
 .步驟
-. 在系統管理器中，單擊 * 保護 > 概述 * ，然後滾動至 BlueXP  備份和恢復 * 部分。
+. 在系統管理器中，選擇 * 保護 > 概述 * ，然後滾動至 Cloud Backup Service 部分。
 . 輸入* Client ID*和* Client Secret *。
 +
 
-NOTE: 從《Sof the S21》（英文）9.10.1開始ONTAP 、按一下*深入瞭解雲端使用成本*、即可瞭解雲端的使用成本。
+NOTE: 從 ONTAP 9.10.1 開始，您可以選擇 * 深入瞭解使用雲端的成本 * ，瞭解使用雲端的成本。
 
-. 按一下 * 連線並啟用 BlueXP  備份與還原 * 。
+. 選取 * 連線並啟用 Cloud Backup Service * 。
 . 在 *Enable backup and recovery * （啓用 BlueXP  備份和恢復 * ）頁面上，根據您選擇的提供商提供以下詳細信息。
 +
 [cols="35,65"]
@@ -115,8 +115,7 @@ Google Cloud Project（GCP）
 
 
  a| 
-StorageGRID
-（ ONTAP 9.10.1 及更新版本、僅適用於 BlueXP 內部部署）
+StorageGRID （ ONTAP 9.10.1 及更新版本，僅適用於內部部署的 BlueXP  ）
  a| 
 ** 伺服器
 ** SG 存取金鑰
@@ -158,8 +157,8 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 您可以變更 BlueXP  備份與還原所使用的保護原則。
 
 .步驟
-. 在系統管理器中，單擊 * 保護 > 概述 * ，然後滾動至 BlueXP  備份和恢復 * 部分。
-. 單擊，然後單擊 image:icon_kabob.gif["功能表選項圖示"]* 編輯 * 。
+. 在系統管理器中，選擇 * 保護 > 概述 * ，然後滾動至 Cloud Backup Service 部分。
+. 選擇image:icon_kabob.gif["功能表選項圖示"]，然後選擇 * 編輯 * 。
 . 選擇*保護原則*：
 +
 ** *現有原則*：選擇現有原則。
@@ -220,9 +219,9 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 您可以為現有的磁碟區和LUN建立SnapMirror保護關係。
 
 .步驟
-. 選取現有的磁碟區或LUN、然後按一下*保護*。
+. 選取現有的磁碟區或 LUN ，然後選取 * 保護 * 。
 . 在 * 保護 Volumes （磁碟區） * 頁面上，針對保護原則指定 * 使用 BlueXP  備份與還原服務 * 進行備份。
-. 按一下*保護*。
+. 選取 * 保護 * 。
 . 在* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
 . 選取 * 連線並啟用 BlueXP  備份與還原 * 。
 
@@ -231,4 +230,4 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 
 == 從備份檔案還原資料
 
-您只能在使用BlueXP介面時執行備份管理作業、例如還原資料、更新關係及刪除關係。請參閱 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["從備份檔案還原資料"] 以取得更多資訊。
+您只能在使用BlueXP介面時執行備份管理作業、例如還原資料、更新關係及刪除關係。如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["從備份檔案還原資料"^] 。

@@ -54,9 +54,10 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 
 這些檔案中的變數是用來控制 ONTAP Mediator 服務所使用的憑證檔案。
 
-
-NOTE: 在 ONTAP Mediator 1.8 及更早版本中， CA 憑證為 `ca.crt`。從 ONTAP Mediator 1.9 開始，所需的憑證為 `intermediate.crt`。
-
+[role="tabbed-block"]
+====
+.ONTAP Mediator 1.9 及更新版本
+--
 下表列出的預設變數會包含在檔案中 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。
 
 [cols="2*"]
@@ -103,6 +104,57 @@ NOTE: 在 ONTAP Mediator 1.8 及更早版本中， CA 憑證為 `ca.crt`。從 O
 
 | `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt` 
 |===
+--
+.ONTAP Mediator 1.8 及更早版本
+--
+下表列出的預設變數會包含在檔案中 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。
+
+[cols="2*"]
+|===
+| 變動 | 路徑 
+
+
+| `cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt` 
+
+
+| `key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
+
+
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+
+
+| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key` 
+
+
+| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl` 
+
+
+| `cert_valid_days` | `1095` 
+
+
+| `x509_passin_pwd` | `pass:ontap` 
+|===
+* `cert_valid_days`用於設定用戶端憑證的到期日。最大值為三年（ 1095 天）。
+* `x509_passin_pwd`是簽署用戶端憑證的密碼。
+
+
+下表列出的預設變數會包含在檔案中 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini`。
+
+[cols="2*"]
+|===
+| 變動 | 路徑 
+
+
+| `mediator_cert` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt` 
+
+
+| `mediator_key` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
+
+
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+|===
+--
+====
 如果您修改這些屬性，請重新啟動 ONTAP Mediator 服務以套用變更。如需如何以協力廠商憑證取代預設憑證的詳細指示，請參閱link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["以信任的第三方憑證取代自我簽署的憑證"]。
 
 

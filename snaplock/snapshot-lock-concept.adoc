@@ -1,52 +1,60 @@
 ---
 permalink: snaplock/snapshot-lock-concept.html 
 sidebar: sidebar 
-keywords: snaplock, snapshot copy, lock, tamperproof 
-summary: 從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定Snapshot複本、以防止勒索軟體攻擊。鎖定Snapshot複本可確保它們不會意外或惡意刪除。 
+keywords: snaplock, snapshot, lock, tamperproof 
+summary: 從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。 
 ---
-= 鎖定Snapshot複本以防止勒索軟體攻擊
+= 鎖定快照以防止勒索軟體攻擊
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定Snapshot複本、以防止勒索軟體攻擊。鎖定Snapshot複本可確保不會意外或惡意刪除。
+從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。
 
-您可以使用SnapLock 「不符法規時鐘」功能、將Snapshot複本鎖定一段特定期間、以便在達到到期時間之前將其刪除。鎖定Snapshot複本可防止資料竄改、避免受到勒索軟體威脅。如果磁碟區受到勒索軟體攻擊、您可以使用鎖定的Snapshot複本來恢復資料。
+您可以使用 SnapLock Compliance 時鐘功能將快照鎖定一段指定的時間，以便在快照達到到期時間之前無法刪除快照。鎖定快照可防止竄改，防止勒索軟體威脅。如果磁碟區遭到勒索軟體攻擊，您可以使用鎖定的快照來恢復資料。
 
-從 ONTAP 9.14.1 開始、 Snapshot 複本鎖定功能可支援 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的長期保留 Snapshot 複本。Snapshot 複本鎖定是透過使用與相關的 SnapMirror 原則規則來設定保留期間來啟用 xref:Modify an existing policy to apply long-term retention[現有原則標籤]。此規則會覆寫在磁碟區上設定的預設保留期間。如果 SnapMirror 標籤沒有相關的保留期間、則會使用磁碟區的預設保留期間。
+從 ONTAP 9.14.1 開始，快照鎖定功能可支援 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的長期保留快照。使用與相關的 SnapMirror 原則規則來設定保留期間xref:Modify an existing policy to apply long-term retention[現有原則標籤]，即可啟用快照鎖定。此規則會覆寫在磁碟區上設定的預設保留期間。如果 SnapMirror 標籤沒有相關的保留期間、則會使用磁碟區的預設保留期間。
 
-.防竄改Snapshot複本要求與考量
+.防竄改的快照需求與考量
 * 如果您使用的是 ONTAP CLI 、叢集中的所有節點都必須執行 ONTAP 9.12.1 或更新版本。如果您使用的是 System Manager 、則所有節點都必須執行 ONTAP 9.13.1 或更新版本。
 * link:../system-admin/install-license-task.html["SnapLock 授權必須安裝在叢集上"]。本授權包含在link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]中。
 * link:../snaplock/initialize-complianceclock-task.html["叢集上的規範時鐘必須初始化"]。
-* 在磁碟區上啟用Snapshot鎖定功能時、您可以將叢集升級至ONTAP 更新於ONTAP 版本更新至版本更新於版本更新至版本更新的版本。 不過ONTAP 、在所有鎖定的Snapshot複本都達到到期日並刪除、且Snapshot複本鎖定功能已停用之前、您無法還原至舊版的功能。
-* 鎖定Snapshot時、磁碟區過期時間會設定為Snapshot複本的過期時間。如果鎖定多個 Snapshot 複本、則 Volume 過期時間會反映所有 Snapshot 複本中最長的過期時間。
-* 鎖定Snapshot複本的保留期間優先於Snapshot複本保留數、也就是說、如果鎖定Snapshot複本的Snapshot複本保留期間尚未過期、則不會保留保留保留數限制。
-* 在SnapMirror關係中、您可以在鏡射儲存庫原則規則上設定保留期間、如果目的地磁碟區已啟用Snapshot複本鎖定功能、則保留期間會套用至複寫至目的地的Snapshot複本。保留期間優先於保留數；例如、即使超過保留數、仍會保留未超過到期日的Snapshot複本。
-* 您可以在非SnapLock Volume上重新命名Snapshot複本。僅當原則為MirrorAllSnapshots時、SnapMirror關係的主要磁碟區上的Snapshot重新命名作業才會反映在次要磁碟區上。對於其他原則類型、重新命名的Snapshot複本不會在更新期間傳播。
-* 如果您使用的是 ONTAP CLI 、您可以使用還原鎖定的 Snapshot 複本 `volume snapshot restore` 僅當鎖定的Snapshot複本是最新的時、才會執行命令。如果有任何未過期的Snapshot複本比要還原的複本晚、則Snapshot複本還原作業將會失敗。
+* 在磁碟區上啟用快照鎖定功能時，您可以將叢集升級至 ONTAP 9.12.1 之後的 ONTAP 版本；不過，除非所有鎖定的快照都已達到到期日，並已刪除，且快照鎖定功能已停用，否則您無法還原至舊版的 ONTAP 。
+* 快照鎖定時，磁碟區過期時間會設為快照的到期時間。如果鎖定多個快照，則磁碟區過期時間會反映所有快照中最長的過期時間。
+* 鎖定快照的保留期間優先於快照保留計數，這表示如果鎖定快照的快照保留期間尚未過期，則保留數量限制將不會生效。
+* 在 SnapMirror 關係中，您可以在鏡射資料保險箱原則規則上設定保留期間，如果目的地磁碟區已啟用快照鎖定功能，則會將保留期間套用至複寫至目的地的快照。保留期間優先於保留計數；例如，即使超過保留計數，仍會保留未超過過期的快照。
+* 您可以重新命名非 SnapLock 磁碟區上的快照。僅當原則為MirrorAllSnapshots時、SnapMirror關係的主要磁碟區上的Snapshot重新命名作業才會反映在次要磁碟區上。對於其他原則類型，重新命名的快照不會在更新期間傳播。
+* 如果您使用的是 ONTAP CLI ，只有在鎖定的快照是最新的時，才能使用命令來還原鎖定的快 `volume snapshot restore`照。如果在還原快照之後仍有任何未過期的快照，則快照還原作業將會失敗。
 
 
-.防竄改Snapshot複本支援的功能
+.防竄改快照支援的功能
 * link:https://docs.netapp.com/us-en/bluexp-cloud-volumes-ontap/reference-worm-snaplock.html["Cloud Volumes ONTAP"^]
 * 資料量FlexGroup
 +
-支援將Snapshot複本鎖定在FlexGroup 不支援的情況下。Snapshot鎖定僅發生在根組成Snapshot複本上。只有在根組成的到期時間已過時、才FlexGroup 允許刪除此功能。
+FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快照上。只有在根組成的到期時間已過時、才FlexGroup 允許刪除此功能。
 
 * 從系統轉換為FlexVol FlexGroup
 +
-您可以使用FlexVol 鎖定的Snapshot複本、將某個不符合需求的Volume轉換成FlexGroup 一個不符合需求的Volume。轉換後、Snapshot複本仍會保持鎖定狀態。
+您可以將具有鎖定快照的 FlexVol volume 轉換為 FlexGroup Volume 。轉換後，快照仍會保持鎖定狀態。
+
+* SnapMirror 非同步
++
+規範時鐘必須同時在來源和目的地上初始化。
+
+* SVM DR
++
+規範時鐘必須同時在來源和目的地上初始化。
 
 * Volume複製與檔案複製
 +
-您可以從鎖定的Snapshot複本建立Volume複本和檔案複本。
+您可以從鎖定的快照建立磁碟區複本和檔案複本。
 
 
 
 .不支援的功能
-下列功能目前不支援防竄改Snapshot複本：
+防竄改快照目前不支援下列功能：
 
 * 一致性群組
 * FabricPool
@@ -60,9 +68,9 @@ summary: 從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定S
 
 
 
-== 建立磁碟區時啟用Snapshot複本鎖定
+== 建立磁碟區時啟用快照鎖定
 
-從ONTAP 《支援資料9.12.1：建立新磁碟區或使用修改現有磁碟區時、您可以啟用Snapshot複本鎖定功能 `-snapshot-locking-enabled` 選項 `volume create` 和 `volume modify` CLI 中的命令。從 ONTAP 9.13.1 開始、您可以使用系統管理員來啟用 Snapshot 複本鎖定。
+從 ONTAP 9.12.1 開始，您可以在建立新磁碟區時，或在 CLI 中使用和 `volume modify`命令選項 `volume create`修改現有磁碟區時，啟用快照鎖定 `-snapshot-locking-enabled`。從 ONTAP 9.13.1 開始，您可以使用系統管理員來啟用快照鎖定。
 
 [role="tabbed-block"]
 ====
@@ -75,24 +83,24 @@ summary: 從VMware 9.12.1開始ONTAP 、您可以在非SnapLock Volume上鎖定S
 . 如果尚未啟用、請選取 * 初始化 SnapLock 法規遵循時鐘 * 。
 . 儲存您的變更。
 . 在 *Volumes （卷） * 窗口中，選擇您更新的卷，然後選擇 *Overview （總覽） * 。
-. 驗證 * SnapLock Snapshot Copy Locking * 是否顯示爲 * Enabled* 。
+. 驗證 * SnapLock 快照鎖定 * 是否顯示爲 * 已啓用 * 。
 
 
 --
 .CLI
 --
-. 若要建立新磁碟區並啟用Snapshot複本鎖定、請輸入下列命令：
+. 若要建立新的磁碟區並啟用快照鎖定，請輸入下列命令：
 +
 `volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
 
 +
-下列命令可在名為vol1的新磁碟區上啟用Snapshot複本鎖定：
+下列命令可在名為 vol1 的新磁碟區上啟用快照鎖定：
 
 +
 [listing]
 ----
 > volume create -volume vol1 -aggregate aggr1 -size 100m -snapshot-locking-enabled true
-Warning: Snapshot copy locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked Snapshot copies are past their expiry time. A volume with unexpired locked Snapshot copies cannot be deleted.
+Warning: snapshot locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked snapshots are past their expiry time. A volume with unexpired locked snapshots cannot be deleted.
 Do you want to continue: {yes|no}: y
 [Job 32] Job succeeded: Successful
 ----
@@ -102,9 +110,9 @@ Do you want to continue: {yes|no}: y
 ====
 
 
-== 在現有磁碟區上啟用Snapshot複本鎖定
+== 在現有磁碟區上啟用快照鎖定
 
-從 ONTAP 9.12.1 開始、您可以使用 ONTAP CLI 在現有磁碟區上啟用 Snapshot 複本鎖定。從 ONTAP 9.13.1 開始、您可以使用系統管理員在現有磁碟區上啟用 Snapshot 複本鎖定。
+從 ONTAP 9.12.1 開始，您可以使用 ONTAP CLI 在現有磁碟區上啟用快照鎖定。從 ONTAP 9.13.1 開始，您可以使用系統管理員在現有的磁碟區上啟用快照鎖定。
 
 [role="tabbed-block"]
 ====
@@ -112,20 +120,20 @@ Do you want to continue: {yes|no}: y
 --
 . 瀏覽至*儲存>磁碟區*。
 . 選擇 image:icon_kabob.gif["功能表選項圖示"] 並選擇 * 編輯 > Volume * 。
-. 在 *Edit Volume* （編輯 Volume ）視窗中、找到 Snapshot Copies （本機） Settings （ Snapshot 複本（本機）設定）區段、然後選取 * Enable Snapshot 閉鎖 * （啟用 Snapshot 鎖定）。
+. 在 * 編輯 Volume * 視窗中，找到「 Snapshots （本機）設定」區段，然後選取 * 啟用 Snapshot 鎖定 * 。
 +
 如果未安裝 SnapLock 授權、則不會顯示此選項。
 
 . 如果尚未啟用、請選取 * 初始化 SnapLock 法規遵循時鐘 * 。
 . 儲存您的變更。
 . 在 *Volumes （卷） * 窗口中，選擇您更新的卷，然後選擇 *Overview （總覽） * 。
-. 驗證 * SnapLock Snapshot Copy Locking * 是否顯示爲 * Enabled* 。
+. 驗證 * SnapLock 快照鎖定 * 是否顯示爲 * 已啓用 * 。
 
 
 --
 .CLI
 --
-. 若要修改現有磁碟區以啟用Snapshot複本鎖定、請輸入下列命令：
+. 若要修改現有的磁碟區以啟用快照鎖定，請輸入下列命令：
 +
 `volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
 
@@ -135,13 +143,13 @@ Do you want to continue: {yes|no}: y
 ====
 
 
-== 建立鎖定的 Snapshot 複本原則並套用保留
+== 建立鎖定的快照原則並套用保留
 
-從ONTAP 功能表9.12開始、您可以建立Snapshot複本原則、以套用Snapshot複本保留期間、並將原則套用至磁碟區、以便在指定期間鎖定Snapshot複本。您也可以手動設定保留期間、以鎖定Snapshot複本。從 ONTAP 9.13.1 開始、您可以使用系統管理員來建立 Snapshot 複本鎖定原則、並將其套用至磁碟區。
+從 ONTAP 9.12.1 開始，您可以建立快照原則來套用快照保留期間，並將原則套用至磁碟區，以鎖定指定期間的快照。您也可以手動設定保留期間來鎖定快照。從 ONTAP 9.13.1 開始，您可以使用系統管理員建立快照鎖定原則，並將其套用至磁碟區。
 
 
 
-=== 建立Snapshot複本鎖定原則
+=== 建立快照鎖定原則
 
 [role="tabbed-block"]
 ====
@@ -152,8 +160,8 @@ Do you want to continue: {yes|no}: y
 . 找到 *Snapshot policies * 並選擇 image:icon_arrow.gif["箭頭圖示"]。
 . 在 * 新增 Snapshot Policy* 視窗中、輸入原則名稱。
 . 選取 image:icon_add.gif["新增圖示"]。
-. 提供 Snapshot 複本排程詳細資料、包括排程名稱、要保留的最大 Snapshot 複本、以及 SnapLock 保留期間。
-. 在 * SnapLock 保留期間 * 欄中、輸入保留 Snapshot 複本的小時數、天數、月數或年數。例如、保留期為 5 天的 Snapshot 複本原則、會從建立 Snapshot 複本起鎖定 5 天、而且在該時間內無法刪除該複本。支援下列保留期間範圍：
+. 提供快照排程詳細資料，包括排程名稱，要保留的最大快照數，以及 SnapLock 保留期間。
+. 在 * SnapLock 保留期間 * 欄中，輸入保留快照的小時數，天數，月數或年數。例如，保留期為 5 天的快照原則，會從建立快照之日起將快照鎖定 5 天，而且在該期間無法刪除快照。支援下列保留期間範圍：
 +
 ** 年數： 0 - 100
 ** 月數： 0 - 1200
@@ -167,12 +175,12 @@ Do you want to continue: {yes|no}: y
 --
 .CLI
 --
-. 若要建立Snapshot複本原則、請輸入下列命令：
+. 若要建立快照原則，請輸入下列命令：
 +
 `volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
 
 +
-下列命令會建立Snapshot複本鎖定原則：
+下列命令會建立快照鎖定原則：
 
 +
 [listing]
@@ -180,7 +188,7 @@ Do you want to continue: {yes|no}: y
 cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
 ----
 +
-如果 Snapshot 複本處於作用中保留狀態、則不會取代該複本；也就是說、如果有鎖定的 Snapshot 複本尚未過期、則保留計數將不會生效。
+如果快照處於作用中保留狀態，則不會取代該快照；也就是說，如果有鎖定的快照尚未過期，則保留計數將不會生效。
 
 
 
@@ -196,16 +204,16 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 瀏覽至*儲存>磁碟區*。
 . 選擇 image:icon_kabob.gif["功能表選項圖示"] 並選擇 * 編輯 > Volume * 。
-. 在 * 編輯 Volume * 視窗中、選取 * 排程 Snapshot Copies * 。
-. 從清單中選取鎖定 Snapshot 複本原則。
-. 如果尚未啟用 Snapshot 複本鎖定、請選取 * 啟用 Snapshot 鎖定 * 。
+. 在 * 編輯 Volume * 視窗中，選取 * 排程快照 * 。
+. 從清單中選取鎖定快照原則。
+. 如果尚未啟用快照鎖定，請選取 * 啟用快照鎖定 * 。
 . 儲存您的變更。
 
 
 --
 .CLI
 --
-. 若要將Snapshot複本鎖定原則套用至現有磁碟區、請輸入下列命令：
+. 若要將快照鎖定原則套用至現有的磁碟區，請輸入下列命令：
 +
 `volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
 
@@ -215,31 +223,31 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 ====
 
 
-=== 在手動建立Snapshot複本期間套用保留期間
+=== 在手動建立快照期間套用保留期間
 
-您可以在手動建立 Snapshot 複本時套用 Snapshot 複本保留期間。必須在磁碟區上啟用 Snapshot 複本鎖定、否則會忽略保留期間設定。
+您可以在手動建立快照時套用快照保留期間。必須在磁碟區上啟用 Snapshot 鎖定，否則會忽略保留期間設定。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 . 瀏覽至 * 儲存 > 磁碟區 * 、然後選取磁碟區。
-. 在 Volume 詳細資料頁面中、選取 * Snapshot Copies （快照複本） * 標籤。
+. 在 Volume 詳細資料頁面中，選取 * Snapshots* 標籤。
 . 選取 image:icon_add.gif["新增圖示"]。
-. 輸入 Snapshot 複本名稱和 SnapLock 到期時間。您可以選取行事曆來選擇保留到期日和時間。
+. 輸入快照名稱和 SnapLock 到期時間。您可以選取行事曆來選擇保留到期日和時間。
 . 儲存您的變更。
-. 在「 * 磁碟區 > Snapshot Copies （快照複本）」頁面中、選取 * 顯示 / 隱藏 * 、然後選擇 * SnapLock Expiration Time （過期時間） * 以顯示 * SnapLock Expiration Time* （ * 快照過期時間）欄、並確認已設定保留時間。
+. 在「 * 磁碟區 > 快照 * 」頁面中，選取 * 顯示 / 隱藏 * ，然後選擇 * SnapLock 過期時間 * 以顯示 * SnapLock 過期時間 * 欄，並確認已設定保留時間。
 
 
 --
 .CLI
 --
-. 若要手動建立Snapshot複本並套用鎖定保留期間、請輸入下列命令：
+. 若要手動建立快照並套用鎖定保留期間，請輸入下列命令：
 +
 `volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -snaplock-expiry-time _expiration_date_time_`
 
 +
-下列命令會建立新的Snapshot複本並設定保留期間：
+下列命令會建立新的快照，並設定保留期間：
 
 +
 [listing]
@@ -252,28 +260,28 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 ====
 
 
-=== 將保留期間套用至現有的Snapshot複本
+=== 將保留期間套用至現有的快照
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 . 瀏覽至 * 儲存 > 磁碟區 * 、然後選取磁碟區。
-. 在 Volume 詳細資料頁面中、選取 * Snapshot Copies （快照複本） * 標籤。
-. 選擇 Snapshot （快照）複本，選擇，然後選擇 * Modify SnapLock Expiration Time （修改快照 image:icon_kabob.gif["功能表選項圖示"]到期時間） * 。您可以選取行事曆來選擇保留到期日和時間。
+. 在 Volume 詳細資料頁面中，選取 * Snapshots* 標籤。
+. 選取快照，選取image:icon_kabob.gif["功能表選項圖示"]，然後選擇 * 修改 SnapLock 過期時間 * 。您可以選取行事曆來選擇保留到期日和時間。
 . 儲存您的變更。
-. 在「 * 磁碟區 > Snapshot Copies （快照複本）」頁面中、選取 * 顯示 / 隱藏 * 、然後選擇 * SnapLock Expiration Time （過期時間） * 以顯示 * SnapLock Expiration Time* （ * 快照過期時間）欄、並確認已設定保留時間。
+. 在「 * 磁碟區 > 快照 * 」頁面中，選取 * 顯示 / 隱藏 * ，然後選擇 * SnapLock 過期時間 * 以顯示 * SnapLock 過期時間 * 欄，並確認已設定保留時間。
 
 
 --
 .CLI
 --
-. 若要手動將保留期間套用至現有的Snapshot複本、請輸入下列命令：
+. 若要手動將保留期間套用至現有的快照，請輸入下列命令：
 +
 `volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
 
 +
-以下範例將保留期間套用至現有的Snapshot複本：
+以下範例將保留期間套用至現有的快照：
 
 +
 [listing]
@@ -288,13 +296,13 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 === 修改現有原則以套用長期保留
 
-在SnapMirror關係中、您可以在鏡射儲存庫原則規則上設定保留期間、如果目的地磁碟區已啟用Snapshot複本鎖定功能、則保留期間會套用至複寫至目的地的Snapshot複本。保留期間優先於保留數；例如、即使超過保留數、仍會保留未超過到期日的Snapshot複本。
+在 SnapMirror 關係中，您可以在鏡射資料保險箱原則規則上設定保留期間，如果目的地磁碟區已啟用快照鎖定功能，則會將保留期間套用至複寫至目的地的快照。保留期間優先於保留計數；例如，即使超過保留計數，仍會保留未超過過期的快照。
 
-從 ONTAP 9.14.1 開始、您可以新增規則來設定 Snapshot 複本的長期保留、以修改現有的 SnapMirror 原則。此規則用於覆寫 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的預設磁碟區保留期間。
+從 ONTAP 9.14.1 開始，您可以新增規則來設定快照的長期保留，以修改現有的 SnapMirror 原則。此規則用於覆寫 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的預設磁碟區保留期間。
 
 . 將規則新增至現有的 SnapMirror 原則：
 +
-`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of Snapshot copies> -retention-period [<integer> days|months|years]`
+`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of snapshots> -retention-period [<integer> days|months|years]`
 
 +
 下列範例建立規則、將 6 個月的保留期間套用至現有的「 LockVault 」原則：

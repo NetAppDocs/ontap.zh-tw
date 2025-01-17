@@ -84,18 +84,18 @@ xref:../san-admin/provision-storage.html[建立LUN並對應igroup]
 安裝 ONTAP Mediator 並確認叢集組態後、您必須初始化 ONTAP Mediator 以進行叢集監控。您可以使用系統管理員或 ONTAP CLI 來初始化 ONTAP Mediator 。
 
 
-NOTE: 在 ONTAP Mediator 1.8 及更早版本中， CA 憑證為 `ca.crt`。從 ONTAP Mediator 1.9 開始，所需的憑證為 `intermediate.crt`。
 
-[role="tabbed-block"]
-====
-.系統管理員
---
+=== 系統管理員
+
 使用系統管理員、您可以將 ONTAP Mediator 伺服器設定為自動容錯移轉。如果您尚未使用第三方驗證的SSL憑證和CA、也可以將自行簽署的SSL和CA更換為第三方驗證的SSL憑證和CA。
 
 
 IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。
 
-.步驟
+[role="tabbed-block"]
+====
+.ONTAP Mediator 1.9 及更新版本
+--
 . 瀏覽至* Protection > Overview > Mediator > Configure *。
 . 選取 * 新增 * 、然後輸入下列 ONTAP Mediator 伺服器資訊：
 +
@@ -129,13 +129,54 @@ image:successful-mediator-installation.png["中介新增成功"]。
 
 
 --
-.CLI
+.ONTAP Mediator 1.8 及更早版本
 --
+. 瀏覽至* Protection > Overview > Mediator > Configure *。
+. 選取 * 新增 * 、然後輸入下列 ONTAP Mediator 伺服器資訊：
++
+** IPV4位址
+** 使用者名稱
+** 密碼
+** 憑證
+
+
+. 您可以使用兩種方式提供「憑證」輸入：
++
+** * 選項（ a ） * ：選取 * Import （匯入） * 以瀏覽至 `ca.crt`檔案並將其匯入。
+** * 選項（ b ） * ：複製檔案內容 `ca.crt`，並將其貼到 * 憑證 * 欄位。
++
+正確輸入所有詳細資料後、所提供的憑證會安裝在所有對等叢集上。
+
++
+image:configure-mediator-system-manager.png["系統管理員中介新增"]
+
++
+當憑證新增完成時、 ONTAP Mediator 會新增至 ONTAP 叢集。
+
++
+下列影像示範 ONTAP Mediator 組態成功：
+
++
+image:successful-mediator-installation.png["中介新增成功"]。
+
+
+
+
+
+--
+====
+
+
+=== CLI
+
 您可以使用 ONTAP CLI 從主叢集或次叢集初始化 ONTAP Mediator 。當您發出時 `mediator add` 命令在一個叢集上、 ONTAP Mediator 會自動新增至另一個叢集。
 
 使用 Mediator 監控 SnapMirror 作用中同步關係時、如果沒有有效的自我簽署或憑證授權單位（ CA ）憑證、則無法在 ONTAP 中初始化 Mediator 。您可以將有效的憑證新增至對等叢集的憑證存放區。當使用 Mediator 來監控 MetroCluster IP 系統時、在初始設定之後不會使用 HTTPS 、因此不需要憑證。
 
-.步驟
+[role="tabbed-block"]
+====
+.ONTAP Mediator 1.9 及更新版本
+--
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置尋找 ONTAP Mediator CA 憑證 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
 . 將有效的憑證授權單位新增至對等叢集上的憑證存放區。
 +
@@ -246,6 +287,118 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 
 
 --
+.ONTAP Mediator 1.8 及更早版本
+--
+. 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置尋找 ONTAP Mediator CA 憑證 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
+. 將有效的憑證授權單位新增至對等叢集上的憑證存放區。
++
+* 範例 *
+
++
+[listing]
+----
+[root@ontap-mediator server_config]# cat ca.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
+. 將 ONTAP Mediator CA 憑證新增至 ONTAP 叢集。出現提示時、請插入從 ONTAP Mediator 取得的 CA 憑證。在所有對等叢集上重複這些步驟：
++
+`security certificate install -type server-ca -vserver <vserver_name>`
+
++
+* 範例 *
+
++
+[listing]
+----
+[root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@ontap-mediator server_config]# cat ca.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
++
+[listing]
+----
+C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
+
+Please enter Certificate: Press when done
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: D86D8E4E87142XXX
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+C1_test_cluster::*>
+----
+. 檢視使用產生的憑證名稱所安裝的自我簽署 CA 憑證：
++
+`security certificate show -common-name <common_name>`
+
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> security certificate show -common-name ONTAPMediatorCA
+Vserver    Serial Number   Certificate Name                       Type
+---------- --------------- -------------------------------------- ------------
+C1_test_cluster
+           6BFD17DXXXXX7A71BB1F44D0326D2DEEXXXXX
+                           ONTAPMediatorCA                        server-ca
+    Certificate Authority: ONTAP Mediator CA
+          Expiration Date: Thu Feb 15 14:35:25 2029
+----
+. 在其中一個叢集上初始化 ONTAP Mediator 。ONTAP Mediator 會自動新增至其他叢集：
++
+`snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
+
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator add -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -username mediatoradmin
+Notice: Enter the mediator password.
+
+Enter the password: ******
+Enter the password again: ******
+----
+. 檢查 ONTAP Mediator 組態的狀態：
++
+`snapmirror mediator show`
+
++
+....
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster   connected        true
+....
++
+`Quorum Status` 指出 SnapMirror 一致性群組關係是否與 ONTAP Mediator 同步；狀態為 `true` 表示同步成功。
+
+
+
+--
 ====
 
 
@@ -258,10 +411,10 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 .關於這項工作
 您需要以協力廠商憑證取代 SM-BC 叢集的自我簽署憑證、從 ONTAP 移除 ONTAP Mediator 組態、然後新增 ONTAP Mediator 。
 
-[role="tabbed-block"]
-====
-.系統管理員
---
+
+
+=== 系統管理員
+
 有了系統管理員、您必須從 ONTAP 叢集移除以舊的自我簽署憑證設定的 ONTAP Mediator 、並使用新的協力廠商憑證重新設定 ONTAP 叢集。
 
 .步驟
@@ -280,12 +433,16 @@ ONTAP Mediator 現在已設定新的協力廠商自我簽署憑證。
 
 image:configure-mediator-system-manager.png["系統管理員中介新增"]
 
---
-.CLI
---
+
+
+=== CLI
+
 您可以使用 ONTAP CLI 以協力廠商憑證取代自我簽署的憑證、從主要或次要叢集重新初始化 ONTAP Mediator 。
 
-.步驟
+[role="tabbed-block"]
+====
+.ONTAP Mediator 1.9 及更新版本
+--
 . 當您為所有叢集使用自我簽署憑證時，請移除先前安裝的自我 `intermediate.crt`簽署憑證。在以下範例中、有兩個叢集：
 +
 * 範例 *
@@ -325,7 +482,7 @@ This table is currently empty.
 . 請參閱中所述的步驟link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"]，以取得如何從次級 CA 取得憑證的指示，稱為 `intermediate.crt`。以信任的協力廠商憑證取代自我簽署的憑證
 +
 
-NOTE: 具有從需要發送到文件中定義的 PKI 授權機構的請求中獲得的 `intermediate.crt`某些屬性 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`。
+NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 PKI 授權單位的要求所 `intermediate.crt`衍生而來 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`
 
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置新增第三方 ONTAP Mediator CA 憑證 `intermediate.crt`：
 +
@@ -336,6 +493,137 @@ NOTE: 具有從需要發送到文件中定義的 PKI 授權機構的請求中獲
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 [root@ontap-mediator server_config]# cat intermediate.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
+. 將檔案新增 `intermediate.crt`至對等叢集。對所有對等叢集重複此步驟：
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
+
+Please enter Certificate: Press when done
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: D86D8E4E87142XXX
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+C1_test_cluster::*>
+----
+. 從 SnapMirror 主動同步叢集移除先前設定的 ONTAP Mediator ：
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster  connected         true
+
+C1_test_cluster::*> snapmirror mediator remove -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster
+
+Info: [Job 86] 'mediator remove' job queued
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+----
+. 再次新增 ONTAP Mediator ：
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator add -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -username mediatoradmin
+
+Notice: Enter the mediator password.
+
+Enter the password:
+Enter the password again:
+
+Info: [Job: 87] 'mediator add' job queued
+
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster  connected         true
+----
++
+`Quorum Status` 指出 SnapMirror 一致性群組關係是否與中介者同步；狀態為 `true` 表示同步成功。
+
+
+
+--
+.ONTAP Mediator 1.8 及更早版本
+--
+. 當您為所有叢集使用自我簽署憑證時，請移除先前安裝的自我 `ca.crt`簽署憑證。在以下範例中、有兩個叢集：
++
+* 範例 *
+
++
+[listing]
+----
+ C1_test_cluster::*> security certificate delete -vserver C1_test_cluster -common-name ONTAPMediatorCA
+ 2 entries were deleted.
+
+ C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
+ 2 entries were deleted.
+----
+. 使用從 SM-BC 叢集移除先前設定的 ONTAP Mediator `-force true`：
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster   connected         true
+
+C1_test_cluster::*> snapmirror mediator remove -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -force true
+
+Warning: You are trying to remove the ONTAP Mediator configuration with force. If this configuration exists on the peer cluster, it could lead to failure of a SnapMirror failover operation. Check if this configuration
+         exists on the peer cluster C2_test_cluster and remove it as well.
+Do you want to continue? {y|n}: y
+
+Info: [Job 136] 'mediator remove' job queued
+
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+----
+. 請參閱中所述的步驟link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"]，以取得如何從次級 CA 取得憑證的指示，稱為 `ca.crt`。以信任的協力廠商憑證取代自我簽署的憑證
++
+
+NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 PKI 授權單位的要求所 `ca.crt`衍生而來 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`
+
+. 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置新增第三方 ONTAP Mediator CA 憑證 `ca.crt`：
++
+* 範例 *
+
++
+[listing]
+----
+[root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+[root@ontap-mediator server_config]# cat ca.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
