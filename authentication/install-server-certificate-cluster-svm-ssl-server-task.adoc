@@ -2,7 +2,7 @@
 permalink: authentication/install-server-certificate-cluster-svm-ssl-server-task.html 
 sidebar: sidebar 
 keywords: generate, install, ca-signed, server, certificate, csr, signing request, signed 
-summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。您可以使用安全性憑證genere-csr命令來產生憑證簽署要求（CSR）、並使用安全性憑證安裝命令來安裝從憑證授權單位收到的憑證。 
+summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。 
 ---
 = 產生並安裝CA簽署的伺服器憑證總覽
 :allow-uri-read: 
@@ -25,10 +25,12 @@ summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證
 .步驟
 . 產生CSR：
 +
-`security certificate generate-csr -common-name FQDN_or_common_name -size 512|1024|1536|2048 -country country -state state -locality locality -organization organization -unit unit -email-addr email_of_contact -hash-function SHA1|SHA256|MD5`
-
+[source, cli]
+----
+security certificate generate-csr -common-name FQDN_or_common_name -size 512|1024|1536|2048 -country country -state state -locality locality -organization organization -unit unit -email-addr email_of_contact -hash-function SHA1|SHA256|MD5
+----
 +
-下列命令會建立 CSR 、其中含有由「 IT 」部門的「 Software 」群組所產生的 2048 位元私密金鑰、其自訂一般名稱為「 erver1.companyname.com`" 」、位於美國加州桑尼維爾。SVM 聯絡管理員的電子郵件地址為「 web@example.com 」。系統會在輸出中顯示CSR和私密金鑰。
+下列命令會建立 CSR ，其中包含由雜湊函數產生的 2048 位元私密金鑰 `SHA256`，供自訂一般名稱為的公司部門 `server1.companyname.com`中的群組 `IT`使用 `Software`，位於美國加州森尼維爾。SVM 連絡人管理員的電子郵件地址為 `web@example.com`。系統會在輸出中顯示CSR和私密金鑰。
 
 +
 .建立 CSR 的範例
@@ -40,24 +42,13 @@ cluster1::>security certificate generate-csr -common-name server1.companyname.co
 
 Certificate Signing Request :
 -----BEGIN CERTIFICATE REQUEST-----
-MIIBGjCBxQIBADBgMRQwEgYDVQQDEwtleGFtcGxlLmNvbTELMAkGA1UEBhMCVVMx
-CTAHBgNVBAgTADEJMAcGA1UEBxMAMQkwBwYDVQQKEwAxCTAHBgNVBAsTADEPMA0G
-CSqGSIb3DQEJARYAMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAPXFanNoJApT1nzS
-xOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJbmXuj6U3a1woUsb13wfEvQnHVFNci
-2ninsJ8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA0EA6EagLfso5+4g+ejiRKKTUPQO
-UqOUEoKuvxhOvPC2w7b//fNSFsFHvXloqEOhYECn/NX9h8mbphCoM5YZ4OfnKw==
+<certificate_value>
 -----END CERTIFICATE REQUEST-----
 
 
 Private Key :
 -----BEGIN RSA PRIVATE KEY-----
-MIIBOwIBAAJBAPXFanNoJApT1nzSxOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJb
-mXuj6U3a1woUsb13wfEvQnHVFNci2ninsJ8CAwEAAQJAWt2AO+bW3FKezEuIrQlu
-KoMyRYK455wtMk8BrOyJfhYsB20B28eifjJvRWdTOBEav99M7cEzgPv+p5kaZTTM
-gQIhAPsp+j1hrUXSRj979LIJJY0sNez397i7ViFXWQScx/ehAiEA+oDbOooWlVvu
-xj4aitxVBu6ByVckYU8LbsfeRNsZwD8CIQCbZ1/ENvmlJ/P7N9Exj2NCtEYxd0Q5
-cwBZ5NfZeMBpwQIhAPk0KWQSLadGfsKO077itF+h9FGFNHbtuNTrVq4vPW3nAiAA
-peMBQgEv28y2r8D4dkYzxcXmjzJluUSZSZ9c/wS6fA==
+<key_value>
 -----END RSA PRIVATE KEY-----
 
 NOTE: Keep a copy of your certificate request and private key for future reference.
@@ -81,8 +72,10 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 .步驟
 . 安裝 CA 簽署的伺服器憑證：
 +
-`security certificate install -vserver SVM_name -type certificate_type`
-
+[source, cli]
+----
+security certificate install -vserver SVM_name -type certificate_type
+----
 +
 如需完整的命令語法、請參閱 link:config-worksheets-reference.html["工作表"]。
 
@@ -93,7 +86,7 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 
 ====
 +
-下列命令會在 SVM "`engData2` 上安裝 CA 簽署的伺服器憑證和中繼憑證。
+以下命令可在 SVM 上安裝 CA 簽署的伺服器憑證和中繼憑證 `engData2`。
 
 +
 .安裝 CA 簽署的伺服器憑證中繼憑證的範例
@@ -104,37 +97,20 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 cluster1::>security certificate install -vserver engData2 -type server
 Please enter Certificate: Press <Enter> when done
 -----BEGIN CERTIFICATE-----
-MIIB8TCCAZugAwIBAwIBADANBgkqhkiG9w0BAQQFADBfMRMwEQYDVQQDEwpuZXRh
-cHAuY29tMQswCQYDVQQGEwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNV
-BAoTADEJMAcGA1UECxMAMQ8wDQYJKoZIhvcNAQkBFgAwHhcNMTAwNDI2MTk0OTI4
-WhcNMTAwNTI2MTk0OTI4WjBfMRMwEQYDVQQDEwpuZXRhcHAuY29tMQswCQYDVQQG
-EwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNVBAoTADEJMAcGA1UECxMA
-MQ8wDQYJKoZIhvcNAQkBFgAwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAyXrK2sry
+<certificate_value>
 -----END CERTIFICATE-----
 
 
 Please enter Private Key: Press <Enter> when done
 -----BEGIN RSA PRIVATE KEY-----
-MIIBPAIBAAJBAMl6ytrK8nQj82UsWeHOeT8gk0BPX+Y5MLycsUdXA7hXhumHNpvF
-C61X2G32Sx8VEa1th94tx+vOEzq+UaqHlt0CAwEAAQJBAMZjDWlgmlm3qIr/n8VT
-PFnnZnbVcXVM7OtbUsgPKw+QCCh9dF1jmuQKeDr+wUMWknlDeGrfhILpzfJGHrLJ
-z7UCIQDr8d3gOG71UyX+BbFmo/N0uAKjS2cvUU+Y8a8pDxGLLwIhANqa99SuSl8U
-DiPvdaKTj6+EcGuXfCXz+G0rfgTZK8uzAiEAr1mnrfYC8KwE9k7A0ylRzBLdUwK9
-AvuJDn+/z+H1Bd0CIQDD93P/xpaJETNz53Au49VE5Jba/Jugckrbosd/lSd7nQIg
-aEMAzt6qHHT4mndi8Bo8sDGedG2SKx6Qbn2IpuNZ7rc=
+<key_value>
 -----END RSA PRIVATE KEY-----
 
 Do you want to continue entering root and/or intermediate certificates {y|n}: y
 
 Please enter Intermediate Certificate: Press <Enter> when done
 -----BEGIN CERTIFICATE-----
-MIIE+zCCBGSgAwIBAgICAQ0wDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1Zh
-bGlDZXJ0IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIElu
-Yy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24g
-QXV0aG9yaXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAe
-BgkqhkiG9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTA0MDYyOTE3MDYyMFoX
-DTI0MDYyOTE3MDYyMFowYzELMAkGA1UEBhMCVVMxITAfBgNVBAoTGFRoZSBHbyBE
-YWRkeSBHcm91cCwgSW5jLjExMC8GA1UECxMoR28gRGFkZHkgQ2xhc3MgMiBDZXJ0
+<certificate_value>
 -----END CERTIFICATE-----
 
 
@@ -142,14 +118,7 @@ Do you want to continue entering root and/or intermediate certificates {y|n}: y
 
 Please enter Intermediate Certificate: Press <Enter> when done
 -----BEGIN CERTIFICATE-----
-MIIC5zCCAlACAQEwDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0
-IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAz
-BgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9y
-aXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAeBgkqhkiG
-9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTk5MDYyNjAwMTk1NFoXDTE5MDYy
-NjAwMTk1NFowgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0IFZhbGlkYXRpb24gTmV0d29y
-azEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENs
-YXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9yaXR5MSEwHwYDVQQDExhodHRw
+<certificate_value>
 -----END CERTIFICATE-----
 
 

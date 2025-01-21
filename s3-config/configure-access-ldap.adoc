@@ -93,7 +93,9 @@ NOTE: S3 用戶端可能會提示輸入秘密金鑰。如果沒有秘密金鑰�
 
 === Active Directory 的資源驗證、適用於沒有 UID 和 GID 的使用者
 
-如果在 Bucket 原則陳述中指定的 nasgroup 或 nasgroup 的使用者沒有 UID 和 GID 集、當找不到這些屬性時、查詢將會失敗。
+如果在 Bucket 原則陳述中指定的 nasgroup 或 nasgroup 的使用者沒有 UID 和 GID 集、當找不到這些屬性時、查詢將會失敗。Active Directory 使用 SID ，而非 UID 。如果無法將 SID 項目對應至 UID ，則必須將必要資料帶到 ONTAP 。
+
+若要這麼做，請使用 link:../authentication/enable-ad-users-groups-access-cluster-svm-task.html["vserver Active Directory建立"]SVM 來驗證 Active Directory ，並取得必要的使用者和群組資訊。
 
 為了避免查詢失敗、 NetApp 建議使用受信任的網域進行 UPN 格式的資源授權： nasgroup/group@trusted_domain.com
 
@@ -107,3 +109,5 @@ NOTE: S3 用戶端可能會提示輸入秘密金鑰。如果沒有秘密金鑰�
 ----
 $curl -siku FQDN\\user:<user_name> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn](https://github.com/fqdn)>,"<key_time_to_live>":"PT6H3M"}'
 ----
+
+NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。
