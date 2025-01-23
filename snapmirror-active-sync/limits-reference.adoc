@@ -26,7 +26,7 @@ summary: 使用 SnapMirror 主動式同步時、還有幾項額外的限制和�
 | 版本ONTAP | 最大關係數 
 
 
-| 更新版本ONTAP | 50 
+| 更新版本ONTAP | 50* 
 
 
 | 零點9.10.1 ONTAP | 20. 
@@ -34,6 +34,8 @@ summary: 使用 SnapMirror 主動式同步時、還有幾項額外的限制和�
 
 | 部分9.9.1 ONTAP | 5. 
 |===
+｛ Asterisk ｝ 從 ONTAP 9.16.1 開始， SnapMirror 主動式同步支援對稱式雙主動 / 主動式組態中的四節點叢集。在四節點叢集中，支援 100 個一致性群組。
+
 
 
 == 每個一致性群組的磁碟區
@@ -58,6 +60,9 @@ summary: 使用 SnapMirror 主動式同步時、還有幾項額外的限制和�
 
 SnapMirror 主動同步中的 Volume 限制是根據端點數量而非關係數量來計算。具有 12 個磁碟區的一致性群組、可在主叢集和次叢集上提供 12 個端點。SnapMirror 主動式同步和 SnapMirror 同步關係都有助於達到端點總數。
 
+
+IMPORTANT: 這些限制適用於 FAS ， AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K 、 ASA A70 或 ASA A90 ）、請參閱link:https://docs.netapp.com/us-en/asa-r2/data-protection/manage-consistency-groups.html["ASA R2 說明文件"^]。
+
 下表列出每個平台的最大端點數。
 
 |===
@@ -67,11 +72,13 @@ SnapMirror 主動同步中的 Volume 限制是根據端點數量而非關係數�
 |  |  | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP 
 
 
-| 1. | AFF | 400 | 200 | 60 | 400 | 200 | 80 
+| 1. | AFF | 400* | 200 | 60 | 400 | 200 | 80 
 
 
-| 2. | ASA | 400 | 200 | 60 | 400 | 200 | 80 
+| 2. | ASA | 400* | 200 | 60 | 400 | 200 | 80 
 |===
+｛ Asterisk ｝ 從 ONTAP 9.16.1 開始， SnapMirror 主動式同步支援對稱式雙主動 / 主動式組態中的四節點叢集。四節點叢集的總上限為 800 個端點。
+
 
 
 == SAN物件限制
@@ -82,21 +89,17 @@ SnapMirror 主動同步中的 Volume 限制是根據端點數量而非關係數�
 | SnapMirror 主動同步關係中的物件 | 數 
 
 
-| 每個磁碟區的LUN數量 | 256 
-
-
-| 每個節點的LUN對應  a| 
-* 4096 （ ONTAP 9.10 及更新版本）
-* 2048 （ ONTAP 9.9.1 及更早版本）
+| 每個磁碟區的LUN數量  a| 
+* 256 （ ONTAP 9.9.1 - ONTAP 9.15.0 ）
+* 512 （ ONTAP 9.15.1 及更新版本）
 
 
 
 
-| 每個叢集的LUN對應  a| 
-* 8192 （ ONTAP 9.10 及更新版本）
-* 4096 （ ONTAP 9.9.1 及更早版本）
+| 每個雙節點叢集的唯一 LUN | 4 、 096 
 
 
+| 每個四節點叢集的唯一 LUN （從 ONTAP 9.16.1 開始提供） | 6 、 144 
 
 
 | 每個 SVM 的生命（ SnapMirror 主動同步關係中至少有一個 Volume ） | 256 

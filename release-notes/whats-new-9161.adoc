@@ -33,6 +33,20 @@ summary: 瞭解 ONTAP 9.16.1 中提供的新功能。
 
 
  a| 
+xref:../snapmirror-active-sync/[支援 SnapMirror 主動式同步的多節點模式]
+ a| 
+SnapMirror 主動式同步可從先前的雙節點限制擴充，支援四節點叢集，為較大型的工作負載提供資料複寫功能。
+
+
+
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html[SnapMirror 雲端支援建立扇出關係]
+ a| 
+SnapMirror 雲端支援從相同來源 Volume 或 FlexGroup 到不同物件存放區中的一或多個貯體之間的扇出關係。
+
+
+
+ a| 
 xref:../data-protection/cloud-backup-with-snapmirror-task.html[支援從移轉的磁碟區進行 SnapMirror 雲端備份]
  a| 
 SnapMirror 雲端支援使用更有效率的同步程序，將移轉至雲端的磁碟區備份。這項新功能可支援從雲端中移轉的磁碟區到相同目的地物件儲存區端點的 SnapMirror 雲端備份，而無需執行重新基準化作業。支援 FlexVol 和 FlexGroup 磁碟區。
@@ -57,7 +71,7 @@ xref:../encryption-at-rest/migrate-keys-between-key-managers.html[支援金鑰�
  a| 
 xref:../networking/configure_virtual_ip_vip_lifs.html#set-up-border-gateway-protocol-bgp[BGP 對等群組的 MD5 驗證支援]
  a| 
-ONTAP 支援 BGP 對等群組上的 MD5 驗證，以保護 BGP 工作階段。啟用 MD5 時， BGP 工作階段只能在獲授權的對等點之間建立和處理，以防止未獲授權的使用者可能中斷工作階段。
+ONTAP 支援 BGP 對等群組上的 MD5 驗證，以保護 BGP 工作階段。啟用 MD5 時， BGP 工作階段只能在獲授權的對等點之間建立和處理，防止攻擊者嘗試利用 BGP 更新將假路由資訊注入網路等攻擊。
 
 
 
@@ -77,9 +91,19 @@ IP 安全性（ IPsec ）是資料傳輸安全選項，可用來保護用戶端�
 
 
  a| 
+多重傳輸協定 S3 貯體支援 S3 物件中繼資料和標記
+ a| 
+S3 物件標籤適用於非多重傳輸協定 ONTAP S3 儲存區。從 ONTAP 9.16.1 開始， S3 物件標記延伸至 NAS 和 S3 多重傳輸協定 ONTAP S3 儲存區。標籤只能在 S3 傳輸協定中看到。使用 S3 用戶端套用到 https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-tagging.html["標記和中繼資料"^] S3 物件，有助於定義儲存為 ONTAP 中物件或檔案之資料的生命週期，恢復收費，資料類別及自訂工作流程。當與 AWS 資料服務（例如 bedrock 或 Athena ）整合時，標記和中繼資料會成為這些服務所提供 Data Processing 的核心。
+
+
+NOTE: ONTAP 9.9.1 開始支援原生 S3 儲存區中的標記和使用者定義中繼資料。
+
+
+
+ a| 
 xref:../s3-multiprotocol/index.html[多重傳輸協定 S3 貯體支援多重部分上傳]
  a| 
-使用 Multifart 上傳，您可以將單一物件作為一組零件上傳至 S3 多重傳輸協定貯體。
+多部分上傳是一項核心 S3 功能，自一開始就適用於非多重傳輸協定的 ONTAP S3 儲存區。從 ONTAP 9.16.1 開始，這項核心功能已延伸至 NAS 和 S3 多重傳輸協定 ONTAP S3 儲存區。
 
 
 
@@ -138,9 +162,9 @@ NOTE: ARP/AI 功能目前僅支援 NAS 。雖然自動更新功能會顯示系�
 
 
  a| 
-xref:../nvme/set-up-tls-secure-channel-nvme-task.html[支援傳輸至 NVMe 儲存裝置及從 NVMe 儲存裝置傳送資料流量的傳輸中加密]
+xref:../nvme/set-up-tls-secure-channel-nvme-task.html[透過 TLS 1.3 的 NVMe / TCP]
  a| 
-ONTAP 現在支援透過網路傳送至 NVMe 儲存裝置及從 NVMe 儲存裝置傳送的資料流量在執行中加密。
+透過簡化的組態和比 IPSec 更好的效能，保護通訊協定層的 NVMe / TCP 「無線傳輸」。
 
 
 
@@ -182,16 +206,33 @@ xref:../volumes/qtrees-partition-your-volumes-concept.html[延伸 qtree 效能�
 
 
  a| 
+xref:../volumes/manage-svm-capacity.html[在啟用儲存限制的 SVM 中支援資料保護磁碟區]
+ a| 
+已啟用儲存限制的 SVM 可包含資料保護磁碟區。支援非同步災難恢復關係中的 FlexVol Volume ，不含串聯，同步災難恢復關係和還原關係。
+
+[NOTE]
+====
+在 ONTAP 9.15.1 及更早版本中，無法針對任何包含資料保護磁碟區， SnapMirror 關係中的磁碟區或 MetroCluster 組態的 SVM 設定儲存限制。
+
+====
+
+
+ a| 
 xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[支援 FlexGroup 進階容量分配]
  a| 
-啟用時，進階容量平衡功能會在 FlexGroup 成員磁碟區之間分配資料，當大型檔案增加且佔用一個成員磁碟區上的空間時。
+啟用時，進階容量平衡功能會在 FlexGroup 成員磁碟區之間的檔案內分散資料，如此一來，就能在一個成員磁碟區上大幅增加檔案並佔用空間。
 
 
 
  a| 
 xref:../svm-migrate/index.html[SVM 資料移動性支援，可移轉 MetroCluster 組態]
  a| 
-ONTAP 現在支援將 SVM 從非 MetroCluster HA 配對移轉至 MetroCluster 組態，或從 MetroCluster 組態移轉至非 MetroCluster HA 配對。您無法將 SVM 從一個 MetroCluster 組態移轉至另一個 MetroCluster 組態
+ONTAP 支援下列 MetroCluster SVM 移轉：
+
+* 在非 MetroCluster 組態和 MetroCluster IP 組態之間移轉 SVM
+* 在兩個 MetroCluster IP 組態之間移轉 SVM
+* 在 MetroCluster FC 組態和 MetroCluster IP 組態之間移轉 SVM
+
 
 |===
 

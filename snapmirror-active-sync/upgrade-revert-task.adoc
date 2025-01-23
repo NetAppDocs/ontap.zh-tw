@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/upgrade-revert-task.html
 keywords: upgrade, revert, snapmirror active sync, SMBC, SM-BC 
 summary: 升級或還原 ONTAP 會影響 SnapMirror 主動式同步關係、尤其是移轉至 ONTAP 9.9.1 或更新版本、或 9.7 及更新版本時。 
 ---
-= 使用 SnapMirror 主動同步升級和還原 ONTAP
+= 在 ONTAP 中使用 SnapMirror 主動式同步功能進行升級與還原
 :allow-uri-read: 
 :nofooter: 
 :icons: font
@@ -13,7 +13,27 @@ summary: 升級或還原 ONTAP 會影響 SnapMirror 主動式同步關係、尤�
 
 
 [role="lead"]
-從 ONTAP 9.9.1 開始支援 SnapMirror 主動同步。升級和還原 ONTAP 叢集會影響 SnapMirror 主動式同步關係、視您要升級或還原的 ONTAP 版本而定。
+從 ONTAP 9.9.1 開始支援 SnapMirror 主動同步。根據您要升級或還原的 ONTAP 版本，升級和還原 ONTAP 叢集或控制器會對 SnapMirror 作用中同步關係產生影響。
+
+
+
+== 重新整理叢集
+
+從 ONTAP 9.16.1 開始， SnapMirror 主動式同步支援對稱式雙主動 / 主動式組態中的四節點叢集。您可以使用四節點叢集來升級控制器和儲存設備。
+
+.開始之前
+* 查看 link:protect-task.html#configure-symmetric-activeactive-protection["四節點叢集的需求"]。
+* 您可以在技術更新程序期間建立非對稱組態，但在完成重新整理後，您應該回到對稱組態。
+* 這些指示適用於現有的四節點組態，其中包含 50 個或更少的一致性群組和 400 個或更少的磁碟區端點。
+
+
+.步驟
+. link:../volumes/move-volume-task.html["將所有 SnapMirror 作用中同步磁碟區移至 _ 單一 _ 高可用度（ HA ）配對"]。
+. link:../system-admin/remove-nodes-cluster-concept.html["從叢集中移除未使用的節點"]。
+. link:../system-admin/add-nodes-cluster-concept.html["將新節點新增至叢集"]。
+. link:../volumes/move-volume-task.html["移動所有磁碟區"]進入新節點。
+. link:../system-admin/remove-nodes-cluster-concept.html["從叢集中移除未使用的節點"]然後將它們替換link:../system-admin/add-nodes-cluster-concept.html["使用新節點"]。
+
 
 
 

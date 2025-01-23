@@ -31,10 +31,27 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 |===
 .開始之前
 * 您必須是叢集管理員才能設定 SVM 限制。
-* 儲存限制無法針對任何 SVM 進行設定、這些 SVM 包含資料保護磁碟區、 SnapMirror 關係中的磁碟區、或是 MetroCluster 組態中的磁碟區。
+* 從 ONTAP 9.16.1 開始，可針對包含資料保護磁碟區的 SVM 設定儲存限制，包括下列資料保護類型：
++
+** 非同步災難恢復中的 FlexVol 磁碟區，無需串聯
+** 同步災難恢復中的 FlexVol Volume （同步和嚴格同步原則）
+** link:../data-protection/restore-volume-snapvault-backup-task.html["還原"]
+
+
+* 下列組態不支援 SVM 的儲存限制：
++
+** SnapMirror 資料保險箱關聯性
+** SnapMirror 主動同步
+** FlexGroups
+** 一致性群組
+** SVM DR
+** 串聯
+** MetroCluster
+
+
 * 當您移轉 SVM 時、來源 SVM 無法啟用儲存限制。若要完成移轉作業、請停用來源的儲存限制、然後完成移轉。
 * SVM 容量與不同 xref:../volumes/quotas-concept.html[配額]。配額不得超過最大大小。
-* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vservser _svm_name_` 查看現有工作的命令。當任何工作完成時、請再次嘗試執行命令。
+* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vservser <svm_name>`命令查看現有工作。當任何工作完成時、請再次嘗試執行命令。
 
 
 
@@ -76,18 +93,18 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 .步驟
 . 建立 SVM 。若要設定儲存限制、請提供 `storage-limit` 價值。若要設定儲存限制的臨界值警示、請提供的百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver create -vserver _vserver_name_ -aggregate _aggregate_name_ -rootvolume _root_volume_name_ -rootvolume-security-style {unix|ntfs|mixed} -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_ [-ipspace IPspace_name] [-language <language>] [-snapshot-policy _snapshot_policy_name_] [-quota-policy _quota_policy_name_] [-comment _comment_]`
+`vserver create -vserver <vserver_name> -aggregate <aggregate_name> -rootvolume <root_volume_name> -rootvolume-security-style {unix|ntfs|mixed} -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage> [-ipspace IPspace_name] [-language <language>] [-snapshot-policy <snapshot_policy_name>] [-quota-policy <quota_policy_name>] [-comment <comment>]`
 
 +
 如果您未提供臨界值、預設會在 SVM 容量為 90% 時觸發警示。若要停用臨界值警示、請提供零值。
 
 . 確認 SVM 已成功建立：
 +
-`vserver show -vserver _vserver_name_`
+`vserver show -vserver <vserver_name>`
 
 . 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 參數設為零：
 +
-`vserver modify -vserver _vserver_name_ -storage-limit 0`
+`vserver modify -vserver <vserver_name> -storage-limit 0`
 
 
 
@@ -121,14 +138,14 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 .步驟
 . 在裝載 SVM 的叢集上、發出 `vserver modify` 命令。提供的數值 `-storage-limit` 以及百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver modify -vserver _vserver_name_ -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_`
+`vserver modify -vserver <vserver_name> -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage>`
 
 +
-如果您未提供臨界值、則會有 90% 容量的預設警示。若要停用臨界值警示、請提供零值。
+如果您未提供臨界值，則會有 90% 容量的預設警示。若要停用臨界值警示、請提供零值。
 
 . 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 設為零：
 +
-`vserver modify -vserver _vserver_name_ -storage-limit 0`
+`vserver modify -vserver <vserver_name> -storage-limit 0`
 
 
 

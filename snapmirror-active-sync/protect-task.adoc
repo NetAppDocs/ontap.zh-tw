@@ -102,6 +102,16 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 .開始之前
 * 兩個叢集都必須執行 ONTAP 9.15.1 或更新版本。
 * 對稱的主動 / 主動式組態需要 `AutomatedFailoverDuplex` 保護原則。或者、您也可以 xref:../data-protection/create-custom-replication-policy-concept.html[建立自訂 SnapMirror 原則] 已提供 `-type` 是 `automated-failover-duplex`。
+* 在 ONTAP 9.15.1 中，只有雙節點叢集才支援對稱式主動 / 主動式。
+* 從 ONTAP 9.16.1 GA 開始， SnapMirror 主動式同步可支援四節點叢集上的對稱式主動 / 主動式組態。
++
+** 若要在四節點叢集上使用 SnapMirror 主動式同步，您必須執行 ONTAP 9.16.1 GA 或更新版本。
+** 在部署四節點組態之前xref:../peering/create-cluster-relationship-93-later-task.adoc[建立叢集對等關係]，您必須先執行。
+** 檢閱xref:limits-reference.adoc[限制]是否有四節點叢集。
+** 如果您還原至雙節點叢集，則必須先從叢集移除 SnapMirror 作用中同步關係，然後才能還原。
+** 您可以使用四節點組態來升級儲存設備和控制器。此程序不中斷運作，可在將磁碟區移入新節點的同時擴充叢集。如需更多資訊、請參閱 link:upgrade-revert-task.html#refresh-a-cluster["重新整理叢集"]。
+
+
 
 
 .步驟
@@ -114,7 +124,7 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 +
 .. 建立一致性群組時、請指定主機啟動器以建立 igroup 。
 .. 選中核取方塊以 ** 啟用 SnapMirror** 、然後選擇 `AutomatedFailoverDuplex` 原則。
-.. 在出現的對話方塊中、選取「 ** 複寫啟動器群組 ** 」核取方塊來複寫 igroup 。在 ** 編輯近端設定 ** 中、為主機設定近端 SVM 。
+.. 在出現的對話方塊中，選取「 ** 複寫啟動器群組 ** 」核取方塊來複寫 igroup 。在 ** 編輯鄰近設定 ** 中，為主機設定近端 SVM 。
 .. 選擇 ** 儲存 ** 。
 
 
@@ -133,7 +143,7 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 .. 瀏覽至 ** 主機 ** > ** SAN 啟動器群組 ** 。
 .. 選取「 **+Add** 」以建立新的群組群組。
 .. 提供一個 ** 名稱 ** ，選擇 ** 主機作業系統 ** ，然後選擇 ** 啟動器群組成員 ** 。
-.. 選擇 ** 儲存 ** 。
+.. 選擇 ** 保存 ** 以初始化關係。
 
 
 . 將新的 igroup 對應到目的地 LUN 。
@@ -160,12 +170,20 @@ IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMir
 `snapmirror show -destination-path <destination_path>`
 
 . 在主機上、根據您的需求、設定主機連線能力、並存取每個叢集。
-. 建立 igroup 組態。設定本機叢集上啟動器的慣用路徑。指定選項、可將組態複寫至對等叢集的反向關聯。
+. 建立 igroup 組態。設定本機叢集上啟動器的慣用路徑。指定選項，可將組態複寫到對等叢集，以實現反關聯。
 +
-`SiteA::> igroup create -vserver <svm_name> -os-type <os_type> -igroup <igroup_name> -replication-peer <peer_svm_name> -initiator <host>`
+`SiteA::> igroup create -vserver <svm_name> -ostype <os_type> -igroup <igroup_name> -replication-peer <peer_svm_name> -initiator <host>`
 
 +
-`SiteA::> igroup add -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -initiator <host>`
+
+NOTE: 從 ONTAP 9.16.1 開始，請使用 `-proximal-vserver local`此命令中的參數。
+
++
+`SiteA::> igroup add -vserver <svm_name> -igroup <igroup_name> -ostype <os_type> -initiator <host>`
+
++
+
+NOTE: 從 ONTAP 9.16.1 開始，請使用 `-proximal-vserver peer`此命令中的參數。
 
 . 在主機上探索路徑、並驗證主機是否有主動 / 最佳化路徑、可從偏好的叢集前往儲存 LUN 。
 . 部署應用程式並在叢集之間分散 VM 工作負載、以達到所需的負載平衡。

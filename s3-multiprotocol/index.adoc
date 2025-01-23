@@ -119,21 +119,21 @@ S3 NAS「桶」只是S3用戶端NAS資料的對應、並非標準S3桶。因此�
 
 
 
-NOTE: 在 S3 NAS 貯體中使用 S3 時，特別不支援這些 S3 行動。使用原生 S3 時link:../s3-config/ontap-s3-supported-actions-reference.html["正常支援"]，這些動作是。
+NOTE: 在 S3 NAS 儲存區中使用 S3 時，不支援這些 S3 行動。使用原生 S3 時link:../s3-config/ontap-s3-supported-actions-reference.html["正常支援"]，這些動作是。
 
 AWS使用者中繼資料::
 +
 --
-* S3使用者中繼資料一部分收到的金鑰值配對、不會連同目前版本中的物件資料一起儲存在磁碟上。
-* 會忽略開頭為「x-amz-meta」的要求標頭。
+* 對於 ONTAP 9.15.1 及更早版本，作為 S3 使用者中繼資料一部分所接收的金鑰值配對，不會與物件資料一起儲存在磁碟上。
+* 對於 ONTAP 9.15.1 及更早版本，會忽略前置字元為「 x-amz-meta 」的要求標頭。
 
 
 --
 AWS標籤::
 +
 --
-* 在PUT物件和Multifart初始化要求上、會忽略前置詞為「x-amz-tagging」的標頭。
-* 系統會拒絕更新現有檔案上的標記要求（例如使用「標記查詢字串」的PUT、Get和Delete要求）、並顯示錯誤訊息。
+* 對於 Put 物件和 Multifart 初始化要求的 ONTAP 9.15.1 及更早版本，會忽略前置「 x-amz-tagging 」的標頭。
+* 對於 ONTAP 9.15.1 及更早版本，以「標記查詢字串」來更新現有檔案（「放置」，「取得」及「刪除」要求）上的標記要求會遭到拒絕，並出現錯誤。
 
 
 --
