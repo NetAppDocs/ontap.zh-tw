@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: snapmirror, efficiency, manage, storage, snap mirror, compression, compress, postprocess, post-process, update relationship, volume 
 summary: 為了使用 SnapMirror 來維持來源磁碟區和目的地磁碟區之間的儲存效率、您需要停用目的地磁碟區上的後處理壓縮 
 ---
-= 管理儲存效率
+= 使用 ONTAP 管理儲存效率
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,7 +14,7 @@ summary: 為了使用 SnapMirror 來維持來源磁碟區和目的地磁碟區�
 SnapMirror 可保留來源和目的地磁碟區的儲存效率、除非目的地磁碟區上已啟用後處理資料壓縮。在這種情況下、目的地磁碟區上的所有儲存效率都會遺失。若要修正此問題、您必須停用目的地磁碟區的後處理壓縮、手動更新關係、並重新啟用儲存效率。
 
 .關於這項工作
-您可以使用 `volume efficiency show` 命令來判斷是否已在磁碟區上啟用效率。如需詳細資訊、請參閱手冊頁。
+您可以使用 `volume efficiency show`命令來判斷是否在磁碟區上啟用效率。如link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-show.html["指令參考資料ONTAP"^]需詳細 `volume efficiency show`資訊，請參閱。
 
 您可以查看SnapMirror稽核記錄並找出傳輸說明、藉此檢查SnapMirror是否維持儲存效率。如果顯示傳輸說明 `transfer_desc=Logical Transfer with Storage Efficiency`， SnapMirror 將保持存儲效率。如果顯示傳輸說明 `transfer_desc=Logical Transfer`， SnapMirror 不會維持儲存效率。例如：
 
@@ -56,7 +56,7 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -enable-storage-efficiency true
 ----
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 +
 [NOTE]

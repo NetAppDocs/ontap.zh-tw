@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: setting, throughput, ceiling, qos 
 summary: 您可以使用原則群組的「最大處理量」欄位來定義儲存物件工作負載的處理量上限（QoS Max）。您可以在建立或修改儲存物件時套用原則群組。 
 ---
-= 利用QoS設定處理量上限
+= 在 ONTAP 中設定 QoS 的處理量上限
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -41,7 +41,7 @@ summary: 您可以使用原則群組的「最大處理量」欄位來定義儲�
 `qos policy-group create -policy-group _policy_group_ -vserver _SVM_ -max-throughput _number_of_iops_|Mb/S|iops,Mb/S -is-shared true|false`
 
 +
-如需完整的命令語法、請參閱手冊頁。您可以使用 `qos policy-group modify` 用於調整處理量上限的命令。
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos policy-group create`資訊，請參閱。您可以使用 `qos policy-group modify`命令來調整處理量上限。
 
 +
 下列命令會建立共用原則群組 `pg-vs1` 最大處理量為 5 、 000 IOPS ：
@@ -72,7 +72,7 @@ cluster1::> qos policy-group create -policy-group pg-vs4 -vserver vs4 -is-shared
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`
 
 +
-如需完整的命令語法、請參閱手冊頁。您可以使用 `_storage_object_ modify` 將不同原則群組套用至儲存物件的命令。
+如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。您可以使用 `_storage_object_ modify`命令將不同的原則群組套用至儲存物件。
 
 +
 下列命令會套用原則群組 `pg-vs1` 至 SVM `vs1`：
@@ -100,7 +100,7 @@ cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy
 `qos statistics performance show`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics performance show`資訊，請參閱。
 
 +
 [NOTE]
@@ -127,7 +127,7 @@ _System-Background         30           0KB/s        0ms
 `qos statistics workload performance show`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics workload performance show`資訊，請參閱。
 
 +
 [NOTE]
@@ -153,7 +153,7 @@ _Scan_Backgro..   5688       20            0KB/s        0ms
 +
 [NOTE]
 ====
-您可以使用 `qos statistics workload latency show` 命令以檢視 QoS 工作負載的詳細延遲統計資料。
+您可以使用 `qos statistics workload latency show`命令來檢視 QoS 工作負載的詳細延遲統計資料。如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-latency-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics workload latency show`資訊，請參閱。
 
 ====
 

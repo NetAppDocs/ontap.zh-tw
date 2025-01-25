@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: restore, single file, lun, nvme, namespace, snapmirror, destination, snapshot, copy, snap mirror, baseline, 
 summary: 您可以從Snapshot複本還原單一檔案、LUN、一組檔案或LUN、或從SnapMirror目的地Volume還原NVMe命名空間。從 ONTAP 9 7 開始、您也可以從 SnapMirror 同步目的地還原 NVMe 命名空間。您可以將檔案還原至原始來源磁碟區或不同的磁碟區。 
 ---
-= 從SnapMirror目的地還原單一檔案、LUN或NVMe命名空間
+= 使用 ONTAP 從 SnapMirror 目的地還原單一檔案， LUN 或 NVMe 命名空間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -29,7 +29,7 @@ summary: 您可以從Snapshot複本還原單一檔案、LUN、一組檔案或LUN
 `volume snapshot show -vserver <SVM> -volume volume`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-show.html["指令參考資料ONTAP"^]需詳細 `volume snapshot show`資訊，請參閱。
 
 +
 下列範例顯示上的 Snapshot 複本 `vserverB:secondary1` 目的地：
@@ -57,7 +57,7 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 `snapmirror restore -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -source-snapshot snapshot -file-list <source_file_path,@destination_file_path>`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-restore.html["指令參考資料ONTAP"^]需詳細 `snapmirror restore`資訊，請參閱。
 
 +
 [NOTE]

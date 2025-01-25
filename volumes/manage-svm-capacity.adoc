@@ -51,7 +51,7 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 
 * 當您移轉 SVM 時、來源 SVM 無法啟用儲存限制。若要完成移轉作業、請停用來源的儲存限制、然後完成移轉。
 * SVM 容量與不同 xref:../volumes/quotas-concept.html[配額]。配額不得超過最大大小。
-* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vservser <svm_name>`命令查看現有工作。當任何工作完成時、請再次嘗試執行命令。
+* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vserver <svm_name>`命令查看現有工作。當任何工作完成時、請再次嘗試執行命令。
 
 
 
@@ -93,19 +93,25 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 .步驟
 . 建立 SVM 。若要設定儲存限制、請提供 `storage-limit` 價值。若要設定儲存限制的臨界值警示、請提供的百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver create -vserver <vserver_name> -aggregate <aggregate_name> -rootvolume <root_volume_name> -rootvolume-security-style {unix|ntfs|mixed} -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage> [-ipspace IPspace_name] [-language <language>] [-snapshot-policy <snapshot_policy_name>] [-quota-policy <quota_policy_name>] [-comment <comment>]`
-
+[source, cli]
+----
+vserver create -vserver <vserver_name> -aggregate <aggregate_name> -rootvolume <root_volume_name> -rootvolume-security-style {unix|ntfs|mixed} -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage> [-ipspace <IPspace_name>] [-language <language>] [-snapshot-policy <snapshot_policy_name>] [-quota-policy <quota_policy_name>] [-comment <comment>]
+----
 +
 如果您未提供臨界值、預設會在 SVM 容量為 90% 時觸發警示。若要停用臨界值警示、請提供零值。
 
 . 確認 SVM 已成功建立：
 +
-`vserver show -vserver <vserver_name>`
-
-. 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 參數設為零：
+[source, cli]
+----
+vserver show -vserver <vserver_name>
+----
+. 如果您想要停用儲存限制，請將 SVM 的參數設 `-storage-limit`為零：
 +
-`vserver modify -vserver <vserver_name> -storage-limit 0`
-
+[source, cli]
+----
+vserver modify -vserver <vserver_name> -storage-limit 0
+----
 
 
 --
@@ -138,15 +144,19 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 .步驟
 . 在裝載 SVM 的叢集上、發出 `vserver modify` 命令。提供的數值 `-storage-limit` 以及百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver modify -vserver <vserver_name> -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage>`
-
+[source, cli]
+----
+vserver modify -vserver <vserver_name> -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage>
+----
 +
 如果您未提供臨界值，則會有 90% 容量的預設警示。若要停用臨界值警示、請提供零值。
 
-. 如果您想要停用儲存限制、請使用修改 SVM `-storage-limit` 設為零：
+. 如果您要停用儲存限制，請將 SVM 的設 `-storage-limit`為零：
 +
-`vserver modify -vserver <vserver_name> -storage-limit 0`
-
+[source, cli]
+----
+vserver modify -vserver <vserver_name> -storage-limit 0
+----
 
 
 --
@@ -162,7 +172,7 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 * 刪除快照以提供磁碟區空間
 
 
-.其他資訊
+.相關資訊
 * xref:../concepts/capacity-measurements-in-sm-concept.adoc[System Manager中的容量測量]
 * xref:../task_admin_monitor_capacity_in_sm.html[監控System Manager中的容量]
 

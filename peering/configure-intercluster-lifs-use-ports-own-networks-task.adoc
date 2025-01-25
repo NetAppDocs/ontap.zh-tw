@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: configure, intercluster, LIFs  custom, ipspaces 
 summary: 您可以在自訂IPspaces中設定叢集間LIF。如此可讓您隔離多租戶環境中的複寫流量。 
 ---
-= 在自訂IPspaces中設定叢集間LIF
+= 在 ONTAP 的自訂 IPspace 中設定叢集間的生命體
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,7 +21,7 @@ summary: 您可以在自訂IPspaces中設定叢集間LIF。如此可讓您隔離
 `network port show`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["指令參考資料ONTAP"^]需詳細 `network port show`資訊，請參閱。
 
 +
 下列範例顯示中的網路連接埠 `cluster01`：
@@ -66,7 +66,7 @@ cluster01::> network ipspace create -ipspace ipspace-IC1
 `network interface show -fields home-port,curr-port`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
 
 +
 以下範例顯示連接埠 `e0e` 和 `e0f` 尚未指派生命：
@@ -94,7 +94,7 @@ cluster01
 `network port broadcast-domain remove-ports -broadcast-domain Default -ports ports`
 
 +
-連接埠一次不能位於多個廣播網域中。如需完整的命令語法、請參閱手冊頁。
+連接埠一次不能位於多個廣播網域中。如link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-remove-ports.html["指令參考資料ONTAP"^]需詳細 `network port broadcast-domain remove-ports`資訊，請參閱。
 
 +
 下列範例移除連接埠 `e0e` 和 `e0f` 從預設的廣播網域：
@@ -110,7 +110,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 `network port show`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["指令參考資料ONTAP"^]需詳細 `network port show`資訊，請參閱。
 
 +
 以下範例顯示連接埠 `e0e` 和 `e0f` 已從預設廣播網域中移除：
@@ -158,7 +158,7 @@ cluster01-02:e0e,cluster01-02:e0f
 `network port broadcast-domain show`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-show.html["指令參考資料ONTAP"^]需詳細 `network port broadcast-domain show`資訊，請參閱。
 
 +
 [listing]
@@ -209,7 +209,7 @@ ipspace-IC1
 
 |===
 +
-LIF是在主連接埠指派給的廣播網域中建立。廣播網域具有預設的容錯移轉群組、其名稱與廣播網域相同。如需完整的命令語法、請參閱手冊頁。
+LIF是在主連接埠指派給的廣播網域中建立。廣播網域具有預設的容錯移轉群組、其名稱與廣播網域相同。如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["指令參考資料ONTAP"^]需詳細 `network interface create`資訊，請參閱。
 
 +
 以下範例建立叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在廣播網域中 `ipspace-IC1-bd`：
@@ -245,7 +245,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 
 |===
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
 
 +
 [listing]
@@ -280,7 +280,7 @@ ipspace-IC1
 
 |===
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
 
 +
 以下範例顯示叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02` 在SVM上 `e0e` 連接埠容錯移轉至 'e0f`port:

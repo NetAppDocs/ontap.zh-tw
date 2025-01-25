@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: lifs, network, settings, svm, replication 
 summary: 如果來源和目的地SVM位於不同的子網路中、您可以使用SnapMirror原則create命令的-discration-configs網路選項、從SVM複寫中排除LIF和相關的網路設定。 
 ---
-= 從SVM複寫中排除LIF及相關的網路設定
+= 使用 ONTAP 從 SVM 複寫中排除生命與相關網路設定
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,7 +21,7 @@ summary: 如果來源和目的地SVM位於不同的子網路中、您可以使�
 .關於這項工作
 。 `-identity-preserve` 的選項 `snapmirror create` 命令必須設為 `true` 當您建立 SVM 複寫關係時。
 
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
 
 .步驟
 . 建立目的地SVM：
@@ -69,7 +69,7 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 `snapmirror policy create -vserver _SVM_ -policy _policy_ -type async-mirror|vault|mirror-vault -comment _comment_ -tries transfer_tries -transfer-priority low|normal -is-network-compression-enabled true|false -discard-configs network`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
 
 +
 以下範例為SnapMirror DR建立自訂複寫原則、排除LIF：
@@ -139,7 +139,7 @@ cluster_dst::> vserver stop -vserver svm_backup
 `snapmirror initialize -source-path _SVM_: -destination-path _SVM_:`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
 
 +
 以下範例初始化來源之間的關係、 `svm1` 以及目的地、 `svm_backup`：

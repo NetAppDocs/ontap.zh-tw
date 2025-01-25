@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: create, custom, replication, policy 
 summary: 如果關聯的預設原則不適用、您可以建立自訂複寫原則。例如、您可能想要壓縮網路傳輸中的資料、或是修改SnapMirror傳輸Snapshot複本的嘗試次數。 
 ---
-= 建立自訂複寫原則
+= 使用 ONTAP 建立自訂複寫原則
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -92,7 +92,7 @@ StrictSync 模式中的 SnapMirror 同步（從 ONTAP 9 開始支援）
 snapmirror policy create -vserver <SVM> -policy _policy_ -type <async-mirror|vault|mirror-vault|strict-sync-mirror|sync-mirror> -comment <comment> -tries <transfer_tries> -transfer-priority <low|normal> -is-network-compression-enabled <true|false>
 ----
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
 
 +
 從 ONTAP 9 開始、您可以使用 `-common-snapshot-schedule`參數來指定建立 SnapMirror 同步關係通用 Snapshot 複本排程的排程。根據預設、 SnapMirror 同步關係的一般 Snapshot 複本排程為一小時。您可以為 SnapMirror 同步關係的 Snapshot 複本排程指定 30 分鐘到兩小時的值。
@@ -134,7 +134,7 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -typ
 .完成後
 對於「'Vault'」和「mirirmirror-Vault'」原則類型、您必須定義規則、以決定在初始化和更新期間傳輸哪些Snapshot複本。
 
-使用 `snapmirror policy show` 用於驗證 SnapMirror 策略是否已創建的命令。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror policy show`命令驗證是否已建立 SnapMirror 原則。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy show`資訊，請參閱。
 
 --
 ====

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: use, adaptive, qos, policy, groups 
 summary: 您可以使用調適性QoS原則群組、自動將處理量上限或樓層調整為Volume大小、並在磁碟區大小變更時、維持IOPS與TBs的比率。當您在大型部署中管理數百或數千個工作負載時、這是一項重大優勢。 
 ---
-= 使用調適性QoS原則群組
+= 在 ONTAP 中使用調適性 QoS 原則群組
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -127,7 +127,7 @@ LUN包含磁碟區或SVM至原則群組
 `qos adaptive-policy-group create -policy group _policy_group_ -vserver _SVM_ -expected-iops _number_of_iops_/TB|GB -peak-iops _number_of_iops_/TB|GB -expected-iops-allocation-space|used-space -peak-iops-allocation allocated-space|used-space -absolute-min-iops _number_of_iops_ -block-size 8K|16K|32K|64K|ANY`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-adaptive-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos adaptive-policy-group create`資訊，請參閱。
 
 +
 [NOTE]
@@ -148,7 +148,7 @@ cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs
 `volume create -vserver SVM -volume _volume_ -aggregate _aggregate_ -size _number_of_ TB|GB -qos-adaptive-policy-group _policy_group_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["指令參考資料ONTAP"^]需詳細 `volume create`資訊，請參閱。
 
 +
 下列命令會套用調適性 QoS 原則群組 `adpg-app1` 至 Volume `app1`：

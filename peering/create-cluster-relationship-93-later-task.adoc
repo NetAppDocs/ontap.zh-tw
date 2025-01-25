@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: create, cluster, peer, relationship, System Manager, cli 
 summary: 將資料複製到遠端叢集以進行資料備份和災難恢復、藉此在本機叢集和遠端叢集之間建立叢集對等關係、然後保護資料。 
 ---
-= 建立叢集對等關係
+= 在 ONTAP 中建立叢集對等關係
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -62,7 +62,7 @@ cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS|
 如果您同時指定兩者 `-generate-passphrase` 和 `-peer-addrs`，僅在中指定其叢集間的生命體 `-peer-addrs` 可以使用產生的密碼。
 
 +
-您可以忽略 `-ipspace` 選項（如果您不使用自定義 IPspace ）。如需完整的命令語法、請參閱手冊頁。
+如果您不使用自訂 IPspace ，則可以忽略此 `-ipspace`選項。如link:https://docs.netapp.com/us-en/ontap-cli/cluster-peer-create.html["指令參考資料ONTAP"^]需詳細 `cluster peer create`資訊，請參閱。
 
 +
 如果您在 ONTAP 9.6 或更新版本中建立對等關係、而不想加密跨叢集對等通訊、則必須使用 `-encryption-protocol-proposed none` 停用加密的選項。
@@ -122,7 +122,7 @@ Warning: make a note of the passphrase - it cannot be displayed again.
 cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
 ----
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/cluster-peer-create.html["指令參考資料ONTAP"^]需詳細 `cluster peer create`資訊，請參閱。
 
 +
 下列範例驗證本機叢集到叢集間LIF IP位址192.140.112.101和192.140.112.102的遠端叢集：

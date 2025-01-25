@@ -24,8 +24,8 @@ summary: 自主勒索軟體保護會在 NAS 環境中使用工作負載分析、
 
 從 ONTAP 9 0.16.1 開始， ARP 採用機器學習模式來進行反勒索軟體分析，以偵測持續演變的勒索軟體形式，準確度達 99% ，藉此改善網路恢復能力。在模擬勒索軟體攻擊之前和之後， ARP 的機器學習模式都會預先訓練大型檔案資料集。這項資源密集的訓練是在 ONTAP 以外進行，但本訓練的學習內容是用於 ONTAP 內部的模型。
 
-.使用 FlexVol 磁碟區的 ARP/AI 可立即轉換為使用中模式
-如果使用 ARP/AI 和 FlexVol 磁碟區，則沒有<<學習和作用中模式,學習週期>>。ARP/AI 會在安裝後立即以作用中模式開始，或升級至 9.16 。將叢集升級至 ONTAP 9 。 16.1 之後，如果已經為現有和新的 FlexVol 磁碟區啟用了 ARP ，就會自動啟用 ARP/AI 。
+.立即轉換為使用 FlexVol 磁碟區的 ARP/AI 主動保護
+如果使用 ARP/AI 和 FlexVol 磁碟區，則沒有<<學習和作用中模式,學習週期>>。ARP/AI 會在安裝或升級至 9.16 之後立即啟用並啟用。將叢集升級至 ONTAP 9 。 16.1 之後，如果已經為現有和新的 FlexVol 磁碟區啟用了 ARP ，就會自動啟用 ARP/AI 。
 
 link:enable-arp-ai-with-au.html["深入瞭解啟用 ARP/AI"]
 
@@ -106,11 +106,14 @@ NOTE: 任何勒索軟體偵測或預防系統都無法完全保證勒索軟體�
 
 == 學習和作用中模式
 
-ARP 有兩種模式：
+對於所有以 ONTAP 9.10.1 至 9.15.1 執行的 ARP ，以及用於 ONTAP 9.16.1 FlexGroup 磁碟區的 ARP ， ARP 有兩種模式：
 
 * * 學習模式 * （或「幹跑」模式）
 * * 作用中模式 * （或「啟用」模式）
 
+
+
+NOTE: 從 ONTAP 9 。 16.1 開始，就沒有 FlexVol 磁碟區使用 ARP 的學習週期。FlexVol 磁碟區上的 ARP/AI 會在安裝或升級至 9.16.1 之後立即啟用並啟用。如果您使用的是 ONTAP 9 。 16.1 和 FlexGroup 磁碟區的 ARP ，則在轉換至作用中模式之前，仍需要一個學習期間。
 
 .學習模式
 對於所有與 ONTAP 9 ． 10.1 至 9 ． 15.1 一起運行的 ARP 以及用於． 16.1 的 FlexGroup 卷的 ARP ，當您啓用 ONTAP 9 時，它將以 _ 學習模式 _ 運行。在學習模式中、 ONTAP 系統會根據分析領域來開發警示設定檔： Entropy 、檔案副檔名類型和檔案 IOPS 。在學習模式下執行Arp並有足夠時間評估工作負載特性之後、您可以切換至作用中模式、開始保護資料。
@@ -121,9 +124,7 @@ ARP 有兩種模式：
 TIP: 命令 `security anti-ransomware volume workload-behavior show`會顯示已在磁碟區中偵測到的副檔名。如果您在學習模式早期執行此命令，並顯示正確的檔案類型呈現，則不應將該資料當作移至作用中模式的基礎，因為 ONTAP 仍在收集其他計量。
 
 .作用中模式
-對於以 ONTAP 9 ． 10.1 至 9.15.1 執行的 ARP ，在最佳學習時間間隔結束後， ARP 會切換至 _active modes_ 。從 ONTAP 9 。 16.1 開始，就沒有 FlexVol 磁碟區使用 ARP 的學習週期。FlexVol 磁碟區上的 ARP/AI 會在安裝或升級至 9.16.1 之後立即以作用中模式開始。如果您使用的是 ONTAP 9 。 16.1 和 FlexGroup 磁碟區的 ARP ，則在轉換至作用中模式之前，仍需要一個學習期間。
-
-在 ARP 切換至作用中模式之後， ONTAP 會建立 ARP 快照，以在偵測到威脅時保護資料。
+對於以 ONTAP 9 ． 10.1 至 9.15.1 執行的 ARP ，在最佳學習時間間隔結束後， ARP 會切換至 _active modes_ 。在 ARP 切換至作用中模式之後， ONTAP 會建立 ARP 快照，以在偵測到威脅時保護資料。
 
 在作用中模式中、如果檔案副檔名標示為異常、您應該評估警示。您可以對警示採取行動以保護資料、也可以將警示標記為誤報。將警示標記為誤報會更新警示設定檔。例如、如果警示是由新的副檔名觸發、而您將警示標記為誤判、則下次觀察到該副檔名時、您將不會收到警示。
 
@@ -134,7 +135,7 @@ NOTE: 從 ONTAP 9.11.1 開始、您可以自訂 ARP 的偵測參數。如需詳�
 
 == 威脅評估和 ARP 快照
 
-在作用中模式中、 ARP 會根據從學習到的分析中測得的傳入資料來評估威脅可能性。當 ARP 偵測到威脅時、就會指派測量值：
+當處於活動模式而非學習模式時， ARP 會根據從學習到的分析中測得的傳入資料來評估威脅可能性。當 ARP 偵測到威脅時、就會指派測量值：
 
 * * 低 * ：磁碟區最早偵測到異常（例如，在磁碟區中觀察到新的副檔名）。此偵測層級僅適用於 ONTAP 9 。 16.1 之前的版本，但沒有 ARP/AI 。
 * * 中度 * ：觀察到多個檔案副檔名之前從未見過的檔案。
@@ -147,9 +148,9 @@ NOTE: 從 ONTAP 9.11.1 開始、您可以自訂 ARP 的偵測參數。如需詳�
 
 在威脅較低的情況下， ONTAP 會偵測到異常狀況，並建立磁碟區快照，以建立最佳的恢復點。ONTAP 會將 ARP 快照的名稱預先加上 `Anti-ransomware-backup`，以便於識別；例如 `Anti_ransomware_backup.2022-12-20_1248`。
 
-ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。低層級的威脅會記錄下來、並顯示在 System Manager 的 **EventS** 區段中。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示、但您可以從 ONTAP 9.14.1 開始 xref:manage-parameters-task.html#modify-alerts[修改警示設定]。如需詳細資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
+ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示，不過從 ONTAP 9.14.1 開始xref:manage-parameters-task.html#modify-alerts[修改警示設定]，您可以。如需更多資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
-您可以在 System Manager 的「事件 * 」區段或命令中，檢視任何層級的威脅相關資訊 `security anti-ransomware volume show`。
+您可以在 System Manager 的 * 事件 * 區段或命令中檢視中度威脅的相關資訊 `security anti-ransomware volume show`。在 ONTAP 9.16.1 之前的版本中，如果沒有 ARP/AI ，也可以使用命令來檢視低威脅事件 `security anti-ransomware volume show`。
 
 個別的 ARP 快照會保留兩天。如果有多個 ARP 快照，預設會保留五天。從 ONTAP 9.11.1 開始、您可以修改保留設定。如需更多資訊、請參閱 xref:modify-automatic-shapshot-options-task.html[修改快照選項]。
 

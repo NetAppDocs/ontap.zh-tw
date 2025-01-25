@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: reactivate, original, source, volume 
 summary: 當您不再需要從目的地提供資料時、可以重新建立來源與目的地磁碟區之間的原始資料保護關係。 
 ---
-= 重新啟動原始來源Volume
+= 使用 ONTAP 重新啟動原始來源 Volume
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -24,7 +24,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 `snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["指令參考資料ONTAP"^]需詳細 `snapmirror resync`資訊，請參閱。
 
 +
 [NOTE]
@@ -45,7 +45,7 @@ cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 `vserver stop -vserver _SVM_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["指令參考資料ONTAP"^]需詳細 `vserver stop`資訊，請參閱。
 
 +
 [NOTE]
@@ -66,7 +66,7 @@ cluster_dst::> vserver stop svm_backup
 `snapmirror update -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 +
 [NOTE]
@@ -87,7 +87,7 @@ cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 `snapmirror quiesce -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["指令參考資料ONTAP"^]需詳細 `snapmirror quiesce`資訊，請參閱。
 
 +
 [NOTE]
@@ -108,7 +108,7 @@ cluster_src::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-
 `snapmirror break -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
 
 +
 [NOTE]
@@ -129,7 +129,7 @@ cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 `snapmirror delete -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
 
 +
 [NOTE]
@@ -168,7 +168,7 @@ cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-
 `snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["指令參考資料ONTAP"^]需詳細 `snapmirror resync`資訊，請參閱。
 
 +
 以下範例重新建立原始來源磁碟區之間的關係、 `volA` 開啟 `svm1`和原始目的地 Volume 、 `volA_dst` 開啟 `svm_backup`：
@@ -183,7 +183,7 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 `vserver start -vserver _SVM_`
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["指令參考資料ONTAP"^]需詳細 `vserver start`資訊，請參閱。
 
 +
 下列範例會啟動原始目的地SVM：
@@ -196,4 +196,4 @@ cluster_dst::> vserver start svm_backup
 
 
 .完成後
-使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。如需完整的命令語法、請參閱手冊頁。
+使用 `snapmirror show`命令驗證是否已建立 SnapMirror 關係。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror show`資訊，請參閱。

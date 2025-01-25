@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: create, initialize, load-sharing, mirror, relationship 
 summary: 您應該為叢集中的每個根磁碟區建立負載共用鏡像（LSM）。您可以在任何節點上建立LSM、但不包括根磁碟區、例如HA配對中的合作夥伴節點、或最好是在不同的HA配對中。對於雙節點叢集、您應該在具有根磁碟區的節點合作夥伴上建立LSM。 
 ---
-= 建立及初始化負載共用鏡射關係
+= 與 ONTAP 建立及初始化負載共用鏡射關係
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -38,7 +38,7 @@ volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -s
 最佳做法是使用後綴（例如）來命名根卷和目標卷 `_root` 和 `_m1`。
 
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["指令參考資料ONTAP"^]需詳細 `volume create`資訊，請參閱。
 
 +
 以下範例為根磁碟區建立負載共用鏡射磁碟區 `svm1_root` 在中 `cluster_src`：
@@ -56,7 +56,7 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
 ----
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
 
 +
 以下範例在根磁碟區之間建立負載共用鏡像關係 `svm1_root` 以及負載共用鏡射磁碟區 `svm1_m1`：
@@ -76,7 +76,7 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 snapmirror initialize-ls-set -source-path <SVM:volume>
 ----
 +
-如需完整的命令語法、請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
 
 +
 以下範例初始化根磁碟區的負載共用鏡像 `svm1_root`：

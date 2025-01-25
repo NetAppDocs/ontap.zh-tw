@@ -6,12 +6,14 @@ summary: 對於自主勒索軟體保護（ ARP ） 9.15.1 及更早版本，請�
 ---
 = 在學習期間後切換至 ARP 作用中模式
 :allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
 
 
 [role="lead"]
 對於執行 FlexGroup 磁碟區的自治勒索軟體保護（ ARP ） 9.15.1 及更早版本或 ARP ，請手動或自動將啟用 ARP 的磁碟區從學習模式切換至使用中模式。在 ARP 完成至少 30 天的學習模式執行後，您可以手動切換至使用中模式。從 ONTAP 9 。 13.1 開始， ARP 會自動判斷最佳學習期間間隔，並自動執行交換器，這可能會在 30 天之前發生。
 
-如果您在具有 ONTAP 9 。 16.1 或更新版本的 FlexVol 磁碟區上使用 ARP ，則 ARP/AI 功能不需要學習週期，而且預設會選取作用中模式。
+如果您在具有 ONTAP 9.16.1 或更新版本的 FlexVol 磁碟區上使用 ARP ，則 ARP/AI 保護功能會啟用，並自動變成作用中。不需要學習期間。
 
 
 NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
@@ -38,18 +40,24 @@ NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入�
 .步驟
 . 學習期間結束時、如果尚未自動完成、請修改受保護的磁碟區以切換至作用中模式：
 +
-`security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>`
-
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
 +
 您也可以使用modify volume命令切換至作用中模式：
 
 +
-`volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state active`
-
+[source, cli]
+----
+volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state active
+----
 . 驗證磁碟區的ARP狀態。
 +
-`security anti-ransomware volume show`
-
+[source, cli]
+----
+security anti-ransomware volume show
+----
 
 
 --
