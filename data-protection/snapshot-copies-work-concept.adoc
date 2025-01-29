@@ -2,18 +2,18 @@
 permalink: data-protection/snapshot-copies-work-concept.html 
 sidebar: sidebar 
 keywords: restore, file, snapshot copy, nfs, cifs, smb, client 
-summary: NFS或SMB用戶端上的使用者可以直接從Snapshot複本還原檔案、而無需儲存系統管理員的介入。 
+summary: NFS 或 SMB 用戶端上的使用者可以直接從快照還原檔案，而無需儲存系統管理員介入。 
 ---
-= 從NFS或SMB用戶端上的Snapshot複本還原檔案
+= 從 NFS 或 SMB 用戶端上的快照還原檔案
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-NFS或SMB用戶端上的使用者可以直接從Snapshot複本還原檔案、而無需儲存系統管理員的介入。
+NFS 或 SMB 用戶端上的使用者可以直接從快照還原檔案，而無需儲存系統管理員介入。
 
-檔案系統中的每個目錄都包含一個名為的子目錄 `.snapshot` NFS 與 SMB 使用者均可存取。。 `.snapshot` 子目錄包含與 Volume Snapshot 複本對應的子目錄：
+檔案系統中的每個目錄都包含一個子目錄，命名為 NFS 和 SMB 使用者可存取的子目錄 `.snapshot`。 `.snapshot`子目錄包含與磁碟區快照對應的子目錄：
 
 ....
 $ ls .snapshot
@@ -21,7 +21,7 @@ daily.2017-05-14_0013/              hourly.2017-05-15_1106/
 daily.2017-05-15_0012/              hourly.2017-05-15_1206/
 hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 ....
-每個子目錄都包含Snapshot複本所參照的檔案。如果使用者不小心刪除或覆寫檔案、可以將檔案從Snapshot子目錄複製到讀寫目錄、將檔案還原到父讀寫目錄：
+每個子目錄都包含快照所參照的檔案。如果使用者不小心刪除或覆寫檔案，他們可以將檔案從 Snapshot 子目錄複製到讀寫目錄，將檔案還原到父讀寫目錄：
 
 ....
 $ ls my.txt

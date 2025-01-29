@@ -13,14 +13,14 @@ summary: 您可以在現有的 SnapMirror 關係中、從來源或目的地磁�
 [role="lead"]
 您可以在現有的Volume SnapMirror關係中、從來源或目的地Volume建立FlexClone Volume。不過、這樣做可能會使SnapMirror複寫作業無法成功完成。
 
-複寫可能無法運作、因為當您建立FlexClone Volume時、可能會鎖定SnapMirror使用的Snapshot複本。如果發生這種情況、SnapMirror會停止複寫到目的地Volume、直到FlexClone Volume被銷毀或從其父磁碟區分割為止。您有兩種方法可以解決此問題：
+複寫可能無法運作，因為當您建立 FlexClone Volume 時，可能會鎖定 SnapMirror 使用的快照。如果發生這種情況、SnapMirror會停止複寫到目的地Volume、直到FlexClone Volume被銷毀或從其父磁碟區分割為止。您有兩種方法可以解決此問題：
 
 * 如果您暫時需要FlexClone磁碟區、而且可以暫時停止SnapMirror複寫、您可以建立FlexClone磁碟區、並在可能的情況下將其刪除或從其父磁碟區分割。
 +
 當FlexClone磁碟區被刪除或從其父磁碟區分割時、SnapMirror複寫會正常繼續。
 
-* 如果SnapMirror複寫暫時中斷、您可以在SnapMirror來源磁碟區中建立Snapshot複本、然後使用該Snapshot複本建立FlexClone磁碟區。（如果您是從目的地磁碟區建立FlexClone磁碟區、則必須等到Snapshot複本複寫到SnapMirror目的地磁碟區為止。）
+* 如果無法接受 SnapMirror 複寫暫時停止，您可以在 SnapMirror 來源 Volume 中建立快照，然後使用該快照建立 FlexClone Volume 。（如果您是從目的地磁碟區建立 FlexClone Volume ，則必須等到該快照複寫到 SnapMirror 目的地磁碟區為止。）
 +
-這種在SnapMirror來源磁碟區中建立Snapshot複本的方法、可讓您在不鎖定SnapMirror使用中的Snapshot複本的情況下、建立複本。
+這種在 SnapMirror 來源磁碟區中建立快照的方法，可讓您建立複本，而無需鎖定 SnapMirror 正在使用的快照。
 
 

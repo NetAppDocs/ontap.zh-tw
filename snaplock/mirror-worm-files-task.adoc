@@ -35,7 +35,7 @@ summary: 您可以使用SnapMirror將WORM檔案複寫到其他地理位置、以
 
 如果目的地擁有與來源不同的合法保留、則不允許重新同步。來源與目的地必須具有相同的合法持有、或在嘗試重新同步之前、必須釋出目的地上的所有合法持有。
 
-在為擷取分散資料而建立的目的地Volume上鎖定的Snapshot複本、可透過執行的CLI複製到來源 `snapmirror update -s snapshot` 命令。複製一次的快照也會繼續鎖定來源。
+在目的地磁碟區上建立鎖定的快照，以擷取分散的資料，可透過執行命令的 CLI 將其複製到來源 `snapmirror update -s snapshot`。複製一次的快照也會繼續鎖定來源。
 
 * 不支援SVM資料保護關係。
 * 不支援負載共用資料保護關係。
@@ -90,7 +90,7 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ----
 . 在目的地SVM上、建立SnapMirror原則：
 +
-`*snapmirror policy create -vserver _SVM_name_ -policy _policy_name_*`
+`snapmirror policy create -vserver _SVM_name_ -policy _policy_name_`
 
 +
 下列命令會建立 SVM 範圍的原則 `SVM1-mirror`：
@@ -114,7 +114,7 @@ SVM2::> job schedule cron create -name weekendcron -dayofweek "Saturday, Sunday"
 ----
 . 在目的地SVM上、建立SnapMirror關係：
 +
-`*snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_*`
+`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_`
 
 +
 以下命令可在來源磁碟區之間建立 SnapMirror 關係 `srcvolA` 開啟 `SVM1` 以及目的地Volume `dstvolB` 開啟 `SVM2`，然後指派原則 `SVM1-mirror` 和排程 `weekendcron`：
@@ -130,10 +130,10 @@ NOTE: XDP類型ONTAP 可在SHD9.5或更新版本中找到。您必須使用ONTAP
 
 . 在目的地SVM上、初始化SnapMirror關係：
 +
-`*snapmirror initialize -destination-path _destination_path_*`
+`snapmirror initialize -destination-path _destination_path_`
 
 +
-初始化程序會將_基準線傳輸_傳送到目的地Volume。SnapMirror會製作來源Volume的Snapshot複本、然後將複本及其參照的所有資料區塊傳輸到目的地Volume。它也會將來源磁碟區上的任何其他Snapshot複本傳輸到目的地磁碟區。
+初始化程序會將_基準線傳輸_傳送到目的地Volume。SnapMirror 會建立來源磁碟區的快照，然後將複本及其參照的所有資料區塊傳輸至目的地磁碟區。它也會將來源磁碟區上的任何其他快照傳輸至目的地磁碟區。
 
 +
 下列命令可初始化來源磁碟區之間的關係 `srcvolA` 開啟 `SVM1` 以及目的地Volume `dstvolB` 開啟 `SVM2`：

@@ -2,7 +2,7 @@
 permalink: volumes/methods-copying-volume-concept.html 
 sidebar: sidebar 
 keywords: methods to, copy, volume 
-summary: 複製磁碟區的方法取決於集合位置、以及您是否要保留原始磁碟區的 Snapshot 複本。 
+summary: 複製磁碟區的方法取決於集合位置，以及您是否要保留原始磁碟區的快照。 
 ---
 = 複製Volume的方法
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 複製磁碟區的方法取決於集合位置、以及您是否要保�
 
 
 [role="lead"]
-複製磁碟區的方法取決於您是將磁碟區複製到相同的集合體或不同的集合體、以及是否要保留原始磁碟區的Snapshot複本。複製磁碟區會建立一個獨立的磁碟區複本、供您用於測試及其他用途。
+複製磁碟區的方法取決於您是將磁碟區複製到相同的 Aggregate 還是不同的 Aggregate ，以及您是否要保留原始磁碟區的快照。複製磁碟區會建立一個獨立的磁碟區複本、供您用於測試及其他用途。
 
 下表列出複本的特性及建立複本的方法。
 
@@ -21,21 +21,21 @@ summary: 複製磁碟區的方法取決於集合位置、以及您是否要保�
 
 
  a| 
-在同一個集合體中、您不想從原始磁碟區複製Snapshot複本。
+在同一個 Aggregate 中，您不想從原始 Volume 複製快照。
  a| 
 建立原始Volume的FlexClone Volume。
 
 
 
  a| 
-您不想從原始磁碟區複製Snapshot複本到其他Aggregate。
+而您不想從原始磁碟區複製快照到另一個 Aggregate 。
  a| 
 建立原始 Volume 的 FlexClone Volume 、然後使用將該 Volume 移至其他 Aggregate `volume move` 命令。
 
 
 
  a| 
-到另一個集合體、並保留原始磁碟區的所有Snapshot複本。
+將原始磁碟區的所有快照保留到另一個集合體。
  a| 
 使用SnapMirror複寫原始磁碟區、然後打破SnapMirror關係以建立讀寫磁碟區複本。
 

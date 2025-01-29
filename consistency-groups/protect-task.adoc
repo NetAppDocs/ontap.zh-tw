@@ -2,9 +2,9 @@
 permalink: consistency-groups/protect-task.html 
 sidebar: sidebar 
 keywords: application protection, two-phase commit, 2 phase, smbc, async snapmirror, local, remote, snapshot, asynchronous, svm disaster recovery, snapmirror 
-summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同步、 SnapMirror 主動式同步和 SVM 災難恢復的資料。 
+summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， SnapMirror 主動式同步和 SVM 災難恢復來保護資料。 
 ---
-= 保護一致性群組
+= 保護 ONTAP 中的一致性群組
 :hardbreaks:
 :allow-uri-read: 
 :icons: font
@@ -16,7 +16,7 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 
 建立一致性群組不會自動啟用保護。保護原則可以在建立時或建立一致性群組之後設定。您可以使用下列方法來保護一致性群組：
 
-* 本機 Snapshot 複本
+* 本機快照
 * SnapMirror 主動同步（在 9.15.1 之前的 ONTAP 版本中稱爲 SnapMirror 業務連續性）
 * xref:index.html#mcc[MetroCluster （自 9.11.1 起）]
 * SnapMirror 非同步（從 9.13.1 開始）
@@ -25,18 +25,18 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 
 如果您使用巢狀一致性群組、可以為父和子一致性群組設定不同的保護原則。
 
-從 ONTAP 9.11.1 開始、一致性群組提供 <<two-phase,建立雙階段一致性群組Snapshot>>。兩階段 Snapshot 作業會執行預先檢查、確保成功擷取 Snapshot 複本。
+從 ONTAP 9.11.1 開始<<two-phase,建立雙階段一致性群組快照>>，一致性群組提供。兩階段快照作業會執行預先檢查，確保成功擷取快照。
 
-可以針對整個一致性群組、階層式組態中的單一一致性群組、或是一致性群組中的個別磁碟區進行還原。您可以選取想要恢復的一致性群組、選取Snapshot複本類型、然後識別Snapshot複本、以建立還原基礎、藉此達成恢復。如需此程序的詳細資訊、請參閱 link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]。
+可以針對整個一致性群組、階層式組態中的單一一致性群組、或是一致性群組中的個別磁碟區進行還原。您可以選取要從中恢復的一致性群組，選取快照類型，然後識別要作為還原基礎的快照，以達成恢復。如需此程序的詳細資訊，請參閱link:../task_dp_restore_from_vault.html["從較早的快照還原磁碟區"]。
 
 
 
-== 設定本機 Snapshot 原則
+== 設定本機快照原則
 
 設定本機快照保護原則可讓您建立橫跨一致性群組中所有磁碟區的原則。
 
 .關於這項工作
-一致性群組支援的 Snapshot 複本排程下限為 30 分鐘。這是根據 link:https://www.netapp.com/media/12385-tr4571.pdf["FlexGroups 測試"^]，與一致性群組共用相同的 Snapshot 基礎架構。
+一致性群組支援的最少快照排程為 30 分鐘。這是基於link:https://www.netapp.com/media/12385-tr4571.pdf["FlexGroups 測試"^]，它與一致性組共享相同的 Snapshot 基礎架構。
 
 [role="tabbed-block"]
 ====
@@ -47,9 +47,9 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 . 從一致性群組功能表中選取您所建立的一致性群組。
 . 在一致性群組的總覽頁面右上角、選取*編輯*。
 . 選中*排程Snapshot複本（本機）*旁的方塊。
-. 選取Snapshot原則。若要設定新的自訂原則、請參閱 link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]。
+. 選取快照原則。若要設定新的自訂原則，請參閱link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]。
 . 選擇*保存*。
-. 返回一致性群組總覽功能表。在 * Snapshot Copies （ local ） * （快照複本（本機） * ）下的左欄中、狀態會顯示 protected （已保護 image:../media/icon_shield.png["盾牌圖示"]）。
+. 返回一致性群組總覽功能表。在 * 快照（本機） * 下的左欄中，狀態會顯示為image:../media/icon_shield.png["盾牌圖示"]「 protected 」（已保護）。
 
 
 --
@@ -76,9 +76,9 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 ====
 
 
-== 建立隨需 Snapshot 複本
+== 建立隨需快照
 
-如果您需要在正常排程原則之外建立一致性群組的 Snapshot 複本、您可以根據需要建立一個 Snapshot 複本。
+如果您需要在正常排程原則之外建立一致性群組的快照，可以根據需要建立一個快照。
 
 [role="tabbed-block"]
 ====
@@ -86,7 +86,7 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 --
 .步驟
 . 瀏覽至 * 儲存 * > * 一致性群組 * 。
-. 選取您要為其建立隨選 Snapshot 複本的一致性群組。
+. 選取您要為其建立隨選快照的一致性群組。
 . 切換至 * Snapshot Copies （快照複本） * 標籤、然後選取 *+Add* （ *+Add* ）。
 . 提供 * 名稱 * 和 * SnapMirror 標籤 * 。在 * 一致性 * 的下拉式功能表中、選取 * 應用程式一致 * 或 * 損毀一致 * 。
 . 選擇*保存*。
@@ -95,7 +95,7 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 --
 .CLI
 --
-從 ONTAP 9.14.1 開始、您可以使用 CLI 建立一致性群組的隨需 Snapshot 複本。
+從 ONTAP 9.14.1 開始，您可以使用 CLI 建立一致性群組的隨選快照。
 
 .開始之前
 * 您必須處於管理權限層級、才能執行此工作。
@@ -103,9 +103,9 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 
 
 .步驟
-. 建立 Snapshot 複本：
+. 建立快照：
 +
-根據預設、 Snapshot 類型會當機一致。您可以使用選用來修改 Snapshot 類型 `-type` 參數。
+根據預設，快照類型會當機一致。您可以使用選用參數修改快照類型 `-type`。
 
 +
 `consistency-group snapshot create -vserver _svm_name_ -consistency-group _consistency_group_name_ -snapshot _snapshot_name_`
@@ -116,35 +116,35 @@ summary: 使用一致性群組來保護使用本機快照、 SnapMirror 非同�
 ====
 
 
-== 建立兩階段一致性群組快照
+== 建立雙階段一致性群組快照
 
-從 ONTAP 9.11.1 開始、一致性群組支援建立一致性群組（ CG ）快照的兩階段認可、在提交快照複本之前執行預先檢查。此功能只能搭配ONTAP 使用靜態API。
+從 ONTAP 9.11.1 開始，一致性群組支援建立一致性群組（ CG ）快照的兩階段承諾，在提交快照之前執行預先檢查。此功能只能搭配ONTAP 使用靜態API。
 
-建立階段為兩階段的CG Snapshot僅適用於建立Snapshot、而非配置一致性群組或還原一致性群組。
+建立兩階段 CG 快照僅適用於建立快照，不提供一致性群組或還原一致性群組。
 
-兩階段 CG Snapshot 將 Snapshot 建立程序分為兩個階段：
+兩階段 CG 快照可將快照建立程序分為兩個階段：
 
-. 在第一階段、 API 會執行預先檢查並觸發建立 Snapshot 。第一階段包括逾時參數、指定 Snapshot 複本成功提交的時間量。
-. 如果第一階段中的要求成功完成、您可以從第一階段開始、在指定的時間間隔內叫用第二階段、並將 Snapshot 複本提交至適當的端點。
+. 在第一階段， API 會執行預先檢查並觸發建立快照。第一階段包括逾時參數，指定快照成功提交的時間量。
+. 如果第一階段中的要求成功完成，您可以從第一階段開始，在指定的時間間隔內叫用第二階段，並將快照提交至適當的端點。
 
 
 .開始之前
-* 若要使用建立雙階段CG Snapshot、叢集中的所有節點都必須執行ONTAP 更新版本的版本資訊。
-* 一致性群組執行個體一次只支援一個作用中的一致性群組 Snapshot 作業、無論是一階段或兩階段。嘗試在另一個正在執行的 Snapshot 作業時叫用該作業、會導致失敗。
-* 當您叫用建立 Snapshot 時、您可以設定 5 到 120 秒之間的選擇性逾時值。如果未提供逾時值、則作業會在預設的 7 秒時逾時。在 API 中、使用設定逾時值 `action_timeout` 參數。在 CLI 中、使用 `-timeout` 旗標。
+* 若要使用兩階段 CG 快照建立，叢集中的所有節點都必須執行 ONTAP 9.11.1 或更新版本。
+* 一致性群組執行個體一次只支援一個作用中的一致性群組快照作業呼叫，無論是一階段或兩階段。嘗試在另一個正在執行的快照作業時叫用快照作業，會導致失敗。
+* 當您叫用快照建立時，您可以設定 5 到 120 秒之間的選擇性逾時值。如果未提供逾時值、則作業會在預設的 7 秒時逾時。在 API 中，使用參數設定逾時值 `action_timeout`。在 CLI 中，使用 `-timeout`旗標。
 
 
 .步驟
-您可以使用 REST API 或從 ONTAP 9.14.1 開始、使用 ONTAP CLI 來完成兩階段快照。System Manager 不支援此作業。
+您可以使用 REST API 或從 ONTAP 9.14.1 開始，使用 ONTAP CLI 完成兩階段快照。System Manager 不支援此作業。
 
 
-NOTE: 如果您使用 API 來叫用 Snapshot 建立、則必須使用 API 來提交 Snapshot 複本。如果使用 CLI 調用 Snapshot 創建，則必須使用 CLI 提交 Snapshot 副本。不支援混合方法。
+NOTE: 如果您使用 API 來叫用快照建立，則必須使用 API 來提交快照。如果使用 CLI 調用快照創建，則必須使用 CLI 提交快照。不支援混合方法。
 
 [role="tabbed-block"]
 ====
 .CLI
 --
-從 ONTAP 9.14.1 開始、您可以使用 CLI 建立兩階段 Snapshot 複本。
+從 ONTAP 9.14.1 開始，您可以使用 CLI 建立兩階段快照。
 
 .開始之前
 * 您必須處於管理權限層級、才能執行此工作。
@@ -152,11 +152,11 @@ NOTE: 如果您使用 API 來叫用 Snapshot 建立、則必須使用 API 來提
 
 
 .步驟
-. 啟動 Snapshot ：
+. 啟動快照：
 +
 `consistency-group snapshot start -vserver _svm_name_ -consistency-group _consistency_group_name_ -snapshot _snapshot_name_ [-timeout _time_in_seconds_ -write-fence {true|false}]`
 
-. 確認已拍攝快照：
+. 驗證是否已拍攝快照：
 +
 `consistency-group snapshot show`
 
@@ -169,7 +169,7 @@ NOTE: 如果您使用 API 來叫用 Snapshot 建立、則必須使用 API 來提
 --
 .API
 --
-. 調用 Snapshot 創建。使用將 POST 要求傳送至一致性群組端點 `action=start` 參數。
+. 叫用快照建立。使用參數將 POST 要求傳送至一致性群組端點 `action=start`。
 +
 [source, curl]
 ----
@@ -181,7 +181,7 @@ curl -k -X POST 'https://<IP_address>/application/consistency-groups/<cg-uuid>/s
   "snapmirror_label": "<SnapMirror_label>"
 }'
 ----
-. 如果 POST 要求成功、則輸出會包含 Snapshot UUID 。使用該 uuid 提交修補程式要求以提交 Snapshot 複本。
+. 如果 POST 要求成功，則輸出會包含快照 UUID 。使用該 uuid 提交修補程式要求以提交快照。
 +
 [source, curl]
 ----
@@ -203,12 +203,12 @@ For more information about the ONTAP REST API, see link:https://docs.netapp.com/
 
 === 使用 SnapMirror 主動同步設定保護
 
-您可以使用 SnapMirror 主動式同步、確保將在一致性群組上建立的一致性群組 Snapshot 複本複製到目的地。若要深入瞭解 SnapMirror 主動式同步、或如何使用 CLI 設定 SnapMirror 主動式同步、請參閱 xref:../task_san_configure_protection_for_business_continuity.html[設定保護以確保營運不中斷]。
+您可以使用 SnapMirror 主動式同步功能，確保將一致性群組上建立的一致性群組快照複製到目的地。若要深入瞭解 SnapMirror 作用中同步或如何使用 CLI 設定 SnapMirror 作用中同步處理，請參閱xref:../task_san_configure_protection_for_business_continuity.html[設定保護以確保營運不中斷]。
 
 .開始之前
 * SnapMirror 主動同步關係無法在掛載用於 NAS 存取的磁碟區上建立。
 * 來源叢集和目的地叢集中的原則標籤必須相符。
-* SnapMirror 主動式同步預設不會複寫 Snapshot 複本、除非預先定義的規則中新增了 SnapMirror 標籤 `AutomatedFailOver` 原則和Snapshot複本是以該標籤建立。
+* SnapMirror 主動式同步功能預設不會複寫快照，除非已將具有 SnapMirror 標籤的規則新增至預先定義的 `AutomatedFailOver`原則，且快照是以該標籤建立的。
 +
 若要深入瞭解此程序、請參閱 link:../task_san_configure_protection_for_business_continuity.html["使用 SnapMirror 主動同步進行保護"]。
 
@@ -233,21 +233,21 @@ TIP: 若要使用 CLI 設定 SnapMirror 主動式同步、請參閱 xref:../task
 
 === 設定 SnapMirror 非同步
 
-從 ONTAP 9.13.1 開始、您可以為單一一致性群組設定 SnapMirror 非同步保護。從 ONTAP 9.14.1 開始、您可以使用 SnapMirror 非同步功能、使用一致性群組關係、將 Volume 精細的 Snapshot 複本複製到目的地叢集。
+從 ONTAP 9.13.1 開始、您可以為單一一致性群組設定 SnapMirror 非同步保護。從 ONTAP 9.14.1 開始，您可以使用 SnapMirror 非同步功能，使用一致性群組關係，將 Volume 精細的快照複寫到目的地叢集。
 
 .關於這項工作
-若要複寫 Volume 精細的 Snapshot 複本、您必須執行 ONTAP 9.14.1 或更新版本。對於 MirrorAndVault 和 Vault 原則、 Volume 精細 Snapshot 原則的 SnapMirror 標籤必須符合一致性群組的 SnapMirror 原則規則。Volume 精細快照符合一致性群組 SnapMirror 原則的保留值、該原則是根據一致性群組快照來計算的。例如、如果您有原則將兩個 Snapshot 複本保留在目的地上、則可以有兩個 Volume 精細的 Snapshot 複本和兩個一致性群組 Snapshot 複本。
+若要複寫 Volume 精細的快照，您必須執行 ONTAP 9.14.1 或更新版本。對於 MirrorAndVault 和 Vault 原則， Volume 精細快照原則的 SnapMirror 標籤必須符合一致性群組的 SnapMirror 原則規則。Volume 精細快照符合一致性群組 SnapMirror 原則的保留值，該原則是在一致性群組快照之外的情況下進行計算。例如，如果您有原則在目的地上保留兩個快照，則可以有兩個 Volume 精細快照和兩個一致性群組快照。
 
-當 SnapMirror 關係與 Volume 精細 Snapshot 複本重新同步時、您可以使用保留 Volume 精細的 Snapshot 複本 `-preserve` 旗標。保留比一致性群組 Snapshot 複本更新的 Volume 精細 Snapshot 複本。如果沒有一致性群組 Snapshot 複本、則無法在重新同步作業中傳輸 Volume 精細的 Snapshot 複本。
+當重新同步 SnapMirror 與 Volume 精細快照的關係時，您可以使用旗標保留 Volume 精細的快照 `-preserve`。保留比一致性群組快照更新的 Volume 精細快照。如果沒有一致性群組快照，則無法在重新同步作業中傳輸 Volume 精細的快照。
 
 .開始之前
 * SnapMirror 非同步保護僅適用於單一一致性群組。階層式一致性群組不支援此功能。若要將階層式一致性群組轉換成單一一致性群組、請參閱 xref:modify-geometry-task.html[修改一致性群組架構]。
 * 來源叢集和目的地叢集中的原則標籤必須相符。
 * 您可以不中斷營運 xref:modify-task.html#add-volumes-to-a-consistency-group[將磁碟區新增至一致性群組] 使用主動 SnapMirror 非同步關係。對一致性群組所做的任何其他變更、都需要您中斷 SnapMirror 關係、修改一致性群組、然後重新建立並重新同步關係。
 * 啟用 SnapMirror 非同步保護的一致性群組有不同的限制。如需詳細資訊、請參閱 xref:limits.html[一致性群組限制]。
-* 如果您已為多個個別磁碟區設定 SnapMirror 非同步保護關係、則可以將這些磁碟區轉換成一致性群組、同時保留現有的 Snapshot 複本。若要成功轉換磁碟區：
+* 如果您已為多個個別磁碟區設定 SnapMirror 非同步保護關係，則可以將這些磁碟區轉換成一致性群組，同時保留現有的快照。若要成功轉換磁碟區：
 +
-** 磁碟區必須有通用的 Snapshot 複本。
+** 磁碟區必須有通用的快照。
 ** 您必須打破現有的 SnapMirror 關係、 xref:configure-task.html[將磁碟區新增至單一一致性群組]，然後使用以下工作流程重新同步關係。
 
 
@@ -273,7 +273,7 @@ NOTE: SnapMirror 非同步的一致性群組支援的最低排程（恢復點目
 
 === 設定 SVM 災難恢復
 
-從 ONTAP 9.14.1 開始、 xref:../data-protection/snapmirror-svm-replication-concept.html#[SVM 災難恢復] 支援一致性群組、可讓您將一致性群組資訊從來源叢集鏡射到目的地叢集。
+從 ONTAP 9.14.1 開始，xref:../data-protection/snapmirror-svm-replication-concept.html#[SVM 災難恢復]支援一致性群組，可讓您將一致性群組資訊從來源叢集鏡射到目的地叢集。
 
 如果您要在已包含一致性群組的 SVM 上啟用 SVM 災難恢復、請遵循的 SVM 組態工作流程 xref:../task_dp_configure_storage_vm_dr.html[系統管理員] 或 xref:../data-protection/replicate-entire-svm-config-task.html[CLI ONTAP]。
 
@@ -295,10 +295,10 @@ System Manager 會在 * 保護 > 資料庫關聯圖 * 功能表下、視覺化 L
 
 .相關資訊
 * link:clone-task.html["複製一致性群組"]
-* link:../task_dp_configure_snapshot.html["設定Snapshot複本"]
+* link:../task_dp_configure_snapshot.html["設定快照"]
 * link:../task_dp_create_custom_data_protection_policies.html["建立自訂資料保護原則"]
-* link:../task_dp_recover_snapshot.html["從Snapshot複本恢復"]
-* link:../task_dp_restore_from_vault.html["從先前的Snapshot複本還原磁碟區"]
+* link:../task_dp_recover_snapshot.html["從快照中恢復"]
+* link:../task_dp_restore_from_vault.html["從較早的快照還原磁碟區"]
 * link:../snapmirror-active-sync/index.html["SnapMirror 主動式同步總覽"]
 * link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自動化文件"^]
 * xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror 非同步災難恢復基礎知識]

@@ -13,8 +13,6 @@ summary: 若要將非主幹用戶端連線轉換為主幹連線、必須使用�
 [role="lead"]
 若要將非主幹用戶端連線轉換為主幹連線、必須使用有關生命體的資訊、卸載及重新掛載 Linux 和 VMware 用戶端上的現有掛載。
 
-在用戶端上輸入掛載命令時、您必須為主幹群組中的每個 LIF 輸入 IP 位址。
-
 深入瞭解 link:index.html#supported-clients["支援的用戶端"]。
 
 
@@ -24,17 +22,25 @@ NOTE: 卸載 VMware 用戶端會中斷資料存放區上的任何 VM 。另一�
 ====
 .Linux 用戶端需求
 --
-主幹群組中的每個連線都需要個別的掛載點。
+如果您使用 ONTAP 9.16.1 或更新版本，以及 Red Hat Enterprise Linux 8.7 或更新版本（適用於 RHEL 8 ）或 9.2 或更新版本（適用於 RHEL 9 ）作為 Linux 用戶端，則主幹群組只需要一個掛載點。使用以下選項，使用此命令裝載匯出的磁碟區 `trunkdiscovery`：
 
-使用類似下列命令來掛載匯出的磁碟區：
+[source, cli]
+----
+mount <lif_ip>:<volume_name> </mount_path> -o trunkdiscovery,vers=4.1
+----
+否則，主幹群組中的每個連線都需要個別的掛載點。使用類似下列命令的選項掛載匯出的磁碟區 `max_connect`：
 
-`mount lif1_ip:/vol-test /mnt/test1 -o vers=4.1,max_connect=2`
+[source, cli]
+----
+mount <lif1_ip>:<volume_name> </mount_path1> -o vers=4.1,max_connect=16
+----
+[source, cli]
+----
+mount <lif2_ip>:<volume_name> </mount_path2> -o vers=4.1,max_connect=16
+----
+版本 (`vers`）值應為 `4.1` 或更新版本。
 
-`mount lif2_ip:/vol-test /mnt/test2 -o vers=4.1,max_connect=2`
-
-。 `vers` 值應該是 `4.1` 或更新版本。
-
-。 `max_connect` 值應對應於主幹群組中的連線數目。
+。 `max_connect` 值對應於主幹群組中的連線數目。
 
 --
 .VMware 用戶端需求

@@ -498,7 +498,7 @@ recover_full路徑
  a| 
 指定遞增備份的開始日期。
 
- `BASE_DATE` 是參照 Snapshot 識別碼的字串表示。使用 `BASE_DATE` string 、 SMTape 會找出參考 Snapshot 複本。
+ `BASE_DATE`是參考快照識別碼的字串表示。SMTape 會使用 `BASE_DATE`字串來尋找參考快照。
 
  `BASE_DATE` 基準備份不需要。對於遞增備份、的值 `DUMP_DATE` 先前基準或遞增備份的變數會指派給 `BASE_DATE` 變動。
 
@@ -513,7 +513,7 @@ dump日期
  a| 
 `none`
  a| 
-SMTape備份結束時、dump日期會包含字串識別碼、用以識別用於該備份的Snapshot複本。此Snapshot複本可作為後續遞增備份的參考Snapshot複本。
+SMTape 備份結束時， dump 日期包含字串識別碼，可識別用於該備份的快照。此快照可作為後續遞增備份的參考快照。
 
 dump日期的結果值將用作後續遞增備份的base日期值。
 
@@ -535,13 +535,13 @@ SMTAPE_backup_Set_ID
  a| 
 SMTAPE_snapshot名稱
  a| 
-Volume中可用的任何有效Snapshot複本
+Volume 中可用的任何有效快照
  a| 
 `Invalid`
  a| 
-當SMTAPE_snapshot名稱變數設定為Snapshot複本時、該Snapshot複本及其舊的Snapshot複本會備份到磁帶。
+當 SMTAPE_Snapshot_name 變數設定為快照時，該快照及其舊快照會備份到磁帶。
 
-對於遞增備份、此變數會指定遞增的Snapshot複本。by_date變數提供基礎Snapshot複本。
+對於增量備份，此變數會指定遞增快照。base_date 變數提供基準快照。
 
 
 
@@ -552,7 +552,7 @@ SMTAPE_DELETE快照
  a| 
 `N`
  a| 
-對於 SMTape 自動建立的 Snapshot 複本、當 SMTAPE_DELETE _snapshot 變數設為時 `Y`，然後在備份作業完成後， SMTape 會刪除此 Snapshot 複本。但是、由備份應用程式建立的Snapshot複本將不會刪除。
+對於 SMTape 自動建立的快照，當 SMTAPE_DELETE _snapshot 變數設為 `Y`時，則 SMTape 會在備份作業完成後刪除此快照。不過，由備份應用程式建立的快照將不會刪除。
 
 
 

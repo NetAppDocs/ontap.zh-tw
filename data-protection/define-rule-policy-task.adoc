@@ -2,7 +2,7 @@
 permalink: data-protection/define-rule-policy-task.html 
 sidebar: sidebar 
 keywords: define, rule, policy, data protection 
-summary: 對於具有「保存」或「 mirror -Vault 」原則類型的自訂原則，您必須定義至少一個規則，以決定在初始化和更新期間傳輸哪些快照。您也可以使用「保存庫」或「鏡射保存庫」原則類型來定義預設原則的規則。 
+summary: 對於具有「資料保險箱」或「鏡射資料保險箱」原則類型的自訂原則，您必須定義至少一個規則，以決定在初始化和更新期間傳輸哪些快照。您也可以使用「保存庫」或「鏡射保存庫」原則類型來定義預設原則的規則。 
 ---
 = 使用 ONTAP 定義原則規則
 :allow-uri-read: 
@@ -11,10 +11,10 @@ summary: 對於具有「保存」或「 mirror -Vault 」原則類型的自訂�
 
 
 [role="lead"]
-對於使用「 'Vault' 」或「 mirror-Vault' 」原則類型的自訂原則，您必須定義至少一個規則，以決定在初始化和更新期間傳輸哪些快照。您也可以使用「'Vault'」或「mirmirror-Vault'」原則類型來定義預設原則的規則。
+對於具有或 `mirror-vault`原則類型的自訂原則 `vault`，您必須定義至少一個規則，以決定在初始化和更新期間傳輸哪些快照。您也可以使用或 `mirror-vault`原則類型來定義預設原則的規則 `vault`。
 
 .關於這項工作
-每個原則的「資料保險箱」或「鏡射資料保險箱」原則類型都必須有一個規則，指定要複寫哪些快照。例如，規則 "`bi-月刊 `" 表示只應複寫指派 SnapMirror 標籤 "`bi-月刊 `" 的快照。您可以在來源上設定快照原則時指定 SnapMirror 標籤。
+每個具有或 `mirror-vault`原則類型的原則都 `vault`必須有一個規則，指定要複寫哪些快照。例如，規則 `bi-monthly`表示只應複寫指派 SnapMirror 標籤的快照 `bi-monthly`。您可以在來源上設定快照原則時指定 SnapMirror 標籤。
 
 每種原則類型都與一或多個系統定義的規則相關聯。當您指定原則類型時、這些規則會自動指派給該原則。下表顯示系統定義的規則。
 
@@ -48,7 +48,7 @@ all_source_snapshots
  a| 
 保存庫、鏡射保存庫
  a| 
-在初始化和更新時，會傳輸來源上的新快照，並標有 SnapMirror 標籤「 daily 」。
+在初始化和更新時，會傳輸來源上具有 SnapMirror 標籤的新快照 `daily`。
 
 
 
@@ -57,7 +57,7 @@ all_source_snapshots
  a| 
 保存庫、鏡射保存庫
  a| 
-在初始化與更新時，會傳輸來源上的新快照，並標有 SnapMirror 標籤「「每週」。
+在初始化和更新時，會傳輸來源上具有 SnapMirror 標籤的新快照 `weekly`。
 
 
 
@@ -66,7 +66,7 @@ all_source_snapshots
  a| 
 鏡射保存庫
  a| 
-在初始化和更新時，會傳輸來源上的新快照，並將 SnapMirror 標籤標示為「每月」。
+在初始化和更新時，會傳輸來源上具有 SnapMirror 標籤的新快照 `monthly`。
 
 
 
@@ -75,13 +75,13 @@ all_source_snapshots
  a| 
 同步、StrictSync
  a| 
-來源上的 SnapMirror 標籤為「 `app_sistic' 」的快照會同步複寫到目的地。從 ONTAP 9.7 開始支援。
+來源上有 SnapMirror 標籤的快照 `app_consistent`會同步複寫到目的地。從 ONTAP 9.7 開始支援。
 
 |===
 除了「as同步 鏡射」原則類型之外、您可以視需要為預設或自訂原則指定其他規則。例如：
 
-* 對於預設 `MirrorAndVault`原則，您可以建立名為「每月兩次」的規則，將來源上的快照與「每月兩次」 SnapMirror 標籤配對。
-* 對於「鏡射資料保險箱」原則類型的自訂原則，您可以建立名為「每週兩次」的規則，將來源上的快照與「每週兩次」的 SnapMirror 標籤配對。
+* 對於預設 `MirrorAndVault`原則，您可以建立一個規則，稱為 `bi-monthly`將來源上的快照與 SnapMirror 標籤配對 `bi-monthly`。
+* 對於原則類型的自訂原則 `mirror-vault`，您可以建立一個規則，稱為 `bi-weekly`將來源上的快照與 SnapMirror 標籤配對 `bi-weekly`。
 
 
 .步驟

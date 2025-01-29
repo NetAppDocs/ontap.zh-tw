@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: 'load balance, workload, latency, overload, reduce load, ceiling, limits, iops, "mb/s", qos, min, max, policy group, throughput, headroom, floor, adaptive qos' 
 summary: 當節點上的工作量超過可用資源時、工作負載的效能會開始受到延遲的影響。您可以增加可用資源（升級磁碟或CPU）、或減少負載（視需要將磁碟區或LUN移至不同節點）、來管理過載的節點。 
 ---
-= 負載平衡
+= ONTAP 中的負載平衡
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -68,8 +68,7 @@ _Adaptive QoS_會自動將原則群組值調整為工作負載大小、並隨著
 
 NOTE: 在ONTAP 更新版本的更新版本中、可在處理量層使用已用的空間。不支援ONTAP 使用於效能不符合更新版本的資料層。
 
-+
-從 ONTAP 9.13.1 開始、您可以使用調適性 QoS 來設定 SVM 層級的處理量樓層和天花板。
++ 從 ONTAP 9.13.1 開始，您可以使用調適性 QoS 來設定 SVM 層級的處理量樓層和天花板。
 
 * _allocated space_原則會根據儲存物件的名義大小、維持IOPS/TB|GB比率。如果比率為100 IOPS/GB、則150 GB的磁碟區只要磁碟區維持該大小、就會有15,000 IOPS的處理量上限。如果磁碟區大小調整為300 GB、調適性QoS會將處理量上限調整為30、000 IOPS。
 * _used space_原則（預設值）會根據儲存效率前的實際資料量、維持IOPS/TB|GB比率。如果比率為100 IOPS/GB、則儲存100 GB資料的150 GB磁碟區的處理量上限為10、000 IOPS。隨著使用空間量的變化、調適性QoS會根據比率調整處理量上限。

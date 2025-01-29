@@ -2,7 +2,7 @@
 permalink: snaplock/create-snaplock-volume-task.html 
 sidebar: sidebar 
 keywords: snaplock, volume, shanpshot, copy, create, complianceclock, file, worm, compliance, enterprise 
-summary: '您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用 `-snaplock-type` 選項、可將 Compliance 或 Enterprise 指定為 SnapLock 類型、以明確建立 SnapLock Volume 。根據預設、 SnapLock 類型設為 `non-snaplock`。' 
+summary: '您必須為要提交至 WORM 狀態的檔案或快照建立 SnapLock Volume 。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用此 `-snaplock-type`選項，將 Compliance 或 Enterprise 指定為 SnapLock 類型，以明確建立 SnapLock Volume 。默認情況下， SnapLock 類型設置爲 `non-snaplock`。' 
 ---
 = 在 ONTAP 中建立及掛載 SnapLock 磁碟區
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: '您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本�
 
 
 [role="lead"]
-您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本建立一個實體磁碟區。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用 `-snaplock-type` 選項、可將 Compliance 或 Enterprise 指定為 SnapLock 類型、以明確建立 SnapLock Volume 。根據預設、 SnapLock 類型設為 `non-snaplock`。
+您必須為要提交至 WORM 狀態的檔案或快照建立 SnapLock Volume 。從ONTAP 功能升級到功能升級到功能升級、您所建立的任何磁碟區、無論集合體類型為何、預設都會建立為非SnapLock Volume。您必須使用此 `-snaplock-type`選項，將 Compliance 或 Enterprise 指定為 SnapLock 類型，以明確建立 SnapLock Volume 。默認情況下， SnapLock 類型設置爲 `non-snaplock`。
 
 .開始之前
 * 此資訊必須在線上。SnapLock
@@ -26,7 +26,7 @@ summary: '您必須為SnapLock 要提交至WORM狀態的檔案或Snapshot複本�
 
 [NOTE]
 ====
-SnapLock 磁碟區不支援 LUN 。只有在非 SnapLock 磁碟區上建立的 Snapshot 複本會傳輸至 SnapLock 磁碟區、以作為 SnapLock 資料保險箱關係的一部分、才能在 SnapLock 磁碟區中支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過、 SnapMirror 來源磁碟區和包含 LUN 的目的地磁碟區都支援防竄改 Snapshot 複本。
+SnapLock 磁碟區不支援 LUN 。只有在將非 SnapLock 磁碟區上建立的快照傳輸至 SnapLock 磁碟區以作為 SnapLock 資料保險箱關係一部分的情況下， SnapLock 磁碟區才支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過，包含 LUN 的 SnapMirror 來源磁碟區和目的地磁碟區都支援防竄改快照。
 
 ====
 使用ONTAP 「系統管理程式」或ONTAP 「系統資訊管理系統」CLI執行此工作。

@@ -2,42 +2,42 @@
 permalink: data-protection/restore-contents-volume-snapshot-task.html 
 sidebar: sidebar 
 keywords: restore, contents, volume, snapshot copy, System Manager, cli 
-summary: 您可以使用Volume Snapshot還原命令、從Snapshot複本還原磁碟區的內容。 
+summary: 您可以使用 Volume Snapshot Restore 命令，從快照還原磁碟區的內容。 
 ---
-= 從Snapshot複本還原磁碟區內容
+= 從快照還原磁碟區的內容
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以從Snapshot複本還原磁碟區、將磁碟區還原至較早的時間點。您可以使用 System Manager 或 `volume snapshot restore`命令、從 Snapshot 複本還原磁碟區的內容。
+您可以從快照還原，將磁碟區恢復到較早的時間點。您可以使用 System Manager 或 `volume snapshot restore`命令，從快照還原磁碟區的內容。
 
 .關於這項工作
-如果磁碟區具有SnapMirror關係、請在從Snapshot複本還原之後、立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
+如果磁碟區具有 SnapMirror 關係，請在從快照還原後立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
 
 .步驟
-您可以使用系統管理員或 ONTAP CLI 、從較早的 Snapshot 複本還原。
+您可以使用系統管理員或 ONTAP CLI ，從較早的快照還原。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 . 按一下「*儲存設備*」、然後選取一個磁碟區。
-. 在 * Snapshot Copies * （快照複本 * ）下、按一下 image:icon_kabob.gif["功能表選項圖示"] 您要還原的 Snapshot 複本旁的、然後選取 * Restore * （還原 * ）。
+. 在 * Snapshot Copies * （快照複本 * ）下，按一下image:icon_kabob.gif["功能表選項圖示"]您要還原的快照旁的，然後選取 * Restore * （還原 * ）。
 
 
 --
 .CLI
 --
-. 列出Volume中的Snapshot複本：
+. 列出磁碟區中的快照：
 +
 [source, cli]
 ----
 volume snapshot show -vserver <SVM> -volume <volume>
 ----
 +
-下列範例顯示中的 Snapshot 複本 `vol1`：
+以下範例顯示中的快照 `vol1`：
 
 +
 [listing]
@@ -57,7 +57,7 @@ vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 7 entries were displayed.
 ----
-. 從Snapshot複本還原磁碟區內容：
+. 從快照還原磁碟區的內容：
 +
 [source, cli]
 ----

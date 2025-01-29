@@ -4,7 +4,7 @@ permalink: networking/configure_network_security_using_federal_information_proce
 keywords: fips 140-2, compliant, ssl, connections, tlsv1.2, tlsv1.1, tlsv1, enable fips, disable fips, compliance status, SSL 
 summary: 所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2 
 ---
-= 使用聯邦資訊處理標準（FIPS）設定網路安全性
+= 使用 ONTAP 中的聯邦資訊處理標準（ FIPS ）來設定網路安全性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -18,7 +18,7 @@ summary: 所有SSL連線均符合聯邦資訊處理標準（FIPS）140-2
 
 根據預設、ONTAP 將「SSL on支援」設為停用FIPS規範、並啟用SSL傳輸協定、提供下列功能：
 
-* TLSv1.3（從ONTAP 功能9.11.1開始）
+* TLSv1.3 （從 ONTAP 9.11.1 開始）
 * TLSv1.2
 * TLSv1.1
 * TLSv1.
@@ -85,7 +85,7 @@ NOTE: 啟用FIPS時、您無法安裝或建立RSA金鑰長度為4096的憑證。
 `security config modify -interface SSL -is-fips-enabled true`
 
 . 當系統提示您繼續時、請輸入 `y`
-. 如果您執行ONTAP 的是效能不正常的9.8或更早版本、請逐一手動重新開機叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
+. 如果您執行ONTAP 的是效能不正常的9.8或更早版本、請逐一手動重新開機叢集中的每個節點。從 ONTAP 9.9.1 開始，不需要重新開機。
 
 
 .範例
@@ -116,7 +116,7 @@ Do you want to continue? {y|n}: y
 `security config modify -interface SSL -is-fips-enabled false`
 
 . 當系統提示您繼續時、請輸入 `y`。
-. 如果您執行ONTAP 的是更新版本的版本、請手動重新啟動叢集中的每個節點。從功能支援的9.9.1開始ONTAP 、不需要重新開機。
+. 如果您執行ONTAP 的是更新版本的版本、請手動重新啟動叢集中的每個節點。從 ONTAP 9.9.1 開始，不需要重新開機。
 
 
 .範例

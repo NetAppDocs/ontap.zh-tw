@@ -28,8 +28,8 @@ CAUTION: 如果您的環境因空間不足而導致寫入作業失敗而受到�
 * 不使用ODX和FlexClone複本卸載
 * Volume 擔保設為 `volume`
 * 檔案或 LUN 空間保留為 `enabled`
-* Volume Snapshot 保留已設定為 `0`
-* Volume Snapshot 複本自動刪除是 `enabled` 承諾等級為 `destroy`、的銷毀清單 `lun_clone,vol_clone,cifs_share,file_clone,sfsr`以及的觸發程序 `volume`
+* Volume Snapshot 保留區設為 `0`
+* Volume Snapshot 自動刪除的 `enabled`承諾層級為 `destroy`，的銷毀清單， `lun_clone,vol_clone,cifs_share,file_clone,sfsr`以及觸發程序 `volume`
 +
 此設定也可確保在必要時刪除FlexClone檔案和FlexClone LUN。
 
@@ -37,12 +37,12 @@ CAUTION: 如果您的環境因空間不足而導致寫入作業失敗而受到�
 
 [NOTE]
 ====
-* 如果滿足上述所有要求、但變更率很高、在極少數情況下、 Snapshot 複本自動刪除可能會落後、導致磁碟區空間不足。
-* 如果滿足上述所有要求且未使用 Snapshot 複本、則磁碟區寫入保證不會用盡空間。
+* 如果滿足上述所有要求，但變更率很高，在極少數情況下，快照自動刪除可能會落後，導致磁碟區空間不足。
+* 如果滿足上述所有要求，且未使用快照，則磁碟區寫入保證不會用盡空間。
 
 
 ====
-此外、您也可以選擇使用Volume自動擴充功能來降低需要自動刪除Volume Snapshot複本的可能性。如果啟用自動擴充功能、則必須監控相關聯Aggregate中的可用空間。如果Aggregate已滿而無法擴充磁碟區、則隨著磁碟區中的可用空間耗盡、可能會刪除更多Snapshot複本。
+此外，您也可以選擇使用 Volume 自動擴充功能來降低自動刪除磁碟區快照的可能性。如果啟用自動擴充功能、則必須監控相關聯Aggregate中的可用空間。如果 Aggregate 已滿，而磁碟區無法成長，則可能會在磁碟區的可用空間耗盡時刪除更多快照。
 
 如果您無法滿足上述所有組態需求、而且需要確保磁碟區不會用盡空間、則必須將磁碟區的「部分保留」設定設為 `100`。這需要更多的可用空間、但保證資料修改作業即使在使用上述技術時仍能順利完成。
 

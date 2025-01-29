@@ -2,7 +2,7 @@
 permalink: data-protection/dpo-systems-feature-enhancements-reference.html 
 sidebar: sidebar 
 keywords: dpo, systems, feature, enhancements, snapmirror, dp optimized, optimised, backoff, back off, deduplication, deduplicate, snapshot blocks, donors, compact, flexvol, license 
-summary: 從ONTAP 使用支援的支援功能支援的不FlexVol 支援功能9.6開始、安裝DP_Optimized（DPO）授權後、支援的不支援功能數量將會增加。從 ONTAP 9.4 開始、具有 DPO 授權的系統支援 SnapMirror 備份、跨磁碟區背景重複資料刪除、使用 Snapshot 區塊做為捐助者、以及壓縮。 
+summary: 從ONTAP 使用支援的支援功能支援的不FlexVol 支援功能9.6開始、安裝DP_Optimized（DPO）授權後、支援的不支援功能數量將會增加。從 ONTAP 9.4 開始，具有 DPO 授權的系統支援 SnapMirror 備份，跨磁碟區背景重複資料刪除，使用快照區塊做為捐助者，以及壓縮。 
 ---
 = DPO系統具備增強功能
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 從ONTAP 使用支援的支援功能支援的不FlexVol 支援功能9.6
 
 
 [role="lead"]
-從ONTAP 使用支援的支援功能支援的不FlexVol 支援功能9.6開始、安裝DP_Optimized（DPO）授權後、支援的不支援功能數量將會增加。從 ONTAP 9.4 開始、具有 DPO 授權的系統支援 SnapMirror 備份、跨磁碟區背景重複資料刪除、使用 Snapshot 區塊做為捐助者、以及壓縮。
+從ONTAP 使用支援的支援功能支援的不FlexVol 支援功能9.6開始、安裝DP_Optimized（DPO）授權後、支援的不支援功能數量將會增加。從 ONTAP 9.4 開始，具有 DPO 授權的系統支援 SnapMirror 備份，跨磁碟區背景重複資料刪除，使用快照區塊做為捐助者，以及壓縮。
 
 從功能支援的支援範圍ONTAP 僅為2、FlexVol 500 FlexVol 個支援的二線或資料保護系統上的最大支援數量已增加、可讓您在容錯移轉模式下、將每個節點的支援數量擴充至2、500個、或最多5、000個。FlexVol 磁碟區的增加是透過啟用的 link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-licensing-concept.html#data-protection-optimized-license["DP_Optimized （ DPO ）授權"]。答 link:https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html#view-details-about-a-license["SnapMirror授權"] 在來源節點和目的地節點上仍然需要。
 
@@ -25,9 +25,9 @@ SnapMirror備份在DPO系統上預設為停用。
 +
 您可以執行 `storage aggregate efficiency cross-volume-dedupe start -aggregate _aggregate_name_ -scan-old-data true` 刪除現有資料的命令。最佳實務做法是在非尖峰時間執行命令、以降低對效能的影響。
 
-* 使用Snapshot區塊做為捐款者、可提高節約效益：無法在作用中檔案系統中使用、但仍被困在Snapshot複本中的資料區塊、將會作為磁碟區重複資料刪除的捐款者。
+* 使用快照區塊做為捐助者，可增加節省成本：使用中檔案系統無法使用但夾在快照中的資料區塊，會作為磁碟區重複資料刪除的捐助者。
 +
-新資料可與Snapshot複本中的資料進行重複資料刪除、有效共用Snapshot區塊。增加的捐贈空間可節省更多成本、尤其是當磁碟區有大量Snapshot複本時。
+新資料可以與快照中的資料進行重複資料刪除，也能有效共用快照區塊。增加的捐贈空間可節省更多成本，尤其是當磁碟區有大量快照時。
 
 * 壓縮：預設會在DPO磁碟區上啟用資料壓縮功能。
 

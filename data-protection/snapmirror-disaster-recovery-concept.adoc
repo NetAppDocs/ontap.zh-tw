@@ -40,7 +40,7 @@ image:snapmirror-for-dp-pg.gif["SnapMirror資料保護關係圖示"]
 +
 link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
-* 從 ONTAP 9 ． 13.1 開始，您可以使用 SnapMirror 異步來保護xref:../consistency-groups/index.html[一致性群組]。從 ONTAP 9 。 14.1 開始、您可以使用 SnapMirror 非同步功能、使用一致性群組關係、將 Volume 精細的快照複寫到目的地叢集。如需更多資訊、請參閱 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[設定 SnapMirror 非同步保護]。
+* 從 ONTAP 9 ． 13.1 開始，您可以使用 SnapMirror 異步來保護xref:../consistency-groups/index.html[一致性群組]。從 ONTAP 9.14.1 開始，您可以使用 SnapMirror 非同步功能，使用一致性群組關係，將 Volume 精細的快照複寫到目的地叢集。如需更多資訊、請參閱 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[設定 SnapMirror 非同步保護]。
 
 
 
@@ -51,21 +51,21 @@ link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
 預設 SnapMirror 原則下的基礎傳輸 `MirrorAllSnapshots` 涉及下列步驟：
 
-* 製作來源Volume的Snapshot複本。
-* 將Snapshot複本及其參照的所有資料區塊傳輸到目的地Volume。
-* 將來源磁碟區上其餘較不新的Snapshot複本傳輸到目的地磁碟區、以便在「'active'」鏡像毀損時使用。
+* 製作來源 Volume 的快照。
+* 將快照及其參照的所有資料區塊傳輸至目的地 Volume 。
+* 將來源磁碟區上的剩餘快照傳輸到目的地磁碟區，以便在「 'active' 」鏡像毀損時使用。
 
 
 
 
 == SnapMirror資料保護關係如何更新
 
-更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的Snapshot原則。
+更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的快照原則。
 
-在的每個更新中 `MirrorAllSnapshots` 原則： SnapMirror 會建立來源 Volume 的 Snapshot 複本、並傳輸該 Snapshot 複本和自上次更新後所建立的任何 Snapshot 複本。在的下列輸出中 `snapmirror policy show` 的命令 `MirrorAllSnapshots` 原則請注意下列事項：
+在原則下的每個更新中， SnapMirror 都 `MirrorAllSnapshots`會建立來源磁碟區的快照，並傳輸自上次更新後所建立的快照和任何快照。在原則命令的 `MirrorAllSnapshots`下列輸出中， `snapmirror policy show`請注意下列事項：
 
-* `Create Snapshot` 為「 'true' 」、表示這一點 `MirrorAllSnapshots` 當 SnapMirror 更新關係時建立 Snapshot 複本。
-* `MirrorAllSnapshots` 具有規則 "`shm_Created （已建立） " 和 "`all_source_snapshots" （所有源快照），表示 SnapMirror 建立的 Snapshot 複本和自上次更新後建立的任何 Snapshot 複本都會在 SnapMirror 更新關係時傳輸。
+* `Create Snapshot`為「 'true' 」，表示 `MirrorAllSnapshots`在 SnapMirror 更新關係時建立快照。
+* `MirrorAllSnapshots`具有規則「 `shm_Created 」和「 `all_source_snapshots 」，表示 SnapMirror 更新關係時，會同時傳輸 SnapMirror 建立的快照和自上次更新後建立的任何快照。
 
 
 [listing]
@@ -95,7 +95,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
 
 == MirrorLatest原則
 
-預先設定的 `MirrorLatest` 原則的運作方式與完全相同 `MirrorAllSnapshots`，但在初始化和更新時僅傳輸 SnapMirror 所建立的 Snapshot 複本。
+預先設定的 `MirrorLatest`原則運作方式與完全相同 `MirrorAllSnapshots`，只有在初始化和更新時才會傳輸由 SnapMirror 建立的快照。
 
 [listing]
 ----

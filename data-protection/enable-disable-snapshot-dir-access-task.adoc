@@ -2,32 +2,32 @@
 permalink: data-protection/enable-disable-snapshot-dir-access-task.html 
 sidebar: sidebar 
 keywords: enable, disable, access, snapshot copy 
-summary: 您可以啟用和停用 Snapshot 複本目錄的存取、讓用戶端系統可以看到該目錄、並讓他們存取磁碟區上的 Snapshot 複本目錄。 
+summary: 您可以啟用和停用快照目錄的存取，讓用戶端系統可以看到快照目錄，並讓他們存取磁碟區上的快照目錄。 
 ---
-= 啟用及停用NFS和SMB用戶端對Snapshot複本目錄的存取
+= 啟用和停用 NFS 和 SMB 用戶端存取快照目錄
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用命令的 ONTAP CLI 選項來啟用和停用 Snapshot 複製目錄的存取 `-snapdir-access` `volume modify` 、並從 ONTAP 9.10.1 開始、使用 System Manager 來啟用或停用用戶端系統、以存取磁碟區上的 Snapshot 複製目錄。啟用存取可讓用戶端看到 Snapshot 複製目錄、並允許 Windows 用戶端將磁碟機對應至 Snapshot 複製目錄、以檢視及存取其內容。然後 NFS 和 SMB 用戶端可以從快照還原檔案或 LUN 。
+您可以使用命令的 ONTAP CLI 選項來 `volume modify`啟用和停用快照目錄的存取 `-snapdir-access`，從 ONTAP 9.10.1 開始，您可以使用系統管理員來啟用或停用用戶端系統來存取磁碟區上的快照目錄。啟用存取可讓用戶端看到快照目錄，並允許 Windows 用戶端將磁碟機對應至快照目錄，以檢視及存取其內容。然後 NFS 和 SMB 用戶端可以從快照還原檔案或 LUN 。
 
-您可以編輯Volume設定或編輯Volume的共用設定、來啟用或停用對Volume Snapshot複本目錄的存取。
+您可以編輯磁碟區設定或編輯磁碟區的共用設定，來啟用或停用對磁碟區快照目錄的存取。
 
 
 
-== 透過編輯磁碟區、啟用或停用用戶端對Snapshot複本目錄的存取
+== 透過編輯磁碟區來啟用或停用用戶端對快照目錄的存取
 
 .步驟
-您可以使用 ONTAP 系統管理員或 ONTAP CLI 來啟用和停用用戶端 Snapshot 複本目錄存取。根據預設、用戶端可存取磁碟區上的Snapshot複本目錄。
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 來啟用和停用用戶端快照目錄存取。根據預設，用戶端可存取磁碟區上的 Snapshot 目錄。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 . 按一下「*儲存設備>磁碟區*」。
-. 選取包含您要顯示或隱藏之Snapshot複本目錄的磁碟區。
+. 選取包含您要顯示或隱藏之快照目錄的磁碟區。
 . 按一下 image:icon_kabob.gif["功能表選項圖示"] 並選取 * 編輯 * 。
 . 在* Snapshot Copies（local）Settings*（*快照複本（本機）設定*）區段中、選取或取消選取* Show the Snapshot copies directoryto clients*（將Snapshot複本目錄顯示給
 . 按一下「 * 儲存 * 」。
@@ -36,7 +36,7 @@ summary: 您可以啟用和停用 Snapshot 複本目錄的存取、讓用戶端�
 --
 .CLI
 --
-. 檢查Snapshot目錄存取狀態：
+. 檢查快照目錄存取狀態：
 +
 [source, cli]
 ----
@@ -54,14 +54,14 @@ vserver volume snapdir-access
 ------- ------ --------------
 vs0     vol1   false
 ----
-. 啟用或停用Snapshot複本目錄存取：
+. 啟用或停用快照目錄存取：
 +
 [source, cli]
 ----
 volume modify -vserver <SVM_name> -volume <vol_name> -snapdir-access <true|false>
 ----
 +
-下列範例可在vol1上啟用Snapshot複本目錄存取：
+以下範例可在 vol1 上啟用快照目錄存取：
 
 +
 [listing]
@@ -76,14 +76,14 @@ Volume modify successful on volume vol1 of Vserver vs0.
 ====
 
 
-== 透過編輯共用區來啟用或停用用戶端對Snapshot複本目錄的存取
+== 透過編輯共用來啟用或停用用戶端對快照目錄的存取
 
-根據預設、用戶端可存取磁碟區上的Snapshot複本目錄。
+根據預設，用戶端可存取磁碟區上的 Snapshot 目錄。
 
 .步驟
 . 按一下「*儲存設備>共享區*」。
-. 選取包含您要顯示或隱藏之Snapshot複本目錄的磁碟區。
+. 選取包含您要顯示或隱藏之快照目錄的磁碟區。
 . 按一下 image:icon_kabob.gif["功能表選項圖示"] 並選取 * 編輯 * 。
-. 在「*共用內容*」區段中、選取或取消選取*允許用戶端存取Snapshot複本目錄*。
+. 在 * 共用內容 * 區段中，選取或取消選取 * 允許用戶端存取快照目錄 * 。
 . 按一下「 * 儲存 * 」。
 

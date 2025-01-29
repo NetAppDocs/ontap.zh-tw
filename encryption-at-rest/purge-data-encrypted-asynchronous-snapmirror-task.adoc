@@ -42,32 +42,30 @@ NOTE: 若要在SAN主機上執行安全清除、您必須刪除包含您要清�
 +
 在 SnapMirror 非同步關係中的每個磁碟區上重複此步驟。
 
-. 如果您要安全清除的檔案位於Snapshot複本中、請刪除Snapshot複本：
+. 如果您要安全清除的檔案位於快照中、請刪除快照：
 +
 `snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot`
 
-. 如果您要安全清除的檔案位於基礎Snapshot複本中、請執行下列步驟：
+. 如果您要安全清除的檔案位於基礎快照中，請執行下列步驟：
 +
-.. 在 SnapMirror 非同步關係中的目的地磁碟區上建立 Snapshot 複本：
+.. 在 SnapMirror 非同步關係中的目的地磁碟區上建立快照：
 +
 `volume snapshot create -snapshot snapshot_name -vserver _SVM_name_ -volume _volume_name_`
 
-.. 更新SnapMirror以將基礎Snapshot複本移至下一頁：
+.. 更新 SnapMirror 以向前移動基礎快照：
 +
 `snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
 
 +
 對 SnapMirror 非同步關係中的每個 Volume 重複此步驟。
 
-.. 重複步驟（a）和（b）、等於基礎Snapshot複本數加上1。
+.. 重複步驟（ a ）和（ b ），等於基礎快照的數量加上 1 。
 +
-例如、如果您有兩個基礎Snapshot複本、則應重複步驟（a）和（b）三次。
+例如，如果您有兩個基礎快照，則應重複步驟（ a ）和（ b ）三次。
 
-.. 驗證基礎 Snapshot 複本是否存在：
- +
+.. 確認基礎快照存在： +
 `snapshot show -vserver _SVM_name_ -volume _volume_name_`
-.. 刪除基礎 Snapshot 複本：
- +
+.. 刪除基礎快照： +
 `snapshot delete -vserver _svm_name_ -volume _volume_name_ -snapshot snapshot`
 
 

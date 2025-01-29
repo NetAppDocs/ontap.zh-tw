@@ -2,7 +2,7 @@
 permalink: data-protection/create-custom-replication-policy-concept.html 
 sidebar: sidebar 
 keywords: create, custom, replication, policy 
-summary: 如果關聯的預設原則不適用、您可以建立自訂複寫原則。例如、您可能想要壓縮網路傳輸中的資料、或是修改SnapMirror傳輸Snapshot複本的嘗試次數。 
+summary: 如果關聯的預設原則不適用、您可以建立自訂複寫原則。例如，您可能想要壓縮網路傳輸中的資料，或是修改 SnapMirror 嘗試傳輸快照的次數。 
 ---
 = 使用 ONTAP 建立自訂複寫原則
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 如果關聯的預設原則不適用、您可以建立自訂複寫原�
 
 
 [role="lead"]
-如果關聯的預設原則不適用、您可以建立自訂複寫原則。例如、您可能想要壓縮網路傳輸中的資料、或是修改SnapMirror傳輸Snapshot複本的嘗試次數。
+如果關聯的預設原則不適用、您可以建立自訂複寫原則。例如，您可能想要壓縮網路傳輸中的資料，或是修改 SnapMirror 嘗試傳輸快照的次數。
 
-您可以在建立複寫關聯時使用預設或自訂原則。對於自訂歸檔（前身為 SnapVault ）或統一化複寫原則、您必須定義一或多個 _rules 、以決定初始化和更新期間要傳輸哪些 Snapshot 複本。您可能也想要定義在目的地上建立本機 Snapshot 複本的排程。
+您可以在建立複寫關聯時使用預設或自訂原則。對於自訂歸檔（前身為 SnapVault ）或統一化複寫原則，您必須定義一或多個 _rules ，以決定在初始化和更新期間傳輸哪些快照。您可能也想要定義在目的地上建立本機快照的排程。
 
 複寫原則的_policy類型_決定其支援的關係類型。下表顯示可用的原則類型。
 
@@ -95,7 +95,7 @@ snapmirror policy create -vserver <SVM> -policy _policy_ -type <async-mirror|vau
 如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
 
 +
-從 ONTAP 9 開始、您可以使用 `-common-snapshot-schedule`參數來指定建立 SnapMirror 同步關係通用 Snapshot 複本排程的排程。根據預設、 SnapMirror 同步關係的一般 Snapshot 複本排程為一小時。您可以為 SnapMirror 同步關係的 Snapshot 複本排程指定 30 分鐘到兩小時的值。
+從 ONTAP 9.5 開始，您可以使用參數來指定建立 SnapMirror 同步關係通用快照排程的排程 `-common-snapshot-schedule`。根據預設， SnapMirror 同步關係的一般快照排程為一小時。您可以為 SnapMirror 同步關係的快照排程指定 30 分鐘到 2 小時的值。
 
 +
 以下範例為SnapMirror DR建立自訂複寫原則、以啟用資料傳輸的網路壓縮：
@@ -132,7 +132,7 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -typ
 
 
 .完成後
-對於「'Vault'」和「mirirmirror-Vault'」原則類型、您必須定義規則、以決定在初始化和更新期間傳輸哪些Snapshot複本。
+對於「資料保險箱」和「鏡射資料保險箱」原則類型，您必須定義規則，以決定在初始化和更新期間傳輸哪些快照。
 
 使用 `snapmirror policy show`命令驗證是否已建立 SnapMirror 原則。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy show`資訊，請參閱。
 

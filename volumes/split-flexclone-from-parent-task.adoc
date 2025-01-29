@@ -16,7 +16,7 @@ summary: 您可以從父磁碟區分割 FlexClone Volume 、使複製成為正�
 複製分割作業會在背景執行。分割期間、可在複本和父實體上存取資料。從 ONTAP 9.4 開始、空間效率就會保留下來。分割程序只會更新中繼資料、而且需要最少的 IO 。不會複製任何資料區塊。
 
 .關於這項工作
-* 在分割作業期間、無法建立 FlexClone Volume 的新 Snapshot 複本。
+* 分割作業期間無法建立 FlexClone Volume 的新快照。
 * 如果 FlexClone Volume 屬於資料保護關係、或是負載共用鏡像的一部分、則無法從父 Volume 分割該 Volume 。
 * 如果您在分割進行中使 FlexClone Volume 離線、分割作業會暫停；當您將 FlexClone Volume 恢復上線時、分割作業會恢復。
 * 分割後、父 FlexVol Volume 和複本都需要由其磁碟區保證所決定的完整空間分配。
@@ -24,7 +24,7 @@ summary: 您可以從父磁碟區分割 FlexClone Volume 、使複製成為正�
 * 從ONTAP 功能不保證的9.4開始AFF 、對於不保證在功能不保證的作業系統、FlexClone Volume的分割作業會共用實體區塊、而不會複製資料。因此、在 AFF 系統上分割 FlexClone 磁碟區的速度比 ONTAP 9.4 及更新版本中其他 FAS 系統的 FlexClone 分割作業更快。改良後AFF 的FlexClone分割作業在整個過程中有下列優點：
 +
 ** 將實體複本從父實體複本分割後、儲存效率仍會維持不變。
-** 不會刪除現有的Snapshot複本。
+** 不會刪除現有的快照。
 ** 作業速度更快。
 ** FlexClone磁碟區可從複製階層中的任何點分割。
 

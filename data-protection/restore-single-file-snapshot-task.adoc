@@ -2,24 +2,24 @@
 permalink: data-protection/restore-single-file-snapshot-task.html 
 sidebar: sidebar 
 keywords: restore, single file, snapshot copy 
-summary: 您可以使用Volume Snapshot還原檔案命令、從Snapshot複本還原單一檔案或LUN。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。 
+summary: 您可以使用 Volume Snapshot restore 檔案命令，從快照還原單一檔案或 LUN 。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。 
 ---
-= 使用 ONTAP 從 Snapshot 複本還原單一檔案
+= 使用 ONTAP 從快照還原單一檔案
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `volume snapshot restore-file` 從 Snapshot 複本還原單一檔案或 LUN 的命令。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。
+您可以使用 `volume snapshot restore-file`命令從快照還原單一檔案或 LUN 。如果您不想取代現有檔案、可以將檔案還原至父讀寫磁碟區中的其他位置。
 
 .關於這項工作
-如果要還原現有LUN、則會以Snapshot複本的形式建立及備份LUN複本。在還原作業期間、您可以從 LUN 讀取及寫入 LUN 。
+如果您要還原現有 LUN ，則會以快照形式建立並備份 LUN 複本。在還原作業期間、您可以從 LUN 讀取及寫入 LUN 。
 
 預設會還原具有串流的檔案。
 
 .步驟
-. 列出Volume中的Snapshot複本：
+. 列出磁碟區中的快照：
 +
 `volume snapshot show -vserver _SVM_ -volume _volume_`
 
@@ -27,7 +27,7 @@ summary: 您可以使用Volume Snapshot還原檔案命令、從Snapshot複本還
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-show.html["指令參考資料ONTAP"^]需詳細 `volume snapshot show`資訊，請參閱。
 
 +
-下列範例顯示中的 Snapshot 複本 `vol1`：
+以下範例顯示中的快照 `vol1`：
 
 +
 [listing]
@@ -47,7 +47,7 @@ vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 7 entries were displayed.
 ----
-. 從Snapshot複本還原檔案：
+. 從快照還原檔案：
 +
 `volume snapshot restore-file -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -path _file_path_ -restore-path _destination_path_`
 

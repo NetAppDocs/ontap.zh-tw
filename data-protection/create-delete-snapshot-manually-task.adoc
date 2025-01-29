@@ -2,25 +2,25 @@
 permalink: data-protection/create-delete-snapshot-manually-task.html 
 sidebar: sidebar 
 keywords: on-demand snapshot, system manager, ontap cli, snapshot, create, delete 
-summary: 當您等不及要建立排程的 Snapshot 複本時、請手動建立 Snapshot 複本、或在不再需要 Snapshot 複本時刪除該複本 
+summary: 當您等不及要建立排程快照，或是在不再需要快照時，手動建立快照 
 ---
-= 手動建立及刪除 Snapshot 複本
+= 手動建立和刪除快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以在等不及要建立排程 Snapshot 複本時手動建立 Snapshot 複本、也可以在不再需要 Snapshot 複本時刪除它們。
+您可以在無法等待排程快照建立時手動建立快照，也可以在不再需要快照時刪除快照。
 
 .關於這項工作
 此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K 、 ASA A70 或 ASA A90 ）、請依照下列步驟link:https://docs.netapp.com/us-en/asa-r2/data-protection/create-snapshots.html#step-2-create-a-snapshot["這些步驟"^]建立隨選快照。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
 
 
 
-== 手動建立 Snapshot 複本
+== 手動建立快照
 
-您可以使用系統管理員或 ONTAP CLI 手動建立 Snapshot 複本。
+您可以使用系統管理員或 ONTAP CLI 手動建立快照。
 
 [role="tabbed-block"]
 ====
@@ -29,7 +29,7 @@ summary: 當您等不及要建立排程的 Snapshot 複本時、請手動建立 
 .步驟
 . 瀏覽至 * 儲存 > Volumes （磁碟區） * 、然後選取 * Snapshot Copies （快照複本） * 標籤。
 . 按一下 image:icon_add.gif["新增圖示"]。
-. 在 * 新增 Snapshot 複本 * 視窗中、接受預設的 Snapshot 複本名稱、或視需要加以編輯。
+. 在 *Add a snapshot * （添加快照 * ）窗口中，接受默認的快照名稱或根據需要進行編輯。
 . * 選用 * ：新增 SnapMirror 標籤。
 . 按一下「 * 新增 * 」。
 
@@ -37,7 +37,7 @@ summary: 當您等不及要建立排程的 Snapshot 複本時、請手動建立 
 --
 .CLI
 --
-. 建立Snapshot複本：
+. 建立快照：
 +
 [source, cli]
 ----
@@ -49,9 +49,9 @@ volume snapshot create -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
 ====
 
 
-== 手動刪除 Snapshot 複本
+== 手動刪除快照
 
-您可以使用系統管理員或 ONTAP CLI 手動刪除 Snapshot 複本。
+您可以使用系統管理員或 ONTAP CLI 手動刪除快照。
 
 [role="tabbed-block"]
 ====
@@ -59,15 +59,15 @@ volume snapshot create -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
 --
 .步驟
 . 瀏覽至 * 儲存 > Volumes （磁碟區） * 、然後選取 * Snapshot Copies （快照複本） * 標籤。
-. 找到要刪除的 Snapshot 副本，單擊， image:icon_kabob.gif["功能表選項圖示"]然後選擇 *Delete* 。
-. 在 * 刪除 Snapshot Copy* 視窗中、選取 * 刪除 Snapshot Copy* 。
+. 找到要刪除的快照，單擊image:icon_kabob.gif["功能表選項圖示"]，然後選擇 * 刪除 * 。
+. 在 * 刪除 snapshot * 視窗中，選取 * 刪除 snapshot * 。
 . 按一下*刪除*。
 
 
 --
 .CLI
 --
-. 刪除 Snapshot 複本：
+. 刪除快照：
 +
 [source, cli]
 ----

@@ -2,7 +2,7 @@
 permalink: san-admin/backup-lun-host-backup-system-task.html 
 sidebar: sidebar 
 keywords: back up, lun, through, host, backup, system 
-summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的來源資料。 
+summary: 您可以使用快照中的複製 LUN 做為主機備份系統的來源資料。 
 ---
 = 透過主機備份系統備份LUN
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的
 
 
 [role="lead"]
-您可以使用Snapshot複本中的複製LUN做為主機備份系統的來源資料。
+您可以使用快照中的複製 LUN 做為主機備份系統的來源資料。
 
 .您需要的產品
 正式作業LUN必須存在、並對應至內含應用程式伺服器WWPN或啟動器節點名稱的igroup。LUN也必須格式化、且可供主機存取
@@ -21,7 +21,7 @@ summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的
 +
 您可以使用主機作業系統提供的命令、也可以使用SnapDrive 適用於Windows的支援功能或SnapDrive 適用於UNIX的支援功能。您也可以選擇將此步驟納入SAN備份預先處理指令碼。
 
-. 使用 `volume snapshot create` 建立正式作業 LUN Snapshot 複本的命令。
+. 使用 `volume snapshot create`命令建立正式作業 LUN 的快照。
 +
 `volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment "Single snapshot" -foreground false`
 
@@ -53,7 +53,7 @@ summary: 您可以使用Snapshot複本中的複製LUN做為主機備份系統的
 +
 `lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
 
-. 使用 `volume snapshot delete` 刪除 Snapshot 複本的命令。
+. 使用 `volume snapshot delete`命令移除快照。
 +
 `volume snapshot delete -vserver vs3 -volume vol3 -snapshot vol3_snapshot`
 

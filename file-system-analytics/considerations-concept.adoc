@@ -4,7 +4,7 @@ permalink: file-system-analytics/considerations-concept.html
 keywords: file system analytics, performance, SVM 
 summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區可見度。其使用受到限制和限制。 
 ---
-= 檔案系統分析考量
+= ONTAP 中的檔案系統分析考量
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -31,7 +31,7 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 
 == 掃描考量
 
-當您啟用容量分析時、 ONTAP 會執行容量分析的初始化掃描。掃描會存取已啟用容量分析之 Volume 中所有檔案的中繼資料。掃描期間不會讀取檔案資料。從 ONTAP 9.14.1 開始、您可以使用 REST API 、系統管理員的 ** 檔案總管 ** 索引標籤、或使用來追蹤掃描進度 `volume analytics show` CLI命令。如果發生節流事件、 ONTAP 會提供通知。
+當您啟用容量分析時、 ONTAP 會執行容量分析的初始化掃描。掃描會存取已啟用容量分析之 Volume 中所有檔案的中繼資料。掃描期間不會讀取檔案資料。從 ONTAP 9.14.1 開始，您可以使用 REST API ，系統管理員的 ** 檔案總管 ** 索引標籤或 CLI 命令來追蹤掃描進度 `volume analytics show`。如果發生節流事件、 ONTAP 會提供通知。
 
 在磁碟區上啟用檔案系統分析時、請確保至少有 5% 至 8% 的磁碟區可用空間可用。如果磁碟區已啟用自動調整大小、請根據最大自動增加大小來計算可用大小。從 ONTAP 9.15.1 開始、如果您在磁碟區上啟用檔案系統分析時沒有足夠的可用空間、 ONTAP 會顯示錯誤訊息。
 
@@ -53,7 +53,7 @@ summary: 檔案系統分析的設計旨在提供使用中NAS資料的磁碟區�
 
 如果用戶端流量增加、就會消耗系統資源、導致掃描所需時間較長。
 
-從 ONTAP 9.12.1 開始、您可以在系統管理員和 ONTAP CLI 中暫停資料收集。
+從 ONTAP 9.12.1 開始，您可以在系統管理員和 ONTAP CLI 中暫停資料收集。
 
 * 如果您使用的是 ONTAP CLI ：
 +

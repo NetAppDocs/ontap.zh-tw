@@ -2,32 +2,32 @@
 permalink: smb-admin/create-snapshot-config-previous-versions-access-task.html 
 sidebar: sidebar 
 keywords: previous, version, functionality, available, client, access, snapshot, copies, copy, enable, snapshot, exist, configuration, requirement, create a snapshot configuration to enable previous versions access 
-summary: 只要已啟用用戶端對Snapshot複本的存取權、且Snapshot複本存在、則舊版功能一律可用。如果Snapshot複本組態不符合這些需求、您可以建立Snapshot複本組態。 
+summary: 只要啟用用戶端對快照的存取權，且快照存在，舊版功能就永遠可用。如果您的快照組態不符合這些需求，您可以建立一個快照組態， 
 ---
-= 建立 Snapshot 組態，以便在 ONTAP 中啟用舊版存取
+= 建立快照組態，以便在 ONTAP 中啟用舊版存取
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-只要已啟用用戶端對Snapshot複本的存取權、且Snapshot複本存在、則舊版功能一律可用。如果Snapshot複本組態不符合這些需求、您可以建立Snapshot複本組態。
+只要啟用用戶端對快照的存取權，且快照存在，舊版功能就永遠可用。如果您的快照組態不符合這些需求，您可以建立一個快照組態，
 
 .步驟
-. 如果包含您要允許舊版存取之共用區的磁碟區沒有關聯的 Snapshot 原則、請將 Snapshot 原則與該磁碟區建立關聯、然後使用加以啟用 `volume modify` 命令。
+. 如果包含您要允許舊版存取之共用區的磁碟區沒有相關聯的快照原則，請將快照原則與磁碟區建立關聯，然後使用命令加以啟用 `volume modify`。
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["指令參考資料ONTAP"^]需詳細 `volume modify`資訊，請參閱。
 
-. 使用存取 Snapshot 複本 `volume modify` 設定的命令 `-snap-dir` 選項 `true`。
+. 使用命令將選項設定為 `true`，以 `-snap-dir`啟用快照的存取 `volume modify`。
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["指令參考資料ONTAP"^]需詳細 `volume modify`資訊，請參閱。
 
-. 使用確認已啟用 Snapshot 原則、且已啟用 Snapshot 目錄的存取 `volume show` 和 `volume snapshot policy show` 命令。
+. 使用和 `volume snapshot policy show`命令確認已啟用快照原則，且已啟用快照目錄的存取 `volume show`。
 +
 深入瞭解 `volume show`及 `volume snapshot policy show` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+show["指令參考資料ONTAP"^]。
 
 +
-如需設定及管理Snapshot原則與Snapshot排程的詳細資訊、請參閱 link:../data-protection/index.html["資料保護"]。
+如需設定及管理快照原則和快照排程的詳細資訊，請參閱link:../data-protection/index.html["資料保護"]。
 
 
 

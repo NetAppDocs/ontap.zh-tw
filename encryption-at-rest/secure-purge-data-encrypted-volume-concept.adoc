@@ -40,7 +40,7 @@ summary: '從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 ** 您可以使用變更這些預設值 `secure purge re-encryption-method [volume-move|in-place-rekey]` 命令。
 
 
-* 根據預設、FlexVol 在安全清除作業期間、會自動刪除所有位於Shapes Volume中的Snapshot複本。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用變更這些預設值 `secure purge delete-all-snapshots [true|false]` 命令。
+* 根據預設， FlexVol 磁碟區中的所有快照都會在安全清除作業期間自動刪除。根據預設、FlexGroup 在安全清除作業期間、不會自動刪除使用SnapMirror資料保護的所有SnapMirror Volume和Snapshot快照。您可以使用命令變更這些預設值 `secure purge delete-all-snapshots [true|false]`。
 
 
 --
@@ -55,7 +55,7 @@ summary: '從支援NVE的磁碟區開始、您可以使用安全清除功能、�
 
 * 如果要清除的磁碟區是SnapMirror關係的來源、您必須先中斷SnapMirror關係、才能清除該磁碟區。
 +
-如果磁碟區中有使用中的Snapshot複本、您必須先釋出Snapshot複本、才能清除該磁碟區。例如、您可能需要從其父磁碟區分割FlexClone磁碟區。
+如果磁碟區中有忙碌的快照，您必須先釋放快照，才能清除磁碟區。例如、您可能需要從其父磁碟區分割FlexClone磁碟區。
 
 * 成功叫用安全清除功能會觸發磁碟區移動、以新金鑰重新加密其餘未清除的資料。
 +

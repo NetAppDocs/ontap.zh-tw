@@ -2,27 +2,27 @@
 permalink: flexgroup/protect-snapshot-copies-task.html 
 sidebar: sidebar 
 keywords: protect, flexgroup, volume, snapshot, copy, flex group, snap shot, manually, manual, automatically, automatic, policy 
-summary: 您可以建立Snapshot原則來自動管理Snapshot複本的建立、或是手動建立FlexGroup 適用於整個實體的Snapshot複本。只有在使用完功能後、才能為每個組成的整個功能區成功建立Snapshot複本、才能為FlexGroup 該功能區建立有效的Snapshot複本ONTAP 。FlexGroup 
+summary: 您可以建立自動管理快照建立的快照原則，也可以手動建立 FlexGroup 磁碟區的快照。只有在 ONTAP 能夠為 FlexGroup Volume 的每個組成部份成功建立快照之後，才會為 FlexGroup Volume 建立有效的快照。 
 ---
-= 使用Snapshot複本保護FlexGroup 功能區
+= 使用快照保護 FlexGroup 磁碟區
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以建立Snapshot原則來自動管理Snapshot複本的建立、或是手動建立FlexGroup 適用於整個實體的Snapshot複本。只有在使用完功能後、才能為每個組成的整個功能區成功建立Snapshot複本、才能為FlexGroup 該功能區建立有效的Snapshot複本ONTAP 。FlexGroup
+您可以建立自動管理快照建立的快照原則，也可以手動建立 FlexGroup 磁碟區的快照。只有在 ONTAP 能夠為 FlexGroup Volume 的每個組成部份成功建立快照之後，才會為 FlexGroup Volume 建立有效的快照。
 
 .關於這項工作
-* 如果您有多FlexGroup 個與Snapshot原則相關聯的現象、您應該確保FlexGroup 不重疊顯示出這些問題。
-* 從ONTAP 功能不完整的9.8開始、FlexGroup 支援在一個Shapshot上的Snapshot複本數量上限為1023份。
+* 如果您有多個 FlexGroup 磁碟區與快照原則相關聯，則應確保 FlexGroup 磁碟區排程不會重疊。
+* 從 ONTAP 9.8 開始， FlexGroup 磁碟區支援的最大快照數為 1023 。
 
 
 
-NOTE: 從 ONTAP 9.8 開始 `volume snapshot show` FlexGroup Volume 命令會使用邏輯區塊來報告 Snapshot 複本大小、而非計算最年輕的擁有區塊。這種新的尺寸計算方法可能會使Snapshot複本尺寸大於ONTAP 舊版的更新計算。
+NOTE: 從 ONTAP 9.8 開始， `volume snapshot show` FlexGroup Volume 命令會使用邏輯區塊來報告快照大小，而非計算最年輕的擁有區塊。這種新的大小計算方法可能會使快照大小看起來大於舊版 ONTAP 的計算。
 
 .步驟
-. 建立Snapshot原則或手動建立Snapshot複本：
+. 建立快照原則或手動建立快照：
 +
 |===
 
@@ -36,26 +36,26 @@ Snapshot原則
 `volume snapshot policy create`
 
 
-NOTE: 與某個Shapes Snapshot原則相關的排程FlexGroup 時間必須超過30分鐘。
+NOTE: 與 FlexGroup 磁碟區快照原則相關的排程，間隔必須大於 30 分鐘。
 
-當您建立 FlexGroup Volume 時 `default` Snapshot 原則會套用至 FlexGroup Volume 。
+建立 FlexGroup Volume 時， `default`快照原則會套用至 FlexGroup Volume 。
 
 
 
  a| 
-手動複製Snapshot複本
+手動快照
  a| 
 `volume snapshot create`
 
 
-NOTE: 為FlexGroup 某個Shapes Volume建立Snapshot複本之後、就無法修改Snapshot複本的屬性。如果您想要修改屬性、則必須刪除並重新建立Snapshot複本。
+NOTE: 為 FlexGroup Volume 建立快照之後，您就無法修改快照的屬性。如果您想要修改屬性，您必須刪除快照，然後重新建立快照。
 
 |===
 
 
-建立Snapshot複本時、用戶端對FlexGroup 此功能的存取會短暫停止。
+建立快照時，用戶端對 FlexGroup Volume 的存取會短暫停頓。
 
-. 確認已為 FlexGroup Volume 建立有效的 Snapshot 複本： `volume snapshot show -volume volume_name -fields state`
+. 確認已為 FlexGroup Volume 建立有效的快照： `volume snapshot show -volume volume_name -fields state`
 +
 [listing]
 ----
@@ -64,7 +64,7 @@ vserver volume snapshot               state
 ------- ------ ---------------------- -----
 fg_vs   fg     hourly.2016-08-23_0505 valid
 ----
-. 檢視 FlexGroup Volume 組成要素的 Snapshot 複本： `volume snapshot show -is-constituent true`
+. 檢視 FlexGroup Volume 組成要素的快照： `volume snapshot show -is-constituent true`
 +
 [listing]
 ----

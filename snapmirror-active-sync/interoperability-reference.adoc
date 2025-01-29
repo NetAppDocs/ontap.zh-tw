@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/interoperability-reference.html
 keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
 summary: SnapMirror 主動同步可與 ONTAP 中的多種作業系統和其他功能相容。 
 ---
-= SnapMirror 主動同步互通性
+= ONTAP 中的 SnapMirror 主動式同步互通性
 :allow-uri-read: 
 :icons: font
 :linkattrs: 
@@ -50,7 +50,7 @@ SnapMirror 主動式同步可提供零 RPO 資料保護、但 AIX 的容錯移�
 
 === HP-UX
 
-從 ONTAP 9.10.1 開始、支援適用於 HP-UX 的 SnapMirror 主動式同步。
+從 ONTAP 9.10.1 開始，支援適用於 HP-UX 的 SnapMirror Active Sync 。
 
 .使用 HP-UX 自動進行非計畫性容錯移轉
 當主要叢集與次要叢集之間的連線中斷、且主要叢集與中介器之間的連線中斷時、隔離主叢集上的自動非計畫性容錯移轉（ AUFO ）事件可能是由雙事件故障所造成。這是罕見的事件、與其他AUFO事件不同。
@@ -87,7 +87,7 @@ SnapMirror 主動式同步支援 FabricPool 上的來源和目的地磁碟區、
 
 image:fanout-diagram.png["扇出組態的圖表"]
 
-SnapMirror 主動同步支援 xref:../data-protection/supported-deployment-config-concept.html[連出組態] 使用 `MirrorAllSnapshots` 原則、從 ONTAP 9.11.1 開始 `MirrorAndVault` 原則。SnapMirror 主動式同步不支援扇出組態 `XDPDefault` 原則。
+SnapMirror 主動式同步可支援 `MirrorAllSnapshots`原則，並從 ONTAP 9.11.1 開始 `MirrorAndVault`支援xref:../data-protection/supported-deployment-config-concept.html[連出組態]原則。SnapMirror 作用中同步處理原則不支援開機組態 `XDPDefault`。
 
 從 ONTAP 9.15.1 開始、 SnapMirror 主動式同步可在容錯移轉事件之後、自動在扇出式階段重新設定。如果從主要站台到次要站台的容錯移轉成功、則會自動重新設定第三站台、將次要站台視為來源站台。重新設定是由計畫性或非計畫性的容錯移轉所觸發。在容錯回復至主要站台時、也會進行重新設定。
 
@@ -97,13 +97,13 @@ SnapMirror 主動同步支援 xref:../data-protection/supported-deployment-confi
 
 === NDMP 還原
 
-從 ONTAP 9.13.1 開始、您可以使用 xref:../tape-backup/transfer-data-ndmpcopy-task.html[NDMP 來複製及還原資料] 使用 SnapMirror 主動式同步。使用 NDMP 可讓您將資料移至 SnapMirror 主動式同步來源、以完成還原而不需暫停保護。這在扇出組態中特別有用。
+從 ONTAP 9.13.1 開始，您可以使用 xref:../tape-backup/transfer-data-ndmpcopy-task.html[NDMP 來複製及還原資料]SnapMirror 主動式同步。使用 NDMP 可讓您將資料移至 SnapMirror 主動式同步來源、以完成還原而不需暫停保護。這在扇出組態中特別有用。
 
 
 
 === SnapCenter
 
-SnapCenter 支援 SnapMirror 主動式同步、從開始 link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]。SnapCenter 可建立可用於保護及恢復應用程式與虛擬機器的即時資料、以提供應用程式層級精細度的隨時可用儲存解決方案。
+SnapCenter 支援 SnapMirror 主動式同步link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]，從開始。SnapCenter 可建立快照，用於保護及恢復應用程式和虛擬機器，以應用程式層級的精細度提供永遠可用的儲存解決方案。
 
 
 
@@ -112,10 +112,10 @@ SnapCenter 支援 SnapMirror 主動式同步、從開始 link:https://docs.netap
 SnapMirror 主動式同步支援部分和單一檔案 SnapRestore 。
 
 .單一檔案 SnapRestore
-從ONTAP 功能性的9.11.1開始、 xref:../data-protection/restore-single-file-snapshot-task.html[單一檔案SnapRestore 的功能] 支援 SnapMirror 主動式同步磁碟區。您可以將單一檔案從從 SnapMirror 作用中同步來源複寫到目的地的 Snapshot 複本還原。由於磁碟區可以包含一或多個 LUN 、因此此功能可協助您實作不中斷營運的還原作業、以精細的方式還原單一 LUN 、而不會中斷其他 LUN 。單一檔案 SnapRestore 有兩個選項：就地和異地。
+從 ONTAP 9.11.1 開始， xref:../data-protection/restore-single-file-snapshot-task.html[單一檔案SnapRestore 的功能]SnapMirror 作用中同步磁碟區支援。您可以從從 SnapMirror 作用中同步來源複寫到目的地的快照，還原單一檔案。由於磁碟區可以包含一或多個 LUN 、因此此功能可協助您實作不中斷營運的還原作業、以精細的方式還原單一 LUN 、而不會中斷其他 LUN 。單一檔案 SnapRestore 有兩個選項：就地和異地。
 
 .部分檔案 SnapRestore
-從 ONTAP 9.12.1 開始、 link:../data-protection/restore-part-file-snapshot-task.html["部分 LUN 還原"] 支援 SnapMirror 主動式同步磁碟區。您可以從應用程式建立的 Snapshot 複本還原資料、這些複本已在 SnapMirror 主動式同步來源（ Volume ）和目的地（ Snapshot 複本）磁碟區之間複寫。如果您需要還原在同一個 LUN 上儲存多個資料庫的主機上的資料庫、則可能需要部分 LUN 或檔案還原。使用此功能時、您必須知道資料和位元組數的起始位元組偏移。
+從 ONTAP 9.12.1 開始， link:../data-protection/restore-part-file-snapshot-task.html["部分 LUN 還原"]SnapMirror 作用中同步磁碟區支援。您可以從應用程式建立的快照還原資料，這些快照已在 SnapMirror 作用中同步來源（ Volume ）和目的地（ Snapshot ）磁碟區之間複寫。如果您需要還原在同一個 LUN 上儲存多個資料庫的主機上的資料庫、則可能需要部分 LUN 或檔案還原。使用此功能時、您必須知道資料和位元組數的起始位元組偏移。
 
 
 

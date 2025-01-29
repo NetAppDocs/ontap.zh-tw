@@ -41,7 +41,7 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 
 
 | xref:../consistency-groups/index.html[增強一致性群組的支援]  a| 
-* 您可以從一致性群組新增和移除磁碟區、複製一致性群組（包括從 Snapshot 複本）。
+* 您可以從一致性群組新增和移除磁碟區，複製一致性群組（包括從快照中）。
 * 一致性群組支援應用程式標記、可簡化資料保護與管理程序。
 * ONTAP REST API 支援使用 NFS/SMB 磁碟區或 NVMe 命名空間來設定一致性群組。
 
@@ -54,7 +54,7 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | xref:../mediator/index.html[ONTAP Mediator 1.5 支援 SnapMirror 業務持續運作] | ONTAP Mediator 1.5 可用於監控 SnapMirror 主動同步關係。 
 
 
-| xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步持續性增強功能] | SnapMirror 主動式同步支援從 Snapshot 進行部分 LUN 還原。此外、 SnapMirror 主動式同步可將 QoS 延伸至非 SnapMirror 關係中的磁碟區。 
+| xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步持續性增強功能] | SnapMirror 主動式同步支援從快照進行部分 LUN 還原。此外、 SnapMirror 主動式同步可將 QoS 延伸至非 SnapMirror 關係中的磁碟區。 
 
 
 | xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror 非同步的資料倉儲重建指標] | SnapMirror 非同步提供指標、顯示資料倉儲在災難恢復排練後所需的重建時間、並顯示完成百分比。 
@@ -63,7 +63,7 @@ SnapMirror 同步組態支援的 FlexVol 磁碟區大小上限、已從 100 TB �
 | SnapLock 選項可設定「未指定」絕對保留時間的最短保留時間 | SnapLock 包含一個選項、可在絕對保留時間設定為「未指定」時、設定最短保留時間。 
 
 
-| xref:../snaplock/snapshot-lock-concept.html[可防竄改的Snapshot複本] | 您可以在非 SnapLock 磁碟區上鎖定 Snapshot 複本、以提供保護、防範勒索軟體攻擊。鎖定 Snapshot 複本有助於確保不會意外或惡意刪除它們。 
+| xref:../snaplock/snapshot-lock-concept.html[防竄改快照] | 您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照有助於確保不會意外或惡意刪除快照。 
 |===
 
 
@@ -275,10 +275,10 @@ NOTE: 建議您不要在 FlexVol 轉 FlexGroup 之後使用自動 FlexGroup 重�
 | xref:../task_admin_search_filter_sort.html[改善搜尋功能] | System Manager 具備改良的搜尋功能、可讓使用者透過系統管理員介面、直接從 NetApp 支援網站 搜尋及存取相關且內容相關的支援資訊和系統管理員產品文件。這可讓使用者取得所需的資訊、無需在支援網站的不同位置進行搜尋、即可採取適當的行動。 
 
 
-| xref:../task_admin_add_a_volume.html[Volume 資源配置的改善] | 儲存管理員可以在使用 System Manager 建立磁碟區時選擇 Snapshot 複本原則、而非使用預設原則。 
+| xref:../task_admin_add_a_volume.html[Volume 資源配置的改善] | 儲存管理員可以在使用 System Manager 建立磁碟區時選擇快照原則，而非使用預設原則。 
 
 
-| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加磁碟區的大小] | 儲存管理員可以在使用 System Manager 調整磁碟區大小時、檢視對資料空間和 Snapshot 複本保留的影響。 
+| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加磁碟區的大小] | 儲存管理員可以在使用 System Manager 調整磁碟區大小時，檢視對資料空間和快照保留的影響。 
 
 
 | xref:../disks-aggregates/create-ssd-storage-pool-task.html[儲存資源池] 和 xref:../disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html?[Flash Pool] 管理 | 儲存管理員可以使用 System Manager 將 SSD 新增至 SSD 儲存池、使用 SSD 儲存池分配單元建立 Flash Pool 本機層（ Aggregate ）、以及使用實體 SSD 建立 Flash Pool 本機層。 

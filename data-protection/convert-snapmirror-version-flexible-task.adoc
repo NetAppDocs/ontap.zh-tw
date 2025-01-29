@@ -62,7 +62,7 @@ Healthy: true
 您可能會發現保留命令輸出複本有助於 `snapmirror show`追蹤現有的關聯性設定。如link:https://docs.netapp.com/us-en/ontap-cli//snapmirror-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror show`資訊，請參閱。
 
 ====
-. 從來源和目的地磁碟區、確保兩個磁碟區都有一個通用的Snapshot複本：
+. 從來源和目的地磁碟區，確保兩個磁碟區都有通用的快照：
 +
 [source, cli]
 ----
@@ -157,14 +157,14 @@ snapmirror break -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror break -destination-path svm_backup:volA_dst
 ----
-. 如果在目的地磁碟區上啟用了自動刪除Snapshot複本、請停用它：
+. 如果在目的地磁碟區上啟用自動刪除快照功能，請停用它：
 +
 [source, cli]
 ----
 volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled false
 ----
 +
-以下範例停用目的地磁碟區上的 Snapshot 複本自動刪除 `volA_dst`：
+以下範例停用目的地磁碟區上的快照自動刪除 `volA_dst`：
 
 +
 [listing]
@@ -255,7 +255,7 @@ snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
-. 如果停用自動刪除Snapshot複本、請重新啟用：
+. 如果您停用自動刪除快照功能，請重新啟用：
 +
 [source, cli]
 ----
@@ -265,5 +265,5 @@ volume snapshot autodelete modify -vserver <SVM> -volume <volume> -enabled true
 
 .完成後
 . 使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。
-. SnapMirror XDP 目的地 Volume 開始更新 SnapMirror 原則定義的 Snapshot 複本後、請使用的輸出 `snapmirror list-destinations` 來源叢集的命令、以顯示新的 SnapMirror XDP 關係。
+. 一旦 SnapMirror XDP 目的地磁碟區開始依照 SnapMirror 原則定義更新快照，請使用來源叢集的命令輸出 `snapmirror list-destinations`來顯示新的 SnapMirror XDP 關係。
 

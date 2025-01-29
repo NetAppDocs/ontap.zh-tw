@@ -2,21 +2,21 @@
 permalink: data-protection/create-snapshot-policy-task.html 
 sidebar: sidebar 
 keywords: create, snapshot, policy 
-summary: Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能每天在上午12：10建立一個Snapshot複本、保留兩個最近的複本、並將其命名為「每日時間戳記」。 Snapshot原則最多可包含五個工作排程。 
+summary: Snapshot 原則會指定何時建立快照，要保留多少份複本，以及如何命名這些快照。例如，系統可能每天在上午 12 ： 10 建立一個快照，保留兩個最新的複本，並將其命名為「 Daily 。 timestamp 」。快照原則最多可包含五個工作排程。 
 ---
-= 建立Snapshot原則
+= 建立快照原則
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-Snapshot原則會指定何時建立Snapshot複本、保留多少複本、以及如何命名這些複本。例如、系統可能會在每天上午 12 ： 10 建立一個 Snapshot 複本、保留兩個最新的複本、並將其命名為「 daily 」.`_timestamp_`.`" Snapshot 原則最多可包含五個工作排程。
+Snapshot 原則會指定何時建立快照，要保留多少份複本，以及如何命名這些快照。例如，系統可能每天在上午 12 ： 10 建立一個快照，保留兩個最新的複本，並將其命名為「 daily.`_timestamp_` 」。快照原則最多可包含五個工作排程。
 
 .關於這項工作
 此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K 、 ASA A70 或 ASA A90 ）、請遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/policies-schedules.html#create-a-snapshot-policy["這些步驟"^]建立快照原則。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
 
-根據預設ONTAP 、將時間戳記附加至工作排程名稱、即可形成Snapshot複本的名稱：
+根據預設， ONTAP 會在工作排程名稱中附加時間戳記，以形成快照名稱：
 
 [listing]
 ----
@@ -29,7 +29,7 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 。 `snapmirror-label` 選項適用於 SnapMirror 複寫。如需詳細資訊、請參閱 link:define-rule-policy-task.html["定義原則規則"]。
 
 .步驟
-您可以使用系統管理員或 ONTAP CLI 建立 Snapshot 複本原則。此程序僅在本機叢集上建立 Snapshot 複本原則。
+您可以使用系統管理員或 ONTAP CLI 建立快照原則。此程序僅會在本機叢集上建立快照原則。
 
 [role="tabbed-block"]
 ====
@@ -38,24 +38,24 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 . 瀏覽至 * 保護 > 概述 * 並展開 * 本機原則設定 * 。
 . 在 * Snapshot Policis* 窗格中，單擊image:icon_arrow.gif["箭頭圖示"]。
 . 在 *Snapshot Policis* 選項卡中，單擊image:icon_add.gif["新增圖示"]。
-. 在 * 新增 Snapshot 原則 * 視窗中、輸入原則名稱、然後選擇範圍。
+. 在 * 新增快照原則 * 視窗中，輸入原則名稱，然後選擇範圍。
 . 按一下 image:icon_add.gif["新增圖示"]。
 . 若要選取排程、請按一下目前顯示的排程名稱、按一下image:icon_dropdown_arrow.gif["下拉式圖"]、然後選擇不同的排程。
-. 輸入要保留的最大 Snapshot 複本、並視需要輸入 SnapMirror 標籤和 SnapLock 保留期間。
+. 輸入要保留的最大快照數，並視需要輸入 SnapMirror 標籤和 SnapLock 保留期間。
 . 按一下「 * 儲存 * 」。
 
 
 --
 .CLI
 --
-. 建立Snapshot原則：
+. 建立快照原則：
 +
 [source, cli]
 ----
 volume snapshot policy create -vserver <SVM> -policy <policy_name> -enabled true|false -schedule1 <schedule1_name> -count1 <copies_to_retain> -prefix1 <snapshot_prefix> -snapmirror-label1 <snapshot_label> ... -schedule5 <schedule5_name> -count5 <copies_to_retain> -prefix5 <snapshot_prefix> -snapmirror-label5 <snapshot_label>
 ----
 +
-以下範例建立名為的 Snapshot 原則 `snap_policy_daily` 在上執行 `daily` 排程。原則最多有五個 Snapshot 複本、每個副本都有名稱 `daily`.`_timestamp_` 和 SnapMirror 標籤 `daily`：
+以下範例建立一個快照原則，其名稱 `snap_policy_daily`是根據排程執行 `daily`。策略最多有五個快照，每個快照都帶有名稱 `daily`.`_timestamp_`和 SnapMirror 標籤 `daily`：
 
 +
 [listing]

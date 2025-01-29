@@ -15,14 +15,13 @@ summary: 您可以使用NetApp SnapLock 的支援技術、以未經修改的形�
 
 SnapLock 有助於防止資料遭到刪除、變更或重新命名、以符合 SEC 17a-4(f) 、 HIPAA 、 FINRA 、 CFTC 和 GDPR 等法規。利用此功能、您可以建立特殊用途的磁碟區、以便在指定保留期間或無限期儲存檔案、並將檔案提交至不可刪除、不可寫入的狀態SnapLock 。支援使用CIFS和NFS等標準開放式檔案傳輸協定、在檔案層級執行此保留作業SnapLock 。支援的開放式SnapLock 檔案傳輸協定為NFS（版本2、3和4）和CIFS（SMB 1.0、2.0和3.0）。
 
-使用支援功能、您可以將檔案和Snapshot複本提交至WORM儲存設備、並設定WORM保護資料的保留期間SnapLock 。WORM儲存設備使用NetApp Snapshot技術、並可運用SnapMirror複寫及還原備份技術作為基礎技術、為資料提供備份恢復保護SnapVault SnapLock 。
-深入瞭解WORM儲存設備： link:https://www.netapp.com/pdf.html?item=/media/6158-tr4526pdf.pdf["符合WORM儲存設備、使用NetApp SnapLock 技術- TR-4526"^]。
+使用 SnapLock ，您可以將檔案和快照提交至 WORM 儲存設備，並設定受 WORM 保護資料的保留期間。SnapLock WORM 儲存設備使用 NetApp 快照技術，並可運用 SnapMirror 複寫和 SnapVault 備份作為基礎技術，為資料提供備份還原保護。深入瞭解 WORM 儲存設備link:https://www.netapp.com/pdf.html?item=/media/6158-tr4526pdf.pdf["符合WORM儲存設備、使用NetApp SnapLock 技術- TR-4526"^]：。
 
 您可以使用應用程式、透過NFS或CIFS將檔案提交至WORM、或使用SnapLock 「更新」功能、自動將檔案提交至WORM。您可以使用_WORM可應用檔案_來保留遞增寫入的資料、例如記錄資訊。如需詳細資訊、請參閱 link:commit-files-worm-state-manual-task.html#create-a-worm-appendable-file["使用Volume附加模式建立WORM可應用檔案"]。
 
 支援資料保護方法、可滿足大部分的法規遵循需求：SnapLock
 
-* 您可以在SnapLock 二線儲存設備上使用「以WORM SnapVault 保護Snapshot複本」功能。請參閱 link:commit-snapshot-copies-worm-concept.html["將Snapshot複本提交至WORM"]。
+* 您可以在次要儲存設備上使用 SnapLock for SnapVault 來保護 WORM 快照。請參閱。 link:commit-snapshot-copies-worm-concept.html["將快照提交至 WORM"]
 * 您可以使用SnapMirror將WORM檔案複寫到另一個地理位置、以便進行災難恢復。請參閱 link:mirror-worm-files-task.html["鏡射WORM檔案"]。
 
 
@@ -37,14 +36,14 @@ SnapLock 有助於防止資料遭到刪除、變更或重新命名、以符合 S
 設定SnapLock 完整套功能後、您可以完成下列工作：
 
 * link:commit-files-worm-state-manual-task.html["將檔案提交至WORM"]
-* link:commit-snapshot-copies-worm-concept.html["將Snapshot複本提交至WORM以供二線儲存設備使用"]
+* link:commit-snapshot-copies-worm-concept.html["將快照提交至 WORM 以進行次儲存"]
 * link:mirror-worm-files-task.html["鏡射WORM檔案以進行災難恢復"]
 * link:hold-tamper-proof-files-indefinite-period-task.html["在訴訟期間使用「合法持有」來保留WORM檔案"]
 * link:delete-worm-files-concept.html["使用權限刪除功能刪除WORM檔案"]
 * link:set-retention-period-task.html["設定檔案保留期間"]
 * link:move-snaplock-volume-concept.html["移動SnapLock 一個流通量的資料"]
-* link:snapshot-lock-concept.html["鎖定Snapshot複本以防止勒索軟體攻擊"]
-* link:create-audit-log-task.html["檢閱SnapLock 稽核記錄的使用情況"]
+* link:snapshot-lock-concept.html["鎖定快照以防止勒索軟體攻擊"]
+* link:create-audit-log-task.html["檢閱 SnapLock 搭配稽核記錄的使用情形"]
 * link:snaplock-apis-reference.html["使用SnapLock 功能完善的API"]
 
 
@@ -338,7 +337,7 @@ FabricPools支援SnapLock 以ONTAP 概念9.8開頭的支援於支援的功能不
 
 == LUN 支援
 
-只有在非 SnapLock 磁碟區上建立的 Snapshot 複本會傳輸至 SnapLock 磁碟區、以作為 SnapLock 資料保險箱關係的一部分、才能在 SnapLock 磁碟區中支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過、 SnapMirror 來源磁碟區和包含 LUN 的目的地磁碟區都支援防竄改 Snapshot 複本。
+只有在將非 SnapLock 磁碟區上建立的快照傳輸至 SnapLock 磁碟區以作為 SnapLock 資料保險箱關係一部分的情況下， SnapLock 磁碟區才支援 LUN 。讀取 / 寫入 SnapLock 磁碟區不支援 LUN 。不過，包含 LUN 的 SnapMirror 來源磁碟區和目的地磁碟區都支援防竄改快照。
 
 
 

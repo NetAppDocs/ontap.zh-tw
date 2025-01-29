@@ -2,31 +2,31 @@
 permalink: smb-admin/determine-snapshot-copies-available-task.html 
 sidebar: sidebar 
 keywords: view, snapshot, copies, copy, previous, version, enable, policy, applied, apply, contain, share, previous, version, access, determine whether snapshot copies are available for previous versions use 
-summary: 只有在已啟用的Snapshot原則套用至包含該共用區的磁碟區、且磁碟區組態允許存取Snapshot複本時、才能從「舊版」索引標籤檢視Snapshot複本。判斷Snapshot複本可用度有助於協助使用者存取舊版。 
+summary: 只有在已啟用的快照原則套用至包含共用的磁碟區，且磁碟區組態允許存取快照時，才能從「舊版」索引標籤檢視快照。判斷快照可用度有助於協助使用者存取舊版。 
 ---
-= 判斷Snapshot複本是否可供舊版使用
+= 判斷快照是否可供舊版使用
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-只有在已啟用的Snapshot原則套用至包含該共用區的磁碟區、且磁碟區組態允許存取Snapshot複本時、才能從「舊版」索引標籤檢視Snapshot複本。判斷Snapshot複本可用度有助於協助使用者存取舊版。
+只有在已啟用的快照原則套用至包含共用的磁碟區，且磁碟區組態允許存取快照時，才能從「舊版」索引標籤檢視快照。判斷快照可用度有助於協助使用者存取舊版。
 
 .步驟
-. 判斷共用資料所在的磁碟區是否已啟用自動 Snapshot 複本、以及用戶端是否可存取 Snapshot 目錄： `volume show -vserver vserver-name -volume volume-name -fields vserver,volume,snapdir-access,snapshot-policy,snapshot-count`
+. 判斷共用資料所在的磁碟區是否已啟用自動快照，以及用戶端是否可存取快照目錄： `volume show -vserver vserver-name -volume volume-name -fields vserver,volume,snapdir-access,snapshot-policy,snapshot-count`
 +
-輸出會顯示與磁碟區相關聯的Snapshot原則、是否啟用用戶端Snapshot目錄存取、以及可用的Snapshot複本數量。
+輸出會顯示與磁碟區相關的快照原則，是否啟用用戶端快照目錄存取，以及可用快照的數量。
 
-. 判斷是否已啟用相關的 Snapshot 原則： `volume snapshot policy show -policy policy-name`
-. 列出可用的 Snapshot 複本： `volume snapshot show -volume volume_name`
+. 判斷是否已啟用相關的快照原則： `volume snapshot policy show -policy policy-name`
+. 列出可用的快照： `volume snapshot show -volume volume_name`
 +
-如需設定及管理Snapshot原則與Snapshot排程的詳細資訊、請參閱 link:../data-protection/index.html["資料保護"]。
+如需設定及管理快照原則和快照排程的詳細資訊，請參閱link:../data-protection/index.html["資料保護"]。
 
 
 
 .範例
-以下範例顯示與「data1」磁碟區相關聯的Snapshot原則資訊、該磁碟區包含「data1」上的共享資料和可用Snapshot複本。
+以下範例顯示與名為「 data1 」的磁碟區相關的快照原則資訊，該磁碟區包含「 data1 」上的共用資料和可用快照。
 
 [listing]
 ----
@@ -64,6 +64,6 @@ vs1      data1
                  hourly.2012-12-23_1905    valid       184KB     0%    0%
 ----
 .相關資訊
-xref:create-snapshot-config-previous-versions-access-task.adoc[建立Snapshot組態以啟用舊版存取]
+xref:create-snapshot-config-previous-versions-access-task.adoc[建立快照組態以啟用舊版存取]
 
 link:../data-protection/index.html["資料保護"]

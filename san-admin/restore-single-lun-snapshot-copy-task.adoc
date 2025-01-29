@@ -2,16 +2,16 @@
 permalink: san-admin/restore-single-lun-snapshot-copy-task.html 
 sidebar: sidebar 
 keywords: restore, single lun, snapshot copy 
-summary: 您可以從Snapshot複本還原單一LUN、而不需還原包含單一LUN的整個Volume。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。 
+summary: 您可以從快照還原單一 LUN ，而無需還原包含單一 LUN 的整個磁碟區。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。 
 ---
-= 從Snapshot複本還原單一LUN
+= 從快照還原單一 LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以從Snapshot複本還原單一LUN、而不需還原包含單一LUN的整個Volume。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。
+您可以從快照還原單一 LUN ，而無需還原包含單一 LUN 的整個磁碟區。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。
 
 .您需要的產品
 * 您的磁碟區必須有足夠的空間才能完成還原作業：
@@ -21,13 +21,13 @@ summary: 您可以從Snapshot複本還原單一LUN、而不需還原包含單一
 ** 如果您要還原非空間保留LUN、則只需要用於還原LUN的實際空間。
 
 
-* 必須已建立目的地LUN的Snapshot複本。
+* 必須已建立目的地 LUN 的快照。
 +
-如果還原作業失敗、則目的地LUN可能會被刪減。在這種情況下、您可以使用Snapshot複本來防止資料遺失。
+如果還原作業失敗、則目的地LUN可能會被刪減。在這種情況下，您可以使用快照來防止資料遺失。
 
-* 必須已建立來源LUN的Snapshot複本。
+* 必須已建立來源 LUN 的快照。
 +
-在極少數情況下、LUN還原可能會失敗、使來源LUN無法使用。如果發生這種情況、您可以使用Snapshot複本、將LUN恢復到還原嘗試前的狀態。
+在極少數情況下、LUN還原可能會失敗、使來源LUN無法使用。如果發生這種情況，您可以使用快照將 LUN 恢復到還原嘗試之前的狀態。
 
 * 目的地LUN和來源LUN必須具有相同的作業系統類型。
 +
@@ -42,11 +42,11 @@ summary: 您可以從Snapshot複本還原單一LUN、而不需還原包含單一
 +
 `lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
-. 確定要將LUN還原至的Snapshot複本：
+. 決定您要將 LUN 還原至的快照：
 +
 `volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
 
-. 在還原LUN之前、先建立LUN的Snapshot複本：
+. 在還原 LUN 之前建立 LUN 的快照：
 +
 `volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
 

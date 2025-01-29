@@ -2,7 +2,7 @@
 permalink: concepts/snapvault-archiving-concept.html 
 sidebar: sidebar 
 keywords: snapvault archive 
-summary: SnapMirror授權可用於支援SnapVault 以還原為備份的功能、以及用於災難恢復的SnapMirror關係。從 ONTAP 9.3 開始、 SnapVault 授權已過時、 SnapMirror 授權可用於設定資料保險箱、鏡射和鏡射與資料保險箱的關係。SnapMirror複寫可用於ONTAP到ONTAP的Snapshot複本複寫、同時支援備份和災難恢復使用案例。 
+summary: SnapMirror授權可用於支援SnapVault 以還原為備份的功能、以及用於災難恢復的SnapMirror關係。從 ONTAP 9.3 開始、 SnapVault 授權已過時、 SnapMirror 授權可用於設定資料保險箱、鏡射和鏡射與資料保險箱的關係。SnapMirror 複寫可用於快照的 ONTAP 對 ONTAP 複寫，同時支援備份和災難恢復使用案例。 
 ---
 = 歸檔SnapVault
 :allow-uri-read: 
@@ -11,17 +11,17 @@ summary: SnapMirror授權可用於支援SnapVault 以還原為備份的功能、
 
 
 [role="lead"]
-SnapMirror授權可用於支援SnapVault 以還原為備份的功能、以及用於災難恢復的SnapMirror關係。從 ONTAP 9.3 開始、 SnapVault 授權已過時、 SnapMirror 授權可用於設定資料保險箱、鏡射和鏡射與資料保險箱的關係。SnapMirror複寫可用於ONTAP到ONTAP的Snapshot複本複寫、同時支援備份和災難恢復使用案例。
+SnapMirror授權可用於支援SnapVault 以還原為備份的功能、以及用於災難恢復的SnapMirror關係。從 ONTAP 9.3 開始、 SnapVault 授權已過時、 SnapMirror 授權可用於設定資料保險箱、鏡射和鏡射與資料保險箱的關係。SnapMirror 複寫可用於快照的 ONTAP 對 ONTAP 複寫，同時支援備份和災難恢復使用案例。
 
-_SUR__ SnapVault 是一項歸檔技術、專為磁碟對磁碟Snapshot複本複寫而設計、以符合標準及其他與治理相關的用途。相較於SnapMirror關係、目的地通常只包含目前位於來源Volume中的Snapshot複本、SnapVault 所以這個目的地通常會保留在更長時間內建立的時間點Snapshot複本。
+SnapVault 是一項歸檔技術，專為磁碟對磁碟快照複寫所設計，以符合標準及其他治理相關用途。與 SnapMirror 關係不同的是，目的地通常只包含目前位於來源 Volume 中的快照， SnapVault 目的地通常會保留在較長時間內建立的時間點快照。
 
-例如、您可能想要在20年內保留資料的每月Snapshot複本、以符合貴企業的政府會計法規。由於不需要從保存庫儲存設備提供資料、因此您可以在目的地系統上使用速度較慢、成本較低的磁碟。
+例如，您可能想要在 20 年內保留每月資料快照，以符合貴企業的政府會計法規。由於不需要從保存庫儲存設備提供資料、因此您可以在目的地系統上使用速度較慢、成本較低的磁碟。
 
-與SnapMirror一樣、SnapVault 當您第一次叫用時、會執行基礎傳輸。它會製作來源磁碟區的Snapshot複本、然後將複本及其參照的資料區塊傳輸到目的地磁碟區。與SnapMirror不同、SnapVault 不像SnapMirror、在基礎資料中不包含舊的Snapshot複本。
+與SnapMirror一樣、SnapVault 當您第一次叫用時、會執行基礎傳輸。它會建立來源磁碟區的快照，然後將複本及其參照的資料區塊傳輸至目的地磁碟區。與 SnapMirror 不同的是， SnapVault 在基準線中不包含較舊的快照。
 
-更新是非同步的、會依照您設定的排程進行。您在關聯原則中定義的規則會識別要納入更新的新Snapshot複本、以及要保留的複本數量。原則中定義的標籤（例如「每月」）必須符合來源上Snapshot原則中定義的一或多個標籤。否則、複寫會失敗。
+更新是非同步的、會依照您設定的排程進行。您在關係原則中定義的規則，可識別哪些新快照要包含在更新中，以及保留多少份複本。原則中定義的標籤（例如「每月」）必須符合來源上快照原則中定義的一或多個標籤。否則、複寫會失敗。
 
 
 NOTE: SnapMirror和SnapVault SnapMirror共用相同的命令基礎架構。您可以指定建立原則時要使用的方法。這兩種方法都需要經過處理的叢集和經過處理的SVM。
 
-image:snapvault-concepts.gif["SnapVault Snapshot 複本通常會在目的地上保留一段比來源時間更長的時間。"]
+image:snapvault-concepts.gif["SnapVault 快照通常會在目的地上保留一段比來源快照更長的時間。"]

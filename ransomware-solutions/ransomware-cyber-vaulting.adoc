@@ -4,7 +4,7 @@ permalink: ransomware-solutions/ransomware-cyber-vaulting.html
 keywords: tr-4572, technical report, ransomware, protect, protection, netapp ransomware protection, netapp tr, ontap tr 
 summary: NetApp 的勒索軟體保護功能包括利用空中綁定式 WORM 保護來隔離關鍵資料備份的網路拖運。 
 ---
-= 利用網路拖運技術提供空中綁帶式 WORM 保護
+= 在 ONTAP 中使用網路資料傳輸技術，提供空中綁帶式 WORM 保護
 :allow-uri-read: 
 
 
@@ -17,11 +17,11 @@ NetApp 的網路資料保險箱方法是專為邏輯上無線網路資料保險�
 
 攻擊者越來越傾向於破壞備份複本、在某些情況下甚至加密這些複本。因此網路安全產業中有許多人建議將氣隙備份作為整體網路恢復策略的一部分。
 
-問題在於傳統的空缺（磁帶和離線媒體）可能會大幅增加還原時間、進而增加停機時間和整體相關成本。即使採用更現代化的方法來解決空缺問題、也可能是問題所在。例如、如果備份資料保險箱暫時開啟以接收新的備份複本、然後中斷與主要資料的網路連線、再次「無線搭接」、攻擊者就可以利用暫時的開啟。在連線上線期間、攻擊者可能會攻擊以破壞或破壞資料。這類組態通常也會增加不必要的複雜度。邏輯氣隙是傳統或現代氣隙的絕佳替代品、因為它有相同的安全保護原則、同時保持備份在線上。有了 NetApp 、您就能解決磁帶或磁碟氣在邏輯氣帶上的複雜性、這可以透過不可變的快照複本和 NetApp SnapLock Compliance 來達成。
+問題在於傳統的空缺（磁帶和離線媒體）可能會大幅增加還原時間、進而增加停機時間和整體相關成本。即使採用更現代化的方法來解決空缺問題、也可能是問題所在。例如、如果備份資料保險箱暫時開啟以接收新的備份複本、然後中斷與主要資料的網路連線、再次「無線搭接」、攻擊者就可以利用暫時的開啟。在連線上線期間、攻擊者可能會攻擊以破壞或破壞資料。這類組態通常也會增加不必要的複雜度。邏輯氣隙是傳統或現代氣隙的絕佳替代品、因為它有相同的安全保護原則、同時保持備份在線上。有了 NetApp ，您就能解決磁帶或磁碟氣在邏輯氣帶上的複雜性，這可以透過不可變的快照和 NetApp SnapLock Compliance 來達成。
 
 image:ransomware-solution-workload-characteristics2.png["與 NetApp 網路資料保險箱的邏輯空空缺"]
 
-NetApp 在 10 多年前推出 SnapLock 功能、以因應資料法規遵循的要求、例如健康保險可攜性與責任法案（ HIPAA ）、沙賓法案（ arbanes-Oxlei ）及其他法規資料規則。您也可以將主要快照複本儲存至 SnapLock 磁碟區、以便將複本提交至 WORM 、避免刪除。有兩個 SnapLock 授權版本： SnapLock Compliance 和 SnapLock Enterprise 。為了保護勒索軟體、 NetApp 建議您使用 SnapLock Compliance 、因為您可以設定特定的保留期間、在此期間、即使是 ONTAP 管理員或 NetApp 支援人員、快照複本也會被鎖定且無法刪除。
+NetApp 在 10 多年前推出 SnapLock 功能、以因應資料法規遵循的要求、例如健康保險可攜性與責任法案（ HIPAA ）、沙賓法案（ arbanes-Oxlei ）及其他法規資料規則。您也可以將主要快照儲存至 SnapLock 磁碟區，以便將複本歸入 WORM ，避免刪除。有兩個 SnapLock 授權版本： SnapLock Compliance 和 SnapLock Enterprise 。為了保護勒索軟體， NetApp 建議您使用 SnapLock Compliance ，因為您可以設定特定的保留期間，在這段期間內，即使是由 ONTAP 管理員或 NetApp 支援人員鎖定或刪除快照，也無法刪除快照。
 
 .深入瞭解
 * https://docs.netapp.com/us-en/netapp-solutions/cyber-vault/ontap-cyber-vault-overview.html["部落格： ONTAP 網路資料保險箱總覽"^]
@@ -29,14 +29,14 @@ NetApp 在 10 多年前推出 SnapLock 功能、以因應資料法規遵循的�
 
 
 
-== 防竄改快照複本
+== 防竄改快照
 
-雖然利用 SnapLock Compliance 作為邏輯間距、可提供終極保護、防止攻擊者刪除備份複本、但您必須使用 SnapVault 將快照複本移至啟用 SnapLock 的次要磁碟區。因此、許多客戶都會在整個網路的次要儲存設備上部署此組態。相較於在主要儲存設備上還原主要 Volume Snapshot 複本、這可能會導致更長的還原時間。
+雖然利用 SnapLock Compliance 作為邏輯空空缺口，可提供終極保護，防止攻擊者刪除備份複本，但您必須使用 SnapVault 將快照移至啟用 SnapLock 的次要磁碟區。因此、許多客戶都會在整個網路的次要儲存設備上部署此組態。相較於在主要儲存設備上還原主要 Volume Snapshot ，還原時間可能會較長。
 
-從 ONTAP 9 ． 12.1 開始、防竄改快照複本可在主要儲存設備和主要磁碟區上、提供近乎 SnapLock Compliance 層級的快照複本保護。不需要使用 SnapVault 將快照複本儲存至次要 SnapLoced Volume 。防竄改的快照複本使用 SnapLock 技術、即使是由完整的 ONTAP 管理員使用相同的 SnapLock 保留期限、也能防止主快照複本遭到刪除。如此可加快還原時間、並能使用防竄改、受保護的快照複本來備份 FlexClone Volume 、這是傳統 SnapLock Compliance 資料保險箱 Snapshot 複本所無法做到的事。
+從 ONTAP 9.12.1 開始，防竄改快照可為主儲存設備和主磁碟區上的快照提供近乎 SnapLock Compliance 層級的保護。不需要使用 SnapVault 將快照儲存至次要 SnapLoced Volume 。防竄改快照使用 SnapLock 技術，即使是由完整的 ONTAP 管理員使用相同的 SnapLock 保留期限，也能防止主快照遭到刪除。這可加快還原時間，並能以防竄改，受保護的傳統 SnapLock Compliance 資料保險箱快照來備份 FlexClone 磁碟區。
 
-SnapLock Compliance 與防竄改快照複本之間的主要差異在於、如果 SnapLock Compliance 磁碟區存在尚未達到到期日的拱形 Snapshot 複本、則 SnapLock Compliance 不允許初始化及清除 ONTAP 陣列。若要使 Snapshot 複本防竄改、必須取得 SnapLock Compliance 授權。
+SnapLock Compliance 與防竄改快照之間的主要差異在於，如果 SnapLock Compliance 磁碟區存在尚未達到到期日的拱形快照，則 SnapLock Compliance 不允許初始化和清除 ONTAP 陣列。為了防止快照竄改，需要 SnapLock Compliance 授權。
 
 .深入瞭解
-* link:../snaplock/snapshot-lock-concept.html["鎖定快照複本以防止勒索軟體攻擊"]
+* link:../snaplock/snapshot-lock-concept.html["鎖定快照以防止勒索軟體攻擊"]
 

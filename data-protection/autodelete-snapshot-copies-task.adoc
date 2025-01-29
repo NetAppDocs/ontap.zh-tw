@@ -2,22 +2,22 @@
 permalink: data-protection/autodelete-snapshot-copies-task.html 
 sidebar: sidebar 
 keywords: autodelete, snapshot, copies 
-summary: 您可以使用Volume Snapshot自動刪除修改命令、在超過Snapshot保留時觸發自動刪除Snapshot複本。根據預設、最舊的Snapshot複本會先刪除。 
+summary: 您可以使用 Volume Snapshot Snapshot 自動刪除修改命令，在超過 Snapshot 保留時觸發自動刪除快照。依預設，最舊的快照會先刪除。 
 ---
-= 使用 ONTAP 自動刪除 Snapshot 複本
+= 使用 ONTAP 自動刪除快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `volume snapshot autodelete modify` 命令、可在超過 Snapshot 保留時觸發自動刪除 Snapshot 複本。根據預設、最舊的Snapshot複本會先刪除。
+您可以使用 `volume snapshot autodelete modify`命令，在超過 Snapshot 保留時觸發自動刪除快照。依預設，最舊的快照會先刪除。
 
 .關於這項工作
-當沒有要刪除的Snapshot複本時、LUN和檔案複本會被刪除。
+當沒有要刪除的快照時， LUN 和檔案複本會被刪除。
 
 .步驟
-. 自動刪除Snapshot複本：
+. 自動刪除快照：
 +
 `volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled true|false -trigger volume|snap_reserve`
 
@@ -25,7 +25,7 @@ summary: 您可以使用Volume Snapshot自動刪除修改命令、在超過Snaps
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-autodelete-modify.html["指令參考資料ONTAP"^]需詳細 `volume snapshot autodelete modify`資訊，請參閱。
 
 +
-以下範例自動刪除的 Snapshot 複本 `vol1` 當 Snapshot 複本保留已用盡時：
+下列範例會在快照保留空間用盡時自動刪除快照 `vol1`：
 
 +
 [listing]

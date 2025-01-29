@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/manage-parameters-task.html 
 keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
-summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體保護偵測參數。 
+summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體保護偵測參數。 
 ---
 = 使用 ONTAP 管理自主勒索軟體保護攻擊偵測參數
 :hardbreaks:
@@ -16,13 +16,13 @@ summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體
 
 
 [role="lead"]
-從 ONTAP 9 。 11.1 開始，您可以在啟用自動勒索軟體保護的特定磁碟區上修改勒索軟體偵測的參數，並將已知的激增報告為正常檔案活動。調整偵測參數有助於根據您的特定 Volume 工作負載、提高報告的準確度。
+從 ONTAP 9.11.1 開始，您可以在啟用自動勒索軟體保護的特定磁碟區上修改勒索軟體偵測的參數，並將已知的激增報告為正常檔案活動。調整偵測參數有助於根據您的特定 Volume 工作負載、提高報告的準確度。
 
 
 
 == 攻擊偵測的運作方式
 
-當自主勒索軟體保護（ ARP ）處於學習模式時、它會為 Volume 行為開發基準值。這些是 Entropy 、檔案副檔名、以及從 ONTAP 9.11.1 開始的 IOPS 。這些基準用於評估勒索軟體威脅。如需這些條件的詳細資訊，請參閱xref:index.html#what-arp-detects[ARP 偵測到什麼]。
+當自主勒索軟體保護（ ARP ）處於學習模式時、它會為 Volume 行為開發基準值。這些是 Entropy ，檔案副檔名，以及從 ONTAP 9.11.1 開始的 IOPS 。這些基準用於評估勒索軟體威脅。如需這些條件的詳細資訊，請參閱xref:index.html#what-arp-detects[ARP 偵測到什麼]。
 
 在 ONTAP 9.10.1 中、如果 ARP 偵測到下列兩種情況、就會發出警告：
 
@@ -30,12 +30,12 @@ summary: 從 ONTAP 9.11.1 開始、可視工作負載而修改自主勒索軟體
 * 高 Entropy 資料
 
 
-從 ONTAP 9.11.1 開始、如果符合 _ 僅 _ 一個條件、 ARP 就會發出威脅警告。例如，如果在 24 小時內觀察到超過 20 個檔案的副檔名，而這些副檔名先前未在磁碟區中觀察到，則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。24 小時和 20 個檔案值為預設值，可加以修改。
+從 ONTAP 9.11.1 開始，如果符合 _ 僅 _ 一個條件， ARP 就會發出威脅警告。例如，如果在 24 小時內觀察到超過 20 個檔案的副檔名，而這些副檔名先前未在磁碟區中觀察到，則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。24 小時和 20 個檔案值為預設值，可加以修改。
 
 
 NOTE: 若要減少大量誤報，請前往 * 儲存 > 磁碟區 > 安全性 > 設定工作負載特性 * ，並停用 * 監控新檔案類型 * 。此設定在 ONTAP 9 中預設為停用。 14.1 P7 ， 9.15.1 P1 和 9.16.1 RC 及更新版本。
 
-從 ONTAP 9 ． 14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
+從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
 
 某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
 
@@ -98,7 +98,7 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 == 設定 ARP 警示
 
-從 ONTAP 9.14.1 開始、 ARP 可讓您指定兩個 ARP 事件的警示：
+從 ONTAP 9.14.1 開始， ARP 可讓您指定兩個 ARP 事件的警示：
 
 * 觀察磁碟區上的新副檔名
 * 建立 ARP 快照

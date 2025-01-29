@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/add-remove-consistency-group-task.html
 keywords: SM-BC, SMBC, volume, consistency group, remove volume, add volume, snapmirror active sync 
 summary: 如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。 
 ---
-= 新增或移除磁碟區至一致性群組
+= 將磁碟區新增或移除至 ONTAP 中的一致性群組
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -24,7 +24,7 @@ summary: 如果您想要新增或移除磁碟區來變更一致性群組的組�
 +
 如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
 
-* 從 ONTAP 9.13.1 開始、您可以透過來源或目的地的主動 SnapMirror 關係、不中斷地將磁碟區新增至一致性群組。
+* 從 ONTAP 9.13.1 開始，您可以不中斷地將磁碟區新增至一致性群組，並從來源或目的地建立有效的 SnapMirror 關係。
 +
 移除磁碟區是一項破壞性作業。在移除磁碟區之前、您必須先刪除 SnapMirror 關係。
 
@@ -37,20 +37,20 @@ summary: 如果您想要新增或移除磁碟區來變更一致性群組的組�
 .開始之前
 * 您無法在中開始修改一致性群組 `InSync` 州/省。
 * 目的地Volume應為DP類型。
-* 您新增以擴充一致性群組的新磁碟區必須在來源與目的地磁碟區之間有一對通用的Snapshot複本。
+* 您新增以擴充一致性群組的新磁碟區，必須在來源磁碟區和目的地磁碟區之間有一對通用快照。
 
 
 .步驟
 兩個磁碟區對應中顯示的範例： `vol_src1` <--> `vol_dst1` 和 `vol_src2` <--> `vol_dst2`、端點之間的一致性群組關係 `vs1_src:/cg/cg_src` 和 `vs1_dst:/cg/cg_dst`。
 
-. 在來源叢集和目的地叢集上、使用命令驗證來源叢集和目的地叢集之間是否有通用的 Snapshot `snapshot show -vserver _svm_name_ -volume _volume_name_ -snapshot _snapmirror_`
+. 在來源叢集和目的地叢集上，使用命令驗證來源叢集和目的地叢集之間是否有通用的快照 `snapshot show -vserver _svm_name_ -volume _volume_name_ -snapshot _snapmirror_`
 +
 `source::>snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
 
 +
 `destination::>snapshot show -vserver vs1_dst -volume vol_dst3 -snapshot snapmirror*`
 
-. 如果沒有常見的Snapshot複本、請建立FlexVol 並初始化一個SnapMirror關係：
+. 如果不存在通用快照，請建立並初始化 FlexVol SnapMirror 關係：
 +
 `destination::>snapmirror initialize -source-path vs1_src:vol_src3 -destination-path vs1_dst:vol_dst3`
 
@@ -58,7 +58,7 @@ summary: 如果您想要新增或移除磁碟區來變更一致性群組的組�
 +
 `destination::>snapmirror delete -destination-path vs1_dst:/cg/cg_dst`
 
-. 釋放來源SnapMirror關係、並保留常見的Snapshot複本：
+. 釋放來源 SnapMirror 關係並保留一般快照：
 +
 `source::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol_dst3`
 
@@ -98,7 +98,7 @@ NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主�
 --
 .ONTAP 9.13.1 及更新版本
 --
-從 ONTAP 9.13.1 開始、您可以使用主動式 SnapMirror 主動同步關係、以不中斷營運的方式將磁碟區新增至一致性群組。SnapMirror 主動同步支援從來源或目的地新增磁碟區。
+從 ONTAP 9.13.1 開始，您可以不中斷地將磁碟區新增至具有作用中 SnapMirror 主動式同步關係的一致性群組。SnapMirror 主動同步支援從來源或目的地新增磁碟區。
 
 
 IMPORTANT: 從 ONTAP 9.8 到 9.14.1 、 SnapMirror 主動式同步稱為 SnapMirror Business Continuity （ SM-BC ）。

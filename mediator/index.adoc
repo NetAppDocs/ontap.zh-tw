@@ -157,24 +157,49 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 ====
 
 
-== 啟用 UEFI 安全開機時、請登錄安全金鑰
+== 啟用 UEFI 安全開機時，請安裝 ONTAP Mediator
 
+ONTAP Mediator 可以安裝在啟用或不啟用 UEFI 安全開機的系統上。
+
+.關於這項工作
+如果不需要 UEFI 安全開機，或者您正在疑難排解 ONTAP Mediator 安裝問題，您可以選擇在安裝 ONTAP Mediator 之前先停用 UEFI 安全開機。從您的機器設定停用 UEFI 安全開機選項。
+
+[NOTE]
+====
+如需如何停用 UEFI 安全開機的詳細資訊，請參閱系統專屬指示。
+
+====
 若要在啟用 UEFI 安全開機的情況下安裝 ONTAP Mediator ，您必須先註冊安全金鑰，才能啟動服務。金鑰是在 SCST 安裝的編譯步驟期間產生，並儲存為您機器上的私密公開金鑰配對。使用 `mokutil`公用程式將公開金鑰新增為電腦擁有者金鑰（ Mok ）至 UEFI 韌體，讓系統信任並載入簽署的模組。請將複雜密碼儲存 `mokutil`在安全的位置，因為重新啟動系統以啟動莫克語時，需要這樣做。
 
-若要判斷系統是否已啟用 UEFI 且已開啟安全開機、請執行下列步驟：
-
 .步驟
-. 如果 `mokutil`未安裝，請執行下列命令：
-+
-`yum install mokutil`
-
-. 檢查您的系統是否已啟用 UEFI 安全開機：
+. [[step 1 _UEFI] 檢查系統上是否已啟用 UEFI 安全開機：
 +
 `mokutil --sb-state`
 
 +
 結果會指出此系統上是否已啟用 UEFI 安全開機。
 
++
+[cols="40,60"]
+|===
+
+
+| 如果... | 前往... 
+
+
+ a| 
+已啟用 UEFI 安全開機
+ a| 
+
+
+
+
+ a| 
+停用 UEFI 安全開機
+ a| 
+link:upgrade-host-os-mediator-task.html["先升級主機作業系統、再升級 ONTAP Mediator"]
+
+|===
 +
 [NOTE]
 ====
@@ -183,6 +208,10 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 
 
 ====
+. [[state_2_UEFI]] 如果 `mokutil`未安裝公用程式，請執行下列命令：
++
+`yum install mokutil`
+
 . 將公開金鑰新增至莫克清單：
 +
 `mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
@@ -195,16 +224,5 @@ NOTE: 您可以將私密金鑰保留在其預設位置，或將其移至安全�
 `[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
 README.module-signing  scst_module_key.der  scst_module_key.priv`
 
-. 重新啟動主機，並使用裝置的 UEFI Boot Manager 來核准新的 Mok 。您需要步驟 2 中提供的密碼 `mokutil`。
-
-
-
-
-== 停用 UEFI 安全開機
-
-您也可以選擇在安裝 ONTAP Mediator 之前停用 UEFI 安全開機。
-
-.步驟
-. 在實體機器 BIOS 設定中、停用「 UEFI 安全開機」選項。
-. 在 VM 的 VMware 設定中、停用 vSphere 6.x 的「安全啟動」選項或 vSphere 7.x 的「安全開機」選項
+. 重新啟動主機，並使用裝置的 UEFI Boot Manager 來核准新的 Mok 。您需要中提供的公用程式密碼 `mokutil`<<step_1_uefi,檢查系統上是否已啟用 UEFI 安全開機的步驟>>。
 

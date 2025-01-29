@@ -30,9 +30,9 @@ summary: 您可以新增或移除磁碟區、或在子一致性群組之間移�
 +
 從 ONTAP 9.13.1 開始、系統管理員就支援此功能。
 
-* 展開一致性群組時、在修改之前擷取的一致性群組 Snapshot 複本將視為部分複本。任何以該 Snapshot 複本為基礎的還原作業、都會在快照的時間點反映一致性群組。
+* 展開一致性群組時，在修改之前擷取的一致性群組快照將視為部分快照。任何以該快照為基礎的還原作業，都會在快照的時間點反映一致性群組。
 * 如果您使用ONTAP 的是從版本9.10.1到9.11.1、則無法修改一致性群組。若要變更ONTAP 《支援一致性》（NetApp）9.10.1或9.11.1中的一致性群組組組態、您必須刪除一致性群組、然後建立新的一致性群組來加入您要的磁碟區。
-* 從 ONTAP 9 。 14.1 開始、您可以在使用 SnapMirror 非同步時、將 Volume 精細的快照複寫到目的地叢集。使用 SnapMirror 非同步擴充一致性群組時、只有在 SnapMirror 原則為 MirrorAll 或 MirrorAndVault 時、才會在擴充一致性群組之後複寫 Volume 精細的快照。只會複寫比基準一致性群組 Snapshot 新的 Volume 精細快照。
+* 從 ONTAP 9.14.1 開始，您可以在使用 SnapMirror 非同步時，將 Volume 精細的快照複寫到目的地叢集。使用 SnapMirror 非同步擴充一致性群組時，只有在 SnapMirror 原則為 MirrorAll 或 MirrorAndVault 時，才會在擴充一致性群組之後複寫 Volume 精細的快照。只會複寫比基準一致性群組快照更新的 Volume 精細快照。
 * 如果您在 SVM 災難恢復關係（從 ONTAP 9.14.1 開始支援）中將磁碟區新增至一致性群組、則必須在擴充一致性群組之後、從目的地叢集更新 SVM 災難恢復關係。如需詳細資訊、請參閱 xref:../data-protection/update-replication-relationship-manual-task.html[手動更新複寫關係]。
 
 
@@ -109,7 +109,7 @@ NOTE: 僅包含 `-parent-consistency-group` 如果一致性群組處於階層關
 .關於這項工作
 * 您無法從 SnapMirror 主動同步或 SVM 災難恢復關係中的一致性群組移除 Volume 。您必須先刪除 SnapMirror 作用中同步關係、才能修改一致性群組、然後重新建立關係。
 * 如果一致性群組在移除作業之後沒有磁碟區、則會刪除一致性群組。
-* 從一致性群組移除磁碟區時、一致性群組的現有快照仍會保留、但視為無效。現有的 Snapshot 無法用來還原一致性群組的內容。Volume精細的Snapshot仍有效。
+* 從一致性群組移除磁碟區時，一致性群組的現有快照仍會保留，但視為無效。現有的快照無法用來還原一致性群組的內容。Volume 精細快照仍有效。
 * 如果您從叢集刪除磁碟區、它會自動從一致性群組中移除。
 * 若要變更ONTAP 《支援一致性》（NetApp）9.10.1或9.11.1中一致性群組的組態、您必須先刪除一致性群組、然後再建立新的一致性群組與所需的成員磁碟區。
 * 從叢集中刪除磁碟區會自動將其移除為一致性群組。
@@ -126,7 +126,7 @@ NOTE: 僅包含 `-parent-consistency-group` 如果一致性群組處於階層關
 . 選取您要修改的單一或子一致性群組。
 . 在* Volumes（磁碟區）*功能表中、選取您要從一致性群組中移除的個別磁碟區旁的核取方塊。
 . 選取*從一致性群組中移除磁碟區*。
-. 確認您瞭解移除磁碟區將導致一致性群組的所有Snapshot複本變成無效、然後選取*移除*。
+. 確認您瞭解移除磁碟區將導致一致性群組的所有快照失效，並選取 * 移除 * 。
 
 
 --
@@ -159,8 +159,8 @@ NOTE: 僅包含 `-parent-consistency-group` 如果一致性群組處於階層關
 
 .關於這項工作
 * 您只能在同一個父一致性群組之下巢狀的一致性群組之間移動磁碟區。
-* 現有的一致性群組快照會變成無效、無法再作為一致性群組快照存取。個別 Volume Snapshot 仍然有效。
-* 父一致性群組的 Snapshot 複本仍然有效。
+* 現有的一致性群組快照無效，無法再作為一致性群組快照存取。個別 Volume 快照仍有效。
+* 父一致性群組的快照仍然有效。
 * 如果將所有磁碟區移出子一致性群組、則該一致性群組將會刪除。
 * 一致性群組的修改必須遵守 xref:limits.html[一致性群組限制]。
 
@@ -197,7 +197,7 @@ NOTE: 僅包含 `-parent-consistency-group` 如果一致性群組處於階層關
 .將磁碟區移至新的子一致性群組
 . 下列命令會建立新的子一致性群組、其中包含指定的磁碟區。
 +
-建立新的一致性群組時、您可以指定新的 Snapshot 、 QoS 和分層原則。
+建立新的一致性群組時，您可以指定新的快照， QoS 和分層原則。
 
 +
 `consistency-group volume reassign -vserver _SVM_name_ -consistency-group _source_child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -volume _volumes_ -new-consistency-group _consistency_group_name_ [-snapshot-policy _policy_ -qos-policy _policy_ -tiering-policy _policy_]`

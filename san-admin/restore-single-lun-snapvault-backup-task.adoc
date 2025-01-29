@@ -2,7 +2,7 @@
 permalink: san-admin/restore-single-lun-snapvault-backup-task.html 
 sidebar: sidebar 
 keywords: ontap 9.2, restore, single, lun, snapvault backup 
-summary: 您可以將單一LUN還原至新位置或原始位置。您可以從SnapVault 任何Snapshot複本還原到二線版。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。 
+summary: 您可以將單一LUN還原至新位置或原始位置。您可以從 SnapVault 次要 Volume 中的任何快照還原。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。 
 ---
 = 從SnapVault 一個不完整的備份還原單一LUN
 :allow-uri-read: 
@@ -11,16 +11,16 @@ summary: 您可以將單一LUN還原至新位置或原始位置。您可以從Sn
 
 
 [role="lead"]
-您可以將單一LUN還原至新位置或原始位置。您可以從SnapVault 任何Snapshot複本還原到二線版。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。
+您可以將單一LUN還原至新位置或原始位置。您可以從 SnapVault 次要 Volume 中的任何快照還原。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。
 
 .您需要的產品
-* 必須初始化此資訊關係、且無法還原的次要磁碟區必須包含適當的Snapshot複本。SnapVault SnapVault
+* 必須初始化 SnapVault 關係，且 SnapVault 次要 Volume 必須包含適當的快照才能還原。
 * 包含SnapVault 不支援的二線磁碟區的儲存虛擬機器（SVM）必須具有一個或多個具備所需SAN傳輸協定的LIF、才能從用於存取LUN複本的主機存取。
 * igroup必須已存在SnapVault 於SVM上。
 
 
 .關於這項工作
-此程序包括從SnapVault 位於恢復二線磁碟區的Snapshot複本建立讀寫磁碟區複本。您可以直接從實體複本使用LUN、也可以選擇將LUN內容複製回原始LUN位置。
+此程序包括從 SnapVault 次要 Volume 中的快照建立讀寫磁碟區複本。您可以直接從實體複本使用LUN、也可以選擇將LUN內容複製回原始LUN位置。
 
 實體複本中的LUN路徑和序號與原始LUN不同。不保留持續保留。
 
@@ -39,7 +39,7 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 執行 `volume snapshot show` 用於識別您要從中還原 LUN 的 Snapshot 複本的命令。
+. 執行 `volume snapshot show`命令以識別您要從中還原 LUN 的快照。
 +
 [listing]
 ----
@@ -53,7 +53,7 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 執行 `volume clone create` 從所需 Snapshot 複本建立讀寫複本的命令。
+. 執行 `volume clone create`命令，從所需的快照建立讀寫複本。
 +
 磁碟區複製是以SnapVault 相同的Aggregate建立、如同使用支援功能進行備份。集合體中必須有足夠的空間來儲存實體複本。
 

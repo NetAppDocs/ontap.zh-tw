@@ -2,7 +2,7 @@
 permalink: data-protection/vault-archive-snapmirror-technology-concept.html 
 sidebar: sidebar 
 keywords: vault, archiving, snapmirror, technology 
-summary: SnapMirror保存原則取代SnapVault 了支援支援SnapMirror 9.3及更新版本的功能。ONTAP您可以使用SnapMirror資料庫原則進行磁碟對磁碟Snapshot複製複寫、以符合標準及其他與治理相關的用途。與SnapMirror關係不同的是、目的地通常只包含目前位於來源磁碟區的Snapshot複本、而資料保存目的地通常會保留在更長時間內建立的時間點Snapshot複本。 
+summary: SnapMirror保存原則取代SnapVault 了支援支援SnapMirror 9.3及更新版本的功能。ONTAP您可以使用 SnapMirror 資料保險箱原則進行磁碟對磁碟快照複寫，以符合標準及其他治理相關目的。與 SnapMirror 關係不同的是，目的地通常只包含來源 Volume 中目前的快照，資料保險箱目的地通常會保留在較長時間內建立的時間點快照。 
 ---
 = 使用SnapMirror技術進行資料保存
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: SnapMirror保存原則取代SnapVault 了支援支援SnapMirror 9.3及�
 
 
 [role="lead"]
-SnapMirror保存原則取代SnapVault 了支援支援SnapMirror 9.3及更新版本的功能。ONTAP您可以使用SnapMirror資料庫原則進行磁碟對磁碟Snapshot複製複寫、以符合標準及其他與治理相關的用途。與SnapMirror關係不同的是、目的地通常只包含目前位於來源磁碟區的Snapshot複本、而資料保存目的地通常會保留在更長時間內建立的時間點Snapshot複本。
+SnapMirror保存原則取代SnapVault 了支援支援SnapMirror 9.3及更新版本的功能。ONTAP您可以使用 SnapMirror 資料保險箱原則進行磁碟對磁碟快照複寫，以符合標準及其他治理相關目的。與 SnapMirror 關係不同的是，目的地通常只包含來源 Volume 中目前的快照，資料保險箱目的地通常會保留在較長時間內建立的時間點快照。
 
-例如、您可能想要在20年內保留資料的每月Snapshot複本、以符合貴企業的政府會計法規。由於不需要從保存庫儲存設備提供資料、因此您可以在目的地系統上使用速度較慢、成本較低的磁碟。
+例如，您可能想要在 20 年內保留每月資料快照，以符合貴企業的政府會計法規。由於不需要從保存庫儲存設備提供資料、因此您可以在目的地系統上使用速度較慢、成本較低的磁碟。
 
 下圖說明SnapMirror Vault資料保護關係。
 
@@ -25,18 +25,18 @@ image:snapvault-data-protection.gif["SnapMirror 資料保險箱資料保護關�
 
 關係的SnapMirror原則定義了基礎的內容和任何更新。
 
-預設資料保險箱原則下的基準傳輸 `XDPDefault` 製作來源 Volume 的 Snapshot 複本、然後將該複本及其參照的資料區塊傳輸至目的地 Volume 。與SnapMirror關係不同的是、資料庫備份不會在基準中包含舊的Snapshot複本。
+預設資料保險箱原則下的基準傳輸 `XDPDefault`會建立來源磁碟區的快照，然後將該複本及其參照的資料區塊傳輸至目的地磁碟區。與 SnapMirror 關係不同的是，資料保險箱備份不會在基準線中包含較舊的快照。
 
 
 
 == 如何更新保存資料保護關係
 
-更新是非同步的、會依照您設定的排程進行。您在關聯原則中定義的規則會識別要納入更新的新Snapshot複本、以及要保留的複本數量。原則中定義的標籤（例如「每月」）必須符合來源上Snapshot原則中定義的一或多個標籤。否則、複寫會失敗。
+更新是非同步的、會依照您設定的排程進行。您在關係原則中定義的規則，可識別哪些新快照要包含在更新中，以及保留多少份複本。原則中定義的標籤（例如「每月」）必須符合來源上快照原則中定義的一或多個標籤。否則、複寫會失敗。
 
-在的每個更新中 `XDPDefault` 原則： SnapMirror 會傳輸自上次更新後所製作的 Snapshot 複本、前提是它們的標籤必須符合原則規則中定義的標籤。在的下列輸出中 `snapmirror policy show` 的命令 `XDPDefault` 原則請注意下列事項：
+在原則下的每個更新中， SnapMirror 都 `XDPDefault`會傳輸自上次更新後所建立的快照，前提是這些快照的標籤必須符合原則規則中定義的標籤。在原則命令的 `XDPDefault`下列輸出中， `snapmirror policy show`請注意下列事項：
 
-* `Create Snapshot` 為 "'false" 、表示這種情況 `XDPDefault` SnapMirror 更新關係時不會建立 Snapshot 複本。
-* `XDPDefault` 有「每日」和「每週」的規則、表示當 SnapMirror 更新關係時、會傳輸來源上所有具有相符標籤的 Snapshot 複本。
+* `Create Snapshot`為 "`FALSE" ，表示 `XDPDefault` SnapMirror 更新關係時不會建立快照。
+* `XDPDefault`有「 daily 」和「 'faily' 」規則，表示 SnapMirror 更新關係時，會傳輸來源上所有標籤相符的快照。
 
 
 [listing]

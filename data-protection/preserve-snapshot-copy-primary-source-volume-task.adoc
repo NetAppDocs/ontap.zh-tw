@@ -2,31 +2,31 @@
 permalink: data-protection/preserve-snapshot-copy-primary-source-volume-task.html 
 sidebar: sidebar 
 keywords: ensure, snapshot, copy, mirror-vault, deployment 
-summary: 您可以使用SnapMirror SnapShot SnapShot擁有者create命令、在鏡射儲存庫部署中、將標示為Snapshot的複本保留在次要上。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。 
+summary: 您可以使用 SnapMirror snapshot 擁有者 create 命令，在鏡射資料保險箱部署中，將標記好的快照保留在次要上。如此可確保存在用於更新資料保險箱關係的通用快照。 
 ---
-= 使用 ONTAP 確保鏡射資料保險箱部署中的通用 Snapshot 複本
+= 使用 ONTAP 確保鏡射資料保險箱部署中的通用快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `snapmirror snapshot-owner create` 命令、在鏡射資料保險箱部署的次要上保留標示的 Snapshot 複本。這樣做可確保有通用的Snapshot複本可供更新資料保險箱關係。
+您可以使用 `snapmirror snapshot-owner create`命令在鏡射資料保險箱部署中的次要上保留標示好的快照。如此可確保存在用於更新資料保險箱關係的通用快照。
 
 .關於這項工作
-如果您使用組合鏡射資料庫的連出或串聯部署、請記住、如果來源和目的地磁碟區上不存在通用的Snapshot複本、更新將會失敗。
+如果您使用鏡射資料保險箱的扇出或串聯部署組合，請記住，如果來源和目的地磁碟區上不存在一般快照，更新將會失敗。
 
-這對於鏡射儲存庫的扇出或串聯部署中的鏡射關係而言、絕對不會有任何問題、因為SnapMirror在執行更新之前、一律會先建立來源磁碟區的Snapshot複本。
+這絕不是鏡射資料保險箱扇出或串聯部署中的鏡射關係問題，因為 SnapMirror 在執行更新之前，一律會先建立來源磁碟區的快照。
 
-不過、這可能是資料保險箱關係的問題、因為SnapMirror在更新資料保險箱關係時、不會建立來源磁碟區的Snapshot複本。您需要使用 `snapmirror snapshot-owner create` 確保在資料保險箱關係的來源和目的地上至少有一個通用 Snapshot 複本。
+不過，這可能是資料保險箱關係的問題，因為 SnapMirror 在更新資料保險箱關係時，不會建立來源 Volume 的快照。您需要使用 `snapmirror snapshot-owner create`來確保在資料保險箱關係的來源和目的地上至少有一個通用快照。
 
 .步驟
-. 在來源磁碟區上、將擁有者指派給您要保留的標記Snapshot複本：
+. 在來源磁碟區上，將擁有者指派給您要保留的標記快照：
 +
 `snapmirror snapshot-owner create -vserver <SVM> -volume <volume> -snapshot <snapshot> -owner <owner>`
 
 +
-以下範例指派 `ApplicationA` 身為的擁有者 `snap1` Snapshot 複本：
+以下範例指派 `ApplicationA`為快照的擁有者 `snap1`：
 
 +
 [listing]
@@ -38,7 +38,7 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 +
 或者、您也可以等待鏡射關係的排程更新。
 
-. 將標示的Snapshot複本傳輸至資料保險箱目的地：
+. 將標示好的快照傳輸至資料保險箱目的地：
 +
 `snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -source-snapshot snapshot`
 
@@ -46,7 +46,7 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 +
-下列範例將轉移 `snap1` Snapshot複本::
+以下範例傳輸 `snap1`快照::
 +
 --
 [listing]
@@ -54,17 +54,17 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 clust1::> snapmirror update -vserver vs1 -volume vol1
 -source-snapshot snap1
 ----
-當資料保存關係更新時、會保留標示為Snapshot的複本。
+當資料保險箱關係更新時，會保留標示的快照。
 
 --
 
 
-. 在來源磁碟區上、從標記為Snapshot複本的擁有者中移除：
+. 在來源磁碟區上，將擁有者從標有的快照中移除：
 +
 `snapmirror snapshot-owner delete -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -owner _owner_`
 
 +
-下列範例會移除 `ApplicationA` 身為的擁有者 `snap1` Snapshot 複本：
+下列範例會移除 `ApplicationA`為快照擁有者 `snap1`：
 
 +
 [listing]

@@ -32,7 +32,7 @@ NOTE: MetroCluster 組態不支援將 Volume 複製為不同 SVM 上的 FlexClon
 
 +
 
-NOTE: 從讀寫父磁碟區建立讀寫FlexClone磁碟區時、您不需要指定基礎Snapshot複本。如果您沒有將任何特定的Snapshot複本命名為該複本的基礎Snapshot複本、則可使用此複本建立Snapshot複本。ONTAP當父磁碟區是資料保護磁碟區時、您必須指定建立FlexClone磁碟區的基礎Snapshot複本。
+NOTE: 從讀寫父磁碟區建立讀寫 FlexClone 磁碟區時，不需要指定基礎快照。如果您未命名任何要作為複本基礎快照的特定快照，則 ONTAP 會建立快照。當父磁碟區是資料保護磁碟區時，您必須指定用於建立 FlexClone 磁碟區的基礎快照。
 
 
 
@@ -41,7 +41,7 @@ NOTE: 從讀寫父磁碟區建立讀寫FlexClone磁碟區時、您不需要指�
 +
 `volume clone create -vserver vs0 -flexclone vol1_clone -type RW -parent-volume vol1`
 
-* 下列命令會使用基礎Snapshot複本snap1、從父Volume DP_vol建立資料保護FlexClone Volume vol_dP_clone：
+* 下列命令會使用基礎 Snapshot snap1 ，從父 Volume DP_vol 建立資料保護 FlexClone Volume vol_dm_clone ：
 +
 `volume clone create -vserver vs1 -flexclone vol_dp_clone -type DP -parent-volume dp_vol -parent-snapshot snap1`
 

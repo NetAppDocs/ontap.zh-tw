@@ -4,7 +4,7 @@ permalink: networking/lifs_and_service_policies96.html
 keywords: service policies for system svms, lif service policies, lif, logical, interface, service, policy, policies, lifs and service policies in ontap 9.6 and later, assign service policies to lifs to specify the supported traffic, service policies for system svms, service policies for data svms, data-core service 
 summary: 將服務原則指派給LIF以指定支援的流量 
 ---
-= 生命與服務原則（ ONTAP 9.6 及更新版本）
+= 更新版本中的生命與服務政策ONTAP
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -29,7 +29,7 @@ summary: 將服務原則指派給LIF以指定支援的流量
 
 管理SVM和任何系統SVM都包含可用於該SVM中的LIF的服務原則、包括管理和叢集間LIF。系統會在建立IPspace時自動建立這些原則。
 
-下表列出截至ONTAP 資訊版SVM的LIF內建政策、對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+下表列出從 ONTAP 9.12.1 開始的系統 SVM 中生命週期的內建原則。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
 
 `network interface service-policy show`
 
@@ -71,11 +71,10 @@ default-route-聲明
  a| 
 節點管理或叢集管理
  a| 
-使用此系統範圍內的管理原則、建立系統SVM擁有的節點和叢集範圍管理生命期。這些LIF可用於連往DNS、AD、LDAP或NIS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。
-從ONTAP 功能9.12.1開始、您可以使用 `management-log-forwarding` 用於控制將稽核記錄轉送到遠端syslog伺服器的生命期服務。
+使用此系統範圍內的管理原則、建立系統SVM擁有的節點和叢集範圍管理生命期。這些LIF可用於連往DNS、AD、LDAP或NIS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。從 ONTAP 9.12.1 開始，您可以使用該 `management-log-forwarding`服務來控制將稽核記錄轉送到遠端系統記錄伺服器的生命週期。
 
 |===
-下表列出截至ONTAP 資訊版SVM上的LIF服務、以及截至資訊版9.11.1的可用服務：
+下表列出從 ONTAP 9.11.1 開始，在系統 SVM 上可使用的服務：
 
 [cols="25,25,50"]
 |===
@@ -236,7 +235,7 @@ SNMP伺服器管理服務
 
 所有資料SVM都包含服務原則、可供該SVM中的LIF使用。
 
-下表列出截至ONTAP 資訊SVM中的LIF內建原則、截至資訊版9.11.1為止。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
+下表列出以 ONTAP 9.11.1 開頭的資料 SVM 中的生命週期內建原則。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：
 
 `network interface service-policy show`
 
@@ -265,7 +264,7 @@ SNMP伺服器管理服務
  a| 
 iSCSI
  a| 
-用於傳輸區塊導向SAN資料流量的生命體。從版本隆9.10.1開始ONTAP 、「預設資料區塊」原則已過時。改用「預設資料iSCSI」服務原則。
+用於傳輸區塊導向SAN資料流量的生命體。從 ONTAP 9.10.1 開始，「 default-data-blocks 」原則已過時。改用「預設資料iSCSI」服務原則。
 
 
 
@@ -301,7 +300,7 @@ NVMe TCP
 用於傳輸NVMe/TCP資料流量的生命生命量。
 
 |===
-下表列出可用於資料SVM的服務、以及截至ONTAP 《支援資訊》的容錯移轉原則所受到的任何限制（如《支援資訊安全規範》）。
+下表列出可用於資料 SVM 的服務，以及從 ONTAP 9.11.1 開始的 LIF 容錯移轉原則所施加的任何限制：
 
 [cols="25,25,50"]
 |===

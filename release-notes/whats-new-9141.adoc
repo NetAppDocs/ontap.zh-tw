@@ -35,13 +35,13 @@ summary: 瞭解 ONTAP 9.14.1 提供的新功能。
 | xref:../encryption-at-rest/configure-netapp-volume-encryption-concept.html[SVM 根磁碟區支援 NVE] | SVM 根磁碟區可以使用具有 NetApp Volume Encryption 的唯一金鑰來加密。 
 
 
-| xref:../snaplock/snapshot-lock-concept.html[能夠在長期保留 Snapshot 複本上設定 Snapshot 複本鎖定 ] 和 xref:../snaplock/initialize-complianceclock-task.html[重新初始化 Compliance 時鐘] | 在具有 SnapLock 授權的叢集上、可為非 SnapLock SnapMirror 目的地磁碟區上建立的 Snapshot 複本設定具有長期保留的 Snapshot 複本防竄改 Snapshot 複本鎖定、而當沒有 SnapLock 磁碟區時、就可以初始化 Compliance Clock 。 
+| xref:../snaplock/snapshot-lock-concept.html[能夠在長期保留快照上設定快照鎖定]和xref:../snaplock/initialize-complianceclock-task.html[重新初始化 Compliance 時鐘] | 在具有 SnapLock 授權的叢集上，可為非 SnapLock SnapMirror 目的地磁碟區上建立的快照設定防竄改快照鎖定，而當沒有 SnapLock 磁碟區時，也可以初始化法規遵循時鐘。 
 
 
 | xref:../snapmirror-active-sync/index.html[SnapMirror Active Sync 支援 SCIS3 持續保留和 Windows 容錯移轉叢集] | SCSI3 持續保留和 Window 容錯移轉叢集 for SnapMirror 主動式同步支援多個節點存取裝置、同時封鎖對其他節點的存取、確保不同應用程式環境的叢集作業保持一致且穩定。 
 
 
-| xref:../data-protection/snapmirror-svm-replication-concept.html[使用一致性群組複製 Volume 精細的快照] | 您可以利用一致性群組、將非同步 SnapMirror 快照和 Volume 精細快照複寫到目的地一致性群組、以獲得額外的災難恢復層。 
+| xref:../data-protection/snapmirror-svm-replication-concept.html[使用一致性群組複製 Volume 精細的快照] | 您可以利用一致性群組，將非同步 SnapMirror 快照和磁碟區精細快照複寫到目的地一致性群組，以進行額外的災難恢復層。 
 
 
 | xref:../task_dp_configure_storage_vm_dr.html[在 SVM 災難恢復關係中支援一致性群組的非同步資料保護] | 如果 SVM 包含一致性群組、則為 SVM 災難恢復設定的 SVM 可將一致性群組資訊複寫到次要站台。 
@@ -141,7 +141,7 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 | link:../authentication/oauth2-deploy-ontap.html["OAuth 2.0 授權架構"] | 新增開放式授權（ OAuth 2.0 ）架構、並為 ONTAP REST API 用戶端提供權杖型驗證。這可利用以 REST API 指令碼或 Ansible 為基礎的自動化工作流程、更安全地管理 ONTAP 叢集。支援標準 OAuth 2.0 功能、包括發卡行、對象、本機驗證、遠端自我反省、 遠端使用者宣告及 Proxy 支援。用戶端授權可以使用獨立的 OAuth 2.0 範圍或對應本機 ONTAP 使用者來設定。支援的身分識別提供者（ IDP ）包括使用多個並行伺服器的驗證 0 和 Keycloak 。 
 
 
-| xref:../anti-ransomware/manage-parameters-task.html[可調警示、提供自動勒索軟體保護] | 設定「自動勒索軟體保護」、以便在偵測到新的副檔名或取得 ARP Snapshot 時接收通知、並收到可能發生勒索軟體事件的早期警告。 
+| xref:../anti-ransomware/manage-parameters-task.html[可調警示、提供自動勒索軟體保護] | 設定「自動勒索軟體保護」，以便在偵測到新的副檔名或擷取 ARP 快照時接收通知，並收到可能發生勒索軟體事件的早期警告。 
 
 
 | xref:https://docs.netapp.com/us-en/ontap/nas-audit/persistent-stores.html[FPolicy 支援持續儲存區、以減少延遲] | FPolicy 可讓您設定持續儲存區、以擷取 SVM 中非強制性非同步原則的檔案存取事件。持續儲存區可協助將用戶端 I/O 處理與 FPolicy 通知處理分離、以減少用戶端延遲。不支援同步和非同步強制組態。 
@@ -182,7 +182,7 @@ ONTAP 支援如的變數 `$aws:username` 適用於庫位原則和群組原則。
 | xref:../flexgroup/manage-flexgroup-rebalance-task.html[主動式 FlexGroup 重新平衡] | FlexGroup Volume 支援自動將目錄中不斷成長的檔案移至遠端成員、以減少當地成員的 I/O 瓶頸。 
 
 
-| xref:../flexgroup/supported-unsupported-config-concept.html[FlexGroup 磁碟區中的 Snapshot 複本標記] | 您可以在中新增、修改及刪除標記和標籤（註解）、以協助識別 Snapshot 複本、並避免意外刪除 FlexGroup Volume 中的 Snapshot 複本。 
+| xref:../flexgroup/supported-unsupported-config-concept.html[FlexGroup 磁碟區中的快照標記] | 您可以在中新增，修改及刪除標記和標籤（註解），以協助識別快照，並避免意外刪除 FlexGroup 磁碟區中的快照。 
 
 
 | xref:../fabricpool/enable-disable-volume-cloud-write-task.html[使用 FabricPool 直接寫入雲端] | FabricPool 新增了將資料寫入 FabricPool 中磁碟區的功能、因此它可以直接移至雲端、而無需等待分層掃描。 

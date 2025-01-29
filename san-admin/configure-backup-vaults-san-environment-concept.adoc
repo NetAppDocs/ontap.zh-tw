@@ -17,24 +17,24 @@ SAN環境中的支援組態和使用與NAS環境中的組態和使用非常類�
 
 建立SnapVault 和初始化包含LUN的主要Volume與做SnapVault 為支援的次要Volume之間的支援性關係的程序、與FlexVol 用於檔案傳輸協定的支援使用的流程相同。本程序將在中詳細說明 link:../data-protection/index.html["資料保護"]。
 
-在建立Snapshot複本並將其複製到SnapVault 該二線磁碟區之前、請務必確保所備份的LUN處於一致狀態。利用SnapCenter NetApp自動建立Snapshot複本、可確保備份的LUN完整且可供原始應用程式使用。
+在建立快照並將其複製到 SnapVault 次要 Volume 之前，請務必確保備份的 LUN 處於一致的狀態。使用 SnapCenter 自動建立快照，可確保備份的 LUN 完整且可由原始應用程式使用。
 
 有三個基本選項可從SnapVault 一個不二元磁碟區還原LUN：
 
 * 您可以直接從SnapVault 「支援」二級磁碟區對應LUN、並將主機連線至LUN、以存取LUN的內容。
 +
-LUN為唯讀、您只能從SnapVault 更新的Snapshot複本進行對應、以供參考。持續保留和其他LUN中繼資料將會遺失。如果需要、您可以使用主機上的複製程式、將LUN內容複製回原始LUN（如果仍可存取）。
+LUN 是唯讀的，您只能從 SnapVault 備份中的最新快照進行對應。持續保留和其他LUN中繼資料將會遺失。如果需要、您可以使用主機上的複製程式、將LUN內容複製回原始LUN（如果仍可存取）。
 
 +
 LUN的序號與來源LUN不同。
 
-* 您可以將SnapVault 任何位於二線磁碟區的Snapshot複本複製到新的讀寫磁碟區。
+* 您可以將 SnapVault 次要 Volume 中的任何快照複製到新的讀寫磁碟區。
 +
 然後、您可以對應磁碟區中的任何LUN、並將主機連線至LUN、以存取LUN的內容。如果需要、您可以使用主機上的複製程式、將LUN內容複製回原始LUN（如果仍可存取）。
 
-* 您可以從SnapVault 任何Snapshot複本還原包含LUN的整個Volume、該複本位於還原次要Volume中。
+* 您可以從 SnapVault 次要磁碟區中的任何快照，還原包含 LUN 的整個磁碟區。
 +
-還原整個磁碟區會取代磁碟區中的所有LUN及任何檔案。自建立Snapshot複本之後所建立的任何新LUN都會遺失。
+還原整個磁碟區會取代磁碟區中的所有LUN及任何檔案。快照建立後所建立的任何新 LUN 都會遺失。
 
 +
 LUN會保留對應、序號、UUID及持續保留。

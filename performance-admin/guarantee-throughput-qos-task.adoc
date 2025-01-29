@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: throughput, qos, understand, ceilings, floors, shared, policy, adaptive, general, support, workloads, 
 summary: 您可以使用儲存服務品質（QoS）來保證關鍵工作負載的效能不會因競爭工作負載而降級。您可以設定競爭工作負載的處理量上限、以限制其對系統資源的影響、或為關鍵工作負載設定處理量下限、確保其符合最低處理量目標、而不論競爭工作負載的需求為何。您甚至可以針對相同的工作負載設定上限和樓層。 
 ---
-= 透過 QoS 總覽來保證處理量
+= 透過 ONTAP 中的 QoS 總覽來保證傳輸量
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -37,7 +37,7 @@ TIP: 如範例所示、處理量上限會直接調節處理量。處理量最低
 
 您可以在建立原則群組時指定樓層、也可以等到監控工作負載之後再指定樓層。
 
-從 ONTAP 9.13.1 開始、您可以使用設定 SVM 範圍的處理量層 <<adaptive-qos-templates>>。在 9.13.1 之前的 ONTAP 版本中、定義處理量層的原則群組無法套用至 SVM 。
+從 ONTAP 9.13.1 開始<<adaptive-qos-templates>>，您可以使用設定 SVM 範圍的處理量層。在 9.13.1 之前的 ONTAP 版本中、定義處理量層的原則群組無法套用至 SVM 。
 
 [NOTE]
 ====
@@ -95,7 +95,7 @@ NOTE: 在ONTAP 更新版本的更新版本中、可在處理量層使用已用�
 
 === 調適性原則群組範本
 
-從 ONTAP 9.13.1 開始、您可以在 SVM 上設定調適性 QoS 範本。可調整的原則群組範本可讓您設定 SVM 中所有磁碟區的處理量層和上限。
+從 ONTAP 9.13.1 開始，您可以在 SVM 上設定調適性 QoS 範本。可調整的原則群組範本可讓您設定 SVM 中所有磁碟區的處理量層和上限。
 
 自適應原則群組範本只能在建立 SVM 之後設定。使用 `vserver modify` 命令 `-qos-adaptive-policy-group-template` 設定原則的參數。
 

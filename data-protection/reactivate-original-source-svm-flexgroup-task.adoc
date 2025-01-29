@@ -32,7 +32,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 ----
 cluster_dst::> snapmirror delete -source-path svm1: -destination-path svm_backup:
 ----
-. 從原始來源SVM或原始來源叢集釋放原始關係、同時保持Snapshot複本不變：
+. 從原始來源 SVM 或原始來源叢集，釋放原始關係，同時保持快照不變：
 +
 `snapmirror release -source-path SVM: -destination-path SVM: -relationship-info-only true`
 
@@ -84,7 +84,7 @@ cluster_src::> snapmirror create -source-path svm_backup: -destination-path svm1
 +
 [NOTE]
 ====
-如果來源和目的地上不存在通用Snapshot複本、則命令會失敗。使用 `snapmirror initialize` 重新初始化關係。
+如果來源和目的地上不存在一般快照，則命令會失敗。用於 `snapmirror initialize`重新初始化關係。
 
 ====
 +
@@ -201,7 +201,7 @@ cluster_src::> vserver start svm1
 ----
 cluster_src::> snapmirror delete -source-path svm_backup: -destination-path svm1:
 ----
-. 從原始目的地SVM或原始目的地叢集、釋放反向關係、同時保持Snapshot複本不變：
+. 從原始目的地 SVM 或原始目的地叢集，釋放相反的關係，同時保持快照不變：
 +
 `snapmirror release -source-path SVM: -destination-path SVM: -relationship-info-only true`
 

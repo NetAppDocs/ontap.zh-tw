@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: considerations, changing, maximum number of files, allowed, flexvol volume, maximum, files, file 
 summary: 包含最多檔案數量的資料。FlexVol您可以變更此上限、但請注意這會如何影響磁碟區。 
 ---
-= FlexVol 磁碟區允許的檔案數量上限
+= ONTAP 中 FlexVol 磁碟區允許的檔案數量上限
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,7 +21,7 @@ summary: 包含最多檔案數量的資料。FlexVol您可以變更此上限、�
 
 在 9.13.1 之前的 ONTAP 版本中，增加大於 680 GB 大小的磁碟區並不會自動產生更多 inode ，因為 ONTAP 不會自動建立超過 21 ， 251 ， 126 個 inode 。如果任何大小的磁碟區需要的檔案數超過預設值、您可以使用volume modify命令來增加磁碟區的最大inode數。
 
-從 ONTAP 9.13.1 開始、 inode 的最大數量會持續增加、因此即使磁碟區大於 680 GB 、每 32 KB 的磁碟區空間也會有一個 inode 。這種成長持續到磁碟區達到 inode 上限 2,040,109,451 為止。
+從 ONTAP 9.13.1 開始， inode 的最大數量會持續增加，因此即使磁碟區大於 680 GB ，每 32 KB 的磁碟區空間也會有一個 inode 。這種成長持續到磁碟區達到 inode 上限 2,040,109,451 為止。
 
 您也可以減少公共inode的最大數量。減少公有 inode 的數量不會改變分配給 inode 的空間量、但會降低公有 inode 檔案所能使用的空間上限。將空間分配給 inode 之後、就不會將其傳回 Volume 。因此，如果將 inode 的最大數量降低到當前分配的 inode 數量以下，則不會返回分配的 inode 所使用的空間。
 

@@ -2,22 +2,22 @@
 permalink: volumes/autoshrink-snapshot-copy-deletion-concept.html 
 sidebar: sidebar 
 keywords: how, autoshrink functionality, interacts with, snapshot copy, deletion, automatic 
-summary: 由於自動縮小功能會縮小FlexVol 一個版本的不全區、因此也可能影響自動刪除Volume Snapshot複本的時間。 
+summary: 由於自動壓縮功能會縮小 FlexVol volume 的大小，因此自動刪除磁碟區快照也會受到影響。 
 ---
-= 自動壓縮功能和快照複本刪除
+= 自動壓縮功能和快照刪除
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-由於自動縮小功能會縮小FlexVol 一個版本的不全區、因此也可能影響自動刪除Volume Snapshot複本的時間。
+由於自動壓縮功能會縮小 FlexVol volume 的大小，因此自動刪除磁碟區快照也會受到影響。
 
-自動壓縮功能會以下列方式與自動刪除Volume Snapshot複本互動：
+自動壓縮功能會以下列方式與自動磁碟區快照刪除互動：
 
-* 如果兩者皆是 `grow_shrink` 自動調整大小模式和自動刪除 Snapshot 複本功能均已啟用、當磁碟區大小縮小時、可能會觸發自動刪除 Snapshot 複本。
+* 如果同時 `grow_shrink`啟用自動調整模式和自動快照刪除功能，當磁碟區大小縮小時，可能會觸發自動刪除快照。
 +
-這是因為Snapshot保留區是以磁碟區大小的百分比（預設為5%）為基礎、而該百分比現在是以較小的磁碟區大小為基礎。這可能會導致Snapshot複本從保留區溢出、並自動刪除。
+這是因為快照保留是以磁碟區大小的百分比（預設為 5% ）為基礎，而該百分比現在是以較小的磁碟區大小為基礎。這可能會導致快照從保留區溢出，並自動刪除。
 
-* 如果是 `grow_shrink` 自動調整大小模式已啟用、您可以手動刪除 Snapshot 複本、它可能會觸發自動縮小 Volume 。
+* 如果 `grow_shrink`啟用自動調整大小模式，而您手動刪除快照，則可能會觸發自動縮小 Volume 。
 

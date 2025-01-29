@@ -2,32 +2,32 @@
 permalink: tape-backup/snapshot-copies-during-smtape-backup-concept.html 
 sidebar: sidebar 
 keywords: snapshot, copy, smtape, backup, baseline, incremental, snapmirror 
-summary: 您應該瞭解在SM磁帶 基礎備份和遞增備份期間、如何使用Snapshot複本。在使用SMTape執行備份時、也必須謹記注意事項。 
+summary: 您應該瞭解在 SMTape 基準備份和遞增備份期間如何使用快照。在使用SMTape執行備份時、也必須謹記注意事項。 
 ---
-= 在SMTape備份期間使用Snapshot複本
+= 在 SMTape 備份期間使用快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您應該瞭解在SM磁帶 基礎備份和遞增備份期間、如何使用Snapshot複本。在使用SMTape執行備份時、也必須謹記注意事項。
+您應該瞭解在 SMTape 基準備份和遞增備份期間如何使用快照。在使用SMTape執行備份時、也必須謹記注意事項。
 
 
 
 == 基礎備份
 
-執行基準備份時、您可以指定要備份到磁帶的Snapshot複本名稱。如果未指定Snapshot複本、則根據磁碟區的存取類型（讀取/寫入或唯讀）、會自動建立Snapshot複本、或是使用現有的Snapshot複本。當您指定備份的Snapshot複本時、比指定Snapshot複本舊的所有Snapshot複本也會備份到磁帶。
+執行基準備份時，您可以指定要備份至磁帶的快照名稱。如果未指定快照，則會根據磁碟區的存取類型（讀取 / 寫入或唯讀）自動建立快照，或使用現有的快照。當您為備份指定快照時，所有比指定快照更舊的快照也會備份到磁帶。
 
-如果您未指定備份的Snapshot複本、則會發生下列情況：
+如果您未指定備份的快照，則會發生下列情況：
 
-* 對於讀寫磁碟區、會自動建立Snapshot複本。
+* 對於讀寫磁碟區，系統會自動建立快照。
 +
-新建立的Snapshot複本和所有舊的Snapshot複本都會備份到磁帶。
+新建立的快照和所有較舊的快照都會備份到磁帶。
 
-* 對於唯讀磁碟區、所有Snapshot複本（包括最新的Snapshot複本）都會備份到磁帶。
+* 對於唯讀磁碟區，所有快照（包括最新快照）都會備份到磁帶。
 +
-在備份啟動後建立的任何新Snapshot複本都不會備份。
+在備份啟動之後建立的任何新快照都不會備份。
 
 
 
@@ -35,21 +35,21 @@ summary: 您應該瞭解在SM磁帶 基礎備份和遞增備份期間、如何�
 
 == 遞增備份
 
-對於SMTape遞增或差異備份作業、NDMP相容的備份應用程式會建立及管理Snapshot複本。
+對於 SMTape 遞增或差異備份作業，符合 NDMP 標準的備份應用程式會建立及管理快照。
 
-執行遞增備份作業時、您必須一律指定Snapshot複本。若要成功進行遞增備份作業、在先前備份作業期間備份的Snapshot複本（基準或遞增）必須位於執行備份的磁碟區上。若要確保使用此備份Snapshot複本、您必須在設定備份原則時、考慮在此磁碟區上指派的Snapshot原則。
+執行遞增備份作業時，您必須一律指定快照。若要成功執行增量備份作業，在先前備份作業（基準或遞增）期間備份的快照必須位於執行備份的磁碟區上。為了確保您使用此備份快照，您必須在設定備份原則時，考慮在此磁碟區上指派的快照原則。
 
 
 
 == SnapMirror目的地上的SMTape備份考量
 
-* 資料保護鏡射關係會在目的地磁碟區上建立暫用Snapshot複本以供複寫。
+* 資料保護鏡射關係會在目的地磁碟區上建立暫時快照以進行複寫。
 +
-您不應使用這些Snapshot複本進行SM磁帶 備份。
+請勿將這些快照用於 SMTape 備份。
 
-* 如果在同一個磁碟區上執行SMTape備份作業時、目的地磁碟區上發生資料保護鏡射關係的SnapMirror更新、則不得在來源磁碟區上刪除由SMTape備份的Snapshot複本。
+* 如果在同一磁碟區上執行 SMTape 備份作業期間，目的地磁碟區的資料保護鏡像關係中發生 SnapMirror 更新，則不得刪除來源磁碟區上由 SMTape 備份的快照。
 +
-在備份作業期間、SMTape會鎖定目的地磁碟區上的Snapshot複本、如果來源磁碟區上刪除對應的Snapshot複本、則後續的SnapMirror更新作業將會失敗。
+在備份作業期間， SMTape 會鎖定目的地磁碟區上的快照，如果來源磁碟區上的對應快照已刪除，則後續的 SnapMirror 更新作業將會失敗。
 
-* 您不應在遞增備份期間使用這些Snapshot複本。
+* 增量備份期間不應使用這些快照。
 

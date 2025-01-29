@@ -2,21 +2,21 @@
 permalink: data-protection/restore-part-file-snapshot-task.html 
 sidebar: sidebar 
 keywords: restore, part, file, snapshot copy 
-summary: 假設您知道資料的起始位元組偏移量和位元組數、您可以使用Volume Snapshot partne-還原 檔案命令、將一系列資料從Snapshot複本還原至LUN、NFS或SMB Container檔案。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。 
+summary: 您可以使用 Volume Snapshot partial 還原檔案命令，將資料範圍從快照還原至 LUN 或 NFS 或 SMB 容器檔案，前提是您知道資料的起始位元組偏移和位元組數。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。 
 ---
-= 使用 ONTAP 從 Snapshot 複本還原部分檔案
+= 使用 ONTAP 從快照還原部分檔案
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `volume snapshot partial-restore-file` 此命令可將資料範圍從 Snapshot 複本還原至 LUN 或 NFS 或 SMB 容器檔案、前提是您知道資料的起始位元組偏移和位元組數。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。
+您可以使用 `volume snapshot partial-restore-file`命令將資料範圍從快照還原至 LUN 或 NFS 或 SMB 容器檔案，前提是您知道資料的起始位元組偏移和位元組數。您可以使用此命令來還原主機上的其中一個資料庫、該資料庫會將多個資料庫儲存在同一個LUN中。
 
-從 ONTAP 9.12.1 開始、使用的磁碟區可進行部分還原 xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]。
+從 ONTAP 9.12.1 開始，使用的磁碟區可xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]進行部分還原。
 
 .步驟
-. 列出Volume中的Snapshot複本：
+. 列出磁碟區中的快照：
 +
 `volume snapshot show -vserver _SVM_ -volume _volume_`
 
@@ -24,7 +24,7 @@ summary: 假設您知道資料的起始位元組偏移量和位元組數、您�
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-show.html["指令參考資料ONTAP"^]需詳細 `volume snapshot show`資訊，請參閱。
 
 +
-下列範例顯示中的 Snapshot 複本 `vol1`：
+以下範例顯示中的快照 `vol1`：
 
 +
 [listing]
@@ -44,7 +44,7 @@ vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 7 entries were displayed.
 ----
-. 從Snapshot複本還原部分檔案：
+. 從快照還原部分檔案：
 +
 `volume snapshot partial-restore-file -vserver _SVM_ -volume _volume_ -snapshot _snapshot_ -path _file_path_ -start-byte _starting_byte_ -byte-count _byte_count_`
 

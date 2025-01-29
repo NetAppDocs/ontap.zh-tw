@@ -2,7 +2,7 @@
 permalink: data-protection/restore-volume-snapvault-backup-task.html 
 sidebar: sidebar 
 keywords: restore, content, volume, snapmirror, destination, snap mirror, snapshot, vault, snapvault, read-write, incremental 
-summary: 您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Volume的內容。您可以將磁碟區的內容還原至原始來源磁碟區或其他磁碟區。 
+summary: 您可以從 SnapMirror 目的地磁碟區的快照還原整個磁碟區的內容。您可以將磁碟區的內容還原至原始來源磁碟區或其他磁碟區。 
 ---
 = 使用 ONTAP 從 SnapMirror 目的地還原磁碟區的內容
 :allow-uri-read: 
@@ -11,21 +11,21 @@ summary: 您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Vo
 
 
 [role="lead"]
-您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Volume的內容。您可以將磁碟區的內容還原至原始來源磁碟區或其他磁碟區。
+您可以從 SnapMirror 目的地磁碟區的快照還原整個磁碟區的內容。您可以將磁碟區的內容還原至原始來源磁碟區或其他磁碟區。
 
 .關於這項工作
 此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K 、 ASA A70 或 ASA A90 ）、請遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/restore-data.html["這些步驟"^]以還原資料。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
 
 還原作業的目的地Volume必須是下列其中一項：
 
-* 讀寫磁碟區、在這種情況下、SnapMirror會執行_遞增 式還原_、前提是來源與目的地磁碟區具有通用的Snapshot複本（如同還原至原始來源磁碟區一般）。
+* 讀寫磁碟區（在這種情況下， SnapMirror 會執行 _ 遞增還原 _ ，前提是來源磁碟區和目的地磁碟區具有通用快照（通常是還原至原始來源磁碟區的情況）。
 +
 [NOTE]
 ====
-如果沒有通用的Snapshot複本、則命令會失敗。您無法將磁碟區的內容還原至空白的讀寫磁碟區。
+如果沒有通用快照，則命令會失敗。您無法將磁碟區的內容還原至空白的讀寫磁碟區。
 
 ====
-* 空的資料保護磁碟區、在這種情況下、SnapMirror會執行_baseline還原_、其中指定的Snapshot複本及其參照的所有資料區塊都會傳輸到來源磁碟區。
+* 空白的資料保護磁碟區，在這種情況下， SnapMirror 會執行 _ 基準還原 _ ，其中指定的快照及其參照的所有資料區塊都會傳輸到來源磁碟區。
 
 
 還原磁碟區的內容是一項顛覆性的作業。當SnapVault 還原作業執行時、SMB流量不得在還原主磁碟區上執行。
@@ -34,9 +34,9 @@ summary: 您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Vo
 
 在執行還原之前、會停用為目的地Volume定義的任何配額規則。您可以使用 `volume quota modify` 還原作業完成後重新啟動配額規則的命令。
 
-當磁碟區中的資料遺失或毀損時、您可以從先前的Snapshot複本還原資料、以復原資料。
+當磁碟區中的資料遺失或毀損時，您可以從較早的快照還原資料。
 
-此程序會以舊版Snapshot複本的資料取代來源磁碟區上的目前資料。您應該在目的地叢集上執行此工作。
+此程序會以舊版快照版本的資料取代來源磁碟區上的目前資料。您應該在目的地叢集上執行此工作。
 
 .步驟
 您可以使用系統管理員或 ONTAP CLI 還原磁碟區的內容。
@@ -48,14 +48,14 @@ summary: 您可以從SnapMirror目的地Volume中的Snapshot複本還原整個Vo
 . 按一下「*保護>關係*」、然後按一下來源Volume名稱。
 . 按一下 image:icon_kabob.gif["功能表選項圖示"] 、然後選取 * 還原 * 。
 . 在*來源*下、預設會選取來源Volume。如果您要選擇來源以外的磁碟區、請按一下*其他Volume *。
-. 在*目的地*下、選擇您要還原的Snapshot複本。
+. 在 * 目的地 * 下，選擇您要還原的快照。
 . 如果來源與目的地位於不同的叢集上、請在遠端叢集上按一下*保護>關係*、以監控還原進度。
 
 
 --
 .CLI
 --
-. 列出目的地Volume中的Snapshot複本：
+. 列出目的地 Volume 中的快照：
 +
 [source, cli]
 ----
@@ -65,7 +65,7 @@ volume snapshot show -vserver <SVM> -volume <volume>
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-show.html["指令參考資料ONTAP"^]需詳細 `volume snapshot show`資訊，請參閱。
 
 +
-下列範例顯示上的 Snapshot 複本 `vserverB:secondary1` 目的地：
+以下範例顯示目的地上的快照 `vserverB:secondary1`：
 
 +
 [listing]
@@ -85,7 +85,7 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 7 entries were displayed.
 ----
-. 從SnapMirror目的地Volume的Snapshot複本還原磁碟區內容：
+. 從 SnapMirror 目的地磁碟區的快照還原磁碟區的內容：
 +
 `snapmirror restore -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <SVM:volume>|<cluster://SVM/volume> -source-snapshot <snapshot>`
 
@@ -97,14 +97,14 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 NOTE: 您必須從原始來源SVM或原始來源叢集執行此命令。
 
 +
-下列命令可還原原始來源 Volume 的內容 `primary1` 從Snapshot複本 `daily.2013-01-25_0010` 在原始目的地 Volume 中 `secondary1`：
+以下命令可從原始目的地 Volume 中的快照 `daily.2013-01-25_0010`還原原始來源 Volume `secondary1`的內容 `primary1`：
 
 +
 [listing]
 ----
 cluster_src::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010
 
-Warning: All data newer than Snapshot copy daily.2013-01-25_0010 on volume vserverA:primary1 will be deleted.
+Warning: All data newer than snapshot daily.2013-01-25_0010 on volume vserverA:primary1 will be deleted.
 
 Do you want to continue? {y|n}: y
 
