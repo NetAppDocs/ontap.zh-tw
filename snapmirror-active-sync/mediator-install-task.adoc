@@ -24,6 +24,14 @@ SnapMirror 主動式同步使用對等叢集，確保在發生容錯移轉情況
 
 ONTAP Mediator 提供持續且有圍籬的儲存區、用於 ONTAP 叢集在 SnapMirror 主動式同步關係中使用的高可用度（ HA ）中繼資料。此外、 ONTAP Mediator 還提供同步節點健全狀況查詢功能、以協助仲裁判斷、並做為偵測控制器活躍度的 Ping Proxy 。
 
+每個叢集對等關係只能與單一 ONTAP Mediator 執行個體關聯。HA Mediator 執行個體不受支援。當叢集與其他叢集處於多個對等關係中時，可使用下列 ONTAP Mediator 選項：
+
+* 如果在每個關係上設定 SnapMirror 主動式同步，則每個叢集對等關係都可以擁有自己唯一的 ONTAP Mediator 執行個體。
+* 叢集可以對所有對等關係使用相同的 ONTAP Mediator 執行個體。
+
+
+例如，如果叢集 B 與叢集 A ，叢集 C 和叢集 D 之間有對等關係，則在每個關係上設定 SnapMirror 作用中同步時，所有三個叢集對等關係都可以擁有唯一的關聯 ONTAP Mediator 執行個體。或者，叢集 B 也可以對所有三個對等關係使用相同的 ONTAP Mediator 執行個體。在此案例中，叢集會列出三次相同的 ONTAP Mediator 執行個體。
+
 .必要條件ONTAP
 * 此《程式集》包含自己的一組先決條件。ONTAP安裝中介器之前、您必須符合這些先決條件。
 +

@@ -37,8 +37,42 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 
 
 
-=== 作業系統需求
+=== 主機需求
 
+安裝 Red Hat Enterprise Linux （ RHEL ）或 Rocky Linux 並設定相關儲存庫時，請遵循這些要求。
+
+[NOTE]
+====
+如果您修改安裝或組態程序，可能需要執行其他步驟。
+
+====
+.Linux 發佈要求
+* 根據 Red Hat 的最佳實務做法來安裝 RHEL 或 Rocky Linux 。由於 CentOS 8.x 已達到使用壽命，因此不建議使用相容版本的 CentOS 8.x 。
+* 安裝 ONTAP Mediator 服務時，請確保系統能夠存取所需的儲存庫，以便安裝程式能夠擷取並安裝所有必要的軟體相依性。
+* 若要讓 yum 安裝程式在 RHEL 儲存庫中尋找相關軟體，請在安裝期間或之後使用有效的 Red Hat 訂閱來登錄系統。
++
+[NOTE]
+====
+如需詳細資訊，請參閱 Red Hat Subscription Manager 文件。
+
+====
+
+
+.網路需求
+* 確保 ONTAP Mediator 有下列可用且未使用的連接埠：
++
+** 31784
+** 3260
+
+
+* 如果使用第三方防火牆，請link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["防火牆需求ONTAP"^]參閱。
+* 對於無法存取網際網路的 Linux 主機，請確定所需的套件可在本機儲存庫中使用。
++
+如果您在 Linux 環境中使用鏈路聚合控制協議（ LACP ），請配置內核並將設置 `sysctl net.ipv4.conf.all.arp_ignore`爲 `2`。
+
+
+
+.作業系統需求
 您的作業系統必須符合下列需求：
 
 * 64位元實體安裝或虛擬機器
@@ -135,6 +169,58 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 . 相容表示 RHEL 不再支援此版本，但仍可安裝 ONTAP Mediator 。
 
 
+.作業系統所需的套件
+下列套件是ONTAP 由《不知道的》服務所要求的：
+
+
+NOTE: 這些套件是由 ONTAP Mediator 安裝程式預先安裝或自動安裝。
+
+[cols="34,33,33"]
+|===
+
+
+| 所有RHEL/CentOS版本 | 適用於 RHEL 8.x / Rocky Linux 8 的其他套件 | RHEL 9.x / Rocky Linux 9 的其他套件 
+
+
+ a| 
+* OpenSSL
+* OpenSSL
+* kernel-devel-$ （ uname -r ）
+* 海灣合作委員會
+* 製造
+* libselinux-utils
+* 修補程式
+* bzip2.
+* Perl-Data-Dumper
+* Perl-ExtUtils-MakeMaker..
+* efibootmgr
+* mokutil
+
+ a| 
+* python3-pip
+* elfutils-libelf-devel
+* policycoreutils-python公用程式
+* RedHat-lsb核心
+* python39.
+* python39-devel
+
+ a| 
+* python3-pip
+* elfutils-libelf-devel
+* policycoreutils-python公用程式
+* python3.
+* python3-devel
+
+
+|===
+該媒體夾安裝套件是一個自我解壓縮的tar檔案、其中包括：
+
+* 一種RPM檔案、內含無法從支援版本儲存庫取得的所有相依性。
+* 安裝指令碼。
+
+
+建議使用有效的 SSL 認證。
+
 
 
 === 作業系統升級考量與核心相容性
@@ -166,7 +252,7 @@ ONTAP Mediator 可以安裝在啟用或不啟用 UEFI 安全開機的系統上�
 
 [NOTE]
 ====
-如需如何停用 UEFI 安全開機的詳細資訊，請參閱系統專屬指示。
+如需停用 UEFI 安全開機的詳細指示，請參閱主機作業系統的文件。
 
 ====
 若要在啟用 UEFI 安全開機的情況下安裝 ONTAP Mediator ，您必須先註冊安全金鑰，才能啟動服務。金鑰是在 SCST 安裝的編譯步驟期間產生，並儲存為您機器上的私密公開金鑰配對。使用 `mokutil`公用程式將公開金鑰新增為電腦擁有者金鑰（ Mok ）至 UEFI 韌體，讓系統信任並載入簽署的模組。請將複雜密碼儲存 `mokutil`在安全的位置，因為重新啟動系統以啟動莫克語時，需要這樣做。
