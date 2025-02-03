@@ -20,17 +20,19 @@ summary: 您可以使用安全金鑰管理程式金鑰create命令來建立節�
 
 * 啟用Onboard Key Manager時、不支援此命令。不過、啟用Onboard Key Manager時、會自動建立兩個驗證金鑰。您可以使用下列命令來檢視金鑰：
 +
-`security key-manager key query -key-type NSE-AK`
-
+[listing]
+----
+security key-manager key query -key-type NSE-AK
+----
 * 如果設定的金鑰管理伺服器已儲存超過128個驗證金鑰、您會收到警告。
-* 您可以使用 `security key-manager key delete` 刪除任何未使用金鑰的命令。。 `security key-manager key delete` 如果指定金鑰目前正由 ONTAP 使用、則命令會失敗。（您必須擁有大於「admin」的權限、才能使用此命令。）
+* 您可以使用 `security key-manager key delete`命令刪除任何未使用的金鑰。 `security key-manager key delete`如果指定金鑰目前正由 ONTAP 使用，則命令會失敗。（ Privileges 必須大於 `admin`才能使用此命令。）
 +
 [NOTE]
 ====
 在支援功能環境中、刪除金鑰之前、您必須先確定合作夥伴叢集上沒有使用金鑰MetroCluster 。您可以在合作夥伴叢集上使用下列命令、檢查金鑰是否未被使用：
 
-** `storage encryption disk show -data-key-id _key-id_`
-** `storage encryption disk show -fips-key-id _key-id_`
+** `storage encryption disk show -data-key-id <key-id>`
+** `storage encryption disk show -fips-key-id <key-id>`
 
 
 ====
@@ -42,8 +44,10 @@ summary: 您可以使用安全金鑰管理程式金鑰create命令來建立節�
 .步驟
 . 建立叢集節點的驗證金鑰：
 +
-`security key-manager key create -key-tag passphrase_label -prompt-for-key true|false`
-
+[source, cli]
+----
+security key-manager key create -key-tag <passphrase_label> -prompt-for-key true|false
+----
 +
 [NOTE]
 ====
@@ -57,12 +61,14 @@ summary: 您可以使用安全金鑰管理程式金鑰create命令來建立節�
 [listing]
 ----
 cluster1::> security key-manager key create
-Key ID: 000000000000000002000000000001006268333f870860128fbe17d393e5083b0000000000000000
+Key ID: <id_value>
 ----
 . 確認已建立驗證金鑰：
 +
-`security key-manager key query -node node`
-
+[listing]
+----
+security key-manager key query -node node
+----
 +
 [NOTE]
 ====
@@ -83,9 +89,9 @@ cluster1::> security key-manager key query
 Key Tag                               Key Type  Restored
 ------------------------------------  --------  --------
 node1                                 NSE-AK    yes
-    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+    Key ID: <id_value>
 node1                                 NSE-AK    yes
-    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+    Key ID: <id_value>
 
        Vserver: cluster1
    Key Manager: external
@@ -94,8 +100,8 @@ node1                                 NSE-AK    yes
 Key Tag                               Key Type  Restored
 ------------------------------------  --------  --------
 node2                                 NSE-AK    yes
-    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+    Key ID: <id_value>
 node2                                 NSE-AK    yes
-    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+    Key ID: <id_value>
 ----
 
