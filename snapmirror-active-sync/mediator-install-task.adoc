@@ -14,9 +14,9 @@ summary: SnapMirror 主動式同步需要您安裝及初始化 ONTAP Mediator �
 
 
 [role="lead"]
-SnapMirror 主動式同步使用對等叢集，確保在發生容錯移轉情況時，資料可用。ONTAP Mediator 是確保業務持續運作、監控每個叢集健全狀況的關鍵資源。若要設定 SnapMirror 主動式同步、您必須先安裝 ONTAP Mediator 、並確保主叢集和次叢集已正確設定。
+SnapMirror 主動式同步使用對等叢集，在發生容錯移轉情況時保護您的資料。ONTAP Mediator 是一項關鍵資源，可監控每個叢集的健全狀況，藉此實現業務持續運作。若要設定 SnapMirror 主動式同步，您必須先安裝 ONTAP Mediator ，並確認您的主要和次要叢集已正確設定。
 
-安裝 ONTAP Mediator 並設定叢集之後、您必須 <<initialize-the-ontap-mediator>> 用於 SnapMirror 主動同步的 ONTAP 調解器。您必須這樣做 xref:protect-task.html[建立、初始化及對應 SnapMirror 主動式同步的一致性群組]。
+安裝 ONTAP Mediator 並設定叢集之後<<initialize-the-ontap-mediator,使用自我簽署的憑證初始化 ONTAP Mediator for SnapMirror 主動式同步>>，。您必須如此xref:protect-task.html[建立、初始化及對應 SnapMirror 主動式同步的一致性群組]。
 
 
 
@@ -33,21 +33,21 @@ ONTAP Mediator 提供持續且有圍籬的儲存區、用於 ONTAP 叢集在 Sna
 例如，如果叢集 B 與叢集 A ，叢集 C 和叢集 D 之間有對等關係，則在每個關係上設定 SnapMirror 作用中同步時，所有三個叢集對等關係都可以擁有唯一的關聯 ONTAP Mediator 執行個體。或者，叢集 B 也可以對所有三個對等關係使用相同的 ONTAP Mediator 執行個體。在此案例中，叢集會列出三次相同的 ONTAP Mediator 執行個體。
 
 .必要條件ONTAP
-* 此《程式集》包含自己的一組先決條件。ONTAP安裝中介器之前、您必須符合這些先決條件。
+* 此《程式集》包含自己的一組先決條件。ONTAP安裝 ONTAP Mediator 之前，您必須符合這些先決條件。
 +
 如需詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["準備安裝ONTAP 《不知道如何安裝》服務"^]。
 
-* 根據預設ONTAP 、此功能可透過TCP連接埠31784提供服務。您應該確定連接埠31784已開啟、而且可以在ONTAP 各個叢集和中介器之間使用。
+* 根據預設ONTAP 、此功能可透過TCP連接埠31784提供服務。您應該確定 ONTAP 叢集和 ONTAP Mediator 之間的連接埠 31784 已開啟且可用。
 
 
 
 
 == 安裝 ONTAP Mediator 並確認叢集組態
 
-請繼續執行下列每個步驟。對於每個步驟、您都應該確認已執行特定組態。請使用每個步驟之後隨附的連結、視需要取得更多資訊。
+執行下列每個步驟以安裝 ONTAP Mediator 並驗證叢集組態。對於每個步驟、您都應該確認已執行特定組態。每個步驟都包含您需要遵循的特定程序連結。
 
 .步驟
-. 在ONTAP 確保來源叢集和目的地叢集已正確設定之前、請先安裝「盡力協助」服務。
+. 請先安裝 ONTAP Mediator 服務，再確認來源叢集和目的地叢集的設定是否正確。
 +
 xref:../mediator/index.html[準備安裝或升級 ONTAP Mediator 服務]
 
@@ -59,11 +59,11 @@ NOTE: SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IP
 +
 xref:../task_dp_prepare_mirror.html[設定對等關係]
 
-. 確認已在每個叢集上建立儲存VM。
+. 確認已在每個叢集上建立 SVM 。
 +
 xref:../smb-config/create-svms-data-access-task.html[建立SVM]
 
-. 確認每個叢集上的儲存VM之間存在對等關係。
+. 確認每個叢集上的 SVM 之間存在對等關係。
 +
 xref:../peering/create-intercluster-svm-peer-relationship-93-later-task.html[建立SVM對等關係]
 
@@ -82,7 +82,7 @@ link:../networking/create_a_lif.html["建立LIF"]
 +
 xref:../san-admin/provision-storage.html[建立LUN並對應igroup]
 
-. 重新掃描應用程式主機以探索任何新的LUN。
+. 重新掃描應用程式主機以探索任何新的 LUN 。
 
 
 
@@ -179,7 +179,7 @@ image:successful-mediator-installation.png["中介新增成功"]。
 
 您可以使用 ONTAP CLI 從主叢集或次叢集初始化 ONTAP Mediator 。當您發出時 `mediator add` 命令在一個叢集上、 ONTAP Mediator 會自動新增至另一個叢集。
 
-使用 Mediator 監控 SnapMirror 作用中同步關係時、如果沒有有效的自我簽署或憑證授權單位（ CA ）憑證、則無法在 ONTAP 中初始化 Mediator 。您可以將有效的憑證新增至對等叢集的憑證存放區。當使用 Mediator 來監控 MetroCluster IP 系統時、在初始設定之後不會使用 HTTPS 、因此不需要憑證。
+使用 ONTAP Mediator 監控 SnapMirror 作用中同步關係時，如果沒有有效的自我簽署或憑證授權單位（ CA ）憑證，則無法在 ONTAP 中初始化 Mediator 。您可以將有效的憑證新增至對等叢集的憑證存放區。使用 ONTAP Mediator 監控 MetroCluster IP 系統時，在初始設定之後不會使用 HTTPS ，因此不需要憑證。
 
 [role="tabbed-block"]
 ====
@@ -403,12 +403,12 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 
 == 使用協力廠商憑證重新初始化 ONTAP Mediator
 
-您可能需要重新初始化 ONTAP Mediator 服務。有時可能需要重新初始化 ONTAP Mediator 服務、例如變更 ONTAP Mediator IP 位址、憑證過期等。
+您可能需要重新初始化 ONTAP Mediator 服務。有時可能需要重新初始化 ONTAP Mediator 服務，例如變更 ONTAP Mediator IP 位址，憑證過期等。
 
 下列程序說明當自我簽署的憑證需要由協力廠商憑證取代時，針對特定案例重新初始化 ONTAP Mediator 。
 
 .關於這項工作
-您需要以協力廠商憑證取代 SM-BC 叢集的自我簽署憑證、從 ONTAP 移除 ONTAP Mediator 組態、然後新增 ONTAP Mediator 。
+您需要以協力廠商憑證取代 SnapMirror 主動式同步叢集的自我簽署憑證，從 ONTAP 移除 ONTAP Mediator 組態，然後新增 ONTAP Mediator 。
 
 
 
@@ -455,7 +455,7 @@ image:configure-mediator-system-manager.png["系統管理員中介新增"]
  C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
  2 entries were deleted.
 ----
-. 使用從 SM-BC 叢集移除先前設定的 ONTAP Mediator `-force true`：
+. 使用從 SnapMirror 主動式同步叢集移除先前設定的 ONTAP Mediator `-force true` ：
 +
 * 範例 *
 
@@ -580,7 +580,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
  C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
  2 entries were deleted.
 ----
-. 使用從 SM-BC 叢集移除先前設定的 ONTAP Mediator `-force true`：
+. 使用從 SnapMirror 主動式同步叢集移除先前設定的 ONTAP Mediator `-force true` ：
 +
 * 範例 *
 

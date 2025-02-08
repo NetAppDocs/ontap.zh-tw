@@ -86,7 +86,7 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 . 如果尚未啟用、請選取 * 初始化 SnapLock 法規遵循時鐘 * 。
 . 儲存您的變更。
 . 在 *Volumes （卷） * 窗口中，選擇您更新的卷，然後選擇 *Overview （總覽） * 。
-. 驗證 * SnapLock Snapshot Copy Locking * 是否顯示爲 * Enabled* 。
+. 驗證 * SnapLock 快照鎖定 * 是否顯示爲 * 已啓用 * 。
 
 
 --
@@ -94,7 +94,7 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 --
 . 若要建立新的磁碟區並啟用快照鎖定，請輸入下列命令：
 +
-`volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+`volume create -vserver <vserver_name> -volume <volume_name> -snapshot-locking-enabled true`
 
 +
 下列命令可在名為 vol1 的新磁碟區上啟用快照鎖定：
@@ -130,7 +130,7 @@ Do you want to continue: {yes|no}: y
 . 如果尚未啟用、請選取 * 初始化 SnapLock 法規遵循時鐘 * 。
 . 儲存您的變更。
 . 在 *Volumes （卷） * 窗口中，選擇您更新的卷，然後選擇 *Overview （總覽） * 。
-. 驗證 * SnapLock Snapshot Copy Locking * 是否顯示爲 * Enabled* 。
+. 驗證 * SnapLock 快照鎖定 * 是否顯示爲 * 已啓用 * 。
 
 
 --
@@ -138,7 +138,7 @@ Do you want to continue: {yes|no}: y
 --
 . 若要修改現有的磁碟區以啟用快照鎖定，請輸入下列命令：
 +
-`volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+`volume modify -vserver <vserver_name> -volume <volume_name> -snapshot-locking-enabled true`
 
 
 
@@ -180,7 +180,7 @@ Do you want to continue: {yes|no}: y
 --
 . 若要建立快照原則，請輸入下列命令：
 +
-`volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
+`volume snapshot policy create -policy <policy_name> -enabled true -schedule1 <schedule1_name> -count1 <maximum snapshots> -retention-period1 <retention_period>`
 
 +
 下列命令會建立快照鎖定原則：
@@ -188,7 +188,7 @@ Do you want to continue: {yes|no}: y
 +
 [listing]
 ----
-cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
+cluster1> volume snapshot policy create -policy lock_policy -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
 ----
 +
 如果快照處於作用中保留狀態，則不會取代該快照；也就是說，如果有鎖定的快照尚未過期，則保留計數將不會生效。
@@ -218,7 +218,7 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 若要將快照鎖定原則套用至現有的磁碟區，請輸入下列命令：
 +
-`volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
+`volume modify -volume <volume_name> -vserver <vserver_name> -snapshot-policy <policy_name>`
 
 
 
@@ -247,7 +247,7 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 若要手動建立快照並套用鎖定保留期間，請輸入下列命令：
 +
-`volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -snaplock-expiry-time _expiration_date_time_`
+`volume snapshot create -volume <volume_name> -snapshot <snapshot name> -snaplock-expiry-time <expiration_date_time>`
 
 +
 下列命令會建立新的快照，並設定保留期間：
@@ -281,7 +281,7 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 --
 . 若要手動將保留期間套用至現有的快照，請輸入下列命令：
 +
-`volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+`volume snapshot modify-snaplock-expiry-time -volume <volume_name> -snapshot <snapshot name> -snaplock-expiry-time <expiration_date_time>`
 
 +
 以下範例將保留期間套用至現有的快照：
@@ -289,7 +289,7 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 +
 [listing]
 ----
-cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -expiry-time "11/10/2022 09:00:00"
+cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -snaplock-expiry-time "11/10/2022 09:00:00"
 ----
 
 

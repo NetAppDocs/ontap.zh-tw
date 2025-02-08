@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/ontap_port_usage_on_a_storage_system_overview.html 
-keywords: port, tcp, udp, ontap, external, externally, service, services, introduce, introduction, introducing, overview, ontap port usage overview, ontap port usage, network ports, ontap ports, tcp ports, udp ports, ssh, port 22, telnet, port 23, dns, port 53, http, port 80, rpcbind, port 111, ntp, port 123, msrpc, port 135, netbios-ssn, port 139, snmp, port 161, https, port 443, microsoft-ds, port 445, mount, port 635, named, port 953, nfs, port 2049, nrv, port 2050, iscsi, port 3260, lockd, port 4045, nsm, port 4046, rquotad, port 4049, krb524, port 4444, mdns, port 5353, https, port 5986, port 8443, ndmp, port 10000, cluster peering, port 11104, port 11105, ports 18600 through 18699, cifs witness, port 40001, tls, port 50000, port 65200 
+keywords: port, tcp, udp, http, https, ssh, ontap ports overview, communication ports, port conflicts, ontap ports for inbound traffic, ontap ports for outbound traffic, internal ports 
 summary: 保留連接埠以ONTAP 供與特定服務進行通訊 
 ---
 = ONTAP 連接埠總覽
@@ -14,121 +14,232 @@ summary: 保留連接埠以ONTAP 供與特定服務進行通訊
 
 
 [role="lead"]
-許多知名連接埠保留用於ONTAP 與特定服務進行的不完整通訊。如果儲存網路環境中的連接埠值與ONTAP S多端 口相同、就會發生連接埠衝突。
+有幾個知名連接埠是專為 ONTAP 與特定服務的通訊所保留。如果儲存網路環境中的連接埠值與 ONTAP 連接埠上的值相同，就會發生連接埠衝突。
 
-下表列出ONTAP 了供下列項目使用的TCP連接埠和udp連接埠。
+
+
+== 傳入流量
+
+ONTAP 儲存設備上的傳入流量使用下列通訊協定和連接埠：
 
 [cols="25,25,50"]
 |===
 
 
-| 服務 | 連接埠/傳輸協定 | 說明 
+| 傳輸協定 | 連接埠 | 目的 
 
 
-| SSH | 22TCP | 安全Shell登入 
+| 所有 ICMP | 全部 | Ping 執行個體 
 
 
-| 遠端登入 | 23個TCP | 遠端登入 
+| TCP | 22 | 安全 Shell 存取叢集管理 LIF 或節點管理 LIF 的 IP 位址 
 
 
-| DNS | 53/TCP | 負載平衡DNS 
+| TCP | 80 | 網頁存取叢集管理 LIF 的 IP 位址 
 
 
-| HTTP | 80/TCP | 超文字傳輸傳輸協定 
+| TCP/UDP | 111. | rpcbind ，遠端程序呼叫 NFS 
 
 
-| rpcbind | 111/TCP | 遠端程序呼叫 
+| UDP | 123. | NTP ，網路時間傳輸協定 
 
 
-| rpcbind | 111/UDP | 遠端程序呼叫 
+| UDP | 135. | MSRPC ， Microsoft 遠端程序呼叫 
 
 
-| NTP | 123/UDP | 網路時間傳輸協定 
+| TCP | 139. | NetBIOS-SSN ，適用於 CIFS 的 NetBios 服務工作階段 
 
 
-| MSRPC | 135/UDP | MSRPC 
+| TCP/UDP | 161-162 | SNMP ，簡易網路管理傳輸協定 
 
 
-| Netbios-SSN | 139/TCP | NetBios 服務工作階段 
+| TCP | 443. | 安全的網頁存取叢集管理 LIF 的 IP 位址 
 
 
-| SNMP | 161/UDP | 簡單的網路管理傳輸協定 
+| TCP | 445. | MS Active Domain Services ， Microsoft SMB/CIFS over TCP 搭配 NetBIOS 架構 
 
 
-| HTTPS | 443/TCP | HTTP over TLS 
+| TCP/UDP | 635 | NFS 裝載可與遠端檔案系統互動，就像是本機檔案系統一樣 
 
 
-| Microsoft - DS | 445/TCP | Microsoft - DS 
+| TCP | 749. | Kerberos 
 
 
-| 掛載 | 635/TCP | NFS 掛載 
+| UDP | 953. | 名稱精靈 
 
 
-| 掛載 | 635/UDP | NFS掛載 
+| TCP/UDP | 2049. | NFS 伺服器精靈 
 
 
-| 已命名 | 953/udp | 名稱精靈 
+| TCP | 2050. | NRV ， NetApp 遠端 Volume 傳輸協定 
 
 
-| NFS | 2049/ udp | NFS伺服器精靈 
+| TCP | 3260 | 透過 iSCSI 資料 LIF 存取 iSCSI 
 
 
-| NFS | 2049/ TCP | NFS伺服器精靈 
+| TCP/UDP | 4045 | NFS 鎖定精靈 
 
 
-| Nrv | 2050/TCP | NetApp遠端Volume傳輸協定 
+| TCP/UDP | 4046 | NFS 的網路狀態監控 
 
 
-| iSCSI | 3260/TCP | iSCSI目標連接埠 
+| UDP | 4049 | NFS RPC Rquotad 
 
 
-| 鎖定 | 4045/TCP | NFS 鎖定精靈 
+| UDP | 4444. | KRB524 ， Kerberos 524 
 
 
-| 鎖定 | 4045/udp | NFS 鎖定精靈 
+| UDP | 5353. | 多點傳送DNS 
 
 
-| NSM | 4046/TCP | 網路狀態監視器 
+| TCP | 10000. | 使用網路資料管理傳輸協定（ NDMP ）進行備份 
 
 
-| NSM | 4046/UDP | 網路狀態監視器 
+| TCP | 11104. | 叢集對等，雙向管理 SnapMirror 的叢集間通訊工作階段 
 
 
-| 商 | 4049/UDP | NFS rquotad 傳輸協定 
+| TCP | 11105. | 叢集對等，雙向 SnapMirror 資料傳輸，使用叢集間的生命週期 
+|===
 
 
-| KRB524 | 4444 / udp | Kerberos 524 
+== 傳出流量
 
+您可以根據業務需求，使用基本或進階規則來設定 ONTAP 儲存設備上的輸出流量。
 
-| mDNS | 533/udp | 多點傳送DNS 
 
 
-| HTTPS | 5986/UDP | HTTPS連接埠-接聽二進位傳輸協定 
+=== 基本傳出規則
 
+所有連接埠都可用於透過 ICMP ， TCP 和 UDP 傳輸協定的所有輸出流量。
 
-| HTTPS | 8433/TCP | 透過https的7MTT GUI工具 
+[cols="25,25,50"]
+|===
 
 
-| NDMP | 1000/TCP | 網路資料管理傳輸協定 
+| 傳輸協定 | 連接埠 | 目的 
 
 
-| 叢集對等 | 11104/TCP | 叢集對等、雙向 
+| 所有 ICMP | 全部 | 所有傳出流量 
 
 
-| 叢集對等、雙向 | 11105/TCP | 叢集對等 
+| 所有 TCP | 全部 | 所有傳出流量 
 
 
-| NDMP | 18600 - 18699/TCP | NDMP 
+| 所有的 udp | 全部 | 所有傳出流量 
+|===
 
 
-| NDMP | 30000/TCP | 接受安全通訊端的控制連線 
+=== 進階傳出規則
 
+如果您需要嚴格的輸出流量規則，可以使用下列資訊，只開啟 ONTAP 輸出通訊所需的連接埠。
 
-| CIFS見證連接埠 | 40001/TCP | CIFS見證連接埠 
 
 
-| TLS | 50000/TCP | 傳輸層安全性 
+==== Active Directory
 
+[cols="10,10,30,25,25"]
+|===
 
-| iSCSI | 65200/TCP | iSCSI連接埠 
+
+| 傳輸協定 | 連接埠 | 來源 | 目的地 | 目的 
+
+
+| TCP | 88. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ， iSCSI ） | Active Directory 樹系 | Kerberos V 驗證 
+
+
+| UDP | 137. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | NetBios 名稱服務 
+
+
+| UDP | 138. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | NetBios 資料報服務 
+
+
+| TCP | 139. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | NetBios 服務工作階段 
+
+
+| TCP | 389. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | LDAP 
+
+
+| UDP | 389. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | LDAP 
+
+
+| TCP | 445. | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | Microsoft SMB/CIFS over TCP 搭配 NetBios 架構 
+
+
+| TCP | 464 | 節點管理 LIF ，資料 LIF （ NFS ， CIFS ） | Active Directory 樹系 | 變更並設定 Kerberos V 密碼（ set_change ） 
+
+
+| UDP | 464 | 節點管理 LIF ， Data LIF （ NFS ， CIFS ） | Active Directory 樹系 | Kerberos 金鑰管理 
+
+
+| TCP | 749. | 節點管理 LIF ， Data LIF （ NFS ， CIFS ） | Active Directory 樹系 | 變更並設定 Kerberos V 密碼（ RPCSEC_GSS ） 
+|===
+
+
+==== AutoSupport
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 傳輸協定 | 連接埠 | 來源 | 目的地 | 目的 
+
+
+| TCP | 80 | 節點管理 LIF | support.netapp.com | 僅當傳輸傳輸傳輸傳輸傳輸協定從HTTPS變更為HTTP時、AutoSupport 
+|===
+
+
+==== SNMP
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 傳輸協定 | 連接埠 | 來源 | 目的地 | 目的 
+
+
+| TCP/UDP | 162. | 節點管理 LIF | 監控伺服器 | 透過 SNMP 設陷進行監控 
+|===
+
+
+==== SnapMirror
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 傳輸協定 | 連接埠 | 來源 | 目的地 | 目的 
+
+
+| TCP | 11104. | 叢集間 LIF | 叢集間 LIF ONTAP | 管理 SnapMirror 的叢集間通訊工作階段 
+|===
+
+
+==== 其他服務
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 傳輸協定 | 連接埠 | 來源 | 目的地 | 目的 
+
+
+| TCP | 25. | 節點管理 LIF | 郵件伺服器 | 可以使用 SMTP 警示 AutoSupport 來執行功能 
+
+
+| UDP | 53. | 節點管理 LIF 與資料 LIF （ NFS 、 CIFS ） | DNS | DNS 
+
+
+| UDP | 67. | 節點管理 LIF | DHCP | DHCP伺服器 
+
+
+| UDP | 68. | 節點管理 LIF | DHCP | 第一次設定的 DHCP 用戶端 
+
+
+| UDP | 514 | 節點管理 LIF | 系統記錄伺服器 | 系統記錄轉送訊息 
+
+
+| TCP | 5010. | 叢集間 LIF | 備份端點或還原端點 | 備份與還原備份至 S3 功能的作業 
+
+
+| TCP | 18600 至 18699 | 節點管理 LIF | 目的地伺服器 | NDMP 複本 
 |===

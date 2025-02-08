@@ -2,7 +2,7 @@
 permalink: abac/abac-overview.html 
 sidebar: sidebar 
 keywords: technical report, tr, abac, attribute, access control, attribute based, nfs, security labels, xattrs, nfs 4.2, nist, abac compliant, data management, role-based access control, rbac, policy enforcement point, pep, policy decision point, pdp 
-summary: ONTAP 設定了 NFS 4.2 安全性標籤和延伸屬性（ XATTRS ），可與角色型存取控制（ RBAC ）和屬性型存取控制（ ABAC ）身分識別和存取控制軟體整合，這是符合 NIST ABAC 標準的資料管理解決方案。 
+summary: ONTAP 設定 NFS v4.2 安全性標籤和延伸屬性（ xATT ）時，可與角色型存取控制（ RBAC ）和屬性型存取控制（ ABAC ）身分識別和存取控制軟體整合，這是符合 NIST ABAC 標準的資料管理解決方案。 
 ---
 = 使用 ONTAP 進行屬性型存取控制
 :allow-uri-read: 
@@ -11,21 +11,13 @@ summary: ONTAP 設定了 NFS 4.2 安全性標籤和延伸屬性（ XATTRS ），
 
 
 [role="lead"]
-您可以使用 ONTAP 來實作具有屬性和屬性型存取控制（ ABAC ）的增強 RBAC 。ONTAP 提供數種客戶可用來達成檔案層級 ABAC 的方法，包括使用 NFS 和 SMB/CIFS 的標記 NFS 4.2 和 XATTRS 。
+從 9.12.1 開始，您可以使用 NFSv4.2 安全性標籤和延伸屬性（ xATT ）來設定 ONTAP ，以支援具有屬性和屬性型存取控制（ ABAC ）的角色型存取控制（ RBAC ）。
 
-屬性型存取控制（ ABAC ）是管理存取權限的精密方法，可考量使用者屬性，資源屬性和環境條件。國家標準與技術研究所（ NIST ）已建立 ABAC 標準，提供安全且一致的實作架構。
+ABAC 是根據使用者屬性，資源屬性和環境條件來定義權限的授權策略。ONTAP 與 NFS v4.2 安全性標籤和 xATTs 的整合符合 NIST 標準的 ABAC 解決方案，如 NIST 特別出版品 800-162 所述。
 
-從 ONTAP 9 。 12.1 開始，您可以使用 NFSv4.2 安全性標籤和延伸屬性（ XATTRS ）來設定 ONTAP ，以便將其與角色型存取控制（ RBAC ）和屬性型存取控制（ ABAC ）身分識別整合。這項整合可讓 ONTAP 存取歸類為 NIST ABAC 相容資料管理解決方案的控制軟體，提供強大且進階的方法來管理複雜環境中的存取權限，包括原則強制執行點（ PEP ），原則決策點（ PDP ），以及考慮與使用者，資源和環境相關屬性的原則。
-
-NetApp ONTAP 與延伸屬性（ XATTRS ）和屬性型存取控制（ ABAC ）軟體的整合符合 NIST 特別出版品 800-162 中所述的準則，確保符合 ABAC 實作的 NIST 標準。使用 NFS 4.2 安全標籤和 XATTRS ，可將使用者定義的屬性與檔案關聯，符合 NIST ABAC 標準在存取控制決策中考量資源屬性的要求。ABAC 軟體的 PEP 和 PDp 符合 NIST ABAC 標準，在存取控制程序中對這些元件的要求。能夠定義複雜的原則，以考量多種屬性和條件，符合 NIST ABAC 標準對原則型存取控制的要求。
+您可以使用 NFS v4.2 安全性標籤和 xatts 來指派檔案使用者定義的屬性和標籤。ONTAP 可與 ABAC 導向的身分識別與存取管理軟體整合，以根據這些屬性和標籤，強制執行精細的檔案和資料夾存取控制原則。
 
 .相關資訊
 * link:../abac/abac-approaches.html["使用 ONTAP 的 ABAC 方法"]
 * link:https://www.netapp.com/media/10720-tr-4067.pdf["NetApp ONTAP 中的 NFS ：最佳實務做法與實作指南"^]
-* 徵求意見（ RFC ）
-+
-** RFC 2203 ： RPCSEC_GSS 傳輸協定規格
-** RFC 3530 ：網路檔案系統（ NFS ）第 4 版傳輸協定
-
-
 

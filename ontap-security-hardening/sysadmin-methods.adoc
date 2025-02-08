@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: ontap-security-hardening/sysadmin-methods.html 
-keywords: tr-4569, ontap hardening guide, security, access, encryption, MFA, multi-factor authentication, ssh, MOTD, CLI timeout, SAML access for System Manager, Insights 
-summary: 部署這些方法以進行健全的 ONTAP 系統管理。 
+keywords: tr-4569, ontap hardening guide, security, access, encryption, MFA, multi-factor authentication, ssh, MOTD, timeout, SAML access for System Manager, Insights 
+summary: 請考量這些 CLI 和系統管理員方法，以實現健全的 ONTAP 系統管理。 
 ---
 = 系統管理方法
 :hardbreaks:
@@ -224,3 +224,19 @@ SAML 規格中定義了三種角色：主體、 IDP 和服務供應商。在 ONT
 | 未設定叢集以接收通知 | 電子郵件、 Webhooks 或 SNMP traphosts 未設定為接收通知。 
 |===
 如需 ONTAP System Manager 深入分析的詳細資訊，請參閱 link:../insights-system-optimization-task.html#view-optimization-insights["ONTAP System Manager Insights 文件"]。
+
+
+
+=== System Manager 工作階段逾時
+
+您可以變更 System Manager 工作階段閒置逾時。預設的閒置逾時為 30 分鐘。逾時對於防止過時的工作階段和工作階段暫存是很重要的。
+
+
+NOTE: 如果已設定 SAML ，則閒置逾時會由 IDP 上的設定控制。
+
+.步驟
+. 選擇*叢集>設定*。
+. 在 *UI settings* 中，選擇image:icon_pencil.gif["編輯圖示"]。
+. 在 * 閒置逾時 * 方塊中，輸入介於 2 到 180 之間的分鐘值，或輸入「 0 」以停用逾時。
+. 選擇*保存*。
+

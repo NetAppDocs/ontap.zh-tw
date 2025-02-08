@@ -25,6 +25,10 @@ summary: 如果來源儲存區中的資料無法使用、您可以中斷SnapMirr
 
 接管作業必須從遠端叢集啟動。
 
+雖然 SnapMirror S3 會將物件從來源貯體複寫到目的地貯體，但不會將群組和貯體原則從來源物件存放區複寫到目的地物件存放區。
+
+必須在目的地物件存放區上設定使用者，群組原則，權限及類似元件，以便用戶端在容錯移轉事件期間存取目的地儲存區。
+
 [role="tabbed-block"]
 ====
 .系統管理員
@@ -52,3 +56,8 @@ dest_cluster::> snapmirror failover start -destination-path dest_svm1:/bucket/te
 
 --
 ====
+.相關資訊
+* link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組（系統管理員）"]
+* link:../s3-config/create-s3-user-task.html["建立S3使用者（CLI）"]
+* link:../s3-config/create-modify-groups-task.html["建立或修改S3群組（CLI）"]
+
