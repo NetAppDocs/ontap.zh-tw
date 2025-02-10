@@ -1,0 +1,167 @@
+---
+permalink: san-config/configure-fc-adapters-initiator-target.html 
+sidebar: sidebar 
+keywords: configure, fc adapters, initiator mode, target mode, FC-NVMe, FC adapter speed 
+summary: 主機板內建 FC 介面卡和某些 FC 擴充介面卡可以設定為啟動器或目標連接埠。其他 FC 擴充介面卡在原廠設定為啟動器或目標，無法變更。 
+---
+= 設定FC介面卡
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+內建 FC 介面卡和某些 FC 擴充卡可以個別設定為啟動器或目標連接埠。其他 FC 擴充介面卡在原廠設定為啟動器或目標，無法變更。透過支援的 UTA2 卡（使用 FC SFP+ 介面卡設定），也可以使用額外的 FC 連接埠。
+
+啟動器連接埠可用於直接連接至後端磁碟櫃，也可能是外部儲存陣列。目標連接埠只能用於連接 FC 交換器。
+
+為 FC 設定的內建連接埠和 CNA/UTA2 連接埠數量會因控制器機型而異。支援的目標擴充介面卡也會因控制器機型而異。如需控制器機型內建 FC 連接埠和支援的目標擴充介面卡的完整清單，請參閱link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+
+
+== 將FC介面卡設定為啟動器模式
+
+啟動器模式用於將連接埠連接至磁帶機、磁帶庫、或使用FlexArray 「虛擬化」或「外部LUN匯入」（FLI）的協力廠商儲存設備。
+
+.開始之前
+* 介面卡上的LIF必須從其成員所在的任何連接埠集中移除。
+* 使用要修改之實體連接埠的所有儲存虛擬機器（SVM）LIF、必須先移轉或銷毀、才能將實體連接埠的特性從目標變更為啟動器。
+
+
+[NOTE]
+====
+NVMe / FC支援啟動器模式。
+
+====
+.步驟
+. 移除介面卡上的所有LIF：
++
+[source, cli]
+----
+network interface delete -vserver _SVM_name_ -lif _lif_name_,_lif_name_
+----
+. 讓介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -status-admin down
+----
++
+如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
+
+. 將介面卡從目標變更為啟動器：
++
+[source, cli]
+----
+system hardware unified-connect modify -t initiator _adapter_port_
+----
+. 重新啟動裝載您所變更介面卡的節點。
+. 驗證FC連接埠的組態設定是否正確：
++
+[source, cli]
+----
+system hardware unified-connect show
+----
+. 將介面卡重新連線：
++
+[source, cli]
+----
+node run -node _node_name_ storage enable adapter _adapter_port_
+----
+
+
+
+
+== 將FC介面卡設定為目標模式
+
+目標模式用於將連接埠連接至FC啟動器。
+
+同樣的步驟也用於設定 FC 傳輸協定和 FC-NVMe 傳輸協定的 FC 介面卡。不過、只有某些FC介面卡支援FC-NVMe。如需支援 FC-NVMe 傳輸協定的介面卡清單，請參閱link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+.步驟
+. 使介面卡離線：
++
+[source, cli]
+----
+node run -node _node_name_ storage disable adapter _adapter_name_
+----
++
+如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
+
+. 將介面卡從啟動器變更為目標：
++
+[source, cli]
+----
+system node hardware unified-connect modify -t target -node _node_name_ adapter _adapter_name_
+----
+. 重新啟動裝載您所變更介面卡的節點。
+. 驗證目標連接埠的組態是否正確：
++
+[source, cli]
+----
+network fcp adapter show -node _node_name_
+----
+. 將介面卡上線：
++
+[source, cli]
+----
+network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up
+----
+
+
+
+
+== 設定 FC 介面卡速度
+
+您應該設定介面卡目標連接埠速度，使其符合所連接裝置的速度，而非使用自動協商。設定為自動協商的連接埠、在接管/恢復或其他中斷之後、重新連線可能需要較長的時間。
+
+.關於這項工作
+由於此工作涵蓋叢集中的所有儲存虛擬機器（ SVM ）和所有生命、因此您必須使用 `-home-port` 和 `-home-lif` 限制此作業範圍的參數。如果不使用這些參數、則此作業會套用至叢集中的所有l生命、這可能是不理想的。
+
+.開始之前
+使用此介面卡做為其主連接埠的所有LIF都必須離線。
+
+.步驟
+. 將此介面卡上的所有生命段離線：
++
+[source, cli]
+----
+network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin down
+----
+. 使介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -state down
+----
++
+如果介面卡未離線、您也可以從系統上適當的介面卡連接埠拔下纜線。
+
+. 判斷連接埠介面卡的最大速度：
++
+[source, cli]
+----
+fcp adapter show -instance
+----
++
+您無法修改介面卡速度超過最大速度。
+
+. 變更介面卡速度：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -speed 16
+----
+. 將介面卡上線：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -state up
+----
+. 將介面卡上的所有生命項目上線：
++
+[source, cli]
+----
+network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin up
+----
+

@@ -4,15 +4,45 @@ sidebar: sidebar
 keywords: host, support, multipathing 
 summary: 支援FC和iSCSI路徑時、務必使用非對稱邏輯單元存取（ALUA）ONTAP 。請務必使用支援ALUA的主機組態來執行FC和iSCSI傳輸協定。 
 ---
-= 主機對多重路徑的支援總覽
+= ONTAP 支援 SAN 主機多重路徑功能
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-支援FC和iSCSI路徑時、務必使用非對稱邏輯單元存取（ALUA）ONTAP 。請務必使用支援ALUA的主機組態來執行FC和iSCSI傳輸協定。
+ONTAP 使用非對稱式邏輯單元存取（ ALUA ）軟體來處理 FC 和 iSCSI 主機的多重路徑。
 
-從ONTAP 使用非同步命名空間存取（ANA）的NVMe組態開始、支援從S59.5多重路徑HA配對容錯移轉/恢復。在支援的過程中、NVMe僅支援從主機到目標的一條路徑。ONTAP應用程式主機需要管理通往其高可用度（HA）合作夥伴的路徑容錯移轉。
+從 ONTAP 9.5 多重路徑高可用度（ HA ）配對容錯移轉 / 恢復開始，就支援使用非同步命名空間存取（ ANA ）的 NVMe 主機。在 ONTAP 9.4 中， NVMe 只支援從主機到目標的一條路徑，因此應用程式主機必須管理通往 HA 合作夥伴的路徑容錯移轉。
+
+如果您的 SAN 主機可以透過多個路徑存取 LUN 或 NVMe 命名空間，則需要多重路徑軟體。它為作業系統提供單一磁碟，用於通往 LUN 或 NVMe 命名空間的所有路徑。如果沒有它，作業系統就可以將每個路徑視為獨立的磁碟，導致資料毀損。
+
+如果您有下列任一項、您的解決方案就會被視為具有多個路徑：
+
+* 主機中的單一啟動器連接埠、連接到SVM中的多個SAN LIF
+* 多個啟動器連接埠、連接至SVM中的單一SAN LIF
+* 多個啟動器連接埠連接至SVM中的多個SAN LIF
+
+
+HA 組態建議使用多重路徑軟體，也稱為 MPIO （多重路徑 I/O ）軟體。除了選擇性 LUN 對應之外，我們也建議使用 FC 交換器分區或連接埠集來限制用於存取 LUN 的路徑。
 
 如需哪些特定主機組態支援ALUA或ANA的相關資訊、請參閱 https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^] 和 https://docs.netapp.com/us-en/ontap-sanhost/index.html["SAN主機組態ONTAP"] 適用於您的主機作業系統。
+
+
+
+== 從主機到叢集中節點的建議路徑數
+
+從主機到叢集中每個節點的路徑不得超過八條。您也不應超過主機作業系統可支援的路徑總數，以及主機上使用的多重路徑。
+
+每個 LUN 至少應有兩條路徑，透過叢集中的儲存虛擬機器（ SVM ）使用，連接至每個報告節點link:../san-admin/selective-lun-map-concept.html["選擇性LUN對應（SLM)"]。如此可消除單點故障、並讓系統在元件故障時仍能繼續運作。
+
+如果叢集中有四個以上的節點、或是任一節點中的SVM使用四個以上的目標連接埠、 您可以使用下列方法來限制可用於存取節點上LUN的路徑數目、以避免超過建議的八個路徑上限。
+
+* SLM
++
+在擁有LUN的節點上、以及擁有節點的HA合作夥伴、透過SLMs減少從主機到LUN的路徑數量、只能達到路徑。根據預設、會啟用SLM.
+
+* link:../san-admin/limit-lun-access-portsets-igroups-concept.html["適用於iSCSI的PortSet"]
+* 主機的FC igroup對應
+* FC交換器分區
+
