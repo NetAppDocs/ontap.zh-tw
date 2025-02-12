@@ -78,42 +78,12 @@ image:workflow_nas_enable_nfs_and_smb.png["工作流程摘要： 1 啟用 NFS 2 
 .. 在名稱服務切換檔中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] * 名稱服務切換 * 底下的。
 
 
-. 必要時設定驗證與加密：
+. 如有必要、請設定Kerberos：
 +
-[role="tabbed-block"]
-====
-.設定 TLS for NFS 用戶端
---
-
-NOTE: 9.15.1 提供 ONTAP over TLS 的公開預覽功能。ONTAP 9.15.1 的正式作業工作負載不支援 NFS over TLS 作為預覽產品。
-
-.步驟
-.. 請參閱 link:nfs-admin/tls-nfs-strong-security-concept.html["需求"^] 在開始之前使用 NFS over TLS 。
-.. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
-.. 在 *NFS* 方塊中、按一下 * NFS over TLS settings* 。
-.. 在 *NFS over TLS settings* （ *NFS over TLS 設置 * ）區域中，選擇要爲其啓用 TLS 的 NFS 網絡接口。
-.. 按一下 image:icon_kabob.gif["功能表選項圖示"] 該介面的。
-.. 按一下「*啟用*」。
-.. 在 * 網路介面 TLS 組態 * 對話方塊中、選取下列其中一個選項、以包含用於 TLS 的憑證：
-+
-*** * 安裝的憑證 * ：從下拉式清單中選擇先前安裝的憑證。
-*** * 新憑證 * ：選擇憑證的一般名稱。
-*** * 外部 CA 簽署的憑證 * ：請依照指示將憑證和私密金鑰的內容貼到方塊中。
-
-
-.. 按一下「 * 儲存 * 」。
-
-
---
-.設定 Kerberos
---
-.步驟
 .. 按一下「*儲存設備>儲存虛擬機器*」、選取儲存虛擬機器、然後按一下「*設定*」。
 .. 按一下 image:icon_arrow.gif["箭頭圖示"] Kerberos 方塊、然後按一下 * 新增 * 。
 
 
---
-====
 . 必要時對應 UNIX 和 Windows 使用者名稱：按一下 image:icon_arrow.gif["箭頭圖示"] * 名稱對應 * 下的，然後按一下 * 新增 * 。
 +
 只有當您的網站具有未隱含對應的 Windows 和 UNIX 使用者帳戶、亦即每個 Windows 使用者名稱的小寫版本與 UNIX 使用者名稱相符時、才應該這麼做。您可以使用 LDAP 、 NIS 或本機使用者來對應使用者名稱。如果您有兩組使用者不相符、則應設定名稱對應。
