@@ -22,21 +22,13 @@ summary: 您可以將磁碟新增至本機層（Aggregate）、以便為其相�
 ====
 .System Manager（ONTAP 版本號：NetApp 9.8及更新版本）
 --
-*使用系統管理程式來新增容量ONTAP （不含更新版本的資訊）*
 
-您可以新增容量磁碟、將容量新增至本機層。
-
-
-NOTE: 從《產品介紹》9.12開始ONTAP 、您可以使用System Manager檢視本機層的已認可容量、以判斷本機層是否需要額外容量。  請參閱  link:../concept_capacity_measurements_in_sm.html["監控System Manager中的容量"]。
-
-.關於這項工作
-只有在安裝ONTAP 了不含更新版本的更新版本時、才能執行此工作。  如果您安裝的是舊版 ONTAP 、請參閱標有「 System Manager （ ONTAP 9.7 及更早版本）」的標籤（或部分）。
-」。
+NOTE: 從《產品介紹》9.12開始ONTAP 、您可以使用System Manager檢視本機層的已認可容量、以判斷本機層是否需要額外容量。請參閱。 link:../concepts/capacity-measurements-in-sm-concept.html["監控System Manager中的容量"]
 
 .步驟
-. 按一下*儲存設備> Tiers*。
-. 按一下 image:icon_kabob.gif["功能表選項圖示"] 您要新增容量的本機層名稱旁的。
-. 按一下*新增容量*。
+. 選擇 * 儲存 > Tiers* 。
+. 選取image:icon_kabob.gif["功能表選項圖示"]您要新增容量的本機層名稱旁的。
+. 選取 * 新增容量 * 。
 +
 
 NOTE: 如果沒有可新增的備用磁碟、則不會顯示「*新增容量*」選項、而且您無法增加本機層的容量。
@@ -54,7 +46,7 @@ NOTE: 如果沒有可新增的備用磁碟、則不會顯示「*新增容量*」
 零點9.8、9.9或9.10.1 ONTAP
  a| 
 .. 如果節點包含多個儲存層、請選取您要新增至本機層的磁碟數量。  否則、如果節點只包含單一儲存層、則會自動預估新增的容量。
-.. 按一下「 * 新增 * 」。
+.. 選取*「Add*」。
 
 
 
@@ -64,7 +56,7 @@ NOTE: 如果沒有可新增的備用磁碟、則不會顯示「*新增容量*」
  a| 
 .. 選取磁碟類型和磁碟數目。
 .. 如果您要新增磁碟至新的RAID群組、請勾選核取方塊。  隨即顯示RAID分配。
-.. 按一下「 * 儲存 * 」。
+.. 選擇*保存*。
 
 
 |===
@@ -75,36 +67,27 @@ NOTE: 如果沒有可新增的備用磁碟、則不會顯示「*新增容量*」
 --
 .系統管理程式ONTAP （僅限版本9.7及更早版本）
 --
-*使用System Manager來增加容量ONTAP （不含更新版本的版本）*
-
-您可以新增容量磁碟、將容量新增至本機層（Aggregate）。
-
-.關於這項工作
-只有在安裝ONTAP 了不含更新版本的更新版本時、才執行此工作。如果您安裝ONTAP 的是更新版本的版本、請參閱 <<increase-cap-98-later,使用System Manager新增容量ONTAP （更新版本：NetApp 9.8或更新版本）>>。
-
 .步驟
-. （僅限Intel®產品僅供參考9.7）按一下*（返回經典版本）*。ONTAP
-. 按一下「*硬體與診斷> Aggregate *」。
-. 選取您要新增容量磁碟的Aggregate、然後按一下*「Actions」（動作）>「Add Capacity」（新增容量）*。
+. （僅適用於 ONTAP 9.7 ）選擇 * （返回經典版本） * 。
+. 選擇 * 硬體與診斷 > Aggregate * 。
+. 選取您要新增容量磁碟的集合體，然後選取 * 動作 > 新增容量 * 。
 +
 
 NOTE: 您應該新增與集合體中其他磁碟大小相同的磁碟。
 
-. （僅適用於S397）按一下*「切換至新體驗」*。ONTAP
-. 按一下*儲存設備> Tiers*以驗證新Aggregate的大小。
+. （僅適用於 ONTAP 9.7 ）選擇 * 切換至新體驗 * 。
+. 選取 * 儲存 > Tiers* 以驗證新集合體的大小。
 
 
 --
 .CLI
 --
-*使用CLI新增容量*
-
-將分割磁碟新增至Aggregate的程序類似於新增未分割磁碟的程序。
-
-.您需要的產品
+.開始之前
 您必須知道要新增儲存設備之集合體的RAID群組大小。
 
 .關於這項工作
+將分割磁碟新增至集合體的程序與新增未分割磁碟的程序類似。
+
 當您擴充Aggregate時、應該注意是要將分割區或未分割磁碟新增至Aggregate。當您將未分割磁碟機新增至現有的Aggregate時、現有RAID群組的大小會由新的RAID群組繼承、這可能會影響所需的同位元檢查磁碟數量。如果將未分割磁碟新增至由分割磁碟組成的RAID群組、則新磁碟會分割、留下未使用的備用磁碟分割。
 
 在配置磁碟分割時、您必須確保在沒有磁碟機的情況下、不會將兩個磁碟分割區都保留為備援磁碟機的情況下離開節點。如果您這麼做、而且節點發生控制器中斷、可能無法提供有關問題的寶貴資訊（核心檔案）給技術支援人員。
@@ -140,8 +123,10 @@ Original Owner: cl1-s2
 ----
 . 顯示目前的集合體RAID群組：
 +
-`storage aggregate show-status _aggr_name_`
-
+[source, cli]
+----
+storage aggregate show-status <aggr_name>
+----
 +
 [listing]
 ----
@@ -163,8 +148,10 @@ Owner Node: cl1-s2
 ----
 . 模擬將儲存設備新增至Aggregate：
 +
-`storage aggregate add-disks -aggregate _aggr_name_ -diskcount _number_of_disks_or_partitions_ -simulate true`
-
+[source, cli]
+----
+storage aggregate add-disks -aggregate <aggr_name> -diskcount <number_of_disks_or_partitions> -simulate true
+----
 +
 無需實際配置任何儲存設備、即可查看新增儲存設備的結果。如果模擬命令顯示任何警告、您可以調整命令並重複模擬。
 
@@ -192,8 +179,10 @@ Aggregate capacity available for volume use would be increased by 1.83TB.
 ----
 . 將儲存設備新增至Aggregate：
 +
-`storage aggregate add-disks -aggregate _aggr_name_ -raidgroup new -diskcount _number_of_disks_or_partitions_`
-
+[source, cli]
+----
+storage aggregate add-disks -aggregate <aggr_name> -raidgroup new -diskcount <number_of_disks_or_partitions>
+----
 +
 建立 Flash Pool Aggregate 時、如果您要新增的磁碟與 Aggregate 不同的 Checksum 、或是要將磁碟新增至混合式 Checksum Aggregate 、則必須使用 `-checksumstyle` 參數。
 
@@ -210,8 +199,10 @@ cl1-s2::> storage aggregate add-disks -aggregate data_1 -raidgroup new -diskcoun
 ----
 . 確認儲存設備已成功新增：
 +
-`storage aggregate show-status -aggregate _aggr_name_`
-
+[source, cli]
+----
+storage aggregate show-status -aggregate <aggr_name>
+----
 +
 [listing]
 ----
@@ -238,8 +229,10 @@ Owner Node: cl1-s2
 ----
 . 確認節點仍有至少一個磁碟機、其中根分割區和資料分割區都是備援磁碟機：
 +
-`storage aggregate show-spare-disks -original-owner _node_name_`
-
+[source, cli]
+----
+storage aggregate show-spare-disks -original-owner <node_name>
+----
 +
 [listing]
 ----
