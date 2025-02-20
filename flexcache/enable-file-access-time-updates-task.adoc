@@ -19,7 +19,7 @@ summary: '您可以啟用 `-atime-update` FlexCache 捲上的欄位、以允許�
 
 ONTAP 提供一個稱為的 Volume 層級欄位 `-atime-update`，用於管理使用讀取、 readlink 和 READDIR 讀取的檔案和目錄的存取時間更新。atime用於不常存取的檔案和目錄的資料生命週期決策。不常存取的檔案最終會移轉至歸檔儲存設備、之後通常會移至磁帶。
 
-在現有和新建立FlexCache 的版本中、預設會停用atim-update欄位。如果您使用FlexCache 的是含有ONTAP 早於9.11.1版本的版本的版本的支援功能、則應停用atime-update欄位、以便在原始磁碟區上執行讀取作業時、不會不必要地清除快取。然而、有了大量FlexCache 的支援資料的快取、系統管理員可以使用特殊工具來管理資料、並確保熱資料保留在快取中、並清除冷資料。停用atime-update時無法執行此動作。不過、從 ONTAP 9.11.1 開始、您可以啟用 `-atime-update` 和 `-atime-update-period,` 並使用管理快取資料所需的工具。
+在現有和新建立FlexCache 的版本中、預設會停用atim-update欄位。如果您在早於 9.11.1 版的 ONTAP 上使用 FlexCache Volume ，則應將 atime-update 欄位保持停用，以便在原始磁碟區上執行讀取作業時，不會不必要地清除快取。然而、有了大量FlexCache 的支援資料的快取、系統管理員可以使用特殊工具來管理資料、並確保熱資料保留在快取中、並清除冷資料。停用atime-update時無法執行此動作。不過，從 ONTAP 9.11.1 開始，您可以啟用 `-atime-update`及 `-atime-update-period,`使用管理快取資料所需的工具。
 
 
 

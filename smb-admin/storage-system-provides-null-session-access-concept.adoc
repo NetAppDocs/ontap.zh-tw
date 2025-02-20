@@ -17,7 +17,7 @@ summary: 由於null工作階段共用不需要驗證、因此需要null工作階
 
 [NOTE]
 ====
-ONTAP 支援 Windows RestrictAnonymous 登錄設定值與 `–restrict-anonymous` 選項。這可讓您控制未對應的null使用者檢視或存取系統資源的程度。例如、您可以停用共用列舉並存取IPC$共用區（隱藏的命名管道共用區）。。 `vserver cifs options modify` 和 `vserver cifs options show` 手冊頁提供有關的更多資訊 `–restrict-anonymous` 選項。
+ONTAP 支援使用選項的 Windows RestrictAnonymous 登錄設定值 `–restrict-anonymous`。這可讓您控制未對應的null使用者檢視或存取系統資源的程度。例如、您可以停用共用列舉並存取IPC$共用區（隱藏的命名管道共用區）。深入瞭解 `vserver cifs options modify`及 `vserver cifs options show` `–restrict-anonymous`中的選項link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+cifs+options["指令參考資料ONTAP"^]。
 
 ====
 除非另有設定、否則執行本機處理程序的用戶端透過null工作階段要求存取儲存系統、只是不受限制群組的成員、例如「'ee任何人'」。若要限制對所選儲存系統資源的null工作階段存取、您可能需要建立一個所有null工作階段用戶端所屬的群組；建立此群組可讓您限制儲存系統存取、並設定專屬於null工作階段用戶端的儲存系統資源權限。

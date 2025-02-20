@@ -20,7 +20,7 @@ summary: 在 SnapMirror 主動式同步組態中、在對稱保護和非對稱�
 
 == 轉換成對稱的主動 / 主動關係
 
-您可以使用非同步保護來轉換 SnapMirror 主動式同步關係，以使用對稱式主動 / 主動式。
+您可以將 SnapMirror 主動式同步關係與非對稱式保護轉換為使用對稱式主動 / 主動式。
 
 .開始之前
 * 兩個叢集都必須執行 ONTAP 9.15.1 或更新版本。
@@ -106,9 +106,17 @@ NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
 +
 `SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
-. 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
+. 在主站台上，將權限等級設為 `advanced`：
 +
-`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
+`SiteA::> set -privilege advanced`
+
+. 修改現有主機的啟動器組態，以設定本機叢集上啟動器的近端路徑。
++
+`SiteA::*> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
+
++
+
+NOTE: 完成此步驟後，您可以將權限等級設回 admin 。
 
 . 為新主機新增一個新的 igroup 和啟動器、並設定主機與本機站台的相似性。Ennable igroup 複寫可複寫組態、並反轉遠端叢集上的主機位置。
 +
@@ -131,18 +139,6 @@ SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -pr
 `snapmirror show -destination-path <destination_path>`
 
 . 如果現有主機是主叢集的本機主機、請將該主機新增至第二個叢集、並建立連線能力、以各自存取每個叢集。
-. 在次要站台上、刪除與遠端主機相關聯的 igroup 上的 LUN 對應。
-+
-
-NOTE: 確保 igroup 不包含非複寫 LUN 的對應。
-
-+
-`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
-
-. 在主要站台上、修改現有主機的啟動器組態、以設定本機叢集上啟動器的近端路徑。
-+
-`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
-
 . 在次要站台上、為新主機新增一個新的 igroup 和 initiator 、並設定主機與本機站台的相似性。將 LUN 對應至 igroup 。
 +
 ``

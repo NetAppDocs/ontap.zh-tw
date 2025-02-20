@@ -13,8 +13,10 @@ summary: 您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈
 [role="lead"]
 如果您要升級ONTAP 至更新版本的版本、則必須先將DP類型的關係轉換成XDP、然後再升級。不支援DP類型的關係。ONTAP您可以輕鬆地將現有的DP類型關係轉換成XDP、以善用靈活版本的SnapMirror。
 
+在升級ONTAP 至版本更新至版本更新ONTAP 之前、您必須先將現有的DP類型關係轉換成XDP、才能升級至版本更新。
+
 .關於這項工作
-* SnapMirror不會自動將現有的DP類型關係轉換為XDP。若要轉換關係、您必須中斷並刪除現有的關係、建立新的XDP關係、然後重新同步關係。如需背景資訊、請參閱 link:version-flexible-snapmirror-default-concept.html["XDP取代DP做為SnapMirror預設值"]。
+* SnapMirror不會自動將現有的DP類型關係轉換為XDP。若要轉換關係、您必須中斷並刪除現有的關係、建立新的XDP關係、然後重新同步關係。
 * 規劃轉換時、您應該注意、XDP SnapMirror關係的背景準備和資料倉儲階段可能需要很長時間。SnapMirror關係報告長時間處於「準備」狀態、並不罕見。
 
 
@@ -266,4 +268,118 @@ volume snapshot autodelete modify -vserver <SVM> -volume <volume> -enabled true
 .完成後
 . 使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。
 . 一旦 SnapMirror XDP 目的地磁碟區開始依照 SnapMirror 原則定義更新快照，請使用來源叢集的命令輸出 `snapmirror list-destinations`來顯示新的 SnapMirror XDP 關係。
+
+
+.DP 型關係的其他資訊
+從 ONTAP 9.3 開始， XDP 模式是預設模式，在命令列或新的或現有指令碼中， DP 模式的任何調用都會自動轉換為 XDP 模式。
+
+現有的關係不受影響。如果某個關係已經是DP類型、則會繼續是DP類型。從 ONTAP 9.5 開始，如果未指定資料保護模式或將 XDP 模式指定為關係類型，則 MirrorAndVault 是預設原則。下表顯示預期行為。
+
+[cols="3*"]
+|===
+
+
+| 如果您指定... | 類型為... | 預設原則（如果您未指定原則）是... 
+
+
+ a| 
+DP
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots（SnapMirror DR）
+
+
+
+ a| 
+什麼都沒有
+ a| 
+XDP
+ a| 
+MirrorAndVault（統一化複寫）
+
+
+
+ a| 
+XDP
+ a| 
+XDP
+ a| 
+MirrorAndVault（統一化複寫）
+
+|===
+如表所示，在不同情況下指派給 XDP 的預設原則，可確保轉換維持與先前類型的功能等效。當然、您可以視需要使用不同的原則、包括統一化複寫的原則：
+
+[cols="3*"]
+|===
+
+
+| 如果您指定... | 政策是... | 結果是... 
+
+
+ a| 
+DP
+ a| 
+MirrorAllSnapshots
+ a| 
+SnapMirror災難恢復
+
+
+
+ a| 
+XDPDefault
+ a| 
+SnapVault
+
+
+
+ a| 
+MirrorAndVault
+ a| 
+統一化複寫
+
+
+
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots
+ a| 
+SnapMirror災難恢復
+
+
+
+ a| 
+XDPDefault
+ a| 
+SnapVault
+
+
+
+ a| 
+MirrorAndVault
+ a| 
+統一化複寫
+
+|===
+轉換的唯一例外情況如下：
+
+* SVM資料保護關係在ONTAP 更新版本的更新版本中、仍預設為DP模式。
++
+從ONTAP SVM 9.4開始、SVM資料保護關係預設為XDP模式。
+
+* 根Volume負載共享資料保護關係仍預設為DP模式。
+* 在更新版本的版本中、資料保護關係仍預設為DP模式。SnapLock ONTAP
++
+從ONTAP S廳9.5開始、SnapLock 資料保護關係預設為XDP模式。
+
+* 如果您設定下列全叢集選項、DP的明確調用仍會繼續預設為DP模式：
++
+[listing]
+----
+options replication.create_data_protection_rels.enable on
+----
++
+如果您未明確叫用DP、則會忽略此選項。
+
 

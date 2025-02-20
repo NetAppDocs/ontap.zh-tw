@@ -110,19 +110,12 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 . 如果目標是 StorageGRID 系統、請在來源叢集的管理 SVM 上安裝 StorageGRID CA 憑證：
 `security certificate install -type server-ca -vserver _src_admin_svm_ -cert-name _storage_grid_server_certificate_`
 +
-請參閱 `security certificate install` 詳細資訊請參閱手冊頁。
+如link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["指令參考資料ONTAP"^]需詳細 `security certificate install`資訊，請參閱。
 
 . 定義 SnapMirror S3 目的地物件存放區：
 `snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type {AWS_S3|SGWS} -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_number_ -access-key target_access_key -secret-password _target_secret_key_`
 +
-參數：
-* `-object-store-name` –本機 ONTAP 系統上物件存放區目標的名稱。
-* `-usage` –使用 `data` 適用於此工作流程。
-* `-provider-type` – `AWS_S3` 和 `SGWS` 支援（ StorageGRID ）目標。
-* `-server` –目標伺服器的 FQDN 或 IP 位址。
-* `-is-ssl-enabled` –啓用 SSL 是可選的，但建議使用。
-  +
-請參閱 `snapmirror object-store config create` 詳細資訊請參閱手冊頁。
+參數： * `-object-store-name` –本機 ONTAP 系統上物件儲存區目標的名稱。* `-usage` –用於 `data`此工作流程。* `-provider-type` – `AWS_S3` `SGWS`支援（ StorageGRID ）目標。* `-server` –目標伺服器的 FQDN 或 IP 位址。* `-is-ssl-enabled` –啟用 SSL 是選擇性的，但建議使用。+ 深入瞭解 `snapmirror object-store config create` link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-object-store-config-create.html["指令參考資料ONTAP"^]。
 
 +
 .範例
