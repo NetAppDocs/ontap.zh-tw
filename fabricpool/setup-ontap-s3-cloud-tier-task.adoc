@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/setup-ontap-s3-cloud-tier-task.html 
 sidebar: sidebar 
-keywords: setting up, ontap s3, cloud tier 
+keywords: tr-4814, fabricpool, setting up, ontap s3, cloud tier, local tier, tiering, storage tiering, storage tier, lif 
 summary: 如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP S3設定為FabricPool 適用於該產品的雲端層。 
 ---
-= 將 ONTAP S3 設定為 ONTAP FabricPool 雲端層
+= 將 ONTAP S3 設定為 FabricPool 雲端層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,17 +13,22 @@ summary: 如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP
 [role="lead"]
 如果您執行ONTAP 的是版本不支援的版本、您可以將ONTAP S3設定為FabricPool 適用於該產品的雲端層。
 
-.您需要的產品
-您必須在ONTAP 遠端叢集上擁有該伺服器的名稱及其相關生命的IP位址。
+.開始之前
+* 您必須在ONTAP 遠端叢集上擁有該伺服器的名稱及其相關生命的IP位址。
++
 
-[NOTE]
-====
-用戶端應用程式會將伺服器名稱用作完整網域名稱（ FQDN ）。在 ONTAP 之外，請確認 DNS 記錄指向正在使用的 SVM 資料生命。
+NOTE: 用戶端應用程式會將伺服器名稱用作完整網域名稱（ FQDN ）。在 ONTAP 之外，請確認 DNS 記錄指向正在使用的 SVM 資料生命。
 
-====
-本機叢集上必須有叢集間的LIF。
+* 本機叢集上必須有<<create-lif,難以克服的生命>>。
++
+設定本機叢集分層時，本機層（也稱為 ONTAP CLI 中的儲存集合體）會附加到本機儲存區。FabricPool 使用叢集生命來處理叢集內的流量。
 
-link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["建立叢集間的生命體、以進行遠端FabricPool 分層"]
++
+
+NOTE: 如果叢集 LIF 資源飽和，可能會導致效能降低。為了避免這種情況， NetApp 建議您在分層至本機儲存區時，使用四節點或更高的叢集，並針對本機層使用 HA 配對，以及將 HA 配對用於本機儲存區。不建議在單一 HA 配對上分層至本機貯體。
+
+* 若要使用 ONTAP S3 啟用遠端 FabricPool 容量（雲端）分層，您必須link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["設定叢集間的生命"]在 FabricPool 用戶端和物件儲存區伺服器上link:../s3-config/create-data-lifs-task.html["設定資料生命"]。
+
 
 .關於這項工作
 支援以更新版本的功能、在更新版本的更新版本中、啟用Ss3伺服器的負載平衡ONTAP 功能。ONTAP當伺服器的主機名稱解析為多個IP位址時ONTAP 、即可建立用戶端連線、並傳回所有IP位址（最多16個IP位址）。建立連線時、會以循環配置資源的方式來取用IP位址。
@@ -65,8 +70,10 @@ link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["
  a| 
 輸入下列命令：
 
-`dns host create -vserver svm_name -address ip_address -hostname s3_server_name`
-
+[listing]
+----
+dns host create -vserver <svm_name> -address ip_address -hostname <s3_server_name>
+----
 |===
 . 使用指定 ONTAP S3 組態資訊 `storage aggregate object-store config create` 命令 `-provider-type` `ONTAP_S3` 參數。
 +
@@ -96,3 +103,8 @@ cluster1::> storage aggregate object-store config create
 
 --
 ====
+[[create-lif]]
+.相關資訊
+* link:../smb-config/create-lif-task.html["為 SMB 建立 LIF"]
+* link:../nfs-config/create-lif-task.html["建立 LIF for NFS"]
+
