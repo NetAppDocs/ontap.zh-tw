@@ -52,7 +52,13 @@ NOTE: NIST 已提交 FIPS-140-3 標準、而 NCSM 將會進行 FIPS-140-2 和 FI
 
 此 `security config modify`命令可讓您修改現有的叢集範圍安全性組態。如果您啟用 FIPS 相容模式、叢集會自動僅選取 TLS 通訊協定。
 
-* 使用此 `-supported-protocols` 參數可在 FIPS 模式之外、自行納入或排除 TLS 通訊協定。根據預設、 FIPS 模式會停用、 ONTAP 支援 TLSv1.2 、 TLSv1.1 和 TLSv1 傳輸協定。
+* 使用此 `-supported-protocols` 參數可在 FIPS 模式之外、自行納入或排除 TLS 通訊協定。根據預設， FIPS 模式會停用，且會啟用 TLSv1.3 （從 ONTAP 9.11.1 開始）和 TLSv1.2 通訊協定。
+* 先前的 ONTAP 版本預設啟用下列 TLS 通訊協定：
++
+** TLSv1.1 （從 ONTAP 9.12.1 開始預設為停用）
+** TLSv1 （從 ONTAP 9.8 開始預設為停用）
+
+
 * 為了回溯相容性、 ONTAP 支援在停用 FIPS 模式時、將 SSLv3 新增至支援的通訊協定清單。
 
 
