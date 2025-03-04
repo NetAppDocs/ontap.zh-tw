@@ -11,12 +11,12 @@ summary: 若要善用 NFS 主幹、您必須在兩個或多個 NIC 上駐留多�
 
 
 [role="lead"]
-NFSv4.1 主幹需要主幹群組中的生命體位於同一個節點上、並在同一個節點上擁有主連接埠。所有的生命體都應該在同一個節點上的容錯移轉群組中進行設定。
+若要善用 NFSv4.1 主幹、主幹群組中的生命體必須位於同一個節點上、且同一個節點上必須有主連接埠。應在同一個節點上的容錯移轉群組中設定生命體。
 
 .關於這項工作
-一對一的生命與 NIC 對應可獲得最大的效能增益、但不需要啟用主幹。
+一對一的生命與 NIC 對應可產生最大的效能增益、但不需要啟用主幹連線。至少安裝兩個 NIC 可提供效能優勢、但並非必要。
 
-您可以有多個容錯移轉群組、但主幹的容錯移轉群組必須僅包含主幹群組中的那些生命體。
+主幹群組中的所有生命體應屬於同一個容錯移轉群組。請注意，當在同一個節點的容錯移轉群組中設定生命體時，該節點上的控制器容錯移轉可能會導致生命體離線。如果在同一個節點上的容錯移轉群組中未設定生命體，並容錯移轉至另一個節點，則主幹將無法再運作。
 
 您應該隨時調整主幹容錯移轉群組、以便從容錯移轉群組新增或移除連線（及基礎 NIC ）。
 
@@ -32,20 +32,20 @@ NFSv4.1 主幹需要主幹群組中的生命體位於同一個節點上、並在
 
 . 建立主幹容錯移轉群組或修改現有的群組以進行主幹連線：
 +
-`network interface failover-groups create -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+`network interface failover-groups create -vserver <svm_name> -failover-group <failover_group_name> -targets <ports_list>`
 
 +
-`network interface failover-groups modify -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+`network interface failover-groups modify -vserver <svm_name> -failover-group <failover_group_name> -targets <ports_list>`
 
 +
 
 NOTE: 這並不需要容錯移轉群組、但強烈建議您使用。
 
 +
-** `_svm_name_` 是包含 NFS 伺服器的 SVM 名稱。
-** `_ports_list_` 是要新增至容錯移轉群組的連接埠清單。
+** `<svm_name>`是包含 NFS 伺服器的 SVM 名稱。
+** `<ports_list>`是要新增至容錯移轉群組的連接埠清單。
 +
-連接埠會以格式新增 `_node_name:port_number_`例如、 `node1:e0c`。
+端口以格式（例如 `node1:e0c`）添加 `<node_name>:<port_number>`。
 
 +
 下列命令會建立容錯移轉群組 `fg3` 對於 SVM VS1 、並新增三個連接埠：
@@ -60,7 +60,7 @@ NOTE: 這並不需要容錯移轉群組、但強烈建議您使用。
 
 . 視需要為主幹群組的成員建立額外的生命體：
 +
-`network interface create -vserver _svm_name_ -lif _lif_name_ -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _IP_address_ [-service-policy _policy_] [-auto-revert {true|false}]`
+`network interface create -vserver <svm_name> -lif <lif_name> -home-node <node_name> -home-port <port_name> -address <IP_address> -netmask <IP_address> [-service-policy <policy>] [-auto-revert <true|false>]`
 
 +
 ** `-home-node` - 在 LIF 上執行網路介面還原命令時、 LIF 會傳回的節點。
@@ -76,7 +76,7 @@ NOTE: 這並不需要容錯移轉群組、但強烈建議您使用。
 針對主幹群組中所需的每個額外 LIF 重複此步驟。
 
 +
-下列命令會在節點 cluster1_01 的連接埠 e0c 上為 SVM VS1 建立 lif-a ：
+下列命令會建立 `lif-A` 適用於 SVM `vs1`、連接埠 `e0c` 節點的 `cluster1_01`：
 
 +
 `network interface create -vserver vs1 -lif lif-A -service-policy default-intercluster -home-node cluster1_01 -home-port e0c -address 192.0.2.0`
@@ -88,8 +88,10 @@ NOTE: 這並不需要容錯移轉群組、但強烈建議您使用。
 
 . 確認已建立生命：
 +
-`network interface show`
-
+[source, cli]
+----
+network interface show
+----
 . 確認已設定的IP位址可連線：
 +
 [cols="25,75"]
