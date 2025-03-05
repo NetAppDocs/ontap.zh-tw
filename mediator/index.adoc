@@ -59,16 +59,60 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 
 
 .網路需求
-* 請確定下列連接埠可供 ONTAP Mediator 使用且未使用。
+請確定下列連接埠可供 ONTAP Mediator 使用且未使用：
+
+|===
+
+
+| 連接埠/服務 | 來源 | 方向 | 目的地 | 目的 
+
+
+ a| 
+22/TCP
+ a| 
+管理主機
+ a| 
+傳入
+ a| 
+資訊媒體ONTAP
+ a| 
+（選用） SSH / ONTAP Mediator 管理
+
+
+
+ a| 
+31784/TCP
+ a| 
+叢集管理生命
+ a| 
+傳入
+ a| 
+資訊媒體伺服器ONTAP
+ a| 
+（必填） REST API （ HTTPS ）
+
+
+
+ a| 
+3260/TCP ^1^
+ a| 
+節點資料生命或節點管理生命
+ a| 
+雙向
+ a| 
+支援iSCSI目標ONTAP
+ a| 
+（ MCCIP 所需）用於信箱的 iSCSI 資料連線
+
+|===
+. 對於 SMBC 客戶， ONTAP 不需要啟用或連線連接埠 3260 。
 +
-** 31784 ：為傳入要求設定此連接埠，因為它是 HTTPS 連接埠，只接受傳入流量。
-** 3260 ：此連接埠是雙向的，因為 iSCSI 傳輸協定需要雙向連線。
-
-
-* 如果使用第三方防火牆，請link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["防火牆需求ONTAP"^]參閱。
-* 對於無法存取網際網路的 Linux 主機，請確定所需的套件可在本機儲存庫中使用。
+** 如果使用第三方防火牆，請link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["防火牆需求ONTAP"^]參閱。
+** 對於無法存取網際網路的 Linux 主機，請確定所需的套件可在本機儲存庫中使用。
 +
 如果您在 Linux 環境中使用鏈路聚合控制協議（ LACP ），請配置內核並將設置 `sysctl net.ipv4.conf.all.arp_ignore`爲 `2`。
+
+
 
 
 
