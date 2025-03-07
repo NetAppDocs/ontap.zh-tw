@@ -2,20 +2,23 @@
 permalink: disks-aggregates/determine-control-volume-space-aggregate-concept.html 
 sidebar: sidebar 
 keywords: determine, control. volume, space usage, aggregate 
-summary: 您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Aggregate）中最大的空間、以及磁碟區內的哪些功能。 
+summary: 您可以判斷哪些 FlexVol 磁碟區使用的是本機層中空間最大的磁碟區，特別是磁碟區中的哪些功能。 
 ---
-= 判斷及控制本機層中的磁碟區空間使用量（Aggregate）
+= 在 ONTAP 的本機層中，判斷並控制磁碟區的空間使用量
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以判斷哪些FlexVol 等量磁碟區使用的是本機層（Aggregate）中最大的空間、以及磁碟區內的哪些功能。
+您可以判斷哪些 FlexVol 磁碟區使用的是本機層中空間最大的磁碟區，特別是磁碟區中的哪些功能。
 
-。 `volume show-footprint` 命令提供有關卷佔用空間或其在包含的 Aggregate 中的空間使用情況的信息。
+該 `volume show-footprint`命令提供有關卷佔用空間或其在包含的本地層中的空間使用情況的信息。
 
-。 `volume show-footprint` 命令會顯示集合體中每個磁碟區（包括離線磁碟區）的空間使用量詳細資料。此命令可橋接的輸出之間的間距 `volume show-space` 和 `aggregate show-space` 命令。所有百分比均以Aggregate大小的百分比計算。
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
+
+此 `volume show-footprint`命令會顯示本機層中每個磁碟區（包括離線磁碟區）的空間使用量詳細資料。此命令可橋接和 `aggregate show-space`命令輸出之間的間隙 `volume show-space`。所有百分比都是以本機層大小的百分比來計算。
 
 下列範例顯示 `volume show-footprint` 稱為 testvol 的 Volume 命令輸出：
 
@@ -44,7 +47,7 @@ cluster1::> volume show-footprint testvol
  a| 
 `Volume Data Footprint`
  a| 
-包含 Aggregate 中使用的總空間量，依據作用中檔案系統中的磁碟區資料，以及磁碟區快照所使用的空間。此列不包含保留空間。
+使用中檔案系統中的磁碟區資料，以及磁碟區快照所使用的空間總量。此列不包含保留空間。
  a| 
 * 從磁碟區刪除資料。
 * 從磁碟區刪除快照。
@@ -55,7 +58,7 @@ cluster1::> volume show-footprint testvol
  a| 
 `Volume Guarantee`
  a| 
-磁碟區在Aggregate中保留的空間量、以供未來寫入。保留的空間量取決於磁碟區的保證類型。
+本機層中的磁碟區保留給未來寫入的空間量。保留的空間量取決於磁碟區的保證類型。
  a| 
 將磁碟區的保證類型變更為 `none`。
 
@@ -64,7 +67,7 @@ cluster1::> volume show-footprint testvol
  a| 
 `Flexible Volume Metadata`
  a| 
-磁碟區中繼資料檔案在集合中使用的空間總量。
+磁碟區中繼資料檔案在本機層中使用的總空間量。
  a| 
 沒有直接的控制方法。
 
@@ -91,7 +94,7 @@ cluster1::> volume show-footprint testvol
  a| 
 `Total Footprint`
  a| 
-磁碟區在集合體中使用的空間總量。這是所有列的總和。
+Volume 在本機層中使用的總空間量。這是所有列的總和。
  a| 
 用於減少磁碟區所用空間的任何方法。
 

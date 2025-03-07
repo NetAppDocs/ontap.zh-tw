@@ -2,19 +2,22 @@
 permalink: disks-aggregates/create-aggregates-manual-task.html 
 sidebar: sidebar 
 keywords: ontap 9, create, aggregates, manually, manual, add, local tier 
-summary: 如果您不想使用ONTAP 來自各地的最佳實務建議來新增本機層（建立集合體）、您可以手動執行程序。 
+summary: 如果您不想使用 ONTAP 的最佳實務建議來新增本機層級，可以手動執行程序。 
 ---
-= 手動新增本機階層（建立集合體）
+= 在 ONTAP 中手動新增本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您不想使用ONTAP 來自各地的最佳實務建議來新增本機層（建立集合體）、您可以手動執行程序。
+如果您不想使用 ONTAP 的最佳實務建議來新增本機層級，可以手動執行程序。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
-磁碟必須由節點擁有、才能在本機層（Aggregate）中使用。  如果您的叢集未設定為使用自動磁碟擁有權指派、您必須 link:manual-assign-disks-ownership-prep-task.html["手動指派擁有權"]。
+磁碟必須由節點擁有，才能在本機層中使用。如果您的叢集未設定為使用自動磁碟擁有權指派link:manual-assign-disks-ownership-prep-task.html["手動指派擁有權"]，您必須。
 
 如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
 
@@ -63,41 +66,41 @@ summary: 如果您不想使用ONTAP 來自各地的最佳實務建議來新增�
 --
 .CLI
 --
-在手動建立Aggregate之前、您應該先檢閱磁碟組態選項並模擬建立。
+手動建立本機層之前，您應該先檢閱磁碟組態選項，並模擬建立。
 
 然後、您可以核發 `storage aggregate create` 命令並驗證結果。
 
 .開始之前
-您必須確定在集合體中所需的磁碟數目和熱備援磁碟數目。
+您必須已確定本地層中所需的磁碟數量和熱備援磁碟數量。
 
 .關於這項工作
 如果已啟用根資料資料分割、而且組態中有24個或更少的固態磁碟機（SSD）、建議您將資料分割區指派給不同的節點。
 
-在啟用根資料分割和根資料分割的系統上建立集合體的程序、與在使用未分割磁碟的系統上建立集合體的程序相同。如果您的系統已啟用根資料分割、您應該使用的磁碟分割區數量 `-diskcount` 選項。對於根資料資料分割、請使用 `-diskcount` 選項指定要使用的磁碟數。
+在已啟用根資料分割和根資料資料分割的系統上建立本機階層的程序，與在使用未分割磁碟的系統上建立本機階層的程序相同。如果您的系統上已啟用根資料分割，則應使用磁碟分割區的數量來進行此 `-diskcount`選項。對於 root-data-data 分割區， `-diskcount`選項會指定要使用的磁碟數。
 
 
-NOTE: 建立多個Aggregate以搭配FlexGroups使用時、Aggregate的大小應盡量接近。
+NOTE: 建立多個本機層以搭配 FlexGroups 使用時，本機層的大小應盡可能接近。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["指令參考資料ONTAP"^]需更多關於 `storage aggregate create`建立選項與需求的資訊，請參閱。
+如需更多關於 `storage aggregate create`及本機層建立選項與需求link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["指令參考資料ONTAP"^]的資訊，請參閱。
 
 .步驟
-. 檢視備用磁碟分割清單、確認您有足夠的空間來建立Aggregate：
+. 檢視備援磁碟分割清單，確認您有足夠的空間來建立本機層：
 +
 `storage aggregate show-spare-disks -original-owner _node_name_`
 
 +
 資料分割區會顯示在下 `Local Data Usable`。根分割區無法作為備援磁碟區使用。
 
-. 模擬建立Aggregate：
+. 模擬建立本機層：
 +
 `storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -raidtype raid_dp -diskcount _number_of_disks_or_partitions_ -simulate true`
 
 . 如果模擬命令顯示任何警告、請調整命令並重複模擬。
-. 建立Aggregate：
+. 建立本機層：
 +
 `storage aggregate create -aggregate _aggr_name_ -node _node_name_ -raidtype raid_dp -diskcount _number_of_disks_or_partitions_`
 
-. 顯示Aggregate以驗證是否已建立：
+. 顯示本機層以驗證其是否已建立：
 +
 `storage aggregate show-status _aggregate_name_`
 

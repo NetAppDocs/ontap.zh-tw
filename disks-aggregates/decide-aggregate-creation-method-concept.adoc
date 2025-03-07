@@ -2,18 +2,21 @@
 permalink: disks-aggregates/decide-aggregate-creation-method-concept.html 
 sidebar: sidebar 
 keywords: decide, aggregate, create, add, method, local tier 
-summary: 雖然供應最佳實務建議、可自動建立本機層（集合體）（使用自動資源配置）、但您必須判斷環境是否支援建議的組態。ONTAP如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。 
+summary: 雖然 ONTAP 提供自動建立本機階層的最佳實務建議，但您必須判斷您的環境是否支援建議的組態。如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。 
 ---
-= 決定要使用何種方法來建立本機層級（集合體）
+= 決定在 ONTAP 中建立本機階層的方法
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-雖然此解決方案提供自動新增本機層級的最佳實務建議（使用自動資源配置建立集合體）、但您必須判斷環境是否支援建議的組態。ONTAP如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。
+雖然 ONTAP 提供自動新增本機層的最佳實務建議，但您必須判斷您的環境是否支援建議的組態。如果不是、您必須決定RAID原則和磁碟組態、然後手動建立本機層級。
 
 自動建立本機層時ONTAP 、即可分析叢集中可用的備用磁碟、並根據最佳實務做法、提出如何使用備用磁碟來新增本機層的建議。顯示建議的組態。ONTAP  您可以接受建議、或手動新增本機層級。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 
 
@@ -39,23 +42,23 @@ summary: 雖然供應最佳實務建議、可自動建立本機層（集合體�
 
 NOTE: 從《局部9.11.1》開始ONTAP 、您可以使用System Manager手動新增本機層級。
 
-* 使用協力廠商陣列LUN進行集合體
+* 使用第三方陣列 LUN 的本機層
 * 虛擬磁碟Cloud Volumes ONTAP 搭配不一樣或ONTAP Select 不一樣的功能
 * 系統MetroCluster
 * SyncMirror
 * MSATA磁碟
-* FlashPool階層（Aggregate）
+* FlashPool 階層
 * 多種磁碟類型或大小會連接至節點
 
 
 
 
-== 選取建立本機階層（集合體）的方法
+== 選取建立本機階層的方法
 
 選擇您要使用的方法：
 
-* link:create-aggregates-auto-provision-task.html["自動新增（建立）本機層級（集合體）"]
-* link:create-aggregates-manual-task.html["手動新增（建立）本機層級（集合體）"]
+* link:create-aggregates-auto-provision-task.html["自動新增（建立）本機層"]
+* link:create-aggregates-manual-task.html["手動新增（建立）本機層"]
 
 
 .相關資訊

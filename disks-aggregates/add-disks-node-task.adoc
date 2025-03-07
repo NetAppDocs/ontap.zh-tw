@@ -1,17 +1,20 @@
 ---
 permalink: disks-aggregates/add-disks-node-task.html 
 sidebar: sidebar 
-keywords: add, drives, node, shelf 
-summary: 您可以將磁碟機新增至節點或磁碟櫃、以增加熱備援磁碟機的數量、或將空間新增至本機層（Aggregate）。 
+keywords: add, drives, node, shelf, local tier, aggregate 
+summary: 您可以將磁碟機新增至節點或機櫃，以增加熱備援磁碟機的數量，或將空間新增至本機層。 
 ---
-= 將磁碟機新增至節點或機櫃
+= 將磁碟機新增至 ONTAP 中的節點或機櫃
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以將磁碟機新增至節點或磁碟櫃、以增加熱備援磁碟機的數量、或將空間新增至本機層（Aggregate）。
+您可以將磁碟機新增至節點或機櫃，以增加熱備援磁碟機的數量，或將空間新增至本機層。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
 您的平台必須支援您要新增的磁碟機。您可以使用確認 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
@@ -76,9 +79,9 @@ NOTE: 新增磁碟機的正確插槽視平台機型和ONTAP 版本而定。在�
 `storage disk zerospares`
 
 +
-先前在ONTAP 某個不景區層（Aggregate）中使用的磁碟機必須先歸零、才能新增至另一個Aggregate。在更新版本的版本中、零位調整可能需要數小時才能完成、視節點中的非零位磁碟機大小而定ONTAP 。磁碟機零位調整現在可防止延遲、以便在需要快速增加本機層級的規模時使用。這在ONTAP 僅需數秒鐘的零磁碟機使用_fast零位調整功能進行零位化的情形下、在S得9.4或更新版本中並不是問題。
+先前在 ONTAP 本機層中使用的磁碟機必須先歸零，才能新增至另一個本機層。在更新版本的版本中、零位調整可能需要數小時才能完成、視節點中的非零位磁碟機大小而定ONTAP 。磁碟機零位調整現在可防止延遲、以便在需要快速增加本機層級的規模時使用。這在ONTAP 僅需數秒鐘的零磁碟機使用_fast零位調整功能進行零位化的情形下、在S得9.4或更新版本中並不是問題。
 
 
 
 .結果
-新磁碟機已準備就緒。  您可以將它們新增至本機層（Aggregate）、放入熱備援清單、或是在建立新的本機層時新增。
+新磁碟機已準備就緒。您可以將它們新增至本機層，將它們放入熱備援磁碟清單，或在建立新的本機層時新增它們。

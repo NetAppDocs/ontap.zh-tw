@@ -2,16 +2,19 @@
 permalink: disks-aggregates/correct-misaligned-spare-partitions-task.html 
 sidebar: sidebar 
 keywords: correct, misaligned, partition, disk 
-summary: 當您將分割磁碟新增至本機層（Aggregate）時、您必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。 
+summary: 當您將分割磁碟新增至本機層時，您必須將具有根分割區和資料分割區的磁碟保留為每個節點的備用磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。 
 ---
-= 修正未對齊的備用分割區
+= 在 ONTAP 中修正未對齊的備用磁碟分割
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-當您將分割磁碟新增至本機層（Aggregate）時、您必須將根磁碟和資料分割區的磁碟保留為每個節點的備援磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。
+當您將分割磁碟新增至本機層時，您必須將具有根分割區和資料分割區的磁碟保留為每個節點的備用磁碟。如果您沒有、而且節點發生中斷、ONTAP 則無法將核心傾印到備用資料分割區。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
 您必須在同一節點擁有的相同磁碟類型上、同時擁有備用資料分割區和備用根分割區。

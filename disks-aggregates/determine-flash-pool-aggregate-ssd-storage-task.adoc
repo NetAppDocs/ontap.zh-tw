@@ -1,26 +1,29 @@
 ---
 permalink: disks-aggregates/determine-flash-pool-aggregate-ssd-storage-task.html 
 sidebar: sidebar 
-keywords: determine, flash pool, aggregate,local tier, ssd storage pool 
-summary: 使用SSD儲存資源池來提供快取時、管理Flash資源池本機層（集合體）的方式與使用獨立SSD時不同。 
+keywords: determine, flash pool, aggregate, local tier, ssd storage pool 
+summary: 當 Flash Pool 本機層使用 SSD 儲存池來提供快取時，您的管理方式會與使用獨立 SSD 時不同。 
 ---
-= 判斷Flash Pool本機層（Aggregate）是否使用SSD儲存資源池
+= 判斷 Flash Pool 本機層是否在 ONTAP 中使用 SSD 儲存池
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以將一個或多個配置單元從SSD儲存資源池新增至現有HDD本機層、以設定Flash資源池（本機層）集合體。
+您可以將一個或多個分配單元從 SSD 儲存池新增至現有 HDD 本機層，以設定 Flash Pool 本機層。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 使用SSD儲存資源池來提供快取時、管理Flash資源池本機層的方式與使用獨立SSD時不同。
 
 .步驟
-. 依RAID群組顯示Aggregate的磁碟機：
+. 依 RAID 群組顯示本機層的磁碟機：
 +
 `storage aggregate show-status _aggr_name_`
 
 +
-如果 Aggregate 使用一或多個 SSD 儲存池、則為的值 `Position` SSD RAID 群組的欄會顯示為 `Shared`和儲存池的名稱會顯示在 RAID 群組名稱旁邊。
+如果本機層使用一或多個 SSD 儲存池， SSD RAID 群組欄的值 `Position`會顯示為，儲存池的名稱會顯示在 `Shared` RAID 群組名稱旁邊。
 
 

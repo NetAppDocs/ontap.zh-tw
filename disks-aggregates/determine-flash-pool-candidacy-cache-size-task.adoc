@@ -2,16 +2,19 @@
 permalink: disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html 
 sidebar: sidebar 
 keywords: flash pool, candidacy, optimal cache size, local tier, aggregate 
-summary: 在將現有的本機層（Aggregate）轉換成Flash Pool本機層之前、您可以判斷本機層是否受I/O限制、以及針對工作負載和預算的最佳Flash Pool快取大小。您也可以檢查現有Flash Pool本機層的快取大小是否正確。 
+summary: 在將現有的本機層轉換為 Flash Pool 本機層之前，您可以判斷本機層是否有 I/O 限制，以及最適合您工作負載和預算的 Flash Pool 快取大小。您也可以檢查現有Flash Pool本機層的快取大小是否正確。 
 ---
-= 判斷Flash Pool候選資格和最佳快取大小
+= 判斷 ONTAP 中的 Flash Pool 候選資格和最佳快取大小
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在將現有的本機層（Aggregate）轉換成Flash Pool本機層之前、您可以判斷本機層是否受I/O限制、以及針對工作負載和預算的最佳Flash Pool快取大小。您也可以檢查現有Flash Pool本機層的快取大小是否正確。
+在將現有的本機層轉換為 Flash Pool 本機層之前，您可以判斷本機層是否有 I/O 限制，以及最適合您工作負載和預算的 Flash Pool 快取大小。您也可以檢查現有Flash Pool本機層的快取大小是否正確。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
 您應該大約知道您分析的本機層何時會經歷其尖峰負載。
@@ -21,15 +24,15 @@ summary: 在將現有的本機層（Aggregate）轉換成Flash Pool本機層之�
 +
 `set advanced`
 
-. 如果您需要判斷現有的本機層（Aggregate）是否適合轉換成Flash Pool Aggregate、請判斷集合體中的磁碟在尖峰負載期間的忙碌程度、以及這會如何影響延遲：
+. 如果您需要判斷現有的本機層是否適合轉換為 Flash Pool 本機層級，請判斷本機層中的磁碟在尖峰負載期間有多忙碌，以及這會如何影響延遲：
 +
 `statistics show-periodic -object disk:raid_group -instance _raid_group_name_ -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 +
-您可以新增Flash Pool快取來決定是否要縮短延遲、以利此集合體。
+您可以決定新增 Flash Pool 快取來減少延遲，是否適合此本機層。
 
 +
-以下命令顯示Agggr1'集合體第一個RAID群組的統計資料：
+下列命令顯示本機層 "'aggr1'" 第一個 RAID 群組的統計資料：
 
 +
 `statistics show-periodic -object disk:raid_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_latency -interval 1 -iterations 60`
@@ -39,14 +42,14 @@ summary: 在將現有的本機層（Aggregate）轉換成Flash Pool本機層之�
 `storage automated-working-set-analyzer start -node _node_name_ -aggregate _aggr_name_`
 
 +
-AWA開始收集與指定集合體相關聯之磁碟區的工作負載資料。
+Awa 開始收集與指定本端層相關聯之磁碟區的工作負載資料。
 
 . 結束進階模式：
 +
 `set admin`
 
 +
-允許AWA執行、直到發生一或多個尖峰負載間隔為止。AWA會收集與指定集合體相關之磁碟區的工作負載統計資料、並分析資料持續最多一週。執行AWA超過一週、只會報告最近一週收集的資料。快取大小預估值是根據資料收集期間所見的最高負載而定；在整個資料收集期間、負載不需要太高。
+允許AWA執行、直到發生一或多個尖峰負載間隔為止。Awa 會收集與指定本端層相關聯之磁碟區的工作負載統計資料，並分析持續時間長達一週的資料。執行AWA超過一週、只會報告最近一週收集的資料。快取大小預估值是根據資料收集期間所見的最高負載而定；在整個資料收集期間、負載不需要太高。
 
 . 進入進階模式：
 +

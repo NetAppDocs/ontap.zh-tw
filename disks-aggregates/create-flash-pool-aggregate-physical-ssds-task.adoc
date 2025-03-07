@@ -2,21 +2,24 @@
 permalink: disks-aggregates/create-flash-pool-aggregate-physical-ssds-task.html 
 sidebar: sidebar 
 keywords: create, flash, pool, aggregate, local tier, physical, ssds 
-summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能、然後將一或多個SSD RAID群組新增至該本機層、藉此建立Flash Pool本機層（Aggregate）。這會為該本機層建立兩組RAID群組：SSD RAID群組（SSD快取）和HDD RAID群組。 
+summary: 您可以在由 HDD RAID 群組組成的現有本機層上啟用此功能，然後將一或多個 SSD RAID 群組新增至該本機層，藉此建立 Flash Pool 本機層。這會為該本機層建立兩組RAID群組：SSD RAID群組（SSD快取）和HDD RAID群組。 
 ---
-= 使用實體SSD建立Flash Pool本機層（Aggregate）
+= 在 ONTAP 中使用實體 SSD 建立 Flash Pool 本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以在由HDD RAID群組組成的現有本機層上啟用此功能、然後將一或多個SSD RAID群組新增至該本機層、藉此建立Flash Pool本機層（Aggregate）。這會為該本機層建立兩組RAID群組：SSD RAID群組（SSD快取）和HDD RAID群組。
+您可以在由 HDD RAID 群組組成的現有本機層上啟用此功能，然後將一或多個 SSD RAID 群組新增至該本機層，藉此建立 Flash Pool 本機層。這會為該本機層建立兩組RAID群組：SSD RAID群組（SSD快取）和HDD RAID群組。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .關於這項工作
 將SSD快取新增至本機層以建立Flash Pool本機層之後、您就無法移除SSD快取、將本機層級轉換回原始組態。
 
-根據預設、SSD快取的RAID層級與HDD RAID群組的RAID層級相同。您可以在新增第一個SSD RAID群組時、指定「raidtype」選項來覆寫此預設選項。
+根據預設、SSD快取的RAID層級與HDD RAID群組的RAID層級相同。您可以在新增第一個 SSD RAID 群組時指定選項，以覆寫此預設 `raidtype`選項。
 
 .開始之前
 * 您必須識別由HDD組成的有效本機層、才能轉換成Flash Pool本機層。
@@ -33,7 +36,7 @@ summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能
 
 
 .步驟
-您可以使用系統管理員或 ONTAP CLI 建立 FlashPool Aggregate 。
+您可以使用系統管理員或 ONTAP CLI 建立 FlashPool 本機層。
 
 [role="tabbed-block"]
 ====
@@ -56,17 +59,17 @@ summary: 您可以在由HDD RAID群組組成的現有本機層上啟用此功能
 .CLI
 --
 .步驟
-. 將本機層（Aggregate）標示為符合資格、可成為Flash Pool Aggregate：
+. 將本機層標記為符合資格成為 Flash Pool 本機層：
 +
 `storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
 
 +
-如果此步驟失敗、請判斷目標Aggregate的寫入快取資格。
+如果此步驟沒有成功，請判斷目標本機層的寫入快取資格。
 
-. 使用將 SSD 新增至 Aggregate `storage aggregate add` 命令。
+. 使用命令將 SSD 新增至本機層 `storage aggregate add`。
 +
 ** 您可以依 ID 或使用來指定 SSD `diskcount` 和 `disktype` 參數。
-** 如果 HDD 和 SSD 沒有相同的 Checksum 類型、或如果 Aggregate 是混合式 Checksum Aggregate 、則您必須使用 `checksumstyle` 用於指定要新增至集合體之磁碟的 Checksum 類型的參數。
+** 如果 HDD 和 SSD 沒有相同的 Checksum 類型，或如果本機層是混合式 Checksum 本機層，則必須使用 `checksumstyle`參數來指定要新增至本機層的磁碟的 Checksum 類型。
 ** 您可以使用為 SSD 快取指定不同的 RAID 類型 `raidtype` 參數。
 ** 如果您想要快取 RAID 群組大小與您所使用 RAID 類型的預設大小不同、您應該現在使用變更快取 RAID 群組大小 `-cache-raid-group-size` 參數。
 

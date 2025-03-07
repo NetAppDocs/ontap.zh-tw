@@ -2,19 +2,22 @@
 permalink: disks-aggregates/create-aggregates-auto-provision-task.html 
 sidebar: sidebar 
 keywords: create, aggregates, auto-provision, add, local tier, automatic, automatically, create, aggregate, auto-provisioning, System Manager, CLI, storage, disk, ownership, assign 
-summary: 您可以接受 ONTAP 自動新增本機層的建議（使用自動資源配置建立 Aggregate ），並讓 ONTAP 新增本機層。 
+summary: 您可以接受 ONTAP 自動新增本機層的建議，並讓 ONTAP 新增本機層。 
 ---
-= 在 ONTAP 中自動新增本機層（使用自動資源配置建立集合體）
+= 在 ONTAP 中自動新增本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果ONTAP 您的環境適合使用由NetApp提供的自動新增本機層（使用自動資源配置建立集合體）的最佳實務建議、您可以接受建議、並讓ONTAP 它加入本機層。
+如果 ONTAP 提供的自動新增本機層的最佳實務建議適用於您的環境，您可以接受建議，並讓 ONTAP 新增本機層。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
-磁碟必須由節點擁有、才能在本機層（Aggregate）中使用。  如果您的叢集未設定為使用自動磁碟擁有權指派、您必須 link:manual-assign-disks-ownership-prep-task.html["手動指派擁有權"]。
+磁碟必須由節點擁有，才能在本機層中使用。如果您的叢集未設定為使用自動磁碟擁有權指派link:manual-assign-disks-ownership-prep-task.html["手動指派擁有權"]，您必須。
 
 如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
 
@@ -66,7 +69,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
  a| 
 手動設定本機層級、並*非*使用System Manager的建議。
  a| 
-請前往 link:create-aggregates-manual-task.html["手動新增本機層（建立Aggregate）"]：
+請前往link:create-aggregates-manual-task.html["手動新增本機層"]：
 
 ** 如需ONTAP 使用版本的版本資訊、請依照下列步驟使用CLI。
 ** 從ONTAP 《2019年9月11日》開始、請依照步驟使用System Manager。
@@ -87,23 +90,23 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 --
 .CLI
 --
-您可以執行 `storage aggregate auto-provision` 命令以產生 Aggregate 配置建議。然後您可以在檢閱ONTAP 並核准各項推薦項目之後、建立集合體。
+您可以執行 `storage aggregate auto-provision`命令來產生本機層配置建議。然後，您可以在審查並核准 ONTAP 建議之後，建立本機層級。
 
 .開始之前
 叢集上必須執行部分為9.2或更新版本。ONTAP
 
 .關於這項工作
-使用產生的預設摘要 `storage aggregate auto-provision` 命令會列出建議建立的集合體、包括名稱和可用大小。您可以檢視清單、並在出現提示時決定是否要建立建議的集合體。
+使用命令產生的預設摘要 `storage aggregate auto-provision`會列出建議建立的本機階層，包括名稱和可用大小。您可以檢視清單，並在出現提示時決定是否要建立建議的本機階層。
 
 您也可以使用顯示詳細摘要 `-verbose` 選項、顯示下列報告：
 
-* 每個節點的新集合體摘要、可在建立集合體之後建立、探索備援磁碟和剩餘的備用磁碟和磁碟分割
-* 新的資料集合體可建立要使用的磁碟和分割區數
-* RAID群組配置顯示如何在要建立的新資料集合體中使用備用磁碟和磁碟分割
-* 有關建立Aggregate之後剩餘的備用磁碟和分割區的詳細資料
+* 在本機層建立之後，每個節點都會摘要列出要建立，探索到的備援磁碟，以及剩餘的備援磁碟和分割區
+* 要建立的新資料本機層，包含要使用的磁碟和分割區數
+* RAID 群組配置顯示如何在要建立的新資料本機層中使用備用磁碟和分割區
+* 本機層建立後剩餘的備用磁碟和分割區詳細資料
 
 
-如果您熟悉自動資源配置方法、且環境已準備妥當、則可以使用 `-skip-confirmation` 選項可建立建議的 Aggregate 、不需顯示和確認。。 `storage aggregate auto-provision` 命令不受 CLI 工作階段影響 `-confirmations` 設定：
+如果您熟悉自動資源配置方法，且環境已準備妥當，您可以使用 `-skip-confirmation`選項來建立建議的本機層，而無需顯示和確認。 `storage aggregate auto-provision`命令不受 CLI 工作階段設定影響 `-confirmations`。
 
 如link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-auto-provision.html["指令參考資料ONTAP"^]需詳細 `storage aggregate auto-provision`資訊，請參閱。
 
@@ -112,7 +115,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
 +
 ** 無選項：顯示標準摘要
 ** `-verbose` 選項：顯示詳細摘要
-** `-skip-confirmation` 選項：建立建議的集合體、無需顯示或確認
+** `-skip-confirmation`選項：建立建議的本機階層，不需顯示或確認
 
 
 . 請執行下列其中一個步驟：
@@ -127,7 +130,7 @@ System Manager會顯示ONTAP 下列資訊、從功能表9.8開始：
  a| 
 接受ONTAP 來自本系統的建議。
  a| 
-檢閱建議的Aggregate顯示、然後回應提示以建立建議的Aggregate。
+檢閱建議的本機階層顯示，然後回應建立建議的本機階層的提示。
 
 [listing]
 ----
@@ -152,7 +155,7 @@ myA400-44556677::>
  a| 
 手動設定本機層級、*非*使用ONTAP 來自各地的建議。
  a| 
-請前往 link:create-aggregates-manual-task.html["手動新增本機層（建立Aggregate）"]。
+繼續執行link:create-aggregates-manual-task.html["手動新增本機層"]。
 
 |===
 

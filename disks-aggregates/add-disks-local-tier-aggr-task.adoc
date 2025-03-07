@@ -2,9 +2,9 @@
 permalink: disks-aggregates/add-disks-local-tier-aggr-task.html 
 sidebar: sidebar 
 keywords: add, expand, aggregate, add drives, add disks, add capacity, local tier, add disks to local tier, add disks to aggregate, increase storage, increase aggregate size, local tier, capacity, disk, expand storage, add drives, add disks, add capacity 
-summary: 您可以將磁碟新增至本機層（Aggregate）、以便為其相關的磁碟區提供更多儲存設備。 
+summary: 您可以將磁碟新增至本機層，以便為其相關的磁碟區提供更多儲存空間。 
 ---
-= 新增容量至本機層（新增磁碟至集合體）
+= 將容量新增至 ONTAP 中的本機層
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,7 +16,10 @@ summary: 您可以將磁碟新增至本機層（Aggregate）、以便為其相�
 
 
 [role="lead"]
-您可以將磁碟新增至本機層（Aggregate）、以便為其相關的磁碟區提供更多儲存設備。
+您可以將磁碟新增至本機層，以便為其相關的磁碟區提供更多儲存空間。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 [role="tabbed-block"]
 ====
@@ -70,30 +73,30 @@ NOTE: 如果沒有可新增的備用磁碟、則不會顯示「*新增容量*」
 .步驟
 . （僅適用於 ONTAP 9.7 ）選擇 * （返回經典版本） * 。
 . 選擇 * 硬體與診斷 > Aggregate * 。
-. 選取您要新增容量磁碟的集合體，然後選取 * 動作 > 新增容量 * 。
+. 選取您要新增容量磁碟的本機層，然後選取 * 動作 > 新增容量 * 。
 +
 
-NOTE: 您應該新增與集合體中其他磁碟大小相同的磁碟。
+NOTE: 您應該新增與本機層中其他磁碟大小相同的磁碟。
 
 . （僅適用於 ONTAP 9.7 ）選擇 * 切換至新體驗 * 。
-. 選取 * 儲存 > Tiers* 以驗證新集合體的大小。
+. 選取 * 儲存 > Tiers* 以驗證新本機層的大小。
 
 
 --
 .CLI
 --
 .開始之前
-您必須知道要新增儲存設備之集合體的RAID群組大小。
+您必須知道要新增儲存設備的本機層的 RAID 群組大小為何。
 
 .關於這項工作
-將分割磁碟新增至集合體的程序與新增未分割磁碟的程序類似。
+將分割磁碟新增至本機層的程序類似於新增未分割磁碟的程序。
 
-當您擴充Aggregate時、應該注意是要將分割區或未分割磁碟新增至Aggregate。當您將未分割磁碟機新增至現有的Aggregate時、現有RAID群組的大小會由新的RAID群組繼承、這可能會影響所需的同位元檢查磁碟數量。如果將未分割磁碟新增至由分割磁碟組成的RAID群組、則新磁碟會分割、留下未使用的備用磁碟分割。
+當您展開本機層時，您應該注意是否要將分割區或未分割磁碟新增至本機層。當您將未分割的磁碟機新增至現有的本機層時，新的 RAID 群組會繼承現有 RAID 群組的大小，這可能會影響所需的同位元磁碟數量。如果將未分割磁碟新增至由分割磁碟組成的RAID群組、則新磁碟會分割、留下未使用的備用磁碟分割。
 
 在配置磁碟分割時、您必須確保在沒有磁碟機的情況下、不會將兩個磁碟分割區都保留為備援磁碟機的情況下離開節點。如果您這麼做、而且節點發生控制器中斷、可能無法提供有關問題的寶貴資訊（核心檔案）給技術支援人員。
 
 .步驟
-. 顯示擁有Aggregate的系統上可用的備援儲存設備：
+. 在擁有本機層的系統上顯示可用的備援儲存設備：
 +
 `storage aggregate show-spare-disks -original-owner _node_name_`
 
@@ -121,7 +124,7 @@ Original Owner: cl1-s2
  1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB zeroed
 2 entries were displayed.
 ----
-. 顯示目前的集合體RAID群組：
+. 顯示本機層目前的 RAID 群組：
 +
 [source, cli]
 ----
@@ -184,13 +187,13 @@ Aggregate capacity available for volume use would be increased by 1.83TB.
 storage aggregate add-disks -aggregate <aggr_name> -raidgroup new -diskcount <number_of_disks_or_partitions>
 ----
 +
-建立 Flash Pool Aggregate 時、如果您要新增的磁碟與 Aggregate 不同的 Checksum 、或是要將磁碟新增至混合式 Checksum Aggregate 、則必須使用 `-checksumstyle` 參數。
+建立 Flash Pool 本機層時，如果您要新增的磁碟與本機層的總和檢查碼不同，或者如果您要新增磁碟至混合式 Checksum 本機層，則必須使用此 `-checksumstyle`參數。
 
 +
-如果您要將磁碟新增至 Flash Pool Aggregate 、則必須使用 `-disktype` 指定磁碟類型的參數。
+如果您要將磁碟新增至 Flash Pool 本機層，則必須使用 `-disktype`參數來指定磁碟類型。
 
 +
-您可以使用 `-disksize` 指定要新增磁碟大小的參數。只會選取約有指定大小的磁碟來新增至集合體。
+您可以使用此 `-disksize`參數來指定要新增的磁碟大小。只會選取大小約為指定大小的磁碟來新增至本機層。
 
 +
 [listing]

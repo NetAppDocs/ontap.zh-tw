@@ -2,30 +2,33 @@
 permalink: disks-aggregates/commands-manage-aggregates-reference.html 
 sidebar: sidebar 
 keywords: commands, manage, aggregates 
-summary: 您可以使用儲存Aggregate命令來管理Aggregate。 
+summary: 您可以使用 storage Aggregate 命令來管理本機層。 
 ---
-= 管理Aggregate的命令
+= 管理 ONTAP 中本機層的命令
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `storage aggregate` 管理集合體的命令。
+您可以使用 `storage aggregate`命令來管理您的本機階層。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 |===
 | 如果您想要... | 使用此命令... 
 
 
  a| 
-顯示所有Flash Pool Aggregate的快取大小
+顯示所有 Flash Pool 本機層的快取大小
  a| 
 `storage aggregate show -fields hybrid-cache-size-total -hybrid-cache-size-total >0`
 
 
 
  a| 
-顯示Aggregate的磁碟資訊和狀態
+顯示本機層的磁碟資訊和狀態
  a| 
 `storage aggregate show-status`
 
@@ -39,63 +42,63 @@ summary: 您可以使用儲存Aggregate命令來管理Aggregate。
 
 
  a| 
-顯示叢集中的根集合體
+顯示叢集中的根本機階層
  a| 
 `storage aggregate show -has-mroot true`
 
 
 
  a| 
-顯示Aggregate的基本資訊和狀態
+顯示本機層的基本資訊和狀態
  a| 
 `storage aggregate show`
 
 
 
  a| 
-顯示集合體中使用的儲存類型
+顯示在本機層中使用的儲存設備類型
  a| 
 `storage aggregate show -fields storage-type`
 
 
 
  a| 
-讓Aggregate上線
+將本機層上線
  a| 
 `storage aggregate online`
 
 
 
  a| 
-刪除 Aggregate
+刪除本機層
  a| 
 `storage aggregate delete`
 
 
 
  a| 
-將Aggregate置於受限狀態
+將本機層置於受限狀態
  a| 
 `storage aggregate restrict`
 
 
 
  a| 
-重新命名Aggregate
+重新命名本機層
  a| 
 `storage aggregate rename`
 
 
 
  a| 
-使Aggregate離線
+使本機層離線
  a| 
 `storage aggregate offline`
 
 
 
  a| 
-變更Aggregate的RAID類型
+變更本機層的 RAID 類型
  a| 
 `storage aggregate modify -raidtype`
 

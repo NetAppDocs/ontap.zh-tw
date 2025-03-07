@@ -2,16 +2,19 @@
 permalink: disks-aggregates/convert-raid-tec-dp-task.html 
 sidebar: sidebar 
 keywords: convert, raid-tec, raid-dp, raid policy 
-summary: 如果您減少本機層（Aggregate）的大小、但不再需要三同位元檢查、您可以將RAID原則從RAID-TEC 「支援」轉換為「RAID-DP」、並減少RAID同位元檢查所需的磁碟數量。 
+summary: 如果您減少本機層的大小，而不再需要三同位元檢查，您可以將 RAID 原則從 RAID-TEC 轉換為 RAID-DP ，並減少 RAID 同位檢查所需的磁碟數量。 
 ---
-= 從RAID-TEC 「支援」轉換為「RAID-DP」
+= 在 ONTAP 中從 RAID-TEC 轉換為 RAID-DP
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您減少本機層（Aggregate）的大小、但不再需要三同位元檢查、您可以將RAID原則從RAID-TEC 「支援」轉換為「RAID-DP」、並減少RAID同位元檢查所需的磁碟數量。
+如果您減少本機層的大小，而不再需要三同位元檢查，您可以將 RAID 原則從 RAID-TEC 轉換為 RAID-DP ，並減少 RAID 同位檢查所需的磁碟數量。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
 支援的最大RAID群組大小RAID-TEC 大於RAID-DP的最大RAID群組大小。如果最大RAID-TEC 的元組大小不在RAID-DP限制之內、您將無法轉換為RAID-DP。
@@ -20,15 +23,15 @@ summary: 如果您減少本機層（Aggregate）的大小、但不再需要三�
 若要瞭解在 RAID 類型之間轉換的影響、請參閱 https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-modify.html#parameters["參數"^] 以取得 `storage aggregate modify` 命令。
 
 .步驟
-. 確認Aggregate已上線、且至少有六個磁碟：
+. 確認本機層已上線，且至少有六個磁碟：
 +
 `storage aggregate show-status -aggregate _aggregate_name_`
 
-. 將Aggregate從RAID-TEC 支援的對象轉型為RAID-DP：
+. 將本機層從 RAID-TEC 轉換為 RAID-DP ：
 +
 `storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_dp`
 
-. 確認Aggregate RAID原則為RAID-DP：
+. 驗證本機層 RAID 原則是否為 RAID-DP ：
 +
 `storage aggregate show _aggregate_name_`
 

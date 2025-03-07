@@ -2,16 +2,16 @@
 permalink: disks-aggregates/setup-active-passive-config-root-data-data-task.html 
 sidebar: sidebar 
 keywords: root-data-data, partitioning, disks, active-passive 
-summary: 當HA配對設定為由原廠使用根資料資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想要在主動-被動組態中使用HA配對、則必須先更新磁碟分割擁有權、才能建立資料Aggregate。 
+summary: 當HA配對設定為由原廠使用根資料資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想在主動被動式組態中使用 HA 配對，則必須先更新分割區擁有權，然後再建立資料本機層。 
 ---
-= 使用root資料資料分割功能、在節點上設定主動-被動式組態
+= 在 ONTAP 中使用根資料資料分割區，在節點上設定主動被動式組態
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-當HA配對設定為由原廠使用根資料資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想要在主動-被動組態中使用HA配對、則必須先更新磁碟分割擁有權、才能建立資料本機層（Aggregate）。
+當HA配對設定為由原廠使用根資料資料分割時、資料分割區的擁有權會在配對中的兩個節點之間分割、以用於雙主動式組態。如果您想在主動被動式組態中使用 HA 配對，則必須先更新分割區擁有權，然後再建立資料本機層。
 
 .開始之前
 * 您應該已經決定要將哪個節點做為主動節點、以及哪個節點將做為被動節點。
@@ -21,7 +21,7 @@ summary: 當HA配對設定為由原廠使用根資料資料分割時、資料分
 .關於這項工作
 此工作會在兩個節點上執行：節點A和節點B
 
-此程序是針對未從分割磁碟建立資料本機層（Aggregate）的節點所設計。
+此程序適用於未從分割磁碟建立資料本機層的節點。
 
 深入瞭解 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_the_rules_for_Advanced_Disk_Partitioning%3F["進階磁碟分割"^]。
 
@@ -106,7 +106,7 @@ Original Owner: cluster1-02
 +
 資料Aggregate會建立、並由作用中節點擁有。
 
-. 或者、您也可以使用ONTAP建議的Aggregate配置、其中包括RAID群組配置和備用數的最佳實務做法：
+. 或者，您也可以使用 ONTAP 建議的本機層配置，其中包括 RAID 群組配置和備用數的最佳實務做法：
 +
 `storage aggregate auto-provision`
 

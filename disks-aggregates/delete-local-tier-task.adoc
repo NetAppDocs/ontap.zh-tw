@@ -2,20 +2,23 @@
 permalink: disks-aggregates/delete-local-tier-task.html 
 sidebar: sidebar 
 keywords: delete, local tier, aggregate, remove 
-summary: 如果本機層上沒有磁碟區、您可以刪除本機層（Aggregate）。 
+summary: 如果本機層上沒有磁碟區，您可以刪除本機層。 
 ---
-= 刪除本機層（Aggregate）
+= 刪除 ONTAP 中的本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果本機層上沒有磁碟區、您可以刪除本機層（Aggregate）。
+如果本機層上沒有磁碟區，您可以刪除本機層。
 
-。 `storage aggregate delete` 命令會刪除儲存Aggregate。如果集合體上存在磁碟區、則命令會失敗。如果Aggregate附加了物件存放區、則除了刪除Aggregate之外、命令也會刪除物件存放區中的物件。此命令不會變更物件存放區組態。
 
-下列範例會刪除名為「aggr1」的Aggregate：
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
+
+命令會 `storage aggregate delete`刪除儲存本機層。如果本機層上有磁碟區，則命令會失敗。如果本機層附加了物件存放區，則除了刪除本機之外，命令也會刪除物件存放區中的物件。此命令不會變更物件存放區組態。
+
+以下範例刪除名為「 aggr1 」的本機層：
 
 ....
 > storage aggregate delete -aggregate aggr1

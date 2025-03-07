@@ -2,19 +2,22 @@
 permalink: disks-aggregates/convert-raid-dp-tec-task.html 
 sidebar: sidebar 
 keywords: convert, raid-dp, raid-tec, raid policy 
-summary: 如果您想要增加三同位元檢查的保護、可以從RAID-DP轉換為RAID-TEC如果集合體中使用的磁碟大小大於4 TiB、則建議使用此功能。RAID-TEC 
+summary: 如果您想要增加三同位元檢查的保護、可以從RAID-DP轉換為RAID-TEC如果本機層中使用的磁碟大小大於 4 TiB ，則建議使用 RAID-TEC 。 
 ---
-= 從RAID-DP轉換為RAID-TEC
+= 在 ONTAP 中從 RAID-DP 轉換為 RAID-TEC
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您想要增加三同位元檢查的保護、可以從RAID-DP轉換為RAID-TEC如果您的本機層（Aggregate）所使用的磁碟大小大於4 TiB、建議使用此功能。RAID-TEC
+如果您想要增加三同位元檢查的保護、可以從RAID-DP轉換為RAID-TEC如果本機層中使用的磁碟大小大於 4 TiB ，則建議使用 RAID-TEC 。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .開始之前
-要轉換的本機層（Aggregate）必須至少有七個磁碟。
+要轉換的本機層必須至少有七個磁碟。
 
 .關於這項工作
 * 硬碟機（HDD）本機層可從RAID-DP轉換為RAID-TEC這包括Flash Pool本機層中的HDD層級。
@@ -22,15 +25,15 @@ summary: 如果您想要增加三同位元檢查的保護、可以從RAID-DP轉�
 
 
 .步驟
-. 確認Aggregate已上線、且至少有六個磁碟：
+. 確認本機層已上線，且至少有六個磁碟：
 +
 `storage aggregate show-status -aggregate _aggregate_name_`
 
-. 將Aggregate從RAID-DP轉換RAID-TEC 為
+. 將本機層從 RAID-DP 轉換為 RAID-TEC ：
 +
 `storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_tec`
 
-. 驗證Aggregate RAID原則RAID-TEC 是否為「支援：
+. 驗證本機層 RAID 原則是否為 RAID-TEC ：
 +
 `storage aggregate show _aggregate_name_`
 

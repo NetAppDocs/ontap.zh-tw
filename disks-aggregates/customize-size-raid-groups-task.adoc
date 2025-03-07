@@ -2,19 +2,22 @@
 permalink: disks-aggregates/customize-size-raid-groups-task.html 
 sidebar: sidebar 
 keywords: raidsize, customize, raid groups 
-summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入本機層（Aggregate）的儲存容量。 
+summary: 您可以自訂 RAID 群組的大小，以確保 RAID 群組大小適合您計畫在本機層中包含的儲存容量。 
 ---
-= 自訂RAID群組的大小
+= 在 ONTAP 中自訂 RAID 群組的大小
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以自訂RAID群組的大小、以確保RAID群組大小適合您計畫納入本機層（Aggregate）的儲存容量。
+您可以自訂 RAID 群組的大小，以確保 RAID 群組大小適合您計畫在本機層中包含的儲存容量。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .關於這項工作
-對於標準本機層（Aggregate）、您可以分別變更每個本機層的RAID群組大小。對於Flash Pool本機層級、您可以獨立變更SSD RAID群組和HDD RAID群組的RAID群組大小。
+對於標準本機層，您可以分別變更每個本機層的 RAID 群組大小。對於Flash Pool本機層級、您可以獨立變更SSD RAID群組和HDD RAID群組的RAID群組大小。
 
 下列清單概述變更RAID群組大小的一些事實：
 
@@ -35,7 +38,7 @@ summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您
 
 
  a| 
-變更Flash Pool Aggregate之SSD RAID群組的最大RAID群組大小
+變更 Flash Pool 本機層的 SSD RAID 群組的最大 RAID 群組大小
  a| 
 `storage aggregate modify -aggregate aggr_name -cache-raid-group-size size`
 
@@ -50,10 +53,10 @@ summary: 您可以自訂RAID群組的大小、以確保RAID群組大小適合您
 
 
 .範例
-下列命令可將Aggregate n1_A4的最大RAID群組大小變更為20個磁碟或陣列LUN：
+下列命令可將本機層 n1_A4 的最大 RAID 群組大小變更為 20 個磁碟或陣列 LUN ：
 
 `storage aggregate modify -aggregate n1_a4 -maxraidsize 20`
 
-下列命令會將Flash Pool Aggregate n1_cache A2的SSD快取RAID群組大小上限變更為24：
+下列命令可將 Flash Pool 本機層 n1_cache_A2 的 SSD 快取 RAID 群組大小上限變更為 24 ：
 
 `storage aggregate modify -aggregate n1_cache_a2 -cache-raid-group-size 24`

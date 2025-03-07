@@ -1,23 +1,26 @@
 ---
 permalink: fabricpool/attach-cloud-tier-aggregate-task.html 
 sidebar: sidebar 
-keywords: attaching, cloud, tier, aggregate 
-summary: 將物件存放區設定為雲端層之後、您可以將其附加FabricPool 至物件存放區、以指定要使用的集合體。在更新版本的版本中、您也可以附加包含合格的等量組成物的集合體。ONTAP FlexGroup 
+keywords: attaching, cloud, tier, cloud tier, aggregate 
+summary: 將物件存放區設定為雲端層之後，您可以將其附加至 FabricPool ，以指定要使用的本機層。在更新版本的版本中、您也可以附加包含合格的等量組成物的集合體。ONTAP FlexGroup 
 ---
-= 將 ONTAP 雲端層與本機層（ Aggregate ）建立關聯
+= 將 ONTAP 雲端層與本機層建立關聯
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-將物件存放區設定為雲端層之後、您可以將其附加FabricPool 至物件庫、以指定要使用的本機層（Aggregate）。在《銷售資料》9.5及更新版本中、您也可以附加含有合格的銷售資料成分的本地層（Aggregate）ONTAP FlexGroup 。
+將物件存放區設定為雲端層之後，您可以將其附加至 FabricPool ，以指定要使用的本機層。在 ONTAP 9.5 或更新版本中，您也可以附加包含合格 FlexGroup Volume 成分的本機階層。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 .關於這項工作
 將雲端層附加到本機層是一項永久性動作。附加雲端層之後、無法從本機層解除附加。不過、您可以使用link:../fabricpool/create-mirror-task.html["FabricPool 鏡射"]將本機層附加至不同的雲端層。
 
 .開始之前
-當您使用ONTAP CLI來設定用於FabricPool 執行效能提升的Aggregate時、Aggregate必須已經存在。
+當您使用 ONTAP CLI 設定 FabricPool 的本機層時，本機層必須已經存在。
 
 [NOTE]
 ====
@@ -25,7 +28,7 @@ summary: 將物件存放區設定為雲端層之後、您可以將其附加Fabri
 
 ====
 .步驟
-您可以FabricPool 使用ONTAP Sytr系統 管理程式或ONTAP CLI、將本機層（Aggregate）附加至物件存放區。
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 將本機層附加至 FabricPool 物件存放區。
 
 [role="tabbed-block"]
 ====
