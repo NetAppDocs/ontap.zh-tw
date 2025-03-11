@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: decide, overview, administrator, authentication, rbac, role-based, access, control 
 summary: 您可以為ONTAP 叢集管理員和儲存虛擬機器（SVM）管理員啟用登入帳戶。您也可以使用角色型存取控制（RBAC）來定義系統管理員的功能。 
 ---
-= 使用CLI進行系統管理員驗證及RBAC概述
+= ONTAP 系統管理員驗證和 RBAC 總覽
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,9 +13,29 @@ summary: 您可以為ONTAP 叢集管理員和儲存虛擬機器（SVM）管理�
 [role="lead"]
 您可以為ONTAP 叢集管理員和儲存虛擬機器（SVM）管理員啟用登入帳戶。您也可以使用角色型存取控制（RBAC）來定義系統管理員的功能。
 
-您可以透過下列方式啟用登入帳戶和RBAC：
+您可以使用下列驗證類型、讓本機系統管理員帳戶存取管理儲存虛擬機器（SVM）或資料SVM：
 
-* 您想要使用ONTAP 的是無法使用系統管理程式或自動化指令碼工具的功能、而是使用功能不全的命令列介面（CLI）。
-* 您想要使用最佳實務做法、而非探索每個可用選項。
-* 您並未使用SNMP來收集叢集的相關資訊。
+* link:enable-password-account-access-task.html["密碼"]
+* link:enable-ssh-public-key-accounts-task.html["SSH公開金鑰"]
+* link:enable-ssl-certificate-accounts-task.html["SSL 憑證"]
+* link:mfa-overview.html["SSH多因素驗證（MFA）"]
++
+從支援使用密碼和公開金鑰的驗證功能、從ONTAP 功能表9.3開始。
+
+
+
+您可以使用下列驗證類型、讓遠端系統管理員帳戶存取管理SVM或資料SVM：
+
+* link:grant-access-active-directory-users-groups-task.html["Active Directory"]
++
+從 ONTAP 9.13.1 開始，您可以使用 SSH 公開金鑰做為 Active Directory 使用者的主要或次要驗證方法。
+
+* link:../system-admin/configure-saml-authentication-task.html["SAML驗證（僅適用於管理SVM）"]
++
+從ONTAP Sf9.3開始、安全聲明標記語言（SAML）驗證可用於使用下列任一Web服務存取管理SVM：服務處理器基礎架構、ONTAP Sf0 API或系統管理員。
+
+* link:grant-access-nis-ldap-user-accounts-task.html["LDAP 或 NIS"]
++
+從ONTAP 版本9.4開始、SSH MFA可用於LDAP或NIS伺服器上的遠端使用者。支援使用nsswitch和公開金鑰進行驗證。
+
 

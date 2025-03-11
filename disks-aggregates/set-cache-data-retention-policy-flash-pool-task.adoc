@@ -29,27 +29,8 @@ summary: 您可以將快取保留原則指派給 Flash Pool 本機層中的磁�
 
 . 設定快取保留原則：
 +
-|===
+`volume modify -volume volume_name -vserver vserver_name -caching-policy policy_name`
 
-
-| 版本ONTAP | 命令 
-
-
- a| 
-版本9.0、ONTAP 9.1
- a| 
-`priority hybrid-cache set volume_name read-cache=read_cache_value write-cache=write_cache_value cache-retention-priority=cache_retention_policy`
-
-設定 `cache_retention_policy` 至 `high` 適用於您想要在快取中保留更久的資料。設定 `cache_retention_policy` 至 `low` 適用於您想要更快從快取移除的資料。
-
-
-
- a| 
-0 ： 2 或更新版本 ONTAP
- a| 
-`volume modify -volume volume_name -vserver vserver_name -caching-policy policy_name.`
-
-|===
 . 確認磁碟區的快取保留原則已變更為您選取的選項。
 . 將權限設定傳回給admin：
 +

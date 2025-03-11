@@ -1,10 +1,10 @@
 ---
 permalink: authentication/workflow-concept.html 
 sidebar: sidebar 
-keywords: svms, administrator, authentication, rbac, workflow 
+keywords: svm, svms, administrator, authentication, rbac, workflow, account, role 
 summary: 您可以啟用本機系統管理員帳戶或遠端系統管理員帳戶的驗證。本機帳戶的帳戶資訊位於儲存系統上、遠端帳戶的帳戶資訊則位於其他位置。每個帳戶都可以擁有預先定義的角色或自訂角色。 
 ---
-= 系統管理員驗證和RBAC工作流程
+= ONTAP 系統管理員驗證和 RBAC 工作流程摘要
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,25 +13,26 @@ summary: 您可以啟用本機系統管理員帳戶或遠端系統管理員帳�
 [role="lead"]
 您可以啟用本機系統管理員帳戶或遠端系統管理員帳戶的驗證。本機帳戶的帳戶資訊位於儲存系統上、遠端帳戶的帳戶資訊則位於其他位置。每個帳戶都可以擁有預先定義的角色或自訂角色。
 
-image:administrator-authentication-rbac-workflow.gif["系統管理員驗證和RBAC工作流程"]
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一"]完成組態工作表
+[role="quick-margin-para"]
+在建立登入帳戶及設定角色型存取控制 (RBAC) 之前，您應該先收集中每個項目的資訊link:config-worksheets-reference.html["組態工作表"]。
 
-您可以使用下列驗證類型、讓本機系統管理員帳戶存取管理儲存虛擬機器（SVM）或資料SVM：
-
-* 密碼
-* SSH公開金鑰
-* SSL 憑證
-* SSH多因素驗證（MFA）
-+
-從支援使用密碼和公開金鑰的驗證功能、從ONTAP 功能表9.3開始。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["二"]判斷系統管理員帳戶是本機帳戶還是遠端帳戶
+[role="quick-margin-list"]
+* * 如果為本機： * 啟用link:enable-password-account-access-task.html["密碼"]，，link:enable-ssh-public-key-accounts-task.html["SSH"] link:mfa-overview.html["SSH MFA"]或link:enable-ssl-certificate-accounts-task.html["SSL"]存取。
+* * 如果是遠端： * 判斷遠端存取的類型。取決於存取類型，link:grant-access-active-directory-users-groups-task.html["啟用 Active Directory 存取"]，link:grant-access-nis-ldap-user-accounts-task.html["啟用 LDAP 或 NIS 存取"]或link:../system-admin/configure-saml-authentication-task.html["設定 SAML 驗證（僅適用於管理 SVM ）"]。
 
 
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三"]設定角色型存取
+[role="quick-margin-para"]
+指派給系統管理員的角色會決定系統管理員可以存取的命令。角色會在您建立系統管理員帳戶時指派，稍後也可以指派link:modify-role-assigned-administrator-task.html["已修改"]。您可以為和link:predefined-roles-svm-administrators-concept.html["SVM"]管理員或link:define-custom-roles-task.html["定義自訂角色"]視需要使用預先定義的角色link:predefined-roles-cluster-administrators-concept.html["叢集"]。
 
-您可以使用下列驗證類型、讓遠端系統管理員帳戶存取管理SVM或資料SVM：
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四"]管理系統管理員帳戶
+[role="quick-margin-para"]
+根據您啓用帳戶訪問的方式，您可能需要關聯link:manage-public-key-authentication-concept.html["具有本機帳戶的公開金鑰"]，管理link:manage-ssh-public-keys-and-certificates.html["公開金鑰和 X.509 憑證"]，配置link:configure-cisco-duo-mfa-task.html["適用於 SSH 登入的 Cisco 雙核心 2FA"]，安裝link:install-server-certificate-cluster-svm-ssl-server-task.html["CA簽署的伺服器數位憑證"]或配置link:enable-ad-users-groups-access-cluster-svm-task.html["Active Directory"]，link:enable-nis-ldap-users-access-cluster-task.html["LDAP 或 NIS"] 存取：您可以在啟用帳戶存取之前或之後執行所有這些工作。
 
-* Active Directory
-* SAML驗證（僅適用於管理SVM）
-+
-從ONTAP Sf9.3開始、安全聲明標記語言（SAML）驗證可用於使用下列任一Web服務存取管理SVM：服務處理器基礎架構、ONTAP Sf0 API或系統管理員。
-
-* 從ONTAP 版本9.4開始、SSH MFA可用於LDAP或NIS伺服器上的遠端使用者。支援使用nsswitch和公開金鑰進行驗證。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"]設定其他安全功能
+[role="quick-margin-list"]
+* link:../multi-admin-verify/index.html["管理多管理員驗證"]如果您想確保某些作業需要指定的系統管理員核准。
+* link:dynamic-authorization-overview.html["管理動態授權"]如果您想根據使用者的信任層級動態套用其他授權檢查，
 

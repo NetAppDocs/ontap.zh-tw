@@ -15,7 +15,7 @@ summary: 您可以使用儲存服務品質（QoS）來保證關鍵工作負載�
 
 
 
-== 關於處理量上限（QoS上限）
+== 處理量上限（ QoS 上限）
 
 處理量上限會將工作負載的處理量限制為最大IOPS或Mbps、或IOPS和Mbps。在下圖中、工作負載2的處理量上限可確保工作負載1和3不會「凸起」。
 
@@ -28,7 +28,7 @@ image:qos-ceiling.gif["對照表、比較應用處理量上限前後的 QoS 。"
 
 
 
-== 關於處理量層（QoS下限）
+== 處理量層（ QoS 最低）
 
 處理量層保證工作負載的處理量不會低於 IOPS 或 Mbps 的最低數量、或 IOPS 和 Mbps 。在下圖中、工作負載1和工作負載3的處理量層級可確保它們符合最低處理量目標、無論工作負載2的需求為何。
 
@@ -52,7 +52,7 @@ image:qos-floor.gif["兩個圖表比較應用層之前和之後的 QoS 處理量
 
 
 
-== 關於共享和非共享的QoS原則群組
+== 共享和非共享的 QoS 原則群組
 
 從ONTAP S得9.4開始、您可以使用非共享的QoS原則群組、來指定定義的處理量上限或樓層分別套用至每個成員工作負載。共享原則群組的行為取決於原則類型：
 
@@ -62,7 +62,7 @@ image:qos-floor.gif["兩個圖表比較應用層之前和之後的 QoS 處理量
 
 
 
-== 關於調適性QoS
+== 調適性QoS
 
 通常、您指派給儲存物件的原則群組值會固定。當儲存物件大小變更時、您需要手動變更值。例如、增加磁碟區上使用的空間量、通常需要為磁碟區指定的處理量上限相應增加。
 
@@ -132,8 +132,8 @@ NOTE: 在ONTAP 更新版本的更新版本中、可在處理量層使用已用�
 全部
  a| 
 * AFF
-* C190 *
-* 採用SSD *的高階版ONTAP Select
+* C190 ^1^
+* ONTAP Select Premium 搭配 SSD ^1^
 
  a| 
 * AFF
@@ -183,7 +183,7 @@ SnapMirror同步
 是的
 
 |===
-C190 與 ONTAP Select 支援從 ONTAP 9.6 版本開始。
+^1^ C190 與 ONTAP Select 支援從 ONTAP 9.6 版本開始。
 
 
 
@@ -192,17 +192,11 @@ C190 與 ONTAP Select 支援從 ONTAP 9.6 版本開始。
 下表顯示ONTAP 支援各個版本的工作負載、以支援不同版本的處理量上限。不支援根磁碟區、負載共用鏡像和資料保護鏡像。
 
 |===
-| 工作負載支援-上限 | ONTAP 9.0 | ONTAP 9.1 | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4 - 9.7 | 更新版本ONTAP 
+| 工作負載支援 | ONTAP 9.3 及更早版本 | ONTAP 9.4 至 9.7 | 更新版本ONTAP 
 
 
  a| 
 Volume
- a| 
-是的
- a| 
-是的
- a| 
-是的
  a| 
 是的
  a| 
@@ -220,23 +214,11 @@ Volume
 是的
  a| 
 是的
- a| 
-是的
- a| 
-是的
- a| 
-是的
 
 
 
  a| 
 LUN
- a| 
-是的
- a| 
-是的
- a| 
-是的
  a| 
 是的
  a| 
@@ -254,25 +236,13 @@ SVM
 是的
  a| 
 是的
- a| 
-是的
- a| 
-是的
- a| 
-是的
 
 
 
  a| 
 流通量FlexGroup
  a| 
-否
- a| 
-否
- a| 
-否
- a| 
-是的
+是（僅限 ONTAP 9.3 ）
  a| 
 是的
  a| 
@@ -281,13 +251,7 @@ SVM
 
 
  a| 
-qtree *
- a| 
-否
- a| 
-否
- a| 
-否
+qtree ^1^
  a| 
 否
  a| 
@@ -305,12 +269,6 @@ qtree *
 是的
  a| 
 是的
- a| 
-是的
- a| 
-是的
- a| 
-是的
 
 
 
@@ -319,18 +277,12 @@ qtree *
  a| 
 否
  a| 
-否
- a| 
-否
- a| 
-否
- a| 
 是的
  a| 
 是的
 
 |===
-從 ONTAP 9.8 開始、 FlexVol 和 FlexGroup 磁碟區的 qtree 支援 NFS 存取、並啟用 NFS 。從ONTAP 推出支援SMB的支援範圍起、FlexVol 從推出支援SMB的功能、即可從功能支援功能支援使用功能的功能性功能、從功能性功能表中的qtree和FlexGroup 功能表中、存取SMB。
+^1^ 從 ONTAP 9.8 開始， FlexVol 的 qtree 和啟用 NFS 的 FlexGroup 磁碟區都支援 NFS 存取。從ONTAP 推出支援SMB的支援範圍起、FlexVol 從推出支援SMB的功能、即可從功能支援功能支援使用功能的功能性功能、從功能性功能表中的qtree和FlexGroup 功能表中、存取SMB。
 
 
 
@@ -339,7 +291,7 @@ qtree *
 下表顯示ONTAP 支援各個版本之資料中心的工作負載。不支援根磁碟區、負載共用鏡像和資料保護鏡像。
 
 |===
-| 工作負載支援- Floor | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4 - 9.7 | ONTAP 9.8 - 9.13.0 | ONTAP 9.13.1 及更新版本 
+| 工作負載支援 | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4 至 9.7 | 零點9.8至9.13.0 ONTAP | ONTAP 9.13.1 及更新版本 
 
 
 | Volume | 是的 | 是的 | 是的 | 是的 | 是的 
@@ -357,7 +309,7 @@ qtree *
 | 流通量FlexGroup | 否 | 否 | 是的 | 是的 | 是的 
 
 
-| qtree * | 否 | 否 | 否 | 是的 | 是的 
+| qtree ^1^ | 否 | 否 | 否 | 是的 | 是的 
 
 
 | 每個原則群組有多個工作負載 | 否 | 否 | 是的 | 是的 | 是的 
@@ -365,7 +317,7 @@ qtree *
 
 | 非共用原則群組 | 否 | 否 | 是的 | 是的 | 是的 
 |===
-\* 從 ONTAP 9.8 開始、 FlexVol 的 qtree 和啟用 NFS 的 FlexGroup 磁碟區都支援 NFS 存取。從ONTAP 推出支援SMB的支援範圍起、FlexVol 從推出支援SMB的功能、即可從功能支援功能支援使用功能的功能性功能、從功能性功能表中的qtree和FlexGroup 功能表中、存取SMB。
+^1^ 從 ONTAP 9.8 開始， FlexVol 的 qtree 和啟用 NFS 的 FlexGroup 磁碟區都支援 NFS 存取。從ONTAP 推出支援SMB的支援範圍起、FlexVol 從推出支援SMB的功能、即可從功能支援功能支援使用功能的功能性功能、從功能性功能表中的qtree和FlexGroup 功能表中、存取SMB。
 
 
 
@@ -374,7 +326,7 @@ qtree *
 下表顯示ONTAP 支援各更新版本的調適性QoS的工作負載。不支援根磁碟區、負載共用鏡像和資料保護鏡像。
 
 |===
-| 工作負載支援：調適性QoS | ONTAP 9.3 | ONTAP 9.4 - 9.13.0 | ONTAP 9.13.1 及更新版本 
+| 工作負載支援 | ONTAP 9.3 | 零點9.4至9.13.0 ONTAP | ONTAP 9.13.1 及更新版本 
 
 
 | Volume | 是的 | 是的 | 是的 

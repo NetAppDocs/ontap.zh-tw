@@ -29,45 +29,35 @@ summary: 建立 FlexGroup Volume 時、您可以選擇讓 ONTAP 自動選取集�
 .步驟
 . 配置FlexGroup 供應功能：
 +
-|===
-
-
-| 如果您使用... | 使用此命令... 
-
-
- a| 
-0 ： 2 或更新版本 ONTAP
- a| 
 `volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true]`
 
++
 從功能性的9.5開始ONTAP 、您就能建立FlexGroup 適用於FabricPool 功能性的若要在 FabricPool 上自動佈建 FlexGroup 磁碟區、您必須設定 `-support-tiering` 參數至 `true`。Volume 保證一律必須設定為 `none` 適用於 FabricPool 。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
 
++
 link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
 
-從ONTAP 功能表支援的9.3開始、您可以指定FlexGroup 一個適用於功能區的處理量上限（QoS Max）、這會限制FlexGroup 功能區使用的效能資源。從ONTAP S得9.4開始、您可以指定處理量層（QoS下限）和適用於FlexGroup 整個過程的調適QoS。
++
+您可以指定 FlexGroup 磁碟區的處理量上限（ QoS 上限）。這會限制 FlexGroup 磁碟區所能耗用的效能資源。從ONTAP S得9.4開始、您可以指定處理量層（QoS下限）和適用於FlexGroup 整個過程的調適QoS。
 
++
 link:../performance-admin/index.html["效能管理"]
 
-從 ONTAP 9.2 開始、您可以設定 `-encrypt` 參數至 `true` 如果您想要在 FlexGroup 磁碟區上啟用加密。若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
++
+如果您想要在 FlexGroup 磁碟區上啟用加密，可以將參數設定 `-encrypt`為 `true`。若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
 
++
 
 NOTE: 您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
 
++
 link:../encryption-at-rest/index.html["加密閒置的資料"]
 
-
-
- a| 
-ONTAP 9.1
- a| 
-`volume flexgroup deploy -vserver svm_name -size fg_size`
-
-|===
 +
 。 `size` 參數指定 FlexGroup 磁碟區大小、單位為 KB 、 MB 、 GB 、 TB 或 PB 。
 
 +
-以下範例說明如何在FlexGroup 功能強大的功能中配置尺寸400 TB的等量磁碟區ONTAP ：
+以下範例說明如何配置大小為 400 TB 的 FlexGroup Volume ：
 
 +
 [listing]
@@ -113,7 +103,10 @@ Do you want to continue? {y|n}: y
 +
 根據預設、 FlexGroup Volume 是使用建立的 `volume` 空間保證設定、 AFF 系統除外。對於 AFF 系統、依預設會使用建立 FlexGroup Volume `none` 空間保證。
 
-. 使用連接路徑掛載 FlexGroup Volume ： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+. 使用連接路徑掛載 FlexGroup Volume ：
++
+`volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+
 +
 [listing]
 ----

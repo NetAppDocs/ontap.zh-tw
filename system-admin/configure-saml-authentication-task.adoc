@@ -2,7 +2,7 @@
 permalink: system-admin/configure-saml-authentication-task.html 
 sidebar: sidebar 
 keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, lanaguage, active, directory, disable, authentication, idp, active directory, troubleshoot, repair 
-summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。停用SAML驗證時、會使用已設定的目錄服務供應商（例如Active Directory和LDAP）進行驗證。 
+summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。 
 ---
 = 設定SAML驗證
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 從ONTAP 推出支援支援功能的支援功能9.3開始、您可以�
 
 
 [role="lead"]
-從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。
+從ONTAP 推出支援支援功能的支援功能9.3開始、您可以設定網路服務的安全聲明標記語言（SAML）驗證。設定並啟用SAML驗證時、使用者會由外部身分識別供應商（IDP）進行驗證、而非由Active Directory和LDAP等目錄服務供應商進行驗證。停用 SAML 驗證時，會使用設定的目錄服務供應商，例如 Active Directory 和 LDAP 進行驗證
 
 
 
@@ -89,7 +89,7 @@ image:workflow_security_mfa_setup.gif["使用 SAML 設定多因素驗證的工�
 --
 . 建立SAML組態、ONTAP 以便讓整個程序能夠存取IDP中繼資料：
 +
-`*security saml-sp create -idp-uri _idp_uri_ -sp-host _ontap_host_name_*`
+`security saml-sp create -idp-uri <idp_uri> -sp-host <ontap_host_name>`
 
 +
 `idp_uri` 是 IDP 主機的 FTP 或 HTTP 位址、可從其中下載 IDP 中繼資料。
@@ -122,7 +122,7 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 
 . 啟用SAML組態：
 +
-`*security saml-sp modify -is-enabled true*`
+`security saml-sp modify -is-enabled true`
 
 +
 存取的任何現有使用者 `http` 或 `ontapi` 應用程式會自動設定以進行 SAML 驗證。
@@ -131,7 +131,15 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 +
 .. 使用 SAML 驗證為新使用者建立登入方法：
 +
-`*security login create -user-or-group-name _user_name_ -application [http | ontapi] -authentication-method saml -vserver _svm_name_*`
+
+NOTE: 此 `user_name`值區分大小寫。僅包含使用者名稱，且不包含網域的任何部分。
+
++
+`security login create -user-or-group-name <user_name> -application [http | ontapi] -authentication-method saml -vserver <svm_name>`
+
++
+範例：
+
 +
 [listing]
 ----
@@ -139,10 +147,13 @@ cluster_12::> security login create -user-or-group-name admin1 -application http
 ----
 .. 確認已建立使用者項目：
 +
-`*security login show*`
+`security login show`
 
 +
-[listing]
+範例：
+
++
+[listing, subs="+quotes"]
 ----
 cluster_12::> security login show
 
@@ -160,7 +171,7 @@ admin          service-processor
                            password      admin            no     none
 admin          ssh         password      admin            no     none
 admin1         http        password      backup           no     none
-**admin1       http        saml          backup           -      none**
+**admin1         http        saml          backup           -      none**
 ----
 
 
@@ -191,11 +202,11 @@ admin1         http        password      backup           no     none
 --
 . 停用SAML驗證：
 +
-`*security saml-sp modify -is-enabled false*`
+`security saml-sp modify -is-enabled false`
 
 . 如果您不想再使用SAML驗證、或想要修改IDP、請刪除SAML組態：
 +
-`*security saml-sp delete*`
+`security saml-sp delete`
 
 
 
@@ -213,11 +224,14 @@ admin1         http        password      backup           no     none
 .步驟
 . 登入進階權限層級：
 +
-`*set -privilege advanced*`
+`set -privilege advanced`
 
 . 識別SAML組態失敗的節點：
 +
-`*security saml-sp status show -instance*`
+`security saml-sp status show -instance`
+
++
+範例：
 
 +
 [listing]
@@ -243,7 +257,10 @@ SAML Service Provider Enabled: false
 ----
 . 修復故障節點上的SAML組態：
 +
-`*security saml-sp repair -node _node_name_*`
+`security saml-sp repair -node <node_name>`
+
++
+範例：
 
 +
 [listing]
@@ -261,15 +278,18 @@ Web伺服器會重新啟動、且任何作用中的HTTP連線或HTTPS連線都�
 
 . 確認已在所有節點上成功設定SAML：
 +
-`*security saml-sp status show -instance*`
+`security saml-sp status show -instance`
 
 +
-[listing]
+範例：
+
++
+[listing, subs="+quotes"]
 ----
 cluster_12::*> security saml-sp status show -instance
 
                          Node: node1
-                Update Status: config-success
+                Update Status: **config-success**
                Database Epoch: 9
    Database Transaction Count: 997
                    Error Text:
