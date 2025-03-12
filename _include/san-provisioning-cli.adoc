@@ -2,7 +2,7 @@
 :allow-uri-read: 
 
 
-. 使用 `system license show` 用於驗證您是否擁有 FC 或 iSCSI 授權的命令。
+. 使用 `system license show`命令驗證您是否擁有 FC 或 iSCSI 的授權。如link:https://docs.netapp.com/us-en/ontap-cli/system-license-show.html["指令參考資料ONTAP"^]需詳細 `system license show`資訊，請參閱。
 +
 `system license show`
 
@@ -18,7 +18,7 @@ Package           Type    Description           Expiration
  iSCSI             site    iSCSI License         -
  FCP               site    FCP License           -
 ----
-. 如果您沒有 FC 或 iSCSI 授權、請使用 `license add` 命令。
+. 如果您沒有 FC 或 iSCSI 的授權，請使用 `license add`命令。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=license+add["指令參考資料ONTAP"^]需詳細 `license add`資訊，請參閱。
 +
 `license add -license-code _your_license_code_`
 
@@ -27,25 +27,34 @@ Package           Type    Description           Expiration
 * iSCSI ： * `vserver iscsi create -vserver _vserver_name_ -target-alias _vserver_name_`
 
 +
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-create.html["指令參考資料ONTAP"^]需詳細 `vserver iscsi create`資訊，請參閱。
+
++
 * 代表 FC ： * `vserver fcp create -vserver _vserver_name_ -status-admin up`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-fcp-create.html["指令參考資料ONTAP"^]需詳細 `vserver fcp create`資訊，請參閱。
 
 . 在每個節點上為SVM建立兩個生命期：
 +
 `network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi|fc -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask netmask`
 
 +
-NetApp為每個SVM服務資料的每個節點至少支援一個iSCSI或FC LIF。不過、備援需要每個節點兩個生命期。
+NetApp為每個SVM服務資料的每個節點至少支援一個iSCSI或FC LIF。不過、備援需要每個節點兩個生命期。如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["指令參考資料ONTAP"^]需詳細 `network interface create`資訊，請參閱。
 
 . 確認您的生命已建立、且其操作狀態為 `online`：
 +
 `network interface show -vserver _vserver_name_ _lif_name_`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
 
 . 建立LUN：
 +
 `lun create -vserver vserver_name -volume _volume_name_ -lun _lun_name_ -size _lun_size_ -ostype linux -space-reserve enabled|disabled`
 
 +
-您的LUN名稱不得超過255個字元、且不得包含空格。
+您的LUN名稱不得超過255個字元、且不得包含空格。如link:https://docs.netapp.com/us-en/ontap-cli/lun-create.html["指令參考資料ONTAP"^]需詳細 `lun create`資訊，請參閱。
 
 +
 
@@ -55,13 +64,22 @@ NOTE: 在磁碟區中建立LUN時、NVFIL選項會自動啟用。
 +
 `igroup create -vserver _vserver_name_ -igroup _igroup_name_ -protocol fcp|iscsi|mixed -ostype linux -initiator _initiator_name_`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=igroup+create["指令參考資料ONTAP"^]需詳細 `igroup create`資訊，請參閱。
+
 . 將LUN對應至igroup：
 +
 `lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["指令參考資料ONTAP"^]需詳細 `lun mapping create`資訊，請參閱。
+
 . 驗證LUN的設定是否正確：
 +
 `lun show -vserver _vserver_name_`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
 
 . link:san-admin/create-port-sets-binding-igroups-task.html["建立連接埠集並繫結至igroup"] （選用）。
 . 請遵循主機文件中的步驟、在特定主機上啟用區塊存取。

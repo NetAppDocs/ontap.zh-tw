@@ -65,7 +65,7 @@ summary: 當 ARP 偵測到潛在攻擊時，就會建立快照。您可以從這
 . 若要從 ARP 快照還原，請跳至步驟二。若要還原舊版快照的資料，您必須釋放 ARP 快照的鎖定。
 +
 
-NOTE: 如果您使用的命令如下所述，則只有在從先前的快照還原之前，才需要先釋放反勒索軟體 SnapLock `volume snap restore` 。如果您使用 FlexClone ，單一檔案貼齊還原或其他方法還原資料，則不需要這麼做。
+NOTE: 如果您使用的命令如下所述，則只有在從先前的快照還原之前，才需要先釋放反勒索軟體 SnapLock `volume snapshot restore` 。如果您使用 FlexClone ，單一檔案貼齊還原或其他方法還原資料，則不需要這麼做。
 
 +
 將攻擊標記為可能的勒索軟體攻擊(`-false-positive false`）並清除可疑檔案(`clear-suspect`）：
@@ -163,7 +163,10 @@ cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.20
 
 
 --
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+snapshot["指令參考資料ONTAP"^]需詳細 `volume snapshot`資訊，請參閱。
+
 ====
 .相關資訊
 * link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["KB ： ONTAP 中的勒索軟體預防與還原"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
 

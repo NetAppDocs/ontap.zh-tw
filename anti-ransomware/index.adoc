@@ -121,7 +121,7 @@ NOTE: 從 ONTAP 9 。 16.1 開始，就沒有 FlexVol 磁碟區使用 ARP 的學
 建議您將 ARP 留在學習模式 30 天。從 ONTAP 9 。 13.1 開始， ARP 會自動判斷最佳學習時間間隔，並自動執行交換器，這可能會在 30 天之前發生。
 
 
-TIP: 命令 `security anti-ransomware volume workload-behavior show`會顯示已在磁碟區中偵測到的副檔名。如果您在學習模式早期執行此命令，並顯示正確的檔案類型呈現，則不應將該資料當作移至作用中模式的基礎，因為 ONTAP 仍在收集其他計量。
+TIP: 命令 `security anti-ransomware volume workload-behavior show`會顯示已在磁碟區中偵測到的副檔名。如果您在學習模式早期執行此命令，並顯示正確的檔案類型呈現，則不應將該資料當作移至作用中模式的基礎，因為 ONTAP 仍在收集其他計量。如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume workload-behavior show`資訊，請參閱。
 
 .作用中模式
 如果是以 ONTAP 9.10.1 至 9.15.1 執行的 ARP ，在最佳學習期間結束後， ARP 會切換至 _active modes_ 。在 ARP 切換至作用中模式之後， ONTAP 會建立 ARP 快照，以在偵測到威脅時保護資料。
@@ -150,7 +150,7 @@ NOTE: 從 ONTAP 9.11.1 開始，您可以自訂 ARP 的偵測參數。如需更�
 
 ONTAP 執行分析報告、判斷異常狀況是否與勒索軟體設定檔相符、威脅就會升級至中度。當攻擊可能性中等時、 ONTAP 會產生 EMS 通知、提示您評估威脅。ONTAP 不會傳送低威脅的警示，不過從 ONTAP 9.14.1 開始xref:manage-parameters-task.html#modify-alerts[修改警示設定]，您可以。如需更多資訊、請參閱 xref:respond-abnormal-task.html[回應異常活動]。
 
-您可以在 System Manager 的 * 事件 * 區段或命令中檢視中度威脅的相關資訊 `security anti-ransomware volume show`。在 ONTAP 9.16.1 之前的版本中，如果沒有 ARP/AI ，也可以使用命令來檢視低威脅事件 `security anti-ransomware volume show`。
+您可以在 System Manager 的 * 事件 * 區段或命令中檢視中度威脅的相關資訊 `security anti-ransomware volume show`。在 ONTAP 9.16.1 之前的版本中，如果沒有 ARP/AI ，也可以使用命令來檢視低威脅事件 `security anti-ransomware volume show`。如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume show`資訊，請參閱。
 
 個別的 ARP 快照會保留兩天。如果有多個 ARP 快照，預設會保留五天。從 ONTAP 9.11.1 開始、您可以修改保留設定。如需更多資訊、請參閱 xref:modify-automatic-shapshot-options-task.html[修改快照選項]。
 

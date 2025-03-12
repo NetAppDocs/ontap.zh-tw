@@ -27,7 +27,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["工作流程摘要：
 .步驟
 . 在指令行中、設定儲存VM根Volume的UNIX權限。ONTAP
 +
-.. 顯示儲存 VM 根磁碟區的相關權限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`
+.. 顯示儲存 VM 根 Volume 的相關權限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`。如link:https://docs.netapp.com/us-en/ontap-cli/volume-show.html["指令參考資料ONTAP"^]需詳細 `volume show`資訊，請參閱。
 +
 儲存VM的根Volume必須具有下列組態：
 
@@ -45,12 +45,12 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["工作流程摘要：
 
 | UNIX權限 | 755 
 |===
-.. 如果未顯示這些值、請使用 `volume modify` 命令進行更新。
+.. 如果未顯示這些值，請使用 `volume modify`命令進行更新。如link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["指令參考資料ONTAP"^]需詳細 `volume modify`資訊，請參閱。
 
 
 . 設定儲存VM根磁碟區的使用者權限。
 +
-.. 顯示本機UNIX使用者： `vserver services name-service unix-user show -vserver _vserver_name_`
+.. 顯示本機 UNIX 使用者： `vserver services name-service unix-user show -vserver _vserver_name_`。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-user-show.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service unix-user show`資訊，請參閱。
 +
 儲存VM應設定下列UNIX使用者：
 
@@ -68,12 +68,12 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["工作流程摘要：
 +
 *附註：*如果NFS用戶端使用者的SPN-UNIX名稱對應存在、則不需要NFS使用者；請參閱步驟5。
 
-.. 如果未顯示這些值、請使用 `vserver services name-service unix-user modify` 命令進行更新。
+.. 如果未顯示這些值，請使用 `vserver services name-service unix-user modify`命令進行更新。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-user-modify.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service unix-user modify`資訊，請參閱。
 
 
 . 設定儲存VM根磁碟區的群組權限。
 +
-.. 顯示本機UNIX群組： `vserver services name-service unix-group show -vserver _vserver_name_`
+.. 顯示本機 UNIX 群組： `vserver services name-service unix-group show -vserver _vserver_name_`。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-group-show.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service unix-group show`資訊，請參閱。
 +
 儲存VM應設定下列UNIX群組：
 
@@ -88,7 +88,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["工作流程摘要：
 
 | 根 | 0% 
 |===
-.. 如果未顯示這些值、請使用 `vserver services name-service unix-group modify` 命令進行更新。
+.. 如果未顯示這些值，請使用 `vserver services name-service unix-group modify`命令進行更新。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-group-modify.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service unix-group modify`資訊，請參閱。
 
 
 . 切換至System Manager以設定Kerberos

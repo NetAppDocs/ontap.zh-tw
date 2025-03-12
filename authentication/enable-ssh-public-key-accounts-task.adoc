@@ -11,7 +11,7 @@ summary: 您可以使用安全登入create命令、讓系統管理員帳戶使�
 
 
 [role="lead"]
-您可以使用 `security login create` 命令可讓系統管理員帳戶使用 SSH 公開金鑰存取管理或資料 SVM 。
+您可以使用 `security login create`命令，讓系統管理員帳戶使用 SSH 公開金鑰存取管理或資料 SVM 。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 .關於這項工作
 * 您必須先將公開金鑰與帳戶建立關聯、帳戶才能存取SVM。
@@ -21,7 +21,7 @@ xref:manage-public-key-authentication-concept.adoc[將公開金鑰與使用者�
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用 `security login modify` 命令以稍後新增角色。
+* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
 
 
 如果您想在叢集上啟用FIPS模式、則必須使用支援的金鑰類型來重新設定現有SSH公開金鑰帳戶、而不需要支援的金鑰演算法。  在您啟用FIPS之前、應先重新設定帳戶、否則系統管理員驗證將會失敗。
@@ -73,9 +73,6 @@ NOTE: 從 ONTAP 9.11.1 開始、移除對 ssh-ed25519 主機金鑰演算法的�
 . 允許本機系統管理員帳戶使用SSH公開金鑰存取SVM：
 +
 `security login create -vserver _SVM_name_ -user-or-group-name user_or_group_name -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 +
 下列命令可啟用 SVM 管理員帳戶 `svmadmin1` 使用預先定義的 `vsadmin-volume` 存取 SVM 的角色``engData1`` 使用 SSH 公開金鑰：
