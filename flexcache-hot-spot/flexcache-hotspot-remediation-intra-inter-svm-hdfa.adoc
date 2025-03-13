@@ -1,0 +1,40 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-intra-inter-svm-hdfa.html 
+sidebar: sidebar 
+keywords: tr, hotspot, flexcache, hdfa, configuration, inter-svm, intra-svm, architecture 
+summary: 確定 HDFS 的密度之後，請決定是否要使用 NFS 存取 HDFS 。 
+---
+= 決定 ONTAP Inter-SVM 或 SVM 內部 HDFA 選項
+:allow-uri-read: 
+
+
+[role="lead"]
+確定 HDFS 的密度之後，請決定是否要使用 NFS 存取 HDFS ，並瞭解 SVM 間 HDFA 和 SVM 內部 HDFA 選項。
+
+
+TIP: 如果只有 SMB 用戶端會存取 HDFS ，您應該在單一 SVM 中建立所有 HDFS 。請參閱 Windows 用戶端組態，瞭解如何使用 DFS 目標來進行負載平衡。
+
+
+
+== SVM 間 HDFA 部署
+
+SVM 間 HDFA 需要為 HDFA 中的每個 HDF 建立 SVM 。如此一來， HDFA 內的所有 HDFS 都能擁有相同的交會路徑，讓用戶端更容易設定。
+
+在範例中<<Figure-1,圖 1.>>，每個 HDF 都位於自己的 SVM 中。這是 SVM 間 HDFA 部署。每個 HDF 都有 / 熱點的交會路徑。此外，每個 IP 都有 DNS A 主機名稱快取記錄。此組態會利用 DNS 循環配置資源，在不同的 HDFS 之間裝載平衡負載。
+
+.圖 1 ： 4x1x4 SVM 間 HDFA 組態
+image:flexcache-hotspot-hdfa-one-hdf-per-svm.png["圖 1 ： 4x1x4 SVM 間 HDFA 組態"]
+
+
+
+== SVM 內部 HDFA 部署
+
+SVM 內部需要每個 HDF 都有唯一的交會路徑，但所有 HDFS 都在一個 SVM 中。ONTAP 中的這項設定較為簡單，因為它只需要一個 SVM ，但它需要在 Linux 端進行更進階的組態 `autofs`，並將資料 LIF 置於 ONTAP 中。
+
+在範例中<<Figure-2,圖 2.>>，每個 HDF 都位於同一個 SVM 中。這是 SVM 內部 HDFA 部署，需要交會路徑是唯一的。若要讓負載平衡正常運作，您需要為每個 IP 建立唯一的 DNS 名稱，並將主機名稱解析為的資料生命負載僅放置在 HDF 所在的節點上。您也需要依照中所述設定 `autofs`多個項目link:flexcache-hotspot-remediation-client-config.html["Linux 用戶端組態"]。
+
+.圖 2 ： 4x1x4 SVM 內部 HDFA 組態
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["圖 2 ： 4x1x4 SVM 內部 HDFA"]
+
+.下一步
+現在您已經瞭解如何部署您的 HDFA, link:flexcache-hotspot-remediation-ontap-config.html["部署 HDFA 並設定用戶端以分散式方式存取"]。

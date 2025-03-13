@@ -1,0 +1,74 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-client-config.html 
+sidebar: sidebar 
+keywords: tr, hotspot, hot-spot, flexcache, hdfa, client configuration 
+summary: 若要補救熱點現象，需要正確設定用戶端，以發揮其功能來防止 CPU 瓶頸。 
+---
+= 設定用戶端以散佈 ONTAP NAS 連線
+:allow-uri-read: 
+
+
+[role="lead"]
+若要補救熱點現象，請正確設定用戶端，以避免 CPU 瓶頸。
+
+
+
+== Linux 用戶端組態
+
+無論您選擇 SVM 內部部署或 SVM 內部 HDFA 部署，您都應該在 Linux 中使用 `autofs`，以確保用戶端在不同的 HDFS 之間進行負載平衡。 `autofs`SVM 之間和 SVM 內部的組態將有所不同。
+
+.開始之前
+您需要 `autofs`安裝適當的相依性。如需相關說明，請參閱 Linux 文件。
+
+.關於這項工作
+所述步驟將使用範例 `/etc/auto_master`檔案搭配下列項目：
+
+[listing]
+----
+/flexcache auto_hotspot
+----
+這會設定 `autofs`為在程序嘗試存取目錄時，隨時尋找目錄 `/flexcache`中所 `/etc`呼叫的檔案 `auto_hotspot`。檔案的內容 `auto_hotspot`會決定要在目錄中掛載哪個 NFS 伺服器和連接路徑 `/flexcache`。所述範例為檔案的不同組態 `auto_hotspot`。
+
+
+
+=== SVM 內部 HDFA 自動設定
+
+在下列範例中，我們將在中建立 `autofs`圖表的對應<<Figure-1,圖 1.>>。因為每個快取都有相同的交會路徑，而且主機名稱有四個 DNS A 記錄，所以 `cache`我們只需要一行：
+
+[listing]
+----
+hotspot cache:/hotspot
+----
+這一簡單行將導致 NFS 客戶端對主機名執行 DNS 查詢 `cache`。DNS 設定為以循環方式傳回 IP 。這將導致前端 NAS 連線的平均分配。用戶端收到 IP 之後，會將連接路徑掛載 `/hotspot`到 `/flexcache/hotspot`。它可以連線至 SVM1 ， SVM2 ， SVM3 或 SVM4 ，但特定的 SVM 並不重要。
+
+.圖 1 ： 2x2x2 SVM 間 HDFA
+image:flexcache-hotspot-hdfa-2x2x2-inter-svm-hdfa.png["圖 1 ： 2x2x2 HDFA"]
+
+
+
+=== SVM 內部 HDFA 自動設定
+
+在下列範例中，我們將在中建立 `autofs`圖表的對應<<Figure-2,圖 2.>>。我們需要確保 NFS 用戶端裝載屬於 HDF 交會路徑部署一部分的 IP 。換句話說，我們不想使用 IP 192 ． 168 ． 0 ． 11 以外的任何設備進行掛載 `/hotspot1`。為達此目的，我們可以列出對應中一個本機裝載位置的四個 IP/ 交會路徑配對 `auto_hotspot`。
+
+
+NOTE: (`\`以下示例中的反斜槓）將繼續輸入下一行，使讀取更容易。
+
+[listing]
+----
+hotspot     cache1:/hostspot1 \
+            cache2:/hostspot2 \
+            cache3:/hostspot3 \
+            cache4:/hostspot4
+----
+當用戶端嘗試存取 `/flexcache/hotspot`時， `autofs`將會對所有四個主機名稱執行轉送查詢。假設所有四個 IP 都位於用戶端所在的同一子網路或不同的子網路中， `autofs`則會對每個 IP 發出 NFS NULL ping 。
+
+此 NULL ping 需要 ONTAP 的 NFS 服務處理封包，但不需要任何磁碟存取。第一個要傳回的 ping 將是 IP 和連接路徑 `autofs`選擇掛載。
+
+.圖 2 ： 4x1x4 SVM 內部 HDFA
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["圖 2 ： s4x1x4 SVM 內部 HDFA"]
+
+
+
+== Windows 用戶端組態
+
+使用 Windows 用戶端時，您應該使用 SVM 內部 HDFA 。若要在 SVM 中的不同 HDFS 之間平衡負載，您必須在每個 HDF 中新增唯一的共用名稱。之後，請依照中的步驟link:https://learn.microsoft.com/en-us/windows-server/storage/dfs-namespaces/create-a-dfs-namespace["Microsoft文件"^]，為同一個資料夾實作多個 DFS 目標。

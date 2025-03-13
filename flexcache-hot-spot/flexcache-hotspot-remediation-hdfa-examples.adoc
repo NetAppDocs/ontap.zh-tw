@@ -1,0 +1,38 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-hdfa-examples.html 
+sidebar: sidebar 
+keywords: tr, hotspot, hot-spot, flexcache, hdfa, compare, examples 
+summary: 決定 FlexCache 陣列密度，並瞭解它如何協助補救熱點。 
+---
+= 判斷 ONTAP FlexCache 密度
+:allow-uri-read: 
+
+
+[role="lead"]
+您的第一個熱點補救設計決策是找出 FlexCache 密度。下列範例為四節點叢集。假設檔案數平均分佈在每個 HDF 的所有成分之間。也假設所有節點之間的前端 NAS 連線都會平均分配。
+
+雖然這些範例並非您唯一可以使用的組態，但您應該瞭解導引設計原則，以便在空間需求和可用資源允許的情況下，製作盡可能多的 HDFS 。
+
+
+NOTE: HDFAs 使用下列語法表示： `HDFs per HDFA x nodes per HDF x constituents per node per HDF`
+
+
+
+== 2x2x2 HDFA 組態
+
+<<Figure-1,圖 1.>>為 2x2x2 HDFA 組態的範例：兩個 HDFS ，每個 HDFS 跨越兩個節點，每個節點包含兩個組成 Volume 。在此範例中，每個用戶端都有 50% 的機會可以直接存取 Hot 檔案。四個用戶端中有兩個具有東西部流量。重要的是，現在有兩個 HDFS ，這表示熱檔案有兩個不同的快取。現在有兩個 CPU/ 磁碟區關聯性，可提供熱檔案的存取。
+
+.圖 1 ： 2x2x2 HDFA 組態
+image:flexcache-hotspot-hdfa-2x2x2.png["圖 1 ： 2x2x2 HDFA 組態"]
+
+
+
+== 4x1x4 HDFA 組態
+
+<<Figure-2,圖 2.>>代表最佳組態。這是 4x1x4 HDFA 組態的範例：四個 HDFS ，每個都包含在單一節點，每個節點包含四個成分。在此範例中，每個用戶端都保證能夠直接存取 Hot 檔案的快取。由於四個不同節點上有四個快取檔案，因此四個不同的 CPU/ 磁碟區關聯性有助於服務存取 Hot 檔案。此外，也不會產生東西部流量。
+
+.圖 2 ： 4x1x4 HDFA 組態
+image:flexcache-hotspot-hdfa-4x1x4.png["圖 2 ： 4x1x4 HDFA"]
+
+.下一步
+在您決定要設定 HDFS 的密度後，如果您要使用來存取 HDFS link:flexcache-hotspot-remediation-intra-inter-svm-hdfa.html["SVM 間 HDFAs 和 SVM 內部 HDFAs"]，就必須做出另一項設計決定。

@@ -66,7 +66,7 @@ S3 NAS「桶」只是S3用戶端NAS資料的對應、並非標準S3桶。因此�
 
 == 物件多部分上傳
 
-從 ONTAP 9 。 16.1 開始，在 FlexGroup 磁碟區上啟用時，就支援物件多部分上傳link:../flexgroup/enable-adv-capacity-flexgroup-task.html["進階容量平衡"]。
+從 ONTAP 9.16.1 開始，在基礎 FlexGroup Volume 上啟用時， S3 NAS 儲存區支援物件多部分上傳link:../flexgroup/enable-adv-capacity-flexgroup-task.html["進階容量平衡"]。
 
 在 NAS 檔案儲存設備上的物件多部分上傳，可讓 S3 傳輸協定用戶端將大型物件上傳成較小的部分。物件多部分上傳具有下列優點：
 
@@ -75,13 +75,20 @@ S3 NAS「桶」只是S3用戶端NAS資料的對應、並非標準S3桶。因此�
 * 如果事先不知道物件大小（例如，仍在寫入大型物件時），用戶端可以立即開始上傳物件的部分，並在建立整個物件之後完成上傳。
 
 
+
+NOTE: S3 NAS 貯體中的多個物件必須以 1MB 的零件大小對齊。例如，零件的大小可以是 4 MB 或 4 GB ，或是類似的大小。零件不能使用大小低於 MB 的大小，例如 4.5MB 或 4000.5MB 。
+
 多部分上傳支援下列 S3 動作：
 
 * AbortMultiPart上 傳
 * 完成多個部分上傳
 * 建立多個部分上傳
 * 清單多個部分上傳
+* 上傳零件
 
+
+
+NOTE: S3 NAS 儲存區不支援依零件編號取得（「 partnumber=xx 」）。而是傳回完整物件。
 
 
 

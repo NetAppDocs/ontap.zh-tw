@@ -1,0 +1,108 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-ontap-config.html 
+sidebar: sidebar 
+keywords: tr, hotspot, FlexCache, HDFA, configuration, ONTAP 
+summary: 設定 HDFA 和資料生命週期，以實現使用叢集快取的效益 
+---
+= 在 ONTAP 中設定 HDFAs 和資料生命
+:allow-uri-read: 
+
+
+[role="lead"]
+您必須適當設定 HDFA 和資料生命週期，才能實現此熱點補救解決方案的效益。此解決方案在同一個叢集中使用同一個來源和 HDFA 的叢集內建快取功能。
+
+以下是兩種 HDFA 範例組態：
+
+* 2x2x2 SVM 間 HDFA
+* 4x1x4 SVM 內部 HDFA
+
+
+.關於這項工作
+使用 ONTAP CLI 執行此進階組態。您必須在命令中使用兩種組態 `flexcache create`，而且必須確定其中一種組態尚未設定：
+
+* `-aggr-list`：提供集合體或集合體清單，這些集合體位於您要限制 HDF 的節點或節點子集上。
+* `-aggr-list-multiplier`：確定選項中列出的每個集合將創建多少個組成 `aggr-list`。如果列出兩個集合體，並將此值設為 `2`，則最後會有四個組成。NetApp 建議每個集合最多 8 個組成單位，但 16 個也足夠。
+* `-auto-provision-as`：如果選中此選項卡， CLI 將嘗試自動填寫並將值設置爲 `flexgroup`。請確定尚未設定。如果出現，請將其刪除。
+
+
+
+
+== 建立 2x2x2 的 SVM 間 HDFA 組態
+
+. 如圖 1 所示，若要協助設定 2x2x2 的 SVM 間 HDFA ，請填寫準備表。
++
+.圖 1 ： 2x2x2 SVM 內部 HDFA 配置
+image:flexcache-hotspot-hdfa-2x2x2-inter-svm-hdfa.png["圖 1 ： 2x2x2 SVM 內部 HDFA 配置"]
+
++
+[cols="1,1,1,1,1,1"]
+|===
+| SVM | 每個 HDF 的節點數 | 集合體 | 每個節點的組成 | 交會路徑 | 資料 LIF IP 
+
+
+| svm1 | node1 、 node2 | aggr1 、 aggr2 | 2. | /HotSpot | 192 ． 168 ． 0 ． 11 ． 0 ． 12 
+
+
+| svm2 | node3 、 node4 | aggr3 、 aggr4 | 2. | /HotSpot | 192 ． 168 ． 0 ． 13 ． 0 ． 14 
+|===
+. 建立 HDFS 。執行下列命令兩次，準備工作表中的每一列各執行一次。請務必調整 `vserver`第二次迭代的和 `aggr-list`值。
++
+[listing]
+----
+cache::> flexcache create -vserver svm1 -volume hotspot -aggr-list aggr1,aggr2 -aggr-list-multiplier 2 -origin-volume <origin_vol> -origin-vserver <origin_svm> -size <size> -junction-path /hotspot
+----
+. 建立資料生命。執行命令四次，在準備工作表中列出的節點上，為每個 SVM 建立兩個資料生命週期。請務必針對每次迭代適當調整值。
++
+[listing]
+----
+cache::> net int create -vserver svm1 -home-port e0a -home-node node1 -address 192.168.0.11 -netmask-length 24
+----
++
+.下一步
+現在您需要設定用戶端，以適當地使用 HDFA 。請參閱。 link:flexcache-hotspot-remediation-client-config.html["用戶端組態"]
+
+
+
+
+
+== 建立 4x1x4 SVM 內部 HDFA
+
+. 如圖 2 所示，若要協助設定 4x1x4 SVM 間 HDFA ，請填寫準備表。
++
+.圖 2 ： 4x1x4 SVM 內部 HDFA 配置
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["圖 2 ： 4x1x4 SVM 內部 HDFA 配置"]
+
++
+[cols="1,1,1,1,1,1"]
+|===
+| SVM | 每個 HDF 的節點數 | 集合體 | 每個節點的組成 | 交會路徑 | 資料 LIF IP 
+
+
+| svm1 | 節點1 | aggr1 | 4. | /hotspot1. | 192.168.0.11 
+
+
+| svm1 | 節點2 | aggr2 | 4. | /hotspot2. | 192.168.0.12 
+
+
+| svm1 | node3 | aggr3 | 4. | /hotspot3. | 192.168.0.13 
+
+
+| svm1 | node4 | aggr4 | 4. | /hotspot4. | 192.168.0.14 
+|===
+. 建立 HDFS 。執行下列命令四次，準備工作表中的每一列各執行一次。請務必調整 `aggr-list`每次迭代的和 `junction-path`值。
++
+[listing]
+----
+cache::> flexcache create -vserver svm1 -volume hotspot1 -aggr-list aggr1 -aggr-list-multiplier 4 -origin-volume <origin_vol> -origin-vserver <origin_svm> -size <size> -junction-path /hotspot1
+----
+. 建立資料生命。執行命令四次，在 SVM 中總共建立四個資料生命週期。每個節點應有一個資料 LIF 。請務必針對每次迭代適當調整值。
++
+[listing]
+----
+cache::> net int create -vserver svm1 -home-port e0a -home-node node1 -address 192.168.0.11 -netmask-length 24
+----
++
+.下一步
+現在您需要設定用戶端，以適當地使用 HDFA 。請參閱。 link:flexcache-hotspot-remediation-client-config.html["用戶端組態"]
+
+

@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-overview.html 
+keywords: hotspot, FlexCache, HDFA, problem, solution, ONTAP 
+summary: 瞭解如何修正熱點問題，這是許多高效能運算工作負載的常見問題，例如動畫呈現或 EDA 與 FlexCache 搭配使用。 
+---
+= 利用 ONTAP 修正高效能運算工作負載的熱點
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+許多高效能運算工作負載（例如動畫呈現或 EDA ）的常見問題是熱點發現。當叢集或網路的特定部分比其他區域的負載大幅增加時，會發生熱點現象，導致效能瓶頸，並因為該位置集中的資料流量過多而降低整體效率。例如，檔案或多個檔案對執行中的工作需求很高，導致 CPU 瓶頸，用於（透過 Volume 關聯性）處理該檔案的要求。FlexCache 可協助減輕此瓶頸，但必須正確設定。
+
+本文件說明如何設定 FlexCache 以修正熱點。
+
+
+NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已與 ONTAP 產品文件整合。此 ONTAP 熱點補救技術報告內容自發表之日起即為全新內容，且從未製作過任何舊版格式。
+
+
+
+== 主要概念
+
+規劃熱點補救時，請務必瞭解這些基本概念。
+
+* * 高密度 FlexCache （ HDF ） * ：一種精簡化的 FlexCache ，只要快取容量需求允許，就能跨越幾個節點
+* * HDF Array （ HDFA ） * ：一組 HDFS ，位於同一來源的快取區，散佈於叢集中
+* * SVM 間 HDFA* ：每部伺服器虛擬機器（ SVM ）的 HDFA 中有一個 HDF
+* * SVM 內部 HDFA* ： HDFA 中的所有 HDFS 都在一個 SVM 中
+* * 東西部流量 * ：從間接資料存取產生的叢集後端流量
+
+
+.下一步
+* link:flexcache-hotspot-remediation-architecture.html["瞭解如何使用高密度 FlexCache 建構架構，以協助補救熱點"]
+* link:flexcache-hotspot-remediation-hdfa-examples.html["決定 FlexCache 陣列密度"]
+* link:flexcache-hotspot-remediation-intra-inter-svm-hdfa.html["判斷 HDFS 的密度，並決定是否要使用 NFS 搭配 SVM 間 HDFAs 和 SVM 內部 HDFAs 來存取 HDFS"]
+* link:flexcache-hotspot-remediation-ontap-config.html["設定 HDFA 和資料生命週期，以實現搭配 ONTAP 組態使用叢集快取的效益"]
+* link:flexcache-hotspot-remediation-client-config.html["瞭解如何設定用戶端，以使用用戶端組態來散佈 ONTAP NAS 連線"]
+

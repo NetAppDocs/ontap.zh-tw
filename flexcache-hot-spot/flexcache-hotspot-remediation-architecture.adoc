@@ -1,0 +1,73 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-architecture.html 
+sidebar: sidebar 
+keywords: hotspot, FlexCache, hdfa, problem, solution, ONTAP 
+summary: 瞭解使用高密度 FlexCache 架構如何協助熱點補救。 
+---
+= 建構 ONTAP FlexCache 熱點補救解決方案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要修正熱點，請探索瓶頸的根本原因，為何自動佈建 FlexCache 不夠充分，以及有效建構 FlexCache 解決方案所需的技術詳細資料。透過瞭解並實作高密度 FlexCache 陣列（ HDFAs ），您可以最佳化效能，消除高需求工作負載的瓶頸。
+
+
+
+== 瞭解瓶頸
+
+以下<<Figure-1,映像>>是典型的單一檔案熱點分析案例。磁碟區是 FlexGroup ，每個節點都有單一組成，檔案位於節點 1 上。
+
+如果您將所有 NAS 用戶端的網路連線分散到叢集中的不同節點，則仍會在 CPU 上產生瓶頸，而 CPU 則會為熱檔案所在的磁碟區相關性提供服務。您也會將叢集網路流量（東西部流量）引入來自連接至檔案所在節點以外節點之用戶端的通話。東西部的流量負荷通常很小，但對於高效能運算工作負載而言，每個小位元都很重要。
+
+.圖 1 ： FlexGroup 單一檔案熱點案例
+image:flexcache-hotspot-hdfa-flexgroup.png["圖 1 ： FlexGroup 單一檔案熱點案例"]
+
+
+
+== 為何自動佈建的 FlexCache 不是答案
+
+若要補救熱點現象，請消除 CPU 瓶頸，最好是東西部流量。如果設定正確， FlexCache 可以提供協助。
+
+在下列範例中， FlexCache 會自動使用系統管理員， BlueXP  或預設的 CLI 引數進行資源配置。<<Figure-1,圖 1.>><<Figure-2,圖 2.>>第一次出現相同的情況：兩者都是四節點，單一組成的 NAS 容器。唯一的差異是，圖 1 的 NAS 容器是 FlexGroup ，圖 2 的 NAS 容器是 FlexCache 。每個圖都描述了相同的瓶頸：節點 1 的 CPU 用於提供熱檔案的磁碟區相似性服務存取，以及導致延遲的東西部流量。自動佈建的 FlexCache 並未消除瓶頸。
+
+.圖 2 ：自動佈建的 FlexCache 案例
+image:flexcache-hotspot-hdfa-1x4x1.png["圖 2 ：自動佈建的 FlexCache 案例"]
+
+
+
+== FlexCache 的解剖構造
+
+若要有效建構 FlexCache 以進行熱點修復，您必須瞭解 FlexCache 的一些技術詳細資料。
+
+FlexCache 始終是稀疏 FlexGroup 。FlexGroup 由多個 FlexVols 組成。這些 FlexVols 稱為 FlexGroup 成分。在預設的 FlexGroup 配置中，叢集中的每個節點都有一或多個組成。組成要素是在抽象層下方「縫製」，並以單一大型 NAS 容器的形式呈現給用戶端。當檔案寫入 FlexGroup 時，擷取啟發式系統會判斷檔案將儲存在哪個組成要素上。它可能是包含用戶端 NAS 連線的組成要素，也可能是不同的節點。位置無關緊要，因為所有作業都在抽象層下運作，而且對用戶端而言是不可見的。
+
+讓我們將 FlexGroup 的這項瞭解應用到 FlexCache 。由於 FlexCache 是建立在 FlexGroup 上，因此默認情況下，您只有一個 FlexCache ，它在羣集中的所有節點上都具有組成部分<<Figure-1,圖 1.>>，如所示。在大多數情況下，這是一件好事。您正在使用叢集中的所有資源。
+
+不過，為了修正 Hot 檔案，這並不理想，因為有兩個瓶頸：單一檔案的 CPU 和東西部流量。如果您為 Hot 檔案在每個節點上建立具有組成成分的 FlexCache ，則該檔案仍只會位於其中一個組成要素上。這表示只有一個 CPU 可為所有存取 Hot 檔案的服務。您也想要限制到達 Hot 檔案所需的東西部流量。
+
+解決方案是一系列高密度 FlexCaches 。
+
+
+
+== 高密度 FlexCache 的解剖構造
+
+高密度 FlexCache （ HDF ）在快取資料的容量需求允許的節點數量範圍內，會有多個組成節點。目標是讓快取在單一節點上運作。如果容量需求使得這種情況變得不可能，您只能在少數幾個節點上建立成員。
+
+例如， 24 節點叢集可能有三個高密度 FlexCaches ：
+
+* 一個跨節點 1 至 8
+* 跨越節點 9 到 16 的第二個節點
+* 跨越節點 17 到 24 的第三個節點
+
+
+這三個 HDFS 將組成一個高密度 FlexCache 陣列（ HDFA ）。如果檔案平均分散在每個 HDF 中，您將有機會將用戶端要求的檔案存放在前端 NAS 連線的本機位置，達到八分之一。如果您的 12 個 HDFS 只橫跨兩個節點，則檔案有 50% 的可能是本機檔案。如果您可以將 HDF 向下收合至單一節點，並建立其中 24 個節點，則您可以保證檔案是本機檔案。
+
+此組態可消除所有東西部流量，最重要的是，將提供 24 個 CPU/ 磁碟區關聯性，以供存取 Hot 檔案。
+
+.接下來呢？
+link:flexcache-hotspot-remediation-hdfa-examples.html["決定 FlexCache 陣列密度"]
+
+.相關資訊
+link:../volume-admin/index.html["FlexGroup 和 TR 的文件"]
