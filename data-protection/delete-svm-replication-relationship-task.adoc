@@ -16,8 +16,6 @@ summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除SVM複
 .關於這項工作
 此命令會 `snapmirror release`從來源中刪除任何 SnapMirror 建立的快照。您可以使用 `-relationship-info-only`選項來保留快照。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["指令參考資料ONTAP"^]需詳細 `snapmirror release`資訊，請參閱。
-
 .步驟
 . 從目的地SVM或目的地叢集執行下列命令、以中斷複寫關係：
 +
@@ -37,6 +35,9 @@ summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除SVM複
 ----
 cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
+
 . 從目的地SVM或目的地叢集執行下列命令、以刪除複寫關係：
 +
 `snapmirror delete -source-path _SVM_: -destination-path _SVM_:`
@@ -55,6 +56,9 @@ cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
 ----
 cluster_dst::> snapmirror delete -source-path svm1: -destination-path svm_backup:
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
+
 . 從來源叢集或來源SVM執行下列命令、以從來源SVM釋出複寫關係資訊：
 +
 `snapmirror release -source-path _SVM_: -destination-path _SVM_:`
@@ -73,4 +77,7 @@ cluster_dst::> snapmirror delete -source-path svm1: -destination-path svm_backup
 ----
 cluster_src::> snapmirror release -source-path svm1: -destination-path svm_backup:
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["指令參考資料ONTAP"^]需詳細 `snapmirror release`資訊，請參閱。
+
 

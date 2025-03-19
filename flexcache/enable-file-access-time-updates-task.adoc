@@ -25,7 +25,9 @@ ONTAP 提供一個稱為的 Volume 層級欄位 `-atime-update`，用於管理�
 
 == 開始之前
 
-所有FlexCache 的不完整資料區都必須執行ONTAP 更新版本的更新版本。
+* 所有FlexCache 的不完整資料區都必須執行ONTAP 更新版本的更新版本。
+* 您必須使用 `advanced`權限模式。
+
 
 
 
@@ -36,9 +38,13 @@ ONTAP 提供一個稱為的 Volume 層級欄位 `-atime-update`，用於管理�
 設定 `-atime-update-period` 至 0 會傳送訊息給每個讀取存取的來源。然後、來源會通知每FlexCache 個VMware Volume、該atime已經過時、影響效能。
 
 .步驟
+. 將權限模式設定為 `advanced`：
++
+`set -privilege advanced`
+
 . 啟用檔案存取時間更新並設定更新頻率：
 +
-`volume modify -volume vol_name -vserver _SVM_name_ -atime-update true -atime-update-period _seconds_`
+`volume modify -volume vol_name -vserver <SVM name> -atime-update true -atime-update-period <seconds>`
 
 +
 以下範例啟用 `-atime-update` 和套件 `-atime-update-period` 至 86400 秒或 24 小時：
@@ -60,4 +66,10 @@ vserver volume         atime-update atime-update-period
 ------- -------------- ------------ -------------------
 vs2_c1  cache1_origin1 true         86400
 ----
+. 啟用後 `-atime-update`，您可以指定是否可以自動掃描 FlexCache 磁碟區上的檔案：
++
+`volume flexcache config modify -vserver <SVM name> -volume <volume_name> -is-atime-scrub-enabled <true|false>`
 
+
+
+如需參數的其他資訊 `-is-atime-scrub-enabled`，請參閱link:https://docs.netapp.com/us-en/ontap-cli/volume-flexcache-config-modify.html#parameters["ONTAP 命令參照"^]。

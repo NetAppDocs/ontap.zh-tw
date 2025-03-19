@@ -11,7 +11,7 @@ summary: 您可以使用安全性登入create命令、讓LDAP或NIS使用者帳�
 
 
 [role="lead"]
-您可以使用 `security login create` 命令、讓 LDAP 或 NIS 使用者帳戶存取管理或資料 SVM 。如果您尚未設定LDAP或NIS伺服器存取SVM、則必須先設定、帳戶才能存取SVM。
+您可以使用 `security login create`命令來啟用 LDAP 或 NIS 使用者帳戶，以存取管理或資料 SVM 。如果您尚未設定LDAP或NIS伺服器存取SVM、則必須先設定、帳戶才能存取SVM。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 .關於這項工作
 * 不支援群組帳戶。
@@ -22,7 +22,7 @@ xref:enable-nis-ldap-users-access-cluster-task.adoc[設定LDAP或NIS伺服器存
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色、可以使用 `security login modify` 命令以稍後新增角色。
+* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
 +
 xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員的角色]
 
@@ -38,9 +38,6 @@ xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員
 . 啟用LDAP或NIS使用者或群組帳戶以存取SVM：
 +
 `security login create -vserver SVM_name -user-or-group-name user_name -application application -authmethod nsswitch -role role -comment comment -is-ns-switch-group yes|no [-is-ldap-fastbind true]`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 +
 link:config-worksheets-reference.html["建立或修改登入帳戶"]
@@ -75,3 +72,7 @@ cluster-1 -second-authentication-method publickey"
 如果您尚未設定LDAP或NIS伺服器存取SVM、則必須先設定、帳戶才能存取SVM。
 
 xref:enable-nis-ldap-users-access-cluster-task.adoc[設定LDAP或NIS伺服器存取]
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login["安全登入"^]
+

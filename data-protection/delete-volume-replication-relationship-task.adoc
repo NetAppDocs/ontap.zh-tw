@@ -26,6 +26,9 @@ summary: 您可以使用SnapMirror刪除和SnapMirror版本命令來刪除磁碟
 ----
 cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["指令參考資料ONTAP"^]需詳細 `snapmirror quiesce`資訊，請參閱。
+
 . （選用）如果您需要將目的地磁碟區設為讀寫磁碟區、請中斷複寫關係。如果您打算刪除目的地Volume、或是不需要讀取/寫入磁碟區、可以跳過此步驟：
 +
 `snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume>, …​ -destination-path <SVM:volume>|<cluster://SVM/volume>, …​`
@@ -35,12 +38,12 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
+
 . 刪除複寫關係：
 +
 `snapmirror delete -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
 
 +
 [NOTE]
@@ -56,12 +59,12 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 ----
 cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
+
 . 來自來源SVM的版本複寫關係資訊：
 +
 `snapmirror release -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["指令參考資料ONTAP"^]需詳細 `snapmirror release`資訊，請參閱。
 
 +
 [NOTE]
@@ -77,4 +80,7 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 ----
 cluster_src::> snapmirror release -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["指令參考資料ONTAP"^]需詳細 `snapmirror release`資訊，請參閱。
+
 

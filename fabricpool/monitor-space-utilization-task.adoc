@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/monitor-space-utilization-task.html 
 sidebar: sidebar 
-keywords: monitoring, space, utilization, fabricpool 
+keywords: aggregate, local tier, monitoring, space, utilization, fabricpool 
 summary: 您需要知道資料儲存在效能和雲端層FabricPool 中的資料量、才能供VMware使用。這些資訊可協助您判斷是否需要變更磁碟區的分層原則、增加FabricPool 未獲授權的使用量限制、或是增加雲端層的儲存空間。 
 ---
-= 監控啟用 FabricPool 的 ONTAP Aggregate 的空間使用率
+= 監控啟用 FabricPool 的 ONTAP 本機層的空間使用率
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,8 +13,11 @@ summary: 您需要知道資料儲存在效能和雲端層FabricPool 中的資料
 [role="lead"]
 您需要知道資料儲存在效能和雲端層FabricPool 中的資料量、才能供VMware使用。這些資訊可協助您判斷是否需要變更磁碟區的分層原則、增加FabricPool 未獲授權的使用量限制、或是增加雲端層的儲存空間。
 
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
+
 .步驟
-. 使用下列其中一個命令來顯示資訊、以監控啟用FabricPool的Aggregate的空間使用率：
+. 使用下列其中一個命令來顯示資訊，以監控啟用 FabricPool 的本機階層的空間使用率：
 +
 |===
 
@@ -23,28 +26,28 @@ summary: 您需要知道資料儲存在效能和雲端層FabricPool 中的資料
 
 
  a| 
-集合體中雲端層的已用大小
+本機層中雲端層的使用大小
  a| 
 `storage aggregate show` 使用 `-instance` 參數
 
 
 
  a| 
-集合體內空間使用率的詳細資料、包括物件存放區的參考容量
+本機層內空間使用率的詳細資料，包括物件存放區的參考容量
  a| 
 `storage aggregate show-space` 使用 `-instance` 參數
 
 
 
  a| 
-附加到集合體的物件存放區空間使用率、包括使用多少授權空間
+附加至本機層的物件存放區空間使用率，包括使用的授權空間量
  a| 
 `storage aggregate object-store show-space`
 
 
 
  a| 
-集合體中的磁碟區清單、以及其資料和中繼資料的佔用空間
+本機層中的磁碟區清單，以及其資料和中繼資料的佔用空間
  a| 
 `volume show-footprint`
 

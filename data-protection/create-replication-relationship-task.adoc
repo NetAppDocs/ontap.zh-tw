@@ -11,7 +11,7 @@ summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的�
 
 
 [role="lead"]
-主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create` 建立 SnapMirror DR 、 SnapVault 或統一化複寫資料保護關係的命令。
+主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create`命令來建立 SnapMirror DR ， SnapVault 或統一化複寫資料保護關係。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
 
 
 NOTE: 此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K ， ASA A90 ， ASA A70 ， ASA A50 ， ASA A30 或 ASA A20 ），請遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["這些步驟"^]建立複寫關係。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
@@ -110,7 +110,7 @@ options replication.create_data_protection_rels.enable on
 
 從 ONTAP 9 開始、支援 SnapMirror 同步關係。
 
-從 ONTAP 9.14.1 開始 `-backoff-level` 、選項會新增至 `snapmirror create`、和命令、 `snapmirror modify` `snapmirror restore` 讓您可以指定每個關係的回溯層級。只有 FlexVol SnapMirror 關係才支援此選項。選用命令會指定因用戶端作業而導致的 SnapMirror 備份層級。退貨值可以是高、中或無。預設值為高。
+從 ONTAP 9.14.1 開始 `-backoff-level` 、選項會新增至 `snapmirror create`、和命令、 `snapmirror modify` `snapmirror restore` 讓您可以指定每個關係的回溯層級。只有 FlexVol SnapMirror 關係才支援此選項。選用命令會指定因用戶端作業而導致的 SnapMirror 備份層級。退貨值可以是高、中或無。預設值為高。深入瞭解 `snapmirror create`， `snapmirror modify`和 `snapmirror restore` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=snapmirror["指令參考資料ONTAP"^]。
 
 .步驟
 您可以使用系統管理員或 ONTAP CLI 來建立複寫關係。
@@ -139,9 +139,6 @@ options replication.create_data_protection_rels.enable on
 ----
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type <DP|XDP> -schedule <schedule> -policy <policy>
 ----
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
-
 +
 
 NOTE: 此 `schedule`參數不適用於建立 SnapMirror 同步關係。

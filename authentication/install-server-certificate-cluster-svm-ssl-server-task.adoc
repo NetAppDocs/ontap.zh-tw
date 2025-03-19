@@ -11,7 +11,7 @@ summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證
 
 
 [role="lead"]
-在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。您可以使用 `security certificate generate-csr` 產生憑證簽署要求（ CSR ）的命令、以及 `security certificate install` 命令來安裝您從憑證授權單位收到的憑證。
+在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。您可以使用命令來產生憑證簽署要求（ CSR ），並 `security certificate install`使用 `security certificate generate-csr`命令來安裝從憑證授權單位收到的憑證。深入瞭解 `security certificate generate-csr`及 `security certificate install` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+certificate["指令參考資料ONTAP"^]。
 
 
 
@@ -64,7 +64,7 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 
 == 安裝CA簽署的伺服器憑證
 
-您可以使用 `security certificate install` 在 SVM 上安裝 CA 簽署的伺服器憑證的命令。系統會提示您輸入憑證授權單位（CA）根憑證和中繼憑證、以構成伺服器憑證的憑證鏈結。ONTAP
+您可以使用 `security certificate install`命令在 SVM 上安裝 CA 簽署的伺服器憑證。系統會提示您輸入憑證授權單位（CA）根憑證和中繼憑證、以構成伺服器憑證的憑證鏈結。ONTAP如link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["指令參考資料ONTAP"^]需詳細 `security certificate install`資訊，請參閱。
 
 .開始之前
 您必須是叢集或SVM管理員、才能執行此工作。
@@ -76,9 +76,6 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 ----
 security certificate install -vserver SVM_name -type certificate_type
 ----
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["指令參考資料ONTAP"^]需詳細 `security certificate install`資訊，請參閱。
-
 +
 [NOTE]
 ====

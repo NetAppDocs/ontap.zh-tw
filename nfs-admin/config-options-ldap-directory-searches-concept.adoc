@@ -106,3 +106,17 @@ LDAP基礎範圍是LDAP用戶端用來執行LDAP查詢的預設搜尋範圍。�
 請注意、此範圍適用於為對應參數指定的整個DNS清單。例如、如果您為使用者範圍指定三個不同使用者DNS和子樹狀結構的清單、則LDAP使用者會搜尋三個指定DNS中的每個子樹狀結構。
 
 從ONTAP 功能介紹9.5開始、您也可以指定LDAP _Referring Chasing _、以便ONTAP 在主要LDAP伺服器未傳回LDAP參照回應時、讓該支援功能可將查詢要求參照到其他LDAP伺服器。用戶端會使用該參照資料、從參照資料中所述的伺服器擷取目標物件。若要搜尋參照LDAP伺服器中的物件、可將參照物件的基礎DN新增至基礎DN、做為LDAP用戶端組態的一部分。不過、只有在啟用參照追蹤（使用 `-referral-enabled true` 選項）。
+
+
+
+== 自訂 LDAP 搜尋篩選器
+
+您可以使用 LDAP 組態選項參數來建立自訂搜尋篩選器。此 `-group-membership-filter`參數指定從 LDAP 伺服器查詢群組成員資格時所使用的搜尋篩選器。
+
+有效篩選的範例包括：
+
+[listing]
+----
+(cn=*99), (cn=1*), (|(cn=*22)(cn=*33))
+----
+深入瞭解 link:https://www.netapp.com/media/19423-tr-4835.pdf["如何在 ONTAP 中設定 LDAP"^]。

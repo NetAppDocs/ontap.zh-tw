@@ -125,6 +125,18 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 * 來源 SVM 必須包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
 * 目的地上必須有足夠的空間放置 Volume
 * 如果來源SVM有加密磁碟區、則必須在目的地上設定「內建金鑰管理程式」
+* 如果您要在非 MetroCluster 組態和 MetroCluster 組態之間移轉 SVM ，或在兩個 MetroCluster 組態之間移轉 SVM ，請確認您的組態符合下列需求：
++
+** 來源和目的地 MetroCluster 叢集處於「正常」狀態。這表示它們無法處於切換模式或「等待切換回復」狀態。
+** 來源和目的地 MetroCluster 叢集並未在 FC 對 IP 轉換或硬體更新的過程中。
+** 目的地叢集執行的 ONTAP 版本與來源叢集上執行的版本相同或更新。
+** 如果來源為 MetroCluster 叢集， SVM 子類型為「 SYNC 來源」（非「 SYNC 目的地」）。
++
+
+NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM 一律為「 SYNC 來源」。如果目的地是非 MetroCluster 叢集，則 SVM 子類型一律為「預設」。
+
+
+
 
 
 
@@ -212,6 +224,9 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 * 在兩個 MetroCluster FC 組態之間移轉 SVM
 * 在非 MetroCluster 組態和 MetroCluster FC 組態之間移轉 SVM
 
+
+
+NOTE: 當來源或目的地是 MetroCluster 叢集時， FabricPool 不支援 SVM 移轉。
 
 
 

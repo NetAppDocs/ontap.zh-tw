@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/move-volume-task.html 
 sidebar: sidebar 
-keywords: moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
+keywords: aggregate, local tier, moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
 summary: 當您將Volume移至FabricPool 物件時、您可以選擇透過移動來指定或變更Volume的分層原則。從功能不活動的資料報告功能開始、當您移動非FabricPool Volume時、會使用熱圖來讀取可分層區塊、並將冷資料移至該目的地的容量層。ONTAP FabricPool FabricPool 
 ---
-= 將磁碟區移至啟用 FabricPool 的 ONTAP Aggregate
+= 將磁碟區移至啟用 FabricPool 的 ONTAP 本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,13 +13,16 @@ summary: 當您將Volume移至FabricPool 物件時、您可以選擇透過移動
 [role="lead"]
 當您將Volume移至FabricPool 物件時、您可以選擇透過移動來指定或變更Volume的分層原則。從功能不活動的資料報告功能開始、當您移動非FabricPool Volume時、會使用熱圖來讀取可分層區塊、並將冷資料移至該目的地的容量層。ONTAP FabricPool FabricPool
 
-.您需要的產品
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
+
+.開始之前
 您必須瞭解變更分層原則、可能會影響資料冷卻及移至雲端層所需的時間。
 
 link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-move-a-volume["當您移動磁碟區時、分層原則會發生什麼事"]
 
 .關於這項工作
-如果非 FabricPool 磁碟區已啟用非作用中的資料報告功能、則當您使用分層原則移動磁碟區時 `auto` 或 `snapshot-only` 對於 FabricPool 、 FabricPool 會從熱圖檔案讀取溫度可控區塊、並使用該溫度將冷資料直接移至 FabricPool 目的地上的容量層。
+如果非 FabricPool 磁碟區已啟用非作用中資料報告功能，當您將具有分層原則的磁碟區或 `snapshot-only`移 `auto`至 FabricPool 時， FabricPool 會從熱圖檔案讀取溫度可控區塊，當非 FabricPool 磁碟區上的分層原則設為時 `auto`， FabricPool 會使用該溫度將冷資料直接移至 FabricPool 目的地上的容量層。
 
 您不應該使用 `-tiering-policy` 如果您使用的是 ONTAP 9.8 、而您想要 FabricPools 使用非作用中的資料報告資訊、將資料直接移至容量層、則可在 Volume 上移動選項。使用此選項會導致FabricPools忽略溫度資料、改為遵循ONTAP 發行版本更新至版本更新版本的動作。
 
@@ -43,7 +46,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層�
 
 
 .將Volume移至FabricPool 不全的範例
-下列範例將名為「VS1」SVM的「myvol2」磁碟區移至啟用FabricPool的「dest_FabricPool」Aggregate。將 Volume 明確設定為使用 `none` 分層原則：
+以下範例將「 VS1 」 SVM 的名為「 myvol2 」的磁碟區移至 FabricPool 啟用 FabricPool 的本機層。磁碟區已明確設定為使用 `none`分層原則：
 
 [listing]
 ----

@@ -1,17 +1,20 @@
 ---
 permalink: fabricpool/create-volume-task.html 
 sidebar: sidebar 
-keywords: creating, volume, fabricpool, tiering, policy, policies, create, snap shot, snapshot, aggregate, flexgroup, cloud retrieval 
+keywords: aggreate, local tier, creating, volume, fabricpool, tiering, policy, policies, create, snap shot, snapshot, aggregate, flexgroup, cloud retrieval 
 summary: 當您建立FabricPool 一個供使用的Volume時、您可以選擇指定分層原則。如果未指定分層原則、則建立的磁碟區會使用預設的純快照分層原則。對於具有純快照或自動分層原則的磁碟區、您也可以指定分層的最小冷卻週期。 
 ---
-= 在啟用 FabricPool 的 ONTAP Aggregate 上建立磁碟區
+= 在啟用 FabricPool 的 ONTAP 本機層上建立磁碟區
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以FabricPool 直接在啟用FabricPool的Aggregate中建立新磁碟區、或是將現有磁碟區從另一個Aggregate移至啟用FabricPool的Aggregate、藉此將磁碟區新增至支援功能。
+您可以直接在啟用 FabricPool 的本機層中建立新的磁碟區，或將現有的磁碟區從另一個本機層移至啟用 FabricPool 的本機層，將這些磁碟區新增至 FabricPool 。
+
+
+NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
 當您建立FabricPool 一個供使用的Volume時、您可以選擇指定分層原則。如果未指定分層原則、則建立的磁碟區會使用預設值 `snapshot-only` 分層原則。適用於具有的 Volume `snapshot-only` 或 `auto` 分層原則、您也可以指定分層的最低冷卻週期。
 
@@ -80,7 +83,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層�
 
 
 .建立FabricPool 一套供參考的Volume範例
-以下範例在啟用FabricPool的「myFabricPool」Aggregate中建立一個名為「myvol1」的Volume。分層原則設為 `auto` 而且分層最低冷卻時間設為 45 天：
+以下範例在啟用 FabricPool 的本機層中建立名為「 myFabricPool 」的 Volume 。分層原則設為，分層最低冷卻期間設 `auto`為 45 天：
 
 [listing]
 ----

@@ -11,7 +11,7 @@ summary: 對於 SSH 公開金鑰驗證、您可以管理系統管理員帳戶的
 
 
 [role="lead"]
-為了提高使用系統管理員帳戶的 SSH 驗證安全性、您可以使用 `security login publickey` 管理 SSH 公開金鑰及其與 X.509 憑證關聯的命令集。
+為了提高使用系統管理員帳戶的 SSH 驗證安全性，您可以使用 `security login publickey`一組命令來管理 SSH 公開金鑰及其與 X.509 憑證的關聯性。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login+publickey["指令參考資料ONTAP"^]需詳細 `security login publickey`資訊，請參閱。
 
 
 
@@ -29,7 +29,7 @@ summary: 對於 SSH 公開金鑰驗證、您可以管理系統管理員帳戶的
 * 如果您需要檢查 X.509 憑證是否過期及撤銷：
 +
 ** 您必須已從憑證授權單位（ CA ）收到憑證。
-** 您必須使用安裝憑證鏈結（中繼和根 CA 憑證） `security certificate install` 命令。
+** 您必須使用命令來安裝憑證鏈結（中繼和根 CA 憑證） `security certificate install`。如link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["指令參考資料ONTAP"^]需詳細 `security certificate install`資訊，請參閱。
 ** 您需要啟用 SSH 的 OCSP 。請參閱 link:../system-admin/verify-digital-certificates-valid-ocsp-task.html["使用OCSP驗證數位憑證是否有效"^] 以取得相關指示。
 
 
@@ -46,6 +46,9 @@ summary: 對於 SSH 公開金鑰驗證、您可以管理系統管理員帳戶的
 . 檢視公開金鑰以驗證變更：
 +
 `security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-show.html["指令參考資料ONTAP"^]需詳細 `security login publickey show`資訊，請參閱。
 
 
 
@@ -73,6 +76,9 @@ Please enter Certificate: Press <Enter> when done
 +
 `security login publickey modify -vserver SVM_name -username user_name -index index -x509-certificate delete`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-modify.html["指令參考資料ONTAP"^]需詳細 `security login publickey modify`資訊，請參閱。
+
 . 檢視公開金鑰以驗證變更：
 +
 `security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
@@ -99,6 +105,9 @@ cluster1::> security login publickey modify -vserver engData2 -username svmadmin
 . 從系統管理員帳戶移除公開金鑰和 X.509 憑證關聯：
 +
 `security login publickey delete -vserver _SVM_name_ -username _user_name_ -index _index_`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-delete.html["指令參考資料ONTAP"^]需詳細 `security login publickey delete`資訊，請參閱。
 
 . 檢視公開金鑰以驗證變更：
 +

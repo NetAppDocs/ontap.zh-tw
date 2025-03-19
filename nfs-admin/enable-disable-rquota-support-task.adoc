@@ -2,22 +2,26 @@
 permalink: nfs-admin/enable-disable-rquota-support-task.html 
 sidebar: sidebar 
 keywords: enable, disable, rquota, support 
-summary: 支援遠端配額傳輸協定第1版（rquota v1）ONTAP 。rquota傳輸協定可讓NFS用戶端從遠端機器取得使用者的配額資訊。您可以使用vserver NFS modify命令、在儲存虛擬機器（SVM）上啟用rquota。 
+summary: 遠端配額傳輸協定（ rquota ）可讓 NFS 用戶端從遠端機器取得使用者的配額資訊。rquota 版本的支援會因您的 ONTAP 版本而異。 
 ---
-= 啟用或停用rquota支援
+= 啟用或停用 ONTAP SVM 的 rquota 支援
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-支援遠端配額傳輸協定第1版（rquota v1）ONTAP 。rquota傳輸協定可讓NFS用戶端從遠端機器取得使用者的配額資訊。您可以使用在儲存虛擬機器（ SVM ）上啟用 rquota `vserver nfs modify` 命令。
+遠端配額傳輸協定（ rquota ）可讓 NFS 用戶端從遠端機器取得使用者的配額資訊。rquota 版本的支援會因您的 ONTAP 版本而異。
+
+* ONTAP 9 及更新版本支援 rquota v1 。
+* ONTAP 9.12.1 及更新版本支援 rquota v2 。
+
 
 .關於這項工作
 預設會停用rquota。
 
 .步驟
-. 執行下列其中一項動作：
+. 啟用或停用 rquota ：
 +
 [cols="2*"]
 |===
@@ -27,15 +31,19 @@ summary: 支援遠端配額傳輸協定第1版（rquota v1）ONTAP 。rquota傳�
  a| 
 啟用SVM的rquota支援
  a| 
-`vserver nfs modify -vserver vserver_name -rquota enable`
-
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -rquota enable
+----
 
 
  a| 
 停用SVM的rquota支援
  a| 
-`vserver nfs modify -vserver vserver_name -rquota disable`
-
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -rquota disable
+----
 |===
 +
 如需配額的詳細資訊、請參閱 link:../volumes/index.html["邏輯儲存管理"]。
