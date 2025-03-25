@@ -34,12 +34,12 @@ summary: 當 FlexVol 磁碟區已滿時、 ONTAP 可以使用數種不同方法�
 根據預設ONTAP 、功能區會先嘗試增加磁碟區的大小。在大多數情況下，最好使用預設組態，因為刪除快照時，就無法還原快照。不過，如果您需要避免盡可能增加磁碟區的大小，您可以設定 ONTAP 在增加磁碟區大小之前刪除快照。
 
 .步驟
-. 如果您希望 ONTAP 在磁碟區滿時嘗試增加磁碟區的大小、請使用啟用磁碟區的自動擴充功能 `volume autosize` 命令 `grow` 模式。
+. 如果您希望 ONTAP 在磁碟區滿時嘗試增加磁碟區的大小，請使用命令搭配 `grow`模式來啟用磁碟區的自動擴充功能 `volume autosize`。如link:https://docs.netapp.com/us-en/ontap-cli/volume-autosize.html["指令參考資料ONTAP"^]需詳細 `volume autosize`資訊，請參閱。
 +
 請記住、當磁碟區成長時、會從其關聯的Aggregate消耗更多可用空間。如果您是根據磁碟區在需要時擴充的能力而定、則必須監控相關聯集合體中的可用空間、並視需要新增更多空間。
 
 . 如果您希望 ONTAP 在磁碟區滿時刪除快照， FlexClone 檔案或 FlexClone LUN ，請針對這些物件類型啟用自動刪除。
-. 如果您同時啟用 Volume 自動擴充功能和一或多個自動刪除功能、請選擇 ONTAP 應使用的第一種方法、以使用為磁碟區提供可用空間 `volume modify` 命令 `-space-mgmt-try-first` 選項。
+. 如果您同時啟用 Volume 自動擴充功能和一或多個自動刪除功能，請選擇第一種 ONTAP 應使用的方法，以選項搭配使用命令 `-space-mgmt-try-first`來提供磁碟區的可用空間 `volume modify`。如link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["指令參考資料ONTAP"^]需詳細 `volume modify`資訊，請參閱。
 +
 要先指定增加卷的大小（默認值），請使用 `volume_grow`。若要指定先刪除快照，請使用 `snap_delete`。
 

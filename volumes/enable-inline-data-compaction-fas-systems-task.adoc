@@ -11,7 +11,7 @@ summary: 利用磁碟區或集合體層級的 Flash Pool （混合式）集合�
 
 
 [role="lead"]
-您可以使用叢集 Shell 命令，在 FAS 系統上啟用快閃集區（混合式）集合體或磁碟區層級的 HDD 集合體的內嵌資料壓縮 `volume efficiency`。FAS 系統上建立的磁碟區預設會停用資料壓縮功能。
+您可以使用叢集 Shell 命令，在 FAS 系統上啟用快閃集區（混合式）集合體或磁碟區層級的 HDD 集合體的內嵌資料壓縮 `volume efficiency`功能。FAS 系統上建立的磁碟區預設會停用資料壓縮功能。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+efficiency["指令參考資料ONTAP"^]需詳細 `volume efficiency`資訊，請參閱。
 
 .關於這項工作
 若要在磁碟區上啟用內嵌資料壓縮，其 `-space-guarantee`選項必須設定為 `none`。在HDD Aggregate上的磁碟區上啟用資料壓縮功能、會使用額外的CPU資源。
@@ -23,12 +23,18 @@ summary: 利用磁碟區或集合體層級的 Flash Pool （混合式）集合�
 ----
 set -privilege advanced
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/set.html["指令參考資料ONTAP"^]需詳細 `set`資訊，請參閱。
+
 . 檢查所需節點的磁碟區和集合體資料壓縮狀態：
 +
 [source, cli]
 ----
 volume efficiency show -volume <volume_name>
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-show.html["指令參考資料ONTAP"^]需詳細 `volume efficiency show`資訊，請參閱。
+
 . 在 Volume 上執行資料壓縮：
 +
 [source, cli]
@@ -36,9 +42,12 @@ volume efficiency show -volume <volume_name>
 volume efficiency modify -volume <volume_name> -data-compaction true
 ----
 +
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-modify.html["指令參考資料ONTAP"^]需詳細 `volume efficiency modify`資訊，請參閱。
+
++
 [NOTE]
 ====
-如果將 Aggregate 或 Volume 的資料壓縮設為 `false` 、則壓縮作業會失敗。啟用壓縮並不會壓縮現有資料、只會壓縮新的系統寫入內容。此 `volume efficiency start`命令包含有關如何壓縮現有資料的詳細資訊。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-cli["指令參考資料ONTAP"^]。
+如果將 Aggregate 或 Volume 的資料壓縮設為 `false` 、則壓縮作業會失敗。啟用壓縮並不會壓縮現有資料、只會壓縮新的系統寫入內容。此 `volume efficiency start`命令包含有關如何壓縮現有資料的詳細資訊。如link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-start.html["指令參考資料ONTAP"^]需詳細 `volume efficiency start`資訊，請參閱。
 
 ====
 . 檢視壓縮統計資料：
