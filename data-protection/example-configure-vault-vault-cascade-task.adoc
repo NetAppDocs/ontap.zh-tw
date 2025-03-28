@@ -2,7 +2,7 @@
 permalink: data-protection/example-configure-vault-vault-cascade-task.html 
 sidebar: sidebar 
 keywords: example, configure, vault-vault, cascade 
-summary: 範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的資料保險箱串聯部署來保留超過 251 個標示為「 my-ever-ev」 的快照。 
+summary: 範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的資料保險箱串聯部署來保留超過 251 個標示為「每週」的快照。 
 ---
 = 範例：設定資料保險箱串聯
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 
 
 [role="lead"]
-範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的資料保險箱串聯部署來保留超過 251 個標示為「每週」的快照。
+範例將具體說明如何一次設定一個步驟的複寫關係。您可以使用範例中設定的資料保險箱串聯部署來保留超過 251 個標示為的快照 `my-weekly`。
 
-.您需要的產品
+.開始之前
 * 來源與目的地叢集和SVM必須進行對等關係。
 * 您必須執行ONTAP 的是版本不含更新版本的版本。早期ONTAP 版本的不支援保存庫-保存庫串聯。
 
@@ -21,31 +21,31 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 .關於這項工作
 範例假設如下：
 
-* 您已在來源叢集上使用 SnapMirror 標籤「 my-ma日報 」，「每週」和「每月」來設定快照。
-* 您已在二線和三線目的地叢集上設定名為「Vola」的目的地Volume。
-* 您已在二線和三線目的地叢集上設定名為「my_SnapVault」的複寫工作排程。
+* 您已在來源叢集上使用 SnapMirror 標籤， `my-weekly`和 `my-monthly`設定快照 `my-daily`。
+* 您已設定在第二和第三目的地叢集上命名的目的地磁碟區 `volA`。
+* 您已設定在第二和第三目的地叢集上命名的複寫工作排程 `my_snapvault`。
 
 
 範例顯示如何根據兩個自訂原則建立複寫關係：
 
-* 「 SnapVault 輔助」原則會在次要目的地叢集上保留每天 7 個快照，每週 52 個快照，每月 180 個快照。
-* 「 SnapVault 第三原則」會在第三個目的地叢集上保留 250 個每週快照。
+* 此 `snapvault_secondary`原則會在次要目的地叢集上保留 7 個每日， 52 個每週和 180 個每月快照。
+* 會 `snapvault_tertiary policy`在第三個目的地叢集上保留 250 個每週快照。
 
 
 .步驟
-. 在次要目的地叢集上、建立「snapVault_secondary」原則：
+. 在次要目的地叢集上，建立 `snapvault_secondary`原則：
 +
-`cluster_secondary::> snapmirror policy create -policy snapvault_secondary -type vault -comment “Policy on secondary for vault to vault cascade” -vserver svm_secondary`
+`cluster_secondary::> snapmirror policy create -policy snapvault_secondary -type vault -comment "Policy on secondary for vault to vault cascade" -vserver svm_secondary`
 
-. 在次要目的地叢集上、定義原則的「每日」規則：
+. 在次要目的地叢集上，定義 `my-daily`原則的規則：
 +
 `cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-daily -keep 7 -vserver svm_secondary`
 
-. 在次要目的地叢集上、定義原則的「每週」規則：
+. 在次要目的地叢集上，定義 `my-weekly`原則的規則：
 +
 `cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-weekly -keep 52 -vserver svm_secondary`
 
-. 在次要目的地叢集上、定義原則的「每月」規則：
+. 在次要目的地叢集上，定義 `my-monthly`原則的規則：
 +
 `cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-monthly -keep 180 -vserver svm_secondary`
 
@@ -83,11 +83,11 @@ summary: 範例將具體說明如何一次設定一個步驟的複寫關係。�
 +
 `cluster_secondary::> snapmirror initialize -source-path svm_primary:volA -destination-path svm_secondary:volA`
 
-. 在第三目的地叢集上、建立「snapVault_三 線」原則：
+. 在第三個目的地叢集上，建立 `snapvault_tertiary`原則：
 +
-`cluster_tertiary::> snapmirror policy create -policy snapvault_tertiary -type vault -comment “Policy on tertiary for vault to vault cascade” -vserver svm_tertiary`
+`cluster_tertiary::> snapmirror policy create -policy snapvault_tertiary -type vault -comment "Policy on tertiary for vault to vault cascade" -vserver svm_tertiary`
 
-. 在第三個目的地叢集上、定義原則的「每週」規則：
+. 在第三個目的地叢集上，定義 `my-weekly`原則的規則：
 +
 `cluster_tertiary::> snapmirror policy add-rule -policy snapvault_tertiary -snapmirror-label my-weekly -keep 250 -vserver svm_tertiary`
 
