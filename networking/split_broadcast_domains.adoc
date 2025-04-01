@@ -4,7 +4,7 @@ permalink: networking/split_broadcast_domains.html
 keywords: split, broadcast, domain, separate, splitting, separating, reachability, port, split a broadcast domain to synchronize the ontap configuration with the physical network topology, unreachable ports, broadcast-domain split, split broadcast domains 
 summary: 分割廣播網域、將ONTAP 更新的版本組態與實體網路拓撲進行同步 
 ---
-= 分割廣播網域（ ONTAP 9.8 及更新版本）
+= 分割 ONTAP 廣播網域
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,9 @@ summary: 分割廣播網域、將ONTAP 更新的版本組態與實體網路拓�
 
 [role="lead"]
 如果透過實體網路連線或交換器組態變更了網路連接埠連線能力、 先前在單一廣播網域中設定的一組網路連接埠已分割成兩個不同的連線能力集、您可以分割廣播網域、將ONTAP 此「更新」組態與實體網路拓撲進行同步。
+
+
+NOTE: 分割廣播網域的程序與 ONTAP 9.7 和舊版不同。如果需要在運行 ONTAP 9.7 及更早版本的網絡上分割廣播域，請link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/split_broadcast_domains97.html["分割廣播網域（ ONTAP 9.7 或更早版本）"^]參閱。
 
 若要判斷網路連接埠廣播網域是否分割成多個連線能力集、請使用 `network port reachability show -details` 命令並注意哪些連接埠無法彼此連線（「無法連線的連接埠」）。一般而言、無法連線的連接埠清單會定義一組連接埠、這些連接埠應在您確認實體和交換器組態正確後分割成另一個廣播網域。
 
@@ -28,4 +31,8 @@ network port broadcast-domain split -ipspace <ipspace_name> -broadcast-domain <b
 * -`broadcast-domain` 是要分割的廣播網域名稱。
 * -`new-broadcast-domain` 是要建立的新廣播網域名稱。
 * -`ports` 是要新增至新廣播網域的節點名稱和連接埠。
+
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-split.html["網路連接埠廣播網域分割"^]
 

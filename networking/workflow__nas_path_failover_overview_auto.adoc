@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: networking/workflow__nas_path_failover_overview_auto.html 
-keywords: introducing, introduction, overview, workflow, nas path, failover, fail, over, workflow for nas path failover, nas path failover overview, nas failover workflow diagram, multipathing 
+keywords: introducing, introduction, overview, workflow, nas path, failover, fail, over, workflow for nas path failover, nas path failover overview, nas failover workflow diagram, multipathing, configure nas path failover on the ONTAP network 
 summary: NAS路徑容錯移轉組態、適用於ONTAP 效能不高的版本 
 ---
-= 工作流程（ ONTAP 9.8 及更新版本）
+= 在 ONTAP 網路上設定 NAS 路徑容錯移轉
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,9 +16,10 @@ summary: NAS路徑容錯移轉組態、適用於ONTAP 效能不高的版本
 [role="lead"]
 如果您已經熟悉基本的網路概念、可以檢閱NAS路徑容錯移轉組態的「實際操作」工作流程、以節省設定網路的時間。
 
-NAS LIF會在目前連接埠的連結失敗後、自動移轉至正常運作的網路連接埠。您可以仰賴ONTAP 「恢復」預設值來管理路徑容錯移轉。
 
-image:Workflow_NAS_failover.png["工作流程摘要： 1 建立 IPspaces 2 將廣播網域移至 IPspaces 3 建立 SVM 4 建立生命週期 5 為 SVM 設定 DNS 服務"]
+NOTE: ONTAP 9.7 和舊版中的 NAS 路徑容錯移轉設定工作流程不同。如果您需要在運行 ONTAP 9.7 及更早版本的網絡上配置 NAS 故障切換link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-failover/workflow__nas_path_failover_overview_manual.html["NAS 路徑容錯移轉工作流程（ ONTAP 9.7 及更早版本）"^]，請參閱工作流程。
+
+NAS LIF會在目前連接埠的連結失敗後、自動移轉至正常運作的網路連接埠。您可以仰賴ONTAP 「恢復」預設值來管理路徑容錯移轉。
 
 
 NOTE: SAN LIF不會移轉（除非您在連結失敗後手動移動它）。相反地、主機上的多重路徑技術會將流量轉移到不同的LIF。如需詳細資訊、請參閱 link:../san-admin/index.html["SAN管理"^]。
@@ -45,4 +46,4 @@ NOTE: SAN LIF不會移轉（除非您在連結失敗後手動移動它）。相�
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["六"]link:configure_dns_services_auto.html["設定 SVM 的 DNS 服務"]
 [role="quick-margin-para"]
-建立 NFS 或 SMB 伺服器之前、請先設定 SVM 的 DNS 服務。
+建立 NFS 或 SMB 伺服器之前，請先設定 SVM 的 DNS 服務。

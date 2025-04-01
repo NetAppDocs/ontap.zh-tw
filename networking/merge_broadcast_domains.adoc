@@ -4,7 +4,7 @@ permalink: networking/merge_broadcast_domains.html
 keywords: merge, combine, broadcast, domain, reachability, merge broadcast domains, merge the ports from one broadcast domain into an existing broadcast domain 
 summary: 將一個廣播網域的連接埠合併到現有的廣播網域 
 ---
-= 合併廣播網域（ ONTAP 9.8 及更新版本）
+= 合併 ONTAP 廣播網域
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,9 @@ summary: 將一個廣播網域的連接埠合併到現有的廣播網域
 
 [role="lead"]
 如果網路連接埠可連線性已變更、無論是透過實體網路連線或交換器組態、或是先前在多個廣播網域中設定的兩組網路連接埠、現在都能共用可連線性、則可以使用合併兩個廣播網域、將ONTAP 此二元組態與實體網路拓撲進行同步。
+
+
+NOTE: ONTAP 9.7 和舊版中的廣播網域合併程序不同。如果需要在運行 ONTAP 9.7 及更早版本的網絡上合併廣播域，請link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/merge_broadcast_domains97.html["合併廣播網域（ ONTAP 9.7 或更早版本）"^]參閱。
 
 若要判斷多個廣播網域是否屬於一個連線能力集、請使用「網路連接埠可連線性show details」命令、並注意在另一個廣播網域中設定的連接埠實際上彼此之間有連線（「非預期連接埠」）。通常、非預期連接埠清單會定義在您驗證實體和交換器組態是否正確之後、應合併到廣播網域的連接埠集。
 
@@ -27,4 +30,8 @@ network port broadcast-domain merge -ipspace <ipspace_name> -broadcast-domain <b
 * `ipspace_name` 是廣播網域所在 IPSpace 的名稱。
 * `-broadcast-domain` 是要合併的廣播網域名稱。
 * `-into-broadcast-domain` 是將接收其他連接埠的廣播網域名稱。
+
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-merge["網路連接埠 broadcast-domain-merge"^]
 

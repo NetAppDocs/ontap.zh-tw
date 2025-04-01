@@ -4,7 +4,7 @@ permalink: networking/commands_for_managing_firewall_service_and_policies.html
 keywords: manage, managing, firewall, fire, wall, service, policy, policies, commands for managing firewall service and policies, system services firewall, system services firewall policy, network interface modify, system services firewall modify, system services firewall show, system services firewall policy create, network interface modify -lif lifname -firewall-policy, system services firewall policy modify, system services firewall policy show, system services firewall policy clone, system services firewall policy delete 
 summary: 管理防火牆服務 
 ---
-= 用於管理 ONTAP 中防火牆服務和原則的命令
+= 管理防火牆服務和原則的 ONTAP 命令
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,15 @@ summary: 管理防火牆服務
 
 [role="lead"]
 您可以使用 `system services firewall` 管理防火牆服務的命令 `system services firewall policy` 管理防火牆原則的命令、以及 `network interface modify` 管理生命的防火牆設定的命令。
+
+從功能部分9.10.1開始ONTAP ：
+
+* 防火牆原則已過時、並由LIF服務原則取代。之前、內建防火牆是使用防火牆原則來管理。此功能現在是使用LIF服務原則來完成。
+* 所有的防火牆原則都是空的、而且不會開啟基礎防火牆中的任何連接埠。而是必須使用LIF服務原則開啟所有連接埠。
+* 升級至9.10.1或更新版本、從防火牆原則轉換至LIF服務原則之後、不需要採取任何行動。系統會自動建構符合先前ONTAP 版本的防火牆原則的LIF服務原則。如果您使用指令碼或其他工具來建立及管理自訂防火牆原則、則可能需要升級這些指令碼、以建立自訂服務原則。
+
+
+若要深入瞭解、請參閱 link:lifs_and_service_policies96.html["更新版本中的生命與服務政策ONTAP"]。
 
 |===
 
