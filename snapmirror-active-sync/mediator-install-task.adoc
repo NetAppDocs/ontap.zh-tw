@@ -57,7 +57,7 @@ xref:../mediator/index.html[準備安裝或升級 ONTAP Mediator 服務]
 NOTE: SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂 IPspace 。
 
 +
-xref:../task_dp_prepare_mirror.html[設定對等關係]
+xref:../peering/create-cluster-relationship-93-later-task.html[建立叢集對等關係]
 
 . 確認已在每個叢集上建立 SVM 。
 +
@@ -270,6 +270,49 @@ Notice: Enter the mediator password.
 Enter the password: ******
 Enter the password again: ******
 ----
+. 您也可以選擇檢查工作 ID 狀態 `job show -id`，以確認 SnapMirror Mediator ADD 命令是否成功。
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+
+
+C1_test_cluster::*> snapmirror mediator add -peer-cluster C2_test_cluster -type on-prem -mediator-address 1.2.3.4 -username mediatoradmin
+
+Notice: Enter the mediator password.
+
+Enter the password:
+Enter the password again:
+
+Info: [Job: 87] 'mediator add' job queued
+
+C1_test_cluster::*> job show -id 87
+                            Owning
+Job ID Name                 Vserver           Node           State
+------ -------------------- ----------------- -------------- ----------
+87     mediator add         C1_test_cluster   C2_test        Running
+
+Description: Creating a mediator entry
+
+C1_test_cluster::*> job show -id 87
+                            Owning
+Job ID Name                 Vserver           Node           State
+------ -------------------- ----------------- -------------- ----------
+87     mediator add         C1_test_cluster   C2_test        Success
+
+Description: Creating a mediator entry
+
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status Type
+---------------- ---------------- ----------------- ------------- -------
+1.2.3.4          C2_test_cluster  connected         true          on-prem
+
+C1_test_cluster::*>
+----
 . 檢查 ONTAP Mediator 組態的狀態：
 +
 `snapmirror mediator show`
@@ -381,6 +424,49 @@ Notice: Enter the mediator password.
 
 Enter the password: ******
 Enter the password again: ******
+----
+. 您也可以選擇檢查工作 ID 狀態 `job show -id`，以確認 SnapMirror Mediator ADD 命令是否成功。
++
+* 範例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+
+
+C1_test_cluster::*> snapmirror mediator add -peer-cluster C2_test_cluster -type on-prem -mediator-address 1.2.3.4 -username mediatoradmin
+
+Notice: Enter the mediator password.
+
+Enter the password:
+Enter the password again:
+
+Info: [Job: 87] 'mediator add' job queued
+
+C1_test_cluster::*> job show -id 87
+                            Owning
+Job ID Name                 Vserver           Node           State
+------ -------------------- ----------------- -------------- ----------
+87     mediator add         C1_test_cluster   C2_test        Running
+
+Description: Creating a mediator entry
+
+C1_test_cluster::*> job show -id 87
+                            Owning
+Job ID Name                 Vserver           Node           State
+------ -------------------- ----------------- -------------- ----------
+87     mediator add         C1_test_cluster   C2_test        Success
+
+Description: Creating a mediator entry
+
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status Type
+---------------- ---------------- ----------------- ------------- -------
+1.2.3.4          C2_test_cluster  connected         true          on-prem
+
+C1_test_cluster::*>
 ----
 . 檢查 ONTAP Mediator 組態的狀態：
 +

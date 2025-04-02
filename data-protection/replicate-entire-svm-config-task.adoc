@@ -60,9 +60,15 @@ SVM名稱在來源叢集和目的地叢集之間必須是唯一的。
 ----
 cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-create.html["指令參考資料ONTAP"^]需詳細 `vserver create`資訊，請參閱。
+
 . 從目的地叢集、使用建立 SVM 對等關係 `vserver peer create` 命令。
 +
 如需詳細資訊、請參閱 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立SVM叢集間對等關係"]。
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-peer-create.html["指令參考資料ONTAP"^]需詳細 `vserver peer create`資訊，請參閱。
 
 . 建立複寫工作排程：
 +
@@ -85,6 +91,9 @@ NOTE: SVM SnapMirror 關係中 FlexVol Volume 的最低支援排程（ RPO ）�
 ----
 cluster_dst::> job schedule cron create -name my_weekly -dayofweek saturday -hour 3 -minute 0
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/job-schedule-cron-create.html["指令參考資料ONTAP"^]需詳細 `job schedule cron create`資訊，請參閱。
+
 . 從目的地SVM或目的地叢集建立複寫關係：
 +
 [source, cli]
@@ -127,6 +136,9 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_unified -identity-preserve true
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
+
 . 停止目的地SVM：
 +
 [source, cli]
@@ -141,6 +153,9 @@ vserver stop -vserver <SVM_name>
 ----
 cluster_dst::> vserver stop -vserver svm_backup
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["指令參考資料ONTAP"^]需詳細 `vserver stop`資訊，請參閱。
+
 . 從目的地SVM或目的地叢集、初始化SVM複寫關係：
 +
 [source, cli]
@@ -159,6 +174,9 @@ NOTE: 您必須在中的 SVM 名稱後面輸入一個冒號（：） `-source-pa
 ----
 cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
+
 
 
 --

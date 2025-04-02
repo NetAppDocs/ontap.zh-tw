@@ -14,13 +14,16 @@ summary: 如果來源SVM有SMB組態、而您選擇將idente-preserve設為假�
 如果來源 SVM 有 SMB 組態、您選擇設定 `identity-preserve` 至 `false`，您必須為目的地 SVM 建立 SMB 伺服器。某些SMB組態需要SMB伺服器、例如SnapMirror關係初始化期間的共用。
 
 .步驟
-. 使用命令啟動目的地 SVM `vserver start` 。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["指令參考資料ONTAP"^]需詳細 `vserver start`資訊，請參閱。
+. 使用命令啟動目的地 SVM `vserver start` 。
 +
 [listing]
 ----
 destination_cluster::> vserver start -vserver dvs1
 [Job 30] Job succeeded: DONE
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["指令參考資料ONTAP"^]需詳細 `vserver start`資訊，請參閱。
+
 . 確認目的地 SVM 位於中 `running` 狀態和子類型為 `dp-destination` 使用 `vserver show` 命令。
 +
 [listing]
@@ -31,12 +34,18 @@ Vserver  Type    Subtype           State      State       Volume     Aggregate
 -------- ------- ----------       ---------- ----------- ---------- ----------
 dvs1     data    dp-destination    running    running       -         -
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-show.html["指令參考資料ONTAP"^]需詳細 `vserver show`資訊，請參閱。
+
 . 使用建立 LIF `network interface create` 命令。
 +
 [listing]
 ----
 destination_cluster::>network interface create -vserver dvs1 -lif NAS1 -role data -data-protocol cifs -home-node destination_cluster-01 -home-port a0a-101  -address 192.0.2.128 -netmask 255.255.255.128
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["指令參考資料ONTAP"^]需詳細 `network interface create`資訊，請參閱。
+
 . 使用建立航線 `network route create` 命令。
 +
 [listing]
@@ -47,6 +56,9 @@ destination_cluster::>network route create -vserver dvs1 -destination 0.0.0.0/0
 +
 link:../networking/networking_reference.html["網路管理"]
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["指令參考資料ONTAP"^]需詳細 `network route create`資訊，請參閱。
+
 . 使用設定 DNS `vserver services dns create` 命令。
 +
 [listing]
@@ -54,6 +66,9 @@ link:../networking/networking_reference.html["網路管理"]
 destination_cluster::>vserver services dns create -domains mydomain.example.com -vserver
 dvs1 -name-servers 192.0.2.128 -state enabled
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+services+dns+create["指令參考資料ONTAP"^]需詳細 `vserver services dns create`資訊，請參閱。
+
 . 使用新增慣用的網域控制站 `vserver cifs domain preferred-dc add` 命令。
 +
 [listing]
@@ -61,6 +76,9 @@ dvs1 -name-servers 192.0.2.128 -state enabled
 destination_cluster::>vserver cifs domain preferred-dc add -vserver dvs1 -preferred-dc
 192.0.2.128 -domain mydomain.example.com
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-domain-preferred-dc-add.html["指令參考資料ONTAP"^]需詳細 `vserver cifs domain preferred-dc add`資訊，請參閱。
+
 . 使用建立 SMB 伺服器 `vserver cifs create` 命令。
 +
 [listing]
@@ -68,6 +86,9 @@ destination_cluster::>vserver cifs domain preferred-dc add -vserver dvs1 -prefer
 destination_cluster::>vserver cifs create -vserver dvs1 -domain mydomain.example.com
 -cifs-server CIFS1
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-create.html["指令參考資料ONTAP"^]需詳細 `vserver cifs create`資訊，請參閱。
+
 . 使用停止目的地 SVM `vserver stop` 命令。
 +
 [listing]
@@ -75,4 +96,7 @@ destination_cluster::>vserver cifs create -vserver dvs1 -domain mydomain.example
 destination_cluster::> vserver stop -vserver dvs1
 [Job 46] Job succeeded: DONE
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["指令參考資料ONTAP"^]需詳細 `vserver stop`資訊，請參閱。
+
 
