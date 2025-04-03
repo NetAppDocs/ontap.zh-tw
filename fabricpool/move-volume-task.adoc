@@ -2,7 +2,7 @@
 permalink: fabricpool/move-volume-task.html 
 sidebar: sidebar 
 keywords: aggregate, local tier, moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
-summary: 當您將Volume移至FabricPool 物件時、您可以選擇透過移動來指定或變更Volume的分層原則。從功能不活動的資料報告功能開始、當您移動非FabricPool Volume時、會使用熱圖來讀取可分層區塊、並將冷資料移至該目的地的容量層。ONTAP FabricPool FabricPool 
+summary: 請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因為本機層，附加雲端層和磁碟區（磁碟區分層原則）所發生的變更都會對功能造成重大影響。 
 ---
 = 將磁碟區移至啟用 FabricPool 的 ONTAP 本機層
 :allow-uri-read: 
@@ -11,45 +11,60 @@ summary: 當您將Volume移至FabricPool 物件時、您可以選擇透過移動
 
 
 [role="lead"]
-當您將Volume移至FabricPool 物件時、您可以選擇透過移動來指定或變更Volume的分層原則。從功能不活動的資料報告功能開始、當您移動非FabricPool Volume時、會使用熱圖來讀取可分層區塊、並將冷資料移至該目的地的容量層。ONTAP FabricPool FabricPool
+A link:../volumes/move-volume-task.html["Volume搬移"] 是 ONTAP 在不中斷營運的情況下，將磁碟區從一個本機層（來源）移至另一個（目的地）的方式。雖然最常見的原因是硬體生命週期管理，叢集擴充和負載平衡，但由於各種原因，可以執行磁碟區移動。
+
+請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因為本機層，附加雲端層和磁碟區（磁碟區分層原則）所發生的變更都會對功能造成重大影響。
 
 
 NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
 
-.開始之前
-您必須瞭解變更分層原則、可能會影響資料冷卻及移至雲端層所需的時間。
 
-link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-move-a-volume["當您移動磁碟區時、分層原則會發生什麼事"]
 
-.關於這項工作
-如果非 FabricPool 磁碟區已啟用非作用中資料報告功能，當您將具有分層原則的磁碟區或 `snapshot-only`移 `auto`至 FabricPool 時， FabricPool 會從熱圖檔案讀取溫度可控區塊，當非 FabricPool 磁碟區上的分層原則設為時 `auto`， FabricPool 會使用該溫度將冷資料直接移至 FabricPool 目的地上的容量層。
+== 目的地本端層
 
-您不應該使用 `-tiering-policy` 如果您使用的是 ONTAP 9.8 、而您想要 FabricPools 使用非作用中的資料報告資訊、將資料直接移至容量層、則可在 Volume 上移動選項。使用此選項會導致FabricPools忽略溫度資料、改為遵循ONTAP 發行版本更新至版本更新版本的動作。
+如果 Volume Move 的目的地本端層沒有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會寫入目的地本端層的本端層。
+
+從 ONTAP 9.8 開始，當磁碟區已啟用時link:determine-data-inactive-reporting-task.html["非作用中資料報告"]， FabricPool 會使用磁碟區的熱圖，立即將冷資料排入佇列，以便在寫入目的地 Aggregate 時立即開始分層。
+
+在 ONTAP 9.8 之前，將磁碟區移至另一個本機層會重設本機層區塊的閒置期間。例如，使用自動磁碟區分層原則的磁碟區，若本機層上的資料已停用 20 天，但尚未分層，則在磁碟區移動後，資料的溫度將會重設為 0 天。
+
+
+
+== 最佳化的 Volume 搬移
+
+從 ONTAP 9.6 開始，如果 Volume Move 的目的地本端層使用與來源本端層相同的貯體，則儲存在該貯體中的來源 Volume 上的資料不會移回本端層。這項最佳化的 Volume 搬移可大幅提升網路效率。
+
+[NOTE]
+====
+部分組態與最佳化的 Volume 移動不相容：
+
+* 在磁碟區移動期間變更分層原則
+* 使用不同加密金鑰的來源和目的地集合體
+* FlexClone Volume
+* FlexClone 父磁碟區
+* MetroCluster （支援 ONTAP 9.8 及更新版本中最佳化的 Volume 搬移）
+* 非同步的 FabricPool 鏡射貯體
+
+
+====
+如果 Volume Move 的目的地本端層有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會先寫入目的地本端層的本端層。如果此方法適用於磁碟區的分層原則，則會寫入目的地本機層的雲端層。
+
+先將資料寫入本機層，可改善磁碟區移動的效能，並縮短轉換時間。如果在執行磁碟區移動時未指定磁碟區分層原則，則目的地磁碟區會使用來源磁碟區的分層原則。
+
+如果在執行磁碟區移動時指定不同的分層原則，則會使用指定的分層原則建立目的地磁碟區，而且不會最佳化磁碟區移動。
+
+
+NOTE: 在 SVM DR 關係中，來源和目的地磁碟區必須使用相同的分層原則。
 
 .步驟
-. 使用 `volume move start` 將 Volume 移至 FabricPool 的命令。
-+
-。 `-tiering-policy` 選用參數可讓您指定磁碟區的分層原則。
-
-+
-您可以指定下列分層原則之一：
-
-+
-** `snapshot-only` （預設）
-** `auto`
-** `all`
-** `none`
- +
-link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["分層原則的類型FabricPool"]
+. 使用 `volume move start`命令將磁碟區從來源本機層移至目的地本機層。
 
 
-
-
-.將Volume移至FabricPool 不全的範例
-以下範例將「 VS1 」 SVM 的名為「 myvol2 」的磁碟區移至 FabricPool 啟用 FabricPool 的本機層。磁碟區已明確設定為使用 `none`分層原則：
+.移動 Volume 的範例
+以下範例將名為 SVM 的 `vs1`磁碟區移 `myvol2`至 `dest_FabricPool`啟用 FabricPool 的本機層。
 
 [listing]
 ----
 cluster1::> volume move start -vserver vs1 -volume myvol2
--destination-aggregate dest_FabricPool -tiering-policy none
+-destination-aggregate dest_FabricPool
 ----
