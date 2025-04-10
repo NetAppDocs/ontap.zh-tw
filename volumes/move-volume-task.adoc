@@ -14,10 +14,10 @@ summary: 將 FlexVol volume 移至同一儲存虛擬機器（ SVM ）內的不�
 您可以將FlexVol 某個SVM磁碟區移至同一個儲存虛擬機器（SVM）內的不同集合體、節點或兩者、以在判斷儲存容量不平衡之後、平衡儲存容量。
 
 .關於這項工作
-根據預設、如果切換作業在30秒內無法完成、將會重試。您可以使用和 `-cutover-action`參數來調整預設行為 `-cutover-window`，這兩者都需要進階權限層級存取。如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["指令參考資料ONTAP"^]需詳細 `volume move start`資訊，請參閱。
+根據預設、如果切換作業在30秒內無法完成、將會重試。您可以使用和 `-cutover-action`參數來調整預設行為 `-cutover-window`，這兩者都需要進階權限層級存取。
 
 .步驟
-. 如果您要移動資料保護鏡像、但尚未初始化鏡射關係、請使用初始化鏡射關係 `snapmirror initialize` 命令。
+. 如果您要移動資料保護鏡像，但尚未初始化鏡射關係，請使用命令初始化鏡射關係 `snapmirror initialize`。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
 +
 必須先初始化資料保護鏡射關係、才能移動其中一個磁碟區。
 
@@ -41,7 +41,10 @@ node12a_aggr1    10.36GB          hdd
 node12a_aggr4    10.36GB          hdd
 5 entries were displayed.
 ----
-. 使用確認磁碟區可以移至預期的 Aggregate `volume move start -perform-validation-only` 執行驗證檢查的命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-target-aggr-show.html["指令參考資料ONTAP"^]需詳細 `volume move target-aggr show`資訊，請參閱。
+
+. 使用命令執行驗證檢查，確認磁碟區可以移至預期的 Aggregate 。 `volume move start -perform-validation-only`如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["指令參考資料ONTAP"^]需詳細 `volume move start`資訊，請參閱。
 . 使用移動 Volume `volume move start` 命令。
 +
 下列命令可將VS2 SVM上的user_max Volume移至node12a_aggr3 Aggregate。此移動會以背景程序執行。
@@ -67,6 +70,9 @@ vs2       user_max   healthy  cutover     -                -
 ----
 +
 當 Volume 移動不再出現在中時、即完成移動 `volume move show` 命令輸出。
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-show.html["指令參考資料ONTAP"^]需詳細 `volume move show`資訊，請參閱。
 
 
 
