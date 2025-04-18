@@ -13,8 +13,8 @@ summary: 您必須在啟用稽核的SVM中指定要稽核的儲存區。
 [role="lead"]
 您必須在啟用稽核的SVM中指定要稽核的儲存區。
 
-.您需要的產品
-* 啟用S3稽核的SVM。
+.開始之前
+* 您已啟用 SVM 進行 S3 稽核。
 
 
 .關於這項工作
@@ -22,15 +22,18 @@ S3 稽核組態是以每個 SVM 為基礎啟用、但您必須在 SVMS 中選取
 
 在命令移除之前，貯體的稽核組態會持續保留 `vserver object-store-server audit event-selector delete`。
 
-.程序
-選取S3稽核的儲存庫：
-
+.步驟
+. 選取S3稽核的儲存庫：
++
 [source, cli]
 ----
 vserver object-store-server audit event-selector create -vserver <svm_name> -bucket <bucket_name> [[-access] {read-only|write-only|all}] [[-permission] {allow-only|deny-only|all}]
 ----
-* `-access` - 指定要稽核的事件存取類型： `read-only`、 `write-only` 或 `all` （預設為 `all`）。
-* `-permission` - 指定要稽核的事件權限類型： `allow-only`、 `deny-only` 或 `all` （預設為 `all`）。
++
+** `-access`：指定要稽核的事件存取類型： `read-only`， `write-only`或 `all`（預設為 `all`）。
+** `-permission`：指定要稽核的事件權限類型： `allow-only`， `deny-only`或 `all`（預設為 `all`）。
+
+
 
 
 .範例
