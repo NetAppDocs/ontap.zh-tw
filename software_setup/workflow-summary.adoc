@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: software_setup/workflow-summary.html 
+keywords: cluster, setup, set up get started, workflow, summary 
+summary: NetApp 建議您使用系統管理員來設定新叢集。System Manager 為叢集設定提供簡單易用的工作流程，包括指派節點管理 IP 位址和初始化叢集。 
+---
+= ONTAP 叢集設定工作流程摘要
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+若要設定叢集，您應該收集完成設定所需的資訊，建立叢集並加入節點，將管理階層的生命從 IPv4 轉換為 IPv6 ，使用 Active IQ Config Advisor 檢查叢集，並在叢集之間同步處理系統時間。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一"]link:gather_cluster_setup_information.html["收集資訊"]
+[role="quick-margin-para"]
+開始叢集設定之前，請先收集完成設定程序所需的資訊。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["二"]link:setup-cluster.html["建立 ONTAP 叢集並加入節點"]
+[role="quick-margin-para"]
+NetApp 建議您使用系統管理員來設定新叢集。System Manager 提供簡單易用的叢集設定工作流程，包括指派節點管理 IP 位址和初始化叢集。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三"]link:convert-ipv4-to-ipv6-task.html["將管理階層的生命從 IPv4 轉換為 IPv6"]
+[role="quick-margin-para"]
+從 ONTAP 9.13.1 開始，您可以使用 ONTAP 命令列介面（ CLI ），在初始叢集設定期間，將 IPv6 位址指派給 AFF A800 和 FAS 8700 平台上的管理階層。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須先將 IPv4 位址指派給管理階層的生命負載、然後在完成叢集設定後轉換成 IPv6 位址。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四"]link:task_check_cluster_with_config_advisor.html["使用Active IQ Config Advisor 功能驗一下叢集"]
+[role="quick-margin-para"]
+在您將所有節點加入新叢集之後、您應該執行Active IQ Config Advisor 效益管理功能來驗證組態、並檢查常見的組態錯誤。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"]link:task_synchronize_the_system_time_across_the_cluster.html["在整個叢集之間同步化系統時間"]
+[role="quick-margin-para"]
+在叢集中同步處理系統時間，以確保叢集中的每個節點都有相同的時間，並防止 CIFS 和 Kerberos 故障。

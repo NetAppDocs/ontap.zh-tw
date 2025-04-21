@@ -1,0 +1,217 @@
+---
+sidebar: sidebar 
+permalink: software_setup/setup-cluster.html 
+keywords: install, installing, cluster, set up, setup, configure, disk, data ports, guided setup, local tiers, aggregate, vserver, volume, configuring ONTAP on a new cluster, configuring a new cluster, assign a node-management IP address, node, DNS server, host name, hostname, NTP server, synchronize time, create a local tier, configure protocol, SSD, provision storage, add LUN, add volume, add namespace, volume, vserver, configure ONTAP on a new cluster, configuration 
+summary: System Manager提供簡單易用的工作流程、可設定叢集及設定儲存設備。 
+---
+= 建立 ONTAP 叢集並加入節點
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp 建議您使用系統管理員來建立新叢集。System Manager 提供簡單易用的叢集設定工作流程。只有在 MetroCluster 組態中執行 ONTAP 9.7 或更早版本，或是需要在特定平台上設定純 IPv6 叢集時，才需要使用 ONTAP 命令列介面（ CLI ）。
+
+.關於這項工作
+此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K ， ASA A90 ， ASA A70 ， ASA A50 ， ASA A30 或 ASA A20 ），請依照指示link:https://docs.netapp.com/us-en/asa-r2/install-setup/initialize-ontap-cluster.html["這些步驟"^]使用系統管理員來設定 ONTAP 叢集。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
+
+從 ONTAP 9.13.1 開始，您可以使用 ONTAP CLI 在初始叢集設定期間，將 IPv6 位址指派給 AFF A800 和 FAS8700 平台上的管理階層。對於早於 ONTAP 9.13.1 的 ONTAP 版本，或是其他平台上的 ONTAP 9.13.1 及更新版本，您應該使用系統管理員來使用 IPv4 位址建立叢集，然後在完成叢集設定之後使用link:convert-ipv4-to-ipv6-task.html["轉換為 IPv6"]位址。
+
+
+NOTE: System Manager 不支援在 ONTAP 9.6 及更早版本中需要 IPv6 網路的部署。
+
+.開始之前
+* 您應該已根據平台機型的安裝與設定指示，安裝，連接新的儲存系統並開啟電源。
++
+請參閱link:https://docs.netapp.com/us-en/ontap-systems/index.html["不再需要使用本技術AFF FAS"^]。
+
+* link:gather_cluster_setup_information.html["收集您需要的資訊"]以完成叢集設定。
+* 叢集網路介面應在叢集的每個節點上設定、以進行叢集內通訊。
+* 如果您使用 CLI 來設定 IPv6 ，則應在基礎管理控制器（ BMC ）上設定 IPv6 ，以便使用 SSH 存取系統。
+
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 指派節點管理IP位址
++
+** Windows 電腦
++
+... 將 Windows 電腦連接至與控制器相同的子網路。
++
+這會自動將節點管理 IP 位址指派給您的系統。
+
+... 開啟 * 網路 * 磁碟機以探索節點。
+... 選取節點以啟動叢集設定精靈。
+
+
+** 非 Windows 電腦
++
+... 開啟要新增至叢集的所有節點。
++
+這是啟用叢集設定探索所需的項目。
+
+... 連線至第一個節點的主控台。
++
+節點會開機、然後從主控台啟動叢集設定精靈。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+... 認可AutoSupport 此聲明。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+根據預設會啟用支援。AutoSupport
+
+... 請依照畫面上的指示，將管理 IP 位址指派給節點。
+... 在 Web 瀏覽器中，輸入您已設定的節點管理 IP 位址："https://node-management-IP"[]。
++
+System Manager會自動探索叢集中的其餘節點。
+
+
+
+
+
+. 在 * 初始化儲存系統 * 下、輸入叢集名稱和管理員密碼。
+. 在 * 網路 * 下、輸入叢集管理 IP 位址、子網路遮罩和閘道。
+. 如果您想要使用網域名稱服務來解析主機名稱、請選取 * 使用網域名稱服務（ DNS ） * 、然後輸入 DNS 伺服器資訊。
+. 如果您想要使用網路時間傳輸協定（ NTP ）在整個叢集上保持時間同步、請在 * 其他 * 下選取 * 使用時間服務（ NTP ） * 、然後輸入 NTP 伺服器資訊。
+. 選擇*提交*。
+
+
+--
+.CLI ONTAP
+--
+. 開啟要新增至叢集的所有節點。
++
+這是啟用叢集設定探索所需的功能。
+
+. 連線至第一個節點的主控台。
++
+節點會開機、然後從主控台啟動叢集設定精靈。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+. 認可AutoSupport 此聲明。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+根據預設會啟用支援。AutoSupport
+
+. 請依照畫面上的指示，將管理 IP 位址指派給節點。
++
+從 ONTAP 9.13.1 開始，您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
+
+. 按* Enter鍵*繼續。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+. 建立新叢集：
++
+.. 輸入 `create`
+.. 接受系統預設值或輸入您自己的值。
+.. 完成設定後，請登入叢集，確認叢集為作用中，第一個節點正常： `cluster show`
++
+以下範例顯示第一個節點（cluster1-01）健全且符合參與資格的叢集：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+----
++
+如有需要，您可以使用 `cluster setup`命令存取叢集設定精靈，並變更您為管理或節點 SVM 輸入的任何值。
+
+
+
+. 將節點加入叢集：
++
+您可以一次將一個節點加入叢集。您必須完成每個節點的連接作業，而且節點必須是叢集的一部分，才能開始加入下一個節點。
+
++
+如果您的 FAS2720 具有 24 個或更少的 NL-SAS 磁碟機，則應確認儲存組態預設值設定為主動 / 被動，以最佳化效能。如需詳細資訊，請參閱的文件 link:../disks-aggregates/setup-active-passive-config-root-data-task.html["在使用根資料分割的節點上設定主動被動式組態"]。
+
++
+.. 登入您打算加入叢集的節點。
++
+叢集設定精靈會在主控台上啟動。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+.. 認可AutoSupport 此聲明。
++
+
+NOTE: 根據預設會啟用支援。AutoSupport
+
+
+
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+.. 請依照畫面上的指示、將IP位址指派給節點。
++
+從 ONTAP 9.13.1 開始，您可以為 A800 和 FAS8700 平台上的管理階層指派 IPv6 位址。對於早於 9.13.1 的 ONTAP 版本、或是在其他平台上的 9.13.1 及更新版本、您必須指派管理階層的 IPv4 位址、然後在完成叢集設定後轉換為 IPv6 。
+
+.. 按* Enter鍵*繼續。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+.. 輸入 `join`
+.. 依照畫面上的指示設定節點、並將其加入叢集。
+.. 完成設定後，請確認節點狀況良好且符合參加叢集的資格： `cluster show`
++
+以下範例顯示第二個節點（cluster1-02）加入叢集之後的叢集：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+cluster1-02           true    true
+----
+
+
+. 重複步驟 7 以加入其餘的每個節點。
+
+
+--
+====
+.下一步
+* 如有需要、 link:convert-ipv4-to-ipv6-task.html["從 IPv4 轉換為 IPv6"]。
+* link:task_check_cluster_with_config_advisor.html["執行 Active IQ Config Advisor 來驗證您的組態，並檢查常見的組態錯誤"]。
+

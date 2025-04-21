@@ -1,24 +1,24 @@
 ---
 permalink: data-protection/specify-svmdr-vol-dest-aggr.html 
 sidebar: sidebar 
-keywords: snapmirror, svm, replication, aggregate, disaster recovery, svm-dr, svm dr, destination 
+keywords: snapmirror, svm, replication, local tier, aggregate, disaster recovery, svm-dr, svm dr, destination 
 summary: '建立災難恢復 SVM 之後、您可以使用 `aggr-list` 選項 `vserver modify` 用於限制用於裝載 SVM DR 目的地 Volume 的集合體的命令。' 
 ---
-= 指定用於 ONTAP SVM DR 關係的集合體
+= 指定用於 ONTAP SnapMirror SVM DR 關係的本機層
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-建立災難恢復 SVM 之後、您可以使用 `aggr-list` 選項 `vserver modify` 用於限制用於裝載 SVM DR 目的地 Volume 的集合體的命令。
+建立災難恢復 SVM 之後，您可以使用 `aggr-list`選項搭配 `vserver modify`命令來限制用來裝載 SVM DR 目的地 Volume 的本機層。
 
 .步驟
 . 建立目的地SVM：
 +
 `vserver create -vserver _SVM_ -subtype dp-destination`
 
-. 修改災難恢復SVM的Aggr-list、以限制用於裝載災難恢復SVM磁碟區的集合體：
+. 修改災難恢復 SVM 的 Aggr-list 以限制用於託管災難恢復 SVM 卷的本地層：
 +
 `cluster_dest::> vserver modify -vserver _SVM_ -aggr-list <comma-separated-list>`
 

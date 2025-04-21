@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, software, setup, synchronize, system, time, across, cluster 
 summary: 同步時間可確保叢集中的每個節點都有相同的時間、並防止CIFS和Kerberos故障。 
 ---
-= 在整個叢集之間同步化系統時間
+= 在 ONTAP 叢集上同步處理系統時間
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,12 +17,18 @@ summary: 同步時間可確保叢集中的每個節點都有相同的時間、�
 
 您可以將叢集與一或多個NTP伺服器建立關聯、以同步整個叢集的時間。
 
-. 確認每個節點的系統時間和時區設定正確。
+. 確認每個節點的系統時間和時區設定正確：
++
+[source, cli]
+----
+cluster date show
+----
 +
 叢集中的所有節點都應設定為相同的時區。
 
 +
-.. 使用cluster date show命令顯示每個節點的目前日期、時間和時區。
+此範例顯示叢集中每個節點的日期和時區。
+
 +
 [listing]
 ----
@@ -35,7 +41,12 @@ cluster1-03  01/06/2015 09:35:15 America/New_York
 cluster1-04  01/06/2015 09:35:15 America/New_York
 4 entries were displayed.
 ----
-.. 使用cluster date modify命令可變更所有節點的日期或時區。
+. 變更所有節點的日期或時區：
++
+[source, cli]
+----
+cluster date modify
+----
 +
 此範例將叢集的時區變更為GMT:
 
@@ -44,15 +55,26 @@ cluster1-04  01/06/2015 09:35:15 America/New_York
 ----
 cluster1::> cluster date modify -timezone GMT
 ----
-
-
-. 使用叢集時間服務NTP伺服器create命令、將叢集與NTP伺服器建立關聯。
+. 將叢集與 NTP 伺服器建立關聯：
 +
-** 若要設定不使用對稱驗證的 NTP 伺服器、請輸入下列命令： `cluster time-service ntp server create -server server_name`
-** 若要使用對稱驗證設定 NTP 伺服器、請輸入下列命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
+若要設定不使用對稱驗證的 NTP 伺服器、請輸入下列命令：
+
++
+[source, cli]
+----
+cluster time-service ntp server create -server <server_name>
+----
++
+若要使用對稱驗證設定 NTP 伺服器、請輸入下列命令：
+
++
+[source, cli]
+----
+cluster time-service ntp server create -server <server_ip_address> -key-id <key_id>
+----
 +
 
-NOTE: 對稱驗證從ONTAP 推出時起即提供。不適用於ONTAP 更新版本的版本。
+NOTE: 對稱驗證從 ONTAP 9.5 開始提供。不適用於ONTAP 更新版本的版本。
 
 +
 此範例假設已為叢集設定DNS。如果您尚未設定DNS、則必須指定NTP伺服器的IP位址：
@@ -62,9 +84,15 @@ NOTE: 對稱驗證從ONTAP 推出時起即提供。不適用於ONTAP 更新版�
 ----
 cluster1::> cluster time-service ntp server create -server ntp1.example.com
 ----
+. 確認叢集與 NTP 伺服器相關聯：
++
+[source, cli]
+----
+cluster time-service ntp server show
+----
++
+此範例顯示叢集與 NTP 伺服器 ntp1.example.com 相關聯。
 
-
-. 確認叢集與 NTP 伺服器相關聯： `cluster time-service ntp server show`
 +
 [listing]
 ----
@@ -75,5 +103,82 @@ ntp1.example.com     auto
 ----
 
 
-.相關資訊
-link:../system-admin/index.html["系統管理"]
+
+
+== 用於管理NTP伺服器上對稱驗證的命令
+
+從推出支援的版本號為《支援網路時間傳輸協定》（NTP）第3版。ONTAPNTPv3包含使用SHA-1金鑰的對稱驗證、可提高網路安全性。
+
+[cols="2*"]
+|===
+| 若要這麼做... | 使用此命令... 
+
+
+ a| 
+設定NTP伺服器而不進行對稱驗證
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name
+----
+
+
+ a| 
+設定採用對稱驗證的NTP伺服器
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_ip_address -key-id key_id
+----
+
+
+ a| 
+為現有的NTP伺服器啟用對稱驗證
+
+您可以修改現有的NTP伺服器、藉由新增必要的金鑰ID來啟用驗證。
+ a| 
+[source, cli]
+----
+cluster time-service ntp server modify -server server_name -key-id key_id
+----
+
+
+ a| 
+設定共用的NTP金鑰
+ a| 
+[source, cli]
+----
+cluster time-service ntp key create -id shared_key_id -type shared_key_type -value shared_key_value
+----
+*附註：*共享金鑰是由ID所指。節點和NTP伺服器上的ID、其類型和值必須相同
+
+
+
+ a| 
+使用未知的金鑰ID設定NTP伺服器
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name -key-id key_id
+----
+
+
+ a| 
+在NTP伺服器上設定未設定金鑰ID的伺服器。
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name -key-id key_id
+----
+*附註：*金鑰ID、類型和值必須與NTP伺服器上設定的金鑰ID、類型和值相同。
+
+
+
+ a| 
+停用對稱驗證
+ a| 
+[source, cli]
+----
+cluster time-service ntp server modify -server server_name -authentication disabled
+----
+|===
