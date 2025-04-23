@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ensure, snapshot, copy, mirror-vault, deployment 
 summary: 您可以使用 SnapMirror snapshot 擁有者 create 命令，在鏡射資料保險箱部署中，將標記好的快照保留在次要上。如此可確保存在用於更新資料保險箱關係的通用快照。 
 ---
-= 使用 ONTAP 確保鏡射資料保險箱部署中的通用快照
+= 確保 ONTAP 鏡射資料保險箱部署中有通用的快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -18,7 +18,7 @@ summary: 您可以使用 SnapMirror snapshot 擁有者 create 命令，在鏡射
 
 這絕不是鏡射資料保險箱扇出或串聯部署中的鏡射關係問題，因為 SnapMirror 在執行更新之前，一律會先建立來源磁碟區的快照。
 
-不過，這可能是資料保險箱關係的問題，因為 SnapMirror 在更新資料保險箱關係時，不會建立來源 Volume 的快照。您需要使用 `snapmirror snapshot-owner create`來確保在資料保險箱關係的來源和目的地上至少有一個通用快照。
+不過，這可能是資料保險箱關係的問題，因為 SnapMirror 在更新資料保險箱關係時，不會建立來源 Volume 的快照。您需要使用 `snapmirror snapshot-owner create`來確保在資料保險箱關係的來源和目的地上至少有一個通用快照。link:supported-deployment-config-concept.html["深入瞭解資料保護扇出部署和串聯部署"]。
 
 .步驟
 . 在來源磁碟區上，將擁有者指派給您要保留的標記快照：
