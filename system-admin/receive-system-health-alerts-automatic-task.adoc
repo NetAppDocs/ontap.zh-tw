@@ -11,7 +11,7 @@ summary: 您可以使用系統健全狀況警示show命令手動檢視系統健�
 
 
 [role="lead"]
-您可以使用手動檢視系統健全狀況警示 `system health alert show` 命令。不過、您應該訂閱特定的事件管理系統（EMS）訊息、以便在健全狀況監視器產生警示時自動接收通知。
+您可以使用命令手動檢視系統健全狀況警示 `system health alert show`。不過、您應該訂閱特定的事件管理系統（EMS）訊息、以便在健全狀況監視器產生警示時自動接收通知。如link:https://docs.netapp.com/us-en/ontap-cli/system-health-alert-show.html["指令參考資料ONTAP"^]需詳細 `system health alert show`資訊，請參閱。
 
 .關於這項工作
 下列程序說明如何設定所有hm.alert.malled訊息和所有hm.alert.Cleared訊息的通知。
@@ -25,13 +25,20 @@ summary: 您可以使用系統健全狀況警示show命令手動檢視系統健�
 ----
 cluster1::> event destination create -name health_alerts -mail admin@example.com
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+destination+create["指令參考資料ONTAP"^]需詳細 `event destination create`資訊，請參閱。
+
 . 使用 `event route add-destinations` 路由的命令 `hm.alert.raised` 訊息和 `hm.alert.cleared` 傳送至目的地的訊息。
 +
 [listing]
 ----
 cluster1::> event route add-destinations -messagename hm.alert* -destinations health_alerts
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+route+add-destinations["指令參考資料ONTAP"^]需詳細 `event route add-destinations`資訊，請參閱。
+
 
 
 .相關資訊
-link:../networking/networking_reference.html["網路管理"]
+* link:../networking/networking_reference.html["網路管理"]
+

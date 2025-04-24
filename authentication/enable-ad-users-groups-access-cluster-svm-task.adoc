@@ -56,6 +56,8 @@ NOTE: 當您升級至 ONTAP 9.14.1 或更新版本時、以舊版 ONTAP 建立�
 
 如果您已為資料 SVM 設定 SMB 伺服器、則可以使用 `security login domain-tunnel create` 命令將 SVM 設定為閘道或 _tunnel_ 、以便 AD 存取叢集。
 
+在 ONTAP 9.16.1 之前，您必須使用驗證通道來管理具有 AD 的叢集管理員帳戶。
+
 .開始之前
 * 您必須為資料SVM設定SMB伺服器。
 * 您必須啟用AD網域使用者帳戶、才能存取叢集的管理SVM。
@@ -70,8 +72,10 @@ NOTE: 一律會先嘗試Kerberos驗證。一旦失敗、就會嘗試執行NTLM�
 .步驟
 . 將啟用SMB的資料SVM設定為驗證通道、以便AD網域控制器存取叢集：
 +
-`security login domain-tunnel create -vserver _svm_name_`
-
+[source, cli]
+----
+security login domain-tunnel create -vserver <svm_name>
+----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/security-login-domain-tunnel-create.html["指令參考資料ONTAP"^]需詳細 `security login domain-tunnel create`資訊，請參閱。
 
@@ -82,7 +86,7 @@ SVM必須執行、使用者才能通過驗證。
 
 ====
 +
-下列命令會將啟用 SMB 的資料 SVM 「 'engData' 」設定為驗證通道。
+下列命令會將啟用 SMB 的資料 SVM 設定 `engData`為驗證通道。
 
 +
 [listing]
@@ -100,19 +104,23 @@ cluster1::>security login domain-tunnel create -vserver engData
 .關於這項工作
 輸入之後 `vserver active-directory create` 命令時、系統會提示您提供 AD 使用者帳戶的認證、並提供足夠的權限、以便將電腦新增至網域中指定的組織單位。帳戶密碼不可空白。
 
+從 ONTAP 9.16.1 開始，您可以使用此程序來管理具有 AD 的叢集管理員帳戶。
+
 .開始之前
 您必須是叢集或SVM管理員、才能執行此工作。
 
 .步驟
 . 在AD網域上建立SVM的電腦帳戶：
 +
-`vserver active-directory create -vserver _SVM_name_ -account-name _NetBIOS_account_name_ -domain _domain_ -ou _organizational_unit_`
+[source, cli]
+----
+vserver active-directory create -vserver <SVM_name> -account-name <NetBIOS_account_name> -domain <domain> -ou <organizational_unit>
+----
++
+從 ONTAP 9.16.1 開始，此 `-vserver`參數會接受管理 SVM 。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-active-directory-create.html["指令參考資料ONTAP"^]需詳細 `vserver active-directory create`資訊，請參閱。
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/vserver-active-directory-create.html["指令參考資料ONTAP"^]需詳細 `vserver active-directory create`資訊，請參閱。
-
-+
-下列命令會在網域 "'example.com`" for SVM "`engData" 上建立名為 "`ADSERVER1`" 的電腦帳戶。輸入命令後、系統會提示您輸入AD使用者帳戶認證。
+以下命令將在 SVM 的域上 `example.com`創建一個名爲的 `engData`計算機帳戶 `ADSERVER1`。輸入命令後、系統會提示您輸入AD使用者帳戶認證。
 
 +
 [listing]

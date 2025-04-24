@@ -32,6 +32,7 @@ summary: 從ONTAP 使用Sf9.7開始、您可以使用FlexCache 原生ONTAP 的�
 +
 ** 雖然寫入FlexCache 到某個卷的作業是在來源捲上進行、但是FPolicy組態會監控快取磁碟區上的寫入作業。這與原生稽核不同、原生稽核會在原始磁碟區上稽核寫入內容。
 ** 雖然在快取和來源SVM上不需要相同的FPolicy組態、但建議您部署兩個類似的組態。ONTAP您可以為快取建立新的FPolicy原則、設定方式與來源SVM相同、但新原則的範圍僅限於快取SVM。
+** FPolicy 組態中的副檔名大小限制為 20KB （ 20480 位元組）。當 FlexCache 磁碟區上 FPolicy 組態中使用的擴充功能大小超過 20KB 時，就會觸發 EMS 訊息 `nblade.fpolicy.extn.failed`。
 
 
 

@@ -79,6 +79,9 @@ vserverB  /vol/dstvolB_clone/lun_C  online  unmapped windows
 
 3 entries were displayed.
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
+
 . 如果所需主機的 igroup 尚未存在於包含 SnapVault 備份的 SVM 上、請執行 `igroup create` 建立 igroup 的命令。
 +
 此範例為使用iSCSI傳輸協定的Windows主機建立igroup：
@@ -97,6 +100,9 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
 cluster::> lun mapping create -vserver vserverB
   -path /vol/dstvolB_clone/lun_C -igroup temp_igroup
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["指令參考資料ONTAP"^]需詳細 `lun mapping create`資訊，請參閱。
+
 . 將主機連接至LUN、並視需要存取LUN的內容。
 +
 LUN為讀寫、可用於取代原始LUN。由於LUN序號不同、因此主機會將其解譯為與原始LUN不同的LUN。

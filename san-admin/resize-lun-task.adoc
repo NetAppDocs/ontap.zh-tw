@@ -56,8 +56,6 @@ LUN的實際最大大小可能不恰好為16TB。  將限制捨位至稍低的�
 |===
 您不需要將LUN離線以增加大小。不過、增加大小之後、您必須重新掃描主機上的LUN、讓主機識別大小的變更。
 
-如link:https://docs.netapp.com/us-en/ontap-cli//lun-resize.html#description["指令參考資料ONTAP"^]需詳細 `lun resize`資訊，請參閱。
-
 .步驟
 [role="tabbed-block"]
 ====
@@ -81,6 +79,9 @@ LUN的實際最大大小可能不恰好為16TB。  將限制捨位至稍低的�
 ----
 lun resize -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -size <lun_size>
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli//lun-resize.html#description["指令參考資料ONTAP"^]需詳細 `lun resize`資訊，請參閱。
+
 . 驗證LUN大小是否增加：
 +
 [source, cli]
@@ -97,6 +98,9 @@ lun show -vserver <SVM_name>
 `lun show -fields max-resize-size -volume _volume_name_ -lun _lun_name_`
 
 ====
++
+如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
+
 . 重新掃描主機上的LUN。
 . 遵循主機文件、讓主機檔案系統能夠看到新建立的LUN大小。
 

@@ -4,7 +4,7 @@ permalink: data-protection/cloud-backup-using-cbs-task.html
 keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, BlueXP back and recovery service, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
 summary: 從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP  備份與還原服務來備份雲端中的資料。 
 ---
-= 使用 ONTAP BlueXP  備份與還原服務備份資料
+= 使用 BlueXP  備份與還原來備份資料
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,17 +16,17 @@ summary: 從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP
 
 
 [role="lead"]
-從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP  備份與還原服務（前身為 Cloud Backup Service ）來備份雲端中的資料。
+從 ONTAP 9.9.1 開始，您可以使用系統管理員，使用 BlueXP  備份與還原（前身為 Cloud Backup Service ）來備份雲端中的資料。
 
-BlueXP  備份與還原服務支援 FlexVol 讀寫磁碟區和資料保護（ DP ）磁碟區。從 ONTAP 9.12.1 開始， BlueXP  備份與還原服務支援 FlexGroup Volume 與 SnapLock Volume 。
+BlueXP  備份與還原支援 FlexVol 讀寫磁碟區和資料保護（ DP ）磁碟區。從 ONTAP 9.12.1 開始， BlueXP  備份與還原支援 FlexGroup 磁碟區和 SnapLock 磁碟區。
 
 深入瞭解 link:https://docs.netapp.com/us-en/bluexp-backup-recovery/index.html["BlueXP 備份與還原"^]。
 
 .開始之前
 您應該執行下列程序、在BlueXP中建立帳戶。對於服務帳戶、您需要建立「帳戶管理員」角色。（其他服務帳戶角色不具備從System Manager建立連線所需的權限。）
 
-. link:https://docs.netapp.com/us-en/occm/task_logging_in.html["在BlueXP中建立帳戶"^]。
-. link:https://docs.netapp.com/us-en/occm/concept_connectors.html["在BlueXP中建立連接器"^] 與下列其中一家雲端供應商合作：
+. link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-logging-in.html["在BlueXP中建立帳戶"^]。
+. link:https://docs.netapp.com/us-en/bluexp-setup-admin/concept-connectors.html["在BlueXP中建立連接器"^]與下列其中一家雲端供應商合作：
 +
 ** Microsoft Azure
 ** Amazon Web Services（AWS）
@@ -38,7 +38,7 @@ NOTE: 從 ONTAP 9.10.1 開始，您可以選擇 StorageGRID 做為雲端備份�
 
 
 
-. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在 BlueXP  中訂閱 BlueXP  備份與還原服務"^]（需要適當的授權）。
+. link:https://docs.netapp.com/us-en/bluexp-backup-recovery/concept-backup-to-cloud.html["在 BlueXP  中訂閱 BlueXP  備份與還原"^]（需要適當的授權）。
 . link:https://docs.netapp.com/us-en/occm/task_managing_cloud_central_accounts.html#creating-and-managing-service-accounts["使用BlueXP產生存取金鑰和秘密金鑰"^]。
 
 
@@ -195,7 +195,7 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 * 您應該擁有SnapMirror授權。
 * 應設定叢集間的LIF。
 * 應設定NTP。
-* 叢集必須執行ONTAP 的是無法支援的
+* 叢集必須執行 ONTAP 9.9.1 或更新版本。
 
 
 .關於這項工作
@@ -209,7 +209,7 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 .步驟
 . 配置磁碟區或LUN時、請在System Manager的* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
 . 選取 BlueXP  備份與還原原則類型。
-. 如果未啟用 BlueXP  備份與還原服務，請選取 * 啟用使用 BlueXP  備份與還原服務 * 的備份。
+. 如果未啟用 BlueXP  備份與還原，請選取 * 啟用使用 BlueXP  備份與還原的備份 * 。
 
 
 
@@ -220,7 +220,7 @@ IMPORTANT: 如果您使用Azure或AWS為磁碟區啟用歸檔、則無法停用�
 
 .步驟
 . 選取現有的磁碟區或 LUN ，然後選取 * 保護 * 。
-. 在 * 保護 Volumes （磁碟區） * 頁面上，針對保護原則指定 * 使用 BlueXP  備份與還原服務 * 進行備份。
+. 在 * 保護 Volumes （磁碟區） * 頁面上，為保護原則指定 * 使用 BlueXP  備份和恢復 * 進行備份。
 . 選取 * 保護 * 。
 . 在* Protection（保護）*頁面上、選取標有* Enable SnapMirror（本機或遠端）*的核取方塊。
 . 選取 * 連線並啟用 BlueXP  備份與還原 * 。
