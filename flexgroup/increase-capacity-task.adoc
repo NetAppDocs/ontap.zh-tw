@@ -22,7 +22,7 @@ summary: 您可以增加 FlexGroup 磁碟區的大小，方法是為現有的 Fl
 如果您想要提升效能、可以擴充FlexGroup 《不只是要用的功能、在下列情況下，您可能會想要擴充 FlexGroup Volume 並新增成員磁碟區：
 
 * 新節點已新增至叢集。
-* 已在現有節點上建立新的Aggregate。
+* 已在現有節點上建立新的本機層（集合體）。
 * FlexGroup 磁碟區的現有成員磁碟區已達到硬體的最大 FlexVol 大小（如果已啟用，則為 100TB 或 300TB link:../volumes/enable-large-vol-file-support-task.html["大容量支援"]），因此 FlexGroup 磁碟區必須新增其他成員磁碟區，才能調整大小。
 
 
@@ -55,12 +55,18 @@ summary: 您可以增加 FlexGroup 磁碟區的大小，方法是為現有的 Fl
 
 的預設值 `-aggr-list-multiplier` 參數為 1 。
 
-若要擴充FlexGroup 適用於FabricPool 功能不全的功能、ONTAP 只要使用FabricPool 任何新的集合體、就必須是無法使用的功能。
+使用擴充 FlexGroup Volume link:../fabricpool/index.html["FabricPool"]時，所有本機層（集合體）都必須附加到同一個雲端層。
 
 |===
 
 
-只要可能、您就應該增加FlexGroup 一個現象區的容量。如果您必須擴充 FlexGroup Volume ，則應以與現有 FlexGroup Volume 成員 Volume 相同的倍數新增成員 Volume ，以確保效能一致。例如，如果現有的 FlexGroup 磁碟區有 16 個成員磁碟區，每個節點有八個成員磁碟區，您可以將現有的 FlexGroup 磁碟區擴充 8 或 16 個成員磁碟區。
+假設現有的集合體（本機層）或成員磁碟區尚未達到其最大容量（每個 100 / 300 TB 或 20 億個檔案），最好是增加 FlexGroup 磁碟區的整體大小，而非增加額外的成員磁碟區。
+
+只有當增加現有的磁碟區大小或檔案數不是選項，或 FlexGroup 正在擴充至新硬體時，才使用 Volume Expand 。應將相同數量的成員磁碟區新增至所有節點，以確保一致的效能。例如，如果現有的 FlexGroup 磁碟區有 8 個成員磁碟區，每個節點有四個成員磁碟區，則每個節點新增兩個成員會產生 12 個成員磁碟區，每個節點有六個成員磁碟區。
+
+將新成員新增至新節點時，請嘗試維持現有節點中每個節點的成員磁碟區數量一致。例如，如果現有的 FlexGroup 磁碟區有 8 個成員磁碟區，每個節點有四個成員磁碟區，則如果 FlexGroup 磁碟區擴充至新節點，則應新增四個成員磁碟區，從而產生 12 個成員的 FlexGroup 磁碟區。
+
+將新成員新增至 FlexGroup 磁碟區會變更擷取功能，以利新的空成員磁碟區，並影響新資料擷取的整體系統效能，直到新成員磁碟區與現有成員磁碟區達到平衡為止。
 
 .範例
 * 增加現有成員磁碟區容量的範例 *
@@ -75,10 +81,10 @@ cluster1::> volume modify -vserver svm1 -volume volX -size +20TB
 
 * 新增成員磁碟區來改善效能的範例 *
 
-以下範例說明如何將兩個成員磁碟區新增至 FlexGroup Volume volX ：
+下列範例說明如何新增四個額外的成員磁碟區，每個基礎本機層（集合體）各兩個，至 FlexGroup Volume fg1 ：
 
 [listing]
 ----
-cluster1::> volume expand -vserver vs1 -volume volX -aggr-list aggr1,aggr2
+cluster1::> volume expand -vserver svm1 -volume fg1 -aggr-list aggr1,aggr2 -aggr-list-multiplier 2
 ----
 新成員磁碟區的大小與現有成員磁碟區的大小相同。
