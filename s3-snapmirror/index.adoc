@@ -140,10 +140,16 @@ MetroCluster 環境不支援 SnapMirror S3 。
 
 建立新的儲存庫時、您可以建立使用者和群組來控制存取。
 
-雖然 SnapMirror S3 會將物件從來源貯體複寫到目的地貯體，但不會將群組和貯體原則從來源物件存放區複寫到目的地物件存放區。
+雖然 SnapMirror S3 會將物件從來源貯體複寫到目的地貯體，但不會將使用者，群組和原則從來源物件存放區複寫到目的地物件存放區。
 
 必須在目的地物件存放區上設定使用者，群組原則，權限及類似元件，以便用戶端在容錯移轉事件期間存取目的地儲存區。
 
+來源和目的地使用者可以使用相同的存取和秘密金鑰，前提是在目的地叢集上建立使用者時，必須手動提供來源金鑰。例如：
+
+[listing]
+----
+vserver object-store-server user create -vserver svm1 -user user1 -access-key "20-characters" -secret-key "40-characters"
+----
 如需詳細資訊、請參閱下列主題：
 
 * link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組（系統管理員）"]
