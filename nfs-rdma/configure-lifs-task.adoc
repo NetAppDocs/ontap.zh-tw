@@ -71,9 +71,15 @@ summary: 本文說明如何設定LIF（網路介面）以支援RDMA。
 .CLI
 --
 . 您可以使用檢查您的生命狀態 `network interface show` 命令。服務原則必須包含資料NFS網路介面服務。。 `-rdma-protocols` 清單應包含在內 `roce`。如果上述任一條件不正確、請修改LIF。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 若要修改LIF、請執行：
 +
 `network interface modify vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["指令參考資料ONTAP"^]需詳細 `network interface modify`資訊，請參閱。
 
 
 
@@ -97,7 +103,7 @@ ONTAP 也可讓您移轉網路介面（ Lifs ），以透過 RDMA 使用 NFS 。
 
 如需移轉網路介面的詳細資訊、請參閱 xref:../networking/migrate_a_lif.html[移轉LIF]。
 
-.更多資訊
+.相關資訊
 * xref:../networking/create_a_lif.html[建立LIF]
 * xref:../networking/create_a_lif.html[建立LIF]
 * xref:../networking/modify_a_lif.html[修改LIF]

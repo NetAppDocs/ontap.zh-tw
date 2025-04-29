@@ -46,6 +46,9 @@ SVM透過一或多個網路邏輯介面（LIF）、為用戶端提供資料服�
 +
 ** System Manager：從ONTAP 功能完善的9.12.0,開始檢視網路介面網格的處理量。
 ** CLI ：使用 `network interface capacity show` 命令和 LIF 容量、可透過使用在每個節點上支援 `network interface capacity details show` 命令（進階權限層級）。
++
+深入瞭解 `network interface capacity show`及 `network interface capacity details show` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface+capacity+show["指令參考資料ONTAP"^]。
+
 
 
 * 從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP
@@ -160,6 +163,9 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 +
 您也可以使用-autom-revert選項、指定LIF是否應自動還原為主節點和主連接埠。
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-revert.html["指令參考資料ONTAP"^]需詳細 `network interface revert`資訊，請參閱。
+
 ** `-home-port` 是 LIF 在時傳回的實體或邏輯連接埠 `network interface revert` 命令會在LIF上執行。
 ** 您可以使用指定 IP 位址 `-address` 和 `-netmask` 或是您可以使用從子網路進行分配 `-subnet_name` 選項。
 ** 使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。
@@ -197,6 +203,9 @@ Vserver   Interface  Admin/Oper Address/Mask    Node      Port    Home
 vs1
            lif1       up/up      10.0.0.128/24   node1     e0d     true
 ....
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 確認容錯移轉群組組態符合需求。
 +
 `network interface show -failover -vserver _vs1_`

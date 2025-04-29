@@ -23,6 +23,9 @@ NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF
 +
 `network interface show -service-policy default-intercluster`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 確保叢集間 LIF 包含 `backup-ndmp-control`以下服務：
 +
 `network interface service-policy show`
@@ -53,6 +56,9 @@ cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
 ----
 cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["指令參考資料ONTAP"^]需詳細 `network interface modify`資訊，請參閱。
+
 
 
 
@@ -73,6 +79,9 @@ Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
 cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
 cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 確保在叢集間的LIF上啟用NDMP的防火牆原則：
 +
 .. 使用驗證是否已啟用 NDMP 的防火牆原則 `system services firewall policy show` 命令。

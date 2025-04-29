@@ -64,7 +64,13 @@ vs1
 +
 「*容錯移轉目標*」欄位會顯示每個LIF的容錯移轉目標優先順序清單。例如、如果 'liL0' 從其主連接埠（ node0 上的 e0b ）容錯移轉、則會先嘗試容錯移轉至 node0 上的連接埠 e0c 。如果生命 0 無法容錯移轉至 e0c 、則會嘗試容錯移轉至 node0 上的連接埠 e0d 、依此類推。
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 如果將容錯移轉原則設定為 * 停用 * 作為任何生命（ SAN 生命期除外）、請使用 `network interface modify` 啟用容錯移轉的命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["指令參考資料ONTAP"^]需詳細 `network interface modify`資訊，請參閱。
+
 . 對於每個LIF、請確認「*容錯移轉目標*」欄位包含來自不同節點的資料連接埠、這些連接埠在LIF主節點升級時仍會保持正常運作。
 +
 您可以使用 `network interface failover-groups modify` 命令將容錯移轉目標新增至容錯移轉群組。

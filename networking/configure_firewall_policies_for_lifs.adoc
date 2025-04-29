@@ -48,7 +48,7 @@ summary: 防火牆原則可增強叢集的安全性
 
 LIF防火牆原則是用來限制透過每個LIF存取叢集。您需要瞭解預設防火牆原則如何影響每種LIF類型的系統存取、以及如何自訂防火牆原則以提高或降低LIF的安全性。
 
-使用設定 LIF 時 `network interface create` 或 `network interface modify` 命令、為指定的值 `-firewall-policy` 參數決定允許存取 LIF 的服務傳輸協定和 IP 位址。
+使用 OR `network interface modify` 命令設定 LIF 時 `network interface create`，為參數指定的值會決定允許存取 LIF 的 `-firewall-policy`服務傳輸協定和 IP 位址。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface["指令參考資料ONTAP"^]需詳細 `network interface`資訊，請參閱。
 
 在許多情況下、您可以接受預設的防火牆原則值。在其他情況下、您可能需要限制特定IP位址和特定管理服務傳輸協定的存取。可用的管理服務傳輸協定包括SSH、HTTP、HTTPS、Telnet、NTP、 NDMP、NDMPS、RSH, DNS及SNMP。
 
@@ -191,6 +191,9 @@ Portmap服務可在ONTAP 不間斷的情況下於更新版本中使用、ONTAP �
 `network interface modify -vserver _vserver_name_ -lif _lif_name_ -firewall-policy _policy_name_`
 
 . 使用確認原則已正確新增至 LIF `network interface show -fields firewall-policy` 命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 
 
 .建立防火牆原則並將其指派給 LIF 的範例
