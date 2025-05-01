@@ -31,8 +31,14 @@ summary: 您可以在 FlexVol 或 FlexClone 磁碟區中建立檔案和 LUN 的�
 
 當節點達到最大分割負載時、節點會暫時停止接受建立 FlexClone 檔案和 FlexClone LUN 的要求、並發出 `EBUSY` 錯誤訊息。當節點的分割負載低於最大值時、節點會再次接受建立FlexClone檔案和FlexClone LUN的要求。再次嘗試建立要求之前、您應該等到節點有建立複本的容量時再進行。
 
+FlexClone LUN繼承父LUN的空間保留屬性。空間保留的FlexClone LUN所需空間與空間保留的父LUN相同。如果FlexClone LUN未保留空間、則磁碟區必須有足夠的空間來容納對實體複本所做的變更。
+
 .步驟
-. 使用建立 FlexClone 檔案或 FlexClone LUN `volume file clone create` 命令。
+. 如果您要複製 LUN ，請確認 LUN 未對應或寫入。
+. 建立 FlexClone LUN 或檔案：
++
+`volume file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -destination-path _destination_path_`
+
 +
 以下範例說明如何在Volume vol1中建立父檔案file1_source的FlexClone檔案file1_clone：
 
@@ -46,5 +52,45 @@ cluster1::> volume file clone create -vserver vs0 -volume vol1 -source-path /fil
 
 
 
-.相關資訊
-link:../concepts/manual-pages.html["指令參考資料ONTAP"]
+
+
+== 從磁碟區中的快照建立 FlexClone LUN
+
+您可以在磁碟區中使用快照來建立 LUN 的 FlexClone 複本。LUN的FlexClone複本可讀取且可寫入。
+
+.您需要的產品
+必須安裝FlexClone授權。本授權隨附於link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+
+.關於這項工作
+FlexClone LUN繼承父LUN的空間保留屬性。空間保留的FlexClone LUN所需空間與空間保留的父LUN相同。如果FlexClone LUN未保留空間、則磁碟區必須有足夠的空間來容納對實體複本所做的變更。
+
+.步驟
+. 確認LUN未對應或寫入。
+. 建立包含 LUN 的磁碟區快照：
++
+`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
+
++
+您必須為要複製的 LUN 建立快照（備份快照）。
+
+. 從快照建立 FlexClone LUN ：
++
+`volume file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -snapshot-name _snapshot_name_ -destination-path _destination_path_`
+
++
+如果您需要 FlexClone LUN 才能自動刪除、請加入 `-autodelete true`。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+
+. 驗證FlexClone LUN是否正確：
++
+`lun show -vserver _vserver_name_`
+
++
+[listing]
+----
+
+Vserver Path                      State    Mapped    Type     Size
+------- ----------------------    -------- --------- -------- -------
+vs1     /vol/vol1/lun1_clone      online   unmapped windows   47.07MB
+vs1     /vol/vol1/lun1_snap_clone online   unmapped windows   47.07MB
+----
+

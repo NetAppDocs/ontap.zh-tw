@@ -18,8 +18,8 @@ summary: 您可以複製磁碟區和LUN、以建立複本進行測試、或是�
 [role="lead"]
 您可以複製磁碟區和LUN、以建立可寫入的暫存複本進行測試。  複本反映資料目前的時間點狀態。  您也可以使用複本、讓更多使用者存取資料、而不需讓他們存取正式作業資料。
 
-
-NOTE: FlexClone 授權應該是 https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["已安裝"] 儲存系統上的。
+.您需要的產品
+FlexClone 授權應該是 https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["已安裝"] 儲存系統上的。
 
 
 
@@ -41,9 +41,18 @@ NOTE: FlexClone 授權應該是 https://docs.netapp.com/us-en/ontap/system-admin
 
 == 複製LUN
 
-建立LUN的複本、如下所示：
+您可以透過複製作用中磁碟區中的LUN來建立LUN複本。這些FlexClone LUN是作用中磁碟區中原始LUN的可讀寫複本。
+
+空間保留的FlexClone LUN所需空間與空間保留的父LUN相同。如果FlexClone LUN未保留空間、您必須確保該磁碟區有足夠空間來容納FlexClone LUN的變更。
+
+
+NOTE: 此程序適用於 FAS 、 AFF 和目前的 ASA 系統。如果您有 ASA R2 系統（ ASA A1K ， ASA A90 ， ASA A70 ， ASA A50 ， ASA A30 或 ASA A20 ），請遵循link:https://docs.netapp.com/us-en/asa-r2/manage-data/data-cloning.html["這些步驟"^]以複製資料。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
 
 .步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
 . 單擊* Storage（儲存設備）> LUN*。
 . 按一下 image:icon_kabob.gif["功能表選項圖示"] 您要複製的 LUN 名稱旁的。
 . 從列表中選擇* Clone（克隆）*。
@@ -54,3 +63,43 @@ NOTE: FlexClone 授權應該是 https://docs.netapp.com/us-en/ontap/system-admin
 或者、您也可以從*總覽*複製LUN、以在檢視LUN詳細資料時顯示。
 
 建立LUN複製時、System Manager會在需要空間時自動刪除複本。
+
+--
+.CLI
+--
+. 在製作實體複本之前、您必須先確認LUN未對應至igroup或寫入。
+. 使用 `lun show` 用於驗證 LUN 是否存在的命令。
++
+`lun show -vserver vs1`
+
++
+[listing]
+----
+Vserver  Path              State     Mapped    Type     Size
+-------- ----------------- --------- --------- -------- -------
+vs1      /vol/vol1/lun1    online   unmapped  windows  47.07MB
+----
+. 使用 `volume file clone create` 建立 FlexClone LUN 的命令。
++
+`volume file clone create -vserver vs1 -volume vol1 -source-path lun1 -destination-path/lun1_clone`
+
++
+如果您需要 FlexClone LUN 才能自動刪除、請加入 `-autodelete true`。如果您使用半厚資源配置在磁碟區中建立此FlexClone LUN、則必須啟用所有FlexClone LUN的自動刪除功能。
+
+. 使用 `lun show` 用於驗證是否已建立 LUN 的命令。
++
+`lun show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver  Path                    State    Mapped   Type     Size
+-------- ----------------------- -------- -------- -------- ------
+vs1      /vol/volX/lun1          online   unmapped windows  47.07MB
+vs1      /vol/volX/lun1_clone    online   unmapped windows  47.07MB
+----
+
+
+--
+====

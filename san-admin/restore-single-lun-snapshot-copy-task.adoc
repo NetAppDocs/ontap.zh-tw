@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: restore, single lun, snapshot copy 
 summary: 您可以從快照還原單一 LUN ，而無需還原包含單一 LUN 的整個磁碟區。您可以將LUN還原到原位或磁碟區中的新路徑。此作業只會還原單一LUN、而不會影響磁碟區中的其他檔案或LUN。您也可以使用串流還原檔案。 
 ---
-= 從快照還原單一 LUN
+= 從 ONTAP 快照還原單一 LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -40,38 +40,41 @@ summary: 您可以從快照還原單一 LUN ，而無需還原包含單一 LUN �
 . 卸載主機上的LUN、使主機無法存取LUN。
 . 取消LUN對應：
 +
-`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-delete.html["指令參考資料ONTAP"^]需詳細 `lun mapping delete`資訊，請參閱。
-
+[source, cli]
+----
+lun mapping delete -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 決定您要將 LUN 還原至的快照：
 +
-`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM_name> -volume <volume_name>
+----
 . 在還原 LUN 之前建立 LUN 的快照：
 +
-`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
-
+[source, cli]
+----
+volume snapshot create -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name>
+----
 . 還原磁碟區中的指定LUN：
 +
-`volume snapshot restore-file -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_ -path _lun_path_`
-
+[source, cli]
+----
+volume snapshot restore-file -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name> -path <lun_path>
+----
 . 請依照畫面上的步驟進行。
 . 如有必要、請將LUN上線：
 +
-`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["指令參考資料ONTAP"^]需詳細 `lun modify`資訊，請參閱。
-
+[source, cli]
+----
+lun modify -vserver <SVM_name> -path <lun_path> -state online
+----
 . 如有必要、請重新對應LUN：
 +
-`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["指令參考資料ONTAP"^]需詳細 `lun mapping create`資訊，請參閱。
-
+[souce]
+----
+lun mapping create -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 從主機重新掛載LUN。
 . 從主機重新啟動對LUN的存取。
 

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: use, flexclone, luns, protect, your, data 
 summary: FlexClone LUN 是作用中磁碟區或快照中另一個 LUN 的時間點可寫入複本。可獨立修改實體複本及其父複本、而不會影響彼此。 
 ---
-= 使用FlexClone LUN來保護您的資料總覽
+= 使用 ONTAP FlexClone LUN 保護您的資料
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -12,6 +12,16 @@ summary: FlexClone LUN 是作用中磁碟區或快照中另一個 LUN 的時間�
 
 [role="lead"]
 FlexClone LUN 是作用中磁碟區或快照中另一個 LUN 的時間點可寫入複本。可獨立修改實體複本及其父複本、而不會影響彼此。
+
+您可以使用FlexClone LUN來建立LUN的多個讀寫複本。
+
+.建立 FlexClone LUN 的理由
+* 您需要建立LUN的暫用複本、以供測試之用。
+* 您必須為其他使用者提供一份資料複本、而不讓他們存取正式作業資料。
+* 您想要建立資料庫的複本、以便進行操作和投影作業、同時以未變更的形式保留原始資料。
+* 您想要存取LUN資料的特定子集（磁碟區群組中的特定邏輯磁碟區或檔案系統、 或檔案系統中的特定檔案或檔案集）、然後複製到原始LUN、而不還原原始LUN中的其餘資料。這適用於支援同時掛載LUN和LUN複本的作業系統。SnapDrive for UNIX 支援此功能 `snap connect` 命令。
+* 您需要使用相同作業系統的多個SAN開機主機。
+
 
 FlexClone LUN最初與其父LUN共享空間。根據預設、FlexClone LUN會繼承父LUN的空間保留屬性。例如、如果父LUN為非保留空間、則FlexClone LUN預設也不會保留空間。不過、您可以從父LUN（空間保留LUN）建立非空間保留的FlexClone LUN。
 
@@ -27,4 +37,7 @@ FlexClone LUN最初與其父LUN共享空間。根據預設、FlexClone LUN會繼
 
 ====
 .相關資訊
-link:../volumes/index.html["邏輯儲存管理"]
+* link:../volumes/create-flexclone-file-flexclone-lun-task.html["建立 FlexClone LUN"]
+* link:../volumes/configure-flexvol-delete-flexclone-files-luns-task.html["設定 FlexVol volume 以自動刪除 FlexClone LUN"]
+* link:../volumes/prevent-flexclone-file-lun-automatic-deleted-task.html["防止自動刪除 FlexClone LUN"]
+

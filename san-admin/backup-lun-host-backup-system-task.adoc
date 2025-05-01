@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: back up, lun, through, host, backup, system 
 summary: 您可以使用快照中的複製 LUN 做為主機備份系統的來源資料。 
 ---
-= 透過主機備份系統備份LUN
+= 使用主機備份系統來保護 ONTAP 儲存系統上的 LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,52 +21,54 @@ summary: 您可以使用快照中的複製 LUN 做為主機備份系統的來源
 +
 您可以使用主機作業系統提供的命令、也可以使用SnapDrive 適用於Windows的支援功能或SnapDrive 適用於UNIX的支援功能。您也可以選擇將此步驟納入SAN備份預先處理指令碼。
 
-. 使用 `volume snapshot create`命令建立正式作業 LUN 的快照。
+. 建立正式作業 LUN 的快照。
 +
-`volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment "Single snapshot" -foreground false`
-
-. 使用 `volume file clone create` 建立正式作業 LUN 複本的命令。
+[source, cli]
+----
+volume snapshot create -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot> -comment <comment> -foreground false
+----
+. 建立正式作業 LUN 的複本。
 +
-`volume file clone create -vserver vs3 -volume vol3 -source-path lun1 -snapshot-name snap_vol3 -destination-path lun1_backup`
-
-. 使用 `lun igroup create` 建立包含備份伺服器 WWPN 的 igroup 命令。
+[source, cli]
+----
+volume file clone create -vserver <SMV_name> -volume <volume> -source-path <path> -snapshot-name <snapshot> -destination-path <destination_path>
+----
+. 建立包含備份伺服器 WWPN 的 igroup 。
 +
-`lun igroup create -vserver vs3 -igroup igroup3 -protocol fc -ostype windows -initiator 10:00:00:00:c9:73:5b:91`
-
+[source, cli]
+----
+lun igroup create -vserver <SVM_name> -igroup <igroup> -protocol <protocol> -ostype <os_type> -initiator <initiator>
+----
+. 將您在步驟 3 中建立的 LUN 複本對應到備份主機。
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-igroup-create.html["指令參考資料ONTAP"^]需詳細 `lun igroup create`資訊，請參閱。
-
-. 使用 `lun mapping create` 命令、將您在步驟 3 中建立的 LUN 複本對應至備份主機。
-+
-`lun mapping create -vserver vs3 -volume vol3 -lun lun1_backup -igroup igroup3`
-
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup>
+----
 +
 您可以選擇將此步驟納入SAN備份應用程式的後處理指令碼。
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["指令參考資料ONTAP"^]需詳細 `lun mapping create`資訊，請參閱。
 
 . 從主機探索新的LUN、並讓主機使用檔案系統。
 +
 您可以選擇將此步驟納入SAN備份應用程式的後處理指令碼。
 
 . 使用SAN備份應用程式、將LUN實體複製中的資料從備份主機備份到磁帶。
-. 使用 `lun modify` 命令將 LUN 複製作業離線。
+. 將 LUN 複製作業離線。
 +
-`lun modify -vserver vs3 -path /vol/vol3/lun1_backup -state offline`
-
+[source, cli]
+----
+lun modify -vserver <SVM_name> -path <path> -state offline
+----
+. 移除 LUN 複本。
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["指令參考資料ONTAP"^]需詳細 `lun modify`資訊，請參閱。
-
-. 使用 `lun delete` 移除 LUN 複本。
+[source, cli]
+----
+lun delete -vserver <SVM_name> -volume <volume> -lun <lun_name>
+----
+. 移除快照。
 +
-`lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-delete.html["指令參考資料ONTAP"^]需詳細 `lun delete`資訊，請參閱。
-
-. 使用 `volume snapshot delete`命令移除快照。
-+
-`volume snapshot delete -vserver vs3 -volume vol3 -snapshot vol3_snapshot`
-
+[source, cli]
+----
+volume snapshot delete -vserver <SVM_name> -volume <volume> -snapshot <snapshot>
+----
 

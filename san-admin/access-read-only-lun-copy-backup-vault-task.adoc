@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: access, read-only, lun, copy, snapvault, backup 
 summary: 您可以從 SnapVault 備份中的最新快照存取 LUN 的唯讀複本。LUN ID、路徑和序號與來源LUN不同、必須先對應。持續保留、LUN對應和igroup不會複寫到SnapVault 位元二的Volume。 
 ---
-= 從SnapVault 一個不完整的備份中存取唯讀LUN複本
+= 從 ONTAP SnapVault 備份存取唯讀 LUN 複本
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -26,7 +26,12 @@ summary: 您可以從 SnapVault 備份中的最新快照存取 LUN 的唯讀複�
 如果在從先前快照對應 LUN 時，新快照已新增至 SnapVault 次要磁碟區，則對應 LUN 的內容會變更。LUN 仍會以相同的識別碼對應，但資料是從新的快照擷取。如果LUN大小變更、部分主機會自動偵測大小變更；Windows主機需要重新掃描磁碟、才能接收任何大小變更。
 
 .步驟
-. 執行 `lun show` 命令列出 SnapVault 次要磁碟區中的可用 LUN 。
+. 列出 SnapVault 次要磁碟區中的可用 LUN 。
++
+[source, cli]
+----
+lun show
+----
 +
 在此範例中、您可以同時查看主要Volume srcvolA中的原始LUN、SnapVault 以及《支援還原的次要Volume dstvolB：
 
@@ -49,7 +54,12 @@ vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
 
-. 如果所需主機的 igroup 尚未存在於包含 SnapVault 次要 Volume 的 SVM 上、請執行 `igroup create` 建立 igroup 的命令。
+. 如果包含 SnapVault 次要 Volume 的 SVM 上尚未存在所需主機的 igroup ，請建立 igroup 。
++
+[source, cli]
+----
+igroup create -vserver <SVM_name> -igroup <igroup_name> -protocol <protocol> -ostype <ostype> -initiator <initiator_name>
+----
 +
 此命令會為使用iSCSI傳輸協定的Windows主機建立igroup：
 
@@ -60,7 +70,12 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 執行 `lun mapping create` 將所需 LUN 複本對應至 igroup 的命令。
+. 將所需的 LUN 複本對應至 igroup 。
++
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -path <LUN_path> -igroup <igroup_name>
+----
 +
 [listing]
 ----

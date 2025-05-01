@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: restore, all, luns in a volume, from, snapshot copy 
 summary: 您可以使用 Volume Snapshot Restore 命令，從快照還原指定磁碟區中的所有 LUN 。 
 ---
-= 從快照還原磁碟區中的所有 LUN
+= 從 ONTAP 快照還原磁碟區中的所有 LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,49 +21,54 @@ summary: 您可以使用 Volume Snapshot Restore 命令，從快照還原指定�
 . 卸載該主機上的LUN、使主機無法存取LUN。
 . 取消對應LUN：
 +
-`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-delete.html["指令參考資料ONTAP"^]需詳細 `lun mapping delete`資訊，請參閱。
-
+[source, cli]
+----
+lun mapping delete -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 決定您要還原磁碟區的快照：
 +
-`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
+[source, cli]
+----
+volume snapshot show -vserver <SVM_name> -volume <volume_name>
 
+----
 . 將您的權限設定變更為進階：
 +
-`set -privilege advanced`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 還原資料：
 +
-`volume snapshot restore -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name>
+----
 . 請依照畫面上的指示操作。
 . 重新對應LUN：
 +
-`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["指令參考資料ONTAP"^]需詳細 `lun mapping create`資訊，請參閱。
-
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 驗證LUN是否處於線上狀態：
 +
-`lun show -vserver _vserver_name_ -path _lun_path_ -fields state`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
-
+[source, cli]
+----
+lun show -vserver <SVM_name> -path <lun_path> -fields state
+----
 . 如果LUN不在線上、請將其上線：
 +
-`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["指令參考資料ONTAP"^]需詳細 `lun modify`資訊，請參閱。
-
+[source, cli]
+----
+lun modify -vserver <SVM_name> -path <lun_path> -state online
+----
 . 將您的權限設定變更為admin：
 +
-`set -privilege admin`
-
+[source, cli]
+----
+set -privilege admin
+----
 . 從主機重新掛載LUN。
 . 從主機重新啟動對LUN的存取。
 

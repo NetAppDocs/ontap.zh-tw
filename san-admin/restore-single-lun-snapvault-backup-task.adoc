@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap 9.2, restore, single, lun, snapvault backup 
 summary: 您可以將單一LUN還原至新位置或原始位置。您可以從 SnapVault 次要 Volume 中的任何快照還原。若要將LUN還原至原始位置、請先將其還原至新位置、然後再將其複製。 
 ---
-= 從SnapVault 一個不完整的備份還原單一LUN
+= 從 ONTAP SnapVault 備份還原單一 LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -25,7 +25,12 @@ summary: 您可以將單一LUN還原至新位置或原始位置。您可以從 S
 實體複本中的LUN路徑和序號與原始LUN不同。不保留持續保留。
 
 .步驟
-. 執行 `snapmirror show` 用於驗證包含 SnapVault 備份的次要磁碟區的命令。
+. 驗證包含 SnapVault 備份的次要磁碟區。
++
+[source, cli]
+----
+snapmirror show
+----
 +
 [listing]
 ----
@@ -39,7 +44,12 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 執行 `volume snapshot show`命令以識別您要從中還原 LUN 的快照。
+. 識別您要從其中還原 LUN 的快照。
++
+[source, cli]
+----
+volume snapshot show
+----
 +
 [listing]
 ----
@@ -53,7 +63,12 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 執行 `volume clone create`命令，從所需的快照建立讀寫複本。
+. 從所需的快照建立讀寫複本
++
+[source, cli]
+----
+volume clone create -vserver <SVM_name> -flexclone <flexclone_name> -type <type> -parent-volume <parent_volume_name> -parent-snapshot <snapshot_name>
+----
 +
 磁碟區複製是以SnapVault 相同的Aggregate建立、如同使用支援功能進行備份。集合體中必須有足夠的空間來儲存實體複本。
 
@@ -65,7 +80,12 @@ cluster::> volume clone create -vserver vserverB
   -parent-snapshot daily.2013-02-10_0010
 [Job 108] Job succeeded: Successful
 ----
-. 執行 `lun show` 命令列出 Volume Clone 中的 LUN 。
+. 列出磁碟區複製中的 LUN 。
++
+[source, cli]
+----
+lun show -vserver <SVM_name> -volume <flexclone_volume_name>
+----
 +
 [listing]
 ----
@@ -82,7 +102,12 @@ vserverB  /vol/dstvolB_clone/lun_C  online  unmapped windows
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["指令參考資料ONTAP"^]需詳細 `lun show`資訊，請參閱。
 
-. 如果所需主機的 igroup 尚未存在於包含 SnapVault 備份的 SVM 上、請執行 `igroup create` 建立 igroup 的命令。
+. 如果包含 SnapVault 備份的 SVM 上尚未存在所需主機的 igroup ，請建立 igroup 。
++
+[source, cli]
+----
+igroup create -vserver <SVM_name> -igroup <igroup_name> -protocol <protocol> -ostype <os_type> -initiator <initiator_name>
+----
 +
 此範例為使用iSCSI傳輸協定的Windows主機建立igroup：
 
@@ -93,7 +118,12 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 執行 `lun mapping create` 將所需 LUN 複本對應至 igroup 的命令。
+. 將所需的 LUN 複本對應至 igroup 。
++
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -path <lun_path> -igroup <igroup_name>
+----
 +
 [listing]
 ----
