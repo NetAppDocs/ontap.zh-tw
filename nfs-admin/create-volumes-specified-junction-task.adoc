@@ -2,7 +2,7 @@
 permalink: nfs-admin/create-volumes-specified-junction-task.html 
 sidebar: sidebar 
 keywords: create, data, volume, specify, junction, point 
-summary: 您可以在建立資料Volume時指定交會點。結果Volume會自動掛載於交會點、並可立即設定以進行NAS存取。 
+summary: 建立資料磁碟區，以便將磁碟區自動掛載到連接點，並立即可供設定以進行 NAS 存取。 
 ---
 = 在 ONTAP 中建立具有指定交會點的資料磁碟區
 :allow-uri-read: 
@@ -22,16 +22,17 @@ summary: 您可以在建立資料Volume時指定交會點。結果Volume會自�
 
 
 
-NOTE: 下列字元無法用於交會路徑：*#"><|？\
+NOTE: 下列字元無法用於連接路徑： `*` `#` `"` `>` `<` `|` `?` `\`
 
-+
 此外、交會路徑長度不得超過255個字元。
 
 .步驟
 . 建立具有交會點的Volume：
 +
-`volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path _junction_path_`
-
+[source, cli]
+----
+volume create -vserver <vserver_name> -volume <volume_name> -aggregate <aggregate_name> -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path <junction_path>
+----
 +
 交會路徑必須以根（/）開頭、且可同時包含目錄和輔助磁碟區。交會路徑不需要包含磁碟區名稱。交會路徑與磁碟區名稱無關。
 
@@ -46,12 +47,14 @@ NOTE: 下列字元無法用於交會路徑：*#"><|？\
 
 . 確認已使用所需的交會點建立磁碟區：
 +
-`volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
-
+[source, cli]
+----
+volume show -vserver <vserver_name> -volume <volume_name> -junction
+----
 
 
 .範例
-以下範例建立一個名為「 'home4' 」的 Volume 、該 Volume 位於 SVM VS1 上、且具有交會路徑 `/eng/home`：
+以下範例建立一個名為 SVM VS1 的磁碟區，該磁碟區 `home4`具有連接路徑 `/eng/home`：
 
 [listing]
 ----

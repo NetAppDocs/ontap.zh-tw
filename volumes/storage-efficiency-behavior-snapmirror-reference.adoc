@@ -1,7 +1,7 @@
 ---
 permalink: volumes/storage-efficiency-behavior-snapmirror-reference.html 
 sidebar: sidebar 
-keywords: storage, efficiency, temperature, change, efficient, snapmirror, volume, move 
+keywords: storage, fabricpool, efficiency, temperature, change, efficient, snapmirror, volume, move 
 summary: 儲存效率行為可能會受到其他作用中或同時啟動的儲存作業影響。 
 ---
 = Volume Move 和 SnapMirror 作業的儲存效率行為
@@ -13,7 +13,15 @@ summary: 儲存效率行為可能會受到其他作用中或同時啟動的儲�
 [role="lead"]
 儲存效率的行為可能會受到其他作用中或同時啟動的儲存作業影響。您應該瞭解這些作業對儲存效率的影響。
 
-在某些情況下、磁碟區上的儲存效率可能會受到其他作業的影響。這包括當您執行 Volume Move 或 SnapMirror 作業時、以及當您執行 SnapMirror 中斷並手動啟用對溫度敏感的儲存效率（ TSSE ）時會發生什麼情況、取決於來源 Volume 的效率類型。
+在某些情況下link:enable-temperature-sensitive-efficiency-concept.html["對溫度敏感的儲存效率（ TSSE ）"]，磁碟區上的儲存效率可能會受到其他作業的影響，包括 Volume Moves ， SnapMirror 關係， FabricPool Volume 和。
+
+
+
+== FabricPool
+
+ `all`資料保護磁碟區通常會使用分層原則，以立即將資料標記為冷資料，並儘快分層。在資料變得冷且分層之前，無需等待至少幾天的時間。
+
+由於分層原則會盡快分層資料，因此 `all`仰賴背景處理程序（例如 32K 高效調適式壓縮（ TSSE ））的儲存效率，沒有足夠的時間來應用。像 8K 壓縮一樣的即時儲存效率，也會正常套用。
 
 下表說明執行其中一項作業時、來源 Volume 和目的地 Volume 的行為。
 
