@@ -2,7 +2,7 @@
 permalink: flexgroup/create-task.html 
 sidebar: sidebar 
 keywords: create, flexgroup, volume, flex group, aggregate, fabricpool, fabric pool 
-summary: 您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁碟區的集合體、然後在每個集合體上指定組成數量、藉此建立一個靜態磁碟區。 
+summary: 您可以手動選取要在其中建立 FlexGroup 磁碟區的本機層（集合體），然後指定每個本機層上的成員磁碟區數量，來建立 FlexGroup 磁碟區。 
 ---
 = 建立 ONTAP FlexGroup Volume
 :allow-uri-read: 
@@ -11,33 +11,35 @@ summary: 您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁
 
 
 [role="lead"]
-您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁碟區的集合體、然後在每個集合體上指定組成數量、藉此建立一個靜態磁碟區。
+您可以手動選取必須在其中建立 FlexGroup 磁碟區的本機層（集合體），然後指定每個本機層上的成員磁碟區（組成）數量，來建立 FlexGroup 磁碟區。
+
+或者，您也可以選擇 ONTAP link:provision-automatically-task.html["自動配置"]the FlexGroup Volume ，方法是選取本機層，並讓 ONTAP 根據最佳實務做法來設定成員磁碟區的數量，以達到最佳效能和容量。
 
 .關於這項工作
-您必須注意到集合體中建立FlexGroup 一個聲音量所需的空間。
+您必須知道在本機層中建立 FlexGroup Volume 所需的空間。
 
 建立FlexGroup 一套用於FlexGroup 實現最佳效能結果的功能集區時、您必須考量下列準則：
 
-* 僅能跨越相同硬體系統上的集合體。FlexGroup
+* FlexGroup 磁碟區應使用位於相同硬體系統上的本機層。
 +
 使用相同的硬體系統、有助於在FlexGroup 整個VMware Volume中提供可預測的效能。
 
-* 一個包含相同磁碟類型和RAID群組組組態的支援區塊。FlexGroup
+* FlexGroup 磁碟區應使用相同的磁碟類型和 RAID 群組組組態跨越本機層。
 +
-若要獲得一致的效能、您必須確保所有的集合體都是由所有SSD、所有HDD或所有混合式集合體所組成。此外、整合應該擁有FlexGroup 相同數量的磁碟機和RAID群組、橫跨整個Sidvolume。
+為了達到一致的效能，您必須確保所有的本機層都是由所有 SSD ，所有 HDD 或所有 Flash Pool （混合式）本機層所組成。此外，本機層在 FlexGroup 磁碟區中的磁碟機和 RAID 群組數量應相同。
 
 * 一個可跨越叢集的部分的供應量。FlexGroup
 +
 不需要將一個穩定磁碟區設定為橫跨整個叢集、但這樣做可以更充分地利用可用的硬體資源。FlexGroup
 
-* 建立FlexGroup 一個流通量時、最好是FlexGroup 將部署該功能的集合體具備下列特性：
+* 建立 FlexGroup Volume 時，最好是部署 FlexGroup Volume 的本機層具有下列特性：
 +
-** 在多個集合體中、可用空間應大致相同、尤其是使用精簡配置時。
-** 建立FlexGroup 完這個功能後、約有3%的可用空間應保留給集合體中繼資料。
+** 在多個本機層中，可用空間應大致相同，尤其是在使用精簡配置時。
+** 在建立 FlexGroup Volume 之後，應保留約 3% 的可用空間給本機層中繼資料。
 
 
-* 對於僅供使用的系統、最好是每個節點有兩個Aggregate、而對於僅供使用的系統、則每個節點必須有一個Aggregate才能使用此功能。FAS AFF FlexGroup
-* 對於每FlexGroup 個支援區塊、您至少應該建立八個分佈在FAS 兩個以上的支援區塊上的支援區塊、以及AFF 在一個或多個支援區塊上的支援區塊上的支援區塊。
+* 對於 FAS 系統，最好每個節點有兩個本機層，對於 AFF 系統，每個節點必須有一個本機層，才能用於 FlexGroup Volume 。
+* 對於每個 FlexGroup Volume ，您應該建立至少八個成員磁碟區，這些磁碟區分佈在 FAS 系統上的兩個或多個本機層，以及 AFF 系統上的一或多個本機層上。
 
 
 .開始之前
@@ -48,23 +50,21 @@ summary: 您可以FlexGroup 手動選取FlexGroup 必須在其中建立該等磁
 
 
 .步驟
-. 建立 FlexGroup Volume ： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name]`
+. 建立 FlexGroup Volume ： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]`
 +
-** 。 `-aggr-list` 參數指定用於 FlexGroup Volume 組成的集合體清單。
+** 此 `-aggr-list`參數指定用於 FlexGroup 成員磁碟區的本機層清單。
 +
-清單中的每個項目都會在指定的Aggregate上建立一個組成項目。您可以多次指定集合體、以便在集合上建立多個成員。
+為了在 FlexGroup 磁碟區中保持一致的效能，所有本機層都必須使用相同的磁碟類型和 RAID 群組組組態。
 
-+
-為了在FlexGroup 整個Singfuse Volume中提供一致的效能、所有的集合體都必須使用相同的磁碟類型和RAID群組組組態。
-
-** 。 `-aggr-list-multiplier` 參數會指定在所列的集合體上重複的次數 `-aggr-list` 建立 FlexGroup Volume 時的參數。
+** 此 `-aggr-list-multiplier`參數指定將在每個與參數一起列出的本機層上建立的成員磁碟區數量 `-aggr-list`。
 +
 的預設值 `-aggr-list-multiplier` 參數為 4 。
 
 ** 。 `size` 參數指定 FlexGroup 磁碟區大小、單位為 KB 、 MB 、 GB 、 TB 或 PB 。
-** 從功能完整的S59.5開始ONTAP 、您可以建立FlexGroup 僅FabricPool 使用所有SSD集合體的功能不只適用於功能完整的功能。
+** 從 ONTAP 9.16.1 開始，您可以 (`-granular-data advanced`在 CLI 中啟用link:../enable-adv-capacity-flexgroup-task.html["進階容量平衡"]），在檔案大於 10GB 時，在多個 FlexGroup 成員磁碟區中寫入資料。
+** 從 ONTAP 9.5 開始，您可以使用啟用 FabricPool 的本機層來建立 FlexGroup Volume 。
 +
-若要為 FabricPool 建立 FlexGroup Volume 、請使用指定的所有集合體 `-aggr-list` 參數必須是 FabricPool 。Volume 保證一律必須設定為 `none` 適用於 FabricPool 。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
+若要為 FabricPool 建立 FlexGroup Volume ，使用參數指定的所有本機層都 `-aggr-list`必須啟用 FabricPool 。使用 FabricPool 時，必須一律將 Volume 保證設定為 `none`。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
 
 +
 xref:../disks-aggregates/index.html[磁碟與Aggregate管理]
@@ -101,7 +101,7 @@ Do you want to continue? {y|n}: y
 ----
 
 
-在前一個範例中、如果您想要建立FlexGroup 適用於Oracle的支援區、FabricPool 則所有的集合體（aggr1、aggr2和aggr3）都必須在FabricPool 支援區內集合體。使用連接路徑掛載 FlexGroup Volume ： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+在上一個範例中，如果您要為 FabricPool 建立 FlexGroup Volume ，則所有本機層（ aggr1 ， aggr2 和 aggr3 ）都必須啟用 FabricPool 。使用連接路徑掛載 FlexGroup Volume ： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
 
 [listing]
 ----

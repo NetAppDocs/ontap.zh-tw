@@ -2,7 +2,7 @@
 permalink: flexgroup/provision-automatically-task.html 
 sidebar: sidebar 
 keywords: provision, flexgroup, volume, automatic, create, flex group, aggregate, space 
-summary: 建立 FlexGroup Volume 時、您可以選擇讓 ONTAP 自動選取集合體來配置 FlexGroup Volume 。根據最佳實務做法來選擇集合體、以獲得最佳效能。 
+summary: 建立 FlexGroup Volume 時，您可以選擇讓 ONTAP 自動選取本機層（集合體）來配置 FlexGroup Volume 。本機層是根據最佳實務做法來選擇，以達到最佳效能。 
 ---
 = 自動配置 ONTAP FlexGroup Volume
 :allow-uri-read: 
@@ -11,28 +11,31 @@ summary: 建立 FlexGroup Volume 時、您可以選擇讓 ONTAP 自動選取集�
 
 
 [role="lead"]
-建立 FlexGroup Volume 時、您可以選擇讓 ONTAP 透過選取集合體來自動佈建 FlexGroup Volume 。集合體是根據最佳實務做法來選取、以達到最佳效能和容量。
+建立 FlexGroup Volume 時，您可以選擇讓 ONTAP 透過選取基礎本機層（集合體）來自動佈建 FlexGroup Volume 。本機層是根據最佳實務做法來選擇，以達到最佳效能和容量。
 
 .開始之前
-叢集中的每個節點必須至少有一個Aggregate。
+叢集中的每個節點必須至少有一個本機層。
 
 [NOTE]
 ====
-若要建立FlexGroup 適用於FabricPool 支援支援的支援功能、ONTAP 每個節點必須至少有一個FabricPool 支援功能的Aggregate。
+建立將分層儲存非使用中資料的 FlexGroup Volume 時，每個節點必須至少有一個本機層，且已啟用 FabricPool 。
 
 ====
 .關於這項工作
-在每個節點上、利用最多可用空間選取兩個集合體、以建立此現象。ONTAP FlexGroup如果兩個集合體無法使用、ONTAP 則每個節點選擇一個集合體來建立FlexGroup 這個卷。
+ONTAP 會選取兩個本機層，每個節點上可用空間最大，以建立 FlexGroup Volume 。如果兩個本機層不可用， ONTAP 會為每個節點選取一個本機層，以建立 FlexGroup Volume 。
 
-從 ONTAP 9.15.1 開始、當您自動佈建 FlexGroup Volume 時、 ONTAP 會使用平衡放置（ BP ）來選擇集合體和 FlexGroup 組成配置。BP 的一個層面是在建立「無」保證的 FlexGroup Volume 時、它如何限制過度資源配置的集合體。整體 FlexGroup 磁碟區的大小受限於集合體上的可用空間量、但限制高於「 Volume 」保證的 FlexGroup 磁碟區。當您使用 REST API 或 ONTAP CLI 建立 FlexGroup Volume `auto-provision-as` 時、資源配置可能會因為空間不足而失敗、因為這種限制。您可以建立較小的 FlexGroup 磁碟區、或使用參數來避免這種 link:create-task.html["建立 FlexGroup Volume 並手動選取集合體"] `aggr-list` 情況。
+從 ONTAP 9.15.1 開始，當您自動配置 FlexGroup Volume 時， ONTAP 會使用平衡放置（ BP ）來選擇本機層和 FlexGroup 成員（組成） Volume 配置。BP 的一個層面是在建立「無」保證（精簡配置）的 FlexGroup 磁碟區時，它如何限制過度資源配置的本機層。整體 FlexGroup 磁碟區的大小受限於本機層的可用空間量，但限制高於保證「 Volume 」（磁碟區）（完整配置）的 FlexGroup 磁碟區。當您使用 REST API 或 ONTAP CLI 建立 FlexGroup Volume `auto-provision-as` 時、資源配置可能會因為空間不足而失敗、因為這種限制。您可以建立較小的 FlexGroup 磁碟區、或使用參數來避免這種 link:create-task.html["建立 FlexGroup Volume 並手動選取本機層"] `aggr-list` 情況。
 
 .步驟
 . 配置FlexGroup 供應功能：
 +
-`volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true]`
+`volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true] [-granular-data advanced]`
 
 +
-從功能性的9.5開始ONTAP 、您就能建立FlexGroup 適用於FabricPool 功能性的若要在 FabricPool 上自動佈建 FlexGroup 磁碟區、您必須設定 `-support-tiering` 參數至 `true`。Volume 保證一律必須設定為 `none` 適用於 FabricPool 。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
+從 ONTAP 9.16.1 開始，您可以 (`-granular-data advanced`在 CLI 中啟用link:../enable-adv-capacity-flexgroup-task.html["進階容量平衡"]），在檔案大於 10GB 時，在多個 FlexGroup 成員磁碟區中寫入資料。
+
++
+從 ONTAP 9.5 開始，您可以在啟用 FabricPool 的本機層上建立 FlexGroup 磁碟區。若要在啟用 FabricPool 的本機層上自動佈建 FlexGroup Volume ，您必須將參數設定 `-support-tiering`為 `true`。磁碟區保證一律必須設定為 `none` for FabricPool 。您也可以指定FlexGroup 針對該卷的分層原則和分層最低冷卻期。
 
 +
 link:../disks-aggregates/index.html["磁碟與Aggregate管理"]
@@ -86,7 +89,7 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
-以下範例說明如何將FlexGroup 尺寸400 TB的S25 Volume配置到FabricPool 位在畫面上的整個畫面ONTAP 上、以供參考。
+以下範例說明如何在啟用 FabricPool 的本機層上，配置大小為 400 TB 的 FlexGroup Volume ：
 
 +
 [listing]
@@ -98,7 +101,7 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
-建立此解決方案時、叢集中的每個節點都會有八個組成要素。FlexGroup這些成員會平均分散在每個節點上兩個最大的集合體之間。
+FlexGroup 磁碟區是在叢集中的每個節點上建立，每個節點上有八個成員磁碟區。成員磁碟區會在每個節點上兩個最大的本機層之間平均分配。
 
 +
 根據預設、 FlexGroup Volume 是使用建立的 `volume` 空間保證設定、 AFF 系統除外。對於 AFF 系統、依預設會使用建立 FlexGroup Volume `none` 空間保證。
