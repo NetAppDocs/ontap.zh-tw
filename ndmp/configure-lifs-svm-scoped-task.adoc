@@ -34,6 +34,9 @@ NOTE: 從ONTAP S振 分9.10.1開始、防火牆原則已過時、並完全由LIF
 +
 `network interface service-policy show`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-service-policy-show.html["指令參考資料ONTAP"^]需詳細 `network interface service-policy show`資訊，請參閱。
+
 . 請確定已針對所有生命期適當設定容錯移轉原則：
 +
 .. 確認叢集管理 LIF 的容錯移轉原則已設定為 `broadcast-domain-wide`，而叢集間和節點管理階層的原則則設定為 `local-only` 使用 `network interface show -failover` 命令。
@@ -144,6 +147,9 @@ Vserver     Interface         Admin/Oper Address/Mask    Node          Port    H
 cluster1    cluster1-1_mgmt1  up/up      192.0.2.69/24   cluster1-1    e0M     true
             cluster1-2_mgmt1  up/up      192.0.2.70/24   cluster1-2    e0M     true
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
+
 . 確保已爲羣集間 NDMP 、羣集管理(`cluster-mgmt`和節點管理(`node-mgmt`（）生命體上的 NDMP 啓用防火牆策略：
 +
 .. 使用驗證是否已啟用 NDMP 的防火牆原則 `system services firewall policy show` 命令。
@@ -262,6 +268,9 @@ cluster1-2 cluster1-2_mgmt1   cluster1-2:e0m    local-only            Default
 ----
 cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["指令參考資料ONTAP"^]需詳細 `network interface modify`資訊，請參閱。
+
 
 
 . 使用指定資料連線所需的生命 `vserver services ndmp modify` 命令 `preferred-interface-role` 參數。

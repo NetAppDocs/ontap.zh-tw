@@ -82,6 +82,8 @@ NOTE: 您不應該在網路介面上建立與交換器原生VLAN相同識別碼�
 
 在某些情況下、如果您想要在效能降低的連接埠上建立 VLAN 連接埠、而不修正硬體問題或任何軟體組態錯誤、則可以設定 `-ignore-health-status` 的參數 `network port modify` 命令為 `true`。
 
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-modify.html["指令參考資料ONTAP"^]需詳細 `network port modify`資訊，請參閱。
+
 .步驟
 . 使用 `network port vlan create` 建立 VLAN 的命令。
 . 您必須指定 `vlan-name` 或 `port` 和 `vlan-id` 建立 VLAN 的選項。
@@ -95,7 +97,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 ....
 從ONTAP 功能更新到功能更新的版本開始、VLAN會在建立後約一分鐘自動放入適當的廣播網域。如果您不想讓 ONTAP 這麼做、而偏好手動將 VLAN 放入廣播網域、請指定 `-skip-broadcast-domain-placement` 參數為的一部分 `vlan create` 命令。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/network-port-vlan-create.html["指令參考資料ONTAP"^]需詳細 `vlan create`資訊，請參閱。
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-vlan-create.html["指令參考資料ONTAP"^]需詳細 `network port vlan create`資訊，請參閱。
 
 --
 ====
