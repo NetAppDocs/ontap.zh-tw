@@ -71,7 +71,7 @@ NOTE: AutoSupport OnDemand 預設為啟用，設定為使用 HTTPS 傳輸通訊�
 .步驟
 [role="tabbed-block"]
 ====
-.ONTAP 9.16.1 及更新版本
+.System Manager - ONTAP 9.16.1 及更新版本
 --
 . 在System Manager中、選取*叢集>設定*。
 . 如果您未啟用 AutoSupport 隨需模式與 HTTPS ，請選取image:icon_kabob.gif["功能表選項圖示"]以啟用繼續所需的設定。
@@ -84,12 +84,23 @@ NOTE: AutoSupport OnDemand 預設為啟用，設定為使用 HTTPS 傳輸通訊�
 
 
 --
-.ONTAP 9.15.1 及更早版本
+.System Manager - ONTAP 9.15.1 及更早版本
 --
 . 在 System Manager 中，選取 * 事件 * 。
 . 在 * 總覽 * 區段的 * 啟用自動更新 * 旁，選取 * 動作 > 啟用 * 。
 . 如果您沒有啟用 HTTPS 的 AutoSupport ，請選取以啟用。
 . 接受條款與條件、然後選取 * 儲存 * 。
+
+
+--
+.CLI
+--
+. 啟用自動韌體更新：
++
+[source, cli]
+----
+system service-processor image modify -node <node_name> -autoupdate true
+----
 
 
 --
