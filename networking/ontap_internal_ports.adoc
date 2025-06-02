@@ -14,13 +14,15 @@ summary: 由內部使用的TCP連接埠和udp連接埠ONTAP
 
 
 [role="lead"]
-下表列出ONTAP 了供內部使用的TCP連接埠和UDP連接埠。這些連接埠用於建立叢集內LIF通訊：
+下表列出了 ONTAP 內部使用的連接埠及其功能。 ONTAP使用這些連接埠執行各種功能，例如建立叢集內 LIF 通訊。
+
+此列表並不詳盡，並且可能在不同環境中有所不同。
 
 [cols="30,70"]
 |===
 
 
-| 連接埠/傳輸協定 | 說明 
+| 連接埠/傳輸協定 | 組件/功能 
 
 
 | 514 | 系統記錄 
@@ -75,6 +77,9 @@ summary: 由內部使用的TCP連接埠和udp連接埠ONTAP
 
 
 | 929 | NetApp叢集RPC 
+
+
+| 930 | 核心服務與管理功能（KSMF） 
 
 
 | 931 | NetApp叢集RPC 
@@ -134,6 +139,9 @@ summary: 由內部使用的TCP連接埠和udp連接埠ONTAP
 | 967 | NetApp叢集RPC 
 
 
+| 975 | 金鑰管理互通性傳輸協定（KMIP） 
+
+
 | 982. | NetApp叢集RPC 
 
 
@@ -153,6 +161,9 @@ summary: 由內部使用的TCP連接埠和udp連接埠ONTAP
 
 
 | 65503 | LIF共用 
+
+
+| 7700 | 叢集會話管理器 (CSM) 
 
 
 | 7810. | NetApp叢集RPC 
@@ -200,11 +211,20 @@ summary: 由內部使用的TCP連接埠和udp連接埠ONTAP
 | 7824 | NetApp叢集RPC 
 
 
+| 7835-7839 及 7845-7849 | 用於集群內通訊的 TCP 連接埠 
+
+
 | 8023. | 節點範圍Telnet 
+
+
+| 8443 | 適用於 Amazon FSx 的 ONTAP S3 NAS 連接埠 
 
 
 | 8514. | 節點範圍RSH 
 
 
 | 9877 | KMIP用戶端連接埠（僅限內部本機主機） 
+
+
+| 10006 | 用於 HA 互連通訊的 TCP 連接埠 
 |===

@@ -49,8 +49,28 @@ summary: 您可以手動選取要在其中建立 FlexGroup 磁碟區的本機層
 
 
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+使用系統管理器，您可以建立 FlexGroup 磁碟區。
+
 .步驟
-. 建立 FlexGroup Volume ： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]`
+. 導航至“儲存”>“磁碟區”並選擇image:icon_add.gif["新增圖示"] 。
+. 在*新增磁碟區*視窗中，輸入磁碟區名稱和大小，然後選擇*更多選項*。
+. 在*儲存和最佳化*部分中，選擇*在叢集中分發磁碟區資料（FlexGroup）*。
+. 完成捲的剩餘資訊並選擇*儲存*。
+
+
+--
+.CLI
+--
+. 建立 FlexGroup Volume ：
++
+[source, cli]
+----
+volume create -vserver <svm_name> -volume <flexgroup_name> -aggr-list aggr1,aggr2,.. -aggr-list-multiplier <constituents_per_aggr> -size <fg_size> [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]
+----
 +
 ** 此 `-aggr-list`參數指定用於 FlexGroup 成員磁碟區的本機層清單。
 +
@@ -79,11 +99,9 @@ link:../performance-admin/index.html["效能管理"]
 若要建立加密磁碟區、您必須安裝Volume加密授權和金鑰管理程式。
 
 +
-[NOTE]
-====
-您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
 
-====
+NOTE: 您必須在FlexGroup 建立時啟用對靜止磁碟區的加密。您無法在現有FlexGroup 的支援資料區啟用加密功能。
+
 +
 link:../encryption-at-rest/index.html["加密閒置的資料"]
 
@@ -118,5 +136,7 @@ cluster1::> volume mount -vserver vs0 -volume fg2 -junction-path /fg
 # ls /mnt/fg2
 file1  file2
 ----
+--
+====
 .相關資訊
 https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf["NetApp技術報告4571：NetApp FlexGroup 《最佳實務做法與實作指南》"^]

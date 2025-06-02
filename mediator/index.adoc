@@ -1,17 +1,17 @@
 ---
 permalink: mediator/index.html 
 sidebar: sidebar 
-keywords: ontap mediator service, install requirements, mediator requirements 
-summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所有先決條件、取得安裝套件、並在主機上執行安裝程式。 
+keywords: ontap mediator, install requirements, mediator requirements 
+summary: 若要安裝 ONTAP Mediator，您必須確保滿足所有先決條件、取得安裝套件並在主機上執行安裝程式。 
 ---
-= 準備安裝或升級 ONTAP Mediator 服務
+= 準備安裝或升級 ONTAP 調解器
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-若要安裝 ONTAP Mediator 服務、您必須確保符合所有先決條件、擷取安裝套件並在主機上執行安裝程式。此程序用於安裝或升級現有安裝。
+若要安裝 ONTAP Mediator，您必須確保滿足所有先決條件、取得安裝套件並在主機上執行安裝程式。此程序用於安裝或升級現有安裝。
 
 * 從使用NetApp 9.7開始ONTAP 、您可以使用ONTAP 任何版本的《不知道》來監控MetroCluster 一個靜態IP組態。
 * 從 ONTAP 9.8 開始、您可以使用任何版本的 ONTAP Mediator 來監控 SnapMirror 主動式同步關係。
@@ -21,13 +21,13 @@ summary: 若要安裝ONTAP 《支援程式》服務、您必須確保符合所�
 
 == 安裝與升級考量
 
-在您升級或安裝 ONTAP Mediator 之前，請先檢閱下列考量事項。
+在升級或安裝 ONTAP 調解器之前，請先查看以下注意事項。
 
 
 CAUTION: ONTAP Mediator 1.8 及更早版本與 Red Hat Enterprise Linux FIPS 模式不相容，因此無法成功安裝。您可以使用命令檢查是否已啟用 FIPS 模式 `fips-mode-setup --check` 。您可以使用命令停用 FIPS 模式 `fips-modesetup --disable` 。停用 FIPS 模式後重新開機，即可成功安裝 ONTAP Mediator 1.8 或更早版本。
 
-* 您應該將 ONTAP Mediator 升級至最新版本。舊版 ONTAP Mediator 可與所有 ONTAP 版本向下相容，但最新版本則包含所有協力廠商元件的安全性修補程式。
-* 當您升級至新的 ONTAP Mediator 版本時，除非有更高版本，否則安裝程式會自動升級至建議的 SCST 版本。如需手動安裝較高 SCST 版本的說明，請參閱link:manage-task.html["管理 Mediator 服務"]。如需支援的版本，請參閱link:whats-new-concept.html#scst-support-matrix["SCST 支援對照表"]。
+* 您應該將 ONTAP Mediator 升級到可用的最新版本。舊版 ONTAP Mediator 可與所有 ONTAP 版本向下相容，但最新版本則包含所有協力廠商元件的安全性修補程式。
+* 當您升級至新的 ONTAP Mediator 版本時，除非有更高版本，否則安裝程式會自動升級至建議的 SCST 版本。如需手動安裝較高 SCST 版本的說明，請參閱link:manage-task.html["管理 ONTAP Mediator"]。如需支援的版本，請參閱link:whats-new-concept.html#scst-support-matrix["SCST 支援對照表"]。
 +
 
 CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTAP Mediator 。
@@ -48,7 +48,7 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 ====
 .Linux 發佈要求
 * 根據 Red Hat 的最佳實務做法來安裝 RHEL 或 Rocky Linux 。由於 CentOS 8.x 已達到使用壽命，因此不建議使用相容版本的 CentOS 8.x 。
-* 安裝 ONTAP Mediator 服務時，請確保系統能夠存取所需的儲存庫，以便安裝程式能夠擷取並安裝所有必要的軟體相依性。
+* 安裝 ONTAP Mediator 時，請確保系統可以存取所需的儲存庫，以便安裝程式可以擷取並安裝所有必要的軟體相依性。
 * 若要讓 yum 安裝程式在 RHEL 儲存庫中尋找相關軟體，請在安裝期間或之後使用有效的 Red Hat 訂閱來登錄系統。
 +
 [NOTE]
@@ -214,7 +214,7 @@ CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTA
 
 
 .作業系統所需的套件
-下列套件是ONTAP 由《不知道的》服務所要求的：
+ONTAP 調解器需要以下軟體包：
 
 
 NOTE: 這些套件是由 ONTAP Mediator 安裝程式預先安裝或自動安裝。
@@ -299,7 +299,7 @@ ONTAP Mediator 可以安裝在啟用或不啟用 UEFI 安全開機的系統上�
 如需停用 UEFI 安全開機的詳細指示，請參閱主機作業系統的文件。
 
 ====
-若要在啟用 UEFI 安全開機的情況下安裝 ONTAP Mediator ，您必須先註冊安全金鑰，才能啟動服務。金鑰是在 SCST 安裝的編譯步驟期間產生，並儲存為您機器上的私密公開金鑰配對。使用 `mokutil`公用程式將公開金鑰新增為電腦擁有者金鑰（ Mok ）至 UEFI 韌體，讓系統信任並載入簽署的模組。請將複雜密碼儲存 `mokutil`在安全的位置，因為重新啟動系統以啟動莫克語時，需要這樣做。
+若要安裝啟用了 UEFI 安全啟動的 ONTAP Mediator，您必須先註冊安全金鑰，然後服務才能啟動。金鑰是在 SCST 安裝的編譯步驟期間產生，並儲存為您機器上的私密公開金鑰配對。使用 `mokutil`公用程式將公開金鑰新增為電腦擁有者金鑰（ Mok ）至 UEFI 韌體，讓系統信任並載入簽署的模組。請將複雜密碼儲存 `mokutil`在安全的位置，因為重新啟動系統以啟動莫克語時，需要這樣做。
 
 .步驟
 . [[step 1 _UEFI] 檢查系統上是否已啟用 UEFI 安全開機：
@@ -327,7 +327,7 @@ ONTAP Mediator 可以安裝在啟用或不啟用 UEFI 安全開機的系統上�
  a| 
 停用 UEFI 安全開機
  a| 
-link:upgrade-host-os-mediator-task.html["先升級主機作業系統、再升級 ONTAP Mediator"]
+link:upgrade-host-os-mediator-task.html["升級主機作業系統，然後升級 ONTAP Mediator"]
 
 |===
 +

@@ -194,8 +194,6 @@ image:AddLag01.png["新增延遲圖形"]
 --
 *使用CLI建立介面群組*
 
-深入瞭解 `network port ifgrp add-port`和設定中適用於連接埠介面群組link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["指令參考資料ONTAP"^]的限制。
-
 建立多重模式介面群組時、您可以指定下列任一種負載平衡方法：
 
 * `port`：網路流量是根據傳輸層（ TCP/UDP ）連接埠來分配。這是建議的負載平衡方法。
@@ -250,13 +248,13 @@ NOTE: 介面群組的MAC位址取決於基礎連接埠的順序、以及這些�
 
 `network port ifgrp add-port`
 
-如link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["指令參考資料ONTAP"^]需詳細 `network port ifgrp add-port`資訊，請參閱。
-
 下列範例說明如何將連接埠e0c新增至名為a0a的介面群組：
 
 `network port ifgrp add-port -node _cluster-1-01_ -ifgrp _a0a_ -port _e0c_`
 
 從ONTAP 功能更新到功能更新的版本開始、介面群組會在介面群組新增第一個實體連接埠約一分鐘後、自動放入適當的廣播網域。如果您不想讓 ONTAP 這麼做、而偏好手動將 ifgrp 放入廣播網域、請指定 `-skip-broadcast-domain-placement` 參數為的一部分 `ifgrp add-port` 命令。
+
+深入瞭解 `network port ifgrp add-port`和設定中適用於連接埠介面群組link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["指令參考資料ONTAP"^]的限制。
 
 --
 ====

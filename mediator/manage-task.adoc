@@ -1,17 +1,17 @@
 ---
 permalink: mediator/manage-task.html 
 sidebar: sidebar 
-keywords: mediator, service, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator service, uninstall scst 
-summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控制、健全狀況驗證、 SCST 維護、以及憑證管理和疑難排解。 
+keywords: mediator, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator, uninstall scst 
+summary: 管理 ONTAP Mediator，包括使用者憑證管理、服務控制、健康驗證、SCST 維護以及證書管理和故障排除。 
 ---
-= 管理 ONTAP Mediator 服務
+= 管理 ONTAP Mediator
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-管理 ONTAP Mediator 服務、包括變更使用者認證、停止及重新啟用服務、驗證其健全狀況、以及安裝或解除安裝 SCST 以進行主機維護。您也可以管理憑證、例如重新產生自我簽署的憑證、以信任的協力廠商憑證取代它們、以及疑難排解憑證相關問題。
+管理 ONTAP Mediator，包括變更使用者憑證、停止和重新啟用服務、驗證其運作狀況以及安裝或解除安裝 SCST 以進行主機維護。您也可以管理憑證、例如重新產生自我簽署的憑證、以信任的協力廠商憑證取代它們、以及疑難排解憑證相關問題。
 
 
 
@@ -20,7 +20,7 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 您可以使用下列程序變更使用者名稱。
 
 .關於這項工作
-在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
+在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
@@ -60,7 +60,7 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 您可以使用下列程序變更密碼。
 
 .關於這項工作
-在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
+在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
@@ -98,12 +98,12 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 
 
 
-== 停止 ONTAP Mediator 服務
+== 停止 ONTAP 調解器
 
-若要停止 ONTAP Mediator 服務、請執行下列步驟：
+若要停止 ONTAP 調解器，請執行下列步驟：
 
 .步驟
-. 停止 ONTAP Mediator ：
+. 停止 ONTAP 調解器：
 +
 `systemctl stop ontap_mediator`
 
@@ -111,7 +111,7 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 +
 `systemctl stop mediator-scst`
 
-. 停用 ONTAP Mediator 和 SCST ：
+. 停用 ONTAP 調解器和 SCST：
 +
 `systemctl diable ontap_mediator mediator-scst`
 
@@ -119,12 +119,12 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 
 
 
-== 重新啟用 ONTAP Mediator 服務
+== 重新啟用 ONTAP 調解器
 
-若要重新啟用 ONTAP Mediator 服務、請執行下列步驟：
+若要重新啟用 ONTAP 調解器，請執行下列步驟：
 
 .步驟
-. 啟用 ONTAP Mediator 和 SCST ：
+. 啟用 ONTAP 調解器和 SCST：
 +
 `systemctl enable ontap_mediator mediator-scst`
 
@@ -140,12 +140,12 @@ summary: 管理 ONTAP Mediator 服務、包括使用者認證管理、服務控�
 
 
 
-== 驗證 ONTAP Mediator 是否正常運作
+== 驗證 ONTAP 調解器是否正常運作
 
-安裝 ONTAP Mediator 之後、您應該確認 ONTAP Mediator 服務正在執行中。
+安裝 ONTAP Mediator 後，請驗證它是否成功運作。
 
 .步驟
-. 檢視 ONTAP Mediator 服務的狀態：
+. 查看 ONTAP 調解器的狀態：
 +
 .. `systemctl status ontap_mediator`
 +
@@ -186,7 +186,7 @@ CGroup: /system.slice/ontap_mediator.service
 ----
 
 
-. 確認 ONTAP Mediator 服務使用的連接埠：
+. 確認 ONTAP 調解器所使用的連接埠：
 +
 `netstat`
 
@@ -356,22 +356,22 @@ _module-filename_
 
 
 
-== 解除安裝ONTAP 「BMC Service」
+== 卸載 ONTAP 調解器
 
-如有必要、您可以移除ONTAP 「資訊調解器」服務。
+如有必要，您可以刪除 ONTAP Mediator。
 
 .開始之前
-在您移除 ONTAP Mediator 服務之前、必須先中斷 ONTAP Mediator 與 ONTAP 的連線。
+您必須先斷開 ONTAP 調解器與 ONTAP 之間的連接，然後才能將其移除。
 
 .關於這項工作
-您需要在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
+在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
 
 如果無法連線至此命令、您可能需要使用完整路徑來執行命令、如下列範例所示：
 
 `/usr/local/bin/uninstall_ontap_mediator`
 
 .步驟
-. 解除安裝ONTAP 《BMC Service：
+. 卸載 ONTAP 調解器：
 +
 `uninstall_ontap_mediator`
 
@@ -397,15 +397,15 @@ _module-filename_
 NOTE: 此程序僅支援執行 ONTAP Mediator 1.7 或更新版本的系統。
 
 .關於這項工作
-* 您可以在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
-* 只有在安裝 ONTAP Mediator 之後、由於主機的主機名稱或 IP 位址變更而產生的自我簽署憑證已過時時、才能執行此工作。
+* 在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
+* 只有安裝 ONTAP 調解器後，由於主機的主機名稱或 IP 位址發生變更而導致產生的自簽章憑證已過時時，您才可以執行此任務。
 * 當暫時自我簽署的憑證已由信任的協力廠商憑證取代之後、您不會使用此工作來重新產生憑證。如果沒有自我簽署的憑證、將導致此程序失敗。
 
 
 .步驟
 若要為目前主機重新產生新的暫時自我簽署憑證、請執行下列步驟：
 
-. 重新啟動 ONTAP Mediator 服務：
+. 重新啟動 ONTAP 調解器：
 +
 `./make_self_signed_certs.sh overwrite`
 
@@ -448,15 +448,15 @@ Getting CA Private Key
 
 ====
 .關於這項工作
-* 您可以在安裝 ONTAP Mediator 服務的 Linux 主機上執行此工作。
+* 在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
 * 如果產生的自我簽署憑證需要由從信任的次級憑證授權單位（ CA ）取得的憑證所取代、您可以執行此工作。若要達成此目標、您應該可以存取信任的公開金鑰基礎架構（ PKI ）授權。
 * 下圖顯示每個 ONTAP Mediator 憑證的用途。
 +
 image:mediator-cert-purposes.png["ONTAP Mediator 憑證用途"]
 
-* 下圖顯示 Web 伺服器設定和 ONTAP Mediator 伺服器設定的組態。
+* 下圖顯示了 Web 伺服器設定和 ONTAP Mediator 設定的配置。
 +
-image:mediator-certs-index.png["Web 伺服器設定和 ONTAP Mediator 伺服器設定組態"]
+image:mediator-certs-index.png["Web 伺服器設定和 ONTAP 調解器設定配置"]
 
 
 
@@ -470,8 +470,7 @@ image:mediator-certs-index.png["Web 伺服器設定和 ONTAP Mediator 伺服器�
 
 [NOTE]
 ====
-* 此範例說明 ONTAP Mediator 服務所需憑證的必要準則。您可以使用與此程序不同的方式、從 PKI 授權單位取得憑證。根據您的業務需求調整程序。
-
+此範例說明了 ONTAP 調解器所需憑證的必要標準。您可以使用與此程序不同的方式、從 PKI 授權單位取得憑證。根據您的業務需求調整程序。
 
 ====
 [role="tabbed-block"]
@@ -513,7 +512,7 @@ PKI 授權單位會驗證要求並簽署 `.csr`、產生憑證 `intermediate.crt
 
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["為 SnapMirror 主動同步配置 ONTAP 調解器和集群"]
 
 
 
@@ -555,7 +554,7 @@ PKI 授權單位會驗證要求並簽署 `.csr`、產生憑證 `ca.crt`。此外
 
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["為 SnapMirror 主動同步配置 ONTAP 調解器和集群"]
 
 
 
@@ -628,7 +627,7 @@ NOTE: 這些檔案是從 PKI 授權單位取得的。如果您使用的是不同
 ====
 .ONTAP Mediator 1.9 及更新版本
 --
-憑證組態會提供給位於的組態檔案中的 ONTAP Mediator 服務 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。檔案包含下列屬性：
+憑證設定透過位於下列位置的設定檔提供給 ONTAP 調解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。檔案包含下列屬性：
 
 [listing]
 ----
@@ -673,7 +672,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 ** Linux 權限： `600`
 
 
-. 重新啟動 ONTAP Mediator ：
+. 重新啟動 ONTAP 調解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -682,7 +681,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 --
 .ONTAP Mediator 1.8 及更早版本
 --
-憑證組態會提供給位於的組態檔案中的 ONTAP Mediator 服務 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。檔案包含下列屬性：
+憑證設定透過位於下列位置的設定檔提供給 ONTAP 調解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。檔案包含下列屬性：
 
 [listing]
 ----
@@ -727,7 +726,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 ** Linux 權限： `600`
 
 
-. 重新啟動 ONTAP Mediator ：
+. 重新啟動 ONTAP 調解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -805,7 +804,7 @@ NOTE: 您應該已經從程序稍早的 PKI 授權單位取得 `intermediate.crt
 ***  `ca_certificate`值是檔案的路徑 `root_intermediate.crt` 。
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `intermediate.crt` `root_intermediate.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["為 SnapMirror 主動同步配置 ONTAP 調解器和集群"]
 
 
 
@@ -817,7 +816,7 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 
 
 
-. 在組態檔中更新憑證時、請重新啟動 ONTAP Mediator ：
+. 當設定檔中的憑證更新後，重新啟動 ONTAP 調解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -888,7 +887,7 @@ NOTE: 您應該已經從程序稍早的 PKI 授權單位取得 `ca.crt` 和 `ont
 ***  `ca_certificate`值是檔案的路徑 `root_ca.crt` 。
 +
 
-NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]
+NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將和憑證新增 `ca.crt` `root_ca.crt` 至 ONTAP 叢集。請參閱。 link:../snapmirror-active-sync/mediator-install-task.html["為 SnapMirror 主動同步配置 ONTAP 調解器和集群"]
 
 
 
@@ -900,7 +899,7 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 
 
 
-. 在組態檔中更新憑證時、請重新啟動 ONTAP Mediator ：
+. 當設定檔中的憑證更新後，重新啟動 ONTAP 調解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -1030,7 +1029,7 @@ Certificate:
 
 。 `v3_req` 中定義的內容 `openssl_server.cnf` 組態檔案會顯示為 `X509v3 extensions` 在憑證中。
 
-在下列範例中、您可以取得中的變數 `alt_names` 執行命令的區段 `hostname -A` 和 `hostname -I` 在安裝 ONTAP Mediator 的 Linux VM 上。
+在下面的例子中，你可以獲取 `alt_names`透過運行命令 `hostname -A`和 `hostname -I`在安裝了 ONTAP Mediator 的 Linux VM 上。
 
 請洽詢您的網路管理員、以取得正確的變數值。
 

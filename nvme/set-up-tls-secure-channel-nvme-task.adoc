@@ -33,23 +33,23 @@ summary: 從 ONTAP 9 。 16.1 開始，您可以啟用和停用 NVMe / TCP 連�
 .CLI
 --
 .步驟
-. 新增支援 TLS 安全通道的 NVMe 子系統主機。您可以使用引數提供預先共用金鑰（ PSK ） `tls-configured-psk`，或使用下列引數使用產生的 PSK `tls-generated-psk` ：
+. 新增支援 TLS 安全通道的 NVMe 子系統主機。您可以使用 `tls-configured-psk`爭論：
 +
 [source, cli]
 ----
-vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> {-tls-configured-psk <key_text> | -tls-generated-psk true}
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-configured-psk <key_text>
 ----
 . 確認 NVMe 子系統主機已設定為 TLS 安全通道。您可以選擇性地使用 `tls-key-type`引數僅顯示使用該金鑰類型的主機：
 +
 [source, cli]
 ----
-vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated}
+vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured}
 ----
 . 確認 NVMe 子系統主機控制器已設定為 TLS 安全通道。您可以選擇性地使用任何 `tls-key-type`， `tls-identity`或 `tls-cipher`引數來僅顯示具有這些 TLS 屬性的控制器：
 +
 [source, cli]
 ----
-vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
+vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
 ----
 
 

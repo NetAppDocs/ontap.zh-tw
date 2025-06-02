@@ -76,7 +76,7 @@ link:repair_port_reachability.html["修復連接埠連線能力"]
 | 連接埠的IPspace會更新為廣播網域的IPspace值。 | 這些連接埠會移至「預設」IPspace、且不含廣播網域屬性。 
 |===
 
-NOTE: 如果您使用移除介面群組的最後一個成員連接埠 `network port ifgrp remove-port` 命令時、會導致介面群組連接埠從廣播網域中移除、因為廣播網域中不允許使用空的介面群組連接埠。
+NOTE: 如果使用命令移除介面群組的最後一個成員連接埠 `network port ifgrp remove-port`，則會導致介面群組連接埠從廣播網域中移除，因為廣播網域中不允許使用空的介面群組連接埠。如link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-remove-port.html["指令參考資料ONTAP"^]需詳細 `network port ifgrp remove-port`資訊，請參閱。
 
 .步驟
 . 使用顯示目前指派或未指派給廣播網域的連接埠 `network port show` 命令。
@@ -123,6 +123,8 @@ NOTE: 如果您使用移除介面群組的最後一個成員連接埠 `network p
 下列命令會從預設IPspace的廣播網域bcast1中移除節點叢集1上的連接埠e0e：
 
 `cluster-1::> network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01:e0e`
+
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-remove-ports.html["指令參考資料ONTAP"^]需詳細 `network port broadcast-domain remove-ports`資訊，請參閱。
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]

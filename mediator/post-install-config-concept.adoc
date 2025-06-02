@@ -2,7 +2,7 @@
 permalink: mediator/post-install-config-concept.html 
 sidebar: sidebar 
 keywords: mediator, new, release, update, install, configuration, post-installation, after installation, metrocluster ip, snapmirror business continuity, snapmirror active sync 
-summary: 安裝並執行 ONTAP Mediator 服務後、必須在 ONTAP 儲存系統中執行其他組態工作、才能使用 Mediator 功能。 
+summary: 安裝並執行 ONTAP Mediator 後，必須在 ONTAP 儲存系統中執行其他設定任務才能使用 Mediator 功能。 
 ---
 = 安裝後 ONTAP Mediator 組態
 :allow-uri-read: 
@@ -11,23 +11,23 @@ summary: 安裝並執行 ONTAP Mediator 服務後、必須在 ONTAP 儲存系統
 
 
 [role="lead"]
-安裝並執行 ONTAP Mediator 服務後、必須在 ONTAP 儲存系統中執行其他組態工作、才能使用 Mediator 功能：
+安裝並執行 ONTAP Mediator 後，必須在 ONTAP 儲存系統中執行其他設定任務才能使用 ONTAP Mediator 功能：
 
-* 若要在ONTAP 不實的IP組態中使用此功能、MetroCluster 請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["從ONTAP 一套不實的IP組態設定「不實不作」MetroCluster 服務"^]。
-* 若要使用 SnapMirror 主動式同步、請參閱 link:../snapmirror-active-sync/mediator-install-task.html["安裝ONTAP 「支援中心服務」並確認ONTAP 「支援中心」組態"]。
+* 若要在 MetroCluster IP 設定中使用 ONTAP 調解器，請參閱link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["透過 MetroCluster IP 配置來設定 ONTAP 調解器"^] 。
+* 若要使用 SnapMirror 作用中同步處理，請參閱link:../snapmirror-active-sync/mediator-install-task.html["安裝 ONTAP 調解器並確認 ONTAP 叢集配置"]。
 
 
 
 
 == 設定 ONTAP Mediator 安全性原則
 
-ONTAP Mediator 伺服器支援數種可設定的安全性設定。所有設定的預設值都是以唯讀檔案提供 `low_space_threshold_mib: 10`：
+ONTAP 調解器支援多種可設定的安全性設定。所有設定的預設值都是以唯讀檔案提供 `low_space_threshold_mib: 10`：
 
 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml`
 
 放置在中的所有值 `ontap_mediator.user_config.yaml` 會覆寫預設值、並在所有 ONTAP Mediator 升級中維護。
 
-修改之後 `ontap_mediator.user_config.yaml`、重新啟動 ONTAP Mediator 服務：
+修改後 `ontap_mediator.user_config.yaml` ，重新啟動 ONTAP 調解器：
 
 `systemctl restart ontap_mediator`
 
@@ -52,7 +52,7 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 * `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini`
 
 
-這些檔案中的變數是用來控制 ONTAP Mediator 服務所使用的憑證檔案。
+這些檔案中的變數用於控制 ONTAP Mediator 使用的憑證檔案。
 
 [role="tabbed-block"]
 ====
@@ -155,7 +155,7 @@ NOTE: 不應變更中的其他預設值 `ontap_mediator.config.yaml`，因為在
 |===
 --
 ====
-如果您修改這些屬性，請重新啟動 ONTAP Mediator 服務以套用變更。如需如何以協力廠商憑證取代預設憑證的詳細指示，請參閱link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["以信任的第三方憑證取代自我簽署的憑證"]。
+如果修改這些屬性，請重新啟動 ONTAP 調解器以套用變更。如需如何以協力廠商憑證取代預設憑證的詳細指示，請參閱link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["以信任的第三方憑證取代自我簽署的憑證"]。
 
 
 
@@ -223,7 +223,7 @@ low_space_threshold_mib: 10
 
 === 控制保留記錄空間
 
-reserve_log_space 是由特定設定所控制。根據預設， ONTAP Mediator 伺服器安裝會為記錄檔建立個別的磁碟空間。安裝程式會建立一個新的固定大小檔案、總共有 700 MB 的磁碟空間、以明確用於 Mediator 記錄。
+reserve_log_space 是由特定設定所控制。預設情況下，ONTAP Mediator 安裝會為日誌建立單獨的磁碟空間。安裝程式會建立一個新的固定大小文件，其磁碟空間總計為 700MB，專門用於 ONTAP Mediator 日誌記錄。
 
 若要停用此功能並使用預設磁碟空間、請執行下列步驟：
 

@@ -79,6 +79,9 @@ network fcp adapter show -data-protocols-supported fc-nvme
 ----
 network port show
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["指令參考資料ONTAP"^]需詳細 `network port show`資訊，請參閱。
+
 . 如果您執行ONTAP 的是SVM 9.7或更早版本、請移除SVM的所有傳輸協定：
 +
 [source, cli]
@@ -124,13 +127,19 @@ vserver nvme show -vserver <SVM_name>
 +
 [source, cli]
 ----
-network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <netmask_value> -role data -data-protocol fc-nvme -home-node <home_node> -home-port <home_port>
+network interface create -vserver <SVM_name> -lif <lif_name> -role data -data-protocol fc-nvme -home-node <home_node> -home-port <home_port>
 ----
-** ONTAP 9.10.1 或更新版本、 FC 或 TCP ：
+** 對於 ONTAP 9.10.1 或更高版本，FC：
 +
 [source, cli]
 ----
-network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <netmask_value> -service-policy <default-data-nvme-tcp | default-data-nvme-fc> -data-protocol <fcp | fc-nvme | nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
+network interface create -vserver <SVM_name> -lif <lif_name> -service-policy <default-data-nvme-tcp | default-data-nvme-fc> -data-protocol <fc-nvme> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
+----
+** 對於 ONTAP 9.10.1 或更高版本，TCP：
++
+[source, cli]
+----
+network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <netmask_value> -service-policy <default-data-nvme-tcp> -data-protocol <nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
 ----
 
 
@@ -142,11 +151,17 @@ network interface create -vserver <SVM_name> -lif <lif_name> -address <ip addres
 ----
 network interface create -vserver <SVM_name> -lif <lif_name> -role data -data-protocol fc-nvme -home-node <home_node> -home-port <home_port>
 ----
-** ONTAP 9.10.1 或更新版本、 FC 或 TCP ：
+** 對於 ONTAP 9.10.1 或更高版本，FC：
 +
 [source, cli]
 ----
-network interface create -vserver <SVM_name> -lif <lif_name> -service-policy <default-data-nvme-tcp | default-data-nvme-fc> -data-protocol <fcp | fc-nvme | nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
+network interface create -vserver <SVM_name> -lif <lif_name> -service-policy <default-data-nvme-fc> -data-protocol <fc-nvme> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
+----
+** 對於 ONTAP 9.10.1 或更高版本，TCP：
++
+[source, cli]
+----
+network interface create -vserver <SVM_name> -lif <lif_name> -address <ip address> -netmask <netmask_value> -service-policy <default-data-nvme-tcp> -data-protocol <nvme-tcp> -home-node <home_node> -home-port <home_port> -status-admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group <failover_group> -is-dns-update-enabled false
 ----
 
 

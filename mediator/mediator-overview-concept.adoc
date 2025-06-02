@@ -1,7 +1,7 @@
 ---
 permalink: mediator/mediator-overview-concept.html 
 sidebar: sidebar 
-keywords: ontap mediator service, install requirements, mediator requirements 
+keywords: ontap mediator, install requirements, mediator requirements 
 summary: ONTAP Mediator 提供數種 ONTAP 功能。 
 ---
 = 瞭解 ONTAP Mediator
@@ -11,18 +11,18 @@ summary: ONTAP Mediator 提供數種 ONTAP 功能。
 
 
 [role="lead"]
-ONTAP Mediator 提供數種 ONTAP 功能：
+ONTAP 調解器為 ONTAP 功能提供了多種功能：
 
 * 為 HA 中繼資料提供持續且有圍籬的儲存區。
 * 做為 ping Proxy 、以實現控制器的活力。
 * 提供同步節點健全狀況查詢功能、以協助仲裁判斷。
 
 
-ONTAP Mediator 提供兩種額外的系統附加服務：
+ONTAP 調解器提供兩項額外的 systemctl 服務：
 
 * *`ontap_mediator.service`*
 +
-維護 REST API 伺服器以管理 ONAP 關係。
+維護用於管理 ONTAP 關係的 REST API 伺服器。
 
 * *`mediator-scst.service`*
 +
@@ -54,7 +54,7 @@ ONTAP Mediator 提供兩種額外的系統附加服務：
 
 * *`/usr/local/bin/mediator_unlock_user`*
 +
-如果達到驗證重試限制、就會釋放 API 使用者帳戶的鎖定。  此功能用於防止暴力密碼推導。  它會提示使用者輸入正確的使用者名稱和密碼。
+如果達到驗證重試限制、就會釋放 API 使用者帳戶的鎖定。此功能用於防止暴力密碼推導。它會提示使用者輸入正確的使用者名稱和密碼。
 
 * *`/usr/local/bin/mediator_add_user`*
 +
@@ -66,7 +66,7 @@ ONTAP Mediator 提供兩種額外的系統附加服務：
 
 == 特別注意事項
 
-ONTAP Mediator 仰賴 SCST 來提供 iSCSI （請參閱 http://scst.sourceforge.net/index.html[]）。  此套件是專為核心而在安裝期間編譯的核心模組。任何核心更新都可能需要重新安裝 SCST 。  或者、先解除安裝、再重新安裝 ONTAP Mediator 、然後重新設定 ONTAP 關係。
+ONTAP Mediator 仰賴 SCST 來提供 iSCSI （請參閱 http://scst.sourceforge.net/index.html[]）。此套件是專為核心而在安裝期間編譯的核心模組。任何核心更新都可能需要重新安裝 SCST 。或者，解除安裝然後重新安裝 ONTAP Mediator，然後重新配置 ONTAP 關係。
 
 
 NOTE: 伺服器作業系統核心的任何更新都應與 ONTAP 中的維護時段協調。
