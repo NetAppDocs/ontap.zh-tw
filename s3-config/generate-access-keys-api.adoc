@@ -26,8 +26,8 @@ NOTE: 如果 LDAP 已停用，您可以設定link:configure-access-ldap.html["Ac
 . 該儲存 VM 中已建立一個儲存區。請參閱 link:../s3-config/create-bucket-task.html["建立儲存庫"]。
 . 在儲存 VM 上設定 DNS 。請參閱。 link:../networking/configure_dns_services_auto.html["設定DNS服務"]
 . 儲存 VM 上會安裝 LDAP 伺服器的自我簽署根憑證授權單位（ CA ）憑證。請參閱 link:../nfs-config/install-self-signed-root-ca-certificate-svm-task.html["在SVM上安裝自我簽署的根CA憑證"]。
-. LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱。 link:../nfs-config/create-ldap-client-config-task.html["建立LDAP用戶端組態"]
-. 將用戶端組態與虛擬伺服器建立關聯。請參閱。 link:../nfs-config/enable-ldap-svms-task.html["將LDAP用戶端組態與SVM建立關聯"]如link:https://docs.netapp.com/us-en/ontap-cli//vserver-services-name-service-ldap-create.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service ldap create`資訊，請參閱。
+. LDAP 用戶端在儲存 VM 上設定為啟用 TLS 。請參閱。 link:../nfs-config/create-ldap-client-config-task.html["為 ONTAP NFS 存取建立 LDAP 用戶端配置"]
+. 將用戶端組態與虛擬伺服器建立關聯。請參閱。 link:../nfs-config/enable-ldap-svms-task.html["將 LDAP 用戶端配置與 ONTAP NFS SVM 關聯"]如link:https://docs.netapp.com/us-en/ontap-cli//vserver-services-name-service-ldap-create.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service ldap create`資訊，請參閱。
 . 如果您使用的是資料儲存 VM 、請在 VM 上建立管理網路介面（ LIF ）、以及 LIF 的服務原則。深入瞭解 `network interface create`及 `network interface service-policy create` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface["指令參考資料ONTAP"^]。
 
 
@@ -71,7 +71,7 @@ security login create -user-or-group-name <ldap-group-name> -application http -a
 security login create -user-or-group-name ldap-group-1 -application http -authentication-method nsswitch -role s3role -is-ns-switch-group yes -second-authentication-method none -vserver svm-1 -is-ldap-fastbind yes
 ----
 +
-如需詳細資訊、請參閱 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["使用LDAP快速連結進行Nsswitch驗證"]。
+如需更多資訊、請參閱 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["使用 LDAP 快速綁定對 ONTAP NFS SVM 進行 nsswitch 驗證"]。
 
 
 

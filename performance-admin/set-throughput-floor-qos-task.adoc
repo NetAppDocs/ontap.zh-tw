@@ -39,26 +39,26 @@ summary: 您可以使用原則群組的最小處理量欄位來定義儲存物�
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos policy-group create`資訊，請參閱。
 
-
-
-您可以使用 `qos policy-group modify`命令來調整處理量層。
-
-+ 下列命令會建立最小處理量為 1 ， 000 IOPS 的共用原則群組 `pg-vs2`：
+. 您可以使用 `qos policy-group modify`命令來調整處理量層。
++
+下列命令會建立最小處理量為 1 ， 000 IOPS 的共用原則群組 `pg-vs2`：
 
 +
-
 [listing]
 ----
 cluster1::> qos policy-group create -policy group pg-vs2 -vserver vs2 -min-throughput 1000iops -is-shared true
 ----
-+ 下列命令會建立無處理量限制的非共用原則群組 `pg-vs4`：
++
+下列命令會建立非共用原則群組 `pg-vs4` 無處理量限制：
 
 +
-
 [listing]
 ----
 cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared false
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["指令參考資料ONTAP"^]需詳細 `qos policy-group modify`資訊，請參閱。
+
 . 將原則群組套用至磁碟區或LUN：
 +
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`

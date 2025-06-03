@@ -41,7 +41,10 @@ summary: 您可以使用原則群組的「最大處理量」欄位來定義儲�
 `qos policy-group create -policy-group _policy_group_ -vserver _SVM_ -max-throughput _number_of_iops_|Mb/S|iops,Mb/S -is-shared true|false`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos policy-group create`資訊，請參閱。您可以使用 `qos policy-group modify`命令來調整處理量上限。
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos policy-group create`資訊，請參閱。
+
++
+您可以使用 `qos policy-group modify`命令來調整處理量上限。
 
 +
 下列命令會建立共用原則群組 `pg-vs1` 最大處理量為 5 、 000 IOPS ：
@@ -67,6 +70,9 @@ cluster1::> qos policy-group create -policy-group pg-vs3 -vserver vs3 -max-throu
 ----
 cluster1::> qos policy-group create -policy-group pg-vs4 -vserver vs4 -is-shared false
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["指令參考資料ONTAP"^]需詳細 `qos policy-group modify`資訊，請參閱。
+
 . 將原則群組套用至SVM、檔案、磁碟區或LUN：
 +
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`
