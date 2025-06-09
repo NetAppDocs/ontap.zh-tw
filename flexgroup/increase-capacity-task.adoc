@@ -2,7 +2,7 @@
 permalink: flexgroup/increase-capacity-task.html 
 sidebar: sidebar 
 keywords: increase, size, flexgroup, volume, flex group 
-summary: 您可以增加 FlexGroup 磁碟區的大小，方法是為現有的 FlexGroup 磁碟區新增更多容量，或是透過新的成員磁碟區來擴充 FlexGroup 磁碟區。 
+summary: 透過在磁碟區的現有組成部分新增更多容量或透過使用新成員磁碟區擴充 FlexGroup 磁碟區來增加 FlexGroup 磁碟區的大小。 
 ---
 = 增加 ONTAP FlexGroup 磁碟區的大小
 :allow-uri-read: 
@@ -26,6 +26,13 @@ summary: 您可以增加 FlexGroup 磁碟區的大小，方法是為現有的 Fl
 * FlexGroup 磁碟區的現有成員磁碟區已達到硬體的最大 FlexVol 大小（如果已啟用，則為 100TB 或 300TB link:../volumes/enable-large-vol-file-support-task.html["大容量支援"]），因此 FlexGroup 磁碟區必須新增其他成員磁碟區，才能調整大小。
 
 
+[NOTE]
+====
+如果您修改 FlexGroup 磁碟區以包含更多成員，則先前建立的快照將被視為“部分”，並且只能由來自 `.snapshot`目錄或“*以前的版本*”選項卡。
+
+如果快照被視為“部分”，則不能用於 SnapRestore 操作。但是，部分快照可用於從 `.snapshot`目錄或“*以前的版本*”選項卡。
+
+====
 在早於 ONTAP 9.3 的版本中，建立 SnapMirror 關係後，請勿擴充 FlexGroup Volume 。如果FlexGroup 您在ONTAP 更新版本早於版本的SnapMirror關係之後擴充來源的來源的sels在於 版本9.3、則必須FlexGroup 再次執行基準傳輸至目的地的s0 Volume。從ONTAP 功能區9.3開始、您可以擴充FlexGroup SnapMirror關係中的功能區。
 
 .步驟
