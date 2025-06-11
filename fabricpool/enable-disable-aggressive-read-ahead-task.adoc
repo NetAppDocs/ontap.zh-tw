@@ -2,7 +2,7 @@
 permalink: fabricpool/enable-disable-aggressive-read-ahead-task.html 
 sidebar: sidebar 
 keywords: creating, volume, fabricpool, aggressive read ahead, enable, on prem, on premises, disable 
-summary: 從 ONTAP 9.14.1 開始、您可以在 FabricPools 中啟用和停用主動式預先讀取模式、以支援媒體和娛樂、例如影片串流工作負載。 
+summary: 從 ONTAP 9.14.1 開始，您可以在 FabricPool 支援的所有平台中的磁碟區上啟用和停用積極預讀模式。 
 ---
 = 在 FabricPool 中啟用 ONTAP Volume 以執行主動式讀取
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 從 ONTAP 9.14.1 開始、您可以在 FabricPools 中啟用和停用�
 
 
 [role="lead"]
-從 ONTAP 9 ． 14.1 開始，您可以在 FabricPools 中的磁碟區上啟用和停用主動式預先讀取模式。所有支援 FabricPool 的內部部署平台上的 ONTAP 9.14.1 均提供主動式預先讀取模式。此功能預設為停用。
+從 ONTAP 9 ． 14.1 開始，您可以在 FabricPools 中的磁碟區上啟用和停用主動式預先讀取模式。在 ONTAP 9.13.1 中，主動預讀模式僅在雲端平台上推出。從 ONTAP 9.14.1 開始，主動預讀模式可在 FabricPool 支援的所有平台（包括本機平台）上使用。此功能預設為停用。
 
 當主動式預先讀取設為 _disabled_ 時， FabricPool 只會讀取用戶端應用程式所需的檔案區塊，而不需要讀取整個檔案。這可能會導致網路流量降低，尤其是大型 GB 和 TB 大小的檔案。在磁碟區上啟用主動式預先讀取會關閉此功能，而 FabricPool 會從物件存放區中預先讀取整個檔案，增加取得處理量並減少用戶端讀取檔案的延遲。依預設，當階層式資料依序讀取時，會保持冷態，不會寫入本機層。
 
