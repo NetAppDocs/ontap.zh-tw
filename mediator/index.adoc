@@ -24,14 +24,19 @@ summary: 若要安裝 ONTAP Mediator，您必須確保滿足所有先決條件�
 在升級或安裝 ONTAP 調解器之前，請先查看以下注意事項。
 
 
-CAUTION: ONTAP Mediator 1.8 及更早版本與 Red Hat Enterprise Linux FIPS 模式不相容，因此無法成功安裝。您可以使用命令檢查是否已啟用 FIPS 模式 `fips-mode-setup --check` 。您可以使用命令停用 FIPS 模式 `fips-modesetup --disable` 。停用 FIPS 模式後重新開機，即可成功安裝 ONTAP Mediator 1.8 或更早版本。
+NOTE: ONTAP Mediator 1.8 及更早版本與 Red Hat Enterprise Linux FIPS 模式不相容，因此無法成功安裝。您可以使用命令檢查是否已啟用 FIPS 模式 `fips-mode-setup --check` 。您可以使用命令停用 FIPS 模式 `fips-modesetup --disable` 。停用 FIPS 模式後重新開機，即可成功安裝 ONTAP Mediator 1.8 或更早版本。
 
 * 您應該將 ONTAP Mediator 升級到可用的最新版本。舊版 ONTAP Mediator 可與所有 ONTAP 版本向下相容，但最新版本則包含所有協力廠商元件的安全性修補程式。
 * 當您升級至新的 ONTAP Mediator 版本時，除非有更高版本，否則安裝程式會自動升級至建議的 SCST 版本。如需手動安裝較高 SCST 版本的說明，請參閱link:manage-task.html["管理 ONTAP Mediator"]。如需支援的版本，請參閱link:whats-new-concept.html#scst-support-matrix["SCST 支援對照表"]。
-+
 
-CAUTION: 如果發生安裝失敗，您可能需要升級至較新版本的 ONTAP Mediator 。
 
+[NOTE]
+====
+* 如果發生安裝失敗，您可能需要升級至較新版本的 ONTAP Mediator 。
+* 自 2025 年 6 月 15 日起，您將無法安裝或升級 ONTAP Mediator 1.8 和 1.9，因為它們的代碼簽署憑證已過期。如果安裝或升級失敗，請改用 ONTAP Mediator 1.9.1 修補程式版本。
+
+
+====
 * 如果您安裝 `yum-utils` 套件中、您可以使用 `needs-restarting` 命令。
 
 

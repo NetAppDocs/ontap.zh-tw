@@ -18,6 +18,8 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 如果您有 MetroCluster 組態、則必須執行 `security key-manager onboard enable` 命令先在本機叢集上執行、然後執行 `security key-manager onboard sync` 在遠端叢集上使用相同密碼的命令。當您執行時 `security key-manager onboard enable` 本機叢集的命令、然後在遠端叢集上進行同步處理、您不需要執行 `enable` 從遠端叢集再次執行命令。
 
+深入瞭解 `security key-manager onboard enable`及 `security key-manager onboard sync` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["指令參考資料ONTAP"^]。
+
 根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。您可以使用 `cc-mode-enabled=yes` 選項要求使用者在重新開機後輸入複雜密碼。
 
 如果您已設定、則適用於 NVE `cc-mode-enabled=yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。適用於 `volume create`，您不需要指定 `-encrypt true`。適用於 `volume move start`，您不需要指定 `-encrypt-destination true`。
@@ -84,7 +86,7 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 +
 [NOTE]
 ====
-命令會 `security key-manager key query`取代 `security key-manager query key`命令。如link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["指令參考資料ONTAP"^]需詳細 `security key-manager key query`資訊，請參閱。
+命令會 `security key-manager key query`取代 `security key-manager query key`命令。
 
 ====
 +
@@ -114,6 +116,9 @@ node1                                 NSE-AK   AES-256      true
 
 2 entries were displayed.
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["指令參考資料ONTAP"^]需詳細 `security key-manager key query`資訊，請參閱。
+
 . 也可以將純文字磁碟區轉換為加密磁碟區。
 +
 `volume encryption conversion start`
@@ -127,3 +132,7 @@ node1                                 NSE-AK   AES-256      true
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
 
 每當您設定Onboard Key Manager複雜密碼時、也應該手動將資訊備份到儲存系統外部的安全位置、以便在發生災難時使用。請參閱 link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全金鑰管理程式設定"^]
+
