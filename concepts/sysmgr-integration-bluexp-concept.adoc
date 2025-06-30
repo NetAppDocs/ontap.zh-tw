@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: concepts/sysmgr-integration-bluexp-concept.html 
 keywords: netapp, ontap, system manager, experience, integrate, integration, bluexp, hybrid, cloud, dashboard, multicloud 
-summary: 從功能更新至功能更新至功能更新至功能更新、系統管理程式與BlueXP完全整合ONTAP 。  有了BlueXP、您可以從單一控制面板管理混合式多雲端基礎架構、同時保留熟悉的System Manager儀表板。 
+summary: 您可以使用 BlueXP 中的 System Manager 管理 ONTAP 9.10.1 及更高版本。這種整合讓您可以使用統一的控制平面來有效地監管混合多雲基礎架構，同時保留熟悉的 System Manager 使用者介面。 
 ---
 = 將 ONTAP 系統管理器與 BlueXP 集成
 :hardbreaks:
@@ -16,16 +16,48 @@ summary: 從功能更新至功能更新至功能更新至功能更新、系統�
 
 
 [role="lead"]
-從功能更新至功能更新至功能更新至功能更新、系統管理程式與BlueXP完全整合ONTAP 。  有了BlueXP、您可以從單一控制面板管理混合式多雲端基礎架構、同時保留熟悉的System Manager儀表板。
+您可以使用 BlueXP 中的 System Manager 管理 ONTAP 9.10.1 及更高版本。這種整合讓您可以使用統一的控制平面來有效地監管混合多雲基礎架構，同時保留熟悉的 System Manager 使用者介面。
 
-BlueXP 可讓您建立及管理雲端儲存設備（例如 Cloud Volumes ONTAP ）、使用 NetApp 的資料服務（例如雲端備份）、以及控制許多內部部署和邊緣儲存設備。
+BlueXP 可讓您建立和管理雲端儲存（例如，Cloud Volumes ONTAP）、使用 NetApp 資料服務（例如，Cloud Backup）以及控制許多內部部署和邊緣儲存裝置。
 
-若要在BlueXP中使用System Manager、請執行下列步驟：
+BlueXP提供兩種探索和管理叢集的方法：
+
+* 透過系統管理器直接發現並進行管理（ONTAP 9.12.1 及更高版本）
+* 透過連接器探索
+
+
+連接器是安裝在您環境中的軟體。它允許您透過系統管理員存取管理功能，並存取提供資料複製、備份和復原、資料分類、資料分層等功能的 BlueXP 雲端服務。
+
+深入瞭解 link:https://docs.netapp.com/us-en/bluexp-ontap-onprem/index.html["使用 BlueXP 進行內部部署 ONTAP 叢集管理"^]。
 
 .步驟
-. 開啟網頁瀏覽器、然後輸入叢集管理網路介面的IP位址。
+. 登入 BlueXP。
 +
-如果叢集已連線至BlueXP、則會顯示登入提示。
+.. 如果您有 BlueXP 登入名，請使用它。
+.. 如果這是您第一次，請選擇使用您的 NetApp 支援網站憑證登錄，然後在 BlueXP 登入頁面上輸入您的憑證。
+
+
+. 使用連接器或直接發現功能在 BlueXP 中發現您的本機叢集。了解更多信息，請訪問：https://docs.netapp.com/us-en/bluexp-ontap-onprem/task-discovering-ontap.html[發現本地 ONTAP 集群^]。
++
+.. 瞭解如何link:https://docs.netapp.com/us-en/bluexp-ontap-onprem/task-manage-ontap-direct.html["管理直接發現的集群"^]。
+.. 瞭解如何link:https://docs.netapp.com/us-en/bluexp-ontap-onprem/task-manage-ontap-connector.html["管理使用連接器發現的集群"^]。
+
+
+. 使用系統管理員管理您的本機叢集。在「我的工作環境」畫布上，選擇集群，然後在「服務」清單中點擊「系統管理員」。
++
+.. 深入瞭解 link:https://docs.netapp.com/us-en/bluexp-ontap-onprem/task-manage-ontap-direct.html["管理直接發現的集群"^]。
+.. 瞭解如何link:https://docs.netapp.com/us-en/bluexp-ontap-onprem/task-manage-ontap-connector.html["管理使用連接器發現的集群"^]。
+
+
+
+
+
+
+== BlueXP 和 ONTAP 9.12.1
+
+注意：如果您使用的是 ONTAP 9.12.1，則會出現一則訊息提示您試用 BlueXP。
+
++ 如果叢集已連線至 BlueXP，則會顯示登入提示。
 
 . 按一下*繼續至藍圖XP*以追蹤至藍圖XP的連結。
 +
@@ -48,24 +80,6 @@ https://docs.netapp.com/us-en/cloud-manager-setup-admin/task-logging-in.html["�
 
 .結果
 System Manager隨即顯示、您現在可以從BlueXP管理叢集。
-
-
-
-== 直接從BlueXP探索叢集
-
-BlueXP提供兩種探索和管理叢集的方法：
-
-* 透過System Manager直接探索以進行管理
-+
-這與您追蹤重新導向的前一節所述的探索選項相同。
-
-* 透過連接器探索
-+
-Connector是安裝在您環境中的軟體、可讓您透過System Manager存取管理功能、並存取提供資料複寫、備份與還原、資料分類、資料分層等功能的BlueXP雲端服務。
-
-
-
-前往 https://docs.netapp.com/us-en/cloud-manager-family/index.html["BlueXP文件"^] 以深入瞭解這些探索與管理選項。
 
 
 

@@ -2,7 +2,7 @@
 permalink: smb-hyper-v-sql/verify-domain-accounts-map-default-unix-user-task.html 
 sidebar: sidebar 
 keywords: verfiy, domain, account, default, unix, server, smb, share, user 
-summary: Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用的共用區。若要成功建立連線、電腦帳戶必須成功對應至UNIX使用者。完成此作業最方便的方法是將電腦帳戶對應至預設UNIX使用者。 
+summary: Hyper-V 和 SQL Server 要求將網域電腦帳戶對應到 UNIX 使用者才能進行 SMB 存取。最簡單的方法是將它們對應到預設 UNIX 使用者。 
 ---
 = 確認網域帳戶對應至 ONTAP 中的預設 UNIX 使用者
 :allow-uri-read: 
@@ -16,45 +16,65 @@ Hyper-V和SQL Server使用網域帳戶建立SMB連線、以連線至持續可用
 .關於這項工作
 Hyper-V和SQL Server使用網域電腦帳戶建立SMB連線。此外、SQL Server也會使用網域使用者帳戶做為進行SMB連線的服務帳戶。
 
-當您建立儲存虛擬機器（ SVM ）時、 ONTAP 會自動建立名為「 'pcuser' 」的預設使用者（其 UID 為 `65534`）和名稱為「 'pcuser' 的群組（具有的 GID `65534`）、並將預設使用者新增至「 'pcuser' 」群組。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
+建立儲存虛擬機器 (SVM) 時，ONTAP 會自動建立名為 `pcuser` （UID 為 `65534` ) 和名為 `pcuser` （GID 為 `65534` ），並將預設使用者新增至 `pcuser`團體。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。
 
 .步驟
 . 判斷是否有預設的UNIX使用者：
 +
-`*vserver cifs options show -vserver _vserver_name_*`
-
+[source, cli]
+----
+vserver cifs options show -vserver <vserver_name>
+----
 . 如果未設定預設使用者選項、請判斷是否有UNIX使用者可以指定為預設UNIX使用者：
 +
-`*vserver services unix-user show -vserver _vserver_name_*`
-
-. 如果未設定預設使用者選項、而且沒有UNIX使用者可指定為預設UNIX使用者、請建立預設UNIX使用者和預設群組、然後將預設使用者新增至群組。
+[source, cli]
+----
+vserver services unix-user show -vserver <vserver_name>
+----
+. 如果未設定預設用戶選項，且沒有可指定為預設 UNIX 用戶的 UNIX 用戶，則建立預設群組和預設 UNIX 用戶，並將預設用戶新增至該群組。
 +
-一般而言、預設使用者的使用者名稱為「 'pcuser' 」、必須指派的 UID `65534`。預設群組通常會指定群組名稱「'pcuser'」。指派給群組的 GID 必須是 `65534`。
+通常，預設使用者的使用者名稱是“pcuser”，並且必須分配 UID  `65534` .預設群組一般被賦予群組名稱“pcuser”。指派給群組的 GID 必須是 `65534`。
 
 +
 .. 建立預設群組：
 +
-`*vserver services unix-group create -vserver _vserver_name_ -name pcuser -id 65534*`
+[source, cli]
+----
+vserver services unix-group create -vserver <vserver_name> -name pcuser -id 65534
+----
 .. 建立預設使用者、並將預設使用者新增至預設群組：
 +
-`*vserver services unix-user create -vserver _vserver_name_ -user pcuser -id 65534 -primary-gid 65534*`
+[source, cli]
+----
+vserver services unix-user create -vserver <vserver_name> -user pcuser -id 65534 -primary-gid 65534
+----
 .. 確認已正確設定預設使用者和預設群組：
 +
-`*vserver services unix-user show -vserver _vserver_name_*`
+[source, cli]
+----
+vserver services unix-user show -vserver <vserver_name>
+----
 +
-`*vserver services unix-group show -vserver _vserver_name_ -members*`
+[source, cli]
+----
+vserver services unix-group show -vserver <vserver_name> -members
+----
 
 
 . 如果未設定CIFS伺服器的預設使用者、請執行下列步驟：
 +
 .. 設定預設使用者：
 +
-`*vserver cifs options modify -vserver *vserver_name* -default-unix-user pcuser*`
-
+[source, cli]
+----
+vserver cifs options modify -vserver <vserver_name> -default-unix-user pcuser
+----
 .. 確認預設UNIX使用者已正確設定：
 +
-`*vserver cifs options show -vserver _vserver_name_*`
-
+[source, cli]
+----
+vserver cifs options show -vserver <vserver_name>
+----
 
 
 . 若要驗證應用程式伺服器的電腦帳戶是否正確對應至預設使用者、請將磁碟機對應至 SVM 上的共用、然後使用確認 Windows 使用者與 UNIX 使用者的對應 `vserver cifs session show` 命令。
@@ -64,7 +84,7 @@ Hyper-V和SQL Server使用網域電腦帳戶建立SMB連線。此外、SQL Serve
 
 
 .範例
-下列命令會判斷CIFS伺服器的預設使用者尚未設定、但會判斷「'pcuser'」使用者和「'pcuser'」群組是否存在。在SVM VS1上、「'pcuser'」使用者會被指派為CIFS伺服器的預設使用者。
+。 `pcuser`使用者被指定為 SVM vs1 上的 CIFS 伺服器的預設使用者。
 
 [listing]
 ----

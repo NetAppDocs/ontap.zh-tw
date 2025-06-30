@@ -27,7 +27,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 設定叢集層級的MOTD：
 
-`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+`security login motd modify -vserver <cluster_name> { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
 
 
 
@@ -36,7 +36,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 修改叢集層級的MOTD：
 
-`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] } | [-uri ftp_or_http_addr] }*`
+`security login motd modify -vserver <cluster_name> { [-message "<text>"] } | [-uri <ftp_or_http_addr>] }`
 
 
 
@@ -45,7 +45,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將叢集層級的 MOTD 設定為空白字串 (`""`）：
 
-`*security login motd modify -vserver _cluster_name_ -message ""*`
+`security login motd modify -vserver <cluster_name> -message ""`
 
 
 
@@ -54,8 +54,8 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 設定叢集層級的MOTD、然後在啟用叢集層級MOTD的情況下、將所有SVM層級的MOTD設為空白字串：
 
-.. `*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
-.. `*security login motd modify { -vserver !"_cluster_name_" } -message "" -is-cluster-message-enabled true*`
+.. `security login motd modify -vserver <cluster_name> { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
+.. `security login motd modify { -vserver !"<cluster_name>" } -message "" -is-cluster-message-enabled true`
 
 
 
@@ -65,8 +65,8 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將叢集層級的MOTD設為空白字串、然後為選取的SVM設定SVM層級的MOTD：
 
-.. `*security login motd modify -vserver _cluster_name_ -message ""*`
-.. `*security login motd modify -vserver _svm_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+.. `security login motd modify -vserver <cluster_name> -message ""`
+.. `security login motd modify -vserver <svm_name> { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
 +
 您可以視需要為每個SVM重複此步驟。
 
@@ -79,7 +79,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將叢集和所有SVM設定為使用相同的MOTD：
 
-`*security login motd modify _-vserver_ * { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+`security login motd modify -vserver * { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
 
 [NOTE]
 ====
@@ -93,7 +93,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 設定叢集層級的MOTD、但停用叢集的顯示：
 
-`*security login motd modify -vserver _cluster_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] } -is-cluster-message-enabled false*`
+`security login motd modify -vserver <cluster_name> { [-message "<text>"] | [-uri <ftp_or_http_addr>] } -is-cluster-message-enabled false`
 
 
 
@@ -102,7 +102,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將叢集和所有SVM設定為使用MOTD的空白字串：
 
-`*security login motd modify -vserver * -message ""*`
+`security login motd modify -vserver * -message ""`
 
 
 
@@ -111,17 +111,19 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 使用延伸查詢可選擇性修改MOTD：
 
-`*security login motd modify { -vserver !"_cluster_name_" -message !"" } { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+`security login motd modify { -vserver !"<cluster_name>" -message !"" } { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
 
 
 
  a| 
-在單一或多行訊息的任何位置顯示所有包含特定文字（例如「1月」、後面接著「2015」）的MOTD、即使文字分成不同的行
+顯示單行或多行訊息中任意位置包含特定文字（例如「January」後面跟著「2015」）的所有 MOTD，即使文字分佈在不同的行上
  a| 
 使用查詢顯示MOTD：
 
-`*security login motd show -message *"January"\***"2015"**`
-
+[listing]
+----
+security login motd show -message *"January"*"2015"*
+----
 
 
  a| 
@@ -132,7 +134,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
 |===
 * 在SVM層級管理MOTD：
 +
-指定 `-vserver _svm_name_` 在 SVM 內容中不需要。
+在 SVM 內容中不需要指定 `-vserver <svm_name>`。
 
 +
 |===
@@ -144,7 +146,7 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 修改SVM層級的MOTD：
 
-`*security login motd modify -vserver _svm_name_ { [-message "_text_"] | [-uri _ftp_or_http_addr_] }*`
+`security login motd modify -vserver <svm_name> { [-message "<text>"] | [-uri <ftp_or_http_addr>] }`
 
 
 
@@ -153,8 +155,8 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將SVM層級MOTD設為空白字串、然後讓叢集管理員啟用SVM的叢集層級MOTD：
 
-.. `*security login motd modify -vserver _svm_name_ -message ""*`
-.. （適用於叢集管理員） `*security login motd modify -vserver _svm_name_ -is-cluster-message-enabled true*`
+.. `security login motd modify -vserver <svm_name> -message ""`
+.. （適用於叢集管理員） `security login motd modify -vserver <svm_name> -is-cluster-message-enabled true`
 
 
 
@@ -164,8 +166,8 @@ summary: 您可以在叢集或SVM層級管理當天訊息（MOTD）。根據預�
  a| 
 將SVM層級MOTD設為空白字串、然後讓叢集管理員停用SVM的叢集層級MOTD：
 
-.. `*security login motd modify -vserver _svm_name_ -message ""*`
-.. （適用於叢集管理員） `*security login motd modify -vserver _svm_name_ -is-cluster-message-enabled false*`
+.. `security login motd modify -vserver <svm_name> -message ""`
+.. （適用於叢集管理員） `security login motd modify -vserver <svm_name> -is-cluster-message-enabled false`
 
 
 |===
