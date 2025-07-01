@@ -11,7 +11,7 @@ summary: 若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系�
 
 
 [role="lead"]
-若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系統管理員帳戶建立關聯、帳戶才能存取SVM。您可以使用 `security login publickey create`命令將金鑰與系統管理員帳戶建立關聯。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html["指令參考資料ONTAP"^]需詳細 `security login publickey create`資訊，請參閱。
+若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系統管理員帳戶建立關聯、帳戶才能存取SVM。您可以使用 `security login publickey create`命令將金鑰與系統管理員帳戶建立關聯。
 
 .關於這項工作
 如果您同時使用密碼和SSH公開金鑰透過SSH驗證帳戶、則會先使用公開金鑰驗證帳戶。
@@ -26,9 +26,15 @@ summary: 若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系�
 +
 `security login publickey create -vserver _SVM_name_ -username _user_name_ -index _index_ -publickey _certificate_ -comment _comment_`
 
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html["指令參考資料ONTAP"^]需詳細 `security login publickey create`資訊，請參閱。
+
 . 檢視公開金鑰以驗證變更：
 +
 `security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-show.html["指令參考資料ONTAP"^]需詳細 `security login publickey show`資訊，請參閱。
 
 
 
@@ -40,4 +46,3 @@ summary: 若要進行SSH公開金鑰驗證、您必須先將公開金鑰與系�
 cluster1::> security login publickey create -vserver engData1 -username svmadmin1 -index 5 -publickey
 "<key text>"
 ----
-如link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-show.html["指令參考資料ONTAP"^]需詳細 `security login publickey show`資訊，請參閱。

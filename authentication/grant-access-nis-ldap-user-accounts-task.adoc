@@ -22,7 +22,10 @@ xref:enable-nis-ldap-users-access-cluster-task.adoc[設定LDAP或NIS伺服器存
 +
 您可以在啟用帳戶存取之前或之後執行此工作。
 
-* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
+* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
+
 +
 xref:modify-role-assigned-administrator-task.adoc[修改指派給系統管理員的角色]
 
@@ -55,7 +58,7 @@ cluster1::>security login create -vserver engCluster -user-or-group-name guest2 
 
 . 為LDAP或NIS使用者啟用MFA登入：
 +
-``security login modify -user-or-group-name rem_usr1 -application ssh -authentication-method nsswitch -role admin -is-ns-switch-group no -second-authentication-method publickey``
+`security login modify -user-or-group-name rem_usr1 -application ssh -authentication-method nsswitch -role admin -is-ns-switch-group no -second-authentication-method publickey`
 
 +
 驗證方法可以指定為 `publickey` 和第二種驗證方法 `nsswitch`。

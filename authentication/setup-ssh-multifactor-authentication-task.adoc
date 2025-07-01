@@ -15,7 +15,10 @@ summary: 多因素驗證（ MFA ）可讓您要求使用者提供兩種驗證方
 
 .關於這項工作
 * 您必須是叢集管理員才能執行此工作。
-* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
+* 如果您不確定要指派給登入帳戶的存取控制角色，可以使用 `security login modify`命令稍後再新增該角色。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
+
 +
 link:modify-role-assigned-administrator-task.html["修改指派給系統管理員的角色"]
 
@@ -121,17 +124,21 @@ security login create -vserver <svm_name> -user-or-group-name <user_or_group_nam
 ----
 security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["指令參考資料ONTAP"^]需詳細 `security login modify`資訊，請參閱。
+
 . 確認 MFA 已啟用 TOTP ：
 +
 [listing]
 ----
 security login show
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["指令參考資料ONTAP"^]需詳細 `security login show`資訊，請參閱。
+
 
 
 --
-如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
-
 ====
 .完成後
 * 如果您尚未將公開金鑰與系統管理員帳戶建立關聯、則必須先建立公開金鑰、帳戶才能存取SVM。

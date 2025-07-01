@@ -40,6 +40,9 @@ summary: 設定Web服務存取權可讓授權使用者使用HTTP或HTTPS存取�
 
 . 若要設定叢集層級的 Web 傳輸協定引擎、並讓 Web 服務內容可供存取、請使用 `system services web modify` 命令。
 . 如果您打算使用安全 Web 服務（ HTTPS ）、請啟用 SSL 、並使用為叢集或 SVM 提供數位憑證資訊 `security ssl modify` 命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-ssl-modify.html["指令參考資料ONTAP"^]需詳細 `security ssl modify`資訊，請參閱。
+
 . 若要啟用叢集或 SVM 的 Web 服務、請使用 `vserver services web modify` 命令。
 +
 您必須針對要為叢集或SVM啟用的每個服務重複此步驟。
@@ -48,14 +51,20 @@ summary: 設定Web服務存取權可讓授權使用者使用HTTP或HTTPS存取�
 +
 您授予存取權的角色必須已經存在。您可以使用顯示現有角色 `security login role show` 使用命令或建立新角色 `security login role create` 命令。
 
++
+深入瞭解 `security login role show`及 `security login role create` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login+role["指令參考資料ONTAP"^]。
+
 . 對於已獲授權存取 Web 服務的角色、請檢查的輸出、以確保其使用者也使用正確的存取方法進行設定 `security login show` 命令。
 +
 存取 ONTAP API Web 服務  `ontapi`）、使用者必須使用設定 `ontapi` 存取方法。若要存取所有其他 Web 服務、必須使用設定使用者 `http` 存取方法。
 
 +
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["指令參考資料ONTAP"^]需詳細 `security login show`資訊，請參閱。
+
++
 [NOTE]
 ====
-您可以使用 `security login create` 新增使用者存取方法的命令。
+您可以使用 `security login create`命令來新增使用者的存取方法。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 ====
 

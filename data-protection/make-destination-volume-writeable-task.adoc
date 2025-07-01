@@ -62,9 +62,6 @@ cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_b
 snapmirror abort -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
 ----
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-abort.html["指令參考資料ONTAP"^]需詳細 `snapmirror abort`資訊，請參閱。
-
-+
 
 NOTE: SnapMirror 同步關係不需要此步驟（從 ONTAP 9 開始支援）。
 
@@ -76,15 +73,15 @@ NOTE: SnapMirror 同步關係不需要此步驟（從 ONTAP 9 開始支援）。
 ----
 cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-abort.html["指令參考資料ONTAP"^]需詳細 `snapmirror abort`資訊，請參閱。
+
 . 打破SnapMirror DR關係：
 +
 [source, cli]
 ----
 snapmirror break -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
 ----
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
-
 +
 以下範例打破來源磁碟區之間的關係 `volA` 開啟 `svm1` 以及目的地Volume `volA_dst` 開啟 `svm_backup`：
 
@@ -93,6 +90,9 @@ snapmirror break -source-path <SVM:volume|cluster://SVM/volume> -destination-pat
 ----
 cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
+
 
 
 .後續步驟

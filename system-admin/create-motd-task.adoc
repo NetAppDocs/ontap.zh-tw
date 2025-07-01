@@ -44,7 +44,7 @@ summary: 您可以建立當天訊息（MOTD）、將資訊傳達給已驗證的C
 MOTD的最大大小為2、048位元組、包括換行字元。
 
 +
-`Security login motd modify`說明可用來讓 MOTD 顯示動態產生內容的逸出順序。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-motd-modify.html["指令參考資料ONTAP"^]需詳細 `security login motd modify`資訊，請參閱。
+`Security login motd modify`說明可用來讓 MOTD 顯示動態產生內容的逸出順序。
 
 +
 使用建立的 MOTD `-uri` 參數為靜態。系統不會自動重新整理以反映來源內容的後續變更。
@@ -54,7 +54,7 @@ MOTD的最大大小為2、048位元組、包括換行字元。
 
 . 將 MOTD 顯示在中、以確認已建立 `security login motd show` 命令。
 +
-指定 `-message` 含有空白字串的參數 (`""`）顯示未設定或沒有內容的 MOTD 。
+指定 `-message`帶有空字串（“``”）的參數顯示未配置或沒有內容的 MOTD。
 
 +
 深入瞭解 `security login motd modify`及參數，讓 MOTD 能夠在中顯示動態產生的內容link:https://docs.netapp.com/us-en/ontap-cli/security-login-motd-modify.html["指令參考資料ONTAP"^]。
@@ -62,13 +62,13 @@ MOTD的最大大小為2、048位元組、包括換行字元。
 
 
 .建立MOTD的範例
-以下範例使用非互動模式來建立「cluster1」叢集的MOTD：
+以下範例使用非互動模式為 `cluster1`簇：
 
 [listing]
 ----
 cluster1::> security login motd modify -message "Greetings!"
 ----
-以下範例使用互動模式來建立「svm1」SVM的MOTD、使用轉義序列來顯示動態產生的內容：
+以下範例使用互動模式為 `svm1`使用轉義序列顯示動態產生內容的 SVM：
 
 [listing]
 ----
@@ -99,3 +99,4 @@ Welcome to the \n SVM.  Your user ID is '\N'. Your last successful login was \L.
 
 2 entries were displayed.
 ----
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-motd-show.html["指令參考資料ONTAP"^]需詳細 `security login motd show`資訊，請參閱。

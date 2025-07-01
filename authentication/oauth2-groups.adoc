@@ -75,7 +75,7 @@ NOTE: 如果存取權杖中包含多個群組， ONTAP 會嘗試使用每個群�
 security login create -user-or-group-name "NICAD5\\Domain Users" -application http -authentication-method domain -role admin
 ----
 
-NOTE: 您也可以使用 ONTAP REST API 來設定此功能。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自動化文件"^]。
+NOTE: 您也可以使用 ONTAP REST API 來設定此功能。如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自動化文件"^]。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
 
 
 
@@ -96,7 +96,7 @@ NOTE: 您也可以使用 ONTAP REST API 來設定這些功能。如需詳細資�
 
 ==== 建立
 
-您可以使用命令來定義新的群組對應組態 `security login group create`。群組 UUID 和名稱應與授權伺服器上的組態相符。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-group-create.html["指令參考資料ONTAP"^]需詳細 `security login group create`資訊，請參閱。
+您可以使用命令來定義新的群組對應組態 `security login group create`。群組 UUID 和名稱應與授權伺服器上的組態相符。
 
 .參數
 用於建立群組對應的參數如下所述。
@@ -124,6 +124,8 @@ NOTE: 您也可以使用 ONTAP REST API 來設定這些功能。如需詳細資�
 ----
 security login group create -vserver ontap-cls-1 -name IAM_Dev -type entra -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
 ----
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-group-create.html["指令參考資料ONTAP"^]需詳細 `security login group create`資訊，請參閱。
+
 建立群組之後，會為群組產生唯一的唯讀整數識別碼。
 
 
@@ -152,7 +154,7 @@ NOTE: 您需要先<<將群組 UUID 對應至群組名稱>>擷取為群組產生�
 
 ==== 建立
 
-您可以使用命令定義新的角色對應 `security login group role-mapping create`。如link:https://docs.netapp.com/us-en/ontap-cli/security-login-group-role-mapping-create.html["指令參考資料ONTAP"^]需詳細 `security login group role-mapping create`資訊，請參閱。
+您可以使用命令定義新的角色對應 `security login group role-mapping create`。
 
 .參數
 用於將群組對應至角色的參數如下所述。
@@ -172,6 +174,8 @@ NOTE: 您需要先<<將群組 UUID 對應至群組名稱>>擷取為群組產生�
 ----
 security login group role-mapping create -group-id 1 -role admin
 ----
+如link:https://docs.netapp.com/us-en/ontap-cli/security-login-group-role-mapping-create.html["指令參考資料ONTAP"^]需詳細 `security login group role-mapping create`資訊，請參閱。
+
 
 
 ==== 其他 CLI 作業

@@ -31,14 +31,17 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 * 使用儲存設備進行邏輯傳輸：從 ONTAP 9.3 開始、不再需要手動更新即可重新啟用儲存效率。如果SnapMirror偵測到後處理壓縮已停用、則會在下次排程更新時自動重新啟用儲存效率。來源和目的地都必須執行ONTAP 不支援的9.3。
 * 從功能性的9.3開始ONTAP 、AFF 在FAS 目的地Volume可寫入後、系統會以不同於功能性的方式管理儲存效率設定：
 +
-** 使用命令將目的地 Volume 設為可寫入後 `snapmirror break`，磁碟區上的快取原則會自動設為「自動」（預設）。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
+** 使用以下方法將目標磁碟區設定為可寫入後 `snapmirror break`命令，卷上的快取策略將自動設定為 `auto` (預設).
 +
 [NOTE]
 ====
 這種行為FlexVol 僅適用於不適用於FlexGroup 功能區、不適用於功能區。
 
 ====
-** 重新同步時、快取原則會自動設定為「none"（無）、重複資料刪除和即時壓縮會自動停用、無論您的原始設定為何。您必須視需要手動修改設定。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["指令參考資料ONTAP"^]需詳細 `snapmirror break`資訊，請參閱。
+
+** 重新同步時，快取策略會自動設定為 `none` ，並且無論您的原始設定如何，重複資料刪除和內聯壓縮都會自動停用。您必須視需要手動修改設定。
 
 
 
