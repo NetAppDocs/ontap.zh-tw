@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-cloud-backup-new-bucket-task.html 
 keywords: create, backup, relationship, new, bucket 
-summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 SnapMirror S3 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。 
+summary: 建立新的 S3 儲存桶時，您可以立即將它們備份到物件儲存提供者上的 SnapMirror S3 目標儲存桶，該提供者可以是 StorageGRID 系統或 Amazon S3 部署。 
 ---
 = 為新的 ONTAP S3 儲存區建立雲端備份關係
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 
 
 [role="lead"]
-當您建立新的 S3 儲存區時、可以立即將其備份到物件儲存區供應商的 SnapMirror S3 目標儲存區、該儲存區可以是 StorageGRID 系統或 Amazon S3 部署。
+建立新的 S3 儲存桶時，您可以立即將它們備份到物件儲存提供者上的 SnapMirror S3 目標儲存桶，該提供者可以是 StorageGRID 系統或 Amazon S3 部署。
 
 .開始之前
 * 您擁有物件存放區提供者的有效帳戶認證和組態資訊。
@@ -54,7 +54,7 @@ summary: 當您建立新的 S3 儲存區時、可以立即將其備份到物件�
 
 
 
-. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個 SnapMirror S3 策略：
 +
 .. 按一下 * 保護 > 總覽 * 、然後按一下 * 本機原則設定 * 。
 .. 按一下 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
@@ -109,7 +109,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個 SnapMirror S3 策略： 
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 參數： * `type continuous` – SnapMirror S3 關係唯一的原則類型（必要）。* `-rpo` –指定恢復點目標的時間（以秒為單位）（選用）。* `-throttle` –指定處理量 / 頻寬的上限、單位為千位元組 / 秒（選用）。
@@ -136,7 +136,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 建立 SnapMirror S3 關係：
+. 創建 SnapMirror S3 關係： 
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore -policy _policy_name_`
 +
 參數：

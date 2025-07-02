@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-remote-mirror-new-bucket-task.html 
 keywords: Create a mirror relationship for a new ONTAP S3 bucket on the remote cluster, protect new s3 buckets, remote cluster, mirror relationship, new buckets, new bucket requirements, mirror data to a remote cluster, snapmirror buckets, snapmirror relationship storage vm, new buckets in storage vm, destination clusters, source cluster, mirror data, peering, storage vm add users, snapmirror protection bucket, create snapmirror policy 
-summary: 建立新的 S3 儲存區時、您可以立即將其保護到遠端叢集上的 SnapMirror S3 目的地。 
+summary: 建立新的 S3 儲存桶時，您可以立即將它們保護到遠端叢集上的 SnapMirror S3 目標。 
 ---
 = 為遠端叢集上的新 ONTAP S3 儲存區建立鏡射關係
 :allow-uri-read: 
 
 
 [role="lead"]
-建立新的 S3 儲存區時、您可以立即將其保護到遠端叢集上的 SnapMirror S3 目的地。
+建立新的 S3 儲存桶時，您可以立即將它們保護到遠端叢集上的 SnapMirror S3 目標。
 
 .關於這項工作
 您需要在來源和目的地系統上執行工作。
@@ -39,7 +39,7 @@ summary: 建立新的 S3 儲存區時、您可以立即將其保護到遠端叢�
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組"] 以取得更多資訊。
 
-. 在來源叢集上，如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 在來源叢集上，如果您沒有現有策略且不想使用預設策略，請建立 SnapMirror S3 策略：
 +
 .. 按一下「*保護>總覽*」、然後按一下「*本機原則設定*」。
 .. 按一下 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
@@ -132,7 +132,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ----
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 在來源 SVM 上、如果您沒有現有的 SnapMirror S3 原則、而且不想使用預設原則、請建立該原則：
+. 在來源 SVM 上，如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個： 
 `snapmirror policy create -vserver _svm_name_ -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 參數：
@@ -163,7 +163,7 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 
 
-. 在來源 SVM 上、建立 SnapMirror S3 關係：
+. 在來源 SVM 上，建立 SnapMirror S3 關係：
 +
 `snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]`
 

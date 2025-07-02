@@ -32,7 +32,7 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html["新增S3使用者和群組"] 以取得更多資訊。
 
-. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個 SnapMirror S3 策略：
 +
 .. 按一下「*保護>總覽*」、然後按一下「*本機原則設定*」。
 .. 按一下 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
@@ -96,7 +96,7 @@ summary: 您可以隨時開始備份現有的S3儲存區、例如、如果您將
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個 SnapMirror S3 策略： 
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 參數： * `type continuous` – SnapMirror S3 關係唯一的原則類型（必要）。* `-rpo` –指定恢復點目標的時間（以秒為單位）（選用）。* `-throttle` –指定處理量 / 頻寬的上限、單位為千位元組 / 秒（選用）。
@@ -123,7 +123,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 建立 SnapMirror S3 關係：
+. 創建 SnapMirror S3 關係： 
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore  -policy _policy_name_`
 +
 參數：

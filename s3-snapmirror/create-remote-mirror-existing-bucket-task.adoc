@@ -46,7 +46,7 @@ summary: 您可以隨時開始保護現有的S3儲存桶、例如、如果您從
 +
 請參閱 link:../task_object_provision_add_s3_users_groups.html[" 新增S3使用者和群組"] 以取得更多資訊。
 
-. 在來源叢集上，如果您沒有現有的 SnapMirror S3 原則，而且不想使用預設原則，請建立該原則：
+. 在來源叢集上，如果您沒有現有策略且不想使用預設策略，請建立 SnapMirror S3 策略：
 +
 .. 選取 * 保護 > 總覽 * 、然後按一下 * 本機原則設定 * 。
 .. 選取 image:../media/icon_arrow.gif["箭頭圖示"] * 保護原則 * 旁的、然後按一下 * 新增 * 。
@@ -130,7 +130,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ----
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 在來源 SVM 上、如果您沒有現有的 SnapMirror S3 原則、而且不想使用預設原則、請建立該原則：
+. 在來源 SVM 上，如果您沒有現有的 SnapMirror S3 策略且不想使用預設策略，請建立一個：
 +
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 
@@ -162,7 +162,7 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 
 
-. 在來源 SVM 上、建立 SnapMirror S3 關係：
+. 在來源 SVM 上，建立 SnapMirror S3 關係：
 +
 `snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path dest_peer_svm_name:/bucket/_bucket_name_, ...} [-policy policy_name]`
 
