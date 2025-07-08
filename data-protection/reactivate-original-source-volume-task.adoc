@@ -29,7 +29,7 @@ summary: 當您不再需要從目的地提供資料時、可以重新建立來�
 +
 [NOTE]
 ====
-您必須從原始來源SVM或原始來源叢集執行此命令。雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。如果來源和目的地上不存在一般快照，則命令會失敗。用於 `snapmirror initialize` 重新初始化關係。
+您必須從原始來源SVM或原始來源叢集執行此命令。雖然重新同步不需要基準傳輸、但這可能很耗時。您可能想要在非尖峰時間執行重新同步。如果來源和目的地上不存在一般快照，則命令會失敗。用於 `snapmirror initialize` 重新初始化關係。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
 
 ====
 +
@@ -87,9 +87,6 @@ cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 `snapmirror quiesce -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["指令參考資料ONTAP"^]需詳細 `snapmirror quiesce`資訊，請參閱。
-
-+
 [NOTE]
 ====
 您必須從原始來源SVM或原始來源叢集執行此命令。
@@ -103,6 +100,9 @@ cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_src::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["指令參考資料ONTAP"^]需詳細 `snapmirror quiesce`資訊，請參閱。
+
 . 當完成最後的更新、且關係指出關係狀態為「靜止」時、請從原始來源SVM或原始來源叢集執行下列命令、以中斷反向關係：
 +
 `snapmirror break -source-path _SVM:volume_ -destination-path _SVM:volume_`
@@ -129,9 +129,6 @@ cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 `snapmirror delete -source-path _SVM:volume_ -destination-path _SVM:volume_`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
-
-+
 [NOTE]
 ====
 您必須從原始來源SVM或原始來源叢集執行此命令。
@@ -145,6 +142,9 @@ cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-pa
 ----
 cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["指令參考資料ONTAP"^]需詳細 `snapmirror delete`資訊，請參閱。
+
 . 從原始目的地SVM或原始目的地叢集釋放反向關係。
 +
 `snapmirror release -source-path _SVM:volume_ -destination-path _SVM:volume_`
@@ -196,4 +196,6 @@ cluster_dst::> vserver start svm_backup
 
 
 .完成後
-使用 `snapmirror show`命令驗證是否已建立 SnapMirror 關係。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror show`資訊，請參閱。
+使用 `snapmirror show` 用於驗證 SnapMirror 關係是否已建立的命令。
+
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror show`資訊，請參閱。

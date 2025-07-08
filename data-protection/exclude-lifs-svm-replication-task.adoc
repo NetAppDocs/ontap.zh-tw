@@ -21,8 +21,6 @@ summary: 如果來源和目的地SVM位於不同的子網路中、您可以使�
 .關於這項工作
 。 `-identity-preserve` 的選項 `snapmirror create` 命令必須設為 `true` 當您建立 SVM 複寫關係時。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
-
 .步驟
 . 建立目的地SVM：
 +
@@ -122,6 +120,9 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_weekly -policy unified_exclude_LIFs -identity-preserve true -discard-configs true
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror create`資訊，請參閱。
+
 . 停止目的地SVM：
 +
 `vserver stop`
@@ -142,9 +143,6 @@ cluster_dst::> vserver stop -vserver svm_backup
 `snapmirror initialize -source-path _SVM_: -destination-path _SVM_:`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
-
-+
 以下範例初始化來源之間的關係、 `svm1` 以及目的地、 `svm_backup`：
 
 +
@@ -152,6 +150,9 @@ cluster_dst::> vserver stop -vserver svm_backup
 ----
 cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
+
 
 
 .完成後
@@ -159,4 +160,5 @@ cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_ba
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror建立"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["SnapMirror初始化"^]
 
