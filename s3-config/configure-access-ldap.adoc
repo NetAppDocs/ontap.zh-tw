@@ -105,14 +105,14 @@ ONTAP S3 的預設組態不包括 HTTP ，而且僅使用 HTTPS 和傳輸層安�
 
 [listing]
 ----
-$curl -siku <user>:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku <user>:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想要允許使用者產生自己的金鑰，您必須將 HTTP 權限新增至其角色，才能使用 Curl 。此權限是 S3 API 權限的補充。
 
 
 
-== 設定 Active Directory 或 CIFS 伺服器的 S3 存取權
+== 為 Active Directory 或 SMB 伺服器設定 S3 訪問
 
 如果在 Bucket 原則聲明中指定的 nasgroup 或 nasgroup 的使用者沒有 UID 和 GID 集，則找不到這些屬性時，查詢會失敗。Active Directory 使用 SID ，而非 UID 。如果無法將 SID 項目對應至 UID ，則必須將必要資料帶到 ONTAP 。
 
@@ -120,7 +120,7 @@ NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想
 
 或者，使用link:../authentication/enable-ad-users-groups-access-cluster-svm-task.html["建立Vserver CIFS"]在 Active Directory 網域中建立 SMB 伺服器。
 
-為了避免查詢失敗， NetApp 建議使用受信任網域進行 UPN 格式的資源授權： `nasgroup/group@trusted_domain.com`
+如果名稱伺服器和物件儲存使用不同的域名，則可能會遇到查找失敗的情況。為避免尋找失敗， NetApp建議使用 UPN 格式的受信任網域進行資源授權：  `nasgroup/group@trusted_domain.com`受信任網域是指已新增至 SMB 伺服器受信任網域清單中的網域。了解如何link:../smb-admin/add-remove-replace-trusted-domains-preferred-lists-task.html["新增、刪除和修改首選信任域"]在 SMB 伺服器清單中。
 
 
 
@@ -130,7 +130,7 @@ NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想
 
 [listing]
 ----
-$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user@fqdn>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user@fqdn>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想要允許使用者產生自己的金鑰，您必須將 HTTP 權限新增至其角色，才能使用 Curl 。此權限是 S3 API 權限的補充。
@@ -143,7 +143,7 @@ NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想
 
 [listing]
 ----
-$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn]>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn]>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 將 API 導向叢集管理 LIF ，而非 SVM 的資料 LIF 。如果您想要允許使用者產生自己的金鑰，您必須將 HTTP 權限新增至其角色，才能使用 Curl 。此權限是 S3 API 權限的補充。如果沒有信任的網域，您只需要將選用的網域值（ @FQDN ）新增至使用者名稱。

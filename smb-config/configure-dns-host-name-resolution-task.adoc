@@ -19,7 +19,7 @@ summary: 您可以使用vserver services name-service DNS命令在SVM上啟用DN
 您應該設定多個DNS伺服器、以避免單點故障。如果您只輸入一個 DNS 伺服器名稱，則命令會 `vserver services name-service dns create`發出警告。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-dns-create.html["指令參考資料ONTAP"^]需詳細 `vserver services name-service dns create`資訊，請參閱。
 
 .關於這項工作
-網路管理指南_包含在SVM上設定動態DNS的相關資訊。
+深入瞭解 link:../networking/configure_dynamic_dns_services.html["在 SVM 上設定動態 DNS"]。
 
 .步驟
 . 在SVM上啟用DNS： `vserver services name-service dns create -vserver vserver_name -domains domain_name -name-servers ip_addresses -state enabled`
@@ -37,7 +37,7 @@ vserver services name-service dns create -vserver vs1.example.com -domains examp
 從 ONTAP 9.2 開始 `vserver services name-service dns create` 如果 ONTAP 無法連絡名稱伺服器、命令會執行自動組態驗證、並回報錯誤訊息。
 
 ====
-. 使用顯示 DNS 網域組態 `vserver services name-service dns show` 命令。」
+. 使用顯示 DNS 網域組態 `vserver services name-service dns show` 命令。
 +
 下列命令會顯示叢集中所有SVM的DNS組態：
 

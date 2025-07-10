@@ -2,7 +2,7 @@
 permalink: fabricpool/object-tagging-user-created-custom-tags-task.html 
 sidebar: sidebar 
 keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort, fabricpool sorting, fabricpool data 
-summary: 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件標記功能、讓您能夠分類及排序物件、以便更輕鬆地管理。如果您是具有管理權限層級的使用者、可以建立新的物件標記、以及修改、刪除和檢視現有標記。 
+summary: 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件標記功能、讓您能夠分類及排序物件、以便更輕鬆地管理。 
 ---
 = 使用使用者建立的自訂標記來管理 ONTAP FabricPool Volume
 :allow-uri-read: 
@@ -22,7 +22,7 @@ summary: 從使用者建立的自訂標記開始ONTAP 、FabricPool 支援物件
 .關於這項工作
 您只能在FabricPool 連接StorageGRID 到不只是一個的資料集上設定標籤。這些標記會在Volume移動期間保留。
 
-* 每個磁碟區最多可有 4 個標記。
+* 每個卷最多允許四個標籤。
 * 在 CLI 中，每個物件標籤都必須是以等號分隔的金鑰值配對。
 * 在 CLI 中，多個標籤必須以逗號分隔。
 * 每個標記值最多可包含 127 個字元。
@@ -98,12 +98,12 @@ volume modify [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-
 <key3=value3>,<key4=value4> ]
 ----
 +
-下列範例將現有標記類型=abc的名稱變更為類型=xyz。
+以下範例變更現有標籤的名稱 `type=abc`到 `type=xyz` 。
 
 +
 [listing]
 ----
-vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
+vol modify -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
 ----
 
 
