@@ -14,20 +14,23 @@ summary: 從ONTAP 功能不完整的9.8開始、您可以從FlexGroup SnapMirror
 從ONTAP 功能不完整的9.8開始、您可以從FlexGroup SnapMirror保存庫或從udp目的地還原單一檔案。
 
 .關於這項工作
-* 您可以從FlexGroup 任何幾何的聲音量還原FlexGroup 至任何幾何的聲音量
-* 每個還原作業只支援一個檔案
-* 您可以還原至原始來源FlexGroup 的「聲音量」或新FlexGroup 的「聲音量」
+* 您可以從任何幾何形狀的FlexGroup磁碟區恢復到任何幾何形狀的FlexGroup磁碟區。
+* 每個還原操作僅支援一個檔案。
+* 您可以還原到原始來源FlexGroup磁碟區或新的FlexGroup區。
 * 不支援遠端隔離檔案查詢。
 +
 如果來源檔案設有保護區、則單一檔案還原會失敗。
 
-* 您可以重新啟動或清除中止的單一檔案還原
-* 您應該使用清除失敗的單一檔案還原傳輸 `clean-up-failure` 的選項 `snapmirror restore` 命令
-* 當進行還原單一檔案或處於中止狀態時、支援擴充FlexGroup 功能FlexGroup
+* 您可以重新啟動或清理中止的單一檔案復原。
+* 您應該使用 `clean-up-failure`選項 `snapmirror restore`命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-restore.html["指令參考資料ONTAP"^]需詳細 `snapmirror restore`資訊，請參閱。
+
+* 當FlexGroup單一檔案還原正在進行或處於中止狀態時，支援擴充FlexGroup磁碟區。
 
 
 .步驟
-. 從 FlexGroup 磁碟區還原檔案：``snapmirror restore -destination-path destination_path -source-path source_path -file-list /f1 -throttle throttle -source-snapshot snapshot``
+. 從 FlexGroup 磁碟區還原檔案： `snapmirror restore -destination-path destination_path -source-path source_path -file-list /f1 -throttle throttle -source-snapshot snapshot`
 +
 以下是FlexGroup 一個關於使用單一檔案還原功能的範例。
 

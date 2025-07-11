@@ -62,7 +62,7 @@ cluster1::> vserver services name-service ldap client create
 ----
 +
 
-NOTE: 從 ONTAP 9.2 開始 `-ldap-servers` 取代欄位 `-servers`。此新欄位可以使用LDAP伺服器的主機名稱或IP位址。
+NOTE: 這 `-ldap-servers`字段替換 `-servers`字段。您可以使用 `-ldap-servers`欄位指定 LDAP 伺服器的主機名稱或 IP 位址。
 
 . 將 LDAP 用戶端組態與 SVM 建立關聯： `vserver services name-service ldap create -vserver <SVM_name> -client-config <client_configuration> -client-enabled <true|false>`
 +
@@ -78,7 +78,7 @@ cluster1::>vserver services name-service ldap create -vserver engData -client-co
 ----
 +
 
-NOTE: 從 ONTAP 9.2 開始 `vserver services name-service ldap create` 如果 ONTAP 無法連絡名稱伺服器、命令會執行自動組態驗證、並回報錯誤訊息。
+NOTE: 這 `vserver services name-service ldap create`如果ONTAP無法聯繫名稱伺服器，則該命令將執行自動設定驗證並報告錯誤訊息。
 
 . 使用vserver services name-service LDAP檢查命令來驗證名稱伺服器的狀態。
 +
@@ -95,7 +95,7 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 | LDAP Status Details: Successfully connected to LDAP server "10.11.12.13".                                              |
 ----
 +
-名稱服務檢查命令可從ONTAP 版本號不含資訊的9.2開始使用。
+您可以使用 `name service check``命令來驗證名稱伺服器的狀態。
 
 
 
@@ -120,7 +120,7 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 
 +
 
-NOTE: 從 ONTAP 9.2 開始 `-nis-servers` 取代欄位 `-servers`。此新欄位可取得 NIS 伺服器的主機名稱或 IP 位址。
+NOTE: 這 `-nis-servers`字段替換 `-servers`字段。您可以使用 `-nis-servers`欄位指定 NIS 伺服器的主機名稱或 IP 位址。
 
 +
 以下命令在 SVM 上創建 NIS 域配置 `engData`。NIS 網域 `nisdomain`會與 IP 位址為的 NIS 伺服器進行通訊 `192.0.2.180`。

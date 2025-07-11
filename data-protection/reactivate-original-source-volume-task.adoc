@@ -45,9 +45,6 @@ cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 `vserver stop -vserver _SVM_`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["指令參考資料ONTAP"^]需詳細 `vserver stop`資訊，請參閱。
-
-+
 [NOTE]
 ====
 您必須從原始目的地SVM或原始目的地叢集執行此命令。此命令會停止使用者對整個原始目的地SVM的存取。您可能想要使用其他方法停止存取原始目的地Volume。
@@ -61,12 +58,12 @@ cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_dst::> vserver stop svm_backup
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["指令參考資料ONTAP"^]需詳細 `vserver stop`資訊，請參閱。
+
 . 更新反轉的關係：
 +
 `snapmirror update -source-path _SVM:volume_ -destination-path _SVM:volume_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 +
 [NOTE]
@@ -82,6 +79,9 @@ cluster_dst::> vserver stop svm_backup
 ----
 cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
+
 . 從原始來源SVM或原始來源叢集、停止針對反向關係進行排程傳輸：
 +
 `snapmirror quiesce -source-path _SVM:volume_ -destination-path _SVM:volume_`
@@ -163,12 +163,12 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["指令參考資料ONTAP"^]需詳細 `snapmirror release`資訊，請參閱。
+
 . 從原始目的地重新建立原始資料保護關係：
 +
 `snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["指令參考資料ONTAP"^]需詳細 `snapmirror resync`資訊，請參閱。
 
 +
 以下範例重新建立原始來源磁碟區之間的關係、 `volA` 開啟 `svm1`和原始目的地 Volume 、 `volA_dst` 開啟 `svm_backup`：
@@ -178,12 +178,12 @@ cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["指令參考資料ONTAP"^]需詳細 `snapmirror resync`資訊，請參閱。
+
 . 如有需要、請啟動原始目的地SVM：
 +
 `vserver start -vserver _SVM_`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["指令參考資料ONTAP"^]需詳細 `vserver start`資訊，請參閱。
 
 +
 下列範例會啟動原始目的地SVM：
@@ -193,6 +193,9 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 ----
 cluster_dst::> vserver start svm_backup
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["指令參考資料ONTAP"^]需詳細 `vserver start`資訊，請參閱。
+
 
 
 .完成後
