@@ -64,9 +64,6 @@ Enter the node management interface port [e0M]:
 . 使用登入管理帳戶 `admin` 使用者名稱。
 . 啟動叢集設定精靈：
 +
-`*cluster setup*`
-
-+
 [listing]
 ----
 ::> cluster setup
@@ -91,7 +88,7 @@ command line interface:
 +
 [NOTE]
 ====
-如需使用設定 GUI 設定叢集的詳細資訊，請參閱link:https://docs.netapp.com/us-en/ontap/manage-nodes-sm-task.html["系統管理員"]線上說明。如link:https://docs.netapp.com/us-en/ontap-cli/cluster-setup.html["指令參考資料ONTAP"^]需詳細 `cluster setup`資訊，請參閱。
+有關使用設定 GUI 設定叢集的更多信息，請參閱link:https://docs.netapp.com/us-en/ontap/task_admin_add_nodes_to_cluster.html["節點管理文檔"] 。如link:https://docs.netapp.com/us-en/ontap-cli/cluster-setup.html["指令參考資料ONTAP"^]需詳細 `cluster setup`資訊，請參閱。
 
 ====
 . 按Enter鍵以使用CLI完成此工作。當系統提示您建立新叢集或加入現有叢集時、請輸入 `*join*`。
@@ -102,7 +99,7 @@ Do you want to create a new cluster or join an existing cluster? {create, join}:
 join
 ----
 +
-如果在新節點上執行的 ONTAP 版本與在現有叢集上執行的版本不同、系統會回報 A `System checks Error: Cluster join operation cannot be performed at this time` 錯誤。這是預期的行為。若要繼續、請執行 `add-node -allow-mixed-version-join new_node_name` 從叢集中的現有節點執行進階權限層級的命令。
+如果新節點上執行的 ONTAP 版本與現有叢集上執行的版本不同，系統會回報 `System checks Error: Cluster join operation cannot be performed at this time`錯誤。這是預期的行為。若要繼續，請從叢集中的現有節點，以進階權限層級執行 `cluster add-node -allow-mixed-version-join true -cluster-ips <IP address> -node-names <new_node_name>`命令。
 
 . 依照提示設定節點並將其加入叢集：
 +
@@ -117,4 +114,6 @@ join
 將節點新增至叢集後、您應該為每個HA配對啟用儲存容錯移轉。
 
 .相關資訊
-link:../upgrade/concept_mixed_version_requirements.html#mixed-version-clusters-supported-for-ontap-software-upgrades["混合版本 ONTAP 叢集"]
+* link:../upgrade/concept_mixed_version_requirements.html#mixed-version-clusters-supported-for-ontap-software-upgrades["支援 ONTAP 軟體升級的混合版本叢集"]
+* https://docs.netapp.com/us-en/ontap-cli/cluster-add-node.html["叢集附加節點"^]
+
