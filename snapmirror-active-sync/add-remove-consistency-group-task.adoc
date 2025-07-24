@@ -24,7 +24,7 @@ summary: 如果您想要新增或移除磁碟區來變更一致性群組的組�
 +
 如果您想要新增或移除磁碟區來變更一致性群組的組成、則必須先刪除原始關聯、然後以新的組成方式再次建立一致性群組。
 
-* 從 ONTAP 9.13.1 開始，您可以不中斷地將磁碟區新增至一致性群組，並從來源或目的地建立有效的 SnapMirror 關係。
+* 從ONTAP 9.13.1 開始，您可以無中斷地從來源或目標新增磁碟區至具有活動SnapMirror關係的一致性群組。 NVMe協定不支援此操作。
 +
 移除磁碟區是一項破壞性作業。在移除磁碟區之前、您必須先刪除 SnapMirror 關係。
 
@@ -76,7 +76,7 @@ NOTE: 目的地LUN會取消對應、而主要複本上的LUN則會繼續為主�
 +
 `source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst -relationship-info-only true`
 
-. ** 如果您使用的是 ONTAP 9.10.1 至 9.13.0 ，則 ** 刪除並重新建立來源上的一致性群組，並使用正確的組合。請依照中的步驟進行 xref:../consistency-groups/delete-task.html[刪除一致性群組] 然後 xref:../consistency-groups/configure-task.html[設定單一一致性群組]。在版本更新的版本中、您必須在System Manager或使用REST API執行刪除和建立作業、而無需執行CLI程序。ONTAP ONTAP
+. **如果您使用的是ONTAP 9.10.1 至 9.13.0，**請刪除來源上的一致性群組，然後重新建立該一致性群組，並使其組成正確。遵循 link:../consistency-groups/delete-task.html["刪除一致性群組"] 中的步驟，然後按link:../consistency-groups/configure-task.html["設定單一一致性群組"]。ONTAP必須在系統管理員中或使用ONTAP REST API 執行刪除和建立操作；沒有 CLI 程序。
 +
 ** 如果您使用的是 ONTAP 9.9.1 、請跳至下一個步驟。 **
 

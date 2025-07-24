@@ -1,0 +1,56 @@
+---
+permalink: authentication/elevate-jit-access-task.html 
+sidebar: sidebar 
+keywords: just in time, just-in-time, privilege elevation, password, security, authentication, JIT, elevation 
+summary: 配置即時權限提升，允許ONTAP使用者暫時提升其權限來執行某些任務。 
+---
+= 在ONTAP中存取 JIT 權限提升
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 9.17.1 開始，叢集管理員可以link:configure-jit-elevation-task.html["配置即時（JIT）權限提升"]允許ONTAP使用者暫時提升其權限以執行某些任務。為使用者設定 JIT 後，使用者可以將其權限暫時提升到具有執行任務所需權限的角色。會話到期後，使用者將恢復其原始存取等級。
+
+叢集管理員可以設定使用者存取 JIT 提升的時長。例如，叢集管理員可以將使用者存取 JIT 提升的權限配置為每次會話 30 分鐘（會話有效期），為期 30 天（JIT 有效期）。在 30 天的期限內，使用者可以根據需要多次提升權限，但每次會話的時長限制為 30 分鐘。
+
+.關於這項工作
+* JIT 權限提升僅適用於使用 SSH 存取ONTAP的使用者。提升的權限僅在目前 SSH 會話中可用，但您可以根據需要在任意數量的並發 SSH 會話中提升權限。
+* JIT 權限提升僅支援使用密碼、nsswitch 或網域驗證登入的使用者。 JIT 權限提升不支援多重身分驗證 (MFA)。
+* 如果設定的會話或 JIT 有效期到期，或叢集管理員撤銷使用者的 JIT 存取權限，則使用者的 JIT 會話將會終止。
+
+
+.開始之前
+* 若要存取 JIT 權限提升，叢集管理員必須為您的帳戶設定 JIT 存取權限。叢集管理員將確定您可以提升權限的角色，以及您可以存取提升權限的時間長度。
+
+
+.步驟
+. 暫時將您的權限提升至配置的角色：
++
+[source, cli]
+----
+security jit-privilege elevate
+----
++
+輸入此指令後，系統會提示您輸入登入密碼。如果您的帳戶配置了 JIT 存取權限，您將在配置的會話時間長度內獲得提升的存取權限。會話時長到期後，您將恢復到原始存取等級。您可以在設定的 JIT 有效期內根據需要多次提升權限。
+
+. 查看 JIT 會話中的剩餘時間：
++
+[source, cli]
+----
+security jit-privilege show-remaining-time
+----
++
+如果您目前處於 JIT 會話中，此命令將顯示剩餘時間。
+
+. 如果需要，請提前結束 JIT 會話：
++
+[source, cli]
+----
+security jit-privilege reset
+----
++
+如果您目前處於 JIT 會話中，此命令將結束 JIT 會話並恢復您的原始存取等級。
+
+

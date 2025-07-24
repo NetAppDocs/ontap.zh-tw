@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/cloud-mediator-config-task.html 
+keywords: SM-BC, SMBC, cluster, peering, ONTAP Cloud Mediator, initialize, snapmirror active sync 
+summary: 將ONTAP Cloud Mediator 與SnapMirror主動同步結合使用時，必須先確認已設定BlueXP服務和用戶端資訊。 
+---
+= 為SnapMirror主動同步設定ONTAP Cloud Mediator
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 9.17.1 開始，您可以使用ONTAP Cloud Mediator 監控每個叢集的運作狀況，從而實現業務連續性。 ONTAPCloud Mediator 是一項基於雲端的服務。將ONTAP Cloud Mediator與SnapMirror主動同步功能結合使用時，必須先確認已配置BlueXP服務和客戶端訊息，並確保叢集對等連線正常。
+
+與ONTAP Mediator 一樣， ONTAP Cloud Mediator 為SnapMirror主動同步關係中的ONTAP叢集所使用的高可用性 (HA) 元資料提供持久且受保護的儲存。 ONTAPONTAP Mediator 提供同步節點運作狀況查詢功能，以協助確定仲裁數量，並可用作控制器活躍度偵測的 ping 代理程式。
+
+.開始之前
+在設定ONTAP Cloud Mediator 之前，您應該確認以下資訊：
+
+* 叢集已配置。
++
+link:cluster-config-task.html["為SnapMirror主動同步配置ONTAP集群"]
+
+* 您擁有有效的BlueXP訂閱。
++
+link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-subscribe-standard-mode.html["訂閱BlueXP數據服務（標準模式）"]
+
+* 您已從BlueXP控制台複製BlueXP組織 ID，並建立了BlueXP成員服務帳戶，以便在設定ONTAP Cloud Mediator 時使用。建立服務帳戶時，必須將組織設定為您設定ONTAP Cloud Mediator 的訂閱。類別必須設定為“應用程式”，角色類型必須設定為“ONTAP Mediator 設定角色”。建立角色時，必須儲存客戶端 ID 和客戶端金鑰。
++
+link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-iam-manage-members-permissions.html#add-members["新增BlueXP會員和服務帳戶"]
+
+
+
+.步驟
+您可以使用系統管理員或ONTAP CLI 新增ONTAP Cloud Mediator。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 導航至*保護>概述>中介*並選擇*新增*。
+. 在「新增中介器」視窗中，選擇「雲端」作為中介器類型並輸入以下資訊：
++
+** BlueXP組織 ID
+** BlueXP客戶端 ID
+** BlueXP客戶端金鑰
+
+
+. 選擇集群對等方。
+. 如果您正在使用 HTTP 代理且尚未配置，請輸入本機和遠端主機的 HTTP 代理資訊。
++
+建議您為每個叢集對等體使用不同的代理伺服器。
+
+. 可選：如果需要在ONTAP中安裝根 CA 證書，尤其是在使用代理伺服器時，請將證書貼到提供的文字方塊中。
+. 選取*「Add*」。
+. 導覽至 *保護>概覽* 並檢查SnapMirror活動同步叢集和ONTAP Cloud Mediator 之間的關係狀態。
+
+
+--
+.CLI
+--
+. 配置ONTAP Cloud Mediator： 
+`snapmirror mediator add -peer-cluster <peerClusterName> -type cloud -bluexp-org-id <BlueXP Organization ID> -service-account-client-id <Service Account Client ID> -use-http-proxy-local <true|false> -use-http-proxy-remote <true|false>`
+. 檢查ONTAP Cloud Mediator 狀態： 
+`snapmirror mediator show`
++
+範例：
+
++
+[listing]
+----
+C1_cluster::> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status Type
+---------------- ---------------- ----------------- ------------- -------
+0.0.0.0          C2_cluster       connected         true          cloud
+----
+
+
+--
+====

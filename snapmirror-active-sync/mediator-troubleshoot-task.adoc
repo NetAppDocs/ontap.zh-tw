@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/mediator-troubleshoot-task.html 
-keywords: troubleshooting, SM-BC, SMBC, Mediator, quorum, quorum status, failover, network, snapmirror active sync 
+keywords: troubleshooting, SM-BC, SMBC, Mediator, Cloud Mediator, quorum, quorum status, failover, network, snapmirror active sync 
 summary: 執行SnapMirror容錯移轉啟動命令之後、SnapMirror容錯移轉show命令的輸出會顯示訊息、指出「媒體器」尚未設定。 
 ---
-= ONTAP Mediator 無法連線或 Mediator 仲裁狀態為假
+= ONTAP調解器或ONTAP Cloud 調解器無法存取或調解器仲裁狀態為 false
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -13,11 +13,13 @@ summary: 執行SnapMirror容錯移轉啟動命令之後、SnapMirror容錯移轉
 :imagesdir: ../media/
 
 
-.問題：
 [role="lead"]
-執行之後 `snapmirror failover start` 命令、的輸出 `snapmirror failover show` 命令會顯示訊息、指出 ONTAP Mediator 尚未設定。
+如果ONTAP調解器或ONTAP Cloud 調解器無法訪問，或調解器仲裁狀態為假，請使用下列資訊。
 
-請參閱 link:mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]。
+.問題：
+執行 `snapmirror failover start`命令，輸出為 `snapmirror failover show`指令會顯示一則訊息，表示ONTAP Mediator 或ONTAP Cloud Mediator 未配置。
+
+看link:mediator-install-task.html["設定 ONTAP Mediator 和叢集以進行 SnapMirror 主動式同步"]或者link:cloud-mediator-config-task.html["為SnapMirror主動同步設定ONTAP Cloud Mediator"] 。
 
 ....
 Cluster1::> snapmirror failover show

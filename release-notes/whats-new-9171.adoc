@@ -1,0 +1,162 @@
+---
+permalink: release-notes/whats-new-9171.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.17.1' 
+summary: 了解ONTAP 9.17.1 中提供的新功能。 
+---
+= ONTAP 9.17.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.17.1 中提供的新功能。
+
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+
+* 瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["適用於NetApp ASA r2 系統的全新增強型ONTAP軟體功能"^] 。
+* 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["對AFF、 ASA和FAS系統以及支援的交換器的全新和增強支持"^] 。
+* 瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
+
+
+若要升級至最新版的 ONTAP ，請參閱link:../upgrade/create-upgrade-plan.html["準備升級 ONTAP"]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../nvme/support-limitations.html#features[SnapMirror主動同步支援透過 NVMe 進行主機訪問]
+ a| 
+SnapMirror主動同步功能新增了對 VMware 工作負載的 NVMe 存取支持，支援 NVMe/TCP 和 NVMe/FC 主機訪問，適用於雙節點ONTAP叢集。 VMware工作負載對 NVMe/TCP 的支援取決於 VMware 漏洞的修復情況。
+
+
+
+ a| 
+xref:../snapmirror-active-sync/index.html[ONTAP Cloud Mediator 支援SnapMirror主動同步]
+ a| 
+ONTAP Cloud Mediator 是ONTAP 9.17.1 中引入的新功能，支援SnapMirror主動同步關係。基於雲端的調解器（例如ONTAP Mediator）可充當SnapMirror主動同步關係的仲裁見證，確保透明的故障轉移，同時降低維護和管理第三個站點的操作複雜性。
+
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../s3-multiprotocol/index.html[ONTAP S3 NAS 儲存桶中的 ObjectCopy 操作支持]
+ a| 
+ONTAP S3 NAS 儲存桶內支援 ObjectCopy 操作。
+
+
+
+ a| 
+xref:../s3-multiprotocol/index.html#object-multipart-upload[支援將 S3 NAS 儲存桶連結到連線路徑]
+ a| 
+使用ONTAP CLI 建立 S3 NAS 儲存桶時，您可以選擇將儲存桶連結到卷，而不是使用連線路徑。連結到磁碟區時，如果路徑發生變化（例如，卸載或掛載磁碟區時），連線路徑會自動更新。
+
+
+
+ a| 
+xref:../s3-multiprotocol/index.html#object-multipart-upload[S3 多協定支援標記和元數據]
+ a| 
+使用 S3 多協定的 CreateMultipartUpload 操作支援標記和使用者元資料鍵/值對。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../system-admin/use-hsts-task.html[HTTP 嚴格傳輸安全性 (HSTS) 支持]
+ a| 
+ONTAP支援 Web 服務的 HTTP 嚴格傳輸安全，因此能夠在使用者瀏覽器和ONTAP之間實作安全的 HTTPS 通訊。
+
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[透過鏈路聚合組進行 IPsec 硬體卸載]
+ a| 
+ONTAP支援鏈路聚合組的 IPsec 硬體卸載，擴展了 9.16.1 中引入的硬體卸載支援。
+
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[IPsec 後量子預共享密鑰支持]
+ a| 
+ONTAP支援 IPsec 的後量子預共用金鑰，以防止未來潛在的量子電腦攻擊。
+
+
+
+ a| 
+xref:../encryption-at-rest/manage-keys-barbican-task.html[OpenStack Barbican 金鑰管理器支援]
+ a| 
+ONTAP支援 OpenStack 的 Barbican 金鑰管理器用於NetApp磁碟區加密 (NVE) 金鑰。
+
+
+
+ a| 
+xref:../authentication/configure-jit-elevation-task.html[即時 (JIT) 權限提升支持]
+ a| 
+ONTAP支援基於角色的存取控制 (RBAC) 的 JIT 權限提升。使用者可以請求臨時提升到已配置的角色，從而按需存取特權命令。叢集管理員可以設定哪些人可以存取 JIT 權限提升，以及何時允許存取以及允許存取多長時間。
+
+
+
+ a| 
+xref:../system-admin/configure-saml-authentication-task.html[支援 Entra IdP 和 IdP 群組支援 SAML 身份驗證]
+ a| 
+ONTAP支援使用 Microsoft Entra 作為 SAML 身分提供者。此外，IdP 提供的群組資訊可以對應到ONTAP角色。
+
+
+
+ a| 
+xref:../system-admin/audit-manage-cross-cluster-requests.html[跨集群請求審計]
+ a| 
+您可以在啟動來源叢集和目標（執行）叢集上配置並執行稽核作業。在先前的版本中，只有接收客戶端請求的叢集才會執行稽核。借助此功能，滿足跨群集請求的對等群集也會記錄該活動。這些審計操作可以啟用並擴展到在ONTAP中發起的任何 SET 或 GET 請求。
+
+
+
+ a| 
+xref:../anti-ransomware/index.html[支援具有自主勒索軟體防護功能的 SAN]
+ a| 
+ARP 支援基於加密的異常檢測功能，可支援 SAN 卷，引入用於詳細熵統計的新命令，並統一了系統管理器中先前專注於 NAS 的勒索軟體防護訊息傳遞。可配置的偵測閾值和更確定性的快照保留功能為各種工作負載提供了更大的靈活性。
+
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../task_nas_file_system_analytics_enable.html[預設情況下，新磁碟區啟用 FSA]
+ a| 
+在ONTAP叢集上新建的 SVM 上建立的磁碟區（如果已指派 NAS 協定）預設啟用檔案系統分析 (FSA)。 FSA會在磁碟區建立後立即自動激活，無需額外配置即可提供即時分析功能。
+
+
+
+ a| 
+xref:../flexgroup/fast-directory-delete-asynchronous-task.html[增強了對查看FlexGroup磁碟區上的直接刪除進度的支持]
+ a| 
+ONTAP CLI 指令 `volume file async-delete show`已增強，包括從客戶端發出的非同步刪除作業。
+
+|===

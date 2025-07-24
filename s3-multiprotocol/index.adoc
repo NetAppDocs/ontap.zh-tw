@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: multiprotocol, s3, configuration, overview, nfs, smb, multipart 
 summary: 從ONTAP S廳9.12.1開始、您可以讓執行S3傳輸協定的用戶端存取使用NFS和SMB傳輸協定的用戶端所獲得的相同資料、而無需重新格式化。 
 ---
-= ONTAP 中的 S3 多重傳輸協定支援
+= 了解ONTAP S3 多協定支持
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,11 +17,11 @@ S3多重傳輸協定功能可解決兩種使用案例：
 
 . 使用S3用戶端存取現有的NAS資料
 +
-如果您現有的資料是使用傳統NAS用戶端（NFS或SMB）建立、而且位於NAS磁碟區（FlexVol VMware FlexGroup 或VMware Volume）上、您現在可以使用S3用戶端上的分析工具來存取這些資料。
+如果您現有的資料是使用傳統 NAS 用戶端（NFS 或 SMB）建立的，並且位於 NAS 磁碟區（FlexVol或FlexGroup磁碟區）上，則您可以使用 S3 用戶端上的分析工具來存取此資料。
 
 . 後端儲存設備、適用於能夠使用NAS和S3傳輸協定執行I/O的現代化用戶端
 +
-您現在可以為 Spark 和 Kafka 等應用程式提供整合式存取、以便使用 NAS 和 S3 傳輸協定來讀取和寫入相同的資料。
+您可以為 Spark 和 Kafka 等可以使用 NAS 和 S3 協定讀取和寫入相同資料的應用程式提供整合存取。
 
 
 
@@ -82,7 +82,11 @@ NOTE: S3 NAS 貯體中的多個物件必須以 1MB 的零件大小對齊。例�
 
 * AbortMultiPart上 傳
 * 完成多個部分上傳
+* CopyObject（從ONTAP 9.17.1 開始）
 * 建立多個部分上傳
++
+從ONTAP 9.17.1 開始，CreateMultipartUpload 支援標記和使用者元資料鍵/值對。
+
 * 清單多個部分上傳
 * 上傳零件
 
@@ -111,7 +115,6 @@ NOTE: S3 NAS 儲存區不支援依零件編號取得（「 partnumber=xx 」）�
 +
 --
 * ByPassGovernanceRetention
-* CopyObject
 * 刪除 BucketLifecycleConfiguration
 * GetBucketLifecycleConfiguration
 * GetBucketObjectLockConfiguration
@@ -134,6 +137,8 @@ NOTE: 在 S3 NAS 儲存區中使用 S3 時，不支援這些 S3 行動。使用�
 AWS使用者中繼資料::
 +
 --
+* 從ONTAP 9.17.1 開始，支援具有多部分物件的元資料。
+* 從ONTAP 9.16.1 開始，支援具有單一藝術物件的元資料。
 * 對於 ONTAP 9.15.1 及更早版本，作為 S3 使用者中繼資料一部分所接收的金鑰值配對，不會與物件資料一起儲存在磁碟上。
 * 對於 ONTAP 9.15.1 及更早版本，會忽略前置字元為「 x-amz-meta 」的要求標頭。
 
@@ -142,6 +147,8 @@ AWS使用者中繼資料::
 AWS標籤::
 +
 --
+* 從ONTAP 9.17.1 開始，支援具有多部分物件的標籤。
+* 從ONTAP 9.16.1 開始，支援單一藝術物件的標籤。
 * 對於 Put 物件和 Multifart 初始化要求的 ONTAP 9.15.1 及更早版本，會忽略前置「 x-amz-tagging 」的標頭。
 * 對於 ONTAP 9.15.1 及更早版本，以「標記查詢字串」來更新現有檔案（「放置」，「取得」及「刪除」要求）上的標記要求會遭到拒絕，並出現錯誤。
 

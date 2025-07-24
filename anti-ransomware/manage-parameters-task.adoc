@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/manage-parameters-task.html 
-keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
+keywords: ransomware, security, modify, security anti-ransomware attack, parameters 
 summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體保護偵測參數。 
 ---
 = 管理 ONTAP 自主勒索軟體保護攻擊偵測參數
@@ -22,8 +22,13 @@ summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體
 
 == 攻擊偵測的運作方式
 
-當自主勒索軟體保護（ ARP ）處於學習模式時、它會為 Volume 行為開發基準值。這些是 Entropy ，檔案副檔名，以及從 ONTAP 9.11.1 開始的 IOPS 。這些基準用於評估勒索軟體威脅。如需這些條件的詳細資訊，請參閱xref:index.html#what-arp-detects[ARP 偵測到什麼]。
+當自主勒索軟體防護 (ARP) 處於學習或評估模式時，它會為卷宗行為制定基準值。這些基準值包括熵、檔案副檔名以及（從ONTAP 9.11.1 開始的）IOPS。這些基準用於評估勒索軟體威脅。有關這些標準的更多信息，請參閱link:index.html#what-arp-detects["ARP 偵測到什麼"] 。
 
+某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
+
+從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
+
+.NAS 環境中的攻擊偵測
 在 ONTAP 9.10.1 中、如果 ARP 偵測到下列兩種情況、就會發出警告：
 
 * 超過 20 個檔案的副檔名先前未在磁碟區中觀察到
@@ -33,28 +38,30 @@ summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體
 從 ONTAP 9.11.1 開始，如果符合 _ 僅 _ 一個條件， ARP 就會發出威脅警告。例如，如果在 24 小時內觀察到超過 20 個檔案的副檔名，而這些副檔名先前未在磁碟區中觀察到，則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。24 小時和 20 個檔案值為預設值，可加以修改。
 
 
-NOTE: 若要減少大量誤報，請前往 * 儲存 > 磁碟區 > 安全性 > 設定工作負載特性 * ，並停用 * 監控新檔案類型 * 。此設定在 ONTAP 9 中預設為停用。 14.1 P7 ， 9.15.1 P1 和 9.16.1 RC 及更新版本。
+NOTE: 若要減少大量誤報，請前往“儲存”>“磁碟區”>“安全性”>“設定工作負載特性”，並停用“監控新檔案類型”。此設定在ONTAP 9.14.1 P7、9.15.1 P1、9.16.1 及更高版本中預設為停用。
 
-從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
-
-某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
+.SAN 環境中的攻擊偵測
+從ONTAP 9.17.1 開始，如果 ARP 偵測到超過自動學習閾值的高加密速率，則會發出警告。此閾值是在link:respond-san-entropy-eval-period.html["評估期"]但可以修改。
 
 
 
 == 修改攻擊偵測參數
 
-視您的 ARP 磁碟區預期行為而定、您可能需要修改攻擊偵測參數。
+根據啟用 ARP 的磁碟區的預期行為，您可能需要修改攻擊偵測參數。
 
 .步驟
 . 檢視現有的攻擊偵測參數：
 +
-`security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>`
-
+[source, cli]
+----
+security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>
+----
 +
 ....
 security anti-ransomware volume attack-detection-parameters show -vserver vs1 -volume vol1
                                              Vserver Name : vs1
                                               Volume Name : vol1
+           Block Device Auto Learned Encryption Threshold : 10
             Is Detection Based on High Entropy Data Rate? : true
   Is Detection Based on Never Seen before File Extension? : true
                   Is Detection Based on File Create Rate? : true
@@ -68,10 +75,7 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
  Never Seen before File Extensions Count Notify Threshold : 20
        Never Seen before File Extensions Duration in Hour : 24
 ....
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-attack-detection-parameters-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume attack-detection-parameters show`資訊，請參閱。
-
-. 所有顯示的欄位都可以使用布林值或整數值來修改。若要修改欄位、請使用 `security anti-ransomware volume attack-detection-parameters modify` 命令。
+. 所有顯示的欄位均可使用布林值或整數值進行修改。若要修改字段，請使用 `security anti-ransomware volume attack-detection-parameters modify`命令。
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-attack-detection-parameters-modify.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume attack-detection-parameters modify`資訊，請參閱。
 
@@ -96,7 +100,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .修改基準突波
 . 如果回報的喘振應視為正常應用程式行為、請回報喘振、以修改基準喘振值。
 +
-`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`詳細 `security anti-ransomware volume workload-behavior update-baseline-from-surge` 如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-update-baseline-from-surge.html["指令參考資料ONTAP"^]需資訊，請參閱。
+`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`
+
++
+詳細了解 `security anti-ransomware volume workload-behavior update-baseline-from-surge`在link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-update-baseline-from-surge.html["指令參考資料ONTAP"^] 。
 
 
 
@@ -112,24 +119,27 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 這兩個事件的警示可在個別磁碟區或整個 SVM 上設定。如果您啟用 SVM 的警示、則警示設定只會由啟用警示後建立的磁碟區繼承。根據預設、警示不會在任何磁碟區上啟用。
 
-事件警示可透過多重管理驗證來控制。如需詳細資訊、請參閱 xref:use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp[使用 ARP 保護的磁碟區進行多重管理驗證]。
+事件警報可透過多管理員驗證進行控制。有關更多信息，請參閱link:use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp["使用 ARP 保護的磁碟區進行多重管理驗證"] 。
+
+.步驟
+您可以使用系統管理員或ONTAP CLI 設定 ARP 事件警報。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 .設定磁碟區的警示
-. 瀏覽至 ** Volumes （磁碟區） ** 。選取您要修改設定的個別磁碟區。
-. 選擇「 ** 安全性 ** 」標籤、然後選擇「事件安全性設定 ** 」。
-. 若要接收關於「偵測到新的副檔名 ** 」和「建立的勒索軟體快照 ** 」的警示、請選取「 ** 嚴重性 ** 」標題下的下拉式功能表。將設定從「不產生事件」 ** 修改為「通知」 ** 。
-. 選擇 ** 儲存 ** 。
+. 導航到“卷”。選擇要修改設定的單一磁碟區。
+. 選擇“*安全*”選項卡，然後選擇“*事件嚴重性設定*”。
+. 若要接收「偵測到新檔案副檔名」和「已建立勒索軟體快照」的警報，請選擇「嚴重性」標題下的下拉式功能表。將設定從「不產生事件」修改為「通知」。
+. 選擇*保存*。
 
 
 .設定 SVM 的警示
-. 瀏覽至 ** 儲存 VM** 、然後選取您要啟用設定的 SVM 。
-. 在「 ** 安全性 ** 」標題下、找到「 ** 防勒索軟體 ** 」卡。接著選擇 image:../media/icon_kabob.gif["功能表選項圖示"] 「編輯勒索軟體事件嚴重性」 ** 。
-. 若要接收關於「偵測到新的副檔名 ** 」和「建立的勒索軟體快照 ** 」的警示、請選取「 ** 嚴重性 ** 」標題下的下拉式功能表。將設定從「不產生事件」 ** 修改為「通知」 ** 。
-. 選擇 ** 儲存 ** 。
+. 導覽至 *儲存虛擬機器*，然後選擇要啟用設定的 SVM。
+. 在「安全性」標題下，找到「反勒索軟體」標籤。選擇image:../media/icon_kabob.gif["功能表選項圖示"]然後*編輯勒索軟體事件嚴重性*。
+. 若要接收「偵測到新檔案副檔名」和「已建立勒索軟體快照」的警報，請選擇「嚴重性」標題下的下拉式功能表。將設定從「不產生事件」修改為「通知」。
+. 選擇*保存*。
 
 
 --
@@ -145,9 +155,6 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 `security anti-ransomware volume event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
 * 使用確認您的設定 `anti-ransomware volume event-log show` 命令。
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-event-log-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume event-log show`資訊，請參閱。
-
 
 
 .設定 SVM 的警示
@@ -159,14 +166,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 +
 `security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-vserver-event-log-modify.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware vserver event-log modify`資訊，請參閱。
-
 * 使用確認您的設定 `security anti-ransomware vserver event-log show` 命令。
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-vserver-event-log-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware vserver event-log show`資訊，請參閱。
 
 
+詳細了解 `security anti-ransomware vserver event-log`命令link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security-anti-ransomware-vserver-event-log["指令參考資料ONTAP"^] 。
 
 --
 ====

@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/cloud-mediator-slow-troubleshoot-task.html 
+keywords: troubleshooting, SM-BC, SMBC, Cloud Mediator, network, latency, snapmirror active sync 
+summary: 新增ONTAP Cloud Meditor 失敗，並發生錯誤，提示 ping 延遲高於建議的延遲。 
+---
+= ONTAP Cloud Mediator 可存取但回應緩慢
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果ONTAP Cloud Meditor 發生故障並發生錯誤，提示 ping 延遲高於建議延遲，請使用以下資訊。
+
+.問題：
+系統管理員：Cloud Mediator 服務可以訪問，但響應緩慢。
+
+CLI：  `mediator add`命令失敗並出現錯誤： 
+`Error: command failed: The ping latency of the BlueXP cloud server is <x> ms which is higher than twice the recommended latency of 200 ms.`
+
+.原因：
+叢集可能不在BlueXP雲端附近，或有網路路徑瓶頸。
+
+.解決方案：
+* 檢查地理位置和與BlueXP雲（美國東部）的距離。
+* 優化網路路徑或解決瓶頸。
+* 使用網路工具測量往返時間 (RTT)，並將延遲減少到建議的範圍內。
+* 使用 HTTP 代理來提高效能。
+
+
+看link:cloud-mediator-config-task.html["為SnapMirror主動同步配置ONTAP Cloud Mediator 和集群"] 。

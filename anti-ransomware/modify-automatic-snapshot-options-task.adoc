@@ -2,16 +2,11 @@
 sidebar: sidebar 
 permalink: anti-ransomware/modify-automatic-snapshot-options-task.html 
 keywords: anti-ransomware, automatic, snapshot, suspected attack, vserver options, autonomous ransomware protection, arp 
-summary: 修改自動產生的勒索軟體保護快照設定，以因應可疑的勒索軟體攻擊。 
+summary: 調整為應對潛在的勒索軟體威脅而自動產生的自主勒索軟體防護快照的建立和保留設定。 
 ---
-= 修改 ONTAP 自動快照的選項
-:hardbreaks:
-:toclevels: 1
+= 調整自動產生的 ARP 快照的設置
 :allow-uri-read: 
-:toclevels: 1
-:nofooter: 
 :icons: font
-:linkattrs: 
 :imagesdir: ../media/
 
 
@@ -19,9 +14,7 @@ summary: 修改自動產生的勒索軟體保護快照設定，以因應可疑�
 從 ONTAP 9 ． 11.1 開始，您可以使用 CLI 來控制自動產生的勒索軟體保護（ ARP ）快照保留設定，以因應可疑的勒索軟體攻擊。
 
 .開始之前
-您只能在節點 SVM 上修改 ARP 快照選項link:../system-admin/types-svms-concept.html["SVM 類型"]，而不能在其他上修改。
-
-如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
+您只能修改link:../system-admin/types-svms-concept.html["節點SVM"]而不適用於其他類型的 SVM。
 
 .步驟
 . 顯示所有目前的 ARP 快照設定：
@@ -46,23 +39,35 @@ options -option-name <arw_setting_name> -option-value <arw_setting_value>
 可修改下列設定：
 
 +
-[cols="1,3"]
+
+NOTE: 從ONTAP 9.17.1 開始，部分所述命令已棄用。 ONTAPONTAP中引入的指令同時支援 NAS 和 SAN 環境。
+
++
+[cols="1,3,1"]
 |===
-| ARW 設定 | 說明 
+| 設定 | 說明 | 支援的版本 
 
 
 | `arw.snap.max.count`  a| 
-指定任何指定時間磁碟區中可以存在的最大 ARP 快照數。刪除較舊的複本，以確保 ARP 快照總數在指定的上限內。
+指定任意給定時間卷中可存在的 ARP 快照的最大數量。系統會刪除較舊的副本，以確保 ARP 快照的總數不會超過此指定限制。
+ a| 
+更新版本ONTAP
 
 
 
 | `arw.snap.create.interval.hours`  a| 
-指定 ARP 快照之間的時間間隔（以小時計）。當懷疑有資料 Entropy 型攻擊，且最近建立的 ARP 快照比指定時間間隔還早時，就會建立新的 ARP 快照。
+指定 ARP 快照之間的間隔（以小時為單位）。當懷疑存在基於資料熵的攻擊且最近建立的 ARP 快照早於指定間隔時，將建立新的 ARP 快照。
+ a| 
+更新版本ONTAP
 
 
 
 | `arw.snap.normal.retain.interval.hours`  a| 
-指定保留 ARP 快照的持續時間（以小時計）。當 ARP 快照達到保留臨界值時，會在刪除之前建立任何其他 ARP 快照複本。
+指定 ARP 快照的保留時長（以小時為單位）。當 ARP 快照達到保留閾值時，將被刪除。
+ a| 
+** ONTAP 9.11.1 升級至ONTAP 9.16.1
+** 在ONTAP 9.17.1 及更高版本中已棄用
+
 
 
 
@@ -71,27 +76,136 @@ options -option-name <arw_setting_name> -option-value <arw_setting_value>
 
 
 NOTE: 如果偵測到中度威脅，就會忽略 ARP 快照的最大保留時間間隔。針對威脅所建立的 ARP 快照會保留，直到您回應威脅為止。當您將威脅標示為誤判時， ONTAP 會刪除該磁碟區的 ARP 快照。
+ a| 
+** ONTAP 9.11.1 升級至ONTAP 9.16.1
+** 在ONTAP 9.17.1 及更高版本中已棄用
+
 
 
 
 | `arw.snap.create.interval.hours.post.max.count`  a| 
-指定當磁碟區已包含最大 ARP 快照數時，每個 ARP 快照之間的間隔（以小時為單位）。達到最大數量時，會刪除 ARP 快照，以便為新的複本提供空間。使用此選項可降低新的 ARP 快照建立速度，以保留較舊的複本。如果磁碟區已包含 ARP 快照的最大數量，則此選項中指定的時間間隔將用於下一次建立 ARP 快照，而非 `arw.snap.create.interval.hours`。
+當磁碟區已包含最大數量的 ARP 快照時，指定 ARP 快照之間的間隔（以小時為單位）。達到最大數量時，將刪除一個 ARP 快照，為新副本騰出空間。使用此選項可以降低新 ARP 快照的建立速度，以保留舊副本。如果磁碟區已包含最大數量的 ARP 快照，則下次建立 ARP 快照時將使用此選項中指定的間隔，而不是 `arw.snap.create.interval.hours` 。
+ a| 
+** ONTAP 9.11.1 至 9.16.1
+** 在ONTAP 9.17.1 及更高版本中已棄用
 
 
 
-| `arw.snap.retain.hours.after.clear.suspect.false.alert` | 指定在管理員將攻擊事件標記為誤報後，作為預防措施保留 ARP 快照的小時數。在此預防性保留期到期後，可能會根據選項定義的標準保留期限刪除快照 `arw.snap.normal.retain.interval.hours`和 `arw.snap.max.retain.interval.days` 。 
 
+| `arw.snap.low.encryption.retain.duration.hours`  a| 
+指定在加密活動較少期間建立的 ARP 快照的保留時間（以小時為單位）。
+ a| 
+** ONTAP 9.17.1 及更高版本
 
-| `arw.snap.retain.hours.after.clear.suspect.real.attack` | 指定管理員將攻擊事件標記為真實攻擊後，作為預防措施保留 ARP 快照的小時數。在此預防性保留期到期後，可能會根據選項定義的標準保留期限刪除快照 `arw.snap.normal.retain.interval.hours`和 `arw.snap.max.retain.interval.days` 。 
-
-
-| `arw.surge.snap.interval.days`  a| 
-指定為回應 IO 突波而建立的 ARP 快照之間的間隔（以天為單位）。當 IO 流量激增且上次建立的 ARP 快照快照比此指定時間間隔還早時， ONTAP 會建立 ARP 快照突波複本。此選項也會指定 ARP 喘振快照的保留期間（以天為單位）。
 
 
 
 | `arw.snap.new.extns.interval.hours`  a| 
-此選項指定偵測到新副檔名時所建立的 ARP 快照之間的間隔時間（小時）。當觀察到新的副檔名時，會建立新的 ARP 快照；觀察到新副檔名時所建立的上一個快照，會比此指定時間間隔還早。在經常建立新副檔名的工作負載上，此時間間隔有助於控制 ARP 快照的頻率。此選項與不相關 `arw.snap.create.interval.hours`，可指定資料 Entropy 型 ARP 快照的間隔。
+指定偵測到新檔案副檔名時建立 ARP 快照的間隔（以小時為單位）。偵測到新檔案副檔名時會建立一個新的 ARP 快照；上一個在偵測到新檔案副檔名時所建立的快照早於此指定的間隔。在頻繁建立新檔案副檔名的工作負載上，此間隔有助於控制 ARP 快照的頻率。此選項獨立於 `arw.snap.create.interval.hours` ，指定基於資料熵的 ARP 快照的間隔。
+ a| 
+** ONTAP 9.11.1 升級至ONTAP 9.16.1
+** 在ONTAP 9.17.1 及更高版本中已棄用
+
+
+
+
+| `arw.snap.retain.hours.after.clear.suspect.false.alert`  a| 
+指定在管理員將攻擊事件標記為誤報後，ARP 快照作為預防措施保留的時間間隔（以小時為單位）。在此預防性保留期到期後，可能會根據選項定義的標準保留期限刪除快照 `arw.snap.normal.retain.interval.hours`和 `arw.snap.max.retain.interval.days` 。
+ a| 
+** ONTAP 9.16.1 及更新版本
+
+
+
+
+| `arw.snap.retain.hours.after.clear.suspect.real.attack`  a| 
+指定管理員將攻擊事件標記為真實攻擊後，ARP 快照作為預防措施保留的時間間隔（以小時為單位）。在此預防性保留期到期後，可能會根據選項定義的標準保留期限刪除快照。  `arw.snap.normal.retain.interval.hours`和 `arw.snap.max.retain.interval.days` 。
+ a| 
+** ONTAP 9.16.1 及更新版本
+
+
+
+
+| `arw.snap.surge.interval.days`  a| 
+指定為回應 IO 突波而建立的 ARP 快照之間的間隔（以天為單位）。當 IO 流量激增且上次建立的 ARP 快照快照比此指定時間間隔還早時， ONTAP 會建立 ARP 快照突波複本。此選項也會指定 ARP 喘振快照的保留期間（以天為單位）。
+ a| 
+更新版本ONTAP
+
+
+
+| `arw.high.encryption.alert.enabled`  a| 
+啟用高級別加密警報。當此選項設定為 `on` （預設），當ONTAP百分比超過 `arw.high.encryption.percentage.threshold` 。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.high.encryption.percentage.threshold`  a| 
+指定卷的最大加密百分比。如果加密百分比超過此閾值，則ONTAP會將加密百分比的增加視為攻擊，並建立 ARP 快照。  `arw.high.encryption.alert.enabled`必須設定為 `on`以使此選項生效。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.snap.high.encryption.retain.duration.hours`  a| 
+指定在高加密閾值事件期間建立的快照的保留持續時間間隔（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
 
 |===
+. 如果您在 SAN 環境中使用 ARP，您也可以修改以下評估期設定：
++
+[cols="1,3,1"]
+|===
+| 設定 | 說明 | 支援的版本 
+
+
+| `arw.block_device.auto.learn.threshold.min_value`  a| 
+指定區塊設備評估的自動學習階段的最小加密閾值百分比值。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.auto.learn.threshold.max_value`  a| 
+指定區塊設備評估的自動學習階段的最大加密閾值百分比值。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.min_hours` | 指定在設定加密閾值之前評估階段必須運行的最小間隔（以小時為單位）。  a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.max_hours`  a| 
+指定在設定加密閾值之前評估階段必須運行的最大間隔（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.min_data_ingest_size_GB` | 指定在設定加密閾值之前評估階段必須提取的最小資料量（以 GB 為單位）。  a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.alert.enabled`  a| 
+指定是否在區塊設備上啟用 ARP 評估階段的警報。預設值為 `True` 。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.alert.threshold`  a| 
+指定區塊設備上 ARP 評估階段的閾值百分比。如果加密百分比超過此閾值，則會觸發警報。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+|===
+
+
+.相關資訊
+* link:index.html#threat-assessment-and-arp-snapshots["威脅評估和 ARP 快照"]
+* link:respond-san-entropy-eval-period.html["SAN熵評估期"]
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/aufo-site-b-troubleshoot-task.html 
-keywords: SM-BC, SMBC, troubleshooting, automatic unplanned failover, aufo, failover, Mediator, quorum, snapmirror active sync 
+keywords: SM-BC, SMBC, troubleshooting, automatic unplanned failover, aufo, failover, Mediator, Cloud Mediator, quorum, snapmirror active sync 
 summary: 站台A故障不會觸發站台B上的非計畫性容錯移轉 
 ---
 = 站台B未觸發自動非計畫性容錯移轉
@@ -13,27 +13,29 @@ summary: 站台A故障不會觸發站台B上的非計畫性容錯移轉
 :imagesdir: ../media/
 
 
-.問題：
 [role="lead"]
+如果站點 A 上的故障不會觸發站點 B 上的非計劃性故障轉移，請使用下列資訊。
+
+.問題：
 站台A故障不會觸發站台B上的非計畫性容錯移轉
 
 .可能原因#1：
-未設定 ONTAP Mediator 。若要判斷這是否是原因、請核發 `snapmirror mediator show` 站台 B 叢集上的命令。
+ONTAP調解器或ONTAP Cloud 調解器未配置。要確定這是否是原因，請發出 `snapmirror mediator show`在網站 B 叢集上執行命令。
 
 ....
-Cluster2::*> snapmirror mediator show
+Cluster2::> snapmirror mediator show
 This table is currently empty.
 ....
-此範例表示 ONTAP Mediator 未在站台 B 上設定
+此範例表示網站 B 上未配置調解器。
 
 .解決方案：
-請確定兩個叢集都已設定 ONTAP Mediator 、狀態已連線、仲裁已設為 True 。
+確保兩個叢集上都配置了 Mediator，狀態為已連接，並且仲裁設定為 True。
 
 .可能原因 #2 ：
 SnapMirror一致性群組不同步。若要判斷原因是否為此、請檢視事件記錄、以檢視一致性群組在站台發生故障期間是否同步。
 
 ....
-cluster::*> event log show -event *out.of.sync*
+cluster::> event log show -event *out.of.sync*
 
 Time                Node             Severity      Event
 ------------------- ---------------- ------------- ---------------------------

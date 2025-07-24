@@ -1,0 +1,63 @@
+---
+permalink: system-admin/audit-manage-cross-cluster-requests.html 
+sidebar: sidebar 
+keywords: audit, peered, cross cluster, log, cluster, get request 
+summary: 啟用跨集群審計來記錄從對等集群發起的操作並改進集群之間的操作追蹤。 
+---
+= 啟用ONTAP跨叢集審核
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 9.17.1 以及ONTAP 9.16.1 P4 和更高版本的 9.16.1 修補程式版本開始，您可以在ONTAP中啟用跨叢集稽核功能，以記錄從對等叢集發起的操作。這種遠端審計功能在多個ONTAP叢集互動的環境中尤其有用，可以提供遠端操作的可追溯性和責任追究。
+
+跨集群審計可以區分用戶發起的 GET（讀取）或 SET（建立/修改/刪除）操作。預設情況下，目標群集僅會審計使用者發起的 SET 操作。任何讀取資料的請求，例如 GET 或 `show` CLI 中的命令，無論請求是否跨集群，預設都不會受到審核。
+
+.開始之前
+* 你必須有 `advanced`等級權限
+* 此叢集必須與另一個叢集對等，且兩個叢集都必須執行ONTAP 9.16.1 P4 或更高版本。
++
+
+NOTE: 在部分節點（而非所有節點）升級到ONTAP 9.16.1 P4 或更高版本的環境中，稽核日誌記錄僅在執行升級版本的節點上進行。建議將所有節點升級到受支援的版本，以確保一致的審計行為。
+
+
+
+
+
+== 啟用或停用跨叢集審計
+
+.步驟
+. 透過設定 `cluster-peer`參數 `on`或者 `off` ：
++
+[source, cli]
+----
+security audit modify -cluster-peer {on|off}
+----
+. 透過檢查目前審核狀態來確認叢集對等設定是啟用還是停用：
++
+[listing]
+----
+security audit show
+----
++
+回覆:
+
++
+[listing]
+----
+    Audit Setting State
+    ------------- -----
+         CLI GET: off
+        HTTP GET: off
+      ONTAPI GET: off
+    Cluster Peer: on
+----
+
+
+
+
+== 啟用 GET 稽核的效果
+
+從ONTAP 9.17.1 開始，如果您 https://docs.netapp.com/us-en/ontap-cli/security-audit-modify.html["啟用 CLI、HTTP、ONTAPI GET 審計"^]在對等叢集上，您也可以啟用對跨叢集使用者發起的 GET 請求的審核。在早期ONTAP版本中，GET 審核僅適用於本機叢集上的請求。在ONTAP 9.17.1 中，如果您使用 `cluster-peer`選項設定為 `on` ，本地集群和跨集群請求都將被審核。

@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/prerequisites-reference.html
 keywords: SM-BC, SMBC, prerequisites, planning, software, hardware, licensing, protocols, network, snapmirror active sync 
 summary: 在規劃 SnapMirror 主動同步解決方案部署時、您應該考量幾項先決條件。 
 ---
-= ONTAP 中 SnapMirror 作用中同步的必要條件
+= ONTAP SnapMirror主動同步的先決條件
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -26,7 +26,7 @@ summary: 在規劃 SnapMirror 主動同步解決方案部署時、您應該考�
 |===
 
 
-| 叢集類型 | 支援的機型 | 支援的功能 | 支援的節點 
+| 叢集類型 | 支援的機型 | 支援的功能 | 支援的最大叢集節點數 
 
 
  a| 
@@ -36,34 +36,35 @@ A 系列， C 系列
  a| 
 自動容錯移轉雙工（對稱式主動 / 主動式），自動容錯移轉（非對稱式主動 / 主動式）
  a| 
-雙節點或四節點叢集 ^1^
+* 2（ONTAP 9.9.1 或更高版本）
+* 4（採用對稱 AA 配置的ONTAP 9.16.1）
+
 
 
 
  a| 
-所有 SAN 陣列（ ASA ）
+ASA
  a| 
 A 系列， C 系列
  a| 
 自動容錯移轉雙工（對稱式 AA ），自動容錯移轉（非對稱式 AA ）
  a| 
-雙節點或四節點叢集 ^1^
+* 2（ONTAP 9.9.1 或更高版本
+* 4（採用對稱 AA 配置的ONTAP 9.16.1）
+
 
 
 
  a| 
 ASA r2
  a| 
--
+全部
  a| 
 自動容錯移轉雙工（對稱 AA ）
  a| 
-雙節點高可用度（ HA ）叢集
+2.
 
 |===
-. 支援四節點叢集，從 ONTAP 9.16.1 開始，需要對稱式 AA 。
-
-
 下表概述叢集類型之間的複寫功能。
 
 [cols="33,33,33"]
@@ -92,16 +93,22 @@ ASA
 
 
  a| 
-ASA ^1^
+ASA
  a| 
 ASA r2
  a| 
 否
 
+
+
+ a| 
+ASA r2
+ a| 
+ASA r2
+ a| 
+是的
+
 |===
-. 有關 ASA 支持的羣集類型的詳細信息，請參閱link:../asa/support-limitations.html["All Flash SAN Array 組態限制與支援"]。
-
-
 
 
 == 軟體
@@ -116,6 +123,20 @@ ASA r2
 
 
 | ONTAP Mediator 版本 | 支援的Linux版本 
+
+
+ a| 
+1.10
+ a| 
+* Red Hat Enterprise Linux
++
+** 相容：9.5 ^1^
+** 建議：8.10、9.4、9.6 和 10
+
+
+* Rocky Linux 8.10、9.6 和 10
+
+
 
 
  a| 
@@ -235,10 +256,33 @@ NOTE: 如果您的 ONTAP 儲存系統是在 2019 年 6 月之前購買、請參�
 
 == 支援的傳輸協定
 
-* 僅支援 SAN 通訊協定（不支援 NFS/SMB ）。
-* 僅支援光纖通道和 iSCSI 傳輸協定。
-* SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂IPspace。
+SnapMirror主動同步支援 SAN 協定。
 
+* 從ONTAP 9.9.1 開始支援 FC 和 iSCSI 協定。
+* 從ONTAP 9.17.1 開始，VMware 工作負載支援 NVMe 協定。
++
+
+NOTE: NVMe/TCP 與 VMware 的結合取決於 VMware Bug ID：TR1049746 的解決方案。
+
++
+SnapMirror主動同步不支援以下 NVMe 協定：
+
++
+** 4 節點對稱主動/主動配置
+** 一致性組大小的變化
++
+當使用具有SnapMirror活動同步的 NVMe 協定時，無法擴展或縮小一致性組。
+
+** 不支援同一一致性組中的 LUN 和命名空間共存。
+
+
+
+
+
+
+== IPSpace
+
+SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂IPspace。
 
 
 

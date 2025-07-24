@@ -1,0 +1,128 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/respond-san-entropy-eval-period.html 
+keywords: ransomware, arp, san, mode, switch, active, learning, entropy, autonomous ransomware protection 
+summary: 從ONTAP 9.17.1 開始，ARP 需要一個評估期來確定 SAN 磁碟區熵等級是否適合勒索軟體防護。 
+---
+= 了解 SAN 磁碟區的ONTAP ARP 評估期
+:allow-uri-read: 
+
+
+[role="lead"]
+從ONTAP 9.17.1 開始，ARP 需要一段評估期來確定 SAN 磁碟區工作負載的熵等級是否適合勒索軟體防護。在 SAN 磁碟區上啟用 ARP 後，它會在評估期間持續監控數據，以確定最佳加密閾值。 ARP會區分評估後的 SAN 磁碟區中適用和不適用的工作負載，如果確定工作負載適合防護，則會根據評估期統計資料自動設定加密閾值。
+
+
+
+== 理解熵評估
+
+系統每隔 10 分鐘收集一次連續的加密統計資料。在評估期間，系統也會每四小時連續建立一次 ARP 快照。如果某個間隔內的加密百分比超過了為此磁碟區確定的最佳加密閾值，則會觸發警報並增加快照保留時間。
+
+.確認評估期間有效
+您可以執行下列指令，確認評估已啟動，並確認狀態為 `evaluation_period`。評估期間適用於包含 LUN 或 VMDK 的捲。磁碟區不包含 LUN 或 VMDK，則不會顯示評估狀態。
+
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <volume_name>
+----
+回應範例：
+
+[listing, subs="+quotes"]
+----
+Vserver Name                                : vs1
+Volume Name                                 : v1
+State                                       : enabled
+Attack Probability                          : none
+Attack Timeline                             : -
+Number of Attacks                           : -
+Attack Detected By                          : -
+*Block device detection status               : evaluation_period*
+----
+.監測評估期資料收集
+您可以透過執行以下命令來即時監控加密偵測。該命令將傳回一個直方圖，顯示每個加密百分比範圍內的資料量。此直方圖每 10 分鐘更新一次。
+
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-encryption-percentage-histogram -vserver <svm_name> -name <lun_name> -duration real_time
+----
+回應範例：
+
+[listing]
+----
+Vserver     Name              Entropy Range   Seen N Time     Data Written
+----------  ----------------  --------------- --------------  -------------
+vs0         lun1              0-5%            4               100MB
+vs0         lun1              6-10%           10              900MB
+vs0         lun1              11-15%          20              40MB
+vs0         lun1              16-20%          10              70MB
+vs0         lun1              21-25%          60              450MB
+vs0         lun1              26-30%          4               100MB
+vs0         lun1              31-35%          10              900MB
+vs0         lun1              36-40%          20              40MB
+vs0         lun1              41-45%          0               0
+vs0         lun1              46-50%          0               0
+vs0         lun1              51-55%          0               0
+vs0         lun1              56-60%          0               0
+vs0         lun1              61-65%          0               0
+vs0         lun1              66-70%          0               0
+vs0         lun1              71-75%          0               0
+vs0         lun1              76-80%          0               0
+vs0         lun1              81-85%          0               0
+vs0         lun1              86-90%          0               0
+vs0         lun1              91-95%          0               0
+vs0         lun1              96-100%         0               0
+
+20 entries were displayed.
+----
+
+
+== 合適的工作負荷和自適應閾值
+
+評估以下列結果之一作結：
+
+* *此工作負載適用於 ARP*。 ARP會自動將自適應閾值設定為高於評估期間最大加密百分比的 10%。 ARP也會持續收集統計資料並定期建立 ARP 快照。
+* *該工作負載不適合 ARP*。 ARP會自動將自適應閾值設定為評估期間內可見的最大加密百分比。 ARP也會繼續收集統計資料並定期建立 ARP 快照，但係統最終會建議在該磁碟區上停用 ARP。
+
+
+.確定評估結果
+評估期結束後，ARP會根據評估結果自動設定自適應閾值。
+
+您可以透過執行以下命令來確定評估結果。卷適用性顯示在 `Block device detection status`場地：
+
+[source, cli]
+----
+security anti-ransomware volume show  -vserver <svm_name> -volume <volume_name>
+----
+回應範例：
+
+[listing, subs="+quotes"]
+----
+Vserver Name                               : vs1
+Volume Name                                : v1
+State                                      : enabled
+Attack Probability                         : none
+Attack Timeline                            : -
+Number of Attacks                          : -
+Attack Detected By                         : -
+*Block device detection status              : Active_suitable_workload*
+
+Block device evaluation start time :  5/16/2025 01:49:01
+----
+您也可以顯示評估結果所採用的值閾值：
+
+[source, cli]
+----
+security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>
+----
+回應範例：
+
+[listing, subs="+quotes"]
+----
+
+                                  Vserver Name : vs_1
+
+                                   Volume Name : vm_2
+
+*Block Device Auto Learned Encryption Threshold : 10*
+...
+
+----

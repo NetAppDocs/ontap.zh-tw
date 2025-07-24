@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
 keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
-summary: NAS 工作負載支援 ARP 。它最適合 NFS 儲存、 Windows 或 Linux 主目錄、視訊和影像工作負載上的資料庫。 
+summary: ARP 支援 NAS 和 SAN 工作負載。它最適合 NFS 儲存上的資料庫、Windows 或 Linux 主目錄以及視訊和映像工作負載。 
 ---
 = ONTAP 自主勒索軟體保護使用案例與考量
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: NAS 工作負載支援 ARP 。它最適合 NFS 儲存、 Windows 或 Li
 
 
 [role="lead"]
-從 ONTAP 9 。 10.1 開始， NAS 工作負載可使用自主勒索軟體保護（ ARP ）。在部署 ARP 之前、您應該瞭解建議的用途和支援的組態、以及效能影響。
+自主勒索軟體防護 (ARP) 適用於從ONTAP 9.10.1 開始的 NAS 工作負載和從ONTAP 9.17.1 開始的 SAN 工作負載。在部署 ARP 之前，您應該了解其建議用途、支援的配置以及效能影響。
 
 
 
@@ -28,12 +28,12 @@ summary: NAS 工作負載支援 ARP 。它最適合 NFS 儲存、 Windows 或 Li
 
 === 合適的工作負載
 
-ARP 適用於：
+ARP 適用於以下類型的工作負載：
 
-* NFS儲存設備上的資料庫
+* NFS 或 SAN 儲存上的資料庫
 * Windows或Linux主目錄
 +
-由於使用者可以建立在學習期間未偵測到的副檔名檔案、因此此工作負載較可能出現誤報。
+對於沒有 ARP/AI 的環境，使用者可能會建立一些在學習期間無法偵測到的副檔名的檔案。因此，此類工作負載中出現誤報的可能性較大。
 
 * 影像與影片
 +
@@ -45,104 +45,90 @@ ARP 適用於：
 
 === 不適當的工作負載
 
-ARP 不適用於：
+ARP 不適合以下類型的工作負載：
 
-* 高檔案建立或刪除頻率的工作負載（數秒內就有數十萬個檔案、例如測試 / 開發工作負載）。
-* ARP 的威脅偵測功能取決於它是否能夠辨識出檔案建立，重新命名或刪除活動異常激增的情況。如果應用程式本身是檔案活動的來源、則無法有效地區別於勒索軟體活動。
+* 具有高頻率檔案建立或刪除操作的工作負載（幾秒鐘內數十萬個檔案；例如，測試/開發工作負載）。
+* ARP 的威脅偵測依賴於其識別檔案建立、重新命名或刪除操作異常激增的能力。如果應用程式本身是文件活動的來源，則無法有效區分勒索軟體活動。
 * 應用程式或主機加密資料的工作負載。
-ARP 需要將傳入的資料識別為加密或未加密。如果應用程式本身正在加密資料、則此功能的有效性將會降低。不過、此功能仍可根據檔案活動（刪除、覆寫或建立、或以新副檔名建立或重新命名）和檔案類型運作。
++
+ARP 依賴區分傳入資料是加密的還是未加密的。如果應用程式本身正在加密數據，則該功能的有效性會降低。但是，ARP 仍然可以根據檔案活動（刪除、覆蓋、創建，或建立檔案或使用新的檔案副檔名重新命名）和檔案類型進行工作。
+
 
 
 
 
 === 支援的組態
 
-從 ONTAP 9 。 10.1 開始，內部部署 ONTAP 系統中的 NFS 和 SMB FlexVol 磁碟區可使用 ARP 。
+從ONTAP 9.10.1 開始，ARP 可用於 NAS NFS 和 SMB FlexVol磁碟區。從 9.17.1 開始，ARP 可用於 iSCSI、FC 和具有 SAN 儲存的 NVMe 的 SAN FlexVol磁碟區。
 
 下列 ONTAP 版本支援其他組態和磁碟區類型：
 
 |===
-|  | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+|  | ONTAP 9.17.1 | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
 
 
-| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| FlexGroup Volumes * | ✓ | ✓ | ✓ | ✓ |  |  |  
+| FlexGroup卷^1^ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 多管理員驗證 | ✓ | ✓ | ✓ | ✓ |  |  |  
+| 多管理員驗證 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| ARP/AI 提供自動更新 | ✓ |  |  |  |  |  |  
+| ARP/AI 提供自動更新 | ✓ | ✓ |  |  |  |  |  |  
 |===
-*ARP/AI 不支援 FlexGroup 磁碟區。升級至 ONTAP 9 。 16.1 之後，啟用 ARP 的 FlexGroup 磁碟區會繼續以 ARP/AI 之前使用的相同 ARP 模型運作。
+^1^ ARP/AI 不支援FlexGroup區。升級到ONTAP 9.16.1 後，啟用 ARP 的FlexGroup磁碟區將繼續使用 ARP/AI 之前使用的 ARP 模型運作。
 
 
 
 ==== SnapMirror與ARP互通性
 
-從 ONTAP 9 ． 12.1 開始、 SnapMirror 非同步目的地磁碟區支援 ARP 。SnapMirror 同步不支援 ARP** 。
+從ONTAP 9.12.1 開始， SnapMirror非同步目標磁碟區支援 ARP。 SnapMirrorSnapMirror或SnapMirror主動同步*不*支援 ARP。
 
-如果 SnapMirror 來源磁碟區已啟用 ARP ， SnapMirror 目的地磁碟區會自動取得來源磁碟區的 ARP 組態狀態（學習，啟用等）， ARP 訓練資料和 ARP 建立的快照。不需要明確啟用。
+如果SnapMirror來源磁碟區啟用了 ARP，則SnapMirror目標磁碟區會自動取得 ARP 設定狀態（例如 `dry-run`或者 `enabled` )、ARP 訓練資料以及 ARP 建立的來源磁碟區快照。無需明確啟用。
 
-雖然目的 Volume 是由唯讀（ RO ）快照組成，但不會對其資料進行 ARP 處理。不過、當SnapMirror目的地Volume轉換為讀寫（RW）時、會自動在RW-轉換的目的地Volume上啟用ARP。除了已記錄在來源Volume上的內容、目的地Volume不需要任何額外的學習程序。
+儘管目標磁碟區包含唯讀 (RO) 快照，但其資料不會進行任何 ARP 處理。但是，當SnapMirror目標磁碟區轉換為讀寫 (RW) 時，ARP 會在已轉換為 RW 的目標磁碟區上自動啟用。除了來源磁碟區上已記錄的內容外，目標磁碟區不需要任何其他學習過程。
 
-在 ONTAP 9 ． 10.1 和 9 ． 11 ． 1 中， SnapMirror 不會將 ARP 組態狀態，訓練資料和快照從來源磁碟區傳輸至目的地磁碟區。因此、當SnapMirror目的地Volume轉換為RW時、在轉換後、必須在學習模式中明確啟用目的地Volume上的ARP。
+在ONTAP 9.10.1 和 9.11.1 中， SnapMirror不會將 ARP 設定狀態、訓練資料和快照從來源磁碟區傳送到目標磁碟區。因此，當SnapMirror目標磁碟區轉換為 RW 時，必須在轉換後在學習模式下明確啟用目標磁碟區上的 ARP。
 
 
 
 ==== ARP 和虛擬機器
 
-虛擬機器（ VM ）支援 ARP 。ARP 偵測在 VM 內部和外部的變更時、行為會有所不同。不建議將 ARP 用於 VM 內部具有高 Entropy 檔案的工作負載。
+虛擬機器 (VM) 支援 ARP。 ARP檢測對於虛擬機器內部和外部的變更有不同的行為。對於虛擬機器中涉及大量高度壓縮檔案（例如 7z 和 ZIP）或加密檔案（例如受密碼保護的 PDF、DOC 或 ZIP）的工作負載，不建議使用 ARP。
 
 .VM 以外的變更
-如果新的副檔名進入已加密的磁碟區、或是檔案副檔名變更、 ARP 就能偵測到 NFS 磁碟區上 VM 以外的檔案副檔名變更。可偵測的檔案副檔名變更包括：
-
-* .vmx
-* .vmxf
-* .vmdk
-* -flat.vmdk
-* NVRAM
-* .vmem
-* vmsd
-* .vmsn
-* .vswp
-* .vmss
-* .log
-* -\#.log
-
+如果新副檔名以加密狀態進入磁碟區或檔案副檔名發生變化，ARP 可以偵測到 VM 外部 NFS 磁碟區上的檔案副檔名變化。
 
 .VM 內部的變更
-如果勒索軟體攻擊是針對 VM 內部的 VM 和檔案進行變更、而未在 VM 外部進行變更、則如果 VM 的預設 Entropy 低（例如 .txt 、 .docx 或 .mp4 檔案）、 ARP 會偵測到威脅。雖然 ARP 在這種情況下會建立保護性快照，但不會產生威脅警示，因為 VM 外部的副檔名並未遭到竄改。
+如果勒索軟體攻擊更改了虛擬機器內部的文件，而沒有更改虛擬機器外部的文件，且虛擬機器的預設熵較低（例如 .txt、.docx 或 .mp4 文件），ARP 就會偵測到威脅。對於ONTAP 9.16.1 及更早版本，ARP 會在這種情況下建立保護性快照，但不會產生威脅警報，因為虛擬機器外部的檔案副檔名未被竄改。從ONTAP 9.17.1 中的 SAN 支援開始，如果 ARP 偵測到虛擬機器內部的熵異常，也會產生威脅警報。
 
-如果檔案預設為高 Entropy （例如 .gzip 或密碼保護的檔案）、則 ARP 的偵測功能會受到限制。在這種情況下， ARP 仍可採取主動式快照，但如果檔案副檔名未遭到外部竄改，則不會觸發警示。
+如果檔案預設為高熵檔案（例如 .gzip 檔案或受密碼保護的檔案），ARP 的偵測能力就會受到限制。在這種情況下，ARP 仍然可以主動拍攝快照；但是，如果檔案副檔名未被外部篡改，則不會觸發警報。
+
+對於 SAN，ARP 在磁碟區層級分析熵統計數據，並在發現熵異常時觸發檢測。
 
 
 
 === 不支援的組態
 
-下列系統組態不支援 ARP ：
-
-* 不支援的S3環境ONTAP
-* SAN環境
-
+ONTAP S3 環境不支援 ARP。
 
 ARP 不支援下列 Volume 組態：
 
-* FlexGroup Volume （ ONTAP 9.10.1 至 9.12.1 ）。從 ONTAP 9 ． 13.1 開始， FlexGroup 磁碟區受到支援，但僅限於 ARP/AI 之前使用的 ARP 模型）
+* FlexGroup磁碟區（在ONTAP 9.10.1 至 9.12.1 中）。從ONTAP 9.13.1 開始，支援FlexGroup卷，但僅限於 ARP/AI 之前使用的 ARP 模型。
 * FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
 * 離線磁碟區
-* 純SAN磁碟區
 * 資料量SnapLock
+* SnapMirror 主動同步
 * SnapMirror 同步
-* SnapMirror 非同步（僅在 ONTAP 9 ． 10.1 和 9 ． 11 ． 1 中不受支持。從 ONTAP 9 開始支援 SnapMirror 非同步。 12.1 。如需更多資訊、請參閱<<SnapMirror>>。）
+* SnapMirror非同步（在ONTAP 9.10.1 和 9.11.1 中）。從ONTAP 9.12.1 開始支援SnapMirror非同步。有關更多信息，請參閱<<SnapMirror>> 。
 * 受限磁碟區
 * 儲存VM的根磁碟區
 * 已停止儲存VM的磁碟區
@@ -152,21 +138,26 @@ ARP 不支援下列 Volume 組態：
 
 == ARP效能和頻率考量
 
-根據處理量和尖峰 IOPS 的測量結果、 ARP 對系統效能的影響最小。ARP 功能的影響取決於特定的 Volume 工作負載。對於一般工作負載、建議使用下列組態限制：
+ARP 對系統效能（以吞吐量和峰值 IOPS 衡量）的影響極小。 ARP功能的影響取決於特定的捲工作負載。對於常見工作負載，建議採用以下配置限制：
 
 [cols="30,20,30"]
 |===
-| 工作負載特性 | 每個節點的建議Volume限制 | 超過每節點磁碟區限制時效能降低：[*] 
+| 工作負載特性 | 每個節點的建議Volume限制 | 當每個節點的磁碟區限制超過上限時，效能會下降^1^ 
 
 
-| 讀取密集或資料可以壓縮。 | 150 | 最高IOPS的4% 
+| 讀取密集型或資料可以壓縮 | 150 | 最高IOPS的4% 
 
 
-| 寫入密集、資料無法壓縮。 | 60 | IOPS上限的10% 
+| 寫入密集且資料無法壓縮 | 60  a| 
+* NAS： ONTAP 9.15.1 及更早版本的最大 IOPS 的 10%
+* NAS： ONTAP 9.16.1 及更高版本的最大 IOPS 的 4%
+* SAN： ONTAP 9.17.1 及更高版本的最大 IOPS 的 5%
+
+
 |===
-通過：[*]無論新增的磁碟區數量超過建議的限制、系統效能不會超過這些百分比。
+^1^ 無論添加的捲數量超過建議的限制多少，系統效能都不會下降超過這些百分比。
 
-由於 ARP 分析會依優先順序執行、因此當受保護的磁碟區數量增加時、分析會在每個磁碟區上執行的頻率較低。
+由於 ARP 分析按優先順序運行，因此隨著受保護磁碟區數量的增加，每個磁碟區上運行的分析頻率會降低。
 
 
 
@@ -178,7 +169,7 @@ ARP 不支援下列 Volume 組態：
 
 深入瞭解 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["指令參考資料ONTAP"^]。
 
-從 ONTAP 9 ． 14.1 開始， ARP 會提供建立 ARP 快照和觀察新副檔名的警示。這些事件的警示預設為停用。警示可在 Volume 或 SVM 層級設定。您可以在 SVM 層級使用或在 Volume 層級 `security anti-ransomware volume event-log modify`使用建立 MAV 規則 `security anti-ransomware vserver event-log modify`。
+從ONTAP 9.14.1 開始，ARP 會在建立 ARP 快照和發現新檔案副檔名時發出警報。這些事件的警報預設為禁用狀態。警報可以在磁碟區或 SVM 層級設定。您可以使用以下命令啟用警報 `security anti-ransomware vserver event-log modify`或使用 `security anti-ransomware volume event-log modify` 。
 
 深入瞭解 `security anti-ransomware vserver event-log modify`及 `security anti-ransomware volume event-log modify` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware["指令參考資料ONTAP"^]。
 

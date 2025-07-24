@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
 summary: NetApp Volume Encryption（NVE）是一項軟體技術、可一次加密閒置一個磁碟區的資料。只有儲存系統才能存取的加密金鑰、可確保在基礎裝置重新調整用途、退回、放錯位置或遭竊時、無法讀取Volume資料。 
 ---
-= 設定NetApp Volume Encryption總覽
+= 了解ONTAP NetApp捲和聚合加密
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -71,7 +71,11 @@ NVE與NAE磁碟區可共存於同一個Aggregate上。根據預設、在Aggregat
 
 * 您可以使用_叢集範圍_來設定叢集中所有SVM的外部金鑰管理。叢集管理員可以存取儲存在伺服器上的每個金鑰。
 * 從ONTAP S9.6開始、您可以使用_SVM範圍_來設定叢集中命名SVM的外部金鑰管理。這最適合多租戶環境、每個租戶使用不同的SVM（或一組SVM）來提供資料。只有特定租戶的SVM管理員可以存取該租戶的金鑰。
-* 從功能升級到功能升級到ONTAP 功能升級、您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault與Google Cloud KMS] 僅保護資料 SVM 的 NVE 金鑰。從 9.12.0 開始、 AWS 的 KMS 都可以使用這項功能。
++
+** 從功能升級到功能升級到ONTAP 功能升級、您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault與Google Cloud KMS] 僅保護資料 SVM 的 NVE 金鑰。從 9.12.0 開始、 AWS 的 KMS 都可以使用這項功能。
+** 從ONTAP 9.17.1 開始，您可以使用xref:manage-keys-barbican-task.html[巴比肯 KMS]僅保護資料 SVM 的 NVE 金鑰。
+
+
 
 
 您可以在同一個叢集中使用這兩個範圍。如果SVM已設定金鑰管理伺服器、ONTAP 則僅使用這些伺服器來保護金鑰。否則ONTAP 、利用為叢集設定的金鑰管理伺服器來保護金鑰。
@@ -125,7 +129,7 @@ NOTE: Azure Key Vault 和 AWS KMS 等雲端 KMS 供應商不支援 KMIP 。因�
  a| 
 ONTAP
  a| 
-所有ONTAP 的部分實作。支援不支援支援支援功能可在支援支援支援功能的版本上找到。ONTAP ONTAP
+所有ONTAP實施。 ONTAP9.5 及更高版本支援Cloud Volumes ONTAP 。
 
 
 

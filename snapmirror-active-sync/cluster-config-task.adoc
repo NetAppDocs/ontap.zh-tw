@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/cluster-config-task.html 
+keywords: SM-BC, SMBC, cluster, peering, ONTAP, Mediator, ONTAP Cloud Mediator, initialize, snapmirror active sync 
+summary: 將ONTAP Mediator 或ONTAP Cloud Mediator 與SnapMirror主動同步結合使用時，必須先確保叢集配置正確。 
+---
+= 為SnapMirror主動同步配置ONTAP集群
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror主動同步使用對等叢集在發生故障轉移時保護您的資料。在為SnapMirror主動同步設定ONTAP Mediator 或ONTAP Cloud Mediator 之前，必須先確保叢集已正確設定。
+
+.開始之前
+在設定ONTAP Mediator 或ONTAP Cloud Mediator 之前，您應該確認以下內容：
+
+. 集群之間存在集群對等關係。
++
+
+NOTE: SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂 IPspace 。
+
++
+link:../peering/create-cluster-relationship-93-later-task.html["建立叢集對等關係"]
+
+. 在每個叢集上建立 SVM。
++
+link:../smb-config/create-svms-data-access-task.html["建立SVM"]
+
+. 每個叢集上的 SVM 之間存在對等關係。
++
+link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立SVM對等關係"]
+
+. 您的 LUN 中存在磁碟區。
++
+link:../smb-config/create-volume-task.html["建立Volume"]
+
+. 叢集中的每個節點上至少建立一個 SAN LIF。
++
+link:../san-admin/manage-lifs-all-san-protocols-concept.html["叢集SAN環境中的LIF考量"]
+
++
+link:../networking/create_a_lif.html["建立LIF"]
+
+. 建立必要的 LUN 並將其對應到 igroup，用於將 LUN 對應到應用程式主機上的啟動器。
++
+link:../san-admin/provision-storage.html["建立LUN並對應igroup"]
+
+. 重新掃描應用程式主機以發現任何新的 LUN。
+

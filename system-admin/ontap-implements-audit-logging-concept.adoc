@@ -11,32 +11,40 @@ summary: 稽核日誌中記錄的管理活動會包含在標準AutoSupport 版�
 
 
 [role="lead"]
-稽核日誌中記錄的管理活動會包含在標準AutoSupport 版的功能表報告中、而EMS訊息中也會包含某些記錄活動。您也可以將稽核記錄轉送到指定的目的地、並使用CLI或Web瀏覽器來顯示稽核記錄檔。
+審計日誌中記錄的管理活動包含在標準AutoSupport報告中，某些日誌記錄活動包含在 EMS 訊息中。您也可以將稽核日誌轉送至指定的目標位置，並可使用ONTAP CLI 或 Web 瀏覽器顯示稽核日誌檔案。
 
 從版本的《Sy9.11.1》開始ONTAP 、您可以使用System Manager來顯示稽核記錄內容。
 
 從 ONTAP 9.12.1 開始、 ONTAP 會針對稽核記錄提供竄改警示。ONTAP 會執行每日背景工作、檢查 audit.log 檔案是否遭到竄改、如果發現任何已變更或竄改的記錄檔、則會傳送 EMS 警示。
 
-系統會記錄叢集上執行的管理活動、例如發出的要求、觸發要求的使用者、使用者的存取方法、以及要求的時間。ONTAP
+從ONTAP 9.17.1 開始，以及從ONTAP 9.16.1 P4 和更高版本的 9.16.1 修補程式版本開始， link:audit-manage-cross-cluster-requests.html["還可以記錄使用跨集群操作從對等集群發起的遠端管理活動"] 。這些活動包括使用者驅動的和源自另一個叢集的內部操作。
 
-管理活動可以是下列其中一種類型：
+.ONTAP中記錄的管理活動
+ONTAP記錄在叢集上執行的管理活動，例如發出了什麼請求、觸發請求的使用者、使用者的存取方式以及請求的時間。
 
-* 設定要求、通常適用於非顯示命令或作業：
+管理活動可以是以下類型之一：
+
+* *SET 請求*：
 +
+** 這些請求通常適用於非顯示命令或操作。
 ** 這些要求會在您執行時發出 `create`、 `modify`或 `delete` 例如命令。
-** 預設會記錄設定要求。
+** 預設會記錄 SET 請求。
 
 
-* 取得要求、以擷取資訊並顯示在管理介面中：
+* *GET 請求*：
 +
+** 這些請求檢索資訊並將其顯示在管理介面中。
 ** 這些要求會在您執行時發出 `show` 例如命令。
-** 依預設不會記錄 GET 要求、但您可以控制是否從 ONTAP CLI 傳送 GET 要求 (`-cliget`）、來自 ONTAP API (`-ontapiget`）、或來自 REST API (`-httpget`）會記錄在檔案中。
+** 預設不會記錄 GET 請求，但您可以控制是否從ONTAP CLI 發送 GET 請求(`-cliget` ），來自ONTAP API (`-ontapiget` ），或透過ONTAP REST API (`-httpget` ) 記錄在文件中。
 
 
 
 
-ONTAP 會在中記錄管理活動 `/mroot/etc/log/mlog/audit.log` 節點的檔案。這裏記錄了三個Shell中用於CLI命令的命令（即clusterShell、nodesell和非交互式系統Shell（不記錄交互式系統Shell命令）以及API命令。稽核記錄包含時間戳記、可顯示叢集中的所有節點是否都同步時間。
+.審計日誌記錄和輪換
+ONTAP記錄管理活動 `/mroot/etc/log/mlog/audit.log`節點的檔案。 CLI指令（clustershell、nodeshell 和非互動式 systemshell）以及 API 指令均記錄在此。互動式 systemshell 指令不記錄。稽核日誌包含時間戳，用於顯示叢集中所有節點是否同步。
 
 。 `audit.log` 檔案是由 AutoSupport 工具傳送給指定的收件者。您也可以將內容安全地轉送到您指定的外部目的地、例如Splunk或syslog伺服器。
 
 。 `audit.log` 檔案會每日旋轉。當檔案大小達到100 MB時、也會進行旋轉、並保留先前的48個複本（最多總共49個檔案）。稽核檔案執行每日旋轉時、不會產生任何EMS訊息。如果稽核檔案因為超過檔案大小限制而旋轉、則會產生EMS訊息。
+
+啟用 GET 稽核時，請考慮設定日誌轉發，以避免因日誌快速輪替而導致資料遺失。有關更多信息，請參閱以下知識庫文章： https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/Enabling_audit-log_forwarding["啟用稽核日誌轉發"^] 。

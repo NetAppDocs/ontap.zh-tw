@@ -99,7 +99,7 @@ NOTE: 可共享證書的產品。ONTAP不需要在憑證與lifs之間建立一�
 
 NOTE: 用戶端必須使用預先共用金鑰（PSK）來支援網際網路金鑰交換版本2（IKEv2）。
 
-.. 選用。選取精細的流量參數、例如上層傳輸協定（ UDP 、 TCP 、 ICMP 等） ）、本機連接埠號碼和遠端連接埠號碼、以保護流量。對應的參數為 `protocols`、 `local-ports` 和 `remote-ports` 分別。
+.. 可選擇細粒度的流量參數，例如上層協定（UDP、TCP、ICMP 等）、本機連接埠號碼和遠端連接埠號，以保護流量。對應的參數如下 `protocols` ，  `local-ports`和 `remote-ports`分別。
 +
 跳過此步驟以保護ONTAP 所有介於整個過程中的資訊流量、例如：靜態IP位址和用戶端IP位址。保護所有流量是預設設定。
 
@@ -113,9 +113,12 @@ NOTE:  `local-identity`如果主機和用戶端都使用強化天鵝，而且沒
 ... 如果您輸入 PKI 、也需要輸入 `cert-name`、 `local-identity`、 `remote-identity` 參數。如果遠端端憑證身分不明、或是需要多個用戶端身分識別、請輸入特殊身分識別 `ANYTHING`。
 
 
+.. 從ONTAP 9.17.1 開始，可以選擇輸入後量子預共享金鑰 (PPK) 身份 `ppk-identity`參數。 PPK提供了額外的安全保障，以抵禦未來潛在的量子電腦攻擊。輸入 PPK 身分時，系統會提示您輸入 PPK 金鑰。 PPK僅支援 PSK 身份驗證。
 
 
 
+
+詳細了解 `security ipsec policy create`在link:https://docs.netapp.com/us-en/ontap-cli/security-ipsec-policy-create.html["指令參考資料ONTAP"^] 。
 
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32

@@ -21,18 +21,26 @@ summary: 從 ONTAP 9 。 10.1 開始，您可以在新的或現有的磁碟區�
 如果您想要設定 ONTAP 叢集，以便依預設啟用所有新的磁碟區以進行自動勒索軟體保護（ ARP ），請參閱本link:enable-default-task.html["相關的 ARP 程序"]節。
 
 .關於這項工作
-* * 對於這些 ONTAP 版本的 ONTAP 9 ， 10.1 至 9.15.1 以及 Volumes （ FlexGroup Volumes ） * 的 ARP ，您應該一開始就在（或「乾式執行」模式）模式中啟用 ARP link:index.html#learning-and-active-modes["學習模式"]。當您第一次在學習模式中啟用 ARP 時，系統會分析工作負載，以找出正常行為的特徵。從使用中模式開始、可能會產生過多的誤報。
+* *（僅限 NAS 環境）對於ONTAP 9.10.1 至 9.15.1 或帶有FlexGroup卷的 ARP* 對於這些版本的ONTAP，您應該始終在link:index.html#learn-about-arp-modes["學習模式"] （或“試運轉”狀態）。首次啟用學習模式下的 ARP 時，系統會分析工作負載以表徵正常行為。以主動模式啟動可能會導致過多的誤報。
 +
-建議您讓 ARP 以學習模式執行至少 30 天。從 ONTAP 9 。 13.1 開始， ARP 會自動判斷最佳學習期間間隔，並自動執行交換器，這可能會在 30 天之前發生。
+建議讓 ARP 以學習模式運作至少 30 天。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。
 
-* * 對於 ONTAP 9.16.1 及更新版本的 FlexVol Volumes * ，當您啟用 ARP 時， ARP/AI 保護會立即啟用並啟用。不需要學習期間。
+* *（僅限 NAS 環境）適用於具有FlexVol磁碟區的ONTAP 9.16.1 及更高版本* 使用系統管理員或命令列介面 (CLI) 啟用 ARP 時，ARP/AI 保護將立即啟用並生效。無需學習期。
+* *（僅限 SAN 環境）適用於包含FlexVol磁碟區的ONTAP 9.17.1 及更高版本* 使用 System Manager 或命令列介面 (CLI) 啟用 ARP 時，ARP/AI 功能將自動啟用。在 SAN 磁碟區上啟用後， link:respond-san-entropy-eval-period.html["ARP/AI 在評估期間持續監測數據"]確定工作負載是否適合ARP並設定最佳加密偵測閾值。
 
 
 .開始之前
-* 您必須為 NFS 或 SMB （或兩者）啟用儲存 VM （ SVM ）。
-* xref:index.html#licenses-and-enablement[正確授權]必須為您的 ONTAP 版本安裝。
-* 您必須設定具有 NAS 工作負載的用戶端。
-* 您要設定 ARP 所在的磁碟區必須受到保護link:../concepts/namespaces-junction-points-concept.html["交會路徑"]，而且必須有作用中的。
+* 您必須擁有已啟用協定的儲存虛擬機器 (SVM)：
++
+** NAS：NFS 或 SMB（或兩者）
+** SAN：iSCSI、FC 或 NVMe
+
+
+
+
+* 這link:index.html#licenses-and-enablement["正確授權"]必須為您的ONTAP版本安裝。
+* 您必須具有已設定用戶端的 NAS 或 SAN 工作負載。
+* （僅限 NAS 環境）要設定 ARP 的磁碟區必須具有活動link:../concepts/namespaces-junction-points-concept.html["交會路徑"] 。
 * 磁碟區必須低於 100% 滿。
 * 建議您將 EMS 系統設定為傳送電子郵件通知、其中包括 ARP 活動通知。如需更多資訊、請參閱 link:../error-messages/configure-ems-events-send-email-task.html["設定EMS事件以傳送電子郵件通知"]。
 * 從 ONTAP 9.13.1 開始，我們建議您啟用多重管理驗證（ MAV ），以便在進行自主勒索軟體保護（ ARP ）組態時，需要兩個或更多已驗證的使用者管理員。如需更多資訊、請參閱 link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"]。
@@ -52,7 +60,7 @@ summary: 從 ONTAP 9 。 10.1 開始，您可以在新的或現有的磁碟區�
 . 選取 * 儲存 > 磁碟區 * 、然後選取您要保護的磁碟區。
 . 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
 +
-** 如果您將 ARP 搭配 ONTAP 9 ． 15.1 或更早版本或 ONTAP 9 ． 16.1 搭配 FlexGroup 磁碟區使用，請在「 * 反勒索軟體 * 」方塊中選取「 * 在學習模式中啟用」。
+** （僅限 NAS 環境）如果您將 ARP 與ONTAP 9.15.1 或更早版本一起使用，或將ONTAP 9.16.1 與FlexGroup磁碟區一起使用，請在 *反勒索軟體* 方塊中選擇 *在學習模式下啟用*。
 +
 
 NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、並將交換器自動化。如果您想要手動控制學習模式到作用中模式的轉換，可以link:enable-default-task.html["在關聯的儲存 VM 上停用此設定"]使用。
@@ -61,7 +69,6 @@ NOTE: 從 ONTAP 9.13.1 開始、 ARP 會自動判斷最佳學習期間間隔、�
 
 NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
 
-** 如果您在具有 ONTAP 9.16.1 或更新版本的 FlexVol 磁碟區上使用 ARP ，則 ARP/AI 功能會立即啟用並啟用。不需要學習期間。
 
 
 . 您可以在 * 反勒索軟體 * 方塊中驗證磁碟區的 ARP 狀態。
@@ -73,22 +80,24 @@ NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入�
 --
 .CLI
 --
-如果您是在現有磁碟區上啟用 ARP 、而不是在新磁碟區上啟用 ARP 、則使用 CLI 啟用 ARP 的程序會有所不同。
+如果要在現有磁碟區或新磁碟區上啟用 ARP，則使用 CLI 啟用 ARP 的流程會有所不同。
 
 .在現有磁碟區上啟用 ARP
 . 修改現有的磁碟區以啟用勒索軟體保護：
 +
+** 對於沒有 ARP/AI 的 NAS 環境或FlexGroup卷，請使用 `dry-run`狀態，以便新卷以學習模式開始。
+** 對於執行ONTAP 9.16.1 或更高版本的 NAS 環境或具有ONTAP 9.17.1 的 SAN 環境，請使用 `enabled`狀態。
++
 [source, cli]
 ----
-security anti-ransomware volume dry-run -volume <vol_name> -vserver <svm_name>
+security anti-ransomware volume <dry-run|enabled> -volume <vol_name> -vserver <svm_name>
 ----
-+
-對於 ONTAP 9.15.1 及更早版本和 FlexGroup 磁碟區，新磁碟區會以學習模式開始。對於 FlexVol Volume 的 ONTAP 9.16.1 及更新版本，會立即啟用 ARP/AI 。無論是哪種情況，都請使用 `dry-run`做為值。
-
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-dry-run.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume dry-run`資訊，請參閱。
 
-. 如果您從 ONTAP 9.13.1 升級至 ONTAP 9.15.1 ，且預設狀態為 `dry-run`，則會啟用調適學習，以便自動完成狀態變更 `active`。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
+
+
+. 如果您將 NAS 環境升級到ONTAP 9.13.1 到ONTAP 9.15.1，並且預設狀態為 `dry-run` （學習模式），自適應學習已啟用，因此變更為 `enabled`狀態（主動模式）會自動啟用。如果您不想自動啟用此行為，請在所有關聯磁碟區的 SVM 層級變更設定：
 +
 [source, cli]
 ----
@@ -105,14 +114,16 @@ security anti-ransomware volume show
 .在新磁碟區上啟用 ARP
 . 在資源配置資料之前，先建立已啟用 ARP 的新磁碟區：
 +
+** 對於沒有 ARP/AI 的 NAS 環境或FlexGroup卷，請使用 `dry-run`狀態，以便新卷以學習模式開始。
+** 對於執行ONTAP 9.16.1 或更高版本的 NAS 環境或具有ONTAP 9.17.1 的 SAN 環境，請使用 `enabled`狀態。
++
 [source, cli]
 ----
-volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state dry-run -junction-path </path_name>
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state <dry-run|enabled> -junction-path </path_name>
 ----
-+
-對於 ONTAP 9.15.1 及更早版本和 FlexGroup 磁碟區，新磁碟區會以學習模式開始。對於 FlexVol Volume 的 ONTAP 9.16.1 及更新版本，會立即啟用 ARP/AI 。無論是哪種情況，都請使用 `dry-run`做為值。
 
-. 如果您從 ONTAP 9.13.1 升級至 ONTAP 9.15.1 ，且預設狀態為 `dry-run`，則會啟用調適學習，以便自動完成狀態變更 `active`。如果您不想自動啟用此行為、請變更所有相關磁碟區上 SVM 層級的設定：
+
+. 如果您將 NAS 環境升級到ONTAP 9.13.1 到ONTAP 9.15.1，並且預設狀態為 `dry-run` （學習模式），自適應學習已啟用，因此變更為 `enabled`狀態（主動模式）會自動啟用。如果您不想自動啟用此行為，請在所有關聯磁碟區的 SVM 層級變更設定：
 +
 [source, cli]
 ----

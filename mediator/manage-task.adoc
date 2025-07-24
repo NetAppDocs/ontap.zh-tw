@@ -220,6 +220,20 @@ CGroup: /system.slice/ontap_mediator.service
 
 
  a| 
+ONTAP調解器 1.10
+ a| 
+scst-3.9.tar.gz
+
+
+
+ a| 
+ONTAP調解器 1.9.1
+ a| 
+scst-3.8.0.tar.bz2
+
+
+
+ a| 
 ONTAP Mediator 1.9
  a| 
 scst-3.8.0.tar.bz2
@@ -925,7 +939,7 @@ NOTE: 對於 SnapMirror Business Continuity （ SM-BC ）叢集、您必須將�
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -938,7 +952,7 @@ Certificate:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in ca.crt -text -noout
 Certificate:
     Data:
 ...
@@ -962,10 +976,10 @@ Certificate:
 
 [listing, subs="+quotes"]
 ----
-[root@scs000216982 server_config]# pwd
+[root@mediator_host server_config]# pwd
 /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@scs000216982 server_config]# cat openssl_ca.cnf
+[root@mediator_host server_config]# cat openssl_ca.cnf
 ...
 [ v3_ca ]
 *subjectKeyIdentifier = hash*
@@ -973,7 +987,7 @@ Certificate:
 *basicConstraints = critical, CA:true*
 *keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
 
-[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -995,10 +1009,10 @@ Certificate:
 
 [listing, subs="+quotes"]
 ----
-[root@scs000216982 server_config]# pwd
+[root@mediator_host server_config]# pwd
 /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@scs000216982 server_config]# cat openssl_ca.cnf
+[root@mediator_host server_config]# cat openssl_ca.cnf
 ...
 [ v3_ca ]
 *subjectKeyIdentifier = hash*
@@ -1006,7 +1020,7 @@ Certificate:
 *basicConstraints = critical, CA:true*
 *keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in ca.crt -text -noout
 Certificate:
     Data:
 ...
@@ -1039,10 +1053,10 @@ Certificate:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# pwd
+[root@mediator_host server_config]# pwd
 /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@scs000216982 server_config]# cat openssl_server.cnf
+[root@mediator_host server_config]# cat openssl_server.cnf
 ...
 [ v3_req ]
 basicConstraints       = CA:false
@@ -1056,7 +1070,7 @@ DNS.2 = abc-v6.company.com
 IP.1 = 1.2.3.4
 IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
 
-[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -1076,10 +1090,10 @@ Certificate:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# pwd
+[root@mediator_host server_config]# pwd
 /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@scs000216982 server_config]# cat openssl_server.cnf
+[root@mediator_host server_config]# cat openssl_server.cnf
 ...
 [ v3_req ]
 basicConstraints       = CA:false
@@ -1093,7 +1107,7 @@ DNS.2 = abc-v6.company.com
 IP.1 = 1.2.3.4
 IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@mediator_host server_config]# openssl x509 -in ca.crt -text -noout
 Certificate:
     Data:
 ...
@@ -1124,10 +1138,10 @@ Certificate:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl rsa -noout -modulus -in intermediate.key | openssl md5
+[root@mediator_host server_config]# openssl rsa -noout -modulus -in intermediate.key | openssl md5
 Enter pass phrase for intermediate.key:
 (stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
-[root@scs000216982 server_config]# openssl x509 -noout -modulus -in intermediate.crt | openssl md5
+[root@mediator_host server_config]# openssl x509 -noout -modulus -in intermediate.crt | openssl md5
 (stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
 ----
 --
@@ -1135,10 +1149,10 @@ Enter pass phrase for intermediate.key:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl rsa -noout -modulus -in ca.key | openssl md5
+[root@mediator_host server_config]# openssl rsa -noout -modulus -in ca.key | openssl md5
 Enter pass phrase for ca.key:
 (stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
-[root@scs000216982 server_config]# openssl x509 -noout -modulus -in ca.crt | openssl md5
+[root@mediator_host server_config]# openssl x509 -noout -modulus -in ca.crt | openssl md5
 (stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
 ----
 --
@@ -1157,15 +1171,16 @@ Enter pass phrase for ca.key:
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl verify -CAfile intermediate.crt ontap_mediator_server.crt
+[root@mediator_host server_config]# openssl verify -CAfile root_ca.crt --untrusted intermediate.crt ontap_mediator_server.crt
 ontap_mediator_server.crt: OK
+[root@mediator_host server_config]#
 ----
 --
 .ONTAP Mediator 1.8 及更早版本
 --
 [listing]
 ----
-[root@scs000216982 server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
+[root@mediator_host server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
 ontap_mediator_server.crt: OK
 ----
 --

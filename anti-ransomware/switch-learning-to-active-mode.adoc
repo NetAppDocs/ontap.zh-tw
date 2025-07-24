@@ -2,14 +2,16 @@
 sidebar: sidebar 
 permalink: anti-ransomware/switch-learning-to-active-mode.html 
 keywords: ransomware, arp, mode, switch, active, learning, autonomous ransomware protection 
-summary: 對於自主勒索軟體保護（ ARP ） 9.15.1 及更早版本，請手動或自動將啟用 ARP 的磁碟區從學習模式切換至使用中模式。 
+summary: 對於 NAS 環境中的 ARP 9.15.1 及更早版本，手動或自動將啟用 ARP 的捲從學習模式切換到活動模式。 
 ---
 = 在學習期間之後，在 ONTAP ARP 中切換至作用中模式
 :allow-uri-read: 
 
 
 [role="lead"]
-對於執行 FlexGroup 磁碟區的自治勒索軟體保護（ ARP ） 9.15.1 及更早版本或 ARP ，請手動或自動將啟用 ARP 的磁碟區從學習模式切換至使用中模式。在 ARP 完成至少 30 天的學習模式執行後，您可以手動切換至使用中模式。從 ONTAP 9 。 13.1 開始， ARP 會自動判斷最佳學習期間間隔，並自動執行交換器，這可能會在 30 天之前發生。
+對於 NAS 環境，手動或自動將啟用 ARP 的磁碟區從學習模式切換到活動模式。如果您在ONTAP 9.15.1 及更早版本中使用 ARP，或者您的 ARP 在FlexGroup磁碟區上執行，則需要切換模式。
+
+ARP 完成建議至少 30 天的學習模式運作後，您可以手動切換到活動模式。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習週期間隔並自動切換，切換可能在 30 天之前發生。
 
 如果您在具有 ONTAP 9.16.1 或更新版本的 FlexVol 磁碟區上使用 ARP ，則 ARP/AI 保護功能會啟用，並自動變成作用中。不需要學習期間。
 
@@ -20,13 +22,18 @@ NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入�
 
 == 在學習期間後手動切換至使用中模式
 
-若為 ONTAP 9 。 10.1 至 9.15.1 ，以及使用 FlexGroup 磁碟區的 ARP ，您可以使用系統管理員或 ONTAP CLI ，手動從 ARP 學習模式轉換至作用中模式。
+對於ONTAP 9.10.1 至 9.15.1 以及帶有FlexGroup卷的 ARP，您可以在學習期結束後使用系統管理器或ONTAP CLI 手動從 ARP 學習模式過渡到主動模式。
+
+.關於這項工作
+本過程中所描述的學習期後手動過渡到主動模式特定於 NAS 環境。
+
+.步驟
+您可以使用系統管理員或ONTAP CLI 從學習模式切換到主動模式。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-.步驟
 . 選取 * 儲存 > 磁碟區 * 、然後選取已準備好用於作用中模式的磁碟區。
 . 在 * Volumes * （卷）總覽的 * Security （安全性） * 標籤中，在 Anti-勒索 軟體方塊中選取 * Switch to active mode* （切換至作用中模式）。
 . 您可以在 * 反勒索軟體 * 方塊中驗證磁碟區的 ARP 狀態。
@@ -35,8 +42,7 @@ NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入�
 --
 .CLI
 --
-.步驟
-. 學習期間結束時、如果尚未自動完成、請修改受保護的磁碟區以切換至作用中模式：
+. 如果尚未自動完成，則修改受保護的磁碟區以切換到活動模式：
 +
 [source, cli]
 ----
@@ -64,7 +70,7 @@ security anti-ransomware volume show
 
 == 自動從學習模式切換至使用中模式
 
-從 ONTAP 9.13.1 開始，調適性學習已新增至 ARP 分析，並自動從學習模式切換至主動模式。ARP 自動從學習模式切換至使用中模式的自主決定、是根據下列選項的組態設定而定：
+從ONTAP 9.13.1 開始，自適應學習已新增至 ARP 分析中，並且可以自動從學習模式切換到主動模式。 ARP自動從學習模式切換到主動模式的自主決策基於以下選項的配置設定：
 
 [listing]
 ----
@@ -74,7 +80,7 @@ security anti-ransomware volume show
  -anti-ransomware-auto-switch-minimum-file-count
  -anti-ransomware-auto-switch-minimum-file-extension
 ----
-學習 30 天之後、即使其中一或多個條件不滿足、 Volume 仍會自動切換至使用中模式。也就是說、如果啟用自動切換、則磁碟區最多會在 30 天之後切換至使用中模式。30 天的最大值是固定的、不可修改的。
+如果啟用自動切換功能，即使未滿足所有條件，磁碟區也會在最多 30 天後自動切換到活動模式。此 30 天的限制是固定的，無法更改。
 
 如需 ARP 組態選項（包括預設值）的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-auto-switch-to-enable-mode-show.html["指令參考資料ONTAP"^]。
 

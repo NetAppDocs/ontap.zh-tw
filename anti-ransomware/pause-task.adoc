@@ -23,7 +23,7 @@ summary: 如果您預期會發生不尋常的工作負載事件、您可以隨�
 link:../multi-admin-verify/enable-disable-task.html["深入瞭解MAV"]。
 
 .關於這項工作
-在暫停ARP期間、不會記錄任何事件、也不會針對新的寫入動作進行任何動作。不過、分析作業會在背景中繼續進行、以處理較早的記錄。
+在 ARP 暫停期間，不會記錄任何新寫入的事件或操作；但是，分析操作會在後台繼續對早期的日誌進行分析。
 
 
 NOTE: 請勿使用 ARP 停用功能來暫停分析。這樣做會停用磁碟區上的Arp、並會遺失所有有關已學習工作負載行為的現有資訊。這需要重新啟動學習期間。
@@ -36,11 +36,12 @@ NOTE: 請勿使用 ARP 停用功能來暫停分析。這樣做會停用磁碟區
 .系統管理員
 --
 . 選取 * 儲存 > 磁碟區 * 、然後選取您要暫停 ARP 的磁碟區。
-. 在 Volumes （磁碟區）總覽的 ** Security （ ** 安全性） ** 索引標籤中、在 * Anti-勒索 ware* 方塊中選取 * Pause anti-勒索 ware* 。
+. 在卷概覽的「安全性」標籤中，選擇「反勒索軟體」方塊中的「暫停反勒索軟體」。
 +
 
 NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、暫停作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
 
+. 若要恢復監控，請選擇*恢復反勒索軟體*。
 
 
 --
@@ -48,12 +49,16 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
 --
 . 在磁碟區上暫停ARP：
 +
-`security anti-ransomware volume pause -vserver _svm_name_ -volume _vol_name_`
-
+[source, cli]
+----
+security anti-ransomware volume pause -vserver <svm_name> -volume <vol_name>
+----
 . 若要繼續處理、請使用 `resume` 命令：
 +
-`security anti-ransomware volume resume -vserver _svm_name_ -volume _vol_name_`
-
+[source, cli]
+----
+security anti-ransomware volume resume -vserver <svm_name> -volume <vol_name>
+----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume+["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume`資訊，請參閱。
 
@@ -64,12 +69,16 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
 +
 .. 顯示要求：
 +
-`security multi-admin-verify request show`
-
+[source, cli]
+----
+security multi-admin-verify request show
+----
 .. 核准申請：
 +
-`security multi-admin-verify request approve -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request approve -index[<number returned from show request>]
+----
 +
 最後一個群組核准者的回應表示該磁碟區已修改、而且 ARP 狀態已暫停。
 
@@ -77,8 +86,10 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
 如果您使用的是 MAV 、而且您是 MAV 群組核准者、您可以拒絕暫停作業要求：
 
 +
-`security multi-admin-verify request veto -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request veto -index[<number returned from show request>]
+----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+multi-admin-verify+request["指令參考資料ONTAP"^]需詳細 `security multi-admin-verify request`資訊，請參閱。
 

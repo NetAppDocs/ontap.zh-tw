@@ -61,21 +61,21 @@ summary: 使用 SnapMirror 主動式同步時、還有幾項額外的限制和�
 SnapMirror 主動同步中的 Volume 限制是根據端點數量而非關係數量來計算。具有 12 個磁碟區的一致性群組、可在主叢集和次叢集上提供 12 個端點。SnapMirror 主動式同步和 SnapMirror 同步關係都有助於達到端點總數。
 
 
-IMPORTANT: 這些限制適用於 FAS ， AFF 和目前的 ASA 系統。如果您有 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），請參閱link:https://docs.netapp.com/us-en/asa-r2/data-protection/manage-consistency-groups.html["ASA R2 說明文件"^] 。
+IMPORTANT: 這些限制適用於FAS、 AFF和ASA系統。如果您擁有ASA r2 系統（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30 或ASA A20），請參閱link:https://docs.netapp.com/us-en/asa-r2/data-protection/manage-consistency-groups.html["ASA R2 說明文件"^] 。
 
 下表列出每個平台的最大端點數。
 
 |===
-| 美國否 | 平台 3+| 每個 HA 的端點用於 SnapMirror 主動同步 3+| 每個 HA 的整體同步和 SnapMirror 主動同步端點 
+| 平台 3+| 每個 HA 的端點用於 SnapMirror 主動同步 3+| 每個 HA 的整體同步和 SnapMirror 主動同步端點 
 
 
-|  |  | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP 
+|  | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP | 更新版本ONTAP | 零點9.10.1 ONTAP | 部分9.9.1 ONTAP 
 
 
-| 1. | AFF | 400* | 200 | 60 | 400 | 200 | 80 
+| AFF | 400* | 200 | 60 | 400 | 200 | 80 
 
 
-| 2. | ASA | 400* | 200 | 60 | 400 | 200 | 80 
+| ASA | 400* | 200 | 60 | 400 | 200 | 80 
 |===
 ｛ Asterisk ｝ 從 ONTAP 9.16.1 開始， SnapMirror 主動式同步支援對稱式雙主動 / 主動式組態中的四節點叢集。四節點叢集的總上限為 800 個端點。
 
@@ -86,7 +86,7 @@ IMPORTANT: 這些限制適用於 FAS ， AFF 和目前的 ASA 系統。如果您
 下表包含 SAN 物件限制。無論平台為何、限制都適用。
 
 |===
-| SnapMirror 主動同步關係中的物件 | 數 
+| SnapMirror主動同步關係中的對象 | 數 
 
 
 | 每個磁碟區的LUN數量  a| 
@@ -96,19 +96,49 @@ IMPORTANT: 這些限制適用於 FAS ， AFF 和目前的 ASA 系統。如果您
 
 
 
-| 每 2 x 2 SnapMirror 主動式同步解決方案的唯一 LUN 數量 | 4 、 096 
+| 每個 2 x 2 SnapMirror主動同步解決方案的唯一 LUN、命名空間或儲存單元的數量 | 4 、 096 
 
 
-| 每 4 x 4 SnapMirror 主動式同步解決方案的唯一 LUN 數量（從 ONTAP 9.16.1 開始提供） | 6 、 144 
+| 每個 4 x 4 SnapMirror主動同步解決方案的唯一 LUN、命名空間或儲存單元的數量（從ONTAP 9.16.1 開始提供） | 6 、 144 
 
 
-| 每個 SVM 的生命（ SnapMirror 主動同步關係中至少有一個 Volume ） | 256 
+| 每個 SVM 的 LIF（至少有一個磁碟區處於SnapMirror主動同步關係中） | 256 
 
 
 | 每個節點的叢集間生命量 | 4. 
 
 
 | 每個叢集的叢集間生命量 | 8. 
+|===
+
+
+== NVMe 物件限制
+
+從ONTAP 9.17.1 開始， SnapMirror主動同步支援 NVMe 協定。下表列出了 NVMe 物件的限制。
+
+|===
+| SnapMirror主動同步關係中的最大物件數 | 數 
+
+
+| 每個節點的命名空間映射數量 | 4K 
+
+
+| 簇大小 | 2個節點 
+
+
+| 每個 HA 對的一致性組數量 | 50 
+
+
+| 單一 NVMe SnapMirror活動同步一致性群組中的磁碟區數 | 80 
+
+
+| HA 對中的捲數 | 400 
+
+
+| 每個一致性組的 NVMe 子系統 | 16. 
+
+
+| 每個一致性組的命名空間映射 | 256 
 |===
 .相關資訊
 * link:https://hwu.netapp.com/["Hardware Universe"^]

@@ -13,29 +13,27 @@ summary: 瞭解 ONTAP 中的 ARP 通知，並判斷勒索軟體是否發生攻�
 [role="lead"]
 當自發勒索軟體保護（Arp）偵測到受保護磁碟區中的異常活動時、就會發出警告。您應該評估通知、以判斷該活動是否可接受（誤判）、或攻擊是否看起來惡意。將攻擊分類後，您可以清除可疑檔案的警告和注意事項。
 
-當 ONTAP 偵測到異常時，也會建立link:index.html#threat-assessment-and-arp-snapshots["ARP 快照"]磁碟區以建立最佳的恢復點。依預設， ARP 快照會保留兩到五天。
-
-當您將攻擊分類時，這些 ARP 快照會立即刪除（ ONTAP 9.15.1 及更早版本），或保留在分類作業（ ONTAP 9.16.1 及更新版本）所起始的簡短期間內。
+對攻擊進行分類時，ARP 快照要麼立即刪除（ONTAP 9.15.1 及更早版本），要麼在分類操作啟動後保留一段較短的時間（ONTAP 9.16.1 及更高版本）。
 
 
-NOTE: 從 ONTAP 9.11.1 開始，您可以修改xref:modify-automatic-snapshot-options-task.html[保留設定]用於 ARP 快照的。
+NOTE: 從ONTAP 9.11.1 開始，您可以修改link:modify-automatic-snapshot-options-task.html["保留設定"]用於 ARP 快照。
 
 .關於這項工作
-當Arp偵測到高資料Entropy、異常Volume活動與資料加密、以及異常檔案副檔名的任何組合時、會顯示可疑檔案的清單。
+當 ARP 偵測到高資料熵、包含資料加密的異常磁碟區活動以及異常檔案副檔名的任意組合時，它會顯示可疑檔案清單。從適用於 NAS 和 SAN 環境的ONTAP 9.17.1 開始，系統管理員中的「反勒索軟體」頁面也會報告熵峰值的詳細資訊。
 
-發出 ARP 警告時，請以下列兩種方式之一來指定檔案活動：
+當發出 ARP 警告通知時，透過以下兩種方式之一指定活動進行回應：
 
 * * 誤判 *
 +
-識別的檔案類型應在您的工作負載中使用、而且可以忽略。
+已識別的文件類型或熵峰值是您的工作負載中預期會出現的，可以忽略。
 
 * * 可能的勒索軟體攻擊 *
 +
-識別出的檔案類型在您的工作負載中是非預期的、應該視為潛在攻擊。
+所識別的文件類型或熵峰值在您的工作負載中是意外的，應被視為潛在攻擊。
 
 
 
-在這兩種情況下、更新和清除通知後、系統都會繼續正常監控。ARP 會將您的評估記錄在威脅評估設定檔中、並使用您的選擇來監控後續的檔案活動。
+在您更新您的決定並清除 ARP 通知後，系統將恢復正常監控。 ARP會將您的評估記錄到威脅評估設定檔中，並使用您的選擇來監控後續的檔案活動。
 
 如果是可疑的攻擊、您必須判斷它是否為攻擊、如果是攻擊、請回應、並在清除通知之前還原受保護的資料。 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["深入瞭解如何從勒索軟體攻擊中恢復"]。
 
@@ -43,7 +41,7 @@ NOTE: 從 ONTAP 9.11.1 開始，您可以修改xref:modify-automatic-snapshot-op
 NOTE: 如果您還原整個磁碟區、則沒有要清除的通知。
 
 .開始之前
-ARP 必須處於作用中狀態，而非處於學習模式。
+ARP 必須主動保護卷，而不是處於學習或評估模式。
 
 .步驟
 您可以使用系統管理員或 ONTAP CLI 來回應異常活動。
@@ -52,33 +50,40 @@ ARP 必須處於作用中狀態，而非處於學習模式。
 ====
 .系統管理員
 --
-. 當您收到「異常活動」通知時，請點選連結。或者、瀏覽至 * Volumes * 總覽的 * Security * 標籤。
+. 當您收到「異常活動」通知時，請點擊連結。或者，導覽至「磁碟區」概覽的「安全性」標籤。
 +
 警告會顯示在 * 事件 * 功能表的 * 總覽 * 窗格中。
 
-. 當出現偵測到異常 Volume 活動的訊息時，請檢視可疑的檔案類型。
+. 在「*安全*」標籤中，查看可疑檔案類型或熵峰值報告。
 +
-在 * 安全 * 標籤中，選取選項以檢閱可疑的檔案類型。
+** 對於可疑文件，請檢查「可疑文件類型」對話方塊中的每種文件類型，並分別標記。
+** 對於熵峰值，請檢查熵報告。
 
-. 在 * 可疑檔案類型 * 對話方塊中，檢查每種檔案類型，並將其標記為「誤判」或「可能的勒索軟體攻擊」。
+
+. 記錄你的答案：
 +
 [cols="25,75"]
 |===
 
 
-| 如果您選取此值... | 請採取此行動... 
+| 如果選擇此值... | 請採取此行動... 
 
 
  a| 
 誤判
  a| 
-.. 選擇 * 更新 * 和 * 清除可疑檔案類型 * 來記錄您的決定。
+.. 執行下列其中一項：
++
+*** 對於文件類型警告，選擇*更新並清除可疑文件類型*。
+*** 對於熵尖峰，選擇*標記為假陽性*。
++
+這些操作可清除有關可疑文件或活動的警告通知。 ARP隨後將恢復對磁碟區的正常監控。對於ONTAP 9.15.1 及更早版本，清除可疑檔案類型後，相關的 ARP 快照會自動刪除。對於ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照會在分類操作觸發的縮短保留期後自動刪除。
+
 +
 
 NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、則清除可疑的作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
 
-+
-此動作會清除可疑檔案的警告通知。接著， ARP 會恢復對磁碟區的正常監控。對於 ONTAP 9.15.1 及更早版本，清除可疑的檔案類型之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+
 
 
 
@@ -87,11 +92,24 @@ NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定�
  a| 
 可能的勒索軟體攻擊
  a| 
-.. 回應攻擊和link:recover-data-task.html["還原受保護的資料"]。
-.. 選擇 * 更新 * 和 * 清除可疑檔案類型 * 、以記錄您的決定並恢復正常的 ARP 監控。
+.. 回應攻擊：
++
+*** 對於文件類型警告，將選定的文件標記為*潛在勒索軟體攻擊*，並link:recover-data-task.html["還原受保護的資料"] 。
+*** 對於表示攻擊的熵峰值，選擇「標記為潛在勒索軟體攻擊」並link:recover-data-task.html["還原受保護的資料"] 。
 
 
-此動作會清除攻擊報告。如果您還原了整個磁碟區，則沒有可疑的檔案類型通知可清除。對於 ONTAP 9.15.1 及更早版本，還原磁碟區之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+.. 資料恢復完成後，記錄您的決定並恢復正常的ARP監控：
++
+*** 對於文件類型警告，選擇*更新並清除可疑文件類型*。
+*** 對於熵峰值，選擇*標記為潛在勒索軟體攻擊*並選擇*儲存並關閉*。
+
+
+
+
+
+NOTE: 如果您已還原整個磁碟區，則無需清除任何可疑文件類型通知。
+
+記錄您的決定將清除攻擊報告。對於ONTAP 9.15.1 及更早版本，還原磁碟區後，ARP 快照將自動刪除。對於ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照將在分類操作觸發的縮短保留期後自動刪除。
 
 |===
 
@@ -114,8 +132,9 @@ Vserver Name: vs0
 Volume Name: vol1
 State: enabled
 Attack Probability: moderate
-Attack Timeline: 9/14/2021 01:03:23
+Attack Timeline: 5/12/2025 01:03:23
 Number of Attacks: 1
+Attack Detected By: encryption_percentage_analysis
 ....
 +
 您也可以檢查EMS訊息：
@@ -129,7 +148,7 @@ event log show -message-name callhome.arw.activity.seen
 +
 [source, cli]
 ----
-security anti-ransomware volume attack generate-report -vserver <svm_name> -volume <vol_name> -dest-path <[svm_name:]vol_name/[sub-dir-name]>
+security anti-ransomware volume attack generate-report -vserver <svm_name> -volume <vol_name> -dest-path <[svm_name]:[junction_path/sub_dir_name]>
 ----
 +
 命令範例：
@@ -149,34 +168,44 @@ Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
 ----
 . 在管理用戶端系統上檢視報告。例如：
 +
-....
+[listing]
+----
 cat report_file_vs0_vol1_14-09-2021_01-21-08
-....
-. 根據您對副檔名的評估、採取下列其中一項行動：
+----
+. 根據您對檔案副檔名或熵峰值的評估，請執行以下操作之一：
 +
 ** 誤判
 +
-執行下列命令以記錄您的決定，將新的擴充功能新增至允許的擴充功能清單，並恢復正常的勒索軟體保護監控：
+執行以下命令之一來記錄您的決定並恢復正常的自主勒索軟體防護監控：
 
++
+*** 對於檔案副檔名：
 +
 [source, cli]
 ----
-anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive true
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension_identifiers>] -false-positive true
 ----
 +
 使用下列選用參數，僅將特定副檔名識別為誤報：
 
 +
-*** `[-extension <text>, … ]`：檔案副檔名
-+
-此 `clear-suspect`作業會清除可疑檔案的警告通知。接著， ARP 會恢復對磁碟區的正常監控。對於 ONTAP 9.15.1 及更早版本，清除可疑的檔案類型之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+**** `[-extension <text>, … ]`：檔案副檔名
 
+
+*** 對於熵尖峰：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive true
+----
 
 
 ** 可能的勒索軟體攻擊
 +
-回應攻擊和link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。恢復資料後，請執行下列命令來記錄您的決定，並恢復正常的 ARP 監控：
+回應攻擊和 link:../anti-ransomware/recover-data-task.html["從 ARP 建立的備份快照中恢復資料"]。執行以下命令之一記錄您的決定並恢復正常的 ARP 監控：
 
++
+*** 對於檔案副檔名：
 +
 [source, cli]
 ----
@@ -186,13 +215,21 @@ anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_nam
 請使用下列選用參數，僅將特定的擴充功能識別為可能的勒索軟體：
 
 +
-*** `[-extension <text>, … ]`：檔案副檔名
+**** `[-extension <text>, … ]`：檔案副檔名
+
+
+*** 對於熵尖峰：
 +
-此 `clear-suspect`作業會清除攻擊報告。如果您還原了整個磁碟區，則沒有可疑的檔案類型通知可清除。對於 ONTAP 9.15.1 及更早版本，還原磁碟區之後，系統會自動刪除 ARP 快照。對於 ONTAP 9.16.1 及更新版本中的 ARP/AI ，在分類作業觸發的縮短保留期間之後，會自動刪除 ARP 快照。
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive false
+----
 
 
 
 
++
+這 `clear-suspect`操作會清除攻擊報告。如果您還原了整個磁碟區，則無需清除任何可疑檔案類型通知。對於ONTAP 9.15.1 及更早版本，還原磁碟區或清除可疑事件後，ARP 快照會自動刪除。對於ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照會在分類操作觸發的縮短保留期後自動刪除。
 
 . 如果您使用的是 MAV 、而且是預期的 `clear-suspect` 作業需要額外核准、每位 MAV 群組核准者必須：
 +

@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: s3, svm, bucket, object, server, versioning, protocol, filesystems, nas, directories 
 summary: S3 NAS儲存區是S3儲存區名稱與NAS路徑之間的對應。  
 ---
-= 建立S3 NAS儲存區
+= 建立ONTAP S3 NAS 儲存桶
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-S3 NAS儲存區是S3儲存區名稱與NAS路徑之間的對應。S3 NAS儲存區可讓您將S3存取權提供給現有磁碟區和目錄結構的SVM命名空間的任何部分。
+S3 NAS 儲存桶是 S3 儲存桶名稱和 NAS 路徑之間的對應。 S3NAS 儲存桶可讓您提供具有現有磁碟區和目錄結構的 SVM 命名空間的任何部分的 S3 存取權。
 
 .開始之前
 * S3物件伺服器是在包含NAS資料的SVM中設定。
@@ -30,16 +30,21 @@ S3 NAS儲存區是S3儲存區名稱與NAS路徑之間的對應。S3 NAS儲存區
 
 例如、您可能需要個別的資源庫原則、將唯讀資料存取權限授予一大群使用者、而另一個原則則允許受限群組針對該資料的子集執行作業。
 
-由於S3 NAS「桶」是對應而非S3桶、因此下列標準S3桶內容不適用於S3 NAS桶。
+從ONTAP 9.17.1 開始，您可以直接將 S3 NAS 儲存桶連結到卷，而無需通過連接路徑。預設情況下，NAS 磁碟區上的 S3 儲存桶與連線路徑關聯， ONTAP管理員可以隨時變更該連線路徑。這些變更可能會中斷 S3 儲存桶的運作。從ONTAP 9.17.1 開始，您可以使用 `-is-nas-path-mutable false`選項 `vserver object-store-server bucket create`指令用於啟用 S3 NAS 儲存桶與磁碟區的連結。預設情況下，  `-is-nas-path-mutable`設定為 `true` 。
+
+由於 S3 NAS「儲存桶」是映射而不是 S3 儲存桶，因此標準 S3 儲存桶的以下屬性不適用於 S3 NAS 儲存桶。
 
 * *agger-list \ aggr-list-multiplier \ storage 服務層級 \ volume \ size \ exclain-aggr-list \ qos-policy-tgroup* +
 設定 S3 NAS 儲存區時、不會建立任何磁碟區或 qtree 。
-* * 角色 \ 受保護 \ 受保護的 ONTAP 上受保護 \ 受保護的雲端 * + S3 NAS 儲存區不受保護或使用 SnapMirror S3 鏡射、而是使用一般的 SnapMirror 保護功能、提供 Volume 精細度。
+* *role \ is -protected \ 是 -protected-on-ontap \ 是 -protected-on-cloud* + S3 NAS 儲存桶不受SnapMirror S3 保護或鏡像，而是使用卷粒度上可用的常規SnapMirror保護。
 * * 版本管理狀態 * + NAS 磁碟區通常都有快照技術可供儲存不同版本。不過、S3 NAS儲存區目前無法使用版本管理功能。
 * * 邏輯使用的 \ 物件計數 * +
 NAS 磁碟區可透過 Volume 命令取得等效的統計資料。
-* * 多部分物件 * + 從 ONTAP 9.16.1 開始，在基礎 FlexGroup 磁碟區上啟用時， S3 NAS 磁碟區支援多部分物件link:../flexgroup/enable-adv-capacity-flexgroup-task.html["進階容量平衡"]。進階容量平衡只能在 FlexGroup 磁碟區上啟用。無法在 FlexVols 上啟用。
+* *多部分物件* + 從ONTAP 9.16.1 開始，當 S3 NAS 儲存桶支援多部分物件時link:../flexgroup/enable-adv-capacity-flexgroup-task.html["進階容量平衡"]在底層FlexGroup磁碟區上啟用。高級容量平衡只能在FlexGroup磁碟區上啟用。無法在FlexVol磁碟區上啟用。
 
+
+.步驟
+您可以使用 System Manager 或ONTAP CLI 建立 NAS 儲存桶。
 
 [role="tabbed-block"]
 ====
@@ -60,11 +65,21 @@ NAS 磁碟區可透過 Volume 命令取得等效的統計資料。
 --
 .CLI
 --
-在包含NAS檔案系統的SVM中建立S3 NAS儲存區。+
-`vserver object-store-server bucket create -vserver _svm_name_ -bucket _bucket_name_ -type nas -nas-path _junction_path_ [-comment _text_]`
+. 在包含 NAS 檔案系統的 SVM 中建立 S3 NAS 儲存桶。+ 
+`vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> -type nas -nas-path <junction_path> -is-nas-path-mutable true|false [-comment <text>]`
++
+範例 1：建立 S3 NAS 儲存桶
 
-範例：+
++
 `cluster1::> vserver object-store-server bucket create -bucket testbucket -type nas -path /vol1`
+
++
+範例 2：建立 S3 NAS 儲存桶並將儲存桶連結到卷
+
++
+`vserver object-store-server bucket create -vserver vs1 -bucket nasbucket1 -type nas -nas-path /pathA/dir1 -is-nas-path-mutable false`
+
+
 
 --
 ====

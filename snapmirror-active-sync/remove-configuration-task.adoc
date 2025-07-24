@@ -41,7 +41,7 @@ summary: 您可以移除零 RTO SnapMirror 同步保護、並刪除 SnapMirror �
 
 
 
-== 移除對稱的主動 / 主動式組態
+== 刪除 iSCSI 或 FC 對稱主動/主動配置
 
 您可以使用系統管理員或 ONTAP CLI 移除對稱組態。在這兩個介面中、都有不同的步驟 xref:index.html#key-concepts[統一且不一致的組態]。
 
@@ -129,6 +129,54 @@ SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 +
 `SiteA::> snapmirror release -destination-path <destination_path>`
 
+. 重新探索路徑、確認主機只能使用本機路徑。
+
+
+--
+====
+
+
+== 刪除 NVMe 對稱主動/主動配置
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 在來源叢集上，導覽至*保護>複製*。
+. 找到要刪除的關係，選擇image:icon_kabob.gif["功能表選項圖示"]並選擇*刪除*。
+
+
+--
+.CLI
+--
+. 從目標叢集中刪除SnapMirror活動同步關係。
++
+`snapmirror delete -destination-path <destination_path> -unmap-namespace true`
+
++
+範例：
+
++
+[listing]
+----
+DST::> snapmirror delete -destination-path vs1:/cg/cg_dst_1 -force true
+----
++
+子系統及其命名空間已從輔助叢集中刪除。
+
+. 從來源叢集中，從主站點釋放SnapMirror主動同步關係。
++
+`snapmirror release -destination-path <destination_path>`
+
++
+範例：
+
++
+[listing]
+----
+SRC::> snapmirror release -destination-path vs1:/cg/cg_dst_1
+----
 . 重新探索路徑、確認主機只能使用本機路徑。
 
 

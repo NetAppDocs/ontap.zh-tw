@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/index.html
 keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync, TR-4878 
 summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、讓應用程式能以透明方式容錯移轉、確保在發生災難時營運不中斷。 
 ---
-= ONTAP 中的 SnapMirror 作用中同步總覽
+= 了解ONTAP SnapMirror主動同步
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,9 +16,68 @@ summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、
 [role="lead"]
 SnapMirror 主動式同步（也稱為 SnapMirror Business Continuity __[SM-BC] ）可讓業務服務持續運作、即使整個站台發生故障、也能支援應用程式使用次要複本進行透明容錯移轉。不需要手動介入或自訂指令碼，即可觸發 SnapMirror 主動式同步的容錯移轉。
 
-從 ONTAP 9.9.1 開始、 AFF 叢集、 All Flash SAN Array （ ASA ）叢集和 C 系列（ AFF 或 ASA ）支援 SnapMirror 主動式同步。主叢集和次叢集的類型必須相同： ASA 或 AFF 。SnapMirror 主動式同步功能可保護應用程式與 iSCSI 或 FCP LUN 。
+對SnapMirror主動同步的支援因ONTAP版本的不同而有所差異：
 
-從 ONTAP 9.15.1 開始， SnapMirror 主動式同步支援xref:architecture-concept.html[對稱式主動 / 主動式功能]。對稱式主動 / 主動式可從受保護 LUN 的兩個複本啟用讀取和寫入 I/O 作業，並提供雙向同步複寫，讓兩個 LUN 複本都能在本機上執行 I/O 作業。在 ONTAP 9.15.1 之前、 SnapMirror 主動式同步僅支援非對稱式主動 / 主動式組態、其中次要站台上的資料會代理至 LUN 。從 ONTAP 9.16.1 GA 開始，四節點 ONTAP 叢集也支援對稱式雙主動式 / 主動式。
+[cols="4*"]
+|===
+
+
+| 版本ONTAP | 支援的集群 | 支援的傳輸協定 | 支援的組態 
+
+
+| 9.17.1 及更高版本  a| 
+* AFF
+* ASA
+* C 系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+* NVMe
+
+ a| 
+* 非對稱主動/主動
+
+
+
+NOTE: 非對稱主動/主動不支援ASA r2 和 NVMe。有關 NVMe 支援的更多信息，請參閱link:../nvme/support-limitations.html["NVMe 組態、支援和限制"] 。
+
+* 對稱式主動 / 主動式
+
+
+
+
+| 9.15.1 及更高版本  a| 
+* AFF
+* ASA
+* C 系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非對稱主動/主動
+* 對稱主動/主動 對稱主動/主動配置支援ONTAP 9.15.1 中的 2 節點叢集。 ONTAPONTAP及更高版本支援 4 節點叢集。
+
+
+
+
+| 9.9.1及更新版本  a| 
+* AFF
+* ASA
+* C系列*
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+非對稱主動/主動
+
+|===
+主集群和輔助集群必須是同一種類型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
 
 
 NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已與 ONTAP 產品文件整合。ONTAP SnapMirror 主動式同步文件現在包含來自 _TR-4878 的內容： SnapMirror 主動式同步。
@@ -35,35 +94,34 @@ SnapMirror 主動式同步提供下列優點：
 * 測試每個應用程式的容錯移轉功能。
 * 即時建立鏡射複本、不會影響應用程式可用度。
 * 能夠在同一個 ONTAP 叢集中部署受保護和不受保護的工作負載。
-* LUN 身分保持不變、因此應用程式將其視為共享虛擬裝置。
+* LUN、NVMe 命名空間、NVMe 子系統或儲存單元身分保持不變，因此應用程式將它們視為共用虛擬裝置。
 * 能夠靈活地重複使用次叢集、為開發測試、 UAT 或報告用途建立即時複本、而不影響應用程式效能或可用度。
 
 
-SnapMirror 主動式同步可讓您保護資料 LUN 、讓應用程式在發生災難時能以透明方式容錯移轉、以確保營運不中斷。如需詳細資訊、請參閱 link:use-cases-concept.html["使用案例"]。
+SnapMirror主動同步功能可保護您的資料 LUN 或 NVMe 命名空間，使應用程式能夠透明地進行故障轉移，從而在災難發生時保持業務連續性。有關更多信息，請參閱link:use-cases-concept.html["使用案例"] 。
 
 
 
 == 主要概念
 
-SnapMirror 主動式同步使用一致性群組和 ONTAP Mediator ，確保即使發生災難情況，資料仍能複寫並提供服務。規劃 SnapMirror 主動同步部署時、務必瞭解 SnapMirror 主動同步及其架構的基本概念。
+SnapMirror主動同步使用一致性群組和ONTAP調解器（或從ONTAP 9.17.1 開始使用ONTAP雲端調解器）來確保即使在災難的情況下也能複製和提供資料。在規劃SnapMirror主動同步部署時，請務必了解SnapMirror主動同步及其架構中的基本概念。
 
 .不對稱性和對稱性
-SnapMirror 主動式同步支援非對稱式、並從 ONTAP 9.15.1 開始支援對稱式主動 / 主動式解決方案。這些選項是指主機如何存取儲存路徑和寫入資料。在非對稱組態中、次要站台上的資料會代理至 LUN 。在對稱式主動 / 主動式組態中、兩個站台都能存取使用中 I/O 的本機儲存設備
+在對稱主動/主動配置中，兩個站點均可存取本地儲存以進行主動 I/O。對稱主動/主動配置針對叢集應用程式進行了最佳化，包括 VMware vMSC、Windows 故障轉移叢集（含 SQL）以及 Oracle RAC。
 
-對稱式雙主動式 / 主動式已針對叢集式應用程式進行最佳化，包括 VMware VMSC ， Windows 容錯移轉叢集（含 SQL ）和 Oracle RAC 。
-
+ In asymmetric active/active configurations data on the secondary site is proxied to a LUN, namespace or storage unit.
 如需詳細資訊、請參閱 xref:architecture-concept.html[SnapMirror 主動同步架構]。
 
 .一致性群組
-答 link:../consistency-groups/index.html["一致性群組"] 是 FlexVol 磁碟區的集合、可為應用程式工作負載提供一致性保證、且必須加以保護、以確保業務持續運作。
+對於AFF和ASA系統link:../consistency-groups/index.html["一致性群組"]是FlexVol磁碟區的集合，為必須保護以確保業務連續性的應用程式工作負載提供一致性保證。在ASA r2 系統中，一致性群組是儲存單元的集合。
 
-一致性群組的目的是同時拍攝多個磁碟區的快照影像、以確保磁碟區集合在某個時間點的損毀一致複本。一致性群組可確保資料集的所有磁碟區都會處於靜默狀態、然後精確地在同一時間點對齊。如此可在支援資料集的磁碟區之間提供資料一致的還原點。因此一致性群組可維持相關的寫入順序一致性。如果您決定保護應用程式以確保營運不中斷、則必須將與此應用程式對應的磁碟區群組新增至一致性群組、以便在來源與目的地一致性群組之間建立資料保護關係。來源和目的地一致性必須包含相同的磁碟區數量和類型。
+一致性組的目的是同時對磁碟區或儲存單元集合進行快照，從而確保在某個時間點集合的崩潰一致性副本。一致性組確保資料集的所有磁碟區都處於靜止狀態，然後在同一時間點進行快照。這為支援資料集的磁碟區或儲存單元提供了資料一致的還原點。因此，一致性組可以維護相關的寫入順序一致性。如果您決定保護應用程式以實現業務連續性，則必須將與此應用程式對應的磁碟區或儲存單元群組新增至一致性群組中，以便在來源一致性群組和目標一致性群組之間建立資料保護關係。來源一致性群組和目標一致性群組必須包含相同數量和類型的磁碟區。
 
 .組成
-屬於 SnapMirror 主動式同步關係中所保護之一致性群組的個別磁碟區或 LUN 。
+單一磁碟區、LUN 或 NVMe 命名空間（從ONTAP 9.17.1 開始），是SnapMirror活動同步關係中受保護的一致性群組的一部分。
 
 .資訊媒體ONTAP
-。 link:../mediator/index.html["資訊媒體ONTAP"] 接收有關協調的 ONTAP 叢集和節點的健全狀況資訊、在兩者之間協調、並判斷每個節點 / 叢集是否正常運作。ONTAP Mediator 提供下列相關健全狀況資訊：
+這link:../mediator/index.html["資訊媒體ONTAP"]接收有關對等ONTAP叢集和節點的運行狀況信息，在兩者之間進行協調，並確定每個節點/叢集是否運行正常且正在運行。 ONTAP調解ONTAP提供以下方面的運作狀況資訊：
 
 * 對等 ONTAP 叢集
 * 對等 ONTAP 叢集節點
@@ -80,6 +138,9 @@ SnapMirror 主動式同步支援非對稱式、並從 ONTAP 9.15.1 開始支援�
 
 
 NOTE: 從 ONTAP 9.15.1 開始，系統管理員會顯示任一叢集的 SnapMirror 作用中同步關係狀態。您也可以從系統管理員的任一叢集監控 ONTAP Mediator 的狀態。在早期版本的 ONTAP 中、系統管理員會顯示來源叢集的 SnapMirror 主動式同步關係狀態。
+
+.ONTAP雲端調解器
+ONTAP Cloud Mediator 從ONTAP 9.17.1 開始可用。 ONTAPONTAP Mediator 提供與ONTAP Mediator 相同的服務，不同之處在於它使用BlueXP託管在雲端。
 
 .規劃的容錯移轉
 一種手動操作、可變更 SnapMirror 主動式同步關係中的複本角色。主要站台會變成次要站台、次要站台則成為主要站台。

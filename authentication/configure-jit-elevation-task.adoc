@@ -1,0 +1,220 @@
+---
+permalink: authentication/configure-jit-elevation-task.html 
+sidebar: sidebar 
+keywords: just in time, just-in-time, privilege elevation, password, security, authentication, JIT, elevation 
+summary: 配置即時權限提升，允許ONTAP使用者暫時提升其權限來執行某些任務。 
+---
+= 在ONTAP中設定 JIT 權限提升
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 9.17.1 開始，叢集管理員可以設定即時 (JIT) 權限提升，以允許ONTAP使用者暫時提升其權限以執行某些任務。為使用者配置 JIT 後，他們可以臨時link:elevate-jit-access-task.html["提升他們的特權"]賦予具有執行任務所需權限的角色。會話持續時間到期後，使用者將恢復其原始存取等級。
+
+叢集管理員可以設定使用者存取 JIT 提升的時長。例如，您可以設定使用者存取 JIT 提升的時長，在 30 天的時間內（即「JIT 有效期」），每次會話的時長限制為 30 分鐘（即「會話有效期限」）。在這 30 天的時間段內，使用者可以根據需要多次提升權限，但每次會話的時間限制為 30 分鐘。
+
+JIT 權限提升支援最小權限原則，讓使用者執行需要提升權限的任務，而無需永久授予這些權限。這有助於降低未經授權的存取或意外更改系統的風險。以下範例描述了 JIT 權限提升的一些常見用例：
+
+* 允許臨時訪問 `security login create`和 `security login delete`命令來啟用使用者的入職和離職。
+* 允許臨時訪問 `system node image update`和 `system node upgrade-revert`在更新視窗期間。更新完成後，命令存取權限將被撤銷。
+* 允許臨時訪問 `cluster add-node` ，  `cluster remove-node` ， 和 `cluster modify`以啟用叢集擴充或重新配置。叢集變更完成後，命令存取權限將被撤銷。
+* 允許臨時訪問 `volume snapshot restore`啟用還原作業和備份目標管理。還原或設定完成後，命令存取權限將被撤銷。
+* 允許臨時訪問 `security audit log show`在合規性檢查期間啟用稽核日誌審查和匯出。
+
+
+請參閱 https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]了解更多關於這些範例中命令的資訊。如需查看更詳細的常見 JIT 用例列表，請參閱<<常見的 JIT 用例>> 。
+
+叢集管理員可以為ONTAP使用者設定 JIT 存取權限，並在整個叢集範圍內或為特定 SVM 配置預設 JIT 有效期。
+
+.關於這項工作
+* JIT 權限提升僅適用於使用 SSH 存取ONTAP的使用者。提升的權限僅在使用者目前的 SSH 會話中可用，但使用者可以根據需要在任意數量的並發 SSH 會話中提升權限。
+* JIT 權限提升僅支援使用密碼、nsswitch 或網域驗證登入的使用者。 JIT 權限提升不支援多重身分驗證 (MFA)。
+
+
+.開始之前
+* 您必須是ONTAP叢集管理員 `admin`權限等級來執行下列任務。
+
+
+
+
+== 修改全域 JIT 設定
+
+您可以修改ONTAP叢集全域或特定 SVM 的預設 JIT 設定。這些設定決定了已配置 JIT 存取的使用者的預設會話有效期和最大 JIT 有效期。
+
+.關於這項工作
+* 預設 `default-session-validity-period`值為一小時。此設定決定使用者在 JIT 會話中可以存取提升權限的時間，之後需要重新提升權限。
+* 預設 `max-jit-validity-period`值為 90 天。此設定決定了使用者在配置的開始日期之後可以存取 JIT 提升權限的最長期限。您可以為單一使用者設定 JIT 有效期，但不能超過最長 JIT 有效期。
+
+
+.步驟
+. 檢查目前 JIT 設定：
++
+[source, cli]
+----
+security jit-privilege show -vserver <svm_name>
+----
++
+`-vserver`是可選的。如果您未指定 SVM，則命令將顯示全域 JIT 設定。
+
+. 全域或針對 SVM 修改 JIT 設定：
++
+[source, cli]
+----
+security jit-privilege modify -vserver <svm_name> -default-session-validity-period <period> -max-jit-validity-period <period>
+----
++
+如果您未指定 SVM，則命令將修改全域 JIT 設定。以下範例將 SVM 的預設 JIT 會話時長設定為 45 分鐘，最大 JIT 長度設定為 30 天 `svm1` ：+ 
+`security jit-privilege modify -vserver svm1 -default-session-validity-period 45m -max-jit-validity-period 30d`
+
++
+在此範例中，使用者將能夠一次存取 45 分鐘的 JIT 提升，並且可以在配置的開始日期之後最多 30 天內啟動 JIT 工作階段。
+
+
+
+
+
+== 為使用者配置 JIT 權限提升存取權限
+
+您可以為ONTAP使用者指派 JIT 權限提升存取權限。
+
+.步驟
+. 檢查使用者目前的 JIT 存取權限：
++
+[source, cli]
+----
+security jit-privilege user show -username <username>
+----
++
+`-username`是可選的。如果您未指定使用者名，該命令將顯示所有使用者的 JIT 存取權限。
+
+. 為使用者指派新的 JIT 存取權限：
++
+[source, cli]
+----
+security jit-privilege create -username <username> -vserver <svm_name> -role <rbac_role> -session-validity-period <period> -jit-validity-period <period> -start-time <date>
+----
++
+** 如果 `-vserver`未指定，則在叢集層級分配 JIT 存取。
+**  `-role`是使用者將被提升到的 RBAC 角色。如果未指定，  `-role`預設為 `admin` 。
+** `-session-validity-period`是使用者在需要啟動新的 JIT 會話之前可以存取提升角色的時間長度。如果未指定，則全域或 SVM  `default-session-validity-period`被使用。
+** `-jit-validity-period`是使用者在配置的開始日期之後可以發起 JIT 會話的最長持續時間。如果未指定，則 `session-validity-period`被使用。此參數不能超過全域或 SVM  `max-jit-validity-period` 。
+** `-start-time`是使用者可以啟動 JIT 會話的日期和時間。如果未指定，則使用目前日期和時間。
++
+下面的例子將允許 `ontap_user`訪問 `admin`角色運行 1 小時後才需要開始新的 JIT 會話。  `ontap_user`將能夠從 2025 年 7 月 1 日下午 1 點開始啟動為期 60 天的 JIT 會話：+ 
+`security jit-privilege user create -username ontap_user -role admin -session-validity-period 1h -jit-validity-period 60d -start-time "7/1/25 13:00:00"`
+
+
+
+. 如果需要，撤銷使用者的 JIT 存取權限：
++
+[source, cli]
+----
+security jit-privilege user delete -username <username> -vserver <svm_name>
+----
++
+此命令將撤銷使用者的 JIT 存取權限，即使其存取權限尚未過期。如果 `-vserver`如果未指定，則 JIT 存取權限將在叢集層級撤銷。如果使用者處於活動的 JIT 會話中，則該會話將被終止。
+
+
+
+
+
+== 常見的 JIT 用例
+
+下表包含 JIT 權限提升的常見用例。對於每個用例，都需要配置一個 RBAC 角色來提供對相關命令的存取權限。每個命令都連結到ONTAP命令參考，其中包含有關該命令及其參數的更多資訊。
+
+[cols="1,1a,1"]
+|===
+| 使用案例 | 命令 | 細節 
+
+
+| 使用者和角色管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["建立安全登入"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-delete.html["7a414cbc26ad99f3f688affc1ecabe6f"]
+| 在入職或離職期間暫時提升新增/刪除使用者或變更角色的權限。 
+
+
+| 證書管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-create.html["9ea06376db2d229da0b3a4c13ce61404"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["安全性憑證安裝"]
+| 授予證書安裝或更新的短期存取權限。 
+
+
+| SSH/CLI 存取控制  a| 
+`link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html[security login create] -application ssh`
+| 暫時授予 SSH 存取權限以進行故障排除或供應商支援。 
+
+
+| 授權管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/system-license-add.html["6c25ae7b27db9a62b5c245ad70b9d7cc"] ， link:https://docs.netapp.com/us-en/ontap-cli/system-license-delete.html["5f3eb0e0b3c2143bc24467a3ed94289e"]
+| 授予在功能啟動或停用期間新增或刪除許可證的權限。 
+
+
+| 系統升級和修補  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/system-node-image-update.html["系統節點映像更新"] ， link:https://docs.netapp.com/us-en/ontap-cli/system-node-upgrade-revert-upgrade.html["3375ab72573f54f214f0e7b4b9759e15"]
+| 提升升級窗口，然後撤銷。 
+
+
+| 網路安全設定  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["建立安全登入角色"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-modify.html["c44e895fab96f3c7a61edd2ebae0fd59"]
+| 允許對網路相關的安全角色進行臨時更改。 
+
+
+| 叢集管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/cluster-add-node.html["叢集附加節點"] ， link:https://docs.netapp.com/us-en/ontap-cli/cluster-remove-node.html["叢集移除節點"] ， link:https://docs.netapp.com/us-en/ontap-cli/cluster-modify.html["叢集修改"]
+| 提升叢集擴充或重新配置。 
+
+
+| SVM 管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/vserver-create.html["Vserver建立"] ， link:https://docs.netapp.com/us-en/ontap-cli/vserver-delete.html["a75eb9196380a98a2a2a693496267088"] ， link:https://docs.netapp.com/us-en/ontap-cli/vserver-modify.html["Vserver修改"]
+| 暫時授予 SVM 管理員權限以進行設定或停用。 
+
+
+| 磁碟區管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["Volume建立"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-delete.html["Volume刪除"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["Volume修改"]
+| 提升磁碟區配置、調整大小或刪除的權限。 
+
+
+| 快照管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-create.html["ceb6830d4a1748af1adc615d6239b127"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-delete.html["1cf71c15916b07b46dc8360baf4bd9d5"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-restore.html["8f381ba1024744332b561ba609495012"]
+| 提升快照刪除或在復原期間復原的權限。 
+
+
+| 網路組態  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["8e4b4cb9c44fdee9551da126fb754f8a"] ， link:https://docs.netapp.com/us-en/ontap-cli/network-port-vlan-create.html["733be7dba8f13ff258d7f73e2740324c"]
+| 授予在維護時段內進行網路變更的權利。 
+
+
+| 磁碟/聚合管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/storage-disk-assign.html["3c698d76925a2f101122edd72990fc94"] ， link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["1b40ef6e34df7d2fb54b5d639e14412d"] ， link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-add-disks.html["be260f7e87b5ae56c1d81f359067a35f"]
+| 提升新增或刪除磁碟或管理聚合的能力。 
+
+
+| 資料保護  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror建立"] ， link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-modify.html["SnapMirror修改"] ， link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-restore.html["SnapMirror還原"]
+| 暫時提升以配置或恢復SnapMirror關係。 
+
+
+| 效能調優  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["建立QoS原則群組"] ， link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["92e30cc5fff2e2aead2254497baabf90"]
+| 提升性能故障排除或調整。 
+
+
+| 審計日誌訪問  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html["8886c6249c30eca960ab30fed3c6746b"]
+| 在合規性檢查期間暫時提升稽核日誌審查或匯出權限。 
+
+
+| 事件和警報管理  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/event-notification-create.html["64b1a654c15b96443ae00ee82d8ea7ad"] ， link:https://docs.netapp.com/us-en/ontap-cli/event-notification-modify.html["3289b87193da03bd8309fc4b2ea2e02e"]
+| 提升設定或測試事件通知或 SNMP 陷阱的權限。 
+
+
+| 合規性驅動的數據訪問  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/volume-show.html["Volume Show"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html["8886c6249c30eca960ab30fed3c6746b"]
+| 授予審計員臨時唯讀存取權限以審查敏感資料或日誌。 
+
+
+| 特權訪問審查  a| 
+link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["025c83c1a746b39471a98aa72befe950"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-show.html["c964d7ae2ca92e255e3199e128824eb9"]
+| 暫時提升權限以審查和報告特權存取權限。在限定時間內授予唯讀權限。 
+|===

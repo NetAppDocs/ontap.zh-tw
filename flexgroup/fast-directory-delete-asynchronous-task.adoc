@@ -4,27 +4,36 @@ sidebar: sidebar
 keywords: perform, directory, delete, files, asynchronous, share, flexvol, flex vol, flexgroup, flex group, cancel 
 summary: 從ONTAP 功能表9.8開始、您可以使用Volume檔案as同步 刪除命令、從Linux和Windows用戶端共用的背景中刪除檔案和目錄。您可以在FlexVol 支援的功能區和FlexGroup 功能區上執行非同步刪除。 
 ---
-= 使用 FlexGroups 在 ONTAP 叢集上非同步刪除目錄
+= 從ONTAP FlexGroup卷非同步刪除目錄
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從 ONTAP 9 8 開始、您可以使用非同步刪除功能、以非同步方式（也就是背景）刪除 Linux 和 Windows 用戶端共用的目錄。叢集與SVM管理員可以在FlexVol 支援的功能區執行非同步刪除作業FlexGroup 、包括在內。
+從ONTAP 9.8 開始，您可以非同步（即在背景）從 Linux 和 Windows 用戶端共用中刪除目錄。叢集和 SVM 管理員可以在FlexVol和FlexGroup磁碟區上執行非同步刪除操作。
 
-如果您使用的 ONTAP 版本早於 ONTAP 9 。 11.1 、則必須是使用進階權限模式的叢集管理員或 SVM 管理員。
+.關於這項工作
+您必須是叢集管理員或使用進階權限模式的 SVM 管理員。
+
+從 ONTAP 9 8 開始、您可以使用 ONTAP CLI 使用非同步刪除功能。從功能支援的9.9開始ONTAP 、您可以搭配System Manager使用此功能。如需此程序的詳細資訊，請參閱link:../task_nas_file_system_analytics_take_corrective_action.html["根據 FSA 中的 ONTAP 分析採取糾正措施"]。
 
 從功能更新9.11.1開始ONTAP 、儲存管理員可以授予磁碟區的權限、讓NFS和SMB用戶端執行非同步刪除作業。如需更多資訊、請參閱 link:manage-client-async-dir-delete-task.html["管理用戶端權限、以非同步方式刪除目錄"]。
 
-從 ONTAP 9 8 開始、您可以使用 ONTAP CLI 使用非同步刪除功能。從功能支援的9.9開始ONTAP 、您可以搭配System Manager使用此功能。如需此程序的詳細資訊，請參閱link:../task_nas_file_system_analytics_take_corrective_action.html["根據 FSA 中的 ONTAP 分析採取糾正措施"]。
+您可以使用 `volume file async-delete show`指令檢查正在進行的非同步刪除作業的狀態，並且從ONTAP 9.17.1 開始，也會顯示從客戶端發出的非同步刪除作業的狀態。
+
+
+
+== 非同步刪除目錄
+
+您可以使用 System Manager 或ONTAP CLI 非同步刪除目錄。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
 |===
-| 在209.8和9.9.1中ONTAP | 從ONTAP 功能上開始。9.10.1 
+| 在ONTAP 9.9.1 中 | 從ONTAP 功能上開始。9.10.1 
 
 
  a| 
@@ -54,22 +63,26 @@ NOTE: 刪除目錄和檔案時、新的儲存容量值不會立即顯示。
 
 . 進入進階權限模式：
 +
-`-privilege advance`
+`set -privilege advanced`
 
 . 刪除 FlexVol 或 FlexGroup 磁碟區上的目錄：
 +
-`volume file async-delete start -vserver vserver_name -volume volume_name -path file_path -throttle throttle`
+`volume file async-delete start -vserver <SVM_name> -volume <volume_name> -path <file_path> -throttle <throttle>`
 
 +
-最小節流值為10、最大值為100、000、預設值為5000。
+最小節流值為 10，最大值為 100,000，預設值為 5000。較低的節流值使用較少的資源，這會導致較慢的刪除速度，而較高的節流值使用較多的資源，但會導致較快的刪除速度。
 
 +
 下列範例會刪除名為D2的目錄、該目錄位於名為D1的目錄中。
 
 +
 ....
-cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
+cluster::*> volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
 ....
+. （可選）檢查正在進行的非同步刪除作業的狀態：
++
+`volume file async-delete show`
+
 . 確認目錄已刪除：
 +
 `event log show`
@@ -79,17 +92,22 @@ cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
 
 +
 ....
-cluster-cli::*> event log show
-Time                 Node             Severity      Event
--------------------  ---------------- ------------- --------------------
-MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed.
+cluster::*> event log show
+
+Time                Node             Severity      Event
+------------------- ---------------- ------------- ---------------------------
+7/7/2025 09:04:04   cluster-vsim     NOTICE        asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed. Number of files deleted: 7, Number of directories deleted: 5. Total number of bytes deleted: 135168.
 ....
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/event-log-show.html["指令參考資料ONTAP"^]需詳細 `event log show`資訊，請參閱。
 
 
 
-*取消目錄刪除工作*
+--
+====
+
+
+== 取消目錄刪除作業
 
 . 進入進階權限模式：
 +
@@ -104,9 +122,6 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 . 取消目錄刪除：
 +
-`volume file async-delete cancel -vserver _SVM_name_ -volume _volume_name_ -jobid _job_id_`
+`volume file async-delete cancel -vserver <SVM_name> -volume <volume_name> -jobid <job_id>`
 
 
-
---
-====

@@ -2,28 +2,33 @@
 sidebar: sidebar 
 permalink: anti-ransomware/recover-data-task.html 
 keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshots, potential ransomware attack, ransomware attack, recovery snapshots are deleted, recover deleted snapshots, autonomous, ransomware, protection, arp 
-summary: 當 ARP 偵測到潛在攻擊時，就會建立快照。您可以從這些反勒索軟體複本或其他快照還原資料。 
+summary: ARP 會建立快照來防禦潛在的勒索軟體威脅。您可以從這些 ARP 快照或其他快照中還原資料。 
 ---
 = 在勒索軟體攻擊之後，從 ONTAP ARP 快照還原資料
-:hardbreaks:
-:toclevels: 1
 :allow-uri-read: 
-:toclevels: 1
-:nofooter: 
 :icons: font
-:linkattrs: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-自主勒索軟體保護（ ARP ）會在偵測到可能的勒索軟體威脅時，建立名為的快照 `Anti_ransomware_backup`。您可以使用這些 ARP 快照或磁碟區的另一個快照來還原資料。
+自主勒索軟體防護 (ARP) 會建立快照來防禦潛在的勒索軟體威脅。您可以使用其中一個 ARP 快照或磁碟區的其他快照來還原資料。
 
 .關於這項工作
-如果磁碟區具有 SnapMirror 關係，請在從快照還原後立即手動複寫磁碟區的所有鏡射複本。否則可能導致無法使用的鏡像複本、必須刪除並重新建立。
+ARP 使用以下前綴名稱之一建立快照：
 
-若要在識別出系統攻擊後從快照以外的快照還原 `Anti_ransomware_backup`，您必須先發行 ARP 快照。
+* `Anti_ransomware_backup` ：在ONTAP 9.16.1 及更早版本中，用於為應對異常而建立的快照。例如，  `Anti_ransomware_backup.2022-12-20_1248` 。
+* `Anti_ransomware_periodic_backup` ：在ONTAP 9.17.1 及更高版本中用於定期建立的快照。例如，  `Anti_ransomware_periodic_backup.2025-06-01_1248` 。
 
-如果未報告系統攻擊，您必須先從快照還原 `Anti_ransomware_backup`，然後從您選擇的快照完成後續的磁碟區還原。
+
+要從快照中恢復，  `Anti_ransomware`快照 辨識出系統攻擊後，必須先釋放ARP快照。
+
+如果沒有報告系統攻擊，您必須先從 `Anti_ransomware`快照，然後從您選擇的快照完成磁碟區的後續還原。
+
+
+NOTE: 如果受 ARP 保護的磁碟區屬於SnapMirror關係，則從快照還原磁碟區後，您需要手動更新該磁碟區的所有映像副本。如果跳過此步驟，鏡像副本可能會變得不可用，需要刪除並重新建立。
+
+.開始之前
+link:respond-abnormal-task.html["您必須將攻擊標記為潛在的勒索軟體攻擊"]從快照恢復資料之前。
 
 .步驟
 您可以使用System Manager或ONTAP NetApp CLI來還原資料。
@@ -53,7 +58,7 @@ summary: 當 ARP 偵測到潛在攻擊時，就會建立快照。您可以從這
 +
 選擇 * 儲存 > Volumes （磁碟區） * 、然後選擇 Volume （磁碟區）和 * Snapshot Copies （ * 快照複本） * 。
 
-. 選擇image:icon_kabob.gif["功能表選項圖示"]然後選擇 `Anti_ransomware_backup`快照。
+. 選擇image:icon_kabob.gif["功能表選項圖示"]然後選擇 `Anti_ransomware`快照。
 . 選擇*還原*。
 . 返回 * Snapshot Copies （快照複本） * 功能表，然後選擇您要使用的快照。選擇*還原*。
 
@@ -62,17 +67,25 @@ summary: 當 ARP 偵測到潛在攻擊時，就會建立快照。您可以從這
 .CLI
 --
 .系統攻擊後還原
-. 若要從 ARP 快照還原，請跳至步驟二。若要還原舊版快照的資料，您必須釋放 ARP 快照的鎖定。
-+
+若要從 ARP 快照還原，請跳至步驟二。若要還原舊版快照的資料，您必須釋放 ARP 快照的鎖定。
+
 
 NOTE: 如果您使用的命令如下所述，則只有在從先前的快照還原之前，才需要先釋放反勒索軟體 SnapLock `volume snapshot restore` 。如果您使用 FlexClone ，單一檔案貼齊還原或其他方法還原資料，則不需要這麼做。
 
+. 將攻擊標記為潛在的勒索軟體攻擊(`-false-positive false` ）並清除可疑文件(`clear-suspect` ):
 +
-將攻擊標記為可能的勒索軟體攻擊(`-false-positive false`）並清除可疑檔案(`clear-suspect`）：
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`使用下列其中一個參數來識別副檔名：
-`[-seq-no _integer_]`可疑清單中檔案的序號。
-`[-extension _text_, … ]`要清除之檔案範圍的檔案副檔名
-`[-start-time _date_time_ -end-time _date_time_]`開始和結束時間，格式為「 MM/DD/YYYY HH ： MM ： SS 」。
+[source, cli]
+----
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
++
+使用以下參數之一來識別擴充：
+
++
+** `[-seq-no _integer_]` ：可疑清單中文件的序號。
+** `[-extension _text_, … ]` ：檔案副檔名
+** `[-start-time _date_time_ -end-time _date_time_]` ：需要清除的檔案範圍的開始和結束時間，格式為「MM/DD/YYYY HH:MM:SS」。
+
 
 . 列出磁碟區中的快照：
 +
@@ -159,12 +172,11 @@ volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
 ----
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
-. 重複步驟 1 和 2 ，使用所需的快照還原磁碟區。
 
 
---
 如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+snapshot["指令參考資料ONTAP"^]需詳細 `volume snapshot`資訊，請參閱。
 
+--
 ====
 .相關資訊
 * link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["KB ： ONTAP 中的勒索軟體預防與還原"^]

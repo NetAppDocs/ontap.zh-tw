@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/remove-mediator-task.html 
-keywords: SM-BC, SMBC, removing, Mediator, snapmirror active sync 
-summary: 如果您想要從ONTAP 您的叢集移除現有的SnapMirror中介程式組態ONTAP 、可以使用SnapMirror中介程式移除命令來執行此作業。 
+keywords: SM-BC, SMBC, removing, uninstalling, Mediator, Cloud Mediator, snapmirror active sync 
+summary: 如果您想要從ONTAP叢集中刪除現有的ONTAP Mediator 或ONTAP Cloud Mediator 配置，可以使用 snapmirror mediator remove 指令執行此操作。 
 ---
-= 移除ONTAP 此資訊器
+= 刪除ONTAP調解器或ONTAP Cloud 調解器
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,11 +14,45 @@ summary: 如果您想要從ONTAP 您的叢集移除現有的SnapMirror中介程�
 
 
 [role="lead"]
-如果您想要從 ONTAP 叢集移除現有的 ONTAP Mediator 組態、可以使用來移除 `snapmirror mediator remove` 命令。
+如果要從ONTAP叢集中刪除現有的ONTAP Mediator 或ONTAP Cloud Mediator 配置，可以使用 `snapmirror mediator remove`命令。例如，您一次只能使用一種類型的 Mediator，因此必須先移除一個實例，然後才能安裝另一個實例。
 
 .步驟
+您可以透過完成以下步驟之一來刪除ONTAP Mediator 或ONTAP Cloud Mediator。
+
+[role="tabbed-block"]
+====
+.資訊媒體ONTAP
+--
 . 移除ONTAP 此資訊器：
 +
-`snapmirror mediator remove -mediator-address 12.345.678.90 -peer-cluster cluster_xyz`
+`snapmirror mediator remove -mediator-address <address> -peer-cluster <peerClusterName>`
+
++
+範例：
+
++
+[listing]
+----
+snapmirror mediator remove -mediator-address 12.345.678.90 -peer-cluster cluster_xyz
+----
 
 
+--
+.ONTAP雲端調解器
+--
+. 刪除ONTAP Cloud Mediator：
++
+`snapmirror mediator remove -peer-cluster <peerClusterName> -type cloud`
+
++
+範例：
+
++
+[listing]
+----
+snapmirror mediator remove -peer-cluster cluster_xyz -type cloud
+----
+
+
+--
+====

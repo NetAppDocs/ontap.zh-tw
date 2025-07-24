@@ -4,13 +4,8 @@ permalink: snapmirror-active-sync/mediator-install-task.html
 keywords: SM-BC, SMBC, cluster, peering, ONTAP Mediator, initialize, snapmirror active sync 
 summary: SnapMirror 主動同步要求您安裝和初始化 ONTAP Mediator 並確保正確的叢集對等連線。 
 ---
-= 為 SnapMirror 主動同步配置 ONTAP 調解器和集群
-:hardbreaks:
+= 為SnapMirror主動同步配置ONTAP調解器
 :allow-uri-read: 
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -32,12 +27,14 @@ ONTAP 調解器為 SnapMirror 主動同步關係中的 ONTAP 叢集所使用的�
 
 例如，如果叢集 B 與叢集 A ，叢集 C 和叢集 D 之間有對等關係，則在每個關係上設定 SnapMirror 作用中同步時，所有三個叢集對等關係都可以擁有唯一的關聯 ONTAP Mediator 執行個體。或者，叢集 B 也可以對所有三個對等關係使用相同的 ONTAP Mediator 執行個體。在此案例中，叢集會列出三次相同的 ONTAP Mediator 執行個體。
 
+從ONTAP 9.17.1 開始，您可以設定link:cloud-mediator-config-task.html["ONTAP雲端調解器"]但是，要在SnapMirror主動同步配置中監控叢集的運作狀況，您不能同時使用這兩個中介器。
+
 .ONTAP 調解器的先決條件
 * ONTAP Mediator 本身包含一組先決條件。您必須先滿足這些先決條件，然後才能安裝 ONTAP Mediator。
 +
-如需更多資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["準備安裝 ONTAP 調解器"^]。
+有關詳細信息，請參閱link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html["準備安裝ONTAP調解器服務"^] 。
 
-* 預設情況下，ONTAP 調解器透過 TCP 連接埠 31784 提供服務。您應確保連接埠 31784 在 ONTAP 叢集和 ONTAP 調解器之間處於開啟狀態且可用。
+* 預設情況下， ONTAP調解器透過 TCP 連接埠 31784 提供服務。您應確保連接埠 31784 在ONTAP叢集和ONTAP調解器之間處於開啟狀態且可用。
 
 
 
@@ -57,32 +54,8 @@ xref:../mediator/index.html[準備安裝或升級 ONTAP 調解器]
 NOTE: SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂 IPspace 。
 
 +
-xref:../peering/create-cluster-relationship-93-later-task.html[建立叢集對等關係]
+link:cluster-config-task.html["為SnapMirror主動同步配置ONTAP集群"]
 
-. 確認已在每個叢集上建立 SVM 。
-+
-xref:../smb-config/create-svms-data-access-task.html[建立SVM]
-
-. 確認每個叢集上的 SVM 之間存在對等關係。
-+
-xref:../peering/create-intercluster-svm-peer-relationship-93-later-task.html[建立SVM對等關係]
-
-. 確認LUN的磁碟區已存在。
-+
-xref:../smb-config/create-volume-task.html[建立Volume]
-
-. 確認叢集中的每個節點都至少建立一個SAN LIF。
-+
-link:../san-admin/manage-lifs-all-san-protocols-concept.html["叢集SAN環境中的LIF考量"]
-
-+
-link:../networking/create_a_lif.html["建立LIF"]
-
-. 確認已建立必要的 LUN 並對應至 igroup 、用於將 LUN 對應至應用程式主機上的啟動器。
-+
-xref:../san-admin/provision-storage.html[建立LUN並對應igroup]
-
-. 重新掃描應用程式主機以探索任何新的 LUN 。
 
 
 
@@ -188,7 +161,7 @@ image:successful-mediator-installation.png["中介新增成功"]。
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置尋找 ONTAP Mediator CA 憑證 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
 . 將有效的憑證授權單位新增至對等叢集上的憑證存放區。
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -203,7 +176,7 @@ image:successful-mediator-installation.png["中介新增成功"]。
 `security certificate install -type server-ca -vserver <vserver_name>`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -240,7 +213,7 @@ C1_test_cluster::*>
 `security certificate show -common-name <common_name>`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -259,7 +232,7 @@ C1_test_cluster
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -272,7 +245,7 @@ Enter the password again: ******
 ----
 . 您也可以選擇檢查工作 ID 狀態 `job show -id`，以確認 SnapMirror Mediator ADD 命令是否成功。
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -334,7 +307,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置尋找 ONTAP Mediator CA 憑證 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
 . 將有效的憑證授權單位新增至對等叢集上的憑證存放區。
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -349,7 +322,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 `security certificate install -type server-ca -vserver <vserver_name>`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -386,7 +359,7 @@ C1_test_cluster::*>
 `security certificate show -common-name <common_name>`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -405,7 +378,7 @@ C1_test_cluster
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -418,7 +391,7 @@ Enter the password again: ******
 ----
 . 您也可以選擇檢查工作 ID 狀態 `job show -id`，以確認 SnapMirror Mediator ADD 命令是否成功。
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -521,7 +494,7 @@ image:configure-mediator-system-manager.png["系統管理員中介新增"]
 --
 . 當您為所有叢集使用自我簽署憑證時，請移除先前安裝的自我 `intermediate.crt`簽署憑證。在以下範例中、有兩個叢集：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -534,7 +507,7 @@ image:configure-mediator-system-manager.png["系統管理員中介新增"]
 ----
 . 使用從 SnapMirror 主動式同步叢集移除先前設定的 ONTAP Mediator `-force true` ：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -562,7 +535,7 @@ NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 P
 
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置新增第三方 ONTAP Mediator CA 憑證 `intermediate.crt`：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -575,7 +548,7 @@ NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 P
 ----
 . 將檔案新增 `intermediate.crt`至對等叢集。對所有對等叢集重複此步驟：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -599,7 +572,7 @@ C1_test_cluster::*>
 ----
 . 從 SnapMirror 主動同步叢集移除先前設定的 ONTAP Mediator ：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -617,7 +590,7 @@ This table is currently empty.
 ----
 . 再次新增 ONTAP 調解器：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -646,7 +619,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 --
 . 當您為所有叢集使用自我簽署憑證時，請移除先前安裝的自我 `ca.crt`簽署憑證。在以下範例中、有兩個叢集：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -659,7 +632,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 ----
 . 使用從 SnapMirror 主動式同步叢集移除先前設定的 ONTAP Mediator `-force true` ：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -687,7 +660,7 @@ NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 P
 
 . 從 ONTAP Mediator Linux VM/ 主機軟體安裝位置新增第三方 ONTAP Mediator CA 憑證 `ca.crt`：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -700,7 +673,7 @@ NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 P
 ----
 . 將檔案新增 `intermediate.crt`至對等叢集。對所有對等叢集重複此步驟：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -724,7 +697,7 @@ C1_test_cluster::*>
 ----
 . 從 SnapMirror 主動同步叢集移除先前設定的 ONTAP Mediator ：
 +
-* 範例 *
+範例：
 
 +
 [listing]
@@ -742,7 +715,7 @@ This table is currently empty.
 ----
 . 再次新增 ONTAP 調解器：
 +
-* 範例 *
+範例：
 
 +
 [listing]

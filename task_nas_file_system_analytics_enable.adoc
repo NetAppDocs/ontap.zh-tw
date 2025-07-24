@@ -18,6 +18,9 @@ summary: 若要收集及顯示容量分析等使用資料、您必須啟用檔�
 [role="lead"]
 若要收集及顯示容量分析等使用資料、您必須在磁碟區上啟用檔案系統分析。
 
+
+NOTE: 從ONTAP 9.17.1 開始，在ONTAP叢集上新建的 SVM 上建立的磁碟區（如果已指派 NAS 協定）現在預設啟用檔案系統分析 (FSA)。 FSA會在磁碟區建立後立即自動激活，無需額外配置即可提供即時分析功能。如果您不想在新磁碟區上啟用檔案系統分析，則必須 https://docs.netapp.com/us-en/ontap-cli/volume-analytics-off.html["在新磁碟區上停用 FSA"^]來自 SVM。
+
 .關於這項工作
 * 從功能支援的9.8開始ONTAP 、您可以在新的或現有的磁碟區上啟用檔案系統分析功能。如果您將系統升級ONTAP 至支援更新版本的支援版本9.8、請務必先完成所有的升級程序、再啟用檔案系統分析功能。
 * 啟用分析所需的時間取決於磁碟區的大小和內容。系統管理程式會顯示進度、並在完成時顯示分析資料。如果您需要更精確的初始化掃描進度資訊、可以使用 ONTAP CLI 命令 `volume analytics show`。
@@ -61,9 +64,15 @@ summary: 若要收集及顯示容量分析等使用資料、您必須啟用檔�
 .CLI
 --
 .使用 CLI 啟用檔案系統分析
-. 執行下列命令：
-`volume analytics on -vserver _svm_name_ -volume _volume_name_ [-foreground {true|false}]`
-根據預設、命令會在前景執行； ONTAP 會顯示進度、並在完成時顯示分析資料。如果您需要更精確的資訊、可以使用在背景執行命令 `-foreground false` 選項、然後使用 `volume analytics show` 用於在 CLI 中顯示初始化進度的命令。
+. 運行以下命令：
++
+[source, cli]
+----
+volume analytics on -vserver <svm_name> -volume <volume_name> [-foreground {true|false}]
+----
++
+預設情況下，此命令在前台運行； ONTAP會在完成後顯示進度並提供分析資料。如果您需要更精確的訊息，可以使用 `-foreground false`選項，然後使用 `volume analytics show`指令在 CLI 中顯示初始化進度。
+
 . 成功啟用檔案系統分析之後、請使用系統管理員或 ONTAP REST API 來顯示分析資料。
 
 
@@ -85,22 +94,22 @@ summary: 若要收集及顯示容量分析等使用資料、您必須啟用檔�
 如果您使用的是 System Manager 、您可以修改儲存 VM 或叢集設定、以在建立 Volume 時啟用容量分析和活動追蹤。預設啟用功能僅適用於修改設定後建立的磁碟區、而非現有的磁碟區。
 
 .修改叢集上的檔案系統分析設定
-. 在 System Manager 中、瀏覽至 ** 叢集設定 ** 。
-. 在 ** 叢集設定 ** 中、檢閱檔案系統設定標籤。若要修改設定、請選取 image:icon_gear.gif["動作圖示"] 圖示。
-. 在「 ** 活動追蹤 ** 」欄位中、輸入 SVM 的名稱、以預設為啟用「活動追蹤」。將此欄位保留空白、將會在所有 SVM 上停用「活動追蹤」。
+. 在系統管理員中，導航至*集群設定*。
+. 在「叢集設定」中，查看「檔案系統設定」標籤。若要修改設置，請選擇image:icon_gear.gif["動作圖示"]圖示.
+. 在「活動追蹤」欄位中，輸入預設啟用活動追蹤的 SVM 名稱。如果將此欄位留空，則所有 SVM 上的活動追蹤功能均處於停用狀態。
 +
-取消核取「在新的儲存 VM 上啟用」核取方塊、即可在新的儲存 VM 上預設停用「活動追蹤」。
+取消勾選「在新儲存虛擬機器上啟用」方塊以預設在新儲存虛擬機器上停用活動追蹤。
 
-. 在「 ** 分析 ** 」欄位中、輸入您要依預設啟用容量分析的儲存 VM 名稱。將欄位保留空白、將會在所有 SVM 上停用容量分析。
+. 在「*分析*」欄位中，輸入您希望預設啟用容量分析的儲存虛擬機器的名稱。如果將此欄位留空，則所有 SVM 上的容量分析均處於停用狀態。
 +
-取消核取「在新的儲存 VM 上啟用」核取方塊、即可在新的儲存 VM 上依預設停用容量分析。
+取消勾選「在新儲存虛擬機器上啟用」方塊以預設在新儲存虛擬機器上停用容量分析。
 
-. 選擇 ** 儲存 ** 。
+. 選擇*保存*。
 
 
 .修改 SVM 上的檔案系統分析設定
-. 選擇要修改的 SVM 、然後選擇 ** 儲存 VM 設定 ** 。
-. 在「 ** 檔案系統分析 ** 」卡中、使用切換來啟用或停用儲存 VM 上所有新磁碟區的「活動追蹤」和「容量分析」。
+. 選擇要修改的 SVM，然後選擇*儲存 VM 設定*。
+. 在*檔案系統分析*卡中，使用切換按鈕啟用或停用儲存虛擬機器上所有新磁碟區的活動追蹤和容量分析。
 
 
 --
@@ -109,13 +118,18 @@ summary: 若要收集及顯示容量分析等使用資料、您必須啟用檔�
 您可以使用 ONTAP CLI 將儲存 VM 設定為在新磁碟區上預設啟用檔案系統分析。
 
 .依預設、在 SVM 上啟用檔案系統分析
-. 修改 SVM 以在所有新建立的磁碟區上、依預設啟用容量分析和活動追蹤：
-`vserver modify -vserver _svm_name_ -auto-enable-activity-tracking true -auto-enable-analytics true`
+. 修改 SVM 以在所有新建立的磁碟區上預設啟用容量分析和活動追蹤：
++
+[source, cli]
+----
+vserver modify -vserver <svm_name> -auto-enable-activity-tracking true -auto-enable-analytics true
+----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/vserver-modify.html["指令參考資料ONTAP"^]需詳細 `vserver modify`資訊，請參閱。
+
 
 
 --
-如link:https://docs.netapp.com/us-en/ontap-cli/vserver-modify.html["指令參考資料ONTAP"^]需詳細 `vserver modify`資訊，請參閱。
-
 ====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
