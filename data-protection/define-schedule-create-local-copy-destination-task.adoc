@@ -14,7 +14,7 @@ summary: 對於 SnapVault 和統一複寫關係，您可以在目的地上建立
 對於 SnapVault 和統一複寫關係，您可以在目的地上建立上次傳輸快照的複本，以防止更新快照毀損。無論來源上的保留規則為何，此「本機複本」都會保留，因此即使來源上不再提供 SnapMirror 原本傳輸的快照，目的地上也會提供該快照的複本。
 
 .關於這項工作
-您可以在命令選項 `snapmirror policy add-rule`中指定建立本機複本的排程 `-schedule`。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy add-rule`資訊，請參閱。
+您可以在 `-schedule`選項 `snapmirror policy add-rule`命令。
 
 .步驟
 . 定義在目的地上建立本機複本的排程：
@@ -40,4 +40,7 @@ cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -
 ----
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy my_unified -snapmirror-label my_monthly -schedule my_monthly
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy add-rule`資訊，請參閱。
+
 

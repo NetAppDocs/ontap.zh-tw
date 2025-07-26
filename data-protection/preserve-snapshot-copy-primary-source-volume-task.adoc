@@ -11,7 +11,7 @@ summary: 您可以使用 SnapMirror snapshot 擁有者 create 命令，在鏡射
 
 
 [role="lead"]
-您可以使用 `snapmirror snapshot-owner create`命令在鏡射資料保險箱部署中的次要上保留標示好的快照。如此可確保存在用於更新資料保險箱關係的通用快照。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-snapshot-owner-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror snapshot-owner create`資訊，請參閱。
+您可以使用 `snapmirror snapshot-owner create`命令用於在鏡像-保險庫部署中的輔助伺服器上保留標籤的快照。這樣做可以確保存在用於更新保險庫關係的通用快照。
 
 .關於這項工作
 如果您使用鏡射資料保險箱的扇出或串聯部署組合，請記住，如果來源和目的地磁碟區上不存在一般快照，更新將會失敗。
@@ -34,6 +34,9 @@ summary: 您可以使用 SnapMirror snapshot 擁有者 create 命令，在鏡射
 clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 -snapshot snap1 -owner ApplicationA
 ----
++
+詳細了解 `snapmirror snapshot-owner create`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-snapshot-owner-create.html["指令參考資料ONTAP"^] 。
+
 . 如所述、更新鏡射關係 link:update-replication-relationship-manual-task.html["手動更新複寫關係"]。
 +
 或者、您也可以等待鏡射關係的排程更新。
@@ -41,9 +44,6 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 . 將標示好的快照傳輸至資料保險箱目的地：
 +
 `snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -source-snapshot snapshot`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 +
 以下範例傳輸 `snap1`快照::
@@ -55,6 +55,8 @@ clust1::> snapmirror update -vserver vs1 -volume vol1
 -source-snapshot snap1
 ----
 當資料保險箱關係更新時，會保留標示的快照。
+
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["指令參考資料ONTAP"^]需詳細 `snapmirror update`資訊，請參閱。
 
 --
 

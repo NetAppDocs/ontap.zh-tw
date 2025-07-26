@@ -70,9 +70,6 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 `snapmirror policy create -vserver _SVM_ -policy _policy_ -type async-mirror|vault|mirror-vault -comment _comment_ -tries transfer_tries -transfer-priority low|normal -is-network-compression-enabled true|false -discard-configs network`
 
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
-
-+
 以下範例為SnapMirror DR建立自訂複寫原則、排除LIF：
 
 +
@@ -94,6 +91,9 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LI
 考慮在來源叢集上建立相同的自訂 SnapMirror 原則、以供未來容錯移轉和容錯回復案例使用。
 
 ====
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
+
 . 從目的地SVM或目的地叢集、執行下列命令以建立複寫關係：
 +
 `snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true|false -discard-configs true|false`
@@ -161,4 +161,5 @@ cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_ba
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror建立"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["SnapMirror初始化"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["SnapMirror 策略創建"^]
 

@@ -92,9 +92,6 @@ StrictSync 模式中的 SnapMirror 同步（從 ONTAP 9 開始支援）
 snapmirror policy create -vserver <SVM> -policy _policy_ -type <async-mirror|vault|mirror-vault|strict-sync-mirror|sync-mirror> -comment <comment> -tries <transfer_tries> -transfer-priority <low|normal> -is-network-compression-enabled <true|false>
 ----
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
-
-+
 從 ONTAP 9.5 開始，您可以使用參數來指定建立 SnapMirror 同步關係通用快照排程的排程 `-common-snapshot-schedule`。根據預設， SnapMirror 同步關係的一般快照排程為一小時。您可以為 SnapMirror 同步關係的快照排程指定 30 分鐘到 2 小時的值。
 
 +
@@ -129,12 +126,17 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy my_unified -type m
 ----
 cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -type strict-sync-mirror -common-snapshot-schedule my_sync_schedule
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy create`資訊，請參閱。
+
 
 
 .完成後
 對於「資料保險箱」和「鏡射資料保險箱」原則類型，您必須定義規則，以決定在初始化和更新期間傳輸哪些快照。
 
-使用 `snapmirror policy show`命令驗證是否已建立 SnapMirror 原則。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy show`資訊，請參閱。
+使用 `snapmirror policy show`命令驗證SnapMirror策略是否已建立。
+
+詳細了解 `snapmirror policy show`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["指令參考資料ONTAP"^] 。
 
 --
 ====
