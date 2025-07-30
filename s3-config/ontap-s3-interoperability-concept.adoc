@@ -47,10 +47,10 @@ Cloud Volumes ONTAP
 * 銷毀編碼
 * NDMP
 * SM磁帶
-* SnapMirror
+* SnapMirror （同步和非同步）
 * SnapMirror 雲端
 * SVM 災難恢復
-* SyncMirror
+* SyncMirror （從ONTAP 9.14.1 開始， MetroCluster配置支援SyncMirror映像聚合。MetroClusterMetroCluster之外不支援SyncMirror 。）
 
 
 
@@ -86,7 +86,7 @@ SnapMirror S3
 * 壓實
 
  a| 
-* 集合體層級效率
+* 聚合級效率（位於相同聚合上的成員可以利用跨磁碟區重複資料刪除，但位於不同聚合上的成員則不能）
 * 包含不含支援的S3鏟斗的實體磁碟區Volume複製FlexGroup ONTAP
 
 
@@ -117,12 +117,16 @@ NetApp FlexArray 解決方案：虛擬化
  a| 
 * link:../s3-audit/index.html["稽核S3事件"] （從ONTAP 版本號《2019年9月10日》開始）
 * link:../s3-config/create-bucket-lifecycle-rule-task.html["貯體生命週期管理"] （從 ONTAP 9.13.1 開始）
+* FabricPool雲層（僅限原生 S3）
+* FabricPool本機層（僅限 NAS 磁碟區）
 
  a| 
 * 資料量FlexCache
 * FPolicy
 * qtree
 * 配額
+* FabricPool雲層（僅限 NAS 卷）
+* FabricPool本機層（僅限原生 S3）
 
 
 |===
