@@ -619,6 +619,8 @@ NOTE: 申請者即使在核准群組中，也無法核准自己的申請（雖�
 
 MAV規則會在RBAC權限之後評估。因此、沒有足夠RBAC權限執行作業的使用者無法啟動MAV要求程序。
 
+在執行受保護的操作之前，MAV 規則會被評估。這意味著規則會根據系統的目前狀態執行。例如，如果為以下物件建立了 MAV 規則：  `volume modify`查詢 `-size 5GB` ， 使用 `volume modify`將 5GB 磁碟區大小調整為 2GB 需要 MAV 批准，但將 2GB 磁碟區大小調整為 5GB 則不需要。
+
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/cluster-date-modify.html["叢集日期修改"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+log-forwarding["叢集記錄轉送"^]
