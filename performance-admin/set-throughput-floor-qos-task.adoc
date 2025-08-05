@@ -60,10 +60,7 @@ cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared
 
 . 將原則群組套用至磁碟區或LUN：
 +
-`_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`
-
-+
-如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。您可以使用 `_storage_object_modify`命令將不同的原則群組套用至儲存物件。
+`_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`您可以使用 `_storage_object_modify`命令將不同的策略群組套用到儲存物件。
 
 +
 下列命令會套用原則群組 `pg-app2` 磁碟區 `app2`：
@@ -73,12 +70,12 @@ cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared
 ----
 cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy-group pg-app2
 ----
++
+如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
+
 . 監控原則群組效能：
 +
 `qos statistics performance show`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics performance show`資訊，請參閱。
 
 +
 [NOTE]
@@ -100,12 +97,12 @@ pg_app2                  7216       28.19MB/s   420.00us
 _System-Best-Effort        62       13.36KB/s     4.13ms
 _System-Background         30           0KB/s        0ms
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics performance show`資訊，請參閱。
+
 . 監控工作負載效能：
 +
 `qos statistics workload performance show`
-
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics workload performance show`資訊，請參閱。
 
 +
 [NOTE]
@@ -128,6 +125,9 @@ vs1-wid12279     12279     5026        19.63MB/s     2.52ms
 _USERSPACE_APPS     14       55        10.92KB/s   236.00us
 _Scan_Backgro..   5688       20            0KB/s        0ms
 ----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-performance-show.html["指令參考資料ONTAP"^]需詳細 `qos statistics workload performance show`資訊，請參閱。
+
 +
 [NOTE]
 ====

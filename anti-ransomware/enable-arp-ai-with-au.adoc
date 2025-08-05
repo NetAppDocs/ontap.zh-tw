@@ -16,7 +16,7 @@ summary: 從ONTAP 9.16.1 開始，可以自動為FlexVol安裝啟用 ARP/AI，�
 
 
 [role="lead"]
-從ONTAP 9.16.1 開始，ARP 已採用人工智慧自主勒索軟體防護 (ARP/AI) 來改善威脅偵測和回應。將叢集升級至ONTAP 9.16.1（適用於 NAS）或ONTAP 9.17.1（適用於 SAN）後，如果已為FlexVol磁碟區啟用 ARP，則 ARP/AI 將自動為這些磁碟區啟用。如果您尚未啟用 ARP 或尚未啟用ONTAP link:../update/enable-automatic-updates-task.html["自動更新"]對於您的集群，您應該遵循此過程中描述的場景之一。
+從ONTAP 9.16.1 開始，ARP 已採用人工智慧自主勒索軟體防護 (ARP/AI) 來改善威脅偵測和回應。將叢集升級至ONTAP 9.17.1（適用於 SAN）或ONTAP 9.16.1（適用於 NAS）後，如果已為FlexVol磁碟區啟用 ARP，則 ARP/AI 將自動為這些磁碟區啟用。如果您尚未啟用 ARP 或尚未啟用ONTAP link:../update/enable-automatic-updates-task.html["自動更新"]對於您的集群，您應該遵循此過程中描述的場景之一。
 
 
 IMPORTANT: 在升級到支援 ARP/AI 的ONTAP版本之前， link:../upgrade/arp-warning-clear.html["關閉任何現有的 ARP 偵測"] 。
@@ -31,16 +31,16 @@ NOTE: （僅限 NAS 環境）升級至ONTAP 9.16.1 或更高版本時，ARP 將�
 .步驟
 . 請遵循您的組態所特有的案例：
 +
+** *僅限 SAN 環境*
++
+*** *對於運行ONTAP 9.17.1 或更高版本且帶有FlexVol卷的新集群和現有集群*：升級到或安裝ONTAP 9.17.1 或更高版本時，您應該link:enable-task.html["啟用 ARP"]在您要保護的磁碟區上。使用 System Manager 或 CLI 啟用 ARP 時，ARP/AI 功能將自動啟用。在 SAN 磁碟區上啟用後， link:respond-san-entropy-eval-period.html["ARP/AI 在評估期間持續監測數據"]確定工作負載是否適合ARP並設定最佳偵測加密閾值。
+
+
 ** *僅限 NAS 環境*
 +
 *** *對於運行 ONTAP 9.16.1 或更新版本與 FlexVol 磁碟區*的新群集：link:enable-task.html["啟用 ARP"]。ARP 未啟用。啟用 ARP 後，您選擇保護的FlexVol磁碟區上將自動啟用 ARP/AI 功能。
 *** *對於最近升級到ONTAP 9.16.1 及更高版本且已啟用 ARP 的現有叢集*：無需採取任何措施。 ARP/AI 將自動成為您選擇保護的FlexVol磁碟區上的新 ARP 威脅防護方法。
 *** *對於最近升級到ONTAP 9.16.1 及更高版本且未啟用 ARP 的現有叢集*： link:enable-task.html["啟用 ARP"] .啟用 ARP 後，ARP/AI 將自動成為新的 ARP 威脅防護方法。
-
-
-** *僅限 SAN 環境*
-+
-*** *對於運行ONTAP 9.17.1 或更高版本且帶有FlexVol卷的新集群和現有集群*：升級到或安裝ONTAP 9.17.1 或更高版本時，您應該link:enable-task.html["啟用 ARP"]在您要保護的磁碟區上。使用 System Manager 或 CLI 啟用 ARP 時，ARP/AI 功能將自動啟用。在 SAN 磁碟區上啟用後， link:respond-san-entropy-eval-period.html["ARP/AI 在評估期間持續監測數據"]確定工作負載是否適合ARP並設定最佳偵測加密閾值。
 
 
 

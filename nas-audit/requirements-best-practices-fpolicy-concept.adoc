@@ -109,7 +109,9 @@ NOTE: 從 ONTAP 9 8 開始、 ONTAP 提供用戶端 LIF 服務 `data-fpolicy-cli
 
 持續儲存區會維持上次收到事件、發生非預期的重新開機、或是停用 FPolicy 並再次啟用時的狀態。在接管作業之後、新事件會由合作夥伴節點儲存和處理。恢復作業完成後、持續儲存區會繼續處理任何未處理的事件、這些事件可能會在節點接管發生時保留。即時事件將優先於未處理的事件。
 
-如果持續儲存區磁碟區在同一個 SVM 中從一個節點移至另一個節點、則尚未處理的通知也會移至新節點。您需要在磁碟區移動之後，在任一節點上重新執行 `fpolicy persistent-store create`命令，以確保擱置的通知會傳送至外部伺服器。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-fpolicy-persistent-store-create.html["指令參考資料ONTAP"^]需詳細 `fpolicy persistent-store create`資訊，請參閱。
+如果持久性儲存磁碟區從同一 SVM 中的一個節點移至另一個節點，則尚未處理的通知也會移至新節點。您需要重新運行 `fpolicy persistent-store create`移動磁碟區後，在任一節點上執行指令，以確保待處理的通知傳遞到外部伺服器。
+
+詳細了解 `fpolicy persistent-store create`在link:https://docs.netapp.com/us-en/ontap-cli/vserver-fpolicy-persistent-store-create.html["指令參考資料ONTAP"^] 。
 
 
 
@@ -202,8 +204,6 @@ NOTE: 您必須處於診斷模式、才能收集與 FPolicy 相關的統計資�
 +
 .. `statistics show -object fpolicy -instance <instance_name> -sample-id <ID>`
 .. `statistics show -object fpolicy_server -instance <instance_name> -sample-id <ID>`
-
-
 +
 --
 。 `fpolicy` 和 `fpolicy_server` Counters 提供下表所述數種效能參數的相關資訊。
@@ -267,7 +267,10 @@ NOTE: 您必須處於診斷模式、才能收集與 FPolicy 相關的統計資�
 --
 
 
++
 深入瞭解 `statistics start`及 `statistics show` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=statistics["指令參考資料ONTAP"^]。
+
+
 
 
 
@@ -305,4 +308,5 @@ NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如�
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html["統計數據顯示"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/statistics-start.html["統計開始"^]
 

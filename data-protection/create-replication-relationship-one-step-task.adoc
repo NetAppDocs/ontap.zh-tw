@@ -11,7 +11,7 @@ summary: 從ONTAP 功能介紹9.3開始、您可以使用SnapMirror Protect命�
 
 
 [role="lead"]
-從 ONTAP 9.3 開始，您可以在單一步驟中使用 `snapmirror protect`命令來設定資料保護關係。您可以指定要複寫的磁碟區清單，目的地叢集上的 SVM ，工作排程和 SnapMirror 原則。 `snapmirror protect`其餘的都是。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["指令參考資料ONTAP"^]需詳細 `snapmirror protect`資訊，請參閱。
+從ONTAP 9.3 開始，您可以使用 `snapmirror protect`命令透過一個步驟配置資料保護關係。您指定要複製的磁碟區清單、目標叢集上的 SVM、作業計劃和SnapMirror策略。 `snapmirror protect`完成剩下的工作。
 
 .開始之前
 * 來源與目的地叢集和SVM必須進行對等關係。
@@ -33,7 +33,7 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 
 目的地 Volume 的名稱為格式 `_source_volume_name_dst_`。如果與現有名稱發生衝突、命令會在磁碟區名稱加上一個數字。您可以在命令選項中指定字首和/或字尾。後置字元會取代系統提供的 `dst` 後置字元。
 
-在 ONTAP 9.3 及更早版本中，目的地 Volume 最多可包含 251 個快照。在 ONTAP 9.4 及更新版本中，目的地 Volume 最多可包含 1019 個快照。
+在ONTAP 9.4 及更高版本中，目標磁碟區最多可包含 1019 個快照。在ONTAP 9.3 及更早版本中，目標磁碟區最多可包含 251 個快照。
 
 [NOTE]
 ====
@@ -41,6 +41,8 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 
 ====
 從 ONTAP 9 5 開始、可以使用 `snapmirror protect`命令建立 SnapMirror 同步關係。
+
+詳細了解 `snapmirror protect`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["指令參考資料ONTAP"^] 。
 
 .步驟
 . 只需一個步驟即可建立及初始化複寫關係：
@@ -111,5 +113,4 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/job-show.html["工作展示"^]
-* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["SnapMirror保護"^]
 
