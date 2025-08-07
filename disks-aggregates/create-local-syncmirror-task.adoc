@@ -1,0 +1,63 @@
+---
+permalink: disks-aggregates/create-local-syncmirror-task.html 
+sidebar: sidebar 
+keywords: ontap 9, create, aggregates, syncmirror, sync mirror, add, local tier 
+summary: 您可以在手動建立本機圖層時啟用SyncMirror ，以同步鏡像本地層資料。 
+---
+= 新增啟用SyncMirror的ONTAP本地層
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在手動建立本機圖層時啟用SyncMirror ，以同步鏡像本地層資料。
+
+詳細了解link:../concepts/mirrored-unmirrored-aggregates-concept.html["鏡像和非鏡像本地層"] 。
+
+.開始之前
+* 必須僅使用內部儲存來初始化叢集。
+* 必須在兩個節點上完成叢集設定。
+
+
+.關於這項工作
+此程序在每個叢集節點上建立大小相同的鏡像資料本機層，每個本機層的磁碟數為 44。
+
+.步驟
+. 停用儲存自動分配：
++
+`storage disk option modify -node * -autoassign off`
+
+. 確認自動分配已停用：
++
+`storage disk option show`
+
+. 安裝外部擱板。
+. 將外部磁碟機指派給指定池 1 的每個節點：
++
+`storage disk assign -disk <disk ID> -owner <node name> -pool 1`
+
+. 在每個節點上鏡像根本地層：
++
+`storage aggregate mirror -aggregate <node1 root-aggr>`
+
++
+`storage aggregate mirror -aggregate <node2 root-aggr>`
+
++
+
+NOTE: 池 1 中的磁碟機會自動分割以符合叢 0 中的磁碟機。
+
+. 在節點 1 上，使用磁碟數量 44 建立鏡像資料本機層。這將從池 0 中選擇 22 個分割區，從池 1 中選擇 22 個分割區。
++
+`storage aggregate create -node <node1 name> -aggregate <node1 aggr-name> -diskcount 44 -mirror true`
+
+. 在節點 2 上，使用磁碟數量 44 建立鏡像資料本機層。這將從池 0 中選擇 22 個分割區，從池 1 中選擇 22 個分割區。
++
+`storage aggregate create -node <node2 name> -aggregate <node2 aggr-name> -diskcount 44 -mirror true`
+
+. 驗證是否成功建立了大小相同的本機層：
++
+`storage aggregate show`
+
+

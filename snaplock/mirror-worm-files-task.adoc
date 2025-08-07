@@ -19,6 +19,7 @@ summary: 您可以使用SnapMirror將WORM檔案複寫到其他地理位置、以
 .關於這項工作
 * 從ONTAP 功能完善的9.5開始、您可以使用XDP（延伸資料保護）類型的SnapMirror關係來複寫WORM檔案、而非DP（資料保護）類型關係。XDP模式ONTAP 與版本無關、能夠區分儲存在同一個區塊中的檔案、讓重新同步複寫的法規遵循模式磁碟區變得更加容易。如需如何將現有DP類型關係轉換成XDP類型關係的相關資訊、請參閱 link:../data-protection/index.html["資料保護"]。
 * 若由SnapMirror判斷會SnapLock 導致資料遺失、則針對法規遵循模式磁碟區、對DP類型SnapMirror關係進行重新同步作業將會失敗。如果重新同步作業失敗、您可以使用 `volume clone create` 建立目的地 Volume 複本的命令。然後、您可以重新同步來源磁碟區與實體複本。
+* SnapLock卷的SnapMirror關係僅支持 `MirrorAllSnapshots`非同步鏡像類型策略。 SnapLock磁碟區的保留期由其所保存的所有 WORM 檔案的最大保留期決定。由於目標是來源的 DR 副本，因此目標SnapLock磁碟區的保留期將與來源相同。
 * 支援不同步磁碟區之間XDP類型的SnapMirror關係SnapLock 、即使目的地上的資料與中斷後的來源資料有所不同、也能在中斷後支援重新同步。
 +
 在重新同步時、如果偵測到來源與目的地之間的資料差異、而非一般快照、則會在目的地上剪下新的快照、以擷取此差異。新的快照和通用快照都會以下列保留時間鎖定：
@@ -78,7 +79,7 @@ image:snapmirror_steps_clustered.png["此圖例顯示初始化 SnapMirror 關係
 
 +
 
-NOTE: 從ONTAP 版本S59.10.1開始、SnapLock 相同的集合體上可以存在不含SnapLock的不含SnapLock磁碟區；因此SnapLock 、如果您使用ONTAP 的是版本S59.10.1、則不再需要建立個別的不含SnapLock的集合體。您可以使用Volume -SnapLock類型選項來指定法規遵循或Enterprise SnapLock 版的Volume類型。在不早於版本的發行版中、從Aggregate繼承而來的是「不符合要求」（即「企業」）的「不符合要求」模式。ONTAP ONTAP SnapLock不支援具有版本彈性的目的地Volume。目的地Volume的語言設定必須符合來源Volume的語言設定。
+NOTE: 從ONTAP 9.10.1 開始， SnapLock和非SnapLock磁碟區可以存在於同一個聚合上；因此，如果您使用ONTAP 9.10.1，則不再需要建立單獨的SnapLock聚合。您可以使用volume -snaplock-type選項指定Compliance或Enterprise SnapLock磁碟區類型。在ONTAP 9.10.1 之前的ONTAP版本中， SnapLock模式（Compliance 或 Enterprise）是從聚合繼承的。目標磁碟區的語言設定必須與來源磁碟區的語言設定相符。
 
 +
 下列命令會建立 2 GB SnapLock `Compliance` Volume 命名 `dstvolB` 在中 `SVM2` 在 Aggregate 上 `node01_aggr`：
