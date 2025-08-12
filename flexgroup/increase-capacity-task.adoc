@@ -11,7 +11,9 @@ summary: 透過在磁碟區的現有組成部分新增更多容量或透過使�
 
 
 [role="lead"]
-您可以增加 FlexGroup 磁碟區的大小，方法是為現有的 FlexGroup 磁碟區成員磁碟區（組成）新增更多容量，或是透過擴充具有新成員磁碟區的 FlexGroup 磁碟區。FlexGroup 磁碟區不能有 200 個以上的成員磁碟區。
+您可以透過在FlexGroup磁碟區的所有現有成員磁碟區（組成部分）中新增更多容量或透過使用新成員磁碟區來擴充FlexGroup區來增加FlexGroup磁碟區的大小。  FlexGroup磁碟區不能有超過 200 個成員磁碟區。
+
+如果需要，您也可以增加FlexGroup區中單一磁碟區的大小。
 
 .開始之前
 集合體中必須有足夠的可用空間。
@@ -47,9 +49,9 @@ summary: 透過在磁碟區的現有組成部分新增更多容量或透過使�
  a| 
 功能FlexGroup
  a| 
-調整 FlexGroup Volume 的成員磁碟區大小：
+調整FlexGroup磁碟區的所有成員磁碟區的大小：
 
-`volume modify -vserver vserver_name -volume fg_name -size new_size`
+`volume modify -vserver <svm_name> -volume <fg_name> -size <new_size>`
 
 
 
@@ -95,3 +97,22 @@ cluster1::> volume modify -vserver svm1 -volume volX -size +20TB
 cluster1::> volume expand -vserver svm1 -volume fg1 -aggr-list aggr1,aggr2 -aggr-list-multiplier 2
 ----
 新成員磁碟區的大小與現有成員磁碟區的大小相同。
+
+.增加單一卷的大小
+如果要增加FlexGroup區中單一成員磁碟區的大小，可以使用 `volume resize`命令。
+
+.步驟
+. 增加單一FlexGroup成員磁碟區的大小：
++
+`volume size -volume <volume_name> -vserver <svm1> -new-size <new_size>`
+
++
+以下範例將FlexGroup成員磁碟區 FG_0003 的大小增加到 3.7GB：
+
++
+[listing]
+----
+volume size -volume FG__0003 -vserver svm1 -new-size 3.7GB
+vol size: Volume "svm1:FG__0003" size set to 3.70g.
+----
+
