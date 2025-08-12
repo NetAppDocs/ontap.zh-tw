@@ -4,27 +4,35 @@ sidebar: sidebar
 keywords: considerations, changing, maximum number of files, allowed, flexvol volume, maximum, files, file 
 summary: 包含最多檔案數量的資料。FlexVol您可以變更此上限、但請注意這會如何影響磁碟區。 
 ---
-= ONTAP 中 FlexVol 磁碟區允許的檔案數量上限
+= ONTAP中FlexVol磁碟區允許的預設檔案數和最大檔案數
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-包含最多檔案數量的資料。FlexVol您可以變更此上限、但在變更之前、您應該先瞭解此變更如何影響磁碟區。
+FlexVol磁碟區具有其可包含的預設檔案數和最大檔案數。如果您的資料需要大量文件，您可以將磁碟區上允許的使用者可見文件的數量增加到最大值。在繼續之前您應該了解限制和注意事項。
 
-如果您的資料需要大量檔案或非常大的目錄、您可以擴充ONTAP 各種文件或目錄容量。不過、您應該先瞭解相關限制和注意事項、然後再繼續。
+磁碟區可以包含的使用者可見檔案的數量由該磁碟區的可用 inode 容量決定。  inode 是一種包含有關文件資訊的資料結構。
 
-磁碟區可以包含的檔案數量取決於它擁有的 inode 數量。_inod__是一種資料結構、包含檔案的相關資訊。Volume具有私有和公有inode。公有inode用於使用者可見的檔案、而私有inode則用於ONTAP 由內部使用的檔案。您只能變更Volume的最大公有inode數量。您不能影響私有inode的數量。
+ONTAP會根據新建立的磁碟區的大小自動設定其預設和最大可用 inode 數，如下所示。
 
-根據磁碟區大小、更新建立的磁碟區可自動設定最大公有inode數量：每32 KB磁碟區大小1個inode。ONTAP當某個磁碟區的大小由管理員直接增加、或ONTAP 由管理員透過自動調整大小功能自動增加時ONTAP 、除了增加（如有必要）公共inode的最大數量、每32 KB的Volume大小至少有1個inode、 直到磁碟區大小達到約680 GB為止。
+[cols="2,2"]
+|===
+| 預設 inode 數量 | 最大 inode 數量 
 
-在 9.13.1 之前的 ONTAP 版本中，增加大於 680 GB 大小的磁碟區並不會自動產生更多 inode ，因為 ONTAP 不會自動建立超過 21 ， 251 ， 126 個 inode 。如果任何大小的磁碟區需要的檔案數超過預設值、您可以使用volume modify命令來增加磁碟區的最大inode數。
 
-從 ONTAP 9.13.1 開始， inode 的最大數量會持續增加，因此即使磁碟區大於 680 GB ，每 32 KB 的磁碟區空間也會有一個 inode 。這種成長持續到磁碟區達到 inode 上限 2,040,109,451 為止。
+| 每 32 KB 卷大小 1 個 | 每 4 KB 卷大小 1 個 
+|===
+當磁碟區的大小增加時（無論是由管理員手動增加還是由 ONTAP 的自動調整大小功能自動增加）， ONTAP也會增加（如有必要）可用的 inode 數量，以便每 32 KB 磁碟區大小至少有 1 個 inode，直到磁碟區大小達到約 680 GB。
 
-您也可以減少公共inode的最大數量。減少公有 inode 的數量不會改變分配給 inode 的空間量、但會降低公有 inode 檔案所能使用的空間上限。將空間分配給 inode 之後、就不會將其傳回 Volume 。因此，如果將 inode 的最大數量降低到當前分配的 inode 數量以下，則不會返回分配的 inode 所使用的空間。
+在ONTAP 9.12.1 及更早版本中，建立新磁碟區或調整現有磁碟區的大小（大於 680 GB）不會自動產生額外的 inode 容量。如果您需要的檔案數量超過任何大小卷的預設數量，則可以使用 `volume modify`指令將磁碟區的可用 inode 數量增加到最大值。
+
+從ONTAP 9.13.1 開始，建立新磁碟區或調整現有磁碟區的大小時，即使磁碟區大於 680 GB，可用 inode 的預設數量也會設定為每 32 KB 磁碟區空間 1 個 inode。此比率將持續存在，直到磁碟區達到絕對 inode 最大值 2,040,109,451。
+
+您還可以減少可用的 inode 數量。這不會改變分配給 inode 的空間量，但會降低公用 inode 檔案可以消耗的最大空間量。為 inode 分配空間後，該空間將永遠不會返回磁碟區。因此，不可能將最大 inode 數量降低到低於目前分配的 inode 數量。
 
 .更多資訊
 * xref:display-file-inode-usage-task.html[確定卷的文件和 inode 使用情況]
+* link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/FAQ_-_ONTAP_default_and_maximum_number_of_files_(inodes)["知識庫文章：常見問題 - ONTAP預設和最大檔案數 (inodes)"]
 
