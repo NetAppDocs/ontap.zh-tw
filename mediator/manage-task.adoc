@@ -205,12 +205,18 @@ CGroup: /system.slice/ontap_mediator.service
 
 
 
-== 手動解除安裝 SCST 以執行主機維護
+== 執行主機維護
+
+如果執行ONTAP Mediator 的 VM 需要使用較新的核心進行升級，則這可能會導致與ONTAP Mediator 使用的 SCST 核心模組出現相容性問題。在這種情況下， NetApp建議您手動解除安裝並重新安裝 SCST。
+
+
+
+=== 步驟 1：手動卸載 SCST
 
 若要解除安裝 SCST 、您需要用於已安裝 ONTAP Mediator 版本的 SCST tar 套件。
 
 .步驟
-. 下載適當的 SCST 套裝組合（如下表所示）並將其解壓縮。
+. 下載適當的 SCST 套件（如下表所示）並解壓縮。
 +
 [cols="50,50"]
 |===
@@ -295,7 +301,13 @@ ONTAP Mediator 1.0
 scst-3.3.0.tar.bz2
 
 |===
-. 在 "scst" 目錄中輸入下列命令：
++
+.. 從訪問開源包link:https://scst.sourceforge.net/downloads.html["SCST sourceforge 下載"^]。
+.. 選擇*下載已發布版本*。
+.. 將捆綁包提取到您的虛擬機器。
+
+
+. 在 `scst`目錄：
 +
 .. `systemctl stop mediator-scst`
 .. `make scstadm_uninstall`
@@ -309,11 +321,14 @@ scst-3.3.0.tar.bz2
 
 
 
-== 手動安裝 SCST 以執行主機維護
+=== 步驟 2：手動安裝 SCST
 
-若要手動安裝 SCST 、您需要用於已安裝 ONTAP Mediator 版本的 SCST tar 套件（請參閱 <<scst-bundle-table,上表>>）。
+若要手動安裝 SCST，您需要用於已安裝ONTAP Mediator 版本的 SCST tar 套件（請參閱<<scst-bundle-table,SCST 表>>）。
 
-. 在 "scst" 目錄中輸入下列命令：
+
+NOTE: 在安裝ONTAP調解器之前執行此步驟。如果您使用的 SCST 版本比ONTAP Mediator 安裝程式捆綁的版本新，則安裝程式將跳過此步驟。
+
+. 在 `scst`目錄：
 +
 .. `make 2release`
 .. `make scst_install`
@@ -321,13 +336,25 @@ scst-3.3.0.tar.bz2
 .. `make iscsi_install`
 .. `make scstadm_install`
 .. `depmod`
++
+[NOTE]
+====
+如果您是首次安裝並且想要預先安裝ONTAP Mediator，請在繼續下一步之前執行以下命令：
+
+`mkdir -p /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys` 。
+
+====
 .. `cp scst/src/certs/scst_module_key.der /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/`
 .. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
++
+
+NOTE: 如果您是首次安裝並且想要在安裝ONTAP Mediator 之前預先安裝 SCST，則可以跳過此步驟。  ONTAP調解器安裝程式在安裝過程中將任何相關修補程式套用於 SCST 元件。
+
 
 
 . 或者、如果已啟用安全開機、請在重新開機之前執行下列步驟：
 +
-.. 決定「 scst_vdisk 」、「 scst 」和「 iscsim_scst 」模組的每個檔案名稱：
+.. 確定每個檔名 `scst_vdisk`， `scst` ， 和 `iscsi_scst`模組：
 +
 ....
 [root@localhost ~]# modinfo -n scst_vdisk
@@ -339,7 +366,7 @@ scst-3.3.0.tar.bz2
 ....
 [root@localhost ~]# uname -r
 ....
-.. 使用核心簽署每個檔案：
+.. 使用核心對每個模組檔案進行簽名：
 +
 ....
 [root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
@@ -347,7 +374,7 @@ scst-3.3.0.tar.bz2
 /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der \
 _module-filename_
 ....
-.. 使用 UEFI 韌體安裝正確的金鑰。
+.. 使用韌體安裝 UEFI 金鑰。
 +
 有關安裝 UEFI 金鑰的說明、請參閱：
 
@@ -362,7 +389,7 @@ _module-filename_
 
 
 
-. 執行重新開機：
+. 重新啟動系統：
 +
 `reboot`
 
