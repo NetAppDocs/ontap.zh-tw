@@ -107,14 +107,14 @@ NAS 環境使用學習和主動模式。對於<<arp-ai,ARP/AI>>從ONTAP 9.16.1 �
 
 
 | 學習  a| 
-對於ONTAP 9.10.1 到 9.15.1 版本，啟用 ARP 後，ARP 會自動設定為學習模式。在學習模式下， ONTAP系統會根據以下分析領域（熵、檔案副檔名類型和檔案 IOPS）制定警報設定檔。建議您將 ARP 保持在學習模式 30 天。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。對於ONTAP 9.13.1 之前的版本，您可以手動進行切換。
+對於ONTAP 9.15.1 到 9.10.1 版本，啟用 ARP 後，ARP 會自動設定為學習模式。在學習模式下， ONTAP系統會根據以下分析領域（熵、檔案副檔名類型和檔案 IOPS）制定警報設定檔。建議您將 ARP 保持在學習模式 30 天。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。對於ONTAP 9.13.1 之前的版本，您可以手動進行切換。
 
 link:switch-learning-to-active-mode.html["了解有關從學習模式切換到主動模式的更多信息"] 。
 
 
 TIP: 命令 `security anti-ransomware volume workload-behavior show`會顯示已在磁碟區中偵測到的副檔名。如果您在學習模式早期執行此命令，並顯示正確的檔案類型呈現，則不應將該資料當作移至作用中模式的基礎，因為 ONTAP 仍在收集其他計量。如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume workload-behavior show`資訊，請參閱。
  a| 
-* FlexVol卷（採用ONTAP 9.10.1 至 9.15.1）
+* FlexVol卷（採用ONTAP 9.15.1 至 9.10.1）
 * 附ONTAP 9.13.1 及更高版本的 FlexGroup卷
 
 
@@ -170,8 +170,8 @@ ARP 根據學習分析測量的傳入資料來評估威脅機率。當 ARP 偵�
 
 * * 低 * ：磁碟區最早偵測到異常（例如，在磁碟區中觀察到新的副檔名）。此偵測層級僅適用於 ONTAP 9 。 16.1 之前的版本，但沒有 ARP/AI 。
 +
-** 在 ONTAP 9.10.1 中、向上提報至中度的臨界值為 100 個以上的檔案。
 ** 從ONTAP 9.11.1 開始，您可以link:manage-parameters-task.html["自訂ARP檢測參數"] 。
+** 在 ONTAP 9.10.1 中、向上提報至中度的臨界值為 100 個以上的檔案。
 
 
 * *中*：偵測到高熵，或觀察到多個具有相同前所未見檔案副檔名的檔案。這是ONTAP 9.16.1 及更高版本中帶有 ARP/AI 的基準檢測等級。

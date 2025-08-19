@@ -24,18 +24,10 @@ summary: 啟用儲存庫存取、以便 ONTAP Mediator 在安裝過程中存取�
 
 
  a| 
-RHEL 7.x
+RHEL 10.x
  a| 
-** RHEL-7-server選用-rpms
-
-
-
-
- a| 
-RHEL 8.x
- a| 
-** RHEL-8-for-x86_64：basos-rpms
-** RHEL-8-for-x86_64：AppStream：rpms
+** rhel-10-for-x86_64-baseos-rpms
+** rhel-10-for-x86_64-appstream-rpms
 
 
 
@@ -50,10 +42,18 @@ RHEL 9.x
 
 
  a| 
-RHEL 10.x
+RHEL 8.x
  a| 
-** rhel-10-for-x86_64-baseos-rpms
-** rhel-10-for-x86_64-appstream-rpms
+** RHEL-8-for-x86_64：basos-rpms
+** RHEL-8-for-x86_64：AppStream：rpms
+
+
+
+
+ a| 
+RHEL 7.x
+ a| 
+** RHEL-7-server選用-rpms
 
 
 
@@ -67,7 +67,7 @@ CentOS 7.x
 
 
  a| 
-Rocky Linux 8
+Rocky Linux 10
  a| 
 ** AppStream
 ** 基礎
@@ -85,7 +85,7 @@ Rocky Linux 9
 
 
  a| 
-Rocky Linux 10
+Rocky Linux 8
  a| 
 ** AppStream
 ** 基礎
@@ -98,17 +98,22 @@ Rocky Linux 10
 
 NOTE: 如果 ONTAP 調解器依賴「extras」和「optional」儲存庫中的 Python 模組，則可能需要存取 `rhel-X-for-x86_64-extras-rpms`和 `rhel-X-for-x86_64-optional-rpms`文件。
 
-.RHEL 7.x作業系統的程序
-[#rhel7x%collapsible]
+.RHEL 10.x 作業系統的安裝步驟
+[#rhel10x%collapsible]
 ====
-如果您的作業系統是 * RHEL 7.x * 、請使用此程序來存取儲存庫：
+如果您的作業系統是 *RHEL 10.x*，請使用此程序來啟用對儲存庫的存取：
 
 .步驟
 . 訂閱所需的儲存庫：
 +
 [source, cli]
 ----
-subscription-manager repos --enable rhel-7-server-optional-rpms
+subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
+----
++
+[source, cli]
+----
+subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
 ----
 +
 下列範例顯示此命令的執行：
@@ -116,59 +121,10 @@ subscription-manager repos --enable rhel-7-server-optional-rpms
 +
 [listing]
 ----
-[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
-Repository 'rhel-7-server-optional-rpms' is enabled for this system.
-----
-. 執行 `yum repolist` 命令。
-+
-下列範例顯示此命令的執行。清單中應會顯示「RHEL-7-server選擇性-rpms」儲存庫。
-
-+
-[listing]
-----
-[root@localhost ~]# yum repolist
-Loaded plugins: product-id, search-disabled-repos, subscription-manager
-rhel-7-server-optional-rpms | 3.2 kB  00:00:00
-rhel-7-server-rpms | 3.5 kB  00:00:00
-(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group              |  26 kB  00:00:00
-(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo         | 2.5 MB  00:00:00
-(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db         | 8.3 MB  00:00:01
-repo id                                      repo name                                             status
-rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
-rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
-repolist: 46,205
-[root@localhost ~]#
-----
-
-
-====
-.RHEL 8.x 作業系統的程序
-[#rhel8x%collapsible]
-====
-如果您的作業系統是 * RHEL 8.x 、請使用此程序來存取儲存庫：
-
-.步驟
-. 訂閱所需的儲存庫：
-+
-[source, cli]
-----
-subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
-----
-+
-[source, cli]
-----
-subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
-----
-+
-下列範例顯示此命令的執行：
-
-+
-[listing]
-----
-[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
-Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
-[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
-Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
+[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
+Repository 'rhel-10-for-x86_64-baseos-rpms' is enabled for this system.
+[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
+Repository 'rhel-10-for-x86_64-appstream-rpms' is enabled for this system.
 ----
 . 執行 `yum repolist` 命令。
 +
@@ -212,22 +168,22 @@ Repository 'rhel-9-for-x86_64-appstream-rpms' is enabled for this system.
 
 
 ====
-.RHEL 10.x 作業系統的安裝步驟
-[#rhel10x%collapsible]
+.RHEL 8.x 作業系統的程序
+[#rhel8x%collapsible]
 ====
-如果您的作業系統是 *RHEL 10.x*，請使用此程序來啟用對儲存庫的存取：
+如果您的作業系統是 * RHEL 8.x 、請使用此程序來存取儲存庫：
 
 .步驟
 . 訂閱所需的儲存庫：
 +
 [source, cli]
 ----
-subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
+subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
 ----
 +
 [source, cli]
 ----
-subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
+subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
 ----
 +
 下列範例顯示此命令的執行：
@@ -235,15 +191,59 @@ subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
 +
 [listing]
 ----
-[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
-Repository 'rhel-10-for-x86_64-baseos-rpms' is enabled for this system.
-[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
-Repository 'rhel-10-for-x86_64-appstream-rpms' is enabled for this system.
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 ----
 . 執行 `yum repolist` 命令。
 +
 新訂閱的儲存庫應會出現在清單中。
 
+
+
+====
+.RHEL 7.x作業系統的程序
+[#rhel7x%collapsible]
+====
+如果您的作業系統是 * RHEL 7.x * 、請使用此程序來存取儲存庫：
+
+.步驟
+. 訂閱所需的儲存庫：
++
+[source, cli]
+----
+subscription-manager repos --enable rhel-7-server-optional-rpms
+----
++
+下列範例顯示此命令的執行：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
+Repository 'rhel-7-server-optional-rpms' is enabled for this system.
+----
+. 執行 `yum repolist` 命令。
++
+下列範例顯示此命令的執行。清單中應會顯示「RHEL-7-server選擇性-rpms」儲存庫。
+
++
+[listing]
+----
+[root@localhost ~]# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+rhel-7-server-optional-rpms | 3.2 kB  00:00:00
+rhel-7-server-rpms | 3.5 kB  00:00:00
+(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group              |  26 kB  00:00:00
+(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo         | 2.5 MB  00:00:00
+(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db         | 8.3 MB  00:00:01
+repo id                                      repo name                                             status
+rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
+rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
+repolist: 46,205
+[root@localhost ~]#
+----
 
 
 ====
@@ -294,10 +294,10 @@ repolist: 21,433
 
 
 ====
-.Rocky Linux 8、9 或 10 作業系統的程序
-[#rocky-linux-8-9-10%collapsible]
+.Rocky Linux 10、9 或 8 作業系統的程序
+[#rocky-linux-10-9-8%collapsible]
 ====
-如果您的作業系統是 *Rocky Linux 8*、*Rocky Linux 9* 或 *Rocky Linux 10*，請使用下列步驟來啟用對儲存庫的存取：
+如果您的作業系統是 *Rocky Linux 10*、*Rocky Linux 9* 或 *Rocky Linux 8*，請使用下列步驟來啟用對儲存庫的存取：
 
 .步驟
 . 訂閱所需的儲存庫：
@@ -331,8 +331,8 @@ dnf repolist
 [root@localhost ~]# dnf clean all
 [root@localhost ~]# dnf repolist
 repo id                        repo name
-appstream                      Rocky Linux 8 - AppStream
-baseos                         Rocky Linux 8 - BaseOS
+appstream                      Rocky Linux 10 - AppStream
+baseos                         Rocky Linux 10 - BaseOS
 [root@localhost ~]#
 ....
 ....
@@ -351,8 +351,8 @@ baseos                         Rocky Linux 9 - BaseOS
 [root@localhost ~]# dnf clean all
 [root@localhost ~]# dnf repolist
 repo id                        repo name
-appstream                      Rocky Linux 10 - AppStream
-baseos                         Rocky Linux 10 - BaseOS
+appstream                      Rocky Linux 8 - AppStream
+baseos                         Rocky Linux 8 - BaseOS
 [root@localhost ~]#
 ....
 ====
