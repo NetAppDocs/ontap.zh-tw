@@ -11,36 +11,57 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
 
 
 [role="lead"]
-您可以存取節點的SP並執行SP CLI命令、以執行節點管理工作、藉此從遠端管理節點。對於多項常用的遠端節點管理工作、您也可以使用ONTAP 叢集中其他節點的指令執行。有些SP命令是平台專屬的、可能無法在您的平台上使用。
+您可以透過存取其SP並執行SP CLI 命令，或存取BMC並執行BMC CLI 命令來遠端執行節點管理任務。對於幾個常見的遠端節點管理任務，您也可以從叢集中的另一個節點使用ONTAP命令。某些SP和BMC指令是特定於平台的，可能在您的平台上不可用。
+
+某些指令類型可以在SP和BMC指令集中使用。當輸入命令列時就會顯示它們之間的差異。
+
+.範例
+* 這 `help`SP中的指令： `SP> help`
+* 這 `help`BMC中的指令： `BMC> help`
+
+
+詳細了解 `help`可用於SP和BMC 的指令選項link:https://docs.netapp.com/us-en/ontap/system-admin/online-help-at-sp-bmc-cli-task.html["在 ONTAP SP / BMC CLI 中檢視說明資訊"^]。
+
+了解有關相應ONTAP BMC CLI 的更多信息link:https://docs.netapp.com/us-en/ontap/system-admin/bmc-cli-commands-reference.html["ONTAP 基礎板管理控制器支援的 CLI 命令"^]。
 
 |===
-| 如果您想要... | 使用此SP命令... | 使用此 BMC 命令 ... | 或此ONTAP 指令... 
+| 如果您想要... | 使用此SP命令... | 使用此 BMC 命令 ... | 使用此ONTAP指令... 
 
 
  a| 
-顯示指定SP命令的可用SP命令或子命令
+顯示SP/ BMC/ ONTAP的可用指令或指定指令的子指令
  a| 
 `help` [`command`]
  a| 
+`help` [`command`]
  a| 
+不適用
 
 
 
  a| 
-顯示SP CLI的目前權限等級
+顯示SP/ BMC/ ONTAP CLI 的目前權限級別
  a| 
 `priv show`
  a| 
+`priv` `show`
  a| 
+不適用
 
 
 
  a| 
-設定權限層級、以存取SP CLI的指定模式
+設定權限等級以存取SP/ BMC/ ONTAP CLI 的指定模式
  a| 
-`priv set` {`admin` | `advanced` | `diag`}
+`priv set`
+
+{`admin`| `advanced` | `diag` }
  a| 
+`priv set`
+
+{`admin`| `advanced` | `diag` | `test` }
  a| 
+不適用
 
 
 
@@ -49,42 +70,58 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `date`
  a| 
+`date`
  a| 
 `date`
 
 
 
  a| 
-顯示SP記錄的事件
+顯示SP/ BMC/ ONTAP記錄的事件
  a| 
-`events` {`all` | `info` | `newest` `number` | `oldest number` | `search keyword`}
+`events`
+
+{`all`| `info` | `newest` `number` | `oldest number` | `search keyword` }
  a| 
+`events`
+
+{`all`| `info` | `newest` | `oldest` | `search` }
  a| 
+不適用
 
 
 
  a| 
-顯示SP狀態和網路組態資訊
+顯示SP/ BMC/ ONTAP狀態和網路設定資訊
  a| 
-`sp status` [`-v` | `-d`]
+`sp status`
 
-。 `-v` 選項以詳細格式顯示 SP 統計資料。。 `-d` 選項會將 SP 偵錯記錄新增至顯示器。
+[`-v`| `-d` ]
+
+* 這 `-v`選項以詳細形式顯示SP統計資料。
+* 這 `-d`選項將SP偵錯日誌新增至顯示。
+
  a| 
-`bmc status` [`-v` | `-d`]
+`bmc status`
 
-。 `-v` 選項以詳細格式顯示 SP 統計資料。。 `-d` 選項會將 SP 偵錯記錄新增至顯示器。
+[`-v`| `-d` ]
+
+* 這 `-v`選項以詳細形式顯示SP統計資料。
+* 這 `-d`選項將SP偵錯日誌新增至顯示。
+
  a| 
 `system service-processor show`
 
 
 
  a| 
-顯示過去1、5和15分鐘內SP已啟動的時間長度、以及執行佇列中的平均工作數
+顯示SP/ BMC/ ONTAP啟動的時間長度以及過去 1、5 和 15 分鐘內運行佇列中的平均作業數
  a| 
 `sp uptime`
  a| 
 `bmc uptime`
  a| 
+不適用
 
 
 
@@ -93,17 +130,28 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system log`
  a| 
+`system log`
+
+[`-a`]
  a| 
+`system log`
+
+（列印系統控制台日誌）
 
 
 
  a| 
-顯示SP記錄歸檔或歸檔中的檔案
+顯示SP/ BMC/ ONTAP日誌檔案或檔案中的文件
  a| 
-`sp log history show` [`-archive` {`latest` |{`all` | `archive-name`}] [`-dump` {`all` | `file-name`}]
+`sp log history show`
+
+[`-archive` {`latest`|{`all` | `archive-name` }][`-dump` {`all` | `file-name` }]
  a| 
-`bmc log history show` [`-archive` {`latest` |{`all` | `archive-name`}] [`-dump` {`all` | `file-name`}]
+`bmc log history show`
+
+[`-archive` {`latest`|{`all` | `archive-name` }][`-dump` {`all` | `file-name` }]
  a| 
+不適用
 
 
 
@@ -112,6 +160,7 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system power status`
  a| 
+`system power status`
  a| 
 `system node power show`
 
@@ -122,16 +171,22 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system battery show`
  a| 
+`system battery show`
  a| 
+不適用
 
 
 
  a| 
 顯示ACP資訊或擴充器感測器的狀態
  a| 
-`system acp` [`show` | `sensors show`]
+`system acp`
+
+[`show`| `sensors show` ]
  a| 
+不適用
  a| 
+不適用
 
 
 
@@ -140,7 +195,9 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system fru list`
  a| 
+`system fru list`
  a| 
+不適用
 
 
 
@@ -149,24 +206,39 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system fru show` `fru_id`
  a| 
+`system fru show`
+
+[ `show <id>` ]
  a| 
+不適用
 
 
 
  a| 
 顯示FRU資料歷程記錄
  a| 
-`system fru log show` （進階權限層級）
+`system fru log show`
+
+（進階權限層級）
  a| 
+`system fru log show`
  a| 
+不適用
 
 
 
  a| 
 顯示環境感測器的狀態、包括其狀態和目前值
  a| 
-`system sensors` 或 `system sensors show`
+`system sensors`
+
+或
+
+`system sensors show`
  a| 
+`system sensors`
+
+{`show`| `filter <sensor_string>` }
  a| 
 `system node environment sensors show`
 
@@ -179,56 +251,80 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
 
 您可以取得 `sensor_name` 使用 `system sensors` 或 `system sensors show` 命令。
  a| 
+`system sensors`
+
+[ `get` ]
  a| 
+不適用
 
 
 
  a| 
-顯示SP韌體版本資訊
+顯示SP/ BMC/ ONTAP韌體版本信息
  a| 
 `version`
  a| 
+`version`
  a| 
 `system service-processor image show`
 
 
 
  a| 
-顯示SP命令歷程記錄
+顯示SP/ BMC/ ONTAP指令歷史記錄
  a| 
-`sp log audit` （進階權限層級）
+`sp log audit`
+
+（進階權限層級）
  a| 
 `bmc log audit`
+
+（進階權限層級）
  a| 
+不適用
 
 
 
  a| 
-顯示SP偵錯資訊
+顯示SP/ BMC/ ONTAP調試訊息
  a| 
-`sp log debug` （進階權限層級）
+`sp log debug`
+
+（進階權限層級）
  a| 
-`bmc log debug` （進階權限層級）
+`bmc log debug`
+
+（進階權限層級）
  a| 
+不適用
 
 
 
  a| 
-顯示SP訊息檔案
+顯示SP/ BMC/ ONTAP訊息文件
  a| 
-`sp log messages` （進階權限層級）
+`sp log messages`
+
+（進階權限層級）
  a| 
-`bmc log messages` （進階權限層級）
+`bmc log messages`
+
+（進階權限層級）
  a| 
+不適用
 
 
 
  a| 
 顯示在監視器重設事件上收集系統鑑識的設定、顯示在監視器重設事件期間收集的系統鑑識資訊、或清除收集的系統鑑識資訊
  a| 
-`system forensics` [`show` | `log dump` | `log clear`]
+`system forensics`
+
+[`show`| `log dump` | `log clear` ]
  a| 
+不適用
  a| 
+不適用
 
 
 
@@ -237,6 +333,7 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system console`
  a| 
+`system console`
  a| 
 `system node run-console`
 
@@ -252,22 +349,29 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 `system power` `on`
  a| 
+`system power` `on`
  a| 
-`system node power on` （進階權限層級）
+`system node power on`
+
+（進階權限層級）
 
 
 
  a| 
 `system power` `off`
  a| 
+`system power` `off`
  a| 
+不適用
 
 
 
  a| 
 `system power` `cycle`
  a| 
+`system power` `cycle`
  a| 
+不適用
 
 
 
@@ -288,6 +392,7 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
 
 。 `-f` 選項會強制建立核心傾印並重設節點。
  a| 
+`system core`
  a| 
 `system node coredump trigger`
 
@@ -303,12 +408,17 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 使用選擇性指定的BIOS韌體映像（主要、備份或目前）重新開機節點、以從節點開機裝置的毀損映像等問題中恢復
  a| 
-`system reset` {`primary` | `backup` | `current`}
- a| 
- a| 
-`system node reset` 使用 `-firmware` {`primary` | `backup` | `current`} 參數（進階權限等級）
+`system reset`
 
-`system node reset`
+{`primary`| `backup` | `current` }
+ a| 
+`system reset`
+
+{ `current` | `primary` | `backup` }
+ a| 
+`system node reset`與 `-firmware` {`primary`| `backup` | `current` } 範圍
+
+（進階權限層級）
 
 
 
@@ -323,13 +433,17 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
 
 
  a| 
-顯示電池韌體自動更新的狀態、或在下次SP開機時啟用或停用電池韌體自動更新
+顯示電池韌體自動更新的狀態，或在下次SP啟動時啟用或停用電池韌體自動更新
  a| 
-`system battery auto_update` [`status` | `enable` | `disable`]
+`system battery auto_update`
+
+[`status`| `enable` | `disable` ]
 
 （進階權限層級）
  a| 
+不適用
  a| 
+不適用
 
 
 
@@ -342,39 +456,56 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
 
 如果 `image_URL` 未指定、則會使用預設電池韌體映像進行比較。
  a| 
+`system battery verify` [`image_URL`]
+
+（進階權限層級）
+
+如果 `image_URL` 未指定、則會使用預設電池韌體映像進行比較。
  a| 
+不適用
 
 
 
  a| 
 從指定位置的映像更新電池韌體
  a| 
-`system battery flash` `image_URL`
+`system battery flash` [`image_URL`]
 
 （進階權限層級）
 
 如果自動電池韌體升級程序因故失敗、請使用此命令。
  a| 
+不適用
  a| 
+不適用
 
 
 
  a| 
-使用指定位置的映像更新SP韌體
+使用指定位置的映像更新SP/ BMC/ ONTAP韌體
  a| 
-`sp update` `image_URL image_URL` 不得超過 200 個字元。
+`sp update`
+
+`image_URL`
+
+`image_URL`不得超過 200 個字元。
  a| 
-`bmc update` `image_URL image_URL` 不得超過 200 個字元。
+`bmc update`
+
+`image_URL`
+
+`image_URL`不得超過 200 個字元。
  a| 
 `system service-processor image update`
 
 
 
  a| 
-重新啟動SP
+重新啟動SP/ BMC/ ONTAP
  a| 
 `sp reboot`
  a| 
+`bmc reboot`
  a| 
 `system service-processor reboot-sp`
 
@@ -383,20 +514,28 @@ summary: 您可以存取節點的SP並執行SP CLI命令、以執行節點管理
  a| 
 清除NVRAM Flash內容
  a| 
-`system nvram flash clear` （進階權限層級）
+`system nvram flash clear`
+
+（進階權限層級）
 
 當控制器電源關閉時、無法啟動此命令 (`system power off`）。
  a| 
+不適用
  a| 
+不適用
 
 
 
  a| 
-結束SP CLI
+退出SP/ BMC/ ONTAP CLI
  a| 
 `exit`
  a| 
+`exit`
  a| 
+不適用
 
 |===
-如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
+
