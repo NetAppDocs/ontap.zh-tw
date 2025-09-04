@@ -29,7 +29,45 @@ summary: 瞭解 ONTAP 9 的新功能。
 
 == ONTAP 9.17.1 亮點
 
-ONTAP 9.17.1 在安全管理、資料保護、S3 物件儲存和儲存管理方面提供了新功能和增強功能。有關新功能和增強功能的完整列表，請參閱xref:whats-new-9171.adoc[ONTAP 9.17.1 的新增功能] 。
+ONTAP 9.17.1 在 AI 驅動的 SAN 自主勒索軟體防護方面提供了創新，並透過SnapMirror主動同步和一致性群組分層管理增加了 NVMe 前端主機支援。這些增強功能鞏固了 NetApp 在資料安全和網路彈性方面的領導地位，提高了ONTAP 的效能、可擴展性、效率和業務連續性。有關新功能和增強功能的完整列表，請參閱xref:whats-new-9171.adoc[ONTAP 9.17.1 的新增功能] 。
+
+* xref:../anti-ransomware/index.html[支援具有自主勒索軟體防護功能的 SAN]
++
+ARP 支援基於加密的異常檢測功能，可支援 SAN 卷，引入用於詳細熵統計的新命令，並統一了系統管理器中先前專注於 NAS 的勒索軟體防護訊息傳遞。可配置的偵測閾值和更確定性的快照保留功能為各種工作負載提供了更大的靈活性。
+
+* xref:../system-admin/use-hsts-task.html[HTTP 嚴格傳輸安全性 (HSTS) 支持]
++
+ONTAP 9.17.1 支援 Web 服務的 HTTP 嚴格傳輸安全，以便能夠在使用者瀏覽器和ONTAP之間實作安全的 HTTPS 通訊。
+
+* xref:../networking/ipsec-prepare.html[透過鏈路聚合組進行 IPsec 硬體卸載]
++
+ONTAP 9.17.1 支援鏈路聚合組的 IPsec 硬體卸載，擴展了ONTAP 9.16.1 中引入的硬體卸載支援。
+
+* xref:../networking/ipsec-prepare.html[IPsec 後量子預共享密鑰支持]
++
+ONTAP支援 IPsec 的後量子預共用金鑰，以防止未來潛在的量子電腦攻擊。
+
+* xref:../encryption-at-rest/manage-keys-barbican-task.html[OpenStack Barbican 金鑰管理器支援]
++
+ONTAP支援 OpenStack 的 Barbican 金鑰管理器用於NetApp磁碟區加密 (NVE) 金鑰。
+
+* xref:../authentication/configure-jit-elevation-task.html[即時 (JIT) 權限提升支持]
++
+ONTAP支援基於角色的存取控制 (RBAC) 的 JIT 權限提升。使用者可以請求臨時提升到已配置的角色，從而按需存取特權命令。叢集管理員可以設定哪些人可以存取 JIT 權限提升，以及何時允許存取以及允許存取多長時間。
+
+* xref:../system-admin/configure-saml-authentication-task.html[支援 Entra IdP 和 IdP 群組支援 SAML 身份驗證]
++
+ONTAP支援使用 Microsoft Entra 作為 SAML 身分提供者。此外，IdP 提供的群組資訊可以對應到ONTAP角色。
+
+* xref:../nvme/support-limitations.html#features[SnapMirror主動同步支援透過 NVMe 進行主機訪問]
++
+SnapMirror主動同步功能新增了對 VMware 工作負載的 NVMe 存取支持，支援 NVMe/TCP 和 NVMe/FC 主機訪問，適用於雙節點ONTAP叢集。 VMware
+
+* xref:../snapmirror-active-sync/index.html[ONTAP Cloud Mediator 支援SnapMirror主動同步]
++
+ONTAP Cloud Mediator 是ONTAP 9.17.1 中引入的新功能，支援SnapMirror主動同步關係。基於雲端的調解器（例如ONTAP Mediator）可充當SnapMirror主動同步關係的仲裁見證，確保透明的故障轉移，同時降低維護和管理第三個站點的操作複雜性。
+
+
 
 
 
@@ -55,7 +93,7 @@ ONTAP 9.16.1 在最新一代的 AFF A 系列和 AFF C 系列系統平台中，�
 
 * xref:../san-admin/enable-space-allocation.html[支援 NVMe 空間分配]
 +
-NVMe 命名空間現在支援空間分配（也稱為「打孔」和「取消對應」）。空間刪除功能可協助精簡配置的磁碟區和 NVMe 命名空間，在主機應用程式刪除資料時回收未使用的空間。如此可大幅提升整體儲存效率，尤其是資料週轉率高的檔案系統。
+NVMe 命名空間現在支援空間釋放（也稱為「打洞」和「取消映射」）。當主機應用程式刪除資料時，空間釋放可協助精簡配置磁碟區和 NVMe 命名空間回收未使用的空間。這大大提高了整體儲存效率，特別是對於資料週轉率高的檔案系統。
 
 * xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[FlexGroup 磁碟區的進階容量平衡]
 +
