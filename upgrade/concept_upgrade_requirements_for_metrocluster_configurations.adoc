@@ -25,7 +25,10 @@ summary: 在 MetroCluster 組態上升級 ONTAP 軟體之前，叢集必須符�
 
 * 兩個叢集中的集合體不得處於重新同步RAID狀態。
 +
-在還原過程MetroCluster 中、鏡射的集合體會重新同步。您可以使用命令來確認 MetroCluster 組態是否處於此狀態 `storage aggregate plex show -in-progress true`。如果有任何Aggregate正在同步、則在重新同步完成之前、不應執行升級。如link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-plex-show.html["指令參考資料ONTAP"^]需詳細 `storage aggregate plex show`資訊，請參閱。
+在MetroCluster修復期間，鏡像聚合會重新同步。您可以使用以下方式驗證MetroCluster配置是否處於此狀態 `storage aggregate plex show -in-progress true`命令。如果正在同步任何聚合，則不應執行升級，直到重新同步完成。
+
++
+詳細了解 `storage aggregate plex show`在link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-plex-show.html["指令參考資料ONTAP"^] 。
 
 * 在升級進行期間、議定的切換作業將會失敗。
 +
