@@ -16,69 +16,6 @@ summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、
 [role="lead"]
 SnapMirror 主動式同步（也稱為 SnapMirror Business Continuity __[SM-BC] ）可讓業務服務持續運作、即使整個站台發生故障、也能支援應用程式使用次要複本進行透明容錯移轉。不需要手動介入或自訂指令碼，即可觸發 SnapMirror 主動式同步的容錯移轉。
 
-對SnapMirror主動同步的支援因ONTAP版本的不同而有所差異：
-
-[cols="4*"]
-|===
-
-
-| 版本ONTAP | 支援的集群 | 支援的傳輸協定 | 支援的組態 
-
-
-| 9.17.1 及更高版本  a| 
-* AFF
-* ASA
-* C 系列
-* ASA r2
-
- a| 
-* iSCSI
-* FC
-* NVMe
-
- a| 
-* 非對稱主動/主動
-
-
-
-NOTE: 非對稱主動/主動不支援ASA r2 和 NVMe。有關 NVMe 支援的更多信息，請參閱link:../nvme/support-limitations.html["NVMe 組態、支援和限制"] 。
-
-* 對稱式主動 / 主動式
-
-
-
-
-| 9.15.1 及更高版本  a| 
-* AFF
-* ASA
-* C 系列
-
- a| 
-* iSCSI
-* FC
-
- a| 
-* 非對稱主動/主動
-* 對稱主動/主動 對稱主動/主動配置支援ONTAP 9.15.1 中的 2 節點叢集。 ONTAPONTAP及更高版本支援 4 節點叢集。
-
-
-
-
-| 9.9.1及更新版本  a| 
-* AFF
-* ASA
-* C系列*
-
- a| 
-* iSCSI
-* FC
-
- a| 
-非對稱主動/主動
-
-|===
-主集群和輔助集群必須是同一種類型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
-
 
 NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已與 ONTAP 產品文件整合。ONTAP SnapMirror 主動式同步文件現在包含來自 _TR-4878 的內容： SnapMirror 主動式同步。
 
@@ -178,3 +115,87 @@ RPO 是指恢復點目標、這是指在指定期間內可接受的資料遺失�
 
 .零RTO
 RTO 是指恢復時間目標、這是應用程式在中斷、故障或其他資料遺失事件後、在不中斷營運的情況下、恢復正常作業所能接受的時間量。零 RTO 表示無法接受停機時間量。
+
+
+
+== ONTAP版本支援的SnapMirror主動同步配置
+
+對SnapMirror主動同步的支援因ONTAP版本的不同而有所差異：
+
+[cols="4*"]
+|===
+
+
+| 版本ONTAP | 支援的集群 | 支援的傳輸協定 | 支援的組態 
+
+
+| 9.17.1 及更高版本  a| 
+* AFF
+* ASA
+* C 系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+* 適用於 VMware 工作負載的 NVMe
+
+ a| 
+* 非對稱主動/主動
+
+
+
+NOTE: 非對稱主動/主動不支援ASA r2 和 NVMe。有關 NVMe 支援的更多信息，請參閱link:../nvme/support-limitations.html["NVMe 組態、支援和限制"] 。
+
+* 對稱式主動 / 主動式
+
+
+
+
+| 9.16.1 及更新版本  a| 
+* AFF
+* ASA
+* C 系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非對稱主動/主動
+* 對稱主動/主動 對稱主動/主動配置支援ONTAP 9.16.1 及更高版本中的 4 節點叢集。對於ASA r2，僅支援 2 節點叢集。
+
+
+
+
+| 9.15.1 及更高版本  a| 
+* AFF
+* ASA
+* C 系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非對稱主動/主動
+* 對稱主動/主動 對稱主動/主動配置支援ONTAP 9.15.1 中的 2 節點叢集。 ONTAPONTAP及更高版本支援 4 節點叢集。
+
+
+
+
+| 9.9.1及更新版本  a| 
+* AFF
+* ASA
+* C 系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+非對稱主動/主動
+
+|===
+主集群和輔助集群必須是同一種類型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
