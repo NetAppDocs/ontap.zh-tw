@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: manage, svm, scope, ndmp, flexvol, volumes, vserver, modify 
 summary: 您可以使用NDMP選項和命令、以每個SVM為基礎來管理NDMP。您可以使用vserver services NDMP modify命令來修改NDMP選項。在SVM範圍的NDMP模式中、使用者驗證會與角色型存取控制機制整合。 
 ---
-= 在 ONTAP 中管理 FlexVol Volume 的 SVM 範圍 NDMP 模式總覽
+= 了解如何管理FlexVol磁碟區的ONTAP SVM 範圍的 NDMP 模式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -16,6 +16,128 @@ summary: 您可以使用NDMP選項和命令、以每個SVM為基礎來管理NDMP
 您可以使用在允許或不允許的通訊協定清單中新增 NDMP `vserver modify` 命令。根據預設、NDMP位於允許的傳輸協定清單中。如果將NDMP新增至不允許的傳輸協定清單、就無法建立NDMP工作階段。
 
 您可以使用選項來控制 NDMP 資料連線所建立的 LIF 類型 `-preferred-interface-role`。在建立NDMP資料連線期間、NDMP會選擇屬於此選項指定之LIF類型的IP位址。如果IP位址不屬於上述LIF類型、則無法建立NDMP資料連線。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-ndmp-modify.html["指令參考資料ONTAP"^]需詳細 `vserver services ndmp modify`資訊，請參閱。
+
+
+
+== 用於管理ONTAP SVM 範圍的 NDMP 模式的命令
+
+您可以使用 `vserver services ndmp` 管理每個儲存虛擬機器（ SVM 、先前稱為 vserver ）上 NDMP 的命令。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+啟用NDMP服務
+ a| 
+`vserver services ndmp on`
+
+[NOTE]
+====
+叢集中的所有節點必須一律啟用NDMP服務。您可以使用在節點上啟用 NDMP 服務 `system services ndmp on` 命令。根據預設、NDMP服務一律會在節點上啟用。
+
+====
+
+
+ a| 
+停用NDMP服務
+ a| 
+`vserver services ndmp off`
+
+
+
+ a| 
+顯示 NDMP 組態
+ a| 
+`vserver services ndmp show`
+
+
+
+ a| 
+修改 NDMP 組態
+ a| 
+`vserver services ndmp modify`
+
+
+
+ a| 
+顯示預設NDMP版本
+ a| 
+`vserver services ndmp version`
+
+
+
+ a| 
+顯示所有NDMP工作階段
+ a| 
+`vserver services ndmp status`
+
+
+
+ a| 
+顯示所有NDMP工作階段的詳細資訊
+ a| 
+`vserver services ndmp probe`
+
+
+
+ a| 
+終止指定的NDMP工作階段
+ a| 
+`vserver services ndmp kill`
+
+
+
+ a| 
+終止所有NDMP工作階段
+ a| 
+`vserver services ndmp kill-all`
+
+
+
+ a| 
+產生NDMP密碼
+ a| 
+`vserver services ndmp generate-password`
+
+
+
+ a| 
+顯示NDMP擴充狀態
+ a| 
+`vserver services ndmp extensions show`
+
+此命令可在進階權限層級使用。
+
+
+
+ a| 
+修改（啟用或停用）NDMP擴充狀態
+ a| 
+`vserver services ndmp extensions modify`
+
+此命令可在進階權限層級使用。
+
+
+
+ a| 
+開始記錄指定的NDMP工作階段
+ a| 
+`vserver services ndmp log start`
+
+此命令可在進階權限層級使用。
+
+
+
+ a| 
+停止記錄指定的NDMP工作階段
+ a| 
+`vserver services ndmp log stop`
+
+此命令可在進階權限層級使用。
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+services+ndmp["指令參考資料ONTAP"^]需詳細 `vserver services ndmp`資訊，請參閱。
 
 .相關資訊
 xref:commands-manage-svm-scoped-ndmp-reference.adoc[管理SVM範圍NDMP模式的命令]

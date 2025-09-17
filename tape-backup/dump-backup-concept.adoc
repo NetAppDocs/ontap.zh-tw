@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: dump, backup, qtree, file, system, data 
 summary: 傾印備份會使用預先定義的程序、將檔案系統資料從磁碟寫入磁帶。您可以備份既不是整個Volume、也不是整個qtree的Volume、qtree或子樹。 
 ---
-= 傾印備份的運作方式
+= 轉儲備份如何與ONTAP NDMP 搭配使用
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -65,3 +65,60 @@ dump 備份會將它建立的每個快照命名為 `snapshot_for_backup.n`，其
 當您從快照備份時，傾印引擎不會建立額外的快照。
 
 ====
+
+
+== 傾印引擎備份的資料類型
+
+傾印引擎可讓您將資料備份至磁帶、以防止災難或控制器中斷。除了備份檔案、目錄、qtree或整個磁碟區等資料物件之外、傾印引擎也能備份許多類型的每個檔案相關資訊。瞭解傾印引擎可以備份的資料類型、以及需要考量的限制、有助於您規劃災難恢復的方法。
+
+除了備份檔案中的資料外、傾印引擎也可視情況備份每個檔案的下列相關資訊：
+
+* UNIX GID、擁有者唯一識別碼及檔案權限
+* UNIX存取、建立及修改時間
+* 檔案類型
+* 檔案大小
+* DOS名稱、DOS屬性及建立時間
+* 存取控制清單（ACL）、內含1、024個存取控制項目（ACE）
+* qtree資訊
+* 交會路徑
+
+
+交會路徑會備份為符號連結。
+
+* LUN與LUN複製
++
+您可以備份整個LUN物件、但無法備份LUN物件內的單一檔案。同樣地、您可以還原整個LUN物件、但不能還原LUN內的單一檔案。
+
++
+[NOTE]
+====
+傾印引擎會將LUN複本備份為獨立的LUN。
+
+====
+* VM對齊的檔案
++
+早於發行版本的版本不支援VM對齊檔案的備份Data ONTAP 。
+
+
+
+[NOTE]
+====
+當快照備援LUN複製作業從Data ONTAP 以7-Mode運作的VMware移轉至ONTAP VMware時、它就會變成不一致的LUN。傾印引擎不會備份不一致的LUN。
+
+====
+當您將資料還原至磁碟區時、所還原的LUN上的用戶端I/O會受到限制。LUN限制只會在傾印還原作業完成時移除。同樣地、在SnapMirror單一檔案或LUN還原作業期間、用戶端I/O也會受到還原檔案和LUN的限制。只有在單一檔案或LUN還原作業完成時、才會移除此限制。如果在執行傾印還原或SnapMirror單一檔案或LUN還原作業的磁碟區上執行傾印備份、則備份中不會包含具有用戶端I/O限制的檔案或LUN。如果移除用戶端I/O限制、這些檔案或LUN會包含在後續的備份作業中。
+
+[NOTE]
+====
+執行於支援磁帶的LUN僅可還原至8.3版及更新版本、而無法還原至較早版本。Data ONTAP如果LUN還原至較早版本、則LUN會還原為檔案。
+
+====
+當您將SnapVault 某個不支援的次要Volume或Volume SnapMirror目的地備份到磁帶時、只會備份該磁碟區上的資料。不會備份相關的中繼資料。因此、當您嘗試還原磁碟區時、只會還原該磁碟區上的資料。有關Volume SnapMirror關係的資訊無法在備份中取得、因此無法還原。
+
+如果您傾印只有Windows NT權限的檔案、並將其還原至UNIX樣式的qtree或Volume、則該檔案會取得該qtree或Volume的預設UNIX權限。
+
+如果您傾印的檔案只有UNIX權限、並將其還原至NTFS型qtree或Volume、則該檔案會取得該qtree或Volume的預設Windows權限。
+
+其他傾印和還原會保留權限。
+
+您可以備份 VM 對齊的檔案和 `vm-align-sector` 選項。如需VM對齊檔案的詳細資訊、請參閱 link:../volumes/index.html["邏輯儲存管理"]。

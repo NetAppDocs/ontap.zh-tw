@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: dump, restore, file, write, system, data, disk 
 summary: 傾印還原會使用預先定義的程序、將檔案系統資料從磁帶寫入磁碟。 
 ---
-= 傾印還原的運作方式
+= 轉儲還原如何與ONTAP NDMP 搭配使用
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -47,3 +47,47 @@ summary: 傾印還原會使用預先定義的程序、將檔案系統資料從�
 將重複步驟2和3、直到從磁帶複製所有指定的檔案為止。ONTAP
 
 |===
+
+
+== 傾印引擎還原的資料類型
+
+當發生災難或控制器中斷時、傾印引擎會提供多種方法、讓您將所有備份的資料、從單一檔案、檔案屬性、還原至整個目錄。瞭解傾印引擎可還原的資料類型、以及何時使用哪種恢復方法、有助於將停機時間降至最低。
+
+您可以將資料還原至線上對應的LUN。不過、在還原作業完成之前、主機應用程式無法存取此LUN。還原作業完成後、應清除LUN資料的主機快取、以提供還原資料的一致性。
+
+傾印引擎可恢復下列資料：
+
+* 檔案和目錄的內容
+* UNIX檔案權限
+* ACL
++
+如果您還原的檔案僅具有NTFS qtree或Volume的UNIX檔案權限、則該檔案沒有Windows NT ACL。儲存系統只會使用此檔案的UNIX檔案權限、直到您在該檔案上建立Windows NT ACL為止。
+
++
+[NOTE]
+====
+如果您將從執行Data ONTAP 還原8.2的儲存系統備份的ACL、還原到執行Data ONTAP 速度低於1、024的ACE限制、並執行速度低於1、024的儲存系統、則會還原預設ACL。
+
+====
+* qtree資訊
++
+僅當qtree還原至磁碟區根目錄時、才會使用qtree資訊。如果 qtree 還原至較低的目錄、例如、則不會使用 qtree 資訊 `/vs1/vol1/subdir/lowerdir`，它不再是 qtree 。
+
+* 所有其他檔案和目錄屬性
+* Windows NT串流
+* LUN
++
+** LUN必須還原至磁碟區層級或qtree層級、才能保留為LUN。
++
+如果將其還原至目錄、則會將其還原為檔案、因為它不包含任何有效的中繼資料。
+
+** 7-Mode LUN會還原ONTAP 為位於VMware Volume上的LUN。
+
+
+* 7-Mode Volume可還原ONTAP 為一個不完整的功能。
+* 還原至目的地Volume的VM對齊檔案、會繼承目的地Volume的VM對齊屬性。
+* 還原作業的目的地Volume可能有具有強制或建議事項鎖定的檔案。
++
+在對此類目的地Volume執行還原作業時、傾印引擎會忽略這些鎖定。
+
+

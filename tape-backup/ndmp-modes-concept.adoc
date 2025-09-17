@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ndmp, mode, operation, backup, restore, node, level, svm 
 summary: 您可以選擇在節點層級或儲存虛擬機器（ SVM ）層級執行磁帶備份與還原作業。若要在SVM層級成功執行這些作業、必須在SVM上啟用NDMP服務。 
 ---
-= 關於NDMP操作模式
+= 了解ONTAP NDMP 操作模式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,9 +17,30 @@ summary: 您可以選擇在節點層級或儲存虛擬機器（ SVM ）層級執
 
 如果您安裝的新叢集Data ONTAP 採用了SVM範圍的NDMP模式、則NDMP預設為SVM範圍的NDMP模式。若要在節點範圍的NDMP模式中執行磁帶備份與還原作業、您必須明確啟用節點範圍的NDMP模式。
 
+
+
+== 了解節點範圍的ONTAP NDMP 模式
+
+在節點範圍的NDMP模式中、您可以在節點層級執行磁帶備份與還原作業。從8.2升級到8.3後、將繼續保留在用作執行動作的NDMP模式。Data ONTAP
+
+在節點範圍的NDMP模式中、您可以在擁有該磁碟區的節點上執行磁帶備份與還原作業。若要執行這些作業、您必須在擁有磁碟區或磁帶裝置的節點上、於裝載LIF上建立NDMP控制連線。
+
+[NOTE]
+====
+此模式已過時、將在未來的主要版本中移除。
+
+====
+
+
+== 了解 SVM 範圍的ONTAP NDMP 模式
+
+如果在SVM上啟用NDMP服務、您可以在儲存虛擬機器（SVM）層級成功執行磁帶備份與還原作業。如果備份應用程式支援駕駛室內擴充、您可以備份及還原叢集SVM不同節點上託管的所有Volume。
+
+您可以在不同的LIF類型上建立NDMP控制連線。在SVM範圍的NDMP模式中、這些LIF屬於資料SVM或管理SVM。只有在擁有此LIF的SVM上啟用NDMP服務時、才能在LIF上建立連線。
+
+資料LIF屬於資料SVM、而叢集間LIF、節點管理LIF及叢集管理LIF則屬於管理SVM。
+
+在SVM範圍的NDMP模式中、磁碟區和磁帶設備的備份與還原作業可用度取決於建立NDMP控制連線的LIF類型、以及電纜擴充的狀態。如果您的備份應用程式支援CAB擴充功能、而且磁碟區和磁帶設備共用相同的關聯性、則備份應用程式可以執行本機備份或還原作業、而非三向備份或還原作業。
+
 .相關資訊
 xref:commands-manage-node-scoped-ndmp-reference.adoc[管理節點範圍NDMP模式的命令]
-
-xref:manage-node-scoped-ndmp-mode-concept.adoc[管理FlexVol 節點範圍的NDMP模式、以利實現不受限的功能]
-
-xref:manage-svm-scoped-ndmp-mode-concept.adoc[管理SVM範圍的FlexVol NDMP模式、以利實現不受限的功能]
