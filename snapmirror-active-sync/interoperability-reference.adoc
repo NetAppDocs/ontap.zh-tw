@@ -21,7 +21,7 @@ NOTE: 如需此處未涵蓋的特定支援能力和互通性詳細資料、請�
 
 == 應用程式主機
 
-SnapMirror 主動式同步支援應用程式主機、包括 Hyper-V 、 Red Hat Enterprise Linux （ RHEL ）、 VMware 、 VMware vSphere Metro Storage Cluster （ VMSC ）、 Windows Server 、以及 ONTAP 9.14.1 、 Windows Server 容錯移轉叢集。
+SnapMirror主動同步支援虛擬機器管理程序，包括 Hyper-V、ESXi、Red Hat Enterprise Linux (RHEL)、Windows Server 等作業系統以及 vSphere Metro Storage Cluster (vMSC) 等叢集解決方案，以及從ONTAP 9.14.1 開始的 Windows Server 故障轉移叢集。
 
 
 
@@ -32,7 +32,6 @@ SnapMirror 主動同步可支援多種作業系統、包括：
 * AIX via PVR （從 ONTAP 9.11.1 開始）
 * HP-UX （從 ONTAP 9.10.1 開始）
 * Solaris 11.4 （從 ONTAP 9.10.1 開始）
-* ESXi 支援 NVMe（從ONTAP 9.17.1 開始）
 
 
 
@@ -54,7 +53,7 @@ SnapMirror 主動同步可支援多種作業系統、包括：
 從 ONTAP 9.10.1 開始，支援適用於 HP-UX 的 SnapMirror Active Sync 。
 
 .使用 HP-UX 自動進行非計畫性容錯移轉
-當主要叢集與次要叢集之間的連線中斷、且主要叢集與中介器之間的連線中斷時、隔離主叢集上的自動非計畫性容錯移轉（ AUFO ）事件可能是由雙事件故障所造成。這是罕見的事件、與其他AUFO事件不同。
+當主集群和輔助集群之間的連接遺失，且主集群和中介集群之間的連接也丟失時，雙事件故障可能會導致隔離主集群上發生自動計劃外故障轉移 (AUFO) 事件。與其他 AUFO 事件不同，這被認為是一種罕見事件。
 
 * 在這種情況下、在 HP-UX 主機上恢復 I/O 可能需要 120 秒以上的時間。視執行的應用程式而定、這可能不會導致任何I/O中斷或錯誤訊息。
 * 若要進行修正、您必須重新啟動 HP-UX 主機上的應用程式、使中斷容錯度低於 120 秒。
@@ -84,7 +83,7 @@ SnapMirror 主動式同步支援 FabricPool 上的來源和目的地磁碟區、
 
 === 連出組態
 
-在中 xref:../data-protection/supported-deployment-config-concept.html[連出組態]、您的來源磁碟區可以鏡射至 SnapMirror 主動同步目的地端點、以及一或多個 SnapMirror 非同步關係。
+在xref:../data-protection/supported-deployment-config-concept.html[連出組態]，您的來源磁碟區可以鏡像到SnapMirror活動同步目標端點和一個SnapMirror非同步關係。
 
 image:fanout-diagram.png["扇出組態的圖表"]
 

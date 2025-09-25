@@ -1,8 +1,8 @@
 ---
 permalink: mediator/host-maintenance-task.html 
 sidebar: sidebar 
-keywords: mediator, maintain, host, maintenance, package update, kernal upgrade, change hostname, change IP, self-signed certificate, self signed certificate 
-summary: 為了達到最佳效能、您應該定期維護 ONTAP Mediator 的主機 OD 。 
+keywords: mediator, maintain, host, maintenance, package update, kernel upgrade, change hostname, change IP, self-signed certificate, self signed certificate 
+summary: 定期維護ONTAP Mediator 的主機作業系統以獲得最佳效能。 
 ---
 = 維護 ONTAP Mediator 的主機作業系統
 :allow-uri-read: 
@@ -11,25 +11,25 @@ summary: 為了達到最佳效能、您應該定期維護 ONTAP Mediator 的主�
 
 
 [role="lead"]
-為了獲得最佳效能、您應該定期維護 ONTAP Mediator 的主機作業系統。
+定期維護ONTAP Mediator 的主機作業系統以獲得最佳效能。
 
 
 
 == 重新啟動主機
 
-叢集正常運作時、請重新啟動主機。當 ONTAP 調解器處於離線狀態時，叢集可能無法正確應對故障。如果需要重新開機、建議您使用服務時段。
+僅當叢集健康時才重新啟動主機。當ONTAP調解器處於離線狀態時，叢集無法回應故障。在重啟之前安排一個服務視窗。
 
-ONTAP Mediator 會在重新開機期間自動恢復、並重新輸入先前使用 ONTAP 叢集設定的關係。
+ONTAP調解器會在重新啟動期間自動恢復，並重新進入與ONTAP叢集先前配置的關係。
 
 
 
 == 主機套件更新
 
-任何程式庫或 yum 套件（核心除外）均可安全更新、但可能需要重新開機才能生效。   如果需要重新開機、建議您使用服務時段。
+更新核心以外的任何函式庫或 yum 套件。如果需要，請重新啟動主機以使變更生效。在重新啟動主機之前安排服務視窗。
 
 如果您安裝 `yum-utils` 套件中、請使用 `needs-restarting` 偵測是否有任何套件變更需要重新開機的命令。
 
-如果更新了任何 ONTAP Mediator 相依性、您應該重新開機、因為它們不會立即影響執行中的程序。
+更新ONTAP調解器相依性後重新啟動，因為變更不會立即生效。
 
 
 
@@ -40,11 +40,206 @@ SCST 必須針對正在使用的核心進行編譯。  若要更新作業系統�
 .步驟
 請執行下列步驟來升級主機作業系統核心。
 
+
+NOTE: 升級核心之前，請檢查作業系統和ONTAP Mediator 版本是否相容。有關支援的版本，請參閱link:whats-new-concept.html#os-support-matrix["作業系統支援對照表"]。
+
 . 停止 ONTAP 調解器。
-. 解除安裝 SCST 套件。  （ SCST 不提供升級機制。）
+. 卸載 SCST 包，請參閱<<執行主機維護>>。  （SCST 不提供升級機制。）
 . 升級作業系統、然後重新開機。
 . 重新安裝 SCST 套件。
 . 重新啟用 ONTAP 調解器。
+
+
+
+
+== 執行主機維護
+
+升級 VM 核心可能會導致與 SCST 模組的兼容性問題。手動卸載並重新安裝 SCST。
+
+
+
+=== 步驟 1：卸載 SCST
+
+若要解除安裝 SCST，請使用適合您的ONTAP Mediator 版本的 tar 套件。
+
+.步驟
+. 下載適當的 SCST 套件（如下表所示）並解壓縮。
++
+[cols="50,50"]
+|===
+
+
+| 對於此版本 ... | 使用此 tar 套裝組合 ... 
+
+
+ a| 
+ONTAP調解器 1.10
+ a| 
+scst-3.9.tar.gz
+
+
+
+ a| 
+ONTAP調解器 1.9.1
+ a| 
+scst-3.8.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.9
+ a| 
+scst-3.8.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.8
+ a| 
+scst-3.8.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.7
+ a| 
+scst-3.7.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.6
+ a| 
+scst-3.7.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.5
+ a| 
+scst-3.6.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.4
+ a| 
+scst-3.6.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.3
+ a| 
+scst-3.5.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.1
+ a| 
+scst-3.4.0.tar.bz2
+
+
+
+ a| 
+ONTAP Mediator 1.0
+ a| 
+scst-3.3.0.tar.bz2
+
+|===
++
+.. 從訪問開源包link:https://scst.sourceforge.net/downloads.html["SCST sourceforge 下載"^]。
+.. 選擇*下載已發布版本*。
+.. 將捆綁包提取到您的虛擬機器。
+
+
+. 在 `scst`目錄：
++
+.. `systemctl stop mediator-scst`
+.. `make scstadm_uninstall`
+.. `make iscsi_uninstall`
+.. `make usr_uninstall`
+.. `make scst_uninstall`
+.. `depmod`
+
+
+
+
+
+
+=== 步驟 2：安裝 SCST
+
+若要手動安裝 SCST，您需要用於已安裝ONTAP Mediator 版本的 SCST tar 套件（請參閱<<scst-bundle-table,SCST 表>>）。
+
+
+NOTE: 在安裝ONTAP調解器之前執行此步驟。如果您使用的 SCST 版本比ONTAP Mediator 安裝程式捆綁的版本新，則安裝程式將跳過此步驟。
+
+. 在 `scst`目錄：
++
+.. `make 2release`
+.. `make scst_install`
+.. `make usr_install`
+.. `make iscsi_install`
+.. `make scstadm_install`
+.. `depmod`
++
+[NOTE]
+====
+如果您是首次安裝並且想要預先安裝ONTAP Mediator，請在繼續下一步之前執行以下命令：
+
+`mkdir -p /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys`
+
+====
+.. `cp scst/src/certs/scst_module_key.der /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/`
+.. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
++
+
+NOTE: 如果您在首次安裝期間在ONTAP Mediator 之前預先安裝 SCST，請跳過此步驟。安裝程式應用相關的 SCST 修補程式。
+
+
+
+. 或者、如果已啟用安全開機、請在重新開機之前執行下列步驟：
++
+.. 確定每個檔名 `scst_vdisk`， `scst` ， 和 `iscsi_scst`模組：
++
+....
+[root@localhost ~]# modinfo -n scst_vdisk
+[root@localhost ~]# modinfo -n scst
+[root@localhost ~]# modinfo -n iscsi_scst
+....
+.. 決定核心版本：
++
+....
+[root@localhost ~]# uname -r
+....
+.. 使用核心對每個模組檔案進行簽名：
++
+....
+[root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
+/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.priv \
+/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der \
+_module-filename_
+....
+.. 使用韌體安裝 UEFI 金鑰。
++
+有關安裝 UEFI 金鑰的說明、請參閱：
+
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing`
+
++
+產生的 UEFI 金鑰位於：
+
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
+
+
+
+. 重新啟動系統：
++
+`reboot`
+
 
 
 
@@ -53,12 +248,12 @@ SCST 必須針對正在使用的核心進行編譯。  若要更新作業系統�
 
 .關於這項工作
 * 在安裝了 ONTAP Mediator 的 Linux 主機上執行此任務。
-* 只有安裝 ONTAP 調解器後，由於主機的主機名稱或 IP 位址發生變更而導致產生的自簽章憑證已過時時，您才可以執行此任務。
-* 當暫時自我簽署的憑證已由信任的協力廠商憑證取代之後、您不會使用此工作來重新產生憑證。  如果沒有自我簽署的憑證、將導致此程序失敗。
+* 僅當自簽章憑證因安裝ONTAP調解器後主機名稱或 IP 位址變更而過時時才執行此任務。
+* 臨時自簽名憑證被受信任的第三方憑證取代後，您就不再使用此任務來重新產生憑證。如果您沒有自簽名證書，則無法使用此程序。
 
 
 .步驟
-若要為目前主機重新產生新的暫時自我簽署憑證、請執行下列步驟：
+為目前主機建立臨時自簽名憑證：
 
 . 重新啟動 ONTAP 調解器：
 +

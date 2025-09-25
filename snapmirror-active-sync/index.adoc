@@ -14,7 +14,15 @@ summary: 使用 SnapMirror 主動式同步功能來保護應用程式與 LUN 、
 
 
 [role="lead"]
-SnapMirror 主動式同步（也稱為 SnapMirror Business Continuity __[SM-BC] ）可讓業務服務持續運作、即使整個站台發生故障、也能支援應用程式使用次要複本進行透明容錯移轉。不需要手動介入或自訂指令碼，即可觸發 SnapMirror 主動式同步的容錯移轉。
+SnapMirror主動同步，也稱為SnapMirror業務連續性 (SM-BC)，可讓業務服務在整個網站發生故障時繼續運作。該技術使應用程式能夠無縫地故障轉移到輔助副本，而無需人工幹預或自訂腳本。
+
+NetApp SnapMirror主動同步 (SM-as) 旨在提供更細微、更低成本、更易於使用的應用程式層級保護，並具有自動故障轉移功能。 SnapMirror主動同步使關鍵任務業務服務即使在整個站點發生故障時也能繼續運作。借助SnapMirror主動同步，您現在可以在不同地理位置的網站之間同步複製應用程式的多個磁碟區（透過將它們新增至一致性群組）。當主副本發生中斷時，您可以自動故障轉移到輔助副本，從而實現第一層應用程式的業務連續性。
+
+一些國家針對金融機構的規定要求企業定期從其二級資料中心提供服務。  SnapMirror主動同步及其高可用性叢集可實現這些資料中心切換，從而實現業務連續性。
+
+從ONTAP 9.9.1 開始， SnapMirror主動同步在AFF和全快閃 SAN 陣列 (ASA) 叢集上支援。主群集和輔助群集必須是同一種類型： ASA、 ASA r2 或AFF。  SnapMirror主動同步使用 iSCSI 或 FCP LUN 或 NVMe 命名空間保護應用程式。
+
+SnapMirror主動同步支援對稱和非對稱配置。 ONTAP 9.15.1 中引入了對對稱主動/主動的支援。對稱主動/主動配置允許受保護 LUN 的兩個副本透過雙向同步複製執行讀寫 I/O 操作，從而使每個 LUN 副本能夠滿足本地 I/O 請求。
 
 
 NOTE: 自 2024 年 7 月起、先前以 PDF 格式發佈的技術報告內容已與 ONTAP 產品文件整合。ONTAP SnapMirror 主動式同步文件現在包含來自 _TR-4878 的內容： SnapMirror 主動式同步。
@@ -41,7 +49,7 @@ SnapMirror主動同步功能可保護您的資料 LUN 或 NVMe 命名空間，�
 
 == 主要概念
 
-SnapMirror主動同步使用一致性群組和ONTAP調解器（或從ONTAP 9.17.1 開始使用ONTAP雲端調解器）來確保即使在災難的情況下也能複製和提供資料。在規劃SnapMirror主動同步部署時，請務必了解SnapMirror主動同步及其架構中的基本概念。
+SnapMirror主動同步使用一致性群組來確保您的資料被複製。 SnapMirror主動同步使用ONTAP Mediator，或從ONTAP 9.17.1 開始使用 Cloud Mediator 進行自動故障轉移，確保在災難發生時能夠提供資料。在規劃SnapMirror主動同步部署時，請務必了解SnapMirror主動同步及其架構中的基本概念。
 
 .不對稱性和對稱性
 在對稱主動/主動配置中，兩個站點均可存取本地儲存以進行主動 I/O。對稱主動/主動配置針對叢集應用程式進行了最佳化，包括 VMware vMSC、Windows 故障轉移叢集（含 SQL）以及 Oracle RAC。
@@ -83,6 +91,9 @@ ONTAP Cloud Mediator 從ONTAP 9.17.1 開始可用。 ONTAPONTAP Mediator 提供�
 .規劃的容錯移轉
 一種手動操作、可變更 SnapMirror 主動式同步關係中的複本角色。主要站台會變成次要站台、次要站台則成為主要站台。
 
+.自動非計畫性容錯移轉（AUFO）
+一種自動操作、可執行容錯移轉至鏡射複本。此作業需要 ONTAP Mediator 協助、以偵測主要複本是否無法使用。
+
 .一級和一級偏差
 SnapMirror 主動式同步採用一項主要原則、優先選用主要複本、以便在網路分割區中提供 I/O 服務。
 
@@ -90,13 +101,10 @@ primer-bias 是一種特殊的仲裁實作、可改善 SnapMirror 主動式同�
 
 從 ONTAP 9.15.1 開始、 SnapMirror 主動同步支援主要優先與主要偏置。主要複本會在 System Manager 中指定、並以 REST API 和 CLI 輸出。
 
-.自動非計畫性容錯移轉（AUFO）
-一種自動操作、可執行容錯移轉至鏡射複本。此作業需要 ONTAP Mediator 協助、以偵測主要複本是否無法使用。
-
 .不同步（OOS）
 當應用程式 I/O 未複寫到次要儲存系統時、會報告為 ** 不同步 ** 。不同步狀態表示次要磁碟區不會與主要（來源）同步、也不會發生 SnapMirror 複寫。
 
-如果鏡射狀態為 `Snapmirrored`，表示由於不受支援的作業而導致傳輸失敗或失敗。
+如果鏡像狀態是 `Snapmirrored`，這表明SnapMirror關係已建立且資料傳輸已完成，這意味著目標磁碟區與來源磁碟區保持同步。
 
 SnapMirror 主動式同步支援自動重新同步、讓複本恢復至不同步狀態。
 

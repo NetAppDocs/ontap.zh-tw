@@ -34,7 +34,7 @@ summary: 從功能完整的9.12.1開始ONTAP 、您可以FlexGroup 在不中斷�
 
 * 從系統轉換為FlexVol FlexGroup
 +
-建議您不要在FlexGroup 完成從功能到功能的轉換後、使用自動的功能來重新平衡功能FlexGroup FlexVol 。您可以輸入命令，改用 ONTAP 9.10.1 及更新版本提供的具破壞性回溯性檔案移動功能 `volume rebalance file-move`。如link:https://docs.netapp.com/us-en/ontap-cli/volume-rebalance-file-move-start.html["指令參考資料ONTAP"^]需詳細 `volume rebalance file-move start`資訊，請參閱。
+建議您在FlexVol到FlexGroup轉換後不要使用自動FlexGroup重新平衡。相反，您可以使用 `volume rebalance file-move start`指令，在ONTAP 9.10.1 及更高版本中可用。預設情況下，此操作不會造成中斷(`-is-disruptive false`）。如果某些繁忙檔案無法移動，您可以以中斷模式重新執行命令(`-is-disruptive true`) 在計畫的維護時段內。詳細了解 `volume rebalance file-move start`在link:https://docs.netapp.com/us-en/ontap-cli/volume-rebalance-file-move-start.html["指令參考資料ONTAP"^] 。
 
 +
 使用自動 FlexGroup 重新平衡功能重新平衡可能會在移動大量檔案時降低效能、例如執行 FlexVol 至 FlexGroup 轉換時、 FlexVol 磁碟區上最多有 50% 至 85% 的資料會移至新的組成項目。

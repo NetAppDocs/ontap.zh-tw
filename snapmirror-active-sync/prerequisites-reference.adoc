@@ -260,8 +260,10 @@ ASA r2
 
 == 授權
 
-* SnapMirror 同步授權必須套用至兩個叢集。
-* SnapMirror 授權必須套用至兩個叢集。
+以下SnapMirror許可證是作為ONTAP One 許可證套件的一部分提供，並且必須在兩個叢集上應用：
+
+* SnapMirror 同步
+* SnapMirror
 +
 
 NOTE: 如果您的 ONTAP 儲存系統是在 2019 年 6 月之前購買、請參閱 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP -主要授權金鑰"^] 取得所需的 SnapMirror 同步授權。
@@ -294,11 +296,12 @@ SnapMirror主動同步不支援以下 NVMe 協定：
 
 +
 ** 4 節點對稱主動/主動配置
+** 非對稱主動/主動配置
 ** 一致性組大小的變化
 +
 當使用具有SnapMirror活動同步的 NVMe 協定時，無法擴展或縮小一致性組。
 
-** 不支援同一一致性組中的 LUN 和命名空間共存。
+** 同一一致性組中的 LUN 和命名空間共存。
 
 
 
@@ -307,7 +310,7 @@ SnapMirror主動同步不支援以下 NVMe 協定：
 
 == IPSpace
 
-SnapMirror 主動同步對於叢集對等關係而言、需要預設的 IPspace 。不支援自訂IPspace。
+SnapMirror主動同步需要使用預設 IP 空間來建立叢集對等關係。不支援自訂 IP 空間。
 
 
 
@@ -330,8 +333,8 @@ SnapMirror 主動式同步磁碟區 * 不 * 支援 NTFS 安全樣式。
 
 == 其他先決條件
 
-* 讀寫目的地磁碟區不支援 SnapMirror 主動同步關係。在使用讀寫磁碟區之前、您必須先建立磁碟區層級的SnapMirror關係、然後刪除關係、將其轉換成DP磁碟區。如需詳細資訊、請參閱 link:convert-active-sync-task.html["將現有的 SnapMirror 關係轉換成 SnapMirror 主動同步"]。
-* 使用 SnapMirror Active Sync 的儲存 VM 無法以用戶端計算的方式加入 Active Directory 。
+* 在ONTAP 9.15.1 之前的版本中，讀寫目標磁碟區（在非對稱主動-主動模式下從 DP 轉換為讀寫的磁碟區）不支援SnapMirror主動同步關係。在使用讀寫磁碟區之前，您必須先建立磁碟區級SnapMirror關係式（非同步或同步），然後刪除該關係，將其轉換為 DP 磁碟區。有關詳細信息，請參閱link:convert-active-sync-task.html["將現有的 SnapMirror 關係轉換成 SnapMirror 主動同步"] 。
+* 使用SnapMirror主動同步的儲存虛擬機器無法以客戶端電腦加入 Active Directory。
 
 
 
