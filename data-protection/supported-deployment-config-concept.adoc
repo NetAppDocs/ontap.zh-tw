@@ -49,6 +49,21 @@ SnapMirror支援_鏡射鏡射_、_鏡射-保存庫_、_資料保存鏡射_和_�
 
 鏡射鏡射鏡射串聯部署包含一系列關係、其中來源磁碟區會鏡射至次要磁碟區、而次要磁碟區則會鏡射至第三個磁碟區。如果次要Volume無法使用、您可以在不執行新的基礎傳輸的情況下、同步主要和第三個Volume之間的關係。
 
+在級聯磁碟區關係中，所有版本的ONTAP 9 中，僅在級聯的最終SnapMirror目標磁碟區上支援長期保留 (LTR) 快照。在級聯中的任何中間磁碟區上啟用 LTR 快照會導致錯過備份和快照。如果您有一個不支援的配置，其中在級聯的任何中間磁碟區上啟用了 LTR 快照，請聯絡技術支援和參考link:https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_(LTR)_snapshots_enabled_is_not_supported["知識庫文章不支援級聯啟用了長期保留 (LTR) 快照的捲"^]尋求幫助。
+
+以下ONTAP版本不允許您在級聯中的任何磁碟區上啟用 LTR 快照（最終SnapMirror目標磁碟區除外）。
+
+* 9.15.1 及更高版本
+* 9.14.1P2 和 P4-P14
+* 9.13.1P9-P17
+* 9.12.1 P12-P19
+* 9.11.1P15-P20
+* 9.10.1P18-P20
+* 9.9.1P20
+
+
+詳細了解link:long-term-retention-snapshots-concept.html["長期保留快照"^] 。
+
 從 ONTAP 9 6 開始、鏡射鏡射串聯部署支援 SnapMirror 同步關係。只有主要和次要磁碟區可以處於 SnapMirror 同步關係中。二線磁碟區與三線磁碟區之間的關係必須是非同步的。
 
 image:sm-mirror-mirror-cascade.png["SnapMirror部署：鏡射鏡射鏡射串聯鏈"]

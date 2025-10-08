@@ -11,7 +11,24 @@ summary: 如果您的叢集上已設定 SnapMirror 串聯關係、則可能需�
 
 
 [role="lead"]
-如果您要從 ONTAP 9.9.1 或更早版本升級至 ONTAP 9.10.1 或更高版本、且叢集上已設定 SnapMirror 串聯關係、則在升級之前、您應該停用串聯中磁碟區的長期保留（ LTR ）快照。ONTAP 9.10.1 或更新版本不支援在啟用 LTR 快照的情況下串聯磁碟區。升級後使用此組態可能會導致遺失備份和快照。
+在級聯磁碟區關係中，所有版本的ONTAP 9 中，僅在級聯的最終SnapMirror目標磁碟區上支援長期保留 (LTR) 快照。在級聯中的任何中間磁碟區上啟用 LTR 快照會導致錯過備份和快照。
+
+詳細了解link:../data-protection/long-term-retention-snapshots-concept.html["長期保留快照"^] 。
+
+如果您有一個不支援的配置，其中在級聯的任何中間磁碟區上啟用了 LTR 快照，請聯絡技術支援和參考link:https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_(LTR)_snapshots_enabled_is_not_supported["知識庫文章不支援級聯啟用了長期保留 (LTR) 快照的捲"^]尋求幫助。
+
+以下ONTAP版本不允許您在級聯中的任何磁碟區上啟用 LTR 快照（最終SnapMirror目標磁碟區除外）。
+
+* 9.15.1 及更高版本
+* 9.14.1P2 和 P4-P14
+* 9.13.1P9-P17
+* 9.12.1 P12-P19
+* 9.11.1P15-P20
+* 9.10.1P18-P20
+* 9.9.1P20
+
+
+在從允許您在級聯中間磁碟區上啟用 LTR 快照的ONTAP版本升級到封鎖該功能的ONTAP版本之前，您需要停用 LTR 快照以避免錯過備份和快照。
 
 您必須在下列案例中採取行動：
 
