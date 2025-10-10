@@ -1,0 +1,89 @@
+---
+permalink: volumes/increase-volume-active-file-system-size.html 
+sidebar: sidebar 
+keywords: increase, active, file system, volume, cpu offload, compression offload, dedicated offload processor, storage efficiency, compression 
+summary: 如果您想要將磁碟區從不支援專用卸載處理器儲存效率的平台移至支援專用卸載儲存效率的平台，則應在移動磁碟區之前增加磁碟區的活動檔案系統的大小，以防止磁碟區耗盡空間。 
+---
+= 從 8k 自適應壓縮遷移之前增加ONTAP磁碟區的活動檔案系統
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支援8k自適應壓縮的平台在磁碟區層級節省空間。 AFF C 系列平台和支援 32k 壓縮的平台可在聚合層級節省空間。將磁碟區從 8k 自適應壓縮遷移到AFF C 系列平台或具有 32k 壓縮的平台時，您需要透過 8k 壓縮節省來增加磁碟區的活動檔案系統的大小。這可以防止磁碟區移動期間耗盡可用空間。
+
+以下系統支援 32k 壓縮：
+
+[cols="2"]
+|===
+| 平台 | 版本ONTAP 
+
+
+ a| 
+* AFF A1K
+* AFF A90
+* AFF A70
+* FAS90
+* FAS70
+
+| 9.15.1 或更新版本 
+
+
+ a| 
+* AFF A50
+* AFF A30
+
+| 9.16.1 或更新版本 
+|===
+詳細了解link:../concepts/builtin-storage-efficiency-concept.html["支援 32k 壓縮的AFF和FAS平台"] 。
+
+查看link:https://hwu.netapp.com/["Hardware Universe"^]以取得AFF C 系列平台的完整清單。
+
+.關於這項工作
+如果您使用磁碟區移動操作遷移數據，請執行下列步驟。如果您使用SnapMirror操作遷移數據，則無需手動增加活動檔案系統的大小。  SnapMirror目標磁碟區預設使用磁碟區自動調整大小，因此由於在聚合層而不是磁碟區層實現壓縮節省，預計不會耗盡空間。
+
+.開始之前
+如果您的磁碟區上未啟用邏輯空間報告和強制執行，您可以選擇透過設定 `-is-space-reporting-logical`和 `-is-space-enforcement-logical`參數為*true*。在磁碟區移動之前啟用這些設定可以幫助您評估磁碟區是否足夠大，以適應從 8k 壓縮轉換時磁碟區層的壓縮節省損失。您應該在磁碟區上啟用這些設定。如果在 SVM 層級啟用這些設置，則它們僅適用於新建立的磁碟區。
+
+.步驟
+. 驗證磁碟區的目前大小和快照保留：
++
+[source, cli]
+----
+volume show-space
+----
+. 檢查卷的壓縮空間節省：
++
+[source, cli]
+----
+volume show -vserver -volume -fields compression-space-saved
+----
+. 將磁碟區的活動檔案系統大小增加所示的量 `compression-space-saved`加上快照保留。
++
+[source, cli]
+----
+volume size -vserver <vserver_name> -volume <volume_name> -new-size +<size>
+----
++
+.範例
+如果磁碟區為 100GB，且具有 20% 的快照保留；則活動檔案系統為 80GB，快照保留為 20GB。要將活動檔案系統增加 20GB，必須將總磁碟區大小增加 25GB；也就是說，20GB 用於活動檔案系統，5GB（20%）用於快照保留。
+
++
+[listing]
+----
+volume size -vserver svm1 -volume volx -size +20GB
+----
+. 驗證卷的大小是否增加：
++
+[source, cli]
+----
+volume show -vserver <vserver_name> -volume <volume_name> -fields size
+----
+
+
+.結果
+您的磁碟區的活動檔案系統大小已增加，您已準備好移動該磁碟區。
+
+.接下來呢？
+執行link:move-volume-task.html["Volume搬移"]遷移您的資料。

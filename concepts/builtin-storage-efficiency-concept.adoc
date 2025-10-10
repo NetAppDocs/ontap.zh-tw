@@ -1,19 +1,22 @@
 ---
 permalink: concepts/builtin-storage-efficiency-concept.html 
 sidebar: sidebar 
-keywords: storage efficiency, built-in, platform, controller, offload 
-summary: 從 ONTAP 9.15.1 開始、 AFF A70 、 AFF A90 和 AFF A1K 平台內建自動啟用的儲存效率和資料壓縮功能。 
+keywords: storage efficiency, built-in, platform, controller, offload, aff a1k, aff a90, aff a70, fas90, fas70, aff a50, aff a30 
+summary: 某些AFF和FAS平台預設啟用專用卸載處理器儲存效率。這些平台不使用對溫度敏感的儲存效率。壓縮無需等待資料冷卻即可開始，並使用專用的卸載處理器執行。 
 ---
-= CPU 或專用卸載處理器儲存效率
+= 了解ONTAP專用卸載處理器的儲存效率
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-某些AFF和FAS平台上預設啟用 CPU 或專用卸載處理器儲存效率。這些平台不使用對溫度敏感的儲存效率。壓縮無需等待資料冷卻即可開始，並使用主 CPU 或專用卸載處理器執行。這些平台還使用連續物理塊的順序打包來進一步提高壓縮資料的儲存效率。
+專用卸載處理器儲存效率執行連續實體區塊的順序打包，並使用專用卸載處理器進行 32k 資料壓縮。使用 32k 壓縮可以在聚合層級實現空間節省，這與使用 8k 自適應壓縮的平台不同，後者在磁碟區層級實現空間節省。使用專用卸載處理器儲存效率的平台不使用溫度敏感儲存效率 (TSSE)，這意味著壓縮不是基於熱資料或冷資料。這樣可以立即節省空間，而不會對性能產生任何影響。
 
-以下平台和ONTAP版本提供 CPU 或專用卸載處理器儲存效率：
+以下平台和ONTAP版本預設啟用專用卸載處理器儲存效率。
+
+
+NOTE: AFF A20 平台不支援專用卸載處理器的儲存效率。對於AFF A20 平台，使用SnapMirror技術遷移的資料會使用主 CPU 自動轉換為 32k 內聯壓縮。
 
 [cols="2"]
 |===
@@ -36,9 +39,6 @@ summary: 從 ONTAP 9.15.1 開始、 AFF A70 、 AFF A90 和 AFF A1K 平台內建
 
 | 9.16.1 或更新版本 
 |===
-
-NOTE: 使用SnapMirror技術遷移的資料會在AFF A20 平台上自動轉換為 32k 線內壓縮。但是AFF A20 平台不支援 CPU 或專用卸載處理器儲存效率。
-
 對於以下平台，儲存效率會自動啟用，無需配置。這適用於所有新建立的精簡配置磁碟區和現有數據，包括從其他平台移動的磁碟區。無論空間保證設定如何，都會啟用重複資料刪除。壓縮和資料壓縮都要求將空間保證設為無。使用磁碟區移動或SnapMirror技術遷移的資料會自動轉換為 32k 內聯壓縮。
 
 * AFF A1K

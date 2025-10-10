@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: move, volume 
 summary: 將 FlexVol volume 移至同一儲存虛擬機器（ SVM ）內的不同集合體、節點或兩者、以平衡儲存容量。 
 ---
-= 移動Volume
+= 移動ONTAP卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -18,12 +18,32 @@ summary: 將 FlexVol volume 移至同一儲存虛擬機器（ SVM ）內的不�
 
 您必須是叢集管理員才能執行此工作。
 
-.步驟
-. 如果您要移動資料保護鏡像，但尚未初始化鏡射關係，請使用命令初始化鏡射關係 `snapmirror initialize`。如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^]需詳細 `snapmirror initialize`資訊，請參閱。
+.開始之前
+* 如果您要將使用 8K 自適應壓縮的捲移動到以下平台之一，您應該link:increase-volume-active-file-system-size.html["增加卷的活動文件系統的大小"]在移動音量之前。這些平台上的資料壓縮方式不同，因此節省的空間是在聚合層級而不是磁碟區層級。由於這種差異，磁碟區的活動檔案系統的大小應該會增加 8k 壓縮節省量，以防止磁碟區在磁碟區移動期間耗盡空間。
++
+** 支援專用卸載處理器儲存效率的AFF和FAS平台
++
+詳細了解支援以下功能的AFF和FAS平台link:../concepts/builtin-storage-efficiency-concept.html["專用卸載處理器儲存效率"]。
+
+** AFF C 系列平台
++
+查看link:https://hwu.netapp.com/["Hardware Universe"^]了解 C 系列平台的完整清單。
+
+
+
+* 如果您正在移動資料保護鏡像且尚未初始化鏡像關係，請使用 `snapmirror initialize`命令初始化鏡像關係。詳細了解 `snapmirror initialize`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^] 。
 +
 必須先初始化資料保護鏡射關係、才能移動其中一個磁碟區。
 
-. 使用來判斷可將磁碟區移至的集合體 `volume move target-aggr show` 命令。
+
+
+.步驟
+. 確定可以將磁碟區移動到的聚合：
++
+[source, cli]
+----
+volume move target-aggr show
+----
 +
 您選取的Aggregate必須有足夠的磁碟區空間、也就是可用的大小大於您要移動的磁碟區。
 
@@ -46,8 +66,21 @@ node12a_aggr4    10.36GB          hdd
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-target-aggr-show.html["指令參考資料ONTAP"^]需詳細 `volume move target-aggr show`資訊，請參閱。
 
-. 使用命令執行驗證檢查，確認磁碟區可以移至預期的 Aggregate 。 `volume move start -perform-validation-only`如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["指令參考資料ONTAP"^]需詳細 `volume move start`資訊，請參閱。
-. 使用移動 Volume `volume move start` 命令。
+. 執行驗證檢查以確認磁碟區可以移動到目標聚合：
++
+[source, cli]
+----
+volume move start -perform-validation-only
+----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["指令參考資料ONTAP"^]需詳細 `volume move start`資訊，請參閱。
+
+. 移動音量：
++
+[source, cli]
+----
+volume move start
+----
 +
 下列命令可將VS2 SVM上的user_max Volume移至node12a_aggr3 Aggregate。此移動會以背景程序執行。
 
@@ -57,7 +90,12 @@ node12a_aggr4    10.36GB          hdd
 cluster1::> volume move start -vserver vs2 -volume user_max
 -destination-aggregate node12a_aggr3
 ----
-. 使用判斷 Volume Move 作業的狀態 `volume move show` 命令。
+. 確定磁碟區移動操作的狀態：
++
+[source, cli]
+----
+volume move show
+----
 +
 以下範例顯示完成複寫階段且處於轉換階段的Volume Move狀態：
 
@@ -75,6 +113,16 @@ vs2       user_max   healthy  cutover     -                -
 
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-move-show.html["指令參考資料ONTAP"^]需詳細 `volume move show`資訊，請參閱。
+
+. 或者，查看壓縮節省：
++
+[source, cli]
+----
+volume show-footprint -vserver <SVM> -volume <volume_name>
+----
++
+
+NOTE: 透過在磁碟區移動完成後不久自動執行的後處理轉換掃描，可以實現額外的聚合級節省。
 
 
 
