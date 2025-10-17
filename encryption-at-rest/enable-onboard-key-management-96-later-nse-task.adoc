@@ -18,7 +18,7 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 .關於這項工作
 您必須執行 `security key-manager onboard enable` 每次將節點新增至叢集時的命令。在 MetroCluster 組態中、您必須執行 `security key-manager onboard enable` 先在本機叢集上執行 `security key-manager onboard sync` 在遠端叢集上、使用相同的複雜密碼。
 
-深入瞭解 `security key-manager onboard enable`及 `security key-manager onboard sync` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["指令參考資料ONTAP"^]。
+詳細了解 `security key-manager onboard enable`和 `security key-manager onboard sync`在link:https://docs.netapp.com/us-en/ontap-cli//security-key-manager-onboard-enable.html["指令參考資料ONTAP"^]。
 
 根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。除了在 MetroCluster 中、您可以使用 `cc-mode-enabled=yes` 選項要求使用者在重新開機後輸入複雜密碼。
 
@@ -32,7 +32,7 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 * 系統映像更新會使用NetApp RSA-3072程式碼簽署憑證搭配SHA-384程式碼簽署摘要、來檢查映像完整性、而非一般的NetApp RSA-2048程式碼簽署憑證和SHA-256程式碼簽署摘要。
 +
-升級命令會檢查各種數位簽章、以確認映像內容未遭竄改或毀損。如果驗證成功、映像更新程序會繼續下一步；否則映像更新會失敗。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["指令參考資料ONTAP"^]需詳細 `cluster image`資訊，請參閱。
+升級命令透過檢查各種數位簽名來驗證影像內容是否已更改或損壞。如果驗證有效，映像更新將進入下一步。如果驗證無效，則影像更新失敗。詳細了解 `cluster image`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["指令參考資料ONTAP"^]。
 
 
 
@@ -46,7 +46,7 @@ NOTE: Onboard Key Manager可將金鑰儲存在揮發性記憶體中。當系統�
 link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
 
 * 您必須是叢集管理員才能執行此工作。
-* 設定Onboard Key Manager之前、您必須先設定MetroCluster 這個靜態環境。
+* 在設定Onboard Key Manager之前、您必須先設定MetroCluster 這個靜態環境。
 
 
 .步驟
@@ -61,21 +61,13 @@ NOTE: 設 `cc-mode-enabled=yes`為要求使用者在重新開機後輸入金鑰�
 +
 下列範例會在叢集1上啟動金鑰管理程式設定命令、而不要求在每次重新開機後輸入通關密碼：
 
-+
-[listing]
-----
-cluster1::> security key-manager onboard enable
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
-Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
-----
-. 在通關密碼提示字元中、輸入32到256個字元之間的通關密碼、或輸入「'cc-mode'」（64到256個字元之間的通關密碼）。
+. 輸入一個介於 32 到 256 個字元之間的密碼，或對於“`cc-mode`”，輸入一個介於 64 到 256 個字元之間的密碼。
 +
 
 NOTE: 如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管理程式設定作業再次顯示通關密碼提示之前、會有五秒鐘的延遲。
 
 . 在通關密碼確認提示下、重新輸入通關密碼。
-. 確認已建立驗證金鑰：
+. 驗證系統是否建立了身份驗證金鑰：
 +
 `security key-manager key query -node node`
 
@@ -84,44 +76,19 @@ NOTE: 如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管�
 NOTE: 命令會 `security key-manager key query`取代 `security key-manager query key`命令。
 
 +
-下列範例會驗證是否已為建立驗證金鑰 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> security key-manager key query
-       Vserver: cluster1
-   Key Manager: onboard
-          Node: node1
-
-Key Tag                               Key Type  Restored
-------------------------------------  --------  --------
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-
-       Vserver: cluster1
-   Key Manager: onboard
-          Node: node2
-
-Key Tag                               Key Type  Restored
-------------------------------------  --------  --------
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-node2                                 NSE-AK    yes
-    Key ID: <id_value>
-----
-+
-如link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html?q=security+key-manager+key+query["指令參考資料ONTAP"^]需詳細 `security key-manager key query`資訊，請參閱。
+如link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["指令參考資料ONTAP"^]需詳細 `security key-manager key query`資訊，請參閱。
 
 
 
 .完成後
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
 
-所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。您也應該手動備份資訊、以便在發生災難時使用。
+系統會自動將關鍵管理資訊備份到叢集的複製資料庫（RDB）。您還應該手動備份此資訊以用於災難復原。
 
 .相關資訊
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全金鑰管理程式設定"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["叢集影像命令"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-enable.html["安全金鑰管理員外部啟用"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["安全金鑰管理員金鑰查詢"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["安全金鑰管理員板載啟用"^]
+* link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
 

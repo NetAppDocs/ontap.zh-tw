@@ -97,10 +97,8 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 . 在 SVM 上啟用 Cloud KMS
 `security key-manager external gcp enable -vserver _svm_name_ -project-id _project_id_-key-ring-name _key_ring_name_ -key-ring-location _key_ring_location_ -key-name _key_name_`
 出現提示時、請使用服務帳戶私密金鑰輸入 JSON 檔案的內容
-. 確認 Cloud KMS 已設定正確的參數：
-`security key-manager external gcp show vserver _svm_name_`
-狀態 `kms_wrapped_key_status` 將會是 `“UNKNOWN”` 如果尚未建立加密磁碟區、
-如果服務連線能力不正常、請透過資料SVM LIF建立與GCP金鑰管理服務的連線。
+. 驗證 Cloud KMS 是否配置了正確的參數：
+`security key-manager external gcp show vserver _svm_name_`現狀 `kms_wrapped_key_status`將 `"UNKNOWN"`如果沒有建立加密磁碟區。如果服務可達性不正常，則透過資料 SVM LIF 建立與 GCP 金鑰管理服務的連線。
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external+gcp["指令參考資料ONTAP"^]需詳細 `security key-manager external gcp`資訊，請參閱。
 

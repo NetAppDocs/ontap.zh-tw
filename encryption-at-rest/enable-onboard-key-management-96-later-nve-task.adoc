@@ -6,8 +6,6 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 ---
 = 在ONTAP 9.6 及更高版本中啟用 NVE 的板載金鑰管理
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -18,13 +16,13 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 如果您有 MetroCluster 組態、則必須執行 `security key-manager onboard enable` 命令先在本機叢集上執行、然後執行 `security key-manager onboard sync` 在遠端叢集上使用相同密碼的命令。當您執行時 `security key-manager onboard enable` 本機叢集的命令、然後在遠端叢集上進行同步處理、您不需要執行 `enable` 從遠端叢集再次執行命令。
 
-深入瞭解 `security key-manager onboard enable`及 `security key-manager onboard sync` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["指令參考資料ONTAP"^]。
+詳細了解 `security key-manager onboard enable`和 `security key-manager onboard sync`在link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["指令參考資料ONTAP"^]。
 
 根據預設、當節點重新開機時、您不需要輸入金鑰管理程式密碼。您可以使用 `cc-mode-enabled=yes` 選項要求使用者在重新開機後輸入複雜密碼。
 
 如果您已設定、則適用於 NVE `cc-mode-enabled=yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。適用於 `volume create`，您不需要指定 `-encrypt true`。適用於 `volume move start`，您不需要指定 `-encrypt-destination true`。
 
-設定ONTAP 靜止資料加密時、若要符合商業分類解決方案（CSfC）的要求、您必須搭配NVE使用NSE、並確保在「一般條件」模式中啟用「內建金鑰管理程式」。請參閱 link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSfC解決方案簡介"^] 如需CSfC的詳細資訊、
+在設定ONTAP資料加密時，為了滿足商業機密解決方案 (CSfC) 的要求，您必須將 NSE 與 NVE 一起使用，並確保在通用標準模式下啟用板載金鑰管理員。看link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSfC解決方案簡介"^]。
 
 [NOTE]
 ====
@@ -32,17 +30,17 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 
 * 系統會監控在「一般準則」模式下運作時、連續嘗試失敗的叢集密碼。
 +
-如果您在開機時未輸入正確的叢集密碼、則不會掛載加密的磁碟區。若要修正此問題、您必須重新啟動節點、然後輸入正確的叢集密碼。一旦開機、系統最多可連續5次嘗試在24小時內、針對任何需要叢集密碼作為參數的命令、正確輸入叢集密碼。如果達到限制（例如、您連續5次未正確輸入叢集密碼）、則必須等待24小時逾時期間、或是重新啟動節點、才能重設限制。
+如果 5 次輸入叢集密碼失敗，請等待 24 小時或重新啟動節點以重設限制。
 
 * 系統映像更新會使用NetApp RSA-3072程式碼簽署憑證搭配SHA-384程式碼簽署摘要、來檢查映像完整性、而非一般的NetApp RSA-2048程式碼簽署憑證和SHA-256程式碼簽署摘要。
 +
-升級命令會檢查各種數位簽章、以確認映像內容未遭竄改或毀損。如果驗證成功、映像更新程序會繼續下一步；否則映像更新會失敗。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["指令參考資料ONTAP"^]需詳細 `cluster image`資訊，請參閱。
+升級命令透過檢查各種數位簽名來驗證影像內容是否已更改或損壞。如果驗證成功，系統將繼續進行影像更新過程的下一步；否則，影像更新失敗。詳細了解 `cluster image`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["指令參考資料ONTAP"^]。
 
 
 
 ====
 
-NOTE: Onboard Key Manager可將金鑰儲存在揮發性記憶體中。當系統重新開機或停止時、揮發性記憶體內容會被清除。在正常操作條件下、系統停止時、揮發性記憶體內容將在30秒內清除。
+NOTE: 板載密鑰管理器將密鑰儲存在揮發性記憶體中。當系統重新啟動或停止時，揮發性記憶體的內容將會被清除。系統停止後 30 秒內清除揮發性記憶體。
 
 .開始之前
 * 您必須是叢集管理員才能執行此工作。
@@ -60,18 +58,7 @@ NOTE: Onboard Key Manager可將金鑰儲存在揮發性記憶體中。當系統�
 設定 `cc-mode-enabled=yes` 要求使用者在重新開機後輸入金鑰管理密碼。如果您已設定、則適用於 NVE `cc-mode-enabled=yes`、您使用建立的磁碟區 `volume create` 和 `volume move start` 命令會自動加密。。 `- cc-mode-enabled` MetroCluster 組態不支援此選項。    。 `security key-manager onboard enable` 命令會取代 `security key-manager setup` 命令。
 
 ====
-+
-下列範例會在叢集1上啟動金鑰管理程式設定命令、而不要求在每次重新開機後輸入通關密碼：
-
-+
-[listing]
-----
-cluster1::> security key-manager onboard enable
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
-Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
-----
-. 在通關密碼提示字元中、輸入32到256個字元之間的通關密碼、或輸入「'cc-mode'」（64到256個字元之間的通關密碼）。
+. 輸入一個介於 32 到 256 個字元之間的密碼，或對於“`cc-mode`”，輸入一個介於 64 到 256 個字元之間的密碼。
 +
 [NOTE]
 ====
@@ -90,36 +77,9 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 
 ====
 +
-下列範例會驗證是否已為建立驗證金鑰 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> security key-manager key query -key-type NSE-AK
-               Node: node1
-            Vserver: cluster1
-        Key Manager: onboard
-   Key Manager Type: OKM
- Key Manager Policy: -
-
- Key Tag                               Key Type Encryption   Restored
-
-------------------------------------  -------- ------------ --------
-
-node1                                 NSE-AK   AES-256      true
-
-    Key ID: <id_value>
-
-node1                                 NSE-AK   AES-256      true
-
-    Key ID: <id_value>
-
-2 entries were displayed.
-----
-+
 如link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["指令參考資料ONTAP"^]需詳細 `security key-manager key query`資訊，請參閱。
 
-. 也可以將純文字磁碟區轉換為加密磁碟區。
+. 您可以選擇將純文字磁碟區轉換為加密磁碟區。
 +
 `volume encryption conversion start`
 
@@ -131,8 +91,11 @@ node1                                 NSE-AK   AES-256      true
 .完成後
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
 
-每當您設定Onboard Key Manager複雜密碼時、也應該手動將資訊備份到儲存系統外部的安全位置、以便在發生災難時使用。請參閱 link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。
+配置板載金鑰管理器密碼後，手動將資訊備份到儲存系統外部的安全位置。看link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。
 
 .相關資訊
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全金鑰管理程式設定"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["叢集影像命令"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-enable.html["安全金鑰管理員外部啟用"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["安全金鑰管理員金鑰查詢"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["安全金鑰管理員板載啟用"^]
 

@@ -30,12 +30,12 @@ summary: 您可以使用Onboard Key Manager來保護叢集用來存取加密資�
 NOTE: 密碼嘗試失敗後、您必須重新啟動節點。
 
 .開始之前
-* 如果您使用 NSE 或 NVE 搭配外部金鑰管理（ KMIP ）伺服器、則必須刪除外部金鑰管理程式資料庫。
+* 如果您將 NSE 或 NVE 與外部金鑰管理 (KMIP) 伺服器一起使用，請刪除外部金鑰管理器資料庫。
 +
 link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
 
 * 您必須是叢集管理員才能執行此工作。
-* 在設定Onboard Key Manager之前、您必須先設定MetroCluster 這個靜態環境。
+* 在配置板載金鑰管理器之前，請先配置MetroCluster環境。
 
 
 .步驟
@@ -76,12 +76,12 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在通關密碼確認提示下、重新輸入通關密碼。
 . 驗證是否已為所有節點設定金鑰：
 +
-`security key-manager key show`
+`security key-manager show-key-store`
 
 +
 [listing]
 ----
-cluster1::> security key-manager key show
+cluster1::> security key-manager show-key-store
 
 Node: node1
 Key Store: onboard
@@ -98,22 +98,24 @@ Key ID                                                           Used By
 <id_value> NSE-AK
 ----
 +
-如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+key+show["指令參考資料ONTAP"^]需詳細 `security key-manager key show`資訊，請參閱。
+詳細了解 `security key-manager show-key-store`在link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-show-key-store.html["指令參考資料ONTAP"^]。
 
 . 也可以將純文字磁碟區轉換為加密磁碟區。
 +
 `volume encryption conversion start`
 
 +
-在轉換磁碟區之前、必須先完整設定 Onboard Key Manager 。在 MetroCluster 環境中、兩個站台都必須設定內建金鑰管理員。
+在轉換卷之前配置板載密鑰管理器。在MetroCluster環境中，在兩個站點上進行配置。
 
 
 
 .完成後
 將通關密碼複製到儲存系統外部的安全位置、以供未來使用。
 
-每當您設定Onboard Key Manager複雜密碼時、也應該手動將資訊備份到儲存系統外部的安全位置、以便在發生災難時使用。請參閱 link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。
+配置板載金鑰管理器密碼時，請將資訊備份到儲存系統外部的安全位置，以防災難發生。看link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]。
 
 .相關資訊
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全金鑰管理程式設定"^]
+* link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]
+* link:delete-key-management-database-task.html["從外部金鑰管理移轉至內建金鑰管理"]
+* link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-show-key-store.html["安全金鑰管理員顯示金鑰庫"^]
 
