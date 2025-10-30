@@ -72,7 +72,7 @@ IMPORTANT: 從ONTAP 9.14.1 到 9.8， SnapMirror主動同步被稱為SnapMirror�
 以下範例建立兩個一致性群組： `cg_src_ on the source with `vol1` 和 `vol2` 以及鏡射目的地一致性群組、 `cg_dst`。
 
 +
-`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver`
+`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOverDuplex`
 
 . 從目的地叢集初始化一致性群組。
 +
@@ -179,7 +179,7 @@ IMPORTANT: 從ONTAP 9.14.1 到 9.8， SnapMirror主動同步被稱為SnapMirror�
 +
 [listing]
 ----
-destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver
+destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOverDuplex
 ----
 . 初始化 SnapMirror 關係：
 `snapmirror initialize -destination-path <destination-consistency-group>`
@@ -218,7 +218,7 @@ NOTE: 從 ONTAP 9.16.1 開始，請使用 `-proximal-vserver peer`此命令中�
 +
 [listing]
 ----
-destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver
+destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOverDuplex
 ----
 . 初始化 SnapMirror 關係：
 `snapmirror initialize -destination-path <destination-consistency-group>`
