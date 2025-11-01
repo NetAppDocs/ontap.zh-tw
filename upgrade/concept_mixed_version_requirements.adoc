@@ -225,16 +225,32 @@ NOTE: ONTAP補丁程式 (P) 版本對混合版本叢集的相容性沒有影響�
 如果您打算將新節點新增至叢集、而這些節點需要比叢集目前執行版本更高的最低 ONTAP 版本、則在新增節點之前、您必須在叢集中現有節點上執行任何支援的軟體升級。理想情況下、您可以將所有現有節點升級至您計畫新增至叢集的節點所需的最低 ONTAP 版本。不過、如果因為部分現有節點不支援較新版的 ONTAP 、所以無法這麼做、則在升級程序中、您必須在有限的時間內輸入混合版本狀態。
 
 .步驟
-. link:concept_upgrade_methods.html["升級"] 不支援新控制器所需最低 ONTAP 版本的節點、達到其所支援的最大 ONTAP 版本。
+. link:concept_upgrade_methods.html["升級"] 不支援新控制器所需的最低ONTAP版本的節點，應升級到它們支援的最高ONTAP版本。
 +
-例如、如果您有執行 ONTAP 9.5 的 FAS8080 、而且您要新增執行 ONTAP 9.12.1 的 C 系列平台、則您應該將 FAS8080 升級至 ONTAP 9.8 （這是它支援的最大 ONTAP 版本）。
+例如，如果您有一台運行ONTAP 9.5 的 FAS8080，並且您正在新增一台運行ONTAP 9.12.1 的新 C 系列平台，則應將 FAS8080 升級到ONTAP 9.8（這是它支援的最高ONTAP版本）。
 
 . link:../system-admin/add-nodes-cluster-concept.html["將新節點新增至叢集"^]。
 . link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["移轉資料"^] 從要從叢集移除的節點、移至新增的節點。
 . link:../system-admin/remove-nodes-cluster-concept.html["從叢集中移除不支援的節點"^]。
-. link:concept_upgrade_methods.html["升級"] 叢集中其餘節點的版本與新節點相同。
+. link:concept_upgrade_methods.html["升級"] 將叢集遷移到與新節點上運行的ONTAP版本和補丁級別相同的環境，或遷移到… link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建議的修補程式版本"^] 適用於在新節點上執行的ONTAP版本。
+. 請確認所有節點運行的ONTAP版本是否相同。
 +
-您也可以選擇將整個叢集（包括新節點）升級至 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建議的修補程式版本"] 新節點上執行的 ONTAP 版本。
+.. 顯示叢集上執行的ONTAP版本：
++
+[source, cli]
+----
+version
+----
+.. 顯示叢集中每個節點上運行的ONTAP版本：
++
+[source, cli]
+----
+version *
+----
+
+
++
+如果輸出中報告的ONTAP版本存在差異， `version *` （集群）和 `version` （單一節點）命令，透過執行以下命令將所有節點更新到相同的ONTAP和修補程式版本： link:concept_upgrade_methods.html["叢集鏡像更新"]。
 
 
 
