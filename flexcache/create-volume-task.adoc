@@ -17,6 +17,10 @@ summary: 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以�
 * 從 ONTAP 9.5 開始、 FlexCache 支援 FlexVol Volume 做為原始磁碟區、 FlexGroup 磁碟區做為 FlexCache 磁碟區。
 * 從 ONTAP 9.7 開始， FlexVol volume 和 FlexGroup 磁碟區都支援做為原始磁碟區。
 * 從 ONTAP 9.14.0 開始、您可以從加密來源建立未加密的 FlexCache Volume 。
+* 從ONTAP 9.18.1 開始， FlexCache支援為具有 SVM-DR 關係的 SVM 的來源磁碟區建立快取磁碟區。
++
+如果您執行的是ONTAP 9.18.1 或更高版本，則儲存管理員必須先將快取 SVM 與 SVM-DR 關係中的主來源 SVM 和輔助來源 SVM 建立對等關係，然後再建立屬於 SVM-DR 關係的來源磁碟區的快取磁碟區。
+
 
 
 .開始之前
@@ -195,10 +199,7 @@ vs_1           vol_1           vs_1             fc1            cluster1
 
 --
 ====
-
-
-== 結果
-
+.結果
 成功建立了這個功能。FlexCache用戶端可以使用FlexCache 解決方案開發區的交會路徑來掛載磁碟區。
 
 .相關資訊

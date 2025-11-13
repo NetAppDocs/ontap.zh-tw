@@ -14,17 +14,12 @@ summary: 在安裝程序中、您將先升級主機作業系統、然後再升�
 若要將主機作業系統 for ONTAP Mediator 升級至更新版本、您必須先解除安裝 ONTAP Mediator 。
 
 .關於這項工作
-當您使用 leapp-upgrade 工具將主機作業系統 for ONTAP Mediator 升級至較新的主要版本（例如從 7.x 升級至 8.x ）時、 您必須解除安裝 ONTAP Mediator 、因為此工具會嘗試偵測安裝在系統儲存庫中的任何 RPM 的新版本。
+使用 leapp-upgrade 工具升級ONTAP Mediator 的主機作業系統前，請先解除安裝ONTAP Mediator。此工具會檢查已註冊倉庫中是否有新的 RPM 版本。
 
-由於 .rpm 檔案是 ONTAP Mediator 安裝程式的一部分、因此會包含在該搜尋中。不過、由於 .rpm 檔案已在安裝程式中解壓縮、且未從已註冊的儲存庫下載、因此無法找到升級。在這種情況下、 leapp-upgrade 工具會解除安裝套件。
-
-為了保留用於分類支援案例的日誌文件，您應該在升級作業系統之前備份這些文件，並在重新安裝 ONTAP Mediator 軟體包後恢復它們。安裝 ONTAPMediator 後，需要重新連線連接到該軟體包的 ONTAP 叢集。
-
-
-NOTE: 應依序執行下列步驟。重新安裝 ONTAP Mediator 後，應立即停止 ontap_mediator，替換日誌文件，然後重新啟動它。這樣做是為了確保日誌不會遺失。
+ONTAP Mediator 安裝程式會安裝一個 .rpm 文件，leapp-upgrade 工具會將其包含在搜尋範圍內。由於安裝程式會解壓縮文件而不是從註冊的儲存庫下載文件，因此該工具找不到升級程式。您必須使用 leapp-upgrade 工具卸載該軟體包。
 
 .步驟
-. 備份記錄檔。
+. 備份日誌檔：
 +
 ....
 [rootmediator-host ~]# tar -czf ontap_mediator_file_backup.tgz -C /opt/netapp/lib/ontap_mediator ./log ./ontap_mediator/server_config/ontap_mediator.user_config.yaml
@@ -40,7 +35,7 @@ NOTE: 應依序執行下列步驟。重新安裝 ONTAP Mediator 後，應立即�
 ./ontap_mediator/server_config/ontap_mediator.user_config.yaml
 [rootmediator-host ~]#
 ....
-. 使用 leapp-upgrade 工具執行升級。
+. 使用 leapp-upgrade 工具執行升級：
 +
 ....
 [rootmediator-host ~]# leapp preupgrade --target 8.4
@@ -53,43 +48,45 @@ NAME="Red Hat Enterprise Linux"
 VERSION="8.4 (Ootpa)"
 [rootmediator-host ~]#
 ....
-. 重新安裝 ONTAP Mediator 。
+. 重新安裝ONTAP Mediator：
 +
 
 NOTE: 重新安裝 ONTAP Mediator 之後、請立即執行其餘步驟、以避免記錄檔遺失。
 
 +
 ....
-[rootmediator-host ~]# ontap-mediator-1.10/ontap-mediator-1.10
+[rootmediator-host ~]# ontap-mediator-1.11.0/ontap-mediator-1.11.0
 
 ONTAP Mediator: Self Extracting Installer
 
   ..<snip installation>..
 [rootmediator-host ~]#
 ....
-. 停止 ontap_mediator。
+. 停止 ontap_mediator：
 +
 ....
 [rootmediator-host ~]# systemctl stop ontap_mediator
 [rootmediator-host ~]#
 ....
-. 取代記錄檔。
+. 替換日誌檔：
 +
 ....
 [rootmediator-host ~]# tar -xf ontap_mediator_log_backup.tgz -C /opt/netapp/lib/ontap_mediator
 [rootmediator-host ~]#
 ....
-. 啟動 ontap_mediator。
+. 啟動 ontap_mediator：
 +
 ....
 [rootmediator-host ~]# systemctl start ontap_mediator
 [rootmediator-host ~]#
 ....
-. 將所有 ONTAP 叢集重新連線至升級的 ONTAP Mediator
-+
-.MetroCluster over IP 程序
-[%collapsible]
+. 將所有ONTAP叢集重新連接到升級後的ONTAP中介器：
+
+
+[role="tabbed-block"]
 ====
+.基於 IP 的MetroCluster
+--
 ....
 siteA::> metrocluster configuration-settings mediator show
 Mediator IP     Port    Node                    Configuration Connection
@@ -127,12 +124,10 @@ Mediator IP     Port    Node                    Configuration Connection
                         siteB-node2             true          true
 siteA::>
 ....
-====
-+
-.SnapMirror 主動同步程序
-[%collapsible]
-====
-對於 SnapMirror 主動式同步、如果您在 /opt/NetApp 目錄外安裝 TLS 憑證、則不需要重新安裝。如果您使用的是預設產生的自我簽署憑證、或是將您的自訂憑證放入 /opt/NetApp 目錄、則您應該備份並還原它。
+--
+.SnapMirror 主動同步
+--
+對於SnapMirror主動同步，您無需重新安裝儲存在 /opt/netapp 之外的 TLS 憑證。備份並還原儲存在 /opt/netapp 中的憑證。
 
 ....
 peer1::> snapmirror mediator show
@@ -217,9 +212,8 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 peer1::>
 
 ....
+--
 ====
-
-
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-delete.html["刪除安全性憑證"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["安全性憑證安裝"^]

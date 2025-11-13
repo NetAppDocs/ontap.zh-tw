@@ -26,7 +26,7 @@ ARP 會定期建立鎖定快照，並根據計畫建立快照，以增強保護�
 
 == 授權與能力
 
-ARP 支援包含在link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One 授權"^] 。如果您沒有ONTAP One 許可證，則可以使用其他許可證來用於 ARP，具體取決於您的ONTAP版本。
+ARP 支援包含在內link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One 許可證"^]。如果您沒有ONTAP One 許可證，則可以使用其他許可證來用於 ARP，具體取決於您的ONTAP版本。
 
 [cols="2*"]
 |===
@@ -95,9 +95,9 @@ NOTE: 沒有任何勒索軟體偵測系統可以保證完全的安全。如果�
 
 === NAS 環境和模式類型
 
-NAS 環境使用學習和主動模式。對於<<arp-ai,ARP/AI>>從ONTAP 9.16.1 開始在 NAS 環境中運作時，當 ARP 與FlexVol磁碟區一起使用時沒有學習期。
-
 下表總結了ONTAP 9.10.1 與 NAS 環境的更高版本之間的差異。
+
+對於採用早期 ARP 模型的版本，建議在開始主動監控之前先進行一段時間的學習。對於支援 NAS 的環境<<arp-ai,ARP/AI>>沒有學習期，立即開始主動監控。
 
 [cols="1,5,1"]
 |===
@@ -105,24 +105,28 @@ NAS 環境使用學習和主動模式。對於<<arp-ai,ARP/AI>>從ONTAP 9.16.1 �
 
 
 | 學習  a| 
-對於ONTAP 9.15.1 到 9.10.1 版本，啟用 ARP 後，ARP 會自動設定為學習模式。在學習模式下， ONTAP系統會根據以下分析領域（熵、檔案副檔名類型和檔案 IOPS）制定警報設定檔。建議您將 ARP 保持在學習模式 30 天。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。對於ONTAP 9.13.1 之前的版本，您可以手動進行切換。
+對於某些版本的ONTAP和某些磁碟區類型，啟用 ARP 時，ARP 會自動設定為學習模式。在學習模式下， ONTAP系統會根據以下分析領域（熵、檔案副檔名類型和檔案 IOPS）制定警報設定檔。
+
+建議您將 ARP 保持在學習模式 30 天。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。對於ONTAP 9.13.1 之前的版本，您可以手動進行切換。
+
+從ONTAP 9.16.1 開始， FlexVol磁碟區僅存在活動模式，任何升級到此版本或更高版本的FlexVol磁碟區都會自動從學習模式過渡到活動模式。
+
+對於ONTAP 9.16.1 到 9.17.1，ARP/AI 尚不支援FlexGroup卷，並繼續運行較舊的 ARP 模型。因此，對於這些帶有FlexGroup卷的版本，仍然建議留出一段學習期。
+
+從ONTAP 9.18.1 開始， FlexVol和FlexGroup磁碟區都只有活動模式。任何升級後的捲都會自動切換到活動模式。
 
 link:switch-learning-to-active-mode.html["了解有關從學習模式切換到主動模式的更多信息"] 。
 
 
 TIP: 命令 `security anti-ransomware volume workload-behavior show`會顯示已在磁碟區中偵測到的副檔名。如果您在學習模式早期執行此命令，並顯示正確的檔案類型呈現，則不應將該資料當作移至作用中模式的基礎，因為 ONTAP 仍在收集其他計量。如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume workload-behavior show`資訊，請參閱。
  a| 
-* FlexVol卷（採用ONTAP 9.15.1 至 9.10.1）
-* 附ONTAP 9.13.1 及更高版本的 FlexGroup卷
+* FlexVol卷（採用ONTAP 9.10.1 至 9.15.1）
+* FlexGroup卷，版本從ONTAP 9.13.1 到ONTAP 9.17.1
 
 
 
 
 | 積極的  a| 
-在學習模式下執行 ARP 足夠長的時間以評估工作負載特徵後，您可以切換到主動模式並開始保護資料。從ONTAP 9.13.1 開始，ARP 會自動確定最佳學習間隔並自動切換，切換可能在 30 天之前完成。
-
-在ONTAP 9.15.1 到 9.10.1 版本中，ARP 會在最佳學習期結束後切換到主動模式。 ARP切換到主動模式後，如果偵測到威脅， ONTAP會建立 ARP 快照來保護資料。
-
 在主動模式下，如果檔案副檔名被標記為異常，您應該評估該警報。您可以根據警報採取行動來保護數據，也可以將警報標記為誤報。將警報標記為誤報會更新警報設定檔。例如，如果警報是由新的檔案副檔名觸發的，並且您將警報標記為誤報，則下次觀察到該檔案副檔名時，您將不會收到警報。
  a| 
 所有支援的ONTAP版本以及FlexVol和FlexGroup卷
@@ -140,7 +144,7 @@ SAN 環境會使用評估期（類似 NAS 環境中的學習模式），然後�
 
 
 | 評估  a| 
-會進行為期兩到四週的評估期，以確定基線加密行為。您可以透過運行 `security anti-ransomware volume show`指揮和檢查 `Block device detection status` 。
+進行為期兩到四週的評估期，以確定基線加密行為，同時 ARP/AI 在評估期內為 SAN 磁碟區提供即時主動保護。在建立基線閾值期間，可以進行偵測並發出警報。您可以透過執行以下命令來確定評估期間是否結束： `security anti-ransomware volume show`命令和檢查 `Block device detection status`。
 
 link:respond-san-entropy-eval-period.html["了解有關 SAN 捲和熵評估期的更多信息"] 。
  a| 
@@ -283,10 +287,15 @@ ARP 基於成熟的ONTAP資料保護和災難復原技術，可有效應對勒�
 
 從ONTAP 9.16.1 開始，ARP 採用機器學習模型進行反勒索軟體分析，從而提升了網路彈性。該模型能夠在 NAS 環境中以 99% 的準確率檢測不斷演變的勒索軟體形式。的機器學習模型在模擬勒索軟體攻擊前後都基於大量文件資料集進行了預訓練。這種資源密集的訓練是在ONTAP之外進行的，使用開源取證研究資料集來訓練模型。整個建模流程不會使用客戶數據，因此不存在隱私問題。此訓練產生的預訓練模型隨ONTAP一起提供。但無法透過ONTAP CLI 或ONTAP API 存取或修改此模型。
 
-.立即轉換為使用 FlexVol 磁碟區的 ARP/AI 主動保護
-有了 ARP/AI 和 FlexVol 卷，就沒有<<了解 ARP 模式,學習週期>>。安裝或升級至 9.16 後，ARP/AI 將立即啟用並處於活動狀態。叢集升級到ONTAP 9.16.1 後，如果現有和新的FlexVol磁碟區已啟用 ARP，則 ARP/AI 將自動啟用。
+.立即過渡到主動防禦ARP/AI
+使用ARP/AI，就沒有<<了解 ARP 模式,學習週期>>。對於以下受支援的磁碟區類型，ARP/AI 在安裝或升級後立即啟動：
 
-link:enable-arp-ai-with-au.html["深入瞭解啟用 ARP/AI"]
+* NAS FlexVol卷，支援ONTAP 9.16.1 及更高版本
+* NAS FlexGroup卷， ONTAP9.18.1 及更高版本
+* 使用ONTAP 9.17.1 及更高版本的 SAN 磁碟區（立即激活，即使在期間）link:respond-san-entropy-eval-period.html["評估期"] ）
+
+
+對於已啟用 ARP 功能的現有捲和新磁碟區，將叢集升級至支援 ARP/AI 的ONTAP版本後，ARP/AI 保護將自動啟動。
 
 .ARP/AI 自動更新
 為了持續提供對最新勒索軟體威脅的最新保護，ARP/AI 提供頻繁的自動更新，這些更新在ONTAP常規升級和發布週期之外進行。如果您link:../update/enable-automatic-updates-task.html["已啟用自動更新"]在您選擇安全檔案自動更新後，您也將能夠開始接收 ARP/AI 的自動安全性更新。您也可以選擇link:arp-ai-automatic-updates.html#manually-update-arpai-with-the-latest-security-package["手動進行這些更新"]並控制更新發生的時間。

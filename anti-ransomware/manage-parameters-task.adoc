@@ -24,7 +24,7 @@ summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體
 
 當自主勒索軟體防護 (ARP) 處於學習或評估模式時，它會為卷宗行為制定基準值。這些基準值包括熵、檔案副檔名以及（從ONTAP 9.11.1 開始的）IOPS。這些基準用於評估勒索軟體威脅。有關這些標準的更多信息，請參閱link:index.html#what-arp-detects["ARP 偵測到什麼"] 。
 
-某些磁碟區和工作負載需要不同的偵測參數。例如、啟用 ARP 的磁碟區可能會裝載許多類型的副檔名、在這種情況下、您可能會想要將前所未見的副檔名臨界值數修改為大於預設值 20 的數字、或是根據前所未見的副檔名停用警告。從 ONTAP 9.11.1 開始、您可以修改攻擊偵測參數、使其更適合您的特定工作負載。
+不同的資料量和工作負載需要不同的偵測參數。例如，啟用 ARP 的磁碟區可能託管多種類型的檔案副檔名，在這種情況下，您可能需要將從未見過的檔案副檔名的閾值計數修改為大於預設值 20 的數字，或停用基於從未見過的檔案副檔名的警告。從ONTAP 9.11.1 開始，您可以修改攻擊偵測參數，使其更適應您的特定工作負載。
 
 從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
 
@@ -72,8 +72,8 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
                  File Create Rate Surge Notify Percentage : 100
                  File Rename Rate Surge Notify Percentage : 100
                  File Delete Rate Surge Notify Percentage : 100
- Never Seen before File Extensions Count Notify Threshold : 20
-       Never Seen before File Extensions Duration in Hour : 24
+ Never Seen before File Extensions Count Notify Threshold : 5
+       Never Seen before File Extensions Duration in Hour : 48
 ....
 . 所有顯示的欄位均可使用布林值或整數值進行修改。若要修改字段，請使用 `security anti-ransomware volume attack-detection-parameters modify`命令。
 +
@@ -90,8 +90,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .回報一次性突波
 . 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
 +
-`security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>`
-
+[source, cli]
+----
+security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>
+----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-clear-surge.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume workload-behavior clear-surge`資訊，請參閱。
 
@@ -100,8 +102,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .修改基準突波
 . 如果回報的喘振應視為正常應用程式行為、請回報喘振、以修改基準喘振值。
 +
-`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`
-
+[source, cli]
+----
+security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>
+----
 +
 詳細了解 `security anti-ransomware volume workload-behavior update-baseline-from-surge`在link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-update-baseline-from-surge.html["指令參考資料ONTAP"^] 。
 
@@ -148,24 +152,32 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .設定磁碟區的警示
 * 若要設定新副檔名的警示：
 +
-`security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true`
-
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true`
+----
 * 若要設定建立 ARP 快照的警示：
 +
-`security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-snapshot-copy-creation true`
-
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-snapshot-copy-creation true
+----
 * 使用確認您的設定 `anti-ransomware volume event-log show` 命令。
 
 
 .設定 SVM 的警示
 * 若要設定新副檔名的警示：
 +
-`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
-
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true
+----
 * 若要設定建立 ARP 快照的警示：
 +
-`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
-
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true
+----
 * 使用確認您的設定 `security anti-ransomware vserver event-log show` 命令。
 
 

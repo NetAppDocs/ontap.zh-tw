@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: svm, migrate, remove, cleanup, source, manual 
 summary: 如果您在停用來源清理的情況下執行SVM移轉、則可在用戶端轉換完成後手動移除來源SVM。 
 ---
-= 在用戶端轉換之後手動移除來源SVM
+= 客戶端切換後手動移除來源ONTAP SVM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,12 +14,16 @@ summary: 如果您在停用來源清理的情況下執行SVM移轉、則可在�
 如果您在停用來源清理的情況下執行SVM移轉、則可在用戶端轉換完成後手動移除來源SVM。
 
 .步驟
-. 確認他們的狀態已準備好進行來源清理：
+. 確認狀態為已準備好進行來源清理：
 +
-`dest_cluster> vserver migrate show`
-
+[source, cli]
+----
+vserver migrate show
+----
 . 清除來源：
 +
-`dest_cluster> vserver migrate source-cleanup -vserver <vserver_name>`
-
+[source, cli]
+----
+vserver migrate source-cleanup -vserver <SVM_name>
+----
 

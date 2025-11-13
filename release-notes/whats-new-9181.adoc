@@ -1,0 +1,129 @@
+---
+permalink: release-notes/whats-new-9181.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.18.1' 
+summary: 了解ONTAP 9.18.1 中提供的新功能。 
+---
+= ONTAP 9.18.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.17.1 中提供的新功能。
+
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+
+* 瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+* 了解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9171.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^] 。
+* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^] 。
+* 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["對AFF、 ASA和FAS系統以及支援的交換器的全新和增強支持"^] 。
+* 瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
+
+
+若要升級至最新版的 ONTAP ，請參閱link:../upgrade/create-upgrade-plan.html["準備升級 ONTAP"]。
+
+
+
+== 網路
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[IPsec 硬體卸載 IPv6 支持]
+ a| 
+IPsec硬體卸載支援已擴展到IPv6。
+
+
+
+ a| 
+xref:../networking/configure_network_security_using_federal_information_processing_standards_fips.html[OpenSSL PQC 演算法]
+ a| 
+ONTAP支援用於 SSL 的後量子計算加密演算法。這些演算法可針對未來潛在的量子運算攻擊提供額外保護，並且在 SSL FIPS 模式停用時可用。
+
+
+
+ a| 
+xref:../networking/configure-backend-encryption.html[ONTAP後端叢集網路加密]
+ a| 
+您可以為ONTAP後端叢集網路上的傳輸中資料啟用 TLS 加密。
+
+
+
+ a| 
+xref:../high-availability/ha-pair-encryption.html[ONTAP HA 流量網路加密]
+ a| 
+您可以為高可用性 (HA) 對中的節點之間的流量啟用加密。
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../san-admin/nvme-copy-offload.html[NVMe 複製卸載]
+ a| 
+NVMe 複製卸載功能可讓 NVMe 主機將複製作業從其 CPU 解除安裝至ONTAP儲存控制器的 CPU。主機可以將資料從一個 NVMe 命名空間複製到另一個 NVMe 命名空間，同時將其 CPU 資源保留給應用程式工作負載。
+
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../s3-snapshots/list-restore-s3-snapshot.html[支援恢復 S3 快照（時間點）]
+ a| 
+能夠恢復 S3 儲存桶中損壞的對象，或將整個儲存桶恢復到現有儲存桶之上。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[FlexGroup磁碟區支援 ARP/AI]
+ a| 
+NetApp FlexGroup磁碟區支援 ARP/AI，提供基於機器學習的進階勒索軟體偵測和保護。在ONTAP 9.17.1 及更早版本中， FlexGroup磁碟區僅支援第一代 ARP。從ONTAP 9.18.1 開始， FlexGroup磁碟區在本機ONTAP平台（AFF和FAS）和虛擬ONTAP部署（包括Cloud Volumes ONTAP和ONTAP Select ）上與FlexVol磁碟區具有同等功能。因此，ARP/AI 成為FlexVol和FlexGroup磁碟區的預設 ARP 技術。
+
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../performance-admin/adaptive-qos-policy-groups-task.html[支援在SVM和磁碟區上設定兩級嵌套的QoS策略群組]
+ a| 
+您可以同時為 SVM 和 SVM 下的磁碟區指派 QoS 策略。
+
+
+
+ a| 
+xref:../flexcache/create-volume-task.html[在 SVM-DR 關係中建立來源磁碟區的 SVM FlexCache卷]
+ a| 
+您可以建立屬於 SVM-DR 關係的來源磁碟區的 SVM FlexCache磁碟區。
+
+|===

@@ -1,0 +1,29 @@
+---
+permalink: san-admin/nvme-copy-offload.html 
+sidebar: sidebar 
+keywords: configure, ports 
+summary: NVMe 複製卸載功能可讓 NVMe 主機將複製作業從其 CPU 解除安裝至ONTAP儲存控制器的 CPU。主機可以將資料從一個 NVMe 命名空間複製到另一個 NVMe 命名空間，同時將其 CPU 資源保留給應用程式工作負載。 
+---
+= 了解 NVMe 複製卸載
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NVMe 複製卸載功能可讓 NVMe 主機將複製作業從其 CPU 解除安裝至ONTAP儲存控制器的 CPU。主機可以將資料從一個 NVMe 命名空間複製到另一個 NVMe 命名空間，同時將其 CPU 資源保留給應用程式工作負載。
+
+例如，假設您需要重新平衡儲存工作負載以改善效能分佈。這需要您遷移 10 台虛擬機器 (VM)，其中包含 45 個 NVMe 命名空間，每個命名空間的平均大小為 500 GB。這意味著你需要複製大約 22.5 TB 的資料。主機無需使用自身的 CPU 進行資料遷移，而是可以使用 NVMe 複製卸載功能，從而避免在資料複製期間佔用 CPU 資源來處理應用程式工作負載。
+
+
+
+== NVMe 複製卸載支援和限制
+
+從ONTAP 9.18.1 開始支援 NVMe 複製卸載。  ONTAP無法啟動 NVMe 複製卸載；它必須由主機支援和啟動。
+
+以下限制適用於使用ONTAP進行的 NVMe 複製卸載作業：
+
+* 支援的最大複製操作大小為 16MB。
+* 資料只能在同一子系統內的 NVMe 命名空間之間遷移。
+* 資料只能在同一高可用性 (HA) 對中的節點之間遷移。
+

@@ -24,7 +24,10 @@ summary: 您可以使用儲存 QoS 原則群組來管理工作負載、來控制
 +
 您可以在建立原則群組時指定SVM。
 
-* 如果您將磁碟區指派給原則群組、則無法將包含SVM的磁碟區或任何子LUN或檔案指派給原則群組。
+* 從ONTAP 9.18.1 開始，您可以將 QoS 策略指派給包含在具有 QoS 策略的其他物件中的對象，例如 SVM 中包含的磁碟區。使用嵌套 QoS 策略時，將應用限制性最強的策略。
++
+在ONTAP 9.18.1 之前的版本中，您可以將 QoS 策略指派給包含在其他具有 QoS 策略的對像中的對象，但這些對象由 QoS 單獨跟踪，並且不會相互交互。例如，如果您有 50 IOPS 上限的 SVM 和一個 100 IOPS 上限的 FlexVol volume，則FlexVol volume受 100 IOPS 上限的限制，但 QoS 不會將其計入 SVM 工作負載。
+
 
 
 如需如何使用Storage QoS的詳細資訊、請參閱 link:../system-admin/index.html["系統管理參考資料"]。
@@ -38,6 +41,7 @@ summary: 您可以使用儲存 QoS 原則群組來管理工作負載、來控制
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=qos+policy-group["QoS策略組"^]
+* 連結： https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html ://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html [qos policy-group create]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["Volume建立"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["Volume修改"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=qos+statistics["QoS 統計資料"^]

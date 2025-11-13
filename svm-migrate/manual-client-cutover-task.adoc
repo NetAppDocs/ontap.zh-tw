@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: svm, migrate, client, cutover, manual 
 summary: 根據預設、當SVM移轉達到「準備轉換」狀態時、會自動執行用戶端轉換至目的地叢集。如果您選擇停用自動用戶端轉換、則需要手動執行用戶端轉換。 
 ---
-= 手動切換用戶端
+= ONTAP SVM 遷移後手動切換客戶端
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -16,10 +16,14 @@ summary: 根據預設、當SVM移轉達到「準備轉換」狀態時、會自�
 .步驟
 . 手動執行用戶端轉換：
 +
-`dest_cluster> vserver migrate cutover -vserver <vserver name>`
-
+[source, cli]
+----
+vserver migrate cutover -vserver <SVM_name>
+----
 . 檢查轉換作業的狀態：
 +
-`dest_cluster> vserver migrate show`
-
+[source, cli]
+----
+vserver migrate show
+----
 

@@ -64,33 +64,33 @@ ARP 依賴區分傳入資料是加密的還是未加密的。如果應用程式�
 下列 ONTAP 版本支援其他組態和磁碟區類型：
 
 |===
-|  | ONTAP 9.17.1 | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+|  | ONTAP 9.18.1 | ONTAP 9.17.1 | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
 
 
-| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用 SnapMirror 非同步保護的磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 受 SnapMirror 非同步（ SVM 災難恢復）保護的 SVM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| FlexGroup卷^1^ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
+| FlexGroup卷^1^ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 多管理員驗證 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
+| 多管理員驗證 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  |  
 
 
-| ARP/AI 提供自動更新 | ✓ | ✓ |  |  |  |  |  |  
+| ARP/AI 提供自動更新 | ✓ | ✓ |  |  |  |  |  |  |  
 |===
-^1^ ARP/AI 不支援FlexGroup區。升級到ONTAP 9.16.1 後，啟用 ARP 的FlexGroup磁碟區將繼續使用 ARP/AI 之前使用的 ARP 模型運作。
+^1^ ONTAP 9.16.1 和 9.17.1 不提供FlexGroup卷的 ARP/AI 支援。升級到這些版本後，啟用 ARP 的FlexGroup磁碟區將繼續使用 ARP/AI 之前使用的相同 ARP 模型運行。從ONTAP 9.18.1 開始， FlexGroup磁碟區使用 ARP/AI 模型。
 
 
 
 ==== SnapMirror與ARP互通性
 
-從ONTAP 9.12.1 開始， SnapMirror非同步目標磁碟區支援 ARP。 SnapMirrorSnapMirror或SnapMirror主動同步*不*支援 ARP。
+從ONTAP 9.12.1 開始， SnapMirror非同步目標磁碟區支援 ARP。 SnapMirrorSnapMirror同步或SnapMirror主動同步不支援 ARP。
 
 如果SnapMirror來源磁碟區啟用了 ARP，則SnapMirror目標磁碟區會自動取得 ARP 設定狀態（例如 `dry-run`或者 `enabled` )、ARP 訓練資料以及 ARP 建立的來源磁碟區快照。無需明確啟用。
 
@@ -115,6 +115,9 @@ ARP 依賴區分傳入資料是加密的還是未加密的。如果應用程式�
 對於 SAN，ARP 在磁碟區層級分析熵統計數據，並在發現熵異常時觸發檢測。
 
 
+NOTE: 在ONTAP 9.18.1 及更高版本中，僅FlexVol磁碟區可偵測 VM 內發生的攻擊，如果 VM 資料儲存配置在FlexGroup磁碟區上，則無法偵測 VM 內發生的攻擊。
+
+
 
 === 不支援的組態
 
@@ -122,7 +125,11 @@ ONTAP S3 環境不支援 ARP。
 
 ARP 不支援下列 Volume 組態：
 
-* FlexGroup磁碟區（在ONTAP 9.10.1 至 9.12.1 中）。從ONTAP 9.13.1 開始，支援FlexGroup卷，但僅限於 ARP/AI 之前使用的 ARP 模型。
+* FlexGroup磁碟區（在ONTAP 9.10.1 至 9.12.1 中）。
++
+
+NOTE: 從ONTAP 9.13.1 到ONTAP 9.17.1，支援FlexGroup卷，但僅限於 ARP/AI 之前使用的 ARP 模型。  ONTAP 9.18.1 開始支援 ARP/AI 的FlexGroup磁碟區。
+
 * FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
 * 離線磁碟區
 * 資料量SnapLock

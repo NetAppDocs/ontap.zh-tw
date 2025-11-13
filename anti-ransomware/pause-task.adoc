@@ -23,7 +23,7 @@ summary: 如果您預期會發生不尋常的工作負載事件、您可以隨�
 link:../multi-admin-verify/enable-disable-task.html["深入瞭解MAV"]。
 
 .關於這項工作
-在 ARP 暫停期間，不會記錄任何新寫入的事件或操作；但是，分析操作會在後台繼續對早期的日誌進行分析。
+在 ARP 暫停期間， ONTAP不會記錄新寫入的事件或操作；但是，對早期日誌的分析會在背景繼續進行。
 
 
 NOTE: 請勿使用 ARP 停用功能來暫停分析。這樣做會停用磁碟區上的Arp、並會遺失所有有關已學習工作負載行為的現有資訊。這需要重新啟動學習期間。
@@ -39,7 +39,7 @@ NOTE: 請勿使用 ARP 停用功能來暫停分析。這樣做會停用磁碟區
 . 在卷概覽的「安全性」標籤中，選擇「反勒索軟體」方塊中的「暫停反勒索軟體」。
 +
 
-NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、暫停作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
+NOTE: 從ONTAP 9.13.1 開始，如果您使用 MAV 來保護 ARP 設置，暫停操作會提示您獲得一個或多個其他管理員的批准。link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"]與 MAV 審批小組相關，否則操作將會失敗。
 
 . 若要恢復監控，請選擇*恢復反勒索軟體*。
 
@@ -62,7 +62,7 @@ security anti-ransomware volume resume -vserver <svm_name> -volume <vol_name>
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume+["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume`資訊，請參閱。
 
-. 如果您使用 MAV （從 ONTAP 9 ． 13.1 開始的 ARP 提供）來保護您的 ARP 設置，暫停操作將提示您獲得一個或多個其他管理員的批准。必須從與 MAV 核准群組相關的所有管理員處收到核准，否則作業將會失敗。
+. 如果您使用 MAV（從ONTAP 9.13.1 開始與 ARP 一起使用）來保護 ARP 設置，則暫停操作會提示您獲得一個或多個其他管理員的批准。必須獲得與 MAV 審批組相關的所有管理員的批准，否則操作將失敗。
 +
 如果您使用的是 MAV 、而預期的暫停作業需要額外核准、則每位 MAV 群組核准者都會執行下列動作：
 

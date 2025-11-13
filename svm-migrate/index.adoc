@@ -2,20 +2,22 @@
 permalink: svm-migrate/index.html 
 sidebar: sidebar 
 keywords: svm, migrate, workflow, relocate, prerequisites, data mobility 
-summary: 叢集管理員可從ONTAP SVMware 9.10.1開始、在不中斷營運的情況下、將SVM從來源叢集重新部署到目的地叢集、以管理容量和負載平衡、或是啟用設備升級或資料中心整合。從功能支援的版本起、可從功能支援到功能性的支援、包括在功能性的支援平台上、以及混合式集合體上。ONTAP FAS AFF 
+summary: 從ONTAP 9.10.1 開始，叢集管理員可以無中斷地將 SVM 從來源叢集遷移到目標集群，以管理容量和負載平衡，或啟用設備升級或資料中心整合。從ONTAP 9.12.1 開始， FAS和AFF系統以及混合聚合體均支援此功能。 
 ---
-= SVM資料移動性總覽
+= 了解ONTAP SVM 資料遷移
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-從 ONTAP 9.10.1 開始、叢集管理員可以不中斷地將 SVM 從來源叢集重新定位到目的地叢集、以管理容量和負載平衡、或使用 ONTAP CLI 進行設備升級或資料中心整合。
+從ONTAP 9.10.1 開始，叢集管理員可以無中斷地將 SVM 從來源叢集遷移到目標集群，以管理容量和負載平衡，或啟用設備升級或資料中心整合。
 
-ONTAP 9.10.1 和 9.11.1 中的 AFF 平台支援這項不中斷 SVM 重新定位功能。從 ONTAP 9.12.1 開始、 FAS 和 AFF 平台以及混合式集合體均支援此功能。
+ONTAP 9.10.1 和 9.11.1 版本支援在AFF系統上進行非中斷式 SVM 遷移。從ONTAP 9.12.1 開始， FAS和AFF系統以及混合聚合體均支援此功能。
 
 SVM的名稱和UUID在移轉之後會維持不變、以及資料LIF名稱、IP位址和物件名稱（例如Volume名稱）。SVM中物件的UUID會有所不同。
+
+從ONTAP 9.18.1 開始，支援從ASA儲存系統到ASA r2 儲存系統的 SVM 遷移。如果您擁有ASA r2 儲存系統（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30、 ASA A20 或ASA C30），並且想要將 SVM 從ASA系統移轉到您的ASA r2 系統，請依照下列步驟操作。link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["這些步驟"^] 。
 
 
 
@@ -27,7 +29,7 @@ image:workflow_svm_migrate.gif["SVM 移轉工作流程。這概述了後續步�
 
 
 
-== SVM 移轉平台支援
+== SVM遷移系統支持
 
 [cols="1,1"]
 |===
@@ -36,16 +38,19 @@ image:workflow_svm_migrate.gif["SVM 移轉工作流程。這概述了後續步�
 | 控制器系列 | 支援的 ONTAP 版本 
 
 
-| AFF A 系列 | 更新版本ONTAP 
+| ASA | ONTAP 9.18.1 及更高版本 關注link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["這些步驟"^]用於將 SVM 從ASA遷移到ASA r2 系統。 
 
 
 | AFF C 系列 | ONTAP 9.12.1 修補程式 4 及更新版本 
 
 
 | FAS | 更新版本ONTAP 
+
+
+| AFF A 系列 | 更新版本ONTAP 
 |===
 
-NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自動磁碟區放置會嘗試執行類似 Aggregate Match 的作業。例如、如果來源叢集有 60 個磁碟區、則磁碟區放置位置會嘗試在目的地上尋找 AFF 集合體來放置磁碟區。如果 AFF 集合體上沒有足夠的空間、則這些磁碟區將放置在具有非 Flash 磁碟的集合體上。
+NOTE: 從AFF叢集遷移到具有混合聚合的FAS叢集時，自動磁碟區放置將嘗試執行類似的聚合匹配。例如，如果來源叢集有 60 個磁碟區，則磁碟區放置作業將嘗試在目標叢集上找到AFF聚合來放置這些磁碟區。當AFF聚合空間不足時，磁碟區將被放置在具有非快閃磁碟的聚合上。
 
 
 
@@ -58,7 +63,7 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 | 版本ONTAP | HA 在來源和目的地中配對 
 
 
-| ONTAP 9.14.1. | 12. 
+| ONTAP 9.14.1 及更新版本 | 12. 
 
 
 | ONTAP 9.13.1.12.9.11.9.11. | 6. 
@@ -94,7 +99,7 @@ NOTE:  當從 AFF 叢集移轉至具有混合式集合體的 FAS 叢集時、自
 |===
 
 
-| 來源 | 目的地 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 更新版本ONTAP 
+| 來源 | 目的地 | ONTAP 9.14.1 及更新版本 | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 更新版本ONTAP 
 
 
 | AFF | AFF | 400 | 200 | 100 | 100 
@@ -201,7 +206,7 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 | 資料量FlexCache | 不支援 |  
 
 
-| FlexGroup | 不支援 |  
+| 資料量FlexGroup | 不支援 |  
 
 
 | IPsec 原則 | 不支援 |  
@@ -287,7 +292,7 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 
 
 | SMB 傳輸協定 | ONTAP 9.12.1  a| 
-SMB 移轉作業會中斷運作、需要在移轉後重新整理用戶端。
+中小企業遷移會造成混亂，遷移後需要更新客戶端。
 
 
 

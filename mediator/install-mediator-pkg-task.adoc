@@ -16,35 +16,19 @@ summary: 若要安裝 ONTAP Mediator，您必須取得安裝套件並在主機�
 .步驟
 . 執行安裝程式並視需要回應提示：
 +
-`./ontap-mediator-1.10/ontap-mediator-1.10 -y`
+`./ontap-mediator-1.11.0/ontap-mediator-1.11.0 -y`
 
 +
 [listing]
 ----
-[root@scs000099753 ~]# ./ontap-mediator-1.10/ontap-mediator-1.10 -y
+[root@scs000099753 ~]# ./ontap-mediator-1.11.0/ontap-mediator-1.11.0 -y
 ----
 +
 
-NOTE: 若要跳過安裝過程中的自動簽名檢查，請使用下列命令：  `./ontap-mediator-1.10/ontap-mediator-1.10 -y --skip-code-signature-check`
+NOTE: 若要跳過安裝過程中的簽章檢查，請使用下列命令： `./ontap-mediator-1.11.0/ontap-mediator-1.11.0 -y --skip-code-signature-check`
 
 +
-安裝程序會繼續建立所需的帳戶、並安裝所需的套件。如果主機上已安裝舊版的「媒體資訊器」、系統會提示您確認是否要升級。
-
-. 從ONTAP 推出支援程式1.4開始、安全開機機制就會在UEFI系統上啟用。啟用「安全開機」時、您必須在安裝後採取其他步驟來登錄安全金鑰：
-+
-** 依照 README 檔案中的指示簽署 SCST 核心模組：
-+
-`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing`
-
-** 找到所需的金鑰：
-+
-`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys`
-
-
-
-+
-
-NOTE: 安裝後、系統輸出也會提供README檔案和主要位置。
+安裝程式會建立所需的帳戶並安裝所需的軟體包。如果 Mediator 已安裝，則會提示您進行升級。
 
 
 
@@ -53,18 +37,18 @@ NOTE: 安裝後、系統輸出也會提供README檔案和主要位置。
 ====
 [listing]
 ----
-[root@mediator_host ~]# tar -zxvf ontap-mediator-1.10.tgz
-ontap-mediator-1.10/
-ontap-mediator-1.10/csc-prod-chain-ONTAP-Mediator.pem
-ontap-mediator-1.10/csc-prod-ONTAP-Mediator.pem
-ontap-mediator-1.10/tsa-prod-ONTAP-Mediator.pem
-ontap-mediator-1.10/tsa-prod-chain-ONTAP-Mediator.pem
-ontap-mediator-1.10/ONTAP-Mediator-production.pub
-ontap-mediator-1.10/ontap-mediator-1.10
-ontap-mediator-1.10/ontap-mediator-1.10.sig.tsr
-ontap-mediator-1.10/ontap-mediator-1.10.tsr
-ontap-mediator-1.10/ontap-mediator-1.10.sig
-[root@mediator_host ~]#./ontap-mediator-1.10.0/ontap-mediator-1.10.0
+[root@mediator_host ~]# tar -zxvf ontap-mediator-1.11.0.tgz
+ontap-mediator-1.11.0/
+ontap-mediator-1.11.0/csc-prod-chain-ONTAP-Mediator.pem
+ontap-mediator-1.11.0/csc-prod-ONTAP-Mediator.pem
+ontap-mediator-1.11.0/tsa-prod-ONTAP-Mediator.pem
+ontap-mediator-1.11.0/tsa-prod-chain-ONTAP-Mediator.pem
+ontap-mediator-1.11.0/ONTAP-Mediator-production.pub
+ontap-mediator-1.11.0/ontap-mediator-1.11.0
+ontap-mediator-1.11.0/ontap-mediator-1.11.0.sig.tsr
+ontap-mediator-1.11.0/ontap-mediator-1.11.0.tsr
+ontap-mediator-1.11.0/ontap-mediator-1.11.0.sig
+[root@mediator_host ~]#./ontap-mediator-1.11.0/ontap-mediator-1.11.0
 
 ONTAP Mediator: Self Extracting Installer
 
@@ -75,12 +59,12 @@ Error querying OCSP responder
 80BBA032607F0000:error:1E800080:HTTP routines:OSSL_HTTP_REQ_CTX_nbio:failed reading data:crypto/http/http_client.c:549:
 80BBA032607F0000:error:1E800067:HTTP routines:OSSL_HTTP_REQ_CTX_exchange:error receiving:crypto/http/http_client.c:901:server=http://ocsp.entrust.net:80
    WARNING: The OCSP check failed while attempting to test the Code-Signature-Check certificate
-   Continue without code signature checking (only recommended if integrity has been established manually)? y(es)/N(o): yes
+   Continue without code signature checking (only recommended if integrity has been established manually)? yes/no: yes
  SKIPPING: Code signature check, manual override due to lack of OCSP response
 + Unpacking the ONTAP Mediator installer
 
 ONTAP Mediator requires two user accounts. One for the service (netapp), and one for use by ONTAP to the mediator API (mediatoradmin).
-Using default account names: netapp + mediatoradmin
+Would you like to use the default account names: netapp + mediatoradmin? (Y(es)/n(o)): yes
 
 
 
@@ -124,7 +108,7 @@ Installing:
  make                                                                 x86_64                                          1:4.4.1-9.el10                                                 BaseOS                                             591 k
  openssl-devel                                                        x86_64                                          1:3.2.2-16.el10                                                AppStream                                          3.9 M
  patch                                                                x86_64                                          2.7.6-26.el10                                                  AppStream                                          134 k
- perl-ExtUtils-MakeMaker                                              noarch                                          2:7.70-513.el10                                                AppStream                                          297 k
+ perl-ExtUtils-MakeMaker                                              noarch                                          2:7.70-513.el10                                                AppStream                                           297 k
  python3-devel                                                        x86_64                                          3.12.9-1.el10                                                  AppStream
  334 k
  python3-pip                                                          noarch                                          23.3.2-7.el10                                                  AppStream                                          3.2 M
@@ -296,8 +280,8 @@ Installed:
 
 Complete!
 OS package installations finished
-+ Installing ONTAP Mediator. (Log: /root/ontap_mediator.vdizgQ/ontap-mediator-1.10.0/ontap-mediator-1.10.0/install_20250715160240.log)
-    This step will take several minutes. Use the log file to view progress.
++ Installing ONTAP Mediator. (Log: /root/ontap_mediator.vdizgQ/ontap-mediator-1.11.0/ontap-mediator-1.11.0/install_20250715160240.log)
+    This step takes several minutes. View progress in the log file.
     Sudoer config verified
     ONTAP Mediator rsyslog and logging rotation enabled
 + Install successful. (Moving log to /opt/netapp/lib/ontap_mediator/log/install_20250715160240.log)
@@ -306,8 +290,8 @@ OS package installations finished
            If SB is enabled in the future, SCST will not work unless the following action is taken:
            Using the keys in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys follow
            instructions in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing
-           to sign the SCST kernel module. Note that reboot will be needed.
-     SCST will not start automatically when Secure Boot is enabled and not configured properly.
+           to sign the SCST kernel module. Note that a reboot is needed.
+     SCST does not start automatically when Secure Boot is enabled and not configured properly.
 
 + Note: ONTAP Mediator generated a self-signed server certificate for temporary use on
     this host. If the DNS name or IP address for the host is changed, the certificate
@@ -355,3 +339,64 @@ root@mediator_host:~#
 
 ----
 ====
+
+
+== 註冊 UEFI 安全啟動的安全金鑰
+
+從ONTAP Mediator 1.4 開始，UEFI 系統上啟用了安全啟動機制。啟用安全啟動後，安裝完成後必須採取額外步驟來註冊安全金鑰。
+
+.步驟
+. 依照 README 檔案中的說明對 SCST 核心模組進行簽署：
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing`
+
+. 找到所需的金鑰：
++
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys`
+
++
+
+NOTE: 安裝完成後，系統輸出會提供 README 檔案和金鑰位置。
+
+. 將公開金鑰新增至莫克清單：
++
+`mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
+
++
+[NOTE]
+====
+您可以將私鑰保留在預設位置，也可以將其移動到安全位置。您必須將公鑰保存在現有位置，以便啟動管理器可以使用它。更多資訊請參閱 README.module-signing 檔案：
+
+`[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
+README.module-signing  scst_module_key.der  scst_module_key.priv`
+
+====
+. 重新啟動主機，並使用裝置的 UEFI 啟動管理員批准新的 MOK。您需要使用提供的密碼短語。 `mokutil`實用性link:index.html#install-ontap-mediator-when-uefi-secure-boot-is-enabled["啟用 UEFI 安全開機時，請安裝 ONTAP Mediator"]。
+
+
+
+
+== 對 SCST 核心模組進行簽名
+
+安裝ONTAP Mediator 後，如果 systemctl 狀態 `mediator-scst`顯示為失敗（非活動狀態），請依照下列步驟對 SCST 核心模組進行簽署。
+
+.步驟
+. 在建置過程中，會產生一對公鑰/私鑰。 `/opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/`使用以下命令進入目錄：
++
+`[root@mediator-host ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
+README.module-signing  scst_module_key.der  scst_module_key.priv
+[root@mediator-host ~]#`
+
+. 執行以下命令，開始將公鑰匯入UEFI金鑰庫的過程：
++
+`[root@mediator-host ~]# mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der
+input password:
+input password again:`
+
++
+`[root@mediator-host ~]#`
+
+. mokutil 軟體在匯入過程中會要求為此金鑰設定一個臨時密碼。
+. 確認導入過程是否已開始 `mokutil --list-new`然後重啟系統。引導程式啟動 EFI MOK 管理器。
+. 使用螢幕上的選單開啟 SCST 核心模組金鑰。啟動後，運行 `systemctl status mediator-scst`。服務啟動後，SCST 核心模組將被簽署。
+

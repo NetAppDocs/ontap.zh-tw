@@ -81,7 +81,7 @@ ARP 必須主動保護卷，而不是處於學習或評估模式。
 
 +
 
-NOTE: 從 ONTAP 9.13.1 開始、如果您使用 MAV 來保護您的 ARP 設定、則清除可疑的作業會提示您取得一或多個額外管理員的核准。 link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"] 與 MAV 核准群組相關聯、否則作業將會失敗。
+NOTE: 從ONTAP 9.13.1 開始，如果您使用 MAV 來保護 ARP 設置，清除可疑項目操作會提示您獲得一個或多個其他管理員的批准。link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"]與 MAV 審批小組相關，否則操作將會失敗。
 
 
 
@@ -117,6 +117,7 @@ NOTE: 如果您已還原整個磁碟區，則無需清除任何可疑文件類�
 --
 .CLI
 --
+.驗證攻擊
 . 當您收到可疑勒索軟體攻擊的通知時、請確認攻擊的時間和嚴重性：
 +
 [source, cli]
@@ -172,6 +173,9 @@ Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
 ----
 cat report_file_vs0_vol1_14-09-2021_01-21-08
 ----
+
+
+.採取行動
 . 根據您對檔案副檔名或熵峰值的評估，請執行以下操作之一：
 +
 ** 誤判
@@ -231,6 +235,15 @@ security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume
 +
 這 `clear-suspect`操作會清除攻擊報告。如果您還原了整個磁碟區，則無需清除任何可疑檔案類型通知。對於ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照會在分類操作觸發的縮短保留期後自動刪除。對於ONTAP 9.15.1 及更早版本，還原磁碟區或清除可疑事件後，ARP 快照會自動刪除。
 
+. 從 9.18.1 版本開始，您可以確定以下狀態： `clear-suspect`手術：
++
+[source, cli]
+----
+security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -vserver <svm_name>
+----
+
+
+.MAV選項
 . 如果您使用的是 MAV 、而且是預期的 `clear-suspect` 作業需要額外核准、每位 MAV 群組核准者必須：
 +
 .. 顯示要求：
