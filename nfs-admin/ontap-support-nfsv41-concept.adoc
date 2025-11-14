@@ -15,10 +15,11 @@ summary: 從功能不支援的問題9.8開始ONTAP 、NFSv4.1啟用時、預設�
 
 較早的NFS用戶端實作只使用單一TCP連線與掛載。在鏈接功能中、單一TCP連線可能會成為瓶頸、導致IOPS增加。ONTAP
 
-不過，啟用 nconnect 的用戶端可以有多個 TCP 連線（最多 16 個）與單一 NFS 掛載相關聯。 nConnect 只使用一個 IP ，並在單一 IP 上建立多個 TCP 連線，以掛載 NFS 匯出。這類 NFS 用戶端會以循環方式將檔案作業分散到多個 TCP 連線，進而從可用的網路頻寬獲得更高的處理量。nConnect建議僅用於NFSv3和NFSv4.1掛載。
-
-請參閱NFS用戶端文件、確認您的用戶端版本是否支援nconnect。
+nconnect 透過允許單一掛載點建立多個 TCP 連線（最多 16 個），提高了 NFS 用戶端的效能，有助於克服隨著 IOPS 增加，單一 TCP 連線可能出現的效能瓶頸。
 
 NFSv4.1預設會在ONTAP 更新版本的版本中啟用。在舊版中、您可以透過指定來啟用 `-v4.1` 選項並將其設定為 `enabled` 在儲存虛擬機器（ SVM ）上建立 NFS 伺服器時。
 
 不支援NFSv4.1目錄和檔案層級委派。ONTAP
+
+.相關資訊
+link:nconnect-concept.html["了解 nconnect 如何提升 NFS 效能"]。
