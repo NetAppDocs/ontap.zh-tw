@@ -9,12 +9,12 @@ summary: 定期更改板載密鑰管理密碼。將新密碼儲存在儲存系�
 
 
 [role="lead"]
-定期更改板載密鑰管理密碼。將新密碼儲存在儲存系統之外的安全位置。
+NetApp建議您定期變更板載金鑰管理密碼。您必須將新密碼短語儲存在儲存系統之外的安全位置。
 
 .開始之前
 * 您必須是叢集或SVM管理員、才能執行此工作。
 * 此工作需要進階權限。
-* 如果您正在管理ONTAP MetroCluster環境，則必須更新兩個叢集上的密碼
+* 在MetroCluster環境中，在本地叢集上更新密碼短語後，同步夥伴叢集上的密碼短語更新。
 
 
 .步驟
@@ -22,39 +22,63 @@ summary: 定期更改板載密鑰管理密碼。將新密碼儲存在儲存系�
 +
 `set -privilege advanced`
 
-. 變更內建金鑰管理通關密碼：
+. 更改機載密鑰管理密碼。您使用的命令取決於您執行的ONTAP版本。
 +
-[cols="25,75"]
-|===
-
-
-| 此版本... ONTAP | 使用此命令... 
-
-
- a| 
-更新版本ONTAP
- a| 
+[role="tabbed-block"]
+====
+.更新版本ONTAP
+--
 `security key-manager onboard update-passphrase`
 
-
-
- a| 
-不含更新版本ONTAP
- a| 
+--
+.不含更新版本ONTAP
+--
 `security key-manager update-passphrase`
 
-|===
+--
+====
 . 輸入一個介於 32 到 256 個字元之間的密碼，或對於“`cc-mode`”，輸入一個介於 64 到 256 個字元之間的密碼。
 +
 如果指定的"'cc-mode"通關密碼少於64個字元、則在金鑰管理程式設定作業再次顯示通關密碼提示之前、會有五秒鐘的延遲。
 
 . 在通關密碼確認提示下、重新輸入通關密碼。
+. 如果您使用的是MetroCluster配置，請在夥伴叢集上同步更新後的密碼短語。
++
+.. 透過選擇適合您ONTAP版本的正確指令，在夥伴叢集上同步密碼短語：
++
+[role="tabbed-block"]
+====
+.更新版本ONTAP
+--
+`security key-manager onboard sync`
+
+--
+.不含更新版本ONTAP
+--
+*** 在ONTAP 9.5 中，運行：
++
+`security key-manager setup -sync-metrocluster-config`
+
+*** 在ONTAP 9.4 及更早版本中，更新本機叢集上的密碼短語後，等待 20 秒，然後在夥伴叢集上執行以下命令：
++
+`security key-manager setup`
+
+
+
+--
+====
+.. 出現提示時，請輸入新的密碼短語。
++
+兩個群集必須使用相同的密碼短語。
+
+
+
 
 
 .完成後
-您應該將內建金鑰管理通關密碼複製到儲存系統外部的安全位置、以供未來使用。
+將板載金鑰管理密碼短語複製到儲存系統外部的安全位置，以備將來使用。
 
-每當您變更內建金鑰管理通關密碼時、都應該手動備份金鑰管理資訊。
+每次變更機載金鑰管理密碼時，請手動備份金鑰管理資訊。
 
 .相關資訊
 * link:backup-key-management-information-manual-task.html["手動備份內建金鑰管理資訊"]
