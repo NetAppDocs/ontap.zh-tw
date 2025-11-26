@@ -1,0 +1,53 @@
+---
+permalink: pnfs/pnfs-overview.html 
+sidebar: sidebar 
+keywords: tr-4063, technical report, pnfs, parallel nfs, nfsv4.1, nfsv4.2, performance, metadata, data path 
+summary: '並行 NFS (pNFS) 允許 NFS 用戶端直接並行地對儲存設備執行讀取/寫入操作，從而繞過 NFS 伺服器這一潛在瓶頸，並提高了效能。' 
+---
+= 了解ONTAP中的平行 NFS (pNFS)
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+並行 NFS 於 2010 年 1 月作為 RFC 標準 RFC-5661 推出，旨在透過分離元資料和資料路徑，允許客戶端直接存取 NFSv4.1 伺服器上的檔案資料。這種直接存取方式透過資料本地化、CPU效率和操作並行化帶來效能優勢。2018 年編寫了後續的 RFC，涵蓋 pNFS 佈局類型（RFC-8434），其中定義了文件、區塊和物件佈局的標準。ONTAP利用 pNFS 操作的檔案佈局類型。
+
+
+NOTE: 從 2024 年 7 月開始，先前以 PDF 形式發布的技術報告內容已與ONTAP產品文件整合。ONTAP NFS 儲存管理文件現在包含了來自 _TR-4063： NetApp ONTAP 中的平行網路檔案系統 (pNFS)_ 的內容。
+
+多年來，NFSv3 一直是 NFS 協定的標準版本，幾乎適用於所有用例。然而，該協定存在一些局限性，例如缺乏狀態性、權限模型簡陋以及基本的鎖定功能。NFSv4.0 (RFC 7530) 在 NFSv3 的基礎上進行了一系列改進，隨後的 NFSv4.1 (RFC 5661) 和 NFSv4.2 (RFC 7862) 版本進一步改進了這些改進，增加了並行 NFS (pNFS) 等功能。
+
+
+
+== NFSv4.x 的優勢
+
+NFSv4.x 相較於 NFSv3 有下列優勢：
+
+* 由於 NFSv4 僅使用單一連接埠（2049）進行操作，因此對防火牆友善。
+* 進階且積極的快取管理，例如 NFSv4.x 中的委託機制
+* 採用密碼學的強大 RPC 安全選項
+* 字元國際化
+* 複合操作
+* 僅支援 TCP
+* 有狀態協定（不像NFSv3那樣是無狀態的）
+* 全面整合 Kerberos，實現高效率的身份驗證機制
+* NFS轉診
+* 支援與 UNIX 和 Windows 相容的存取控制
+* 基於字串的使用者和群組標識符
+* pNFS（NFSv4.1）
+* 擴展屬性（NFSv4.2）
+* 安全標籤（NFSv4.2）
+* 稀疏檔案操作（FALLOCATE）（NFSv4.2）
+
+
+有關 NFSv4.x 的更多信息，包括最佳實踐和功能詳情，請參閱 https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["NetApp技術報告4067：NFS最佳實務與實作指南"^]。
+
+.相關資訊
+* link:../nfs-config/index.html["NFS組態總覽"]
+* link:../nfs-admin/index.html["NFS 管理概述"]
+* link:../flexgroup/index.html["資料區管理FlexGroup"]
+* link:../nfs-trunking/index.html["NFS 主幹總覽"]
+* https://www.netapp.com/pdf.html?item=/media/19370-tr-4523.pdf[]
+* link:https://www.netapp.com/pdf.html?item=/media/19384-tr-4616.pdf["NetApp技術報告4616：ONTAP NFS Kerberos in Some with Microsoft Active Directory"^]
+

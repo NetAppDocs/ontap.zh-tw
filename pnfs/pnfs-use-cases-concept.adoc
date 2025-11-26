@@ -1,0 +1,116 @@
+---
+permalink: pnfs/pnfs-use-cases-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, use cases, nconnect, session trunking, referrals, advanced capacity balancing, technical report 
+summary: pNFS 可與各種ONTAP功能（包括 nconnect、會話中繼和高階容量均衡）一起使用，以提高效能和靈活性。 
+---
+= ONTAP中的 pNFS 用例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 可以與ONTAP 的各種功能一起使用，以提高效能並為 NFS 工作負載提供更大的靈活性。
+
+
+
+== 使用 nconnect 的 pNFS
+
+NFS 為一些較新的客戶端和伺服器引入了一種新的掛載選項，該選項提供了一種在掛載單一 IP 位址的同時提供多個 TCP 連線的方法。這提供了一種機制，可以更好地並行化操作，繞過 NFS 伺服器和客戶端的限制，並有可能為某些工作負載提供更高的整體效能。 ONTAP 9.8 及更高版本支援 nconnect，前提是用戶端支援 nconnect。
+
+當使用 nconnect 連接 pNFS 時，將使用 nconnect 選項並行連接 NFS 伺服器通告的每個 pNFS 裝置。例如，如果 nconnect 設置為 4，並且有 4 個符合 pNFS 條件的接口，則每個掛載點創建的連接總數最多為 16 個（4 個 nconnect x 4 個 IP 位址）。
+
+.pNFS 的 nconnect 設定為 4
+image::pNFS_fig_015.png[pNFS，nconnect=4]
+
+link:../nfs-admin/ontap-support-nfsv41-concept.html["了解更多關於ONTAP對 NFSv4.1 的支持"]
+
+
+
+== pNFS 與 NFSv4.1 會話中繼
+
+NFSv4.1 會話中繼 (https://datatracker.ietf.org/doc/html/rfc5661#section-2.10.5["RFC 5661，第 2.10.5 節"^]) 是指在客戶端和伺服器之間使用多個 TCP 連線來提高資料傳輸速度。ONTAP 9.14.1 新增了對 NFSv4.1 會話中繼的支持，必須與也支援會話中繼的用戶端一起使用。
+
+在ONTAP中，會話中繼可以跨叢集中的多個節點使用，以提供額外的吞吐量和連接冗餘。
+
+會話中繼可以透過多種方式建立：
+
+* *透過掛載選項自動發現：* 大多數現代 NFS 用戶端可以透過掛載選項建立會話中繼（請查看您的作業系統供應商的文件），該選項會向 NFS 伺服器發出訊號，以便將有關會話中繼的資訊傳送回用戶端。此資訊以 NFS 資料包的形式出現。 `fs_location4` 稱呼。
++
+所使用的掛載選項取決於客戶端的作業系統版本。例如，Ubuntu Linux 的各種版本通常使用 `max_connect=n` 表示要使用會話中繼。在 RHEL Linux 發行版中， `trunkdiscovery` 使用了掛載選項。
+
++
+.Ubuntu 範例
+[listing]
+----
+mount -o vers=4.1,max_connect=8 10.10.10.10:/pNFS /mnt/pNFS
+----
++
+.RHEL 範例
+[listing]
+----
+mount -o vers=4.1,trunkdiscovery 10.10.10.10:/pNFS /mnt/pNFS
+----
++
+
+NOTE: 如果您嘗試使用 `max_connect` 在 RHEL 發行版上，它將被視為 nconnect，會話中繼將無法如預期般運作。
+
+* *手動建立：* 您可以透過將每個單獨的 IP 位址掛載到相同的匯出路徑和掛載點來手動建立會話中繼。例如，如果同一個節點上有兩個 IP 位址（10.10.10.10 和 10.10.10.11），用於匯出路徑， `/pNFS`你需要運行兩次 mount 指令：
++
+[listing]
+----
+mount -o vers=4.1 10.10.10.10:/pNFS /mnt/pNFS
+mount -o vers=4.1 10.10.10.11:/pNFS /mnt/pNFS
+----
++
+對所有要參與主幹的介面重複此程序。
+
+
+
+
+NOTE: 每個節點都有自己的會話主幹。主幹不經過節點。
+
+
+NOTE: 使用 pNFS 時，僅使用會話中繼_或_ nconnect。同時使用兩者會導致不良行為，例如只有元資料伺服器連線才能獲得 nconnect 的好處，而資料伺服器只能使用單一連線。
+
+.ONTAP中的 NFSv4.1 會話中繼
+image::pNFS_fig_016.png[ONTAP中的 NFSv4.1 會話中繼]
+
+pNFS 可以為叢集中的每個參與節點提供本機路徑，並且當與會話中繼一起使用時，pNFS 可以利用每個節點的會話中繼來最大限度地提高整個叢集的吞吐量。
+
+image::pNFS_fig_017.png[ONTAP中的 NFSv4.1 會話中繼與 pNFS 集成]
+
+什麼時候 `trunkdiscovery` 如果使用，則會利用附加的 GETATTR 呼叫 (FS_Locations) 來取得 NFS 伺服器節點上所列的會話中繼接口，該節點是掛載介面所在的位置。一旦這些位址返回，後續的掛載點就會指向返回的位址。這可以從掛載過程中的資料包擷取中看出。
+
+.掛載期間的 NFS 會話主幹發現：資料包捕獲
+image::pNFS_fig_018.png[掛載期間的 NFS 會話主幹發現：資料包捕獲]
+
+link:../nfs-trunking/index.html["了解更多關於NFS中繼的信息"]
+
+
+
+== pNFS 與 NFSv4.1 轉診
+
+NFSv4.1 參考提供了一種初始掛載路徑重新導向模式，該模式會在發出掛載請求時將用戶端引導至磁碟區的位置。NFSv4.1 轉介功能在單一 SVM 內運作。此功能嘗試將 NFS 掛載點定位到與資料磁碟區位於相同節點上的網路介面。如果該介面或磁碟區在掛載到客戶端時移動到另一個節點，則資料路徑將不再本地化，直到建立新的掛載點為止。
+
+pNFS 不會嘗試定位掛載路徑。相反，它會使用掛載路徑建立一個元資料伺服器，然後根據需要動態地本地化資料路徑。
+
+NFSv4.1 引用可以與 pNFS 一起使用，但此功能沒有必要。啟用 pNFS 的轉診功能不會產生明顯效果。
+
+link:../nfs-admin/enable-disable-nfsv4-referrals-task.html["啟用或停用 NFSv4 引用"]
+
+
+
+== pNFS與高階容量平衡的交互
+
+link:../flexgroup/enable-adv-capacity-flexgroup-task.html["進階容量平衡"] ONTAP會將檔案資料的一部分寫入FlexGroup磁碟區的各個組成磁碟區（單一FlexVol磁碟區不支援此功能）。隨著檔案的成長， ONTAP決定開始將資料寫入不同的組成磁碟區上的新的多部分 inode，該組成磁碟區可能位於同一節點上，也可能位於不同的節點上。對這些多 inode 檔案進行的寫入、讀取和元資料操作對客戶端是透明的，不會造成乾擾。先進的容量平衡技術改善了FlexGroup各組成磁碟區之間的空間管理，從而提供了更穩定的效能。
+
+pNFS 可以根據 NFS 伺服器中儲存的檔案佈局訊息，將資料 I/O 重新導向到本機網路路徑。當一個大檔案被分成多個部分，分佈在多個組成磁碟區中，而這些磁碟區可能跨越叢集中的多個節點時， ONTAP中的 pNFS 仍然可以為每個檔案部分提供本機流量，因為ONTAP也維護了所有檔案部分的檔案佈局資訊。讀取檔案時，資料路徑的局部性會根據需要而改變。
+
+.基於 pNFS 的高階容量平衡
+image::pNFS_fig_019.png[基於 pNFS 的高階容量平衡]
+
+.相關資訊
+* link:../flexgroup/supported-unsupported-config-concept.html["FlexGroup卷配置"]
+

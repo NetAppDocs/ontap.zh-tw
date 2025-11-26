@@ -1,0 +1,95 @@
+---
+permalink: pnfs/pnfs-plan-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, plan, prerequisites, requirements, flexgroup, nfsv4.1, nfsv4.2, interoperability, limits, technical report 
+summary: 在ONTAP中使用 pNFS 之前，請確保滿足先決條件並了解互通性要求和限制。 
+---
+= pNFS部署計劃
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在您的環境中部署 pNFS 之前，請確保滿足先決條件，並了解互通性要求和配置限制。
+
+
+
+== 先決條件
+
+在ONTAP中啟用和使用 pNFS 之前，請確保符合以下要求：
+
+* NFS伺服器上已啟用NFSv4.1或更高版本
+* 至少一個 link:pnfs-architecture-concept.html#data-path-information["每個節點都存在資料 LIF。"] 在託管 NFS 伺服器的 SVM 叢集中
+* 全部 link:pnfs-architecture-concept.html#data-path-information["SVM 中的資料 LIF 是可路由的"] 致 NFS 用戶端
+* NFS 用戶端支援 pNFS（2014 年及以後的大多數現代 Linux 發行版均支援）。
+* 客戶端與SVM中所有資料LIF之間的網路連線正常
+* 所有資料 LIF 的 DNS 解析（如果使用主機名稱）均已正確配置。
+* link:pnfs-architecture-concept.html#interaction-of-pnfs-with-flexgroup-volumes["資料量FlexGroup"] 已配置（建議使用以獲得最佳效果）
+* link:pnfs-tuning-performance-concept.html#nfsv4-x-id-domains["NFSv4.x ID 域匹配"] 客戶與ONTAP之間
+* link:pnfs-tuning-performance-concept.html#nfs-kerberos["NFS Kerberos"] （如果使用）在 SVM 中的所有資料 LIF 上啟用。
+
+
+
+
+== 最佳實務總結
+
+在您的環境中部署 pNFS 時，請遵循以下最佳實務：
+
+* 使用 link:pnfs-tuning-performance-concept.html#volume-type-recommendations["資料量FlexGroup"] 為了獲得最佳性能和容量擴展性
+* 確保所有 link:pnfs-tuning-performance-concept.html#network-interface-connectivity["SVM中的網路介面是可路由的。"] 致客戶
+* link:pnfs-tuning-performance-concept.html#nfsv4-0["停用NFSv4.0"] 確保客戶端使用 NFSv4.1 或更高版本
+* 分散掛載點到多個網路介面和節點
+* 使用輪詢 DNS link:pnfs-tuning-performance-concept.html#metadata-server["負載平衡元資料伺服器"]
+* 核實 link:pnfs-tuning-performance-concept.html#nfsv4-x-id-domains["NFSv4.x ID 域匹配"] 在客戶端和伺服器上
+* 執行 link:pnfs-tuning-performance-concept.html#network-interface-migration["網路介面遷移"] 和 link:pnfs-tuning-performance-concept.html#storage-failoversgivebacks["儲存故障轉移"] 維護窗口期
+* 使能夠 link:pnfs-tuning-performance-concept.html#nfs-kerberos["NFS Kerberos"] 如果使用 Kerberos 安全機制，則所有資料 LIF 都會受到影響。
+* 避免使用 link:pnfs-tuning-performance-concept.html#nfsv4-1-referrals["NFSv4.1 轉介"] 使用 pNFS 時
+* 測試 link:pnfs-tuning-performance-concept.html#nconnect["nconnect 設定"] 謹慎操作，避免超出 TCP 連線限制
+* 考慮 link:pnfs-use-cases-concept.html#pnfs-with-nfsv4-1-session-trunking["會話中繼"] 作為替代方案 link:pnfs-use-cases-concept.html#pnfs-with-nconnect["n 連接"] （請勿同時使用兩者）
+* 核實 link:pnfs-tuning-performance-concept.html#client-recommendations["客戶端作業系統供應商支持"] 部署前先對 pNFS 進行處理
+
+
+
+
+== 互通性
+
+ONTAP中的 pNFS 設計用於與符合 RFC 標準的 NFS 用戶端搭配使用。以下幾點要考慮：
+
+* 最現代 link:pnfs-tuning-performance-concept.html#client-recommendations["2014 年及以後的 Linux 發行版"] 支援 pNFS（RHEL 6.4、Fedora 17 及更高版本）
+* 請向您的用戶端作業系統供應商確認是否支援 pNFS。
+* pNFS 可與FlexVol和 link:pnfs-architecture-concept.html#interaction-of-pnfs-with-flexgroup-volumes["資料量FlexGroup"]
+* pNFS 支援 NFSv4.1 和 link:pnfs-tuning-performance-concept.html#nfsv4-2["NFSv4.2"]
+* pNFS 可以與…一起使用 link:pnfs-tuning-performance-concept.html#nfs-kerberos["NFS Kerberos"] （krb5、krb5i、krb5p），但性能可能會受到影響
+* pNFS 可以與…一起使用 link:pnfs-use-cases-concept.html#pnfs-with-nconnect["n 連接"] 或者 link:pnfs-use-cases-concept.html#pnfs-with-nfsv4-1-session-trunking["會話中繼"] （但不能同時進行）
+* pNFS 無法在 link:pnfs-tuning-performance-concept.html#nfsv4-0["NFSv4.0"]
+
+
+
+
+== 限制
+
+以下限制適用於ONTAP中的 pNFS：
+
+* link:pnfs-tuning-performance-concept.html#nconnect["TCP 連線限制"] 每個節點的具體限制因平台而異（請查看NetAppHardware Universe以了解特定限制）。
+* 最大檔案大小：取決於磁碟區類型和ONTAP版本
+* 最大文件數：最多 2000 億個文件 link:pnfs-architecture-concept.html#interaction-of-pnfs-with-flexgroup-volumes["資料量FlexGroup"]
+* 最大容量：高達 60 PB link:pnfs-architecture-concept.html#interaction-of-pnfs-with-flexgroup-volumes["資料量FlexGroup"]
+* link:pnfs-tuning-performance-concept.html#network-interface-connectivity["網路介面數量"]每個節點至少需要一個資料 LIF；負載平衡可能需要更多。
+
+
+使用時 link:pnfs-use-cases-concept.html#pnfs-with-nconnect["nconnect 與 pNFS"]請注意，TCP 連線數會迅速成長：
+
+* 每個使用 nconnect 的客戶端掛載都會為每個資料 LIF 建立多個 TCP 連線。
+* 由於許多客戶使用了較高的 nconnect 值， link:pnfs-tuning-performance-concept.html#nconnect["TCP 連線限制"] 可以超過
+* TCP連線數超過限制會阻止建立新連接，直到現有連線被釋放為止。
+
+
+.相關資訊
+* link:../nfs-admin/enable-disable-nfsv41-task.html["啟用或停用 NFSv4.1"]
+* link:../nfs-config/create-lif-task.html["建立LIF"]
+* link:../nfs-admin/ontap-support-nfsv41-concept.html["ONTAP對 NFSv4.1 的支持"]
+* link:../nfs-admin/ontap-support-nfsv42-concept.html["ONTAP對 NFSv4.2 的支持"]
+* https://hwu.netapp.com["NetApp Hardware Universe"^]
+* link:../flexgroup/index.html["資料區管理FlexGroup"]
+

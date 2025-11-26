@@ -1,0 +1,167 @@
+---
+permalink: pnfs/pnfs-commands.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, commands, technical report 
+summary: 使用這些ONTAP CLI 指令來設定、排查 pNFS 故障和收集統計資料。 
+---
+= pNFS 指令、統計資料和事件日誌
+:allow-uri-read: 
+
+
+[role="lead"]
+這些ONTAP CLI 指令專門用於 pNFS。您可以使用它們進行配置、故障排除和收集統計資料。
+
+
+
+== 啟用 NFSv4.1
+
+[listing]
+----
+nfs modify -vserver SVM -v4.1 enabled
+----
+
+
+== 啟用pNFS
+
+[listing]
+----
+nfs modify -vserver SVM -v4.1-pnfs enabled
+----
+
+
+== 顯示 pNFS 設備（進階權限）
+
+[listing]
+----
+pnfs devices show -vserver SVM
+----
+[listing]
+----
+Vserver Name     Mapping ID      Volume MSID     Mapping Status  Generation
+---------------  --------------- --------------- --------------- -------------
+SVM              17              2157024470      notavailable    2
+SVM              18              2157024463      notavailable    2
+SVM              19              2157024469      available       3
+SVM              20              2157024465      available       4
+SVM              21              2157024467      available       3
+SVM              22              2157024462      available       1
+----
+
+
+== 顯示 pNFS 裝置對映（高階權限）
+
+[listing]
+----
+pnfs devices mappings show -vserver SVM
+----
+[listing]
+----
+Vserver Name    Mapping ID      Dsid            LIF IP
+--------------  --------------- --------------- --------------------
+SVM             19              2449            10.x.x.x
+SVM             20              2512            10.x.x.y
+SVM             21              2447            10.x.x.x
+SVM             22              2442            10.x.x.y
+----
+
+
+== 擷取 pNFS 特有的效能計數器（進階權限）
+
+[listing]
+----
+statistics start -object nfsv4_1 -vserver SVM -sample-id [optional-name]
+----
+
+
+== 查看 pNFS 特有的效能計數器（進階權限）
+
+[listing]
+----
+statistics show -object nfsv4_1 -vserver SVM
+----
+
+
+== 查看 pNFS 特有計數器清單（進階權限）
+
+[listing]
+----
+statistics catalog counter show -object nfsv4_1 -counter *layout*|*device*
+----
+[listing]
+----
+Object: nfsv4_1
+
+Counter                     Description
+--------------------------- ----------------------------------------------
+getdeviceinfo_avg_latency   Average latency of NFSv4.1 GETDEVICEINFO operations.
+getdeviceinfo_error         The number of failed NFSv4.1 GETDEVICEINFO operations.
+getdeviceinfo_percent       Percentage of NFSv4.1 GETDEVICEINFO operations.
+getdeviceinfo_success       The number of successful NFSv4.1 GETDEVICEINFO operations.
+getdeviceinfo_total         Total number of NFSv4.1 GETDEVICEINFO operations.
+getdevicelist_avg_latency   Average latency of NFSv4.1 GETDEVICELIST operations.
+getdevicelist_error         The number of failed NFSv4.1 GETDEVICELIST operations.
+getdevicelist_percent       Percentage of NFSv4.1 GETDEVICELIST operations.
+getdevicelist_success       The number of successful NFSv4.1 GETDEVICELIST operations.
+getdevicelist_total         Total number of NFSv4.1 GETDEVICELIST operations.
+layoutcommit_avg_latency    Average latency of NFSv4.1 LAYOUTCOMMIT operations.
+layoutcommit_error          The number of failed NFSv4.1 LAYOUTCOMMIT operations.
+layoutcommit_percent        Percentage of NFSv4.1 LAYOUTCOMMIT operations.
+layoutcommit_success        The number of successful NFSv4.1 LAYOUTCOMMIT operations.
+layoutcommit_total          Total number of NFSv4.1 LAYOUTCOMMIT operations.
+layoutget_avg_latency       Average latency of NFSv4.1 LAYOUTGET operations.
+layoutget_error             The number of failed NFSv4.1 LAYOUTGET operations.
+layoutget_percent           Percentage of NFSv4.1 LAYOUTGET operations.
+layoutget_success           The number of successful NFSv4.1 LAYOUTGET operations.
+layoutget_total             Total number of NFSv4.1 LAYOUTGET operations.
+layoutreturn_avg_latency    Average latency of NFSv4.1 LAYOUTRETURN operations.
+layoutreturn_error          The number of failed NFSv4.1 LAYOUTRETURN operations.
+layoutreturn_percent        Percentage of NFSv4.1 LAYOUTRETURN operations.
+layoutreturn_success        The number of successful NFSv4.1 LAYOUTRETURN operations.
+layoutreturn_total          Total number of NFSv4.1 LAYOUTRETURN operations.
+----
+
+
+== 查看 NFS 的活動網路連接
+
+您可以使用以下命令驗證是否與 SVM 建立了多個 TCP 連線： `network connections active show` 命令。
+
+例如，如果要查看 NFS 會話中繼，請尋找來自相同客戶端在每個節點的不同介面上的連線：
+
+[listing]
+----
+cluster::*> network connections active show -node cluster-0* -vserver PNFS
+              Vserver   Interface         Remote
+      CID Ctx Name      Name:Local Port   Host:Port            Protocol/Service
+--------- --- --------- ----------------- -------------------- ----------------
+Node: node-01
+2304333128 14 PNFS      data1:2049        ubuntu22-224:740     TCP/nfs
+2304333144 10 PNFS      data3:2049        ubuntu22-224:864     TCP/nfs
+2304333151  5 PNFS      data1:2049        ubuntu22-226:848     TCP/nfs
+2304333167 15 PNFS      data3:2049        ubuntu22-226:684     TCP/nfs
+Node: node-02
+2497668321 12 PNFS      data2:2049        ubuntu22-224:963     TCP/nfs
+2497668337 18 PNFS      data4:2049        ubuntu22-224:859     TCP/nfs
+2497668344 14 PNFS      data2:2049        ubuntu22-226:675     TCP/nfs
+2497668360  7 PNFS      data4:2049        ubuntu22-226:903     TCP/nfs
+----
+
+
+== 查看已連接客戶端的 NFS 版本信息
+
+您也可以使用以下方式查看 NFS 連線： `nfs connected-clients show` 命令。請注意，此處顯示的客戶名單是過去 48 小時內有活躍 NFS 流量的客戶。空閒的 NFS 用戶端（即使仍然掛載）可能要等到存取掛載點時才會顯示出來。您可以透過指定以下參數來篩選這些客戶端，使其僅顯示最近造訪過的用戶端： `-idle-time` 特徵。
+
+例如，要查看過去 10 分鐘內 pNFS SVM 中有活動的客戶：
+
+[listing]
+----
+cluster::*> nfs connected-clients show -vserver PNFS -idle-time <10m>
+
+ Node: node-01
+
+Vserver: PNFS Data-Ip: 10.x.x.x Local Remote Client-Ip Protocol Volume Policy Idle-Time Reqs Reqs Trunking
+
+10.x.x.a nfs4.2 PNFS_root default 9m 10s 0 149 false 10.x.x.a nfs4.2 FG_0001 default 9m 10s 135847 0 false 10.x.x.b nfs4.2 PNFS_root default 8m 12s 0 157 false 10.x.x.b nfs4.2 FG_0001 default 8m 12s 52111 0 false
+----
+.相關資訊
+* link:pnfs-overview.html["了解ONTAP中的平行 NFS (pNFS)"]
+

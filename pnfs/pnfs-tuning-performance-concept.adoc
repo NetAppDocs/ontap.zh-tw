@@ -1,0 +1,206 @@
+---
+permalink: pnfs/pnfs-tuning-performance-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, performance, tuning, best practices, considerations, flexgroup, metadata, nconnect, session trunking, kerberos, technical report 
+summary: 在ONTAP中使用 pNFS 時，請遵循最佳實務和注意事項，以獲得最佳效能和可靠性。 
+---
+= pNFS調優與效能最佳實踐
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在ONTAP中使用 pNFS 時，請遵循以下注意事項和最佳實踐，以獲得最佳結果。
+
+
+
+== 容量類型推薦
+
+ONTAP中的 pNFS 可以與FlexVol捲和FlexGroup磁碟區一起使用，但為了獲得最佳的整體效果，請使用FlexGroup磁碟區。
+
+FlexGroup卷提供：
+
+* 單一掛載點可以跨越叢集中的多個硬體資源，同時允許 pNFS 本地化資料流量。
+* 海量儲存容量（高達 60 PB）和高檔案數量（高達 2000 億個檔案）
+* 支援多部分文件以實現容量平衡和潛在的性能優勢
+* 支援對單一工作負載的捲和硬體進行並行訪問
+
+
+link:../flexgroup/index.html["了解FlexGroup磁碟區管理"]
+
+
+
+== 客戶推薦
+
+並非所有 NFS 用戶端都支援 pNFS，但大多數現代客戶端都支援。 RHEL 6.4 和 Fedora 17 是最早支援 pNFS 的用戶端（大約在 2014 年），因此可以合理地假設過去幾年發布的客戶端版本都完全支援此功能。ONTAP 對 NFS 的支援立場是「如果用戶端支援該功能且符合 RFC 標準，而我們也支援該功能，那麼這種組合就是受支援的」。但是，最佳實踐是確保客戶端作業系統供應商支援 pNFS。
+
+
+
+== 成交量變動
+
+ONTAP能夠以非中斷的方式在同一叢集中的節點或聚合之間移動捲，從而提供容量和效能平衡的靈活性。當ONTAP中發生磁碟區移動時，pNFS 設備對應會自動更新，以便在必要時通知客戶端使用新的捲到介面關係。
+
+link:../volumes/move-volume-task.html["了解如何移動卷"]
+
+
+
+== 網路介面遷移
+
+ONTAP能夠將網路介面遷移到同一叢集中的不同節點，從而實現效能平衡和維護靈活性。與磁碟區遷移類似，當ONTAP中發生網路介面遷移時，pNFS 設備對應會自動更新，以便在必要時通知用戶端使用新的捲到介面關係。
+
+然而，由於 NFSv4.1 是有狀態協議，網路介面遷移可能會對正在積極使用 NFS 掛載的客戶端造成乾擾。最佳實踐是在維護視窗期間進行網路介面遷移，並通知客戶可能出現的網路中斷。
+
+
+
+== 儲存故障轉移/恢復
+
+pNFS 遵循與 NFSv4.1 相同的儲存故障轉移考量。這些內容在下文有詳細介紹。 https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["NetApp技術報告4067：NFS最佳實務與實作指南"^]一般來說，任何涉及 pNFS 的儲存故障轉移/復原都應該在維護視窗內進行，由於協定的狀態性，可能會出現儲存中斷。
+
+
+
+== 元資料工作負載
+
+元資料操作的規模很小，但數量可能很大，具體取決於工作負載（您是否正在建立大量檔案？）您是否正在執行“查找”命令？ ）以及文件總數。因此，元資料呼叫量高的工作負載會佔用 NFS 伺服器大量的 CPU 資源，並可能導致單一連線瓶頸。 pNFS（以及一般的 NFSv4.x）並不適合對效能要求較高的元資料工作負載，因為該協定版本的狀態性、鎖定機制以及某些安全特性會對 CPU 使用率和延遲產生負面影響。這些工作負載類型（例如高 GETATTR 或 SETATTR）通常在 NFSv3 中表現較好。
+
+
+
+== 元資料伺服器
+
+pNFS 中的元資料伺服器是在 NFS 匯出首次掛載時建立的。安裝點一旦建立，就會一直保持原位，直到重新安裝或移動資料介面為止。因此，最佳實務是確保多個客戶端存取同一磁碟區時掛載到 SVM 的不同節點和資料介面。這種方法可以實現跨節點和 CPU 資源的元資料伺服器負載平衡，同時最大限度地利用叢集中的網路介面。實現此目的的一種方法是建立輪詢 DNS 設置，這在下文中有所介紹。 https://www.netapp.com/pdf.html?item=/media/19370-tr-4523.pdf["NetApp技術報告 4523： ONTAP中的 DNS 負載平衡"^]。
+
+
+
+== NFSv4.x ID 域
+
+NFSv4.x 透過多種方式提供安全功能（詳見下文）。 https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["NetApp技術報告4067：NFS最佳實務與實作指南"^]）。NFSv4.x ID 網域是實作 NFS 匯出時客戶端和伺服器必須就 ID 網域進行驗證的方法之一。ID 網域不匹配的副作用之一是，使用者或群組會顯示為匿名使用者（本質上是被壓制），以防止未經授權的存取。對於 NFSv4.x（以及 pNFS），最佳實踐是確保客戶端和伺服器上的 NFSv4.x ID 網域匹配。
+
+
+
+== n 連接
+
+如前所述， ONTAP中的 nconnect 可以幫助提高某些工作負載的效能。對於 pNFS，需要了解的是，雖然 nconnect 可以透過大幅增加與儲存系統的 TCP 連線總數來提高效能，但當許多客戶端利用掛載選項時，它也可能透過使儲存上的 TCP 連接過載而造成問題。NetAppHardware Universe涵蓋了每個節點的 TCP 連線限制。
+
+當節點的 TCP 連線數超過限制時，在現有連線釋放之前，不允許建立新的 TCP 連線。這可能會為可能遭遇暴風雪的地區帶來複雜情況。
+
+下表顯示了使用 nconnect 的 pNFS 如何可能超出 TCP 連線限制：
+
+[cols="20,20,60"]
+|===
+| 客戶數量 | nconnect 值 | 每個掛載點每個節點的潛在 TCP 連線總數 
+
+
+| 1. | 4. | 4. 
+
+
+| 100 | 4. | 400 
+
+
+| 1000 | 8. | 8000 
+
+
+| 10000. | 8. | 80000 
+
+
+| 10000. | 16. | 160000 ^1^ 
+|===
+^1^ 超出大多數ONTAP單節點 TCP 連線限制
+
+
+
+== NFSv4.1 工作階段主幹
+
+ONTAP中的會話中繼可用於提高 NFSv4.x 掛載的吞吐量和路徑彈性。與 pNFS 一起使用時，叢集中的每個節點都可以建立會話中繼。但是，會話中繼需要每個節點至少兩個接口，而 pNFS 需要每個節點至少有一個接口才能按預期工作。此外，SVM 中的所有介面都必須能夠路由到 NFS 用戶端。同時使用 nconnect 時，會話中繼和 pNFS 無法正常運作。將 nconnect 和會話中繼視為互斥的功能。
+
+link:../nfs-trunking/index.html["了解NFS中繼"]
+
+
+
+== 網路介面連接
+
+pNFS 需要叢集中每個節點都具有可路由的網路介面才能正常運作。如果與託管 pNFS 的 NFS 伺服器位於同一 SVM 中，且存在其他無法路由到 NFS 用戶端的網路接口，則ONTAP仍會在設備映射中向客戶端通告這些接口。當 NFS 用戶端嘗試透過不同子網路中的介面存取資料時，將無法連接，導致服務中斷。最佳實踐是，在使用 pNFS 時，只允許 SVM 中的網路介面可供客戶端存取。
+
+
+
+== NFSv4.0
+
+NFSv4.0 是ONTAP NFS 伺服器中可以與 NFSv4.1 一起啟用的選項。但是，pNFS 不能在 NFSv4.0 上運作。如果 NFS 伺服器啟用了 NFSv4.0，則用戶端可能會在不知情的情況下掛載該協定版本，並且無法利用 pNFS。因此，在使用 pNFS 時，最佳實踐是明確停用 NFSv4.0。NFSv4.1 仍需啟用，並且可以獨立於 NFSv4.0 運作。
+
+
+
+== NFSv4.1 轉介
+
+NFSv4.1 引用會將客戶端的掛載路徑本地化到擁有該磁碟區的節點上的網路介面。 pNFS 在地化資料路徑，而掛載路徑則成為元資料伺服器。
+
+雖然這兩個功能可以實際一起使用，但將 NFSv4.1 引用與 pNFS 一起使用可能會導致在同一節點上堆疊多個元資料伺服器，從而降低將元資料伺服器分散到多個叢集節點的能力，這種效果並不理想。在使用 pNFS 時，如果元資料伺服器沒有均勻分佈在叢集中，那麼單一節點的 CPU 可能會被元資料請求淹沒，從而造成效能瓶頸。
+
+因此，在使用 pNFS 時，最好避免使用 NFSv4.1 引用。相反，應將掛載點分散到叢集中的多個網路介面和節點上。
+
+link:../nfs-admin/enable-disable-nfsv4-referrals-task.html["了解如何啟用或停用 NFSv4 轉儲"]
+
+
+
+== NFS Kerberos
+
+使用 NFS Kerberos，可以對 krb5 進行身份驗證加密，並進一步對封包進行 krb5i 和 krb5p 加密。在SVM中，此功能是基於每個網路介面啟用的，詳情請參見[此處]。 https://www.netapp.com/pdf.html?item=/media/19384-tr-4616.pdf["NetApp技術報告4616：ONTAP NFS Kerberos in Some with Microsoft Active Directory"^]。
+
+由於 pNFS 可以將資料流量重定向到 SVM 中的節點和網路接口，因此 SVM 中的每個網路介面都必須啟用 NFS Kerberos 並使其正常運作。如果 SVM 中的任何網路介面未啟用 Kerberos，則 pNFS 在嘗試存取這些介面上的資料磁碟區時將無法正常運作。
+
+例如，當在具有兩個網路介面（只有一個啟用了 Kerberos）的 pNFS 支援的 SVM 上使用並行 dd 運行讀取測試時，位於啟用了 Kerberos 的介面上的檔案效能良好，而位於未啟用 Kerberos 的介面上的節點上的檔案始終無法完成讀取。當兩個介面都啟用 Kerberos 時，所有檔案都能如預期運作。
+
+只要在 SVM 的所有網路介面上啟用了 NFS Kerberos，NFS Kerberos 就可以與 pNFS 一起使用。請記住，由於封包的加密/解密，NFS Kerberos 可能會造成效能損失，因此最佳實踐是使用工作負載徹底測試 pNFS 與 NFS Kerberos，以確保任何效能損失都不會對工作負載造成過大的影響。
+
+下面是一個在 RHEL 9.5 用戶端上使用 pNFS 並結合 krb5（身份驗證）和 krb5p（端對端加密）時的平行讀取效能範例。Krb5p 在這項測試中表現下降了 70%。
+
+[cols="20,40,40"]
+|===
+| 克爾貝羅斯口味 | MB/秒 | 完成時間 
+
+
+| KRB5  a| 
+* File1-243
+* File2-243
+* File3-238
+* File4-238
+
+ a| 
+* File1-43
+* File2-43.1
+* File3-44
+* File4-44.1
+
+
+
+
+| krb5p  a| 
+* File1-72.9
+* File2-72.8
+* File3-71.4
+* File4-71.2
+
+ a| 
+* File1-143.9
+* File2-144.1
+* File3-146.9
+* File4-147.3
+
+
+|===
+link:../nfs-config/kerberos-nfs-strong-security-concept.html["了解 NFS 中的 Kerberos，以實現強大的安全性"]
+
+
+
+== NFSv4.2
+
+NFSv4.2 已加入ONTAP 9.8 中，是目前可用的最新 NFSv4.x 版本 (RFC-7862)。NFSv4.2 沒有明確的選項來啟用/停用它。相反，它是與 NFSv4.1 一起啟用/停用的。 (`-4.1 enabled`）。如果用戶端支援 NFSv4.2，則在掛載命令期間，除非另有指定，否則它將協商支援的最高 NFS 版本。 `minorversion=2` 安裝選項。
+
+ONTAP中的 NFSv4.2 支援以下功能：
+
+* 安全標籤（MAC標籤）
+* 延伸屬性
+* 稀疏文件操作（FALLOCATE）
+
+
+pNFS 隨 NFSv4.1 引入，但也受 NFSv4.2 及其相關功能的支援。
+
+link:../nfs-admin/ontap-support-nfsv42-concept.html["了解 ONTAP 對 NFSv4.2 的支持"]

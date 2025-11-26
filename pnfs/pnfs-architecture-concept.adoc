@@ -1,0 +1,180 @@
+---
+permalink: pnfs/pnfs-architecture-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, architecture, metadata server, data server, parallel nfs, layout, technical report 
+summary: pNFS架構將元資料和資料路徑分離，透過資料本地化和平行化提供效能優勢。 
+---
+= 了解ONTAP中的 pNFS 架構
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 架構由三個主要元件組成：支援 pNFS 的 NFS 用戶端、為元資料操作提供專用路徑的元資料伺服器以及提供檔案本地化路徑的資料伺服器。
+
+用戶端存取 pNFS 需要與 NFS 伺服器上的資料和元資料路徑建立網路連線。如果 NFS 伺服器包含用戶端無法存取的網路接口，則伺服器可能會向客戶端通告無法存取的資料路徑，從而導致服務中斷。
+
+
+
+== 元資料伺服器
+
+當用戶端使用 NFSv4.1 或更高版本發起掛載，且 NFS 伺服器上啟用了 pNFS 時，pNFS 中的元資料伺服器就會建立。完成此操作後，所有元資料流量都將透過此連接發送，並在掛載期間保持在此連接上，即使介面遷移到另一個節點。
+
+.在ONTAP的 pNFS 中建立元資料伺服器
+image::pNFS_fig_007.png[在ONTAP的 pNFS 中建立元資料伺服器]
+
+pNFS 支援是在掛載呼叫期間確定的，具體是在 EXCHANGE_ID 呼叫中確定的。在 NFS 操作下方的封包擷取中可以看到這個標誌。當 pNFS 標誌 `EXCHGID4_FLAG_USE_PNFS_DS` 和 `EXCHGID4_FLAG_USE_PNFS_MDS` 如果設定為 1，則該介面符合 pNFS 中的資料和元資料操作條件。
+
+.pNFS掛載的資料包捕獲
+image::pNFS_fig_008.png[pNFS掛載的資料包捕獲]
+
+NFS 中的元資料通常包括檔案和資料夾屬性，例如檔案句柄、權限、存取和修改時間以及所有權資訊。元資料還可以包括建立和刪除呼叫、連結和取消連結呼叫以及重新命名。
+
+在 pNFS 中，還有一部分元資料呼叫是 pNFS 特性特有的，這些呼叫將在後續章節中進行更詳細的介紹。 link:https://www.rfc-editor.org/rfc/rfc5661.html#section-12.3["RFC 5661"^]。這些呼叫用於協助確定 pNFS 合格設備、設備到資料集的映射以及其他所需資訊。下表列出了 pNFS 特有的元資料操作。
+
+[cols="30,70"]
+|===
+| 營運 | 說明 
+
+
+| 佈局獲取 | 從元資料伺服器取得資料伺服器對應。 
+
+
+| 佈局委員會 | 伺服器提交佈局並更新元資料映射。 
+
+
+| 佈局返回 | 返回佈局；如果資料被修改，則傳回新佈局。 
+
+
+| 取得設備資訊 | 客戶端取得儲存叢集中資料伺服器的最新資訊。 
+
+
+| 取得設備列表 | 客戶端請求提供參與儲存叢集的所有資料伺服器的清單。 
+
+
+| CB_LAYOUTRECALL | 如果偵測到衝突，伺服器會從客戶端呼叫資料佈局。 
+
+
+| CB_RECALL_ANY | 將所有佈局傳回給元資料伺服器。 
+
+
+| CB_NOTIFY_DEVICEID | 設備 ID 發生任何變更時發出通知。 
+|===
+
+
+== 資料路徑資訊
+
+元資料伺服器建立並開始資料操作後， ONTAP開始追蹤符合 pNFS 讀取和寫入操作條件的設備 ID，以及將叢集中的磁碟區與本機網路介面關聯起來的設備對應。當對掛載點執行讀取或寫入操作時，就會發生此程序。元資料調用，例如 `GETATTR`不會觸發這些設備映射。因此，運行一個 `ls` 掛載點內的命令不會更新映射。
+
+可以使用ONTAP CLI 的高階權限查看設備和映射，如下所示。
+
+[listing]
+----
+::*> pnfs devices show -vserver DEMO
+  (vserver nfs pnfs devices show)
+Vserver Name     Mapping ID      Volume MSID     Mapping Status  Generation
+---------------  --------------- --------------- --------------- -------------
+DEMO             16              2157024470      available       1
+
+::*> pnfs devices mappings show -vserver SVM
+  (vserver nfs pnfs devices mappings show)
+Vserver Name    Mapping ID      Dsid            LIF IP
+--------------  --------------- --------------- --------------------
+DEMO            16              2488            10.193.67.211
+----
+
+NOTE: 這些指令中沒有磁碟區名稱。相反，將使用與這些磁碟區關聯的數字 ID：主集 ID (MSID) 和資料集 ID (DSID)。若要尋找與映射相關的體積，您可以使用 `volume show -dsid [dsid_numeric]` 或者 `volume show -msid [msid_numeric]` 具備ONTAP CLI 的高階權限。
+
+當客戶端嘗試讀取或寫入位於遠離元資料伺服器連接的節點上的檔案時，pNFS 將協商適當的存取路徑，以確保這些操作的資料本地性，並且客戶端將重定向到已發布的 pNFS 設備，而不是嘗試穿越叢集網路來存取該檔案。這有助於降低CPU佔用率和網路延遲。
+
+.使用 NFSv4.1 的遠端讀取路徑，無需 pNFS
+image::pNFS_fig_009.png[使用 NFSv4.1 的遠端讀取路徑，無需 pNFS]
+
+.使用 pNFS 的本地化讀取路徑
+image::pNFS_fig_010.png[使用 pNFS 的本地化讀取路徑]
+
+
+
+== pNFS 控制路徑
+
+除了 pNFS 的元資料和資料部分之外，還有一個 pNFS 控制路徑。控制路徑由 NFS 伺服器用於同步檔案系統資訊。在ONTAP集群中，後端集群網路會定期複製，以確保所有 pNFS 設備和設備映射保持同步。
+
+
+
+== pNFS 設備群組工作流程
+
+以下描述了客戶端請求讀取或寫入磁碟區中的檔案後，pNFS 設備如何在ONTAP中填入。
+
+. 客戶端請求讀取或寫入；執行 OPEN 操作並檢索檔案句柄。
+. 執行 OPEN 操作後，用戶端透過元資料伺服器連接，以 LAYOUTGET 呼叫的方式將檔案句柄傳送至儲存裝置。
+. LAYOUTGET 向客戶端傳回有關文件佈局的信息，例如狀態 ID、條帶大小、文件段和裝置 ID。
+. 然後客戶端取得裝置 ID，並向伺服器發送 GETDEVINFO 呼叫以檢索與該裝置關聯的 IP 位址。
+. 儲存裝置會傳送回覆，其中包含用於本機存取該裝置的關聯 IP 位址清單。
+. 用戶端透過儲存設備傳回的本機 IP 位址繼續進行 NFS 通訊。
+
+
+
+
+== pNFS與FlexGroup體積的交互
+
+ONTAP中的FlexGroup磁碟區將儲存呈現為跨越叢集中多個節點的FlexVol volume組成部分，從而允許工作負載利用多個硬體資源，同時保持單一掛載點。由於多個具有多個網路介面的節點與工作負載交互，因此在ONTAP中看到遠端流量穿越後端叢集網路是很自然的結果。
+
+.在不使用 pNFS 的情況下，透過FlexGroup磁碟區存取單一文件
+image::pNFS_fig_011.png[在不使用 pNFS 的情況下，透過FlexGroup磁碟區存取單一文件]
+
+使用 pNFS 時， ONTAP會追蹤FlexGroup磁碟區的檔案和磁碟區佈局，並將它們對應到叢集中的本機資料介面。例如，如果包含正在存取的檔案的組成磁碟區位於節點 1 上，則ONTAP將通知用戶端將資料流量重新導向至節點 1 上的資料介面。
+
+.在FlexGroup區中使用 pNFS 進行單一檔案存取
+image::pNFS_fig_012.png[在FlexGroup區中使用 pNFS 進行單一檔案存取]
+
+pNFS 也提供了從單一客戶端呈現平行網路路徑到檔案的功能，而沒有 pNFS 的 NFSv4.1 則不具備此功能。例如，如果用戶端想要使用 NFSv4.1（不使用 pNFS）從相同掛載點同時存取四個文件，則所有文件都將使用相同的網路路徑， ONTAP叢集將改為向這些文件發送遠端請求。掛載路徑可能會成為操作的瓶頸，因為它們都遵循一條路徑到達同一個節點，並且還要處理元資料操作以及資料操作。
+
+.在不使用 pNFS 的情況下， FlexGroup磁碟區中可同時存取多個檔案。
+image::pNFS_fig_013.png[在不使用 pNFS 的情況下， FlexGroup磁碟區中可同時存取多個檔案。]
+
+當使用 pNFS 從單一客戶端同時存取相同的四個檔案時，用戶端和伺服器會協商每個節點上的檔案本機路徑，並使用多個 TCP 連線進行資料操作，而掛載路徑則作為所有元資料操作的位置。這樣既可以利用本地檔案路徑來降低延遲，也可以透過使用多個網路介面來提高吞吐量，前提是客戶端可以發送足夠的資料來使網路飽和。
+
+.在FlexGroup卷中使用 pNFS 實現多個文件同時訪問
+image::pNFS_fig_014.png[在FlexGroup卷中使用 pNFS 實現多個文件同時訪問]
+
+以下顯示的是在單一 RHEL 9.5 用戶端上進行簡單測試運行的結果，其中使用 dd 並行讀取四個 10GB 檔案（全部位於兩個ONTAP叢集節點的不同組成磁碟區上）。使用 pNFS 時，每個檔案的整體吞吐量和完成時間都提高了。當不使用 pNFS 而使用 NFSv4.1 時，掛載點本機檔案和遠端檔案之間的效能差異比使用 pNFS 時更大。
+
+[cols="40,30,30"]
+|===
+| 測試 | 每個檔案的吞吐量（MB/s） | 每個文件的完成時間 
+
+
+| NFSv4.1：無 pNFS  a| 
+* 文件 1–228（本地）
+* 文件.2–227（本地）
+* 文件.3–192（遠端）
+* 文件.4–192（遠端）
+
+ a| 
+* 文件 1–46（本地）
+* 文件.2–46.1（本地）
+* 文件.3–54.5（遠端）
+* 文件.4–54.5（遠端）
+
+
+
+
+| NFSv4.1：與 pNFS  a| 
+* 文件 1–248（本地）
+* 文件.2–246（本地）
+* 文件.3–244（本地透過pNFS）
+* 文件.4–244（本地透過pNFS）
+
+ a| 
+* 文件.1–42.3（本地）
+* 文件.2–42.6（本地）
+* 文件.3–43（本地透過pNFS）
+* 文件 4–43（本地透過 pNFS）
+
+
+|===
+.相關資訊
+* link:../flexgroup/index.html["資料區管理FlexGroup"]
+* https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf["NetApp技術報告 4571： FlexGroup最佳實踐"^]
+

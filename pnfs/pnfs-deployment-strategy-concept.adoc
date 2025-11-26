@@ -1,0 +1,55 @@
+---
+permalink: pnfs/pnfs-deployment-strategy-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, deployment, strategy, configuration, traditional nfs, benefits, technical report 
+summary: 了解傳統 NFS 的挑戰以及 pNFS 如何解決這些挑戰，有助於您規劃有效的 pNFS 部署。 
+---
+= ONTAP中的 pNFS 部署策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 的引入是為了改進傳統的 NFS，它分離元資料和資料路徑，提供資料本地化，並支援平行操作。
+
+
+
+== 傳統NFS的挑戰與pNFS的優勢
+
+下表列出了傳統 NFS 面臨的挑戰，並解釋了ONTAP中的 pNFS 如何解決這些挑戰。
+
+[cols="40,60"]
+|===
+| 挑戰 | pNFS 獲益 
+
+
+| *元資料和資料走同一條路徑* 在傳統的 NFS 中，元資料和資料走同一條路徑，這可能會導致網路和 CPU 飽和，因為一條路徑會連接到叢集中的單一硬體節點。當許多用戶嘗試存取同一個 NFS 匯出時，這種情況會更加嚴重。 | *元資料和資料路徑分離，資料路徑並行化* 透過分離 NFS 流量的元資料和資料路徑，並為資料路徑提供多條網路路徑， ONTAP叢集中的 CPU 和網路資源得到最大化利用，從而提高了工作負載的擴展性。 
+
+
+| *工作負載分配挑戰* 在ONTAP NAS 叢集中，最多可以有 24 個節點，每個節點都可以有自己的一組資料捲和網路介面。每個磁碟區都可以承載自己的工作負載，或是工作負載的子集；而使用FlexGroup卷，為了簡化操作，工作負載可以存在於存取單一命名空間的多個節點上。當客戶端掛載 NFS 匯出時，網路流量將在單一節點上建立。當被存取的資料位於叢集中的單獨節點上時，就會發生遠端流量，這會增加工作負載的延遲和管理的複雜性。 | *本地並行資料結構路徑* 由於 pNFS 將資料路徑與元資料分離，並根據磁碟區在叢集中的位置提供多個並行資料路徑，因此可以透過減少叢集中網路流量的距離以及利用叢集中的多個硬體資源來降低延遲。此外，由於ONTAP中的 pNFS 會自動重新導向資料流量，管理員無需管理多個匯出路徑和位置。 
+
+
+| *NFS 掛載點遷移* 掛載點建立後，卸載並重新掛載磁碟區會造成乾擾。ONTAP提供了在節點之間遷移網路介面的功能，但這會增加管理開銷，並且會對使用 NFSv4.x 的有狀態 NFS 連線造成乾擾。重新定位掛載點的部分原因與資料本地性挑戰有關。 | *自動路徑重定位* 使用 pNFS 時，NFS 伺服器會維護一個網路介面和磁碟區位置的表。當客戶端透過 pNFS 中的元資料路徑請求資料結構時，伺服器將向客戶端提供最佳化的網路路徑，然後客戶端將使用該路徑進行資料操作。這大大降低了工作負載的管理開銷，並且在某些情況下可以提高效能。 
+|===
+
+
+== 配置要求
+
+在NetApp ONTAP中設定 pNFS 需要以下步驟：
+
+* 支援 pNFS 且掛載於 NFSv4.1 或更高版本的 NFS 用戶端
+* ONTAP中的 NFS 伺服器已啟用 NFSv4.1 (`nfs modify -v4.1 enabled`（預設為關閉）
+* ONTAP中的 NFS 伺服器已啟用 pNFS (`nfs modify -v4.1-pnfs enabled`（預設為禁用）
+* 每個節點至少需要一個可路由至 NFS 用戶端的網路介面。
+* SVM 中具有允許 NFSv4 導出策略和規則的資料卷
+
+
+image::pNFS_fig_020.png[pNFS 配置要求]
+
+滿足上述配置要求後，pNFS 即可自行運作。
+
+.相關資訊
+* link:../nfs-config/index.html["NFS 組態"]
+* link:../nfs-admin/ontap-support-nfsv41-concept.html["ONTAP對 NFSv4.1 的支持"]
+
