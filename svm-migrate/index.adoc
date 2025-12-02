@@ -50,7 +50,7 @@ image:workflow_svm_migrate.gif["SVM 移轉工作流程。這概述了後續步�
 | AFF A 系列 | 更新版本ONTAP 
 |===
 
-NOTE: 從AFF叢集遷移到具有混合聚合的FAS叢集時，自動磁碟區放置將嘗試執行類似的聚合匹配。例如，如果來源叢集有 60 個磁碟區，則磁碟區放置作業將嘗試在目標叢集上找到AFF聚合來放置這些磁碟區。當AFF聚合空間不足時，磁碟區將被放置在具有非快閃磁碟的聚合上。
+NOTE: 從AFF叢集遷移到具有混合聚合的FAS叢集時，自動磁碟區放置會嘗試執行類似的聚合匹配。例如，如果來源叢集有 60 個磁碟區，則磁碟區放置操作會嘗試在目標叢集上找到一個AFF聚合來放置這些磁碟區。當AFF聚合空間不足時，磁碟區將被放置在具有非快閃磁碟的聚合上。
 
 
 
@@ -119,23 +119,27 @@ NOTE: 從AFF叢集遷移到具有混合聚合的FAS叢集時，自動磁碟區�
 
 在開始 SVM 移轉之前、您必須符合下列先決條件：
 
-* 您必須是叢集管理員。
-* link:../peering/create-cluster-relationship-93-later-task.html["來源叢集和目的地叢集必須相互對等"]。
-* 來源叢集和目的地叢集必須同步 SnapMirror link:../system-admin/install-license-task.html["已安裝授權"]。本授權隨附於 link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
-* 來源叢集中的所有節點都必須執行 ONTAP 9.10.1 或更新版本。如需特定的 ONTAP 陣列控制器支援、請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
-* 來源叢集中的所有節點都必須執行相同的 ONTAP 版本。
-* 目的地叢集中的所有節點都必須執行相同的 ONTAP 版本。
-* 目的地叢集 ONTAP 版本必須與來源叢集相同或不超過兩個主要更新版本。
-* 來源叢集和目的地叢集必須支援相同的 IP 子網路、才能進行資料 LIF 存取。
-* 來源 SVM 必須包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
-* 目標上必須有足夠的空間放置磁碟區。
-* 如果來源 SVM 具有加密磁碟區，則必須在目標上的叢集層級設定板載金鑰管理器或外部金鑰管理。
+* 您是叢集管理員。
+* link:../peering/create-cluster-relationship-93-later-task.html["源集群和目標集群彼此互聯"]。
+* 來源叢集和目標叢集具有同步的SnapMirror 。 link:../system-admin/install-license-task.html["已安裝授權"]。此許可證包含在內 link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+* 來源叢集中的所有節點均運行ONTAP 9.10.1 或更高版本。有關ONTAP陣列控制器的具體支持，請參閱 link:https://hwu.netapp.com/["Hardware Universe"^]。
+* 來源叢集中的所有節點都運行相同的ONTAP版本。
+* 目標叢集中的所有節點都運行相同的ONTAP版本。
+* 目標叢集的ONTAP版本與來源叢集的 ONTAP 版本相同，或最多比來源叢集的新兩個主要版本。
+* 來源叢集和目標叢集支援相同的 IP 子網路以進行資料 LIF 存取。
+* 源SVM包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
+* 目的地有足夠的空間放置書籍。
+* 如果來源 SVM 具有加密磁碟區，則需要在目標叢集層級設定板載金鑰管理器或外部金鑰管理。
 +
-** 在這種情況下，在來源伺服器上的 SVM 層級配置的金鑰管理器將不會遷移到目標伺服器上。目標伺服器將使用叢集層級的金鑰管理器。
+** 在這種情況下，在來源端 SVM 層級配置的金鑰管理器不會遷移到目標端。目標位置使用叢集級密鑰管理器。
 
 
 * 如果來源具有加密磁碟區且配置了NetApp聚合加密 (NAE)，則目標也必須配置為 NAE。
 * 如果您要在非 MetroCluster 組態和 MetroCluster 組態之間移轉 SVM ，或在兩個 MetroCluster 組態之間移轉 SVM ，請確認您的組態符合下列需求：
++
+
+NOTE: 在MetroCluster配置中，不支援在本地叢集和夥伴叢集之間遷移 SVM。
+
 +
 ** 來源和目的地 MetroCluster 叢集處於「正常」狀態。這表示它們無法處於切換模式或「等待切換回復」狀態。
 ** 來源和目的地 MetroCluster 叢集並未在 FC 對 IP 轉換或硬體更新的過程中。
@@ -159,12 +163,12 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 
 == SVM 作業
 
-您應該檢查是否有可能與SVM移轉發生衝突的作業：
+檢查是否有可能與 SVM 遷移衝突的操作：
 
 * 目前並未進行容錯移轉作業
 * WAFLIRON無法執行
 * 指紋未在進行中
-* Vol Move、rehost、Clone、create、convert或分析功能均未執行
+* 流量移動、重新託管、複製、建立、轉換或分析功能未運行
 * 目標叢集上沒有執行SVM遷移程序。任何時候都只允許進行一次SVM遷移。
 
 
@@ -239,19 +243,20 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 
 * 在兩個 MetroCluster FC 組態之間移轉 SVM
 * 在非 MetroCluster 組態和 MetroCluster FC 組態之間移轉 SVM
+* 在相同的MetroCluster配置中，將 SVM 從本地叢集遷移到夥伴叢集。
 
 
 查看<<先決條件,先決條件>>在MetroCluster配置中遷移 SVM。
 
 
 
-| NetApp Aggregate Encryption（NAE） | 零點9.11.1. ONTAP | Nae Volume 必須放置在支援目的地的 NAE 上。如果沒有可用的 NAE 目的地，移轉作業將會失敗。 
+| NetApp Aggregate Encryption（NAE） | 零點9.11.1. ONTAP | NAE 磁碟區必須放置在 NAE 支援的目標位置。如果沒有可用的 NAE 目標，則遷移操作失敗。 
 
 
 | NDMP 組態 | 不支援 |  
 
 
-| NetApp Volume Encryption（NVE） | 零點9.10.1 ONTAP | NVE 磁碟區將在目的地上移轉為 NVE 磁碟區。 
+| NetApp Volume Encryption（NVE） | 零點9.10.1 ONTAP | NVE 磁碟區將作為 NVE 磁碟區遷移到目標位置。 
 
 
 | NFS 和 SMB 稽核記錄 | ONTAP 9.13.1.12.9.11.9.11.  a| 
@@ -305,7 +310,7 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 
 | SnapMirror 非同步來源 | 零點9.11.1. ONTAP  a| 
 * 在FlexVol 大多數移轉期間、傳輸作業仍可正常繼續進行有關SnapMirror關係的作業。
-* 任何進行中的傳輸都會在轉換期間取消、而新傳輸會在轉換期間失敗、而且在移轉完成之前、無法重新啟動傳輸。
+* 切換期間，所有正在進行的轉帳都會被取消，新的轉帳也會失敗。在遷移完成之前，它們無法重新啟動。
 * 移轉完成後、移轉期間取消或錯過的排程傳輸不會自動啟動。
 +
 [NOTE]
