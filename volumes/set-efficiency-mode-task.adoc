@@ -14,53 +14,28 @@ summary: 從ONTAP 功能更新到功能更新AFF 到功能更新到功能更新�
 從ONTAP 功能更新到功能更新AFF 到功能更新到功能更新到功能更新到功能更新到功能更新的功能更新到功能更新到功能更新的功能、您可以設定儲存效率模式。
 
 .關於這項工作
-您可以使用參數控制新 AFF 捲上的儲存效率模式 `-storage-efficiency-mode`。您可以在兩個選項之間選擇以設定儲存效率模式： `default`或 `efficient`。您選擇的儲存效率模式取決於您想要磁碟區上的更高效能或更高的儲存效率。注意： `-storage-efficiency-mode`非 AFF 磁碟區或資料保護磁碟區不支援此參數。
+您可以使用下列參數控制新AFF磁碟區的儲存效率模式 `-storage-efficiency-mode`。您可以選擇以下兩種選項來設定儲存效率模式： `default` 或者 `efficient`。您選擇的儲存效率模式取決於您想要更高的效能還是更高的儲存效率。參數 `-storage-efficiency-mode` 在非AFF磁碟區或資料保護磁碟區上不受支援。
+
+建立新的AFF區時，如果啟用儲存效率模式，則預設為效能模式。
 
 link:enable-temperature-sensitive-efficiency-concept.html["深入瞭解對溫度敏感的儲存效率和儲存效率模式"]。
 
 .步驟
-您可以使用 ONTAP 系統管理員或 ONTAP CLI 來執行此工作。
-
-[role="tabbed-block"]
-====
-.系統管理員
---
-從《支援範圍》9.10.1開始ONTAP 、您可以使用System Manager、利用對溫度敏感的儲存效率功能來提升儲存效率。效能型儲存效率預設為啟用。
-
-. 按一下「*儲存設備>磁碟區*」。
-. 找到要啟用或停用儲存效率的磁碟區、然後按一下 image:icon_kabob.gif["功能表選項圖示"]。
-. 按一下 * 編輯 > 磁碟區 * 、然後捲動至 * 儲存效率 * 。
-. 選取*「啟用更高的儲存效率」*。
-
-
---
-.CLI
---
-.使用高效模式建立新的Volume
-若要在建立新磁碟區時設定溫度敏感的儲存效率模式、您可以使用 `-storage-efficiency-mode` 參數與值 `efficient`。
-
-. 建立啟用效率模式的新Volume：
+. 建立新磁碟區並設定效率模式：
 +
-`volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode efficient`
+[source, cli]
+----
+volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode <efficient|default>
+----
++
+放 `-storage-efficiency-mode` 到 `efficient` 為了提高效率模式或 `default` 用於性能模式。
 
 +
+在以下範例中，aff_vol1 是以效率模式建立的。
+
+
+
 [listing]
 ----
 volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode efficient -size 10g
 ----
-
-
-.使用效能模式建立新的 Volume
-當您以儲存效率建立新的 AFF Volume 時、預設會設定效能模式。雖然不是必要的、但您可以選擇性地使用 `default` 的價值 `-storage-efficiency-mode` 建立新 AFF Volume 時的參數。
-
-. 使用效能儲存效率模式「預設」建立新的 Volume ：
-+
-`volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode default`
-
-+
-`volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode default -size 10g`
-
-
-
---
-====

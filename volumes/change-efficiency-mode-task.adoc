@@ -11,9 +11,28 @@ summary: '您可以將 AFF 磁碟區的儲存效率模式從變更 `default`為 
 
 
 [role="lead"]
-從 ONTAP 9 。 10.1 開始、 Volume 層級的儲存效率模式 _ 預設 _ 和 _ 效率 _ 僅支援 AFF 系統。這些模式可在檔案壓縮（預設）（建立新的 AFF 磁碟區時為預設模式）或對溫度敏感的儲存效率（有效率）之間進行選擇、以提高對溫度敏感的儲存效率。您可以使用 `volume efficiency modify`命令將 AFF 磁碟區的儲存效率模式從變更 `default`為 `efficient`、或是在尚未設定磁碟區效率時、設定效率模式。
+從ONTAP 9.10.1 開始，磁碟區級儲存效率模式 _default_ 和 _efficient_ 僅對AFF系統支援。這些模式提供了兩種選擇：檔案壓縮（預設），這是建立新AFF磁碟區時的預設模式；或溫度敏感儲存效率（高效），它可以啟用溫度敏感儲存效率。
 
 .步驟
+您可以使用 ONTAP 系統管理員或 ONTAP CLI 來執行此工作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從《支援範圍》9.10.1開始ONTAP 、您可以使用System Manager、利用對溫度敏感的儲存效率功能來提升儲存效率。效能型儲存效率預設為啟用。
+
+. 按一下「*儲存設備>磁碟區*」。
+. 找到要啟用或停用儲存效率的磁碟區、然後按一下 image:icon_kabob.gif["功能表選項圖示"]。
+. 按一下 * 編輯 > 磁碟區 * 、然後捲動至 * 儲存效率 * 。
+. 選取*「啟用更高的儲存效率」*。
+
+
+--
+.CLI
+--
+你可以使用 `volume efficiency modify` 用於更改AFF卷儲存效率模式的命令 `default` 到 `efficient`或者，當音量效率尚未設定時，您可以設定效率模式。
+
 . 變更Volume Eff效率 模式：
 +
 [listing]
@@ -22,4 +41,6 @@ volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-
 ----
 
 
+--
+====
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-modify.html["指令參考資料ONTAP"^]需詳細 `volume efficiency modify`資訊，請參閱。
