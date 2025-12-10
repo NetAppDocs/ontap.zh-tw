@@ -14,19 +14,18 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 
 
 [role="lead"]
-從 ONTAP 9.11.1 開始，您可以設定連線至 SVM 上的叢集式外部金鑰管理伺服器。透過叢集式金鑰伺服器、您可以在SVM上指定主要和次要金鑰伺服器。登錄金鑰時ONTAP 、在連續嘗試存取次要伺服器之前、先嘗試存取主要金鑰伺服器、直到作業成功完成為止、以避免金鑰重複。
+從ONTAP 9.11.1 開始，您可以在 SVM 上設定與叢集外部金鑰管理伺服器的連線。使用叢集金鑰伺服器，您可以在 SVM 上指定主金鑰伺服器和輔助金鑰伺服器。註冊或檢索金鑰時， ONTAP首先嘗試存取主密鑰伺服器，然後依序嘗試存取輔助伺服器，直到操作成功完成。
 
-外部金鑰伺服器可用於NSE、NVE、NAE和SED金鑰。SVM最多可支援四個主要外部KMIP伺服器。每部主要伺服器最多可支援三部次要金鑰伺服器。
+您可以使用外部金鑰伺服器來取得NetApp儲存加密 (NSE)、 NetApp磁碟區加密 (NVE) 和NetApp聚合加密 (NAE) 金鑰。一個 SVM 最多可以支援四個主外部 KMIP 伺服器。每個主伺服器最多可支援三個輔助密鑰伺服器。
 
-
-
-== 開始之前
-
-* link:install-ssl-certificates-hardware-task.html["必須為 SVM 啟用 KMIP 金鑰管理"]。
+.關於這項工作
 * 此程序僅支援使用KMIP的主要伺服器。如需支援的金鑰伺服器清單、請查看 link:http://mysupport.netapp.com/matrix/["NetApp 互通性對照表工具"^]。
+
+
+.開始之前
+* link:install-ssl-certificates-hardware-task.html["必須為 SVM 啟用 KMIP 金鑰管理"]。
 * 叢集中的所有節點都必須執行ONTAP 版本不符合要求的9.11.1或更新版本。
-* 伺服器的順序會列出中的引數 `-secondary-key-servers` 參數反映外部金鑰管理（ KMIP ）伺服器的存取順序。
-* 如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
+* 伺服器的排列順序 `-secondary-key-servers`此參數反映了外部金鑰管理（KMIP）伺服器的存取順序。
 
 
 
@@ -39,21 +38,59 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 ====
 .將主要和次要金鑰伺服器新增至SVM
 --
-. 確認未啟用叢集的金鑰管理：
-`security key-manager external show -vserver _svm_name_`
-如果 SVM 已啟用最多四個主要金鑰伺服器、則必須先移除其中一個現有的主要金鑰伺服器、才能新增新的金鑰伺服器。
-. 啟用主要金鑰管理程式：
-`security key-manager external enable -vserver _svm_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
-. 修改主密鑰伺服器，新增輔助密鑰伺服器。這 `-secondary-key-servers` 此參數接受以逗號分隔的最多三個金鑰伺服器清單。輔助密鑰伺服器無需提供連接埠號碼。
-`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+.步驟
+. 確認叢集（admin SVM）未啟用任何金鑰管理功能：
++
+`security key-manager external show -vserver <svm_name>`
+
++
+如果 SVM 已啟用最多四個主金鑰伺服器，則必須先刪除一個現有的主金鑰伺服器，然後再新增新的主金鑰伺服器。
+
+. 啟用主密鑰管理器：
++
+`security key-manager external enable -vserver <svm_name> -key-servers <primary_key_server_ip> -client-cert <client_cert_name> -server-ca-certs <server_ca_cert_names>`
+
++
+** 如果您沒有在參數中指定端口， `-key-servers`如果使用參數，則預設使用連接埠 5696。
++
+
+NOTE: 如果你正在運行 `security key-manager external enable`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。  NetApp強烈建議在兩個叢集上使用相同的金鑰伺服器。
+
+
+
+. 修改主密鑰伺服器，新增輔助密鑰伺服器。這 `-secondary-key-servers`此參數接受一個以逗號分隔的列表，最多可包含三個金鑰伺服器：
++
+`security key-manager external modify-server -vserver <svm_name> -key-servers <primary_key_server> -secondary-key-servers <list_of_key_servers>`
+
++
+** 請勿在輔助密鑰伺服器中包含連接埠號碼。 `-secondary-key-servers`範圍。它使用與主密鑰伺服器相同的連接埠號碼。
++
+
+NOTE: 如果你正在運行 `security key-manager external`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。  NetApp強烈建議在兩個叢集上使用相同的金鑰伺服器。
+
+
+
 
 
 --
 .新增次要金鑰伺服器至現有的主要金鑰伺服器
 --
-. 修改主密鑰伺服器，新增輔助密鑰伺服器。這 `-secondary-key-servers` 此參數接受以逗號分隔的最多三個金鑰伺服器清單。輔助密鑰伺服器無需提供連接埠號碼。
-`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`有關輔助密鑰伺服器的更多信息，請參閱 <<mod-secondary>>。
+.步驟
+. 修改主密鑰伺服器，新增輔助密鑰伺服器。這 `-secondary-key-servers`此參數接受一個以逗號分隔的列表，最多可包含三個金鑰伺服器：
++
+`security key-manager external modify-server -vserver <svm_name> -key-servers <primary_key_server> -secondary-key-servers <list_of_key_servers>`
 
++
+** 請勿在輔助密鑰伺服器中包含連接埠號碼。 `-secondary-key-servers`範圍。它使用與主密鑰伺服器相同的連接埠號碼。
++
+
+NOTE: 如果你正在運行 `security key-manager external modify-server`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。  NetApp強烈建議在兩個叢集上使用相同的金鑰伺服器。
+
+
+
+
+
+有關輔助密鑰伺服器的更多信息，請參閱 <<mod-secondary>>。
 
 --
 ====
@@ -61,24 +98,64 @@ summary: 透過建立叢集、為外部金鑰管理伺服器提供額外支援�
 
 == 修改叢集式金鑰伺服器
 
-您可以變更特定金鑰伺服器的狀態（主要或次要）、新增及移除次要金鑰伺服器、或變更次要金鑰伺服器的存取順序、來修改外部金鑰伺服器叢集。
-
-
-
-=== 轉換主要和次要金鑰伺服器
-
-若要將主要金鑰伺服器轉換為次要金鑰伺服器、您必須先使用將其從 SVM 中移除 `security key-manager external remove-servers` 命令。
-
-若要將次要金鑰伺服器轉換成主要金鑰伺服器、您必須先從現有的主要金鑰伺服器移除次要金鑰伺服器。請參閱 <<mod-secondary>>。如果您在移除現有金鑰時將次要金鑰伺服器轉換為主要伺服器、在完成移除和轉換之前嘗試新增伺服器可能會導致金鑰重複。
+您可以透過新增和刪除輔助金鑰伺服器、變更輔助金鑰伺服器的存取順序或變更特定金鑰伺服器的指定（主金鑰伺服器或輔助金鑰伺服器）來修改叢集外部金鑰伺服器。如果在MetroCluster配置中修改叢集外部金鑰伺服器， NetApp強烈建議在兩個叢集上使用相同的金鑰伺服器。
 
 
 
 === 修改次要金鑰伺服器
 
-輔助密鑰伺服器由以下方式管理： `-secondary-key-servers` 參數 `security key-manager external modify-server` 命令。這 `-secondary-key-servers` 參數接受以逗號分隔的清單。清單中輔助密鑰伺服器的指定順序決定了輔助密鑰伺服器的存取順序。可以透過執行以下命令來修改存取順序 `security key-manager external modify-server` 輔助密鑰伺服器的輸入順序不同。輔助密鑰伺服器無需提供連接埠號碼。
+使用  `security key-manager external modify-server` 指令的 `-secondary-key-servers` 參數來管理次要金鑰伺服器。這 `-secondary-key-servers` 參數接受以逗號分隔的清單。清單中輔助密鑰伺服器的指定順序決定了輔助密鑰伺服器的存取順序。您可以透過執行指令 `security key-manager external modify-server`，並以不同順序輸入次要金鑰伺服器，來修改存取順序。輔助密鑰伺服器無需提供連接埠號碼。
 
-若要移除次要金鑰伺服器、請使用 `-secondary-key-servers` 引數應包含您想要保留的主要伺服器、同時省略要移除的伺服器。若要移除所有次要金鑰伺服器、請使用引數 `-`表示沒有。
 
+NOTE: 如果你正在運行 `security key-manager external modify-server`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。
+
+若要移除輔助密鑰伺服器，請將要保留的密鑰伺服器新增至清單中。 `-secondary-key-servers`參數，並省略要刪除的參數。若要刪除所有輔助密鑰伺服器，請使用下列參數 `-`表示無。
+
+
+
+=== 轉換主要和次要金鑰伺服器
+
+您可以使用下列步驟變更特定金鑰伺服器的指定（主金鑰伺服器或輔助金鑰伺服器）。
+
+[role="tabbed-block"]
+====
+.將主密鑰伺服器轉換為輔助密鑰伺服器
+--
+.步驟
+. 從SVM中移除主密鑰伺服器：
++
+`security key-manager external remove-servers`
+
++
+
+NOTE: 如果你正在運行 `security key-manager external remove-servers`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。
+
+. 執行<<建立叢集式金鑰伺服器>>使用原主密鑰伺服器作為輔助密鑰伺服器進行此程序。
+
+
+--
+.將輔助金鑰伺服器轉換為主金鑰伺服器
+--
+.步驟
+. 從現有的主密鑰伺服器移除輔助密鑰伺服器：
++
+`security key-manager external modify-server -secondary-key-servers`
+
++
+[NOTE]
+====
+** 如果你正在運行 `security key-manager external modify-server -secondary-key-servers`對於MetroCluster配置中的管理 SVM 指令，必須在兩個叢集上執行此命令。如果你要為單一資料 SVM 執行命令，則無需在兩個叢集上執行該命令。
+** 如果在刪除現有密鑰伺服器的同時將輔助密鑰伺服器轉換為主密鑰伺服器，則在完成刪除和轉換之前嘗試新增新的密鑰伺服器可能會導緻密鑰重複。
+
+
+====
+. 執行<<建立叢集式金鑰伺服器>>使用原輔助金鑰伺服器作為新叢集金鑰伺服器的主金鑰伺服器進行此程序。
+
+
+請參閱<<mod-secondary>>了解更多。
+
+--
+====
 .相關資訊
-* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external["安全金鑰管理員外部"^]
+* 了解更多 `security key-manager external`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external["指令參考資料ONTAP"^]
 
