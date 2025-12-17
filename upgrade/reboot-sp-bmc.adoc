@@ -24,17 +24,45 @@ summary: 您不需要在升級 ONTAP 之前更新韌體。  您叢集的韌體�
 
 若要準備順利更新、您應該在升級開始之前重新啟動SP或BMC。
 
-.步驟
-. 在升級之前重新啟動SP或BMC：
+使用ONTAP CLI、 SP或BMC重啟。
+
+[role="tabbed-block"]
+====
+.CLI
+--
+. 重啟SP或BMC：
 +
 [source, cli]
 ----
 system service-processor reboot-sp -node <node_name>
 ----
+
+
+--
+.SP
+--
+. 重啟SP：
 +
+[source, cli]
+----
+sp reboot
+----
+
+
+--
+.BMC
+--
+. 重啟BMC：
++
+[source, cli]
+----
+bmc reboot
+----
+
+
+--
+====
 一次只能重新啟動一個 SP 或 BMC 。  等待重新開機的 SP 或 BMC 完全回收、然後再重新開機。
-
-
 
 您也可以link:../update/firmware-task.html["手動更新韌體"]在 ONTAP 升級之間進行。如果您有數位顧問、您可以link:https://activeiq.netapp.com/system-firmware/["檢視ONTAP 目前包含在您的ImageImage中的韌體版本清單"^]。
 
