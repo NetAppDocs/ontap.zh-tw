@@ -21,11 +21,17 @@ summary: 升級 ONTAP 之後、請確認叢集版本、叢集健全狀況和儲�
 
 叢集版本是ONTAP 叢集內任何節點上執行的最低版本的功能。如果叢集版本不是目標ONTAP 版本的版本、您可以升級叢集。
 
+. 變更為進階權限層級：
++
+[source, cli]
+----
+set -privilege advanced
+----
 . 驗證叢集版本是否為目標ONTAP 版本的發行版本：
 +
 [source, cli]
 ----
-version
+system node image show -version
 ----
 . 如果叢集版本不是目標 ONTAP 版本、您應該驗證所有節點的升級狀態：
 +
@@ -59,12 +65,6 @@ node1                 true    true
 +
 如果有任何節點不健全或不符合資格、請檢查EMS記錄是否有錯誤、並採取修正行動。
 
-. 將權限層級設為進階：
-+
-[source, cli]
-----
-set -privilege advanced
-----
 . 驗證每個RDB程序的組態詳細資料。
 +
 ** 每個節點的關聯式資料庫時期和資料庫時期應相符。
@@ -142,6 +142,12 @@ Node              Node              Status        Status        Status
 cluster1-01       cluster1-01       in-quorum     true          operational
                   cluster1-02       in-quorum     true          operational
 2 entries were displayed.
+----
+. 將權限等級傳回管理員：
++
+[source, cli]
+----
+set -privilege admin
 ----
 
 
