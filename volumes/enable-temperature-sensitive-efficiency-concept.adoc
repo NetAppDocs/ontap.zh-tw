@@ -13,7 +13,7 @@ summary: ONTAP 9 8 引進的溫度敏感儲存效率、可在某些 AFF 磁碟�
 [role="lead"]
 ONTAP透過評估磁碟區資料的存取頻率並將該頻率對應到應用於該資料的壓縮程度來提供溫度敏感儲存效率 (TSSE) 優勢。對於不經常存取的冷數據，壓縮較大的數據塊；對於經常存取和覆蓋的熱數據，壓縮較小的數據塊，從而使處理更加高效。
 
-TSSE 在ONTAP 9.8 中引入，並在新建立的精簡配置AFF磁碟區上自動啟用。您可以在現有AFF捲和精簡配置的非AFF DP 磁碟區上啟用溫度敏感儲存效率。
+TSSE 在ONTAP 9.8 中引入，並在新建立的精簡配置AFF磁碟區上自動啟用。您可以對現有的精簡配置AFF磁碟區和精簡配置的非AFF DP 磁碟區啟用溫度敏感儲存效率。TSSE 不支援在厚置備卷上執行。
 
 以下平台不適用溫度敏感儲存效率：
 
@@ -56,7 +56,7 @@ NOTE: 隨著時間的推移，與 8K 自適應壓縮相比，TSSE 佔用的捲�
 啟用 FabricPool 的集合體和所有分層原則類型都支援兩種儲存效率模式（預設和有效率）。
 
 .在 C 系列平台上啟用對溫度敏感的儲存效率
-AFF C 系列平台預設會啟用對溫度敏感的儲存效率、並在目的地安裝下列版本的情況下、使用 Volume Move 或 SnapMirror 、將磁碟區從非 TSSE 平台移轉至啟用 TSSE 的 C 系列平台：
+在AFF C 系列平台上，溫度敏感儲存效率 (TSSE) 預設為啟用；當使用磁碟區移動或SnapMirror將精簡配置磁碟區從非 TSSE 平台遷移到啟用 TSSE 的 C 系列平台時，如果目標平台上安裝了以下版本，則也會啟用 TSSE：
 
 * ONTAP 9.12.1P4 及更新版本
 * ONTAP 9.13.1 及更新版本
@@ -64,7 +64,7 @@ AFF C 系列平台預設會啟用對溫度敏感的儲存效率、並在目的�
 
 如需更多資訊、請參閱 link:../volumes/storage-efficiency-behavior-snapmirror-reference.html["Volume Move 和 SnapMirror 作業的儲存效率行為"]。
 
-對於現有的磁碟區，不會自動啟用對溫度敏感的儲存效率，但是您可以link:../volumes/change-efficiency-mode-task.html["修改儲存效率模式"]手動變更為有效率模式。
+對於現有的精簡配置卷，溫度敏感儲存效率不會自動啟用；但是，您可以… link:../volumes/change-efficiency-mode-task.html["修改儲存效率模式"] 手動切換到高效率模式。
 
 
 NOTE: 將儲存效率模式變更為「有效率」後、您就無法將其變更回來。

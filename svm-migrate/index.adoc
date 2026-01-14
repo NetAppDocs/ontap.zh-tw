@@ -130,6 +130,7 @@ NOTE: 在混合叢集中，每個 SVM 可遷移的最大磁碟區數取決於支
 * 目標叢集中的所有節點都運行相同的ONTAP版本。
 * 目標叢集的ONTAP版本與來源叢集的 ONTAP 版本相同，或最多比來源叢集的新兩個主要版本。
 * 來源叢集和目標叢集支援相同的 IP 子網路以進行資料 LIF 存取。
+* 來源叢集和目標叢集都必須至少有一個介面可以存取所有遷移的 SVM 網絡，否則遷移預檢查將會失敗。
 * 源SVM包含的數量少於 xref:Maximum supported volumes per SVM[版本支援的資料磁碟區數量上限]。
 * 目的地有足夠的空間放置書籍。
 * 如果來源 SVM 具有加密磁碟區，則需要在目標叢集層級設定板載金鑰管理器或外部金鑰管理。
@@ -190,7 +191,26 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 | 功能 | 第一版支援 | 註解 
 
 
+| 審計日誌（NFS 和 SMB） | ONTAP 9.13.1.12.9.11.9.11.  a| 
+[NOTE]
+====
+若為內部部署 SVM 移轉並啟用稽核、您應停用來源 SVM 的稽核、然後執行移轉。
+
+====
+在 SVM 移轉之前：
+
+* link:../nas-audit/enable-disable-auditing-svms-task.html["必須在目標叢集上啟用稽核日誌。"]。
+* link:../nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必須在目的地叢集上建立來源 SVM 的稽核記錄目的地路徑"]。
+
+
+
+
 | 自主勒索軟體保護 | ONTAP 9.12.1 |  
+
+
+| 雲端實例 | 不支援  a| 
+不支援將 SVM 從本機執行個體遷移到雲端或從本機執行個體遷移到雲端。
+
 
 
 | Cloud Volumes ONTAP | 不支援 |  
@@ -262,20 +282,6 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 | NetApp Volume Encryption（NVE） | 零點9.10.1 ONTAP | NVE 磁碟區將作為 NVE 磁碟區遷移到目標位置。 
 
 
-| NFS 和 SMB 稽核記錄 | ONTAP 9.13.1.12.9.11.9.11.  a| 
-[NOTE]
-====
-若為內部部署 SVM 移轉並啟用稽核、您應停用來源 SVM 的稽核、然後執行移轉。
-
-====
-在 SVM 移轉之前：
-
-* link:../nas-audit/enable-disable-auditing-svms-task.html["必須在目的地叢集上啟用稽核記錄重新導向"]。
-* link:../nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必須在目的地叢集上建立來源 SVM 的稽核記錄目的地路徑"]。
-
-
-
-
 | NFS v3 、 NFS v4.1 和 NFS v4.2 | 零點9.10.1 ONTAP |  
 
 
@@ -291,6 +297,9 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 | 在來源叢集上啟用 Common Criteria 模式的 Onboard Key Manager （ OKM ） | 不支援 |  
 
 
+| ONTAP Select | 不支援 | 不支援將 SVM 遷移到 ONTAP Select 實例或從ONTAP Select實例遷移 SVM。 
+
+
 | qtree | ONTAP 9.14.1. |  
 
 
@@ -300,7 +309,7 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 | S3 | 不支援 |  
 
 
-| SMB 傳輸協定 | ONTAP 9.12.1  a| 
+| SMB 傳輸協定 | ONTAP 9.12.1 但是不支援 SMB1 協定。  a| 
 中小企業遷移會造成混亂，遷移後需要更新客戶端。
 
 
@@ -429,3 +438,10 @@ NOTE: 如果目的地是 MetroCluster 叢集，則在目的地上建立的 SVM �
 
 | 從快照還原檔案 | 允許 | 允許 | 不支援 
 |===
+
+
+== 移民後訊息
+
+* 遷移後，本機快照策略會帶有 -MIG 副檔名，這可能會破壞某些自動化功能。您應該搜尋此擴充功能並重新命名所需的策略。
+* 遷移到 Vault 目標SnapMirror磁碟區必須執行重新同步才能重新啟動保護。需要重新同步儲存庫，因為遷移會在遷移 SVM 之間建立一個新的基線，該基線比儲存庫之前的基線更新。執行重新同步操作會重新啟動儲存庫，同時也會刪除比目前儲存庫基準更新的任何數據，特別是遷移期間產生的快照。
+
