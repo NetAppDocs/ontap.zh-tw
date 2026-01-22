@@ -23,6 +23,11 @@ NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 
 * 硬碟機（HDD）本機層可從RAID-DP轉換為RAID-TEC這包括Flash Pool本機層中的HDD層級。
 
 
+.對於快閃記憶體池 / 混合聚合，需要使用 -disktype 參數來變更每個磁碟類型的流程
+[-T, -disktype {ATA | BSAS | FCAL | FSAS | LUN | MSATA | SAS | SSD | VMDISK | SSD-NVM | SSD-CAP | SSD-ZNS | VMLUN | VMLUN-SSD}] - 磁碟類型
+
+此參數指定要修改的 RAID 群組的磁碟類型。對於 Flash Pool，它可以指定 HDD 層或 SSD 層。如果 HDD 層由多種類型的磁碟組成，則指定其中任何一種正在使用的磁碟類型都會導致該層被修改。如果目前 Aggregate RAID 類型為 mixed_raid_type，則此參數為必填項。
+
 .步驟
 . 確認本機層已上線，且至少有六個磁碟：
 +
