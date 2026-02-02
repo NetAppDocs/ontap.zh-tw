@@ -1,0 +1,27 @@
+---
+permalink: revert/anti-ransomware-disable-auto-enable.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, anti-ransomware, enable, autonomous, protection, arp 
+summary: 在將已升級至 ONTAP 9.18.1 的磁碟區還原至 ONTAP 9.17.1 或更早版本之前，停用 ARP 的自動啟用。 
+---
+= 在從 ONTAP 9.18.1 版本回溯之前，請停用自動啟用自主勒索軟體防護功能。
+:allow-uri-read: 
+
+
+[role="lead"]
+如果您將磁碟區升級到 ONTAP 9.18.1，則在短暫的寬限期（12 小時）後,ONTAP ARP 自動啟用功能可能已為您的磁碟區設定。建議您在降級到 ONTAP 9.17.1 或更早版本之前,先在已升級至 ONTAP 9.18.1 的磁碟區上停用此自動啟用設定。
+
+.步驟
+. 確定已升級至 ONTAP 9.18.1 或更高版本的磁碟區是否已啟動自動啟用選項：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 停用 SVM 上所有磁碟區的勒索軟體防護自動啟用選項：
++
+[source, cli]
+----
+security anti-ransomware volume disable -volume * -auto-enabled-volumes-only true
+----
+

@@ -11,16 +11,17 @@ summary: 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以�
 
 
 [role="lead"]
-您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以改善存取熱物件時的效能。如果您的資料中心位於不同的位置、您可以在FlexCache 遠端叢集上建立支援區、以加速資料存取。
+您可以在同一 ONTAP 叢集中建立 FlexCache 磁碟區，以提高存取熱點物件時的效能。如果您在不同位置擁有資料中心，則可以在遠端 ONTAP 叢集上建立 FlexCache 磁碟區，以加快資料存取速度。
 
 .關於這項工作
-* 從 ONTAP 9.5 開始、 FlexCache 支援 FlexVol Volume 做為原始磁碟區、 FlexGroup 磁碟區做為 FlexCache 磁碟區。
-* 從 ONTAP 9.7 開始， FlexVol volume 和 FlexGroup 磁碟區都支援做為原始磁碟區。
-* 從 ONTAP 9.14.0 開始、您可以從加密來源建立未加密的 FlexCache Volume 。
+* 從 ONTAP 9.18.1 開始，您可以在建立磁碟區時將 `-is-s3-enabled`選項設定為 `true`，以在 FlexCache 磁碟區上啟用 NAS S3 儲存桶存取權限。此選項預設為停用狀態。
 * 從ONTAP 9.18.1 開始， FlexCache支援為具有 SVM-DR 關係的 SVM 的來源磁碟區建立快取磁碟區。
 +
 如果您執行的是ONTAP 9.18.1 或更高版本，則儲存管理員必須先將快取 SVM 與 SVM-DR 關係中的主來源 SVM 和輔助來源 SVM 建立對等關係，然後再建立屬於 SVM-DR 關係的來源磁碟區的快取磁碟區。
 
+* 從 ONTAP 9.14.0 開始、您可以從加密來源建立未加密的 FlexCache Volume 。
+* 從 ONTAP 9.7 開始，FlexVol 磁碟區和 FlexGroup 磁碟區都支援作為來源磁碟區。
+* 從 ONTAP 9.5 開始、 FlexCache 支援 FlexVol Volume 做為原始磁碟區、 FlexGroup 磁碟區做為 FlexCache 磁碟區。
 
 
 .開始之前
@@ -39,7 +40,7 @@ NOTE: 如果HA配對正在使用 link:https://docs.netapp.com/us-en/ontap/encryp
 ====
 .系統管理員
 --
-. 如果 FlexCache 磁碟區與原始磁碟區位於不同的叢集、請建立叢集對等關係：
+. 如果 FlexCache 磁碟區與來源磁碟區位於不同的 ONTAP 叢集上，請建立叢集對等關係：
 +
 .. 在本機叢集中、按一下*保護>總覽*。
 .. 展開 * 叢集間設定 * 、按一下 * 新增網路介面 * 、然後新增叢集的叢集間網路介面。
@@ -144,7 +145,7 @@ vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluste
 +
 [source, cli]
 ----
-volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name>
+volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name> -is-s3-enabled true|false
 ----
 +
 以下範例建立FlexCache 一個現象區、並自動選取現有的集合體進行資源配置：
@@ -161,8 +162,16 @@ cluster1::> volume flexcache create -vserver vs_1 -volume fc1 -auto-provision-as
 +
 [listing]
 ----
-cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 -origin-volume origin1 -size 400m -junction-path /fc4
+cluster1::> volume flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 -origin-volume origin1 -size 400m -junction-path /fc4
 [Job 903] Job succeeded: Successful
+----
++
+以下範例啟用對 FlexCache 磁碟區的 S3 存取：
+
++
+[listing]
+----
+cluster1::> volume flexcache create -vserver vs3 -volume cache_vs3_vol33 -origin-volume vol33 -origin-vserver vs3 -junction-path /cache_vs3_vol33 -is-s3-enabled true
 ----
 . 驗證FlexCache 從「聲音量」和「原始」磁碟區的「聲音」關係FlexCache 。
 +

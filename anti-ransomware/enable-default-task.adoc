@@ -16,9 +16,11 @@ summary: 從 ONTAP 9 。 10.1 開始，您可以設定 SVM ，以便依預設啟
 
 
 [role="lead"]
-從 ONTAP 9 （ 10.1 ）開始，您可以設定儲存 VM （ SVM ），以便在預設情況下啟用新的磁碟區，並採用自動勒索軟體保護（ ARP ）。您可以使用 System Manager 或 CLI 來修改此設定。
+從 ONTAP 9.10.1 開始，您可以設定儲存虛擬機器（SVM），以便預設為新磁碟區啟用自主勒索軟體防護（ARP）。您可以使用 System Manager 或 ONTAP CLI 修改此設定。
 
-如果您只想設定個別的新磁碟區或現有磁碟區，而不將 ARP 設為預設值link:enable-task.html["相關的 ARP 程序"]，請參閱本。
+從 ONTAP 9.18.1 開始，在叢集升級或全新安裝後經過 12 小時的寬限期後，link:use-cases-restrictions-concept.html#supported-configurations["支援的系統"] 的所有新磁碟區預設會在叢集層級啟用 ARP。如果您在叢集層級停用 ARP 的自動預設啟用，仍可選擇在 SVM 層級手動為所有新磁碟區預設啟用 ARP。
+
+對於 ONTAP 9.17.1 及更早版本，在 SVM 層級進行設定是預設在新磁碟區上啟用 ARP 的唯一方法。
 
 .關於這項工作
 預設情況下，新建磁碟區的 ARP 功能是停用的。您需要啟用 ARP 功能，並將其設定為在 SVM 中建立的新磁碟區上預設為啟用。

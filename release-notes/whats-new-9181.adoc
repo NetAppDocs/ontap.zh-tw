@@ -26,6 +26,21 @@ summary: 了解ONTAP 9.18.1 中提供的新功能。
 
 
 
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html[SnapMirror 雲端支援 MetroCluster FlexGroup Volume]
+ a| 
+SnapMirror cloud 支援在 MetroCluster 組態中的 FlexGroup volume 進行備份與還原作業。
+
+|===
+
+
 == 網路
 
 [cols="30%,70%"]
@@ -87,7 +102,14 @@ NVMe 複製卸載功能可讓 NVMe 主機將複製作業從其 CPU 解除安裝�
  a| 
 xref:../s3-snapshots/list-restore-s3-snapshot.html[支援恢復 S3 快照（時間點）]
  a| 
-能夠恢復 S3 儲存桶中損壞的對象，或將整個儲存桶恢復到現有儲存桶之上。
+現在可以透過 ONTAP CLI 直接存取 S3 快照儲存貯體。此外，您還可以從 S3 快照在 S3 用戶端上還原單一物件、一組物件或整個儲存貯體。
+
+
+
+ a| 
+xref:../s3-multiprotocol/create-nas-bucket-task.html[支援在 FlexCache 磁碟區上建立 NAS 儲存桶]
+ a| 
+您可以在 FlexCache 磁碟區上建立 NAS 儲存桶，當叢集中的所有節點都使用 ONTAP 9.18.1 或更高版本時，應用程式可以使用 S3 協定存取 FlexCache 磁碟區上的資料。
 
 |===
 
@@ -103,6 +125,13 @@ xref:../s3-snapshots/list-restore-s3-snapshot.html[支援恢復 S3 快照（時�
 xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[FlexGroup磁碟區支援 ARP/AI]
  a| 
 NetApp FlexGroup磁碟區支援 ARP/AI，提供基於機器學習的進階勒索軟體偵測和保護。在ONTAP 9.17.1 及更早版本中， FlexGroup磁碟區僅支援第一代 ARP。從ONTAP 9.18.1 開始， FlexGroup磁碟區在本機ONTAP平台（AFF和FAS）和虛擬ONTAP部署（包括Cloud Volumes ONTAP和ONTAP Select ）上與FlexVol磁碟區具有同等功能。因此，ARP/AI 成為FlexVol和FlexGroup磁碟區的預設 ARP 技術。
+
+
+
+ a| 
+xref:../anti-ransomware/index.html#enablement-options-for-arp[在支援的系統上，新磁碟區預設會啟用 ARP/AI]
+ a| 
+建立新叢集或將叢集升級至 9.18.1 版本時，AFF A 系列、AFF C 系列、ASA 和 https://docs.netapp.com/us-en/asa-r2/secure-data/enable-anti-ransomware-protection.html["ASA r2"]系統的所有新磁碟區在 12 小時寬限期後預設自動啟用 ARP/AI。在此寬限期內，您可以選擇停用預設啟用。
 
 |===
 
@@ -125,5 +154,16 @@ xref:../performance-admin/adaptive-qos-policy-groups-task.html[支援在SVM和�
 xref:../flexcache/create-volume-task.html[在 SVM-DR 關係中建立來源磁碟區的 SVM FlexCache卷]
  a| 
 您可以建立屬於 SVM-DR 關係的來源磁碟區的 SVM FlexCache磁碟區。
+
+
+
+ a| 
+xref:../volumes/commands-display-space-usage-reference.html[用於顯示空間使用資訊的命令]
+ a| 
+在 ONTAP 9.18.1 及更高版本中， `storage aggregate show-space`命令變更了邏輯引用容量和邏輯非引用容量的報告方式。邏輯引用容量報告所有物件中的引用區塊以及碎片化物件中的非引用區塊。邏輯非引用容量僅報告已超過容量飽和閾值且符合物件刪除和碎片整理條件的物件中的非引用區塊。
+
+例如，當您使用 ONTAP S3 和 StorageGRID 的預設 Aggregate 完整度臨界值 40% 時，物件中 60% 的區塊必須未被引用，然後這些區塊才會被報告為未被引用的容量。
+
+在 ONTAP 9.18.1 之前的版本中，「邏輯引用容量」會報告所有物件（包括已滿物件和碎片物件）中已引用的區塊。「邏輯未引用容量」會報告所有物件中未引用的區塊。
 
 |===

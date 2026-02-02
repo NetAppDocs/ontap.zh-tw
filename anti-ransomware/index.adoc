@@ -26,6 +26,12 @@ ARP 除了按計畫建立快照外，還會定期建立鎖定快照，以增加�
 
 == 授權與能力
 
+您需要取得授權才能使用 ARP。請決定是預設在新磁碟區上啟用 ARP，還是手動為每個磁碟區啟用 ARP。
+
+
+
+=== ARP 的授權選項
+
 ARP 支援包含在內link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One 許可證"^]。如果您沒有ONTAP One 許可證，則可以使用其他許可證來用於 ARP，具體取決於您的ONTAP版本。
 
 [cols="2*"]
@@ -50,15 +56,34 @@ ARP 支援包含在內link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_an
 * 如果您從ONTAP 9.11.1 或更高版本還原到ONTAP 9.10.1，並且已使用 Anti_ransomware 授權啟用 ARP，您將看到警告訊息，可能需要重新設定 ARP。link:../revert/anti-ransomware-license-task.html["瞭解如何還原Arp"] 。
 
 
-link:enable-task.html["您可以在現有磁碟區上啟用自主勒索軟體保護 (ARP)，或建立新磁碟區並啟用 ARP"] 。
+
+
+=== ARP 啟用選項
+
+ARP 在叢集、SVM 和磁碟區層級提供靈活的啟用選項，可讓您為新磁碟區設定自動預設啟用，或根據需要在現有磁碟區上手動啟用 ARP。
+
+.新磁碟區上的自動預設啟用
+從 ONTAP 9.18.1 開始，對於 AFF A 系列和 AFF C 系列、ASA 和 ASA r2 系統，所有新建磁碟區預設會自動啟用 ARP。此預設會自動啟用 ARP 的功能不適用於 link:use-cases-restrictions-concept.html#unsupported-configurations["不支援的磁碟區或組態"]。
+
+升級後，新磁碟區上的 ARP 預設啟用將在 12 小時寬限期後生效；對於新 ONTAP 9.18.1 安裝，則 ARP 預設啟用將立即生效，前提是已安裝 ARP 授權。您必須<<manual-default-enablement,手動啟用 ARP>>在現有磁碟區上。
+
+在寬限期內，您可以link:default-enable-change.html["使用 System Manager 或 ONTAP CLI 在叢集層級選擇退出新磁碟區的預設啟用"]。如果您未選擇退出，則寬限期結束後建立的所有新磁碟區都會自動啟用 ARP。如果寬限期結束後需求發生變化，您也可以隨時靈活地啟用或停用預設啟用功能。
+
+.在新磁碟區上手動啟用預設功能
+如果您在叢集層級停用了 ARP 的自動預設啟用，也可以選擇link:enable-default-task.html["手動在所有新磁碟區上預設啟用 ARP"]在 SVM 層級進行設定。對於 ONTAP 9.17.1 及更早版本，這是將 ARP 設定為在新磁碟區上預設啟用的唯一方法。
+
+.在所有或特定現有磁碟區上啟用 ARP
+從 9.18.1 版本開始，您可以從叢集層級手動在所有現有磁碟區上啟用 ARP（選擇 *叢集 > 安全性*，然後在 *Anti-ransomware* 區段中按一下 image:icon_kabob.gif["功能表選項圖示"]，接著選擇 *在所有現有磁碟區上啟用*）。
+
+如果您希望將 ARP 啟用限制在特定磁碟區上，您可以link:enable-task.html["以每個磁碟區為基礎啟用 ARP"]。
 
 
 
 == 勒索軟體保護策略ONTAP
 
-有效的勒索軟體偵測策略應該包含多層保護。以車輛的安全功能為例。您不能依賴安全帶等單一功能來在事故中完全保護您。安全氣囊、防鎖死煞車系統和前方碰撞警告等安全功能共同作用，帶來更佳效果。勒索軟體保護也應以同樣的方式看待。
+有效的勒索軟體防護需要多層防護協同運作。
 
-雖然ONTAP包含 FPolicy、快照、 SnapLock和Active IQ Digital Advisor （也稱為Digital Advisor）等功能來幫助防禦勒索軟體，但以下資訊重點介紹具有機器學習功能的 ARP 功能。
+雖然 ONTAP 包含 FPolicy、快照、SnapLock 和 Active IQ Digital Advisor（也稱為 Digital Advisor）等功能來幫助抵禦勒索軟體，但 ARP 提供了一層額外的防禦。
 
 若要詳細了解NetApp產品組合中防範勒索軟體的其他功能，請參閱link:https://docs.netapp.com/us-en/ontap-technical-reports/ransomware-solutions/ransomware-active-iq.html["勒索軟體和 NetApp 的保護產品組合"^] 。
 
@@ -164,7 +189,7 @@ link:respond-san-entropy-eval-period.html["了解有關 SAN 捲和熵評估期�
 
 == 威脅評估和 ARP 快照
 
-ARP 根據學習分析測量的傳入資料來評估威脅機率。當 ARP 偵測到異常時，會分配一個測量值。快照可能會在檢測時或定期分配。
+ARP 根據接收到的數據，並結合現有的分析數據來評估威脅機率。當 ARP 偵測到異常情況時，會指派一個度量值。ARP 可能會在偵測到異常時分配一個快照，也可能定期分配一個快照。
 
 
 
@@ -304,6 +329,51 @@ ARP 基於成熟的ONTAP資料保護和災難復原技術，可有效應對勒�
 
 link:arp-ai-automatic-updates.html["深入瞭解 ARP/AI 更新"]
 
+
+
+== ARP/AI 與 ARP 模型之間的差異概覽
+
+[cols="1,1,1"]
+|===
+| 功能 | ARP | ARP/AI 
+
+
+| ONTAP 版本 | ONTAP 9.10.1-9.15.1 | ONTAP 9.16.1 及更新版本；9.15.1（技術預覽） 
+
+
+| 偵測方法 | 分析檔案活動、資料熵和檔案副檔名類型 | 基於大型取證資料集訓練的 AI / 機器學習模型；分析熵和檔案行為 
+
+
+| 學習期 | NAS FlexVol Volume 需要 30 天學習模式（9.13.1 及更高版本支援自動切換） | 無需學習期；啟用後立即生效 
+
+
+| 磁碟區類型支援  a| 
+* FlexVol：9.10.1 及更高版本
+* FlexGroup：9.13.1 及更高版本
+* SAN:不支援
+
+ a| 
+* FlexVol：9.16.1 及更高版本
+* FlexGroup：9.18.1 及更高版本
+* SAN：9.17.1 及更新版本（含評估期間）
+
+
+
+
+| Snapshot 建立 | 由高熵、新的檔案副檔名或檔案操作激增所觸發 | 以固定 4 小時間隔建立，並在確認攻擊時建立 
+
+
+| Snapshot 保留 | 保留直到管理員清除可疑活動 | 預設時間為 12 小時；依攻擊確認情況延長（誤報為 24 小時，確認為正確為 7 天） 
+
+
+| 更新 | 靜態偵測邏輯（僅在 ONTAP 升級時更新） | 自動安全性更新，與 ONTAP 版本無關 
+
+
+| 部署 | 手動啟用（按磁碟區）或 SVM 層級預設設定 | 可手動按磁碟區啟用或設定 SVM 等級的預設設定；對於 9.18.1 及更高版本中支援的系統，所有新磁碟區均預設在叢集層級啟用 
+
+
+| 評估期 | 不適用 | SAN 磁碟區需要（2-4 週）來建立基線加密閾值 
+|===
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
 

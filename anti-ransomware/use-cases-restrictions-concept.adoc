@@ -5,14 +5,7 @@ keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomwa
 summary: ARP 支援 NAS 和 SAN 工作負載。它最適合 NFS 儲存上的資料庫、Windows 或 Linux 主目錄以及視訊和映像工作負載。 
 ---
 = ONTAP 自主勒索軟體保護使用案例與考量
-:hardbreaks:
-:toclevels: 1
 :allow-uri-read: 
-:toclevels: 1
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -83,8 +76,13 @@ ARP 依賴區分傳入資料是加密的還是未加密的。如果應用程式�
 
 
 | ARP/AI 提供自動更新 | ✓ | ✓ |  |  |  |  |  |  |  
+
+
+| ARP/AI 預設啟用 ^2^ | ✓ |  |  |  |  |  |  |  |  
 |===
 ^1^ ONTAP 9.16.1 和 9.17.1 不提供FlexGroup卷的 ARP/AI 支援。升級到這些版本後，啟用 ARP 的FlexGroup磁碟區將繼續使用 ARP/AI 之前使用的相同 ARP 模型運行。從ONTAP 9.18.1 開始， FlexGroup磁碟區使用 ARP/AI 模型。
+
+^2^ 從 ONTAP 9.18.1 開始，AFF A 系列和 AFF C 系列、ASA 和 ASA r2 系統均支援 ARP/AI 預設為啟用。此行為會在升級後 12 小時寬限期後自動為所有新磁碟區啟用 ARP/AI,或新 ONTAP 9.18.1 安裝的系統則立即啟用。您需要手動啟用 ARP link:enable-task.html["現有磁碟區"]。
 
 
 
@@ -157,7 +155,7 @@ ARP 對系統效能（以吞吐量和峰值 IOPS 衡量）的影響極小。 ARP
 
 | 寫入密集且資料無法壓縮 | 60  a| 
 * NAS： ONTAP 9.15.1 及更早版本的最大 IOPS 的 10%
-* NAS： ONTAP 9.16.1 及更高版本的最大 IOPS 的 4%
+* NAS：ONTAP 9.16.1 及更高版本最大 IOPS 的 5%
 * SAN： ONTAP 9.17.1 及更高版本的最大 IOPS 的 5%
 
 
@@ -165,6 +163,33 @@ ARP 對系統效能（以吞吐量和峰值 IOPS 衡量）的影響極小。 ARP
 ^1^ 無論添加的捲數量超過建議的限制多少，系統效能都不會下降超過這些百分比。
 
 由於 ARP 分析按優先順序運行，因此隨著受保護磁碟區數量的增加，每個磁碟區上運行的分析頻率會降低。
+
+[NOTE]
+====
+預設在大量新磁碟區上啟用 ARP 可能會增加系統資源使用量。在磁碟區上啟用 ARP 時，請考慮快照等競爭程序的空間需求。
+
+====
+
+
+== 依平台的 ARP 磁碟區限制
+
+從 ONTAP 9.18.1 開始、ARP 支援根據平台類型和 CPU 核心數增加磁碟區限制。
+
+[cols="40,30"]
+|===
+| 平台類型 | 每個節點啟用 ARP 的最大磁碟區數 
+
+
+| 低階（最多 20 個 CPU 核心的系統） | 250 
+
+
+| 中等配置（最多 64 個 CPU 核心的系統） | 500 
+
+
+| 高階（擁有超過 64 個 CPU 核心的系統） | 1000 
+|===
+
+NOTE: CPU 核心數適用於 2 節點 HA 對中的每個單獨節點。
 
 
 

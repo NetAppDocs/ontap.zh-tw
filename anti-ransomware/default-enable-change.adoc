@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/default-enable-change.html 
+keywords: ransomware, arp, enable, set up, autonomous ransomware protection 
+summary: 從 ONTAP 9.18.1 開始，ARP 預設為自動啟用。您可以在 12 小時寬限期內或之後選擇退出此預設啟用。 
+---
+= 選擇退出 ONTAP Autonomous Ransomware Protection 預設啟用狀態
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.18.1 開始，對於 AFF A 系列和 AFF C 系列、ASA 和 ASA r2 系統，在升級或全新安裝後的 12 小時預熱期結束後，所有新磁碟區預設自動啟用 Autonomous Ransomware Protection（ARP），前提是已安裝 ARP 授權。您可以在 12 小時寬限期內或之後使用 System Manager 或 ONTAP CLI 選擇停用此預設功能。
+
+
+NOTE: 現有磁碟區必須link:enable-task.html["手動啟用"]用於 ARP。
+
+.關於這項工作
+您可以稍後變更此程序所選擇的設定。寬限期過後，您可以隨時靈活地開啟或關閉預設啟用功能：
+
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false|true
+----
+.步驟
+您可以使用 System Manager 或 ONTAP CLI 來管理 ARP 預設啟用選項。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*叢集>設定*。
+. 執行下列其中一項：
++
+** 在作用中寬限期內停用：
++
+... 在「反勒索軟體」部分，您會看到一則訊息，指示啟用 ARP 前剩餘的小時數。選取「不啟用」。
+... 在下一個對話方塊中選取 *Disable*，以確認已為新磁碟區關閉預設 ARP 啟用功能。
+
+
+** 寬限期過後停用：
++
+... 在 *Anti-ransomware* 部分中，選取 image:icon_pencil.gif["編輯圖示"]。
+... 選取核取方塊，然後按一下 *Save* 以停用新磁碟區的預設 ARP 啟用功能。
+
+
+
+
+
+
+--
+.CLI
+--
+. 檢查預設啟用狀態：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 停用新磁碟區的預設啟用：
++
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false
+----
+
+
+--
+====
+.相關資訊
+* link:enable-task.html["在單一磁碟區啟用 ONTAP 自主勒索軟體防護"]
+
