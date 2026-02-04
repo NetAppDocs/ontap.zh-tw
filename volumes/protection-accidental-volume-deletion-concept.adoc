@@ -15,6 +15,9 @@ summary: 預設Volume刪除行為有助於恢復意外刪除FlexVol 的不小心
 
 答 `volume delete` 對類型為的 Volume 提出要求 `RW` 或 `DP` （如所示 `volume show` 命令輸出）會將該磁碟區移至「部分刪除」狀態。根據預設、它會保留在恢復佇列中至少12小時、然後才被完全刪除。
 
+
+NOTE: 刪除包含已刪除磁碟區的 SVM 會清除磁碟區復原佇列（VRQ）。只有當您確定無需還原 SVM 擁有的磁碟區時，才應刪除 SVM。刪除擁有磁碟區的 SVM 時，磁碟區復原佇列中的磁碟區將無法存在。
+
 .相關資訊
 * link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_use_the_Volume_Recovery_Queue["如何使用Volume Recovery Queue"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-delete.html["Volume刪除"^]
