@@ -1,0 +1,332 @@
+---
+permalink: flexcache/enable-flexcache-duality.html 
+sidebar: sidebar 
+keywords: flexcache, s3, nas, dual protocol, certificates, ontap 9.18.1 
+summary: 從 ONTAP 9.18.1 版本開始，您可以啟用對 NAS FlexCache 磁碟區的 S3 存取。這樣，除了傳統的 NAS 協定（例如 NFS 和 SMB）之外，客戶端還可以使用 S3 協定存取儲存在 FlexCache 磁碟區中的資料。以下是設定此功能的快速入門指南。 
+---
+= 啟用對 NAS FlexCache 磁碟區的 S3 存取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.18.1 開始，您可以啟用對 NAS FlexCache 磁碟區的 S3 存取，也稱為「雙重性」。這允許用戶端使用 S3 傳輸協定存取儲存在 FlexCache 磁碟區中的資料，以及 NFS 和 SMB 等傳統 NAS 傳輸協定。您可以使用以下資訊來設定 FlexCache 雙重性。
+
+
+
+== 先決條件
+
+在開始之前、您必須確保完成下列先決條件：
+
+* 確保 S3 協議和所需的 NAS 協議（NFS、SMB 或兩者）已獲得授權並在 SVM 上進行設定。
+* 請確認 DNS 及其他所需服務均已配置。
+* 叢集和 SVM 對等
+* FlexCache Volume 建立
+* 已建立資料 LIF
+
+
+
+NOTE: 有關 FlexCache 雙重性的更詳細文件，請參閱 link:https://docs.netapp.com/us-en/ontap/s3-multiprotocol/index.html#how-s3-multiprotocol-support-works["ONTAP S3 多重傳輸協定支援"]。
+
+
+
+== 步驟 1：建立並簽署憑證
+
+若要啟用對 FlexCache 磁碟區的 S3 存取，您需要為託管 FlexCache 磁碟區的 SVM 安裝憑證。本範例使用自我簽署憑證，但在正式作業環境中，您應該使用由受信任的憑證授權單位（CA）簽署的憑證。
+
+. [[anchor1-step]]建立 SVM 根 CA：
++
+[source, cli]
+----
+security certificate create -vserver <svm> -type root-ca -common-name <arbitrary_name>
+----
+. [[anchor2-step]]產生憑證簽署要求：
++
+[source, cli]
+----
+security certificate generate-csr -common-name <dns_name_of_data_lif> -dns-name <dns_name_of_data_lif> -ipaddr <data_lif_ip>
+----
++
+範例輸出：
+
++
+[listing]
+----
+-----BEGIN CERTIFICATE REQUEST-----
+MIICzjCCAbYCAQAwHzEdMBsGA1UEAxMUY2FjaGUxZy1kYXRhLm5hcy5sYWIwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCusJk075O8Uh329cHI6x+BaRS2
+w5wrqvzoYlidXtYmdCH3m1DDprBiAyfIwBC0/iU3Xd5NpB7nc1wK1CI2VEkrXGUg
+...
+vMIGN351+FgzLQ4X5lKfoMXCV70NqIakxzEmkTIUDKv7n9EVZ4b5DTTlrL03X/nK
++Bim2y2y180PaFB3NauZHTnIIzIc8zCp2IEqmFWyMDcdBjP9KS0+jNm4QhuXiM8F
+D7gm3g/O70qa5OxbAEal5o4NbOl95U0T0rwqTaSzFG0XQnK2PmA1OIwS5ET35p3Z
+dLU=
+-----END CERTIFICATE REQUEST-----
+----
++
+私密金鑰範例：
+
++
+[listing]
+----
+-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCusJk075O8Uh32
+9cHI6x+BaRS2w5wrqvzoYlidXtYmdCH3m1DDprBiAyfIwBC0/iU3Xd5NpB7nc1wK
+1CI2VEkrXGUgwBtx1K4IlrCTB829Q1aLGAQXVyWnzhQc4tS5PW/DsQ8t7olZ9zEI
+...
+rXGEdDaqp7jQGNXUGlbxO3zcBil1/A9Hc6oalNECgYBKwe3PeZamiwhIHLy9ph7w
+dJfFCshsPalMuAp2OuKIAnNa9l6fT9y5kf9tIbskT+t5Dth8bmV9pwe8UZaK5eC4
+Svxm19jHT5QqloDaZVUmMXFKyKoqPDdfvcDk2Eb5gMfIIb0a3TPC/jqqpDn9BzuH
+TO02fuRvRR/G/HUz2yRd+A==
+-----END PRIVATE KEY-----
+----
++
+
+NOTE: 請保留憑證申請和私密金鑰的副本，以供日後參考。
+
+. [[anchor3-step]]簽署憑證：
++
+ `root-ca`是您在<<anchor1-step,建立 SVM 根 CA>>中建立的。
+
++
+[source, cli]
+----
+certificate sign -ca <svm_root_ca> -ca-serial <svm_root_ca_sn> -expire-days 364 -format PEM -vserver <svm>
+----
+. 貼上在<<anchor2-step,產生憑證簽署要求>>中產生的憑證簽署請求 (CSR)。
++
+範例：
+
++
+[listing]
+----
+-----BEGIN CERTIFICATE REQUEST-----
+MIICzjCCAbYCAQAwHzEdMBsGA1UEAxMUY2FjaGUxZy1kYXRhLm5hcy5sYWIwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCusJk075O8Uh329cHI6x+BaRS2
+w5wrqvzoYlidXtYmdCH3m1DDprBiAyfIwBC0/iU3Xd5NpB7nc1wK1CI2VEkrXGUg
+...
+vMIGN351+FgzLQ4X5lKfoMXCV70NqIakxzEmkTIUDKv7n9EVZ4b5DTTlrL03X/nK
++Bim2y2y180PaFB3NauZHTnIIzIc8zCp2IEqmFWyMDcdBjP9KS0+jNm4QhuXiM8F
+D7gm3g/O70qa5OxbAEal5o4NbOl95U0T0rwqTaSzFG0XQnK2PmA1OIwS5ET35p3Z
+dLU=
+-----END CERTIFICATE REQUEST-----
+----
++
+這會將已簽署的憑證列印到主控台，類似於以下範例。
+
++
+已簽署憑證範例：
+
++
+[listing]
+----
+-----BEGIN CERTIFICATE-----
+MIIDdzCCAl+gAwIBAgIIGHolbgv5DPowDQYJKoZIhvcNAQELBQAwLjEfMB0GA1UE
+AxMWY2FjaGUtMTY0Zy1zdm0tcm9vdC1jYTELMAkGA1UEBhMCVVMwHhcNMjUxMTIx
+MjIxNTU4WhcNMjYxMTIwMjIxNTU4WjAfMR0wGwYDVQQDExRjYWNoZTFnLWRhdGEu
+...
+qS7zhj3ikWE3Gp9s+QijKWXx/0HDd1UuGqy0QZNqNm/M0mqVnokJNk5F4fBFxMiR
+1o63BxL8xGIRdtTCjjb2Gq2Wj7EClUw6CykEkxAcVk+XrRtArGkNtcYdtHfUsKVE
+wswvv0rNydrNnWhJLhSl8TW5Tex+OMyTXgk9/3K8kB0mAMrtxxYjt8tm+gztkivf
+J0eo1uDJhaNxqwEZRzFyGaa4k1+56oFzRfTc
+-----END CERTIFICATE-----
+----
+. 複製憑證以供下一步使用。
+. 在 SVM 上安裝伺服器憑證：
++
+[source, cli]
+----
+certificate install -type server -vserver <svm> -cert-name flexcache-duality
+----
+. 從 <<anchor3-step,簽署憑證>> 貼上已簽署的憑證。
++
+範例：
+
++
+[listing]
+----
+Please enter Certificate: Press <Enter> [twice] when done
+-----BEGIN CERTIFICATE-----
+MIIDdzCCAl+gAwIBAgIIGHolbgv5DPowDQYJKoZIhvcNAQELBQAwLjEfMB0GA1UE
+AxMWY2FjaGUtMTY0Zy1zdm0tcm9vdC1jYTELMAkGA1UEBhMCVVMwHhcNMjUxMTIx
+MjIxNTU4WhcNMjYxMTIwMjIxNTU4WjAfMR0wGwYDVQQDExRjYWNoZTFnLWRhdGEu
+bmFzLmxhYjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK6wmTTvk7xS
+...
+qS7zhj3ikWE3Gp9s+QijKWXx/0HDd1UuGqy0QZNqNm/M0mqVnokJNk5F4fBFxMiR
+1o63BxL8xGIRdtTCjjb2Gq2Wj7EClUw6CykEkxAcVk+XrRtArGkNtcYdtHfUsKVE
+wswvv0rNydrNnWhJLhSl8TW5Tex+OMyTXgk9/3K8kB0mAMrtxxYjt8tm+gztkivf
+J0eo1uDJhaNxqwEZRzFyGaa4k1+56oFzRfTc
+-----END CERTIFICATE-----
+----
+. 貼上在 <<anchor2-step,產生憑證簽署要求>> 中產生的私鑰。
++
+範例：
+
++
+[listing]
+----
+Please enter Private Key: Press <Enter> [twice] when done
+-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCusJk075O8Uh32
+9cHI6x+BaRS2w5wrqvzoYlidXtYmdCH3m1DDprBiAyfIwBC0/iU3Xd5NpB7nc1wK
+1CI2VEkrXGUgwBtx1K4IlrCTB829Q1aLGAQXVyWnzhQc4tS5PW/DsQ8t7olZ9zEI
+W/gaEIajgpXIwGNWZ+weKQK+yoolxC+gy4IUE7WvnEUiezaIdoqzyPhYq5GC4XWf
+0johpQugOPe0/w2nVFRWJoFQp3ZP3NZAXc8H0qkRB6SjaM243XV2jnuEzX2joXvT
+wHHH+IBAQ2JDs7s1TY0I20e49J2Fx2+HvUxDx4BHao7CCHA1+MnmEl+9E38wTaEk
+NLsU724ZAgMBAAECggEABHUy06wxcIk5hO3S9Ik1FDZV3JWzsu5gGdLSQOHRd5W+
+...
+rXGEdDaqp7jQGNXUGlbxO3zcBil1/A9Hc6oalNECgYBKwe3PeZamiwhIHLy9ph7w
+dJfFCshsPalMuAp2OuKIAnNa9l6fT9y5kf9tIbskT+t5Dth8bmV9pwe8UZaK5eC4
+Svxm19jHT5QqloDaZVUmMXFKyKoqPDdfvcDk2Eb5gMfIIb0a3TPC/jqqpDn9BzuH
+TO02fuRvRR/G/HUz2yRd+A==
+-----END PRIVATE KEY-----
+----
+. 輸入構成伺服器憑證憑證鏈的憑證授權單位（CA）的憑證。
++
+這從伺服器憑證的發行 CA 憑證開始，最多可到根 CA 憑證。
+
++
+[listing]
+----
+Do you want to continue entering root and/or intermediate certificates {y|n}: n
+
+You should keep a copy of the private key and the CA-signed digital certificate for future reference.
+
+The installed certificate's CA and serial number for reference:
+CA: cache-164g-svm-root-ca
+serial: 187A256E0BF90CFA
+----
+. 取得 SVM 根 CA 的公開金鑰：
++
+[source, cli]
+----
+security certificate show -vserver <svm> -common-name <root_ca_cn> -ca <root_ca_cn> -type root-ca -instance
+
+-----BEGIN CERTIFICATE-----
+MIIDgTCCAmmgAwIBAgIIGHokTnbsHKEwDQYJKoZIhvcNAQELBQAwLjEfMB0GA1UE
+AxMWY2FjaGUtMTY0Zy1zdm0tcm9vdC1jYTELMAkGA1UEBhMCVVMwHhcNMjUxMTIx
+MjE1NTIzWhcNMjYxMTIxMjE1NTIzWjAuMR8wHQYDVQQDExZjYWNoZS0xNjRnLXN2
+bS1yb290LWNhMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+...
+DoOL7vZFFt44xd+rp0DwafhSnLH5HNhdIAfa2JvZW+eJ7rgevH9wmOzyc1vaihl3
+Ewtb6cz1a/mtESSYRNBmGkIGM/SFCy5v1ROZXCzF96XPbYQN4cW0AYI3AHYBZP0A
+HlNzDR8iml4k9IuKf6BHLFA+VwLTJJZKrdf5Jvjgh0trGAbQGI/Hp2Bjuiopkui+
+n4aa5Rz0JFQopqQddAYnMuvcq10CyNn7S0vF/XLd3fJaprH8kQ==
+-----END CERTIFICATE-----
+----
++
+
+NOTE: 這是設定客戶端信任由 SVM root-ca 簽署的憑證所必需的。公開金鑰會列印到主控台。複製並儲存公開金鑰。此命令中的值與您在 <<anchor1-step,建立 SVM 根 CA>> 中輸入的值相同。
+
+
+
+
+
+== 步驟 2：設定 S3 伺服器
+
+. 啟用 S3 協定存取：
++
+[source, cli]
+----
+vserver show -vserver <svm> -fields allowed-protocols
+----
++
+
+NOTE: 預設情況下，在 SVM 層級允許 S3。
+
+. 複製現有原則：
++
+[source, cli]
+----
+network interface service-policy clone -vserver <svm> -policy default-data-files -target-vserver <svm> -target-policy <any_name>
+----
+. 將 S3 加入複製的原則：
++
+[source, cli]
+----
+network interface service-policy add-service -vserver <svm> -policy <any_name> -service data-s3-server
+----
+. 將新原則新增至資料 LIF ：
++
+[source, cli]
+----
+network interface modify -vserver <svm> -lif <data_lif> -service-policy duality
+----
++
+
+NOTE: 修改現有 LIF 的服務原則可能會造成中斷。這需要先關閉 LIF，然後再重新啟動，並啟用新服務的接聽程式。TCP *應該* 很快就能從這種中斷中恢復，但請注意潛在的影響。
+
+. 在 SVM 上建立 S3 物件儲存伺服器：
++
+[source, cli]
+----
+vserver object-store-server create -vserver <svm> -object-store-server <dns_name_of_data_lif> -certificate-name flexcache-duality
+----
+. 在 FlexCache 磁碟區上啟用 S3 功能：
++
+必須先將 `flexcache config`選項 `-is-s3-enabled`設定為 `true`，才能建立儲存桶。您還必須將選項 `-is-writeback-enabled`設定為 `false`。
+
++
+以下命令可修改現有的 FlexCache：
+
++
+[source, cli]
+----
+flexcache config modify -vserver <svm> -volume <fcache_vol> -is-writeback-enabled false -is-s3-enabled true
+----
+. 建立 S3 儲存桶：
++
+[source, cli]
+----
+vserver object-store-server bucket create -vserver <svm> -bucket <bucket_name> -type nas -nas-path <flexcache_junction_path>
+----
+. 建立儲存區原則：
++
+[source, cli]
+----
+vserver object-store-server bucket policy add-statement -vserver <svm> -bucket <bucket_name> -effect allow
+----
+. 建立 S3 使用者：
++
+[source, cli]
+----
+vserver object-store-server user create -user <user> -comment ""
+----
++
+範例輸出：
+
++
+[listing]
+----
+    Vserver: <svm>>
+       User: <user>>
+ Access Key: WCOT7...Y7D6U
+ Secret Key: 6143s...pd__P
+    Warning: The secret key won't be displayed again. Save this key for future use.
+----
+. 為 root 使用者重新產生金鑰：
++
+[source, cli]
+----
+vserver object-store-server user regenerate-keys -vserver <svm> -user root
+----
++
+範例輸出：
+
++
+[listing]
+----
+    Vserver: <svm>>
+       User: root
+ Access Key: US791...2F1RB
+ Secret Key: tgYmn...8_3o2
+    Warning: The secret key won't be displayed again. Save this key for future use.
+----
+
+
+
+
+== 步驟 3：設定用戶端
+
+有許多 S3 用戶端可供使用。AWS CLI 是一個不錯的入門選擇。如需更多資訊、請參閱 link:https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html["安裝 AWS CLI"^]。

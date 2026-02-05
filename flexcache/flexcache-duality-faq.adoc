@@ -1,0 +1,45 @@
+---
+permalink: flexcache/flexcache-duality-faq.html 
+sidebar: sidebar 
+keywords: duality, faq, frequently asked questions, flexcache, ontap s3, s3, nas, smb, nfs 
+summary: 關於 ONTAP 9.18.1 中引入的 FlexCache 對偶性的常見問題。 
+---
+= 關於 FlexCache 二元性的常見問題
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+本常見問題解答了有關 ONTAP 9.18.1 中引入的 FlexCache 對偶性的常見問題。
+
+
+
+== 常見問題
+
+.什麼是「二元性」？
+雙功能允許使用檔案（NAS）和物件（S3）協定統一存取相同資料。ONTAP 9.12.1 引入了雙功能，但當時並未提供 FlexCache 支援，ONTAP 9.18.1 擴展了雙功能，使其支援 FlexCache 磁碟區，從而允許使用 S3 協定存取快取在 FlexCache 磁碟區中的 NAS 檔案。
+
+.FlexCache S3 儲存貯體支援哪些 S3 作業？
+標準 S3 NAS 儲存區支援的 S3 作業在 FlexCache S3 NAS 儲存區上也受到支援，但  `COPY` 作業除外。如需標準 S3 NAS 儲存區不支援的作業的最新清單，請造訪 link:https://docs.netapp.com/us-en/ontap/s3-multiprotocol/index.html#s3-and-nas-interoperability["互通性文件"]。
+
+.我可以在寫回模式下使用 FlexCache 與 FlexCache 雙重性嗎？
+不。如果在 FlexCache 磁碟區上建立 FlexCache S3 NAS 儲存桶，則該 FlexCache 磁碟區*必須*處於寫入繞過模式。如果嘗試在寫回模式的 FlexCache 磁碟區上建立 FlexCache S3 NAS 儲存桶，則操作將會失敗。
+
+.由於硬體限制，我無法將其中一個叢集升級到 ONTAP 9.18.1。如果只有快取叢集執行 ONTAP 9.18.1，duality 在我的叢集中還能正常運作嗎？
+不。快取叢集和來源叢集的有效叢集版本都必須至少為 9.18.1。如果您嘗試在與執行 ONTAP 版本低於 9.18.1 的來源叢集建立對等連線的快取叢集上建立 FlexCache S3 NAS 儲存桶，則操作將會失敗。
+
+.我有一個 MetroCluster 配置。我可以使用 FlexCache 雙重性嗎？
+否。FlexCache 二元性在 MetroCluster 組態中不受支援。
+
+.我可以審核對 FlexCache S3 NAS 儲存桶中檔案的 S3 存取嗎？
+S3 審計功能由 NAS 審計功能提供，FlexCache 磁碟區使用此功能。有關 NAS 審計 FlexCache 磁碟區的更多資訊，請參閱link:audit-flexcache-volumes-concept.html["深入瞭解 FlexCache 稽核"]。
+
+.如果快取叢集與來源叢集中斷連線，我應該預期會發生什麼情況？
+如果快取叢集與來源叢集斷開連接，則向 FlexCache S3 NAS 儲存桶發出的 S3 請求將失敗並出現 `503 Service Unavailable`錯誤。
+
+.我能否使用具有 FlexCache 雙重性的多部分 S3 操作？
+若要讓多部分 S3 操作正常運作，底層 FlexCache 磁碟區的粒度資料欄位必須設定為「進階」。此欄位的值與來源磁碟區的值相同。
+
+.FlexCache duality 是否支援 HTTP 和 HTTPS 存取？
+是的。預設情況下，必須使用 HTTPS。如有需要，您可以設定 S3 服務以允許 HTTP 存取。
