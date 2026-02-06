@@ -61,12 +61,17 @@ IMPORTANT: 請勿執行如，，等作業 `cluster remove-node`， `cluster unjo
 ** ONTAP 9.4 及更新版本： `cluster remove-node -skip-last-low-version-node-check`
 
 
-* 如果您從 4 節點叢集取消連接 2 個節點、則叢集 HA 會在其餘兩個節點上自動啟用。
+* 如果從四節點叢集中移除兩個節點，則剩餘兩個節點上的叢集 HA 將自動啟用。
 
 
+[NOTE]
+====
+在將節點從叢集中移除之前，必須使連接到該節點的所有磁碟上的所有系統和使用者資料對使用者無法存取。
 
-NOTE: 從叢集移除節點之前、使用者必須無法存取所有連接至節點的磁碟中的系統和使用者資料。如果某個節點未從叢集正確加入、請聯絡NetApp支援部門以取得有關恢復選項的協助。
+如果節點被錯誤地從叢集中移除，請聯絡 NetApp 支援以取得恢復選項的協助。
 
+====
+[[disable-ha]]
 .步驟
 . 將權限層級變更為進階：
 +
@@ -74,21 +79,35 @@ NOTE: 從叢集移除節點之前、使用者必須無法存取所有連接至�
 ----
 set -privilege advanced
 ----
-. 驗證叢集上的節點是否保留 epsilon ：
+. 識別叢集中具有 epsilon 的節點：
 +
 [source, cli]
 ----
-cluster show -epsilon true
+cluster show
 ----
-. 如果叢集上的某個節點包含 epsilon 、而且該節點即將取消連接、請將 epsilon 移至不會取消連接的節點：
 +
-.. 將 epsilon 從即將取消連接的節點移出
+在以下範例中、「node0」目前持有 epsilon：
+
++
+[listing]
+----
+cluster::*>
+Node                 Health  Eligibility  Epsilon
+-------------------- ------- ------------ ------------
+node0                true    true         true
+node1                true    true         false
+node2                true    true         false
+node3                true    true         false
+----
+. [[epsilon-true]]如果您要移除的節點包含 epsilon：
++
+.. 將 epsilon 從要移除的節點中移出：
 +
 [source, cli]
 ----
-cluster modify -node <name_of_node_to_be_unjoined> -epsilon false
+cluster modify -node <name_of_node_to_be_removed> -epsilon false
 ----
-.. 將 epsilon 移至不會取消連接的節點：
+.. 將 epsilon 移到您不會刪除的節點：
 +
 [source, cli]
 ----
@@ -105,7 +124,7 @@ cluster ring show
 +
 主節點是保存諸如，， `vldb`， `vifmgr` `bcomd`和 `crs`等處理程序的節點 `mgmt`。
 
-. 如果您要移除的節點是目前的主節點、請啟用叢集中的另一個節點、將其選為主節點：
+. 如果要移除的節點是目前的主節點，請啟用叢集中的另一個節點以選舉為主節點：
 +
 .. 使目前的主節點不符合參加叢集的資格：
 +
@@ -114,12 +133,16 @@ cluster ring show
 cluster modify -node <node_name> -eligibility false
 ----
 +
-該節點將被標記為不健康，直到其恢復符合資格為止。當主節點不再符合資格時，叢集仲裁將從剩餘節點中選出一個新主節點。
+該節點會被標記為不健康，直到其恢復資格。當主節點失去資格時，叢集仲裁會從剩餘節點中選出一個作為新的主節點。
 
 +
+[NOTE]
+====
+如果您在 HA 對中的第一個節點上執行此步驟，則只需將該節點標記為不符合條件。請勿修改 HA 夥伴的狀態。
 
-NOTE: 如果您在 HA 對中的第一個節點上執行此步驟，則應僅將該節點標記為不符合條件。請勿修改HA合作夥伴的狀態。如果選擇夥伴節點作為新的主節點，則需要驗證它是否持有 epsilon，然後再取消其資格。重複這些步驟即可刪除夥伴節點。
+如果選擇合作夥伴節點作為新的主節點，您需要在將其設為不符合資格之前驗證它是否持有 epsilon。如果合作夥伴節點持有 epsilon，您需要在將其設為不符合資格之前，將 epsilon 移至叢集中剩餘的其他節點。當您重複這些步驟以移除合作夥伴節點時，您需要執行此操作。
 
+====
 .. 讓先前的主節點符合資格再次參與叢集：
 +
 [source, cli]
@@ -128,8 +151,8 @@ cluster modify -node <node_name> -eligibility true
 ----
 
 
-. 登入遠端節點管理LIF或叢集管理LIF的節點、而非要移除的節點。
-. 從叢集移除節點：
+. 登入您不會從叢集中移除之節點上的遠端節點管理 LIF 或叢集管理 LIF。
+. 從叢集中移除節點：
 +
 |===
 | 此版本... ONTAP | 使用此命令... 
@@ -168,7 +191,7 @@ cluster remove-node -cluster_ip <node_ip>
 
 +
 ** 您也必須從叢集移除節點的容錯移轉合作夥伴。
-** 移除節點之後、在重新加入叢集之前、您必須使用開機功能表選項（4）乾淨組態、並初始化所有磁碟或選項（9）設定進階磁碟分割、以清除節點的組態並初始化所有磁碟。
+** 節點被移除後，在它重新加入叢集之前，必須使用啟動選單選項 *(4) Clean configuration and initialize all disks* 或選項 *(9) Configure Advanced Drive Partitioning* 來擦除節點的配置並初始化所有磁碟。
 +
 如果您在移除節點之前必須處理的條件、就會產生故障訊息。例如、此訊息可能表示節點具有必須移除的共用資源、或節點位於叢集HA組態或必須停用的儲存容錯移轉組態中。
 
@@ -179,21 +202,21 @@ cluster remove-node -cluster_ip <node_ip>
 
 . 如果失敗訊息指出錯誤情況、請解決這些情況、然後重新執行 `cluster remove-node` 或 `cluster unjoin` 命令。
 +
-節點成功從叢集移除後、會自動重新開機。
+節點從叢集中成功移除後會自動重新開機。
 
 . 如果您要重新規劃節點的用途、請清除節點組態並初始化所有磁碟：
 +
 .. 在開機程序期間、當系統提示時、按Ctrl-C可顯示開機功能表。
-.. 選擇開機功能表選項（ 4 ）全新組態並初始化所有磁碟。
+.. 選擇開機選單選項 *(4) Clean configuration and initialize all disks*。
 
 
-. 返回管理權限層級：
+. [[return-admin]]返回管理員權限等級：
 +
 [source, cli]
 ----
 set -privilege admin
 ----
-. 重複上述步驟、從叢集移除容錯移轉合作夥伴。
+. 重複步驟 <<disable-ha,1.>> 至 <<return-admin,9>>，從叢集中移除容錯移轉合作夥伴。
 
 
 .相關資訊
