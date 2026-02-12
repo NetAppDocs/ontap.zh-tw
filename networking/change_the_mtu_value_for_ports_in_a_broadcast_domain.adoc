@@ -19,28 +19,57 @@ summary: 修改廣播網域的MTU值、以變更廣播網域中所有連接埠�
 
 NOTE: 在 ONTAP 9.7 和更早版本中，變更廣播網域連接埠 MTU 值的程序有所不同。如果您需要變更執行 ONTAP 9.7 及更早版本之網路上廣播網域連接埠的 MTU 值，請參閱link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/change_the_mtu_value_for_ports_in_a_broadcast_domain97.html["變更廣播網域中連接埠的 MTU 值（ ONTAP 9.7 及更早版本）"^]。
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+從 ONTAP 9.12.1 開始，您可以使用 System Manager 修改廣播網域的 MTU 值，從而變更該廣播網域中所有連接埠的 MTU 值。
+
+.步驟
+. 選擇 *Network > Broadcast Domains* 。
+. 在 *Broadcast Domains* 部分，選擇要變更 MTU 值的廣播網域的名稱。
+. 系統會彈出提示，詢問您是否要變更廣播網域中所有連接埠的 MTU 值。按一下 *Yes* 繼續變更。
+. 根據需要修改 MTU 值並儲存變更。
++
+系統會將新的 MTU 值套用至廣播網域中的所有連接埠，這會導致這些連接埠的流量短暫中斷。
+
+
+
+--
+.CLI
+--
 .開始之前
 MTU值必須符合連接至該層2網路的所有裝置、但e0M連接埠處理管理流量除外。
 
 .關於這項工作
-變更MTU值會導致受影響連接埠上的流量短暫中斷。系統會顯示提示、您必須回答y才能變更MTU。
+更改 MTU 值會導致受影響連接埠上的流量短暫中斷。系統會顯示提示，您必須輸入 *y* 才能變更 MTU。
 
 .步驟
 變更廣播網域中所有連接埠的MTU值：
 
-....
+[listing]
+----
 network port broadcast-domain modify -broadcast-domain <broadcast_domain_name> -mtu <mtu_value> [-ipspace <ipspace_name>]
-....
+----
+其中：
+
 * `broadcast_domain` 是廣播網域的名稱。
 * `mtu` 為 IP 封包的 MTU 大小； 1500 和 9000 為典型值。
-* `ipspace` 是此廣播網域所在的 IPspace 名稱。除非您指定此選項的值、否則會使用「預設」IPspace。下列命令會將廣播網域bcast1中所有連接埠的MTU變更為9000：
+* `ipspace` 是此廣播域所在的 IPspace 的名稱。除非您為此選項指定值，否則將使用「Default」IPspace。
++
+以下命令將廣播網域 bcast1 中所有連接埠的 MTU 變更為 9000：
 
-
-....
++
+[listing]
+----
 network port broadcast-domain modify -broadcast-domain <Default-1> -mtu < 9000 >
 Warning: Changing broadcast domain settings will cause a momentary data-serving interruption.
 Do you want to continue? {y|n}: <y>
-....
+----
+
+
+--
+====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-modify.html["修改網路連接埠廣播網域"^]
 
