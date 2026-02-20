@@ -14,11 +14,57 @@ summary: 建立叢集之後、您可以新增節點來擴充叢集。您一次�
 建立叢集之後、您可以新增節點來擴充叢集。您一次只能新增一個節點。
 
 .開始之前
+* 請依照下列步驟安裝並設定新的儲存系統：檢視硬體需求、準備場地，以及安裝和連接硬體元件（控制器、儲存架和交換器）。如需詳細資訊，請參閱下列 ONTAP 硬體系統文件：
++
+** link:https://docs.netapp.com/us-en/ontap-systems/aff-landing/index.html["AFF 系統"^]
+** link:https://docs.netapp.com/us-en/ontap-systems/allsan-landing/index.html["ASA 系統"^]
+** link:https://docs.netapp.com/us-en/ontap-systems/afx/index.html["AFX 系統"^]
+** link:https://docs.netapp.com/us-en/ontap-systems/asa-r2/index.html["ASA R2 系統"^]
+** link:https://docs.netapp.com/us-en/ontap-systems/fas/index.html["FAS 系統"^]
+
+
+* 檢閱新儲存系統上叢集連接埠的叢集交換器機型佈線和組態考量事項。請參閱 link:https://docs.netapp.com/us-en/ontap-systems-switches/index.html["ONTAP 硬體系統的交換器文件"^]
++
+.. 在「支援的交換器」圖塊中選取 *Cluster Switches* 或 *Shared Switches* 。
+.. 選擇與您的交換器型號對應的 *Install* 文件。
+.. 搜尋 *Review cabling and configuration considerations* 主題，並針對您的儲存系統進行檢查。
+
+
 * 如果您要將節點新增至多節點叢集，叢集中所有現有的節點都必須健全（如所示 `cluster show`）。如link:https://docs.netapp.com/us-en/ontap-cli/cluster-show.html["指令參考資料ONTAP"^]需詳細 `cluster show`資訊，請參閱。
 * 如果您要將節點新增至雙節點無交換器叢集、則必須使用 NetApp 支援的叢集交換器、將雙節點無交換器叢集轉換為交換器連接的叢集。
 +
-無交換器式叢集功能僅在雙節點叢集上受支援。
+[cols="1,2"]
+|===
+| 交換器機型 | 遷移程序 
 
+
+ a| 
+Broadcom BES-53248
+ a| 
+link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html["遷移到交換式 NetApp 叢集環境"^]
+
+
+
+ a| 
+Cisco Nexus 9336C-FX2
+ a| 
+link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2/migrate-to-2n-switched-9336-cluster.html["遷移至雙節點交換式叢集"^]
+
+
+
+ a| 
+Cisco Nexus 9336C-FX2 （共享叢集 + 儲存）
+ a| 
+link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html["從無交換器叢集遷移，使用直接連接的儲存設備"^]
+
+
+
+ a| 
+NVIDIA SN2100
+ a| 
+link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-nvidia-sn2100/migrate-2n-switched-sn2100-cluster.html["遷移到採用 NVIDIA SN2100 叢集交換器的雙節點交換叢集"^]
+
+|===
 * 如果您要將第二個節點新增至單一節點叢集、則必須已安裝第二個節點、而且必須已設定叢集網路。
 * 如果叢集已啟用 SP 自動組態、則為 SP 指定的子網路必須有可用資源、以允許連接節點使用指定的子網路自動設定 SP 。
 * 您必須已收集下列資訊、以供新節點的節點管理LIF使用：
