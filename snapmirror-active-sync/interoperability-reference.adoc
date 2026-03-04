@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/interoperability-reference.html 
-keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, tamperproof snapshots, snapmirror active sync 
 summary: SnapMirror 主動同步可與 ONTAP 中的多種作業系統和其他功能相容。 
 ---
 = ONTAP SnapMirror主動同步互通性
@@ -116,6 +116,12 @@ SnapMirror 主動式同步支援部分和單一檔案 SnapRestore 。
 
 .部分檔案 SnapRestore
 從 ONTAP 9.12.1 開始， link:../data-protection/restore-part-file-snapshot-task.html["部分 LUN 還原"]SnapMirror 作用中同步磁碟區支援。您可以從應用程式建立的快照還原資料，這些快照已在 SnapMirror 作用中同步來源（ Volume ）和目的地（ Snapshot ）磁碟區之間複寫。如果您需要還原在同一個 LUN 上儲存多個資料庫的主機上的資料庫、則可能需要部分 LUN 或檔案還原。使用此功能時、您必須知道資料和位元組數的起始位元組偏移。
+
+
+
+=== 防竄改快照
+
+SnapMirror 主動同步不支援防篡改 Snapshot 。
 
 
 
