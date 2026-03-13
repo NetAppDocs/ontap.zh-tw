@@ -1,0 +1,62 @@
+---
+permalink: performance-admin/policy-group-assignment-restrictions.html 
+sidebar: sidebar 
+keywords: use, adaptive, qos, policy, groups 
+summary: 您可以使用調適性QoS原則群組、自動將處理量上限或樓層調整為Volume大小、並在磁碟區大小變更時、維持IOPS與TBs的比率。當您在大型部署中管理數百或數千個工作負載時、這是一項重大優勢。 
+---
+= QoS 策略群組分配限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從ONTAP 9.18.1 開始，您可以使用嵌套的 QoS 策略，該策略允許將策略群組指派給包含物件（例如 SVM）及其子物件（例如磁碟區）。在多租用戶環境中，嵌套的 QoS 策略使管理員能夠將 SVM 上的 QoS 限制細分到 SVM 內的各個磁碟區和 qtree，從而能夠在運算環境中平衡儲存資源，同時還能優先處理關鍵任務工作負載。
+
+以下物件對支援嵌套 QoS 策略：
+
+* SVM 和 SVM 包含的FlexVol或FlexGroup磁碟區。
+* FlexVol或FlexGroup卷以及卷內的 qtree。
+
+
+對於嵌套的 QoS 策略，採用最嚴格的適用策略。
+
+下表列出了各項限制。
+
+|===
+| 如果您指派... | 那麼你就無法將其指派到策略群組… 
+
+
+ a| 
+SVM到原則群組
+ a| 
+SVM 中包含的任何儲存物件。
+
+
+NOTE: 如果您執行的是ONTAP 9.18.1，則 SVM 中所包含的FlexVol和FlexGroup磁碟區_可以_指派給策略群組。
+
+
+
+ a| 
+磁碟區至原則群組
+ a| 
+包含該磁碟區或任何子 LUN 的 SVM。
+
+
+NOTE: 如果您執行的是ONTAP 9.18.1 及更高版本，則包含磁碟區的 SVM _可以_指派給策略群組。此外，也可以分配FlexVol或FlexGroup磁碟區中的 qtree。
+
+
+
+ a| 
+LUN至原則群組
+ a| 
+包含 LUN 的磁碟區或 SVM
+
+
+
+ a| 
+檔案至原則群組
+ a| 
+包含文件的磁碟區或 SVM
+
+|===
