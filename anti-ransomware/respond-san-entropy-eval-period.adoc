@@ -1,21 +1,63 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/respond-san-entropy-eval-period.html 
-keywords: ransomware, arp, san, mode, switch, active, learning, entropy, autonomous ransomware protection 
+keywords: ransomware, arp, block, san, nas, mode, switch, active, learning, entropy, autonomous ransomware protection 
 summary: 從ONTAP 9.17.1 開始，ARP 需要一個評估期來確定 SAN 磁碟區熵等級是否適合勒索軟體防護。 
 ---
-= 了解 SAN 磁碟區的ONTAP ARP 評估期
+= 了解 ONTAP ARP/AI 針對區塊裝置工作負載的評估期
 :allow-uri-read: 
 
 
 [role="lead"]
-從ONTAP 9.17.1 開始，ARP 需要一段評估期來確定 SAN 磁碟區工作負載的熵等級是否適合勒索軟體防護。在 SAN 磁碟區上啟用 ARP 後，ARP/AI 會在評估期間主動監控並保護該磁碟區，同時確定最佳加密閾值。在評估期間，可以使用保守閾值進行檢測和發出警報，同時建立基線閾值。會區分評估後的 SAN 磁碟區中適用和不適用的工作負載，如果確定工作負載適合防護，則會根據評估期統計資料自動設定加密閾值。
+從 ONTAP 9.17.1 開始、ARP/AI 需要一個評估期來確定區塊裝置工作負載的熵等級是否適合勒索軟體防護。這些工作負載包括儲存在 ONTAP 磁碟區中的 SAN LUN 和 Hypervisor 虛擬磁碟（例如、NFS 資料存放區中的 VMware 虛擬磁碟、以及從 ONTAP 9.17.1P5 開始的 Hyper-V、KVM 和 OpenStack 虛擬磁碟）。在符合條件的磁碟區上啟用 ARP 後、ARP/AI 會在評估期間主動監控並保護該磁碟區、同時確定最佳加密閾值。在評估期內、系統會使用保守閾值進行偵測和發出警示、並在幾天內建立基線閾值。ARP 會區分被評估磁碟區中適合和不適合的工作負載、如果確定工作負載適合防護、則會根據評估期統計資訊自動設定加密閾值。
+
+
+
+== 支援的工作負載和評估適用性
+
+區塊裝置評估期間適用於以下情況：
+
+* *SAN 磁碟區*
++
+** 以區塊裝置形式呈現給主機或 Hypervisor 的 LUN 型工作負載。
+
+
+* *包含由 ONTAP 自動偵測到的虛擬機器管理程式虛擬磁碟的 NAS 磁碟區*
++
+** 支援的虛擬機器管理程式包括 VMware、Hyper-V、KVM 以及儲存在 NFS 或 SMB 資料儲存中的 OpenStack 虛擬磁碟。
+
+
+
+
+在這些磁碟區中：
+
+* 評估期_適用於_基於虛擬磁碟客體檔案系統內部熵變化所偵測到的攻擊（例如，對應到 LUN 或虛擬磁碟的客體作業系統中的檔案進行操作的勒索軟體）。
+* 評估期間不適用於基於熵值和檔案副檔名變更（直接從虛擬機器管理程式主機對虛擬磁碟檔案進行變更）而偵測到的攻擊（例如，勒索軟體直接操作 ESXi NFS 資料儲存掛載點上的 `.vmdk`檔案）。這些直接針對磁碟的攻擊使用不同的偵測路徑，該路徑不依賴區塊裝置評估期。
+
+
+
+
+== 區塊裝置和 Hypervisor 偵測的版本支援
+
+* *ONTAP 9.17.1*
++
+** 介紹 SAN 磁碟區的區塊裝置評估期。
+** 可在 SAN LUN 和儲存在 ONTAP NFS 資料儲存區中的 VMware 虛擬磁碟內進行 ARP/AI 攻擊偵測。
+
+
+* *ONTAP 9.17.1P5 及更新版本*
++
+** 將 ARP/AI 區塊設備偵測擴展到 Hyper-V、KVM 和 OpenStack 等虛擬機器管理程式虛擬磁碟。
+** 當 ONTAP 偵測到這些額外的 Hypervisor 工作負載時，對這些工作負載套用相同的區塊裝置評估邏輯和臨界值。
+
+
+
 
 
 
 == 理解熵評估
 
-系統每隔 10 分鐘收集一次連續的加密統計資料。在評估期間，也會每四小時持續建立一次 ARP 定期快照。如果某個時間間隔內的加密百分比超過了為該磁碟區確定的最佳加密閾值，則會觸發警報， `Anti_ransomware_attack_backup`建立快照，並且任何定期 ARP 快照的快照保留時間都會增加。
+在評估期間，系統會從支援的區塊裝置和 Hypervisor 工作負載中，以 10 分鐘為間隔持續收集加密統計資料。此外，系統還會每四小時持續建立一次 ARP 週期性 Snapshot。如果在某個時間間隔內加密百分比超過為該 Volume 確定的最佳加密閾值，則會觸發警報， `Anti_ransomware_attack_backup`建立 Snapshot，並增加所有週期性 ARP Snapshot 的保留時間。
 
 .確認評估期間有效
 您可以執行下列指令，確認評估已啟動，並確認狀態為 `evaluation_period`。如果磁碟區不符合評估條件，則不會顯示評估狀態。
@@ -77,7 +119,7 @@ vs0         lun1              96-100%         0               0
 
 == 合適的工作負荷和自適應閾值
 
-評估以下列結果之一作結：
+評估結果最終會得出以下結果之一，該結果適用於透過區塊裝置偵測評估的 SAN LUN 工作負載和 Hypervisor 虛擬磁碟：
 
 * *此工作負載適用於 ARP*。 ARP會自動將自適應閾值設定為高於評估期間最大加密百分比的 10%。 ARP也會持續收集統計資料並定期建立 ARP 快照。
 * *該工作負載不適合 ARP*。 ARP會自動將自適應閾值設定為評估期間內可見的最大加密百分比。 ARP也會繼續收集統計資料並定期建立 ARP 快照，但係統最終會建議在該磁碟區上停用 ARP。
