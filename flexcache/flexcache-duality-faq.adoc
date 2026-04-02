@@ -21,7 +21,7 @@ summary: 關於 ONTAP 9.18.1 中引入的 FlexCache 對偶性的常見問題。
 雙功能允許使用檔案（NAS）和物件（S3）協定統一存取相同資料。ONTAP 9.12.1 引入了雙功能，但當時並未提供 FlexCache 支援，ONTAP 9.18.1 擴展了雙功能，使其支援 FlexCache 磁碟區，從而允許使用 S3 協定存取快取在 FlexCache 磁碟區中的 NAS 檔案。
 
 .FlexCache S3 儲存貯體支援哪些 S3 作業？
-標準 S3 NAS 儲存區支援的 S3 作業在 FlexCache S3 NAS 儲存區上也受到支援，但  `COPY` 作業除外。如需標準 S3 NAS 儲存區不支援的作業的最新清單，請造訪 link:https://docs.netapp.com/us-en/ontap/s3-multiprotocol/index.html#s3-and-nas-interoperability["互通性文件"]。
+標準 S3 NAS 儲存區支援的 S3 作業在 FlexCache S3 NAS 儲存區上也受到支援，但  `COPY` 作業除外。如需標準 S3 NAS 儲存區不支援的作業的最新清單，請造訪 link:https://docs.netapp.com/us-en/ontap/s3-multiprotocol/index.html#s3-and-nas-interoperability["互通性文件"^]。
 
 .我可以在寫回模式下使用 FlexCache 與 FlexCache 雙重性嗎？
 不。如果在 FlexCache 磁碟區上建立 FlexCache S3 NAS 儲存桶，則該 FlexCache 磁碟區*必須*處於寫入繞過模式。如果嘗試在寫回模式的 FlexCache 磁碟區上建立 FlexCache S3 NAS 儲存桶，則操作將會失敗。
