@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/network-port-requirements.html 
+keywords: SM-BC, SMBC, SM-AS, restrictions, firewall, network ports, snapmirror active sync 
+summary: ONTAP SnapMirror 主動同步網路連接埠要求 
+---
+= 網路連接埠要求
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 主動同步複寫對網路連接埠有多個要求。
+
+例如，參與複寫的每個節點都需要監控其夥伴節點的健全狀況、控制複寫活動，而且資料本身也必須複寫。此外，ONTAP Mediator 或 ONTAP Cloud Mediator 需要與所有節點通訊，以便提供仲裁服務並協助容錯移轉。所有這些功能對端點和連接埠的要求各不相同。
+
+在大多數情況下，SnapMirror 主動同步複寫將在內部網路上運作，不受連接埠或目的地限制。如果 IP 流量受到防火牆、路由器、網路拓撲或其他機制的限制，則應驗證下列連線需求。
+
+
+
+== 使用叢集間 / 對等連結在節點之間進行通訊
+
+|===
+| 連接埠 | 來源 | 方向 | 目的地 | 目的 
+
+
+| 3260/tcp | 叢集間 LIF | 兩者 | 叢集間 LIF | LUN 共識 
+
+
+ a| 
+11104/tcp + 11105/tcp
+| 叢集間 LIF | 兩者 | 叢集間 LIF  a| 
+叢集間通訊
+
+SnapMirror 資料傳輸
+
+
+
+| 443/tcp（HTTPS） | 叢集間 LIF | 兩者 | 叢集間 LIF | 叢集間管理 
+
+
+| 10000/tcp  a| 
+叢集管理 LIF + 節點管理 LIF
+| 兩者 | 選用 | 與 Active IQ Unified Manager 的通訊 
+|===
+
+
+== 中介器與叢集節點之間的通訊
+
+|===
+| 連接埠 | 來源 | 方向 | 目的地 | 目的 
+
+
+| 22/tcp （SSH） | 管理主機 | 傳入 | 資訊媒體ONTAP | ONTAP Mediator 管理 
+
+
+| 31784/tcp （HTTPS） | 叢集管理 LIF | 傳入 | 資訊媒體伺服器ONTAP | REST API 
+
+
+| 31784/TCP | 節點管理 LIF | 傳入 | 資訊媒體伺服器ONTAP | 仲裁服務 
+|===
