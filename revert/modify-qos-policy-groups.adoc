@@ -1,0 +1,29 @@
+---
+permalink: revert/modify-qos-policy-groups.html 
+sidebar: sidebar 
+keywords: modify, modifying, qos, policy, groups, adaptive, non-adaptive, revert, reverting, 9.19.1 
+summary: 如果您從 ONTAP 9.12.1 還原，則必須先停用頻內驗證，才能還原。 
+---
+= 在從 ONTAP 9.19.1 回溯之前，請修改在 ONTAP 9.19.1 或更高版本中建立的 QoS 原則群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+預設情況下，自適應和非自適應 QoS 原則群組會自動啟用，以便在短期內將工作負載的處理量上限暫時提高 50%，持續 1 秒，從而回應對更高效能的需求。從 ONTAP 9.19.1 開始，您可以修改這些預設設定。在 ONTAP 9.18.1 及更早版本中，這些設定無法變更。如果您修改了在 ONTAP 9.19.1 或更高版本中建立的任何 QoS 原則群組的預設設定，則必須先重設這些設定，才能從 ONTAP 9.19.1 還原到 ONTAP 9.18.1。
+
+.步驟
+. 請檢查是否啟用了任何用於自動提高吞吐量上限的 QoS 策略群組：
++
+[source, cli]
+----
+qos policy-group show – instance
+----
+. 如果任何原則群組配置了 `burst-percent`、 `burst-iops`和 `burst-duration`，請將這些選項設為 0。
++
+[source, cli]
+----
+qos policy-group modify -policy-group <policy-group> -burst-percent 0 -burst-iops 0 -burst-duration 0
+----
+

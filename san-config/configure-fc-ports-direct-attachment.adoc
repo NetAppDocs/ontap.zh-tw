@@ -1,0 +1,106 @@
+---
+permalink: san-config/configure-fc-ports-direct-attachment.html 
+sidebar: sidebar 
+keywords:  
+summary:  
+---
+= 設定 ONTAP FC 連接埠以直接連接至 FC 和 FC-NVMe 主機
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.19.1 版本開始，無需 FC 交換器即可在 FC 和 FC-NVMe 主機與 ONTAP 儲存之間建立連線。主機可以直接連接到 AFF、ASA、ASA r2 和 FAS 系統上的 FC 適配器連接埠。在遠端站點和混合式環境中，這種直接連接功能尤其重要，因為在這些環境中，簡單性至關重要。必須先將 FC 連接埠離線並修改其拓撲結構，才能將其直接連接到主機。
+
+直接連接組態中使用的 FC 連接埠有以下限制：
+
+* 連接埠只能指派給一個儲存虛擬機器 （SVM）。
+* 設定為直接連接後，只能將一個網路介面 (LIF) 指派給 port。
+* 此連接埠可支援 FC 傳輸協定或 FC-NVMe 傳輸協定，但不能同時支援兩者。
+
+
+.開始之前
+您必須是叢集管理員。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 在 System Manager 中，選擇 *Network > FC ports*。
+. 選擇要配置為直接連接的連接埠旁的 image:icon_kabob.gif["選擇圖示"]，然後選擇 *編輯拓撲*。
+. 在 *Topology* 下，選擇 *Direct*，然後選擇 *I want to change the topology and take the port offline*。
+. 選擇 *Save* 。
+. 將目標連接埠的纜線直接連接至主機啟動器。
+. 如果您使用的是 ASA r2 系統，請依照link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 程序"^]建立 LIF。如果您使用的是 AFF、ASA 或 FAS 系統，請依照下列步驟建立 LIF：
++
+.. 選擇 *Network > Interfaces*，然後選擇 image:icon_add.gif["新增圖示"]。
+.. 選擇 FC 或 NVMe/FC 傳輸協定。
+.. 為 LIF 命名，或接受 ONTAP 產生的名稱。
+.. 如果至少配置了一個子網路，則可以為 LIF 選擇一個子網路。
+.. 如果未選擇子網路，則可以指定廣播網域的 IP 位址和子網路遮罩。
+.. 從廣播網域中選擇主連接埠。
++
+根據廣播網域或子網路選擇顯示主連接埠控制資訊。
+
+.. 選擇*保存*。
++
+建立 LIF 後，連接埠會自動上線。
+
+
+
+
+
+.接下來呢？
+在 System Manager 中、選取 * 網路 > FC 連接埠 * 、然後確認 * 拓撲 * 顯示為 * 直接 * 。
+
+--
+.CLI
+--
+. 檢視用於介面卡連接埠的 LIF 管理和作業狀態：
++
+[source, cli]
+----
+network interface show -vserver <SVM_name>
+----
+. 使介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_port> -status-admin down
+----
+. 從介面卡 port 移除所有 LIF：
++
+[source, cli]
+----
+network interface delete -vserver <SVM_name> -lif <lif_name>,<lif_name>
+----
+. 將介面卡連接埠拓撲變更為直接連接：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_port> -topology direct
+----
+. 將目標連接埠的纜線直接連接至主機啟動器。
+. 建立單一 LIF 介面：
++
+[source, cli]
+----
+network interface create -vserver <SVM_name> -lif <lif_name> -data protocol fcp|fcp-nvme -home-node <node_name> -home-port <port_name>
+----
++
+LIF 建立完成後，連接埠會自動啟用。
+
+. 確認連接埠已設定為直接連接：
++
+[source, cli]
+----
+network fcp adapter show -fields topologies-supported
+----
++
+拓撲應顯示為直接。
+
+
+
+--
+====

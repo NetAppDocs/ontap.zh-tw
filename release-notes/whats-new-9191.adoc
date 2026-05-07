@@ -1,0 +1,239 @@
+---
+permalink: release-notes/whats-new-9191.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.19.1' 
+summary: 了解 ONTAP 9.19.1 中的新功能。 
+---
+= ONTAP 9.19.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解 ONTAP 9.19.1 中的新功能。
+
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+
+* 瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+* 了解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9171.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^] 。
+* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^] 。
+* 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["對AFF、 ASA和FAS系統以及支援的交換器的全新和增強支持"^] 。
+* 瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
+
+
+若要升級至最新版的 ONTAP ，請參閱link:../upgrade/create-upgrade-plan.html["準備升級 ONTAP"]。
+
+
+
+== 資料保護
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../snapmirror-active-sync/interoperability-reference.html[SnapMirror active sync 支援 AIX 的透明應用程式容錯移轉]
+ a| 
+SnapMirror 對稱主動/主動模式的主動同步支援透明故障轉移，在 AIX 的 2 節點叢集上實現零 RPO。
+
+
+
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html#restore-from-the-cloud[SnapMirror 雲端支援上限提高至 100 個 S3 儲存桶]
+ a| 
+SnapMirror 雲端將支援的 S3 儲存桶數量增加到 100 個。
+
+
+
+ a| 
+xref:../snaplock/snapshot-lock-concept.html[SnapMirror 同步支援防篡改 Snapshot 鎖定]
+ a| 
+您可以使用防篡改 Snapshot 鎖定搭配 SnapMirror 同步。
+
+
+
+ a| 
+xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[SnapMirror 同步支援將快照複寫到目的地磁碟區]
+ a| 
+您可以使用 SnapMirror 同步方式將快照複寫到目的地磁碟區。
+
+|===
+
+
+== 網路
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+管理 SVM 支援的 NFS 版本
+ a| 
+NFSv4.2 的支援獨立於 NFSv4.1 設定進行管理，允許每個 SVM 根據需要發布或停用 NFSv4.2 功能。預設情況下，建立新的 NFS 服務時會啟用 NFSv4.2，除非管理員明確停用。
+
+* https://docs.netapp.com/us-en/ontap/nfs-admin/enable-disable-nfsv42-task.html["啟用或停用 ONTAP SVM 的 NFSv4.2"]
+* https://docs.netapp.com/us-en/ontap/task_nas_enable_linux_nfs.html["透過 ONTAP 系統管理器使用 NFS 為 Linux 伺服器啟用 NAS 存儲"]
+
+
+
+
+ a| 
+xref:../concepts/path-failover-concept.html#nas-path-failover[LIF 故障轉移增強功能]
+ a| 
+ONTAP 系統定義的容錯移轉群組原則可動態擴充 NAS 資料 LIF 的容錯移轉目標，使其可能包含叢集中任何可用節點廣播網域內的任何可用連接埠。您可以將此系統定義的原則套用至任何容錯移轉群組。在 ONTAP 9.19.1 之前的版本中，應用此原則的 LIF 只能容錯移轉到叢集中的一個其他節點；如果該節點不在仲裁範圍內，即使有其他可用節點，LIF 也不會發生容錯移轉。
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../san-config/configure-fc-nvme-hosts-ha-pairs-reference.html[支援直接連接 FC 組態]
+ a| 
+將 FC 和 FC-NVMe 主機連接到 ONTAP 儲存設備無需使用 FC 交換器。主機可以直接連接到 AFF、ASA 和 FAS 系統上的 FC 介面卡連接埠。這種直接連接方式在遠端站點和混合環境中尤其有用，因為在這些環境中，簡單性至關重要。
+
+
+
+ a| 
+xref:../san-admin/multipath-automatic-lif-failover-support.html[AFF 系統支援主動 - 主動多路徑]
+ a| 
+AFF 系統支援 SAN 環境中的雙活多路徑。在雙活配置中，擁有 LUN 或命名空間的 HA 配對中的所有路徑都處於主動最佳化狀態，因此，當發生儲存容錯移轉時，主機無需等待容錯移轉路徑的 ALUA 或 ANA 轉換即可恢復 I/O。這縮短了容錯移轉時間，使 SAN 客戶能夠在 AFF 系統上執行關鍵任務工作負載，並獲得與先前僅在 ASA 系統上才有的相同的不中斷路徑恢復能力和負載平衡能力。
+
+
+
+ a| 
+xref:../san-admin/multipath-automatic-lif-failover-support.html[增強對 SAN LIF 自動容錯移轉的支援]
+ a| 
+AFF 和 ASA 系統支援 iSCSI 協定 LIF 在主動-主動和僅主動-主動-SCSI 多路徑組態中的自動 LIF 容錯移轉，以及 NVMe/TCP 協定 LIF 在主動-主動多路徑組態中的自動 LIF 容錯移轉。
+
+
+
+ a| 
+xref:../ontap-fli/get-started/learn-about-data-migration.html[iSCSI 協定的外部 LUN 匯入支援]
+ a| 
+外部 LUN 匯入（FLI）支援 iSCSI 協定進行後端連線。
+
+|===
+
+
+== S3 物件儲存
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../s3-config/create-modify-bucket-policy-task.html[ONTAP S3 支援條件寫入和刪除，並強制執行]
+ a| 
+您可以使用條件來強制執行物件上傳的條件寫入和物件刪除的條件刪除。條件寫入和刪除提供了一種防止物件被覆寫或意外刪除的方法。
+
+
+
+ a| 
+xref:../s3-config/regenerate-access-keys.html[ONTAP S3 金鑰]
+ a| 
+為了在原始存取金鑰過期時保持使用者對 S3 資源的存取，ONTAP 叢集管理員可以為每個 S3 使用者產生第二個存取金鑰。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+ARP 工作負載特性已從 System Manager UI 移除
+ a| 
+System Manager 不再顯示 Autonomous Ransomware Protection (ARP) 工作負載特性，包括基準線和激增統計資料。此資訊已移除，因為激增活動經常被誤解為實際的勒索軟體攻擊或需要手動調整的情況。
+
+ARP 行為和偵測方式保持不變，僅 System Manager 中這些詳細資訊的顯示方式受到影響。用戶仍然可以透過 ONTAP CLI 和 REST API 選項存取激增統計資料，以進行進階分析。
+
+
+
+ a| 
+xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[自主勒索軟體防護支援 SnapMirror 同步和 SnapMirror 主動同步]
+ a| 
+ARP/AI 支援在支援的平台上參與 SnapMirror 同步（NAS 和 SAN）和 SnapMirror 主動同步 SAN 關係的磁碟區。ARP/AI 可以保護 FAS、AFF 和 AFX 系統上 SnapMirror 同步關係中的主要磁碟區，以及 AFF 和 ASA r2 系統上 SnapMirror 主動同步 SAN 關係中的主要磁碟區。ARP/AI 在關係中具有讀寫權限的主動主要磁碟區上執行，建立僅針對主要磁碟區的 ARP 快照，並提供基於機器學習的勒索軟體偵測。
+
+
+
+ a| 
+xref:../networking/configure-tls-offload.html[TLS 卸載組態]
+ a| 
+您可以設定 TLS 卸載功能，利用支援的乙太網路卡上的資源來提升 TLS 握手後的效能。此功能可卸載加密和解密操作，從而降低 CPU 負擔並提高效能。
+
+|===
+
+
+== 儲存效率
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../flexcache/index.html[NAS 效能提升]
+ a| 
+ONTAP 9.19.1 允許使用更多 CPU 資源來處理小型 NAS 目錄的清單請求。這項增強功能使擁有數百至數千個用戶端同時列出同一個小型 NAS 目錄（大小為 2 MB 或更小，約 25,000 個檔案）的客戶受益。
+
+這項改進減少了使用諸如本地 FlexCache 磁碟區之類的變通方案來支援大量用戶端執行目錄清單操作的需求。對於較少的用戶端，效能不會受到負面影響。此效能改進是自動進行的，無需配置。
+
+|===
+
+
+== 儲存資源管理增強功能
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../performance-admin/guarantee-throughput-qos-task.html[支援修改控制自動 QoS 吞吐量上限增加的預設設定]
+ a| 
+您可以修改預設設定，這些設定控制 QoS 原則群組如何根據短期效能需求自動提高 QoS 處理量上限。這些設定在 ONTAP 9.18.1 及更早版本中無法修改。
+
+|===
+
+
+== 系統管理員
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../concept_svm_admin_dashboard_sm.html[使用新的 ONTAP System Manager 儀表板監控和管理 SVM]
+ a| 
+全新的專用儀表板使 SVM 管理員能夠監控和管理自己的 SVM。這在租用戶型 ONTAP 環境中尤其有用，叢集管理員可以為每個租用戶提供一個 SVM 儀表板。
+
+|===
+
+
+== 升級
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../upgrade/automated-pre-checks.html[增強自動升級預先檢查的報告功能]
+ a| 
+執行自動升級前檢查時，錯誤和警告會分別顯示，以協助您輕鬆識別升級前必須解決的問題。
+
+|===

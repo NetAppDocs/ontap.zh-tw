@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: networking/configure-tls-offload.html 
+keywords: TLS offload, TLS, performance 
+summary: 設定 TLS 卸載設定 
+---
+= 設定 ONTAP TLS 硬體卸載
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.19.1 開始，您可以設定 TLS 卸載，透過利用支援的乙太網路卡上的資源來提升 TLS 握手後的效能。此功能可卸載加密和解密操作，從而降低 CPU 開銷並提高效能。
+
+.關於這項工作
+* TLS 卸載功能預設為停用狀態。
+* 僅卸載 AES-GCM 密碼套件（TLSv1.2/TLSv1.3、128/256 位元）。
+* TLS 握手階段不會被卸載。只有握手後的資料階段會被卸載。
+* 網路邏輯介面（LIF）遷移到不具備卸載功能的連接埠會導致自動軟體回退。
++
+對於 TLS 卸載連線，TLS 加密作業通常會略過軟體，並由具備卸載功能的 NIC 處理。如果與此連線相關的 LIF 移轉至不具備 TLS 卸載功能的網路連接埠，加密作業會退回軟體，並由系統核心處理。
+
+* 管理介面（HTTPS、REST API）不受此設定的影響。
+* TLS 硬體卸載設定是叢集範圍內的。
+
+
+TLS 硬體卸載需要支援的網路卡。支援下列網路卡：
+
+* 4 埠 CX7 10/25 GbE
+* 2 埠 CX6-Dx 40/100 GbE
+* 2 埠 CX7 40/100 GbE
+* 2 埠 CX7 40/100/200
+
+
+以下 AFF 平台支援 4 埠 CX7 10/25 GbE、2 埠 CX6-Dx 40/100 GbE 和 2 埠 CX7 40/100 GbE 網路卡：
+
+* AFF A20
+* AFF A30
+* AFF A50
+* AFF C30
+* AFF C60
+
+
+以下 AFF 和 FAS 平台支援 4 埠 2 埠 CX6-Dx 40/100 GbE、2 埠 CX7 40/100 GbE 和 2 埠 CX7 40/100/200 GbE 卡：
+
+* AFF A70-90
+* AFF C80
+* FAS70
+* FAS90
+* AFF A1K
+
+
+.開始之前
+* 您必須是ONTAP管理員。 `admin`執行下列任務所需的權限等級。
+* 所有節點必須執行 ONTAP 9.19.1 或更新版本。
+
+
+
+
+== 啟用或停用 TLS 卸載
+
+.步驟
+. 檢視目前的 TLS 卸載狀態：
++
+[source, cli]
+----
+security config show
+----
++
+此指令顯示叢集範圍內的 TLS 卸載設定：
+
++
+[listing]
+----
+cluster1::*> security config show
+Cluster    Supported Offload
+FIPS Mode  Protocols Enabled Supported Cipher Suites
+---------- --------- ------- --------------------------------------------------
+false      TLSv1.3,  false   TLS_RSA_WITH_AES_128_CCM,
+           TLSv1.2           TLS_RSA_WITH_AES_128_CCM_8,
+                             TLS_RSA_WITH_AES_128_GCM_SHA256,
+                             TLS_RSA_WITH_AES_128_CBC_SHA,
+                             TLS_RSA_WITH_AES_128_CBC_SHA256,
+                             TLS_RSA_WITH_AES_256_CCM,
+[...]
+----
+. 啟用或停用 TLS 卸載：
++
+[source, cli]
+----
+security config modify -is-offload-enabled {true|false}
+----
++
+此命令用於啟用或停用新連線的 TLS 資料階段硬體卸載。在啟用 TLS 卸載功能之前建立的現有連線，只有在刪除並重新建立這些連線後才會卸載。
+
++
+啟用 TLS 卸載時，必須指定介面：
+
++
+[source, cli]
+----
+security config modify -is-offload-enabled true -interface SSL
+----
+
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/security-config-show.html["security config show"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-config-modify.html["security config modify"^]
+

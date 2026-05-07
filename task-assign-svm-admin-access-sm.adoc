@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: task-assign-svm-admin-access-sm.html 
+keywords: netapp, system manager, ontap, administration, svm, storage vm, volume, vserver, dashboard, administrator, tenant, multi-tenancy, protocol, network interface, performance, assign 
+summary: 為 ONTAP SVM 管理員提供增強的 SVM 監控和管理功能。 
+---
+= 使用 ONTAP System Manager 指派 SVM 管理員存取
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9.19.1 開始，ONTAP 叢集管理員可以將 System Manager 存取指派給管理 SVM 的人員，也就是 SVM 管理員。
+
+這在租用戶型 ONTAP 環境中尤其有用，叢集管理員可以為每個租用戶提供 SVM 儀表板。
+
+叢集管理員也可以允許其 SVM 管理員建立磁碟區。
+
+
+
+== 步驟 1：為 SVM 儀表板準備管理網路介面
+
+在將 SVM 儀表板指派給 SVM 管理員之前，請確保 SVM 具有管理網路介面。如果 SVM 沒有網路介面，您可以建立一個。
+
+.步驟
+. 在 System Manager 中、選取 * 網路介面 > 總覽 * 、然後選取 * 新增 * 以建立網路介面。
+. 選擇 *Storage VM management* 作為網路介面類型。
+. 指定 SVM 管理網路介面的 *IP 位址* 和 *子網路遮罩*。
+
+
+
+
+== 步驟 2：驗證 vsadmin 使用者帳戶組態
+
+每當建立 SVM 時，ONTAP 都會自動建立一個關聯的 vsadmin 使用者帳戶。在將 SVM 儀表板指派給管理員之前，請確保 vsadmin 使用者帳戶已設定密碼且處於解鎖狀態。
+
+.步驟
+. 以叢集管理員身分開啟 System Manager 儀表板。
+. 選擇 *Cluster > Storage VMs*。
+. 選取 SVM、選取 *Settings*，然後選取 *Security > Users and roles*。
+. 在 *vsadmin* 使用者旁邊，選取 image:icon_kabob.gif["功能表選項圖示"]，如果需要，請選取：
++
+.. *Change password* 以更新 vsadmin 密碼。
+.. *解鎖* 以確保其可用。
+
+
+
+
+
+
+== 步驟 3：允許 SVM 管理員新增 Volume（選用）
+
+作為 ONTAP 叢集管理員，如果您希望 SVM 管理員能夠在他們的 SVM 中新增本機磁碟區，您可以授予權限。
+
+.步驟
+. 開啟 System Manager 儀表板，並以叢集管理員身分登入。
+. 在 *Cluster* 下，選擇 *Storage VMs* 。
+. 選擇適用的 SVM 的 image:icon_kabob.gif["功能表選項圖示"]。
+. 選擇*編輯*。
+. 在 *Resource Allocation* 下，選取 *Limit volume creation to preferred local tiers* 核取方塊。
+. 預設情況下，選取此核取方塊後，將包含所有本機層。您可以根據需要移除特定層。如果移除所有本機層或將核取方塊留空，SVM 管理員將無法佈建本機磁碟區。
+. 選擇*保存*。
+
+
+
+
+== 步驟 4：指派 SVM 管理員 access
+
+若要指派 SVM 儀表板存取權限，請為每位 SVM 管理員提供 SVM 管理 IP 位址和 vsadmin 密碼。
+
+.步驟
+. 在 System Manager 中、選取 * 網路介面 > 總覽 * 、然後選取 * 管理 * 網路介面。
+. 選擇 IP 位址並將其與 *vsadmin* 使用者名稱和密碼一起分享給 SVM 管理員。
+
+
+.相關主題：
+* link:disks-aggregates/assign-aggregates-svms-task.html["將 ONTAP 本機層指派給儲存 VM （ SVM ）"]
+* link:authentication/create-svm-user-accounts-task.html#cluster-and-svm-administrators["瞭解如何建立 ONTAP 登入帳戶"]
+* link:concepts/cluster-svm-administrators-concept.html["叢集與SVM管理"]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-login-password.html#description["安全登入密碼"]
+

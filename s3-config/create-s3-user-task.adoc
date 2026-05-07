@@ -22,6 +22,8 @@ S3 使用者可以存取儲存 VM 中的任何儲存區。當您建立 S3 使用
 
 為了提高安全性、從 ONTAP 9.15.1 開始、只有在建立 S3 使用者時才會顯示存取金鑰和秘密金鑰、而且無法再次顯示。如果金鑰遺失，link:regenerate-access-keys.html["必須重新產生新金鑰"]。
 
+若要讓 S3 資源的存取在原始存取金鑰過期後仍然可用，從 ONTAP 9.19.1 開始，您可以link:regenerate-access-keys.html#generate-a-second-s3-access-key["產生第二個存取金鑰"]為每個 S3 使用者執行此操作。
+
 您可以在儲存區原則或物件伺服器原則中、將特定的存取權限授予S3使用者。
 
 [NOTE]
@@ -47,6 +49,14 @@ S3 使用者可以存取儲存 VM 中的任何儲存區。當您建立 S3 使用
 ----
 vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to-live P1W
 ----
++
+建立使用者時，您也可以手動在 `-access-key`和 `-secret-key`參數中定義自己的存取金鑰和私鑰。例如：
+
++
+[listing]
+----
+vserver object-store-server user create -vserver svm1 -user user1 -access-key "20-characters" -secret-key "40-characters"
+----
 
 
 . 請務必儲存存取金鑰和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
@@ -55,11 +65,11 @@ vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to
 --
 .系統管理員
 --
-. 按一下「*儲存設備>儲存設備VM*」。選取您需要新增使用者的儲存 VM 、選取 * 設定 * 、然後按一下 image:icon_pencil.gif["編輯圖示"] S3 下的。
-. 若要新增使用者、請按一下 * 使用者 > 新增 * 。
+. 選擇 *Storage > Storage VMs*。選擇需要新增使用者的 Storage VM，選擇 *Settings*，然後在 S3 下選擇 image:icon_pencil.gif["編輯圖示"]。
+. 若要新增使用者，請選取 *Users > Add*。
 . 輸入使用者名稱。
 . 從 ONTAP 9.14.1 開始、您可以指定為使用者建立之存取金鑰的保留期間。您可以指定金鑰自動過期的保留期間（以天、小時、分鐘或秒為單位）。依預設、此值設為 `0` 這表示金鑰無限期有效。
-. 按一下「 * 儲存 * 」。系統會建立使用者、並為使用者產生存取金鑰和秘密金鑰。
+. 選擇 *Save* 。使用者建立完成，系統將為該使用者產生存取金鑰和私鑰。
 . 下載或儲存存取金鑰和秘密金鑰。從 S3 用戶端進行存取時、需要使用這些資料。
 
 

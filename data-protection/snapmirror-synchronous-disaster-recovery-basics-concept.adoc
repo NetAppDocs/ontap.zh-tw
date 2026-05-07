@@ -172,6 +172,9 @@ ONTAP Select
 | SVM 災難恢復 | ONTAP 9.6 | * SnapMirror 同步來源也可以是 SVM 災難恢復來源、例如、將 SnapMirror 同步化為單一連線的開機組態、以及將 SVM 災難恢復視為另一方的開機組態。* SnapMirror 同步來源不能是 SVM 災難恢復目的地、因為 SnapMirror 同步不支援串聯資料保護來源。您必須先釋放同步關係、才能在目的地叢集中執行 SVM 災難恢復反轉重新同步。* SnapMirror 同步目的地不能是 SVM 災難恢復來源、因為 SVM 災難恢復不支援 DP 磁碟區的複寫。同步來源的反轉重新同步會導致 SVM 災難恢復、但目的地叢集中的 DP Volume 除外。 
 
 
+| link:../snaplock/snapshot-lock-concept.html["防竄改快照"^] | ONTAP 9.19.1 | 您只能在建立快照時指定過期時間。您無法設定或延長現有快照的過期時間。 
+
+
 | 磁帶型還原至來源磁碟區 | ONTAP 9.13.1.12.9.11.9.11. |  
 
 
@@ -196,7 +199,6 @@ SnapMirror 同步關係不支援下列功能：
 LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
 * SnapCenter
 * 資料量SnapLock
-* 防竄改快照
 * 在目的地磁碟區上使用dump和SMtape進行磁帶備份或還原
 * 來源磁碟區的處理量層（QoS下限）
 * Volume SnapRestore
@@ -223,8 +225,43 @@ SnapMirror 同步關係的狀態在 `InSync`正常操作期間始終處於狀態
 
 如果 `OutofSync`在 StrictSync 模式中 SnapMirror 同步關係的關係狀態變成、則會停止對主要 Volume 的所有 I/O 作業。 `OutofSync`同步模式中的 SnapMirror 同步關係狀態不會中斷主要磁碟區的主要和 I/O 作業、
 
+
+
+== 排程的 Snapshot 複寫
+
+從 ONTAP 9.19.1 開始，您可以在進階權限模式下使用 SnapMirror 策略參數 `-sync-snapshot-replication-mode`，將排程快照複寫到 SnapMirror 目的地。複寫排程快照可在 SnapMirror 同步關係中的主要與次要磁碟區之間提供對稱性。
+
+.先決條件
+* 您必須是叢集或 SVM 管理員
+* 您必須處於進階權限模式
+* 您必須配置一個使用者定義的 SnapMirror 原則，該原則使用參數 `-sync-snapshot-replication-mode`並包含選項 `sched_created`。
++
+** 系統定義的原則無法修改。您必須建立新原則並重新建立關係。
+** 使用者定義的原則變更需要重新同步（靜止後再繼續）才能對現有關係生效。
+
+
+
+
+此參數接受以下選項：
+
+* `none`- 停用非 SnapMirror 同步快照的複製
+* `application_created`- 複寫應用程式建立的快照
+* `sched_created` - 複製排程的 Snapshot
+* `sm_created` - 複製 SnapMirror 非同步（扇出分支）所建立的快照
+* 以逗號分隔的類型清單： `application_created`、 `sched_created` 和  `sm_created`。
+
+
+此參數僅在關係狀態為 `InSync`時生效。未列出的 Snapshot 類型僅儲存在主要磁碟區上。
+
+
+NOTE: 在 SnapMirror 同步磁碟區上建立快照可能會增加使用者 I/O 延遲。建議您使用頻率大於 30 分鐘的快照排程。
+
 .相關資訊
 * https://www.netapp.com/pdf.html?item=/media/17174-tr4733pdf.pdf["NetApp 技術報告 4733 ： SnapMirror 同步組態與最佳實務做法"^]
+* link:https://docs.netapp.com/us-en/ontap-cli//volume-snapshot-create.html["Volume Snapshot 建立"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-delete.html["Volume Snapshot 刪除"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-modify.html["Volume Snapshot 修改"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-rename.html["Volume Snapshot 重新命名"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["SnapMirror中斷"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["SnapMirror靜止"^]
 

@@ -4,7 +4,7 @@ permalink: data-protection/cloud-backup-with-snapmirror-task.html
 keywords: netapp, ontap, System Manager, ONTAP 9.9.1, cloud backup, SnapMirror cloud, cloud object store, add cloud object store, remove cloud object store, StorageGRID, ONTAP S3, cloud restore, restore from cloud 
 summary: 從功能支援的9.9開始ONTAP 、您可以使用System Manager將資料備份到雲端、並將資料從雲端儲存設備還原到不同的磁碟區。您可以使用StorageGRID Suse或ONTAP SS3做為雲端物件儲存區。 
 ---
-= 使用 ONTAP SnapMirror 將資料備份到雲端
+= 使用 ONTAP SnapMirror 雲端將資料備份到雲端
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,7 +16,20 @@ summary: 從功能支援的9.9開始ONTAP 、您可以使用System Manager將資
 
 
 [role="lead"]
-從功能升級到功能升級到ONTAP 功能升級到功能升級、您可以使用System Manager將資料備份到雲端、並將資料從雲端儲存設備還原到不同的磁碟區。您可以使用StorageGRID Suse或ONTAP SS3做為雲端物件儲存區。
+從 ONTAP 9.9.1 開始，當您需要將資料保護工作流程遷移到雲端時，可以使用 _SnapMirror cloud_。您可以取代傳統的磁帶備份架構，使用物件儲存作為長期資料保留和歸檔的替代儲存庫。您可以選擇 Amazon S3、Azure Blob、Google Cloud Storage、StorageGRID 或 ONTAP S3 等供應商作為您的雲端物件儲存。
+
+從 ONTAP 9.9.1 開始、您可以使用 System Manager 來備份及還原資料。
+
+從 ONTAP 9.19.1 開始：
+
+* SnapMirror 雲端服務將每個叢集支援的 S3 物件儲存桶數量從 6 個增加到 100 個。此限制適用於 ONTAP 叢集上所有 SnapMirror 雲端物件儲存端點配置的物件儲存總數。使用此功能時，請注意以下事項：
++
+** 當您在每個叢集使用超過 6 個 bucket 時，建議對支援此功能的供應商（包括 AWS S3、Alibaba Cloud、StorageGrid、Google Cloud Storage、IBM Cloud object storage、ONTAP S3 以及其他相容 S3 的供應商）使用虛擬主機樣式的 URL 設定。建議使用此設定，以啟用可擴展的物件儲存位址並避免底層限制。
+** 預設會啟用隨需還原。
+** 視系統中同時進行的隨需還原作業數量而定，隨需還原期間的讀取延遲可能會較高。
+
+
+
 
 從 ONTAP 9.18.1 開始：
 

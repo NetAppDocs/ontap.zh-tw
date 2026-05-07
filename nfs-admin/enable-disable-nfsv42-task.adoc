@@ -1,0 +1,158 @@
+---
+permalink: nfs-admin/enable-disable-nfs-task.html 
+sidebar: sidebar 
+keywords: enable, disable, nfsv3, nfsv4, nfsv4.2, ontap, netapp, nfsv4.1, storage vm, svm, storage virtual machine, nfs, -v3, -v4, -v4.1, -v4.2 
+summary: 您可以使用 System Manager 或 CLI 啟用或停用 NFS 版本。這允許使用 NFS 傳輸協定的用戶端進行檔案存取。 
+---
+= 啟用或停用 ONTAP SVM 的 NFS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 System Manager 或 CLI 啟用或停用 NFS 版本。這允許使用 NFS 傳輸協定的用戶端進行檔案存取。
+
+預設情況下，所有支援的 ONTAP 9 版本均啟用 NFSv3。從 ONTAP 9.9.1 開始，預設啟用 NFSv4.1 和 NFSv4.2；在早期版本中，它們預設為停用。
+
+從 ONTAP 9.19.1 開始，您可以分別啟用或停用 NFSv4.1 和 NFSv4.2。在 ONTAP 9.19.1 之前，您只能同時啟用或停用 NFSv4.1 和 NFSv4.2。預設情況下，建立新的 NFS 服務時，NFSv4.1 和 NFSv4.2 都會啟用，除非管理員明確停用。
+
+
+NOTE: 不支援 FPolicy 監控 NFSv4.2 檔案存取事件。如果您設定 FPolicy 監控，則需要在 SVM 上停用 NFSv4.2。如需參考資訊，請參閱 link:nas-audit/supported-file-operation-filter-fpolicy-nfsv4-concept.html["ONTAP FPolicy 為 NFSv4 監控的支援的檔案操作和過濾器組合"]。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.步驟
+. 在 System Manager 中，選取 *Cluster > Storage VMs*，選取儲存 VM，選取 *Settings*，然後選取 image:icon_gear.gif["動作圖示"] 或 *NFS* 下的 image:icon-edit-pencil-blue-outline.png["編輯圖示"]。
+. 選取 *Enable NFS* 核取方塊。
+. 啟用或停用 NFS 協定：
++
+** 若要啟用 NFSv3 ，請選取 *Enable support version 3* 核取方塊，並考慮下列選項：
++
+*** 勾選 *Enable 64-bit FSIDs and file identifiers* 核取方塊，即可啟用對 NFSv3 的 64 位元檔案系統 ID 和檔案識別碼的支援。
+
+
+** 若要停用 NFSv3，請清除 *Enable support version 3* 核取方塊。
+** 若要啟用 NFSv4.0，請選取 *Enable support version 4* 核取方塊，並考慮以下選項：
++
+*** 選取 *Enable ACL* 核取方塊，以允許使用存取控制清單。
+*** 選取 *Enable read delegation* 核取方塊以允許唯讀存取。
+*** 選取 *Enable write delegation* 核取方塊以允許寫入存取。
+*** 勾選 *Enable 64-bit FSIDs and file identifiers* 核取方塊，即可啟用對 64 位元檔案系統 ID 和檔案識別碼的支援。此核取方塊適用於 NFSv4.0、NFSv4.1 和 NFSv4.2。它與用於控制 NFSv3 64 位元支援的核取方塊是分開的。
+
+
+** 若要停用 NFSv4.0，請清除 *Enable support version 4* 核取方塊。
+** 若要啟用 NFSv4.1，請勾選 *Enable support version 4.1 and 4.2* 核取方塊，然後選取 *Enable support version 4.1* 核取方塊。請考慮下列選項：
++
+*** 選取 *Enable ACL* 核取方塊，以允許使用存取控制清單。
+*** 選取 *Enable read delegation* 核取方塊以允許唯讀存取。
+*** 選取 *Enable write delegation* 核取方塊以允許寫入存取。
+*** 選取 *pNFS* 核取方塊，允許用戶端使用平行 NFS（pNFS）以提高效能。
+*** 勾選 *Enable 64-bit FSIDs and file identifiers* 核取方塊，即可啟用對 64 位元檔案系統 ID 和檔案識別碼的支援。此核取方塊適用於 NFSv4.0、NFSv4.1 和 NFSv4.2。它與用於控制 NFSv3 64 位元支援的核取方塊是分開的。
+
+
+** 若要停用 NFSv4.1，請清除 *Enable support version 4.1* 核取方塊。
+** 若要啟用 NFSv4.2，請勾選 *Enable support version 4.1 and 4.2* 核取方塊，然後選取 *Enable support version 4.2* 核取方塊。請考慮下列選項：
++
+*** 選取 *Enable ACL* 核取方塊，以允許使用存取控制清單。
+*** 選取 *Enable read delegation* 核取方塊以允許唯讀存取。
+*** 選取 *Enable write delegation* 核取方塊以允許寫入存取。
+*** 選取 *pNFS* 核取方塊，允許用戶端使用平行 NFS（pNFS）以提高效能。
+*** 勾選 *Enable 64-bit FSIDs and file identifiers* 核取方塊，即可啟用對 64 位元檔案系統 ID 和檔案識別碼的支援。此核取方塊適用於 NFSv4.0、NFSv4.1 和 NFSv4.2。它與用於控制 NFSv3 64 位元支援的核取方塊是分開的。
+
+
+** 若要停用 NFSv4.2，請清除 *Enable support version 4.2* 核取方塊。
+
+
+. （選用）您可以為 NFS 傳輸協定指定 *V4 ID 網域名稱*。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+.步驟
+. 執行下列其中一項動作：
++
+[cols="1*, 1*, 1*"]
+|===
+| 如果您想要... | 版本... | 輸入下列命令... 
+
+
+.4+| 啟用 NFS  a| 
+NFSv3.
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v3 enabled
+----
+
+
+ a| 
+NFSv4.0
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.0 enabled
+----
+
+
+ a| 
+NFSv4.1
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.1 enabled
+----
+
+
+ a| 
+NFSv4.2
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.2 enabled
+----
+
+
+.4+| 停用 NFS  a| 
+NFSv3.
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v3 disabled
+----
+
+
+ a| 
+NFSv4.0
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.0 disabled
+----
+
+
+ a| 
+NFSv4.1
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.1 disabled
+----
+
+
+ a| 
+NFSv4.2
+ a| 
+[source, cli]
+----
+vserver nfs modify -vserver vserver_name -v4.2 disabled
+----
+|===
+
+
+--
+====

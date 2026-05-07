@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: task-svm-admin-dashboard-sm.html 
+keywords: netapp, system manager, ontap, administration, svm, storage vm, volume, vserver, dashboard, administrator, tenant, multi-tenancy, protocol, network interface, performance 
+summary: 叢集管理員可以為其 SVM 管理員提供監控和管理 SVM 的存取。SVM 管理員可以透過 ONTAP System Manager 中的 SVM 管理員儀表板監控和管理 SVM。 
+---
+= 使用 System Manager 管理和監控 ONTAP SVM
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+從 ONTAP 9.19.1 開始、SVM 管理員可以使用專用的 System Manager 儀表板來監控和管理自己的 SVM。
+
+.開始之前
+您的叢集管理員必須向您提供：
+
+* SVM 的管理 IP 位址
+* SVM System Manager 儀表板的認證資料（使用者名稱和密碼）（必須解除鎖定 vsadmin 使用者）
+* （選用）在 SVM 上新增磁碟區的權限
+
+
+.步驟
+. 在瀏覽器中輸入 SVM 的管理 IP 位址。
+. 輸入 SVM 管理員（vsadmin）的使用者名稱和密碼。
+. 選擇 *Sign in*。
++
+ONTAP System Manager 儀表板隨即開啟。
+
+. 您可以檢視下列有關 SVM 的資訊：
++
+[cols="1,2"]
+|===
+| SVM 資訊 | 說明 
+
+
+| 通訊協定 | 在 SVM 上啟用的傳輸協定。 
+
+
+| 細節 | NIS 和 LDAP 資訊、語言以及磁碟區刪除後的保留期限。 
+
+
+| 效能 | 所選傳輸協定按小時、天、週、月或年統計的延遲、IOPS 和處理量效能統計資料。 
+|===
+. 您也可以選擇將資料下載為逗號分隔值（csv）檔案，以便進行進一步分析。
+. 選擇*儲存>磁碟區*。
++
+Volume 儀表板頁面隨即開啟。
+
++
+叢集管理員可以授予您向 SVM 新增磁碟區的權限。如果未授予此權限，則選擇 *Add* 按鈕將失敗並顯示錯誤訊息。
+
+
+
+.相關資訊
+* link:concepts/cluster-svm-administrators-concept.html["叢集與SVM管理"]
+* link:task_cp_dashboard_tour.html#performance["了解 ONTAP System Manager 儀表板上的叢集管理（效能部分）"]
+* link:volumes/manage-volumes-task.html["使用系統管理器管理 ONTAP 卷"]
+

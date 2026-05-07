@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: san-admin/multipath-automatic-lif-failover-support.html 
+keywords: netapp, ontap, san, multipath, automatic lif failover, supported configurations, active-active, local-active, active-active-scsi-only, multipathing, 
+summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本。 
+---
+= 了解 ONTAP 系統的 SAN 多路徑和自動 LIF 故障轉移支援
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在多重路徑組態中，主機和儲存系統之間會設定多個網路路徑，以便在一個路徑無法使用時，I/O 可以重新導向至替代路徑，以避免服務中斷。自動 LIF 容錯移轉可讓邏輯介面（LIF）在其主連接埠變得不健全或發生儲存容錯移轉時，自動移轉至不同的連接埠。具有自動 LIF 容錯移轉的多重路徑功能可將 I/O 無縫地重新路由至最佳化的可用路徑，而無需進行容錯移轉路徑轉換。
+
+
+
+== SAN 支援的多重路徑組態
+
+SAN 環境支援下列多重路徑組態。
+
+本地主動:: 擁有 LUN 或命名空間的節點上的路徑已啟動並最佳化。HA 夥伴節點上的路徑已啟動但未最佳化。
+主動-主動:: HA 配對中擁有 LUN 或命名空間的所有路徑均處於作用中狀態並已最佳化。
+僅限主動 - 主動 SCSI:: 擁有 LUN 或命名空間的節點上的路徑處於活動狀態並已最佳化。HA 夥伴節點上的路徑可以是活動最佳化型或活動非最佳化型，這取決於 SAN 協定。僅在 ASA 系統上支援僅活動-活動-SCSI 設定。
+
+
+SAN 多路徑組態的支援會因儲存系統和 ONTAP 版本而異。
+
+[cols="1,1,1,1"]
+|===
+| 系統 | 版本ONTAP | 支援的多重路徑組態 | 預設多重路徑組態 
+
+
+| FAS | 9.0 及更新版本 | 本地主動 | 本地主動 
+
+
+.2+| AFF | 9.19.1 及更高版本  a| 
+* 主動-主動
+* 本地主動
+
+| 本地主動 
+
+
+| 9.18.1 及更早版本 | 本地主動 | 本地主動 
+
+
+.2+| ASA | 9.19.1 及更高版本  a| 
+* 主動-主動
+* 僅限主動 - 主動 SCSI
+
+| 主動-主動 
+
+
+| 9.18.1 及更早版本  a| 
+* 主動-主動
+* 僅限主動 - 主動 SCSI
+
+| 僅限主動 - 主動 SCSI 
+
+
+| ASA r2 | 9.16.1 及更新版本 | 主動-主動 | 主動-主動 
+|===
+
+
+== 依組態的預設 LIF 容錯移轉行為
+
+根據多路徑組態、主機與儲存系統之間的路徑可以是主動最佳化或主動非最佳化。當使用主動最佳化路徑發生儲存容錯移轉時、主機不需要等待容錯移轉路徑的 ALUA 或 ANA 轉換即可恢復 I/O。對於主動非最佳化路徑、ALUA 或 ANA 必須先將 I/O 從故障路徑轉換至 HA 合作夥伴、才能恢復 I/O。深入瞭解 link:../san-config/host-support-multipathing-concept.html["ALUA 和 ANA"]。
+
+[cols="1,1,1,1,1"]
+|===
+| 多重路徑組態 | 傳輸協定 | 預設 LIF 容錯移轉原則 | 擁有節點路徑 | HA 合作夥伴路徑 
+
+
+| 本地主動  a| 
+* iSCSI
+* NVMe / TCP
+* NVMe / FC
+
+| 僅限本機 | 主動最佳化 | 主動式非最佳化 
+
+
+.2+| 主動-主動  a| 
+* iSCSI
+* NVMe / TCP
+
+| sfo-partner-only | 主動最佳化 | 主動最佳化 
+
+
+ a| 
+* FCP
+* NVMe / FC
+
+| 不適用 持續連接埠用於容錯移轉 | 主動最佳化 | 主動最佳化 
+
+
+.4+| active-active-scsi-only （僅適用於 ASA 平台） | iSCSI | sfo-partner-only | 主動最佳化 | 主動最佳化 
+
+
+| NVMe / TCP | 僅限本機 | 主動最佳化 | 主動式非最佳化 
+
+
+| FC | 不適用 持續連接埠用於容錯移轉 | 主動最佳化 | 主動最佳化 
+
+
+| NVMe / FC | 不適用 持續連接埠用於容錯移轉 | 主動最佳化 | 主動式非最佳化 
+|===
+
+
+== 支援自動 LIF 容錯移轉
+
+在執行 iSCSI 和 NVMe/TCP 傳輸協定的主動-主動多重路徑組態以及執行 iSCSI 傳輸協定的主動-主動-僅 SCSI 多重路徑組態中，均支援自動 LIF 容錯移轉。LIF 預設設定為使用系統建立的 sfo-partner-only 容錯移轉原則。sfo-partner-only 預設原則可以修改。
+
+本機主動多重路徑組態不支援自動 LIF 容錯移轉。無法修改僅限本機的預設原則。
+
+執行 FC 或 NVMe-FC 傳輸協定的主動 - 主動多重路徑組態使用持續連接埠進行容錯移轉。持續連接埠從 ONTAP 9.8 開始支援、且不使用容錯移轉原則。深入瞭解link:../san-config/asa-support-limitations.html["支援持續性連接埠"]。
+
+對自動 LIF 容錯移轉的支援取決於您的儲存系統、ONTAP 版本和 SAN 傳輸協定。
+
+[cols="1,1,1,1"]
+|===
+| 系統 | 版本ONTAP | SAN 協定 | LIF 故障轉移支援 
+
+
+| FAS | 9.0 及更新版本 | 全部 | 不支援 
+
+
+.4+| AFF .3+| 9.19.1 及更高版本 | iSCSI | 採用主動 - 主動或僅主動 - 主動 - SCSI 多重路徑組態的自動 LIF 容錯移轉 
+
+
+| NVMe / TCP | 採用主動 - 主動多重路徑組態的自動 LIF 容錯移轉 
+
+
+ a| 
+* FC
+* NVMe / FC
+
+| 使用持續性連接埠進行容錯移轉 
+
+
+| 9.18.1 及更早版本 | 全部 | 不支援 
+
+
+.9+| ASA .3+| 9.19.1 及更高版本 | iSCSI | 採用主動 - 主動或僅主動 - 主動 - SCSI 多重路徑組態的自動 LIF 容錯移轉 
+
+
+| NVMe / TCP | 採用主動 - 主動多重路徑組態的自動 LIF 容錯移轉 
+
+
+ a| 
+* FC
+* NVMe / FC
+
+| 使用持續性連接埠進行容錯移轉 
+
+
+.3+| 9.11.1 至 9.18.1 | iSCSI | 自動 LIF 容錯移轉 
+
+
+| FC | 使用持續性連接埠進行容錯移轉 
+
+
+ a| 
+* NVMe / FC
+* NVMe / TCP
+
+| 不支援 
+
+
+.2+| 9.8 至 9.10.1 | FC | 使用持續性連接埠進行容錯移轉 
+
+
+ a| 
+* iSCSI
+* NVMe / FC
+* NVMe / TCP
+
+| 不支援 
+
+
+| 9.7% | 全部 | 不支援 
+
+
+.2+| ASA r2 .2+| 9.19.1 及更高版本  a| 
+* iSCSI
+* NVMe / TCP
+
+| 採用主動 - 主動多重路徑組態的自動 LIF 容錯移轉 
+
+
+ a| 
+* FC
+* NVMe / FC
+
+| 使用持續性連接埠進行容錯移轉 
+|===
+
+
+== 多重路徑組態限制
+
+對於 SnapMirror 處於主動同步關係的儲存虛擬機器（SVM）和 MetroCluster 組態，SAN 多重路徑組態有限制。
+
+* *SnapMirror 主動同步*
++
+如果您的 SVM 處於 SnapMirror 主動式同步關係，則來源 SVM 和目的地 SVM 上的多重路徑組態必須相同。來源 SVM 和目的地 SVM 不支援不同的多重路徑組態。
+
+* *MetroCluster 組態*
++
+主站點和備用站點的儲存系統類型必須相同。
+
+
+
+
+
+== AFF 系統上的主動 - 主動多重路徑
+
+從 ONTAP 9.19.1 開始，AFF 系統在 SAN 環境中支援 SVM 層級的主動-主動多路徑與自動 LIF 容錯移轉。這縮短了容錯移轉時間，使 SAN 客戶能夠在 AFF 系統上執行關鍵任務工作負載，並獲得先前僅在 ASA 系統上才有的不中斷路徑恢復能力和負載平衡能力。AFF 系統上的主動-主動多路徑支援和自動 LIF 容錯移轉功能，使您能夠整合管理網域、最佳化儲存空間、充分利用現有 NAS 投資，並針對所有傳輸協定需求標準化為單一儲存系統，同時仍能滿足嚴格的可用性和效能 SLA。
+
+在 AFF 系統中，只有在 ONTAP 9.19.1 及更高版本中建立新的 SVM 時，才能配置雙活多路徑。SVM 無法從本地主動配置轉換為雙活配置。
+
+您可以將現有 LUN 和命名空間從配置為本機主動多路徑的 SVM 移至配置為主動-主動多路徑的 SVM。如果將 LUN 或命名空間移至新的 SVM，則必須先將主機重新對應到新的 SVM，然後才能開始提供資料服務。
+
+
+NOTE: 如果您的叢集執行 ONTAP 9.19.1 或更新版本、並同時包含 FAS 和 AFF 系統、則所有系統都應使用本機主動式多重路徑組態。不建議在同一個叢集中對 FAS 系統使用本機主動式組態、而對 AFF 系統使用主動-主動式組態。
+
+.相關資訊
+* 深入瞭解link:asa-iscsi-lif-fo-task.html:["ASA 系統上的自動 iSCSI LIF 容錯移轉"]。
+* 深入瞭解link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["ASA r2 系統上的自動 iSCSI LIF 容錯移轉"^]。
+

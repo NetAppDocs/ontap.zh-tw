@@ -131,6 +131,33 @@ ONTAP 9.13.1.12.9.11.9.11.
 
 == 物件作業
 
+從 ONTAP 9.19.1 開始，ONTAP S3 支援對物件上傳強制執行條件式寫入，以及對物件刪除強制執行條件式刪除。條件式寫入和刪除提供了一種防止物件被覆寫或意外刪除的方法。條件式作業僅在透過 TLS 連線使用 AWS_V4 簽署方法提出要求時才有效。支援下列條件式標頭和物件作業：
+
+|===
+| 物件作業 | 條件標頭 
+
+
+ a| 
+PuttObject
+
+CopyObject
+
+完成多個部分上傳
+ a| 
+if-none-match
+
+if-match
+
+
+
+ a| 
+刪除物件
+
+刪除物件
+ a| 
+If-match
+
+|===
 從支援物件中繼資料和標記的ONTAP 支援範圍起、ONTAP 從S9.9開始。
 
 * PutObject 和 CreateMultpartUpload 包含使用的金鑰值配對 `x-amz-meta-<key>.`

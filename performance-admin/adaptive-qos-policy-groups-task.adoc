@@ -14,7 +14,6 @@ summary: 您可以使用調適性 QoS 原則群組，根據磁碟區大小自動
 您可以使用_自適應 QoS_策略群組，根據磁碟區大小自動調整吞吐量上限或下限，從而在磁碟區大小變化時保持 IOPS 與 TB/GB 的比率。在大型部署中管理數百上千個工作負載時，這是一個顯著的優勢。
 
 .開始之前
-* 您必須執行 ONTAP 9.3 或更新版本。
 * 您必須是叢集管理員、才能建立原則群組。
 * 要新增至策略群組的儲存物件必須是非自適應策略群組的成員
 +
@@ -25,25 +24,44 @@ summary: 您可以使用調適性 QoS 原則群組，根據磁碟區大小自動
 
 
 .關於這項工作
-調適性QoS原則群組永遠不會共用：定義的處理量上限或樓層會個別套用至每個成員的工作負載。
-
-處理量限制與儲存物件大小的比率、取決於下列欄位的互動：
-
-* `expected-iops`是每分配 TB/GB 的最低預期 IOPS。
+* 調適性QoS原則群組永遠不會共用：定義的處理量上限或樓層會個別套用至每個成員的工作負載。
+* 預設情況下，自適應和非自適應 QoS 原則群組會自動啟用，以便在短期內將工作負載的處理量上限暫時提高 50%，持續 1 秒，從而回應對更高效能的短期需求。從 ONTAP 9.19.1 開始，您可以修改這些預設設定。在 ONTAP 9.18.1 及更早版本中，這些設定無法變更。
 +
-[NOTE]
-====
- `expected-iops` 僅在 AFF 平台上針對不在 SnapMirror 同步關係中的磁碟區提供保證。 `expected-iops` 僅在分層原則設為「none」且雲端中沒有區塊時，才針對 FabricPool 提供保證。
+使用以下選項來修改預設設定：
 
-====
-* `peak-iops`是每分配或使用的 TB/GB 的最大可能 IOPS。
-* `expected-iops-allocation`指定預期 IOPS 使用的是已分配空間（預設）還是已使用空間。 `expected-iops-allocation is available beginning with ONTAP 9.5.`
-* `peak-iops-allocation` 指定是使用分配的空間還是使用的空間（預設） `peak-iops`。
-*  `absolute-min-iops` 為 IOPS 的絕對最小值。您可以將此欄位用於非常小的儲存物件。它會同時取代兩者 `peak-iops` 和/或 `expected-iops` 何時 `absolute-min-iops` 大於計算值 `expected-iops`。
++
+[cols="3"]
+|===
+| 選項 | 說明 | 預設設定 
+
+
+ a| 
+`burst-percent`
+| 處理量增加百分比 | 50% 
+
+
+ a| 
+`burst duration`
+| 處理量增加的持續時間 （秒） | 1 秒 
+
+
+ a| 
+`burst-iops`
+| 在指定的突發持續時間內，高於處理量上限的最大 IOPS 數 | 0% 
+|===
+* 處理量限制與儲存物件大小的比率、取決於下列欄位的互動：
++
+** `expected-iops`是每分配 TB/GB 的最低預期 IOPS。
+** `peak-iops`是每分配或使用的 TB/GB 的最大可能 IOPS。
+** `expected-iops-allocation` 指定預期 IOPS 使用的是已分配空間（預設值）還是已使用空間。
+** `peak-iops-allocation` 指定是使用分配的空間還是使用的空間（預設） `peak-iops`。
+**  `absolute-min-iops` 為 IOPS 的絕對最小值。您可以將此欄位用於非常小的儲存物件。它會同時取代兩者 `peak-iops` 和/或 `expected-iops` 何時 `absolute-min-iops` 大於計算值 `expected-iops`。
 +
 例如、如果您設定 `expected-iops` 以 1 、 000 IOPS / TB 為單位、且磁碟區大小小於 1 GB `expected-iops` 將為分數 IOP 。計算所得的 `peak-iops` 將會是更小的一部分。您可以透過設定來避免這種情況 `absolute-min-iops` 至實際值。
 
-* `block-size` 指定應用程式 I/O 區塊大小。預設值為 32K 。有效值為8K、16K、32K、64K、any。任何表示不會強制執行區塊大小。
+** `block-size` 指定應用程式 I/O 區塊大小。預設值為 32K 。有效值為8K、16K、32K、64K、any。任何表示不會強制執行區塊大小。
+
+
 
 
 .步驟
@@ -51,7 +69,7 @@ summary: 您可以使用調適性 QoS 原則群組，根據磁碟區大小自動
 +
 [source, cli]
 ----
-qos adaptive-policy-group create -policy group _policy_group_ -vserver _SVM_ -expected-iops _number_of_iops_/TB|GB -peak-iops _number_of_iops_/TB|GB -expected-iops-allocation-space|used-space -peak-iops-allocation allocated-space|used-space -absolute-min-iops _number_of_iops_ -block-size 8K|16K|32K|64K|ANY
+qos adaptive-policy-group create -policy group <policy_group> -vserver <SVM> -expected-iops <number_of_iops>/TB|GB -peak-iops <number_of_iops>/TB|GB -expected-iops-allocation-space|used-space -peak-iops-allocation allocated-space|used-space -absolute-min-iops <number_of_iops> -block-size 8K|16K|32K|64K|ANY
 ----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/qos-adaptive-policy-group-create.html["指令參考資料ONTAP"^]需詳細 `qos adaptive-policy-group create`資訊，請參閱。
@@ -74,7 +92,7 @@ cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs
 +
 [source, cli]
 ----
-volume create -vserver SVM -volume _volume_ -aggregate _aggregate_ -size _number_of_ TB|GB -qos-adaptive-policy-group _policy_group_
+volume create -vserver SVM -volume <volume_name> -aggregate <aggregate> -size <number_of_ TB|GB> -qos-adaptive-policy-group<_policy_group>
 ----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["指令參考資料ONTAP"^]需詳細 `volume create`資訊，請參閱。

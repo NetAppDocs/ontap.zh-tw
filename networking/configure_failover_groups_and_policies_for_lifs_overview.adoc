@@ -16,9 +16,16 @@ summary: LIF 容錯移轉是指當連結發生故障時，LIF 會自動移轉到
 [role="lead"]
 LIF容錯移轉是指自動將LIF移轉至不同的網路連接埠、以因應LIF目前連接埠上的連結故障。這是提供高可用度以連線至SVM的關鍵元件。設定LIF容錯移轉包括建立容錯移轉群組、修改LIF以使用容錯移轉群組、以及指定容錯移轉原則。
 
-容錯移轉群組包含一組來自叢集中一或多個節點的網路連接埠（實體連接埠、VLAN和介面群組）。容錯移轉群組中的網路連接埠可定義LIF可用的容錯移轉目標。容錯移轉群組可以指派叢集管理、節點管理、叢集間及NAS資料生命期給它。
+使用容錯移轉群組進行 LIF 容錯移轉不支援 SAN 傳輸協定 LIF。深入瞭解link:../san-admin/multipath-automatic-lif-failover-support.html["SAN 多重路徑和自動 LIF 容錯移轉支援"]。
+
+容錯移轉群組包含來自 ONTAP 叢集中一個或多個節點的一組網路連接埠（實體連接埠、VLAN 和介面群組）。容錯移轉群組中的網路連接埠定義了 LIF 可用的容錯移轉目標。容錯移轉群組可以指派叢集管理 LIF、節點管理 LIF、叢集間 LIF 和 NAS 資料 LIF。
 
 
 IMPORTANT: 如果LIF設定為沒有有效的容錯移轉目標、則LIF嘗試容錯移轉時會發生中斷。您可以使用 `network interface show -failover`命令來驗證容錯移轉組態。如link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["指令參考資料ONTAP"^]需詳細 `network interface show`資訊，請參閱。
 
 建立廣播網域時、系統會自動建立同名的容錯移轉群組、其中包含相同的網路連接埠。此容錯移轉群組是由系統自動管理、也就是說、當連接埠從廣播網域新增或移除時、它們會自動從這個容錯移轉群組中新增或移除。對於不想管理自己的容錯移轉群組的系統管理員而言、這是一種效率。
+
+從 ONTAP 9.19.1 開始，ONTAP 系統定義的故障轉移群組原則會動態擴展 NAS 資料 LIF 的故障轉移目標，使其可能包含叢集中任何可用節點廣播網域內的任何可用連接埠。您可以將此系統定義的原則套用至任何故障轉移群組。在 ONTAP 9.19.1 之前的版本中，應用此原則的 LIF 只能故障轉移到叢集中的一個其他節點；如果該節點不在仲裁範圍內，即使有其他可用節點，LIF 也不會發生故障轉移。
+
+.相關資訊
+深入瞭解link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["ASA r2 系統上的自動 LIF 容錯移轉"^]。

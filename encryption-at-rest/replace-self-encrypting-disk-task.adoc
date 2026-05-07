@@ -33,13 +33,21 @@ NOTE: 如果HA配對正在使用 link:https://docs.netapp.com/us-en/ontap/encryp
 [listing]
 ----
 cluster1::> storage disk show -broken
-Original Owner: cluster1-01
+Original Owner: node1
   Checksum Compatibility: block
-                                                                 Usable Physical
-    Disk   Outage Reason HA Shelf Bay Chan   Pool  Type    RPM     Size     Size
-    ------ ---- ------------ ---- --- ---- ------ -----  -----  -------  -------
-    0.0.0  admin  failed  0b    1   0    A  Pool0  FCAL  10000  132.8GB  133.9GB
-    0.0.7  admin  removed 0b    2   6    A  Pool1  FCAL  10000  132.8GB  134.2GB
+                                                Drawer                              Usable Physical
+    Disk            Outage Reason  HA Shelf Bay  /Slot Chan   Pool    Type    RPM     Size     Size Model
+    --------------- ------------- --- ----- --- ------ ---- ------ ------- ------ -------- -------- ----------------
+    1.0.12          admin failed   0a     0  12   -/-     A FAILED SSD-NVM      -   1.75TB   1.75TB X4024S173A1T9NTE
+
+Original Owner: node2
+  Checksum Compatibility: block
+                                                Drawer                              Usable Physical
+    Disk            Outage Reason  HA Shelf Bay  /Slot Chan   Pool    Type    RPM     Size     Size Model
+    --------------- ------------- --- ----- --- ------ ---- ------ ------- ------ -------- -------- ----------------
+    1.0.13          admin failed   0b     0  13   -/-     B FAILED SSD-NVM      -   1.75TB   1.75TB X4024S173A1T9NTF
+
+2 entries were displayed.
 [...]
 ----
 . 請依照磁碟櫃模型硬體指南中的指示、移除故障磁碟、並以新的FIPS磁碟機或SED進行更換。

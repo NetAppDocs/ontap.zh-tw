@@ -4,26 +4,23 @@ sidebar: sidebar
 keywords: manage, lifs, san protocols 
 summary: LIF 連接到 SAN 主機。它們可以從連接埠集中移除、移動到儲存虛擬機器內的不同節點，以及刪除。 
 ---
-= 管理所有SAN傳輸協定的生命量
+= 了解適用於 SAN 環境的 ONTAP LIF
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-啟動器必須使用多重路徑 I/O （ MPIO ）和非對稱式邏輯單元存取（ ALUA ）、才能在 SAN 環境中為叢集提供容錯移轉功能。如果某個節點發生故障、則lifs不會移轉或假設故障的合作夥伴節點IP位址。而在主機上使用ALUA的MPIO軟體則負責選取適當的路徑、以便透過LIF存取LUN。
+ONTAP 系統中的 LUN 和命名空間都包含在儲存虛擬機器（SVM）中。網路介面（LIF）允許 SAN 用戶端連接到 SVM 並存取其包含的 LUN 和命名空間中的資料。
 
-您需要使用邏輯介面（lifs）、從HA配對中的每個節點建立一或多個iSCSI路徑、以便存取由HA配對服務的LUN。  您應該為每個支援SAN的儲存虛擬機器（SVM）設定一個管理LIF。
-
-支援直接連線或使用乙太網路交換器進行連線。您必須為這兩種連線類型建立生命。
-
-* 您應該為每個支援SAN的儲存虛擬機器（SVM）設定一個管理LIF。
-您可以為每個節點設定兩個生命期、每個節點一個用於FC的網路、另一個用於iSCSI的乙太網路。
+* 您應該為每個支援 SAN 的儲存虛擬機器（SVM）配置一個管理 LIF。
+* 每個節點可以配置兩個 LIF，一個用於與 FC 一起使用的每個網狀架構，另一個用於 iSCSI 的獨立乙太網路。
+* 支援直接連接或使用乙太網路交換器進行連線。您必須為兩種連線類型設定 LIF。
 
 
-建立生命體後、即可從連接埠集移除生命體、移至儲存虛擬機器（ SVM ）內的不同節點、並刪除生命體。
+學習 link:../networking/create_a_lif.html["建立LIF"]
 
 .相關資訊
-* link:../networking/configure_lifs_cluster_administrators_only_overview.html#lif-failover-and-giveback["設定生命總覽"]
-* link:../networking/create_a_lif.html["建立LIF"]
+* link:../networking/configure_lifs_cluster_administrators_only_overview.html["深入瞭解 LIF 組態"]
+* link:multipath-automatic-lif-failover-support.html["瞭解 SAN 自動 LIF 容錯移轉的支援"]。
 
