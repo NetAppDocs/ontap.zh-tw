@@ -66,15 +66,9 @@ ONTAP 調解器提供兩項額外的 systemctl 服務：
 
 
 
-== SCST 和核心更新
+== 特別說明
 
-ONTAP Mediator 使用 SCST 為 MetroCluster IP 組態中的通訊提供 iSCSI 功能。SCST 套件是一個核心模組，會在安裝過程中編譯。核心更新後，您可能需要重新安裝 SCST。或者，您可以解除安裝 ONTAP Mediator，然後重新安裝並重新設定 ONTAP 關係。請參閱 link:https://scst.sourceforge.net/["SCST：適用於 Linux 的通用 SCSI 目標子系統"^] 以深入瞭解 SCST。
-
-
-NOTE: 您應該將伺服器作業系統核心的任何更新與 ONTAP 中的維護視窗協調起來。
+ONTAP Mediator 依賴 SCST 提供 iSCSI（請參閱 http://scst.sourceforge.net/index.html[]）。該軟體包是一個核心模組，在安裝過程中專門針對核心進行編譯。核心的任何更新都可能需要重新安裝 SCST。或者，您可以解除安裝 ONTAP Mediator，然後重新安裝，最後重新設定 ONTAP 關係。
 
 
-
-== 支援 HTTPS 和 iSCSI
-
-從 ONTAP Mediator 1.12 版本開始，您可以設定使用 HTTPS 或 iSCSI 監控 MetroCluster IP 組態的 ONTAP Mediator。您可以選擇安裝同時支援 iSCSI 和 HTTPS 的 ONTAP Mediator，或僅安裝支援 HTTPS 的 ONTAP Mediator。如果安裝的 ONTAP Mediator 僅支援 HTTPS，則不會安裝 SCST 軟體套件。如需詳細資訊，請參閱 link:index.html#https-iscsi-installation["ONTAP Mediator 的 HTTPS 和 iSCSI 安裝選項"]。
+NOTE: 伺服器作業系統核心的任何更新都應與 ONTAP 中的維護視窗協調進行。
