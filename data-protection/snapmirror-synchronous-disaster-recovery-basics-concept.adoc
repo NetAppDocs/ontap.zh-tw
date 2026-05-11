@@ -97,7 +97,10 @@ ONTAP Select
 | SnapMirror 同步關係主要磁碟區上的防毒軟體 | ONTAP 9.6 |  
 
 
-| 應用程式建立的快照複寫 | 更新ONTAP | 如果快照在拍攝時帶有適當的標籤 `snapshot create`操作，使用 CLI 或ONTAP API， SnapMirror在靜止應用程式後同步複製快照（包括使用者建立的快照或使用外部腳本建立的快照）。使用快照策略建立的計劃快照不會被複製。有關複製應用程式創建的快照的更多信息，請參閱link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["NetApp知識庫：如何使用SnapMirror同步複製應用程式建立的快照"^]。 
+| 應用程式建立的快照複寫 | 更新ONTAP | 如果在 `snapshot create`操作時使用 CLI 或 ONTAP API 為快照新增了對應的標籤，則 SnapMirror 在應用程式靜默後，同步複製快照（包括使用者建立的快照和使用外部腳本建立的快照）。從 ONTAP 9.14.1 開始，複製應用程式建立的快照不再需要標籤。有關複製應用程式建立的快照的更多資訊，請參閱link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["NetApp知識庫：如何使用SnapMirror同步複製應用程式建立的快照"^]。 
+
+
+| 自主勒索軟體保護 | ONTAP 9.19.1 |  
 
 
 | 複製自動刪除 | ONTAP 9.6 |  
@@ -157,6 +160,9 @@ ONTAP Select
 | 移除高中繼資料作業頻率限制 | ONTAP 9.6 |  
 
 
+| 排程的 Snapshot 複寫 | ONTAP 9.19.1 | 從 ONTAP 9.19.1 開始，您可以使用 SnapMirror 原則啟用排程快照的複寫。在 ONTAP 9.19.1 之前的版本中，使用快照原則建立的排程快照不會被複寫。 
+
+
 | 使用TLS 1.2加密技術、確保傳輸中的敏感資料安全無虞 | ONTAP 9.6 |  
 
 
@@ -186,7 +192,6 @@ ONTAP Select
 
 SnapMirror 同步關係不支援下列功能：
 
-* 自主勒索軟體保護
 * 一致性群組
 * DP_最佳化（DPO）系統
 * 資料量FlexGroup
