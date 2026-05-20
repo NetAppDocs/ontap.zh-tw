@@ -20,7 +20,7 @@ summary: 安裝 ONTAP Mediator 後，您應該驗證 ONTAP Mediator 是否正在
 +
 [listing]
 ----
-[root@scspr1915530002 ~]# systemctl status ontap_mediator
+[root@mediator_host ~]# systemctl status ontap_mediator
 
  ontap_mediator.service - ONTAP Mediator
 Loaded: loaded (/etc/systemd/system/ontap_mediator.service; enabled; vendor preset: disabled)
@@ -35,13 +35,17 @@ CGroup: /system.slice/ontap_mediator.service
       ├─286716 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
       └─286717 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
 
-[root@scspr1915530002 ~]#
+[root@mediator_host ~]#
 ----
 .. `systemctl status mediator-scst`
 +
+
+NOTE: 如果您安裝的是僅支援 HTTPS 的 ONTAP Mediator 1.12 或更高版本，則不會安裝 SCST 套件，您可以跳過此步驟。
+
++
 [listing]
 ----
-[root@scspr1915530002 ~]# systemctl status mediator-scst
+[root@mediator_host ~]# systemctl status mediator-scst
    Loaded: loaded (/etc/systemd/system/mediator-scst.service; enabled; vendor preset: disabled)
    Active: active (running) since Mon 2022-04-18 10:41:47 EDT; 1 weeks 0 days ago
   Process: 286595 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
@@ -51,7 +55,7 @@ CGroup: /system.slice/ontap_mediator.service
    CGroup: /system.slice/mediator-scst.service
            └─286662 /usr/local/sbin/iscsi-scstd
 
-[root@scspr1915530002 ~]#
+[root@mediator_host ~]#
 ----
 
 
