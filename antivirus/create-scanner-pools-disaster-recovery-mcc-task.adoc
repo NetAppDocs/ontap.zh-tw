@@ -33,7 +33,7 @@ image:metrocluster-av-config.png["MetroCluster / DR 組態"]
 .步驟
 . 建立掃描器集區：
 +
-`vserver vscan scanner-pool create -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_ -hostnames _Vscan_server_hostnames_ -privileged-users _privileged_users_`
+`vserver vscan scanner-pool create -vserver <data_SVM|cluster_admin_SVM> -scanner-pool <scanner_pool> -hostnames <Vscan_server_hostnames> -privileged-users <privileged_users>`
 
 +
 ** 為個別SVM定義的資源池指定資料SVM、並為叢集中所有SVM定義的資源池指定叢集管理SVM。
@@ -56,36 +56,36 @@ image:metrocluster-av-config.png["MetroCluster / DR 組態"]
 +
 [listing]
 ----
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool1_for_site1 -hostnames scan1 -privileged-users cifs
+site_A::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_siteA -hostnames scan1 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool1_for_site2 -hostnames scan1 -privileged-users cifs
+site_B::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_siteB -hostnames scan1 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool2_for_site1 -hostnames scan2 -privileged-users cifs
+site_A::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_siteA -hostnames scan2 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool2_for_site2 -hostnames scan2 -privileged-users cifs
+site_B::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_siteB -hostnames scan2 -privileged-users cifs
 \u1,cifs\u2
 ----
 . 確認已建立掃描器集區：
 +
-`vserver vscan scanner-pool show -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_`
+`vserver vscan scanner-pool show -vserver <data_SVM|cluster_admin_SVM> -scanner-pool <scanner_pool>`
 
 +
-下列命令會顯示掃描器集區的詳細資料 `pool1`：
+以下命令顯示掃描器池的詳細資訊 `pool1_for_siteA`：
 
 +
 [listing]
 ----
-cluster1::> vserver vscan scanner-pool show -vserver cifssvm1 -scanner-pool pool1_for_site1
+site_A::> vserver vscan scanner-pool show -vserver cifssvm1 -scanner-pool pool1_for_siteA
 
                                     Vserver: cifssvm1
-                               Scanner Pool: pool1_for_site1
+                               Scanner Pool: pool1_for_siteA
                              Applied Policy: idle
                              Current Status: off
          Cluster on Which Policy Is Applied: -
