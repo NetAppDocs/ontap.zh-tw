@@ -134,17 +134,12 @@ network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up
 . 在 *Topology* 下，選擇 *Direct*，然後選擇 *I want to change the topology and take the port offline*。
 . 選擇 *Save* 。
 . 將目標連接埠的纜線直接連接至主機啟動器。
-. 如果您使用的是 ASA r2 系統，請依照link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 程序"^]建立 LIF。如果您使用的是 AFF、ASA 或 FAS 系統，請依照下列步驟建立 LIF：
+. 如果您擁有 AFF、ASA 或 FAS 系統，請依照下列步驟建立 LIF：如果您擁有 ASA r2 系統，請依照link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 程序"^]建立 LIF。
 +
 .. 選擇 *Network > Interfaces*，然後選擇 image:icon_add.gif["新增圖示"]。
 .. 選擇 FC 或 NVMe/FC 傳輸協定。
 .. 為 LIF 命名，或接受 ONTAP 產生的名稱。
-.. 如果至少配置了一個子網路，則可以為 LIF 選擇一個子網路。
-.. 如果未選擇子網路，則可以指定廣播網域的 IP 位址和子網路遮罩。
-.. 從廣播網域中選擇主連接埠。
-+
-根據廣播網域或子網路選擇顯示主連接埠控制資訊。
-
+.. 選擇主連接埠。
 .. 選擇*保存*。
 +
 建立 LIF 後，連接埠會自動上線。
@@ -175,13 +170,13 @@ network interface show -vserver <SVM_name>
 +
 [source, cli]
 ----
-network interface modify -vserver <SVM_name> -lif* -status-admin down
+network interface modify -vserver <SVM_name> -lif * -home-port <adapter_port> -status-admin down
 ----
 . 從介面卡 port 移除所有 LIF：
 +
 [source, cli]
 ----
-network interface delete -vserver <SVM_name> -lif <lif_name>,<lif_name>
+network interface delete -vserver <SVM_name> -lif * -home-port <adapter_port>
 ----
 . 使介面卡離線：
 +
