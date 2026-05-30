@@ -64,7 +64,7 @@ SSH-DSS +
 SSH-RSA
 
 |===
-沒有支援金鑰演算法的現有SSH公開金鑰帳戶、必須先以支援的金鑰類型重新設定、才能啟用FIPS、否則系統管理員驗證將會失敗。
+在啟用 FIPS 之前，必須重新配置現有的 SSH 公鑰帳戶以使用受支援的金鑰類型，否則管理員身份驗證將失敗。
 
 如需詳細資訊、請參閱 link:../authentication/enable-ssh-public-key-accounts-task.html["啟用SSH公開金鑰帳戶"]。
 
@@ -89,7 +89,7 @@ NOTE: 啟用FIPS時、您無法安裝或建立RSA金鑰長度為4096的憑證。
 `security config modify * -is-fips-enabled true`
 
 . 當系統提示您繼續時、請輸入 `y`
-. 從ONTAP 9.9.1 開始，不需要重新啟動。如果您執行的是ONTAP 9.8 或更早版本，請手動逐一重新啟動叢集中的每個節點。
+. 從 ONTAP 9.9.1 開始，無需重新啟動。如果您執行的是 ONTAP 9.8 或更早版本，請手動逐一重新啟動叢集中的每個節點。
 
 
 .範例
@@ -119,7 +119,7 @@ Do you want to continue? {y|n}: y
 
 . 輸入下列命令來停用FIPS：
 +
-`security config modify -is-fips-enabled false`
+`security config modify -is-fips-enabled false -interface SSL`
 
 . 當系統提示您繼續時、請輸入 `y`。
 . 從ONTAP 9.9.1 開始，不需要重新啟動。如果您執行的是ONTAP 9.8 或更早版本，請手動重新啟動叢集中的每個節點。
@@ -127,7 +127,7 @@ Do you want to continue? {y|n}: y
 
 如果您需要使用 SSLv3 協議，則必須依照上述步驟停用 FIPS。只有在停用 FIPS 的情況下才能啟用 SSLv3。
 
-您可以使用以下命令啟用 SSLv3。如果您執行的是ONTAP 9.9.1 或更高版本，則不會看到此警告訊息。
+您可以使用以下命令啟用 SSLv3。如果您執行的是 ONTAP 9.9.1 或更高版本，則不會看到此警告訊息。
 
 ....
 security config modify -supported-protocols SSLv3
@@ -145,7 +145,7 @@ Do you want to continue? {y|n}: y
 您可以查看整個叢集是否正在執行目前的安全性組態設定。
 
 .步驟
-. 如果您執行的是ONTAP 9.8 或更早版本，請手動逐一重新啟動叢集中的每個節點。
+. 如果您執行的是 ONTAP 9.8 或更早版本，請手動逐一重新啟動叢集中的每個節點。
 . 檢視目前的法規遵循狀態：
 +
 `security config show`
