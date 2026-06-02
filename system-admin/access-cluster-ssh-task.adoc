@@ -49,9 +49,9 @@ AD使用者名稱和網域名稱不區分大小寫。不過ONTAP 、不區分使
 啟用SSH多因素驗證時、使用者會使用公開金鑰和密碼進行驗證。
 
 * 從 ONTAP 9.4 開始、您可以 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["啟用 SSH 多因素驗證"^] 適用於 LDAP 和 NIS 遠端使用者。
-* 從 ONTAP 9.13.1 開始、您可以選擇性地將憑證驗證新增至 SSH 驗證程序、以增強登入安全性。若要這麼做、 link:../authentication/manage-ssh-public-keys-and-certificates.html["將 X.509 憑證與公開金鑰建立關聯"^] 帳戶使用的。如果您同時使用 SSH 公開金鑰和 X.509 憑證登入、 ONTAP 會先檢查 X.509 憑證的有效性、然後再使用 SSH 公開金鑰進行驗證。如果該憑證已過期或撤銷、 SSH 公開金鑰會自動停用、則 SSH 登入會遭到拒絕。
-* 從 ONTAP 9.14.1 開始、 ONTAP 系統管理員就可以 link:../authentication/configure-cisco-duo-mfa-task.html["將 Cisco 雙核心雙因素驗證新增至 SSH 驗證程序"^] 以增強登入安全性。啟用 Cisco 雙核心驗證之後、首次登入時、使用者必須註冊裝置、以作為 SSH 工作階段的驗證者。
-* 從 ONTAP 9.15.1 開始、系統管理員就可以 link:../authentication/dynamic-authorization-overview.html["設定動態授權"^] 根據使用者的信任分數、為 SSH 使用者提供額外的自適應驗證。
+* 從 ONTAP 9.13.1 開始，您可以選擇在 SSH 驗證過程中新增憑證驗證，以增強登入安全性。為此，link:../authentication/manage-ssh-public-keys-and-certificates.html["將 X.509 憑證與公開金鑰建立關聯"]帳戶使用的憑證。如果您同時使用 SSH 公開金鑰和 X.509 憑證透過 SSH 登入，ONTAP 會在使用 SSH 公開金鑰進行驗證之前，先檢查 X.509 憑證的有效性。如果該憑證已過期或已被撤銷，則 SSH 登入將被拒絕，並且 SSH 公開金鑰將自動停用。
+* 從 ONTAP 9.14.1 版本開始，ONTAP 管理員可以link:../authentication/configure-cisco-duo-mfa-task.html["將 Cisco 雙核心雙因素驗證新增至 SSH 驗證程序"]增強登入安全性。啟用 Cisco Duo 驗證後，使用者首次登入時需要註冊一台裝置作為 SSH 工作階段的驗證器。
+* 從 ONTAP 9.15.1 開始，管理員可以link:../authentication/dynamic-authorization-overview.html["設定動態授權"]根據使用者的信任評分，為 SSH 使用者提供額外的自適應驗證。
 
 
 .步驟
