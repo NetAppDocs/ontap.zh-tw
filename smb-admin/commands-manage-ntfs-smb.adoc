@@ -1,0 +1,241 @@
+---
+permalink: smb-admin/commands-manage-ntfs-smb.html 
+sidebar: sidebar 
+keywords: ontap, command, managing, manage, security, descriptor, create, modify, delete, display, information, commands for managing ntfs security descriptors 
+summary: 使用 ONTAP 命令建立、修改、刪除及顯示有關 NTFS 安全描述元以及 DACL 和 SACL 中存取控制項目（ACE）的資訊。您也可以使用 ONTAP 命令來管理 SMB 安全性原則、原則工作和原則作業。 
+---
+= 用於管理 NTFS 和 SMB 安全性原則和存取控制項目的 ONTAP 命令
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 ONTAP 命令建立、修改、刪除及顯示有關 NTFS 安全描述元以及 DACL 和 SACL 中存取控制項目（ACE）的資訊。您也可以使用 ONTAP 命令來管理 SMB 安全性原則、原則工作和原則作業。
+
+
+
+== 用於管理 SMB 伺服器上的 NTFS 安全描述符的 ONTAP 命令
+
+管理安全性描述元時、會ONTAP 有特定的指令檔。您可以建立、修改、刪除及顯示安全性描述元的相關資訊。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立NTFS安全性描述元
+ a| 
+`vserver security file-directory ntfs create`
+
+
+
+ a| 
+修改現有的NTFS安全性描述元
+ a| 
+`vserver security file-directory ntfs modify`
+
+
+
+ a| 
+顯示現有NTFS安全性描述元的相關資訊
+ a| 
+`vserver security file-directory ntfs show`
+
+
+
+ a| 
+刪除NTFS安全性描述元
+ a| 
+`vserver security file-directory ntfs delete`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+ntfs["指令參考資料ONTAP"^]需詳細 `vserver security file-directory ntfs`資訊，請參閱。
+
+
+
+== 用於管理 SMB 伺服器上的 NTFS DACL 存取控制項目的 ONTAP 命令
+
+管理ONTAP DACL存取控制項目（ACE）時、會有特定的功能不完整的指令。您可以隨時將ACE新增至NTFS DACL。您也可以在DACL中修改、刪除及顯示有關ACE的資訊、來管理現有的NTFS DACL。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立ACE並將其新增至NTFS DACL
+ a| 
+`vserver security file-directory ntfs dacl add`
+
+
+
+ a| 
+修改NTFS DACL中的現有ACE
+ a| 
+`vserver security file-directory ntfs dacl modify`
+
+
+
+ a| 
+顯示NTFS DACL中現有ACE的相關資訊
+ a| 
+`vserver security file-directory ntfs dacl show`
+
+
+
+ a| 
+從NTFS DACL移除現有的ACE
+ a| 
+`vserver security file-directory ntfs dacl remove`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+ntfs+dacl["指令參考資料ONTAP"^]需詳細 `vserver security file-directory ntfs dacl`資訊，請參閱。
+
+
+
+== 用於管理 SMB 伺服器上的 NTFS SACL 存取控制項目的 ONTAP 命令
+
+管理ONTAP SACL存取控制項目（ACE）時、會有特定的功能不完整的命令。您可以隨時將ACE新增至NTFS SACL。您也可以在SACL中修改、刪除及顯示有關ACE的資訊、來管理現有的NTFS SACL。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立ACE並將其新增至NTFS SACL
+ a| 
+`vserver security file-directory ntfs sacl add`
+
+
+
+ a| 
+修改NTFS SACL中的現有ACE
+ a| 
+`vserver security file-directory ntfs sacl modify`
+
+
+
+ a| 
+顯示NTFS SACL中現有ACE的相關資訊
+ a| 
+`vserver security file-directory ntfs sacl show`
+
+
+
+ a| 
+從NTFS SACL移除現有的ACE
+ a| 
+`vserver security file-directory ntfs sacl remove`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+ntfs+sacl["指令參考資料ONTAP"^]需詳細 `vserver security file-directory ntfs sacl`資訊，請參閱。
+
+
+
+== 用於管理 SMB 安全性原則的 ONTAP 命令
+
+管理安全性原則時、會ONTAP 有特定的指令檔。您可以顯示原則的相關資訊、也可以刪除原則。您無法修改安全性原則。
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+建立安全性原則
+ a| 
+`vserver security file-directory policy create`
+
+
+
+ a| 
+顯示安全性原則的相關資訊
+ a| 
+`vserver security file-directory policy show`
+
+
+
+ a| 
+刪除安全性原則
+ a| 
+`vserver security file-directory policy delete`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+policy["指令參考資料ONTAP"^]需詳細 `vserver security file-directory policy`資訊，請參閱。
+
+
+
+== 用於管理 SMB 安全性原則任務的 ONTAP 命令
+
+有一些用來新增、修改、移除及顯示安全性原則工作相關資訊的指令。ONTAP
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+新增安全性原則工作
+ a| 
+`vserver security file-directory policy task add`
+
+
+
+ a| 
+修改安全性原則工作
+ a| 
+`vserver security file-directory policy task modify`
+
+
+
+ a| 
+顯示安全性原則工作的相關資訊
+ a| 
+`vserver security file-directory policy task show`
+
+
+
+ a| 
+移除安全性原則工作
+ a| 
+`vserver security file-directory policy task remove`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+policy+task["指令參考資料ONTAP"^]需詳細 `vserver security file-directory policy task`資訊，請參閱。
+
+
+
+== 用於管理 SMB 安全性原則作業的 ONTAP 指令
+
+有一些用來暫停、恢復、停止及顯示安全性原則工作資訊的指令。ONTAP
+
+|===
+| 如果您想要... | 使用此命令... 
+
+
+ a| 
+暫停安全性原則工作
+ a| 
+`vserver security file-directory job pause ‑vserver vserver_name -id integer`
+
+
+
+ a| 
+恢復安全原則工作
+ a| 
+`vserver security file-directory job resume ‑vserver vserver_name -id integer`
+
+
+
+ a| 
+顯示安全性原則工作的相關資訊
+ a| 
+`vserver security file-directory job show ‑vserver vserver_name` 您可以使用此命令來判斷工作的工作 ID 。
+
+
+
+ a| 
+停止安全性原則工作
+ a| 
+`vserver security file-directory job stop ‑vserver vserver_name -id integer`
+
+|===
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+security+file-directory+job["指令參考資料ONTAP"^]需詳細 `vserver security file-directory job`資訊，請參閱。

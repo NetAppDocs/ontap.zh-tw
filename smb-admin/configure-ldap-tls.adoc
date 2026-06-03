@@ -1,0 +1,105 @@
+---
+permalink: smb-admin/configure-ldap-tls.html 
+sidebar: sidebar 
+keywords: ldap, ssl, tls, secure, securing, active, directory, communication, export, copy, certificate, service, self-signed, root, ca, file, ascii, text, storage, virtual, machine, svm, export a copy of the self-signed root ca certificate 
+summary: 為 ONTAP SMB 伺服器設定 LDAP over TLS，以確保 SMB 伺服器與 Active Directory LDAP 伺服器之間的通訊安全。 
+---
+= 為 ONTAP SMB 伺服器設定 LDAP over TLS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+為 ONTAP SMB 伺服器設定 LDAP over TLS，以確保 SMB 伺服器與 Active Directory LDAP 伺服器之間的通訊安全。
+
+
+
+== 步驟 1：匯出 ONTAP SMB SVM 的自簽名根 CA 憑證
+
+若要使用LDAP over SSL/TLS來保護Active Directory通訊安全、您必須先將Active Directory憑證服務的自我簽署根CA憑證複本匯出至憑證檔案、然後將其轉換成Ascii文字檔。這個文字檔是ONTAP 由SITALL用來在儲存虛擬機器（SVM）上安裝憑證。
+
+必須已為 CIFS 伺服器所屬的網域安裝並設定了 Active Directory 憑證服務。您可以參考 http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com"]以了解有關安裝和設定 Active Directory 憑證服務的資訊。Step
+
+. 取得中網域控制站的根 CA 憑證 `.pem` 文字格式。
++
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com"]
+
+
+
+.下一步
+在SVM上安裝憑證。
+
+
+
+== 步驟 2：在 ONTAP SMB SVM 上安裝自我簽署的根 CA 憑證
+
+如果在連結至LDAP伺服器時需要使用TLS進行LDAP驗證、您必須先在SVM上安裝自我簽署的根CA憑證。
+
+.關於這項工作
+ONTAP 中所有使用 TLS 通訊的應用程式，都可以使用線上憑證狀態傳輸協定（ OCSP ）來檢查數位憑證狀態。如果在TLS上為LDAP啟用OCSP、則撤銷的憑證會遭到拒絕、連線也會失敗。
+
+.步驟
+. 安裝自我簽署的根CA憑證：
++
+.. 開始安裝憑證：
++
+[source, cli]
+----
+security certificate install -vserver <SVM_name> -type server-ca
+----
++
+主控台輸出會顯示下列訊息： `Please enter Certificate: Press <Enter> when done`
+
+.. 開啟憑證 `.pem` 使用文字編輯器檔案、複製憑證、包括開頭的行 `-----BEGIN CERTIFICATE-----` 並以結束 `-----END CERTIFICATE-----`，然後在命令提示字元之後貼上憑證。
+.. 確認已正確顯示憑證。
+.. 按Enter完成安裝。
+
+
+. 請確認憑證已安裝：
++
+[source, cli]
+----
+security certificate show -vserver <SVM_name>
+----
+
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["安全性憑證安裝"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-show.html["安全證書展示"^]
+
+
+
+
+== 步驟 3：在 ONTAP SMB 伺服器上啟用 LDAP over TLS
+
+您的SMB伺服器必須先修改SMB伺服器安全性設定、才能使用TLS與Active Directory LDAP伺服器進行安全通訊。
+
+從ONTAP 《支援範圍》9.10.1開始、Active Directory（AD）和名稱服務LDAP連線預設都支援LDAP通道繫結。僅當啟用Start-TLS或LDAPS並將工作階段安全性設定為簽署或密封時、才能嘗試透過LDAP連線進行通道繫結。ONTAP若要停用或重新啟用與 AD 伺服器的 LDAP 通道繫結、請使用 `-try-channel-binding-for-ad-ldap` 參數 `vserver cifs security modify` 命令。
+
+若要深入瞭解、請參閱：
+
+* link:../nfs-admin/using-ldap-concept.html["了解適用於 ONTAP NFS SVM 的 LDAP"]
+* link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 LDAP通道繫結和LDAP簽署要求、適用於Windows"^]。
+
+
+.步驟
+. 設定 SMB 伺服器安全設定，以允許與 Active Directory LDAP 伺服器進行安全的 LDAP 通訊：
++
+[source, cli]
+----
+vserver cifs security modify -vserver <SVM_name> -use-start-tls-for-ad-ldap true
+----
+. 確認 LDAP over TLS 安全設定已設為  `true`：
++
+[source, cli]
+----
+vserver cifs security show -vserver <SVM_name>
+----
++
+[NOTE]
+====
+如果 SVM 使用相同的 LDAP 伺服器來查詢名稱對應或其他 UNIX 資訊（例如使用者、群組和網路群組）、則您也必須修改 `-use-start-tls` 選項：使用 `vserver services name-service ldap client modify` 命令。
+
+====
+

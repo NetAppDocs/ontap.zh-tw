@@ -1,0 +1,334 @@
+---
+permalink: smb-admin/manage-local-groups.html 
+sidebar: sidebar 
+keywords: modify, exist, local, group, description, exist, local, group, renaming, rename, modify local groups 
+summary: 您可以變更現有本機群組的說明、或重新命名群組、以修改現有的本機群組。 
+---
+= 管理本機 ONTAP SMB 群組
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以透過更新描述或重新命名來變更本機群組。您也可以查看叢集或特定儲存虛擬機器（SVM）上的所有本機群組，並查看每個群組的成員。此資訊有助於您排查 SVM 上的檔案存取和使用者權限問題。
+
+[cols="2,4a"]
+|===
+| 如果您想要... | 使用命令... 
+
+
+ a| 
+顯示叢集上的所有本機群組
+ a| 
+`vserver cifs users-and-groups local-group show`
+
+
+
+ a| 
+在 SVM 上顯示所有本機群組
+ a| 
+`vserver cifs users-and-groups local-group show -vserver <SVM_name>`
+
+
+
+ a| 
+顯示叢集上所有本機群組的成員
+ a| 
+`vserver cifs users-and-groups local-group show-members`
+
+
+
+ a| 
+在 SVM 上顯示所有本機群組的成員
+ a| 
+`vserver cifs users-and-groups local-group show-members -vserver <SVM_name>`
+
+
+
+ a| 
+修改本機群組說明
+ a| 
+`vserver cifs users-and-groups local-group modify -vserver <SVM_name> -group-name <group_name> -description text`
+
+如果說明包含空格，則必須用雙引號括住。
+
+
+
+ a| 
+重新命名本機群組
+ a| 
+`vserver cifs users-and-groups local-group rename -vserver <SVM_name> -group-name <group_name> -new-group-name <new_group_name>`
+
+|===
+.命令範例
+[%collapsible]
+====
+.範例
+下列範例將本機群組「'CIFs_Server\Engineering」重新命名為「'CIFs_Server\Engineering _new'」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group rename -vserver vs1 -group-name CIFS_SERVER\engineering -new-group-name CIFS_SERVER\engineering_new
+----
+下列範例修改本機群組「'CIFs_Server\Engineering」的說明：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group modify -vserver vs1 -group-name CIFS_SERVER\engineering -description "New Description"
+----
+.範例
+下列範例顯示SVM VS1上所有本機群組的相關資訊：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1
+Vserver  Group Name                  Description
+-------- --------------------------- ----------------------------
+vs1      BUILTIN\Administrators      Built-in Administrators group
+vs1      BUILTIN\Backup Operators    Backup Operators group
+vs1      BUILTIN\Power Users         Restricted administrative privileges
+vs1      BUILTIN\Users               All users
+vs1      CIFS_SERVER\engineering
+vs1      CIFS_SERVER\sales
+----
+.範例
+下列範例顯示SVM VS1上所有本機群組成員的相關資訊：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show-members -vserver vs1
+Vserver   Group Name                   Members
+--------- ---------------------------- ------------------------
+vs1       BUILTIN\Administrators       CIFS_SERVER\Administrator
+                                       AD_DOMAIN\Domain Admins
+                                       AD_DOMAIN\dom_grp1
+          BUILTIN\Users                AD_DOMAIN\Domain Users
+                                       AD_DOMAIN\dom_usr1
+          CIFS_SERVER\engineering      CIFS_SERVER\james
+----
+====
+
+
+== 刪除本機 ONTAP SMB 群組
+
+如果不再需要本機群組來判斷與該SVM相關之資料的存取權限、或不再需要將SVM使用者權限（權限）指派給群組成員、您可以從儲存虛擬機器（SVM）中刪除該群組。
+
+.關於這項工作
+刪除本機群組時、請謹記下列事項：
+
+* 檔案系統不會變更。
++
+不會調整參照此群組之檔案和目錄上的Windows安全性描述元。
+
+* 如果群組不存在、則會傳回錯誤。
+* 無法刪除特殊的_Everyon__群組。
+* 無法刪除內建群組、例如_BUILTIN\Administrators__BUILTIN\Users_。
+
+
+.步驟
+. 透過在 SVM 上顯示本機群組清單，判斷您要刪除的本機群組名稱：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-group show -vserver <SVM_name>
+----
+. 刪除本機群組：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-group delete -vserver <SVM_name> -group-name <group_name>
+----
+. 確認該群組已刪除：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-group show -vserver <SVM_name>
+----
+
+
+.命令範例
+[%collapsible]
+====
+下列範例會刪除與SVM VS1相關聯的本機群組「'CIFs_Server\sales'」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1
+Vserver   Group Name                   Description
+--------- ---------------------------- ----------------------------
+vs1       BUILTIN\Administrators       Built-in Administrators group
+vs1       BUILTIN\Backup Operators     Backup Operators group
+vs1       BUILTIN\Power Users          Restricted administrative privileges
+vs1       BUILTIN\Users                All users
+vs1       CIFS_SERVER\engineering
+vs1       CIFS_SERVER\sales
+
+cluster1::> vserver cifs users-and-groups local-group delete -vserver vs1 -group-name CIFS_SERVER\sales
+
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1
+Vserver   Group Name                   Description
+--------- ---------------------------- ----------------------------
+vs1       BUILTIN\Administrators       Built-in Administrators group
+vs1       BUILTIN\Backup Operators     Backup Operators group
+vs1       BUILTIN\Power Users          Restricted administrative privileges
+vs1       BUILTIN\Users                All users
+vs1       CIFS_SERVER\engineering
+----
+====
+
+
+== 將成員新增至本機 ONTAP SMB 群組
+
+您可以透過新增本機使用者、網域使用者或網域群組來管理本機群組成員資格。如果您想要根據群組上設定的存取控制來控制資料存取權限，或者想要讓使用者擁有與該群組相關的權限，這將非常有用。
+
+.關於這項工作
+* 您無法將使用者新增至特殊的_Everyon__群組。
+* 您必須先存在本機群組、才能將使用者新增至該群組。
+* 使用者必須存在、才能將使用者新增至本機群組。
+* 您無法將本機群組新增至其他本機群組。
+* 若要將網域使用者或群組新增至本機群組、Data ONTAP 則必須能夠將名稱解析為SID。
+
+
+.步驟
+. 在群組中新增成員：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-group add-members -vserver _vserver_name_ -group-name _group_name_ -member-names name[,...]
+----
+
+
+您可以指定要新增至指定本機群組的本機使用者、網域使用者或網域群組的以逗號分隔的清單。
+
+.命令範例
+[%collapsible]
+====
+以下範例將本機使用者「'Smb_server\sue」和網域群組「'AD_DOM\DOM_DOM_eng'」新增至SVM VS1上的本機群組「'Smb_server\engin'」：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group add-members -vserver vs1 -group-name SMB_SERVER\engineering -member-names SMB_SERVER\sue,AD_DOMAIN\dom_eng
+----
+====
+
+
+== 從本機 ONTAP SMB 群組中移除成員
+
+您可以透過移除本機使用者、網域使用者或網域群組來管理本機群組成員資格。如果您想要根據群組上設定的存取控制來控制資料存取、或是想要讓使用者擁有與該群組相關的權限、這項功能就很實用。
+
+.關於這項工作
+* 您無法從特殊的_Everyon__群組中移除成員。
+* 您要從中移除成員的群組必須存在。
+* 必須能夠將您要從群組移除的成員名稱解析為對應的SID。ONTAP
+
+
+.步驟
+. 從群組中移除成員：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-group remove-members -vserver _vserver_name_ -group-name _group_name_ -member-names name[,...]
+----
+
+
+您可以指定要從指定本機群組中移除的本機使用者、網域使用者或網域群組的以逗號分隔的清單。
+
+.命令範例
+[%collapsible]
+====
+以下範例將SVM VS1上本機群組「'Smb_server\sue」和「'smb_server\james'」中的本機使用者移除：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group remove-members -vserver vs1 -group-name SMB_SERVER\engineering -member-names SMB_SERVER\sue,SMB_SERVER\james
+----
+====
+
+
+== 更新本機資料庫中的 ONTAP SMB 網域使用者和群組名稱
+
+您可以將網域使用者和群組新增至CIFS伺服器的本機群組。這些網域物件會在叢集的本機資料庫中登錄。如果重新命名網域物件、則必須手動更新本機資料庫。
+
+.關於這項工作
+您必須指定要更新網域名稱的儲存虛擬機器（SVM）名稱。
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 更新與儲存虛擬機器相關聯的網域使用者和群組名稱：
++
+[source, cli]
+----
+vserver cifs users-and-groups update-names -vserver <SVM_name>
+----
+. 顯示已成功更新和更新失敗的網域使用者和群組：
++
+[source, cli]
+----
+vserver cifs users-and-groups update-names -vserver <SVM_name> -display-failed-only false|true
+----
+. 如果要封鎖所有更新狀態資訊，請使用以下命令：
++
+[source, cli]
+----
+vserver cifs users-and-groups update-names -vserver <SVM_name> -suppress-all-output true
+----
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+.命令範例
+[%collapsible]
+====
+下列範例會更新與儲存虛擬機器（SVM、先前稱為Vserver）VS1相關聯的網域使用者和群組名稱。對於上一次更新、需要更新的是一條相依的名稱鏈：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs users-and-groups update-names -vserver vs1
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654321-12345
+   Domain:            EXAMPLE1
+   Out-of-date Name:  dom_user1
+   Updated Name:      dom_user2
+   Status:            Successfully updated
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654322-23456
+   Domain:            EXAMPLE2
+   Out-of-date Name:  dom_user1
+   Updated Name:      dom_user2
+   Status:            Successfully updated
+
+   Vserver:           vs1
+   SID:               S-1-5-21-123456789-234565432-987654321-123456
+   Domain:            EXAMPLE1
+   Out-of-date Name:  dom_user3
+   Updated Name:      dom_user4
+   Status:            Successfully updated; also updated SID "S-1-5-21-123456789-234565432-987654321-123457"
+                      to name "dom_user5"; also updated SID "S-1-5-21-123456789-234565432-987654321-123458"
+                      to name "dom_user6"; also updated SID "S-1-5-21-123456789-234565432-987654321-123459"
+                      to name "dom_user7"; also updated SID "S-1-5-21-123456789-234565432-987654321-123460"
+                      to name "dom_user8"
+
+The command completed successfully. 7 Active Directory objects have been updated.
+
+cluster1::*> set -privilege admin
+----
+====
+.相關資訊
+如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+cifs["指令參考資料ONTAP"^]需詳細 `vserver cifs`資訊，請參閱。

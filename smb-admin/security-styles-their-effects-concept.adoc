@@ -17,37 +17,44 @@ summary: 安全風格分為四種：UNIX、NTFS、混合和統一。每種安全
 
 例如、如果某個磁碟區使用UNIX安全型態、則SMB用戶端仍可存取資料（前提是他們必須正確驗證及授權）、因為ONTAP 此為多重傳輸協定的本質。不過ONTAP 、VMware使用UNIX權限、只有UNIX用戶端可以使用原生工具進行修改。
 
-[cols="5*"]
+[cols="5"]
 |===
 | 安全風格 | 可以修改權限的用戶端 | 用戶端可以使用的權限 | 打造出有效的安全風格 | 可存取檔案的用戶端 
 
 
-.2+| UNIX .2+| NFS | NFSv3模式位元 .2+| UNIX .9+| NFS與SMB 
+| UNIX | NFS  a| 
+* NFSv3模式位元
+* NFSv4.x ACL
+
+| UNIX | NFS與SMB 
 
 
-| NFSv4.x ACL 
+| NTFS | 中小企業 | NTFS ACL | NTFS | NFS與SMB 
 
 
-| NTFS | 中小企業 | NTFS ACL | NTFS 
+| 混合 | NFS或SMB  a| 
+* NFSv3模式位元
+* NFSv4.x ACL
+* NTFS ACL
+
+ a| 
+* UNIX（用於 NFSv3 模式位元和 NFSv4.x ACL）
+* NTFS（用於 NTFS ACL）
+
+| NFS與SMB 
 
 
-.3+| 混合 .3+| NFS或SMB | NFSv3模式位元 .2+| UNIX 
+| 統一化
+（僅適用於 Infinite Volume 、 ONTAP 9.4 及更早版本。） | NFS或SMB  a| 
+* NFSv3模式位元
+* NFSv4.1 ACL
+* NTFS ACL
 
+ a| 
+* UNIX （適用於 NFSv3 模式位元和 NFSv4.1 ACL）
+* NTFS（用於 NTFS ACL）
 
-| NFSv4.ACL 
-
-
-| NTFS ACL | NTFS 
-
-
-.3+| 統一化
-（僅適用於 Infinite Volume 、 ONTAP 9.4 及更早版本。） .3+| NFS或SMB | NFSv3模式位元 .2+| UNIX 
-
-
-| NFSv4.1 ACL 
-
-
-| NTFS ACL | NTFS 
+| NFS與SMB 
 |===
 支援UNIX、NTFS和混合式安全型態的支援。FlexVol當安全性樣式混合或統一化時、有效權限取決於上次修改權限的用戶端類型、因為使用者是個別設定安全性樣式。如果上次修改權限的用戶端是NFSv3用戶端、則權限為UNIX NFSv3模式位元。如果最後一個用戶端是NFSv4用戶端、則權限為NFSv4 ACL。如果最後一個用戶端是SMB用戶端、則權限為Windows NTFS ACL。
 
@@ -62,4 +69,55 @@ summary: 安全風格分為四種：UNIX、NTFS、混合和統一。每種安全
 ====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
+
+
+
+NOTE: 安全樣式可以設定在 FlexVol 磁碟區（根磁碟區或資料磁碟區）以及 qtree 上。安全樣式可以在建立時手動設定、自動繼承，或於日後變更。== 決定在 ONTAP SVM 上使用哪些 SMB 安全樣式
+
+為了協助您決定要在磁碟區上使用哪種安全樣式、您應該考慮兩個因素。主要因素是管理檔案系統的系統管理員類型。次要因素是存取磁碟區上資料的使用者或服務類型。
+
+在Volume上設定安全樣式時、您應該考慮環境的需求、以確保您選擇最佳的安全樣式、並避免管理權限時發生問題。下列考量事項可協助您決定：
+
+[cols="2,4"]
+|===
+| 安全風格 | 選擇是否... 
+
+
+ a| 
+UNIX
+ a| 
+* 檔案系統由UNIX管理員管理。
+* 大多數使用者是NFS用戶端。
+* 存取資料的應用程式會使用UNIX使用者做為服務帳戶。
+
+
+
+
+ a| 
+NTFS
+ a| 
+* 檔案系統由Windows管理員管理。
+* 大多數使用者是 SMB 用戶端。
+* 存取資料的應用程式會使用Windows使用者做為服務帳戶。
+
+
+
+
+ a| 
+混合
+ a| 
+檔案系統由UNIX和Windows系統管理員管理、使用者同時由NFS和SMB用戶端組成。
+
+|===
+
+
+== 瞭解 ONTAP SMB 安全風格的繼承
+
+如果您在建立新FlexVol 的流通量或qtree時未指定安全樣式、它會以不同的方式繼承其安全風格。
+
+安全樣式會以下列方式繼承：
+
+* 此功能會繼承包含SVM的根磁碟區安全樣式。FlexVol
+* qtree會繼承其包含FlexVol 的不穩定區的安全樣式。
+* 檔案或目錄會繼承其包含FlexVol 的不穩定磁碟區或qtree的安全樣式。
 

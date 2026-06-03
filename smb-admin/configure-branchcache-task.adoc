@@ -2,7 +2,7 @@
 permalink: smb-admin/configure-branchcache-task.html 
 sidebar: sidebar 
 keywords: configure, branchcache, service, per-share, basis, smb, share, configure branchcache on the cifs server 
-summary: 您可以設定在每個共用區基礎上提供BranchCache服務。或者、您也可以設定在所有SMB共用區上自動啟用快取。 
+summary: 您可以為單一共用或所有 SMB 共用設定 BranchCache。如果您選擇按共用設定，則必須在每個需要提供快取的 SMB 共用上啟用 BranchCache。 
 ---
 = 在 ONTAP SMB 伺服器上設定 BranchCache
 :allow-uri-read: 
@@ -11,7 +11,17 @@ summary: 您可以設定在每個共用區基礎上提供BranchCache服務。或
 
 
 [role="lead"]
-您可以設定在每個共用區基礎上提供BranchCache服務。或者、您也可以設定在所有SMB共用區上自動啟用快取。
+若要使用 BranchCache，您必須設定用戶端，如果需要，還需設定分公司中用於快取內容的託管快取伺服器。您可以為單一共用或所有 SMB 共用設定 BranchCache。如果您選擇按共用設定，則必須在每個需要提供快取的 SMB 共用上啟用 BranchCache。您也可以設定 BranchCache 為在所有 SMB 共用上自動啟用快取。
+
+.開始之前
+在為SVM設定CIFS伺服器上的BranchCache之前、必須符合下列需求：
+
+* 叢集中的所有節點都必須安裝此程式。ONTAP
+* CIFS 必須獲得授權、而且必須設定 SMB 伺服器。SMB 授權隨附於link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。如果您沒有 ONTAP One 且未安裝授權、請聯絡您的銷售代表。
+* 必須設定IPv4或IPv6網路連線。
+* 對於BranchCache 1、必須啟用SMB 2.1或更新版本。
+* 對於BranchCache 2、必須啟用SMB 3.0、且遠端Windows用戶端必須支援BranchCache 2。
+
 
 .關於這項工作
 您可以在SVM上設定BranchCache。
@@ -22,6 +32,7 @@ summary: 您可以設定在每個共用區基礎上提供BranchCache服務。或
 
 在設定BranchCache時、您必須指定下列參數：
 
+[cols="2,6"]
 |===
 | 必要參數 | 說明 
 
@@ -45,6 +56,7 @@ BranchCache雜湊儲存在SVM磁碟區的一般檔案中。您必須指定ONTAP 
 |===
 您可以選擇性地指定下列參數：
 
+[cols="2,6"]
 |===
 | 選用參數 | 說明 
 
@@ -83,24 +95,59 @@ _操作模式_
 .步驟
 . 視需要啟用SMB 2.1和3.0：
 +
-.. 將權限層級設為進階： `set -privilege advanced`
-.. 檢查設定的 SVM SMB 設定、判斷是否已啟用所有必要的 SMB 版本： `vserver cifs options show -vserver _vserver_name_`
-.. 如有必要、請啟用 SMB 2.1 ： `vserver cifs options modify -vserver _vserver_name_ -smb2-enabled true`
+.. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 檢查已設定的 SVM SMB 設定，以判斷是否已啟用所有必要的 SMB 版本：
++
+[source, cli]
+----
+vserver cifs options show -vserver <SVM_name>
+----
+.. 如有必要，請啟用 SMB 2.1：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -smb2-enabled true
+----
 +
 命令可同時啟用SMB 2.0和SMB 2.1。
 
-.. 如有必要、請啟用 SMB 3.0 ： `vserver cifs options modify -vserver _vserver_name_ -smb3-enabled true`
-.. 返回管理權限層級： `set -privilege admin`
+.. 如有必要、請啟用 SMB 3.0：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -smb3-enabled true
+----
+.. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
 
 
-. 設定 BranchCache ： `vserver cifs branchcache create -vserver _vserver_name_ -hash-store-path path [-hash-store-max-size {integer[KB|MB|GB|TB|PB]}] [-versions {v1-enable|v2-enable|enable-all] [-server-key text] -operating-mode {per-share|all-shares}`
+. 設定 BranchCache：
++
+[source, cli]
+----
+vserver cifs branchcache create -vserver <SVM_name> -hash-store-path <path> [-hash-store-max-size {integer[KB|MB|GB|TB|PB]}] [-versions {v1-enable|v2-enable|enable-all}] [-server-key <text>] -operating-mode {per-share|all-shares}
+----
 +
 指定的雜湊儲存路徑必須存在、而且必須位於SVM管理的磁碟區上。路徑也必須位於可讀寫磁碟區上。如果路徑為唯讀或不存在、則命令會失敗。
 
 +
 如果您想在其他SVM BranchCache組態中使用相同的伺服器機碼、請記錄您輸入的伺服器機碼值。當您顯示有關BranchCache組態的資訊時、不會顯示伺服器機碼。
 
-. 驗證 BranchCache 組態是否正確： `vserver cifs branchcache show -vserver _vserver_name_`
+. 請確認 BranchCache 配置是否正確：
++
+[source, cli]
+----
+vserver cifs branchcache show -vserver <SVM_name>
+----
 
 
 .範例
@@ -159,9 +206,15 @@ cluster1::> vserver cifs branchcache show -vserver vs1
 Encryption Key Used to Secure the Hashes: -
         CIFS BranchCache Operating Modes: per_share
 ----
+.接下來呢？
+在SMB伺服器上設定了BranchCache之後、您必須在用戶端電腦上安裝及設定BranchCache、並選擇性地在遠端辦公室的快取伺服器上進行設定。Microsoft提供在遠端辦公室設定BranchCache的說明。
+
+Microsoft BranchCache網站上有設定分公司用戶端的指示、以及選用快取伺服器以使用BranchCache的指示。
+
+http://technet.microsoft.com/EN-US/NETWORK/DD425028["Microsoft BranchCache文件：新功能"^]
+
 .相關資訊
 * xref:branchcache-version-support-concept.html[了解 BranchCache 版本支持]
-* xref:configure-branchcache-remote-office-concept.adoc[了解如何在遠端辦公室配置 BranchCache]
 * xref:create-branchcache-enabled-share-task.adoc[建立啟用BranchCache的SMB共用區]
 * xref:enable-branchcache-existing-share-task.adoc[在現有共享上啟用 BranchCache]
 * xref:modify-branchcache-config-task.html[修改共享上的 BranchCache 配置]

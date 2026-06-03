@@ -1,0 +1,140 @@
+---
+permalink: smb-admin/enable-disable-local-users-groups-authentication.html 
+sidebar: sidebar 
+keywords: local, user, group, access, control, ntfs, security-style, data, enable, authentication, disable, enable or disable local users and groups functionality 
+summary: 您必須先啟用本機使用者和群組功能、才能使用本機使用者和群組來存取NTFS安全型資料。此外、如果您想要使用本機使用者進行SMB驗證、則必須啟用本機使用者驗證功能。 
+---
+= 啟用或停用本機 ONTAP SMB 使用者和群組功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必須先啟用本機使用者和群組功能、才能使用本機使用者和群組來存取NTFS安全型資料。此外、如果您想要使用本機使用者進行SMB驗證、則必須啟用本機使用者驗證功能。
+
+預設會啟用本機使用者和群組功能和本機使用者驗證。如果未啟用這些功能、您必須先啟用這些功能、才能設定及使用本機使用者和群組。您可以隨時停用本機使用者和群組功能。
+
+除了明確停用本機使用者和群組功能之外、ONTAP 如果叢集中的任何節點還原ONTAP 為不支援此功能的版本、則無法使用本地使用者和群組功能。本機使用者和群組功能只有在叢集中的所有節點都執行ONTAP 支援的版本支援之前、才會啟用。
+
+.相關資訊
+* xref:manage-local-user-accounts.html[修改本機使用者帳戶]
+* xref:manage-local-groups.html[修改本機群組]
+* xref:manage-local-privileges.html[新增權限給本機或網域使用者或群組]
+
+
+
+
+== 在 ONTAP SMB 伺服器上啟用或停用本機使用者和群組
+
+您可以在儲存虛擬機器（SVM）上啟用或停用本機使用者和群組進行SMB存取。預設會啟用本機使用者和群組功能。
+
+.關於這項工作
+您可以在設定SMB共用區和NTFS檔案權限時使用本機使用者和群組、也可以在建立SMB連線時選用本機使用者進行驗證。若要使用本機使用者進行驗證、您也必須啟用本機使用者和群組驗證選項。
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 啟用或停用本機使用者和群組：
++
+** 啟用本機使用者和群組：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-users-and-groups-enabled true
+----
+** 停用本機使用者和群組：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-users-and-groups-enabled false
+----
+
+
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+.範例
+下列範例可在SVM VS1上啟用本機使用者和群組功能：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-users-and-groups-enabled true
+
+cluster1::*> set -privilege admin
+----
+.相關資訊
+* xref:manage-local-user-accounts.adoc[管理本機使用者帳戶] == 在 ONTAP SMB 伺服器上啟用或停用本機使用者驗證
+
+
+您可以在儲存虛擬機器（SVM）上啟用或停用SMB存取的本機使用者驗證。預設為允許本機使用者驗證、這在SVM無法連絡網域控制器或您選擇不使用網域層級存取控制時非常有用。
+
+.開始之前
+必須在CIFS伺服器上啟用本機使用者和群組功能。
+
+.關於這項工作
+您可以隨時啟用或停用本機使用者驗證。如果您想要在建立SMB連線時使用本機使用者進行驗證、也必須啟用CIFS伺服器的本機使用者和群組選項。
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 啟用或停用本機使用者驗證：
++
+** 啟用本機使用者驗證：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-auth-enabled true
+----
+** 停用本機使用者驗證：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-auth-enabled false
+----
+
+
+. 返回管理權限層級：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+.範例
+下列範例可在SVM VS1上啟用本機使用者驗證：
+
+[listing]
+----
+cluster1::>set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-auth-enabled true
+
+cluster1::*> set -privilege admin
+----
+.相關資訊
+* xref:local-user-authentication-concept.adoc[了解本地用戶身份驗證]
+* xref:enable-disable-local-users-groups-authentication.html[啟用或停用伺服器上的本機使用者和群組]
+

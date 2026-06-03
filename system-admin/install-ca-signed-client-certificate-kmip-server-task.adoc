@@ -2,7 +2,7 @@
 permalink: system-admin/install-ca-signed-client-certificate-kmip-server-task.html 
 sidebar: sidebar 
 keywords: install, ca, signed, client, certificate, kmip, server, key, management, interoperability, protocol, server 
-summary: Key Management Interoperability Protocol 的憑證子類型，以及 client 和 server-ca 類型，指定該憑證用於叢集與外部金鑰管理程式（例如 KMIP 伺服器）之間的相互驗證。 
+summary: client 和 server-ca 類型指定憑證用於叢集與外部金鑰管理員（例如 KMIP 伺服器）之間的相互驗證。 
 ---
 = 在ONTAP中為 KMIP 伺服器安裝 CA 簽署的客戶端憑證
 :allow-uri-read: 
@@ -11,13 +11,13 @@ summary: Key Management Interoperability Protocol 的憑證子類型，以及 cl
 
 
 [role="lead"]
-金鑰管理互通性傳輸協定（KMIP）的憑證子類型（-subtype kmip-cert參數）、以及用戶端和伺服器-ca類型、都會指定該憑證用於互動驗證叢集和外部金鑰管理程式、例如KMIP伺服器。
+client 和 server-ca 類型指定憑證用於叢集與外部金鑰管理員（例如 KMIP 伺服器）之間的相互驗證。
 
 .關於這項工作
-安裝KMIP憑證、將KMIP伺服器驗證為叢集的SSL伺服器。
+安裝憑證以驗證 KMIP 伺服器作為叢集的 SSL 伺服器。
 
 .步驟
-. 使用 `security certificate install` 命令 `-type server-ca` 和 `-subtype kmip-cert` 用於為 KMIP 伺服器安裝 KMIP 憑證的參數。
+. 使用 `security certificate install` 指令搭配 `-type server-ca` 參數，以安裝 KMIP server 的憑證。
 . 出現提示時、請輸入憑證、然後按Enter。
 +
 提醒您保留一份憑證複本、以供日後參考。ONTAP
@@ -25,8 +25,7 @@ summary: Key Management Interoperability Protocol 的憑證子類型，以及 cl
 +
 [listing]
 ----
-cluster1::> security certificate install -type server-ca -subtype kmip-cert
--vserver cluster1
+cluster1::> security certificate install -type server-ca -vserver cluster1
 
 Please enter Certificate: Press <Enter> when done
 -----BEGIN CERTIFICATE-----
