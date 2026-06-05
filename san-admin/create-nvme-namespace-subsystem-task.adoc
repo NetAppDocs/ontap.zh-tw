@@ -11,7 +11,9 @@ summary: 對於使用NVMe傳輸協定的系統、您必須建立一或多個NVMe
 
 
 [role="lead"]
-請使用這些步驟、為現有儲存 VM 上任何 NVMe 支援的主機建立命名空間並配置儲存空間。
+當您配置儲存設備時，您可以讓 NVMe 主機從 ONTAP 儲存系統讀取資料並將資料寫入 ONTAP 儲存系統。對於使用 NVMe 傳輸協定的系統，您必須建立一個或多個 NVMe 命名空間和子系統。然後，每個命名空間都可以對應至 NVMe 子系統，以允許從主機存取資料。
+
+如果包含 NVMe 子系統的儲存虛擬機器（SVM）同時具有 NVMe/FC 和 NVMe/TCP 網路介面，則對應到 NVMe 子系統的命名空間可以透過 NVMe/FC 和 NVMe/TCP 傳輸協定存取。從 ONTAP 9.4 及更新版本開始，可使用 FC 的 NVMe 支援。ONTAP 9.10.1 及更新版本可使用 TCP 的 NVMe 支援。如果您需要對命名空間進行特定協定的存取，則應link:configure-svm-nvme-task.html["配置 SVM"]為每種協定單獨配置。
 
 .關於這項工作
 此程序適用於 FAS、AFF 和 ASA 系統。如果您擁有 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），請遵循link:https://docs.netapp.com/us-en/asa-r2/manage-data/provision-san-storage.html["這些步驟"^]來配置您的儲存。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
