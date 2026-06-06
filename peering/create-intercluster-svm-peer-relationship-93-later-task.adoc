@@ -39,7 +39,7 @@ cluster02            vs1,vs2               snapmirror
 ----
 . 在資料保護來源叢集上、建立與資料保護目的地叢集上預先授權SVM的對等關係：
 +
-`vserver peer create -vserver _local_SVM_ -peer-vserver _remote_SVM_`
+`vserver peer create -vserver _local_SVM_ -peer-cluster _peer_cluster_ -peer-vserver _remote_SVM_ -application _application_`
 
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/vserver-peer-create.html["指令參考資料ONTAP"^]需詳細 `vserver peer create`資訊，請參閱。
@@ -50,7 +50,7 @@ cluster02            vs1,vs2               snapmirror
 +
 [listing]
 ----
-cluster01::> vserver peer create -vserver pvs1 -peer-vserver vs1
+cluster01::> vserver peer create -vserver pvs1 -peer-cluster cluster02 -peer-vserver vs1 -application snapmirror
 ----
 . 驗證SVM對等關係：
 +
