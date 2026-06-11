@@ -62,6 +62,23 @@ xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.
 |===
 
 
+== NAS
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../flexcache/index.html[NAS 效能提升]
+ a| 
+ONTAP 9.19.1 允許使用更多 CPU 資源來處理小型 NAS 目錄的清單請求。這項增強功能使擁有數百至數千個用戶端同時列出同一個小型 NAS 目錄（大小為 2 MB 或更小，約 25,000 個檔案）的客戶受益。
+
+這項改進減少了使用諸如本地 FlexCache 磁碟區之類的變通方案來支援大量用戶端執行目錄清單操作的需求。對於較少的用戶端，效能不會受到負面影響。此效能改進是自動進行的，無需配置。
+
+|===
+
+
 == 網路
 
 [cols="30%,70%"]
@@ -168,7 +185,7 @@ xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurat
 ARP/AI 支援在支援的平台上參與 SnapMirror 同步（NAS 和 SAN）和 SnapMirror 主動同步 SAN 關係的磁碟區。ARP/AI 可以保護 FAS、AFF 和 AFX 系統上 SnapMirror 同步關係中的主要磁碟區，以及 AFF 和 ASA r2 系統上 SnapMirror 主動同步 SAN 關係中的主要磁碟區。ARP/AI 在關係中具有讀寫權限的主動主要磁碟區上執行，建立僅針對主要磁碟區的 ARP 快照，並提供基於機器學習的勒索軟體偵測。
 
 
-NOTE: 升級到 ONTAP 9.19.1 RC 並啟用屬於 SnapMirror 同步或 SnapMirror 主動式同步關係之磁碟區的 ARP 後，該關係可能會短暫出現不同步狀態。這種情況是暫時的，關係會自動重新同步，無需任何干預。
+NOTE: 升級到 ONTAP 9.19.1 RC 並啟用屬於 SnapMirror 同步或 SnapMirror 主動同步關係之磁碟區的 ARP 後，該關係可能會短暫出現不同步狀態。這種情況是暫時的，關係會自動重新同步，無需任何干預。
 
 
 
@@ -176,23 +193,6 @@ NOTE: 升級到 ONTAP 9.19.1 RC 並啟用屬於 SnapMirror 同步或 SnapMirror 
 xref:../networking/configure-tls-offload.html[TLS 卸載組態]
  a| 
 您可以設定 TLS 卸載功能，利用支援的乙太網路卡上的資源來提升 TLS 握手後的效能。此功能可卸載加密和解密操作，從而降低 CPU 負擔並提高效能。
-
-|===
-
-
-== 儲存效率
-
-[cols="30%,70%"]
-|===
-| 更新 | 說明 
-
-
- a| 
-xref:../flexcache/index.html[NAS 效能提升]
- a| 
-ONTAP 9.19.1 允許使用更多 CPU 資源來處理小型 NAS 目錄的清單請求。這項增強功能使擁有數百至數千個用戶端同時列出同一個小型 NAS 目錄（大小為 2 MB 或更小，約 25,000 個檔案）的客戶受益。
-
-這項改進減少了使用諸如本地 FlexCache 磁碟區之類的變通方案來支援大量用戶端執行目錄清單操作的需求。對於較少的用戶端，效能不會受到負面影響。此效能改進是自動進行的，無需配置。
 
 |===
 
