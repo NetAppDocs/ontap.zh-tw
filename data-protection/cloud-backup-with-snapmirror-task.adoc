@@ -16,9 +16,16 @@ summary: 從功能支援的9.9開始ONTAP 、您可以使用System Manager將資
 
 
 [role="lead"]
-從 ONTAP 9.9.1 開始，當您需要將資料保護工作流程遷移到雲端時，可以使用 _SnapMirror cloud_。您可以取代傳統的磁帶備份架構，使用物件儲存作為長期資料保留和歸檔的替代儲存庫。您可以選擇 Amazon S3、Alibaba Cloud、Azure Blob、Google Cloud Storage、IBM Cloud Object Storage、StorageGRID 或 ONTAP S3 等雲端物件儲存供應商。
+_SnapMirror cloud_ 提供 ONTAP 複製到物件儲存目標位置的功能。這可讓您使用物件儲存取代傳統的磁帶備份架構，以實現長期資料保留和歸檔。您可以選擇 Amazon S3、Alibaba Cloud、Azure Blob、Google Cloud Storage、IBM Cloud Object Storage、NetApp StorageGRID 或 ONTAP S3 作為您的雲端物件儲存。
 
-從 ONTAP 9.9.1 開始、您可以使用 System Manager 來備份及還原資料。
+
+NOTE: SnapMirror 由 SystemManager 管理的雲端複寫僅支援 StorageGrid 和 ONTAP S3 作為物件儲存目標。不支援其他提供者。
+
+
+NOTE: 對 SnapMirror 雲端複製到其他物件儲存提供者以及其他備份與還原產品的支援情況各有不同。請諮詢您的第三方廠商以了解其支援政策。
+
+
+NOTE: SnapMirror 雲端 API 的使用通常僅限於備份合作夥伴。希望開發自有 API 解決方案的客戶應聯絡其 NetApp 客戶經理團隊，以了解授權條款。
 
 從 ONTAP 9.19.1 開始：
 
@@ -36,13 +43,12 @@ summary: 從功能支援的9.9開始ONTAP 、您可以使用System Manager將資
 * SnapMirror cloud 支援在 MetroCluster 組態上的 FlexGroup 磁碟區進行備份與還原作業，並使用現有的 link:https://docs.netapp.com/us-en/ontap-automation/get-started/access_rest_api.html["REST API ONTAP"^]。此功能可讓您在切換與切回後，針對由合作夥伴站點維護的 MetroCluster 組態上的 FlexGroup 磁碟區建立 SnapMirror cloud 關係。
 
 
-從 ONTAP 9.16.1 開始：
+在使用 SnapMirror 雲端功能之前，您應該從 NetApp 支援網站申請 SnapMirror 雲端 API 授權金鑰： link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["申請 SnapMirror 雲端 API 授權金鑰"^]。
 
-* SnapMirror 雲端備份支援扇出關係。這表示可以在兩個不同的物件存放區上同時建立 SnapMirror 備份。有了 ONTAP 9.16.1 ， SnapMirror 雲端可支援兩種扇出關係。扇出可以是兩個物件儲存區，也可以是兩個不同物件儲存區中的一或兩個貯體。建立兩個以上的扇出關係的嘗試將會失敗。
-* SnapMirror 雲端支援使用現有的更有效率的同步處理程序來備份移轉至雲端link:https://docs.netapp.com/us-en/ontap-automation/get-started/access_rest_api.html["REST API ONTAP"^]的磁碟區。此功能可支援從雲端中移轉的磁碟區到相同目的地物件儲存區端點的 SnapMirror 雲端備份，而無需執行重新基準作業。支援 FlexVol 和 FlexGroup 磁碟區。
+按照說明，您需要簡要描述您的業務機會，並透過發送電子郵件至提供的電子郵件地址申請 API 金鑰。您將在 24 小時內收到一封電子郵件回覆，其中包含獲取 API 金鑰的進一步說明。
 
 
-在使用 SnapMirror 雲端功能之前、您應該先向 NetApp 支援網站申請 SnapMirror 雲端 API 授權金鑰：link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["申請 SnapMirror 雲端 API 授權金鑰"^]。依照指示、您應該簡單說明您的商機、並透過傳送電子郵件至提供的電子郵件地址來申請API金鑰。您應該會在24小時內收到電子郵件回應、並提供如何取得API金鑰的進一步指示。
+NOTE: 您可能需要 SnapMirror Cloud 授權金鑰和 API 金鑰。雖然 ONTAP One 本身包含 SnapMirror Cloud 授權，但啟用 SnapMirror Cloud 功能仍需要授權金鑰。授權金鑰可能需要單獨產生和安裝。
 
 
 
