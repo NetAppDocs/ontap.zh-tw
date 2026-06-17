@@ -100,7 +100,7 @@ ONTAP Select
 | 應用程式建立的快照複寫 | 更新ONTAP | 如果在 `snapshot create`操作時使用 CLI 或 ONTAP API 為快照新增了對應的標籤，則 SnapMirror 在應用程式靜默後，同步複製快照（包括使用者建立的快照和使用外部腳本建立的快照）。從 ONTAP 9.14.1 開始，複製應用程式建立的快照不再需要標籤。有關複製應用程式建立的快照的更多資訊，請參閱link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["NetApp知識庫：如何使用SnapMirror同步複製應用程式建立的快照"^]。 
 
 
-| 自主勒索軟體保護 | ONTAP 9.19.1 | 升級後，如果對處於 SnapMirror 同步或 SnapMirror 活動同步關係中的磁碟區啟用 ARP，則該關係會短暫進入不同步狀態。這種情況是暫時的，關係會自動重新同步，無需人工幹預。 
+| 自主勒索軟體保護 | ONTAP 9.19.1 | 升級後，如果對處於 SnapMirror 同步或 SnapMirror 活動同步關係中的磁碟區啟用 ARP，則該關係會短暫進入不同步狀態。這種情況是暫時的，關係會自動重新同步，無需人工幹預。如需詳細資訊，請參閱 link:../anti-ransomware/use-cases-restrictions-concept.html["自主勒索軟體保護的使用案例和考量"]。 
 
 
 | 複製自動刪除 | ONTAP 9.6 |  
@@ -178,7 +178,12 @@ ONTAP Select
 | SnapMirror 同步鏡射鏡射串聯 | ONTAP 9.6 | 來自 SnapMirror 同步關係目的地 Volume 的關係必須是 SnapMirror 非同步關係。 
 
 
-| SVM 災難恢復 | ONTAP 9.6 | * SnapMirror 同步來源也可以是 SVM 災難恢復來源、例如、將 SnapMirror 同步化為單一連線的開機組態、以及將 SVM 災難恢復視為另一方的開機組態。* SnapMirror 同步來源不能是 SVM 災難恢復目的地、因為 SnapMirror 同步不支援串聯資料保護來源。您必須先釋放同步關係、才能在目的地叢集中執行 SVM 災難恢復反轉重新同步。* SnapMirror 同步目的地不能是 SVM 災難恢復來源、因為 SVM 災難恢復不支援 DP 磁碟區的複寫。同步來源的反轉重新同步會導致 SVM 災難恢復、但目的地叢集中的 DP Volume 除外。 
+| SVM 災難恢復 | ONTAP 9.6  a| 
+* SnapMirror 同步來源也可以是 SVM 災難恢復來源，例如，扇出組態中以 SnapMirror 同步作為一條支路，SVM 災難恢復作為另一條支路。
+* SnapMirror 同步來源不能作為 SVM 災難復原目標，因為 SnapMirror 同步不支援串聯資料保護來源。在目標叢集中執行 SVM 災難復原翻轉重新同步之前，必須先解除同步關係。
+* A SnapMirror 同步目標不能作為 SVM 災難復原來源，因為 SVM 災難復原不支援 DP 磁碟區的複寫。對同步來源進行翻轉重新同步會導致 SVM 災難復原將目標叢集中的 DP 磁碟區排除在外。
+
+
 
 
 | link:../snaplock/snapshot-lock-concept.html["防竄改快照"] | ONTAP 9.19.1 | 您只能在建立快照時指定過期時間。您無法設定或延長現有快照的過期時間。 
@@ -267,7 +272,7 @@ SnapMirror 同步關係的狀態在 `InSync`正常操作期間始終處於狀態
 NOTE: 在 SnapMirror 同步磁碟區上建立快照可能會增加使用者 I/O 延遲。建議您使用頻率大於 30 分鐘的快照排程。
 
 .相關資訊
-* https://www.netapp.com/pdf.html?item=/media/17174-tr4733pdf.pdf["NetApp 技術報告 4733 ： SnapMirror 同步組態與最佳實務做法"^]
+* https://www.netapp.com/pdf.html?item=/media/17174-tr4733.pdf["NetApp 技術報告 4733 ： SnapMirror 同步組態與最佳實務做法"^]
 * link:https://docs.netapp.com/us-en/ontap-cli//volume-snapshot-create.html["Volume Snapshot 建立"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-delete.html["Volume Snapshot 刪除"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-modify.html["Volume Snapshot 修改"^]

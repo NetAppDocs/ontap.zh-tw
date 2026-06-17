@@ -1,0 +1,38 @@
+---
+permalink: revert/delete-active-active-svms.html 
+sidebar: sidebar 
+keywords: delete, active-active, SVMs, storage virtual machines, revert 
+summary: 如果您已啟用用戶端連線的主幹連線、並將先前版本還原為 ONTAP 9.12.1 、則必須在還原之前停用任何 NFSv4.1 伺服器上的主幹連線。 
+---
+= 在從 ONTAP 9.19.1 回溯之前，請刪除雙活 SVM。
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 9.18.1 及更早版本不支援 SAN 主動-主動多路徑。從 ONTAP 9.19.1 還原之前，您必須刪除所有具有主動-主動組態的儲存虛擬機器 （SVM）。
+
+.步驟
+. 找出所有配置了 san-multipathing 選項且設定為 active-active 或 active-active-scsi-only 的 SVM：
++
+[source, cli]
+----
+vserver show
+----
+. 刪除所有設定為雙活或雙活-僅 SCSI 多路徑的 SVM：
++
+[source, cli]
+----
+vserver delete -vserver <SVM>
+----
+. 確認 SVM 已刪除：
++
+[source, cli]
+----
+vserver show
+----
+
+
+.相關資訊
+深入瞭解 ONTAP 9.19.1 及更新版本中的 link:../san-admin/multipath-automatic-lif-failover-support.html["SAN 主動-主動多路徑支援"]。
