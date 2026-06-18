@@ -1,0 +1,40 @@
+---
+permalink: data-protection/convert-exclude-svm-replication-task.html 
+sidebar: sidebar 
+keywords: exclude, network, name service, other settings, svm replication, disaster recovery, convert 
+summary: '您可以使用 `-identity-preserve true`參數，將複製期間排除 SVM 組態資訊的 SVM DR 關係轉換為複製組態資訊的關係。' 
+---
+= 將 ONTAP SnapMirror SVM 複寫關係轉換為包含 SVM 組態資訊
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `-identity-preserve true`參數，將複製期間排除 SVM 組態資訊的 SVM DR 關係轉換為複製組態資訊的關係。
+
+.開始之前
+如果有任何 SnapMirror 傳輸正在進行中，請等待其完成或中止傳輸。
+
+.步驟
+. 從目標叢集中，靜止關係：
++
+`snapmirror quiesce -destination-path <destination_svm>`：
+
+. 當關係狀態變成靜止時，從目的地叢集刪除該關係：
++
+`snapmirror delete -destination-path <destination_svm>`：
+
+. 從來源叢集釋放關係，但不刪除 SnapMirror 快照資訊：
++
+`snapmirror release -destination-path <destination_svm>: -relationship-info-only true`
+
+. 從目標端，使用以下命令重新建立複寫關係 `-identity-preserve true`：
++
+`snapmirror create -source-path <source_svm>: -destination-path <destination_svm>: -policy <policy> -schedule <schedule> -identity-preserve true`
+
+. 從目的地叢集重新同步SnapMirror關係：
++
+`snapmirror resync -destination-path <destination_svm>:`
+
+

@@ -1,33 +1,33 @@
 ---
 permalink: concepts/snapmirror-cloud-backups-object-store-concept.html 
 sidebar: sidebar 
-keywords: snapmirror cloud backup, recovery, data protection, replication, object storage, ontap s3, StorageGRID 
-summary: SnapMirror 雲端是一項備份與還原技術、專為想要將資料保護工作流程移轉至雲端的 ONTAP 使用者所設計。從舊有備份到磁帶架構移轉的組織、可以使用物件儲存設備做為長期資料保留和歸檔的替代儲存庫。 
+keywords: snapmirror Cloud backup, recovery, data protection, replication, object storage, ontap s3, StorageGRID 
+summary: SnapMirror Cloud 是專為希望將其資料保護工作流程遷移到雲端的 ONTAP 使用者所設計的備份和復原技術。正在從傳統的磁帶備份架構轉型的組織可以使用物件儲存作為長期資料保留和歸檔的替代儲存庫。 
 ---
-= SnapMirror 雲端備份至物件儲存設備
+= SnapMirror 雲端備份至物件儲存
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-_SnapMirror cloud_ 是一種備份和復原技術，專為希望將其資料保護工作流程遷移到雲端或本地物件儲存解決方案的 ONTAP 使用者而設計。正在擺脫傳統磁帶備份架構的組織可以使用物件儲存作為長期資料保留和歸檔的替代儲存庫。SnapMirror cloud 提供 ONTAP 到物件儲存的複製功能，作為永久增量備份策略的一部分。
+SnapMirror Cloud 是一種備份和復原技術，專為希望將其資料保護工作流程遷移到雲端或本地物件儲存解決方案的 ONTAP 使用者而設計。正在擺脫傳統磁帶備份架構的組織可以使用物件儲存作為長期資料保留和歸檔的替代儲存庫。SnapMirror Cloud 提供 ONTAP 到物件儲存的複製功能，作為永久增量備份策略的一部分。
 
-SnapMirror 雲端複寫是一項授權的 ONTAP 功能。SnapMirror Cloud 是在 ONTAP 9 8 中推出、作為 SnapMirror 複寫技術系列的延伸。雖然 SnapMirror 經常用於 ONTAP 對 ONTAP 備份，但 SnapMirror 雲端使用相同的複寫引擎，將 ONTAP 的快照傳輸至符合 S3 標準的物件儲存備份。
+SnapMirror Cloud 複製是 ONTAP 的一項授權功能。SnapMirror Cloud 於 ONTAP 9.8 中推出，作為 SnapMirror 複製技術系列的延伸。雖然 SnapMirror 常用於 ONTAP 對 ONTAP 的備份，但 SnapMirror Cloud 使用相同的複製引擎，將快照從 ONTAP 傳輸至符合 S3 標準的物件儲存備份。
 
-SnapMirror 雲端的目標是備份使用案例、同時支援長期保留和歸檔工作流程。與 SnapMirror 一樣、初始 SnapMirror 雲端備份會執行磁碟區的基礎傳輸。對於後續備份， SnapMirror 雲端會產生來源磁碟區的快照，並只將變更的資料區塊傳輸到物件儲存目標。
+SnapMirror Cloud 專為備份應用場景而設計，支援長期保留和歸檔工作流程。與 SnapMirror 類似，初始 SnapMirror Cloud 備份會執行磁碟區的基線傳輸。對於後續備份，SnapMirror Cloud 會產生來源磁碟區的快照，並將僅包含已變更資料區塊的快照傳輸到物件儲存目標。
 
-SnapMirror 雲端關係可在 ONTAP 系統和特定內部部署和公有雲物件儲存目標之間進行設定、包括 Amazon S3 、 Google Cloud Storage 和 Microsoft Azure Blob Storage 。其他內部部署物件儲存目標包括 StorageGRID 和 ONTAP S3 。
+SnapMirror Cloud 關係可在 ONTAP 系統與選取的內部部署及公有雲物件儲存目標之間進行設定，包括 Amazon S3、Google Cloud Storage 和 Microsoft Azure Blob Storage。其他內部部署物件儲存目標包括 StorageGRID 和 ONTAP S3。
 
-除了使用 ONTAP 系統管理員來管理 SnapMirror 雲端組態之外，還有幾個協調選項可用於管理 SnapMirror 雲端備份：
+除了使用 ONTAP System Manager 管理 SnapMirror Cloud 組態外，還有幾種協調選項可用於管理 SnapMirror Cloud 備份：
 
-* 支援 SnapMirror 雲端複寫的多個協力廠商備份合作夥伴。您可以在上找link:https://www.netapp.com/blog/new-backup-architecture-snapdiff-v3/["NetApp部落格"^]到參與廠商。
+* 多家第三方備份合作夥伴提供 SnapMirror 雲端複製支援。參與的供應商可在 link:https://www.netapp.com/blog/new-backup-architecture-snapdiff-v3/["NetApp部落格"^] 找到。
 * NetApp Backup and Recovery 是適用於ONTAP環境的NetApp原生解決方案
 * API可用於開發自訂的資料保護工作流程軟體、或是運用自動化工具
 
 
 
-NOTE: SnapMirror 由 SystemManager 管理的雲端複寫僅支援 StorageGrid 和 ONTAP S3 作為物件儲存目標。不支援其他提供者。
+NOTE: 由 System Manager 管理的 SnapMirror Cloud 複寫僅支援 StorageGRID 和 ONTAP S3 作為物件儲存目的地。不支援其他提供者。
 
 
 NOTE: SnapMirror 雲端 API 的使用通常僅限於備份合作夥伴。希望開發自有 API 解決方案的客戶應聯絡其 NetApp 客戶經理團隊，以了解授權條款。
