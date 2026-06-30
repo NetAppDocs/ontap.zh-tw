@@ -131,14 +131,14 @@ summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， S
 .開始之前
 * 若要使用兩階段 CG 快照建立，叢集中的所有節點都必須執行 ONTAP 9.11.1 或更新版本。
 * 一致性群組執行個體一次只支援一個作用中的一致性群組快照作業呼叫，無論是一階段或兩階段。嘗試在另一個正在執行的快照作業時叫用快照作業，會導致失敗。
-* 當您叫用快照建立時，您可以設定 5 到 120 秒之間的選擇性逾時值。如果未提供逾時值、則作業會在預設的 7 秒時逾時。在 API 中，使用參數設定逾時值 `action_timeout`。在 CLI 中，使用 `-timeout`旗標。
+* 建立快照時，您可以設定一個可選的逾時值，範圍為 5 到 120 秒。如果未提供逾時值，則操作預設逾時時間為 7 秒。在 ONTAP REST API 中，使用  `action_timeout` 參數設定逾時值。在 ONTAP CLI 中，使用  `-timeout` 標誌。
 
 
 .步驟
-您可以使用 REST API 或從 ONTAP 9.14.1 開始，使用 ONTAP CLI 完成兩階段快照。System Manager 不支援此作業。
+您可以使用 ONTAP REST API 完成兩階段快照，或從 ONTAP 9.14.1 開始，可以使用 ONTAP CLI。System Manager 不支援此作業。
 
 
-NOTE: 如果您使用 API 來叫用快照建立，則必須使用 API 來提交快照。如果使用 CLI 調用快照創建，則必須使用 CLI 提交快照。不支援混合方法。
+NOTE: 如果您使用 ONTAP REST API 建立快照，則必須使用 ONTAP REST API 提交快照。如果您使用 ONTAP CLI 建立快照，則必須使用 ONTAP CLI 提交快照。不支援混合使用這兩種方法。
 
 [role="tabbed-block"]
 ====
