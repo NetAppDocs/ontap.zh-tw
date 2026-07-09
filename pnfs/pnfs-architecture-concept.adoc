@@ -84,7 +84,7 @@ Vserver Name    Mapping ID      Dsid            LIF IP
 DEMO            16              2488            10.193.67.211
 ----
 
-NOTE: 這些指令中沒有磁碟區名稱。相反，將使用與這些磁碟區關聯的數字 ID：主集 ID (MSID) 和資料集 ID (DSID)。若要尋找與映射相關的體積，您可以使用 `volume show -dsid [dsid_numeric]` 或者 `volume show -msid [msid_numeric]` 具備ONTAP CLI 的高階權限。
+NOTE: 這些命令中不包含磁碟區名稱。而是使用與這些磁碟區關聯的數字 ID：MSID 和 DSID。若要尋找與映射關聯的磁碟區，您可以在 ONTAP CLI 的進階權限中使用 `volume show -dsid [dsid_numeric]`或 `volume show -msid [msid_numeric]`。
 
 當客戶端嘗試讀取或寫入位於遠離元資料伺服器連接的節點上的檔案時，pNFS 將協商適當的存取路徑，以確保這些操作的資料本地性，並且客戶端將重定向到已發布的 pNFS 設備，而不是嘗試穿越叢集網路來存取該檔案。這有助於降低CPU佔用率和網路延遲。
 
