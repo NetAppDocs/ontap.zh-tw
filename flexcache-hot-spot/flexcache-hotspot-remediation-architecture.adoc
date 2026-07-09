@@ -15,28 +15,33 @@ summary: 瞭解使用高密度 FlexCache 架構如何協助熱點補救。
 
 
 
+[[understanding-the-bottleneck]]
 == 瞭解瓶頸
 
 以下<<Figure-1,映像>>是典型的單一檔案熱點分析案例。磁碟區是 FlexGroup ，每個節點都有單一組成，檔案位於節點 1 上。
 
 如果您將所有 NAS 用戶端的網路連線分散到叢集中的不同節點，則仍會在 CPU 上產生瓶頸，而 CPU 則會為熱檔案所在的磁碟區相關性提供服務。您也會將叢集網路流量（東西部流量）引入來自連接至檔案所在節點以外節點之用戶端的通話。東西部的流量負荷通常很小，但對於高效能運算工作負載而言，每個小位元都很重要。
 
+[[Figure-1]]
 .圖 1 ： FlexGroup 單一檔案熱點案例
 image:flexcache-hotspot-hdfa-flexgroup.png["圖 1 ： FlexGroup 單一檔案熱點案例"]
 
 
 
+[[why-an-auto-provisioned-flexcache-isnt-the-answer]]
 == 為何自動佈建的 FlexCache 不是答案
 
 若要補救熱點現象，請消除 CPU 瓶頸，最好是東西部流量。如果設定正確， FlexCache 可以提供協助。
 
 在下列範例中， FlexCache使用系統管理員、 NetApp控制台或預設 CLI 參數自動設定。<<Figure-1,圖 1.>>和<<Figure-2,圖 2.>>乍看之下它們是一樣的：都是四節點、單成分 NAS 容器。唯一的差異是，圖 1 的 NAS 容器是FlexGroup，而圖 2 的 NAS 容器是FlexCache。每個圖都描述了相同的瓶頸：節點 1 的 CPU 用於卷親和性服務存取熱文件，以及導致延遲的東西向流量。自動配置的FlexCache並未消除瓶頸。
 
+[[Figure-2]]
 .圖 2 ：自動佈建的 FlexCache 案例
 image:flexcache-hotspot-hdfa-1x4x1.png["圖 2 ：自動佈建的 FlexCache 案例"]
 
 
 
+[[anatomy-of-a-flexcache]]
 == FlexCache 的解剖構造
 
 若要有效建構 FlexCache 以進行熱點修復，您必須瞭解 FlexCache 的一些技術詳細資料。
@@ -51,6 +56,7 @@ FlexCache 始終是稀疏 FlexGroup 。FlexGroup 由多個 FlexVols 組成。這
 
 
 
+[[anatomy-of-a-high-density-flexcache]]
 == 高密度 FlexCache 的解剖構造
 
 高密度 FlexCache （ HDF ）在快取資料的容量需求允許的節點數量範圍內，會有多個組成節點。目標是讓快取在單一節點上運作。如果容量需求使得這種情況變得不可能，您只能在少數幾個節點上建立成員。

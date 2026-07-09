@@ -24,6 +24,7 @@ summary: 設定動態授權架構、以提高 SSH 登入的安全性、並限制
 
 
 
+[[configure-dynamic-authorization-global-settings]]
 == 設定動態授權全域設定
 
 您可以設定動態授權的全域設定、包括要保護的儲存 VM 、驗證挑戰的抑制時間間隔、以及信任分數設定。
@@ -51,12 +52,14 @@ security dynamic-authorization show
 
 
 
+[[configure-restricted-commands]]
 == 設定受限命令
 
 啟用動態授權時、此功能會包含一組預設的限制命令。您可以修改此清單以符合您的需求。請參閱 link:../multi-admin-verify/index.html["多重管理驗證（ MAV ）文件"] 以取得受限命令的預設清單資訊。
 
 
 
+[[add-a-restricted-command]]
 === 新增受限制的命令
 
 您可以將命令新增至受限於動態授權的命令清單。
@@ -84,6 +87,7 @@ security dynamic-authorization rule show
 
 
 
+[[remove-a-restricted-command]]
 === 移除受限制的命令
 
 您可以從受限於動態授權的命令清單中移除命令。
@@ -109,12 +113,14 @@ security dynamic-authorization rule show
 
 
 
+[[configure-dynamic-authorization-groups]]
 == 設定動態授權群組
 
 根據預設、動態授權會在您啟用後立即套用至所有使用者和群組。不過、您可以使用建立群組 `security dynamic-authorization group create` 因此動態授權僅適用於這些特定使用者。
 
 
 
+[[add-a-dynamic-authorization-group]]
 === 新增動態授權群組
 
 您可以新增動態授權群組。
@@ -142,6 +148,7 @@ security dynamic-authorization group show
 
 
 
+[[remove-a-dynamic-authorization-group]]
 === 移除動態授權群組
 
 您可以移除動態授權群組。
@@ -167,6 +174,7 @@ security dynamic-authorization group show
 
 
 
+[[configure-dynamic-authorization-trust-score-components]]
 == 設定動態授權信任分數元件
 
 您可以設定最大分數權重、以變更評分準則的優先順序、或移除風險評分的特定準則。
@@ -208,6 +216,7 @@ security dynamic-authorization trust-score-component show
 
 
 
+[[reset-the-trust-score-for-a-user]]
 === 重設使用者的信任分數
 
 如果使用者因系統原則而遭拒存取、且能夠證明其身分識別、則系統管理員可以重設使用者的信任分數。
@@ -228,6 +237,7 @@ security dynamic-authorization user-trust-score reset \
 
 
 
+[[display-your-trust-score]]
 === 顯示您的信任分數
 
 使用者可以顯示自己的登入工作階段信任分數。
@@ -256,6 +266,7 @@ Trust Score: 50
 
 
 
+[[configure-a-custom-trust-score-provider]]
 == 設定自訂信任分數提供者
 
 如果您已經收到外部信任分數提供者的評分方法、可以將自訂提供者新增至動態授權組態。
@@ -302,6 +313,7 @@ security dynamic-authorization trust-score-component show
 
 
 
+[[configure-custom-trust-score-provider-tags]]
 === 設定自訂信任分數提供者標記
 
 您可以使用標記與外部信任分數提供者通訊。這可讓您將 URL 中的資訊傳送給信任分數提供者、而不會洩漏敏感資訊。

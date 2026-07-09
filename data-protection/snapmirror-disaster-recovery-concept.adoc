@@ -17,6 +17,7 @@ _SnapMirror是災難恢復技術、專為從一線儲存設備容錯移轉到位
 
 
 
+[[data-protection-relationships]]
 == 資料保護關係
 
 資料會在磁碟區層級鏡射。主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 磁碟區所在的叢集和從磁碟區提供資料link:../peering/index.html["已有速度"]的 SVM 必須是。對等關係可讓叢集和 SVM 安全地交換資料。
@@ -27,6 +28,7 @@ image:snapmirror-for-dp-pg.gif["SnapMirror資料保護關係圖示"]
 
 
 
+[[scope-of-data-protection-relationships]]
 == 資料保護關係的範圍
 
 您可以直接在磁碟區之間或在擁有磁碟區的SVM之間建立資料保護關係。在_SVM資料保護關係中、系統會複寫SVM組態的全部或部分內容、從NFS匯出、SMB共用到RBAC、以及SVM所擁有的磁碟區資料。
@@ -43,6 +45,7 @@ link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
 
 
+[[how-snapmirror-data-protection-relationships-are-initialized]]
 == SnapMirror資料保護關係如何初始化
 
 第一次叫用SnapMirror時、它會執行從來源磁碟區到目的地磁碟區的_基準傳輸_。關聯的_SnapMirror原則_定義了基準的內容和任何更新。
@@ -56,6 +59,7 @@ link:../snaplock/index.html["利用SnapLock NetApp技術歸檔及法規遵循"]
 
 
 
+[[how-snapmirror-data-protection-relationships-are-updated]]
 == SnapMirror資料保護關係如何更新
 
 更新是非同步的、會依照您設定的排程進行。保留會鏡射來源上的快照原則。
@@ -91,6 +95,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
 ----
 
 
+[[mirrorlatest-policy]]
 == MirrorLatest原則
 
 預先設定的 `MirrorLatest`原則運作方式與完全相同 `MirrorAllSnapshots`，只有在初始化和更新時才會傳輸由 SnapMirror 建立的快照。

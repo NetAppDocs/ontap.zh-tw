@@ -31,6 +31,7 @@ summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， S
 
 
 
+[[configure-a-local-snapshot-policy]]
 == 設定本機快照原則
 
 設定本機快照保護原則可讓您建立橫跨一致性群組中所有磁碟區的原則。
@@ -76,6 +77,7 @@ summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， S
 ====
 
 
+[[create-an-on-demand-snapshot]]
 == 建立隨需快照
 
 如果您需要在正常排程原則之外建立一致性群組的快照，可以根據需要建立一個快照。
@@ -116,6 +118,7 @@ summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， S
 ====
 
 
+[[create-two-phase-consistency-group-snapshots]]
 == 建立雙階段一致性群組快照
 
 從 ONTAP 9.11.1 開始，一致性群組支援建立一致性群組（ CG ）快照的兩階段承諾，在提交快照之前執行預先檢查。此功能只能搭配ONTAP 使用靜態API。
@@ -195,12 +198,14 @@ For more information about the ONTAP REST API, see link:https://docs.netapp.com/
 ====
 
 
+[[set-remote-protection-for-a-consistency-group]]
 == 設定一致性群組的遠端保護
 
 一致性群組可透過 SnapMirror 主動式同步提供遠端保護、從 ONTAP 9 。 13.1 開始即為 SnapMirror 非同步。
 
 
 
+[[configure-protection-with-snapmirror-active-sync]]
 === 使用 SnapMirror 主動同步設定保護
 
 您可以使用 SnapMirror 主動式同步，確保將在一致性群組上建立的一致性群組快照複製到目的地。若要深入瞭解 SnapMirror 作用中同步或如何使用 CLI 設定 SnapMirror 作用中同步處理，請參閱xref:../task_san_configure_protection_for_business_continuity.html[設定保護以確保營運不中斷]。
@@ -231,6 +236,7 @@ TIP: 若要使用 CLI 設定 SnapMirror 主動式同步、請參閱 xref:../task
 
 
 
+[[configure-snapmirror-asynchronous]]
 === 設定 SnapMirror 非同步
 
 從 ONTAP 9.13.1 開始、您可以為單一一致性群組設定 SnapMirror 非同步保護。從 ONTAP 9.14.1 開始，您可以使用 SnapMirror 非同步功能，使用一致性群組關係，將 Volume 精細的快照複寫到目的地叢集。
@@ -271,6 +277,7 @@ NOTE: SnapMirror 非同步的一致性群組支援的最低排程（恢復點目
 
 
 
+[[configure-svm-disaster-recovery]]
 === 設定 SVM 災難恢復
 
 從 ONTAP 9.14.1 開始，xref:../data-protection/snapmirror-svm-replication-concept.html#[SVM 災難恢復]支援一致性群組，可讓您將一致性群組資訊從來源叢集鏡射到目的地叢集。
@@ -289,6 +296,7 @@ NOTE: SnapMirror 非同步的一致性群組支援的最低排程（恢復點目
 
 
 
+[[visualize-relationships]]
 == 視覺化關係
 
 System Manager 會在 * 保護 > 資料庫關聯圖 * 功能表下、視覺化 LUN 對應。當您選取來源關係時、System Manager會顯示來源關係的視覺化。選取磁碟區之後、您可以深入瞭解這些關係、以查看包含的LUN清單和啟動器群組關係。此資訊可從個別的 Volume 檢視下載為 Excel 活頁簿、下載作業會在背景執行。

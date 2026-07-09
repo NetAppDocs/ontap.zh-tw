@@ -16,6 +16,7 @@ NOTE: ONTAP 9.12.1 推出回寫功能作為公開預覽。這稱為回寫版本 
 
 
 
+[[write-back-vs-write-around]]
 == 回寫與回寫
 
 自從 ONTAP 9.5 引進 FlexCache 以來、它一直是可讀寫的快取、但卻是以寫入模式運作。快取中的寫入資料會傳送至原始伺服器、以用於穩定儲存設備。原始伺服器成功將寫入內容提交至穩定儲存設備後、就會確認寫入快取。然後快取會確認寫入用戶端。如此一來、每次寫入都會被罰在快取和原始伺服器之間穿越網路。FlexCache 回寫會變更此項目。
@@ -46,6 +47,7 @@ NOTE: 升級至 ONTAP 9.15.1 之後、您可以將傳統的繞過寫入快取轉
 |===
 
 
+[[flexcache-write-back-terminology]]
 == FlexCache 回寫詞彙
 
 瞭解使用 FlexCache 回寫功能的關鍵概念和詞彙。
@@ -80,6 +82,7 @@ NOTE: 升級至 ONTAP 9.15.1 之後、您可以將傳統的繞過寫入快取轉
 |===
 
 
+[[consistent-current-and-coherent]]
 === 一致、最新且一致的
 
 FlexCache 是 NetApp 的解決方案、可隨時隨地擁有正確的資料。FlexCache 100% 一致、即時且一致的 100% 時間：

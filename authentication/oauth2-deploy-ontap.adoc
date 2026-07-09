@@ -18,12 +18,14 @@ summary: 部署核心 OAuth 2.0 功能需要三個主要步驟。
 
 
 
+[[before-you-begin]]
 == 開始之前
 
 您必須準備 OAuth 2.0 部署、才能設定 ONTAP 。例如、您需要評估授權伺服器、包括其憑證的簽署方式、以及它是否位於防火牆的後方。請參閱 link:../authentication/oauth2-prepare.html["準備使用 ONTAP 部署 OAuth 2.0"] 以取得更多資訊。
 
 
 
+[[step-1-install-the-authorization-server-root-ca-certificates]]
 == 步驟 1 ：安裝授權伺服器根 CA 憑證
 
 ONTAP 包含大量預先安裝的根 CA 憑證。因此、在許多情況下、 ONTAP 會立即辨識您的授權伺服器憑證、而無需額外設定。但視授權伺服器憑證的簽署方式而定、您可能需要安裝根 CA 憑證和任何中繼憑證。
@@ -81,6 +83,7 @@ ONTAP 包含大量預先安裝的根 CA 憑證。因此、在許多情況下、 
 ====
 
 
+[[step-2-configure-the-authorization-server]]
 == 步驟 2 ：設定授權伺服器
 
 您需要定義至少一個 ONTAP 授權伺服器。您應該根據組態和部署計畫來選擇參數值。檢閱 link:../authentication/oauth2-deployment-scenarios.html["OAuth2 部署案例"] 以判斷您的組態所需的確切參數。
@@ -142,6 +145,7 @@ security oauth2 client create \
 ====
 
 
+[[step-3-enable-oauth-2-0]]
 == 步驟 3 ：啟用 OAuth 2.0
 
 最後一步是啟用 OAuth 2.0 。這是 ONTAP 叢集的全域設定。

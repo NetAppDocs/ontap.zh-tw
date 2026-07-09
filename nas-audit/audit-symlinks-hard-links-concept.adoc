@@ -17,6 +17,7 @@ summary: 稽核symlink和硬式連結時、必須謹記某些考量事項。
 
 
 
+[[symlinks]]
 == symlinks
 
 symlink是一個具有獨立inode的檔案、其中包含指向目的地物件（稱為目標）位置的指標。透過symlink存取物件時ONTAP 、流通會自動解譯symlink、並遵循實際規範的非規範傳輸協定路徑、前往磁碟區中的目標物件。
@@ -33,6 +34,7 @@ lrwxrwxrwx 1 user1 group1 10 Apr  2 09:54 softlink.txt -> target.txt
 ----
 
 
+[[hard-links]]
 == 硬式連結
 
 硬式連結是指將名稱與檔案系統上現有檔案相關聯的目錄項目。硬式連結指向原始檔案的inode位置。如同用什麼方式解譯symlinks、它會解譯硬式連結、並遵循實際規範路徑前往Volume中的目標物件。ONTAP ONTAP稽核硬式連結物件的存取時、稽核事件會在中記錄這條絕對規範路徑 `ObjectName` 標記而非硬連結路徑。

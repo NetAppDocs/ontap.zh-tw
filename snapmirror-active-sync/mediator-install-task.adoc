@@ -15,6 +15,7 @@ SnapMirror 主動式同步使用對等叢集，在發生容錯移轉情況時保
 
 
 
+[[ontap-mediator]]
 == 資訊媒體ONTAP
 
 ONTAP 調解器為 SnapMirror 主動同步關係中的 ONTAP 叢集所使用的高可用性 (HA) 元資料提供持久且受保護的儲存。此外， ONTAP Mediator 還提供同步節點健全狀況查詢功能，以協助仲裁判斷，並做為偵測控制器活躍度的 Ping Proxy 。
@@ -42,6 +43,7 @@ IMPORTANT: 如果您正在使用 SnapMirror active sync 和 ONTAP Mediator 或 O
 
 
 
+[[install-ontap-mediator-and-confirm-cluster-configuration]]
 == 安裝 ONTAP 調解器並確認叢集配置
 
 執行下列每個步驟來安裝 ONTAP 調解器並驗證叢集配置。對於每個步驟、您都應該確認已執行特定組態。每個步驟都包含您需要遵循的特定程序連結。
@@ -63,12 +65,15 @@ link:cluster-config-task.html["為SnapMirror主動同步配置ONTAP集群"]
 
 
 
+[[initialize-the-ontap-mediator]]
+[[initialize-ontap-mediator-for-snapmirror-active-sync-using-self-signed-certificates]]
 == 使用自簽名憑證初始化 ONTAP 調解器以進行 SnapMirror 主動同步
 
 安裝 ONTAP 調解器並確認叢集配置後，必須初始化 ONTAP 調解器以進行叢集監控。您可以使用 System Manager 或 ONTAP CLI 初始化 ONTAP 調解器。
 
 
 
+[[system-manager]]
 === 系統管理員
 
 使用系統管理器，您可以設定 ONTAP 調解器以實現自動故障轉移。如果您尚未使用第三方驗證的SSL憑證和CA、也可以將自行簽署的SSL和CA更換為第三方驗證的SSL憑證和CA。
@@ -151,6 +156,7 @@ image:successful-mediator-installation.png["中介新增成功"]。
 ====
 
 
+[[cli]]
 === CLI
 
 您可以使用 ONTAP CLI 從主叢集或輔助叢集初始化 ONTAP 調解器。當您發出 `mediator add`指令時，ONTAP Mediator 會自動新增到另一個叢集。
@@ -508,6 +514,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 ====
 
 
+[[re-initialize-ontap-mediator-with-third-party-certificates]]
 == 使用協力廠商憑證重新初始化 ONTAP Mediator
 
 您可能需要重新初始化 ONTAP 調解器。在某些情況下，例如 ONTAP 調解器 IP 位址變更、憑證過期等，可能需要重新初始化 ONTAP 調解器。
@@ -519,6 +526,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 
 
 
+[[system-manager]]
 === 系統管理員
 
 使用系統管理器，您需要從 ONTAP 叢集中刪除使用舊的自簽名憑證設定的 ONTAP 調解器版本，然後使用新的第三方憑證重新設定 ONTAP 叢集。
@@ -541,6 +549,7 @@ image:configure-mediator-system-manager.png["系統管理員中介新增"]
 
 
 
+[[cli]]
 === CLI
 
 您可以使用 ONTAP CLI 將自簽名憑證取代為第三方證書，從而從主叢集或輔助叢集重新初始化 ONTAP 調解器。

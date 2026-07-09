@@ -15,12 +15,14 @@ summary: 如果您想要設定FPolicy外部引擎、以便在連線至FPolicy伺
 
 
 
+[[ssl-server-authentication]]
 == SSL伺服器驗證
 
 如果您選擇將FPolicy外部引擎設定為SSL伺服器驗證、則在建立外部引擎之前、必須先安裝簽署FPolicy伺服器憑證的憑證授權單位（CA）的公開憑證。
 
 
 
+[[mutual-authentication]]
 == 相互驗證
 
 如果您將FPolicy外部引擎設定為在將儲存虛擬機器（SVM）資料LIF連線至外部FPolicy伺服器時使用SSL相互驗證、則在建立外部引擎之前、 您必須安裝簽署FPolicy伺服器憑證的CA公開憑證、以及用於驗證SVM的公開憑證和金鑰檔。當任何 FPolicy 原則使用已安裝的憑證時，請勿刪除此憑證。
@@ -31,6 +33,7 @@ summary: 如果您想要設定FPolicy外部引擎、以便在連線至FPolicy伺
 
 
 
+[[install-certificates-for-ssl]]
 == 安裝SSL憑證
 
 用來簽署 FPolicy 伺服器憑證的 CA 公用憑證是使用安裝 `security certificate install` 命令 `-type` 參數設為 `client-ca`。使用安裝驗證 SVM 所需的私密金鑰和公開憑證 `security certificate install` 命令 `-type` 參數設為 `server`。

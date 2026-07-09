@@ -28,10 +28,12 @@ image:s3-svm-layout.png["S3 SVM 貯體存取"]
 ====
 
 
+[[bucket-limits]]
 == 貯體限制
 
 
 
+[[minimum-capacity]]
 === 最低容量
 
 最小桶容量由ONTAP平台決定。
@@ -43,18 +45,21 @@ image:s3-svm-layout.png["S3 SVM 貯體存取"]
 
 
 
+[[maximum-size]]
 === 最大尺寸
 
 最大桶容量限制為最大FlexGroup尺寸 60PB。
 
 
 
+[[maximum-number-of-buckets]]
 === 最大桶數
 
 每個FlexGroup磁碟區最多可容納 1000 個桶，或每個集群最多可容納 12,000 個桶（使用 12 個FlexGroup區）。
 
 
 
+[[automatic-flexgroup-sizing-with-ontap-9-14-1-and-later]]
 == 使用 ONTAP 9.14.1 及更新版本自動調整 FlexGroup 規模
 
 從 ONTAP 9.14.1 開始，預設的 FlexGroup 尺寸是根據其包含的貯體大小而定。FlexGroup Volume 會隨著貯體的新增或移除而自動增加或縮小。
@@ -67,6 +72,7 @@ image:s3-svm-layout.png["S3 SVM 貯體存取"]
 
 
 
+[[fixed-default-flexgroup-sizes-in-ontap-9-13-1-and-earlier]]
 == ONTAP 9.13.1 及更早版本中的固定預設 FlexGroup 大小
 
 為了提供貯體擴充的容量、 FlexGroup Volume 上所有貯體的總使用容量應小於叢集上可用儲存集合體的 FlexGroup 磁碟區容量上限 33% 。如果無法達成此目標、則所建立的新貯體將配置在新的自動建立 FlexGroup Volume 上。

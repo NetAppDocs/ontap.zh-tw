@@ -20,6 +20,7 @@ summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體
 
 
 
+[[how-attack-detection-works]]
 == 攻擊偵測的運作方式
 
 當自主勒索軟體防護 (ARP) 處於學習或評估模式時，它會為卷宗行為制定基準值。這些基準值包括熵、檔案副檔名以及（從ONTAP 9.11.1 開始的）IOPS。這些基準用於評估勒索軟體威脅。有關這些標準的更多信息，請參閱link:index.html#what-arp-detects["ARP 偵測到什麼"] 。
@@ -45,6 +46,7 @@ NOTE: 若要減少誤報數量，請前往 *Storage > Volumes > Security > Confi
 
 
 
+[[modify-attack-detection-parameters]]
 == 修改攻擊偵測參數
 
 根據啟用 ARP 的磁碟區的預期行為，您可能需要修改攻擊偵測參數。
@@ -83,6 +85,7 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 
 
+[[report-known-surges]]
 == 回報已知的突波
 
 即使在作用中， ARP 仍會繼續修改偵測參數的基準值。如果您知道 Volume 活動的突波，一次性突波或是屬於新常態特徵的突波，您應該將它們回報為安全的。手動回報這些突波的安全性、有助於提高 ARP 威脅評估的準確度。
@@ -113,6 +116,8 @@ security anti-ransomware volume workload-behavior update-baseline-from-surge -vs
 
 
 
+[[modify-alerts]]
+[[configure-arp-alerts]]
 == 設定 ARP 警示
 
 從 ONTAP 9.14.1 開始， ARP 可讓您指定兩個 ARP 事件的警示：
