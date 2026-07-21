@@ -2,7 +2,7 @@
 permalink: system-admin/accounts-access-sp-concept.html 
 sidebar: sidebar 
 keywords: account, access, sp, cluster, user, cli, node 
-summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶、可存取叢集任何節點上的SP CLI。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從0到9：9.1開始ONTAP 、SP使用者帳戶必須具備管理員角色。 
+summary: 當您嘗試存取 SP 時，系統會提示您輸入認證資料。使用服務處理器應用程式類型建立的叢集使用者帳戶可以存取叢集中任何節點上的 SP CLI。SP 使用者帳戶由 ONTAP 管理，並透過密碼進行驗證。從 ONTAP 9.15.1 開始，SP 使用者帳戶可以選擇使用雙重驗證，並將公開金鑰作為第二種身分驗證方法。從 ONTAP 9.9.1 開始，SP 使用者帳戶必須具有管理員角色。 
 ---
 = 使用叢集使用者帳戶存取 ONTAP 服務處理器
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用
 
 
 [role="lead"]
-當您嘗試存取SP時、系統會提示您提供認證資料。使用建立的叢集使用者帳戶 `service-processor` 應用程式類型可存取叢集任何節點上的 SP CLI 。SP使用者帳戶是從ONTAP 無法驗證的地方管理、並由密碼驗證。從 ONTAP 9.9.1 開始、 SP 使用者帳戶必須具有 `admin` 角色：
+嘗試存取 SP 時，系統會提示您輸入認證資料。使用 `service-processor`應用程式類型建立的叢集使用者帳戶可以存取叢集中任何節點上的 SP CLI。SP 使用者帳戶由 ONTAP 管理，並透過密碼進行驗證。從 ONTAP 9.15.1 開始，SP 使用者帳戶可以選擇使用雙重驗證，並將公開金鑰作為第二種身分驗證方法。從 ONTAP 9.9.1 開始，SP 使用者帳戶必須具有 `admin`角色。
 
-存取SP的使用者帳戶是透過ONTAP 不使用SP CLI的功能來管理、叢集使用者帳戶如果是使用建立 SP 、則可以存取 SP `-application` 的參數 `security login create` 命令設為 `service-processor` 和 `-authmethod` 參數設為 `password`。SP僅支援密碼驗證。
+用於存取 SP 的使用者帳戶是從 ONTAP 進行管理，而不是從 SP CLI 進行管理。如果建立叢集使用者帳戶時，將  `security login create` 命令的  `-application` 參數設定為  `service-processor`，且將  `-authmethod` 參數設定為  `password`，則該帳戶即可存取 SP。從 ONTAP 9.15.1 開始，您可以選擇性地為 SP 帳戶設定雙重驗證，方法是使用  `security login modify` 命令將第二個身分驗證方法設定為  `publickey`，然後使用  `security login publickey create` 命令將公開金鑰與其建立關聯。
 
 您必須指定 `-role` 建立 SP 使用者帳戶時的參數。
 
@@ -32,4 +32,4 @@ summary: 當您嘗試存取SP時、系統會提示您提供認證資料。使用
 
 您可以使用顯示目前的 SP 使用者帳戶 `-application service-processor` 的參數 `security login show` 命令。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["指令參考資料ONTAP"^]需詳細 `security login show`資訊，請參閱。
+如需 ONTAP 命令參考中連結：https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html[`security login modify`^]、連結：https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html[`security login publickey create`^] 和連結：https://docs.netapp.com/us-en/ontap-cli/security-login-show.html[`security login show`^] 的詳細資訊，請參閱 ONTAP 命令參考。

@@ -113,7 +113,7 @@ image:fanout-diagram.png["扇出組態的圖表"]
 
 SnapMirror SAN 的主動同步支援xref:../data-protection/supported-deployment-config-concept.html[連出組態]搭配 `MirrorAllSnapshots`原則，從 ONTAP 9.11.1 開始，也支援 `MirrorAndVault`原則。連出組態不支援搭配 `XDPDefault`原則的 SnapMirror 主動同步。
 
-從 ONTAP 9.15.1 開始，SnapMirror 主動同步支援在容錯移轉事件發生後自動重新組態連出連結。如果從主要站台到次要站台的容錯移轉成功，第三站台將自動重新組態，以將次要站台視為來源。非同步連出連結可以是 SAN 組態中的一致性群組關係，也可以是獨立的 Volume 關係。重新組態適用於這兩種情況。重新組態由計劃內或計劃外容錯移轉觸發。容錯回復至主要站台時也會進行重新組態。
+從 ONTAP 9.15.1 開始，SnapMirror 主動同步支援在故障切換事件發生後自動重新設定連出連結。如果從主要站台到次要站台的故障切換成功，則在非同步連出連結的下一次排程更新期間，將啟動連出關係的重新設定。它不會在 SnapMirror 主動同步故障切換後立即觸發。非同步連出連結可以是 SAN 組態中的一致性群組關係，也可以是獨立的 Volume 關係。重新設定適用於這兩種情況。重新設定由計劃內或計劃外故障切換觸發。容錯回復至主要站台時也會進行重新設定。
 
 如需在舊版 ONTAP 中管理您的扇出組態的相關資訊、請參閱 xref:recover-unplanned-failover-task.adoc[在連出組態中恢復保護]。
 
