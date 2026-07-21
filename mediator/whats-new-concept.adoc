@@ -28,6 +28,28 @@ summary: 每個版本都提供 ONTAP Mediator 的新功能。  最新功能。
 
 
  a| 
+1.12.1
+ a| 
+* 支援 RHEL ：
++
+** 相容：10.1 和 9.7。
+** 建議：10.2、10.0、9.8、9.6、9.4 和 8.10。
+
+
+* 支援 Rocky Linux 10.2、9.8 和 8.10。
+* 支援 Oracle Linux 10.1 和 9.7，同時支援 rhck 和 uek 核心。
+* 從 ONTAP Mediator 1.12.1 和 ONTAP 9.19.1 開始，設定了 HTTPS 的單一 ONTAP Mediator 執行個體可以同時監控以下組態：
++
+** 如果安裝在配備 8 核心 CPU 和至少 16GB RAM 的主機上，最多可安裝 10 個四節點或 5 個八節點 MetroCluster IP 組態。請參閱link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#mediator-multiple-mccip["使用 ONTAP Mediator 監控多個 MetroCluster IP 組態"^]。
+** 如果安裝在具有 2 核心 CPU 的主機上，則一個四節點 MetroCluster IP 組態和一個 SnapMirror 主動同步對等關係。請參閱 link:../snapmirror-active-sync/mediator-install-task.html#ontap-mediator["為SnapMirror主動同步配置ONTAP調解器"]。
+
+
+* 包含一個用於修理損壞的 SCST 安裝的新工具。安裝 ONTAP Mediator 後，您可以在 `/usr/local/bin/mediator_repair_scst`找到該工具。如果升級後的作業系統需要預設 SCST 套件中未提供的 SCST 修補程式，則可以在作業系統升級後使用該工具。
+
+
+
+
+ a| 
 1.12
  a| 
 * 支援 RHEL ：
@@ -213,11 +235,13 @@ summary: 每個版本都提供 ONTAP Mediator 的新功能。  最新功能。
 |===
 
 
-| 適用於 ONTAP Mediator 的作業系統 | 1.12 | 1.11 | 1.10 | 1.9.1 | 1.9 | 1.8 | 1.1.7 | 1.6. | 1.5. | 1.4. | 1.3. | 1.2. | 1.1. | 1.0 
+| 適用於 ONTAP Mediator 的作業系統 | 1.12.1 | 1.12 | 1.11 | 1.10 | 1.9.1 | 1.9 | 1.8 | 1.1.7 | 1.6. | 1.5. | 1.4. | 1.3. | 1.2. | 1.1. | 1.0 
 
 
  a| 
 RHEL 10.2
+ a| 
+是的
  a| 
 是的
  a| 
@@ -251,6 +275,8 @@ RHEL 10.2
 
  a| 
 RHEL 10.1
+ a| 
+相容
  a| 
 相容
  a| 
@@ -291,6 +317,8 @@ RHEL 10.0
  a| 
 是的
  a| 
+是的
+ a| 
 否
  a| 
 否
@@ -317,6 +345,8 @@ RHEL 10.0
 
  a| 
 RHEL 9.8
+ a| 
+是的
  a| 
 是的
  a| 
@@ -350,6 +380,8 @@ RHEL 9.8
 
  a| 
 RHEL 9.7
+ a| 
+相容
  a| 
 相容
  a| 
@@ -390,6 +422,8 @@ RHEL 9.6
  a| 
 是的
  a| 
+是的
+ a| 
 否
  a| 
 否
@@ -416,6 +450,8 @@ RHEL 9.6
 
  a| 
 RHEL 9.5
+ a| 
+否
  a| 
 否
  a| 
@@ -462,6 +498,8 @@ RHEL 9.4
  a| 
 是的
  a| 
+是的
+ a| 
 否
  a| 
 否
@@ -482,6 +520,8 @@ RHEL 9.4
 
  a| 
 RHEL 9.3
+ a| 
+否
  a| 
 否
  a| 
@@ -515,6 +555,8 @@ RHEL 9.3
 
  a| 
 RHEL 9.2
+ a| 
+否
  a| 
 否
  a| 
@@ -559,6 +601,8 @@ RHEL 9.1
  a| 
 否
  a| 
+否
+ a| 
 是的
  a| 
 是的
@@ -581,6 +625,8 @@ RHEL 9.1
 
  a| 
 RHEL 9.0
+ a| 
+否
  a| 
 否
  a| 
@@ -627,6 +673,8 @@ RHEL 8.10.
  a| 
 是的
  a| 
+是的
+ a| 
 否
  a| 
 否
@@ -647,6 +695,8 @@ RHEL 8.10.
 
  a| 
 RHEL 8.9
+ a| 
+否
  a| 
 否
  a| 
@@ -687,6 +737,8 @@ RHEL 8.8
  a| 
 否
  a| 
+否
+ a| 
 是的
  a| 
 是的
@@ -713,6 +765,8 @@ RHEL 8.8
 
  a| 
 RHEL 8.7
+ a| 
+否
  a| 
 否
  a| 
@@ -753,6 +807,8 @@ RHEL 8.6
  a| 
 否
  a| 
+否
+ a| 
 相容
  a| 
 相容
@@ -786,6 +842,8 @@ RHEL 8.5
  a| 
 否
  a| 
+否
+ a| 
 相容
  a| 
 相容
@@ -812,6 +870,8 @@ RHEL 8.5
 
  a| 
 RHEL 8.4
+ a| 
+否
  a| 
 否
  a| 
@@ -862,6 +922,8 @@ RHEL 8.3
  a| 
 過時
  a| 
+過時
+ a| 
 是的
  a| 
 是的
@@ -878,6 +940,8 @@ RHEL 8.3
 
  a| 
 RHEL 8.2
+ a| 
+過時
  a| 
 過時
  a| 
@@ -928,6 +992,8 @@ RHEL 8.1
  a| 
 過時
  a| 
+過時
+ a| 
 是的
  a| 
 是的
@@ -944,6 +1010,8 @@ RHEL 8.1
 
  a| 
 RHEL 8.0
+ a| 
+過時
  a| 
 過時
  a| 
@@ -994,6 +1062,8 @@ RHEL 和 CentOS 7.9
  a| 
 過時
  a| 
+過時
+ a| 
 是的
  a| 
 是的
@@ -1010,6 +1080,8 @@ RHEL 和 CentOS 7.9
 
  a| 
 RHEL 和 CentOS 7.8
+ a| 
+過時
  a| 
 過時
  a| 
@@ -1060,6 +1132,8 @@ RHEL 和 CentOS 7.7
  a| 
 過時
  a| 
+過時
+ a| 
 是的
  a| 
 是的
@@ -1076,6 +1150,8 @@ RHEL 和 CentOS 7.7
 
  a| 
 RHEL 和 CentOS 7.6
+ a| 
+過時
  a| 
 過時
  a| 
@@ -1132,6 +1208,8 @@ CentOS 8 和串流
  a| 
 否
  a| 
+否
+ a| 
 不適用
  a| 
 不適用
@@ -1142,6 +1220,8 @@ CentOS 8 和串流
 
  a| 
 Rocky Linux 10
+ a| 
+是的 (10.2)
  a| 
 是的 (10.2)
  a| 
@@ -1175,6 +1255,8 @@ Rocky Linux 10
 
  a| 
 Rocky Linux 9
+ a| 
+是的 (9.8)
  a| 
 是的 (9.8)
  a| 
@@ -1221,6 +1303,8 @@ Rocky Linux 8
  a| 
 是的 (8.10)
  a| 
+是的 (8.10)
+ a| 
 是的 (8.9)
  a| 
 是的 (8.8)
@@ -1241,6 +1325,8 @@ Rocky Linux 8
 
  a| 
 Oracle Linux 10
+ a| 
+是的 (10.1)
  a| 
 是的 (10.1)
  a| 
@@ -1274,6 +1360,8 @@ Oracle Linux 10
 
  a| 
 Oracle Linux 9
+ a| 
+是的 (9.7)
  a| 
 是的 (9.7)
  a| 
@@ -1322,6 +1410,9 @@ Oracle Linux 9
 [cols="2*"]
 |===
 | ONTAP Mediator 版本 | 支援 SCST 的支援版本 
+
+
+| ONTAP Mediator 1.12.1 | scst-3.10.tar.gz 
 
 
 | ONTAP Mediator 1.12 | scst-3.10.tar.gz 

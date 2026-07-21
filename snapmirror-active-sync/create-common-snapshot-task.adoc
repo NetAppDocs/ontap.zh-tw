@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/create-common-snapshot-task.html 
 keywords: SM-BC, SMBC, common Snapshot copy, manual Snapshot copy create, snapmirror active sync 
-summary: 除了定期排程的快照作業之外，您還可以在主要 SnapMirror 一致性群組中的磁碟區和次要 SnapMirror 一致性群組中的磁碟區之間，手動建立通用快照。 
+summary: 除了定期排程的快照操作外，您還可以手動建立主要 SnapMirror 一致性群組中的 Volume 與次要 SnapMirror 一致性群組中的 Volume 之間的通用快照，或在 NAS 組態的 SVM 層級建立通用快照。 
 ---
-= 在ONTAP一致性組之間建立通用快照
+= 在 ONTAP 一致性群組或 NAS SVM 之間建立通用快照
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,26 +14,59 @@ summary: 除了定期排程的快照作業之外，您還可以在主要 SnapMir
 
 
 [role="lead"]
-除了定期排程的快照作業之外，您也可以手動在主要 SnapMirror 一致性群組中的磁碟區和次要 SnapMirror 一致性群組中的磁碟區之間建立通用的link:../concepts/snapshot-copies-concept.html["Snapshot"]資料。
+除了定期排程的快照操作外，您還可以在 SAN 組態中或在 NAS 組態的 SVM 層級，手動建立主要 SnapMirror 一致性群組中的 Volume 與次要 SnapMirror 一致性群組中的 Volume 之間的共同link:../concepts/snapshot-copies-concept.html["Snapshot"]。
 
 .關於這項工作
-排程的快照建立時間間隔為 12 小時。
+Automated Failover 原則的排程快照建立間隔為 12 小時，Automated Failover Duplex 原則的排程快照建立間隔為 3 小時。
 
 .開始之前
 * SnapMirror群組關係必須同步。
 
 
 .步驟
-. 建立一般快照：
-+
-`destination::>snapmirror update -destination-path vs1_dst:/cg/cg_dst`
+您可以使用 System Manager 或 ONTAP CLI 建立通用快照。
 
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 從目的地叢集，導覽至 *Protection > Replication*。
+. 找到關係來源，選擇 image:icon_kabob.gif["功能表選項圖示"] 並選擇「更新」。
+. 選擇 *As per policy* 或 *Select the snapshot* 以選擇現有快照。
+. 選擇 *Update* 。
+
+
+--
+.CLI
+--
+. 從目的地站台建立通用快照：
++
+`snapmirror update -destination-path <destination path>`
+
++
+SAN 組態範例：
+
++
+[listing]
+----
+destination::>snapmirror update -destination-path vs1_dst:/cg/cg_dst
+----
++
+NAS 組態範例：
+
++
+[listing]
+----
+snapmirror update -destination-path vs_b:
+----
 . 監控更新進度：
 +
 `destination::>snapmirror show -fields newest-snapshot`
 
 
 
+--
+====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["SnapMirror 顯示"^]
 

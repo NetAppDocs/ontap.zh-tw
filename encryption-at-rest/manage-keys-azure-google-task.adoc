@@ -74,12 +74,13 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 .Azure
 --
 .在 ONTAP SVM 上啟用 Azure Key Vault
-. 開始之前、您必須先從Azure帳戶取得適當的驗證認證資料、包括用戶端機密或憑證。您也必須確保叢集中的所有節點都正常運作。您可以使用命令來檢查 `cluster show`。如link:https://docs.netapp.com/us-en/ontap-cli/cluster-show.html["指令參考資料ONTAP"^]需詳細 `cluster show`資訊，請參閱。
+. 開始之前，您必須從您的 Azure 帳戶取得適當的身分驗證認證資料，不論是用戶端密碼或憑證。您也必須確保叢集中的所有節點都處於健全狀態。您可以使用命令  `cluster show` 來檢查此狀態。深入瞭解  `cluster show`，請參閱 link:https://docs.netapp.com/us-en/ontap-cli/cluster-show.html["指令參考資料ONTAP"^]。
 . 將權限層級設為進階
 `set -priv advanced`
-. 在 SVM 上啟用 AKV
-`security key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method {certificate|client-secret}`
-出現提示時、請輸入 Azure 帳戶的用戶端憑證或用戶端機密。
+. 在 SVM 上啟用 AKV 從 ONTAP 9.19.1 開始，使用：
+`security key-manager external azure create-config -config-name _config_name_ -client-id _client_id_ -tenant-id _tenant_id_ -name URL -key-id _key_id_ -authentication-method {certificate|client-secret} -vserver _vserver_name_`然後：
+`security key-manager keystore enable -vserver _vserver_name_ -keystore-type AKV -config-name _config_name_`對於 ONTAP 9.18.1 及更早版本，使用：
+`security key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name _name_ -key-id _key_id_ -authentication-method {certificate|client-secret} -vserver _vserver_name_`出現提示時，輸入 Azure 帳戶中的用戶端憑證或用戶端金鑰。
 . 確認 AKV 已正確啟用：
 `security key-manager external azure show vserver _svm_name_`
 如果服務連線能力不正常、請透過資料 SVM LIF 建立與 AKV 金鑰管理服務的連線。

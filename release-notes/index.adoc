@@ -16,8 +16,8 @@ summary: 瞭解 ONTAP 9 的新功能。
 除了這些重點摘要之外、您還可以針對最新 ONTAP 版本中推出的所有新功能和增強功能、找到全方位的每個版本涵蓋範圍。
 
 * 深入瞭解 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["全新增強的 ONTAP MetroCluster 功能"^]。
-* 了解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9171.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^] 。
-* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^] 。
+* 瞭解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9191.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^]。
+* 瞭解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9191.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^]。
 * 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["對AFF、 ASA和FAS系統以及支援的交換器的全新和增強支持"^] 。
 * 瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
 
@@ -25,6 +25,67 @@ summary: 瞭解 ONTAP 9 的新功能。
 如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
 
 若要升級至最新版的 ONTAP 、請參閱 xref:../upgrade/prepare.html[升級至最新版的 ONTAP] 和 xref:../upgrade/when-to-upgrade.html[我應該何時升級 ONTAP ？]
+
+
+
+[[ontap-9-19-1-highlights]]
+== ONTAP 9.19.1 亮點
+
+ONTAP 9.19.1 在安全性、擴充性和儲存管理方面提供了一系列新增和增強功能，以支援資料基礎架構現代化。這些增強功能有助於您擴展規模、提高營運效率並保護資料，以因應未來挑戰。如需新增功能和增強功能的完整清單，請參閱 xref:whats-new-9191.adoc[ONTAP 9.19.1 的新增功能]。
+
+* xref:../performance-admin/guarantee-throughput-qos-task.html[可設定的 QoS 突發原則]
++
+可設定的 QoS 突發原則允許在 QoS 限制之外進行可控且有時限的效能突發，從而在尖峰事件期間提高工作負載回應能力，而不會犧牲公平性或需要過度配置。
+
+* xref:../nfs-admin/enable-nfs-over-tls-task.html[透過 TLS 1.3 的 NFS]
++
+使用基於標準的 TLS 1.3 加密保護傳輸中的 NFS 資料，有助於加強保護並簡化企業級加密 NFS 的採用。 
+
+* xref:../s3-config/regenerate-access-keys.html[每個用戶擁有多個 S3 存取金鑰]
++
+新增對每位使用者多個作用中 S3 存取金鑰的支援，實現無縫認證資料輪換，無需應用程式停機時間，協助客戶在維持對物件工作負載不間斷存取的同時，強化安全性與法規遵循。
+
+* xref:../snapmirror-active-sync/protect-nas-task.html[適用於 NAS 的 SnapMirror active sync]
++
+借助 NAS 支援，SnapMirror active sync 現在是一個統一的業務連續性解決方案，可實現零 RPO 與透明的故障轉移。 
+
+* xref:../san-config/configure-fc-nvme-hosts-ha-pairs-reference.html[FC 直接連接]
++
+引入安全的 FC HBA 卡支援，實現可信任主機連線功能，為硬體支援的機上 FC 安全性奠定基礎，同時保持效能並滿足企業法規遵循要求。 
+
+* xref:../san-admin/multipath-automatic-lif-failover-support.html[統一的雙主動式 LIF 故障轉移]
++
+AFF 系統提供雙主動式多重路徑與自動 LIF 容錯移轉功能，讓所有 SAN 路徑保持最佳化的雙主動式狀態，確保主機 I/O 在容錯移轉期間能立即持續運作。 
+
+* xref:https://docs.netapp.com/us-en/ontap-fli/get-started/learn-about-data-migration.html[FLI 中的 iSCSI 支援]
++
+為外部 LUN 匯入 (FLI) 新增 iSCSI 支援，讓使用者能夠使用現有的 iSCSI 連線功能，以最小的中斷將區塊資料從第三方儲存系統移轉至 ONTAP。 
+
+* xref:../s3-config/create-modify-bucket-policy-task.html[S3 條件寫入與刪除]
++
+啟用 S3 API 條件寫入和刪除的支援，允許應用程式在物件更新和移除期間強制執行資料一致性檢查，從而降低並行和分散式物件工作負載中意外覆寫或刪除的風險。
+
+* xref:../concepts/path-failover-concept.html#nas-path-failover[聯合 LIF 故障轉移]
++
+AFF 和 ASA 系統支援 iSCSI 協定 LIF 在雙主動式和 active-active-scsi-only 多重路徑組態中的自動 LIF 容錯移轉，以及 NVMe/TCP 協定 LIF 在雙主動式多重路徑組態中的自動 LIF 容錯移轉。 
+
+* xref:../networking/improve-tcp-wan-performance.html[增強的 WAN 效能]
++
+TCP RACK 增強的 WAN 效能可提升壅塞網路的處理量和恢復能力，加速遠端檔案存取和站點間資料服務。 
+
+* xref:../networking/configure-tls-offload.html[硬體加速的 kTLS 可加快後端叢集加密]
++
+透過引入硬體加速的 kTLS 來增強後端叢集加密，將加密處理卸載到支援的 SmartNIC，從而提供更高的效能和更低的 CPU 例行成本，同時保持叢集和 HA 流量始終在線的安全通訊。 
+
+* xref:../anti-ransomware/use-cases-restrictions-concept.html#snapmirror[針對同步複寫工作負載的 AI 驅動勒索軟體偵測]
++
+將自主勒索軟體防護 (ARP/AI) 擴展到 SnapMirror 同步同步 （SAN 和 NAS） 和 SnapMirror 雙主動式 SAN 環境，在零 RPO 架構中保留偵測和恢復訊號。 
+
+* xref:../concept-svm-admin-dashboard-sm.html[使用新的 ONTAP System Manager 儀表板監控和管理 SVM]
++
+提供租戶友善的 SVM 管理 GUI，無需複雜的 CLI 介面。 
+
+
 
 
 

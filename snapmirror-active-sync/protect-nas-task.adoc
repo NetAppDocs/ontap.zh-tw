@@ -1,0 +1,304 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/protect-nas-task.html 
+keywords: SM-BC, snapmirror business continuity, svm, remote protection, destination, nfs, smb 
+summary: 在 NAS 組態中設定業務連續性保護，需要選取要保護的 SVM 及其 Volume，並建立目的地 SVM。 
+---
+= 使用 ONTAP SnapMirror active sync for NAS 進行保護
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+
+
+[[configure-snapmirror-active-sync-for-nas]]
+== 設定 SnapMirror 主動同步以用於 NAS
+
+從 ONTAP 9.19.1 開始，您可以為 NAS 組態設定 SnapMirror 主動同步。
+
+.開始之前
+* 處於 SnapMirror 主動同步關係中的兩個叢集必須執行 ONTAP 9.19.1 或更新版本。
+* 您必須是叢集管理員。
+* 您必須設定 ONTAP Mediator 或 ONTAP Cloud Mediator。
+* 來源叢集和目的地叢集必須執行對等關係。
+
+
+.ONTAP 搭配適用於 NAS 的 SnapMirror 主動同步支援與不支援的功能
+下表說明搭配 NAS 的 SnapMirror active sync 支援與不支援的 ONTAP 功能。
+
+|===
+| ONTAP 功能 | 由 SnapMirror 主動同步支援 | 其他資訊 
+
+
+| 應用程式一致性群組 | 否 |  
+
+
+| 稽核 | 是的 | 只有 SVM 中的合併日誌才會被複寫。 
+
+
+| DP 磁碟區 | 否 |  
+
+
+| FabricPool | 部分 | The `all` 分層原則不允許用於 SnapMirror 活動同步 NAS Volume。 
+
+
+| 檔案系統分析 | 部分 | 在輔助 SVM 上，檔案系統分析預設設定為 `Off`，故障轉移後必須手動設定為 `On`。 
+
+
+| FlexCache 磁碟區 | 否 |  
+
+
+| 流通量FlexGroup | 否 |  
+
+
+| Fpolicy 和防毒掃描 | 是的 |  
+
+
+| 負載共享鏡像 | 否 | 在 ONTAP 9.19.1 中，適用於 NAS 的 SnapMirror active sync 僅支援 AFF 叢集中的 2 個節點。 
+
+
+| 組態MetroCluster | 否 |  
+
+
+| NAS 命令的多重管理員驗證 | 否 |  
+
+
+| S3 NAS | 否 |  
+
+
+| 處於 SnapMirror 主動同步 NAS 保護 SVM 中的 SAN Volume | 否 | SnapMirror 若 SVM 中存在裝載 LUN 的 Volume，則 NAS 的主動同步初始化將會失敗。 
+
+
+| SnapLock | 否 |  
+
+
+| SnapMirror 到雲端 | 否 |  
+
+
+| SVM 移轉 | 否 |  
+|===
+.關於這項工作
+若要為 NAS 啟用 SnapMirror 主動同步，您需要建立目的地 SVM。目的地 SVM 在發生容錯移轉之前保持休眠狀態。
+
+.步驟
+您可以使用 System Manager 或 ONTAP CLI 來為 NAS 設定 SnapMirror 主動同步。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 從來源叢集導覽至叢集 > 儲存 VM。
+. 按一下要設定的 SVM 名稱旁邊的 image:icon_kabob.gif["功能表選項圖示"]，然後選擇 *保護*。
+. 在「保護儲存 VM」視窗中，選擇目的地叢集。
+. 選擇 `AutomatedFailOver`作為複寫原則。
+. 輸入要在目的地建立的儲存設備 VM 的名稱。
+. 選擇要保護的 Volume：
++
+.. *保護所有 Volume* – 預設情況下，所有 Volume 均受保護。
+.. *選擇要保護的 Volume* - 僅保護選定的 Volume。
+.. *選擇要排除的 Volume* - 所選 Volume 將從保護中排除。
+
+
+. 點選 *Initialize relationship*。
+. 按一下「 * 儲存 * 」。
+. 在「保護儲存 VM」視窗中，在「保護」欄中驗證 SVM 保護狀態。
+
+
+--
+.CLI
+--
+. 在目的地叢集上，建立一個類型為 dp-destination 的 SVM：
++
+`vserver create -vserver <SVM name> -sub-type dp-destination`
+
++
+範例：
+
++
+[listing]
+----
+destination::> vserver create -vserver vs_b -sub-type dp-destination
+----
+. 建立與來源 SVM 的 SVM 對等關係：
++
+`vserver peer create -vserver <destination SVM> -peer-vserver <souce SVM> -peer-cluster <source cluster> -applications snapmirror`
+
++
+範例：
+
++
+[listing]
+----
+destination::> vserver peer create -vserver vs_b -peer-vserver vs_a -peer-cluster SiteA -applications snapmirror
+----
+. 在來源 SVM 上，接受對等請求：
++
+`vserver peer accept -vserver <source SVM name> -peer-vserver <destination SVM name>vserver peer accept -vserver <source SVM name> -peer-vserver <destination SVM name>`
+
++
+範例：
+
++
+[listing]
+----
+source::> vserver peer accept -vserver vs_a -peer-vserver vs_b
+----
+. 建立 SnapMirror 關係：
++
+`snapmirror create -source-path <source SVM name>: -destination-path <destination SVM name>: -policy AutomatedFailOver`
+
++
+範例：
+
++
+[listing]
+----
+destination::> snapmirror create -source-path vs_a: -destination-path vs_b: -policy AutomatedFailOver
+----
+. 確認關係已建立並檢查其狀態：
++
+'snapmirror show'
+
++
+範例：
+
++
+[listing]
+----
+destination::> snapmirror show
+Progress
+	Source            Destination Mirror        Relationship   Total             Last
+	Path        Type  Path        State         Status         Progress  Healthy Updated
+	----------- ---- ------------ -------       -------------- --------- ------- --------
+	vs_a:       XDP  vs_b:        Uninitialized Idle           -         true    -
+
+----
+. 在目的地 SVM 上，初始化關係：
++
+`snapmirror initialize -destination-path <SVM name>:`
+
++
+範例：
+
++
+[listing]
+----
+destination::> snapmirror initialize -destination-path vs_b:
+----
+. 檢查初始化狀態：
++
+`snapmirror show`
+
++
+範例：
+
++
+[listing]
+----
+	destination::> snapmirror show
+	                                                                             Progress
+	Source            Destination Mirror        Relationship   Total             Last
+	Path        Type  Path        State         Status         Progress  Healthy Updated
+	----------- ---- ------------ -------       -------------- --------- ------- --------
+	vs_a:       XDP  vs_b:        Snapmirrored  InSync         -         true    -
+
+----
+
+
+--
+====
+
+
+[[create-an-unprotected-volume-in-a-snapmirror-active-sync-nas-configuration]]
+== 在 SnapMirror 主動同步 NAS 組態中建立未受保護的 Volume
+
+如果不需要保護，您可以將 Volume 從 SnapMirror active sync 中排除；例如在建立用於開發測試的 FlexClone® Volume 時。
+
+.步驟
+您可以使用 System Manager 或 ONTAP CLI，從適用於 NAS 的 SnapMirror active sync 中排除 Clone Volume。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 從來源叢集導覽至 *Storage > Volumes*。
+. 在 Volume 清單中，按一下要 Clone 的 Volume 名稱旁邊的 image:icon_kabob.gif["功能表選項圖示"]，然後選取 *Clone*。
+. 在「Clone Volume」視窗中，確保取消選取「將 Clone 包含在業務連續性保護中」。
+. 點選 *Clone*。
+
+
+--
+.CLI
+--
+. 從來源叢集，為現有的 SnapMirror 主動同步組態新增未受保護的 Volume：
++
+`volume clone create -vserver <SVM name> -flexclone <clone vol name> -parent-vserver <SVM name> -parent-volume <vol name> -parent-snapshot <snapshot name>`
+`volume add -vserver <SVM name> -volume <volume name> -smas-protection unprotected`
+
+
+
+--
+====
+
+
+[[use-the-ontap-cli-to-exclude-a-volume-from-a-snapmirror-active-sync-nas-configuration]]
+== 使用 ONTAP CLI 從 SnapMirror 主動同步 NAS 組態中排除 Volume
+
+如果不再需要保護，或想要刪除 Volume，您可以將 Volume 從 SnapMirror 主動同步 NAS 組態中排除。
+
+
+NOTE: 將目前受保護的 Volume 標記為未受保護狀態，會對 SnapMirror 主動同步關係執行收縮操作。收縮操作會刪除來源和目的地上該 Volume 的 SnapMirror 項目。
+
+
+NOTE: 將 Volume 標記為未受保護狀態，並不會自動刪除主要或次要關係上的 Volume。如果要刪除 Volume，可以在主要和次要 SVM 上手動刪除。
+
+.步驟
+. 從 SnapMirror 主動 NAS 保護中移除 Volume：
++
+`volume modify -vserver <SVM name> -volume <volume name> -smas-protection unprotected`
+
+
+
+
+
+[[convert-an-svm-dr-relationship-to-a-snapmirror-active-sync-relationship]]
+== 將 SVM DR 關係轉換為 SnapMirror 主動同步關係
+
+在 ONTAP 9.19.1 中，您無法直接將 SVM DR 關係轉換為 NAS 的 SnapMirror 主動同步關係。您必須先刪除 SVM DR 關係，建立新的目的地 SVM，建立新的 SnapMirror 主動同步關係，然後初始化該關係。
+
+
+NOTE: 該 `snapmirror resync`命令目前不受支援。
+
+. 在目的地叢集上，刪除 SnapMirror 關係：
++
+`snapmirror delete -destination-path`
+
+. 在主要叢集上，釋放關係資訊：
++
+`snapmirror release -relationship-info-only true`
+
+. 在目的地叢集上，建立具有 dp-destination 子類型的 SVM：
++
+`vserver create -vserver <SVM name> -sub-type dp-destination`
+
+. 在目的地叢集上，使用以下原則建立 SnapMirror 關係： `AutomatedFailover`
++
+`snapmirror create -source-path <source SVM name> -destination-path <destination SVM name> -policy AutomatedFailOver`
+
+. 在目的地叢集上，初始化關係：
++
+`snapmirror initialize -destination-path <SVM name>`
+
+
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror建立"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["SnapMirror初始化"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["SnapMirror 顯示"^]
+
