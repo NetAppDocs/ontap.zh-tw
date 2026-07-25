@@ -521,7 +521,6 @@
   <block id="36df56f28037b8d48e44d956260d610f" category="list-text">確認SSD快取是否存在及大小：</block>
   <block id="ccdba30615fb95f1b3a828beb3420add" category="paragraph"><block ref="a12866070c41a2038f0e952fc2000bd5" prefix="" category="inline-code"></block></block>
   <block id="c59f8c483de4b977f348bdd9c1fc13ad" category="paragraph">快取的大小列於下<block ref="de0a2f64b84982d32ab4003bfacac6b2" prefix=" " category="inline-code"></block>。</block>
-  <block id="462495e44ca2b273125c316da27211b2" category="inline-link">NetApp技術報告4070：Flash Pool設計與實作指南</block>
   <block id="5b0406b91e2f701754247ae42acf80db" category="inline-link-macro">將SSD新增至SSD儲存資源池</block>
   <block id="7777b07e1e90f1c52c7d6287e9243b7d" category="paragraph"><block ref="056f75662ab5a00bee9b640313ef50ac" prefix="" category="inline-code"></block></block>
   <block id="129d098ca410b6c80090ee2a60549c18" category="paragraph">將SSD快取新增至本機層以建立Flash Pool本機層之後、您就無法移除SSD快取、將本機層級轉換回原始組態。</block>
@@ -19226,7 +19225,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="d384359ca03c8d46191c719c57744679" category="sidebar">SnapMirror Volume複寫</block>
   <block id="dadcafcf2e5bc5cb778329f07b38e65c" category="sidebar">管理SnapMirror Volume複寫</block>
   <block id="febf5c0aebee0d728b141c602ec217df" category="sidebar">一次設定一個複寫關係步驟</block>
-  <block id="6a4b03f75f0ca691e161c3c0da678f24" category="sidebar">自訂複寫原則</block>
   <block id="79268cea67ecd3c82851376e7d6542e3" category="sidebar">從 SnapMirror 目的地 Volume 提供資料</block>
   <block id="089d3d55b4dfaa8a4354c5e39e6e8d99" category="sidebar">複寫SVM組態</block>
   <block id="bb23c69b020dd49e78676cb0c25ca2f6" category="sidebar">管理SnapMirror根Volume複寫</block>
@@ -21526,12 +21524,7 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="03cc126e2caff1c542a6ddab4c9823dd" category="paragraph">從 ONTAP 9.6 開始、您可以使用<block ref="148b68957f094088c8b50c7e8764a58b" prefix=" " category="inline-code"></block> 變更外部金鑰管理伺服器 I/O 逾時和使用者名稱的命令。</block>
   <block id="5bfe49fcad19b32d824541b6e12d03be" category="list-text">在這個支援對象環境中MetroCluster 、您必須在兩個叢集上為管理SVM重複這些步驟。</block>
   <block id="c37b9766e3e6327fac06d344e8a35eb5" category="list-text">修改叢集的外部金鑰管理程式伺服器內容：</block>
-  <block id="e04ff7b5b3fc8f1da430169d128430a9" category="paragraph"><block ref="5d69eb3def5f852939baa4c751465215" prefix="" category="inline-code"></block></block>
-  <block id="fd35e3d955aad84b03e77d01d0e42317" category="paragraph">超時值以秒表示。如果您修改使用者名稱、系統會提示您輸入新密碼。    如果您在叢集登入提示字元中執行命令、<block ref="ff290f247e82063dfaf6618fab82f830" prefix=" " category="inline-code"></block> 預設為目前叢集的管理SVM。您必須是叢集管理員、才能修改外部金鑰管理程式伺服器內容。</block>
   <block id="6fc9bcf15692172b1d99f25409f90aad" category="paragraph">下列命令會將的逾時值變更為 45 秒<block ref="fb56c6cfda5b5fd176697c125dc11863" prefix=" " category="inline-code"></block> 偵聽預設連接埠 5696 的外部金鑰管理伺服器：</block>
-  <block id="adc8983fe7ff78d6470d3ec39ee65204" category="list-text">修改SVM的外部金鑰管理程式伺服器內容（僅限NVE）：</block>
-  <block id="b51b860f1a8754c07f9bffc0c6a951d6" category="paragraph"><block ref="ff49ad8772f7d6001cb24d60567caf6e" prefix="" category="inline-code"></block></block>
-  <block id="f44956cdd630f824de411b7dcf6d0c15" category="paragraph">超時值以秒表示。如果您修改使用者名稱、系統會提示您輸入新密碼。    如果您在 SVM 登入提示字元下執行命令、<block ref="cd1001994f72499b4e03299b81ba8e2d" prefix=" " category="inline-code"></block> 預設為目前的 SVM 。您必須是叢集或SVM管理員、才能修改外部金鑰管理程式伺服器內容。</block>
   <block id="072c89d9a89a67f531df7fad0c2a551c" category="paragraph">下列命令會變更的使用者名稱和密碼<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 偵聽預設連接埠 5696 的外部金鑰管理伺服器：</block>
   <block id="eadfe41148a3bbfb568f3f2283f7fc02" category="summary">設定Onboard Key Manager複雜密碼時、您應該將內建金鑰管理資訊複製到儲存系統外部的安全位置。</block>
   <block id="8eabb763c6442a78080d51a43b260dce" category="paragraph">所有的金鑰管理資訊都會自動備份到叢集的複寫資料庫（RDB）。您也應該手動備份金鑰管理資訊、以便在發生災難時使用。</block>
@@ -24318,10 +24311,8 @@ Cisco Nexus 9336C-FX2</block>
   <block id="11257db99ba33ed6b06a82974b80c96d" category="paragraph">為儲存虛擬機器（SVM）設定檔案共用事件並啟用稽核時、就會產生稽核事件。使用修改 SMB 網路共用時、會產生檔案共用事件<block ref="eac66d61c781409b2c25610f21b676ee" prefix=" " category="inline-code"></block> 相關命令。</block>
   <block id="6bf6601e418fb6ec372e458d46e70586" category="paragraph">新增、修改或刪除SVM的SMB網路共用時、會產生事件ID為5142、5143和5144的檔案共用事件。SMB 網路共用組態是使用修改的<block ref="61ea5c6f2bcbffe05fb9388eb7c8ddfc" prefix=" " category="inline-code"></block> 命令。</block>
   <block id="de8a6156fd5ef133f305a4a936054f74" category="paragraph">下列範例顯示建立名為「稽核目的地」的共用物件時、會產生ID為5143的檔案共用事件：</block>
-  <block id="e9cf9e74622f1f0842c9fc40cf4e4778" category="summary">當暫存磁碟區或包含稽核事件記錄的磁碟區空間不足時、可能會發生問題。如果空間不足、就無法建立新的稽核記錄、這會使用戶端無法存取資料、而且存取要求也會失敗。您應該知道如何疑難排解及解決這些磁碟區空間問題。</block>
   <block id="a2b76bd9de03c9bd88b41613cdd67f6b" category="doc">疑難排解稽核和暫存磁碟區空間問題</block>
   <block id="894ed03a3227c63d304229c7adca1778" category="section-title">疑難排解與事件記錄磁碟區相關的空間問題</block>
-  <block id="b7cb910efffd35857ff406a9d9ebbcf2" category="paragraph">如果包含事件記錄檔的磁碟區空間不足、稽核將無法將記錄轉換成記錄檔。這會導致用戶端存取失敗。您必須知道如何疑難排解與事件記錄磁碟區相關的空間問題。</block>
   <block id="1b3909a5eb4b9aa9e6e40bf80c7df603" category="list-text">如果包含事件記錄的磁碟區空間不足、SVM和叢集管理員可以移除部分事件記錄檔、或是增加磁碟區的大小、來解決空間問題。</block>
   <block id="fffccef64895f5358a60138ebafa400a" category="paragraph">如果包含事件記錄磁碟區的Aggregate已滿、則必須先增加Aggregate的大小、才能增加磁碟區的大小。只有叢集管理員可以增加集合體的大小。</block>
   <block id="0969e7125f51d9e50e032d76c96a4888" category="list-text">事件記錄檔的目的地路徑可透過修改稽核組態、變更為另一個磁碟區上的目錄。</block>
@@ -24331,7 +24322,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="69345c1025cecf9474288ec0be5a4113" category="inline-link-macro">如何檢視有關集合體與管理集合體的資訊</block>
   <block id="797c76467d08d0e1c414214141973ce2" category="list-text"><block ref="4ee878122d9d1410f219361424522f2d" category="inline-link-macro-rx"></block>。</block>
   <block id="56fd27eccbb9a7a5b65e8f140f9f8584" category="section-title">疑難排解與接移磁碟區相關的空間問題</block>
-  <block id="103dd08422fc65bb2c91b7e933141054" category="paragraph">如果任何包含儲存虛擬機器（SVM）暫存檔案的磁碟區空間不足、稽核將無法將記錄寫入暫存檔案。這會導致用戶端存取失敗。若要疑難排解此問題、您必須顯示磁碟區使用量的相關資訊、以判斷SVM中使用的任何暫存磁碟區是否已滿。</block>
   <block id="d14f6325a063fdf290250817d261fec5" category="paragraph">如果包含合併事件記錄檔的磁碟區有足夠空間、但由於空間不足、仍有用戶端存取失敗、則暫存磁碟區可能空間不足。SVM管理員必須聯絡您、以判斷內含SVM暫存檔案的暫存磁碟區是否空間不足。如果因暫存磁碟區空間不足而無法產生稽核事件、則稽核子系統會產生EMS事件。畫面會顯示下列訊息：<block ref="9e5b486193c8dbe8b218159e809a7453" prefix=" " category="inline-code"></block>。只有您可以檢視暫存磁碟區的相關資訊、SVM管理員無法檢視。</block>
   <block id="fe34dd4cff709f2b57a295da337017f8" category="paragraph">所有暫存磁碟區名稱都以開頭<block ref="dab9c19a370b6fe268c958a82aaf0a99" prefix=" " category="inline-code"></block> 接著是包含該暫存磁碟區的集合的 UUID 。以下範例顯示管理SVM上的四個系統磁碟區、這些磁碟區是在為叢集中的資料SVM建立檔案服務稽核組態時自動建立的：</block>
   <block id="854ef87a47a1089bf6eb634f8283a39e" category="paragraph">如果暫存磁碟區空間不足、您可以增加磁碟區的大小來解決空間問題。</block>
@@ -25996,7 +25986,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="25fef42d8a5265619da8d1ce9bef180d" category="sidebar">使用FlexClone檔案和FlexClone LUN來建立有效率的檔案和LUN複本</block>
   <block id="a9e38a0a0ee6eff4ce422540958b41ce" category="sidebar">使用qtree來分割FlexVol 您的等量磁碟區</block>
   <block id="83af8cc1c6f14be840cf31b49a93ebf8" category="sidebar">使用配額來限制或追蹤資源使用量</block>
-  <block id="d2abadaec09ef38036e971f230328976" category="sidebar">配額程序總覽</block>
   <block id="a9ed45fdce87ebb1b4b6881298137466" category="sidebar">特殊配額</block>
   <block id="12dba032347e1bcad9d67c218976df00" category="sidebar">配額如何搭配使用者和群組使用</block>
   <block id="8eb3f3a1d62b585852454040a6502b9f" category="sidebar">qtree變更如何影響配額</block>
@@ -33918,7 +33907,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="74aa775254d81d4c2a040788c79e7637" category="list-text">選用 <block ref="84d0ee3929a839d089aa0cd03b7631c7" category="inline-link-macro-rx"></block>：。</block>
   <block id="983799f6e14fdba500ee61fa09130b43" category="list-text">按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> 貯體名稱旁的、然後選取 * 編輯 * 。</block>
   <block id="7b6b2832c72560c8467695eaa6658094" category="list-text">在 * 設定 * 索引標籤中、按一下 <block ref="58d565a214601e9d4902eae84c80b895" category="inline-image-macro-rx" type="image"></block> * S2* 方塊。</block>
-  <block id="c902b5771ffd379a64d109db8742ce99" category="list-text">按一下 * 儲存 &gt; 儲存 VM* 、選取 NAS 就緒的儲存 VM 、按一下「設定」、然後按一下 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block> S3 下的。</block>
   <block id="c921c96d7cdfdad447cadf19285302af" category="list-text">選擇 * 設定 * 、然後按一下 <block ref="15e4db7d54738597deeb336dd26320a4" category="inline-image-macro-rx" type="image"></block> * 名稱對應 * （在 * 主機使用者和群組 * 下）。</block>
   <block id="b7231e594097059daa420d1757c20251" category="list-text">按一下 * 儲存空間 &gt; 鏟斗 * 、按一下 <block ref="2e4fa1d5403170da7db51a75f20a53a5" category="inline-image-macro-rx" type="image"></block> 所需 S3 貯體旁的、然後按一下 * 編輯 * 。</block>
   <block id="8c7bf11d0df635d30be3df80a3d9b3c2" category="list-text">確認使用者和群組已正確定義：按一下 * 儲存 &gt; 儲存 VM* 、按一下儲存 VM 、按一下 * 設定 * 、然後按一下 <block ref="58d565a214601e9d4902eae84c80b895" category="inline-image-macro-rx" type="image"></block> S3 下的。</block>
@@ -34968,7 +34956,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="6e1f03da360ff2f4db5aac0d5276ce61" category="paragraph"><block ref="6e1f03da360ff2f4db5aac0d5276ce61" category="inline-image-macro-rx" type="image"></block></block>
   <block id="359b644aba2aab59a223131b53a62845" category="inline-image-macro">SVM 災難恢復工作流程。這會顯示啟動目的地 SVM 的步驟。</block>
   <block id="861279e324c4fc8f79bfe1a5e0323dd1" category="paragraph"><block ref="861279e324c4fc8f79bfe1a5e0323dd1" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="c6ca5d4f7193632286d54d80d7ce8ebc" category="paragraph"><block ref="c6ca5d4f7193632286d54d80d7ce8ebc" category="inline-link-rx"></block></block>
   <block id="2a7e0c5b8e814e03c21799cbb69f2d18" category="paragraph"><block ref="2a7e0c5b8e814e03c21799cbb69f2d18" category="inline-link-rx"></block></block>
   <block id="e21360dd35f27084558acc5c49983870" category="paragraph"><block ref="e21360dd35f27084558acc5c49983870" category="inline-link-rx"></block></block>
   <block id="4d425048ca97c21b95d238d660671ad1" category="inline-image-macro">NetApp Volume Encryption 工作流程。這會顯示在磁碟區上啟用加密的步驟。</block>
@@ -37146,7 +37133,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="97c30e4ac53088a286f42d19ee9d9073" category="cell"><block ref="9f6e24bb776ac0c6a5b1dd6b9562153e" prefix="" category="inline-code"></block></block>
   <block id="503ad3e0a576a09c22b6feba7d66cf56" category="cell"><block ref="b1bbabc3962f067d7560bf21dde6f309" prefix="" category="inline-code"></block></block>
   <block id="cb134f392c4d0aa6710f4456a02bc961" category="cell"><block ref="3992f7b26c8265ef3170e116f4cecf97" prefix="" category="inline-code"></block></block>
-  <block id="a3c4ffc5b1586befd09ca0f9f2c53a4e" category="list-text">X50131A （ 2p ， 40G/100g/200g/400G 乙太網路控制器）</block>
   <block id="bb8917b538ccb8a7e1b5863be366fde2" category="list-text">X60132A （ 4p ， 10G/25G 乙太網路控制器）</block>
   <block id="84621d601f6b7bd1714240b0cfde2213" category="summary">從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。</block>
   <block id="5e8c9d081a4e7ca510072e15483c4571" category="doc">鎖定快照以防止勒索軟體攻擊</block>
@@ -37395,7 +37381,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="29114884fd90ee6cb3c35a1026d913a9" category="paragraph">如<block ref="0e91e110b7822cc1681ca0087eb3cb38" category="inline-link-macro-rx"></block>需詳細<block ref="e6ebf77095ce261f6b81f38fb7b5eed1" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="126041390f1f5d5ef0e21f98f85258fb" category="paragraph">如需其他選用參數的詳細<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>資訊，請參閱。</block>
   <block id="08ccf451e4e866faa7f249160e1fd9f2" category="paragraph">您可以使用網路介面modify命令、將防火牆原則套用至現有的LIF。如需有關本程序中所述命令<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>的詳細資訊，請參閱。</block>
-  <block id="61b546a79857943607ef9ccc17720cdb" category="paragraph">如<block ref="3291cd2d667e1ab92bcb51904664aac3" category="inline-link-macro-rx"></block>需詳細<block ref="6d1ff1fe379ad7135a1488c876be6574" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="6716e1c0cdfc047209c14040b38bd39f" category="admonition">驗證失敗設陷預設為停用。您必須使用<block ref="241030f4454e1568f70c97d2eb3d4759" prefix=" " category="inline-code"></block> 命令來啟用陷阱。如<block ref="75a41b6ab1e36ac70d344316aae055ec" category="inline-link-macro-rx"></block>需詳細<block ref="241030f4454e1568f70c97d2eb3d4759" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="aa772607cc5be6eb2486c55e9d4695e6" category="paragraph">如<block ref="fd4084eda58424b05c4c74abbcabefa2" category="inline-link-macro-rx"></block>需詳細<block ref="3b1343510b893361ba224919be3dd1eb" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="f276bd023818b6ee0387e4d32001f43e" category="paragraph">如<block ref="52ba95d6241f84e96738efb427dbae93" category="inline-link-macro-rx"></block>需詳細<block ref="014fbdab8ed751e10ca8b7fd551fd0d5" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
@@ -40651,7 +40636,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="5cfb7ad357062c1ebdf2e542ea9a6df0" category="sidebar">SnapMirror複寫工作流程</block>
   <block id="f5b4a3874246cc0a3a0967c54a253497" category="sidebar">建立 SnapMirror 目的地 Volume</block>
   <block id="57b7bc7771b226d9a1e67b1225567b56" category="sidebar">建立 SnapMirror 複寫工作排程</block>
-  <block id="f6a45f80926af1df625feb18ad3c1a67" category="sidebar">自訂 SnapMirror 複寫原則</block>
   <block id="2f0c83b9b49badf70effe4220333b595" category="sidebar">建立自訂 SnapMirror 複寫原則</block>
   <block id="c39cdf01800b6d5bcf671a5baa940783" category="sidebar">定義 SnapMirror 原則的規則</block>
   <block id="1e9da25f4a0a8950553271392a89dc01" category="sidebar">定義 SnapMirror 排程以在目的地上建立本機複本</block>
@@ -43495,9 +43479,7 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="f0f6ad502570d6c78a9b2ac657dec83e" category="paragraph">除了 PSK 之外，憑證還可用於 IPsec 驗證。在ONTAP 9.10.1 之前的版本中，僅支援使用 PSK 進行身份驗證。</block>
   <block id="063e01b31730ffc6c145a5ce7599a5a2" category="paragraph">您只需安裝並使用受支援的乙太網路卡。從ONTAP 9.16.1 開始，支援以下乙太網路卡：</block>
   <block id="ee1b7c8373ee00bcd4c9f88ac3fc6441" category="paragraph">ONTAP 9.17.1 增加了對以下乙太網路卡的支援：</block>
-  <block id="4a5de9d6a058ff88b7a7bc223e95c9ad" category="list-text">X50135A（2p，40G/100G乙太網路控制器）</block>
   <block id="12632730705c69a23b48c4bb255ea800" category="list-text">X60135A（2p，40G/100G乙太網路控制器）</block>
-  <block id="febb0fae6d703923bc7214e29cd41e3f" category="paragraph">以下平台支援 X50131A 和 X50135A 卡：</block>
   <block id="1bd3d2dde7c16728209289384c84aa60" category="paragraph">以下平台支援 X60132A 和 X60135A 卡：</block>
   <block id="b1b229cd5f527d47f0b97993c54937ff" category="paragraph">查看<block ref="41f66f34b3a905f864500c9319fdff8f" category="inline-link-macro-rx"></block>有關支援的平台和卡片的更多資訊。</block>
   <block id="e60612df1980adf168ee06b4e9868cd3" category="inline-link-macro">鏈路聚合組</block>
@@ -46110,7 +46092,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="f5b7ad3b857af41eec374957c177b5cf" category="list-text">在使用符合MetroCluster標準但未經MetroCluster驗證的交換器的MetroCluster IP 系統中，從ONTAP 9.7 回滾到 9.6 會造成乾擾，因為不支援使用ONTAP 9.6 及更早版本的系統。</block>
   <block id="b408b3dc571bcdaa4dd089c047bc3d38" category="paragraph">如果您嘗試還原到不支援 SVM 根磁碟區加密的ONTAP版本，系統將發出警告並阻止復原。</block>
   <block id="2e3f0fba0ff6b32abc16d7f2fc3ca6ac" category="paragraph">當主集群宕機或隔離時，會觸發自動非計劃故障轉移 (AUFO) 操作。ONTAP Mediator 偵測故障轉移發生時，並執行自動非計劃故障轉移到輔助叢集。 此操作只能在ONTAP中介器的協助下執行。輔助集群將轉換為主集群並開始為客戶端提供服務。此作業僅能在 ONTAP Mediator 的協助下執行。</block>
-  <block id="0e9987b557a618ed08becdbaa7d3ed71" category="paragraph">從ONTAP 9.16.1 開始，您可以為 NVMe/TCP 連線設定 TLS 安全通道。您可以使用系統管理員或ONTAP CLI 新增啟用了 TLS 的新 NVMe 子系統，或為現有的 NVMe 子系統啟用 TLS。ONTAP不支援 TLS 硬體卸載。</block>
   <block id="8190e257e3b4a58b9a80396c7e1cfdd3" category="paragraph">這<block ref="96cf306e4040200feb7a7bf5e785fe7b" prefix=" " category="inline-code"></block> 選項指的是您要還原到的ONTAP版本。只需要ONTAP版本的前兩個值。例如，如果您要從 9.14.1 版本回溯到 9.13.1 版本，則正確的值為：<block ref="96cf306e4040200feb7a7bf5e785fe7b" prefix=" " category="inline-code"></block> 選項為 9.13。</block>
   <block id="5259c1ef00b0e620c30d0eb43dd56aa9" category="paragraph">使用ONTAP CLI、 SP或BMC重啟。</block>
   <block id="37982d39d5ad7024147ce610205a91b9" category="list-text">重啟SP或BMC：</block>
@@ -46162,7 +46143,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="fde34246eab48caf30e3085c8480aeae" category="list-text">遷移到 Vault 目標SnapMirror磁碟區必須執行重新同步才能重新啟動保護。需要重新同步儲存庫，因為遷移會在遷移 SVM 之間建立一個新的基線，該基線比儲存庫之前的基線更新。執行重新同步操作會重新啟動儲存庫，同時也會刪除比目前儲存庫基準更新的任何數據，特別是遷移期間產生的快照。</block>
   <block id="2387799aae311c35f9cbefc08f3bae06" category="summary">如果您的叢集上配置了SnapMirror級聯關係，則可能需要在升級前停用長期保留快照。</block>
   <block id="33104e45d4ee037b1df9c6c463877526" category="paragraph">在級聯磁碟區的關係中， ONTAP 9 的所有版本僅支援在級聯的最終SnapMirror目標磁碟區上保留長期快照。在級聯備份的任何中間磁碟區上啟用長期保留快照會導致備份和快照遺失。</block>
-  <block id="d12d0497202e64a394d7a5e2cee1b01b" category="paragraph">如果您在級聯的任何中間磁碟區上啟用了長期保留快照，且設定不受支持，請聯絡技術支援並參考下列連結： https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_ NetApp知識庫：不支援啟用長期保留 (LTR) 快照的磁碟區級聯^] 以取得協助。</block>
   <block id="3da7c7c0bb376449a4f790902b525361" category="paragraph">在從允許您在級聯中間磁碟區上啟用長期保留快照的 ONTAP版本升級到阻止該功能的 ONTAP版本之前，您需要停用長期保留快照，以避免錯過備份和快照。</block>
   <block id="d654691f967528fb4ffe8ca8d755db1a" category="list-text">長期保留快照配置在「A &gt; B &gt; C」 SnapMirror級聯中的「B」磁碟區上，或配置在更大的級聯中的另一個中間SnapMirror目標磁碟區上。</block>
   <block id="3785bb6a833e582becd87a1ab3019808" category="list-text">長期保留快照由應用於SnapMirror策略規則的計畫定義。此規則不會從來源磁碟區複製快照，而是直接在目標磁碟區上建立快照。</block>
@@ -47656,7 +47636,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="d3cd17653f3da7da964b8061bc333331" category="paragraph">您可以將現有 LUN 和命名空間從配置為本機主動多路徑的 SVM 移至配置為主動-主動多路徑的 SVM。如果將 LUN 或命名空間移至新的 SVM，則必須先將主機重新對應到新的 SVM，然後才能開始提供資料服務。</block>
   <block id="3643b6a786555903dc499aa281695d80" category="admonition">如果您的叢集執行 ONTAP 9.19.1 或更新版本、並同時包含 FAS 和 AFF 系統、則所有系統都應使用本機主動式多重路徑組態。不建議在同一個叢集中對 FAS 系統使用本機主動式組態、而對 AFF 系統使用主動-主動式組態。</block>
   <block id="95dc16afc99c1f1cbc848279980c5d00" category="inline-link-macro">ASA 系統上的自動 iSCSI LIF 容錯移轉</block>
-  <block id="ae5113a51c636cac5e7e6677b33e4061" category="list-text">深入瞭解<block ref="1974aa1419798d14fdce703af01f1f31" category="inline-link-macro-rx"></block>。</block>
   <block id="3b2d690e20c8633158879d2817088632" category="inline-link-macro">ASA r2 系統上的自動 iSCSI LIF 容錯移轉</block>
   <block id="2655120dfa77b377870a764aa34770d6" category="list-text">深入瞭解<block ref="3568de4be0f82609f253699bd07c36ca" category="inline-link-macro-rx"></block>。</block>
   <block id="c7e9b5353c80d9bb04eee79cbb25bc8c" category="summary">您可以設定 FC 和 FC-NVMe SAN 主機，使其透過一個或多個光纖通道連接到 HA 對；或者，根據您的 ONTAP 版本，您可以直接將 FC 或 FC-NVMe SAN 主機連接到 HA 對，而無需使用交換器。</block>
@@ -48937,7 +48916,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="054052039bfa6bb9b4daf45b50861291" category="list-text"><block ref="054052039bfa6bb9b4daf45b50861291" category="inline-xref-macro-rx"></block></block>
   <block id="9fcb94e32c5760de0a8c5457936185d5" category="paragraph">AFF 系統提供雙主動式多重路徑與自動 LIF 容錯移轉功能，讓所有 SAN 路徑保持最佳化的雙主動式狀態，確保主機 I/O 在容錯移轉期間能立即持續運作。 </block>
   <block id="29316a40956e411f0354bde35a4ad12e" category="inline-xref-macro">FLI 中的 iSCSI 支援</block>
-  <block id="4b56ee616077b9ab0530fdf2341d42c2" category="list-text"><block ref="4b56ee616077b9ab0530fdf2341d42c2" category="inline-xref-macro-rx"></block></block>
   <block id="09116f57cb69822cee7d9d4506c513fa" category="paragraph">為外部 LUN 匯入 (FLI) 新增 iSCSI 支援，讓使用者能夠使用現有的 iSCSI 連線功能，以最小的中斷將區塊資料從第三方儲存系統移轉至 ONTAP。 </block>
   <block id="746d9863727620f27f335bda43fd0ff9" category="inline-xref-macro">S3 條件寫入與刪除</block>
   <block id="33c9acb685ed3cdc6c77045abec8c8e1" category="list-text"><block ref="33c9acb685ed3cdc6c77045abec8c8e1" category="inline-xref-macro-rx"></block></block>
@@ -49218,5 +49196,32 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="caa6941cc670ae7bf2ade1c4fb560921" category="list-text"><block ref="caa6941cc670ae7bf2ade1c4fb560921" category="inline-link-macro-rx"></block></block>
   <block id="d3008fc5d3784506fdae96c5c6c4bbb3" category="paragraph">深入瞭解 <block ref="6e5e9a57d5633d1a6b78cfd2abd93a91" prefix=" " category="inline-code"></block>，請參閱 <block ref="6d34713ad195829950dc7de25b26cc21" category="inline-link-macro-rx"></block>。</block>
   <block id="38d916e198bbe19eae68117d1a5d5c06" category="inline-link-macro">security ssh publickey show -vserver &lt;vsname&gt; -host-key-algorithm &lt;algorithm&gt; 命令</block>
-  <block id="6286f2f82c23cd0cbf3d40f1b0d1a399" category="list-text">從 ONTAP 9.19.1 開始，管理者可以使用 <block ref="e07e196d523e45b94de02018aff7a0bb" category="inline-link-macro-rx"></block> 來檢視 ONTAP 主機金鑰指紋。這可讓管理者驗證此指紋是否與 ONTAP 中儲存的指紋相符。</block>
+  <block id="2de4965fc4daf9cf963e42c825a75049" category="list-text">Oracle Linux 10.1 和 9.8</block>
+  <block id="03e3f38d640d4a916c98f165d25ba54c" category="paragraph"><block ref="58d115ba35a35a8b14a460336d9789ec" prefix="" category="inline-code"></block></block>
+  <block id="accee56c578f321127ba1bf32c5bd782" category="list-text">逾時值是指建立與 KMIP 伺服器連線所需的時間，以秒為單位。如果指定為 0，則沒有逾時限制，連線請求可以無限期等待。如果指定 1 到 60 之間的任何值，則在指定的秒數內無法建立與 KMIP 金鑰伺服器的連線時，連線請求將逾時。</block>
+  <block id="e330e6613c2f922a0845040f8440ed03" category="list-text">如果修改使用者名稱，系統會提示您輸入新密碼。</block>
+  <block id="2f1f5e0b47a6b7d77cf2f923fe630726" category="list-text">如果在叢集登入提示字元下執行該命令，<block ref="ff290f247e82063dfaf6618fab82f830" prefix=" " category="inline-code"></block>則預設使用目前叢集的管理 SVM。您必須是叢集管理員才能修改外部金鑰管理程式伺服器屬性。</block>
+  <block id="ee8a44f86431a9efe764abd1dd638999" category="list-text">修改 SVM 的外部金鑰管理程式伺服器屬性：</block>
+  <block id="e803314c6722cd858aaa2de1094c5cc7" category="paragraph"><block ref="ff25e2350e53f10d22adcf8b2e757db9" prefix="" category="inline-code"></block></block>
+  <block id="dce81498087d6b8a1e99c1512ca2f790" category="list-text">如果在 SVM 登入提示字元下執行該命令，<block ref="cd1001994f72499b4e03299b81ba8e2d" prefix=" " category="inline-code"></block>則預設使用目前 SVM。您必須是叢集或 SVM 系統管理員才能修改外部金鑰管理程式伺服器屬性。</block>
+  <block id="acd913a5269fd9ee68854d6f9c7fc55c" category="summary">當接移 Volume 或包含稽核事件日誌的 Volume 空間不足時，可能會出現問題。如果空間不足，則無法建立新的稽核記錄。啟用稽核保證後，這可能會阻止用戶端存取資料，並導致存取要求失敗。您應該了解如何疑難排解並解決這些 Volume 空間問題。</block>
+  <block id="138a8e101f5d7cf82df5bd21bde5d66d" category="paragraph">啟用稽核保證後，將出現此行為。如需更多資訊，請參閱 <block ref="57c8579b422ceb48503640224a0bd73f" category="inline-link-macro-rx"></block>。</block>
+  <block id="e1592ce43850fbb153b84eb221212273" category="paragraph">如果包含事件日誌檔案的 Volume 空間不足，稽核功能將無法將日誌記錄轉換為日誌檔案。啟用稽核保證後，這將導致用戶端存取失敗。您必須了解如何排查與事件日誌 Volume 相關的空間問題。</block>
+  <block id="934fa357e3a439271ceb1a10250f0147" category="paragraph">如果儲存設備虛擬機器 （SVM） 中任何包含接移檔案的 Volume 空間不足，稽核功能將無法將日誌記錄寫入接移檔案。啟用稽核保證後，這將導致用戶端存取失敗。若要解決此問題，您需要透過顯示 Volume 使用情況資訊來確定 SVM 中使用的任何接移 Volume 是否已滿。</block>
+  <block id="0ad9ff0cfa3ca4cff02a15582411c8f5" category="paragraph">深入瞭解 <block ref="6d1ff1fe379ad7135a1488c876be6574" prefix=" " category="inline-code"></block>，請參閱 <block ref="25bce3dc5a30e48459cec79ee6f29cbb" category="inline-link-macro-rx"></block>。</block>
+  <block id="f55ab61a8f9ae4e3994c84a0aa6df7d5" category="list-text">X50131A（IO Module，2PT，100/200GbE）</block>
+  <block id="37f200a91111d9882200c299a9131df4" category="list-text">X50131B（IO 模組，2PT，200/400GbE，B）</block>
+  <block id="e7faec76700aea2af0e0efa610af46ab" category="list-text">X50135A （IO 模組，2PT，100GbE，加密）</block>
+  <block id="40d4abacbe7db24e83d83b9a1f586ade" category="paragraph">X50131A、X50131B 和 X50135A 卡支援以下平台：</block>
+  <block id="5d516e30122cf168cf5e2ff6de42baf4" category="paragraph">從 ONTAP 9.16.1 開始，您可以為 NVMe/TCP 連線設定 TLS 安全的通道。您可以使用 System Manager 或 ONTAP CLI 新增啟用 TLS 的新 NVMe 子系統，或為現有 NVMe 子系統啟用 TLS。從 ONTAP 9.19.1 開始，支援 TLS 硬體卸載。</block>
+  <block id="a71de286ec74ecfae1e56e7657842a2f" category="list-text"><block ref="a71de286ec74ecfae1e56e7657842a2f" category="inline-link-macro-rx"></block></block>
+  <block id="b17d25196e38e68944c90a6536367ca6" category="list-text">按一下「Storage &gt; Storage VMs」，選取支援 NAS 的儲存設備 VM，按一下「Settings」，然後在「Protocols &gt; S3」下，按一下 S3 下方的 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block>。</block>
+  <block id="44699e5e6e6032196b4cb71d8c989f34" category="list-text">按一下 *Cluster &gt; Storage VMs*，選擇支援 NAS 的儲存設備虛擬機器，按一下 *Settings*，然後在 *Protocols &gt; S3* 下按一下 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block>。</block>
+  <block id="e11331ff1eeb9cfa654f417922a297c6" category="list-text">如果您需要再次取得憑證資訊：按一下 *Cluster &gt; Storage VMs*，選擇儲存設備 VM，然後按一下 *Settings*。</block>
+  <block id="4c968336e2b5e79de3e31ae7956951f6" category="list-text">深入瞭解<block ref="9f23ddd0b03507a080c4b38a88267124" category="inline-link-macro-rx"></block>。</block>
+  <block id="bf18869fff5dcaec5e30f0245c7a98be" category="list-text">從 ONTAP 9.19.1 開始，管理者可以使用 <block ref="54234680f092ec7473fd411d9c14e9c9" category="inline-link-macro-rx"></block> 來檢視 ONTAP 主機金鑰指紋。這可讓管理者驗證此指紋是否與 ONTAP 中儲存的指紋相符。</block>
+  <block id="d4bdeec6a8be5cfb68700fe8e79cf346" category="paragraph">如果您的組態不受支援，且已在級聯的任何中間 Volume 上啟用長期保留快照，請聯絡技術支援並參考 <block ref="b75f73b0359ea06ce0481d0230f9ec08" category="inline-link-macro-rx"></block> 以取得協助。</block>
+  <block id="5b9074b096aeb918ffa51a926265b419" category="sidebar">了解配額</block>
+  <block id="f1671437514826b9255a5056e17af5f9" category="sidebar">了解配額和 qtree</block>
+  <block id="6e512211beb8fd6a952723c4e1c7368b" category="sidebar">配額管理</block>
 </blocks>
