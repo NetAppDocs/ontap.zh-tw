@@ -2417,7 +2417,6 @@
   <block id="14bea9d2a7556213e096936a8ab22fa1" category="list-text">建立LIF：</block>
   <block id="c165581cf6f251b06e053c12c69800d7" category="paragraph"><block ref="ad03a5bb5cedb94d031bf02f4a25b866" prefix="" category="inline-code"></block></block>
   <block id="efbf4af8893ac9f0a9a1b921f8477513" category="list-text">服務原則必須是預設資料檔案或包含資料NFS網路介面服務的自訂原則。</block>
-  <block id="7fb138d1f22e1bed79740c71932d46f9" category="list-text">。<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block> 參數接受預設為空白的清單。何時<block ref="61c4ea0665eded0925f4c1c1b212936b" prefix=" " category="inline-code"></block> 新增的值是 LIF 只能在支援 roce 卸載的連接埠上設定、影響 bot LIF 移轉和容錯移轉。</block>
   <block id="eb6296a7b46cafff2ac086286cec3d8f" category="section-title">修改LIF</block>
   <block id="5e42f034b95506205e935487fe3ec0e3" category="list-text">選中*使用roce Ports*以通過RDMA啓用NFS或取消選中此框以禁用NFS。如果網路介面位於具備RoCE功能的連接埠、您會看到*使用roce連接埠*旁邊的核取方塊。</block>
   <block id="d3358c36fc638d2c6047809cf39d2271" category="list-text">視需要修改其他設定。</block>
@@ -32227,7 +32226,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="ac5f42142a791ebb4b40b5edda4bbd8e" category="list-text"><block ref="ac5f42142a791ebb4b40b5edda4bbd8e" category="inline-link-rx"></block></block>
   <block id="ace4a25d18f9f1ce0a6624fd3185b655" category="list-text"><block ref="ace4a25d18f9f1ce0a6624fd3185b655" category="inline-link-rx"></block></block>
   <block id="a6574960243cb29b662edb520273a288" category="list-text">當您選取 *NFS 、 SMB/CIFS 、 S2* 時、您可以選擇 * 使用 roce 連接埠 * 。選取「*使用roce連接埠*」核取方塊。</block>
-  <block id="fde8c09ed0226827e026f3088edffb26" category="list-text">選取儲存VM和主節點。指派一個 ** 名稱 ** 、 ** IP 位址 ** 和 ** 子網路遮罩 ** 。</block>
   <block id="a1935efe42a6d300dd6c6dcdf420583f" category="list-text">輸入 IP 位址和子網路遮罩後、 System Manager 會將廣播網域清單篩選為具有具備 ROCE 功能連接埠的網域。選取廣播網域。您可以選擇性地新增閘道。</block>
   <block id="d89fbbd996c55b16090f7f5fad671e0e" category="list-text">檢查是否支援RDMA。瀏覽至*「網路」&gt;「乙太網路連接埠」*、然後在群組檢視中選取適當的節點。展開節點時、請查看指定連接埠的 * RDMA 傳輸協定 * 欄位：值 * roce* 表示支援 RDMA ；破折號（ * - * ）表示不支援。</block>
   <block id="0d94480cd29b5e681e67f682be9ab0e2" category="list-text">若要新增VLAN、請選取*+ VLAN*。選取適當的節點。在 *Port* 下拉式功能表中、如果可用連接埠支援 RDMA 、則會顯示文字 * roce Enabled* 。如果不支援 RDMA 、則不會顯示任何文字。</block>
@@ -33669,8 +33667,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="24f6d56b796634e212139aa1db740552" category="paragraph">您必須在選項中的 SVM 名稱之後輸入一個冒號（：）<block ref="14c9dbe62cc088e651905add5647a8ea" prefix=" " category="inline-code"></block> 。</block>
   <block id="5f751c76c4e4eef17e52fc585dbe15c6" category="paragraph">請檢查是否有下列情況、以避免轉換成功：</block>
   <block id="f340ca3685c301194d845ffb8ef7b48e" category="list-text">FlexVol Volume 是使用 7MTT （ ONTAP 9.7 ）從 7-Mode 轉換而來。</block>
-  <block id="4e1c2885b0cbfa50f6bed28b7a02c8bb" category="list-text">要轉換的 FlexVol Volume 所在的 SVM 目前使用 SVM DR 。</block>
-  <block id="b77c043263b01dd5dffd766c253063fd" category="list-text">NetApp FlexClone 磁碟區存在、 FlexVol 磁碟區是父磁碟區。正在轉換的磁碟區不能是父磁碟區或複製磁碟區。</block>
   <block id="08ac0ddf29672f52564d28a7e349e561" category="list-text">Volume 是 NetApp FlexCache 原始 Volume 。</block>
   <block id="820a78f43f188f609ae6ae13a7c54a00" category="list-text">實現儲存效率。這些必須停用、且可在轉換後重新啟用。</block>
   <block id="dfc79c1dce62d0ebd04701dfa3f13fbd" category="list-text">Volume 是 SnapMirror 關係的來源、目的地尚未轉換。</block>
@@ -47335,24 +47331,16 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="3b410efbd5f63a911aebe8af2d370805" category="list-text">僅卸載 AES-GCM 密碼套件（TLSv1.2/TLSv1.3、128/256 位元）。</block>
   <block id="8872551887f70b5cc2558349d1f75275" category="list-text">TLS 握手階段不會被卸載。只有握手後的資料階段會被卸載。</block>
   <block id="31918cd39bc0f5372cee40be75f1bdc0" category="list-text">網路邏輯介面（LIF）遷移到不具備卸載功能的連接埠會導致自動軟體回退。</block>
-  <block id="e8b4d0464e162ab8f294fd5dd7419073" category="paragraph">對於 TLS 卸載連線，TLS 加密作業通常會略過軟體，並由具備卸載功能的 NIC 處理。如果與此連線相關的 LIF 移轉至不具備 TLS 卸載功能的網路連接埠，加密作業會退回軟體，並由系統核心處理。</block>
   <block id="f4b448a67530e9e455eb1efa5b6638c3" category="list-text">管理介面（HTTPS、REST API）不受此設定的影響。</block>
   <block id="2a3022fac3408e3b3cf9a7fcfd526e34" category="list-text">TLS 硬體卸載設定是叢集範圍內的。</block>
-  <block id="53403c0c03fa820a7866bb4e9cea317e" category="paragraph">TLS 硬體卸載需要支援的網路卡。支援下列網路卡：</block>
   <block id="6ed83b48824ce8475314525a8072d55d" category="list-text">4 埠 CX7 10/25 GbE</block>
-  <block id="8a185695035bac525612ed11bc34a34d" category="list-text">2 埠 CX6-Dx 40/100 GbE</block>
   <block id="ac75d0f709657733b95e3796ba5c5ec8" category="list-text">2 埠 CX7 40/100 GbE</block>
-  <block id="ba81d1c0c398838cc4e2687a88b08f40" category="list-text">2 埠 CX7 40/100/200</block>
-  <block id="c3e0fb7abc3005aa0a5b67759629206b" category="paragraph">以下 AFF 平台支援 4 埠 CX7 10/25 GbE、2 埠 CX6-Dx 40/100 GbE 和 2 埠 CX7 40/100 GbE 網路卡：</block>
-  <block id="1e5912c26fc09da0321007e0a554323a" category="paragraph">以下 AFF 和 FAS 平台支援 4 埠 2 埠 CX6-Dx 40/100 GbE、2 埠 CX7 40/100 GbE 和 2 埠 CX7 40/100/200 GbE 卡：</block>
-  <block id="043294bc320eb3ade6a6259a3be09a5f" category="list-text">AFF A70-90</block>
   <block id="cb6e1fcae385d9b3ef55b4a4fa379d3d" category="list-text">所有節點必須執行 ONTAP 9.19.1 或更新版本。</block>
   <block id="49920ff6a5dc951c026b18665a1d0644" category="section-title">啟用或停用 TLS 卸載</block>
   <block id="bc47a19510d5d2386c6bf122bf861c6e" category="list-text">檢視目前的 TLS 卸載狀態：</block>
   <block id="5a1db7dd2463eaf6d202be1f374a6aba" category="paragraph">此指令顯示叢集範圍內的 TLS 卸載設定：</block>
   <block id="ae9b6c2baef405490041264cfcb9f973" category="list-text">啟用或停用 TLS 卸載：</block>
   <block id="3466e0126b241815fb12eb494bb9319e" category="paragraph">此命令用於啟用或停用新連線的 TLS 資料階段硬體卸載。在啟用 TLS 卸載功能之前建立的現有連線，只有在刪除並重新建立這些連線後才會卸載。</block>
-  <block id="eb891e43598132f9a8fedb63dcc108a5" category="paragraph">啟用 TLS 卸載時，必須指定介面：</block>
   <block id="61789c6adb45e9f3b230601daa2aad37" category="inline-link-macro">security config show</block>
   <block id="ba4d2ab12bc88ef6399451aa21331c82" category="list-text"><block ref="ba4d2ab12bc88ef6399451aa21331c82" category="inline-link-macro-rx"></block></block>
   <block id="785355defe297906c13c09f5b9a932ee" category="inline-link-macro">security config modify</block>
@@ -49224,4 +49212,42 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="5b9074b096aeb918ffa51a926265b419" category="sidebar">了解配額</block>
   <block id="f1671437514826b9255a5056e17af5f9" category="sidebar">了解配額和 qtree</block>
   <block id="6e512211beb8fd6a952723c4e1c7368b" category="sidebar">配額管理</block>
+  <block id="60408242a68f5e195825940f575b739b" category="section-title">設定 ONTAP S3 雲端分層以供 FabricPool 使用</block>
+  <block id="1db7f2e08acb403b68f5f37d462d367e" category="section-title">變更 ONTAP S3 FQDN 以進行 FabricPool 分層</block>
+  <block id="bfa211ab8df303a47af4b38b9950aa10" category="paragraph">當您需要對網路進行變更（包括 FQDN 更新）時，應變更用於 FabricPool 分層的 ONTAP S3 FQDN，以避免網路中斷。</block>
+  <block id="3fe6a9a4e21727798d8c728278bd8f5a" category="list-text">關閉 FabricPool 分層的憑證驗證：</block>
+  <block id="02d2445aaec76c57f449eec7d6341a15" category="paragraph"><block ref="8c445ea49641d2223258da11253ea12d" prefix="" category="inline-code"></block></block>
+  <block id="fb644136bd1e83f9f7d0521b29e5ce84" category="list-text">更改 ONTAP S3 伺服器的 FQDN：</block>
+  <block id="ed86e0e21384d15537335f1ad7b0cdf8" category="paragraph"><block ref="93b102a620a958f1e36fe28a0780c328" prefix="" category="inline-code"></block></block>
+  <block id="8f1a186b17d490e5f9dcb504df7619da" category="inline-link-macro">續簽證書</block>
+  <block id="5d73bdfa2f6791eb19ca143801668192" category="list-text">（可選）如果需要憑證驗證且主機名稱已更改，<block ref="a297703e4db0afd9eadb0171aa75a70c" category="inline-link-macro-rx"></block>。</block>
+  <block id="1c4ccce32fbf4fa786c3125de5c53d79" category="list-text">使用新的 FQDN 更新 FabricPool 分層：</block>
+  <block id="f3442d36d209f6b20af6f416bbdfd9e2" category="paragraph"><block ref="33933d4e097eb17378635ceb49eee0ff" prefix="" category="inline-code"></block></block>
+  <block id="541964295e2a41bc777a41892dffe683" category="list-text">驗證所有物件儲存及其鏡像（如有）是否可在 FabricPool 層中使用：</block>
+  <block id="94a78d4e1875e8ddd9f7c97782b912f3" category="paragraph"><block ref="cf5a102ecf420088c1e8ad3a72cc725d" prefix="" category="inline-code"></block></block>
+  <block id="fa931ef1d1200b8682f89a2b3f04bc4f" category="paragraph">如需更多資訊，請參閱 <block ref="1d7ca4ba5508a4275b98e690fd217f47" category="inline-link-macro-rx"></block>。</block>
+  <block id="28d2ee701d61423ffb5733157d4ab4a1" category="list-text">對其他物件儲存重複這些步驟。</block>
+  <block id="df2c8fb66d5771010ea3b9742c1b00c5" category="list-text">如果您在 ONTAP S3 伺服器上續訂了憑證，並且在 FabricPool 分層上也續訂了憑證，請重新啟用憑證驗證：</block>
+  <block id="47cc2bede55fad70d2504b34bf9a8358" category="paragraph"><block ref="c16028440ab06e282e6223c95bfba870" prefix="" category="inline-code"></block></block>
+  <block id="27877bcc17ed2faf67f5505dcf36769a" category="inline-link-macro">將 FlexVol Volume 轉換為 SVM-DR 來源上的 FlexGroup Volume</block>
+  <block id="8b9453219b90e36f782e6d74deb26e55" category="list-text">在 ONTAP 9.10.1 之前的版本中，待轉換的 FlexVol Volume 所在的 SVM 目前使用 SVM-DR。從 ONTAP 9.10.1 開始，您可以<block ref="54481151238b915e30fab83b23cc87e3" category="inline-link-macro-rx"></block>。</block>
+  <block id="cb66614eef549101ebae161ceae28933" category="list-text">存在 NetApp FlexClone® Volume，且該 FlexVol Volume 為父 Volume。正在進行轉換的 Volume 不能是父 Volume 或 Clone。</block>
+  <block id="924b1c0a1afe1164dcdb436aef801a8b" category="paragraph">對於啟用 TLS 卸載的連線，TLS 加密操作通常會繞過軟體，由支援卸載功能的網路卡處理。如果與此連線關聯的 LIF 移轉至不具備 TLS 卸載功能的網路連接埠，則加密操作將回退至軟體，由系統核心處理。</block>
+  <block id="678ede5d83222a3defceeab3ecbf7cf8" category="paragraph">TLS 硬體卸載需要支援的網路卡。下表列出各平台支援的網路卡。</block>
+  <block id="d91d2d50a8d48ba66d571b36d6e91e20" category="cell">平台系列</block>
+  <block id="ca8928f278004699eecfd392bd753580" category="cell">支援的網路卡</block>
+  <block id="d25c852b59cc221694ffd2f44b7a60f8" category="cell">AFF 和 FAS</block>
+  <block id="68466f4ca7d2b49a1499db65432939a2" category="cell">AFF A20、AFF A30、AFF A50、AFF C30、AFF C60、FAS50</block>
+  <block id="7d7dfef94c18c12c68eb1450015722ed" category="list-text">2 埠 CX6-DX 40/100 GbE</block>
+  <block id="89562626297943380f51a110bb05760b" category="cell">AFF A70、AFF A90、AFF C80、FAS70、FAS90、AFF A1K</block>
+  <block id="816de0d4be9f4f3ee164ea22f4df90a7" category="list-text">2 埠 CX7 40/100/200/400 GbE</block>
+  <block id="042c6fd434b5217a4086d7e2ad6822fa" category="cell">ASA A20、ASA A30、ASA A50、ASA C30</block>
+  <block id="314dd358a8539d70535adf374e8b37d3" category="cell">ASA A70、ASA A90、ASA A1K</block>
+  <block id="03a70507b7d040ed5990e474d0b55688" category="cell">AFX 1K</block>
+  <block id="23b43ede4557b73e6fa354124a73ba91" category="cell">AFX 2K</block>
+  <block id="d19041aa9c8295e4c367cd926b41373d" category="admonition">在 ASA 系統上，TLS 硬體卸載僅適用於 NVMe/TCP 流量。NFS over TLS、FabricPool 和 S3 不支援於 ASA 平台。</block>
+  <block id="736e235b19e52edff4ed990d79e62f60" category="admonition">在 AFX 平台上，TLS 硬體卸載支援 NFS 和 S3 前端流量類型。AFX 平台不支援 NVMe/TCP，因為 AFX 不支援 SAN/區塊協定。</block>
+  <block id="cb17a18ac1c63a3d9c4bd533f4db0ebf" category="admonition">每個 RDMA 連接埠最多可以有 127 個 LIF。當增加更多 LIF，或當 LIF 故障轉移到超過該限制的連接埠時，新新增的 LIF 或故障轉移的 LIF 將無法處理 RDMA 流量。</block>
+  <block id="f73946896696e2b01a16305cdfde8b9f" category="list-text">選擇儲存設備虛擬機器和主節點。指定*名稱*、*IP 位址*和*子網路遮罩*。</block>
+  <block id="be1376ff9d05a0f1cfca8a7cbc06eb70" category="list-text">此<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block>參數接受一個列表，預設值為空。將<block ref="61c4ea0665eded0925f4c1c1b212936b" prefix=" " category="inline-code"></block>新增為參數值後，LIF 只能在支援 RoCE 卸載的連接埠上設定，這會影響 LIF 移轉和容錯移轉。</block>
 </blocks>

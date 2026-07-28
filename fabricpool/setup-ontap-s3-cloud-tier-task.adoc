@@ -33,6 +33,11 @@ NOTE: 如果叢集 LIF 資源飽和，可能會導致效能降低。為了避免
 .關於這項工作
 支援以更新版本的功能、在更新版本的更新版本中、啟用Ss3伺服器的負載平衡ONTAP 功能。ONTAP當伺服器的主機名稱解析為多個IP位址時ONTAP 、即可建立用戶端連線、並傳回所有IP位址（最多16個IP位址）。建立連線時、會以循環配置資源的方式來取用IP位址。
 
+
+
+[[set-up-the-ontap-s3-cloud-tier-for-fabricpool]]
+== 設定 ONTAP S3 雲端分層以供 FabricPool 使用
+
 .步驟
 您可以使用ONTAP 支援功能的支援功能、將S3設定為FabricPool 適用於各種功能的雲端層ONTAP 、以供使用。ONTAP
 
@@ -103,6 +108,41 @@ cluster1::> storage aggregate object-store config create
 
 --
 ====
+
+
+[[change-the-ontap-s3-fqdn-for-fabricpool-tiering]]
+== 變更 ONTAP S3 FQDN 以進行 FabricPool 分層
+
+當您需要對網路進行變更（包括 FQDN 更新）時，應變更用於 FabricPool 分層的 ONTAP S3 FQDN，以避免網路中斷。
+
+.步驟
+. 關閉 FabricPool 分層的憑證驗證：
++
+`storage aggregate object-store config modify -object-store-name <object store> -is-certificate-validation-enabled false`
+
+. 更改 ONTAP S3 伺服器的 FQDN：
++
+`vserver object-store-server modify -vserver <vserver> -object-store-server <new fqdn>`
+
+. （可選）如果需要憑證驗證且主機名稱已更改，link:../s3-config/create-install-ca-certificate-svm-task.html["續簽證書"]。
+. 使用新的 FQDN 更新 FabricPool 分層：
++
+`storage aggregate object-store config modify -object-store-name <object_store_name> -server <new fqdn>`
+
+. 驗證所有物件儲存及其鏡像（如有）是否可在 FabricPool 層中使用：
++
+`storage aggregate object-store show -fields object-store-availability,mirror-type,is-mirror-degraded`
+
++
+如需更多資訊，請參閱 link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-object-store-show.html#description["儲存聚合物件儲存顯示"^]。
+
+. 對其他物件儲存重複這些步驟。
+. 如果您在 ONTAP S3 伺服器上續訂了憑證，並且在 FabricPool 分層上也續訂了憑證，請重新啟用憑證驗證：
++
+`storage aggregate object-store config modify -object-store-name <object store> -is-certificate-validation-enabled true`
+
+
+
 [[create-lif]]
 .相關資訊
 * link:../smb-config/create-lif-task.html["為 SMB 建立 LIF"]

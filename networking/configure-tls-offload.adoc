@@ -19,48 +19,81 @@ summary: 設定 TLS 卸載設定
 * TLS 握手階段不會被卸載。只有握手後的資料階段會被卸載。
 * 網路邏輯介面（LIF）遷移到不具備卸載功能的連接埠會導致自動軟體回退。
 +
-對於 TLS 卸載連線，TLS 加密作業通常會略過軟體，並由具備卸載功能的 NIC 處理。如果與此連線相關的 LIF 移轉至不具備 TLS 卸載功能的網路連接埠，加密作業會退回軟體，並由系統核心處理。
+對於啟用 TLS 卸載的連線，TLS 加密操作通常會繞過軟體，由支援卸載功能的網路卡處理。如果與此連線關聯的 LIF 移轉至不具備 TLS 卸載功能的網路連接埠，則加密操作將回退至軟體，由系統核心處理。
 
 * 管理介面（HTTPS、REST API）不受此設定的影響。
 * TLS 硬體卸載設定是叢集範圍內的。
 
 
 .支援的網路卡和平台
-TLS 硬體卸載需要支援的網路卡。支援下列網路卡：
+TLS 硬體卸載需要支援的網路卡。下表列出各平台支援的網路卡。
 
+[cols="1,2,3a"]
+|===
+| 平台系列 | 平台 | 支援的網路卡 
+
+
+| AFF 和 FAS | AFF A20、AFF A30、AFF A50、AFF C30、AFF C60、FAS50  a| 
 * 4 埠 CX7 10/25 GbE
-* 2 埠 CX6-Dx 40/100 GbE
+* 2 埠 CX6-DX 40/100 GbE
 * 2 埠 CX7 40/100 GbE
-* 2 埠 CX7 40/100/200
 
 
-以下 AFF 平台支援 4 埠 CX7 10/25 GbE、2 埠 CX6-Dx 40/100 GbE 和 2 埠 CX7 40/100 GbE 網路卡：
-
-* AFF A20
-* AFF A30
-* AFF A50
-* AFF C30
-* AFF C60
 
 
-以下 AFF 和 FAS 平台支援 4 埠 2 埠 CX6-Dx 40/100 GbE、2 埠 CX7 40/100 GbE 和 2 埠 CX7 40/100/200 GbE 卡：
-
-* AFF A70-90
-* AFF C80
-* FAS70
-* FAS90
-* AFF A1K
+| AFF 和 FAS | AFF A70、AFF A90、AFF C80、FAS70、FAS90、AFF A1K  a| 
+* 2 埠 CX6-DX 40/100 GbE
+* 2 埠 CX7 40/100 GbE
+* 2 埠 CX7 40/100/200/400 GbE
 
 
+
+
+| ASA | ASA A20、ASA A30、ASA A50、ASA C30  a| 
+* 4 埠 CX7 10/25 GbE
+* 2 埠 CX6-DX 40/100 GbE
+* 2 埠 CX7 40/100 GbE
+
+
+
+
+| ASA | ASA A70、ASA A90、ASA A1K  a| 
+* 2 埠 CX6-DX 40/100 GbE
+* 2 埠 CX7 40/100 GbE
+* 2 埠 CX7 40/100/200/400 GbE
+
+
+
+
+| AFX | AFX 1K  a| 
+* 2 埠 CX6-DX 40/100 GbE
+* 2 埠 CX7 40/100 GbE
+* 2 埠 CX7 40/100/200/400 GbE
+
+
+
+
+| AFX | AFX 2K  a| 
+* 2 埠 CX7 40/100/200/400 GbE
+
+
+|===
 .支援的流量類型
 TLS 硬體卸載支援以下流量類型：
 
+* NFS
 * NVMe / TCP
 * 叢集對等加密
 * FabricPool
 * S3
 * NFS
 
+
+
+NOTE: 在 ASA 系統上，TLS 硬體卸載僅適用於 NVMe/TCP 流量。NFS over TLS、FabricPool 和 S3 不支援於 ASA 平台。
+
+
+NOTE: 在 AFX 平台上，TLS 硬體卸載支援 NFS 和 S3 前端流量類型。AFX 平台不支援 NVMe/TCP，因為 AFX 不支援 SAN/區塊協定。
 
 .開始之前
 * 您必須是ONTAP管理員。 `admin`執行下列任務所需的權限等級。
@@ -101,19 +134,11 @@ false      TLSv1.3,  false   TLS_RSA_WITH_AES_128_CCM,
 +
 [source, cli]
 ----
-security config modify -is-offload-enabled {true|false}
+security config modify * -is-offload-enabled {true|false}
 ----
 +
 此命令用於啟用或停用新連線的 TLS 資料階段硬體卸載。在啟用 TLS 卸載功能之前建立的現有連線，只有在刪除並重新建立這些連線後才會卸載。
 
-+
-啟用 TLS 卸載時，必須指定介面：
-
-+
-[source, cli]
-----
-security config modify -is-offload-enabled true -interface SSL
-----
 
 
 .相關資訊
