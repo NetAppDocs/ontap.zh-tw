@@ -1,0 +1,41 @@
+---
+permalink: fabricpool/modify-cloud-retrieval-policy-task.html 
+sidebar: sidebar 
+keywords: cloud retrieval, controls, volume, default, tiering policy 
+summary: 您可以使用 ONTAP 9.8 中引入的 -cloud-retrieval-policy 選項來變更 Volume 的雲端擷取原則。 
+---
+= 修改 Volume 的雲端擷取原則
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FabricPool 雲端資料擷取由擷取原則控制，這些原則決定何時將資料寫回本機層。讀取模式可以是連續的，也可以是隨機的。
+
+例如，當使用「Auto」Volume 分層原則時，如果冷資料區塊以連續的方式讀取，它們將保持冷狀態並保留在雲端分層。對於大多數用戶端應用程式而言，這是理想的行為，可以防止防毒和分析應用程式常用的深度檔案掃描將冷資料寫回本機分層。
+
+從 ONTAP 9.8 開始，您可以變更 Volume 的雲端擷取原則來置換link:tiering-policies-concept.html#how-cloud-retrieval-policies-work-with-tiering-policies["預設雲端擷取"]行為。
+
+.開始之前
+* 使用修改磁碟區 `-cloud-retrieval-policy` 選項需要 ONTAP 9.8 或更新版本。
+* 您必須具備進階權限層級才能執行此作業。
+* 您應該瞭解分層原則的行為 `-cloud-retrieval-policy`。
++
+link:tiering-policies-concept.html#how-cloud-retrieval-policies-work-with-tiering-policies["雲端擷取原則如何與分層原則搭配運作"]
+
+
+
+.步驟
+. 使用 `volume modify`命令搭配 `-cloud-retrieval-policy`選項，修改現有 Volume 的雲端擷取原則：
++
+[listing]
+----
+volume create -volume <volume_name> -vserver <vserver_name> - tiering-policy <policy_name> -cloud-retrieval-policy
+----
++
+[listing]
+----
+vol modify -volume fp_volume4 -vserver vs0 -cloud-retrieval-policy promote
+----
+

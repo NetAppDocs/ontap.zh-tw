@@ -22360,9 +22360,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="a8db74af44c524483b37d8fd9f6ac629" category="paragraph">當您複製磁碟區時、請謹記下列最佳實務做法：</block>
   <block id="b84eb3627c239a2fcf2c01f42fd559ac" category="list-text">。<block ref="a7eccb52726bd28c01fb9068943f7f7c" prefix=" " category="inline-code"></block> 選項與<block ref="e5e88684921dd21f3f86c28343a3082f" prefix=" " category="inline-code"></block> 複製選項只會控制複製特有之區塊的分層行為。因此、我們建議在父FlexVol 級不知道上使用分層設定、以移動相同數量的資料、或移動的資料量少於任何複本</block>
   <block id="e0febff557fd2c80b29c98e8445a2c42" category="list-text">父FlexVol 實體上的雲端擷取原則應移動相同數量的資料、或移動的資料應大於任何實體複本的擷取原則</block>
-  <block id="43c00d76656b469796aeb875ce4da83e" category="section-title">分層原則如何與雲端移轉搭配運作</block>
-  <block id="efc60ae7c94e2f966b4f46abd8e532ab" category="paragraph">利用分層原則來控制實體雲端資料擷取、根據讀取模式從雲端層擷取資料至效能層。FabricPool讀取模式可以是連續的或隨機的。</block>
-  <block id="1438d2210f3b29b05360858b4e974fce" category="paragraph">下表列出各原則的分層原則和雲端資料擷取規則。</block>
   <block id="fabea8658161c3de0e08742a1ab72c7e" category="cell">分層原則</block>
   <block id="19cb9782a8400d7f82528b55cb1b9259" category="cell">擷取行為</block>
   <block id="06179c002fb6622beae2f92b2e35de8b" category="paragraph">連續和隨機讀取</block>
@@ -22374,24 +22371,15 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="ed1cc1983392c3510555a46582d065fd" category="paragraph">下表列出支援的雲端擷取原則及其擷取行為。</block>
   <block id="0e62752c412c22ccb51e87b4d924fd2a" category="cell">雲端擷取原則</block>
   <block id="c21f969b5f03d33d43e04f8f136e7682" category="paragraph">預設</block>
-  <block id="2d6e6f775bcf0afb5621351a3b69cfdd" category="paragraph">分層原則會決定應將哪些資料取回、因此雲端資料擷取不會有「預設」的變更<block ref="8d0428fd00f378728e570080c1c94844" prefix="," category="inline-code"></block>。無論託管的Aggregate類型為何、此原則都是任何Volume的預設值。</block>
   <block id="0ba0dc933ac714a0bef4467360437336" category="paragraph">讀取時</block>
-  <block id="75fecb0d7b16ae9650837859af97bad8" category="paragraph">所有用戶端導向的資料讀取都會從雲端層移至效能層。</block>
   <block id="c7561db7a418dd39b2201dfe110ab4a4" category="paragraph">永不</block>
-  <block id="c41b1a57f2ea7131cd6cebb5b332cdf3" category="paragraph">不會將用戶端導向的資料從雲端層提取到效能層</block>
   <block id="eeefc0add5ccd6e20ac4214923d27fbc" category="paragraph">促銷</block>
-  <block id="e2331297e3531571919ecdb9d3640389" category="list-text">對於分層原則「無、」、所有雲端資料都會從雲端層提取到效能層</block>
-  <block id="447893877315e0b0d9fc4ae92a93aa20" category="list-text">若為分層原則、會擷取「僅限快照」的主動式檔案管理系統資料。</block>
   <block id="4d51b32f815b0a25bf4574af6e16c546" category="summary">您可以檢查效能層級促銷的狀態、以判斷作業何時完成。</block>
   <block id="e89cb0a26d79ca1c1cb78270c456cc75" category="doc">檢查效能層促銷的狀態</block>
   <block id="95c6afc0ddaf4546c7f565635618bd9d" category="list-text">使用Volume<block ref="223b958a04dbfd72b60d84158f9bc86d" prefix=" " category="inline-code"></block> 命令<block ref="62b7a4e4dd9c50fbc7f8d51060d41d1f" prefix=" " category="inline-code"></block> 檢查效能層級促銷狀態的選項。</block>
-  <block id="21d81d34b5a7bdf14a769b84a228b397" category="summary">您可以使用ONTAP 《》（更新）中介紹的-Cloud retrieve-policy（雲端擷取原則）選項、將Volume的預設分層原則從雲端層控制使用者資料擷取、變更為效能層。</block>
-  <block id="496477974f0611e5177688e18c053b5e" category="paragraph">您可以使用變更 Volume 的預設分層原則、以控制從雲端層擷取的使用者資料、並將其變更為效能層<block ref="5d3f204d30c366a50a05951d5b665ffe" prefix=" " category="inline-code"></block> ONTAP 9.8 提供的選項。</block>
   <block id="95a3e02a044ee289b851625207bcfa00" category="list-text">使用修改磁碟區<block ref="5d3f204d30c366a50a05951d5b665ffe" prefix=" " category="inline-code"></block> 選項需要 ONTAP 9.8 或更新版本。</block>
   <block id="fcd6b25dd7664eeb5065b3a269c7658e" category="list-text">您必須具備進階權限層級才能執行此作業。</block>
   <block id="b00f696b1f8c2d311e1b4349a9683368" category="list-text">您應該瞭解分層原則的行為<block ref="5d3f204d30c366a50a05951d5b665ffe" prefix=" " category="inline-code"></block>。</block>
-  <block id="f1e5c277d5732a0a79a97cc577614ce3" category="paragraph"><block ref="f1e5c277d5732a0a79a97cc577614ce3" category="inline-link-macro-rx"></block></block>
-  <block id="5f45ed5f26cf825b0cd09eaa1403a8b6" category="list-text">使用修改現有磁碟區的分層原則行為<block ref="9f9fc58b577820fbcd41ff15739ed6f0" prefix=" " category="inline-code"></block> 命令<block ref="5d3f204d30c366a50a05951d5b665ffe" prefix=" " category="inline-code"></block> 選項：</block>
   <block id="516ae5f67a73565d4c37ff957ed5457e" category="summary">從功能支援的9.8開始ONTAP 、您可以使用ONTAP 功能支援的S3、將資料分層至本機物件儲存設備。</block>
   <block id="0dd0063d6ac08858105400822760e971" category="summary">從 ONTAP 9.14.1 開始、您可以在 FabricPool 的新磁碟區或現有磁碟區上啟用和停用雲端寫入模式、以允許 NFS 用戶端直接將資料寫入雲端。</block>
   <block id="e81273cb179d924e4120f13743811b3d" category="paragraph">從 ONTAP 9.14.1 開始、您可以在 FabricPool 中的新磁碟區或現有磁碟區上、啟用和停用直接寫入雲端的功能、讓 NFS 用戶端無需等待分層掃描即可直接將資料寫入雲端。SMB 用戶端仍會寫入雲端寫入磁碟區中的效能層。預設會停用雲端寫入模式。</block>
@@ -36733,7 +36721,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="18ccf9d51149f8271117acfeb023f695" category="doc">在適用於 StorageGRID 的 ONTAP 叢集上安裝 CA 憑證</block>
   <block id="f8a967869572457212675a5d470c728f" category="doc">在 ONTAP 叢集上安裝 FabricPool 授權</block>
   <block id="a86a52ed8f96013c8318a59a2d30906a" category="doc">瞭解 ONTAP FabricPool 鏡射</block>
-  <block id="4d72fc6e046a88ac4742a79144d16305" category="doc">修改 ONTAP Volume 的預設 FabricPool 分層原則</block>
   <block id="45b3f0d7a2ac1d1021b9e042b0407534" category="doc">修改 ONTAP Volume 的分層原則和最低冷卻期</block>
   <block id="45763bf95ba2a4cd6fd71ce90c29e60b" category="doc">使用使用者建立的自訂標記來管理 ONTAP FabricPool Volume</block>
   <block id="0bacf42e47f97ea56396eb250d02f3e0" category="doc">開始使用 ONTAP FabricPool</block>
@@ -42224,7 +42211,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="4f47c13c6e0f9a4596c7efc9a6b06485" category="sidebar">使用使用者建立的自訂標籤管理 FabricPool 卷</block>
   <block id="367fab13c06c2a8ed4717021cd04ed08" category="sidebar">監控啟用 FabricPool 的本地層的空間利用率</block>
   <block id="26d140e482a2a420d311b32f7df0e5d5" category="sidebar">修改卷的分層策略和最短冷卻期</block>
-  <block id="199f6058819e193896196596f968338a" category="sidebar">修改磁碟區的預設 FabricPool 分層策略</block>
   <block id="928b60b16dc39347177f30491574a445" category="sidebar">設定 FabricPool 每節點放置速率的閾值</block>
   <block id="9bdc6023a17fb600ae0edf1493d733df" category="sidebar">自訂 FabricPool 物件刪除和碎片整理</block>
   <block id="f1e3839522a26d99951760e39fd1c47b" category="sidebar">將資料提升至效能層級</block>
@@ -49251,4 +49237,26 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="f73946896696e2b01a16305cdfde8b9f" category="list-text">選擇儲存設備虛擬機器和主節點。指定*名稱*、*IP 位址*和*子網路遮罩*。</block>
   <block id="be1376ff9d05a0f1cfca8a7cbc06eb70" category="list-text">此<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block>參數接受一個列表，預設值為空。將<block ref="61c4ea0665eded0925f4c1c1b212936b" prefix=" " category="inline-code"></block>新增為參數值後，LIF 只能在支援 RoCE 卸載的連接埠上設定，這會影響 LIF 移轉和容錯移轉。</block>
   <block id="14940c554618efc24c58c4e107508496" category="list-text">來源和目的地叢集不能是 MetroCluster 組態的一部分。</block>
+  <block id="55ddd46d69335cef9695e57d7ec3b218" category="summary">您可以使用 ONTAP 9.8 中引入的 -cloud-retrieval-policy 選項來變更 Volume 的雲端擷取原則。</block>
+  <block id="2951b12488cecc5509e1600f67cd8535" category="doc">修改 Volume 的雲端擷取原則</block>
+  <block id="438047a21893d3a40e291a6d8f396ff7" category="paragraph">FabricPool 雲端資料擷取由擷取原則控制，這些原則決定何時將資料寫回本機層。讀取模式可以是連續的，也可以是隨機的。</block>
+  <block id="3d223c316624319ab417417cd507e41b" category="paragraph">例如，當使用「Auto」Volume 分層原則時，如果冷資料區塊以連續的方式讀取，它們將保持冷狀態並保留在雲端分層。對於大多數用戶端應用程式而言，這是理想的行為，可以防止防毒和分析應用程式常用的深度檔案掃描將冷資料寫回本機分層。</block>
+  <block id="b821a609f009db9fdfe64d202b04ec3b" category="inline-link-macro">預設雲端擷取</block>
+  <block id="d7bdbfd210eed618397655a959c59182" category="paragraph">從 ONTAP 9.8 開始，您可以變更 Volume 的雲端擷取原則來置換<block ref="acb42634f5519cc387b124eb9e4ee8da" category="inline-link-macro-rx"></block>行為。</block>
+  <block id="128eb7fb186bb563a87e0b4a2e3ebcf7" category="inline-link-macro">雲端擷取原則如何與分層原則搭配運作</block>
+  <block id="fe36a16aed2dc35a095549aee23a4898" category="paragraph"><block ref="fe36a16aed2dc35a095549aee23a4898" category="inline-link-macro-rx"></block></block>
+  <block id="f6180dde4bdf9f5cb1abf773e8647b78" category="list-text">使用<block ref="9f9fc58b577820fbcd41ff15739ed6f0" prefix=" " category="inline-code"></block>命令搭配<block ref="5d3f204d30c366a50a05951d5b665ffe" prefix=" " category="inline-code"></block>選項，修改現有 Volume 的雲端擷取原則：</block>
+  <block id="faa7d176cc936ee4db67d46537f6db7f" category="paragraph">下表列出 Volume 分層原則及每種原則的預設擷取行為。</block>
+  <block id="dc23174fb1021eddaa7e96553ac6d478" category="cell">預設擷取行為</block>
+  <block id="1873cb7fb8ea35bd941ccd5b26b18910" category="paragraph">讀取 Volume 中的冷資料區塊時，它們會使用 Volume 分層原則的預設行為。無論託管彙總類型為何，此原則都是任何 Volume 的預設值。</block>
+  <block id="3fff23e76a04e3ed10d78d2a469cfdf1" category="paragraph">當雲端擷取原則設定為「`On-Read`」的 Volume 中的冷塊被隨機或連續地讀取時，這些冷塊將變為熱塊並寫入本機層。</block>
+  <block id="0ce2bb4851f840682e60fc18d230819a" category="paragraph">使用連續讀取的應用程式會透過將 Volume 雲端擷取原則設為「`On-Read`」來觸發寫回本機分層。這對於需要從先前的冷資料（現在正由作用中工作負載讀取）中獲得本機分層效能的應用程式而言相當有益。</block>
+  <block id="d0d076e9455efe1382356872cf03c6e5" category="paragraph">當雲端擷取原則設定為「`Never`」的 Volume 中的冷資料區塊被讀取時，它們將保持冷狀態並保留在雲端分層中。它們不會被寫回本機分層。</block>
+  <block id="79bfb55172e6bd04e06a1cbc252add30" category="paragraph">將雲端擷取原則設定為「`Never`」與「全部」分層原則類似，因為不允許資料傳回本機分層，但與「全部」分層原則不同的是，它會繼續使用 Volume 的分層最小冷卻天數設定，而不是盡快進行分層。</block>
+  <block id="3c54c411fcb6471e8e7adc83c680796c" category="paragraph">例如，使用 Auto 分層原則預設設定的 Volume，在資料閒置 31 天後才會將其標記為冷資料。31 天後，閒置資料將分層至物件儲存，且由於該 Volume 的雲端擷取原則已設定為「`Never」`，讀取時不會返回。</block>
+  <block id="a2f15859d965eaa8f56a0b3f5f4852fa" category="list-text">對於分層原則「`none`」，所有分層資料都會寫回本機分層。</block>
+  <block id="7b6a5b43076a000e6d85376a1b2a9403" category="list-text">對於分層原則「`snapshot-only,`」，分層的非快照資料會寫回本機層。</block>
+  <block id="94f2b60cbc7db8e5a87edc8a9927f663" category="paragraph-title">修改雲端擷取原則的範例</block>
+  <block id="b8f604272d7f0fbe61868e76e60d2dd5" category="paragraph">以下範例將 Volume 的分層原則變更為<block ref="334c4a4c42fdb79d7ebc3e73b517e6f8" prefix=" " category="inline-code"></block>，並將擷取原則變更為<block ref="eeefc0add5ccd6e20ac4214923d27fbc" prefix=" " category="inline-code"></block>：</block>
+  <block id="6efc81e9f0882a33ba5965b12da434a5" category="sidebar">修改 Volume 的雲端擷取原則</block>
 </blocks>
