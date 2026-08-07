@@ -1,0 +1,169 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-arp.html 
+keywords: ARP, enable, autonomous ransomware protection, ONTAP 9.10.1, NAS, FlexVol, FlexGroup, learning mode, dry-run, ransomware, legacy ARP enablement, ONTAP 9.15.1 or earlier 
+summary: 從 ONTAP 9.10.1 到 ONTAP 9.15.1，在現有或新的 NAS Volume 上啟用傳統 ARP，以在學習模式下啟動勒索軟體偵測。 
+---
+= 在 Volume 上啟用 ONTAP ARP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.10.1 開始，您可以在現有的 NAS Volume 上啟用自主勒索軟體保護 （ARP），或建立啟用 ARP 的新 Volume。
+
+
+NOTE: 如果您執行的是 ONTAP 9.16.1 或更新版本，請參閱link:enable-arpai.html["在 Volume 上啟用 ARP/AI"]。
+
+.關於這項工作
+適用於 NAS 工作負載（ONTAP 9.10.1 至 9.15.1）的 ARP 服務啟動時處於link:learn-about-arp.html#arp-protection-modes["學習模式"] (`dry-run`狀態。系統會分析工作負載以識別正常行為，然後切換到作用中模式進行威脅偵測。在學習期完成之前啟動作用中模式可能會導致過多的誤報。
+
+對於 ONTAP 9.10.1 至 9.12.1 版本，建議讓 ARP 在學習模式下運作至少 30 天。從 ONTAP 9.13.1 版本開始，ARP 會自動決定最佳學習期間間隔並自動化切換，切換可能在 30 天之前發生。
+
+ONTAP 9.10.1 至 9.15.1 版本不支援 SAN Volume 上的 ARP。請參閱link:support-arp.html["ARP 支援的組態"]。
+
+
+NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
+
+啟用自主勒索軟體防護後，根據您的環境和 ONTAP 版本，可能會進入過渡期：
+
+[cols="25,25,50"]
+|===
+| Volume類型 | 版本ONTAP | 啟用後的行為 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更新版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+| SAN 磁碟區 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即啟動，啟動評估期，以確定合適的警報閾值，然後再從初始的保守閾值過渡。 
+|===
+.開始之前
+* 啟用了 NFS 或 SMB（或兩者）協定的儲存虛擬機器 (SVM)。
+* 已配置客戶端的 NAS 工作負載。
+* 積極link:../concepts/namespaces-junction-points-concept.html["交會路徑"]就音量而言。
+* 適用於您的 ONTAP 版本的 link:index.html#licenses-for-autonomous-ransomware-protection["正確授權"]。
+* （建議）啟用多管理員驗證 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"]。
+
+
+
+
+[[enable-arp-on-nas-flexvol-volumes]]
+== 在 NAS FlexVol磁碟區上啟用 ARP
+
+您可以使用 System Manager 或 ONTAP CLI 在 NAS FlexVol® Volume 上啟用 ARP。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取您要保護的磁碟區。
+. 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
+. 在「反勒索軟體」方塊中選擇「在學習模式下啟用」。
++
+
+NOTE: 如果您想手動link:enable-default-arp.html["停用關聯儲存 VM 上的自動學習至作用中模式轉換"]控制學習模式到作用中模式的轉換，您可以這樣做。
+
++
+
+NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
+
+. 在「反勒索軟體」方塊中驗證磁碟區的 ARP 狀態。
++
+若要顯示所有磁碟區的 ARP 狀態：在 * Volumes （磁碟區） * 窗格中，選取 * Show （顯示） / Hide （隱藏） * ，然後確定已勾選 * Anti-勒索 ware* 狀態。
+
+
+
+--
+.CLI
+--
+*在現有 Volume 上啟用 ARP（學習模式）：*
+
+[source, cli]
+----
+security anti-ransomware volume dry-run -volume <vol_name> -vserver <svm_name>
+----
+如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-dry-run.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume dry-run`資訊，請參閱。
+
+*建立啟用 ARP （學習模式）的新 Volume：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state dry-run -junction-path </path_name>
+----
+*停用從學習模式自動切換到作用中模式（選用）：*
+
+如果您正在執行 ONTAP 9.13.1 至 9.15.1，並且想要手動控制與 SVM 關聯的所有 Volume 從學習模式切換至作用中模式：
+
+[source, cli]
+----
+vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
+----
+*驗證ARP狀態：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+
+
+[[enable-arp-on-nas-flexgroup-volumes]]
+== 在 NAS FlexGroup磁碟區上啟用 ARP
+
+從 ONTAP 9.13.1 開始，NAS FlexGroup Volume 提供 ARP 支援。
+
+
+NOTE: ONTAP 9.13.1 至 9.17.1 中的 FlexGroup Volume 使用具有學習模式的原始 ARP 模型，而非 ARP/AI。針對 FlexGroup Volume 具有立即作用中模式的 ARP/AI 需要 ONTAP 9.18.1。請參閱 link:enable-arpai.html["在 Volume 上啟用 ARP/AI"]。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇“儲存 > 磁碟區”，然後選擇要保護的FlexGroup區。
+. 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
+. 在「反勒索軟體」方塊中選擇「在學習模式下啟用」。
++
+
+NOTE: 如果您想手動link:enable-default-arp.html["停用自動學習到作用中模式的轉換"]控制學習模式到作用中模式的轉換，您可以這樣做。
+
+. 在「反勒索軟體」方塊中驗證磁碟區的 ARP 狀態。
+
+
+--
+.CLI
+--
+*在現有 FlexGroup Volume 上啟用 ARP（學習模式）：*
+
+[source, cli]
+----
+security anti-ransomware volume dry-run -volume <vol_name> -vserver <svm_name>
+----
+*建立啟用 ARP （處於學習模式）的全新 FlexGroup Volume：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggr-list <aggregate name> -aggr-list-multiplier <integer> -size <nn> -anti-ransomware-state dry-run -junction-path </path_name>
+----
+*驗證ARP狀態：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+.相關資訊
+* link:switch-learning-arp.html["從學習模式切換到作用中模式"]
+* link:enable-default-arp.html["在新磁碟區中預設啟用 ARP"]
+

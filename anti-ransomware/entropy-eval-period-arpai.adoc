@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/entropy-eval-period-arpai.html 
+keywords: ARP AI, arpai, SAN, entropy evaluation, block device, ransomware detection, ONTAP 9.17.1, evaluation period, hypervisor, VMware, Hyper-V, KVM, OpenStack, machine learning ransomware 
+summary: 從 ONTAP 9.17.1 開始，ARP/AI 需要一個評估期來判斷區塊設備熵等級是否適合勒索軟體保護。 
+---
+= 了解 ONTAP ARP/AI 針對區塊設備工作負載的熵評估週期
+:allow-uri-read: 
+
+
+[role="lead"]
+從 ONTAP 9.17.1 開始，ARP/AI 需要一個評估期來確定區塊設備工作負載的熵等級是否適合勒索軟體保護。這些工作負載包括儲存在 ONTAP Volume 中的 SAN LUN 和 Hypervisor 虛擬磁碟（例如，NFS 資料儲存區中的 VMware 虛擬磁碟，以及從 ONTAP 9.17.1P5 開始的 Hyper-V、KVM 和 OpenStack 虛擬磁碟）。在符合條件的 Volume 上啟用 ARP/AI 後，它會在評估期間主動監控並保護該 Volume，同時確定最佳加密臨界值。
+
+
+NOTE: 本頁面適用於 ARP/AI（ONTAP 9.17.1 及更新版本）。舊版 ONTAP 不支援 ARP 的 SAN Volume。
+
+
+
+[[supported-workloads-and-evaluation-applicability]]
+== 支援的工作負載和評估適用性
+
+區塊裝置評估期間適用於以下情況：
+
+* *SAN volumes*：以區塊設備形式呈現給主機或 Hypervisor 的 LUN 型工作負載。
+* *ONTAP 自動偵測到的包含 Hypervisor 虛擬磁碟的 NAS Volume*：支援的 Hypervisor 包括 VMware、Hyper-V、KVM 以及儲存在 NFS 或 SMB 資料存放區中的 OpenStack 虛擬磁碟。
+
+
+在這些磁碟區中：
+
+* 評估期_適用於_基於虛擬磁碟客體檔案系統內部熵變化所偵測到的攻擊（例如，對應到 LUN 或虛擬磁碟的客體作業系統中的檔案進行操作的勒索軟體）。
+* 評估期間_不_適用於基於熵值和檔案副檔名變更（直接從 Hypervisor 主機對虛擬磁碟檔案進行變更）而偵測到的攻擊（例如，勒索軟體直接作用於 ESXi NFS 資料儲存安裝點的 .vmdk 檔案）。這些直接針對磁碟的攻擊採用不同的偵測路徑。
+
+
+
+
+[[understand-entropy-evaluation]]
+== 理解熵評估
+
+評估期最短兩週，最長四週。如果在前兩週內寫入的資料量超過 10 GB，則評估在兩週結束時完成。如果兩週內未達到 10 GB 的臨界值，則評估將繼續進行，直到寫入的資料達到 10 GB，最長不超過四週。
+
+在評估期間，系統會從支援的區塊裝置和 Hypervisor 工作負載中，以 10 分鐘為間隔持續收集加密統計資料。此外，系統還會每四小時持續建立一次 ARP/AI 週期性快照。如果在某個時間間隔內加密百分比超過為該 Volume 確定的最佳加密臨界值，則會觸發警報， `Anti_ransomware_attack_backup`建立快照，並增加所有週期性 ARP/AI 快照的保留時間。
+
+.確認評估期間有效
+您可以透過執行以下命令並檢查狀態是否為 `evaluation_period`來確認評估是否處於作用中狀態。如果 Volume 不符合評估條件，則不會顯示評估狀態。
+
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <volume_name>
+----
+回應範例：
+
+[listing, subs="+quotes"]
+----
+Vserver Name                                : vs1
+Volume Name                                 : v1
+State                                       : enabled
+Attack Probability                          : none
+Attack Timeline                             : -
+Number of Attacks                           : -
+Attack Detected By                          : -
+*Block device detection status               : Evaluation_period*
+----
+.監測評估期資料收集
+您可以即時監控加密偵測情況。此命令會傳回一個直方圖，顯示每個加密百分比範圍內的資料量。直方圖每 10 分鐘更新一次。
+
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-encryption-percentage-histogram -vserver <svm_name> -volume <vol_name> -duration real_time
+----
+
+
+[[suitable-workloads-and-adaptive-thresholds]]
+== 合適的工作負荷和自適應閾值
+
+評估結果最終會得出以下幾種結果之一：
+
+* *此工作負載適用於 ARP/AI*。ARP/AI 會自動將具調適能力的臨界值設定為高於評估期間觀察到的最大加密百分比的 10%。ARP/AI 也會持續收集統計資料並定期建立 ARP/AI 快照。
+* *此工作負載不適合使用 ARP/AI*。ARP/AI 會自動將具調適能力的臨界值設定為評估期間觀察到的最大加密百分比。ARP/AI 也會繼續收集統計資料並定期建立 ARP/AI 快照，但系統最終建議停用該 Volume 上的 ARP/AI。
+
+
+.確定評估結果
+評估期結束後，ARP/AI 會根據評估結果自動設定具調適能力的臨界值。您可以執行以下命令來查看評估結果。Volume 適用性會在  `Block device detection status` 欄位中顯示：
+
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <volume_name>
+----
+回應範例：
+
+[listing, subs="+quotes"]
+----
+Vserver Name                               : vs1
+Volume Name                                : v1
+State                                      : enabled
+Attack Probability                         : none
+Attack Timeline                            : -
+Number of Attacks                          : -
+Attack Detected By                         : -
+*Block device detection status              : Active_suitable_workload*
+
+Block device evaluation start time :  5/16/2025 01:49:01
+----
+您也可以顯示評估結果所採用的值閾值：
+
+[source, cli]
+----
+security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>
+----
+.相關資訊
+* link:modify-snapshot-options-arpai.html["修改 ARP/AI 的快照選項"]
+* link:manage-parameters-arpai.html["管理 ARP/AI 攻擊偵測參數"]
+* link:respond-arpai.html["回應 ARP/AI 偵測到的異常活動"]
+

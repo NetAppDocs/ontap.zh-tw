@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/support-arp.html 
+keywords: ARP, autonomous ransomware protection, ONTAP 9.10.1, supported configurations, NAS, FlexVol, FlexGroup, SnapMirror, MAV, multi-admin verification, 4000 file extensions, NFS, SMB, learning mode, legacy ARP, ONTAP 9.10.1 through 9.15.1 
+summary: ARP （ ONTAP 9.10.1 至 9.15.1 ）支援 FlexVol 和 FlexGroup Volume 上的 NAS 工作負載。在部署 ARP 之前，請先審查支援的組態和限制。 
+---
+= ONTAP ARP 支援的組態
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.10.1 到 ONTAP 9.15.1，NAS 工作負載可使用 Autonomous Ransomware Protection （ARP）。在部署 ARP 之前，您應瞭解建議的使用方式、支援的組態以及效能影響。
+
+
+NOTE: ARP/AI 是 ONTAP 9.16.1 及更新版本目前的 ONTAP 勒索軟體保護模型。如果您正在執行 ONTAP 9.16.1 或更新版本，請參閱 link:support-arpai.html["ARP/AI 支援的組態"]。
+
+
+
+[[suitable-workloads]]
+== 合適的工作負載
+
+ARP 適用於以下類型的工作負載：
+
+* NFS 儲存設備上的資料庫
+* Windows或Linux主目錄
++
+使用者可以建立在學習期間無法偵測到的副檔名檔案，因此在此工作負載中出現誤報的可能性較大。
+
+* 影像與影片
++
+例如、醫療記錄和電子設計自動化（ EDA ）資料
+
+
+
+
+
+[[unsuitable-workloads]]
+== 不適當的工作負載
+
+ARP 不適合以下類型的工作負載：
+
+* 檔案建立或刪除操作頻率高的工作負載（幾秒鐘內處理數十萬個檔案；例如，測試/開發工作負載）。
++
+ARP 的威脅偵測依賴於其識別檔案建立、重新命名或刪除操作異常激增的能力。如果應用程式本身是文件活動的來源，則無法有效區分勒索軟體活動。
+
+* 工作負載涉及超過 4,000 個不同的檔案副檔名。
++
+ARP（ONTAP 9.10.1 至 9.15.1）每個 Volume 最多可分析 4,000 個檔案副檔名。如果 Volume 上唯一的檔案副檔名數量超過此限制，ARP 將無法有效偵測勒索軟體活動，且該工作負載將被視為不合適。
+
+* 應用程式或主機加密資料的工作負載。
++
+ARP 依賴區分傳入資料是加密的還是未加密的。如果應用程式本身正在加密數據，則該功能的有效性會降低。但是，ARP 仍然可以根據檔案活動（刪除、覆蓋、創建，或建立檔案或使用新的檔案副檔名重新命名）和檔案類型進行工作。
+
+* SAN 工作負載。
++
+ARP（9.10.1 至 9.15.1）不支援 SAN Volume。SAN 支援已於 ONTAP 9.17.1 中透過 ARP/AI 引入。link:learn-about-arpai.html["有關 SAN 的詳細資訊，請參閱 ARP/AI 文件。"]
+
+
+
+
+
+[[supported-configurations]]
+== 支援的組態
+
+ARP（9.10.1 至 9.15.1）支援 FlexVol Volume 上 NFS 和 SMB 協定的 NAS 工作負載，並且從 ONTAP 9.13.1 開始，也支援 FlexGroup Volume 上的 NAS 工作負載。
+
+|===
+| 組態 | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+
+
+| FlexVol® Volume （NAS） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+
+
+| FlexGroup Volume （NAS） | ✓ | ✓ | ✓ |  |  |  
+
+
+| 具有 SnapMirror 非同步的 Volume | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| 具有 SnapMirror 非同步的 SVM（SVM 災難恢復） | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| SVM資料移動性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| 多重管理驗證（ MAV ） | ✓ | ✓ | ✓ |  |  |  
+
+
+| 內部組態MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+|===
+
+
+[[snapmirror-and-arp-interoperability]]
+[[snapmirror]]
+== SnapMirror與ARP互通性
+
+從 ONTAP 9.12.1 開始，ARP 支援 SnapMirror 非同步目的地 Volume。SnapMirror 同步和 SnapMirror 作用中同步僅從 ONTAP 9.19.1 開始透過 ARP/AI 提供支援。
+
+如果 SnapMirror 來源 Volume 已啟用 ARP，SnapMirror 目的地 Volume 會自動取得來源 Volume 的 ARP 組態狀態（例如 `dry-run`或 `enabled`）、ARP 訓練資料及 ARP 建立的快照。目的地無需單獨啟用 ARP。
+
+當目的地 Volume 由唯讀 (RO) 快照組成時，不會對其資料進行 ARP 處理。但是，當 SnapMirror 目的地 Volume 轉換為讀寫 (RW) 時，ARP 會自動在 RW 轉換後的目的地 Volume 上啟用。
+
+
+NOTE: 在 ONTAP 9.10.1 和 9.11.1 版本中，SnapMirror 不會將 ARP 設定狀態、訓練資料和快照從來源磁碟區傳送到目標磁碟區。當 SnapMirror 目標磁碟區轉換為讀寫模式時，必須在轉換後明確地在目標磁碟區上啟用 ARP 的學習模式。
+
+
+
+[[unsupported-configurations]]
+== 不支援的組態
+
+ARP 不支援下列 Volume 組態：
+
+* FlexCache Volume （原始 FlexVol 磁碟區支援 ARP 、快取磁碟區則不支援）
+* 離線磁碟區
+* 資料量SnapLock
+* SnapMirror 同步
+* SnapMirror 主動同步
+* SnapMirror ONTAP 9.10.1 和 9.11.1 中的非同步目的地 Volume（從 ONTAP 9.12.1 開始支援）
+* 受限磁碟區
+* 儲存VM的根磁碟區
+* 已停止儲存VM的磁碟區
+* FlexVol 至 FlexGroup 轉換（轉換前必須停用 ARP）
+
+
+
+
+[[performance-and-volume-limits]]
+== 效能和 Volume 限制
+
+ARP 對系統效能（以吞吐量和峰值 IOPS 衡量）的影響極小。 ARP功能的影響取決於特定的捲工作負載。對於常見工作負載，建議採用以下配置限制：
+
+[cols="2,1,2"]
+|===
+| 工作負載特性 | 每個節點的建議Volume限制 | 當每個節點的磁碟區限制超過上限時，效能會下降^1^ 
+
+
+| 讀取密集型或資料可以壓縮 | 150 | 最高IOPS的4% 
+
+
+| 寫入密集且資料無法壓縮 | 60 | 最大 IOPS 的 10% 
+|===
+^1^ 無論添加的捲數量超過建議的限制多少，系統效能都不會下降超過這些百分比。
+
+由於 ARP 分析按優先順序運行，因此隨著受保護磁碟區數量的增加，每個磁碟區上運行的分析頻率會降低。
+
+
+NOTE: 預設在大量新磁碟區上啟用 ARP 可能會增加系統資源使用量。在磁碟區上啟用 ARP 時，請考慮快照等競爭程序的空間需求。
+
+
+
+[[multi-admin-verificationmulti-admin-verification-with-arp-protected-volumes]]
+== [[multi-admin-verification]]使用 ARP 保護 Volume 的多重管理員驗證
+
+從 ONTAP 9.13.1 開始、您可以啟用多重管理驗證（ MAV ）、以提高 ARP 的安全性。MAV 可確保至少有兩位或多位通過驗證的系統管理員必須關閉 ARP 、暫停 ARP 、或將可疑攻擊標示為受保護磁碟區上的誤報。瞭解如何link:../multi-admin-verify/enable-disable-task.html["為受 ARP 保護的磁碟區啟用 MAV"]。
+
+您需要為 MAV 群組定義管理員，並為 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect`命令建立 MAV 規則。
+
+深入瞭解 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["指令參考資料ONTAP"^]。
+
+.相關資訊
+* link:enable-arp.html["在 Volume 上啟用 ARP"]
+* link:enable-default-arp.html["在新磁碟區中預設啟用 ARP"]
+

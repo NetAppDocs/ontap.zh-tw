@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/default-enable-change-arpai.html 
+keywords: ARP AI, arpai, opt out, disable automatic enablement, autonomous ransomware protection AI, ONTAP 9.18.1, grace period, AFF, ASA, upgrade 
+summary: 在支援的 AFF 和 ASA 系統上升級至 ONTAP 9.18.1 或更新版本時，ARP/AI 會在一段寬限期後預設對新 Volume 啟用。您可以隨時選擇停用或變更此設定。 
+---
+= 升級期間管理 ONTAP ARP/AI 自動能力開發
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:imagesdir: ../media/
+
+
+[role="lead"]
+升級至 ONTAP 9.18.1 或更新版本時，在 12 小時寬限期後，所有 AFF A 系列、AFF C 系列、ASA 和 ASA r2 系統的所有新 Volume 將預設自動啟用具 AI 功能的自主勒索軟體防護 （ARP/AI），前提是已安裝反勒索軟體授權。請使用此程序，在寬限期內或寬限期後選擇退出自動預設能力開發，或在升級後隨時變更此設定。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:index.html["了解自主勒索軟體防護"]。
+
+
+NOTE: 如果您執行的是 ONTAP 9.17.1 或更早版本，則自動叢集層級預設能力開發不適用。您可以使用 link:enable-default-arpai.html["在新 Volume 中預設啟用 ARP/AI"] 設定 SVM 層級預設能力開發。
+
+
+NOTE: 現有 Volume 必須link:enable-arpai.html["手動啟用"]才能用於 ARP/AI。
+
+
+NOTE: 從 ONTAP 9.19.1 開始，預設 ARP/AI 能力開發適用於包含 SnapMirror 同步和 SnapMirror 作用中同步 SAN 關係的叢集。在 ONTAP 9.18.1 中，這些設定的預設能力開發已被停用。對於跨叢集 SnapMirror 同步關係，來源和目的地叢集升級至 ONTAP 9.19.1 後，預設能力開發才會啟動。
+
+.關於這項工作
+您選擇的設定之後可以更改。寬限期過後，您隨時都能靈活地開啟或關閉自動預設能力開發：
+
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false|true
+----
+.步驟
+您可以使用 System Manager 或 ONTAP CLI 來管理 ARP/AI 自動預設能力開發。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇*叢集>設定*。
+. 執行下列其中一項：
++
+** 在作用中寬限期內停用：
++
+... 在「反勒索軟體」部分，您會看到一則訊息，指示啟用 ARP/AI 功能前剩餘的小時數。選取*不啟用*。
+... 在下一個對話方塊中選擇 *停用*，以確認已關閉新 Volume 的預設 ARP/AI 能力開發。
+
+
+** 寬限期過後停用：
++
+... 在 *Anti-ransomware* 部分中，選取 image:icon_pencil.gif["編輯圖示"]。
+... 選取複選框，然後按一下「儲存」以停用新 Volume 的自動預設 ARP/AI 能力開發。
+
+
+
+
+
+
+--
+.CLI
+--
+. 檢查自動能力開發狀態：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 停用新 Volume 的自動預設能力開發：
++
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false
+----
+
+
+--
+====
+.相關資訊
+* link:enable-arpai.html["在單一 Volume 上啟用 ARP/AI"]
+

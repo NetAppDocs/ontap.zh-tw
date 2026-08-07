@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/release-history-arp.html 
+keywords: ransomware, arp, autonomous protection, ai, new features, enhancements, release notes, versions, feature availability, release history 
+summary: 了解 ONTAP 各版本中自主勒索軟體防護功能增強情形。 
+---
+= ONTAP 自主勒索軟體防護功能依版本提供的可用度
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解 ONTAP 各版本中自主勒索軟體防護功能增強情形。
+
+
+
+[[ontap-9-19-1]]
+== ONTAP 9.19.1
+
+* link:support-arpai.html["SnapMirror 同步和 SnapMirror 作用中同步支援"]：ARP/AI 現在支援 SnapMirror 同步和 SnapMirror 作用中同步關係中的 Volume。ARP/AI 在關係中作用中的讀寫主 Volume 上執行，建立僅限主要的 ARP/AI 快照，並提供基於機器學習的勒索軟體偵測。
++
+** SnapMirror 同步（NAS 和 SAN）：在 FAS、AFF A 系列、AFF C 系列和 AFX 系統上受支援。
+** SnapMirror 作用中同步（SAN）：支援 AFF A 系列、AFF C 系列和 ASA r2 系統。
+
+
+* link:manage-parameters-arpai.html["System Manager 工作負載特徵顯示已移除"]：System Manager 不再顯示基於人工智慧的自主勒索軟體防護 （ARP/AI） 工作負載特徵，包括基線統計資料和峰值統計資料。峰值活動經常被誤解為勒索軟體攻擊或需要手動調整，因此已移除此資訊。ARP/AI 的行為和偵測功能保持不變，峰值統計資料仍可透過 ONTAP CLI 和 REST API 選項進行進階分析。
+
+
+
+
+[[ontap-9-18-1]]
+== ONTAP 9.18.1
+
+* link:enable-default-arpai.html["ARP/AI 自動預設能力開發"]：對於 AFF A 系列、AFF C 系列、ASA 和 ASA r2 系統，所有新 Volume 預設會自動啟用 ARP/AI。升級至 ONTAP 9.18.1 後，系統提供 12 小時的寬限期，讓您可以link:default-enable-change-arpai.html["選擇退出預設能力開發"]。如果您未選擇停用，寬限期結束後建立的所有新 Volume 都會自動啟用 ARP/AI。
+* link:support-arpai.html["ARP/AI FlexGroup 同位元檢查"]：FlexGroup Volume 現在與 FlexVol Volume 在本機 ONTAP 平台（AFF 和 FAS）以及虛擬 ONTAP 部署（Cloud Volumes ONTAP 和 ONTAP Select）上的 ARP/AI 支援方面具有同位元檢查。從 ONTAP 9.18.1 開始，FlexGroup Volume 預設使用 ARP/AI 模型。
+
+
+
+
+[[ontap-9-17-1]]
+== ONTAP 9.17.1
+
+* link:support-arpai.html["SAN 區塊設備支援"]：ARP/AI 支援具備加密型異常偵測的 SAN Volume，為區塊層級工作負載引入進階勒索軟體保護能力。支援的 Volume 包括含有 LUN （區塊儲存設備）和 NVMe 命名空間的 Volume。ARP/AI 也能偵測包含 VMware vSphere Hypervisor 虛擬磁碟的 NAS Volume。
+* link:respond-arpai.html["System Manager 勒索軟體監控已擴展至 SAN"]：System Manager 現在可以顯示 SAN Volume 和 NAS Volume 的 ARP 狀態、熵峰值詳細資料和威脅警示，提供跨所有儲存設備類型的勒索軟體保護的單一檢視。
+* link:entropy-eval-period-arpai.html["區塊設備評估期"]：SAN 工作負載會經歷兩到四週的評估期，在此期間，ARP/AI 會建立基線加密行為。在 ARP/AI 建立基線臨界值期間，會進行偵測並發出警報，從而在此評估期間提供立即的作用中保護。
+* link:manage-parameters-arpai.html["可設定的 SAN Volume 偵測臨界值"]：評估期為 SAN Volume 建立基準加密臨界值後，您可以修改該臨界值，以針對特定工作負載特徵調校偵測。
+* link:respond-arpai.html["SAN Volume 的熵統計資料"]：新的 CLI 命令提供 SAN 工作負載的 Volume 層級加密統計資料的可見度，可讓您檢視加密百分比直方圖和最近的高加密事件，以支援威脅調查。
+* link:recover-arpai.html["已更新 ARP 快照命名"]：ARP 快照命名慣例現在區分定期自動備份（命名為 `Anti_ransomware_periodic_backup.YYYY-MM-DD_HHMM`）和回應偵測到的攻擊而建立的快照（命名為 `Anti_ransomware_attack_backup.YYYY-MM-DD_HHMM`）。
+* link:entropy-eval-period-arpai.html["Hypervisor 支援"]：ARP/AI 支援包含 VMware vSphere 虛擬磁碟的 NAS Volume。從 ONTAP 9.17.1 P5 開始，ARP/AI 也支援 Hyper-V、KVM 和 OpenStack Hypervisor。
+
+
+
+
+[[ontap-9-16-1]]
+== ONTAP 9.16.1.
+
+* link:index.html["ARP/AI 模型簡介"]：全新的 AI 偵測模型取代了先前用於 FlexVol® Volume 的 ARP 模型。ARP/AI 消除了解除學習期的要求。啟用後會立即開始作用中保護，提供更快速的勒索軟體保護。
+* link:support-arpai.html["無限副檔名偵測"]：ARP/AI 取消了早期 ARP 模型中 4,000 個唯一檔案副檔名的限制，因此具有多種檔案類型的工作負載可獲得更好的保護。
+* link:update-arpai.html["自動安全性套裝組合更新"]：NetApp 在 ONTAP 常規版本計劃之外提供 ARP/AI 安全性更新。如果您的叢集已註冊自動系統和韌體更新，則在 ARP/AI 安全性更新可用時，您將自動收到通知。您也可以設定這些更新的自動安裝，以持續防護最新威脅。
+
+
+
+
+[[ontap-9-14-1]]
+== ONTAP 9.14.1.
+
+* link:manage-parameters-arp.html["可調式警報"]：設定 Autonomous Ransomware Protection，以便在偵測到新的檔案副檔名或拍攝 ARP 快照時接收通知，從而更早發出可能的勒索軟體事件警告，並更快速地回應威脅。
+
+
+
+
+[[ontap-9-13-1]]
+== ONTAP 9.13.1.12.9.11.9.11.
+
+* link:support-arp.html["FlexGroup Volume 支援"]：ARP 保護現在可用於 FlexGroup Volume，將勒索軟體保護從傳統的 FlexVol® Volume 擴充至大規模、可大幅擴充的儲存設備環境。
+* link:switch-learning-arp.html["自動從學習模式轉換為作用中模式"]：ARP 會自動確定最佳學習週期，並從學習模式切換到作用中模式，這可能早於傳統的 30 天建議週期。這種自動化減少了手動步驟，並加快了全面保護的速度。
+* link:pause-arp.html["多管理員驗證整合"]：多重管理員驗證 (MAV) 現在可以保護 Autonomous Ransomware Protection 作業，確保敏感的 ARP 行動在執行之前需要獲得多位系統管理員的核准。
+
+
+
+
+[[ontap-9-12-1]]
+== ONTAP 9.12.1
+
+* link:support-arp.html["SnapMirror 互通性"]：ARP 現在支援使用 SnapMirror 非同步關係保護的 Volume，為複寫資料提供勒索軟體保護。此外，支援範圍也延伸至使用 SnapMirror 保護的 SVM （SVM 災難恢復）以及啟用 SVM 資料移動性的 SVM。
+
+
+
+
+[[ontap-9-11-1]]
+== 零點9.11.1. ONTAP
+
+* link:index.html["增強型檢測演算法"]：ONTAP 增強 ARP 偵測演算法，以偵測更多惡意軟體威脅，進而提高勒索軟體威脅識別的準確性和範圍。
+* link:manage-parameters-arp.html["可修改的攻擊偵測參數"]：修改 ARP 偵測臨界值，包括檔案副檔名、熵和 IOPS，以針對特定工作負載特徵調校偵測行為。預設情況下，當短時間內出現 20 個或更多未見過的檔案副檔名時，ARP 會發出警報。
+* link:modify-snapshot-options-arp.html["可設定的快照保留"]：調整自動產生的 ARP 快照設定，包括最大快照數量和保留行為。
+* link:index.html["授權金鑰更新"]：新的 `Anti_ransomware`授權金鑰可啟動 Autonomous Ransomware Protection。從 ONTAP 9.10.1 升級的系統可繼續使用先前的授權金鑰，該金鑰提供相同的功能。
+
+
+
+
+[[ontap-9-10-1]]
+== 零點9.10.1 ONTAP
+
+* link:index.html["自主勒索軟體防護的初始版本"]：Autonomous Ransomware Protection 在 NFS 環境中利用工作負載分析，針對可能表示勒索軟體攻擊的異常活動向您發出警示。在 ONTAP 9.10.1 及更新版本的 NAS （NFS 和 SMB） FlexVol® Volume 上支援。ARP 最初在學習模式下運作，分析系統計量以建立警示設定檔，然後轉換為作用中偵測模式，進行即時勒索軟體威脅監控與回應。
+

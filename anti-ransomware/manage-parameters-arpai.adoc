@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
-permalink: anti-ransomware/manage-parameters-task.html 
-keywords: ransomware, security, configure workload characteristics, modify, security anti-ransomware attack, parameters 
-summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體保護偵測參數。 
+permalink: anti-ransomware/manage-parameters-arpai.html 
+keywords: ARP AI, arpai, detection parameters, configure workload characteristics, modify, security anti-ransomware attack, SAN ransomware parameters, ONTAP 9.16.1, machine learning ransomware, event alerts 
+summary: 從 ONTAP 9.16.1 開始，修改 NAS 和 SAN 工作負載的 ARP/AI 偵測參數，以提高勒索軟體偵測準確率。 
 ---
-= 管理 ONTAP 自主勒索軟體保護攻擊偵測參數
+= 管理 ONTAP ARP/AI 攻擊偵測參數
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,40 +16,41 @@ summary: 從 ONTAP 9.11.1 開始，可視工作負載而修改自主勒索軟體
 
 
 [role="lead"]
-從 ONTAP 9.11.1 開始，您可以在啟用自動勒索軟體保護的特定磁碟區上修改勒索軟體偵測的參數，並將已知的激增報告為正常檔案活動。調整偵測參數有助於根據您的特定 Volume 工作負載、提高報告的準確度。
+從 ONTAP 9.16.1 開始，您可以修改特定啟用 ARP/AI 的 Volume 上的勒索軟體偵測參數，並將已知的流量激增報告為正常檔案活動。調整偵測參數有助於根據您特定 Volume 的工作負載提高報告的準確性。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:manage-parameters-arp.html["管理 ARP 攻擊偵測參數"]。
 
 
 
-[[how-attack-detection-works]]
-== 攻擊偵測的運作方式
+[[how-arpai-attack-detection-works]]
+== ARP/AI 攻擊偵測的工作原理
 
-當自主勒索軟體防護 (ARP) 處於學習或評估模式時，它會為卷宗行為制定基準值。這些基準值包括熵、檔案副檔名以及（從ONTAP 9.11.1 開始的）IOPS。這些基準用於評估勒索軟體威脅。有關這些標準的更多信息，請參閱link:index.html#what-arp-detects["ARP 偵測到什麼"] 。
+ARP/AI 使用機器學習模型來偵測勒索軟體活動。當 ARP/AI 處於作用中模式（或 SAN Volume 的評估模式）時，它會持續監控 Volume 的行為。這些行為包括熵、檔案副檔名和檔案 IOPS （NAS）或 Volume 層級加密速率（SAN）。如需偵測條件的詳細資訊，請參閱 link:learn-about-arpai.html#what-arp-ai-detects["ARP/AI 偵測到的內容"]。
 
-不同的資料量和工作負載需要不同的偵測參數。例如，啟用 ARP 的磁碟區可能託管多種類型的檔案副檔名，在這種情況下，您可能需要將從未見過的檔案副檔名的閾值計數修改為大於預設值 20 的數字，或停用基於從未見過的檔案副檔名的警告。從ONTAP 9.11.1 開始，您可以修改攻擊偵測參數，使其更適應您的特定工作負載。
+某些 Volume 和工作負載需要不同的偵測參數。例如，啟用 ARP/AI 的 Volume 可能裝載多種類型的檔案副檔名，在這種情況下，您可能需要修改從未出現過的檔案副檔名的臨界值計數，或完全停用這些警告。
 
-從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
+從 ONTAP 9.14.1 開始，您可以設定當 ARP/AI 偵測到新的檔案副檔名以及 ARP/AI 建立快照時發出警示。如需詳細資訊，請參閱 <<modify-alerts>>。
 
 .NAS 環境中的攻擊偵測
-在 ONTAP 9.10.1 中、如果 ARP 偵測到下列兩種情況、就會發出警告：
+ARP/AI 在偵測到以下任一情況時會發出威脅警告：
 
-* 超過 20 個檔案的副檔名先前未在磁碟區中觀察到
 * 高 Entropy 資料
+* 在 48 小時內發現多個具有相同但從未見過的檔案副檔名的檔案
 
 
-從 ONTAP 9.11.1 開始，如果符合 _ 僅 _ 一個條件， ARP 就會發出威脅警告。例如，如果在 24 小時內觀察到超過 20 個檔案的副檔名，而這些副檔名先前未在磁碟區中觀察到，則 ARP 會將此歸類為威脅（無論觀察到的 Entropy 為何）。24 小時和 20 個檔案值為預設值，可加以修改。
 
-
-NOTE: 若要減少誤報數量，請前往 *Storage > Volumes > Security > Configure workload characteristics*，然後停用 *Monitor new file types*。此設定在 ONTAP 9.14.1 P7、9.15.1 P1、9.16.1 及更新版本中預設為停用。從 ONTAP 9.18.1 P2 開始，System Manager 不再顯示 ARP 工作負載特性，包括基線統計資訊和峰值統計資訊。峰值統計資訊仍可透過 ONTAP CLI 和 ONTAP REST API 選項進行進階分析。
+NOTE: 若要減少大量誤報警示，請前往 *Storage > Volumes > Security > Configure workload characteristics*，然後停用 *Monitor new file types*。從 ONTAP 9.18.1 P2 開始，System Manager 不再顯示 ARP/AI 工作負載特性，包括基準及突增統計資料。突增統計資料仍可透過 ONTAP CLI 和 REST API 選項進行進階分析。
 
 .SAN 環境中的攻擊偵測
-從ONTAP 9.17.1 開始，如果 ARP 偵測到超過自動學習閾值的高加密速率，則會發出警告。此閾值是在link:respond-san-entropy-eval-period.html["評估期"]但可以修改。
+從 ONTAP 9.17.1 版本開始，如果 ARP/AI 偵測到加密速率過高，超過自動學習到的臨界值，則會發出警告。此臨界值是在link:entropy-eval-period-arpai.html["評估期"]之後建立的，但可以修改。
 
 
 
-[[modify-attack-detection-parameters]]
-== 修改攻擊偵測參數
+[[modify-arpai-attack-detection-parameters]]
+== 修改 ARP/AI 攻擊偵測參數
 
-根據啟用 ARP 的磁碟區的預期行為，您可能需要修改攻擊偵測參數。
+根據啟用 ARP/AI 的 Volume 的預期行為，您可能需要修改攻擊偵測參數。
 
 .步驟
 . 檢視現有的攻擊偵測參數：
@@ -88,10 +89,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 [[report-known-surges]]
 == 回報已知的突波
 
-即使在作用中， ARP 仍會繼續修改偵測參數的基準值。如果您知道 Volume 活動的突波，一次性突波或是屬於新常態特徵的突波，您應該將它們回報為安全的。手動回報這些突波的安全性、有助於提高 ARP 威脅評估的準確度。
+即使在作用中模式下，ARP/AI 也會持續調整偵測參數的基線值。如果您發現 Volume 活動出現激增，無論是單次激增還是某種新常態下的激增，都應將其報告為安全。手動將這些激增報告為安全有助於提高 ARP/AI 威脅評估的準確性。
 
 .回報一次性突波
-. 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
+. 如果在已知情況下發生了一次性激增，且您希望 ARP/AI 在未來類似情況下報告激增，請從工作負載行為中清除該激增：
 +
 [source, cli]
 ----
@@ -103,7 +104,7 @@ security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name
 
 
 .修改基準突波
-. 如果回報的喘振應視為正常應用程式行為、請回報喘振、以修改基準喘振值。
+. 如果報告的突波應被視為正常的應用程式行為，則應將此突波報告為正常行為，以修改基線突波值：
 +
 [source, cli]
 ----
@@ -116,22 +117,22 @@ security anti-ransomware volume workload-behavior update-baseline-from-surge -vs
 
 
 
-[[configure-arp-alerts]]
+[[configure-arpai-alerts]]
 [[modify-alerts]]
-== 設定 ARP 警示
+== 設定 ARP/AI 警示
 
-從 ONTAP 9.14.1 開始， ARP 可讓您指定兩個 ARP 事件的警示：
+從 ONTAP 9.14.1 開始，您可以為以下兩個事件指定警報：
 
-* 觀察磁碟區上的新副檔名
-* 建立 ARP 快照
+* 觀察到 Volume 上出現新的檔案副檔名
+* 建立 ARP/AI 快照
 
 
-這兩個事件的警示可在個別磁碟區或整個 SVM 上設定。如果您啟用 SVM 的警示、則警示設定只會由啟用警示後建立的磁碟區繼承。根據預設、警示不會在任何磁碟區上啟用。
+可以針對單一 Volume 或整個 SVM 設定這兩個事件的警示。如果為 SVM 啟用警示，則警示設定僅由啟用警示後建立的 Volume 繼承。預設情況下，任何 Volume 均未啟用警示。
 
-事件警報可透過多管理員驗證進行控制。有關更多信息，請參閱link:use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp["使用 ARP 保護的磁碟區進行多重管理驗證"] 。
+事件警報可透過多管理員驗證進行控制。如需更多資訊，請參閱 link:support-arpai.html#multi-admin-verification-with-arpai-protected-volumes["使用 ARP/AI 保護的 Volume 進行多重系統管理員驗證"]。
 
 .步驟
-您可以使用系統管理員或ONTAP CLI 設定 ARP 事件警報。
+您可以使用 System Manager 或 ONTAP CLI 設定 ARP/AI 事件警報。
 
 [role="tabbed-block"]
 ====
@@ -155,13 +156,13 @@ security anti-ransomware volume workload-behavior update-baseline-from-surge -vs
 .CLI
 --
 .設定磁碟區的警示
-* 若要設定新副檔名的警示：
+* 設定新檔案副檔名提醒：
 +
 [source, cli]
 ----
-security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true`
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true
 ----
-* 若要設定建立 ARP 快照的警示：
+* 若要設定 ARP/AI 快照建立的警示：
 +
 [source, cli]
 ----
@@ -171,13 +172,13 @@ security anti-ransomware volume event-log modify -vserver <svm_name> -volume <vo
 
 
 .設定 SVM 的警示
-* 若要設定新副檔名的警示：
+* 設定新檔案副檔名提醒：
 +
 [source, cli]
 ----
 security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true
 ----
-* 若要設定建立 ARP 快照的警示：
+* 若要設定 ARP/AI 快照建立的警示：
 +
 [source, cli]
 ----
@@ -191,6 +192,6 @@ security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enable
 --
 ====
 .相關資訊
-* link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["瞭解自主勒索軟體保護攻擊和自主勒索軟體保護快照"^]。
+* link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["了解 ARP/AI 攻擊和 ARP/AI 快照"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
 

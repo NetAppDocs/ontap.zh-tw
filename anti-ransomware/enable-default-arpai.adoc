@@ -1,0 +1,112 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-default-arpai.html 
+keywords: ARP AI, arpai, enable by default, autonomous ransomware protection AI, default volume state, ONTAP 9.18.1, automatic enablement, SVM default, cluster default, machine learning ransomware 
+summary: 從 ONTAP 9.16.1 開始，設定 SVM 以便預設啟用 ARP/AI 來建立新 Volume。從 ONTAP 9.18.1 開始，支援的系統上提供叢集層級的自動啟用功能。 
+---
+= 在新 Volume 中預設啟用 ONTAP ARP/AI
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.16.1 開始，您可以設定儲存設備虛擬機器 （SVM），以便預設為新 Volume 啟用基於人工智慧的自主勒索軟體防護 （ARP/AI）。從 ONTAP 9.18.1 開始，ARP/AI 將在叢集層級自動啟用link:support-arpai.html["支援的系統"]，並保留 12 小時的寬限期。如果您需要在 SVM 層級（而非叢集層級）為新 Volume 預設啟用 ARP/AI，請使用此程序。
+
+對於 ONTAP 9.17.1 及更早版本，在 SVM 層級進行設定是預設在新磁碟區上啟用 ARP 的唯一方法。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:enable-default-arp.html["在新磁碟區中預設啟用 ARP"]。
+
+
+NOTE: 對於 ONTAP 9.13.1 至 9.17.1，FlexGroup Volume 使用較早的 ARP 模型，需要學習期。請參閱link:enable-default-arp.html["在新磁碟區中預設啟用 ARP"]。
+
+.關於這項工作
+在叢集層級未自動啟用 ARP/AI 的系統中，預設情況下，新建 Volume 的 ARP/AI 功能會處於停用狀態。您必須啟用 ARP/AI，並將其設定為 SVM 中新建 Volume 的預設啟用狀態。
+
+未啟用 ARP/AI 的現有 Volume 在您變更 SVM 預設值時不會自動變更 ARP/AI 啟用狀態。本程序中所述的 SVM 設定僅影響新 Volume。了解如何link:enable-arpai.html["為現有 Volume 啟用 ARP/AI"]。
+
+[[arp-enablement-default-behavior-table]]
+啟用自主勒索軟體防護後，根據您的環境和 ONTAP 版本，可能會進入過渡期：
+
+[cols="25,25,50"]
+|===
+| Volume類型 | 版本ONTAP | 啟用後的行為 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更新版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+| SAN 磁碟區 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即啟動，啟動評估期，以確定合適的警報閾值，然後再從初始的保守閾值過渡。 
+|===
+.開始之前
+在預設啟用 ARP/AI 之前，請確保您的環境具備以下條件：
+
+.NAS 特定要求
+* 啟用了 NFS 或 SMB（或兩者）協定的儲存虛擬機器 (SVM)。
+* 積極link:../concepts/namespaces-junction-points-concept.html["交會路徑"]就音量而言。
+
+
+.SAN 特定要求
+* 啟用了 iSCSI、FC 或 NVMe 協定的儲存虛擬機器 (SVM)。
+
+
+.一般要求
+* 適用於您的 ONTAP 版本的 link:index.html#licenses-for-autonomous-ransomware-protection["正確授權"]。
+* （建議）啟用多管理員驗證 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"]。
+
+
+.步驟
+您可以使用 System Manager 或 ONTAP CLI 在 SVM 層級為新 Volume 預設啟用 ARP/AI。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇 *Storage* 或 *Cluster*（取決於您的環境），選擇 *Storage VMs*，然後選擇將包含要使用 ARP/AI 保護的 Volume 的儲存設備 VM。
+. 導航至“設定”標籤。在「安全性」下，找到「反勒索軟體」磁貼，然後選擇image:icon_pencil.gif["編輯圖示"] 。
+. 選取此核取方塊以啟用反勒索軟體 (ARP/AI)。選取另一個核取方塊可在儲存設備 VM 中所有符合條件的 Volume 上啟用 ARP/AI。
++
+
+NOTE: ARP/AI 立即進入作用中模式；無需學習期。
+
+
+
+--
+.CLI
+--
+.修改現有 SVM，使其在新 Volume 中預設啟用 ARP/AI
+[source, cli]
+----
+vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state enabled
+----
+.建立新的 SVM，並預設為新 Volume 啟用 ARP/AI
+[source, cli]
+----
+vserver create -vserver <svm_name> -anti-ransomware-default-volume-state enabled
+----
+.驗證 ARP/AI 狀態
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+.相關資訊
+* link:default-enable-change-arpai.html["選擇退出 ARP/AI 自動能力開發"]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["安全反勒索軟體卷顯示"^]
+

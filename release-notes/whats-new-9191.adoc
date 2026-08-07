@@ -191,11 +191,11 @@ xref:../s3-config/regenerate-access-keys.html[ONTAP S3 金鑰]
 
 
  a| 
-ARP 工作負載特性已從 System Manager UI 移除
+System Manager UI 中已移除 Autonomous Ransomware Protection 工作負載特徵。
  a| 
-System Manager 不再顯示 Autonomous Ransomware Protection (ARP) 工作負載特性，包括基準線和激增統計資料。此資訊已移除，因為激增活動經常被誤解為實際的勒索軟體攻擊或需要手動調整的情況。
+System Manager 不再顯示 Autonomous Ransomware Protection 工作負載特徵，包括基線統計資料和峰值統計資料。此資訊已移除，因為峰值活動經常被誤解為實際的勒索軟體攻擊或需要手動調整的情況。
 
-ARP 行為和偵測方式保持不變，僅 System Manager 中這些詳細資訊的顯示方式受到影響。使用 ONTAP CLI 和 ONTAP REST API 選項仍可取得突增統計資料，以進行進階分析。
+自主勒索軟體防護的行為和偵測方式保持不變，僅 System Manager 中這些詳細資訊的顯示方式受到影響。激增統計資料仍可透過 ONTAP CLI 和 ONTAP REST API 選項取得，以進行進階分析。
 
 
 
@@ -216,9 +216,9 @@ xref:../nfs-admin/enable-nfs-over-tls-task.html[啟用基於 TLS 的 NFS，以�
  a| 
 xref:../anti-ransomware/use-cases-restrictions-concept.html#snapmirror[自主勒索軟體防護支援 SnapMirror 同步和 SnapMirror 主動同步]
  a| 
-ARP/AI 可保護 FAS、AFF 和 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9191.html["AFX"]系統上 SnapMirror 同步（NAS 和 SAN）關係中的主要 Volume，以及 AFF 和 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9191.html["ASA r2"]系統上 SnapMirror 雙主動式 SAN 關係中的主要 Volume。偵測在作用中讀寫主要磁碟區上執行，並在該磁碟區上建立 ARP 快照（快照不會複寫）。
+ARP/AI 可保護 FAS、AFF 和 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9191.html["AFX"^]系統上 SnapMirror 同步（NAS 和 SAN）關係中的主要 Volume，以及 AFF 和 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9191.html["ASA r2"^]系統上 SnapMirror 作用中同步 SAN 關係中的主要 Volume。偵測在作用中讀寫主要 Volume 上執行，並在該主要 Volume 上建立 ARP/AI 快照（快照不會被複寫）。
 
-先前因同步複寫關係而導致預設 ARP 能力開發受到抑制的叢集升級至 ONTAP 9.19.1 後，ARP 將自動恢復。更新前警告會通知管理員，並提供停用 ARP 的選項。
+先前由於同步複寫關係而預設 ARP/AI 能力開發遭到抑制的叢集升級至 ONTAP 9.19.1 後，此功能將自動恢復。更新前警告會通知管理員，並提供停用該功能的選項。
 
 
 

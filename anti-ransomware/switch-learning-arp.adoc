@@ -1,0 +1,95 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/switch-learning-arp.html 
+keywords: ARP, learning mode, active mode, switch, autonomous ransomware protection, ONTAP 9.10.1, dry-run, NAS, FlexGroup, legacy ARP learning mode, ONTAP 9.15.1 or earlier 
+summary: 在學習模式下至少運行 30 天後，針對 ONTAP 9.10.1 至 9.15.1 NAS Volume，手動或自動將 ARP 從學習模式切換至作用中模式。 
+---
+= 在學習期間之後，在 ONTAP ARP 中切換至作用中模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+對於 NAS 環境，需要手動或自動將啟用 ARP 的 Volume 從學習模式切換至作用中模式。如果您在 ONTAP 9.10.1 至 9.15.1 版本中使用 ARP，或在 ONTAP 9.13.1 至 9.17.1 版本的 FlexGroup Volume 上執行 ARP，則需要切換模式。
+
+
+NOTE: ARP/AI（ONTAP 9.16.1 及更新版本）不需要學習期。ARP/AI 保護會立即在 FlexVol Volume 上作用中。對於 FlexGroup Volume，ARP/AI 需要 ONTAP 9.18.1。ARP/AI 沒有等效的切換模式程序。如果您執行的是 ONTAP 9.16.1 或更新版本，請參閱 link:index.html["了解自主勒索軟體防護"]。
+
+ARP 完成建議的至少 30 天學習模式運作後，您可以手動切換至作用中模式。從 ONTAP 9.13.1 開始，ARP 會自動決定最佳學習期間間隔並自動切換，切換可能在 30 天之前完成。
+
+
+NOTE: 在現有的磁碟區中、學習和作用中模式僅適用於新寫入的資料、而不適用於磁碟區中現有的資料。不會掃描和分析現有資料、因為在啟用Volume以進行Arp之後、會根據新資料來假設先前一般資料流量的特性。
+
+
+
+[[manually-switch-to-active-mode-after-a-learning-period]]
+== 學習期結束後，手動切換至作用中模式
+
+對於 ONTAP 9.10.1 至 9.15.1（以及 ONTAP 9.13.1 至 9.17.1 中的 FlexGroup Volume），學習期結束後，您可以使用 System Manager 或 ONTAP CLI 手動將 ARP 學習模式轉換為作用中模式。
+
+.步驟
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取已準備好用於作用中模式的磁碟區。
+. 在 * Volumes * （卷）總覽的 * Security （安全性） * 標籤中，在 Anti-勒索 軟體方塊中選取 * Switch to active mode* （切換至作用中模式）。
+. 在「反勒索軟體」方塊中驗證磁碟區的 ARP 狀態。
+
+
+--
+.CLI
+--
+. 將受保護 Volume 切換到作用中模式：
++
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
++
+您也可以使用 `volume modify`命令切換至作用中模式：
+
++
+[source, cli]
+----
+volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state enabled
+----
+. 驗證 Volume 的 ARP 狀態：
++
+[source, cli]
+----
+security anti-ransomware volume show
+----
+
+
+--
+====
+
+
+[[automatic-switching-from-learning-mode-to-active-mode]]
+== 自動從學習模式切換至使用中模式
+
+從ONTAP 9.13.1 開始，自適應學習已新增至 ARP 分析中，並且可以自動從學習模式切換到主動模式。 ARP自動從學習模式切換到主動模式的自主決策基於以下選項的配置設定：
+
+[listing]
+----
+ -anti-ransomware-auto-switch-minimum-incoming-data-percent
+ -anti-ransomware-auto-switch-duration-without-new-file-extension
+ -anti-ransomware-auto-switch-minimum-learning-period
+ -anti-ransomware-auto-switch-minimum-file-count
+ -anti-ransomware-auto-switch-minimum-file-extension
+----
+如果啟用自動切換功能，即使未滿足所有條件，磁碟區也會在最多 30 天後自動切換到活動模式。此 30 天的限制是固定的，無法更改。
+
+如果您偏好手動控制切換過程，可以停用 SVM 中所有 Volume 從學習模式到作用中模式的自動切換：
+
+[source, cli]
+----
+vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
+----
+如需 ARP 組態選項（包括預設值）的詳細資訊、請參閱 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-auto-switch-to-enable-mode-show.html["指令參考資料ONTAP"^]。
+
+.相關資訊
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["安全反勒索軟體量"^]
+

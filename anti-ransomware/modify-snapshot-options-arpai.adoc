@@ -1,0 +1,203 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/modify-snapshot-options-arpai.html 
+keywords: ARP AI, arpai, snapshot settings, retention, arw snap, autonomous ransomware protection AI, ONTAP 9.17.1, SAN snapshot parameters, machine learning ransomware 
+summary: 調整為回應潛在勒索軟體威脅而自動產生的 ARP/AI 快照的建立和保留設定。 
+---
+= 調整自動產生的 ONTAP ARP/AI 快照設定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.16.1 開始，您可以使用 CLI 來控制 Autonomous Ransomware Protection with AI （ARP/AI） 快照的保留設定，這些快照會自動產生以回應疑似勒索軟體攻擊。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:modify-snapshot-options-arp.html["調整自動產生的 ARP 快照的設置"]。
+
+.開始之前
+您只能修改 link:../system-admin/types-svms-concept.html["節點SVM"] 的 ARP/AI 快照選項，而不能修改其他類型的 SVM 的 ARP/AI 快照選項。
+
+.步驟
+. 顯示所有目前的 ARP/AI 快照設定：
++
+[source, cli]
+----
+options -option-name arw*
+----
+. 顯示選定的目前 ARP/AI 快照設定：
++
+[source, cli]
+----
+options -option-name <arw_setting_name>
+----
+. 修改 ARP/AI 快照設定：
++
+[source, cli]
+----
+options -option-name <arw_setting_name> -option-value <arw_setting_value>
+----
++
+您可以修改以下設定（ONTAP 9.16.1 及更新版本）：
+
++
+[cols="1,3,1"]
+|===
+| 設定 | 說明 | 支援 ARP/AI 的版本 
+
+
+| `arw.snap.max.count`  a| 
+指定 Volume 中任何時間點可同時存在的 ARP/AI 快照最大數量。較舊的複本將被刪除，以確保 ARP/AI 快照的總數保持在此限制範圍內。
+ a| 
+ONTAP 9.16.1 及更新版本
+
+
+
+| `arw.snap.create.interval.hours`  a| 
+指定 ARP/AI 快照之間的間隔時間（以小時為單位）。當懷疑存在基於資料熵的攻擊，且最近建立的快照早於指定的間隔時間時，將建立新的 ARP/AI 快照。
+ a| 
+ONTAP 9.16.1 及更新版本
+
+
+
+| `arw.snap.normal.retain.interval.hours`  a| 
+指定 ARP/AI 快照的保留時長（以小時為單位）。當 ARP/AI 快照達到保留期間臨界值時，即會被刪除。
+ a| 
+ONTAP 9.16.1（已在 9.17.1 及更新版本中棄用）
+
+
+
+| `arw.snap.max.retain.interval.days`  a| 
+指定 ARP/AI 快照可保留的最大天數。當 Volume 上未報告任何攻擊時，早於此期限的 ARP/AI 快照將會被刪除。
+
+
+NOTE: 如果 ARP/AI 偵測到威脅，則會忽略最大保留間隔。為回應威脅而建立的 ARP/AI 快照將保留，直到您對該威脅做出回應。當您將威脅標記為誤報時， `arw.snap.retain.hours.after.clear.suspect.false.alert` 所指定的保留定時器將套用至 ARP/AI 快照。定時器到期後，將恢復標準保留設定。
+ a| 
+ONTAP 9.16.1（已在 9.17.1 及更新版本中棄用）
+
+
+
+| `arw.snap.create.interval.hours.post.max.count`  a| 
+指定當 Volume 已包含最大數量的 ARP/AI 快照時，ARP/AI 快照之間的間隔（以小時為單位）。達到最大數量後，將刪除一個 ARP/AI 快照，以便為新複本騰出空間。使用此選項可降低建立速度，以保留較舊的複本。
+ a| 
+ONTAP 9.16.1（已在 9.17.1 及更新版本中棄用）
+
+
+
+| `arw.snap.new.extns.interval.hours`  a| 
+指定偵測到新檔案副檔名時所建立的 ARP/AI 快照之間的間隔（以小時為單位）。當偵測到新檔案副檔名且上一次此類快照的建立時間早於指定的間隔時，系統會建立一個新的 ARP/AI 快照。此選項獨立於 `arw.snap.create.interval.hours`之外，後者用於指定基於熵的快照間隔。
+ a| 
+ONTAP 9.16.1（已在 9.17.1 及更新版本中棄用）
+
+
+
+| `arw.snap.low.encryption.retain.duration.hours`  a| 
+指定在低加密活動期間建立的 ARP/AI 快照的保留期間（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.snap.retain.hours.after.clear.suspect.false.alert`  a| 
+指定在系統管理員將攻擊事件標記為誤報後，作為預防措施保留 ARP/AI 快照的間隔（以小時為單位）。
+ a| 
+ONTAP 9.16.1 及更新版本
+
+
+
+| `arw.snap.retain.hours.after.clear.suspect.real.attack`  a| 
+指定在系統管理員將攻擊事件標記為真實攻擊後，作為預防措施保留 ARP/AI 快照的間隔（以小時為單位）。
+ a| 
+ONTAP 9.16.1 及更新版本
+
+
+
+| `arw.snap.surge.interval.days`  a| 
+指定回應 IO 激增而建立的 ARP/AI 快照之間的間隔（以天為單位）。此選項也指定 ARP/AI 激增快照的保留期間（以天為單位）。
+ a| 
+ONTAP 9.16.1 及更新版本
+
+
+
+| `arw.high.encryption.alert.enabled`  a| 
+啟用高加密等級警報。當設定為 `on`（預設值）時，當加密百分比超過 `arw.high.encryption.percentage.threshold`中指定的臨界值時，ONTAP 會發出警報。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.high.encryption.percentage.threshold`  a| 
+指定 Volume 的最大加密百分比。如果加密百分比超過此臨界值，ONTAP 會將此增加視為攻擊並建立 ARP/AI 快照。 `arw.high.encryption.alert.enabled`必須設為 `on`才能使此選項生效。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.snap.high.encryption.retain.duration.hours`  a| 
+指定在高加密閾值事件期間建立的快照的保留持續時間間隔（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+|===
+. 如果您在 SAN 環境中使用 ARP/AI，也可以修改以下評估期設定：
++
+[cols="1,3,1"]
+|===
+| 設定 | 說明 | 支援的版本 
+
+
+| `arw.block_device.auto.learn.threshold.min_value`  a| 
+指定區塊設備評估的自動學習階段的最小加密閾值百分比值。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.auto.learn.threshold.max_value`  a| 
+指定區塊設備評估的自動學習階段的最大加密閾值百分比值。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.min_hours`  a| 
+指定在設定加密閾值之前評估階段必須運行的最小間隔（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.max_hours`  a| 
+指定在設定加密閾值之前評估階段必須運行的最大間隔（以小時為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.min_data_ingest_size_GB`  a| 
+指定在設定加密閾值之前評估階段必須提取的最小資料量（以 GB 為單位）。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.alert.enabled`  a| 
+指定是否為區塊設備上的 ARP/AI 評估階段啟用警報。預設值為 `True`。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+
+
+| `arw.block_device.evaluation.phase.alert.threshold`  a| 
+指定在區塊裝置上進行 ARP/AI 評估階段的臨界值百分比。如果加密百分比超過此臨界值，則會觸發警報。
+ a| 
+ONTAP 9.17.1 及更高版本
+
+|===
+
+
+.相關資訊
+* link:learn-about-arpai.html#arp-ai-snapshots["威脅評估和 ARP/AI 快照"]
+* link:entropy-eval-period-arpai.html["SAN Volume 的 ARP/AI 熵評估週期"]
+

@@ -1,0 +1,210 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-arpai.html 
+keywords: ARP AI, arpai, enable, autonomous ransomware protection AI, ONTAP 9.16.1, NAS, SAN, FlexVol, FlexGroup, machine learning ransomware, active mode, enable ransomware protection ONTAP 9.16.1, enable ARP AI SAN volumes, no learning period ARP AI enablement 
+summary: 從 ONTAP 9.16.1 開始，在支援的 Volume 上啟用 ARP/AI，即可立即獲得作用中保護，無需學習期。SAN 和 FlexGroup 支援將在後續版本中提供。 
+---
+= 在 Volume 上啟用 ONTAP ARP/AI
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.16.1 開始，您可以在現有 Volume 上啟用基於人工智慧的自主勒索軟體防護 （ARP/AI），也可以建立啟用 ARP/AI 的新 Volume。ARP/AI 無需學習期即可立即作用中。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:enable-arp.html["在 Volume 上啟用 ARP"]。
+
+.關於這項工作
+ARP/AI 是 ONTAP 9.16.1 及更高版本目前的勒索軟體保護模型。若要啟用 ARP/AI，請在確保您的環境符合要求後，按照與您的環境相符的步驟進行操作：
+
+* <<enable-nas-flexvol,帶有FlexVol磁碟區的 NAS>>（ONTAP 9.16.1 及更新版本）
+* <<enable-nas-flexgroup,帶有FlexGroup磁碟區的 NAS>>（ONTAP 9.18.1 及更新版本）
+* <<enable-san,SAN 磁碟區>>（ONTAP 9.17.1 及更新版本）
+
+
+啟用自主勒索軟體防護後，根據您的環境和 ONTAP 版本，可能會進入過渡期：
+
+[cols="25,25,50"]
+|===
+| Volume類型 | 版本ONTAP | 啟用後的行為 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更新版本 | ARP/AI 無需學習期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP啟動後將進入學習模式，持續30天。 
+
+
+| SAN 磁碟區 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即啟動，啟動評估期，以確定合適的警報閾值，然後再從初始的保守閾值過渡。 
+|===
+.開始之前
+啟用 ARP/AI 之前，請確保您的環境具備以下條件：
+
+.NAS 特定要求
+* 啟用了 NFS 或 SMB（或兩者）協定的儲存虛擬機器 (SVM)。
+* 已配置客戶端的 NAS 工作負載。
+* 積極link:../concepts/namespaces-junction-points-concept.html["交會路徑"]就音量而言。
+
+
+.SAN 特定要求
+* 啟用了 iSCSI、FC 或 NVMe 協定的儲存虛擬機器 (SVM)。
+* 已配置客戶端的 SAN 工作負載。
+
+
+.一般要求
+* 適用於您的 ONTAP 版本的 link:index.html#licenses-for-autonomous-ransomware-protection["正確授權"]。
+* （建議）啟用多管理員驗證 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["啟用多重管理驗證"]。
+
+
+
+
+[[enable-arpai-on-nas-flexvol-volumes]]
+[[enable-nas-flexvol]]
+== 在 NAS FlexVol Volume 上啟用 ARP/AI
+
+自 ONTAP 9.16.1 起，ARP/AI 在能力開發後會立即針對 NAS FlexVol® Volume 處於作用中狀態。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選取 * 儲存 > 磁碟區 * 、然後選取您要保護的磁碟區。
+. 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
+. 在「反勒索軟體」方塊中驗證 Volume 的 ARP/AI 狀態。
++
+若要顯示所有 Volume 的 ARP/AI 狀態：在 *Volumes* 窗格中，選取 *Show/Hide*，然後確保已勾選 *Anti-ransomware* 狀態。
+
+
+
+--
+.CLI
+--
+*在現有 Volume 上啟用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*建立啟用 ARP/AI 的新 Volume：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state enabled -junction-path </path_name>
+----
+*驗證 ARP/AI 狀態：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume show`資訊，請參閱。
+
+--
+====
+
+
+[[enable-arpai-on-nas-flexgroup-volumes]]
+[[enable-nas-flexgroup]]
+== 在 NAS FlexGroup Volume 上啟用 ARP/AI
+
+從 ONTAP 9.18.1 開始，ARP/AI 在 FlexGroup Volume 能力開發後立即作用中。
+
+
+NOTE: 對於 ONTAP 9.13.1 至 9.17.1，FlexGroup Volume 使用較早的 ARP 模型，需要學習期。請參閱link:enable-arp.html#enable-arp-on-nas-flexgroup-volumes["在 NAS FlexGroup磁碟區上啟用 ARP"]。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇“儲存 > 磁碟區”，然後選擇要保護的FlexGroup區。
+. 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
+. 在「反勒索軟體」方塊中驗證 Volume 的 ARP/AI 狀態。
++
+若要顯示所有 Volume 的 ARP/AI 狀態：在 *Volumes* 窗格中，選取 *Show/Hide*，然後確保已勾選 *Anti-ransomware* 狀態。
+
+
+
+--
+.CLI
+--
+*在現有 FlexGroup Volume 上啟用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*建立啟用 ARP/AI 的全新 FlexGroup Volume：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggr-list <aggregate name> -aggr-list-multiplier <integer> -size <nn> -anti-ransomware-state enabled -junction-path </path_name>
+----
+*驗證 ARP/AI 狀態：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+
+
+[[enable-arpai-on-san-volumes]]
+[[enable-san]]
+== 在 SAN Volume 上啟用 ARP/AI
+
+從 ONTAP 9.17.1 開始，您可以在 SAN Volume 上啟用 ARP/AI。能力開發後，ARP/AI 將立即自動作用中，並開始監控和保護 SAN Volumelink:entropy-eval-period-arpai.html["熵評估期"]，同時判斷工作負載是否適合使用 ARP/AI，並設定最佳加密臨界值以進行偵測。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 選擇“儲存 > 磁碟區”，然後選擇要保護的 SAN 磁碟區。
+. 在 * Volumes （卷） * 概述的 * Security （安全） * 選項卡中，選擇 * Status （狀態） * 以從 Disabled （已禁用）切換到 Enabled （已啓用）。
+. ARP/AI自動進入評估期。
+. 在「反勒索軟體」方塊中驗證 ARP/AI 狀態和評估狀態。
++
+若要顯示所有 Volume 的 ARP/AI 狀態：在 *Volumes* 窗格中，選取 *Show/Hide*，然後確保已勾選 *Anti-ransomware* 狀態。
+
+
+
+--
+.CLI
+--
+*在現有 SAN Volume 上啟用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*建立啟用 ARP/AI 的新 SAN Volume：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state enabled
+----
+*驗證 ARP/AI 狀態和評估狀態：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+檢查  `Block device detection status` 欄位以監控評估期進度。請參閱 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["指令參考資料ONTAP"^] 以深入瞭解  `security anti-ransomware volume show`。
+
+--
+====
+
+
+[[related-information]]
+== 相關資訊
+
+* link:entropy-eval-period-arpai.html["SAN Volume 的 ARP/AI 熵評估週期"]
+

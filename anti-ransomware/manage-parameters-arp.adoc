@@ -1,0 +1,196 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/manage-parameters-arp.html 
+keywords: ARP, detection parameters, configure workload characteristics, modify, security anti-ransomware attack, ONTAP 9.11.1, NAS, event alerts, autonomous ransomware protection, legacy ARP detection tuning, ONTAP 9.15.1 or earlier 
+summary: 從 ONTAP 9.11.1 開始，修改 NAS Volume 的 ARP 偵測參數，以提高勒索軟體偵測準確率（ONTAP 9.10.1 至 9.15.1）。 
+---
+= 管理 ONTAP ARP 攻擊偵測參數
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.11.1 版本開始，您可以修改特定啟用 ARP 的 NAS Volume 上的勒索軟體偵測參數，並將已知的流量激增報告為正常檔案活動。調整偵測參數有助於根據您特定 Volume 的工作負載提高報告的準確性。
+
+
+NOTE: 如果您執行的是 ONTAP 9.16.1 或更新版本，請參閱link:manage-parameters-arpai.html["管理 ARP/AI 攻擊偵測參數"]。
+
+
+
+[[how-arp-attack-detection-works]]
+== ARP 攻擊偵測的工作原理
+
+當自主勒索軟體防護 (ARP) 處於學習模式時，它會建立 Volume 行為的基準值。這些基準值包括熵、檔案副檔名，以及從 ONTAP 9.11.1 開始新增的 IOPS。這些基準值用於評估勒索軟體威脅。如需這些條件的詳細資訊，請參閱 link:learn-about-arp.html#what-arp-detects["ARP 偵測到什麼"]。
+
+在 ONTAP 9.10.1 中，如果 ARP 偵測到以下*兩個*條件同時存在，則會發出警告：
+
+* 超過 20 個檔案的副檔名先前未在磁碟區中觀察到
+* 高 Entropy 資料
+
+
+在 ONTAP 9.10.1 中，當 100 個或更多檔案受到影響時，低威脅警告會升級為中等威脅。
+
+從 ONTAP 9.11.1 版本開始，如果滿足以下任一條件，ARP 都會發出威脅警告。例如，如果在 24 小時內偵測到超過 20 個檔案副檔名先前未在 Volume 中出現過，則無論觀察到的熵值為何，ARP 都會將其歸類為威脅。24 小時和 20 個檔案這兩個值均為預設值，可以進行修改。
+
+
+NOTE: 若要減少大量誤報警示，請前往 *Storage > Volumes > Security > Configure workload characteristics*，然後停用 *Monitor new file types*。此設定在 ONTAP 9.14.1 P7 和 9.15.1 P1 中預設為停用。
+
+在 ONTAP 9.10.1 到 9.15.1 中，ARP 不會評估 SAN Volume。從 ONTAP 9.17.1 開始，SAN Volume 僅受 ARP/AI 支援。
+
+從 ONTAP 9.14.1 開始，您可以在 ARP 觀察到新的副檔名，以及 ARP 建立快照時，設定警示。如需更多資訊、請參閱 <<modify-alerts>>。
+
+
+
+[[modify-arp-attack-detection-parameters]]
+== 修改 ARP 攻擊偵測參數
+
+根據啟用 ARP 的 NAS Volume 的預期行為，您可能需要修改攻擊偵測參數。
+
+.步驟
+. 檢視現有的攻擊偵測參數：
++
+[source, cli]
+----
+security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>
+----
++
+....
+security anti-ransomware volume attack-detection-parameters show -vserver vs1 -volume vol1
+                                             Vserver Name : vs1
+                                              Volume Name : vol1
+            Is Detection Based on High Entropy Data Rate? : true
+  Is Detection Based on Never Seen before File Extension? : true
+                  Is Detection Based on File Create Rate? : true
+                  Is Detection Based on File Rename Rate? : true
+                  Is Detection Based on File Delete Rate? : true
+           Is Detection Relaxing Popular File Extensions? : true
+                High Entropy Data Surge Notify Percentage : 100
+                 File Create Rate Surge Notify Percentage : 100
+                 File Rename Rate Surge Notify Percentage : 100
+                 File Delete Rate Surge Notify Percentage : 100
+ Never Seen before File Extensions Count Notify Threshold : 20
+       Never Seen before File Extensions Duration in Hour : 24
+....
+. 所有顯示的欄位均可使用布林值或整數值進行修改。若要修改字段，請使用 `security anti-ransomware volume attack-detection-parameters modify`命令。
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-attack-detection-parameters-modify.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume attack-detection-parameters modify`資訊，請參閱。
+
+
+
+
+
+[[report-known-surges]]
+== 回報已知的突波
+
+即使在作用中下，ARP 仍會持續調整偵測參數的基線值。如果您發現 Volume 活動出現激增，無論是單次激增還是某種新常態下的激增，都應將其報告為安全。手動將這些激增報告為安全有助於提高 ARP 威脅評估的準確性。
+
+.回報一次性突波
+. 如果已知情況下發生一次性喘振、而您希望 ARP 在未來的情況下回報類似的喘振、請清除工作負載行為中的喘振：
++
+[source, cli]
+----
+security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>
+----
++
+如link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-clear-surge.html["指令參考資料ONTAP"^]需詳細 `security anti-ransomware volume workload-behavior clear-surge`資訊，請參閱。
+
+
+
+.修改基準突波
+. 如果報告的突波應被視為正常的應用程式行為，則應將此突波報告為正常行為，以修改基線突波值：
++
+[source, cli]
+----
+security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>
+----
++
+詳細了解 `security anti-ransomware volume workload-behavior update-baseline-from-surge`在link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-update-baseline-from-surge.html["指令參考資料ONTAP"^] 。
+
+
+
+
+
+[[configure-arp-alerts]]
+[[modify-alerts]]
+== 設定 ARP 警示
+
+從 ONTAP 9.14.1 開始，ARP 允許您為以下兩個事件指定警報：
+
+* 觀察到 Volume 上出現新的檔案副檔名
+* 建立 ARP 快照
+
+
+可以針對單一 Volume 或整個 SVM 設定這兩個事件的警示。如果為 SVM 啟用警示，則警示設定僅由啟用警示後建立的 Volume 繼承。預設情況下，任何 Volume 均未啟用警示。
+
+事件警報可透過多管理員驗證進行控制。如需更多資訊，請參閱 link:support-arp.html#multi-admin-verification["使用 ARP 保護 Volume 的多管理員驗證"]。
+
+.步驟
+您可以使用系統管理員或ONTAP CLI 設定 ARP 事件警報。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+.設定磁碟區的警示
+. 導航到“卷”。選擇要修改設定的單一磁碟區。
+. 選擇“*安全*”選項卡，然後選擇“*事件嚴重性設定*”。
+. 若要接收「偵測到新檔案副檔名」和「已建立勒索軟體快照」的警報，請選擇「嚴重性」標題下的下拉式功能表。將設定從「不產生事件」修改為「通知」。
+. 選擇*保存*。
+
+
+.設定 SVM 的警示
+. 導覽至 *儲存虛擬機器*，然後選擇要啟用設定的 SVM。
+. 在「安全性」標題下，找到「反勒索軟體」標籤。選擇image:../media/icon_kabob.gif["功能表選項圖示"]然後*編輯勒索軟體事件嚴重性*。
+. 若要接收「偵測到新檔案副檔名」和「已建立勒索軟體快照」的警報，請選擇「嚴重性」標題下的下拉式功能表。將設定從「不產生事件」修改為「通知」。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+.設定磁碟區的警示
+* 設定新檔案副檔名提醒：
++
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true
+----
+* 若要設定建立 ARP 快照的警示：
++
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-snapshot-copy-creation true
+----
+* 使用確認您的設定 `anti-ransomware volume event-log show` 命令。
+
+
+.設定 SVM 的警示
+* 設定新檔案副檔名提醒：
++
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true
+----
+* 若要設定建立 ARP 快照的警示：
++
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true
+----
+* 使用確認您的設定 `security anti-ransomware vserver event-log show` 命令。
+
+
+詳細了解 `security anti-ransomware vserver event-log`命令link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security-anti-ransomware-vserver-event-log["指令參考資料ONTAP"^] 。
+
+--
+====
+.相關資訊
+* link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["了解 ARP 攻擊和 ARP 快照"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
+

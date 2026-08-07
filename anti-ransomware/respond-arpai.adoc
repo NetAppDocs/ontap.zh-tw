@@ -1,0 +1,292 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/respond-arpai.html 
+keywords: ARP AI, arpai, respond, abnormal activity, false positive, ransomware attack, NAS, SAN, entropy spike, clear suspect, ONTAP 9.16.1, machine learning ransomware, ransomware detected ONTAP alert, ARP AI warning response, ARP AI false positive response 
+summary: 當 ARP/AI 偵測到受保護 Volume 中的異常活動時，評估它是誤報還是真正的勒索軟體攻擊，並遵循建議的 ONTAP 回應工作流程。 
+---
+= 回應 ONTAP ARP/AI 偵測到的異常活動
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當基於人工智慧的自主勒索軟體防護 (ARP/AI) 偵測到受保護 Volume（ONTAP 9.16.1 及更高版本）中的異常活動時，它會發出警告。評估此通知，並將其分類為誤報或潛在的勒索軟體攻擊。完成活動分類後，ARP/AI 會記錄您的評估結果，調整其威脅設定檔，並恢復正常監控。
+
+
+NOTE: 如果您執行的是 ONTAP 9.15.1 或更早版本，請參閱link:respond-arp.html["回應 ARP 偵測到的異常活動"]。
+
+將攻擊分類時，ARP/AI 快照會保留一段由分類作業啟動的較短時間：
+
+* ONTAP 9.17.1 及更新版本：確認的攻擊為 7 天，誤報為 24 小時。
+* ONTAP 9.16.1 及更早版本：確認的攻擊需要 5 天，誤報需要 48 小時。
+
+
+
+NOTE: 您可以修改這些 link:modify-snapshot-options-arpai.html["保留設定"] 以用於 ARP/AI 快照。
+
+.關於這項工作
+對於 NAS Volume，當 ARP/AI 偵測到高資料熵、資料加密的異常 Volume 活動和不尋常的檔案副檔名的任何組合時，它會顯示可疑檔案清單。
+
+從 ONTAP 9.17.1 開始：
+
+* *對於 NAS Volume*：ARP/AI 繼續提供可疑檔案和檔案類型。
+* *對於 SAN Volume*（包含 LUN 或 NVMe 命名空間的 Volume）：ARP/AI 僅在 Volume 層級評估熵。ONTAP 無法查看 LUN 或命名空間內的個別檔案，因此無法取得可疑檔案清單和檔案類型。ARP/AI 會報告 Volume 層級的加密百分比峰值（熵峰值）。
+
+
+系統管理器中的反勒索軟體頁面會報告 NAS 和 SAN 磁碟區的熵峰值詳細資料。
+
+儘管自主勒索軟體防護功能可以自動偵測並建立快照，但最終確定檔案或事件是否真正惡意仍需手動調查。自主勒索軟體防護功能無法明確判斷事件是否為真正的勒索軟體攻擊。它會標記可疑活動，但您需要進行調查並確認該事件是真正的勒索軟體攻擊還是誤報（良性活動）。
+
+link:determine-ransomware-tips.html["判斷檔案或事件是否真的惡意"]。
+
+當發出 ARP/AI 警告通知時，請透過以下兩種方式之一來指定該活動：
+
+* *誤報*：識別出的檔案類型或熵峰值在您的工作負載中是預期的，可以忽略。
+* *潛在的勒索軟體攻擊*：在您的工作負載中，已識別的檔案類型或熵峰值是意料之外的，應將其視為潛在的攻擊。
+
+
+在您更新決策並清除 ARP/AI 通知後，監控將恢復正常。ARP/AI 會將您的評估記錄到威脅評估設定檔中，並根據您的選擇監控後續的檔案活動。
+
+如果懷疑發生攻擊，您必須確定它是否是攻擊，如果是，請做出回應，然後清除通知並還原資料。link:recover-arpai.html["深入瞭解如何從勒索軟體攻擊中恢復"]。
+
+.開始之前
+ARP/AI 必須主動保護 Volume，而非處於評估模式（針對 SAN Volume）。
+
+.步驟
+當您需要對異常活動進行分類時，請遵循以下步驟：
+
+. <<檢閱異常活動詳細資料,檢閱異常活動詳細資料>>
+. <<了解清除可疑事件時的快照行為,了解清除可疑事件時的快照行為>>
+. 執行下列其中一項：
++
+** <<分類為誤報並繼續監控,分類為誤報並繼續監控>>
+** <<歸類為潛在勒索軟體攻擊並恢復資料,將此次攻擊歸類為潛在勒索軟體攻擊、恢復資料並完成處理>>
+
+
+
+
+如果需要還原資料，請按照 link:recover-arpai.html["勒索軟體攻擊後如何恢復資料"] 中的步驟操作。
+
+
+
+[[review-abnormal-activity-details]]
+== 檢閱異常活動詳細資料
+
+您可以使用 System Manager 或 ONTAP CLI 審查 ARP/AI 警告詳情，然後再選擇回應工作流程。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 收到「異常活動」通知後，請點選連結。或者，導航至 *Storage > Volumes*，找到受影響的 Volume，然後選擇 *Security* 標籤。
++
+警告會顯示在 System Manager 儀表板 *Events* 功能表的 *Overview* 窗格中。
+
+. 在 *Security* 標籤中，檢閱異常活動詳細資料：
++
+** 對於 NAS Volume，審查「可疑檔案類型」報告。「可疑檔案類型」對話方塊會顯示 ARP/AI 辨識出的檔案副檔名和檔案數量。
+** 對於 NAS 和 SAN Volume，請檢閱熵峰值報告，其中顯示時間視窗、持續時間、寫入的資料量和熵值。
+
+
+
+
+--
+.CLI
+--
+. 當您收到可疑勒索軟體攻擊的通知時、請確認攻擊的時間和嚴重性：
++
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <vol_name>
+----
++
+範例輸出：
+
++
+....
+Vserver Name: vs0
+Volume Name: vol1
+State: enabled
+Attack Probability: moderate
+Attack Timeline: 5/12/2025 01:03:23
+Number of Attacks: 1
+Attack Detected By: encryption_percentage_analysis
+....
++
+您也可以檢查EMS訊息：
+
++
+[source, cli]
+----
+event log show -message-name callhome.arw.activity.seen
+----
+. （選用、NAS 和 SAN）檢視在磁碟區上偵測到的最近熵峰值：
++
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-recent-high-encryption-stat -vserver <svm_name> -volume <vol_name>
+----
+. （選用）檢視加密百分比隨時間變化的長條圖：
++
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-encryption-percentage-histogram -vserver <svm_name> -volume <vol_name>
+----
+
+
+--
+====
+
+
+[[understand-snapshot-behavior-when-clearing-a-suspected-event]]
+== 了解清除可疑事件時的快照行為
+
+* 對於 `volume snapshot restore` ONTAP 9.16.1 及更新版本，*請先清除可疑事件*，然後再執行還原。清除可疑檔案後，ARP/AI 快照的保留時間取決於您對活動的分類：如果您將活動標記為潛在的勒索軟體攻擊，則預設保留 7 天；如果您將其標記為誤報，則保留 24 小時。先清除可疑事件不會移除您的還原目標。此外，Volume 還原後，「清除可疑事件」選項將無法使用，因此您必須在還原之前先清除可疑事件。
+* 對於 `volume snapshot restore`以外的其他還原方法（例如 FlexClone 或單一檔案 SnapRestore），請先執行資料還原，然後再清除可疑事件。這些方法不會影響清除可疑事件選項的可用性。
+* 從 ONTAP 9.13.1 開始，如果您使用 MAV 來保護 ARP/AI 設定，則該 `clear-suspect`操作可能需要額外的審批。link:../multi-admin-verify/request-operation-task.html["必須收到所有管理員的核准"]與 MAV 審批群組相關聯，否則操作將失敗。
+
+
+
+
+[[classify-as-false-positive-and-resume-monitoring]]
+== 分類為誤報並繼續監控
+
+當工作負載預期會出現已識別的檔案類型或熵峰值時，請使用此流程。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 記錄你的答案：
++
+** 對於 NAS 檔案類型警告，選擇受影響的檔案，選擇 *Mark as false positive*，然後選擇 *Update and Clear Suspected File Types*。
+** 對於熵峰值（NAS 和 SAN），選擇 *標記為誤報*，然後選擇 *儲存並忽略*。
+
+
+
+
+這些行動會清除有關可疑檔案（NAS）或異常活動（NAS 和 SAN）的警告通知。ARP/AI 隨後會恢復對 Volume 的正常監控。
+
+--
+.CLI
+--
+. 執行下列其中一個命令以記錄您的決定並恢復正常的 ARP/AI 監控：
++
+** 對於 NAS 檔案副檔名：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension_identifiers>] -false-positive true
+----
++
+使用下列選用參數，僅將特定副檔名識別為誤報： `[-extension <text>, ... ]`
+
+** 對於熵尖峰（NAS 和 SAN）：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive true
+----
++
+對於 SAN 磁碟區，這是唯一受支援的對異常活動進行分類的方法；沒有可疑檔案清單或檔案副檔名。
+
+
+
+. 從 ONTAP 9.18.1 開始，您可以確定 `clear-suspect`操作的狀態：
++
+[source, cli]
+----
+security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -vserver <svm_name>
+----
+
+
+--
+====
+
+
+[[classify-as-potential-ransomware-attack-and-recover-data]]
+== 歸類為潛在勒索軟體攻擊並恢復資料
+
+當識別出的檔案類型或熵峰值對於工作負載而言是 _意料之外的_ 時，請使用此流程。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 將活動分類：
++
+** 對於 NAS 檔案類型警告，將選定的檔案標記為 *潛在的勒索軟體攻擊*。
+** 對於熵峰值（NAS 和 SAN），請選取 *標記為潛在的勒索軟體攻擊*。
+
+
+. 在恢復資料之前，請考慮您的link:recover-arpai.html#choose-a-recovery-method["還原方法選項"]。然後執行下列其中一項操作：
++
+** *還原 Volume*：先清除通知，然後還原 Volume：
++
+... [[arp-snapshot-decision-sm-pre-restore]]清除潛在攻擊的通知：
++
+**** 對於 NAS 檔案類型警告，請選擇 *Update and Clear Suspected File Types* 。
+**** 對於熵峰值（NAS 和 SAN）、請選取 *Save and dismiss*。
++
+
+NOTE: 清除可疑檔案後，ARP/AI 快照預設保留 7 天。如果需要更多時間進行資料恢復，link:modify-snapshot-options-arpai.html["調整 ARP/AI 快照設定"]可以增加快照的保留時間。所有資料恢復完成後，可以縮短保留時間。
+
+
+
+... 使用 link:recover-arpai.html["最新的 ARP/AI 快照或更早的快照"] 恢復資料。
+
+
+** *如果您打算使用其他還原方法*：請先還原資料，然後清除通知：
++
+... link:recover-arpai.html["使用 FlexClone 或單一檔案 SnapRestore 恢復資料"]。
+... 資料還原後完成分類，以恢復正常的 ARP/AI 監控：
++
+**** 對於 NAS 檔案類型警告，請選擇 *Update and Clear Suspected File Types* 。
+**** 對於熵峰值（NAS 和 SAN）、請選取 *Save and dismiss*。
++
+
+NOTE: 記錄您的決定會清除攻擊報告。
+
+
+
+
+
+
+
+
+
+--
+.CLI
+--
+. （僅限 NAS Volume）建立攻擊報告：
++
+.. 產生攻擊報告並指定儲存位置。
++
+[source, cli]
+----
+security anti-ransomware volume attack generate-report -vserver <svm_name> -volume <vol_name> -dest-path <[svm_name]:[junction_path/sub_dir_name]>
+----
+
+
+. [[arp-snapshot-decision-cli-pre-restore]]在還原之前清除可疑事件（對於 `volume snapshot restore`）。將攻擊標記為潛在勒索軟體(`-false-positive false`）並清除可疑檔案以解除鎖定：
++
+** 對於 NAS 檔案副檔名：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension_identifiers>] -false-positive false
+----
+** 對於熵尖峰（NAS 和 SAN）：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive false
+----
+
+
+. [[arp-snapshot-decision-cli-post-restore]]繼續執行 link:recover-arpai.html["恢復資料"]。
+
+
+--
+====
