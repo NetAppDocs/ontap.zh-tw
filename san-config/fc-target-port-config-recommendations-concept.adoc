@@ -4,84 +4,30 @@ sidebar: sidebar
 keywords: fc, target, port, configuration, recommendations 
 summary: 若要獲得最佳效能和最高可用度、您應該使用建議的FC目標連接埠組態。 
 ---
-= ONTAP 系統的建議 FC 目標連接埠組態和速度
+= 確定 ONTAP 系統支援的 FC 目標連接埠速度
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-FC 目標連接埠可設定及用於 FC-NVMe 傳輸協定，其方式與 FC 傳輸協定的設定和使用方式完全相同。FC-NVMe 傳輸協定的支援會因您的平台和 ONTAP 版本而異。使用 NetApp Hardware Universe 驗證支援。
+FC 目標連接埠可以按照與 FC 協定完全相同的方式設定並用於 FC-NVMe 協定。
 
-為獲得最佳效能和最高可用度，您應針對特定平台使用中所列的建議目標連接埠組態 https://hwu.netapp.com["NetApp Hardware Universe"^]。
+為了獲得最佳效能和最高可用度，您應該使用 https://hwu.netapp.com["NetApp Hardware Universe"^]中針對您的特定 ONTAP 系統列出的建議目標連接埠組態。
 
+每個就職 FC 連接埠和擴充介面卡連接埠均可個別設定，以支援不同的傳輸速度。支援的速度取決於您的 ONTAP 系統和 HBA。同一主機使用的所有目標連接埠都應設定為相同的速度。
 
+最佳實務做法是，您應該為所有啟動器、交換器和目標連接埠設定相同的速率。如果連接埠和啟動器的速率不同，且無法協商出一致的速率，則無法建立工作階段。不建議使用自動協商來確定連接埠速率。自動協商可能會減慢工作階段建立速度以及中斷後的重新連線速度。
 
-[[configuration-for-fc-target-ports-with-shared-asics]]
-== 具有共享 ASIC 的 FC 目標連接埠組態
+支援的速度列在每個 ONTAP 系統的 NetApp Hardware Universe 的「支援的介面卡」下。
 
-下列平台具有連接埠配對，可與共享的應用程式專用集成電路（ ASIC ）搭配使用。如果您在這些平台上使用擴充介面卡，您應該設定 FC 連接埠，使它們不會使用相同的 ASIC 進行連線。
-
-[cols="3*"]
-|===
-| 控制器 | 連接埠配對與共享ASIC | 目標連接埠數量：建議的連接埠 
-
-
- a| 
-* FAS8200
-* 部分A300 AFF
-
- a| 
-0g+0小時
- a| 
-1 ： 0g 2 ： 0g ， 0 小時
+.步驟
+. 前往 link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+. 選擇*產品*。
+. 在 *Platforms* 下，選擇您的系統類型。
+. 選擇您的特定系統，然後選擇您的 ONTAP 版本。
+. 選擇 *Show Results*，然後選擇 *Supported Adapter Cards*。
++
+FC 介面卡在 *Category* 下列為「Block Access (Target)」，支援的速度列在 *Supported Protocol(s)* 下。
 
 
-
- a| 
-* FAS2750
-* VA220 AFF
-
- a| 
-0C+0d 0e+0f
- a| 
-1 ： 0C 2 ： 0C ， 0e 3 ： 0C ， 0e ， 0d 4 ： 0C ， 0e ， 0d ， 0f
-
-|===
-
-
-[[fc-target-port-supported-speeds]]
-== FC目標連接埠支援的速度
-
-FC目標連接埠可設定為以不同速度執行。指定主機使用的所有目標連接埠都應設定為相同的速度。您應該設定目標連接埠速度、使其符合所連接裝置的速度。請勿將自動協商功能用於連接埠速度。設定為自動協商的連接埠、在接管/恢復或其他中斷之後、重新連線可能需要較長時間。
-
-您可以設定內建連接埠和擴充介面卡、以下列速度執行。每個控制器和擴充介面卡連接埠都可視需要個別設定、以獲得不同的速度。
-
-[cols="4*"]
-|===
-| 4 Gb連接埠 | 8 Gb 連接埠 | 16 GB連接埠 | 32 GB 連接埠 
-
-
- a| 
-* 4 GB
-* 2 GB
-* 1 GB
-
- a| 
-* 8 GB
-* 4 GB
-* 2 GB
-
- a| 
-* 16 GB
-* 8 GB
-* 4 GB
-
- a| 
-* 32 GB
-* 16 GB
-* 8 GB
-
-
-|===
-如需支援的介面卡及其支援速度的完整清單，請參閱 https://hwu.netapp.com["NetApp Hardware Universe"^]。
