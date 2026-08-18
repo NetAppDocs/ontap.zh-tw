@@ -4,15 +4,17 @@ sidebar: sidebar
 keywords: 4-node MetroCluster configurations,8-node MetroCluster configurations, upgrade, upgrading, manual, manually 
 summary: 手動升級四個或八個節點的 MetroCluster 組態、包括準備和更新每個 DR 群組中的 DR 配對、以及執行升級後的工作 
 ---
-= 使用 CLI 手動進行四節點或八節點 MetroCluster 組態的 ONTAP 不中斷升級
+= 在四節點或八節點 MetroCluster 組態上手動執行 ONTAP NDU
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-手動升級四個或八個節點的 MetroCluster 組態、包括準備更新、同時更新一或兩個 DR 群組中的每個 DR 配對、以及執行升級後的工作。
+對四節點或八節點 MetroCluster 組態進行手冊不中斷營運的升級 （NDU），包括準備更新、同時更新一個或兩個 DR 群組中的每個 DR 配對，以及執行升級後工作。
 
+.關於這項工作
+* 您必須使用 ONTAP 命令列介面 （CLI） 來執行此工作。
 * 此工作適用於下列組態：
 +
 ** 執行不含更新版本的4節點MetroCluster 的不含功能的FC或IP組態ONTAP
@@ -84,6 +86,7 @@ image:mcc_dr_groups_8_node.gif["八節點 MetroCluster 組態的圖表。"]
 
 image:mcc_dr_groups_8_node.gif["八節點 MetroCluster 組態的圖表。"]
 
+.步驟
 . 識別組態中的 DR 配對：
 +
 [source, cli]
@@ -274,6 +277,7 @@ NOTE: 您應該記下每個增加用戶端作業的傳輸協定、以便在節�
 
 如果您已在第一個 DR 群組上升級 ONTAP 軟體、並正在八節點 MetroCluster 組態中升級第二個 DR 群組、則在此工作中、您將會更新 node_a_3 和 node_B_3 。
 
+.步驟
 . 將所有資料生命從節點移轉至其他位置：
 +
 [source, cli]
@@ -530,6 +534,7 @@ system image show
 
 如果您已在第一個 DR 群組上升級 ONTAP 軟體、並正在八節點 MetroCluster 組態中更新第二個 DR 群組、則在此工作中、您將更新 node_a_4 和 node_B_4 。
 
+.步驟
 . 將所有資料生命從節點移轉至其他位置：
 +
 [source, cli]
