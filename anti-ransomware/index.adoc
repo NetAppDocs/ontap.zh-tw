@@ -88,29 +88,29 @@ Autonomous Ransomware Protection 支援包含在 link:https://kb.netapp.com/onpr
 | 模型 | ARP | ARP/AI 
 
 
-| ONTAP 版本 | ONTAP 9.10.1-9.15.1 | ONTAP 9.16.1 及更新版本 
+| ONTAP 版本 | ONTAP 9.10.1 至 9.15.1 | ONTAP 9.16.1 及更新版本 
 
 
 | 偵測方法 | 分析檔案活動、資料熵和檔案副檔名類型 | 基於大型取證資料集訓練的 AI / 機器學習模型；分析熵和檔案行為 
 
 
-| 學習期 | NAS FlexVol Volume 需要 30 天學習模式（9.13.1 及更高版本支援自動切換） | 無需學習期；啟用後立即生效 
+| 學習期 | 需要適用於 NAS FlexVol® Volume 的 30 天學習模式（ONTAP 9.13.1 及更新版本提供自動切換） | 無需學習期；啟用後立即生效 
 
 
 | 磁碟區類型支援  a| 
-* FlexVol®: 9.10.1 至 9.15.1
-* FlexGroup：9.13.1 至 9.17.1
+* FlexVol®: ONTAP 9.10.1 至 9.15.1
+* FlexGroup：ONTAP 9.13.1 至 9.17.1
 * SAN:不支援
 
  a| 
-* FlexVol：9.16.1 及更高版本
-* FlexGroup：9.18.1 及更高版本
-* SAN：9.17.1 及更新版本（含評估期間）
+* FlexVol®：ONTAP 9.16.1 及更新版本
+* FlexGroup：ONTAP 9.18.1 及更高版本
+* SAN：ONTAP 9.17.1 及更高版本（含評估期間）
 
 
 
 
-| Snapshot 建立 | 由高熵、新的檔案副檔名或檔案操作激增所觸發 | 以固定 4 小時間隔建立，並在確認攻擊時建立 
+| Snapshot 建立 | 由高熵、新的檔案副檔名或檔案操作激增所觸發 | 在確認攻擊後建立（ONTAP 9.16.1）。從 ONTAP 9.17.1 開始，快照也以固定的 4 小時間隔建立。 
 
 
 | Snapshot 保留 | 保留直到管理員清除可疑活動 | 預設時間為 12 小時；依攻擊確認情況延長（誤報為 24 小時，確認為正確為 7 天） 
@@ -119,7 +119,7 @@ Autonomous Ransomware Protection 支援包含在 link:https://kb.netapp.com/onpr
 | 更新 | 靜態偵測邏輯（僅在 ONTAP 升級時更新） | 自動安全性更新，與 ONTAP 版本無關 
 
 
-| 部署 | 手動啟用（按磁碟區）或 SVM 層級預設設定 | 可手動按磁碟區啟用或設定 SVM 等級的預設設定；對於 9.18.1 及更高版本中支援的系統，所有新磁碟區均預設在叢集層級啟用 
+| 部署 | 手動啟用（按磁碟區）或 SVM 層級預設設定 | 可手動按 Volume 或 SVM 層級的預設設定進行能力開發；對於 ONTAP 9.18.1 及更新版本中支援的系統，所有新 Volume 均預設在叢集層級啟用能力開發。 
 
 
 | 評估期 | 不適用 | SAN Volume 需要（2-4 週）以建立基準加密臨界值。自 ONTAP 9.17.1 起，配有 ONTAP 偵測之 Hypervisor 虛擬磁碟的 NAS FlexVol® Volume 也需要。 

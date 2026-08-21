@@ -411,22 +411,36 @@ system node upgrade-revert show -node <nodename>
 狀態應列為「完成」、「不需要」或「沒有傳回表格項目」。
 
 . 在 HA 配對的另一個節點上重複這些步驟。
-. 還原兩個節點之後，請重新啟用叢集的高可用度：
+. 兩個節點都回復後，重新啟用叢集的 HA：
 +
 [source, cli]
 ----
 cluster ha modify -configured true
 ----
++
+
+NOTE: 重新啟用叢集 HA 可能會導致該 `storage failover auto-giveback`設定回復為 true。
+
 . 在兩個節點上重新啟用儲存容錯移轉：
 +
 [source, cli]
 ----
 storage failover modify -node <nodename> -enabled true
 ----
+. 請確認兩個節點上的 `storage failover auto-giveback`設定：
++
+[source, cli]
+----
+storage failover show -node <nodename>
+----
++
+如果您的環境需要不同的設定，請使用 `storage failover modify -node <nodename> -auto-giveback <true|false>`命令進行修改。
+
 
 
 --
 ====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/storage-failover-modify.html["儲存故障轉移修改"^]
+* link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/Why_auto-giveback_enabled_after_re-enabling_storage_failover_setting["NetApp 知識庫：為什麼在重新啟用儲存設備容錯移轉設定後會自動啟用歸還功能"^]
 

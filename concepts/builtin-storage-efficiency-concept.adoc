@@ -2,7 +2,7 @@
 permalink: concepts/builtin-storage-efficiency-concept.html 
 sidebar: sidebar 
 keywords: storage efficiency, built-in, platform, controller, offload, aff a1k, aff a90, aff a70, fas90, fas70, aff a50, aff a30 
-summary: 某些AFF和FAS平台預設啟用專用卸載處理器儲存效率。這些平台不使用對溫度敏感的儲存效率。壓縮無需等待資料冷卻即可開始，並使用專用的卸載處理器執行。 
+summary: 某些 AFF 和 FAS 系統支援專用卸載處理器儲存效率。這些系統不使用溫度敏感型儲存效率。壓縮無需等待資料冷卻即可開始，並由專用卸載處理器執行。 
 ---
 = 了解ONTAP專用卸載處理器的儲存效率
 :allow-uri-read: 
@@ -11,41 +11,31 @@ summary: 某些AFF和FAS平台預設啟用專用卸載處理器儲存效率。�
 
 
 [role="lead"]
-專用卸載處理器儲存效率執行連續實體區塊的順序打包，並使用專用卸載處理器進行 32k 資料壓縮。使用 32k 壓縮可以在聚合層級實現空間節省，這與使用 8k 自適應壓縮的平台不同，後者在磁碟區層級實現空間節省。使用專用卸載處理器儲存效率的平台不使用溫度敏感儲存效率 (TSSE)，這意味著壓縮不是基於熱資料或冷資料。這樣可以立即節省空間，而不會對性能產生任何影響。
+專用卸載處理器儲存效率對鄰近的實體區塊進行連續的打包，並使用專用卸載處理器進行 32k 資料壓縮。與使用 8k 具調適能力的壓縮的系統（後者在 Volume 層級實現空間節約效益）不同，32k 壓縮在彙總層級實現空間節約效益。使用專用卸載處理器儲存效率的系統不使用溫度敏感儲存效率 （TSSE），這意味著壓縮不基於熱資料或冷資料。這可立即實現空間節約效益，且不會產生任何效能影響。
 
-以下平台和ONTAP版本預設啟用專用卸載處理器儲存效率。
+以下系統支援專用卸載處理器儲存效率。在所列的 AFF 系統中，此功能預設為啟用。
 
 
-NOTE: AFF A20 平台不支援專用卸載處理器的儲存效率。對於AFF A20 平台，使用SnapMirror技術遷移的資料會使用主 CPU 自動轉換為 32k 內聯壓縮。
+NOTE: AFF A20 平台不支援專用卸載處理器儲存效率。對於 AFF A20 系統，使用 SnapMirror 技術遷移的資料會由主 CPU 自動轉換為 32k 即時壓縮。
 
-* AFF C80
-* AFF C60
-* AFF C30
-* AFF A90
-* AFF A70
-* AFF A50
-* AFF A30
+* AFF A 系列系統：AFF A90、AFF A70、AFF A50、AFF A30
 * AFF A1K
-* FAS90
-* FAS70
+* AFF C 系列系統：AFF C80、AFF C60、AFF C30
+* FAS 系統：FAS90、FAS70、FAS50
 
 
-對於以下平台，儲存效率會自動啟用，無需配置。這適用於所有新建立的精簡配置磁碟區和現有數據，包括從其他平台移動的磁碟區。無論空間保證設定如何，都會啟用重複資料刪除。壓縮和資料壓縮都要求將空間保證設為無。使用磁碟區移動或SnapMirror技術遷移的資料會自動轉換為 32k 內聯壓縮。
+對於以下系統，儲存效率將自動啟用，無需任何組態。這適用於所有新建的精簡配置 Volume 和現有資料，包括從其他系統移動的 Volume。無論空間保證設定為何，重複資料刪除功能都會啟用。壓縮和資料精簡均要求將空間保證設為「無」。使用 Volume 移動或 SnapMirror 技術遷移的資料將自動轉換為 32k 即時壓縮。
 
-* AFF C80
-* AFF C60
-* AFF C30
+* AFF A 系列系統：AFF A90、AFF A70、AFF A50、AFF A30
 * AFF A1K
-* AFF A90
-* AFF A70
-* AFF A50
-* AFF A30
+* AFF C 系列系統：AFF C80、AFF C60、AFF C30
 
 
-對於下列平台，預設情況下，僅對升級至 ONTAP 9.15.1 或更高版本之前已啟用儲存效率的現有精簡配置磁碟區啟用儲存效率。您可以使用 ONTAP CLI 或 ONTAP REST API 方法在新建立的磁碟區上啟用儲存效率。使用磁碟區移動或 SnapMirror 技術移轉的資料，僅當原始平台啟用了壓縮時，才會轉換為 32k 內嵌壓縮。
+對於下列系統，預設情況下，僅對升級至 ONTAP 9.15.1 或更新版本之前已啟用儲存效率的現有精簡配置 Volume 啟用儲存效率。您可以使用 ONTAP CLI 或 ONTAP REST API 方法對新建立的 Volume 啟用儲存效率。使用 Volume 移動或 SnapMirror 技術遷移的資料，僅當原始平台啟用了壓縮時，才會轉換為 32k 即時壓縮。
 
 * FAS90
 * FAS70
+* FAS50
 
 
-有關將控制器升級到受支援平台之一的信息，請參閱 https://docs.netapp.com/us-en/ontap-systems-upgrade/choose_controller_upgrade_procedure.html["ONTAP 硬體升級文件"^]。
+有關將控制器升級至其中一個受支援系統的相關資訊，請參閱 https://docs.netapp.com/us-en/ontap-systems-upgrade/choose_controller_upgrade_procedure.html["ONTAP 硬體升級文件"^]。

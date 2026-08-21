@@ -1,0 +1,68 @@
+---
+permalink: update/pre-stage-system-firmware.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, andu, bios, loader, firmware, pre-stage, single reboot, slipstream, system firmware, boot media, cluster image update 
+summary: 從 ONTAP 9.17.1 開始，您可以在 ONTAP 升級之前，在節點上預先安裝較新的 BIOS 或 LOADER 韌體，以便在單一重新開機週期內完成這兩個更新。 
+---
+= 在 ONTAP 軟體升級之前預先配置系統韌體
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.17.1 開始，如果在執行自動不中斷升級 （ANDU） 之前，節點開機裝置上已存在較新的 BIOS 或 LOADER 韌體，則升級程序會保留較新的韌體，而非以 ONTAP 「映像」中隨附的版本覆寫。如此一來，ONTAP 軟體升級和韌體更新即可在單一重新開機週期內完成。
+
+在 ONTAP 9.16.1 及更早版本中，無論開機裝置上已有的韌體版本為何，ANDU 都會始終安裝目標 ONTAP "映像"中所捆綁的 BIOS 和 LOADER 韌體。如果已單獨下載了更新的 BIOS 或 LOADER 服務"映像"，則在 ONTAP 升級後需要分隔執行一次接管和歸還操作，才能啟動新韌體。
+
+從 ONTAP 9.17.1 開始，ONTAP 會將每個節點開機裝置上的 BIOS 和 LOADER 韌體版本與目標 ONTAP "映像"中隨附的版本進行比較。如果開機裝置已包含比隨附版本更新的韌體，則不會安裝隨附的韌體。現有的較新韌體將予以保留。如果隨附版本等於或新於開機裝置上的版本，則會安裝隨附的韌體。
+
+節點依照正常的 ANDU 工作流程重新開機後，開機裝置上的韌體將會啟動，以便在單一重新開機中同時完成 ONTAP 升級和韌體更新。
+
+.開始之前
+* 叢集中的所有節點都必須執行 ONTAP 9.17.1 或更新版本。
+* 您必須從 link:https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["NetApp 支援網站"^] 下載較新的 BIOS 或 LOADER 服務"映像"。
++
+您需要進階權限層級才能將韌體下載到節點的開機設備。
+
+
+
+.步驟
+. 將權限層級設為進階：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 將最新的服務"映像"下載到每個節點的開機設備：
++
+[source, cli]
+----
+system node firmware download -node <node_name> -package
+----
++
+對叢集中每個需要接收新韌體的節點重複此步驟。
+
+. 返回管理員權限：
++
+[source, cli]
+----
+set -privilege admin
+----
+. 請檢查每個節點開機設備上目前的韌體版本：
++
+[source, cli]
+----
+system node firmware bootmedia show
+----
++
+預先準備的韌體版本應高於目標 ONTAP "映像"中隨附的版本。
+
+
+
+.接下來呢？
+* 韌體預先配置完成後，即可開始 link:../upgrade/automated-upgrade-task.html["執行自動 ONTAP 升級"]。
++
+升級過程中，ONTAP 會偵測到開機裝置已包含更新的 BIOS 和 LOADER 韌體，並保留這些韌體。對於已存在較高版本韌體的節點，不會安裝隨附的韌體。
+
+

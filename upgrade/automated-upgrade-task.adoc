@@ -16,21 +16,25 @@ summary: 您可以在不中斷營運的情況下更新ONTAP 叢集上的版本�
 
 
 [role="lead"]
-執行自動升級時、 ONTAP 會自動在每個節點上安裝目標 ONTAP 映像、驗證叢集是否可以成功升級、然後執行任一項 xref:concept_upgrade_methods.html[批次或循環升級] 在背景中、根據叢集中的節點數量。
+當您執行自動不中斷升級 （ANDU） 時，ONTAP 會自動在每個節點上安裝目標 ONTAP "映像"，驗證叢集是否可以成功升級，然後根據叢集中的節點數在背景執行 xref:concept_upgrade_methods.html[批次或循環升級]。
 
 如果您的組態支援此功能、您應該使用 System Manager 來執行自動升級。  如果您的組態不支援使用系統管理員進行自動升級、您可以使用 ONTAP 命令列介面（ CLI ）來執行自動升級。
 
 
-NOTE: 如果您透過NetApp升級至ONTAP 9.15.1 或更高版本，請依照link:https://docs.netapp.com/us-en/console-software-updates/get-started/software-updates.html["NetApp控制台文件中的升級流程"^]。
+NOTE: 如果您透過NetApp控制台升級到ONTAP 9.15.1 或更高版本，請依照link:https://docs.netapp.com/us-en/console-software-updates/get-started/software-updates.html["NetApp控制台文件中的升級流程"^]。
 
 
-IMPORTANT: 在自動不中斷升級（ andu ）開始之前修改命令選項的設定 `storage failover modify-auto-giveback`，不會影響升級程序。在更新所需的接管/恢復期間、andu程序會忽略此選項的任何預設值。例如，在開始之前設定 `-autogiveback`為 false ，則不會在恢復之前中斷自動升級。如link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage+failover+modify-auto-giveback["指令參考資料ONTAP"^]需詳細 `storage failover modify-auto-giveback`資訊，請參閱。
+IMPORTANT: 在 ANDU 啟動之前修改 `storage failover modify-auto-giveback`命令選項的設定不會影響升級過程。ANDU 程序會在更新所需的接管/歸還期間忽略此選項的任何預設值。例如，在啟動 ANDU 之前將 `-autogiveback`設為 false 不會中斷歸還前的自動升級。深入瞭解 `storage failover modify-auto-giveback`，請參閱link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage+failover+modify-auto-giveback["指令參考資料ONTAP"^]。
 
 .開始之前
 * 您應該 link:prepare.html["準備升級"]。
 * 您應該 link:download-software-image.html["下載 ONTAP 軟體映像"] 適用於您的目標 ONTAP 版本。
 +
 如果您正在執行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升級"]，則需要下載您的特定所需的兩個 ONTAP 映像link:../upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升級途徑"]。
+
+* （可選）link:../update/pre-stage-system-firmware.html["預先配置系統韌體，以便進行單一重新開機升級"]
++
+從 ONTAP 9.17.1 開始，如果在執行 ANDU 之前節點的開機設備上已存在較新的 BIOS 或 LOADER 韌體，升級程序將保留較新的韌體，而不是以 ONTAP 映像中隨附的版本覆寫。如此一來，ONTAP 軟體升級和韌體更新即可在單一重新開機週期內完成。
 
 * 對於每個HA配對、每個節點應在同一個廣播網域上有一個或多個連接埠。
 +
@@ -373,6 +377,9 @@ metrocluster show
 
 --
 ====
+.接下來呢？
+如果您已預先暫存韌體，請使用 `system node firmware bootmedia show`命令驗證每個節點上的預期韌體版本是否為作用中。
+
 
 
 [[resume-ontap-software-upgrade-after-an-error-in-the-automated-upgrade-process]]

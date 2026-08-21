@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade, how, post-checks 
 summary: 升級ONTAP 完您的更新版的更新版軟體之後、您應該執行幾項工作來驗證叢集是否就緒。 
 ---
-= 驗證 ONTAP 升級後的叢集整備狀態
+= ONTAP 升級後驗證工作流程
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,21 +13,18 @@ summary: 升級ONTAP 完您的更新版的更新版軟體之後、您應該執�
 [role="lead"]
 升級 ONTAP 之後、您應該執行數項工作來驗證叢集就緒性。
 
-.步驟
-. link:task_verify_cluster_after_upgrade.html["驗證您的叢集"]。
-+
-升級 ONTAP 之後、您應該驗證叢集版本、叢集健全狀況和儲存健全狀況。如果您使用MetroCluster 的是SFC組態、您也需要確認叢集已啟用自動非計畫性切換功能。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一"]請驗證您的叢集。
+[role="quick-margin-para"]
+升級 ONTAP 後，您應該link:task_verify_cluster_after_upgrade.html["驗證叢集版本、叢集健全狀況和儲存設備健全狀況"]。如果您使用的是 MetroCluster FC 組態，則還需要驗證叢集是否已啟用自動非計劃切換。
 
-. link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["確認所有的生命都在主連接埠上"]。
-+
-在重新開機期間、部分LIF可能已移轉至指派的容錯移轉連接埠。升級叢集之後、您必須啟用及還原任何不在主連接埠上的生命。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["二"] 確認所有 LIF 都位於主連接埠。
+[role="quick-margin-para"]
+重新開機期間，某些 LIF 可能已遷移到其指派的故障轉移連接埠。升級叢集後，您必須link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["啟用並回復所有未連接到其主連接埠的 LIF"]。
 
-. 驗證 link:concept_special_configurations_post_checks.html["特殊考量"] 特定於您的叢集。
-+
-如果叢集上存在某些組態、您可能需要在升級後執行其他步驟。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三"]請確認叢集的特殊考量事項。
+[role="quick-margin-para"]
+如果您的叢集上存在某些組態，您可能需要 link:concept_special_configurations_post_checks.html["升級後請執行其他步驟"]。
 
-. link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新磁碟認證套件（ DQP ）"]。
-+
-不會在ONTAP 進行升級時更新DQP。
-
-
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四"] 更新磁碟鑑定套件（DQP）。
+[role="quick-margin-para"]
+DQP 不會作為 ONTAP 升級的一部分進行更新。您必須link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新 DQP"]在升級後。
