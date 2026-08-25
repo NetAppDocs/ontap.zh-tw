@@ -141,7 +141,7 @@ ONTAP Select
 | 混合式傳輸協定存取（ NFS v3 和 SMB ） | ONTAP 9.6 |  
 
 
-| NDMP / NDMP 還原 | ONTAP 9.13.1.12.9.11.9.11. | 來源叢集和目的地叢集都必須執行 ONTAP 9.13.1 或更新版本、才能搭配 SnapMirror 同步使用 NDMP 。如需詳細資訊、請參閱 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用 NDMP 複本傳輸資料]。 
+| NDMP / NDMP 還原 | ONTAP 9.13.1.12.9.11.9.11. | 若要對 SnapMirror 同步磁碟區執行基於傾印或 SMTape 的 NDMP 備份，來源和目的地叢集都必須執行 ONTAP 9.13.1 或更新版本。不支援對處於 SnapMirror 作用中同步或 SnapMirror 同步關係中的目的地磁碟區執行基於傾印或 SMTape 的 NDMP 還原。 
 
 
 | 僅限在 AFF / ASA 平台上執行不中斷的 SnapMirror 同步作業（ n ）。 | ONTAP 9.12.1 | 支援不中斷營運、可讓您在不排程停機時間的情況下執行許多常見的維護工作。支援的作業包括接管與恢復、以及在兩個叢集之間保留一個節點的磁碟區移動。 
@@ -215,7 +215,7 @@ SnapMirror 同步關係不支援下列功能：
 LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。
 * SnapCenter
 * 資料量SnapLock
-* 在目的地磁碟區上使用dump和SMtape進行磁帶備份或還原
+* 將基於轉儲或 SMTape 的 NDMP 還原到處於 SnapMirror 作用中同步或 SnapMirror 同步關係的目的地磁碟區
 * 來源磁碟區的處理量層（QoS下限）
 * Volume SnapRestore
 * VVOL
