@@ -39,9 +39,7 @@ TIP: 如果 VScan 流量的 LIF 設定在與用戶端流量的 LIF 不同的連�
 * 將防毒引擎和定義保持在最新狀態。請諮詢合作夥伴、瞭解您應該多久更新一次的建議。
 * 在多租戶環境中、只要 VScan 伺服器和 SVM 屬於同一個網域或信任的網域、即可與多個 SVM 共用掃描程式集區（ VScan 伺服器集區）。
 * 受感染檔案的防毒軟體原則應設為「刪除」或「隔離」、這是大多數防毒廠商設定的預設值。如果「 vscan 檔案 op-profile 」設定為「 write_only 」、而且發現受感染的檔案、檔案會保留在共用區中、而且可以開啟、因為開啟檔案不會觸發掃描。防毒掃描只會在檔案關閉後觸發。
-* 。 `scan-engine timeout` 值應小於 `scanner-pool request-timeout` 價值。
-如果設定為較高的值、可能會延遲存取檔案、最終可能會逾時。
-若要避免這種情況、請設定 `scan-engine timeout` 少於 5 秒 `scanner-pool request-timeout` 價值。請參閱掃描引擎廠商的文件、以取得如何變更的指示 `scan-engine timeout` 設定：。 `scanner-pool timeout` 您可以在進階模式中使用下列命令、並提供適當的值來變更 `request-timeout` 參數：
+* 該 `scan-queue-timeout`值應小於 `scanner-pool request-timeout`值。如果設定過高，檔案存取可能會延遲，最終甚至逾時。為避免這種情況，請將 `scan-queue-timeout`設定為比 `scanner-pool request-timeout`值少 5 秒。有關如何變更 `scan-queue-timeout`設定的說明，請參閱掃描引擎廠商的文件。 `scanner-pool timeout`可在進階模式下使用下列命令並為 `request-timeout`參數提供適當的值來變更：
 `vserver vscan scanner-pool modify`。
 * 對於規模適合存取掃描工作負載、且需要使用隨選掃描的環境、 NetApp 建議將隨選掃描工作排程在非尖峰時間、以避免現有防毒基礎架構增加負載。
 
