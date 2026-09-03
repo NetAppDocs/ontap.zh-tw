@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/recover-unplanned-failover-task.html 
 keywords: fan-out, snapmirror active sync, unplanned failover 
-summary: 當主叢集當機或隔離時、會自動執行非計畫性容錯移轉（AUFO）作業。  發生這種情況時、次要叢集會轉換為主要叢集、並開始服務用戶端。 
+summary: 當主要叢集發生故障或處於隔離的狀態時，會發生自動非計畫性容錯移轉 （AUFO） 作業。SnapMirror 主動同步會偵測到此類故障，並啟動自動非計畫性容錯移轉至次要叢集。次要叢集會轉換為主要叢集，並開始為用戶端提供服務。 
 ---
 = 從自動的、計劃外的ONTAP集群故障轉移操作中恢復
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: 當主叢集當機或隔離時、會自動執行非計畫性容錯移�
 
 
 [role="lead"]
-當主集群宕機或隔離時，會觸發自動非計劃故障轉移 (AUFO) 操作。ONTAP Mediator 偵測故障轉移發生時，並執行自動非計劃故障轉移到輔助叢集。 此操作只能在ONTAP中介器的協助下執行。輔助集群將轉換為主集群並開始為客戶端提供服務。此作業僅能在 ONTAP Mediator 的協助下執行。
+當主要叢集停機或隔離的時，會發生自動計劃外容錯移轉 （AUFO） 作業。SnapMirror 作用中同步會偵測此類故障，並啟動自動計劃外容錯移轉至次要叢集。次要叢集將轉換為主要叢集（慣用叢集），並開始為用戶端提供服務。請注意，故障偵測和容錯移轉處理只能在 ONTAP Mediator 的協助下完成。
 
 
 NOTE: 在自動非計劃性容錯移轉之後，重新掃描主機路徑非常重要，以確保不會遺失 I/O 路徑。
@@ -24,7 +24,7 @@ NOTE: 在自動非計劃性容錯移轉之後，重新掃描主機路徑非常�
 [[reestablish-the-protection-relationship-after-an-unplanned-failover]]
 == 在非計畫性容錯移轉之後重新建立保護關係
 
-您可以使用系統管理員或 ONTAP CLI 重新建立保護關係。
+一旦原始主要叢集（例如叢集 A）恢復，SnapMirror 作用中同步會自動建立反向保護。如果您希望還原原始狀態，使叢集 A 成為主要的慣用叢集，可以使用 System Manager 或 ONTAP CLI 啟動計劃性容錯移轉作業，以執行手動容錯回復。
 
 [role="tabbed-block"]
 ====
@@ -35,7 +35,7 @@ NOTE: 在自動非計劃性容錯移轉之後，重新掃描主機路徑非常�
 IMPORTANT: 從 ONTAP 9.8 到 ONTAP 9.14.1，SnapMirror 主動同步被稱為 SnapMirror Business Continuity（SM-BC）。
 
 . 導航至*保護>關係*並等待關係狀態顯示“InSync”。
-. 若要恢復原始來源叢集的作業、請按一下 image:icon_kabob.gif["功能表選項圖示"] 並選取 * 容錯移轉 * 。
+. 若要對原始來源叢集執行故障回復並恢復作業，請按一下 image:icon_kabob.gif["功能表選項圖示"] 並選取 *Failover*。
 
 
 --
@@ -57,6 +57,25 @@ Primary Data Cluster: cluster-2
 Last Progress Update: -
        Failover Type: unplanned
   Error Reason codes: -
+....
+您可以在原始主要叢集上使用  `snapmirror show` 命令來監控反向保護關係的狀態。
+
+例如：
+
+....
+ClusterA::> snapmirror show
+                                                                               Progress
+Source             Destination  Mirror        Relationship   Total             Last
+Path         Type  Path         State         Status         Progress  Healthy Updated
+-----------  ----  ------------ -------       -------------- --------- ------- --------
+vs3:/cg/dcg3 XDP   vs1:/cg/scg3 Snapmirrored  InSync          -         true    -
+....
+您可以使用  `snapmirror failover start` 命令對原始主要叢集執行容錯回復。
+
+例如：
+
+....
+ClusterA::> snapmirror failover start -destination-path vs1:/cg/scg3
 ....
 請參閱 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-aufo-events.html["EMS 參考"^] 以瞭解事件訊息及修正行動。
 
