@@ -46761,13 +46761,11 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="b0789998a8993c9d062c472eae06575f" category="paragraph">深入瞭解<block ref="66d919b844737f130289ef8ca7328395" category="inline-link-macro-rx"></block>。</block>
   <block id="93fe8cb24d3c7187b63e8073a2d7dc63" category="summary">設定 TLS 卸載設定</block>
   <block id="8863838c87c7804c533b11593435d494" category="doc">設定 ONTAP TLS 硬體卸載</block>
-  <block id="3aa3699df2eb8bb8b6fac65752dad31d" category="paragraph">從 ONTAP 9.19.1 開始，您可以設定 TLS 卸載，透過利用支援的乙太網路卡上的資源來提升 TLS 握手後的效能。此功能可卸載加密和解密操作，從而降低 CPU 開銷並提高效能。</block>
   <block id="a9b36a6ee9738f7c98a64bf70ebd07c4" category="list-text">TLS 卸載功能預設為停用狀態。</block>
   <block id="3b410efbd5f63a911aebe8af2d370805" category="list-text">僅卸載 AES-GCM 密碼套件（TLSv1.2/TLSv1.3、128/256 位元）。</block>
   <block id="8872551887f70b5cc2558349d1f75275" category="list-text">TLS 握手階段不會被卸載。只有握手後的資料階段會被卸載。</block>
   <block id="31918cd39bc0f5372cee40be75f1bdc0" category="list-text">網路邏輯介面（LIF）遷移到不具備卸載功能的連接埠會導致自動軟體回退。</block>
   <block id="f4b448a67530e9e455eb1efa5b6638c3" category="list-text">管理介面（HTTPS、REST API）不受此設定的影響。</block>
-  <block id="2a3022fac3408e3b3cf9a7fcfd526e34" category="list-text">TLS 硬體卸載設定是叢集範圍內的。</block>
   <block id="6ed83b48824ce8475314525a8072d55d" category="list-text">4 埠 CX7 10/25 GbE</block>
   <block id="ac75d0f709657733b95e3796ba5c5ec8" category="list-text">2 埠 CX7 40/100 GbE</block>
   <block id="cb6e1fcae385d9b3ef55b4a4fa379d3d" category="list-text">所有節點必須執行 ONTAP 9.19.1 或更新版本。</block>
@@ -47581,7 +47579,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="16875cc1334626fee30ba2a0a6597598" category="paragraph"><block ref="60e64e1ba1836139f785621c02abc082" prefix="" category="inline-code"></block></block>
   <block id="2f19f5cbb8730f912c6e7b9092aa4bcf" category="paragraph">您可以使用以下命令啟用 SSLv3。如果您執行的是 ONTAP 9.9.1 或更高版本，則不會看到此警告訊息。</block>
   <block id="ea2a16c9a7dd80668144cb301bbf9e4f" category="list-text">如果您執行的是 ONTAP 9.8 或更早版本，請手動逐一重新啟動叢集中的每個節點。</block>
-  <block id="96006e246f271674f724179d78ac7e14" category="paragraph">TLS 硬體卸載支援以下流量類型：</block>
   <block id="eff9591a74101237cfb7eecfbef1e474" category="paragraph">Microsoft 不再建議使用<block ref="dbbfdc279d3cdb25ad3ef5b63ed4d2d5" prefix=" " category="inline-code"></block>或<block ref="d05657c53d946af67792b9579f5f6306" prefix=" " category="inline-code"></block>群組原則設定。Microsoft 也不再建議使用<block ref="2a8e045e31c6cc158b81ffb22f7afe5b" prefix=" " category="inline-code"></block>登錄設定。這些選項僅影響 SMB 1 的行為，可以透過<block ref="b5b21003cae6f1e37ddf0ab8f9af9db2" prefix=" " category="inline-code"></block>群組原則設定或<block ref="105b182fe41a0754f575cbf714c36c10" prefix=" " category="inline-code"></block>登錄設定來替代。</block>
   <block id="afeb89d95272bef407fc3674e1017cf5" category="admonition">如果 HA 配對使用<block ref="220286b0a4d2a8e1b63be85ee026df7e" category="inline-link-rx"></block>，則在初始化系統（開機選項 4 或 9）之前，必須針對 HA 配對內的所有磁碟機遵循<block ref="cb427ed28e3cb771225a0fad05cd271a" category="inline-link-rx"></block>主題中的指示。若未執行此動作，當磁碟機重新調整用途時，可能會導致未來的資料遺失。</block>
   <block id="b417099cfca3d858eab3a72922a57ef4" category="paragraph">根據潛在攻擊情況，您可以透過以下方式之一還原資料：</block>
@@ -48564,7 +48561,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="03a70507b7d040ed5990e474d0b55688" category="cell">AFX 1K</block>
   <block id="23b43ede4557b73e6fa354124a73ba91" category="cell">AFX 2K</block>
   <block id="d19041aa9c8295e4c367cd926b41373d" category="admonition">在 ASA 系統上，TLS 硬體卸載僅適用於 NVMe/TCP 流量。NFS over TLS、FabricPool 和 S3 不支援於 ASA 平台。</block>
-  <block id="736e235b19e52edff4ed990d79e62f60" category="admonition">在 AFX 平台上，TLS 硬體卸載支援 NFS 和 S3 前端流量類型。AFX 平台不支援 NVMe/TCP，因為 AFX 不支援 SAN/區塊協定。</block>
   <block id="cb17a18ac1c63a3d9c4bd533f4db0ebf" category="admonition">每個 RDMA 連接埠最多可以有 127 個 LIF。當增加更多 LIF，或當 LIF 故障轉移到超過該限制的連接埠時，新新增的 LIF 或故障轉移的 LIF 將無法處理 RDMA 流量。</block>
   <block id="f73946896696e2b01a16305cdfde8b9f" category="list-text">選擇儲存設備虛擬機器和主節點。指定*名稱*、*IP 位址*和*子網路遮罩*。</block>
   <block id="be1376ff9d05a0f1cfca8a7cbc06eb70" category="list-text">此<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block>參數接受一個列表，預設值為空。將<block ref="61c4ea0665eded0925f4c1c1b212936b" prefix=" " category="inline-code"></block>新增為參數值後，LIF 只能在支援 RoCE 卸載的連接埠上設定，這會影響 LIF 移轉和容錯移轉。</block>
@@ -49521,4 +49517,20 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="b2499cbb3cd1ebfa98398970fe74ecaf" category="list-text">從 ONTAP 9.19.1 和 ONTAP Mediator 1.12 開始，您可以設定在 MetroCluster IP 組態中使用 HTTPS 進行通訊的 ONTAP Mediator。HTTPS 透過使用 SSL/TLS 加密整個工作階段來提高安全性。您可以選擇安裝僅支援 HTTPS 的 ONTAP Mediator。如果使用此安裝方法，則不會安裝 SCST 套件。<block ref="a64233a3f11178c79e178332c809edd1" category="inline-link-macro-rx"></block>。</block>
   <block id="ce0147152f43c0c7be5963e1fa6cac57" category="paragraph">ListMultipartUploads</block>
   <block id="ac7aaa15d6c88f358146f97bc9d76b78" category="paragraph">僅限 ONTAP 9.17.1</block>
+  <block id="68897d04bec690aad08bb1fc975a1416" category="paragraph">從 ONTAP 9.19.1 開始，您可以設定 TLS 卸載，利用支援的乙太網路網路卡上的資源來提升 TLS 握手後的效能。此功能可卸載加密和解密操作，從而降低 CPU 例行成本並提升效能。</block>
+  <block id="68061540e751c246aaa86fe4b9e2bb42" category="paragraph">您只能對使用 KTLS 的流量啟用 TLS 卸載。此設定不適用於所有啟用 TLS 的流量。HTTPS 和 REST API 等管理流量不受此設定影響。不支援 HA 流量。</block>
+  <block id="8dc8623f4f660e1a7947a35a0a79088c" category="list-text">TLS 硬體卸載是叢集範圍的設定。</block>
+  <block id="335b6b2532fbb4c1dbb4746d355a88ca" category="list-text">TLS 硬體卸載不支援 HA 流量。</block>
+  <block id="868536f454dee62c86b1b245ac6a4a10" category="paragraph">下表顯示每種流量類型是否支援 TLS 硬體卸載。</block>
+  <block id="89652e228f31afd994aaf865c5a3cf43" category="cell">流量類型</block>
+  <block id="c87e4f5e162b05916902cf5c8e92bbe2" category="cell">在支援 TLS 卸載的平台和網路卡上提供支援。</block>
+  <block id="d17fd236ea111dd9795be4946942a765" category="cell">支援叢集網路流量。這不包括 HA 流量。</block>
+  <block id="4ade1e690485ace608877ec90f1e5fbc" category="cell">基於 TLS 的 NFS</block>
+  <block id="88ed83755bc71af2af79877f5c44ee71" category="cell">是的，從 ONTAP 9.19.1 開始</block>
+  <block id="2b38e89ddb74267053dbdf60bb3e4249" category="cell">支援使用 KTLS 的 ONTAP NFS over TLS 流量。</block>
+  <block id="5a2c55bb167f4f0fcfe52384fe7a4f0b" category="cell">KMIP</block>
+  <block id="b77fdfcbeb49b754c87ad08c3896bb78" category="cell">此設定不影響管理介面。</block>
+  <block id="324af02eeb4236b07aa1d33e99f2dba8" category="cell">HA 流量</block>
+  <block id="7ca9449a9a4cc9fa6e499b1686242135" category="cell">TLS 硬體卸載不適用於 HA 流量。</block>
+  <block id="d404291011eac4d076d928297923f6f1" category="admonition">在 AFX 平台上，TLS 硬體卸載支援 NFS over TLS 和 S3 前端流量類型。AFX 平台不支援 NVMe/TCP，因為 AFX 不支援 SAN/區塊協定。</block>
 </blocks>
