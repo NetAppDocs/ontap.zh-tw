@@ -46,11 +46,11 @@ NOTE: 若要在SAN主機上執行安全清除、您必須刪除包含您要清�
 
 . 如果您要安全清除的檔案位於基礎快照中，請執行下列步驟：
 +
-.. 在 SnapMirror 非同步關係中的目的地磁碟區上建立快照：
+.. 在 SnapMirror 非同步關係中的來源 Volume 上建立快照：
 +
 `volume snapshot create -snapshot snapshot_name -vserver _SVM_name_ -volume _volume_name_`
 
-.. 更新 SnapMirror 以向前移動基礎快照：
+.. 更新 SnapMirror 關係，將基礎快照向前移動到目的地：
 +
 `snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
 
