@@ -222,6 +222,11 @@ security login duo modify -vserver <STORAGE_VM_NAME> -is-enabled false
 ----
 
 
+[NOTE]
+====
+設定 `-is-enabled false`會停用 Duo 驗證，但不會從 SSH 登入路徑中移除 Duo 組態。在某些環境中，SSH 登入仍然可能需要互動式驗證流程，這可能會阻止非互動式 SSH 登入。若要還原非互動式 SSH 登入行為，請使用 `security login duo delete -vserver <STORAGE_VM_NAME>`完全移除 Duo 組態。
+
+====
 
 
 [[exclude-duo-group-users]]

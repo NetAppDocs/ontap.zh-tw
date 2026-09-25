@@ -20,8 +20,14 @@ summary: 為 ONTAP SMB 伺服器設定 LDAP over TLS，以確保 SMB 伺服器�
 
 若要使用LDAP over SSL/TLS來保護Active Directory通訊安全、您必須先將Active Directory憑證服務的自我簽署根CA憑證複本匯出至憑證檔案、然後將其轉換成Ascii文字檔。這個文字檔是ONTAP 由SITALL用來在儲存虛擬機器（SVM）上安裝憑證。
 
-必須已為 CIFS 伺服器所屬的網域安裝並設定了 Active Directory 憑證服務。您可以參考 http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com"]以了解有關安裝和設定 Active Directory 憑證服務的資訊。Step
+CIFS 伺服器所屬的網域必須已安裝並設定 Active Directory 憑證服務。您可以查閱 http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com"]來尋找有關安裝和設定 Active Directory 憑證服務的資訊。
 
+[NOTE]
+====
+從 ONTAP 9.13.1 開始，如果 SMB 伺服器啟用了 `-use-start-tls-for-ad-ldap` 或 `-use-ldaps-for-ad-ldap`，請確保為受信任網域以及主網域安裝了所需的 CA 憑證。ONTAP 必須能夠與受信任網域的網域控制器建立 TLS 或 LDAPS 連線，以判斷其站台資訊。
+
+====
+.步驟
 . 取得中網域控制站的根 CA 憑證 `.pem` 文字格式。
 +
 http://technet.microsoft.com/en-us/library/["Microsoft TechNet程式庫：technet.microsoft.com"]
@@ -93,6 +99,12 @@ security certificate show -vserver <SVM_name>
 ----
 vserver cifs security modify -vserver <SVM_name> -use-start-tls-for-ad-ldap true
 ----
++
+[NOTE]
+====
+從 ONTAP 9.13.1 版本開始，當為 Active Directory 連線啟用安全的 LDAP 通訊時，ONTAP 在聯絡受信任網域的網域控制器時也會使用這些安全的連線。如果未為受信任網域的網域控制器安裝所需的憑證，ONTAP 可能無法確定受信任網域的站台資訊。
+
+====
 . 確認 LDAP over TLS 安全設定已設為  `true`：
 +
 [source, cli]

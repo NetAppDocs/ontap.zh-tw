@@ -38,6 +38,7 @@ summary: 您可以使用vserver CIFS create命令在SVM上建立SMB伺服器、�
 * 指定網域時、您必須使用完整網域名稱（FQDN）。
 * 預設設定是將SMB伺服器機器帳戶新增至Active Directory CN=電腦物件。
 * 您可以使用  `-ou` 選項將 SMB 伺服器新增至不同的 OU。
+* 從 ONTAP 9.13.1 開始，您可以為 SMB 伺服器設定預設站台。當 LIF 沒有站台成員資格時，ONTAP 可以使用此站台；如果在尋找受信任網域的網域控制器時，受信任網域的站台探索失敗，ONTAP 也可以使用此站台作為備用站台。
 * 您可以選擇性地為SMB伺服器新增一個或多個NetBios別名（最多200個）的以逗號分隔的清單。
 +
 當您將其他檔案伺服器的資料整合到SMB伺服器、並希望SMB伺服器回應原始伺服器的名稱時、設定SMB伺服器的NetBios別名很有用。
@@ -58,7 +59,7 @@ SMB 授權隨附於link:../system-admin/manage-licenses-concept.html#licenses-in
 +
 如果SMB伺服器僅用於驗證、則不需要CIFS授權。
 
-. 在 AD 網域中建立 SMB 伺服器： `+vserver cifs create -vserver vserver_name -cifs-server smb_server_name -domain FQDN [-ou organizational_unit][-netbios-aliases NetBIOS_name, ...][-keytab-uri {(ftp|http)://hostname|IP_address}][-comment text]+`
+. 在 AD 網域中建立 SMB 伺服器： `+vserver cifs create -vserver vserver_name -cifs-server smb_server_name -domain FQDN [-ou organizational_unit][-default-site site_name][-netbios-aliases NetBIOS_name, ...][-keytab-uri {(ftp|http)://hostname|IP_address}][-comment text]+`
 +
 加入網域時、此命令可能需要幾分鐘的時間才能完成。
 
@@ -97,6 +98,10 @@ Default Site Used by LIFs Without Site Membership:
                           CIFS Server Description: -
                           List of NetBIOS Aliases: -
 ----
+
+
+從 ONTAP 9.13.1 開始，如果 ONTAP 無法探索受信任網域的站台資訊，則 SMB 伺服器預設站台也可用作備用站台。
+
 . 如有需要、請啟用與網域控制器（ ONTAP 9.8 及更新版本）的加密通訊： `vserver cifs security modify -vserver svm_name -encryption-required-for-dc-connection true`
 
 
