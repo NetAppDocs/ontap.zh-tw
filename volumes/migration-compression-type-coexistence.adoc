@@ -1,0 +1,41 @@
+---
+permalink: volumes/migration-compression-type-coexistence.html 
+sidebar: sidebar 
+keywords: access control lists, flexclone files, flexclone luns, inheritance, ACL, ACLs, acl, acls, flexclone 
+summary: FlexClone檔案和FlexClone LUN會繼承其父檔案和LUN的存取控制清單。 
+---
+= 支援在 ONTAP Volume 移轉期間壓縮類型共存
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+當 Volume 在 ONTAP 系統之間移轉時，來源 Volume 可能使用與目的地 Volume 不同的資料壓縮類型。
+
+支援的壓縮類型包括次要、具調適能力的 8K 和溫度敏感儲存設備（TSSE）。在移轉過程中，這些壓縮類型可以暫時共存於目的地 Volume 上，如下所示：
+
+[cols="4"]
+|===
+| 來源壓縮類型 | 目的地壓縮類型 | 支援移轉共存 | 應用程式 I/O 讀寫大小 
+
+
+| 次要 | TSSE | 是的 | 自動 
+
+
+| 具調適能力的 8K | TSSE | 是的 | 自動 
+
+
+| 次要 | 具調適能力的 8K | 否 | 不支援 
+|===
+.從次要和具調適能力的 8k 壓縮移轉到 TSSE 壓縮
+次要 Volume 與 8k 具調適能力的 Volume 會在移轉後透過背景程序逐步轉換為 TSSE，或是在移轉期間隨著資料重寫至目的地 Volume 時進行轉換。
+
+在 Volume 從次要或具調適能力的 8K 壓縮移轉至 TSSE 壓縮後，即使所有現有區塊都已轉換，在 `volume efficiency show` 命令輸出中顯示的 *compression type* 也不會改變。對於已轉換的次要 Volume，壓縮類型仍為 *secondary*；對於已轉換的具調適能力的 8K Volume，壓縮類型仍為 *adaptive*。
+
+寫入從次要或具調適能力的 8K 壓縮轉換而來的 Volume 的新資料會採用 TSSE 進行壓縮。
+
+.從次要壓縮移轉到具調適能力的 8k 壓縮
+不支援在同一個 Volume 上直接共存次要與具調適能力的 8K 壓縮。
+
+了解如何link:move-between-secondary-adaptive-compression-task.html["在次要壓縮和具調適能力的壓縮之間切換"]。
