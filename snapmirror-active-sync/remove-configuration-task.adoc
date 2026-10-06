@@ -21,11 +21,49 @@ summary: 您可以移除零 RTO SnapMirror 同步保護、並刪除 SnapMirror �
 [[remove-an-asymmetric-san-configuration]]
 == 移除非對稱 SAN 組態
 
+
+
+[[unmap-luns-on-the-destination-cluster]]
+=== 取消對應目的地叢集上的 LUN
+
+.關於這項工作
 * 在刪除 SnapMirror 主動同步 SAN 關係之前，必須先取消對應目的地叢集中的所有 LUN。
 * 在LUN未對應且重新掃描主機之後、SCSI目標會通知主機LUN資源清冊已變更。零RTO次要磁碟區上的現有LUN會在零RTO關係刪除後變更、以反映新的身分識別。主機會將次要Volume LUN視為與來源Volume LUN無關的新LUN。
 * 在刪除關聯之後、次要磁碟區仍會保留DP磁碟區。您可以核發 `snapmirror break` 將它們轉換為讀取 / 寫入的命令。
 * 當關係未反轉時、在容錯移轉狀態中不允許刪除關係。
 
+
+.步驟
+在刪除 SnapMirror 作用中同步 SAN 關係之前，您必須取消對應目的地叢集上屬於該關係的所有 LUN。在刪除非對稱 SAN 組態之前，請完成下列步驟。
+
+. 如果目的地 LUN 是透過複寫的 igroup 來對應，則必須先檢查並移除來源叢集的 igroup 複寫，然後才能刪除目的地叢集上的 LUN 對應：
++
+`SiteB::> igroup show -igroup <igroup_name>  -vserver <vserver_name> -fields replication-peer`
+
+. 如果 igroup 已複寫，請從來源叢集移除複寫對等節點關聯：
++
+`SiteA::> igroup modify -vserver <svm_name> -igroup <igroup_name> -replication-peer "-"`
+
+. 確認 igroup 不再被複寫：
++
+`SiteB::> igroup show -igroup <igroup_name> -vserver <vserver_name> -fields replication-peer`
+
+. 刪除目的地端 LUN 對應：
++
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <lun_path>`
+
+. 如果沒有其他 LUN 對應到該 igroup，則刪除該 igroup：
++
+`SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
+
+
+
+
+
+[[delete-the-snapmirror-active-sync-san-relationship]]
+=== 刪除 SnapMirror 作用中同步 SAN 關係
+
+取消映射 LUN 後，刪除 SnapMirror 作用中同步關係。
 
 .步驟
 . 從次要叢集移除來源端點與目的地端點之間的 SnapMirror 作用中同步一致性群組關係：
