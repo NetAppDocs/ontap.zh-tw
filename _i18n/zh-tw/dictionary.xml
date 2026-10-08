@@ -7707,7 +7707,6 @@ ONTAP 9.12.1 、 ONTAP 9.11.1 和 ONTAP 9.10.1 的最新修補版本也支援 AF
   <block id="6cb0f0ec105b0d888bd813c6bcce192c" category="list-text">確認已啟用自動恢復：</block>
   <block id="a2ddda2c7f7dc9bcbb676e13bb3308a1" category="paragraph">此範例顯示兩個節點均已啟用自動恢復功能：</block>
   <block id="2aba6782377793d4902dd92c32a9d2cf" category="summary">升級 ONTAP 之前、如果您已將 netgroup 載入 SVM 、請確認每個節點上都有 netgroup 檔案。節點上缺少 netgroup 檔案可能會導致升級失敗。</block>
-  <block id="054d3cff3846274b8d1a73bad7913905" category="doc">在 ONTAP 升級之前、請確認所有節點上都存在 netgroup 檔案</block>
   <block id="2b8589afc43d1e6ee98099822578031e" category="paragraph">升級 ONTAP 之前、如果您已將 netgroup 載入儲存虛擬機器（ SVM ）、則必須確認每個節點上都有 netgroup 檔案。節點上缺少 netgroup 檔案可能會導致升級失敗。</block>
   <block id="e85755b0a1b5d47d1c6d5d7f6efced85" category="list-text">顯示每個 SVM 的 netgroup 狀態：</block>
   <block id="751dc60e5d0abd1098d8cbaa125b0089" category="list-text">確認每個 SVM 的每個節點都顯示相同的 netgroup 檔案雜湊值：</block>
@@ -16722,38 +16721,18 @@ LIF 的服務原則。
   <block id="4c36274c4fe167ea0e5c665e33791c68" category="paragraph">下列命令會顯示預設IPspace中所有傳輸協定的QoS標記：</block>
   <block id="de73a1e9954790ff0901101e659f1bf5" category="summary">建立LIF、此為與實體或邏輯連接埠相關聯的IP位址。</block>
   <block id="753ad49162ca6621affe67bf28ce6a1e" category="doc">建立 LIF （網路介面）</block>
-  <block id="ec7d87855b2f41d3b6c36ff49c461e98" category="paragraph">SVM透過一或多個網路邏輯介面（LIF）、為用戶端提供資料服務。您必須在您要用來存取資料的連接埠上建立LIF。LIF （網路介面）是與實體或邏輯連接埠相關聯的 IP 位址。如果元件發生故障、LIF可能會容錯移轉至不同的實體連接埠、或移轉至不同的實體連接埠、進而繼續與網路通訊。</block>
-  <block id="5bcb18cd3811711d3c8e7a250c84fbb6" category="paragraph">連接至 ONTAP 的交換器連接埠應設定為跨距樹狀目錄邊緣連接埠、以減少 LIF 移轉期間的延遲。</block>
-  <block id="6789dcbf206f0a4f22a16b71e5acd842" category="list-text">基礎實體或邏輯網路連接埠必須設定為管理UP狀態。</block>
   <block id="0b7a56152c376f386379636394d6eee1" category="list-text">如果您打算使用子網路名稱來配置LIF的IP位址和網路遮罩值、則該子網路必須已經存在。</block>
-  <block id="8d7c6d693d91720dcea00ddb63dae543" category="paragraph">子網路包含屬於同一第3層子網路的IP位址集區。它們是使用 System Manager 或建立的<block ref="0eec35ff52aa111a144d89156bcaed96" prefix=" " category="inline-code"></block> 命令。</block>
   <block id="dc9e8d63cbbdb8d5ea7b651eb84b063e" category="list-text">指定LIF處理之流量類型的機制已變更。對於僅適用於更新版本的版本、LIF會使用角色來指定其處理的流量類型。ONTAP從ONTAP Sf6開始、l生命 就會使用服務原則來指定處理的流量類型。</block>
   <block id="0e2f314790eb6267c4448c40e54aaea9" category="list-text">您無法將NAS和SAN傳輸協定指派給相同的LIF。</block>
-  <block id="d63abfced299c6ffbd6200e985c6d340" category="paragraph">支援的傳輸協定包括SMB、NFS、FlexCache 支援功能、iSCSI和FC； iSCSI和FC無法與其他傳輸協定結合使用。不過、NAS和乙太網路型SAN傳輸協定可以存在於同一個實體連接埠上。</block>
-  <block id="917d93a73123e18a54b6430b74261e40" category="list-text">您不應設定承載SMB流量的生命期、以自動還原至其主節點。如果SMB伺服器要裝載解決方案、以便透過Hyper-V或SQL Server透過SMB進行不中斷營運、則此建議為必填。</block>
   <block id="9d233c1f0b092bc81ad068414cb64e53" category="list-text">您可以在同一個網路連接埠上同時建立IPV4和IPv6 LIF。</block>
-  <block id="092185cac2efeb6454b5f317056077d4" category="list-text">SVM使用的所有名稱對應和主機名稱解析服務、例如DNS、NIS、LDAP和Active Directory、 必須至少有一個LIF處理SVM的資料流量。</block>
   <block id="9ad4be6eef992b371fa173aecc5c7bd0" category="list-text">處理節點之間叢集內流量的LIF、不應與處理管理流量的LIF或處理資料流量的LIF位於相同的子網路上。</block>
-  <block id="b4fdad0f41f5d63611cc1226e8b16ef6" category="list-text">建立沒有有效容錯移轉目標的LIF會產生警告訊息。</block>
-  <block id="53c7c393b93df8cb5a9fbfa1f669b976" category="list-text">如果叢集中有大量的生命量、您可以驗證叢集上支援的LIF容量：</block>
-  <block id="cd942e7c6676928ecc4c39ce02efa758" category="list-text">System Manager：從ONTAP 功能完善的9.12.0,開始檢視網路介面網格的處理量。</block>
-  <block id="2d783dafcb9a806c61739c4783f65a68" category="list-text">CLI ：使用<block ref="be57ee83c24450e6f6cbf92cb6031c11" prefix=" " category="inline-code"></block> 命令和 LIF 容量、可透過使用在每個節點上支援<block ref="6d38f68efafeeda72933275474c52475" prefix=" " category="inline-code"></block> 命令（進階權限層級）。</block>
   <block id="df6fd02001382d75cfbaa48f225d87e0" category="list-text">從ONTAP NetApp 9.7開始、如果相同子網路中的SVM已存在其他LIF、您就不需要指定LIF的主連接埠。在相同的廣播網域中、系統會自動在指定的主節點上選擇隨機連接埠、如同在同一個子網路中設定的其他LIF。ONTAP</block>
   <block id="4832088a6467cdd27ab5e94be99fde92" category="paragraph">從ONTAP 支援FFC-NVMe的支援功能到支援的功能表9.4開始。如果您要建立FC-NVMe LIF、應該注意下列事項：</block>
   <block id="cb246c73e23f19b4642bb424d4402935" category="list-text">NVMe傳輸協定必須受到建立LIF的FC介面卡支援。</block>
   <block id="183bb9f40117c65cde5613d5e0729ba9" category="list-text">FC-NVMe是資料生命中唯一的資料傳輸協定。</block>
   <block id="f766fb2dec615453dd7fdf037100b8c5" category="list-text">必須為每個支援SAN的儲存虛擬機器（SVM）設定一個LIF處理管理流量。</block>
-  <block id="ae0df50a6255a9c9261d6b580219771e" category="list-text">當您建立具有子網路的網路介面時ONTAP 、ENetApp會自動從所選子網路選取可用的IP位址、並將其指派給網路介面。如果有多個子網路、您可以變更子網路、但無法變更IP位址。</block>
-  <block id="f0a3b3545950846c431aae854b982efd" category="list-text">建立（新增）SVM時、您無法為網路介面指定位於現有子網路範圍內的IP位址。您會收到子網路衝突錯誤。此問題發生在網路介面的其他工作流程中、例如在SVM設定或叢集設定中建立或修改叢集間網路介面。</block>
   <block id="ea06529e6d0eb82bb26656038620b02e" category="inline-xref-macro">透過RDMA設定NFS的LIF</block>
-  <block id="cd13dd69b76cb5a8d8836c52e28ee458" category="list-text">從 ONTAP 9.11.1 開始、全快閃 SAN 陣列（ ASA ）平台可自動進行 iSCSI LIF 容錯移轉。</block>
-  <block id="eb3e6c35d448456277ecc4873989ccd5" category="paragraph">iSCSI LIF 容錯移轉會自動啟用（容錯移轉原則設為<block ref="9817175b2d67fda65aaaec8b8fcf2111" prefix=" " category="inline-code"></block> 且自動還原值設為<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block>）如果指定 SVM 中不存在 iSCSI 生命負載、或指定 SVM 中所有現有的 iSCSI 生命負載均已透過 iSCSI LIF 容錯移轉啟用、則新建立的 iSCSI 生命負載。</block>
-  <block id="2e9d79bdadc3c1a3ea80a6d99ea9c771" category="paragraph">如果您升級至 ONTAP 9.11.1 或更新版本後、 SVM 中現有的 iSCSI 生命體尚未啟用 iSCSI LIF 容錯移轉功能、且您在同一個 SVM 中建立新的 iSCSI 生命體、則新的 iSCSI 生命體將採用相同的容錯移轉原則 <block ref="075ae3d2fc31640504f814f60e5ef713" prefix="(" category="inline-code"></block>） SVM 中現有的 iSCSI 生命。</block>
   <block id="ef934d4d8f2b4314965fe0a91d2aac87" category="inline-link-macro">適用於ASA 各種平台的iSCSI LIF容錯移轉</block>
-  <block id="5b1166dba71dd88b92c8f0acf473772e" category="paragraph"><block ref="5b1166dba71dd88b92c8f0acf473772e" category="inline-link-macro-rx"></block></block>
-  <block id="ff75491cef38298812f55b5192a63322" category="paragraph">從ONTAP 支援支援的版本9.7開始、ONTAP 只要IPspace的同一子網路中至少已存在一個LIF、則該產品就會自動選擇LIF的主連接埠。在同一個廣播網域中選擇一個主連接埠、以作為該子網路中的其他LIF。ONTAP您仍可指定主連接埠、但不再需要主連接埠（除非該子網路在指定的IPspace中尚不存在任何生命區）。</block>
-  <block id="cc81ac9d702ccf6d3fb5a87328ac320e" category="paragraph">從ONTAP 功能性的9.12.0開始、您所遵循的程序取決於您所使用的介面-系統管理員或CLI：</block>
-  <block id="37d203a4d30c92c7e0433e138e21db41" category="paragraph">*使用System Manager新增網路介面*</block>
   <block id="80b672eadb959ee067f798c949769797" category="list-text">選取下列其中一個介面角色：</block>
   <block id="f6068daa29dbb05a7ead1e3b5a48bbee" category="list-text">資料</block>
   <block id="a5e7f0e3e9c9116082e3187550f2112f" category="list-text">叢集間</block>
@@ -16766,26 +16745,20 @@ LIF 的服務原則。
   <block id="9f5d454d522b09f8cb2c421adee76a83" category="list-text">如果在所選SVM的IPspace中至少設定一個子網路、則會顯示子網路下拉式清單。</block>
   <block id="1636f97e6bf0d009e6d54f431dd78331" category="list-text">如果您選取子網路、請從下拉式清單中選擇該子網路。</block>
   <block id="4f251f06f399aea726037b03ba55a92e" category="list-text">如果您在沒有子網路的情況下繼續、則會顯示「廣播網域」下拉式清單：</block>
-  <block id="c77fd2236a05934d1482c13bc9c2cd4d" category="list-text">指定IP位址。如果IP位址正在使用中、則會顯示警告訊息。</block>
   <block id="f2ccfb6eb1082f7276bb8c59544ba16d" category="list-text">指定子網路遮罩。</block>
   <block id="dd8594a8467817eb4f593564094d8619" category="list-text">從廣播網域中選取主連接埠、可以是自動（建議）或從下拉式功能表中選取一個。主連接埠控制項會根據廣播網域或子網路選擇來顯示。</block>
   <block id="877dcf4e4c0dcca42bb2ac810a06d5e7" category="list-text">儲存網路介面。</block>
-  <block id="9264736930746a402294c277d922cca5" category="paragraph">* 使用 CLI 建立 LIF*</block>
   <block id="1ebcfad534ca6b48a25ad52ffad224cc" category="list-text">確定要用於LIF的廣播網域連接埠。</block>
-  <block id="f71d8c4bffdcfe0255989a522519e921" category="paragraph"><block ref="f8ae370acaa7702ed5f8a0f329fbbc89" prefix="" category="inline-code"></block></block>
   <block id="f32118da3d70a4f320a9e03ff567af21" category="list-text">驗證要用於lifs的子網路是否包含足夠的未使用IP位址。</block>
-  <block id="ec9f06f6ad41803059b084ab6467f053" category="paragraph"><block ref="df45c041fbec4b88d2620f8f27969ca2" prefix="" category="inline-code"></block></block>
   <block id="2307fb5b78b821211a9b011ea25ba45a" category="list-text">在您要用來存取資料的連接埠上建立一個或多個生命體。</block>
   <block id="8d6c97487ddd2038e41c9e6af2e2c2b1" category="list-text"><block ref="42819bf7ae4bf9a7d2a14b2805ca0e83" prefix="" category="inline-code"></block> 是 LIF 在返回時返回的節點<block ref="d1e4afa40f7e9718bdad64b4f5db9abb" prefix=" " category="inline-code"></block> 命令會在LIF上執行。</block>
   <block id="c55a4f044dfec68d4e9f5b17072e3330" category="paragraph">您也可以使用-autom-revert選項、指定LIF是否應自動還原為主節點和主連接埠。</block>
   <block id="a216b55b3c0bf385e4630d18a1048d5b" category="list-text"><block ref="321ff01f394ce440009a9f460f09d191" prefix="" category="inline-code"></block> 是 LIF 在時傳回的實體或邏輯連接埠<block ref="d1e4afa40f7e9718bdad64b4f5db9abb" prefix=" " category="inline-code"></block> 命令會在LIF上執行。</block>
-  <block id="66538afe2f70d10ce8f5fa836c504d8e" category="list-text">您可以使用指定 IP 位址<block ref="38df54fe961fa2bf2a7f82a5854fabad" prefix=" " category="inline-code"></block> 和<block ref="bba17324bbe2e8cea0c60e47268d4b36" prefix=" " category="inline-code"></block> 或是您可以使用從子網路進行分配<block ref="8db950a15da003c155c149cbe4e043a2" prefix=" " category="inline-code"></block> 選項。</block>
   <block id="74d2e4c4ae33f4210672309e2da7aa67" category="list-text">使用子網路提供IP位址和網路遮罩時、如果子網路是使用閘道定義、則使用該子網路建立LIF時、會自動將通往該閘道的預設路由新增至SVM。</block>
   <block id="8c61a3dc9fe23290c557a2511c9b35e1" category="list-text"><block ref="28c988ac956ff7a16325cde07547fef0" prefix="" category="inline-code"></block> 可讓您指定資料 LIF 是否在啟動、管理資料庫狀態變更或建立網路連線等情況下自動還原至其主節點。預設設定為<block ref="68934a3e9455fa72420237eb05902327" prefix=" " category="inline-code"></block>但您可以將其設定為<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block> 視環境中的網路管理原則而定。</block>
   <block id="307b6a8428f6f758ace66db2ccc5d91b" category="list-text"><block ref="950af4194b424bf604f7ce86c7eff452" prefix="" category="inline-code"></block> 從 ONTAP 9.5 開始、您可以使用指派 LIF 的服務原則<block ref="950af4194b424bf604f7ce86c7eff452" prefix=" " category="inline-code"></block> 選項。
 當為LIF指定服務原則時、該原則會用來建構LIF的預設角色、容錯移轉原則和資料傳輸協定清單。在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。</block>
   <block id="efe97ec1aaddc6abcc95f07658ec7a4c" category="list-text"><block ref="5d2f1b504fd65080a58edd34b33a0b73" prefix="" category="inline-code"></block> 可讓您建立支援 FCP 或 NVMe / FC 傳輸協定的 LIF 。建立IP LIF時不需要此選項。</block>
-  <block id="0e8be86fb1fd96c9321d5e4107e3475b" category="list-text">*選用*：在-address選項中指派IPv6位址：</block>
   <block id="76ffff692e8f2a4eea8bb8acb769b46a" category="paragraph">。<block ref="621563f27da2174dd6450a0ccd81978f" prefix=" " category="inline-code"></block> 命令可在進階權限層級使用。</block>
   <block id="0d710d73b461c89b1ba215412b9541e2" category="list-text">使用格式<block ref="371fe1c91d7ccdea2021e0fb5b75a7b3" prefix=" " category="inline-code"></block> 手動建構 IPv6 位址。</block>
   <block id="2fede0e329f4e76a33495cab21d88e61" category="paragraph"><block ref="851f5ac9941d720844d143ed9cfcf60a" prefix="" category="inline-code"></block> 是在各種介面上學習的首碼。</block>
@@ -29821,7 +29794,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="a6ec5384deb02e7f5a5d09161cba7c96" category="cell"><block ref="428bc1fb4fd7af6ecad3d608f6b1d101" prefix="" category="inline-code"></block></block>
   <block id="a6bb207600924c876367c6c67de3b73f" category="admonition">您只能在維護程序中視需要停用儲存容錯移轉。</block>
   <block id="70d9e3c68d42d6ec42ab792e06c44357" category="doc">NVMe</block>
-  <block id="72f484d24e898cdb86b1b6f55c9a0a83" category="doc">調整命名空間大小</block>
   <block id="100935c541e6a3a07b3e031eec79755d" category="paragraph">從ONTAP 版本號《支援》（2019）9.10.1開始、您可以使用ONTAP 支援的CLI來增加或減少NVMe命名空間的大小。您可以使用System Manager來增加NVMe命名空間的大小。</block>
   <block id="bbc17395a9abd3414bda074c059901b9" category="section-title">增加命名空間的大小</block>
   <block id="498777bfaba04ac6f91f2a96fc62023e" category="list-text">按一下「*儲存設備&gt; NVMe命名空間*」。</block>
@@ -29908,7 +29880,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="df6617ee55441a6bfae2683e66353cfc" category="list-text">輸入下列命令、將 NVMe 命名空間轉換為 LUN ：</block>
   <block id="bb6a1cf51a8de546ad2dd3d9890e204b" category="paragraph"><block ref="506875209903ed928830b2952068a94d" prefix="" category="inline-code"></block></block>
   <block id="00151817d18957b14ac89f55e87d9bce" category="summary">從支援NVMe 9.5開始ONTAP 需要授權。如果ONTAP NVMe是在更新至ONTAP 版本號9.5之後啟用、系統會給予90天的寬限期以取得授權。</block>
-  <block id="7eb59ea74552d796af890c483255c243" category="doc">NVMe授權需求</block>
   <block id="1ccdcaa7d2707dbb7f181d58c4c9602b" category="paragraph">您可以使用下列命令來啟用授權：</block>
   <block id="4139071842fb10479d0544cf8ab80630" category="paragraph"><block ref="e4e9fb14c781996365be1dc090142e5c" prefix="" category="inline-code"></block></block>
   <block id="063206680d500c8a055071bea17e298b" category="section-title">啟用 NVMe / TCP 控制器的自動主機探索</block>
@@ -32639,7 +32610,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="296f756d27c037198fe9a2b121b560ef" category="section-title">停用動態授權</block>
   <block id="19f47c3c52d1d3bce181a9cf5466e835" category="paragraph">如果不再需要新增的驗證安全性、您可以停用動態授權。</block>
   <block id="9934c7b58baadcfa97e22acfc519cd78" category="list-text">將動態授權狀態變更為、以停用動態授權<block ref="075ae3d2fc31640504f814f60e5ef713" prefix=" " category="inline-code"></block>。如果您不使用<block ref="b058e17241aaaab6fd881949dfb6df3e" prefix=" " category="inline-code"></block> 參數、命令會在叢集層級執行。更新括弧 &lt;&gt; 中的值以符合您的環境。必須使用粗體參數：</block>
-  <block id="8771c42b4bb875440fc45ff5bf6dc55f" category="doc">NVMe 組態、支援和限制</block>
   <block id="fa8c618c138547a3674f63f533db6d6e" category="paragraph">從 ONTAP 9.4 開始 <block ref="978a0518377727b64c14f349a691f978" category="inline-link-macro-rx"></block> 傳輸協定適用於 SAN 環境。FC-NVMe採用與傳統FC網路相同的實體設定和分區實務做法、但相較於FC-SCSI、可提供更高的頻寬、增加IOPs並縮短延遲。</block>
   <block id="7dd4138bca8a8f81a4a9fafb645ded08" category="list-text">NVMe / TCP 上的四節點 MetroCluster IP 組態</block>
   <block id="64d765c73f22e37ce86f9f78119707b0" category="list-text">設定子系統的主機優先順序（主機層級 QoS ）</block>
@@ -36299,7 +36269,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="b11c58611f4ced373f9a2d5a76634ffc" category="paragraph">如需有關本程序中所述命令<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>的詳細資訊，請參閱。</block>
   <block id="fc8a23c6096ea495fd6fd2dcf8940de4" category="doc">在 ONTAP 中設定叢集式外部金鑰伺服器</block>
   <block id="65b2323fbe7e1a5f404b27e0883d910d" category="doc">使用 ONTAP 中的 Volume 加密轉換啟動命令，在現有磁碟區上啟用加密</block>
-  <block id="c54dbe39234f8280d6f1651be5a1c1a1" category="admonition">NetApp 建議為資料 SVM 上的所有生命建立子網路物件。這對 MetroCluster 組態尤其重要，因為每個子網路物件都有相關的廣播網域，因此子網路物件可讓 ONTAP 判斷目的地叢集上的容錯移轉目標。有關說明，請參閱<block ref="ad8e74354bc7fdb3d5c3a1c355adf86b" category="inline-link-macro-rx"></block>。</block>
   <block id="f0a2b989304d28e556b9962a34329b9d" category="list-text">NetApp 建議為資料 SVM 上的所有生命建立子網路物件。這對 MetroCluster 組態尤其重要，因為每個子網路物件都有相關的廣播網域，因此子網路物件可讓 ONTAP 判斷目的地叢集上的容錯移轉目標。</block>
   <block id="92fddfdf5dbc47678ec4636b79dffe90" category="doc">建立 ONTAP S3 儲存區</block>
   <block id="cc5ddbb381355c5ec14560d21cf91e5f" category="doc">建立或修改 ONTAP S3 物件存放區伺服器原則</block>
@@ -36602,10 +36571,7 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="b435af79e1f691df6df2c12d59ea19e1" category="doc">將現有的 ONTAP DP 類型關係轉換為 XDP</block>
   <block id="56c0a3bfc3e1d556477e8a8cba2857d2" category="doc">在計畫性升級之前執行 ONTAP 自動升級前檢查</block>
   <block id="30683864319af2d9960510bc3547e744" category="doc">使用自動化的不中斷 ONTAP 升級來安裝 ONTAP 映像</block>
-  <block id="4a6591cd8ee699bc89271024726ebf1d" category="doc">在升級之前驗證 ONTAP 叢集 SVM 路由組態</block>
   <block id="0b84c528e5c36ebf24b6d176388283ce" category="doc">在 ONTAP 升級之後更新磁碟資格審查套件</block>
-  <block id="c1eb700c3f91a715b676f8d8e5e78eed" category="doc">確認您的硬體組態是否支援 ONTAP 目標版本</block>
-  <block id="181104cd158acb458868183ff14d242e" category="doc">驗證 SnapMirror S3 組態的 ONTAP 授權</block>
   <block id="fbe129925d69d7a1608ff8517c2e054a" category="doc">在升級之前下載 ONTAP 軟體映像</block>
   <block id="3c1c85acf1c954debff924a041791601" category="doc">將 LDAP 用戶端設定為在 ONTAP 升級之前使用 TLS</block>
   <block id="ff30859fb8678e14da434faf10d64f75" category="doc">升級之前，請先確認 ONTAP 叢集 LIF 容錯移轉組態</block>
@@ -37599,7 +37565,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="ecfa38529755b5fd267ba5c944888775" category="paragraph">FPolicy 可監控 SMB ， NFSv3 ， NFSv4 ，以及從 ONTAP 9.15.1 開始的 NFSv4.1 檔案存取作業。</block>
   <block id="7b1807f7146547bf2bbd98f7a49da644" category="paragraph">從 ONTAP 9.15.1 開始， NFSv4 可讓您擷取 NFSv4.0 和 NFSv4.1 事件。</block>
   <block id="371831c4c5c3d34a6e11af6df69e3bf2" category="list-text">TLSv1.3 （從 ONTAP 9.11.1 開始）</block>
-  <block id="9724403f22cff13c43fab946ba63c363" category="list-text">從 ONTAP 9.10.1 開始，<block ref="168d50085a3c4e712aaa28cf90e2f228" prefix=" " category="inline-code"></block> CLI 命令包含<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block>透過 RDMA 組態的 NFS 參數。從 ONTAP 9.12.1 開始，系統管理員支援透過 RDMA 組態建立 NFS 的網路介面。如需更多資訊、請參閱 <block ref="7ea15161e83b0e9a905b63481e90b54c" category="inline-xref-macro-rx"></block>。</block>
   <block id="1d8404eb6271fc502c911b0db577288e" category="list-text">如果您計畫在建立 SVM 時指定快照原則，但不知道原則名稱，請列出可用的原則，並識別並記錄您要使用的快照原則名稱：</block>
   <block id="4b22a84049b0ae29867579d641819d56" category="paragraph">下表列出從 ONTAP 9.12.1 開始的系統 SVM 中生命週期的內建原則。對於其他版本、請使用下列命令顯示服務原則及其詳細資料：</block>
   <block id="083ea751684ac248378573774ca094b5" category="paragraph">使用此系統範圍內的管理原則、建立系統SVM擁有的節點和叢集範圍管理生命期。這些LIF可用於連往DNS、AD、LDAP或NIS伺服器的傳出連線、以及一些額外連線、以支援代表整個系統執行的應用程式。從 ONTAP 9.12.1 開始，您可以使用該<block ref="1f5803a97adcac618c409e797f78cf63" prefix=" " category="inline-code"></block>服務來控制將稽核記錄轉送到遠端系統記錄伺服器的生命週期。</block>
@@ -40194,7 +40159,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="57d91d55f06020fe5574e62877b065bf" category="paragraph">如<block ref="fb994e46b2e16f144068ce3c7e5a0cf6" category="inline-link-macro-rx"></block>需詳細<block ref="67e744e347af4cbdf0ab39fa5f21c0c7" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="074210e1f3b0bb0528013586d3e469e8" category="inline-link-macro">叢集控制器更換網路置換介面刪除</block>
   <block id="e6efe865531f88e7e1119a8ca81c6d40" category="list-text"><block ref="e6efe865531f88e7e1119a8ca81c6d40" category="inline-link-macro-rx"></block></block>
-  <block id="2f4cfbafbd8e41a116fcfd05597e4ada" category="list-text">基礎實體或邏輯網路連接埠必須設定為管理<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態。如<block ref="4c63772c0d465bc502b91b6f903bbe29" category="inline-link-macro-rx"></block>需詳細<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="554a60a1bdbf15aa7473f5348c14a9e8" category="paragraph">如<block ref="ef4243ec358c5e412dc9667d726f5888" category="inline-link-macro-rx"></block>需詳細<block ref="18ac852fb0d15d21df0560ca7f7d0e22" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="644618ccf1cbcc1bb2636aa67dd16c8d" category="doc">建立並啟用 ONTAP S3 稽核組態</block>
   <block id="0c9ebdfc9ba5ea7dda1079764cfd8756" category="doc">瞭解如何稽核 ONTAP S3 事件</block>
@@ -40223,10 +40187,7 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="493ab9d2a248c4d8231cfd1b2da4031f" category="paragraph"><block ref="493ab9d2a248c4d8231cfd1b2da4031f" category="inline-link-macro-rx"></block></block>
   <block id="f51291e0738be7b28dacdf71f22559ba" category="doc">刪除 ONTAP S3 快照</block>
   <block id="caf60be7491db9f567b5ef1b0259e027" category="doc">檢視及還原 ONTAP S3 快照</block>
-  <block id="6ae17b6c65a90c3e2d4608342c65fe0e" category="paragraph"><block ref="1e368189292e3982a3ae35731a40777f" prefix=" " category="inline-code"></block>SVM 的應列爲<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。如<block ref="4c63772c0d465bc502b91b6f903bbe29" category="inline-link-macro-rx"></block>需詳細<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="e1f811620c757575a04d26ca70cf082d" category="list-text">CIFS 伺服器的管理狀態必須設為<block ref="74e8333ad11685ff3bdae589c8f6e34d" prefix=" " category="inline-code"></block>，才能繼續 Active Directory 網域修改。</block>
-  <block id="8ad8b340a7f3ff90988838c82e65a5b5" category="list-text">如果命令成功完成，管理狀態會自動設定為<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。如<block ref="4c63772c0d465bc502b91b6f903bbe29" category="inline-link-macro-rx"></block>需詳細<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
-  <block id="f51a1b200e2aedf02f53c08f70dba43c" category="list-text">如果生命期相關聯的任何主連接埠網路介面未處於<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態，請解決此問題，使這些介面正常運作。如<block ref="4c63772c0d465bc502b91b6f903bbe29" category="inline-link-macro-rx"></block>需詳細<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="8f0db6fb02ceff2540a80aca4d8afe62" category="paragraph">如<block ref="52c5aac9881c68e527ca210415f7abab" category="inline-link-macro-rx"></block>需詳細<block ref="f24f62eeb789199b9b2e467df3b1876b" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="e3ca30297f0106f64e153af5359c4f44" category="inline-link-macro">安全性 SAML SP</block>
   <block id="b025b9a299499619d321d82e10b44c9d" category="list-text"><block ref="b025b9a299499619d321d82e10b44c9d" category="inline-link-macro-rx"></block></block>
@@ -40261,7 +40222,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="bb29a491c1f1d6b2a83599781ca1c64d" category="list-text"><block ref="bb29a491c1f1d6b2a83599781ca1c64d" category="inline-link-macro-rx"></block></block>
   <block id="df347a373b8f92aa0ae3dd920a5ec2f6" category="inline-link-macro">列</block>
   <block id="a17168900b967f74c5ad06d22f2503e7" category="list-text"><block ref="a17168900b967f74c5ad06d22f2503e7" category="inline-link-macro-rx"></block></block>
-  <block id="57bd74d15d773182b7cb25b174bf3204" category="paragraph"><block ref="727bab3e5569f98b6c0b2d6021838c82" prefix=" " category="inline-code"></block>和<block ref="73653ee3560c81c0cf4dc58e4a29d97e" prefix=" " category="inline-code"></block>字段應返回<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。如<block ref="4c63772c0d465bc502b91b6f903bbe29" category="inline-link-macro-rx"></block>需詳細<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="ba772aa8211e00200011f1fbc62ab755" category="paragraph">深入瞭解<block ref="639161158d7426b3865ce9c5a6f648b3" prefix=" " category="inline-code"></block>及<block ref="484f24f8e4da80a1185aa63fa1d5fc08" prefix=" " category="inline-code"></block> <block ref="d112375d24cd1b9561ded217911dd9f1" category="inline-link-macro-rx"></block>。</block>
   <block id="db473d2e829b51448e96550734d0dafe" category="sidebar">瞭解稽核 S3 事件的相關資訊</block>
   <block id="86f36a312425e9727bebca0171917508" category="sidebar">建立並啟用組態</block>
@@ -44833,7 +44793,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="7a4fb48520dfb199bb74635ed5df5b61" category="paragraph">叢集中每個節點的憑證和憑證授權單位 (CA) 名稱均已顯示。</block>
   <block id="ee0e320b9c2150d66a895688f0536e76" category="list-text">修改節點的叢集網路加密證書：</block>
   <block id="b544d12facc0f5d651f9bbf1f05a7dbd" category="paragraph">此指令修改特定節點的叢集網路加密證書。在執行此命令之前，必須先安裝憑證並由已安裝的 CA 進行簽署。有關證書管理的更多信息，請參閱<block ref="31a00ab4013243ed6589f7ba4570beb4" category="inline-link-macro-rx"></block>。如果<block ref="e50d72d773874b2be58530daec43900c" prefix=" " category="inline-code"></block>如果未指定，則使用自動產生的預設憑證。</block>
-  <block id="1876b5d5f580981e4017a9ec61211df4" category="paragraph">ONTAP 的所有 SSL 連線均符合聯邦資訊處理標準 (FIPS) 140-2。您可以開啟和關閉 SSL FIPS 模式，全域設定 SSL 協議，並關閉ONTAP中的任何弱密碼。</block>
   <block id="b3848087f947ca532bd0f798638c3f0d" category="inline-xref">FIPS 已停用</block>
   <block id="f3046461e3924fd6a0165270c2ae3323" category="paragraph">ONTAP 9.18.1 引入了對 ML-KEM、ML-DSA 和 SLH-DSA 後量子計算加密演算法的支持，用於 SSL，從而為抵禦未來潛在的量子電腦攻擊提供了額外的安全保障。這些演算法僅在以下情況下可用<block ref="bc401b934f697fff623a4e2373aca77c" category="inline-xref-macro-rx"></block>。當 FIPS 被停用且對等方支援時，將協商後量子加密演算法。</block>
   <block id="1fd8835aa2cd933954033d6853847670" category="paragraph">從ONTAP 9.18.1 開始， ONTAP中的 SSL 支援 ML-KEM、ML-DSA 和 SLH-DSA 後量子計算加密演算法。只有在禁用 FIPS 且對等方支援這些演算法時，這些演算法才可用。</block>
@@ -46067,7 +46026,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="691549d3af8c7a4e078e128c7447fe90" category="summary">建立並指派 LIF 的服務原則。</block>
   <block id="7eb9bddff8d5b751be257d6ae59f214f" category="summary">介紹 LIF 組態。</block>
   <block id="ba0bea8ac6b69d39dada1ee8578ce85c" category="summary">介紹實體和虛擬網路連接埠。</block>
-  <block id="24a0b720b51546a4e67ce104eb861708" category="summary">所有 SSL 連線均符合 Federal Information Processing Standards 140-2。</block>
   <block id="a5f0d677b0f867da98953b155ec42304" category="summary">設定 SNMPv3 使用者以從 SNMP 管理器執行 SNMP 公用程式。</block>
   <block id="9584f2b25fa9b9fa062a9b29853f317a" category="summary">引入子網路。</block>
   <block id="d049ae28c8a7c44c63a19e5c489467e1" category="summary">設定 SNMP 管理器以接收設陷通知。</block>
@@ -49163,7 +49121,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="8e9a1645efa9e3c27f2aac1ae6487519" category="doc">在 ONTAP 升級之前，請先驗證 SSH 主機金鑰演算法支援。</block>
   <block id="c73de1c9b941fd8c6f4112889b79eef4" category="doc">ONTAP 升級持續時間指南</block>
   <block id="d5e67ad9e9a84a282caee216233369b4" category="doc">了解 ONTAP 升級</block>
-  <block id="8b71c98e7b773e00ce90608d284ef1b4" category="doc">手動準備 ONTAP 軟體升級</block>
   <block id="7a2e3b5e305e8519c73cc926354b3d32" category="doc">升級 ONTAP 後，從網路原則移除 EMS LIF 服務</block>
   <block id="a0406d0b01ba33eaead3baec34463020" category="doc">ONTAP 升級如何變更 Service Processor 使用者帳戶</block>
   <block id="b0ae30300d11ddd0ce05f360278eb9b6" category="doc">ONTAP 升級前的特殊組態檢查</block>
@@ -49172,7 +49129,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="8a3131431438414085b863e65f980bc2" category="doc">使用 Config Advisor 在升級 ONTAP 之前識別組態錯誤</block>
   <block id="286ddad9dd5d6de9356f29c98011d2a9" category="doc">在 ONTAP 升級後啟用 LIF 並將其回復至主連接埠</block>
   <block id="dd1e9ab49ae0a1935a1611aeb7b68bf4" category="doc">從 ONTAP 9.2 或更早版本升級後重新設定 KMIP 伺服器</block>
-  <block id="c1191e4cec1734af46b2e39eaf394de4" category="doc">在四節點或八節點 MetroCluster 組態上手動執行 ONTAP NDU</block>
   <block id="444edf9eb9ea486a425b6cf114df64d5" category="paragraph">對四節點或八節點 MetroCluster 組態進行手冊不中斷營運的升級 （NDU），包括準備更新、同時更新一個或兩個 DR 群組中的每個 DR 配對，以及執行升級後工作。</block>
   <block id="076d5db944cbfaaecfcc037924156e6a" category="list-text">您必須使用 ONTAP 命令列介面 （CLI） 來執行此工作。</block>
   <block id="9d42755d1906201265ebf9079f98b345" category="doc">升級 ONTAP 雙節點 MetroCluster 組態</block>
@@ -49550,4 +49506,68 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="9b666e9f6530a96c20bb097b74398627" category="paragraph"><block ref="ac4bfd89fa917d221e7699de7d6c48de" prefix="" category="inline-code"></block></block>
   <block id="202d3eff129ab666d73ef23971f6ed10" category="section-title">刪除 SnapMirror 作用中同步 SAN 關係</block>
   <block id="6bf4ed0956506783cdde9a26ef683a64" category="paragraph">取消映射 LUN 後，刪除 SnapMirror 作用中同步關係。</block>
+  <block id="43010de42cbcfbb25be075901dd4b32b" category="summary">所有 SSL 連線均符合聯邦資訊處理標準 140-2 和 140-3 法規。</block>
+  <block id="ed1c011e021a857b9e7786921725baf0" category="paragraph">ONTAP 的所有 SSL 連線均符合聯邦資訊處理標準（FIPS）的法規。您可以啟用或停用 SSL FIPS 模式、全域設定 SSL 協定，並關閉 ONTAP 中的任何弱加密演算法。</block>
+  <block id="8af9a580aeca3ad8a9e7638c535cd503" category="paragraph">支援的 FIPS 法規遵循版本取決於您的 ONTAP 版本：</block>
+  <block id="c19f3126c40bbba29c78f627481d536f" category="cell">支援的 FIPS 法規遵循</block>
+  <block id="4a961b8f85fdf9fe71cad93d123199c8" category="cell">FIPS 140-3</block>
+  <block id="208bcd63753f2ef8a374f73ef74d14a5" category="list-text">9.19.1P2 及更新版本</block>
+  <block id="12c504ea5bf2e5057f3d02c787d66da9" category="list-text">9.18.1P6 及後續的 9.18.1 修補程式版本</block>
+  <block id="8a5275b722854cee8913aea0acdc2c33" category="cell">FIPS 140-2</block>
+  <block id="eca0960939de806346fd966b18fdaef5" category="list-text">9.19.1P1</block>
+  <block id="3c98a704e8c72b30a6923a188e97bd30" category="list-text">9.18.1P5 及更早版本</block>
+  <block id="44defbe3e6eb995ec3e6a6963de2a160" category="paragraph">儲存設備虛擬機器（SVM）透過一個或多個邏輯介面（LIF）向客戶端提供資料，這些邏輯介面是與實體連接埠或邏輯連接埠關聯的 IP 位址。您必須在要用於存取資料的連接埠上建立 LIF。如果某個元件發生故障，LIF 可以容錯移轉或移轉到不同的實體連接埠，從而繼續與網路通訊。</block>
+  <block id="8611c9af48cda5587049199f7b97f656" category="list-text">底層實體或邏輯網路連接埠必須處於管理<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態。</block>
+  <block id="b0d7f1a6adfcd5a4213d1313d1c85522" category="list-title">建立具有子網路的 LIFS</block>
+  <block id="a2a9e413667d6891efdae81c47f375aa" category="list-text">NetApp 建議為資料 SVM 上的所有 LIF 建立子網路物件。這對於 MetroCluster 組態尤其重要，因為子網路物件可讓 ONTAP 決定目的地叢集上的容錯移轉目標，因為每個子網路物件都有一個關聯的廣播網域。如果您規劃使用子網路名稱為 LIF 分配 IP 位址和網路遮罩值，則該子網路必須已存在。如需相關指示，請參閱 <block ref="ad8e74354bc7fdb3d5c3a1c355adf86b" category="inline-link-macro-rx"></block>。</block>
+  <block id="888d709fd5726772e10897bc6d9e245d" category="list-text">建立叢集間網路介面時，無法指定現有子網路範圍內的 IP 位址。</block>
+  <block id="a3b283ebbbb36ecc690f53829e6f2e11" category="list-text">從 ONTAP 9.7 開始，當您建立具有子網路的網路介面時，ONTAP 自動從所選子網路中選擇一個可用的 IP 位址並將其指派給該網路介面。如果存在</block>
+  <block id="762d9413e8f686daaa6c0e805e9d758a" category="paragraph-title">各 ONTAP 版本對 LIF 建立功能的支援</block>
+  <block id="a4480cade6455cab138d923bf0bb1e20" category="paragraph">與 LIF 建立相關的功能支援因 ONTAP 版本而異。</block>
+  <block id="7d0a287f4ae4256262d56a3e50740fc3" category="cell">從 ONTAP 版本開始</block>
+  <block id="b4bc76184cf881db286fc3ee183e99e5" category="cell">支援在 System Manager 中為 NFS over RDMA 組態建立網路介面。如需詳細資訊，請參閱 <block ref="7ea15161e83b0e9a905b63481e90b54c" category="inline-xref-macro-rx"></block>。</block>
+  <block id="b78086408274e220dea46a6f6d1ebd92" category="cell">支援全快閃 SAN 陣列（ASA）系統上的自動 iSCSI LIF 容錯移轉。對於新的 iSCSI LIF ，如果 SVM 沒有現有的 iSCSI LIF ，或所有現有的 iSCSI LIF 都已啟用容錯移轉，則會自動啟用容錯移轉，並採用 <block ref="9817175b2d67fda65aaaec8b8fcf2111" prefix=" " category="inline-code"></block> 原則，且自動回復設定為 <block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block> 。升級至 ONTAP 9.11.1 或更新版本後，如果同一個 SVM 中現有的 iSCSI LIF 未啟用容錯移轉，新的 iSCSI LIF 會繼承 <block ref="075ae3d2fc31640504f814f60e5ef713" prefix=" " category="inline-code"></block> 容錯移轉原則。深入瞭解 <block ref="5b1166dba71dd88b92c8f0acf473772e" category="inline-link-macro-rx"></block></block>
+  <block id="3aafd02626737b3fdc7b1464b4c6c61f" category="cell">這些<block ref="168d50085a3c4e712aaa28cf90e2f228" prefix=" " category="inline-code"></block>命令包含一個適用於 NFS over RDMA 組態的<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block>參數</block>
+  <block id="fcf3613900d6c4027d474b06d5d3c231" category="cell">如果同一子網路中已存在其他用於 SVM 的 LIF，則無需指定 LIF 的主連接埠。ONTAP 會自動在指定的主節點上，選擇一個與相同子網路中已設定的其他 LIF 位於相同廣播網域的隨機連接埠。</block>
+  <block id="d6ff33ec51770db3630a6b4da594a609" category="paragraph">LIF 使用服務原則來指定其處理的流量類型。在 ONTAP 9.5 及更早版本中，角色用於指定流量類型。</block>
+  <block id="28c3bb61cabdf0a7164b365d8b68ccfb" category="list-title">LIF 建立限制</block>
+  <block id="5280595b4db0d37d83cc52ae2619aadf" category="paragraph">然而，NAS 和基於乙太網路的 SAN 協定可以存在於同一個實體連接埠上。</block>
+  <block id="9574c804c9fb1d09bbbbd8b4e4636f38" category="list-text">NVMe LIF</block>
+  <block id="72c516a521e978dac7780a2e8bf37579" category="list-text">資料 LIF 不能在 NVMe 和任何其他協定之間共享。NVMe 資料 LIF 上只能使用 NVMe 協定。</block>
+  <block id="8b3ceee0c2c99a2402e287d6d9b032a2" category="paragraph">深入瞭解 <block ref="19481bdaaf9cbe1b26536cb01cf9effe" category="inline-link-macro-rx"></block>。</block>
+  <block id="49ce6a3953749e0d596d53c99f772e2c" category="list-text">SMB LIF</block>
+  <block id="183f741caf1845dcfc395362a53ef463" category="list-text">如果 SMB 伺服器託管了透過 SMB 搭配 Hyper-V 或 SQL Server 進行不中斷營運的解決方案，請勿將傳輸 SMB 流量的 LIF 設定為自動回復至其主節點。</block>
+  <block id="3164484a100cb440dcd936cf2b1ece1b" category="paragraph">使用 System Manager 或 CLI 建立 LIF。</block>
+  <block id="70f05d5e4f09d0d338143f04d8b5e5c4" category="paragraph">如果您的叢集中有大量 LIF，則可以在建立更多 LIF 之前驗證叢集支援的 LIF 容量。從 ONTAP 9.12.1 開始，您可以在 System Manager 中的「網路介面」網格中檢視處理量。</block>
+  <block id="4890b86912dacff6f1f095031a537ce0" category="list-text">請指定 IP 位址。如果該 IP 位址已被佔用，則會顯示警告訊息。</block>
+  <block id="9041024967cb18a5953cefc2586c7be7" category="list-text">（選用）將權限層級設定為進階，以檢視網路介面容量。</block>
+  <block id="37e228915a5c98ada5d684c37fd272e9" category="list-text">檢視每個節點支援的 LIF 容量：</block>
+  <block id="532a7b2e1505c1bbde96f781fea3213c" category="paragraph">了解更多關於 <block ref="6d38f68efafeeda72933275474c52475" prefix=" " category="inline-code"></block> 命令的資訊 <block ref="8799829b9b38f39ed37b4d409740b73e" category="inline-link-macro-rx"></block>。</block>
+  <block id="d6e56a7fd30418543f46191285abe52a" category="list-text">您可以使用 <block ref="38df54fe961fa2bf2a7f82a5854fabad" prefix=" " category="inline-code"></block> 和 <block ref="bba17324bbe2e8cea0c60e47268d4b36" prefix=" " category="inline-code"></block> 選項指定 IP 位址，或者您可以使用 <block ref="8db950a15da003c155c149cbe4e043a2" prefix=" " category="inline-code"></block> 選項啟用從子網路分配。</block>
+  <block id="6f2f554fc608ee2df936440bf58ccb60" category="list-text">（可選）在 -address 選項中指定 IPv6 位址：</block>
+  <block id="21f332db2a0aeb6d30c08d58804c1f1a" category="list-text">底層實體或邏輯網路連接埠必須設定為管理<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態。</block>
+  <block id="344d154048e17ac0c88eaacf7cfadb92" category="doc">在 ONTAP 中變更 NVMe 主機優先權</block>
+  <block id="b6019f8721e662eb133f05b63059d7b9" category="doc">將 NVMe 命名空間轉換為 ONTAP LUN</block>
+  <block id="32d766d09120959d278450c4ab04403b" category="doc">在 ONTAP 中停用 NVMe 上的帶內驗證</block>
+  <block id="c8aa8e93cb22dcf66571cf23428cdda2" category="doc">在 ONTAP 中停用 NVMe/TCP 的 TLS 安全的通路</block>
+  <block id="83d49af3ea14e0bd4118a6b111778d88" category="doc">ONTAP NVMe 授權需求</block>
+  <block id="3bcb20e1f89d316d053054c019cebdcb" category="doc">調整 ONTAP NVMe 命名空間的大小</block>
+  <block id="09439c09e105cd78806c52c1b0808b42" category="doc">在 ONTAP 中透過 NVMe 設定頻內驗證</block>
+  <block id="1c4d2decc8443addca9ed2dd6765b89c" category="doc">在 ONTAP 中為 NVMe/TCP 設定 TLS 安全的通路</block>
+  <block id="b9f54fc2ec61f3eeae745a7e9d38d3ea" category="doc">ONTAP 中的 NVMe 組態、支援和限制</block>
+  <block id="d53a01afd17aa7fc82a32e208c625644" category="paragraph">SVM 的 <block ref="1e368189292e3982a3ae35731a40777f" prefix=" " category="inline-code"></block> 應列為 <block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。</block>
+  <block id="93dbbbedefe4355c45f2d59ed8d5322f" category="list-text">如果命令成功完成，管理狀態將自動設定為<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。</block>
+  <block id="128096aa51bbdce5c01acf65b4deddde" category="list-text">如果 LIF 應該關聯的任何主連接埠網路介面未處於<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態，請解決問題，使這些介面處於啟用狀態。</block>
+  <block id="9b42fa22a842d7e2d6efe49ef9f49651" category="paragraph"><block ref="727bab3e5569f98b6c0b2d6021838c82" prefix=" " category="inline-code"></block> 和 <block ref="73653ee3560c81c0cf4dc58e4a29d97e" prefix=" " category="inline-code"></block> 欄位應傳回 <block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>。</block>
+  <block id="2bd64a1f15fde9b237ffd303fb13f9e0" category="doc">在 ONTAP 中啟用自動更新</block>
+  <block id="7d3387a352d01e1cd05e30e7ea1ac865" category="doc">手動更新 ONTAP 韌體</block>
+  <block id="44e7fb1c9aedc6a3c24d9c913a611ceb" category="doc">ONTAP 如何排程自動更新以進行安裝</block>
+  <block id="e7dfdf363406fab1deead3bbf6395a96" category="doc">在 ONTAP 中管理建議的自動更新</block>
+  <block id="2ac0f743cb3c12679a002766f6067fd7" category="doc">修改 ONTAP 中的自動更新</block>
+  <block id="4d9ff0981fadde25e34c433935660c06" category="doc">ONTAP 升級前的 SVM 路由組態需求</block>
+  <block id="7717a9341426a93dde759f1529a86bdf" category="doc">ONTAP 升級的硬體組態需求</block>
+  <block id="dd16864609ef8d2cef0bd39dbce65783" category="doc">SnapMirror S3 組態的 ONTAP 授權要求</block>
+  <block id="93c9d4ff21582c79a7cddb11d4a3829d" category="doc">ONTAP 手動升級準備工作流程</block>
+  <block id="165e9ffb20a53bc1f7011ca5414d2161" category="doc">手動升級 ONTAP 四節點或八節點 MetroCluster 組態</block>
+  <block id="c67fe6e6b4e25a2f3dba975eccebb39d" category="doc">在 ONTAP 升級之前，請確認所有節點上都存在 netgroup 檔案</block>
 </blocks>
