@@ -1338,7 +1338,6 @@
   <block id="d15dd85b2c4b94a37de34bc82531e284" category="paragraph">您可以使用傾印備份、將檔案系統資料（例如目錄、檔案及其相關的安全性設定）備份到磁帶設備。您可以備份整個Volume、整個qtree或子樹、而不是整個Volume或整個qtree。</block>
   <block id="b8c21aebf9ea282dc091f7a8cd63be6d" category="paragraph">您可以使用NDMP相容的備份應用程式來執行傾印備份或還原。</block>
   <block id="580908880a091e74ad5cccc605751271" category="paragraph">您可以使用傾印引擎、對磁帶執行層級0、遞增或差異備份。</block>
-  <block id="68eee2e1ac5813b90840b2b9026b8988" category="paragraph">還原至Data ONTAP 版本早於更新版本的版本之後、您必須先執行基礎備份作業、才能執行遞增備份作業。</block>
   <block id="f9cf9415d2ebe0c1351e0f7a1221a2d8" category="inline-link">升級、回復或降級</block>
   <block id="6ab922dabb5964299f58ef0a97303c42" category="summary">序號（SN）是磁帶機或媒體轉換器的唯一識別碼。根據SN（而非WWN）產生別名。ONTAP</block>
   <block id="bff88fe6ed331e1de7ffe5c59f663010" category="paragraph">由於SN是磁帶機或媒體更換器的唯一識別碼、因此無論磁帶機或媒體更換器的多個連線路徑為何、別名都會保持不變。這有助於儲存系統在磁帶庫組態中追蹤相同的磁帶機或媒體更換器。</block>
@@ -1355,7 +1354,6 @@
   <block id="e3652c029bd2fed13b283f038bc1b1b8" category="list-text">UNIX檔案權限</block>
   <block id="3fabfbd2744533c3c888e15445477652" category="list-text">ACL</block>
   <block id="ba4d86b149c5b677d2384d05dc0190d0" category="paragraph">如果您還原的檔案僅具有NTFS qtree或Volume的UNIX檔案權限、則該檔案沒有Windows NT ACL。儲存系統只會使用此檔案的UNIX檔案權限、直到您在該檔案上建立Windows NT ACL為止。</block>
-  <block id="fe06493d34379b057f093feaff993e0b" category="paragraph">如果您將從執行Data ONTAP 還原8.2的儲存系統備份的ACL、還原到執行Data ONTAP 速度低於1、024的ACE限制、並執行速度低於1、024的儲存系統、則會還原預設ACL。</block>
   <block id="0dfaa5e8bb68aedaec3de30c03046a28" category="list-text">qtree資訊</block>
   <block id="a2a7282603ba26c3376afddbad79f419" category="paragraph">僅當qtree還原至磁碟區根目錄時、才會使用qtree資訊。如果 qtree 還原至較低的目錄、例如、則不會使用 qtree 資訊<block ref="fd8d0d2321300173a599bbf8fabacbd1" prefix=" " category="inline-code"></block>，它不再是 qtree 。</block>
   <block id="58a826418f1516e259a0623b5824c4c8" category="list-text">所有其他檔案和目錄屬性</block>
@@ -1638,7 +1636,6 @@
   <block id="c04792b20d4898dd29d399522144910f" category="paragraph">別名可調整為指向新位址。</block>
   <block id="1e98fed193db72d0d3582ce8d472c637" category="paragraph">當多個系統使用特定的磁帶設備時</block>
   <block id="e07cb5d98b5ea2c36b065083352b9150" category="paragraph">使用者可將所有系統的別名設定為相同。</block>
-  <block id="03ac997c483519de278f2a034c5da82d" category="paragraph">當您從Data ONTAP f2 8.1.x升級Data ONTAP 至f2 8.2.x時、Data ONTAP 使用的磁帶別名功能會修改現有的磁帶別名。在這種情況下、您可能必須更新備份應用程式中的磁帶別名。</block>
   <block id="6d40a60c8047b488e6c326136b0df537" category="paragraph">指派磁帶別名可在備份裝置（例如st0或mc1）的邏輯名稱與永久指派給連接埠、磁帶機或媒體更換器的名稱之間提供對應關係。</block>
   <block id="3895b82f66e493169ec966737496bb79" category="paragraph">st0和st00是不同的邏輯名稱。</block>
   <block id="f3d496506e79e68ea324deaa03b4bb21" category="paragraph">邏輯名稱和序號僅用於存取裝置。存取裝置之後、它會使用實體路徑名稱傳回所有錯誤訊息。</block>
@@ -1692,8 +1689,6 @@
   <block id="0a4f5ba25c67280393f562cd5ccb264c" category="paragraph">在目前作用中的工作完成後、重試備份。</block>
   <block id="356225f5e2e17f8537ce100fd433a4eb" category="summary">您可以選擇在節點層級或儲存虛擬機器（ SVM ）層級執行磁帶備份與還原作業。若要在SVM層級成功執行這些作業、必須在SVM上啟用NDMP服務。</block>
   <block id="d24f8ed0cd403535fe06ff2312a4d5c3" category="doc">關於NDMP操作模式</block>
-  <block id="b40c6db01cc156017dafc7a604c5d165" category="paragraph">如果您從Data ONTAP NetApp 8.2升級Data ONTAP 至更新版本8.3、則在從8.2升級至8.3後、8.2中使用的NDMP操作模式將繼續保留。</block>
-  <block id="babc0a88160053434706833c7a94e71c" category="paragraph">如果您安裝的新叢集Data ONTAP 採用了SVM範圍的NDMP模式、則NDMP預設為SVM範圍的NDMP模式。若要在節點範圍的NDMP模式中執行磁帶備份與還原作業、您必須明確啟用節點範圍的NDMP模式。</block>
   <block id="5cd9c7746a368e57d22f618d1c7dc4cb" category="summary">目前使用中的本機磁帶I/O執行緒數目上限。您最多可以有16個作用中的本機磁帶機。</block>
   <block id="6d039b9aac26b3880abd0bc597fe50de" category="doc">資源限制：無可用的執行緒</block>
   <block id="9ebb7d5bda17045294ba5325b8b07f2d" category="paragraph"><block ref="6d039b9aac26b3880abd0bc597fe50de" prefix="" category="inline-code"></block></block>
@@ -1890,10 +1885,8 @@
   <block id="937890d87b169af318d829a57dad399e" category="paragraph">您可以備份整個LUN物件、但無法備份LUN物件內的單一檔案。同樣地、您可以還原整個LUN物件、但不能還原LUN內的單一檔案。</block>
   <block id="c93d8996c09e9b0523f2326386672ab0" category="paragraph">傾印引擎會將LUN複本備份為獨立的LUN。</block>
   <block id="9e66a5a7ac296adab32cfb29b699c023" category="list-text">VM對齊的檔案</block>
-  <block id="018c6ca60dfbd405f837065ef31c0f12" category="paragraph">早於發行版本的版本不支援VM對齊檔案的備份Data ONTAP 。</block>
   <block id="fda1796996d94c05cd2113e0153652c9" category="paragraph">當快照備援LUN複製作業從Data ONTAP 以7-Mode運作的VMware移轉至ONTAP VMware時、它就會變成不一致的LUN。傾印引擎不會備份不一致的LUN。</block>
   <block id="7b3952e889e19b8ce879b63da8efd0bc" category="paragraph">當您將資料還原至磁碟區時、所還原的LUN上的用戶端I/O會受到限制。LUN限制只會在傾印還原作業完成時移除。同樣地、在SnapMirror單一檔案或LUN還原作業期間、用戶端I/O也會受到還原檔案和LUN的限制。只有在單一檔案或LUN還原作業完成時、才會移除此限制。如果在執行傾印還原或SnapMirror單一檔案或LUN還原作業的磁碟區上執行傾印備份、則備份中不會包含具有用戶端I/O限制的檔案或LUN。如果移除用戶端I/O限制、這些檔案或LUN會包含在後續的備份作業中。</block>
-  <block id="b25ab5b2d5be2c5602e5c8535048eeab" category="paragraph">執行於支援磁帶的LUN僅可還原至8.3版及更新版本、而無法還原至較早版本。Data ONTAP如果LUN還原至較早版本、則LUN會還原為檔案。</block>
   <block id="7acee361d87c06a486c0fc7401796ca3" category="paragraph">當您將SnapVault 某個不支援的次要Volume或Volume SnapMirror目的地備份到磁帶時、只會備份該磁碟區上的資料。不會備份相關的中繼資料。因此、當您嘗試還原磁碟區時、只會還原該磁碟區上的資料。有關Volume SnapMirror關係的資訊無法在備份中取得、因此無法還原。</block>
   <block id="d0219fc03daecc247def36e87d4eae0e" category="paragraph">如果您傾印只有Windows NT權限的檔案、並將其還原至UNIX樣式的qtree或Volume、則該檔案會取得該qtree或Volume的預設UNIX權限。</block>
   <block id="2e1612e105f3f63d2891175b999bb52b" category="paragraph">如果您傾印的檔案只有UNIX權限、並將其還原至NTFS型qtree或Volume、則該檔案會取得該qtree或Volume的預設Windows權限。</block>
@@ -2349,7 +2342,6 @@
   <block id="c3832c377d8b885ee9283c3e9a392b5d" category="doc">區塊順序不正常</block>
   <block id="ba2390d1a1b291c4d8b5952f6c91ccc0" category="paragraph"><block ref="c3832c377d8b885ee9283c3e9a392b5d" prefix="" category="inline-code"></block></block>
   <block id="b5e59718db314e7cd750be2a971055be" category="paragraph">請重試還原作業、並依正確順序載入磁帶。</block>
-  <block id="8ad29fd3da1e4c61c3dacb27f9114659" category="summary">在節點範圍的NDMP模式中、您可以在節點層級執行磁帶備份與還原作業。從8.2升級到8.3後、將繼續保留在用作執行動作的NDMP模式。Data ONTAP</block>
   <block id="c1382d2bd662e050fabba9bd3f1e2db7" category="paragraph">在節點範圍的NDMP模式中、您可以在擁有該磁碟區的節點上執行磁帶備份與還原作業。若要執行這些作業、您必須在擁有磁碟區或磁帶裝置的節點上、於裝載LIF上建立NDMP控制連線。</block>
   <block id="b81e9b7001e106554284120906641141" category="paragraph">此模式已過時、將在未來的主要版本中移除。</block>
   <block id="466e77ed172a1c8fb9aaa087cab23c21" category="summary">啟用自動資料平衡器（ADD）時、平衡器會分析Aggregate的使用統計資料、以識別已超過設定的高臨界值使用率百分比的集合體。</block>
@@ -3724,7 +3716,6 @@
   <block id="6e4addbe080a591d48b0ab04a4602f2d" category="paragraph">是（僅適用於Volume成員）</block>
   <block id="3e1dd9b0864f8cf7425e1d161f1c942e" category="paragraph">ONTAP 9.6 及更新版本支援 FlexCache Volume 的移動 Volume 成分。</block>
   <block id="42f079af6cd7aacf6bd656c9c9e84c04" category="paragraph">適用於陣列整合的 VStorage API （ VAAI ）</block>
-  <block id="99d6c45db9b728df982593cae7bd0de6" category="inline-link-macro">NetApp 技術報告 4743 ： FlexCache in ONTAP</block>
   <block id="8852fe9145af690e9eaa668cda7f615e" category="summary">您可以預先填入FlexCache 一個現象區、以縮短存取快取資料所需的時間。</block>
   <block id="333f576d96807d779728f772792cc5c3" category="doc">預先填入FlexCache 一個資料流通量</block>
   <block id="357cd45a6c8e99d6df561eda98cead61" category="list-text">您必須是進階權限層級的叢集管理員</block>
@@ -5432,11 +5423,6 @@
   <block id="72f9d9b7c80cb6e91b2f7fe533079b95" category="cell">允許的值</block>
   <block id="21f1ee07e53b365577e9e8b19bcb5c7e" category="paragraph">0 、 100</block>
   <block id="b4e0d45ea504b07d9e8c4cafce54035b" category="doc">檢視FlexClone檔案與FlexClone LUN所節省的空間</block>
-  <block id="a16875eabcc0ed5145fe8a14e7c8f012" category="list-text">若要檢視FlexClone檔案與FlexClone LUN所達成的空間節約效益、請輸入下列命令：</block>
-  <block id="d9c76738c140686ebf6d7b5f84da2106" category="paragraph"><block ref="a3bae26a021a26eef63c22720806732f" prefix="" category="inline-code"></block></block>
-  <block id="91ad92a1f434309afe91dad2b682e0e4" category="paragraph"><block ref="603fa48956e46ded019521cb6ec993df" prefix="" category="inline-code"></block> 為 FlexVol Volume 的名稱。</block>
-  <block id="8d6a42746d2b9d0eb68c553660223473" category="paragraph">如果您執行<block ref="8fa5e3e3ea6ac911f392500999c3bf17" prefix=" " category="inline-code"></block> 命令在啟用重複資料刪除的 FlexVol 磁碟區上、您可以同時檢視重複資料刪除和 FlexClone 檔案及 LUN 所儲存的空間。</block>
-  <block id="c24ff271fa90598d83efb8e8bcf73811" category="paragraph">以下範例顯示FlexClone Volume test1的空間節約效益：</block>
   <block id="b6b93602d785878d997a71e00fa00057" category="doc">設定FlexVol 一個動態磁碟區、以自動刪除FlexClone檔案和FlexClone LUN</block>
   <block id="b265de55d536b9d8875a123310ea2296" category="list-text">這個流通量必須包含FlexClone檔案和FlexClone LUN、而且必須處於線上狀態。FlexVol</block>
   <block id="cb5f7babeea4fcfb207841abf65a3d95" category="list-text">不能將此資訊區做為唯讀磁碟區。FlexVol</block>
@@ -7699,7 +7685,6 @@ ONTAP 9.12.1 、 ONTAP 9.11.1 和 ONTAP 9.10.1 的最新修補版本也支援 AF
   <block id="831386fed9e7eaea1120ba132250c29d" category="list-text">接管叢集 B 上的 DR 合作夥伴（ node_B_2 ）：</block>
   <block id="807a6245f812af10fad3f6e06988bfae" category="cell">如果您要從...升級</block>
   <block id="c0a479e7e5941d6a985d5a64c1eb13e7" category="paragraph">部分版本ONTAP ONTAP</block>
-  <block id="d8881a6630d9f4a0cff874f5aaa03588" category="paragraph">部分版本的升級版ONTAP Data ONTAP</block>
   <block id="0214fff59fa84cf57a1ca27641abc370" category="admonition">如果啟用 AutoSupport 、則會傳送 AutoSupport 訊息、指出節點已超出叢集仲裁。您可以安全地忽略此通知並繼續升級。</block>
   <block id="52ba7f6feba4fb90a7fb742db071c40b" category="paragraph">以下範例顯示接管作業成功。node_B_2處於「等待恢復」狀態、node_B_1處於「接管中」狀態。</block>
   <block id="d48c172af3887474e3b1a6091ff354ca" category="paragraph">將MetroCluster 靜態IP組態升級ONTAP 為EFlash 9.5之後、集合體將會在重新同步並返回鏡射狀態之前、處於降級狀態一小段時間。</block>
@@ -8048,14 +8033,6 @@ SSH-RSA</block>
   <block id="796d3a90e43ce105cbf37298c5065f7e" category="cell">9.1.</block>
   <block id="cf5f238fca8b6e155078aa41c175743a" category="cell">9.0</block>
   <block id="e6f1ba9eda77b05f0ab5126e92d5e1eb" category="cell">您的andu升級途徑是…</block>
-  <block id="c177eaaa169e24456aa43d6afe000fc6" category="section-title">Data ONTAP 8.</block>
-  <block id="de78eb7ec26241150020f871006c8816" category="paragraph">請務必使用驗證您的平台是否能執行目標ONTAP 版本的<block ref="f73c85a53b5d65cc9c35da0b9e0d2f09" category="inline-link-rx"></block>。</block>
-  <block id="41500358ffe1645da9479b8bdb6bb16e" category="inline-link">NetApp錯誤線上錯誤編號805277</block>
-  <block id="dce5ca759612a73fbb00a3823f9cfad6" category="paragraph">*附註：* Data ONTAP 《Sept.8.3升級指南》錯誤地指出、在四節點叢集中、您應該計畫升級最後保留epsilon的節點。這不再是Data ONTAP 升級的必要條件、從版本號為32的版本開始。如需詳細資訊、請參閱<block ref="46642dff6a4913c1b70e5c47363becfb" category="inline-link-rx"></block>。</block>
-  <block id="a38b3bc68b667dc2c5be397be3520b78" category="list-text">來自於Data ONTAP</block>
-  <block id="452ba1ec2d7971da94fd8574a5f9762d" category="list-text">您可以直接升級ONTAP 至版本更新、然後升級至更新版本。</block>
-  <block id="adda8e73226ec3153c9aec30fbe89320" category="list-text">發行早於8.3.x的版本、包括8.2.x Data ONTAP</block>
-  <block id="f24c93d590e21a0fefcd28c287d16528" category="list-text">您必須先升級Data ONTAP 至版本不含更新版本的版本、然後升級ONTAP 至版本不含更新版本的版本。</block>
   <block id="677f7e634d142b9895ab4d932c2e41c8" category="summary">準備 ONTAP 升級有助於識別並減輕升級風險或封鎖程式、並考慮適用於您組態的特殊考量。</block>
   <block id="5c860550ad02262c7f6fd8d5e0c49c45" category="inline-link-macro">選擇您的目標 ONTAP 版本</block>
   <block id="8bf77a832fe81dfd35567b74660efdcd" category="list-text"><block ref="d2ab47fda121792ffe633e5d0aa4378d" category="inline-link-macro-rx"></block>。</block>
@@ -10603,7 +10580,6 @@ SSH-RSA</block>
   <block id="018a7f3ed456bbefadeccd99f22720d1" category="section-title">ONTAP One for SAN 隨附授權</block>
   <block id="d17f73a41d0f4772e65c5ae3f0c0ee0c" category="paragraph">ONTAP One for SAN 適用於 ASA A 系列和 C 系列系統。這是唯一適用於 SAN 的軟體套件。ONTAP One for SAN 包含下列授權：</block>
   <block id="9949132a86e08247d7e18cffc78d8188" category="section-title">其他授權交付方法</block>
-  <block id="7cc8592eea95513fa72707a11ece7048" category="paragraph">在從功能更新到功能更新到版本9.9.1的過程中、授權金鑰會以28個字元的字串形式提供、每個功能有一個金鑰。ONTAP ONTAP ONTAP如果您使用的是 ONTAP 8.2 至 ONTAP 9.9.1 、則可使用 ONTAP CLI 來安裝授權金鑰。</block>
   <block id="7a4009d77cd46afd583647924d4867b5" category="inline-link">當系統已有 NLF 時、如何取得 ONTAP One 授權</block>
   <block id="e6c044654b23501c1025e9d7a9dc6531" category="paragraph"><block ref="e6c044654b23501c1025e9d7a9dc6531" category="inline-link-rx"></block></block>
   <block id="b05cc644bdf7728b35474d3810ce403b" category="inline-link">如何使用支援網站來驗證 ONTAP 軟體授權與相關授權金鑰</block>
@@ -14743,8 +14719,6 @@ NAS 磁碟區可透過 Volume 命令取得等效的統計資料。</block>
   <block id="4e72dbc6d75fb97e782f19ffcdfd390a" category="paragraph">這是 NetApp 提供的軟體、可處理 SVM 與防毒軟體之間的掃描要求與回應通訊。它可以在虛擬機器上執行、但為了達到最佳效能、請使用實體機器。您可以從 NetApp 支援網站 下載此軟體（需要登入）。</block>
   <block id="24e103004f27c652e1c060ec9d2c1a35" category="list-text">*防毒軟體*</block>
   <block id="6d582c36ee4ebf0335acbe559df26b92" category="paragraph">這是合作夥伴提供的軟體、可掃描檔案中是否有病毒或其他惡意程式碼。您可以指定在設定軟體時、對受感染檔案採取的補救行動。</block>
-  <block id="229c54f44d37ee742e217119790323de" category="section-title">VScan 軟體設定</block>
-  <block id="30627ba5bfc8c75e5dc285ea2a0c8971" category="paragraph">您必須在 VScan 伺服器上設定這些軟體設定。</block>
   <block id="d8b5755ea3c05e0fd8ff56ebbd7519f3" category="list-text">*掃描器資源池*</block>
   <block id="d809d7778bd6d11cabad89ab03ccea20" category="paragraph">此設定定義可連線至 SVM 的 VScan 伺服器和授權使用者。它也定義掃描要求逾時期間、之後若有可用的VScan伺服器、掃描要求會傳送至替代的VScan伺服器。</block>
   <block id="ccc1bb01ee5504acfae6ad3648731378" category="paragraph">您應該將 VScan 伺服器上防毒軟體的逾時時間設定為比掃描器集區掃描要求逾時時間少五秒。這可避免因為軟體的逾時時間超過掃描要求的逾時時間、導致檔案存取延遲或完全遭拒的情況。</block>
@@ -14759,9 +14733,7 @@ NAS 磁碟區可透過 Volume 命令取得等效的統計資料。</block>
   <block id="68e1fdd9878b041bfcc6625f8d2114db" category="list-text"><block ref="cb4ad223556712c006d486c65b332ab1" prefix="" category="inline-code"></block> 可掃描唯讀磁碟區。</block>
   <block id="9a7d82bea667b95ba26db25f5e7de166" category="list-text"><block ref="e5b19ac7771ad33d25ef4c6d87d5ae70" prefix="" category="inline-code"></block> 限制掃描至以執行存取權限開啟的檔案。</block>
   <block id="5991832a0ff630a712ab8f2c8ae8c4cc" category="paragraph">「執行存取」與「執行權限」不同。 只有在以「執行目的」開啟檔案時、指定的用戶端才能在執行檔上擁有「執行存取」。</block>
-  <block id="ebea622ce78522c0bb53e7b1eaaaf26e" category="paragraph">您可以設定<block ref="42421470692997cb60ed7d6bef614a3b" prefix=" " category="inline-code"></block> 選項為「關閉」、可指定在沒有 VScan 伺服器可供病毒掃描時、允許檔案存取。在存取模式中、您可以從這兩個互斥的選項中選擇：</block>
   <block id="cc3df7e499be4889b238103da53ff091" category="list-text">必要：使用此選項、 VScan 會嘗試將掃描要求傳送至伺服器、直到逾時期間過期為止。如果伺服器不接受掃描要求、則用戶端存取要求會遭到拒絕。</block>
-  <block id="c24f1c2d7223a9e010510d39d6b34042" category="list-text">非必要：無論 VScan 伺服器是否可用於掃毒、 VScan 都一律允許用戶端存取。</block>
   <block id="bbfa6fec2650b400988f6b8b43e198e6" category="list-text">*隨需工作*</block>
   <block id="e71bd2cf2955e8ab4677592d8b167519" category="paragraph">此設定定義隨選掃描的範圍。您可以指定要掃描的檔案大小上限、掃描中要包含的檔案副檔名和路徑、以及要從掃描中排除的檔案副檔名和路徑。依預設會掃描子目錄中的檔案。</block>
   <block id="952dc3be83ace6c98a981ff409d6ed87" category="list-text">* VScan檔案作業設定檔（僅限存取掃描）*</block>
@@ -14960,7 +14932,6 @@ VScan 伺服器有瓶頸。
   <block id="b8c0608da6060821045a89c2600df3e8" category="paragraph">如果您在 SMB 伺服器上使用匯出原則、則必須將每個 VScan 伺服器新增至匯出原則。</block>
   <block id="420cebae710ce78dfe1215f0fe4cf249" category="cell">解決方案文件</block>
   <block id="e7b73d8cbef4648d4d02ed78f81f4c72" category="cell">互通性詳細資料</block>
-  <block id="0c5bc65bb59cc30cd297d0226c48968a" category="cell">Trelix （原 McAfee ）</block>
   <block id="bc9bc2e63fa75e34a32781aca837916d" category="inline-link-macro">Trellix 產品文件</block>
   <block id="cfde928dd2edc49cf12a6e902c5e8388" category="cell">Symantec</block>
   <block id="b75800014d091b9ab69fc17b57dfe309" category="inline-link-macro">Symantec Protection Engine 9.0.0</block>
@@ -19158,7 +19129,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="9c73c1a8a014ccaf9b04330027a711e9" category="sidebar">在SVM上建立檔案和目錄稽核組態</block>
   <block id="f240f0faaf56636b41bcca3f85759aec" category="sidebar">可稽核的CLI變更事件</block>
   <block id="44845446592e1f437b63975feff857db" category="sidebar">管理稽核組態</block>
-  <block id="75aeba78346fb2a37725ac411806a028" category="sidebar">瞭解叢集還原的意義</block>
   <block id="1260e0171fc8e8a6ddd085f5163764e9" category="paragraph"><block ref="4dbd80a242f42354a7ebf544228619a5" prefix="" category="inline-code"></block></block>
   <block id="c57dde7d943b0208ce1142ddcb200025" category="paragraph">IP位址的主機名稱</block>
   <block id="1fba506134106e8b280c7b8fa3d61266" category="paragraph"><block ref="6418cd5bcedbd12fa993f6572edf91e6" prefix="" category="inline-code"></block>    <block ref="bffe481228c68120f968dfcba679b4fd" prefix=" " category="inline-code"></block> （僅限 IPv4 位址）</block>
@@ -23742,9 +23712,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="7bf9c192fc96a37e0fd2d23a43b2a620" category="paragraph">雖然您可以在稽核組態中啟用集中存取原則接移功能、但不會在SMB伺服器上啟用動態存取控制、但只有啟用動態存取控制時、才會產生集中存取原則接移事件。動態存取控制是透過SMB伺服器選項來啟用。預設不會啟用此功能。</block>
   <block id="1146ad50873e3bb2794f2b617b15e2c3" category="section-title">NFS 事件</block>
   <block id="c136b72b0c60127ce2a9adcc7bf7aa95" category="paragraph">您可以利用NFSv4 ACL來稽核儲存在SVM上的物件、以稽核檔案和目錄事件。</block>
-  <block id="109aa0029e741d8c2e0382bab7ddfed8" category="summary">如果您打算還原叢集、ONTAP 當叢集中有啟用稽核的儲存虛擬機器（SVM）時、您應該注意下列還原程序。您必須先採取特定行動、才能恢復。</block>
-  <block id="414f394af218092caa6e9d2444dad5e9" category="section-title">還原ONTAP 至不支援SMB登入和登出事件稽核、以及集中存取原則執行事件的版本</block>
-  <block id="d540cb91e9c18cd3b15d8968d35f96b4" category="paragraph">支援SMB登入和登出事件的稽核、以及集中存取原則執行事件、從叢集Data ONTAP 式的版本資訊8.3開始。如果您要回復ONTAP 到不支援這些事件類型的版本、而且您有監控這些事件類型的稽核組態、則必須在還原之前變更這些啟用稽核的SVM的稽核組態。您必須修改組態、以便只稽核檔案作業事件。</block>
   <block id="94a494997979ec21df19099cf8f5cc10" category="summary">當儲存虛擬機器（SVM）的授權原則變更事件設定為啟用稽核時、就會產生稽核事件。</block>
   <block id="f5e7dfbe356c14a082a782b98711404f" category="doc">管理授權原則變更事件</block>
   <block id="47b1bb7c459e0a58023991eedd1c8b64" category="paragraph">每當SMB使用者和SMB群組的授權權限被授予或撤銷時、就會產生事件ID為4704和4705的授權原則變更事件。當使用指派或撤銷授權權限時、就會產生授權原則變更事件<block ref="9e1ee6f8f2b027dfefa9831545c8c3de" prefix=" " category="inline-code"></block> 相關命令。</block>
@@ -24528,8 +24495,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="b9f97c895b3e83786f6627faa4473bd6" category="paragraph">成功測試 SMB 用戶端存取之後、您可以執行進階 SMB 組態或新增 SAN 存取。成功測試NFS用戶端存取之後、您可以執行進階NFS組態或新增SAN存取。傳輸協定存取完成時、您應該保護SVM的根Volume。</block>
   <block id="fb9670348ec4c1bbfa64831756a9a7a8" category="paragraph">您可以使用下列項目來進一步設定SMB存取：</block>
   <block id="1c9d612ec1de82821eecf69b433a2554" category="paragraph">說明如何使用 SMB 通訊協定來設定及管理檔案存取。</block>
-  <block id="df7018e8b5dea8270e2b53ed45ca3664" category="inline-link">NetApp技術報告4191：叢集Data ONTAP 式更新的最佳實務做法指南8.2 Windows檔案服務</block>
-  <block id="40261511a12711af686f66a0ba5aee3e" category="paragraph">提供SMB實作與其他Windows檔案服務功能的簡短概述、並提供ONTAP 有關的建議與基本疑難排解資訊。</block>
   <block id="f34506326aba5bd2e96ea949212bfb7f" category="inline-link">NetApp技術報告3740：SMB 2 Next-Generation CIFS Protocol in Data ONTAP</block>
   <block id="61e501f46c7150f878e0af89f471c9ef" category="paragraph">介紹SMB 2的功能、組態詳細資料、以及ONTAP 其在功能方面的實作。</block>
   <block id="9b6052dbd374ba138463996cc76d0158" category="paragraph">您可以使用下列項目進一步設定NFS存取：</block>
@@ -36474,7 +36439,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="7a7122131ffdc0457c6ca65964f9381a" category="summary">使用 FlexCache 回寫時，請遵循以下準則以確保最佳效能。</block>
   <block id="67de46ed3899084d4992e9435a5f0a51" category="doc">ONTAP FlexCache 回寫準則</block>
   <block id="ed9c782497b450c2837810f6585bee7d" category="paragraph">以下準則已在 NetApp 內部經過充分測試。建議您留在這些範圍內。否則可能會發生非預期的行為。</block>
-  <block id="a93ef1bc6a745c13a3d5bd52ab9d1117" category="list-text">在目前的迭代中， FlexCache 回寫式快取應設定為整個 FlexCache Volume 的單一組成要素。多成分 FlexCaches 可能會導致不必要的資料從快取區移出。</block>
   <block id="82ab829db03a0b7d5d96de51c09dea43" category="list-text">寫入 SMB 替代資料串流會導致主檔案被從快取中移出。主檔案的所有髒資料都必須先清除至來源，才能在該檔案上執行任何其他作業。替代資料串流也會轉送至來源。</block>
   <block id="dc9d56b9fc793d4e43a4dab91171865d" category="list-text">重新命名檔案會使檔案從快取中移出。檔案的所有髒資料都必須先清除至來源，才能在該檔案上執行任何其他作業。</block>
   <block id="ccd9e772ad08b646dc3d5014eeabf59f" category="list-text">目前，唯一可在啟用回寫的 FlexCache 磁碟區上變更或設定的屬性為：</block>
@@ -40456,7 +40420,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="d686a6d74ddcc400c9a1a660db9e037a" category="doc">管理使用者帳戶 ONTAP 事件</block>
   <block id="9a0a8d6c6be0adc5afd60f28175255a1" category="doc">手動旋轉稽核事件記錄檔，以檢視特定的 ONTAP SVM 事件記錄</block>
   <block id="f33f06ffa3323207911d6df9546aa978" category="doc">規劃 ONTAP VM 上的稽核組態</block>
-  <block id="6eb4dfc757c593b99d9fb122d43dd4b0" category="doc">瞭解還原稽核 ONTAP 叢集的影響</block>
   <block id="962bc2f50017fc417b5fd10f81e2c47e" category="doc">ONTAP 稽核的必要條件</block>
   <block id="e8cd304b70137552108243d92b197626" category="doc">瞭解 ONTAP 可稽核以解讀結果的 SMB 事件</block>
   <block id="f659b4a7bf775aad5e552b26500545e9" category="doc">瞭解 ONTAP 稽核事件記錄的支援格式</block>
@@ -42230,7 +42193,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="760042a6666db7aa603c1759de3c17f8" category="admonition">如果您使用<block ref="9e1f34d274d54e077ab71c2c0fe0badd" prefix=" " category="inline-code"></block> 來簽署<block ref="4d389575bb215bbefa0d6232cd02d8f9" prefix=" " category="inline-code"></block> 憑證、 <block ref="41799a9f1cb27f52842c90e3f9f9efdf" prefix=" " category="inline-code"></block> 則會產生檔案。如需詳細資訊、請參閱 <block ref="176f27458d3e2a3c3a9ec02498de4a9f" category="inline-xref-macro-rx"></block> 。</block>
   <block id="757d497aac644c5208241004b9c07c58" category="admonition">如果您使用<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block> 來簽署<block ref="4d389575bb215bbefa0d6232cd02d8f9" prefix=" " category="inline-code"></block> 憑證、 <block ref="6d9cf61db5ec1375b2846eaf8102c57d" prefix=" " category="inline-code"></block> 則會產生檔案。如需詳細資訊、請參閱 <block ref="4f20cf3f9f80bb54f26eaac3d64146c4" category="inline-xref-macro-rx"></block> 。</block>
   <block id="70f2db3add5b32721c8d64a340cb8e59" category="summary">Hyper-V 和 SQL Server 要求將網域電腦帳戶對應到 UNIX 使用者才能進行 SMB 存取。最簡單的方法是將它們對應到預設 UNIX 使用者。</block>
-  <block id="e4792c8cdc05c5dcc45cbb114976c7ff" category="paragraph">建立儲存虛擬機器 (SVM) 時，ONTAP 會自動建立名為<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block> （UID 為<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> ) 和名為<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block> （GID 為<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> ），並將預設使用者新增至<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>團體。如果您要在將叢集升級Data ONTAP 至S8.2之前、在現有的AnSVM上設定Hyper-V over SMB解決方案、則預設使用者和群組可能不存在。如果沒有、您必須先建立這些項目、才能設定CIFS伺服器的預設UNIX使用者。</block>
   <block id="b4d35aa99d0d29074a49abef930e723a" category="list-text">如果未設定預設用戶選項，且沒有可指定為預設 UNIX 用戶的 UNIX 用戶，則建立預設群組和預設 UNIX 用戶，並將預設用戶新增至該群組。</block>
   <block id="c8a9c9677d220b68e6d75e1644cab2c9" category="paragraph">通常，預設使用者的使用者名稱是“pcuser”，並且必須分配 UID <block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> .預設群組一般被賦予群組名稱“pcuser”。指派給群組的 GID 必須是<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>。</block>
   <block id="3b11c15d85c13edbe20b8c5234ba8a09" category="list-text">建立預設群組：</block>
@@ -44626,7 +44588,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="5175d311abea9fd953abd2a80148f041" category="list-text">ONTAP 9.17.1P1 引進了對FlexCache回寫功能的重大增強。強烈建議您在來源叢集和快取叢集上，在 9.17.1P1 版本之後運行目前建議版本。如果您無法執行 9.17.1 程式碼線，建議使用最新的 P 版本 9.16.1。ONTAP 9.15.1 尚未包含FlexCache回寫所需的全部修復和改進，因此不建議用於生產工作負載。</block>
   <block id="57e39f46662d1e17c38e8591175ed421" category="list-text">測試針對小於 100GB 的檔案進行，快取和來源之間的 WAN 往返時間不超過 200ms。超出這些限制的任何工作負載都可能導致意想不到的效能特性。</block>
   <block id="8e94df8bfa53bf22503e8a16e1e22a78" category="list-text">啟用回寫功能的FlexCache磁碟區不支援 SMB 機會鎖（Oplocks）寫入。</block>
-  <block id="2f2696665d248a128095fdbfd0c9c20d" category="list-text">低頻寬和/或有損的群集間網路會對FlexCache寫回效能產生顯著的負面影響。雖然沒有特定的頻寬要求，因為它很大程度上取決於您的工作負載，但強烈建議您確保快取和來源之間的叢集間連結的健康狀況。</block>
   <block id="a18a0e17d9a95a68832380f05ee7f722" category="list-text">在SnapMirror/ SnapVault關係中，除了轉換流程之外，不支援將 FlexGroups 與FlexVol磁碟區混合使用。</block>
   <block id="32429dbb125ce4d663f89c29ac28a3fd" category="paragraph"><block ref="85c0e4ec022ac99f64d0e9835cac3a45" prefix="" category="inline-code"></block></block>
   <block id="5caac37c617f05ba919423680b196cb9" category="paragraph">是的。FlexCache 的寫回功能高度依賴快取和來源之間的叢集間連結。低頻寬和/或丟包網路會對效能產生顯著的負面影響。沒有特定的頻寬要求，因為它很大程度上取決於您的工作負載。</block>
@@ -45814,7 +45775,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="5e5c1e133b052cb824956a34d3dad5fb" category="list-text">您可以使用 <block ref="ee703c88a52e9d2bb01fee9a4af7ee64" prefix=" " category="inline-code"></block> 選項將 SMB 伺服器新增至不同的 OU。</block>
   <block id="0ae47f813a25e76d6fc9fb1ae66a6259" category="paragraph">SnapMirror 主動同步不支援防篡改 Snapshot 。</block>
   <block id="c9eb593214a75cb8ec32ae0033f3a99f" category="paragraph">您可以透過使用<block ref="745a1be36f8a005c1ed0b3ce36df78cc" prefix=" " category="inline-code"></block> 設定，並搭配<block ref="acd96993edb256d739763832d3f9f184" prefix=" " category="inline-code"></block> 端點來操作。使用 GET 來擷取目前的值，使用 POST 在建立新 qtree 時設定，並使用 PATCH 來變更現有的 qtree。</block>
-  <block id="080fc244a058655af01cd933a3036796" category="paragraph">如下表所示，Trellix 和 Trend Micro 的互通性詳情已在 NetApp 互通性矩陣中列出。Trellix、Deep Instinct 和 OPSWAT 的互通性詳情也可在其合作夥伴網站上找到。Sentinel One、Symantec、Deep Instinct、OPSWAT 和其他新合作夥伴的互通性詳情將由合作夥伴在其網站上提供。</block>
   <block id="c3f8d389b2b0cad745940b72f8e21cf1" category="paragraph">檢視儲存虛擬機器（SVM）上的安全追蹤篩選器詳細資料，以識別每個篩選器追蹤的存取事件。</block>
   <block id="dc545cd90003a0eac1dd99704445650b" category="paragraph">從 ONTAP 9.6 開始，您可以使用 System Manager 追蹤 SVM 上的檔案存取。</block>
   <block id="13afb59ecccad6c5d310cb04ede1663a" category="list-text">開啟 System Manager 儀表板。</block>
@@ -46417,7 +46377,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="bc4293c46525148fe110597849594b7b" category="list-text">從內部部署叢集分層至 Google Cloud Storage 時，需要 <block ref="1bdbbd031fafd176ebde0eb66ba6ea69" category="inline-link-macro-rx"></block>。</block>
   <block id="4082a99221e61eb71ff75684e141887a" category="list-text">從內部部署叢集分層到 IBM Cloud Object Storage 時需要 <block ref="1bdbbd031fafd176ebde0eb66ba6ea69" category="inline-link-macro-rx"></block>。</block>
   <block id="167c0dd62e8115ec45795b3b49abc5bb" category="paragraph">如果您為 NFS 用戶端啟用了大容量和檔案支援，則必須重新掛載用戶端，新的最大檔案大小才能生效。</block>
-  <block id="8665c4a5ef20b44f2705f5ede3f106c2" category="list-text">當來源磁碟區的可用空間降至 20% 或以下時，回寫快取會自動切換到環繞寫入模式。這有助於防止來源磁碟區空間耗盡，從而避免在啟用回寫功能的快取中留下孤立的髒資料。但是，如果來源磁碟區過度配置（即其邏輯配置大小大於 Aggregate 中的可用空間），則報告的可用空間百分比可能會比預期更早觸發此閾值。20% 的閾值是根據來源磁碟區報告的可用空間和 Aggregate 的可用實體容量來評估的。</block>
   <block id="5e8784782477be08ff8add860c332997" category="paragraph">您需要叢集 UUID 才能從 NetApp 支援網站取得 NetApp 授權檔案（NLF）。</block>
   <block id="5804b9a7462c2bbbcedaf92042779770" category="summary">非作用中資料報告（IDR）是一個絕佳的工具，用於判斷可從本機層分層的非作用中（冷）資料量。</block>
   <block id="f7ec19912c09376e5217d139a981561f" category="paragraph">預設情況下，IDR 使用 31 天的冷卻期來確定哪些資料被視為非使用中資料。分層的冷資料量取決於磁碟區上設定的分層原則。在 ONTAP 9.8 之前的版本中，IDR 使用固定的 31 天冷卻期。</block>
@@ -47630,9 +47589,7 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="ed3dd7d3e2ab1968bc176c9c9a94e022" category="list-text">A SnapMirror 同步目標不能作為 SVM 災難復原來源，因為 SVM 災難復原不支援 DP 磁碟區的複寫。對同步來源進行翻轉重新同步會導致 SVM 災難復原將目標叢集中的 DP 磁碟區排除在外。</block>
   <block id="45445410b29d8db0d8eec37b7b5c1815" category="list-text"><block ref="45445410b29d8db0d8eec37b7b5c1815" category="inline-link-rx"></block></block>
   <block id="9c3c8a8599754601b45533d7331968af" category="paragraph"><block ref="9c3c8a8599754601b45533d7331968af" category="inline-link-rx"></block></block>
-  <block id="57ee3cc2179babf317d185c2425dc74b" category="admonition">在 ONTAP 9 9.5 之前的版本中，來源 FlexVol 磁碟區只能為在以 7-Mode 運作的 Data ONTAP 8.2.x 系統上建立的 FlexCache 磁碟區提供資料服務。從 ONTAP 9.5 開始，來源 FlexVol 磁碟區也可以為 ONTAP 9 系統上的 FlexCache 磁碟區提供資料服務。如需從 7-Mode FlexCache 移轉至 ONTAP 9 FlexCache 的相關資訊，請參閱 <block ref="85fe5eed7a74fd8a8fda34cfb24b8219" category="inline-link-macro-rx"></block>。</block>
   <block id="d34c44590e477ae7ac510890813da60b" category="paragraph"><block ref="d34c44590e477ae7ac510890813da60b" category="inline-link-rx"></block></block>
-  <block id="ffdf4ffa43b40057d375fcf7a2527909" category="list-text"><block ref="ffdf4ffa43b40057d375fcf7a2527909" category="inline-link-rx"></block></block>
   <block id="85937592f790d6e3d8b684c96c89c085" category="list-text"><block ref="85937592f790d6e3d8b684c96c89c085" category="inline-link-rx"></block></block>
   <block id="b60ea7d3371f308b279a425ddc7f4577" category="list-text"><block ref="b60ea7d3371f308b279a425ddc7f4577" category="inline-link-rx"></block></block>
   <block id="b0d1072738c297ba0914bbc708440c94" category="paragraph">如需 ONTAP 系統中 SNMP 支援的詳細資訊，請參閱<block ref="010101e1a0ea4465ba9ab03058d97b65" category="inline-link-rx"></block>。</block>
@@ -49570,4 +49527,23 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="93c9d4ff21582c79a7cddb11d4a3829d" category="doc">ONTAP 手動升級準備工作流程</block>
   <block id="165e9ffb20a53bc1f7011ca5414d2161" category="doc">手動升級 ONTAP 四節點或八節點 MetroCluster 組態</block>
   <block id="c67fe6e6b4e25a2f3dba975eccebb39d" category="doc">在 ONTAP 升級之前，請確認所有節點上都存在 netgroup 檔案</block>
+  <block id="c9e1753e0145773b68524bcd983a0a6a" category="section-title">Vscan ONTAP 設定</block>
+  <block id="0dc9bb6e297d8293cbc7a446a3518cff" category="paragraph">您必須在 ONTAP 系統上設定以下 Vscan 設定。</block>
+  <block id="0a0ccf36f0676a7604b292d166cd1e7f" category="paragraph">您可以將<block ref="42421470692997cb60ed7d6bef614a3b" prefix=" " category="inline-code"></block>選項設定為<block ref="3262d48df5d75e3452f0f16b313b7808" prefix=" " category="inline-code"></block>，以指定在沒有 Vscan 伺服器可用於掃毒時允許檔案存取。在 on-access 模式下，您可以從這兩個互斥的選項中進行選擇：</block>
+  <block id="68961559705ee734d72247c2c042bf0c" category="list-text">非強制性：啟用此選項後，無論是否有 Vscan 伺服器可用於掃毒，Vscan 始終允許用戶端存取。</block>
+  <block id="4045df8b5dc92daea045388573f5aa94" category="paragraph">如下表所示，Trellix 和 Trend Micro 的互通性詳情會維護在 NetApp 互通性矩陣工具中。其他所有合作夥伴（包括 Sentinel One、Symantec、Deep Instinct 和 OPSWAT）的互通性詳情則維護在其各自的合作夥伴網站上。</block>
+  <block id="fc5c4b423ac83d8102c39331e7623935" category="cell">Trellix（原名McAfee）</block>
+  <block id="ff7119a33dc0439f1e944ce8cf5fcb59" category="list-text">ONTAP 9.19.1 GA、9.18.1P2、9.17.1P3、9.16.1P10 以及各個版本系列中較新的 P 版本，皆支援多元件 FlexCache 回寫快取。對於較早的 ONTAP 版本，您必須為整個 FlexCache Volume 使用單一元件。在較早版本上的多元件 FlexCaches 可能會導致資料從快取中被意外移除。</block>
+  <block id="2521cde500082718d3c5ef4580a2c13d" category="list-text">當來源 Volume 的可用空間降至 20% 或以下時，回寫快取會自動交換器至環繞寫入模式。這有助於防止來源空間耗盡，從而避免在啟用回寫功能的快取中留下孤立的髒資料。如果來源 Volume 過度配置，則其邏輯配置大小會大於彙總中的可用空間。20% 的臨界值是根據來源 Volume 的可用空間和彙總的可用實體容量進行評估。<block ref="42d1a6ca89f2521a475c70f1e4815f7f" prefix=" " category="inline-code"></block> 和 <block ref="7bd14a231864e618e1840c7e117e59c1" prefix=" " category="inline-code"></block> 在可用空間已低於該臨界值時，仍可能顯示為 0%。</block>
+  <block id="a5eae52f529b7281691dfc0030e03c40" category="paragraph">以下範例是過度配置的來源 Volume。幾乎沒有資料寫入，但彙總無法支援完整的邏輯大小：</block>
+  <block id="caacd6d231105cc2cbbfd511dc0883be" category="paragraph">請注意<block ref="42d1a6ca89f2521a475c70f1e4815f7f" prefix=" " category="inline-code"></block> 為 0%，但可用空間為 19.70TB 中的 1.33TB，即 1.33 / 19.70，約有 7% 可用。這已低於 20% 的臨界值，因此該來源的回寫快取會切換至環繞寫入模式。</block>
+  <block id="9698f3194dbe6e3288c69a4bb6a58f6f" category="paragraph">請注意，<block ref="7bd14a231864e618e1840c7e117e59c1" prefix=" " category="inline-code"></block> 也為 0%，僅使用了 515MB。可用空間為 18TB 中的 1363GB，約佔檔案系統的 7%。百分比列顯示儲存的資料非常少。它們不會顯示彙總實際可提供的 Volume 大小。</block>
+  <block id="2fce22f88994a11ab3a8f16942c4ba41" category="inline-link-macro">TCP RACK</block>
+  <block id="6da27d8af98b1091e9ed39a8309555d5" category="list-text">低頻寬和 / 或容易遺失封包的叢集間網路會對 FlexCache® 寫回效能產生顯著的負面影響。雖然沒有特定的頻寬要求（因為它高度取決於您的工作負載），但 *_強烈_* 建議您確保快取與來源之間的叢集間連結健全狀況。如果您的網路容易發生封包遺失，且您執行的是 ONTAP 9.19.1 或更新版本，請考慮使用 <block ref="6100f6d0700ba5986ec142263d6235de" category="inline-link-macro-rx"></block> 來提升效能。</block>
+  <block id="64c93b8a694a76602cf5ad17aed5afd9" category="paragraph">建立儲存設備虛擬機器（SVM）時，ONTAP 會自動建立名為<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>（UID 為<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>）的預設使用者和名為<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>（GID 為<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>）的群組，並將預設使用者新增至<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>群組。</block>
+  <block id="a48bc6076c0a40afc96de0e6f2b3154f" category="paragraph">若要在節點範圍的 NDMP 模式下執行磁帶備份和還原作業，必須明確啟用節點範圍的 NDMP 模式。</block>
+  <block id="c679367f9f87c88ce490b9d553ec2ab1" category="paragraph">在節點範圍的 NDMP 模式下，您可以在節點層級執行磁帶備份和還原作業。</block>
+  <block id="015c0c3c38a424f34c855a6845892e10" category="paragraph">ONTAP 9.0</block>
+  <block id="0b86181e75ac9dd963d28fee4a64e251" category="list-text">檢視因 FlexClone 檔案與 FlexClone LUN 而節省的空間：</block>
+  <block id="0e02eaf79e3306ff6a58686c821d7933" category="paragraph">如果您在啟用重複資料刪除的 FlexVol Volume 上執行此命令，您可以檢視重複資料刪除以及 FlexClone 檔案和 LUN 所節省的空間。</block>
 </blocks>

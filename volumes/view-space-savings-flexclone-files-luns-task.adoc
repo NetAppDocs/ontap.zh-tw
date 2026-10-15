@@ -14,29 +14,16 @@ summary: 您可以在包含 FlexClone 檔案和 FlexClone LUN 的磁碟區上、
 您可以在包含 FlexClone 檔案和 FlexClone LUN 的磁碟區上、檢視區塊共用所儲存的磁碟空間百分比。您可以在容量規劃中執行此動作。
 
 .步驟
-. 若要檢視FlexClone檔案與FlexClone LUN所達成的空間節約效益、請輸入下列命令：
+. 檢視因 FlexClone 檔案與 FlexClone LUN 而節省的空間：
 +
-`df -s volname`
-
-+
-`volname` 為 FlexVol Volume 的名稱。
-
+[source, cli]
+----
+volume show -volume <vol_name> -vserver <SVM> -fields used, sis-space-saved, dedupe-space-saved, compression-space-saved
+----
 +
 [NOTE]
 ====
-如果您執行 `df -s` 命令在啟用重複資料刪除的 FlexVol 磁碟區上、您可以同時檢視重複資料刪除和 FlexClone 檔案及 LUN 所儲存的空間。
+如果您在啟用重複資料刪除的 FlexVol Volume 上執行此命令，您可以檢視重複資料刪除以及 FlexClone 檔案和 LUN 所節省的空間。
 
 ====
 
-
-.範例
-以下範例顯示FlexClone Volume test1的空間節約效益：
-
-[listing]
-----
-systemA> df -s test1
-
-Filesystem         used   saved   %saved Vserver
-/vol/test1/        4828    5744     54%  vs1
-----
-如需有關本程序中所述命令link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]的詳細資訊，請參閱。
