@@ -46,7 +46,7 @@ IMPORTANT: 如果您正在使用 SnapMirror active sync 和 ONTAP Mediator 或 O
 .ONTAP 調解器的先決條件
 * ONTAP Mediator 本身包含一組先決條件。您必須先滿足這些先決條件，然後才能安裝 ONTAP Mediator。
 +
-有關詳細信息，請參閱link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html["準備安裝ONTAP調解器服務"^] 。
+如需詳細資訊，請參閱 link:https://docs.netapp.com/us-en/ontap-mediator/install/prepare-install.html["準備安裝 ONTAP 調解器"^]。
 
 * 預設情況下， ONTAP調解器透過 TCP 連接埠 31784 提供服務。您應確保連接埠 31784 在ONTAP叢集和ONTAP調解器之間處於開啟狀態且可用。
 
@@ -61,7 +61,7 @@ IMPORTANT: 如果您正在使用 SnapMirror active sync 和 ONTAP Mediator 或 O
 .步驟
 . 在驗證來源叢集和目標叢集是否配置正確之前，請安裝 ONTAP 調解器。
 +
-xref:../mediator/index.html[準備安裝或升級 ONTAP 調解器]
+link:https://docs.netapp.com/us-en/ontap-mediator/install/workflow-summary.html["安裝 ONTAP Mediator"^]。
 
 . 確認叢集之間存在叢集對等關係。
 +
@@ -604,7 +604,7 @@ Info: [Job 136] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 請參閱中所述的步驟link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"]，以取得如何從次級 CA 取得憑證的指示，稱為 `intermediate.crt`。以信任的協力廠商憑證取代自我簽署的憑證
+. 請參閱 link:https://docs.netapp.com/us-en/ontap-mediator/administer/replace-self-signed-certificates-task.html["以信任的協力廠商憑證取代自我簽署的憑證"^] 中說明的步驟，以了解如何從下級 CA 取得憑證，稱為 `intermediate.crt`。將自簽名憑證替換為受信任的第三方憑證
 +
 
 NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 PKI 授權單位的要求所 `intermediate.crt`衍生而來 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`
@@ -729,7 +729,7 @@ Info: [Job 136] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 請參閱中所述的步驟link:../mediator/manage-task.html["以信任的協力廠商憑證取代自我簽署的憑證"]，以取得如何從次級 CA 取得憑證的指示，稱為 `ca.crt`。以信任的協力廠商憑證取代自我簽署的憑證
+. 請參閱 link:https://docs.netapp.com/us-en/ontap-mediator/administer/replace-self-signed-certificates-task.html["以信任的協力廠商憑證取代自我簽署的憑證"^] 中說明的步驟，以了解如何從下層 CA 取得憑證，稱為 `ca.crt`。以受信任的第三方憑證取代自我簽署憑證
 +
 
 NOTE: 具有某些屬性，這些屬性是從需要傳送至檔案中定義的 PKI 授權單位的要求所 `ca.crt`衍生而來 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`
@@ -818,6 +818,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 --
 ====
 .相關資訊
+* link:https://docs.netapp.com/us-en/ontap-mediator/index.html["ONTAP Mediator 文件"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/job-show.html["工作展示"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-delete.html["刪除安全性憑證"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["安全性憑證安裝"^]

@@ -4,80 +4,22 @@ sidebar: sidebar
 keywords: ontap mediator, install requirements, mediator requirements 
 summary: ONTAP Mediator 提供數種 ONTAP 功能。 
 ---
-= 瞭解 ONTAP Mediator
+= 了解適用於 MetroCluster IP 和 SnapMirror 作用中同步的 ONTAP Mediator
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-本文檔指的是ONTAP Mediator 的本機版本。有關ONTAP Cloud Mediator（從ONTAP 9.17.1 開始提供）的信息，請參閱link:../snapmirror-active-sync/index.html["SnapMirror主動同步文檔"] 。
+ONTAP Mediator 透過提供高可用性（HA）中繼資料的持久且受保護儲存、協助確定仲裁的同步節點健全狀況查詢功能，以及作為控制器活躍性的 ping Proxy，來支援 SnapMirror 作用中同步和 MetroCluster IP。
 
-ONTAP 調解器為 ONTAP 功能提供了多種功能：
+ONTAP Mediator 執行於第三個故障網域的 Linux 主機上，與您的 ONTAP 叢集分隔，在此為 HA 中繼資料提供持續、隔離的儲存區。ONTAP 使用此儲存區，以及 Mediator 的節點健全狀況查詢與 ping-Proxy 功能，來監控 SnapMirror 作用中同步關係與 MetroCluster IP 組態。
 
-* 為 HA 中繼資料提供持續且有圍籬的儲存區。
-* 做為 ping Proxy 、以實現控制器的活力。
-* 提供同步節點健全狀況查詢功能、以協助仲裁判斷。
-
-
-ONTAP 調解器提供兩項額外的 systemctl 服務：
-
-* *`ontap_mediator.service`*
-+
-維護用於管理 ONTAP 關係的 REST API 伺服器。
-
-* *`mediator-scst.service`*
-+
-控制 iSCSI 模組（ SCST ）的啟動和關閉。
+* ONTAP Mediator 使用節點管理 LIF 和叢集管理 LIF，透過多條備援路徑與每個叢集通訊。這使得 ONTAP 能夠區分整個站台故障和單一 InterSwitch 鏈路（ISL）故障。
+* 在 SnapMirror 作用中同步中，如果叢集與其對等節點和 ONTAP 中介器皆失去連線，ONTAP 會將對等節點視為無法連線，並可自動容錯移轉至存活的複本。
+* 在 MetroCluster IP 組態中，ONTAP Mediator 透過儲存有關 MetroCluster 節點的狀態資訊，並協助判斷故障期間的適當行動方案，來協助進行 Mediator 輔助的自動非計畫性切換（MAUSO）。
 
 
+若要安裝或升級內部環境的 ONTAP Mediator 版本，請參閱 link:https://docs.netapp.com/us-en/ontap-mediator/index.html["ONTAP Mediator 文件"^]
 
-
-
-[[tools-provided-for-the-system-administrator]]
-== 提供給系統管理員的工具
-
-提供給系統管理員的工具：
-
-* *`/usr/local/bin/mediator_change_password`*
-+
-提供目前 API 使用者名稱和密碼時、請設定新的 API 密碼。
-
-* *`/usr/local/bin/mediator_change_user`*
-+
-提供目前 API 使用者名稱和密碼時、請設定新的 API 使用者名稱。
-
-* *`/usr/local/bin/mediator_generate_support_bundle`*
-+
-產生本機的 tmz 檔案、其中包含與 NetApp 客戶支援部門通訊所需的所有實用支援資訊。  這包括應用程式組態、記錄和一些系統資訊。  套件會在本機磁碟上產生、並可視需要手動傳輸。  儲存位置： /opt/NetApp/data/support_bundles/
-
-* *`/usr/local/bin/uninstall_ontap_mediator`*
-+
-移除 ONTAP Mediator 套件和 SCST 核心模組。這包括所有組態、記錄和信箱資料。
-
-* *`/usr/local/bin/mediator_unlock_user`*
-+
-如果達到驗證重試限制、就會釋放 API 使用者帳戶的鎖定。此功能用於防止暴力密碼推導。它會提示使用者輸入正確的使用者名稱和密碼。
-
-* *`/usr/local/bin/mediator_add_user`*
-+
-（僅支援）用於在安裝時新增 API 使用者。
-
-
-
-
-
-[[scst-and-kernel-updates]]
-== SCST 和核心更新
-
-ONTAP Mediator 使用 SCST 為 MetroCluster IP 組態中的通訊提供 iSCSI 功能。SCST 套件是一個核心模組，會在安裝過程中編譯。核心更新後，您可能需要重新安裝 SCST。或者，您可以解除安裝 ONTAP Mediator，然後重新安裝並重新設定 ONTAP 關係。請參閱 link:https://scst.sourceforge.net/["SCST：適用於 Linux 的通用 SCSI 目標子系統"^] 以深入瞭解 SCST。
-
-
-NOTE: 您應該將伺服器作業系統核心的任何更新與 ONTAP 中的維護視窗協調起來。
-
-
-
-[[support-for-https-and-iscsi]]
-== 支援 HTTPS 和 iSCSI
-
-從 ONTAP 9.19.1 和 ONTAP Mediator 1.12 開始，您可以設定使用 HTTPS 或 iSCSI 來監控 MetroCluster IP 組態的 ONTAP Mediator。您可以選擇安裝同時支援 iSCSI 和 HTTPS 的 ONTAP Mediator，或僅支援 HTTPS 的 ONTAP Mediator。如果安裝的 ONTAP Mediator 僅支援 HTTPS，則不會安裝 SCST 套件。如需詳細資訊，請參閱 link:index.html#https-iscsi-installation["ONTAP Mediator 的 HTTPS 和 iSCSI 安裝選項"]。
+有關 ONTAP Cloud Mediator（從 ONTAP 9.17.1 開始提供）的資訊，請參閱 link:../snapmirror-active-sync/index.html["SnapMirror主動同步文檔"]。
