@@ -13,10 +13,12 @@ summary: LIF可以具有不同的特性、以支援不同的連接埠類型。
 
 
 [role="lead"]
-LIF可以具有不同的特性、以支援不同的連接埠類型。
+LIF 可以具有不同的特性以支援不同的連接埠類型。LIF 可以託管在 IPspace 中的實體或邏輯連接埠上。每個連接埠僅與一個 IPspace 關聯。
 
 
 NOTE: 當叢集間和管理生命體設定在同一個子網路中時、外部防火牆可能會封鎖管理流量、AutoSupport 而且可能會導致無法透過不中斷的功能進行。您可以執行來恢復系統 `network interface modify -vserver _vserver name_ -lif _intercluster LIF_ -status-admin up|down` 切換叢集間 LIF 的命令。不過、您應該在不同的子網路中設定叢集間LIF和管理LIF、以避免此問題。
+
+下表總結了 LIF 類型、其相容的連接埠類型及其容錯移轉或移轉行為。
 
 [cols="30,70"]
 |===
@@ -25,32 +27,68 @@ NOTE: 當叢集間和管理生命體設定在同一個子網路中時、外部�
 | LIF | 說明 
 
 
-| 資料LIF | 與儲存虛擬機器（SVM）相關聯的LIF、用於與用戶端通訊。
-您可以在一個連接埠上擁有多個資料生命量。這些介面可在整個叢集內進行移轉或容錯移轉。您可以將資料LIF修改成SVM管理LIF、將其防火牆原則修改為管理。
+| 叢集LIF  a| 
+用於在叢集內節點之間傳輸叢集內流量的 LIF。
 
-建立至NIS、LDAP、Active Directory、WINS和DNS伺服器的工作階段會使用資料生命期。 
-
-
-| 叢集LIF | LIF用於在叢集中的節點之間傳輸叢集內的流量。必須始終在叢集連接埠上建立叢集LIF。
-
-叢集LIF可在同一個節點上的叢集連接埠之間容錯移轉、但無法移轉或容錯移轉至遠端節點。當新節點加入叢集時、會自動產生IP位址。不過、如果您想要手動指派IP位址給叢集LIF、則必須確保新的IP位址與現有的叢集LIF位於相同的子網路範圍內。 
+* 叢集 LIF 必須一律建立在叢集連接埠上。
+* 叢集 LIF 可以在同一節點上的叢集連接埠之間容錯移轉，但不能移轉或容錯移轉到遠端節點。當新節點加入叢集時，系統會自動產生 IP 位址。但是，如果您想要手動為叢集 LIF 指派 IP 位址，則必須確保新 IP 位址與現有叢集 LIF 位於相同子網路範圍內。
 
 
-| 叢集管理LIF | LIF可為整個叢集提供單一管理介面。
-
-叢集管理LIF可容錯移轉至叢集中的任何節點。它無法容錯移轉至叢集或叢集間連接埠 
 
 
-| 叢集間 LIF | 用於跨叢集通訊、備份和複寫的LIF。您必須在叢集中的每個節點上建立叢集間LIF、才能建立叢集對等關係。
+| 叢集管理LIF  a| 
+為整個叢集提供單一管理介面的 LIF。
 
-這些LIF只能容錯移轉至同一個節點中的連接埠。它們無法移轉或容錯移轉至叢集中的其他節點。 
-
-
-| 節點管理 LIF | 提供專屬IP位址以管理叢集中的特定節點的LIF。節點管理生命期是在建立或加入叢集時建立的。例如、當節點無法從叢集存取時、這些生命量會用於系統維護。 
+* 叢集管理 LIF 可以容錯移轉到叢集中的任何節點。它不能容錯移轉到叢集連接埠或叢集間連接埠。
 
 
-| VIP LIF | VIP LIF是在VIP連接埠上建立的任何資料LIF。若要深入瞭解link:../networking/configure_virtual_ip_vip_lifs.html["設定虛擬IP（VIP）LIF"]、請參閱。 
+
+
+| 資料LIF  a| 
+與儲存設備虛擬機器（SVM）關聯的 LIF，用於與用戶端通訊。
+
+* 每個 SVM 都與一個特定的 IPspace 相關聯。資料 SVM 通常位於「預設」 IPspace 中，但未必如此。
+* 您可以在一個連接埠上託管多個資料 LIF。這些資料 LIF 可以在整個叢集中移轉或容錯移轉。您可以藉由將其防火牆原則修改為 mgmt，將資料 LIF 修改為 SVM 管理 LIF。
+* 與 NIS、LDAP、Active Directory、WINS 和 DNS 伺服器建立的工作階段會使用資料 LIF。
+
+
+
+
+| 叢集間 LIF  a| 
+用於跨叢集通訊、備份和複寫的 LIF。
+
+* 在建立叢集對等關係之前，必須在叢集中的每個節點上建立叢集間 LIF。這些 LIF 只能容錯移轉到同一節點上的連接埠。它們無法移轉或容錯移轉到叢集中的其他節點。
+
+
+
+
+| 節點管理 LIF  a| 
+為管理叢集中的特定節點提供專用 IP 位址的 LIF。
+
+* 節點管理 LIF 在建立或加入叢集時建立。這些 LIF 用於系統維護，例如，當某個節點無法從叢集存取時。
+
+
+
+
+| SVM 管理 LIF  a| 
+為 SVM 提供管理連線的 LIF，可啟用該 SVM 的管理作業（通常透過連接埠 443）和管理相關服務。
+
+* 每個 SVM 都與一個特定的 IPspace 相關聯。
+* 根據容錯移轉原則，LIF 可以移轉或容錯移轉到另一個節點或連接埠。
+* 您可以在一個連接埠上託管多個 SVM 管理 LIF。
+* 在多租戶環境中託管時，SVM 管理 LIF 非常有用。
+
+
+
+
+| VIP LIF  a| 
+虛擬 IP （VIP） LIF 是在 VIP 連接埠上建立的任何資料 LIF。
+
+若要深入瞭解，請參閱 link:../networking/configure_virtual_ip_vip_lifs.html["設定虛擬IP（VIP）LIF"]。
+
 |===
 .相關資訊
+* link:./configure_network_ports_cluster_administrators_only_overview.html["瞭解 ONTAP 網路連接埠組態"]
 * link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["修改網路介面"^]
+* link:./configure_ipspaces_cluster_administrators_only_overview.html["瞭解 ONTAP IPspace 組態"]
 

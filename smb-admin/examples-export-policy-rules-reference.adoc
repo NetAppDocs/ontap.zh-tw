@@ -43,7 +43,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑
 
 * 原則名稱：ifsnfs1
 * 索引編號： 2.
-* 用戶端配對：符合所有用戶端
+* 用戶端比對：僅比對網路192.168.1.0/24上的用戶端
 * 傳輸協定：SMB與NFS存取
 * 唯讀存取：存取所有用戶端
 * 讀寫存取：使用Kerberos（NFS和SMB）或NTLM驗證（SMB）的用戶端
@@ -53,7 +53,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑
 
 [listing]
 ----
-cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 0.0.0.0/0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 192.168.1.0/255.255.255.0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
 ----
 
 
@@ -64,7 +64,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 
 
 * 原則名稱：ntlm1
 * 索引編號：1.
-* 用戶端配對：符合所有用戶端
+* 用戶端比對：僅比對網路192.168.1.0/24上的用戶端
 * 傳輸協定：僅啟用SMB存取
 * 唯讀存取：僅限使用NTLM的用戶端
 * 讀寫存取：僅限使用NTLM的用戶端
@@ -77,5 +77,5 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 
 ====
 [listing]
 ----
-cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule ntlm -rwrule ntlm
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 192.168.1.0/255.255.255.0 -rorule ntlm -rwrule ntlm
 ----

@@ -17268,20 +17268,6 @@ SSH-RSA</block>
   <block id="86554767e9874406e845da28cd086b0b" category="paragraph">LIF可以具有不同的特性、以支援不同的連接埠類型。</block>
   <block id="ad678c0f71ca384bc3202876203e73d2" category="admonition">當叢集間和管理生命體設定在同一個子網路中時、外部防火牆可能會封鎖管理流量、AutoSupport 而且可能會導致無法透過不中斷的功能進行。您可以執行來恢復系統<block ref="e45e69ed720963371e10ec51bc780559" prefix=" " category="inline-code"></block> 切換叢集間 LIF 的命令。不過、您應該在不同的子網路中設定叢集間LIF和管理LIF、以避免此問題。</block>
   <block id="95416f2c916dabe21f738406546ebc53" category="cell">LIF</block>
-  <block id="72618f91e0500b0de0f483f4ac9372c7" category="cell">與儲存虛擬機器（SVM）相關聯的LIF、用於與用戶端通訊。
-您可以在一個連接埠上擁有多個資料生命量。這些介面可在整個叢集內進行移轉或容錯移轉。您可以將資料LIF修改成SVM管理LIF、將其防火牆原則修改為管理。
-
-建立至NIS、LDAP、Active Directory、WINS和DNS伺服器的工作階段會使用資料生命期。</block>
-  <block id="bb6b3eeeeea530b9d443139aa98bab5b" category="cell">LIF用於在叢集中的節點之間傳輸叢集內的流量。必須始終在叢集連接埠上建立叢集LIF。
-
-叢集LIF可在同一個節點上的叢集連接埠之間容錯移轉、但無法移轉或容錯移轉至遠端節點。當新節點加入叢集時、會自動產生IP位址。不過、如果您想要手動指派IP位址給叢集LIF、則必須確保新的IP位址與現有的叢集LIF位於相同的子網路範圍內。</block>
-  <block id="fdb61a9372481ce365c4df0d03c756b9" category="cell">LIF可為整個叢集提供單一管理介面。
-
-叢集管理LIF可容錯移轉至叢集中的任何節點。它無法容錯移轉至叢集或叢集間連接埠</block>
-  <block id="c46b415b735a844431face26e3dd78c5" category="cell">用於跨叢集通訊、備份和複寫的LIF。您必須在叢集中的每個節點上建立叢集間LIF、才能建立叢集對等關係。
-
-這些LIF只能容錯移轉至同一個節點中的連接埠。它們無法移轉或容錯移轉至叢集中的其他節點。</block>
-  <block id="cc6ff18647a66c1d43119d8291d3ab95" category="cell">提供專屬IP位址以管理叢集中的特定節點的LIF。節點管理生命期是在建立或加入叢集時建立的。例如、當節點無法從叢集存取時、這些生命量會用於系統維護。</block>
   <block id="960e2e9197894ba266cc974be53f97d7" category="cell">VIP LIF</block>
   <block id="4b39bb47dea269040d5389e36a560e3d" category="paragraph">您可以變更主節點或目前節點、管理狀態、IP位址、網路遮罩、容錯移轉原則、 防火牆原則和服務原則。您也可以將LIF的位址系列從IPV4變更為IPV6。</block>
   <block id="88af1d1f6f6b9e1a0ac27809576f63fd" category="list-text">將LIF的管理狀態修改為「關機」時、任何未完成的NFSv4鎖定都會保留、直到LIF的管理狀態恢復為「開機」為止。</block>
@@ -26869,7 +26855,6 @@ Cisco Nexus 9336C-FX2</block>
   <block id="1a3b47e05c52d70692f3aeea791abedf" category="paragraph">下列命令會在SVM上建立具有下列組態的「」VS1「匯出規則：</block>
   <block id="99342b4007817ecf2e8edd3907e5bdbe" category="list-text">原則名稱：ifsnfs1</block>
   <block id="2de6a4e9afb046a5ad3aaddd3ccb5f2b" category="list-text">索引編號： 2.</block>
-  <block id="a42ab0ecd3880c39bd388d43fd452a4c" category="list-text">用戶端配對：符合所有用戶端</block>
   <block id="5b6920bd8e42096359ec24ecc98f145e" category="list-text">傳輸協定：SMB與NFS存取</block>
   <block id="f1e397e7572336e42279b12ef246b1eb" category="list-text">唯讀存取：存取所有用戶端</block>
   <block id="f5bf8db4c3beef3c0df8e4079abaeedc" category="list-text">讀寫存取：使用Kerberos（NFS和SMB）或NTLM驗證（SMB）的用戶端</block>
@@ -35966,7 +35951,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="aaa0926959481a380c623250cf7aee17" category="inline-link">ONTAP REST API 的新功能</block>
   <block id="b8e07ee130842c6360c09fb9da1746c1" category="inline-link">IPsec 端點</block>
   <block id="fcbc078b41f8ea4c4bb53a099d48993e" category="paragraph">從 ONTAP 自動化文件中深入瞭解 ONTAP REST API ，包括<block ref="5a62402f4eb0a1dd8bfdfac5725ef9cf" category="inline-link-rx"></block>。您也應該檢閱 ONTAP 自動化文件，以取得有關的詳細資訊<block ref="40b8bcff9d85e29d4dcf335573374556" category="inline-link-rx"></block>。</block>
-  <block id="1e95f2bb91366d9573942dc324e74c11" category="cell">VIP LIF是在VIP連接埠上建立的任何資料LIF。若要深入瞭解<block ref="a7179264dd2f35ea2c150b71a7246696" category="inline-link-macro-rx"></block>、請參閱。</block>
   <block id="6307629bef173bd4931a102051e87648" category="paragraph"><block ref="6307629bef173bd4931a102051e87648" category="inline-xref-macro-rx"></block></block>
   <block id="88cd898c2db92154a58676708297e658" category="paragraph"><block ref="88cd898c2db92154a58676708297e658" category="inline-link-macro-rx"></block></block>
   <block id="5bfe513c35c2c46da7880888a3308666" category="paragraph">如需詳細資訊，請參閱<block ref="c528a3b8fe5bcb93f8e90074cd8523d7" category="inline-link-rx"></block>。</block>
@@ -48784,4 +48768,31 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="38ee55d5b669748055ecf402bc413600" category="section-title">ONTAP HotFix 升級</block>
   <block id="642d96f0cde3ee795370d1fb85613176" category="inline-link-macro">ONTAP HotFix 版本</block>
   <block id="4f1c83437ecbd776b1a3e79d2ad51521" category="paragraph">HotFix 升級交付適用於廣大客戶的具時效性修復。在 NetApp 支援網站上深入瞭解 <block ref="c2db4e5efcbf7c2449779e7d85eda844" category="inline-link-macro-rx"></block>。</block>
+  <block id="684e04e9cef22aa87cd0a0af7e6c586e" category="list-text">請確認您已為 HTTP 應用程式建立使用者帳戶，並指派對<block ref="a00c50b90749f90a36742b8673eb5362" prefix=" " category="inline-code"></block> 和<block ref="988c1fa850a7f28af6d297a4fcaf635f" prefix=" " category="inline-code"></block> REST API 具有（至少是唯讀）存取權的角色。</block>
+  <block id="a5da7f8871afd7d4a18d1254d6800bc7" category="paragraph">LIF 可以具有不同的特性以支援不同的連接埠類型。LIF 可以託管在 IPspace 中的實體或邏輯連接埠上。每個連接埠僅與一個 IPspace 關聯。</block>
+  <block id="97af8eedbbce18dd0aa0ce556efa9b57" category="paragraph">下表總結了 LIF 類型、其相容的連接埠類型及其容錯移轉或移轉行為。</block>
+  <block id="07ea719175e49a5b50c51d409da3bab8" category="paragraph">用於在叢集內節點之間傳輸叢集內流量的 LIF。</block>
+  <block id="447347484d40e37f2d951a4d4063e049" category="list-text">叢集 LIF 必須一律建立在叢集連接埠上。</block>
+  <block id="4f9507943fe3b0522a0fc4fbe61066e4" category="list-text">叢集 LIF 可以在同一節點上的叢集連接埠之間容錯移轉，但不能移轉或容錯移轉到遠端節點。當新節點加入叢集時，系統會自動產生 IP 位址。但是，如果您想要手動為叢集 LIF 指派 IP 位址，則必須確保新 IP 位址與現有叢集 LIF 位於相同子網路範圍內。</block>
+  <block id="2fc430e6e712c74fd7f804f31aade34a" category="paragraph">為整個叢集提供單一管理介面的 LIF。</block>
+  <block id="18c28c1c9746503204502a53c92fa2fe" category="list-text">叢集管理 LIF 可以容錯移轉到叢集中的任何節點。它不能容錯移轉到叢集連接埠或叢集間連接埠。</block>
+  <block id="319ae8b892b82f44da56a16cc9fc7cd0" category="paragraph">與儲存設備虛擬機器（SVM）關聯的 LIF，用於與用戶端通訊。</block>
+  <block id="a4acbf82bc139c31fa2ac5fd01223892" category="list-text">每個 SVM 都與一個特定的 IPspace 相關聯。資料 SVM 通常位於「預設」 IPspace 中，但未必如此。</block>
+  <block id="0f3854f5c216d866a8eb1b9c3315d0cb" category="list-text">您可以在一個連接埠上託管多個資料 LIF。這些資料 LIF 可以在整個叢集中移轉或容錯移轉。您可以藉由將其防火牆原則修改為 mgmt，將資料 LIF 修改為 SVM 管理 LIF。</block>
+  <block id="ed1e22b945e8ed5a5e80c33a31c83d67" category="list-text">與 NIS、LDAP、Active Directory、WINS 和 DNS 伺服器建立的工作階段會使用資料 LIF。</block>
+  <block id="c037744dd0c66542ca8f02335fc7c191" category="paragraph">用於跨叢集通訊、備份和複寫的 LIF。</block>
+  <block id="753de00e46785c430041d2e8a1a90246" category="list-text">在建立叢集對等關係之前，必須在叢集中的每個節點上建立叢集間 LIF。這些 LIF 只能容錯移轉到同一節點上的連接埠。它們無法移轉或容錯移轉到叢集中的其他節點。</block>
+  <block id="91ba88e95aece1ac89b4efb40f3e5142" category="paragraph">為管理叢集中的特定節點提供專用 IP 位址的 LIF。</block>
+  <block id="442193c860accf7bfc6d81cf776095ad" category="list-text">節點管理 LIF 在建立或加入叢集時建立。這些 LIF 用於系統維護，例如，當某個節點無法從叢集存取時。</block>
+  <block id="a954bd55e944d7b65a02512356ab0177" category="cell">SVM 管理 LIF</block>
+  <block id="7eb3c16096c2ff1a72285c7cde8fd9b2" category="paragraph">為 SVM 提供管理連線的 LIF，可啟用該 SVM 的管理作業（通常透過連接埠 443）和管理相關服務。</block>
+  <block id="6215b5b3d2f4e21d87f5002aba1ca95d" category="list-text">每個 SVM 都與一個特定的 IPspace 相關聯。</block>
+  <block id="2769f5bd1ca10159de28b7eef534b0dc" category="list-text">根據容錯移轉原則，LIF 可以移轉或容錯移轉到另一個節點或連接埠。</block>
+  <block id="fbd43e1e8d072e6a1db09a56473d4502" category="list-text">您可以在一個連接埠上託管多個 SVM 管理 LIF。</block>
+  <block id="e58a631048eac29af1a79b2be34cb8fc" category="list-text">在多租戶環境中託管時，SVM 管理 LIF 非常有用。</block>
+  <block id="975479f5c675274676df2cf5a669d2e6" category="paragraph">虛擬 IP （VIP） LIF 是在 VIP 連接埠上建立的任何資料 LIF。</block>
+  <block id="aa588eb58d9238ea17a606d1c7c85a8c" category="paragraph">若要深入瞭解，請參閱 <block ref="a7179264dd2f35ea2c150b71a7246696" category="inline-link-macro-rx"></block>。</block>
+  <block id="f67cbf9fe6ab6c46bd55d283d7e7847b" category="list-text"><block ref="f67cbf9fe6ab6c46bd55d283d7e7847b" category="inline-link-macro-rx"></block></block>
+  <block id="22182403b887cf7ca5c8e3e1dedb336a" category="list-text"><block ref="22182403b887cf7ca5c8e3e1dedb336a" category="inline-link-macro-rx"></block></block>
+  <block id="55b55918fbe4abda28fb1e2d711c035e" category="cell">LIF 容錯移轉到另一個不是 HA 合作夥伴的節點。</block>
 </blocks>
