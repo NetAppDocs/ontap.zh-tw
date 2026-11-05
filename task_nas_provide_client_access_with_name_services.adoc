@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: task_nas_provide_client_access_with_name_services.html 
 keywords: netapp, ontap, name services, client access, LDAP, NIS, authenticate NAS client, look up 
-summary: 使用LDAP或NIS驗證NAS用戶端 
+summary: 您可以設定儲存設備虛擬機器以使用 LDAP 或 NIS 名稱服務。這可讓 ONTAP 查詢用於驗證 NAS 用戶端的資訊，包括主機、使用者、群組或網路群組。 
 ---
 = 使用 ONTAP 系統管理員透過名稱服務提供用戶端訪問
 :hardbreaks:
@@ -16,14 +16,98 @@ summary: 使用LDAP或NIS驗證NAS用戶端
 
 
 [role="lead"]
-啟用ONTAP 功能支援使用LDAP或NIS來查詢主機、使用者、群組或網路群組資訊、以驗證NAS用戶端。
+您可以設定儲存設備虛擬機器以使用 LDAP 或 NIS 名稱服務。這可讓 ONTAP 查詢用於驗證 NAS 用戶端的資訊，包括主機、使用者、群組或網路群組。
 
-此程序會在啟用的現有儲存VM上建立或修改LDAP或NIS組態 link:task_nas_enable_linux_nfs.html["NFS"] 或 link:task_nas_enable_windows_smb.html["中小企業"]。
 
-對於LDAP組態、您應該擁有環境中所需的LDAP組態詳細資料、而且您應該使用預設ONTAP 的「支援LDAP」架構。
+
+[[prepare-to-configure-an-svm-name-service]]
+== 準備設定 SVM 名稱服務
+
+在設定名稱服務之前，您需要決定使用 LDAP 還是 NIS。此外，您還應該收集身分基礎架構的詳細資訊，包括伺服器位址或主機名稱、網域或搜尋基礎，以及任何驗證或加密要求，例如 TLS 憑證。提前準備和檢閱這些資訊有助於確保組態順利進行，並避免中斷用戶端存取。
+
+
+TIP: 由於 NIS 缺乏 LDAP 的一些安全性和擴充性功能，NetApp 建議盡可能使用 LDAP，特別是對於 NFSv4 及更高版本的部署。
+
+您還應該決定每項服務將支援哪些名稱服務資料庫（例如 passwd、group 或 netgroup），以及 ONTAP 相對於本機檔案在這些資料庫中的搜尋順序。如果您打算從相同儲存設備虛擬機器同時為 NFS 和 SMB 用戶端提供服務，請確認您的 LDAP 或 NIS 環境設定一致，以避免協定之間出現認證資料對應衝突。
+
+
+
+[[lightweight-directory-access-protocol]]
+=== 輕量級目錄存取協定
+
+輕量型目錄存取協定 (LDAP) 是一種開放、廠商中立的協定，用於透過網路存取和維護分散式目錄資訊，例如使用者帳戶、群組和其他身分資料。LDAP 目錄通常用於集中管理多個系統中的使用者和群組，而 Microsoft Active Directory 是一個廣泛部署的實作，它同時也是一個 LDAP 伺服器。ONTAP 可以使用 LDAP 作為名稱服務來源，為 NFS 用戶端尋找 UNIX 身分資訊（UID、GID 和群組成員身分），並支援 SMB 用戶端的使用者對應和其他身分尋找。與僅使用本機檔案相比，使用 LDAP 作為名稱服務可提供更高的安全性和擴充性，尤其是在使用 NFSv4 或更新版本的環境中。
+
+在 ONTAP 9.20.1 之前，跨 NFS 和 SMB 一致的 UID/GID 存取需要手動設定和維護 `uidNumber/gidNumber` Active Directory 中每個使用者和群組的明確屬性——這是一個耗時且容易出錯的程序，並且難以在大型或多網域環境中保持同步。ONTAP 9.20.1 為 NAS 用戶端引入了_原生 SSSD 支援，並具備自動 SID 到 UNIX ID 轉換功能_，此功能使用確定性且與 SSSD 相容的演算法，從 Windows SID 衍生出 POSIX UID/GID，並反向操作以恢復原始 SID。當 Active Directory 作為身分來源時，可以在 SVM 的 LDAP 用戶端上啟用此功能，這可讓 ONTAP 動態運算一致且可逆的 UNIX 身分，而無需在 Active Directory 中儲存任何 POSIX 屬性。
+
+
+
+[[network-information-service]]
+=== 網路資訊服務
+
+網路資訊服務（NIS）是一種用戶端與伺服器目錄協定，用於在網路上的 UNIX 和 Linux 系統之間共用組態資訊，例如使用者帳戶、群組、主機名稱和網路群組。NIS 透過維護一組對應表來集中管理，用戶端會查詢這些對應表，而不必依賴每個系統上的本機檔案。ONTAP 可以使用 NIS 作為 LDAP 的替代方案，以進行 NFS 用戶端驗證。
+
+
+
+[[configure-an-ldap-service]]
+== 設定 LDAP 服務
+
+您可以選擇為儲存設備虛擬機器設定 LDAP 服務，以便提供用戶端存取。這是 link:./task_nas_enable_linux_nfs.html["透過 ONTAP 系統管理器使用 NFS 為 Linux 伺服器啟用 NAS 存儲"] 程序的一部分。
+
+
+CAUTION: 啟用 ONTAP 9.20.1 及更新版本提供的 *使用自動 SID 到 UNIX ID 轉換* 選項時務必注意，因為它會改變 ONTAP 將 Windows SID 對應到 UNIX ID 的方式。此選項僅適用於尚未為使用者指派 POSIX 屬性的新 LDAP 組態。為現有 LDAP 組態啟用此選項會變更檔案所有權，並可能導致存取控制失效。
+
+.開始之前
+您的環境中應具備所需的 LDAP 組態詳細資料，並且應使用預設的 ONTAP LDAP 架構。啟用具有自動 SID 到 UNIX ID 轉換功能的原生 SSSD 時，您需要將 Active Directory 伺服器指定為身分來源。
 
 .步驟
-. 設定所需的服務：按一下*儲存設備>儲存設備VM*。
-. 選取儲存 VM 、按一下 * 設定 * 、然後按一下 image:icon_gear.gif["動作圖示"] LDAP 或 NIS 。
-. 在名稱服務交換器中加入任何變更：按一下 image:icon_pencil.gif["編輯圖示"] [ 名稱服務交換器 ] 底下的。
+. 在 System Manager 中，選取左側導覽窗格中的 *叢集* ，然後選取 *Storage VM* 。
+. 從清單中選擇要設定的 SVM。
+. 在 *設定* 索引標籤下，向下捲動至 *服務*，然後在 *LDAP* 旁邊選取下列任一項：
++
+.. image:icon_gear.gif["動作圖示"]建立新組態
+.. image:icon_kabob.gif["編輯圖示"] 然後點選 *編輯* 以修改現有組態
+
+
+. 選擇 *Active Directory* 或 *LDAP 伺服器*。
+. 請提供適合伺服器和您環境的組態資訊。
++
+對於 ONTAP 9.20.1 或更新版本上的新 LDAP 組態，並且使用 Active Directory 作為名稱伺服器，您可以選擇 *使用自動 SID 到 UNIX ID 轉換* 來啟用 Windows SID 到 UNIX ID 的自動對應。
+
+. 選擇 *儲存* 以套用組態。
+
+
+
+
+[[configure-an-nis-service]]
+== 設定 NIS 服務
+
+您可以選擇為儲存設備虛擬機器設定 NIS 服務，以提供用戶端存取。這是link:./task_nas_enable_windows_smb.html["使用 ONTAP 系統管理器透過 SMB 為 Windows 伺服器啟用 NAS 存儲"]程序的一部分。
+
+.開始之前
+您應該具備環境中所需的 NIS 組態詳細資訊。
+
+.步驟
+. 在 System Manager 中，選取左側導覽窗格中的 *叢集* ，然後選取 *Storage VM* 。
+. 從清單中選擇要設定的 SVM。
+. 在 *設定* 標籤下，向下捲動至 *服務*，然後在 *NIS* 旁邊選擇下列任一項：
++
+.. image:icon_gear.gif["動作圖示"]建立新組態
+.. image:icon_kabob.gif["編輯圖示"] 然後點選 *編輯* 以修改現有組態
+
+
+. 提供 NIS 網域，並新增適合伺服器和環境的相關值。
+. 選擇 *儲存* 以套用組態。
+
+
+
+
+[[related-information]]
+== 相關資訊
+
+* link:./nfs-admin/ontap-name-services-concept.html["了解 ONTAP 如何使用名稱服務"]
+* link:./nfs-config/configure-name-services-concept.html["了解 ONTAP NFS 名稱服務"]
+* link:./authentication/enable-nis-ldap-users-access-cluster-task.html["在 ONTAP 中設定 LDAP 或 NIS 伺服器存取"]
+* link:./smb-admin/configure-nis-ldap-name-services-svm-task.html["在 ONTAP SMB VM 上設定 NIS 或 LDAP 名稱服務"]
+* link:./nfs-config/configure-name-service-switch-table-task.html["配置 ONTAP NFS 名稱服務切換表"]
+* https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["技術報告：如何在 ONTAP 中設定 LDAP"^]
 

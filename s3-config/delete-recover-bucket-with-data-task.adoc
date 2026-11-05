@@ -1,0 +1,68 @@
+---
+permalink: s3-config/delete-recover-bucket-with-data-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, system manager, cli, delete, restore, recover 
+summary: 從 ONTAP 9.20.1 開始，您可以排程物件存放區伺服器上的儲存桶刪除作業，以便在不先清空儲存桶的情況下將其移除。 
+---
+= 刪除包含物件的 ONTAP S3 儲存桶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，您可以排程物件存放區伺服器上的儲存桶刪除作業，無需先清空即可移除儲存桶。您可以透過使用可設定的、以保留為基礎的恢復時間範圍來執行此作業，這允許在保留期間到期之前恢復儲存桶。
+
+刪除非空儲存桶的功能有助於簡化儲存桶停用，避免在移除儲存桶之前手冊逐個物件進行清理，減少過期積壓，並使容量更快地重新可用。
+
+.開始之前
+* 您必須是叢集管理員或 SVM 系統管理員。
+* 您必須處於進階權限層級。
+
+
+
+
+[[delete-a-bucket-that-contains-objects]]
+== 刪除包含物件的儲存桶
+
+您可以設定保留間隔，無需先清空儲存桶即可排程刪除。預設情況下，保留設為 12 小時。
+
+.步驟
+您可以從系統管理員或 ONTAP CLI 執行此工作。
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+. 導覽至 *儲存設備 > 儲存桶*，並找到您要刪除的儲存桶。
+. 按一下儲存桶名稱旁邊，然後選擇 *刪除*。
+. 如果儲存桶不是空的，請在 *刪除儲存桶* 視窗中，選擇刪除資料並清空儲存桶的選項，然後選擇 *刪除*。
+
+
+--
+.CLI
+--
+. 指定儲存桶的保留期限，超過該期限後儲存桶將永久刪除：
++
+`object-store-server create -vserver <SVM name> -bucket-delete-retention-hours <integer>`
+
+. 啟動儲存桶刪除排程：
++
+`object-store-server bucket delete -bucket <bucket name> -delete-objects tru`e
+
+
+
+--
+====
+
+
+[[recover-a-deleted-bucket]]
+== 恢復已刪除的儲存桶
+
+如果儲存桶被意外刪除，您可以在指定的保留期間使用 ONTAP CLI 恢復它。
+
+. 輸入以下命令恢復已刪除的儲存桶：
++
+`object-store-server bucket recover-deleted-bucket -bucket <bucket name>`
+
+

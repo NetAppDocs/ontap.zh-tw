@@ -127,12 +127,20 @@ NOTE: 您也可以使用 ONTAP REST API 來設定這些功能。如需詳細資�
 
 | `uuid` | 指定授權伺服器或 SAML IdP 提供的群組的通用唯一識別碼。 
 |===
+
+NOTE: 從 ONTAP 9.20.1 開始， `-type` 參數已棄用；單獨使用  `-uuid` 即足以識別群組。
+
 以下是為ONTAP定義群組的範例 CLI 指令。請注意，它使用範例存取令牌中的 UUID 群組。
 
-.範例
+.範例（ONTAP 9.20.1 之前的版本）
 [listing]
 ----
 security login group create -vserver ontap-cls-1 -name IAM_Dev -type entra -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
+----
+.範例（從 ONTAP 9.20.1 開始）
+[listing]
+----
+security login group create -vserver ontap-cls-1 -name IAM_Dev -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
 ----
 建立群組之後，會為群組產生唯一的唯讀整數識別碼。
 

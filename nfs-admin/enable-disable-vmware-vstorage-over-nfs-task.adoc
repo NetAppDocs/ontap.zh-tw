@@ -11,15 +11,17 @@ summary: 您可以使用 vserver nfs modify 指令啟用或停用儲存虛擬機
 
 
 [role="lead"]
-您可以使用來啟用或停用儲存虛擬機器（ SVM ）上透過 NFS 對 VMware vStorage 的支援 `vserver nfs modify` 命令。
+您可以使用 `vserver nfs modify` 命令，在儲存虛擬機器（SVM）上啟用或停用對 VMware vStorage over NFS 的支援。此設定控制 VMware VAAI over NFS 作業，例如複本卸載與保留空間。
 
 .關於這項工作
 預設會停用透過NFS支援VMware vStorage。
 
+從 ONTAP 9.20.1 開始，在 ONTAP NFS 上啟用 VMware vStorage 也支援對精簡配置的 NFSv3 和 NFSv4.1 資料存放區進行自動空間回收。
+
 .步驟
-. 顯示SVM目前的vStorage支援狀態：
+. 驗證 SVM 目前的 VMware vStorage over NFS 設定：
 +
-`vserver nfs show -vserver vserver_name -instance`
+`vserver nfs show -vserver vserver_name -fields vstorage`
 
 . 執行下列其中一項動作：
 +
@@ -41,10 +43,18 @@ summary: 您可以使用 vserver nfs modify 指令啟用或停用儲存虛擬機
 `vserver nfs modify -vserver vserver_name -vstorage disabled`
 
 |===
+. 請確認設定已更新：
++
+`vserver nfs show -vserver vserver_name -fields vstorage`
+
 
 
 .完成後
-您必須先安裝適用於VMware VAAI的NFS外掛程式、才能使用此功能。如需詳細資訊、請參閱_安裝適用於VMware VAA__的NetApp NFS外掛程式。
+您必須先安裝適用於 VMware VAAI 的 NetApp NFS 外掛，才能使用此功能。自動空間回收需要 3.0 或更新版本。
+
+有關 VMware 主機、外掛和互通性需求，請參閱 NetApp 適用於 VMware VAAI 的 NFS 外掛文件和 NetApp 互通性對照表工具。
 
 .相關資訊
 http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=61278["NetApp文件：適用於VMware VAAI的NetApp NFS外掛程式"^]
+
+https://mysupport.netapp.com/matrix["NetApp 互通性對照表工具"^]

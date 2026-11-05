@@ -13,7 +13,7 @@ summary: 您必須設定及設定一或多個 VScan 伺服器、才能啟用防�
 [role="lead"]
 設定一或多個 VScan 伺服器、以確保系統上的檔案已掃描到病毒。請依照廠商提供的指示、在伺服器上安裝及設定防毒軟體。
 
-請依照 NetApp 提供的 README 檔案中的指示來安裝及設定 ONTAP 防毒連接器。或者、請遵循上的指示 link:install-ontap-antivirus-connector-task.html["安裝 ONTAP 防毒連接器頁面"]。
+請依照 NetApp 提供的 README 檔案中的說明，安裝與設定 ONTAP 防毒連接器。或者，請依照 link:install-ontap-antivirus-connector-task.html["安裝 ONTAP 防毒連接器頁面"] 說明進行操作。
 
 [NOTE]
 ====
@@ -26,7 +26,7 @@ summary: 您必須設定及設定一或多個 VScan 伺服器、才能啟用防�
 == 防毒軟體需求
 
 * 如需防毒軟體需求的相關資訊、請參閱廠商文件。
-* 如需 VScan 支援的廠商、軟體和版本資訊、請參閱link:../antivirus/vscan-partner-solutions.html["VScan 合作夥伴解決方案"]頁面。
+* 有關 Vscan 支援的供應商、軟體和版本的資訊，請參閱 link:../antivirus/vscan-partner-solutions.html["VScan 合作夥伴解決方案"]。
 
 
 
@@ -34,7 +34,9 @@ summary: 您必須設定及設定一或多個 VScan 伺服器、才能啟用防�
 [[ontap-antivirus-connector-requirements]]
 == 防毒連接器需求ONTAP
 
-* 您可以從 NetApp 支援網站 的 * 軟體下載 * 頁面下載 ONTAP 防毒連接器。 link:http://mysupport.netapp.com/NOW/cgi-bin/software["NetApp下載：軟體"^]
+每個 SVM 僅使用 ICAP 或防毒連接器，不會同時使用兩者。
+
+* 您可以從 NetApp 支援網站上的 link:http://mysupport.netapp.com/NOW/cgi-bin/software["軟體下載"^] 頁面下載 ONTAP 防毒連接器。
 * 如需 ONTAP 防毒連接器支援的 Windows 版本和互通性需求的相關資訊，請參閱link:../antivirus/vscan-partner-solutions.html["VScan 合作夥伴解決方案"]。
 +
 [NOTE]
@@ -45,3 +47,19 @@ summary: 您必須設定及設定一或多個 VScan 伺服器、才能啟用防�
 * Windows伺服器上必須安裝.NET 3.0或更新版本。
 * 必須在Windows伺服器上啟用SMB 2.0。
 
+
+
+
+[[icap-capable-scan-engine-requirements]]
+== 具備 ICAP 功能的掃描引擎需求
+
+每個 SVM 僅使用 ICAP 或防毒連接器，不會同時使用兩者。
+
+* 從 ONTAP 9.20.1 開始，ONTAP 支援基於 ICAP 的掃描路徑，因此無需 Antivirus Connector。
+* ICAP 支援基於 Linux 的掃描引擎，不需要 Windows、.NET 或 SMB 2.0。
+
+
+
+NOTE: 如果從 ONTAP 9.20.1 回復到更早的版本，則必須先移除所有 ICAP 組態。
+
+深入瞭解 link:icap-vscan.html["基於 ICAP 的 Vscan 組態"]。

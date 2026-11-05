@@ -4,7 +4,7 @@ permalink: concepts/capacity-measurements.html
 keywords: capacity, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, capacity concern, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
 summary: 您的 ONTAP 儲存容量可以實體空間或邏輯空間來衡量。這些測量結果的報告方式取決於您的 ONTAP 版本以及您使用的是 System Manager 還是命令列介面（CLI）。了解與容量相關的各種術語、實體容量和邏輯容量之間的差異以及容量類型的報告方式，對於監控儲存使用情況至關重要。 
 ---
-= 了解 ONTAP 容量報告和測量
+= 了解 ONTAP 如何報告已使用的儲存設備
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,18 +16,70 @@ summary: 您的 ONTAP 儲存容量可以實體空間或邏輯空間來衡量。�
 
 
 [role="lead"]
-您的 ONTAP 儲存容量可以以實體空間和邏輯空間來衡量。這些測量值的報告方式取決於您的 ONTAP 版本以及您使用的是 System Manager 還是命令列介面（CLI）。了解與容量相關的各種術語、實體容量和邏輯容量之間的差異以及容量類型的報告方式，對於監控儲存使用情況至關重要。
-
-* * 實體容量 * ：實體空間是指磁碟區或本機層所使用的實體儲存區塊。由於儲存效率功能（例如重複資料刪除和壓縮）的資料減少、實體已用容量的值通常會小於邏輯已用容量的值。
-* *邏輯容量*：邏輯空間是指磁碟區或本機層中的可用空間（邏輯區塊）。邏輯空間是指理論空間的使用方式、不需計算重複資料刪除或壓縮的結果。所用邏輯空間的值來自已使用的實體空間量、以及已設定的儲存效率功能（例如重複資料刪除和壓縮）所節省的成本。這項測量通常會比實體使用容量大，因為它包含快照，複本和其他元件，而且不會反映資料壓縮和實體空間的其他縮減。因此、總邏輯容量可能高於已配置空間。
+在 ONTAP System Manager 中，已使用的儲存設備數量會報告為 _logical used_ 或 _used_ 空間，而在 ONTAP 命令列介面（CLI）中，則報告為 `physical used`空間或 `effective-total-footprint`。這些值是否包含快照所使用的空間，取決於您的 ONTAP 版本，如果您使用 CLI，則取決於您選擇的 ONTAP 命令。了解已使用容量的報告方式有助於您準確監控儲存設備使用量。
 
 
+
+[[capacity-reporting-in-system-manager]]
+== System Manager 中的容量報告
+
+根據您的 ONTAP 版本，System Manager 使用術語 _logical used_ 或 _used_ 來報告容量。
+
+
+NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregate）容量。
+
+[cols="15,15,30,40"]
+|===
+
+
+| 版本ONTAP | 用於報告容量的術語 | 包括用於快照的空間嗎？ | 定義 
+
+
+ a| 
+9.13.1 及更新版本
+ a| 
+_邏輯已使用_
+ a| 
+否。快照所使用的空間會單獨報告。
+| Volume 或本地分層（彙總）中的可用空間（邏輯區塊），衍生自已使用的實體空間量，加上套用儲存效率功能所實現的空間節約效益。 
+
+
+ a| 
+9.12.1-9.9.1
+ a| 
+_邏輯已使用_
+ a| 
+是的
+| 與上述相同 
+
+
+ a| 
+9.8-9.7
+ a| 
+_已使用_
+ a| 
+是的
+| 與上述相同 
+
+
+ a| 
+9.6-9.5
+ a| 
+_已使用_
+ a| 
+否
+ a| 
+Volume 或本機分層（彙總）中使用的實體儲存設備區塊。
+
+|===
 
 
 [[capacity-reporting-in-the-cli]]
 == CLI 中的容量報告
 
-根據您所使用的 ONTAP 版本，ONTAP CLI 中回報的實體已用空間會有所不同。在 ONTAP 9.13.1 及更早版本中， `physical used` 參數顯示於  `volume show` 指令輸出中，包含套用於該 volume 的所有儲存效率節省。自 ONTAP 9.14.1 起， `physical used` 參數不再包含如溫度感知儲存（TSSE）、即時壓縮、壓縮整合及跨 volume 重複資料刪除等集合層級的儲存效率節省，因此無法準確反映該 volume 的實體已用空間。在 ONTAP 9.14.1 及更新版本中，您應該使用  `vol show-footprint` 指令搭配  `effective_total_footprint` 參數，以檢視 volume 的正確實體已用空間。
+ONTAP CLI 使用 `physical used`和 `effective-total-footprint`參數來報告容量。
+
+從 ONTAP 9.14.1 開始， `physical used` 參數不包含彙總層級的儲存效率節約效益，例如溫度敏感儲存效率（TSSE）、即時壓縮、資料精簡和跨 Volume 重複資料刪除。因此，它無法完全反映 Volume 的實體已用空間。在 ONTAP 9.14.1 及更新版本中，請使用  `vol show-footprint` 命令搭配  `effective_total_footprint` 參數，以取得 Volume 實體已用空間的完整檢視。
 
 [cols="4"]
 |===
@@ -58,70 +110,14 @@ summary: 您的 ONTAP 儲存容量可以實體空間或邏輯空間來衡量。�
 
 
 
-[[capacity-reporting-in-system-manager]]
-== System Manager 中的容量報告
+[[data-reduction-rate]]
+== 資料減量率
 
-根據 ONTAP 版本的不同，System Manager 中顯示的已用容量測量值也會有所不同。從 ONTAP 9.7 開始，System Manager 同時提供物理容量和邏輯容量的測量數據。
+資料減量率表示在應用壓縮、資料精簡和重複資料刪除等儲存效率功能後，資料佔用的儲存設備空間減少了多少。
 
-
-NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregate）容量。
-
-[cols="30,30,40"]
-|===
-
-
-| System Manager版本 | 容量使用詞彙 | 所指容量類型 
-
-
- a| 
-9.9.1及更新版本
- a| 
-已用邏輯
- a| 
-使用的邏輯空間
-如果已啟用儲存效率設定）
-
-
-
- a| 
-9.7和9.8
- a| 
-已使用
- a| 
-使用的邏輯空間
-（如果已啟用儲存效率設定）
-
-
-
- a| 
-9.5 和 9.6
-（經典檢視）
- a| 
-已使用
- a| 
-使用的實體空間
-
-|===
-
-
-[[capacity-measurement-terms]]
-== 容量測量術語
-
-以下術語用於說明容量：
-
-* * 分配容量 * ：已分配給儲存 VM 中磁碟區的空間量。
-* * 可用 * ：儲存資料或在儲存 VM 或本機層中配置磁碟區的可用實體空間量。
-* * 跨磁碟區容量 * ：儲存 VM 上所有磁碟區的已用儲存設備和可用儲存空間總和。
-* * 用戶端資料 * ：用戶端資料（實體或邏輯）使用的空間量。
+* 從 ONTAP 9.20.1 開始，資料減量率（DRR）會報告包含與不包含 _可縮減資料_ 的結果。_可縮減資料_ 是指在套用儲存效率功能後，可實現空間節約效益的資料。在 ONTAP 9.19.1 及更早版本中，DRR 包含可縮減與 _不可縮減資料_。_不可縮減資料_ 是指在套用儲存效率功能後，無法實現空間節約效益的資料，或是無法套用儲存效率功能的資料。不包含可縮減資料的 DRR 能更準確地反映 ONTAP 儲存效率所節省的空間。了解如何link:../task_admin_monitor_capacity_in_sm.html["檢視 DRR。"]
+* 從 ONTAP 9 。 13.1 開始、資料減量會考量大部分儲存效率功能的結果、例如重複資料刪除和壓縮；不過、快照和自動精簡配置並不視為資料減量比率的一部分。
 +
-** 從 ONTAP 9.13.1 開始，用戶端資料所使用的容量稱為 * 已使用邏輯 * ，快照所使用的容量會個別顯示。
-** 在 ONTAP 9.12.1 及更早版本中，新增至快照所使用容量的用戶端資料所使用的容量稱為 * 「已使用的邏輯容量」 * 。
-
-
-* *已提交*：本機層的已提交容量。
-* * 資料減量 * ：擷取資料大小與儲存資料大小的比率。
-+
-** 從 ONTAP 9 。 13.1 開始、資料減量會考量大部分儲存效率功能的結果、例如重複資料刪除和壓縮；不過、快照和自動精簡配置並不視為資料減量比率的一部分。
 ** 在 ONTAP 9.12.1 及更早版本中、資料減量比率顯示如下：
 +
 *** * 容量 * 面板上顯示的資料減量值是所有邏輯使用空間與實體使用空間的整體比率，其中包括使用快照和其他儲存效率功能所帶來的效益。
@@ -130,12 +126,20 @@ NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregat
 
 
 
-* * 使用的邏輯 * ：
-+
-** 從 ONTAP 9.13.1 開始，用戶端資料所使用的容量稱為 * 已使用邏輯 * ，快照所使用的容量會個別顯示。
-** 在 ONTAP 9.12.1 及更早版本中，新增至快照所使用容量的用戶端資料所使用的容量稱為 * 邏輯使用 * 。
 
 
+
+
+[[capacity-measurement-terms]]
+== 容量測量術語
+
+在 System Manager 中描述容量時，會使用下列術語：
+
+* * 分配容量 * ：已分配給儲存 VM 中磁碟區的空間量。
+* * 可用 * ：儲存資料或在儲存 VM 或本機層中配置磁碟區的可用實體空間量。
+* * 跨磁碟區容量 * ：儲存 VM 上所有磁碟區的已用儲存設備和可用儲存空間總和。
+* * 用戶端資料 * ：用戶端資料（實體或邏輯）使用的空間量。
+* *已提交*：本機層的已提交容量。
 * * 邏輯已用容量 %* ：目前邏輯已用容量與已配置容量的百分比，不含快照保留。此值可以大於100%、因為其中包含了Volume的效率節約效益。
 * * 最大容量 * ：為儲存 VM 上的磁碟區分配的最大空間量。
 * *實體已用*：磁碟區或本機層實體區塊所使用的容量。
@@ -163,7 +167,7 @@ NOTE: 在System Manager中、容量表示法並不代表root儲存層（Aggregat
 
 image:max-cap-limit-cap-x-volumes.gif["最大容量限制包含分配的空間和可用空間、而跨磁碟區的容量僅佔用分配的空間。"]
 
-從 ONTAP 9.13.1 開始、叢集管理員就可以 link:../manage-max-cap-limit-svm-in-sm-task.html["為儲存 VM 啟用最大容量限制"]。但是、儲存 VM 若包含用於資料保護、 SnapMirror 關係或 MetroCluster 組態的磁碟區、則無法設定儲存限制。此外、配額也無法設定為超過儲存 VM 的最大容量。
+從 ONTAP 9.13.1 開始，叢集管理員可以 link:../manage-max-cap-limit-svm-in-sm-task.html["為儲存 VM 啟用最大容量限制"]。如需支援與不支援組態的相關資訊，請參閱 link:../volumes/manage-svm-capacity.html["管理 ONTAP SVM 容量限制"]。
 
 設定最大容量限制後、就無法將其變更為小於目前分配容量的大小。
 

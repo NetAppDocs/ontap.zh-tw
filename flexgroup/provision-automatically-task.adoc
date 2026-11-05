@@ -24,10 +24,22 @@ summary: 建立 FlexGroup Volume 時，您可以選擇讓 ONTAP 自動選取本�
 .關於這項工作
 ONTAP 會選取兩個本機層，每個節點上可用空間最大，以建立 FlexGroup Volume 。如果兩個本機層不可用， ONTAP 會為每個節點選取一個本機層，以建立 FlexGroup Volume 。
 
+從 ONTAP 9.20.1 開始，您可以使用儲存設備設定檔來選擇最適合您需求的效能層級。儲存設備設定檔可讓您在標準與效能 FlexGroup 資源配置之間進行切換。-storage-profile 參數定義了 ONTAP 所使用的儲存設備設定檔。
+
+* 效能：針對高效能工作負載的吞吐量最佳化資源配置。
+* 標準：通用工作負載的容量導向資源配置。
+
+
 從 ONTAP 9.15.1 開始，當您自動配置 FlexGroup Volume 時， ONTAP 會使用平衡放置（ BP ）來選擇本機層和 FlexGroup 成員（組成） Volume 配置。BP 的一個層面是在建立「無」保證（精簡配置）的 FlexGroup 磁碟區時，它如何限制過度資源配置的本機層。整體 FlexGroup 磁碟區的大小受限於本機層的可用空間量，但限制高於保證「 Volume 」（磁碟區）（完整配置）的 FlexGroup 磁碟區。當您使用 REST API 或 ONTAP CLI 建立 FlexGroup Volume `auto-provision-as` 時、資源配置可能會因為空間不足而失敗、因為這種限制。您可以建立較小的 FlexGroup 磁碟區、或使用參數來避免這種 link:create-task.html["建立 FlexGroup Volume 並手動選取本機層"] `aggr-list` 情況。
 
 .步驟
-. 配置FlexGroup 供應功能：
+. 請完成以下選項之一。
++
+.. 使用 ONTAP 9.20.1 或更新版本資源配置具有儲存設備設定檔的 FlexGroup Volume：
++
+`volume create -vserver <svm name> -volume <fg_vol_name> -size <fg_size> [-storage-profile {standard|performance}]`
+
+.. 使用 ONTAP 9.19.1 或更早版本資源配置 FlexGroup Volume：
 +
 `volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true] [-granular-data advanced]`
 
@@ -72,6 +84,14 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
+從 ONTAP 9.20.1 開始，您可以使用儲存設備設定檔來資源配置 FlexGroup Volume。下列範例使用效能儲存設備設定檔來建立 100 TB 的 FlexGroup Volume：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs0 -volume fg -size 100TB -storage-profile performance
+----
++
 以下範例說明如何建立QoS原則群組、以利處理量上限、以及如何將其套用FlexGroup 至某個流通量：
 
 +
@@ -105,6 +125,8 @@ FlexGroup 磁碟區是在叢集中的每個節點上建立，每個節點上有�
 
 +
 根據預設、 FlexGroup Volume 是使用建立的 `volume` 空間保證設定、 AFF 系統除外。對於 AFF 系統、依預設會使用建立 FlexGroup Volume `none` 空間保證。
+
+
 
 . 使用連接路徑掛載 FlexGroup Volume ：
 +

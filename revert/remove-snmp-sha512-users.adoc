@@ -1,0 +1,58 @@
+---
+permalink: revert/remove-snmp-sha512-users.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, snmp, snmpv3, sha512, sha-512, authentication, users, switches, 9.20.1 
+summary: 如果您有使用 SHA-512 驗證的 SNMPv3 使用者，ONTAP 會阻止回復到 ONTAP 9.20.1 之前的版本。在回復之前，請刪除這些使用者，並使用受支援的身分驗證傳輸協定重新建立他們。 
+---
+= 在從 ONTAP 9.20.1 回復之前，請移除使用 SHA-512 驗證的 SNMPv3 使用者
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，您可以建立使用 SHA-512 驗證的 SNMPv3 使用者。早於 9.20.1 的 ONTAP 版本不支援 SHA-512 驗證，因此如果存在任何使用 SHA-512 驗證的 SNMPv3 使用者，ONTAP 將阻止回復。在回復之前，請刪除這些使用者，然後使用受支援的身分驗證傳輸協定重新建立它們。
+
+.步驟
+. 顯示使用 SHA-512 驗證的 SNMPv3 使用者：
++
+[source, cli]
+----
+security snmpusers -authmethod usm -authprotocol sha512
+----
+. 刪除每個 SHA-512 使用者：
++
+[source, cli]
+----
+security login delete -vserver <vserver_name> -user-or-group-name <user_name> -application snmp -authentication-method usm
+----
+. 如果您仍然需要這些使用者，請使用受支援的身分驗證傳輸協定重新建立它們，例如  `sha` 或  `sha2-256`：
++
+[source, cli]
+----
+security login create -vserver <vserver_name> -user-or-group-name <user_name> -application snmp -authentication-method usm
+----
++
+如果使用者監控交換器，請包含帶有交換器 IP 位址的 `-remote-switch-ipaddress` 參數：
+
++
+[source, cli]
+----
+security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <switch_ip_address>
+----
++
+深入瞭解 link:../networking/configure_snmpv3_users_in_a_cluster.html["設定 SNMPv3 使用者"]。
+
+. 如果任何乙太網路交換器使用已刪除的 SHA-512 使用者進行監控，請更新每個交換器以使用重新建立的使用者：
++
+[source, cli]
+----
+system switch ethernet modify -device <switch_name> -snmp-version SNMPv3 -community-or-username <snmp_user_name>
+----
++
+深入瞭解 `system switch ethernet modify`，請參閱link:https://docs.netapp.com/us-en/ontap-cli/system-switch-ethernet-modify.html["指令參考資料ONTAP"^]。
+
++
+如需有關乙太網路交換器健全狀況監視器（CSHM）的 SNMPv3 更多資訊，包括如何設定乙太網路交換器，請參閱 link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cshm/config-snmpv3.html["設定 SNMPv3 以監控乙太網路交換器的健全狀況"^]。
+
+

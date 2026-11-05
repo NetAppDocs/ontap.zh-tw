@@ -11,15 +11,17 @@ summary: Server Message Block 是 Microsoft Windows 用戶端和伺服器使用�
 
 
 [role="lead"]
-伺服器訊息區（SMB）是Microsoft Windows用戶端和伺服器所使用的遠端檔案共用傳輸協定。支援所有 SMB 版本。您應該確認ONTAP 支援您環境中所需的用戶端和功能的功能。
+伺服器訊息區塊 (SMB) 是 Microsoft Windows 用戶端和伺服器使用的一種遠端檔案共用協定。ONTAP 支援所有 SMB 版本。您應該確認 ONTAP SMB 伺服器支援您環境中所需的用戶端和功能。
 
 有關哪些SMB用戶端和網域控制器ONTAP 支援的最新資訊、請參閱「互通性對照表工具」。
 
-ONTAP SMB 伺服器預設會啟用 SMB 2.0 及更新版本，並可視需要啟用或停用。SMB 1.0 可視需要啟用或停用。
+ONTAP SMB 伺服器預設啟用 SMB 2.0 及更高版本，可依需求啟用或停用。同樣地，SMB 1.0 也可依需求啟用或停用。
+
+從 ONTAP 9.20.1 版本開始，ONTAP 支援對開啟的檔案和目錄進行 SMB 規範化名稱查詢。Windows 用戶端可以透過單一請求擷取標準的檔案和目錄名稱。
 
 [NOTE]
 ====
-SMB 1.0和2.0連線至網域控制器的預設設定也取決於ONTAP 版本。如link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-security-modify.html["指令參考資料ONTAP"^]需詳細 `vserver cifs security modify`資訊，請參閱。對於現有CIFS伺服器執行SMB 1.0的環境、您應該盡快移轉至較新的SMB版本、以準備增強安全性與法規遵循。如需詳細資訊、請聯絡您的NetApp代表。
+SMB 1.0 和 2.0 連線至網域控制器的預設設定也取決於 ONTAP 版本。深入瞭解 `vserver cifs security modify`命令，請參閱link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-security-modify.html["指令參考資料ONTAP"^]。對於執行 SMB 1.0 的現有 CIFS 伺服器環境，NetApp 建議盡快移轉至較新的 SMB 版本，以因應安全性與法規遵循方面的強化。如需詳細資訊，請聯絡您的 NetApp 業務代表。
 
 ====
 下表顯示每個SMB版本支援哪些SMB功能。部分SMB功能預設為啟用、有些則需要額外的組態。
@@ -236,6 +238,16 @@ SMB 加密： AES-128/GCM
  a| 
 x
  a| 
+ a| 
+x
+
+
+
+ a| 
+對 Windows 用戶端的正規化名稱查詢支援（從 ONTAP 9.20.1 開始）
+ a| 
+ a| 
+x
  a| 
 x
 

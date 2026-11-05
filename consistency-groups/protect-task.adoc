@@ -14,18 +14,34 @@ summary: 使用一致性群組來使用本機快照， SnapMirror 非同步， S
 [role="lead"]
 一致性群組可輕鬆管理跨多個磁碟區的SAN、NAS和NVMe應用程式的本機和遠端保護。
 
-建立一致性群組不會自動啟用保護。保護原則可以在建立時或建立一致性群組之後設定。您可以使用下列方法來保護一致性群組：
+建立一致性群組並不會自動啟用保護。保護原則可以在建立一致性群組時設定，也可以在建立之後設定。
 
-* 本機快照
-* SnapMirror 主動同步（在 9.15.1 之前的 ONTAP 版本中稱爲 SnapMirror 業務連續性）
-* xref:index.html#mcc[MetroCluster （自 9.11.1 起）]
-* SnapMirror 非同步（從 9.13.1 開始）
-* 非同步 SVM 災難恢復（從 9.14.1 開始）
+一致性群組可用的資料保護類型取決於您的 ONTAP 版本。
+
+[cols="2"]
+|===
+| 自 ONTAP 起即可使用…… | 一致性群組的資料保護 
 
 
+| 9.20.1 | SnapLock for SnapVault 來自非 SnapLock Volume 
+
+
+| 9.14.1. | SVM 災難恢復 
+
+
+| 9.13.1.12.9.12.9. | SnapMirror 非同步 
+
+
+| 9.11.1. | 一致性群組提供<<two-phase,建立雙階段一致性群組快照>>。兩階段快照作業會執行預先檢查，以確保成功擷取快照。 
+
+
+| 9.10.1  a| 
+* Snapshot原則
+* SnapMirror 主動同步
+
+
+|===
 如果您使用巢狀一致性群組、可以為父和子一致性群組設定不同的保護原則。
-
-從 ONTAP 9.11.1 開始<<two-phase,建立雙階段一致性群組快照>>，一致性群組提供。兩階段快照作業會執行預先檢查，確保成功擷取快照。
 
 可以針對整個一致性群組、階層式組態中的單一一致性群組、或是一致性群組中的個別磁碟區進行還原。您可以選取要從中恢復的一致性群組，選取快照類型，然後識別要作為還原基礎的快照，以達成恢復。如需此程序的詳細資訊，請參閱link:../task_dp_restore_from_vault.html["從較早的快照還原磁碟區"]。
 
@@ -201,7 +217,14 @@ For more information about the ONTAP REST API, see link:https://docs.netapp.com/
 [[set-remote-protection-for-a-consistency-group]]
 == 設定一致性群組的遠端保護
 
-一致性群組可透過 SnapMirror 主動式同步提供遠端保護、從 ONTAP 9 。 13.1 開始即為 SnapMirror 非同步。
+根據您的 ONTAP 版本，一致性群組透過 SnapMirror 作用中同步、SnapMirror 非同步和 SnapLock for SnapVault 關係提供遠端保護。
+
+從 ONTAP 9.20.1 開始，提供 SnapLock for SnapVault 保護。從 ONTAP 9.13.1 開始，提供 SnapMirror 非同步保護。
+
+.開始之前
+* 您必須 link:../peering/create-cluster-relationship-93-later-task.html["建立叢集對等關係"]。
+* 您必須 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["建立叢集間 SVM 對等關係"]。
+
 
 
 
@@ -247,6 +270,12 @@ TIP: 若要使用 CLI 設定 SnapMirror 主動式同步、請參閱 xref:../task
 當重新同步 SnapMirror 與 Volume 精細快照的關係時，您可以使用旗標保留 Volume 精細的快照 `-preserve`。保留比一致性群組快照更新的 Volume 精細快照。如果沒有一致性群組快照，則無法在重新同步作業中傳輸 Volume 精細的快照。
 
 .開始之前
+* 從 ONTAP 9.20.1 開始，您可以透過現有的 FC 架構設定後端 SnapMirror 複寫。如果您想要使用 FC 架構進行複寫，您必須 link:..//data-protection/configure-backend-fc-replication.html["設定系統以進行後端 FC 複寫"]。您還必須：
++
+** 在建立非同步 SnapMirror 關係以透過 FC 架構複寫時，請選擇 FC 作為傳輸協定。後端複寫預設使用 IP 協定。
+** 使用受支援的非同步保護原則。link:../data-protection/default-protection-policies-concept.html["了解後端 FC 複寫支援哪些預設非同步資料保護原則"]。
+
+
 * SnapMirror 非同步保護僅適用於單一一致性群組。階層式一致性群組不支援此功能。若要將階層式一致性群組轉換成單一一致性群組、請參閱 xref:modify-geometry-task.html[修改一致性群組架構]。
 * 來源叢集和目的地叢集中的原則標籤必須相符。
 * 您可以不中斷營運 xref:modify-task.html#add-volumes-to-a-consistency-group[將磁碟區新增至一致性群組] 使用主動 SnapMirror 非同步關係。對一致性群組所做的任何其他變更、都需要您中斷 SnapMirror 關係、修改一致性群組、然後重新建立並重新同步關係。
@@ -275,6 +304,109 @@ NOTE: SnapMirror 非同步的一致性群組支援的最低排程（恢復點目
 . 一致性群組需要初始化及同步處理。返回 *consistency group* 功能表、確認同步已成功完成。旁邊會顯示 *SnapMirror （遠端） * 狀態 `Protected` image:../media/icon_shield.png["盾牌圖示"]。
 
 
+
+
+[[configure-snaplock-for-snapvault-replication-from-a-non-snaplock-source]]
+=== 從非 SnapLock 來源設定 SnapLock for SnapVault 複寫
+
+從 ONTAP 9.20.1 開始，您可以將一致性群組從非 SnapLock 來源 Volume 複寫至 SnapLock for SnapVault 目的地 Volume。目的地上受 SnapLock for SnapVault 保護的快照無法被意外或惡意刪除。
+
+.開始之前
+* 您應該 link:../system-admin/manage-license-task.html["確認已安裝 SnapLock 授權"]。如果節點上未安裝 SnapLock 授權，您必須 link:..//system-admin/install-license-task.html["安裝它"]。此授權包含在 link:..//system-admin/manage-licenses-concept.html["ONTAP One"] 中。
+* 兩個叢集節點上的 link:..//snaplock/initialize-complianceclock-task.html["法規遵循時鐘必須初始化"]。
+* 您可以透過現有的 FC 架構設定後端 SnapLock for SnapVault 複寫。如果您想要使用 FC 架構進行複寫，您必須link:..//data-protection/configure-backend-fc-replication.html["設定系統以進行後端 FC 複寫"]。您還必須：
++
+** 建立 SnapLock for SnapVault 關係以透過 FC 架構進行複寫時，請選擇 FC 作為傳輸協定。後端複寫預設使用 IP 協定。
+** 使用 MirrorAndVault 非同步保護原則……
+
+
+
+
+.步驟
+使用 System Manager 或 CLI 設定您的 SnapLock for SnapVault 複寫關係
+
+[role="tabbed-block"]
+====
+.系統管理員
+--
+在 System Manager 中啟用 SnapLock for SnapVault，方法是選取 _保存庫_ 複寫原則，然後選擇鎖定目的地快照。
+
+. 在 System Manager 中，選擇 *保護 > 一致性群組*。
+. 選擇一致性群組，然後選擇 *保護*。
++
+System Manager 會自動填入來源端資訊。
+
+. 選取目的地叢集和儲存VM。
+. 選擇保護原則。
++
+您必須選擇已設定保留規則的 _保存庫_ 複寫原則。在 ONTAP 9.20.1 及更新版本中，若要使用後端 FC 複寫，您必須選擇 _MirrorAndVault_ 原則。
+
+. 選擇 *鎖定目的地一致性群組*。
+. 確保選取 *初始化關係*。
+. 選擇*保存*。
+
+
+--
+.CLI
+--
+. 為來源一致性群組建立 SnapLock 目的地 Volume：
++
+[source, cli]
+----
+volume create -vserver <dst_svm> -volume <dst_vol> -aggregate <aggr> -size <size> -type DP -snaplock-type enterprise
+----
+. 建立 SnapMirror 保存庫原則：
++
+[source, cli]
+----
+snapmirror policy create -vserver <dst_svm> -policy <policy_name> -type vault
+----
+. 在原則中新增保留規則：
++
+[source, cli]
+----
+snapmirror policy add-rule -vserver <dst_svm> -policy <policy_name> -snapmirror-label daily -keep <retention_length> -retention-period <retention_period>
+----
++
+在以下範例中，保留期間設定為 1 年：
+
++
+`snapmirror policy add-rule -vserver svm1 -policy vault -snapmirror-label monthly -keep 12 -retention-period "1 years"`
+
++
+在以下範例中，保留期間設定為 30 天：
+
++
+`snapmirror policy add-rule -vserver svm1 -policy vault -snapmirror-label daily -keep 30 -retention-period "30 days"`
+
+. 建立 SnapLock for SnapVault 關係：
++
+[source, cli]
+----
+snapmirror create -source-path <src_svm>:/cg/<src_cg> -destination-path <dst_svm>:/cg/<dst_cg> -policy <policy_name>
+----
+. 初始化關係：
++
+[source, cli]
+----
+snapmirror initialize -destination-path <dst_svm>:<dst_vol>
+----
+. 確認關係已建立：
++
+[source, cli]
+----
+snapmirror show -destination-path <dst_svm>:<dst_vol> -fields policy,status,state
+----
+. 確認快照在目的地上已鎖定：
++
+[source, cli]
+----
+volume snapshot show -vserver <dst_svm> -volume <dst_vol> -fields snapshot,snaplock-expiry-time,is-snaplock-expiry-locked
+----
+
+
+--
+====
 
 
 [[configure-svm-disaster-recovery]]

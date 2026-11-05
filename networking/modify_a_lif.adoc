@@ -33,26 +33,40 @@ summary: 透過變更其屬性來修改 LIF。
 +
 如果沒有有效容錯移轉目標的LIF嘗試進行容錯移轉、可能會發生中斷。
 
-* 從功能介紹9.5開始ONTAP 、您可以修改與LIF相關的服務原則。
-+
-在支援的過程中、服務原則僅適用於叢集間和BGP對等服務。ONTAP在NetApp 9.6中ONTAP 、您可以建立多種資料與管理服務的服務原則。
-
-* 從 ONTAP 9.11.1 開始、自動 iSCSI LIF 容錯移轉功能可在 All Flash SAN Array （ ASA ）平台上使用。
-+
-對於預先存在的 iSCSI 生命體（即升級至 9.11.1 或更新版本之前建立的生命體）、您可以將容錯移轉原則修改為 link:../san-admin/asa-iscsi-lif-fo-task.html["啟用自動 iSCSI LIF 容錯移轉"]。
-
-* ONTAP利用網路時間協定 (NTP) 來同步整個叢集的時間。變更 LIF IP 位址後，您可能需要更新 NTP 設定以防止同步失敗。欲了解更多信息，請參閱link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-Issues/CONTAP-500629["NetApp知識庫：LIF IP 變更後 NTP 同步失敗"^]。
 
 
-您遵循的程序取決於您使用的介面- System Manager或CLI：
+.ONTAP 版本對 LIF 修改功能的支援
+與 LIF 修改相關的功能支援因 ONTAP 版本而異。
+
+[cols="1,5"]
+|===
+| 從 ONTAP 版本開始 | 功能 
+
+
+| 9.20.1  a| 
+支援 AFF 和 FAS 系統上 Broadcom 安全的主機匯流排介面卡（HBA）的 Fibre Channel 安全傳輸協定 3（FC-SP-3）驗證和加密。
+
+在 System Manager 中選擇 *傳輸安全性* 選項，或在 CLI 中使用  `-fc-transport-security` 選項，在修改 LIF 時啟用 FC-SP-3。深入瞭解 link:../san-admin/fc-sp-3-security-support.html["ONTAP 支援 FC-SP-3"]。
+
+
+
+| 9.11.1. | 支援在全快閃 SAN 陣列（ASA）平台上自動 iSCSI LIF 容錯移轉。對於預先存在的 iSCSI LIF，即在升級至 9.11.1 或更新版本之前建立的 LIF，您可以將容錯移轉原則修改為 link:../san-admin/asa-iscsi-lif-fo-task.html["啟用自動 iSCSI LIF 容錯移轉"]。 
+
+
+| 9.6% | 您可以為多個資料和管理服務建立服務原則。 
+
+
+| 9.5. | 您可以修改與 LIF 關聯的服務原則。服務原則僅支援叢集間與 BGP 對等服務。 
+|===
+.步驟
+使用 System Manager 或 CLI 修改 LIF。
 
 [role="tabbed-block"]
 ====
 .系統管理員
 --
-*從ONTAP 版本S59.12.0開始、您可以使用System Manager編輯網路介面*
+從 ONTAP 9.12.0 開始，您可以使用 System Manager 編輯網路介面
 
-.步驟
 . 選擇*網路>總覽>網路介面*。
 . 在您要變更的網路介面旁選取 image:icon_kabob.gif["功能表選項圖示"] * > 編輯 * 。
 . 變更一或多個網路介面設定。如需詳細資訊、請參閱 link:create_a_lif.html["建立LIF"]。
@@ -62,9 +76,6 @@ summary: 透過變更其屬性來修改 LIF。
 --
 .CLI
 --
-*使用CLI修改LIF*
-
-.步驟
 . 使用修改 LIF 屬性 `network interface modify` 命令。
 +
 下列範例說明如何使用IP位址和子網路client1_sub的網路遮罩值來修改LIF datalif2的IP位址和網路遮罩：
@@ -111,3 +122,5 @@ IPv6位址
 
 --
 ====
+.接下來呢？
+ONTAP利用網路時間協定 (NTP) 來同步整個叢集的時間。變更 LIF IP 位址後，您可能需要更新 NTP 設定以防止同步失敗。欲了解更多信息，請參閱link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-Issues/CONTAP-500629["NetApp知識庫：LIF IP 變更後 NTP 同步失敗"^]。

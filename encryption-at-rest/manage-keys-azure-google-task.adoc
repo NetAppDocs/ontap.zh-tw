@@ -13,6 +13,13 @@ summary: 使用 Azure 、 Google Cloud 或 AWS 金鑰管理程式來簡化 ONTAP
 
 AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encryption-concept.html["NetApp Volume Encryption（NVE）金鑰"] 僅適用於資料SVM。
 
+[NOTE]
+====
+從 ONTAP 9.20.1 開始，當您在已透過管理層級金鑰管理程式管理加密 Volume 的資料 SVM 上啟用雲端金鑰管理程式時，ONTAP 會自動將這些 NVE 金鑰移轉到新的資料 SVM 金鑰管理程式。在此工作流程中，您不需要執行分隔的 `security key-manager key migrate`命令。
+
+此自動移轉適用於資料 SVM。如果您要將管理 SVM 從就職金鑰管理或叢集範圍外部金鑰管理轉換至資料 SVM 雲端金鑰管理程式，請先完成適當的管理範圍轉換工作。
+
+====
 .關於這項工作
 您可以使用 CLI 或 ONTAP REST API 來啟用雲端供應商的金鑰管理。
 
@@ -30,7 +37,7 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 * ONTAP 叢集的節點必須支援 NVE 。
 * link:../encryption-at-rest/install-license-task.html["您必須已安裝 Volume Encryption （ VE ）和多租戶加密金鑰管理（ MTEKM ）授權"]。這些授權隨附於link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
 * 您必須是叢集或 SVM 管理員。
-* 資料 SVM 不得包含任何加密的磁碟區、也不得採用金鑰管理程式。如果資料 SVM 包含加密的磁碟區、您必須先移轉這些磁碟區、才能設定 KMS 。
+* 對於 ONTAP 9.20.1 及更高版本，如果加密 Volume 的 NVE 金鑰由管理員範圍的金鑰管理程式代管，則資料 SVM 可以包含加密 Volume。ONTAP 在啟用作業期間自動移轉這些金鑰。對於較早版本，請在設定雲端金鑰管理程式之前移轉金鑰。
 
 
 
@@ -51,7 +58,8 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 ** `Encrypt`
 ** `Decrypt`
 +
-如需詳細資訊、請參閱 AWS 文件 link:https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant["補助"^]。
+如需詳細資訊，請參閱 link:https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant["補助"^] 的 AWS 文件。
+
 
 
 
@@ -108,9 +116,12 @@ AWS KMS 、 AKV 和 Cloud KMS 可用於保護 link:configure-netapp-volume-encry
 
 --
 ====
-如果已為資料SVM設定一或多個加密磁碟區、且對應的NVE金鑰由管理SVM內建金鑰管理程式管理、則這些金鑰應移轉至外部金鑰管理服務。若要使用 CLI 執行此作業、請執行命令：
+從 ONTAP 9.20.1 開始，如果資料 SVM 已設定一個或多個加密 Volume，並且對應的 NVE 金鑰由管理層級金鑰管理程式代管，ONTAP 會在啟用作業期間自動移轉這些金鑰。您無需執行分隔的 `security key-manager key migrate`命令。
+
+對於早於 9.20.1 的 ONTAP 版本，這些金鑰應移轉至外部金鑰管理服務。若要使用 CLI 執行此操作，請執行命令：
 `security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`
-在成功移轉資料 SVM 的所有 NVE 金鑰之前、無法為租戶的資料 SVM 建立新的加密磁碟區。
+
+在成功移轉資料 SVM 的所有 NVE 金鑰之前，無法為租戶的資料 SVM 建立新的加密 Volume。
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-encrypting-volumes.html["使用適用於 Cloud Volumes ONTAP 的 NetApp 加密解決方案來加密磁碟區"^]

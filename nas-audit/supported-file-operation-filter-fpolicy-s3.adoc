@@ -1,0 +1,71 @@
+---
+permalink: nas-audit/supported-file-operation-filter-fpolicy-s3.html 
+sidebar: sidebar 
+keywords: ontap 9, supported file operation, filter combinations, fpolicy, monitor, s3 
+summary: 設定 FPolicy 事件時，您需要感知，只有特定的檔案操作和過濾器組合才支援監控 S3 物件存取操作。 
+---
+= ONTAP FPolicy 針對 S3 監控的支援檔案操作與篩選器組合
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+設定 FPolicy 事件時，您需要感知，只有特定的檔案操作和過濾器組合才支援監控 S3 物件存取操作。
+
+從 ONTAP 9.20.1 開始，FPolicy 支援 NAS 儲存桶上 S3 物件事件的通知。S3 FPolicy 僅以非同步、非強制模式運作。
+
+下表列出 FPolicy 監控 S3 物件存取事件所支援的檔案操作與篩選器組合：
+
+[cols="30,70"]
+|===
+
+
+| 支援的檔案作業 | 支援的篩選器 
+
+
+ a| 
+object_create
+ a| 
+object-create-with-put、object-create-with-copy、object-create-with-complete-mpu
+
+
+
+ a| 
+object_delete
+ a| 
+exclude-multi-delete
+
+
+
+ a| 
+物件標籤
+ a| 
+object-tag-put、object-tag-delete
+
+|===
+
+
+[[filter-descriptions]]
+== 篩選器描述
+
+下列清單說明每個 S3 FPolicy 篩選器：
+
+* object-create-with-put：監控使用 PUT 要求執行的物件建立作業。
+* object-create-with-copy：監控使用 COPY 請求執行的物件建立作業。
+* object-create-with-complete-mpu：監控透過完成多部分上傳執行的物件建立作業。
+* exclude-multi-delete：排除作為多重刪除要求一部分而刪除之物件的通知。設定此篩選條件時，FPolicy 僅會針對單一物件刪除作業產生通知。
+* object-tag-put：監控新增或修改物件標籤的操作。
+* object-tag-delete：監視移除物件標籤的操作。
+
+
+
+
+[[additional-considerations-for-s3-fpolicy-events]]
+== 關於 S3 FPolicy 事件的其他注意事項
+
+* 只有成功的用戶端驅動 S3 操作才會產生 FPolicy 通知。內部產生的操作（例如物件過期或快照還原）和失敗的操作不會產生通知。
+* S3 FPolicy 監控不支援 GET（讀取）作業。
+* 多重刪除要求最多可刪除 1,000 個物件。FPolicy 會為每個成功刪除的物件產生一個通知。同一個多重刪除要求中的每個通知都會共用相同的 FPolicy 要求 ID 和 S3 要求 ID，以便進行關聯。
+* S3 事件不支援存取遭拒通知。
+

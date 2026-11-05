@@ -98,7 +98,7 @@ NOTE: 全部 `security multi-admin-verify rule` 命令必須先獲得 MAV 管理
 
 
 | 建立規則  a| 
-`security multi-admin-verify rule create -operation _"protected_operation"_ [-query _operation_subset_] [_parameters_]`
+`security multi-admin-verify rule create -operation _"protected_operation"_ [-query _operation_subset_] [-approval-groups _group1_[,_group2_…]] [_parameters_]`
 
 
 
@@ -108,6 +108,8 @@ NOTE: 全部 `security multi-admin-verify rule` 命令必須先獲得 MAV 管理
 *範例*：下列規則需要核准才能刪除根Volume。
 
 `security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0"`
+
+使用  `-approval-groups` 參數為此規則指定一個或多個 MAV 核准群組，僅覆寫此作業的全域核准群組設定。
 
 
 
@@ -124,7 +126,55 @@ NOTE: 全部 `security multi-admin-verify rule` 命令必須先獲得 MAV 管理
 | 顯示規則  a| 
 `security multi-admin-verify rule show`
 
+
+
+| 檢視所有可受 MAV 保護的操作  a| 
+`security multi-admin-verify registered-operations show`
+
 |===
+
+
+[[view-available-mav-protectable-operations]]
+== 檢視可用的 MAV 可保護作業
+
+從 ONTAP 9.20.1 開始，您可以顯示目前叢集上所有可受 MAV 保護的作業。這有助於您建立規則，而無需查閱外部文件來確定有效的作業名稱。
+
+`security multi-admin-verify registered-operations show`
+
+*範例：*
+
+[listing]
+----
+cluster1::> security multi-admin-verify registered-operations show
+Operation
+-----------------------------------------
+cluster peer delete
+security login delete
+security login modify
+volume delete
+volume move start
+volume snapshot delete
+...
+----
+
+NOTE: 操作清單因 ONTAP 版本和叢集配置而異。
+
+您可以使用  `-operation` 參數依作業名稱篩選輸出，包括萬用字元比對。
+
+*範例：*
+
+[listing]
+----
+cluster1::> security multi-admin-verify registered-operations show -operation security*
+Operation
+----------------------------------
+security anti-ransomware volume attack clear-suspect
+security anti-ransomware volume disable
+security anti-ransomware volume event-log modify
+security audit modify
+security login delete
+...
+----
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+multi-admin-verify+rule["安全多管理員驗證規則"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["修改安全登入"^]

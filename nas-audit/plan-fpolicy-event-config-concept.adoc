@@ -18,13 +18,13 @@ summary: 在設定FPolicy事件之前、您必須先瞭解建立FPolicy事件的
 [[what-it-means-to-create-an-fpolicy-event]]
 == 建立FPolicy事件的意義
 
-建立FPolicy事件是指定義FPolicy程序所需的資訊、以決定要監控的檔案存取作業、以及應將哪些受監控事件通知傳送至外部FPolicy伺服器。FPolicy事件組態定義下列組態資訊：
+建立 FPolicy 事件代表定義 FPolicy 處理程序所需的資訊，以判斷要監控哪些檔案存取作業，以及應將哪些受監控事件的通知傳送到外部 FPolicy 伺服器。FPolicy 事件組態定義了下列組態資訊：
 
 * 儲存虛擬機器（SVM）名稱
 * 事件名稱
 * 要監控的傳輸協定
 +
-FPolicy 可監控 SMB ， NFSv3 ， NFSv4 ，以及從 ONTAP 9.15.1 開始的 NFSv4.1 檔案存取作業。
+FPolicy 可以監控 SMB、NFSv3、NFSv4、NFSv4.1（從 ONTAP 9.15.1 開始）和 S3（從 ONTAP 9.20.1 開始）檔案存取作業。
 
 * 要監控的檔案作業
 +
@@ -104,16 +104,13 @@ _傳輸協定_
 * `cifs`
 * `nfsv3`
 * `nfsv4`
+* `nfsv4.1`（從 ONTAP 9.15.1 開始）
+* `s3`（自 ONTAP 9.20.1 版本起）
 
 
 [NOTE]
 ====
 如果您指定 `-protocol`、然後您必須在中指定有效值 `-file-operations` 參數。隨著傳輸協定版本變更、有效值可能會變更。
-
-====
-[NOTE]
-====
-從 ONTAP 9.15.1 開始， NFSv4 可讓您擷取 NFSv4.0 和 NFSv4.1 事件。
 
 ==== a| 
 `-protocol` `protocol`
@@ -135,6 +132,9 @@ _File operations _
 * `getattr` 以取得屬性作業
 * `link` 用於連結作業
 * `lookup` 用於查詢作業
+* `object_create` 用於 S3 檔案操作
+* `object_delete` 用於 S3 檔案操作
+* `object_tag` 用於 S3 檔案操作
 * `open` 適用於檔案開啟作業
 * `read` 檔案讀取作業
 * `write` 適用於檔案寫入作業
@@ -163,11 +163,17 @@ _篩選_
 如果您指定 `-filters` 參數、您也必須為指定有效值 `-file-operations` 和 `-protocol` 參數。
 
 ====
-* `monitor-ads` 用於篩選用戶端要求的替代資料串流選項。
 * `close-with-modification` 篩選用戶端要求以進行修改以關閉的選項。
 * `close-without-modification` 篩選用戶端要求以關閉而不修改的選項。
 * `first-read` 篩選用戶端要求以進行第一讀取的選項。
 * `first-write` 篩選用戶端要求進行第一次寫入的選項。
+* `monitor-ads` 用於篩選用戶端要求的替代資料串流選項。
+* `object-create-with-put` 篩選 S3 物件的選項。
+* `object-create-with-copy` 選項可篩選 S3 物件。
+* `object-create-with-complete-mpu` 篩選 S3 物件的選項。
+* `exclude-multi-delete` 選項可用於篩選 S3 物件。
+* `object-tag-put` 篩選 S3 物件的選項。
+* `object-tag-delete` 篩選 S3 物件的選項。
 * `offline-bit` 用於篩選用戶端離線位元集要求的選項。
 +
 設定此篩選器後、FPolicy伺服器只會在存取離線檔案時收到通知。

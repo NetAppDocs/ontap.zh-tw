@@ -1,0 +1,99 @@
+---
+permalink: volumes/enable-large-dir-max-support-task.html 
+sidebar: sidebar 
+keywords: create, modify, volume, large directory, maxdir-size, directory size, 25 million files 
+summary: 建立新 Volume 時，您可以啟用對較大最大目錄大小的支援，也可以修改現有 Volume。 
+---
+= 啟用 ONTAP 對大型目錄最大大小的支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，您可以在建立 Volume 或修改現有 Volume 時啟用和設定對更大目錄大小的支援。這允許目錄包含多達約 2500 萬個檔案、資料夾和其他項目（基於最大 4GB 的目錄大小）。
+
+[CAUTION]
+====
+增加最大目錄大小後，如果不重新建立 Volume 上受影響的目錄，就無法將其減少。
+
+====
+.開始之前
+在建立或修改 Volume 以支援更大的最大目錄大小之前，請確保您是叢集或 SVM 系統管理員。
+
+
+
+[[create-a-new-volume]]
+== 建立新的 Volume
+
+建立新 Volume 時，您可以設定更大的最大目錄大小。
+
+.步驟
+. 建立已啟用支援更大目錄最大大小的 Volume：
++
+[source, cli]
+----
+volume create -vserver <svm_name> -volume <volume_name> -aggregate <aggr_name> -is-dir-index-transfer-enabled true
+----
++
+.範例
+[listing]
+----
+volume create -vserver vs1 -volume big_dir1 -aggregate aggr1 -is-dir-index-transfer-enabled true
+----
+. 增加最大目錄大小，最高可達 4 GB：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -maxdir-size <dir_size>
+----
++
+.範例
+[listing]
+----
+volume modify -vserver vs1 -volume big_dir1 -maxdir-size 4GB
+----
+
+
+
+
+[[modify-an-existing-volume]]
+== 修改現有的 Volume
+
+您可以透過修改現有 Volume 來設定更大的最大目錄大小。
+
+.步驟
+. 啟用對現有 Volume 上更大目錄最大大小的支援：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -is-dir-index-transfer-enabled true
+----
++
+.範例
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -is-dir-index-transfer-enabled true
+----
+. 將最大目錄大小增加至 4 GB：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -maxdir-size <dir_size>
+----
++
+.範例
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -maxdir-size 4GB
+----
+
+
+
+
+[[related-information]]
+== 相關資訊
+
+* link:../volumes/cautions-increasing-maximum-directory-size-concept.html["ONTAP FlexVol 磁碟區的最大目錄大小"]
+* https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]
+

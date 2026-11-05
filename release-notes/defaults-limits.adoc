@@ -25,6 +25,9 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 功能 | 預設變更 | 版本變更… 
 
 
+| 自主勒索軟體防護 (ARP/AI) | 升級至 ONTAP 9.20.1 後，每個 Volume 的預設 ARP/AI 定期快照最大數量從 6 個減少到 2 個，定期快照的預設保留期間從 12 小時減少到 7 小時。除非先前已修改過這些節點層級選項，否則這些變更將會生效。如果在升級前已設定  `arw.snap.max.count` 或  `arw.snap.low.encryption.retain.duration.hours` 選項，則會保留現有的 ARP/AI 快照行為。 | ONTAP 9.20.1 
+
+
 | 自主勒索軟體防護 (ARP/AI) | 在支援的平台上，所有新磁碟區在 12 小時寬限期後預設自動啟用 ARP/AI。 | ONTAP 9.18.1 
 
 
@@ -79,6 +82,15 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 [cols="25%,50%,25%"]
 |===
 | 功能 | 限制變更 | 版本變更… 
+
+
+| 資料量FlexCache | 當每個 Volume 使用一個構成要素時，支援的 FlexCache Volume 數量會增加至每個節點 2500 個，以及每個 HA 配對 5000 個。您可以從來源 Volume 建立的 FlexCache Volume 數量增加至 200，每個來源的回寫快取數量增加至 50。 | ONTAP 9.20.1 
+
+
+| 每個 LUN 的 SCSI-3 持續保留註冊 | 每個 LUN 支援的最大 SCSI-3 持續保留註冊數從 182 增加到 256。 | ONTAP 9.20.1 
+
+
+| 每個一致性群組的磁碟區 | 每個一致性群組的最大 Volume 數量已從 80 增加到 256。每個父一致性群組的最大子一致性群組數量已從 5 增加到 64。這些增加不適用於 SnapMirror 作用中同步關係中的 Volume。對於這些 Volume，每個一致性群組的最大 Volume 數量仍為 80，每個父一致性群組的最大子一致性群組數量仍為 5。 | ONTAP 9.20.1 
 
 
 | SnapMirror 雲端 | SnapMirror 雲端將支援的 S3 儲存桶數量從 6 個增加到 100 個。 | ONTAP 9.19.1 

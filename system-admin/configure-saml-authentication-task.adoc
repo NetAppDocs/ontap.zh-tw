@@ -100,6 +100,12 @@ security saml-sp default-metadata create -sp-host <ontap_host_name>
 . 返回確認視窗（在System Manager中）、然後勾選「I have configured the IDP with the host URI or medetid*（我已使用主機URI或中繼資料*設定IDP）」核取方塊。
 . 按一下*登出*以啟用SAML型驗證。  IDP系統會顯示驗證畫面。
 . 在 IdP 登入頁面，輸入您的基於 SAML 的憑證。憑證驗證完成後，您將被導向到系統管理器主頁。
++
+確保每個需要存取的遠端使用者都擁有 SAML 登入方式。如果未自動建立 SAML 登入方式，請透過 ONTAP CLI 為該使用者建立一個：
+
++
+`security login create -user-or-group-name <user_name> -application http -authentication-method saml -vserver <svm_name>`
+
 
 
 --

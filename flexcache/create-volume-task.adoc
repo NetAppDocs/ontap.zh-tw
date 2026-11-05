@@ -14,7 +14,10 @@ summary: 您可以在FlexCache 同一個叢集中建立一個Sfor Volume、以�
 您可以在同一 ONTAP 叢集中建立 FlexCache 磁碟區，以提高存取熱點物件時的效能。如果您在不同位置擁有資料中心，則可以在遠端 ONTAP 叢集上建立 FlexCache 磁碟區，以加快資料存取速度。
 
 .關於這項工作
-* 從 ONTAP 9.18.1 開始，您可以在建立磁碟區時將 `-is-s3-enabled`選項設定為 `true`，以在 FlexCache 磁碟區上啟用 NAS S3 儲存桶存取權限。此選項預設為停用狀態。
+* 從 ONTAP 9.18.1 開始，您可以在建立 Volume 時，透過將 `-is-s3-enabled` 選項設定為 `true`，來啟用 FlexCache Volume 上的 S3 NAS 儲存桶存取。此選項預設為停用。
++
+在 ONTAP 9.18.1 和 9.19.1 中，僅當來源 Volume 為 FlexGroup Volume 時，才支援 FlexCache® Volume 上的 S3 NAS 儲存區存取。從 ONTAP 9.20.1 開始，具有 FlexVol® 來源的 FlexCache® Volume 也支援 S3 NAS 儲存區存取。
+
 * 從ONTAP 9.18.1 開始， FlexCache支援為具有 SVM-DR 關係的 SVM 的來源磁碟區建立快取磁碟區。
 +
 如果您執行的是ONTAP 9.18.1 或更高版本，則儲存管理員必須先將快取 SVM 與 SVM-DR 關係中的主來源 SVM 和輔助來源 SVM 建立對等關係，然後再建立屬於 SVM-DR 關係的來源磁碟區的快取磁碟區。

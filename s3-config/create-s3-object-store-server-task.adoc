@@ -67,8 +67,12 @@ NetApp最佳實務做法是、請勿使用此root使用者。任何使用root使
 您可以在建立S3伺服器時或稍後隨時指定其他選項。
 
 +
+** 從 ONTAP 9.20.1 開始，您可以使用  `-default-bucket-size` 選項來指定未使用  `-size` 選項建立的 S3 儲存桶大小。此設定適用於使用 ONTAP CLI 、 ONTAP REST API 或 S3 API 建立的儲存桶。它不會變更現有的儲存桶。
++
+建立 S3 伺服器後，使用 `vserver object-store-server modify`命令搭配 `-default-bucket-size`選項來變更新儲存桶的預設大小。
+
 ** 如果您正在設定本機分層、 SVM 名稱可以是資料 SVM 或系統 SVM （叢集）名稱。
-** 憑證名稱應為伺服器憑證的名稱（終端使用者或葉憑證）、而非伺服器 CA 憑證（中繼或根 CA 憑證）。
+** 憑證名稱應該是伺服器憑證（終端使用者或葉憑證）的名稱，而不是伺服器 CA 憑證（中間或根目錄 CA 憑證）的名稱。
 ** 預設會在連接埠443上啟用HTTPS。您可以使用變更連接埠號碼 `-secure-listener-port` 選項。
 +
 啟用 HTTPS 時、必須有 CA 憑證才能與 SSL/TLS 正確整合。從 ONTAP 9.15.1 開始、 S3 物件儲存支援 TLS 1.3 。

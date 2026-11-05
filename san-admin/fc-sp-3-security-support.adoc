@@ -1,0 +1,31 @@
+---
+permalink: san-admin/fc-sp-3-security-support.html 
+sidebar: sidebar 
+keywords: fc-sp-3, edif, support, fc, security 
+summary: 從 ONTAP 9.20.1 開始，ONTAP 支援某些 ONTAP 系統上的 Broadcom 安全的主機匯流排介面卡（HBA）的 Fibre Channel 安全協定 3（FC-SP-3）驗證和加密。 
+---
+= 了解 ONTAP 對 FC-SP-3 安全性的支援
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，ONTAP 支援在某些 ONTAP 系統上為 Broadcom 安全主機匯流排介面卡（HBA）提供 Fibre Channel 安全協定 3（FC-SP-3）的驗證和加密。FC-SP-3 提供硬體層級的加密和裝置驗證，有助於保護 FC 和 NVMe/FC 主機與 ONTAP 儲存系統之間傳輸的資料免受攔截、篡改和未經授權的存取，同時保持效能並符合 T11 FC 安全性標準。
+
+以下 Broadcom 安全的 HBA 支援 FC-SP-3：
+
+* 目標卡：LPe38104
+* 啟動器卡：LPe38102（64G）、LPe37102（32G）
+
+
+使用 link:https://hwu.netapp.com/["NetApp Hardware Universe"^] 來驗證您特定的 ONTAP 系統是否支援所需的 HBA。
+
+您也可以使用該  `fcp adapter show -fields transport-security-supported` 命令來驗證您的 HBA 是否支援 FC-SP-3。當支援 FC-SP-3 時，*transport-security-supported* 欄位為 *true*。
+
+
+
+[[enable-fc-sp-3-support]]
+== 啟用 FC-SP-3 支援
+
+如果您的組態支援 FC-SP-3，當您link:../networking/create_a_lif.html["建立"]或link:../networking/modify_a_lif.html["修改"]網路介面（LIF）時，可以透過將 `-fc-transport-security option`設為 *mandatory* 或 *preferred* 來啟用它。將選項設為 *mandatory* 可防止不支援 FC-SP-3 的主機存取儲存系統。將選項設為 *preferred* 可讓 ONTAP 嘗試建立 FC-SP-3 連線，同時在無法建立 FC-SP-3 時仍允許主機存取。

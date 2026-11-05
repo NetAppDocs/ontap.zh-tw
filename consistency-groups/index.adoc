@@ -67,17 +67,30 @@ NOTE: 在 ONTAP 9.13.1 中，您只能使用 ONTAP REST API 擷取歷史指標�
 [[protect-consistency-groups]]
 == 保護一致性群組
 
-一致性群組提供應用程式一致性保護，確保跨多個磁碟區或 LIF 的資料一致性。建立一致性群組快照時，會在該一致性群組上建立一個「圍欄」。此圍欄會啟動 I/O 佇列，直到快照作業完成，從而確保一致性群組中所有實體的資料在同一時間點的一致性。該圍欄可能會導致快照建立作業（例如排程快照原則或使用 System Manager 建立快照）期間出現短暫的延遲峰值。如需深入瞭解 ONTAP REST API 和 ONTAP CLI 的相關背景，請參閱 link:https://kb.netapp.com/on-prem/ontap/DM/REST-API["ONTAP REST API 文件"^] 和 link:https://docs.netapp.com/us-en/ontap-cli/["指令參考資料ONTAP"^]。
+一致性群組提供應用程式一致性保護，確保跨多個磁碟區或 LIF 的資料一致性。建立一致性群組快照時，會在該一致性群組上建立一個「圍欄」。此圍欄會啟動 I/O 佇列，直到快照作業完成，從而確保一致性群組中所有實體的資料在同一時間點的一致性。該圍欄可能會導致快照建立作業（例如排程快照原則或使用 System Manager 建立快照）期間出現短暫的延遲峰值。
 
-一致性群組透過以下方式提供保護：
+一致性群組可用的資料保護類型取決於您的 ONTAP 版本。
 
+[cols="2"]
+|===
+| 自 ONTAP 起即可使用…… | 一致性群組的資料保護 
+
+
+| 9.20.1 | link:protect-task.html#configure-snaplock-for-snapvault-replication-from-a-non-snaplock-source["SnapLock for SnapVault 來自非 SnapLock Volume"] 
+
+
+| 9.14.1. | link:../data-protection/snapmirror-svm-replication-concept.html["SVM 災難恢復"] 
+
+
+| 9.13.1.12.9.12.9. | xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror 非同步] 
+
+
+| 9.10.1  a| 
 * Snapshot原則
 * xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]
-* <<mcc>> （從ONTAP 版本號《2019年9月11日》開始）
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror 非同步] （從 ONTAP 9.13.1 開始）
-* link:../data-protection/snapmirror-svm-replication-concept.html["SVM 災難恢復"] （從 ONTAP 9.14.1 開始）
 
 
+|===
 建立一致性群組不會自動啟用保護。建立一致性群組時或建立一致性群組之後、都可以設定本機和遠端保護原則。
 
 若要在一致性群組上設定保護、請參閱 link:protect-task.html["保護一致性群組"]。
@@ -125,9 +138,7 @@ NOTE: 為了獲得最佳儲存效能和可用性，建議您為鏡像聚合保�
 [[upgrade-considerations]]
 == 升級考量
 
-當升級至 ONTAP 9 。 10.1 或更新版本時，使用 ONTAP 9 第 8 和 9.9.1 節中的 SnapMirror 主動式同步建立的一致性群組（先前稱為 SnapMirror 業務連續性）會自動升級，並可在系統管理員的 * 儲存 > 一致性群組 * 或 ONTAP REST API 中進行管理link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror 主動式同步升級與還原考量"]，以取得有關從 ONTAP 9 第 8 或 9.9.1 節升級的詳細資訊，請參閱。
-
-在 ONTAP REST API 中建立的一致性群組快照可以透過 System Manager 的一致性群組介面和一致性群組 ONTAP REST API 端點進行管理。從 ONTAP 9.14.1 開始，也可以使用 ONTAP CLI 管理一致性群組快照。
+升級至 ONTAP 9.10.1 或更新版本時，在 ONTAP 9.8 和 9.9.1 中使用 SnapMirror 作用中同步（先前稱為 SnapMirror Business Continuity）建立的一致性群組會自動升級，並可在 System Manager 的 *儲存設備 > 一致性群組* 下或透過 ONTAP REST API 成為可管理的。如需從 ONTAP 9.8 或 9.9.1 升級的詳細資訊，請參閱 link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror 主動式同步升級與還原考量"]。
 
 
 NOTE: 使用 ONTAPI 命令建立的快 `cg-start` `cg-commit`照無法辨識為一致性群組快照，因此無法透過系統管理員的一致性群組介面或 ONTAP REST API 中的一致性群組端點進行管理。從 ONTAP 9.14.1 開始，如果您使用 SnapMirror 非同步原則，這些快照可以鏡射到目的地 Volume 。如需更多資訊、請參閱 xref:protect-task.html#configure-snapmirror-asynchronous[設定 SnapMirror 非同步]。
@@ -137,60 +148,58 @@ NOTE: 使用 ONTAPI 命令建立的快 `cg-start` `cg-commit`照無法辨識為�
 [[supported-features-by-release]]
 == 各版本支援的功能
 
-[cols="3,1,1,1,1,1,1,1"]
+[cols="2"]
 |===
-|  | ONTAP 9.16.1. | ONTAP 9.15.1.1 | ONTAP 9.14.1. | ONTAP 9.13.1.12.9.11.9.11. | ONTAP 9.12.1 | 零點9.11.1. ONTAP | 零點9.10.1 ONTAP 
+| 從ONTAP 無到無...開始 | 支援的功能 
 
 
-| 階層式一致性群組 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 9.20.1 | 次要系統上的 SnapLock for SnapVault 保護 
 
 
-| 利用快照提供本機保護 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 9.16.1.  a| 
+多管理員驗證
 
 
-| SnapMirror 主動同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+
+| 9.14.1.  a| 
+* SVM 災難恢復（僅限單一一致性群組）
+* CLI 支援
 
 
-| 支援 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 兩階段認可（僅限 REST API ） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
+| 9.13.1.12.9.12.9.  a| 
+* 在子一致性群組之間移動磁碟區
+* 修改一致性群組幾何
+* 監控
+* SnapMirror 非同步（僅限單一一致性群組）
 
 
-| 應用程式與元件標籤 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 複製一致性群組 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 9.12.1  a| 
+* 新增和移除磁碟區
+* 應用程式與元件標籤
+* 複製一致性群組
+* 使用新的 NAS Volume 建立 CG（僅限 REST API）
+* 使用 NVMe 命名空間建立 CG（僅限 REST API）
 
 
-| 新增和移除磁碟區 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用新的 NAS 磁碟區建立 CGS | ✓ | ✓ | ✓ | ✓ | 僅REST API |  |  
+| 9.11.1.  a| 
+* 內部組態MetroCluster
+* 兩階段認可（僅限 REST API ）
 
 
-| 使用新的 NVMe 命名空間建立 CGS | ✓ | ✓ | ✓ | ✓ | 僅REST API |  |  
 
 
-| 在子一致性群組之間移動磁碟區 | ✓ | ✓ | ✓ | ✓ |  |  |  
+| 9.10.1  a| 
+* 階層式一致性群組
+* 利用快照提供本機保護
+* SnapMirror 主動同步
 
 
-| 修改一致性群組幾何 | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| 監控 | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| 多管理員驗證 | ✓ |  |  |  |  |  |  
-
-
-| SnapMirror 非同步（僅限單一一致性群組） | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| SVM 災難恢復（僅限單一一致性群組） | ✓ | ✓ | ✓ |  |  |  |  
-
-
-| CLI 支援 | ✓ | ✓ | ✓ |  |  |  |  
 |===
 
 

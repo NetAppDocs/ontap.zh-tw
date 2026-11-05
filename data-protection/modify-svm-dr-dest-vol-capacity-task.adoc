@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: data-protection/modify-svm-dr-dest-vol-capacity-task.html 
+keywords: netapp, ontap, system manager, data, VM, resynchronize, resynchronization, resync, source, SVM, source SVM, source storage VM, destination, destination storage VM, destination SVM, protection, relationship, protection relationship, relationships, capacity 
+summary: 從 ONTAP 9.20.1 開始，儲存設備管理員和資料保護管理員可以調整 SVM DR 目的地 Volume 上的一些 Volume 容量屬性，以使目的地自動調整規模限制與來源成長保持一致，增加目的地保留的快照保留，並且服務供應商管理員可以根據目的地容量準確地管理多租戶 DR 客戶。 
+---
+= 修改 ONTAP SVM DR 關係中的目的地 Volume 容量
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，儲存設備管理員和資料保護管理員可以調整 SVM DR 目的地 Volume 上的一些 Volume 容量屬性，以使目的地自動調整規模限制與來源成長保持一致，增加目的地保留的快照保留，並且服務供應商管理員可以根據目的地容量準確地管理多租戶 DR 客戶。
+
+
+
+[[adjust-the-maximum-size-svm-dr-destination-volumes-can-grow-automatically]]
+== 調整 SVM DR 目的地 Volume 可自動成長的最大大小
+
+.步驟
+. 若要修改 Volume 的最大自動調整規模值，請輸入以下命令：
++
+`volume modify -vserver <dest svm name> -volume <vol name> -max-autosize <integer>`
+
++
+範例：
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -max-autosize 10TB
+----
+
+
+
+
+[[adjust-the-minimum-size-svm-dr-volumes-can-shrink-automatically]]
+== 調整 SVM DR Volume 可自動縮小的最小大小
+
+. 若要修改 Volume 的最小自動調整規模值，請輸入以下命令：
++
+`volume modify -vserver <dest svm name> -volume vol1 -min-autosize <integer>`
+
++
+範例：
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -min-autosize 1TB
+----
+
+
+
+
+[[change-the-volumes-autosize-mode]]
+== 變更 Volume 的自動調整規模模式
+
+. 若要變更自動調整規模模式，請輸入以下命令：
++
+`volume modify -vserver svmdr_dst -volume vol1 -autosize-mode`
+
++
+範例：
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -autosize-mode grow
+----
+
+
+
+
+[[adjust-the-amount-of-space-reserved-for-snapshots]]
+== 調整為快照預留的空間大小
+
+. 若要變更 Snapshot 快照技術預留空間的百分比，請輸入以下命令：
++
+`volume modify -vserver <dest svm name> -volume <vol name> -percent-snapshot-space <integer>`
+
++
+範例：
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -percent-snapshot-space 25
+----
+

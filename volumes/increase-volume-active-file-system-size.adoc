@@ -11,19 +11,16 @@ summary: 如果您想要將磁碟區從不支援專用卸載處理器儲存效�
 
 
 [role="lead"]
-支援8k自適應壓縮的平台在磁碟區層級節省空間。 AFF C 系列平台和支援 32k 壓縮的平台可在聚合層級節省空間。將磁碟區從 8k 自適應壓縮遷移到AFF C 系列平台或具有 32k 壓縮的平台時，您需要透過 8k 壓縮節省來增加磁碟區的活動檔案系統的大小。這可以防止磁碟區移動期間耗盡可用空間。
+支援 8k 具調適能力的壓縮的系統可在 Volume 層級節省空間。支援 QuickAssist Technology（QAT）32k 壓縮的系統可在彙總層級節省空間。在 ONTAP 9.19.1 及更早版本中，將 Volume 從支援 8k 具調適能力的壓縮的系統移轉到支援 QAT 和 32k 壓縮的系統時，您需要將 Volume 的作用中檔案系統大小增加 8k 壓縮節省的空間。這可防止 Volume 在 Volume 移動期間耗盡可用空間。
 
-以下系統支援 32k 壓縮：
+以下系統支援 QAT 和 32k 壓縮：
 
-* AFF A 系列系統：AFF A90、AFF A70、AFF A50、AFF A30
-* AFF A1K
+* AFF A 系列系統：AFF A1K、AFF A90、AFF A70、AFF A50、AFF A30
 * AFF C 系列系統：AFF C80、AFF C60、AFF C30
 * FAS 系統：FAS90、FAS70、FAS50
 
 
-詳細了解link:../concepts/builtin-storage-efficiency-concept.html["支援 32k 壓縮的AFF和FAS平台"] 。
-
-查看link:https://hwu.netapp.com/["Hardware Universe"^]以取得AFF C 系列平台的完整清單。
+深入瞭解 link:../concepts/builtin-storage-efficiency-concept.html["支援 QAT 和 32k 壓縮的 AFF 和 FAS 平台"]。
 
 .關於這項工作
 如果您使用磁碟區移動操作遷移數據，請執行下列步驟。如果您使用SnapMirror操作遷移數據，則無需手動增加活動檔案系統的大小。  SnapMirror目標磁碟區預設使用磁碟區自動調整大小，因此由於在聚合層而不是磁碟區層實現壓縮節省，預計不會耗盡空間。

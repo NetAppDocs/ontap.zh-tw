@@ -327,6 +327,40 @@ Job ID Name                 Vserver    Node           State
 ----
 
 
+
+
+[[verify-key-manager-state-before-reverting]]
+== 回復前驗證金鑰管理程式狀態
+
+在從 ONTAP 9.20.1 回復到更早的 ONTAP 版本之前，請先驗證金鑰管理程式組態對於目標版本是否處於有效狀態。
+
+.步驟
+. 查看金鑰管理程式狀態：
++
+[source, cli]
+----
+security key-manager keystore show
+----
+. 如果任何組態為 `inactive`，請在繼續回復之前將其刪除：
++
+[source, cli]
+----
+security key-manager keystore delete -vserver <svm_name>
+----
+. 檢查是否有任何金鑰管理程式作業仍在執行：
++
+[source, cli]
+----
+job show -name *keymanager*
+----
+. 如果任何金鑰管理程式作業仍在初始化，請等待其完成再開始回復。
+
+
+[NOTE]
+====
+作用中的金鑰存放區組態會作為標準回復程序的一部分來處理。回復的主要考量是 ONTAP 9.20.1 金鑰管理程式工作流程所引入的非作用中金鑰存放區項目，或是進行中的金鑰管理程式作業。
+
+====
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/storage-disk-show.html["儲存磁碟顯示"^]
 

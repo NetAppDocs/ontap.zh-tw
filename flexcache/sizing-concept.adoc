@@ -2,7 +2,7 @@
 permalink: flexcache/sizing-concept.html 
 sidebar: sidebar 
 keywords: guidelines, sizing, flexcache, volume 
-summary: 在開始配置磁碟區之前、您必須瞭解FlexCache 到有關使用功能的限制。 
+summary: FlexCache 規模限制取決於系統上安裝的 ONTAP 版本。在開始資源配置 FlexCache Volume 之前，您應該驗證您的 ONTAP 版本的限制。 
 ---
 = ONTAP FlexCache Volume 規模調整準則
 :allow-uri-read: 
@@ -11,30 +11,14 @@ summary: 在開始配置磁碟區之前、您必須瞭解FlexCache 到有關使�
 
 
 [role="lead"]
-在開始配置磁碟區之前、您必須瞭解FlexCache 到有關使用功能的限制。
+FlexCache 規模限制取決於系統上安裝的 ONTAP 版本。在開始資源配置 FlexCache Volume 之前，您應該驗證您的 ONTAP 版本的限制。
 
-一個來源Volume的大小限制FlexVol 適用於來源Volume。一個不符合原點的Volume大小FlexCache 可以小於或等於原始Volume。最佳實務做法FlexCache 是讓整個範本大小至少達到原點Volume大小的10%。
+FlexVol Volume 的大小限制適用於來源 Volume。FlexCache Volume 的大小通常小於或等於來源 Volume。您可以建立大於來源的快取，但這並不常見。FlexCache Volume 大小的最佳實務做法是至少為來源 Volume 大小的 10%。
 
-您也必須瞭解FlexCache 下列有關《關於》的額外限制：
+若要尋找關於您 ONTAP 版本的 FlexCache 規模限制的最新資訊，請完成下列步驟：
 
-[cols="55,15,15,15"]
-|===
+. 請前往 link:https://hwu.netapp.com/["NetApp Hardware Universe"]。
+. 在 *產品* 下，選擇您的平台。
+. 選擇您的 ONTAP 版本；然後選擇 *顯示結果*。
+. 捲動至或搜尋 *FlexCache 叢集限制*。
 
-
-| 限制 | 更新版本ONTAP | 更新ONTAP | ONTAP 9.6 - 9.5 
-
-
-| 您可以從來源Volume建立的FlexCache 最大數量的不全區資料 | 100 | 10. | 10. 
-
-
-| 建議的每個節點原始磁碟區數量上限 | 100 | 100 | 10. 
-
-
-| 建議FlexCache 的每個節點的最大數量的不均資料量 | 100 | 100 | 10. 
-
-
-| 建議的每個節點的每個共享區的最大FlexGroup 數量FlexCache | 800 | 800 | 40. 
-
-
-| 每個節點每FlexCache 個個個個元區的最大構成數 | 32. | 32. | 32. 
-|===

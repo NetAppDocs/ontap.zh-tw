@@ -4,480 +4,424 @@ sidebar: sidebar
 keywords: release notes, new features, ontap 9, digital advisor 
 summary: 瞭解 ONTAP 9 的新功能。 
 ---
-= ONTAP 9 版本重點摘要
+= ONTAP 9.20.1 的新增功能
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-每個 ONTAP 9 資料管理軟體版本都提供全新且增強的功能、可改善 ONTAP 的功能、管理能力、效能和安全性。
+了解 ONTAP 9.20.1 中的新功能。
 
-除了這些重點摘要之外、您還可以針對最新 ONTAP 版本中推出的所有新功能和增強功能、找到全方位的每個版本涵蓋範圍。
+如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
 
-* 深入瞭解 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["全新增強的 ONTAP MetroCluster 功能"^]。
-* 瞭解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9191.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^]。
-* 瞭解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9191.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^]。
+* 瞭解全新與增強功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster 功能"^]。
+* 深入瞭解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9201.html["適用於NetApp AFX 儲存系統的全新增強型ONTAP軟體功能"^]。
+* 深入瞭解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9201.html["適用於NetApp ASA r2 儲存系統的全新增強型ONTAP軟體功能"^]。
 * 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["對AFF、 ASA和FAS系統以及支援的交換器的全新和增強支持"^] 。
 * 瞭解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["靜態API ONTAP"^]。
 
 
-如需最新 ONTAP 9 版本中已知問題、限制和升級注意事項的詳細資訊、請參閱 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["發行說明ONTAP"^]。您必須使用 NetApp 帳戶登入、或建立帳戶才能存取版本資訊。
+若要升級至最新版的 ONTAP ，請參閱link:../upgrade/create-upgrade-plan.html["準備升級 ONTAP"]。
 
-若要升級至最新版的 ONTAP 、請參閱 xref:../upgrade/prepare.html[升級至最新版的 ONTAP] 和 xref:../upgrade/when-to-upgrade.html[我應該何時升級 ONTAP ？]
 
 
+[[data-protection]]
+== 資料保護
 
-[[ontap-9-19-1-highlights]]
-== ONTAP 9.19.1 亮點
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
-ONTAP 9.19.1 在安全性、擴充性和儲存管理方面提供了一系列新增和增強功能，以支援資料基礎架構現代化。這些增強功能有助於您擴展規模、提高營運效率並保護資料，以因應未來挑戰。如需新增功能和增強功能的完整清單，請參閱 xref:whats-new-9191.adoc[ONTAP 9.19.1 的新增功能]。
 
-* xref:../performance-admin/guarantee-throughput-qos-task.html[可設定的 QoS 突發原則]
-+
-可設定的 QoS 突發原則允許在 QoS 限制之外進行可控且有時限的效能突發，從而在尖峰事件期間提高工作負載回應能力，而不會犧牲公平性或需要過度配置。
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html[SnapMirror 雲端支援原地還原至原始來源 Volume]
+ a| 
+SnapMirror 雲端支援 FlexVol Volume 的原地還原作業，讓您能夠直接將雲端快照還原至原始來源 Volume。ONTAP 會選擇最新的通用快照並執行遞增傳輸，進而縮短還原時間。
 
-* xref:../nfs-admin/enable-nfs-over-tls-task.html[透過 TLS 1.3 的 NFS]
-+
-使用基於標準的 TLS 1.3 加密保護傳輸中的 NFS 資料，有助於加強保護並簡化企業級加密 NFS 的採用。 
 
-* xref:../s3-config/regenerate-access-keys.html[每個用戶擁有多個 S3 存取金鑰]
-+
-新增對每位使用者多個作用中 S3 存取金鑰的支援，實現無縫認證資料輪換，無需應用程式停機時間，協助客戶在維持對物件工作負載不間斷存取的同時，強化安全性與法規遵循。
 
-* xref:../snapmirror-active-sync/protect-nas-task.html[適用於 NAS 的 SnapMirror active sync]
-+
-借助 NAS 支援，SnapMirror active sync 現在是一個統一的業務連續性解決方案，可實現零 RPO 與透明的故障轉移。 
+ a| 
+xref:../snapmirror-active-sync/limits-reference.html[提高 SnapMirror 作用中同步物件限制]
+ a| 
+SnapMirror 作用中同步將每個 HA 配對支援的 Volume 數量增加至 600（適用於 SAN 和 NAS 設定）。
 
-* xref:../san-config/configure-fc-nvme-hosts-ha-pairs-reference.html[FC 直接連接]
-+
-引入安全的 FC HBA 卡支援，實現可信任主機連線功能，為硬體支援的機上 FC 安全性奠定基礎，同時保持效能並滿足企業法規遵循要求。 
 
-* xref:../san-admin/multipath-automatic-lif-failover-support.html[統一的雙主動式 LIF 故障轉移]
-+
-AFF 系統提供雙主動式多重路徑與自動 LIF 容錯移轉功能，讓所有 SAN 路徑保持最佳化的雙主動式狀態，確保主機 I/O 在容錯移轉期間能立即持續運作。 
 
-* link:https://docs.netapp.com/us-en/ontap-fli/get-started/learn-about-data-migration.html["FLI 中的 iSCSI 支援"^]
-+
-為外部 LUN 匯入 (FLI) 新增 iSCSI 支援，讓使用者能夠使用現有的 iSCSI 連線功能，以最小的中斷將區塊資料從第三方儲存系統移轉至 ONTAP。 
+ a| 
+xref:../snaplock/snapshot-lock-concept.html[搭配 SnapMirror 作用中同步 NAS 的防篡改快照支援]
+ a| 
+ONTAP 新增了對使用 SnapMirror 作用中同步 NAS FlexVol Volume 的防篡改快照支援。此增強功能可讓客戶將 SnapMirror 作用中同步 NAS 可用度與不可變的快照保護結合。
 
-* xref:../s3-config/create-modify-bucket-policy-task.html[S3 條件寫入與刪除]
-+
-啟用 S3 API 條件寫入和刪除的支援，允許應用程式在物件更新和移除期間強制執行資料一致性檢查，從而降低並行和分散式物件工作負載中意外覆寫或刪除的風險。
 
-* xref:../concepts/path-failover-concept.html#nas-path-failover[聯合 LIF 故障轉移]
-+
-AFF 和 ASA 系統支援 iSCSI 協定 LIF 在雙主動式和 active-active-scsi-only 多重路徑組態中的自動 LIF 容錯移轉，以及 NVMe/TCP 協定 LIF 在雙主動式多重路徑組態中的自動 LIF 容錯移轉。 
 
-* xref:../networking/improve-tcp-wan-performance.html[增強的 WAN 效能]
-+
-TCP RACK 增強的 WAN 效能可提升壅塞網路的處理量和恢復能力，加速遠端檔案存取和站點間資料服務。 
+ a| 
+xref:../data-protection/modify-svm-dr-dest-vol-capacity-task.html[增強型 SVM 災難恢復]
+ a| 
+ONTAP 透過允許使用標準管理員權限 Volume 修改工作流程，在 SVM-DR 目的地 Volume 上修改選定的 Volume 屬性，來增強 SVM 災難恢復，進而減少對支援協助程序的需求。
 
-* xref:../networking/configure-tls-offload.html[硬體加速的 kTLS 可加快後端叢集加密]
-+
-透過引入硬體加速的 kTLS 來增強後端叢集加密，將加密處理卸載到支援的 SmartNIC，從而提供更高的效能和更低的 CPU 例行成本，同時保持叢集和 HA 流量始終在線的安全通訊。 
+ONTAP 也將選擇加入的 SVM-DR 快速重新同步支援擴展至 FlexGroup 成員，協助承載 FlexGroup 的大型 SVM 在 DR 演練、重新同步或翻轉重新同步工作流程後，更快恢復到受保護狀態。
 
-* xref:../anti-ransomware/use-cases-restrictions-concept.html#snapmirror[針對同步複寫工作負載的 AI 驅動勒索軟體偵測]
-+
-將自主勒索軟體防護 (ARP/AI) 擴展到 SnapMirror 同步 (SAN 和 NAS) 和 SnapMirror 作用中同步 SAN 環境，在零 RPO 架構中保留偵測和恢復訊號。 
+如需詳細資訊，請參閱 xref:../data-protection/resync-svm-destination-task.html[重新同步 ONTAP SnapMirror 目的地 SVM 上的資料]。
 
-* xref:../concept-svm-admin-dashboard-sm.html[使用新的 ONTAP System Manager 儀表板監控和管理 SVM]
-+
-提供租戶友善的 SVM 管理 GUI，無需複雜的 CLI 介面。 
 
 
+ a| 
+xref:../data-protection/configure-backend-fc-replication.html[後端支援 SnapMirror 透過 FC 進行複寫]
+ a| 
+您可以透過現有的 Fibre Channel (FC) 架構設定後端 SnapMirror 非同步複寫與 SnapLock for SnapVault。
 
+這使得複寫流量能夠完全在現有的 SAN 基礎架構內傳輸。在 ONTAP 9.20.1 之前的版本中，這些複寫關係的流量完全透過叢集間 IP 網路傳輸。
 
 
-[[ontap-9-18-1-highlights]]
-== ONTAP 9.18.1 亮點
 
-ONTAP 9.18.1 在安全性、可擴充性和儲存管理方面提供了新的和增強的功能，以支援資料基礎架構現代化。這些增強功能可協助您擴展規模、提高營運效率並確保未來資料安全。如需查看所有新增功能和改進的完整列表，請參閱xref:whats-new-9181.adoc[ONTAP 9.18.1 的新增功能]。
+ a| 
+xref:../consistency-groups/protect-task.html[從非 SnapLock 來源一致性群組複寫至 SnapLock for SnapVault 目的地一致性群組]
+ a| 
+您可以從非 SnapLock 來源一致性群組複寫至 SnapLock for SnapVault 目的地一致性群組。SnapLock for SnapVault 可保護複寫的一致性群組免於意外或惡意刪除。
 
-* xref:../networking/configure-backend-encryption.html[後端叢集高可用性加密]
-+
-能夠使用 mTLS 對後端叢集網路進行加密。
 
-* xref:../networking/configure_network_security_using_federal_information_processing_standards_fips.html[PQC對傳輸中資料的支持]
-+
-能夠使用後量子演算法處理傳輸中的資料。
 
-* xref:../networking/ipsec-prepare.html[支援 IPv6 IPSec 和硬體卸載]
-+
-支援使用 IPv6 位址進行硬體卸載的 IPSec。
+ a| 
+xref:../san-admin/fc-sp-3-security-support.html[使用 Broadcom 安全的 HBA 進行 FC-SP-3 驗證和加密]
+ a| 
+ONTAP 支援在搭配 AFF 與 FAS 系統的 Broadcom 安全 HBA 上使用 Fibre Channel 安全傳輸協定 3 （FC-SP-3） 驗證與加密。FC-SP-3 支援可實現硬體層級的端對端加密與裝置驗證，以保護 FC 與 NVMe/FC SAN 主機和 ONTAP 儲存系統之間傳輸的資料，同時符合 T11 Fibre Channel 安全性標準。
 
-* xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[ARP/AI 支援FlexGroup卷]
-+
-NetApp FlexGroup磁碟區支援 ARP/AI，提供基於機器學習的進階勒索軟體偵測和保護。
+加密已卸載，因此不會對您的儲存系統造成效能影響。
 
-* xref:../san-admin/nvme-copy-offload.html[NVMe 的複製卸載]
-+
-透過將複製操作直接卸載到儲存設備來加速大數據傳輸，從而降低主機 CPU 和網路負載。
+|===
 
-* xref:../s3-snapshots/list-restore-s3-snapshot.html[儲存驅動的 S3 儲存桶快照恢復]
-+
-能夠恢復 S3 儲存桶中損壞的對象，或將整個儲存桶恢復到現有儲存桶之上。
 
+[[fpolicy-enhancements]]
+== FPolicy 增強功能
 
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
 
+ a| 
+xref:../nas-audit/supported-file-operation-filter-fpolicy-nfsv4-concept.html[FPolicy 對 NFS 4.2 的支援]
+ a| 
+FPolicy 將檔案存取監控擴展到 NFSv4.2，從而為使用最新 NFS 傳輸協定版本的環境提供稽核、法規遵循和網路彈性工作流程。FPolicy 會為 NFSv4.2 檔案作業產生通知，包括擴充屬性寫入（SETXATTR、REMOVEXATTR）以及透過 SETATTR/GETATTR 進行的安全性標籤變更。NFSv4.2 通知需要設定為 protobuf 格式的外部引擎。
 
-[[ontap-9-17-1-highlights]]
-== ONTAP 9.17.1 亮點
 
-ONTAP 9.17.1 在 AI 驅動的 SAN 自主勒索軟體防護方面提供了創新，並透過SnapMirror主動同步和一致性群組分層管理增加了 NVMe 前端主機支援。這些增強功能鞏固了 NetApp 在資料安全和網路彈性方面的領導地位，提高了ONTAP 的效能、可擴展性、效率和業務連續性。有關新功能和增強功能的完整列表，請參閱xref:whats-new-9171.adoc[ONTAP 9.17.1 的新增功能] 。
 
-* xref:../anti-ransomware/index.html[支援具有自主勒索軟體防護功能的 SAN]
-+
-ARP/AI 支援具備加密型異常偵測功能的 SAN Volume，引入用於詳細熵統計資料的新命令，並將先前主要針對 NAS 的勒索軟體保護郵件統一整合至 System Manager 中。可設定的偵測閾值與更具確定性的快照保留，為各種工作負載提供更大的靈活度。
+ a| 
+xref:../nas-audit/supported-file-operation-filter-fpolicy-s3.html[Fpolicy 對 S3 物件儲存的支援]
+ a| 
+FPolicy 為 S3 物件工作流程提供安全性監控。這為檔案和物件儲存提供統一的 FPolicy 架構，簡化混合資料環境的安全性操作。FPolicy for S3 物件提供物件生命週期可見度，以監控物件建立、刪除和中繼資料標籤變更，滿足安全性、法規遵循和稽核要求。此功能提供無中斷監控，不會影響效能。
 
-* xref:../system-admin/use-hsts-task.html[HTTP 嚴格傳輸安全性 (HSTS) 支持]
-+
-ONTAP 9.17.1 支援 Web 服務的 HTTP 嚴格傳輸安全，以便能夠在使用者瀏覽器和ONTAP之間實作安全的 HTTPS 通訊。
+|===
 
-* xref:../networking/ipsec-prepare.html[透過鏈路聚合組進行 IPsec 硬體卸載]
-+
-ONTAP 9.17.1 支援鏈路聚合組的 IPsec 硬體卸載，擴展了ONTAP 9.16.1 中引入的硬體卸載支援。
 
-* xref:../networking/ipsec-prepare.html[IPsec 後量子預共享密鑰支持]
-+
-ONTAP支援 IPsec 的後量子預共用金鑰，以防止未來潛在的量子電腦攻擊。
+[[nas]]
+== NAS
 
-* xref:../encryption-at-rest/manage-keys-barbican-task.html[OpenStack Barbican 金鑰管理器支援]
-+
-ONTAP支援 OpenStack 的 Barbican 金鑰管理器用於NetApp磁碟區加密 (NVE) 金鑰。
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
-* xref:../authentication/configure-jit-elevation-task.html[即時 (JIT) 權限提升支持]
-+
-ONTAP支援基於角色的存取控制 (RBAC) 的 JIT 權限提升。使用者可以請求臨時提升到已配置的角色，從而按需存取特權命令。叢集管理員可以設定哪些人可以存取 JIT 權限提升，以及何時允許存取以及允許存取多長時間。
 
-* xref:../system-admin/configure-saml-authentication-task.html[支援 Entra IdP 和 IdP 群組支援 SAML 身份驗證]
-+
-ONTAP支援使用 Microsoft Entra 作為 SAML 身分提供者。此外，IdP 提供的群組資訊可以對應到ONTAP角色。
+ a| 
+xref:../smb-admin/supported-versions-functionality-concept.html[Windows 用戶端的 SMB 規範化名稱查詢支援]
+ a| 
+Windows 用戶端只需單一要求即可擷取規範的檔案和目錄名稱，從而降低檔案開啟延遲，並提高企業桌面、應用程式和檔案伺服器的 SMB 相容性。ONTAP 自動傳回開啟檔案和目錄的規範路徑，無需額外組態即可避免在 Windows 11 24H2 及更新版本的用戶端上進行逐一元件的查閱。
 
-* xref:../nvme/support-limitations.html#features[SnapMirror主動同步支援透過 NVMe 進行主機訪問]
-+
-SnapMirror主動同步功能新增了對 VMware 工作負載的 NVMe 存取支持，支援 NVMe/TCP 和 NVMe/FC 主機訪問，適用於雙節點ONTAP叢集。 VMware
 
-* xref:../snapmirror-active-sync/index.html[ONTAP Cloud Mediator 支援SnapMirror主動同步]
-+
-ONTAP Cloud Mediator 是ONTAP 9.17.1 中引入的新功能，支援SnapMirror主動同步關係。基於雲端的調解器（例如ONTAP Mediator）可充當SnapMirror主動同步關係的仲裁見證，確保透明的故障轉移，同時降低維護和管理第三個站點的操作複雜性。
 
+ a| 
+xref:../nfs-admin/support-vmware-vstorage-over-nfs-concept.html[VMware NFS 資料儲存的自動空間回收]
+ a| 
+ONTAP 透過適用於 VMware VAAI 的 NetApp NFS 外掛程式支援 NFS 資料儲存的自動空間回收。這有助於在 VMware ESXi 9.0 或更新版本的主機發出 UNMAP 作業時，從精簡配置的 VMDK 區塊範圍中回收空間。
 
 
 
+ a| 
+xref:../volumes/cautions-increasing-maximum-directory-size-concept.html[ONTAP FlexVol 磁碟區的最大目錄大小]
+ a| 
+ONTAP 透過支援高達 4GB 的目錄大小，提升了包含多達約 2500 萬個檔案之超大型目錄的效能。執行在單一目錄中產生極高檔案數量之工作負載（例如 AI 訓練）的客戶，可享有避免以往大型目錄所造成之效能損失的優點。它還能確保目錄在資料保護容錯移轉後仍保持完整索引，藉此提高彈性，因此即使 SnapMirror 關係中斷，複寫的複本也能發揮良好的效能。此功能適用於 AFF 和 FAS 儲存系統，包括 MetroCluster 部署；可視需要為每個 Volume 啟用。
 
-[[ontap-9-16-1-highlights]]
-== ONTAP 9.16.1 重點介紹
 
-ONTAP 9 。 16.1 在安全管理，資料保護，網路， SAN 管理和儲存管理等領域提供全新且增強的功能。如需新功能與增強功能的完整清單，請參閱xref:whats-new-9161.adoc[ONTAP 9.16.1 的新功能]。
 
-* xref:../multi-admin-verify/index.html#rule-protected-commands[多重管理驗證（ MAV ）增強功能]
-+
-ONTAP 9.16.1 為 MAV 架構新增了更多命令，以增強對惡意內部人員的保護。這些增強功能包括許多 Consistency Group （CG）、VScan 和 Autonomous Ransomware Protection （ARP/AI） 管理命令，以及 NVMe 組態命令。
+ a| 
+xref:../task_nas_provide_client_access_with_name_services.html[自動 SID 到 UNIX ID 轉換支援]
+ a| 
+ONTAP 為 LDAP 連接的 SVM 引入了自動 SID 到 UNIX ID 轉換支援，可根據 Windows SID 產生和反轉 POSIX UID/GID。這消除了在 Active Directory 中手動維護 uidNumber / gidNumber 屬性的需要，從而降低了管理成本，並有助於確保 NFS 和 SMB 之間一致的檔案存取。這項符合業界標準的功能對於正在將大型網路從基於 SSSD 的 NAS 平台移轉並希望保持身分對應一致性的客戶尤其重要。此功能預設為停用，需針對每個 SVM 進行設定。
 
-* xref:../anti-ransomware/index.html[利用 AI 增強功能（ ARP/AI ）提供自主勒索軟體保護]
-+
-Autonomous Ransomware Protection 已升級全新的 AI 功能，使其能夠以 99% 的精準率與召回率偵測並回應勒索軟體攻擊。由於 AI 是在完整的資料集上進行訓練，因此在 FlexVol® Volume 上執行的 ARP/AI 不再需要學習期，且 ARP/AI 會立即以作用中模式啟動。ARP/AI 還引進了獨立於 ONTAP 升級之外的自動更新功能，以確保針對最新威脅提供持續的保護與彈性。
+|===
 
-* 透過 TLS 1.3 的 NVMe / TCP
-+
-透過簡化的組態和比 IPSec 更好的效能，保護通訊協定層的 NVMe / TCP 「無線傳輸」。
 
-* xref:../networking/ipsec-prepare.html[IPsec 硬體卸載支援新的網路卡]
-+
-ONTAP 9.16.1 在最新一代的 AFF A 系列和 AFF C 系列系統平台中，將 IPSec 硬體卸載功能運用在卸載卡上，可提供更高的「有線」加密效能。
+[[san]]
+== SAN
 
-* xref:../san-admin/enable-space-allocation.html[支援 NVMe 空間分配]
-+
-NVMe 命名空間現在支援空間釋放（也稱為「打洞」和「取消映射」）。當主機應用程式刪除資料時，空間釋放可協助精簡配置磁碟區和 NVMe 命名空間回收未使用的空間。這大大提高了整體儲存效率，特別是對於資料週轉率高的檔案系統。
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
-* xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[FlexGroup 磁碟區的進階容量平衡]
-+
-NetApp FlexGroup Volume 可選擇性地在多個後端組成磁碟區之間的單一檔案中等量資料，減少效能瓶頸，並在平衡後端組成磁碟區的容量時增加一致性。
 
-* xref:../svm-migrate/index.html[SVM 資料移動性支援，可移轉 MetroCluster 組態]
-+
-ONTAP 支援下列 MetroCluster SVM 移轉：
+ a| 
+xref:../revert/remove-persistent-reservation-registrations.html[增加 SCSI 持續保留註冊規模]
+ a| 
+每個 LUN 支援的最大 SCSI-3 持續保留註冊數從 182 增加到 256。這有助於較大的叢集 SAN 環境（例如 VMware 客體叢集和 Windows Server 容錯移轉叢集）在共享的 LUN 上支援更多主機註冊，而無需變更持續保留管理工作流程。
 
-+
-** 在非 MetroCluster 組態和 MetroCluster IP 組態之間移轉 SVM
-** 在兩個 MetroCluster IP 組態之間移轉 SVM
-** 在 MetroCluster FC 組態和 MetroCluster IP 組態之間移轉 SVM
 
 
+ a| 
+SAN 複本卸載效能提升
+ a| 
+ONTAP 可提升符合條件的 NVMe 和 SCSI 複本工作負載的 SAN 複本卸載效能。詳情請聯絡您的 NetApp 代表。
 
 
 
+ a| 
+xref:../svm-migrate/migrate-svm-task.html[支援將儲存設備虛擬機器從 ASA r2 系統無中斷移轉到 ASA 或 AFF 系統]
+ a| 
+您可以將儲存設備虛擬機器（SVM）從 2 節點 ASA r2 叢集無中斷地移轉到 2 節點 ASA 叢集或 2 節點 AFF 叢集。在移轉過程中，現有的主機對映以及 LUN 和命名空間的儲存設備單元組態將保持不變，從而降低維運工作量和風險。
 
-[[ontap-9-15-1-highlights]]
-== ONTAP 9.15.1 重點介紹
+|===
 
-ONTAP 9.15.1 在安全管理、資料保護和 NAS 工作負載支援等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9151.adoc[ONTAP 9.15.1 的新功能]。
 
-* https://www.netapp.com/data-storage/aff-a-series/["支援全新 AFF A 系列系統、專為 AI 打造的儲存設備"^]
-+
-ONTAP 9.15.1 支援全新的高效能 AFF A1K 、 AFF A90 和 AFF A70 系統、專為下一代商業工作負載所設計、例如 AI / ML 訓練和推論。這種新型系統的效能是現有 AFF A 系列產品的兩倍，並可「持續運作」提升儲存效率，而不會影響效能。
+[[s3-object-storage]]
+== S3 物件儲存
 
-* xref:../smb-admin/windows-backup-symlinks.html[伺服器上的 Windows 備份應用程式和 Unix 風格的符號鏈接]
-+
-從 ONTAP 9.15.1 開始，您也可以選擇備份符號連結本身，而不是它指向的資料。這可以帶來許多好處，包括提升備份應用程式的效能。您可以使用 ONTAP CLI 或 ONTAP REST API 啟用此功能。
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
-* xref:../authentication/dynamic-authorization-overview.html[動態授權]
-+
-ONTAP 9.15.1 引進動態授權的初始架構、這項安全功能可判斷系統管理員帳戶所發出的命令是否應遭到拒絕、是否提示進行額外驗證、或是否允許繼續。判斷是根據使用者帳戶的信任分數、並考量時間、位置、 IP 位址、信任的裝置使用量、以及使用者的驗證和授權記錄等因素。
 
-* xref:../multi-admin-verify/index.html#rule-protected-commands[擴大多管理驗證的影響範圍]
-+
-ONTAP 9.15.1 RC1 為 MAV 架構新增了超過一百個命令、以進一步保護免於惡意內部人員的攻擊。
+ a| 
+xref:../s3-snapmirror/index.html#snapmirror-s3-requirements[MetroCluster 支援 SnapMirror S3]
+ a| 
+您可以在 MetroCluster 組態中建立 SnapMirror S3 關係，這些關係在切換和切回過程中可從作用中站台持續保持可用並恢復運作。
 
-* TLS 1.3 加密支援叢集對等關係等功能
-+
-ONTAP 9.15.1 針對 S3 儲存、 FlexCache 、 SnapMirror 和叢集對等加密、推出 TLS 1.3 加密支援。FabricPool 、 Microsoft Azure Page Blobs 儲存設備和 SnapMirror Cloud 等應用程式在 9.15.1 版中持續使用 TLS 1.2 。
 
-* 支援 TLS 上的 SMTP 流量
-+
-透過支援 TLS 的電子郵件安全傳輸 AutoSupport 資料。
 
-* xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步適用於對稱的主動 / 主動式組態]
-+
-這項新功能可提供同步雙向複寫、以利業務持續運作和災難恢復。透過跨多個故障網域同時讀取及寫入資料、保護關鍵 SAN 工作負載的資料存取、實現不中斷的作業、並將災難或系統故障期間的停機時間降至最低。
+ a| 
+xref:../s3-config/create-bucket-lifecycle-rule-task.html[MetroCluster 支援 ONTAP S3 儲存桶生命週期管理]
+ a| 
+您可以在 MetroCluster 組態中為原生 S3 儲存桶建立 ONTAP S3 儲存桶生命週期管理規則。
 
-* xref:../flexcache-writeback/flexcache-writeback-enable-task.html[FlexCache 回寫]
-+
-FlexCache 回寫功能可讓用戶端在本機寫入 FlexCache 磁碟區，相較於直接寫入原始磁碟區，可減少延遲並改善效能。新寫入的資料會以非同步方式複寫回原始磁碟區。
 
-* xref:../nfs-rdma/index.html[NFSv3 over RDMA]
-+
-NFSv3 over RDMA 支援可透過 TCP 提供低延遲、高頻寬存取、協助您解決高效能需求。
 
+ a| 
+xref:../s3-config/create-s3-object-store-server-task.html[靈活的 S3 儲存桶規模]
+ a| 
+ONTAP 支援為新的 S3 儲存桶設定預設大小。這有助於減少應用程式透過 S3 API 建立儲存桶而未指定容量時的手冊調整大小操作。如果未設定預設大小，則儲存桶建立行為保持不變。
 
 
 
+ a| 
+xref:../s3-multiprotocol/create-nas-bucket-task.html[位於 FlexCache Volume 上的 S3 NAS 儲存桶（具有 FlexVol 來源）]
+ a| 
+S3 NAS 儲存貯體支援在具有 FlexVol® 來源的 FlexCache® Volume 上使用。支援單一物件 S3 作業 （PUT、GET、DELETE、HEAD、LIST）。不支援多部分上傳，因為底層 FlexVol® Volume 不支援精細資料分散。
 
-[[ontap-9-14-1-highlights]]
-== ONTAP 9.14.1 重點摘要
 
-ONTAP 9.14.1 在 FabricPool 、反勒索軟體保護、 OAuth 等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9141.adoc[ONTAP 9.14.1 的新功能]。
 
-* xref:../volumes/determine-space-usage-volume-aggregate-concept.html[WAFL 保留減少]
-+
-ONTAP 9.14.1 將 WAFL 保留空間減少至 30 TB 以上、可立即增加 5% 的 FAS 和 Cloud Volumes ONTAP 系統可用空間。
+ a| 
+xref:../s3-multiprotocol/create-nas-bucket-task.html[適用於 FlexCache Volume 上 NAS 儲存桶的 S3 伺服器端複本支援]
+ a| 
+FlexCache Volume 上的 S3 NAS 儲存桶支援使用 S3 CopyObject 和 UploadPartCopy API 進行伺服器端物件複本操作。您可以在同一個 FlexCache NAS 儲存桶內複製物件，或是將物件從由 FlexGroup Volume 支援的 S3 NAS 儲存桶複製到 FlexCache NAS 儲存桶。
 
-* xref:../fabricpool/enable-disable-volume-cloud-write-task.html[FabricPool 增強功能]
-+
-FabricPool 提供更高的效益 xref:../fabricpool/enable-disable-aggressive-read-ahead-task.html[讀取效能] 並可直接寫入雲端、降低空間不足的風險、並將冷資料移至成本較低的儲存層、進而降低儲存成本。
 
-* link:../authentication/oauth2-deploy-ontap.html["支援 OAuth 2.0"]
-+
-ONTAP 支援 OAuth 2.0 架構、可透過系統管理員進行設定。有了 OAuth 2.0 、您就能安全地存取自動化架構的 ONTAP 、而無需建立或將使用者 ID 和密碼公開給純文字指令碼和執行手冊。
 
-* link:../anti-ransomware/manage-parameters-task.html["自主勒索軟體保護（ ARP ）增強功能"]
-+
-ARP 可讓您更有效地控制事件安全性、讓您調整建立警示的條件、並降低誤報的可能性。
+ a| 
+xref:../s3-config/ontap-s3-supported-actions-reference.html[ONTAP S3 靈活 Checksum 支援]
+ a| 
+ONTAP S3 支援與 AWS 相容的 CRC-64NVME Checksum，用於 S3 NAS 儲存桶。當 S3 用戶端為支援的上傳和多部分作業提供 Checksum 資訊時，ONTAP 會驗證並儲存 Checksum，並為支援的 GET 和 HEAD 要求傳回 Checksum 資訊。
 
-* xref:../data-protection/create-delete-snapmirror-failover-test-task.html[SnapMirror 災難恢復在 System Manager 中進行演練]
-+
-System Manager 提供簡單的工作流程、可在遠端位置輕鬆測試災難恢復、並在測試後進行清理。此功能可讓測試更輕鬆、更頻繁、並提高恢復時間目標的信心。
+|===
 
-* xref:../s3-config/index.html[S3 物件鎖定支援]
-+
-ONTAP S3 支援物件鎖定 API 命令、可讓您保護寫入 ONTAP S3 的資料、避免遭到刪除
-使用標準 S3 API 命令、並確保重要資料在適當的時間內受到保護。
 
-* xref:../assign-tags-cluster-task.html[叢集] 和 xref:../assign-tags-volumes-task.html[Volume] 標記
-+
-將中繼資料標記新增至磁碟區和叢集、這些標記會隨著資料從內部部署移至雲端並進行反轉。
+[[security]]
+== 安全性
 
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
 
+ a| 
+用於管理連線泛洪與預叢集增強功能的 Apache 公平佇列
+ a| 
+ONTAP 在管理 Web 伺服器上引進了選擇加入、預設關閉的來源 IP 公平佇列機制，以協助在管理連線激增期間維持對 REST、System Manager 及 ONTAPI 的存取。ONTAP 也支援透過僅限預先叢集的 REST API 進行映像安裝，並增強動態主機設定協定（DHCP）的處理，確保在節點等待叢集設定期間，預先叢集節點管理 LIF 能夠在租約續約與 IP 位址變更時保持可用。
 
 
-[[ontap-9-13-1-highlights]]
-== ONTAP 9.13.1 重點介紹
 
-ONTAP 9.13.1 在防勒索軟體保護、一致性群組、服務品質、租戶容量管理等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9131.adoc[ONTAP 9.13.1 的新功能]。
+ a| 
+xref:../anti-ransomware/modify-snapshot-options-arpai.html[增強對 ARP/AI 快照回應原則的控制]
+ a| 
+您可以在 SVM 或 Volume 層級設定 ARP/AI 快照回應原則，以控制 ARP/AI 在偵測到異常活動時是否建立快照。有三種原則可供選擇： `alert-with-proactive-and-periodic-snapshot` （預設，保留現有行為）、 `alert-with-proactive-snapshot` （僅攻擊快照，無定期快照），以及 `alert-only` （僅警示與事件記錄，不建立快照）。升級至 9.20.1 後，預設的定期快照最大數量將從 6 變更為 2，預設保留期間將從 12 小時變更為 7 小時，除非先前已修改過這些節點層級選項。
 
-* 自主勒索軟體保護（ ARP ）增強功能：
-+
-** xref:../anti-ransomware/enable-default-task.adoc[自動啟用]
-+
-有了 ONTAP 9.13.1 、 ARP 在擁有足夠的學習資料後、就會自動從訓練模式移轉至正式作業模式、免除管理員在 30 天之後啟用的需求。
 
-** xref:../anti-ransomware/support-arpai.html#multi-admin-verification-with-arp-ai-protected-volumes[多重管理驗證支援]
-+
-多重管理驗證支援 ARP 停用命令、確保沒有單一管理員可以停用 ARP 、將資料暴露於可能的勒索軟體攻擊之中。
 
-** xref:../anti-ransomware/use-cases-restrictions-concept.html[FlexGroup 支援]
-+
-從 ONTAP 9.13.1 開始， ARP 支援 FlexGroup 磁碟區。ARP 可以監控並保護橫跨叢集中多個磁碟區和節點的 FlexGroup 磁碟區，甚至是最大的資料集都能使用 ARP 來保護。
+ a| 
+xref:../encryption-at-rest/enable-external-key-management-96-later-nve-task.html[資料 SVM 的金鑰管理工作流程改進]
+ a| 
+在資料 SVM 上啟用外部金鑰管理程式後， ONTAP 可以自動將該 SVM 的 Volume 加密金鑰從管理範圍的金鑰管理程式移轉到新的資料 SVM 金鑰管理程式。這簡化了向外部金鑰管理的轉換，並省去了標準工作流程中分隔的手冊移轉步驟。
 
 
 
-* xref:../consistency-groups/index.html[系統管理程式中一致性群組的效能與容量監控]
-+
-效能與容量監控可針對每個一致性群組提供詳細資料、讓您在應用程式層級快速識別及報告潛在問題、而不只是在資料物件層級。
+ a| 
+xref:../multi-admin-verify/index.html[支援將 IdP、AD 和 LDAP 群組作為 MAV 核准者]
+ a| 
+除了個別系統管理員之外，MAV 核准群組還可以包含身分供應商 (IdP)、Active Directory (AD) 和 LDAP (nsswitch) 群組作為核准者。支援的群組類型包括 Entra ID、ADFS、AD 網域群組和 LDAP 群組。在 IdP、AD 或 LDAP 目錄中新增或移除使用者，無需變更 MAV 組態。使用者群組成員資格的變更，會在使用者下次登入重新驗證後生效。您可以使用 security multi-admin-verify registered-operations show 命令，顯示目前叢集上所有受 MAV 保護的可用作業。
 
-* xref:../volumes/manage-svm-capacity.html[租戶容量管理]
-+
-多租戶客戶和服務供應商可以設定每個 SVM 的容量限制、讓租戶能夠執行自助服務佈建、而不會有一個租戶在叢集上過度使用容量的風險。
 
-* xref:../performance-admin/adaptive-policy-template-task.html[服務品質的天花板和地板]
-+
-ONTAP 9.13.1 可讓您將磁碟區、 LUN 或檔案等物件分組、並指派 QoS 上限（最大 IOPs ）或最低 IOPs （最低 IOPs ）、以改善應用程式效能期望。
 
+ a| 
+xref:../networking/configure_snmpv3_users_in_a_cluster.html[支援 SNMPv3 SHA-512 驗證]
+ a| 
+ONTAP 支援對 SNMPv3 使用者進行 SHA-512 驗證。此增強功能可讓您對外部 SNMP 用戶端和交換器監控（包括需要 SHA-512 驗證的交換器）使用更強大的 SNMPv3 驗證。如需詳細資訊，請參閱「在 ONTAP 叢集中設定 SNMPv3 使用者」和「設定 SNMPv3 以進行乙太網路交換器健全狀況監控」。
 
+如需詳細資訊，請參閱 https://docs.netapp.com/us-en/ontap-systems-switches/switch-cshm/config-snmpv3.html["設定 SNMPv3 以監控乙太網路交換器的健全狀況"]。
 
+|===
 
 
-[[ontap-9-12-1-highlights]]
-== ONTAP 9.12.1 重點摘要
+[[storage-efficiency-enhancements]]
+== 儲存效率提升
 
-ONTAP 9.12.1 在安全強化、保留、效能等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9121.adoc[ONTAP 9.12.1 的新功能]。
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
-* xref:../snaplock/snapshot-lock-concept.html[防竄改快照]
-+
-有了 SnapLock 技術，您就可以保護快照，避免在來源或目的地上遭到刪除。
 
-+
-保護主要與次要儲存設備上的快照、避免勒索軟體攻擊者或惡意系統管理員刪除、進而保留更多恢復點。
+ a| 
+xref:../concepts/capacity-measurements.html[簡化儲存效率資料減量率的報告]
+ a| 
+儲存效率資料減量率 (DRR) 僅包含可縮減資料，從而更精確地評估 ONTAP 儲存效率空間節約效益。在 ONTAP 9.19.1 及更早版本中，DRR 同時包含可縮減資料和不可縮減資料。
 
-* xref:../anti-ransomware/index.html[自主勒索軟體保護（ ARP ）增強功能]
-+
-根據主要儲存設備已完成的篩選模式、立即在次要儲存設備上啟用智慧型自主勒索軟體保護。
 
-+
-容錯移轉之後、立即識別二級儲存設備上可能發生的勒索軟體攻擊。系統會立即擷取開始受到影響的資料，並通知系統管理員，協助阻止攻擊並加強還原。
 
-* xref:../nas-audit/plan-fpolicy-event-config-concept.html[FPolicy]
-+
-單鍵啟動 ONTAP FPolicy 可自動封鎖已知的惡意檔案簡化的啟動有助於防範使用一般已知副檔名的典型勒索軟體攻擊。
+ a| 
+xref:../concepts/builtin-storage-efficiency-concept.html[將 Volume 從非 QAT 系統移轉到 QAT 系統後，效能提升]
+ a| 
+ONTAP 可減少將 Volume 從不支援 QuickAssist 技術 (QAT) 的系統移轉至支援該技術的系統後，可能發生的額外讀取延遲與 CPU 使用率。
 
-* xref:../system-admin/ontap-implements-audit-logging-concept.html[安全強化：防竄改保留記錄]
-+
-ONTAP 中的防竄改保留記錄可確保遭入侵的系統管理員帳戶不會隱藏惡意動作。如果系統不知情、就無法變更或刪除管理員和使用者歷程記錄。
 
-+
-記錄並稽核所有管理動作、無論來源為何、都能保證擷取所有影響資料的動作。每當系統稽核記錄遭到竄改、以任何方式通知系統管理員變更時、就會產生警示。
 
-* xref:../authentication/setup-ssh-multifactor-authentication-task.html[安全強化：擴充的多因素驗證]
-+
-多重驗證（ MFA ） for CLI （ SSH ）支援 Yib金 鑰實體硬體權杖裝置、確保攻擊者無法使用遭竊的認證或遭入侵的用戶端系統來存取 ONTAP 系統。採用 System Manager 的 MFA 支援 Cisco Duo 。
+ a| 
+自動重複資料刪除技術排程器（ADS）最佳化
+ a| 
+ONTAP 提升了 ADS（自動重複資料刪除排程器）的效能，允許每個節點有更多並行的重複資料刪除工作階段，以及更智慧、更具針對性的節流，以進一步平衡用戶端 I/O。DP Volume（來自 SnapMirror 傳輸）上的重複資料刪除活動和全域重複資料刪除工作階段，會與一般 Volume 重複資料刪除一起代管，這可減少爭用與中繼資料成長。您無需變更組態，即可獲得儲存效率節約的優點，尤其是在混合工作負載下。此功能預設為啟用，並適用於 AFF 儲存系統。
 
-* 檔案物件雙重性（多重傳輸協定存取）
-+
-檔案物件雙重性可讓原生 S3 傳輸協定讀取和寫入相同資料來源的存取權、而該資料來源已具有 NAS 傳輸協定存取權。您可以將儲存設備同時存取為檔案或來自相同資料來源的物件、不需要複製資料來搭配不同的傳輸協定（ S3 或 NAS ）使用、例如使用物件資料的分析。
+|===
 
-* xref:../flexgroup/manage-flexgroup-rebalance-task.html[重新平衡FlexGroup]
-+
-如果 FlexGroup 成員節點容量失衡，FlexGroup 可以透過 ONTAP CLI、ONTAP REST API 和 System Manager 進行無中斷的重新平衡和管理。為了獲得最佳效能，FlexGroup 內的成員節點已使用容量應均勻分佈。
 
-* 儲存容量增強功能
-+
-WAFL 空間保留空間已大幅減少，每個聚合最多可提供 40 TiB 更多可用容量。
+[[storage-resource-management-enhancements]]
+== 儲存資源管理增強功能
 
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
 
 
+ a| 
+xref:../s3-config/delete-recover-bucket-with-data-task.html[支援刪除包含物件的 ONTAP S3 儲存桶]
+ a| 
+管理員可以在使用可設定的基於保留的恢復視窗時，安排刪除包含物件的儲存桶。這可讓儲存桶在保留期到期前恢復。此功能可減少過期積壓，並使高變動率工作負載的容量能夠更快地重新利用。
 
 
-[[ontap-9-11-1-highlights]]
-== ONTAP 9.11.1 重點摘要
 
-ONTAP 9.11.1 在安全性、保留、效能等方面提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9111.adoc[ONTAP 9.11.1 的新功能]。
+ a| 
+xref:../flexcache/sizing-concept.html[FlexCache 規模限制增加]
+ a| 
+當每個 Volume 使用一個構成要素時，支援的 FlexCache Volume 數量會增加至每個節點 2500 個，以及每個 HA 配對 5000 個。
 
-* xref:../multi-admin-verify/index.html[多管理員驗證]
-+
-多重管理驗證（ MAV ）是業界首創的原生驗證方法，需要多項核准，才能執行敏感的管理工作，例如刪除快照或磁碟區。MAV 實作所需的核准可防止惡意攻擊和資料意外變更。
+您可以從來源 Volume 建立的 FlexCache Volume 數量增加至 200，每個來源的回寫快取數量增加至 50。
 
-* xref:../anti-ransomware/index.html[增強的自主勒索軟體保護功能]
-+
-自主勒索軟體保護（ ARP ）利用機器學習功能、以更精細的方式偵測勒索軟體威脅、讓您能夠快速識別威脅、並在發生資料外洩時加速恢復。
 
-* xref:../flexgroup/supported-unsupported-config-concept.html#features-supported-beginning-with-ontap-9-11-1[SnapLock Compliance for FlexGroup Volumes]
-+
-透過 WORM 檔案鎖定保護資料、保護電子設計自動化、媒體與娛樂等工作負載的多 PB 資料集、讓資料無法變更或刪除。
 
-* xref:../flexgroup/fast-directory-delete-asynchronous-task.html[非同步目錄刪除]
-+
-使用 ONTAP 9.11.1 時、檔案刪除會發生在 ONTAP 系統的背景中、讓您輕鬆刪除大型目錄、同時消除對主機 I/O 的效能和延遲影響
+ a| 
+xref:../flexcache/supported-unsupported-features-concept.html[搭配 FlexCache 的 NVFail 支援]
+ a| 
+您可以建立與已啟用 NVFAIL 來源的 FlexCache 關係。您也可以獨立於來源 Volume ，在快取 Volume 上啟用 NVFAIL 。在發生 NVFAIL 的來源或快取 Volume 上， ONTAP 會阻止資料讀取或修改，同時保留已修改快取資料的寫回，並在恢復後恢復正常的 I/O 。
 
-* xref:../s3-config/index.html[S3 增強功能]
-+
-利用 ONTAP 簡化及擴充 S3 的物件資料管理功能、在儲存區層級提供額外的 API 端點和物件版本設定、讓物件的多個版本儲存在同一個儲存區中。
 
-* System Manager增強功能
-+
-System Manager 支援進階功能、可最佳化儲存資源並改善稽核管理。這些更新包括管理和設定儲存集合體的增強功能、增強系統分析的可見度、以及 FAS 系統的硬體視覺化。
 
+ a| 
+非同步刪除的效能增強
+ a| 
+ONTAP 可提升非同步刪除效能，並加快 NAS/SMB 用戶端的空間回收。詳情請聯絡您的 NetApp 代表。
 
 
 
+ a| 
+xref:../data-protection/calculate-reclaimable-space-task.html[支援計算 FlexGroup Volume 上的可回收空間]
+ a| 
+ONTAP 支援在刪除 FlexGroup Volume 上的快照之前重新計算可回收空間。
 
-[[ontap-9-10-1-highlights]]
-== ONTAP 9.10.1 重點摘要
 
-ONTAP 9.10.1 在安全強化、效能分析、 NVMe 傳輸協定支援和物件儲存備份選項等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-9101.adoc[ONTAP 9.10.1 的新功能]。
 
-* xref:../anti-ransomware/index.html[自主勒索軟體保護]
-+
-自動勒索軟體保護會自動建立磁碟區快照，並在偵測到異常活動時向管理員發出警示，讓您能夠快速偵測勒索軟體攻擊並更快地恢復。
+ a| 
+xref:../flexgroup/provision-automatically-task.html[自動配置高效能 FlexGroup Volume]
+ a| 
+ONTAP 透過儲存設備設定檔簡化了 FlexGroup 配置，讓客戶能夠為其工作負載選擇均衡或高效能的資料容器，從而減少管理員手動設定和調整組成 Volume 大小以滿足效能要求的需求。
 
-* System Manager增強功能
-+
-系統管理器除了提供與Active IQ Digital Advisor （也稱為Digital Advisor）、 NetApp Console 和憑證管理的新整合外，還會自動下載磁碟、機架、服務處理器的韌體更新。這些增強功能簡化了管理並維持了業務連續性。
 
-* xref:../concept_nas_file_system_analytics_overview.html[檔案系統分析增強功能]
-+
-檔案系統分析提供額外的遙測功能、可識別檔案共用中的重要檔案、目錄和使用者、讓您識別工作負載效能問題、以改善資源規劃和 QoS 實作。
 
-* xref:../nvme/support-limitations.html[AFF 系統的 NVMe over TCP （ NVMe / TCP ）支援]
-+
-當您在現有的乙太網路上使用 NVMe / TCP 時、可在 AFF 系統上為企業 SAN 和現代工作負載達成高效能並降低 TCO 。
+ a| 
+xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[支援 SMB 多通道與進階容量重新平衡]
+ a| 
+當在 FlexGroup Volume 上啟用進階容量平衡時，ONTAP 支援使用 SMB 多重通道。
 
-* xref:../nvme/support-limitations.html[NVMe over Fibre Channel （ NVMe / FC ）支援 NetApp FAS 系統]
-+
-在混合式陣列上使用 NVMe / FC 傳輸協定、即可統一移轉至 NVMe 。
 
-* xref:../s3-snapmirror/index.html[物件儲存的原生混合雲備份]
-+
-您可以選擇物件儲存目標來保護 ONTAP S3 資料。使用 SnapMirror 複寫功能、將 StorageGRID 的內部部署儲存設備備份到 Amazon S3 的雲端、或是 NetApp AFF 和 FAS 系統上的另一個 ONTAP S3 儲存區。
 
-* xref:../flexcache/global-file-locking-task.html[使用 FlexCache 進行全域檔案鎖定]
-+
-使用 FlexCache 進行全域檔案鎖定、以確保在原始伺服器的來源檔案更新期間、快取位置的檔案一致性。這項增強功能可針對需要增強鎖定的工作負載、在原始伺服器對快取關係中啟用專屬的檔案讀取鎖定。
+ a| 
+xref:../svm-migrate/index.html#supported-and-unsupported-features[支援 S3 NAS 儲存桶的 SVM 移轉]
+ a| 
+ONTAP 支援對在 FlexVol Volume 上作為 S3 NAS 儲存桶主機的 SVM 進行 SVM 移轉，讓管理員無須先移除 S3 NAS 組態即可移轉 SVM。
 
 
 
+ a| 
+xref:../task_nas_file_system_analytics_view.html[檔案系統分析存取時間保留]
+ a| 
+檔案系統分析掃描和 System Manager 檔案系統總管瀏覽會保留目錄存取時間（atime）中繼資料。這有助於維護準確的 atime 值，以用於歸檔、分層、法規遵循和資料生命週期工作流程。
 
 
-[[ontap-9-9-1-highlights]]
-== ONTAP 9.9.1 重點摘要
 
-ONTAP 9.91.1 在儲存效率、多因素驗證、災難恢復等領域提供全新且增強的功能。如需新功能與增強功能的完整清單、請參閱 xref:whats-new-991.adoc[ONTAP 9.9.1 的新功能]。
+ a| 
+xref:../volumes/manage-svm-capacity.html[針對 ONTAP SVM 容量限制的 MetroCluster IP 支援]
+ a| 
+您可以為屬於 MetroCluster IP 組態的 SVM 設定儲存設備限制。
 
-* 增強的 CLI 遠端存取管理安全性
-+
-支援 SHA512 和 SSH A512 密碼雜湊功能、可保護系統管理員帳戶認證免受試圖取得系統存取權的惡意攻擊者攻擊。
 
-* https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_and_cable_the_mcc_components.html["MetroCluster IP 增強功能：支援 8 節點叢集"^]
-+
-新的上限是前一上限的兩倍、可支援 MetroCluster 組態、並可持續提供資料可用度。
 
-* xref:../snapmirror-active-sync/index.html[SnapMirror 主動同步]
-+
-針對 NAS 工作負載的大型資料容器、提供更多複寫選項以進行備份和災難恢復。
+ a| 
+FlexCache Volume 計量
+ a| 
+FlexCache Volume 計量報告 FlexCache Volume 與其來源 Volume 之間交換的資料和中繼資料量。現有的 ONTAP REST Volume 統計資料和計量端點新增了兩個屬性，可提供 FlexCache 到來源以及來源到 FlexCache 資料傳輸的可見度。這些計數器會自動收集，無需任何組態；它們有助於容量規劃、效能分析、網路疑難排解和計費分析。此功能要求在 FlexCache 和來源節點上均執行 ONTAP 9.20 或更新版本。如需詳細資訊，請參閱 link:https://docs.netapp.com/us-en/ontap-automation["ONTAP 自動化"^] 文件。
 
-* xref:../san-admin/storage-virtualization-vmware-copy-offload-concept.html[提高 SAN 效能]
-+
-為單一 LUN 應用程式（例如 VMware 資料存放區）提供高達四倍的 SAN 效能、讓您在 SAN 環境中達到高效能。
 
-* xref:../task_cloud_backup_data_using_cbs.html[混合雲的全新物件儲存選項]
-+
-可將 StorageGRID 用作 NetApp Cloud Backup Service 的目的地、以簡化並自動化內部部署 ONTAP 資料的備份作業。
 
+ a| 
+叢集內重新平衡
+ a| 
+ONTAP 引入了兩項全新的 Balanced Placement 功能，協助您在工作負載和叢集容量不斷變化的情況下，以最少的管理工作量維持叢集的最佳效能。資源配置時的放置控制可讓客戶在透過 REST API 放置新 Volume 時，指出應優先考量效能或空間需求。空間效能重新平衡（SPR）是一個背景程序，會持續尋找叢集中逐漸形成的效能熱點或彙總空間壓力。根據設定的模式，SPR 會透過 EMS 通知建議進行修正性的 Volume 移動，或是使用標準且不中斷營運的 ONTAP Volume 移動作業來自動執行移動。如需詳細資訊，請參閱 link:https://docs.netapp.com/us-en/ontap-automation["ONTAP 自動化"^] 文件。
 
+|===
 
-.後續步驟
-* xref:../upgrade/prepare.html[升級至最新版的 ONTAP]
-* xref:../upgrade/when-to-upgrade.html[我應該何時升級 ONTAP ？]
 
+[[system-manager]]
+== 系統管理員
+
+[cols="30%,70%"]
+|===
+| 更新 | 說明 
+
+
+ a| 
+xref:../task_cp_dashboard_tour.html[改進的憑證和使用者密碼過期警示]
+ a| 
+System Manager 會在叢集或儲存設備虛擬機器（SVM）憑證到期前 30 天顯示儀表板健全狀況警報，並每日更新剩餘到期天數。叢集設定也可以設定為讓本機使用者在登入後於頁面頂端收到橫幅通知，從密碼到期前 14 天開始顯示。
+
+
+
+ a| 
+xref:../system-admin/manage-autosupport-concept.html[改進的 AutoSupport 警報]
+ a| 
+System Manager 會顯示新的 AutoSupport 警報，幫助您解決 AutoSupport 組態問題。
+
+|===

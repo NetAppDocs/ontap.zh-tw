@@ -22,6 +22,13 @@ MAV功能可執行現有的角色型存取控制（RBAC）設定。潛在的MAV�
 
 從ONTAP 9.15.1 開始，您可以將 Active Directory (AD) 使用者設定為 MAV 管理員。  AD 使用者必須是link:../authentication/grant-access-active-directory-users-groups-task.html["配置為ONTAP管理員"]。
 
+從 ONTAP 9.20.1 開始，核准群組也可以包含身分供應商（IdP）、Active Directory（AD）或 LDAP（nsswitch）群組。支援的群組類型包括 Entra ID（以前稱為 Azure AD）、ADFS、AD 網域群組和 LDAP 群組。
+
+使用者在身分供應商中的群組成員身分變更將在使用者下次成功登入後生效。無需重新設定 MAV。
+
+
+NOTE: 在將 IdP、AD 或 LDAP 群組新增至 MAV 核准群組之前，該群組必須已設定登入存取，且必須在  `security login group` 表格中註冊並具有角色對應。請參閱下列程序。
+
 
 
 [[system-manager-procedure]]
@@ -33,22 +40,32 @@ MAV功能可執行現有的角色型存取控制（RBAC）設定。潛在的MAV�
 
 . 識別要接收多管理員驗證的系統管理員。
 +
-.. 按一下*叢集>設定。*
-.. 按一下 image:icon_arrow.gif["箭頭圖示"] * 使用者和角色旁邊的。 *
-.. 按一下 image:icon_add.gif["新增圖示"] * 使用者 * 。 *
+.. 選擇 *叢集 > 設定。*
+.. 選取 *使用者、群組和角色* 旁邊的 image:icon_arrow.gif["箭頭圖示"]。
+.. 在 *使用者* 下選取 image:icon_add.gif["新增圖示"]。
 .. 視需要修改名單。
 +
 如需詳細資訊、請參閱 link:../task_security_administrator_access.html["控制系統管理員存取權。"]
 
 
 
+. 從 ONTAP 9.20.1 開始，如果您想要新增 IdP、AD 或 LDAP 群組作為 MAV 核准者，請先註冊該群組，以便在 MAV 組態中參照它。
++
+.. 在 *群組* 下，選取 image:icon_add.gif["新增圖示"] 以新增群組。
++
+輸入群組名稱。UUID 欄位僅對 Microsoft Entra 群組是必要的；其他身分提供者使用群組名稱。
+
+.. 在 *群組到角色對應* 下，選取 image:icon_add.gif["新增圖示"]，選取群組，並指派具有足夠權限的角色以核准 MAV 要求。
+
+
 . 建立或修改MAV核准群組：
 +
-.. 按一下*叢集>設定。*
-.. 按一下 image:icon_arrow.gif["箭頭圖示"] * 安全性 * 區段中 * 多重管理核准 * 旁的。（如果尚未設定 MAV 、您會看到 image:icon_gear.gif["動作圖示"] 圖示。）
+.. 選擇 *叢集 > 設定。*
+.. 選取 *安全性* 區段中 *多重管理員核准* 旁邊的 image:icon_arrow.gif["箭頭圖示"]。（如果尚未設定 MAV，您將會看到 image:icon_gear.gif["動作圖示"] 圖示。）
 +
 *** 名稱：輸入群組名稱。
-*** 核准者：從使用者清單中選取核准者。
+*** 審核者（使用者）：從使用者清單中選擇個別審核者。
+*** 審核者（群組）：從 ONTAP 9.20.1 開始，可選擇一個或多個已註冊的 IdP、AD 或 LDAP 群組。
 *** 電子郵件地址：輸入電子郵件地址。
 *** 預設群組：選取群組。
 
@@ -90,7 +107,7 @@ cluster01::> event config show
 +
 深入瞭解 `event config show`及 `event config modify` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+config["指令參考資料ONTAP"^]。
 
-. 識別要接收多管理員驗證的系統管理員
+. 確定參與多重系統管理員驗證的系統管理員。
 +
 [cols="50,50"]
 |===
@@ -114,22 +131,62 @@ cluster01::> event config show
 +
 深入瞭解 `security login show`， `security login modify`和 `security login create` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login["指令參考資料ONTAP"^]。
 
-. 建立MAV核准群組：
+. 從 ONTAP 9.20.1 開始，如果您想要將 IdP、AD 或 LDAP 群組新增為 MAV 審核人，請確認群組已設定登入存取，然後將其註冊至 MAV。
 +
-`security multi-admin-verify approval-group create [ -vserver _svm_name_] -name _group_name_ -approvers _approver1_[,_approver2_…] [[-email _address1_], _address1_...]`
+如果該群組尚未設定登入存取，請輸入：
 
 +
-** `-vserver` - 此版本僅支援管理 SVM 。
-** `-name` - MAV 群組名稱、最多 64 個字元。
-** `-approvers`- 一個或多個審核者的清單。對於 AD 用戶，使用格式 `domain\user`。例如，  `mydomain\pavan` 。
-** `-email` ：一或多個電子郵件地址、在建立、核准、遭否決或執行要求時收到通知。
+`security login create -user-or-group-name _group_name_ -application http|ssh -authentication-method domain|nsswitch|saml|oauth2 -role _role_`
+
 +
-*範例：*下列命令會建立一個MAV群組、其中包含兩個成員及相關的電子郵件地址。
+然後註冊該群組，以便在 MAV 組態中參照它，並將其對應至一個角色：
+
++
+`security login group create -vserver _svm_name_ -name _group_name_ [-uuid _uuid_]`
+
++
+`security login group role-mapping create -group-id _group_id_ -role _role_`
+
++
+此 `-uuid`參數僅為 Microsoft Entra ID 群組所需。AD 網域、ADFS/SAML 和 LDAP （nsswitch） 群組僅透過名稱進行識別。
+
++
+*範例：* 以下命令將 AD 群組 `mydomain\mav_approvers`註冊至 MAV，並將其對應至 `admin`角色。
 
 +
 [listing]
 ----
-cluster-1::> security multi-admin-verify approval-group create -name mav-grp1 -approvers pavan,julia -email pavan@myfirm.com,julia@myfirm.com
+cluster-1::> security login group create -vserver cluster-1 -name mydomain\mav_approvers
+cluster-1::> security login group show -vserver cluster-1
+
+     Vserver: cluster-1
+  Group Name: mydomain\mav_approvers
+    Group ID: 1
+  Group UUID: -
+     Comment: -
+
+cluster-1::> security login group role-mapping create -group-id 1 -role admin
+----
++
+深入瞭解 `security login group create`和 `security login group role-mapping create`，請參閱link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login+group["指令參考資料ONTAP"^]。
+
+. 建立MAV核准群組：
++
+`security multi-admin-verify approval-group create [ -vserver _svm_name_] -name _group_name_ [-approvers _approver1_[,_approver2_…]] [-groups _group1_[,_group2_…]] [[-email _address1_], _address1_...]`
+
++
+** `-vserver` - 此版本僅支援管理 SVM 。
+** `-name` - MAV 群組名稱、最多 64 個字元。
+** `-approvers` - 一個或多個個別核准者的清單。對於 AD 使用者，請使用格式 `domain\user`。例如， `mydomain\pavan`。
+** `-groups` - 要包含在核准群組中的一個或多個 IdP、AD 或 LDAP 群組清單。每個群組必須已在 `security login group`表格中註冊，並具有角色對應。
+** `-email` ：一或多個電子郵件地址、在建立、核准、遭否決或執行要求時收到通知。
++
+*範例：* 下列命令建立一個包含兩個獨立審核者和一個 Entra ID 群組的 MAV 群組。
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify approval-group create -name mav-grp1 -approvers pavan,julia -groups entra-group-mav-approvers -email pavan@myfirm.com,julia@myfirm.com
 ----
 
 
@@ -144,9 +201,9 @@ cluster-1::> security multi-admin-verify approval-group create -name mav-grp1 -a
 [listing]
 ----
 cluster-1::> security multi-admin-verify approval-group show
-Vserver  Name        Approvers        Email
--------  ---------------- ------------------  ------------------------------------------------------------
-svm-1    mav-grp1   pavan,julia      email pavan@myfirm.com,julia@myfirm.com
+Vserver  Name        Approvers        Approver Groups                  Email
+-------  ---------------- ------------------  ------------------------------- ------------------------------------------------------------
+svm-1    mav-grp1   pavan,julia      entra-group-mav-approvers        pavan@myfirm.com,julia@myfirm.com
 ----
 
 
@@ -160,12 +217,12 @@ svm-1    mav-grp1   pavan,julia      email pavan@myfirm.com,julia@myfirm.com
 
 
 | 修改群組特性或修改現有的成員資訊  a| 
-`security multi-admin-verify approval-group modify [_parameters_]`
+`security multi-admin-verify approval-group modify [-vserver _svm_name_] -name _group_name_ [-approvers _approver1_[,_approver2_…]] [-groups _group1_[,_group2_…]] [[-email _address1_], _address1_...]`
 
 
 
 | 新增或移除成員  a| 
-`security multi-admin-verify approval-group replace [-vserver _svm_name_] -name _group_name_ [-approvers-to-add _approver1_[,_approver2_…]][-approvers-to-remove _approver1_[,_approver2_…]]`
+`security multi-admin-verify approval-group replace [-vserver _svm_name_] -name _group_name_ [-approvers-to-add _approver1_[,_approver2_…]][-approvers-to-remove _approver1_[,_approver2_…]] [-groups-to-add _group1_[,_group2_…]][-groups-to-remove _group1_[,_group2_…]]`
 
 
 

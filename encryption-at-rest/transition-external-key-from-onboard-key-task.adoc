@@ -2,7 +2,7 @@
 permalink: encryption-at-rest/transition-external-key-from-onboard-key-task.html 
 sidebar: sidebar 
 keywords: transitioning, external key management, onboard key management 
-summary: 如果您想從內建金鑰管理切換至外部金鑰管理、則必須先刪除內建金鑰管理組態、才能啟用外部金鑰管理。 
+summary: 如果您要將 admin SVM 從就職金鑰管理切換至外部金鑰管理，必須先停用就職金鑰管理組態，然後才能啟用外部金鑰管理。從 ONTAP 9.20.1 開始，資料 SVM 可以直接轉移至外部金鑰管理程式。 
 ---
 = 從 ONTAP 的內建金鑰管理移轉至外部金鑰管理
 :allow-uri-read: 
@@ -11,8 +11,13 @@ summary: 如果您想從內建金鑰管理切換至外部金鑰管理、則必�
 
 
 [role="lead"]
-如果您想從內建金鑰管理切換至外部金鑰管理、則必須先刪除內建金鑰管理組態、才能啟用外部金鑰管理。
+如果您要從就職金鑰管理交換器到外部金鑰管理，所需的步驟取決於金鑰管理程式的範圍。對於 admin SVM（叢集範圍），您必須先停用就職金鑰管理組態，然後才能啟用外部金鑰管理程式。從 ONTAP 9.20.1 開始，資料 SVM 可以直接啟用外部金鑰管理程式，而且 ONTAP 會自動將 SVM 的 Volume 加密金鑰從管理範圍的金鑰管理程式移轉到新的資料 SVM 金鑰管理程式。
 
+[NOTE]
+====
+從 ONTAP 9.20.1 開始，僅當您將管理 SVM 從就職金鑰管理移轉到外部金鑰管理時，才需要執行此工作。如果您要為資料 SVM 設定外部金鑰管理程式，則無需先停用就職金鑰管理。
+
+====
 .開始之前
 * 對於硬體型加密、您必須將所有FIPS磁碟機或SED的資料金鑰重設為預設值。
 +
@@ -26,7 +31,7 @@ link:unencrypt-volume-data-task.html["取消Volume資料加密"]
 
 
 .步驟
-. 刪除叢集的內建金鑰管理組態：
+. 刪除 admin SVM 的就職金鑰管理組態：
 +
 [cols="35,65"]
 |===

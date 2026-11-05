@@ -11,39 +11,37 @@ summary: 從功能升級至功能區9.7開始ONTAP 、FlexVol 您可以在不Fle
 
 
 [role="lead"]
-從功能升級至功能區9.7開始ONTAP 、FlexVol 您可以在不FlexGroup 需要資料複本或額外磁碟空間的情況下、就地將一個功能區轉換成一個功能區。
+從 ONTAP 9.7 開始，您可以將 FlexVol Volume 就地轉換為 FlexGroup Volume，而不需要資料複本或額外的磁碟空間。當您想要將 FlexVol Volume 擴充至超出其空間限制時，您可以轉換該 Volume。將 FlexVol Volume 轉換為 FlexGroup Volume 可提供更高的效能，以及自動分散負載與擴充性。
+
+.關於這項工作
+* 將 FlexVol Volume 轉換為 FlexGroup Volume 是一個非中斷操作。轉換通常只需幾秒鐘，無需將 Volume 離線或重新掛載共用和匯出，因此用戶端可以繼續存取資料。
+* 在這個過程中、執行的操作和設定FlexVol 必須與轉換程序相容。
+* 從 ONTAP 9.20.1 開始，當您修改 FlexVol® Volume 容量時，ONTAP 會透過 EMS 通知和 CLI 提示，提供將 FlexVol® Volume 轉換為 FlexGroup Volume 的建議。執行轉換時，您可以在轉換時擴充 FlexGroup Volume，而無需建立與原始 FlexVol® Volume 容量相同的 FlexGroup Volume。
+
 
 .開始之前
-* 從 ONTAP 9.8 開始，可將轉換的磁碟區轉換為 FlexGroup 磁碟區。
 * 正在轉換的這個版本必須在線上。FlexVol
-* 將 FlexVol Volume 轉換為 FlexGroup Volume 是一個非中斷操作。轉換通常只需幾秒鐘，無需將 Volume 離線或重新掛載共用和匯出，因此用戶端可以繼續存取資料。
 * 在這個過程中、執行的操作和設定FlexVol 必須與轉換程序相容。
 +
 請檢查是否有下列情況、以避免轉換成功：
 
 +
-** FlexVol Volume 是使用 7MTT （ ONTAP 9.7 ）從 7-Mode 轉換而來。
-+
-轉換後的磁碟區可以從 ONTAP 9.8 開始轉換。
-
-** 磁碟區啟用了 FlexGroup 磁碟區尚未支援的功能；例如，SAN LUN、Windows NFS、SMB1、快照命名/自動刪除、vmalign 設定、早於 ONTAP 9.11.1 版本的 SnapLock（從 ONTAP 9.11.1 開始支援 SnapLock）、空間 SLO 或邏輯空間強制執行/報表。如需更多資訊、請參閱 link:supported-unsupported-config-concept.html["支援且不支援FlexGroup 的功能組態"]。
-** 在 ONTAP 9.10.1 之前的版本中，待轉換的 FlexVol Volume 所在的 SVM 目前使用 SVM-DR。從 ONTAP 9.10.1 開始，您可以link:convert-flexvol-svm-dr-relationship-task.html["將 FlexVol Volume 轉換為 SVM-DR 來源上的 FlexGroup Volume"]。
-** 存在 NetApp FlexClone® Volume，且該 FlexVol Volume 為父 Volume。正在進行轉換的 Volume 不能是父 Volume 或 Clone。
-** Volume 是 NetApp FlexCache 原始 Volume 。
+** Volume 上尚未受 FlexGroup Volume 支援的任何內容均已停用或移除；例如：SAN LUN、Windows NFS、SMB1、Snapshot 快照技術命名/自動刪除、vmalign set、早於 ONTAP 9.11.1 版本的 SnapLock（從 ONTAP 9.11.1 開始支援 SnapLock）、空間 SLO，或邏輯空間強制執行/報告。如需詳細資訊，請參閱 link:supported-unsupported-config-concept.html["支援且不支援FlexGroup 的功能組態"]。
+** 在 ONTAP 9.10.1 之前的版本中，FlexVol Volume 所屬 SVM 上的 SVM-DR 被停用。從 ONTAP 9.10.1 開始，您可以link:convert-flexvol-svm-dr-relationship-task.html["將 FlexVol Volume 轉換為 SVM-DR 來源上的 FlexGroup Volume"]。
+** FlexVol Volume 不能是 NetApp FlexClone Volume 的父 Volume。被轉換的 Volume 不能是父或 Clone。
+** 此 Volume 不能是 NetApp FlexCache 來源 Volume。
 ** 對於 ONTAP 9.7 及更早版本， NetApp 快照不得超過 255 個。ONTAP 9.8 及更新版本支援 1023 個快照。
-** 實現儲存效率。這些必須停用、且可在轉換後重新啟用。
-** Volume 是 SnapMirror 關係的來源、目的地尚未轉換。
-** Volume 是主動（非停止） SnapMirror 關係的一部分。
+** 您無法轉換使用 7MTT 從 7-Mode 過渡的 FlexVol Volume（ONTAP 9.7）。從 ONTAP 9.8 開始，您可以轉換已過渡的 Volume。
+** 該 Volume 不得與任何應用程式關聯。這僅適用於 ONTAP 9.7。此限制在 ONTAP 9.8 中已移除。
+** 儲存設備效率功能已停用。轉換完成後可以重新啟用這些功能。
+** 如果 Volume 是 SnapMirror 關係的來源，且目的地尚未轉換，則無法進行轉換。
+** 如果該 Volume 是作用中（非靜止） SnapMirror 關係的一部分，則該關係必須靜止。
 ** 該 Volume 上的自主勒索軟體保護功能已停用。在轉換完成之前，請勿再次啟用該功能。
-** 配額已啟用。這些必須停用、且可在轉換後重新啟用。
-** Volume 名稱長度超過 197 個字元。
-** 磁碟區與應用程式相關聯。
-+
-這僅適用於 ONTAP 9.7 。ONTAP 9.8 中已移除此限制。
-
-** ONTAP 程序正在執行、例如鏡射、工作、 wafliron 、 NDMP 備份、 及處理中的 inode 轉換。
-** 該 Volume 是 SVM 根 Volume 。
-** 音量太大。
+** 配額功能已停用。轉換完成後即可重新啟用。
+** Volume 名稱不超過 197 個字元。
+** ONTAP 程序不得正在執行，例如鏡射、作業、wafliron、NDMP 備份和正在進行的 inode 轉換。
+** 該 Volume 不能是 SVM 根 Volume。
+** Volume 不能太滿。
 +
 如果存在任何這些不相容的情況、則會在 FlexVol Volume 終止時產生錯誤訊息、且 Volume 轉換也會中止。您可以採取修正行動、然後重試轉換。
 

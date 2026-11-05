@@ -14,7 +14,7 @@ summary: 從 ONTAP 9 。 13.1 開始、您可以設定 SVM 的容量限制。
 從 ONTAP 9.13.1 開始、您可以設定儲存 VM （ SVM ）的最大容量。您也可以在 SVM 接近臨界值容量層級時設定警示。
 
 .關於這項工作
-SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCache Volume 的總和來計算。即使磁碟區在刪除後受到限制、離線或位於恢復佇列中、這些磁碟區也會影響容量計算。如果您已將 Volume 設定為自動擴充、則會根據 SVM 大小計算 Volume 的最大自動調整大小值；如果沒有自動增加、則會計算出 Volume 的實際大小。
+SVM 的容量計算方式為 FlexVol® Volume、FlexGroup Volume、FlexClone® Volume、FlexCache® Volume 的總和。即使 Volume 處於受限、離線或刪除後的恢復佇列中，它們仍然會影響容量計算。如果您將 Volume 設定為自動成長，Volume 的最大自動調整規模值將計入 SVM 大小；若未設定自動成長，則將計算 Volume 的實際大小。
 
 下表說明如何進行 `autosize-mode` 參數會影響容量計算。
 
@@ -31,6 +31,13 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 |===
 .開始之前
 * 您必須是叢集管理員才能設定 SVM 限制。
+* 從 ONTAP 9.20.1 開始，可以為屬於 MetroCluster IP 組態一部分的 SVM 設定儲存設備限制。
++
+[NOTE]
+====
+在 MetroCluster IP 組態中，不支援對 *sync-destination* SVM 啟用或停用儲存設備限制。儲存設備限制只能在 *sync-source* SVM 上啟用或停用。
+
+====
 * 從 ONTAP 9.16.1 開始，可針對包含資料保護磁碟區的 SVM 設定儲存限制，包括下列資料保護類型：
 +
 ** 非同步災難恢復中的 FlexVol 磁碟區，無需串聯
@@ -42,17 +49,17 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 +
 ** SnapMirror 資料保險箱關聯性
 ** SnapMirror 主動同步
-** 資料量FlexGroup
-** 一致性群組
+** 包含資料保護 Volume 的一致性群組
+** 資料保護 FlexGroup Volume
 ** SVM DR
 ** 串聯
-** MetroCluster
+** MetroCluster FC
 
 
 * 從ONTAP 9.16.1 開始，當您建立負載共享鏡像關係時，目標 SVM 無法啟用儲存限制。
 * 當您移轉 SVM 時、來源 SVM 無法啟用儲存限制。若要完成移轉作業、請停用來源的儲存限制、然後完成移轉。
 * SVM 容量與不同 xref:../volumes/quotas-concept.html[配額]。配額不得超過最大大小。
-* 當 SVM 上的其他作業正在進行中時、您無法設定儲存限制。使用 `job show vserver <svm_name>`命令查看現有工作。當任何工作完成時、請再次嘗試執行命令。如link:https://docs.netapp.com/us-en/ontap-cli/job-show.html["指令參考資料ONTAP"^]需詳細 `job show`資訊，請參閱。
+* 當 SVM 上正在進行 Volume 作業時，您無法第一次啟用儲存設備限制。啟用限制後，即使 Volume 作業正在進行，您仍可加以修改。使用 `job show -vserver <svm_name>`命令查看現有工作。請在所有工作完成後，再次嘗試執行命令。在link:https://docs.netapp.com/us-en/ontap-cli/job-show.html["指令參考資料ONTAP"^]中深入瞭解 `job show`。
 
 
 
@@ -64,7 +71,6 @@ SVM 上的容量是以 FlexVols 、 FlexGroup Volume 、 FlexClones 、 FlexCach
 
 * 建立 LUN 、命名空間或磁碟區
 * 複製 LUN 、命名空間或磁碟區
-* 修改 LUN 、命名空間或磁碟區
 * 增加 LUN 、命名空間或磁碟區的大小
 * 擴充 LUN 、命名空間或磁碟區
 * 重新裝載 LUN 、命名空間或磁碟區
@@ -128,6 +134,11 @@ vserver modify -vserver <vserver_name> -storage-limit 0
 
 設定容量上限後、您就無法將限制修改為小於目前分配容量的值。
 
+[NOTE]
+====
+在 MetroCluster IP 組態中，不支援對 *sync-destination* SVM 啟用或停用儲存設備限制。儲存設備限制只能在 *sync-source* SVM 上啟用或停用。
+
+====
 [role="tabbed-block"]
 ====
 .系統管理員

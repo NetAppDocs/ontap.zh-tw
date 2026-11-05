@@ -4,7 +4,7 @@ permalink: task_cp_dashboard_tour.html
 keywords: netapp, ontap, cluster, performance, dashboard, cluster dashboard, headroom, cpu, cpus, usage, latency, guided setup, guided set up, performance values, workload, work load, peak usage 
 summary: System Manager 儀表板可從單一集中位置、快速且全面地檢視叢集。 
 ---
-= 了解 ONTAP System Manager 儀表板上的叢集管理
+= 從 ONTAP System Manager 儀表板檢視叢集資訊
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -18,7 +18,7 @@ summary: System Manager 儀表板可從單一集中位置、快速且全面地�
 [role="lead"]
 System Manager 儀表板可從單一位置快速完整地檢視 ONTAP 叢集。
 
-使用 System Manager 儀表板、您可以一眼檢視重要警示和通知的相關資訊、儲存層和磁碟區的效率和容量、叢集中可用的節點、高可用度（ HA ）配對中節點的狀態、最活躍的應用程式和物件、 以及叢集或節點的效能指標。
+從 System Manager 儀表板，您可以檢視有關叢集健全狀況、容量、網路和效能的資訊，包括重要警報、儲存設備層和 Volume 的效率和容量、叢集節點的狀態和可用度、最作用中的應用程式和物件，以及效能計量。
 
 從 ONTAP 9.19.1 開始，SVM 管理員可以使用 ONTAP System Manager 中的專用 SVM 管理員儀表板來監控和管理自己的 SVM。如需詳細資訊，請參閱link:task-svm-admin-dashboard-sm.html["使用 System Manager 管理和監控 SVM"]。
 
@@ -26,43 +26,47 @@ System Manager 儀表板可從單一位置快速完整地檢視 ONTAP 叢集。
 
 
 
-[[health]]
-== 健全狀況
+[[view-the-cluster-health]]
+== 檢視叢集健全狀況
 
-「健全狀況」檢視會顯示叢集中所有可搜尋節點整體健全狀況的相關資訊。
+在 ONTAP System Manager 儀表板的 *健全狀況* 區段中，您可以檢視叢集的一般資訊，例如其名稱、 ONTAP 版本和建立日期。您也可以檢視叢集節點的整體健全狀況、叢集層級的錯誤、警告、警示，以及提升叢集效能的建議修改。
 
-「健全狀況」檢視也會顯示叢集層級的錯誤和警告、例如未經設定的節點詳細資料、指出可修改以提升叢集效能的特性。
+從 ONTAP 9.20.1 開始，叢集或儲存設備虛擬機器（SVM）憑證到期前 30 天會顯示健全狀況警報。此警報每日更新，顯示剩餘到期天數。您可以將預設的 30 天警報臨界值修改為 0 到 90 之間的任意天數，也可以停用此功能以完全不顯示任何警報，或抑制已過期憑證的警報，同時繼續接收即將到期憑證的警報。
 
-按一下 image:icon_arrow.gif["箭頭圖示"] 以展開「健全狀況」檢視、以取得叢集的概觀、例如叢集名稱、版本、叢集建立日期和時間等。您也可以監控與叢集相關節點健全狀況相關的統計資料。您可以管理標記、讓您群組和識別環境中的資源。Insights 區段可協助您最佳化系統的容量、安全性法規遵循及組態。
+* 若要檢視叢集健全狀況資訊，請選取儀表板上 *健全狀況* 旁邊的 image:icon_arrow.gif["箭頭圖示"]。
+* 若要修改憑證到期設定，請選取警示，然後選取 *憑證設定*。
 
 
 
-[[capacity]]
-== 容量
 
-容量檢視會顯示叢集的儲存空間。您可以檢視已使用的邏輯空間總計、已使用的實體空間總計、以及可用的磁碟空間。
+[[view-the-cluster-capacity]]
+== 檢視叢集容量
 
-您可以選擇向 ActiveIQ 註冊、以檢視歷史叢集資料。按一下 image:icon_arrow.gif["箭頭圖示"] 以展開容量檢視、以查看與叢集相關聯的階層概觀。您可以檢視每個階層的容量資訊：總空間、已用空間和可用空間。會顯示處理量、 IOPS 和延遲的詳細資料。link:./concepts/capacity-measurements-in-sm-concept.html["在 System Manager 中深入瞭解這些容量測量"]。
+在 ONTAP System Manager 儀表板的 *容量* 部分，您可以檢視叢集的儲存空間。您可以檢視已使用邏輯空間總量、已使用實體空間總量和可用磁碟空間。
+
+您可以選擇註冊 ActiveIQ 以檢視歷史叢集資料。
+
+在儀表板上選擇 *容量* 旁的 image:icon_arrow.gif["箭頭圖示"]，以檢視叢集容量資訊，包括與叢集相關的層級總覽，例如總空間、已使用空間和可用空間。此外，也會顯示處理量、IOPS 和延遲的詳細資訊。link:./concepts/capacity-measurements.html["了解 ONTAP 如何報告已使用的儲存設備"]。
 
 您可以選擇使用容量檢視來新增本機層或雲端層。如需詳細資訊、請 link:task_admin_monitor_capacity_in_sm.html["檢視叢集的容量"]參閱。
 
 
 
-[[network]]
-== 網路
+[[view-the-cluster-network]]
+== 檢視叢集網路
 
-「網路」檢視會顯示屬於網路一部分的實體連接埠、網路介面和儲存 VM 。
+在 ONTAP System Manager 儀表板的 *網路* 部分中，您可以檢視網路中的實體連接埠、網路介面和儲存 VM。
 
 「網路」檢視會顯示連線至網路的用戶端類型。每個網路連線的用戶端都會以數字表示（例如「 NVMe / FC 16 」）。選取數字以檢視每個網路元件的特定詳細資料。
 
-按一下 image:icon_arrow.gif["箭頭圖示"] 以查看涵蓋網路上連接埠、網路介面、儲存 VM 和主機的廣泛全頁網路檢視。
+在儀表板上選擇 *網路* 旁的 image:icon_arrow.gif["箭頭圖示"]，即可檢視包含網路上的連接埠、網路介面、儲存設備虛擬機器和主機的廣泛全頁網路檢視。
 
 
 
-[[performance]]
-== 效能
+[[view-the-cluster-performance]]
+== 檢視叢集效能
 
-「效能」檢視會顯示效能統計資料、以協助監控 ONTAP 叢集的健全狀況和效率。這些統計資料包括主要的叢集效能指標、例如延遲、處理量和 IOPS 、以圖表形式呈現。
+在 ONTAP System Manager 儀表板的 *效能* 部分，您可以檢視效能統計資料，以協助監控 ONTAP 叢集的健全狀況和效率。這些統計資料包括關鍵的叢集效能指標，例如延遲、處理量和 IOPS，並以圖表的形式呈現。
 
 「效能」檢視會依日期、小時、週或年、以不同的時間間隔顯示效能統計資料。您可以使用各種圖表快速分析叢集效能、並識別可能需要最佳化的特性。這項快速分析可協助您決定如何新增或移動工作負載。您也可以查看尖峰使用時間、以規劃可能的變更。
 
@@ -72,4 +76,4 @@ System Manager 儀表板可從單一位置快速完整地檢視 ONTAP 叢集。
 
 效能值每3秒重新整理一次、效能圖表每15秒重新整理一次。如果無法取得叢集效能的相關資訊、將不會顯示圖表。
 
-按一下 image:icon-expansion-arrows.png["擴充圖示"] 以查看各小時、日、週、月和年的效能指標全頁檢視。您也可以下載本機系統效能指標的報告。
+在儀表板上選擇 *效能* 旁的 image:icon-expansion-arrows.png["擴充圖示"]，即可查看按小時、天、週、月和年劃分的效能計量全頁檢視。您也可以將效能計量報告下載至本機系統。

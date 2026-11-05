@@ -13,17 +13,30 @@ summary: 一線儲存設備中的來源Volume與二線儲存設備中的目的�
 [role="lead"]
 主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 您可以使用 `snapmirror create`命令來建立 SnapMirror DR ， SnapVault 或統一化複寫資料保護關係。
 
+.關於這項工作
+* 此程序適用於 FAS、AFF 和 ASA 系統。如果您擁有 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），請遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["這些步驟"^]建立複製關係。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
+* 從 ONTAP 9.20.1 開始，您可以設定後端 SnapMirror 非同步複寫以使用 IP 或 FC 傳輸。後端複寫預設使用 IP 網路。在建立 SnapMirror 關係以透過 FC 架構進行複寫時，請使用支援的非同步資料保護原則與 `-transport fc`選項。link:default-protection-policies-concept.html["了解後端 FC 複寫支援哪些預設非同步資料保護原則"]。
++
+** 建立 SnapMirror 複寫關係後，若要變更所選的傳輸協定，您必須刪除並重新建立該關係。
+** 後端 FC 複寫不支援直接連線的 FC 組態。
 
-NOTE: 此程序適用於 FAS、AFF 和 ASA 系統。如果您擁有 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），請遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["這些步驟"^]建立複製關係。ASA R2 系統提供專為僅限 SAN 的客戶所提供的簡化 ONTAP 體驗。
 
-從ONTAP 功能完善的9.11.1開始、您可以使用System Manager來選取預先建立和自訂的鏡像和資料保存原則、顯示和選取舊有原則、以及在保護磁碟區和儲存VM時、覆寫保護原則中定義的傳輸排程。此功能也可在ONTAP 《》ONTAP 的更新版修補程式《》中找到。
-
+* 從ONTAP 功能完善的9.11.1開始、您可以使用System Manager來選取預先建立和自訂的鏡像和資料保存原則、顯示和選取舊有原則、以及在保護磁碟區和儲存VM時、覆寫保護原則中定義的傳輸排程。此功能也可在ONTAP 《》ONTAP 的更新版修補程式《》中找到。
++
 [NOTE]
 ====
 如果您使用ONTAP 的是更新ONTAP 版本的更新版本的更新版本的更新版本的更新版本、且您使用System Manager設定SnapMirror、則如果ONTAP 您打算升級至版本的更新版本的更新版本、則應使用更新版本的更新版本的更新版本。9.9.1P13或更新版本的ONTAP 更新版本以及更新版本的更新版本的更新版本ONTAP ONTAP 。
 
 ====
+
+
 .開始之前
+* 在 ONTAP 9.20.1 及更新版本中，如果您要設定 SnapMirror 非同步關係以使用 FC 作為傳輸協定：
++
+** 您的 ONTAP 系統後端必須設定為 FC 複寫，且 FC 架構和叢集間 IP 網路都必須正常運作。複寫資料可以透過 FC 架構傳輸，但叢集通訊和複寫管理功能需要叢集間 IP 網路。link:configure-backend-fc-replication.html["學習如何設定 ONTAP 系統後端以進行 FC 複寫"]。
+** 在 MetroCluster 組態中，用於 MetroCluster 的儲存設備啟動器必須與用於透過 FC 進行複寫的啟動器分隔。不支援在兩者之間共用啟動器儲存設備。
+
+
 * 來源與目的地叢集和SVM必須進行對等關係。
 +
 link:../peering/index.html["叢集與SVM對等關係"]
@@ -160,12 +173,12 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy XDPDefault
 ----
 +
-下列範例使用預設值建立統一化的複寫關係 `MirrorAndVault` 原則：
+以下範例使用預設 `MirrorAndVault`非同步原則和 `fc`傳輸協定建立統一複寫關係：
 
 +
 [listing]
 ----
-cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault
+cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault -transport fc
 ----
 +
 下列範例使用自訂建立統一複寫關係 `my_unified` 原則：

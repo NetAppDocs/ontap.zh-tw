@@ -19,17 +19,9 @@ summary: 將 FlexVol Volume 移至同一儲存虛擬機器內的不同 Aggregate
 您必須是叢集管理員才能執行此工作。
 
 .開始之前
-* 如果您要將使用 8K 自適應壓縮的捲移動到以下平台之一，您應該link:increase-volume-active-file-system-size.html["增加卷的活動文件系統的大小"]在移動音量之前。這些平台上的資料壓縮方式不同，因此節省的空間是在聚合層級而不是磁碟區層級。由於這種差異，磁碟區的活動檔案系統的大小應該會增加 8k 壓縮節省量，以防止磁碟區在磁碟區移動期間耗盡空間。
+* 如果您執行的是 ONTAP 9.19.1 及更早版本，並且要將使用 8k 具調適能力的壓縮的 Volume 移動到支援 QuickAssist Technology （QAT） 和 32k 壓縮的系統，您應該在移動 Volume 之前 link:increase-volume-active-file-system-size.html["增加卷的活動文件系統的大小"]。這些平台上的資料壓縮方式不同，因此節省的空間是在彙總層級而不是 Volume 層級。由於這種差異，Volume 的作用中檔案系統大小應增加 8k 壓縮節省的空間量，以防止 Volume 在 Volume 移動過程中空間不足。
 +
-** 支援專用卸載處理器儲存效率的AFF和FAS平台
-+
-詳細了解支援以下功能的AFF和FAS平台link:../concepts/builtin-storage-efficiency-concept.html["專用卸載處理器儲存效率"]。
-
-** AFF C 系列平台
-+
-查看link:https://hwu.netapp.com/["Hardware Universe"^]了解 C 系列平台的完整清單。
-
-
+深入瞭解 link:../concepts/builtin-storage-efficiency-concept.html["支援 QAT 和 32k 壓縮的系統"]。
 
 * 如果您正在移動資料保護鏡像且尚未初始化鏡像關係，請使用 `snapmirror initialize`命令初始化鏡像關係。詳細了解 `snapmirror initialize`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["指令參考資料ONTAP"^] 。
 +

@@ -34,9 +34,12 @@ summary: 建立LIF、此為與實體或邏輯連接埠相關聯的IP位址。
 .各 ONTAP 版本對 LIF 建立功能的支援
 與 LIF 建立相關的功能支援因 ONTAP 版本而異。
 
-[cols="2"]
+[cols="1,6"]
 |===
 | 從 ONTAP 版本開始 | 功能 
+
+
+| 9.20.1 | 支援 AFF 和 FAS 系統上 Broadcom 安全的主機匯流排介面卡（HBA）的 Fibre Channel 安全傳輸協定 3（FC-SP-3）驗證和加密。在建立 LIF 時，請在 System Manager 中選擇 *傳輸安全性* 選項，或使用 CLI 中的  `-fc-transport-security` 選項來啟用 FC-SP-3。進一步瞭解 link:../san-admin/fc-sp-3-security-support.html["ONTAP 支援 FC-SP-3"]。 
 
 
 | 9.12.1 | 支援在 System Manager 中為 NFS over RDMA 組態建立網路介面。如需詳細資訊，請參閱 xref:../nfs-rdma/configure-lifs-task.html[透過RDMA設定NFS的LIF]。 
@@ -95,19 +98,20 @@ LIF 使用服務原則來指定其處理的流量類型。在 ONTAP 9.5 及更�
 +
 .. 資料
 .. 叢集間
-.. SVM管理
+.. 儲存 VM 管理
 
 
 . 選取傳輸協定：
 +
-.. SMB/CIFS與NFS
+.. NFS、SMB/CIFS 和 S3
 .. iSCSI
 .. FC
 .. NVMe / FC
 .. NVMe / TCP
 
 
-. 命名LIF或接受先前選擇所產生的名稱。
+. 選擇 LIF 的 *儲存 VM*。
+. 為 LIF 命名或接受產生的名稱。
 . 接受主節點、或使用下拉式選單選取一個節點。
 . 如果在所選SVM的IPspace中至少設定一個子網路、則會顯示子網路下拉式清單。
 +
@@ -121,7 +125,8 @@ LIF 使用服務原則來指定其處理的流量類型。在 ONTAP 9.5 及更�
 
 
 . 從廣播網域中選取主連接埠、可以是自動（建議）或從下拉式功能表中選取一個。主連接埠控制項會根據廣播網域或子網路選擇來顯示。
-. 儲存網路介面。
+. 如果您正在建立 FC 或 NVMe/FC LIF，且執行 ONTAP 9.20.1 或更新版本，請選取 FC-SP-3 *傳輸安全性* 選項。
+. 選取*「Add*」。
 
 
 --

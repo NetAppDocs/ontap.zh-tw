@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/configure_snmpv3_users_in_a_cluster.html 
-keywords: configure, configuration, configuring, setup, setting, set, up, snmp, snmpv3, users, user, cluster, security, secure, configure an snmpv3 user to run the snmp utilities from the snmp manager, security login create command, configure snmpv3 users in a cluster, snmpv3 security parameters, examples for different security levels, security level authpriv, fips mode, snmpwalk test, security level authnopriv 
+keywords: configure, configuration, configuring, setup, setting, set, up, snmp, snmpv3, users, user, cluster, security, secure, sha512, sha-512, authentication protocol, configure an snmpv3 user to run the snmp utilities from the snmp manager, security login create command, configure snmpv3 users in a cluster, snmpv3 security parameters, examples for different security levels, security level authpriv, fips mode, snmpwalk test, security level authnopriv 
 summary: 設定 SNMPv3 使用者以從 SNMP 管理器執行 SNMP 公用程式。 
 ---
 = 在 ONTAP 叢集中設定 SNMPv3 使用者
@@ -30,6 +30,9 @@ summary: 設定 SNMPv3 使用者以從 SNMP 管理器執行 SNMP 公用程式。
 
 .結果
 v3使用者可以使用使用者名稱和密碼、從SNMP管理程式登入、然後執行SNMP公用程式命令。
+
+
+NOTE: 從 ONTAP 9.20.1 開始，您可以建立使用 SHA-512 驗證的 SNMPv3 使用者。您只能建立和刪除使用 SHA-512 驗證的使用者。您無法修改現有使用者的身分驗證傳輸協定。若要變更身分驗證傳輸協定，請刪除該使用者並重新建立。
 
 
 
@@ -68,9 +71,9 @@ SNMP代理程式的引擎ID。預設值為本機引擎ID（建議使用）。
  a| 
 驗證傳輸協定
  a| 
--A｛NONE | md5 | SHA | SHA-256｝
+-a {none | MD5 | SHA | SHA-256 | SHA-512}
  a| 
-驗證類型可以是「無」、「MD5」、「SHa」或「SHA-256」。
+驗證類型可以是無、MD5、SHA、SHA-256 或 SHA-512。從 ONTAP 9.20.1 開始，支援 SHA-512。
 
 
 
@@ -119,7 +122,7 @@ l｛authNoPrimv | authPrimv | noauthNoPrimiv｝
 若要獲得更好的效能、您應該擷取資料表中的所有物件、而非從資料表擷取單一物件或數個物件。
 
 
-NOTE: 您必須使用 `snmpwalk` 5.3.1 或更新版本、當驗證傳輸協定為 SHA 時。
+NOTE: 當身分驗證傳輸協定為 SHA 時，您必須使用 `snmpwalk` 5.3.1 或更新版本。若要使用 SHA-512 驗證，SNMP 用戶端必須支援 SNMPv3 和 SHA-512 身分驗證傳輸協定。
 
 
 
@@ -131,7 +134,7 @@ NOTE: 您必須使用 `snmpwalk` 5.3.1 或更新版本、當驗證傳輸協定�
 ....
 security login create -user-or-group-name snmpv3user -application snmp -authentication-method usm
 Enter the authoritative entity's EngineID [local EngineID]:
-Which authentication protocol do you want to choose (none, md5, sha, sha2-256) [none]: md5
+Which authentication protocol do you want to choose (none, md5, sha, sha2-256, sha512) [none]: md5
 
 Enter the authentication protocol password (minimum 8 characters long):
 Enter the authentication protocol password again:
@@ -146,7 +149,7 @@ Enter privacy protocol password again:
 ....
 security login create -user-or-group-name snmpv3user -application snmp -authmethod usm
 Enter the authoritative entity's EngineID [local EngineID]:
-Which authentication protocol do you want to choose (sha, sha2-256) [sha]
+Which authentication protocol do you want to choose (sha, sha2-256, sha512) [sha]
 
 Enter authentication protocol password (minimum 8 characters long):
 Enter authentication protocol password again:
@@ -164,6 +167,16 @@ Enter privacy protocol password again:
 
 ....
 $ snmpwalk -v 3 -u snmpv3user -a SHA -A password1! -x DES -X password1! -l authPriv 192.0.2.62 .1.3.6.1.4.1.789.1.5.8.1.2
+Enterprises.789.1.5.8.1.2.1028 = "vol0"
+Enterprises.789.1.5.8.1.2.1032 = "vol0"
+Enterprises.789.1.5.8.1.2.1038 = "root_vs0"
+Enterprises.789.1.5.8.1.2.1042 = "root_vstrap"
+Enterprises.789.1.5.8.1.2.1064 = "vol1"
+....
+以下輸出顯示使用 SHA-512 驗證的 SNMPv3 使用者執行 snmpwalk 命令：
+
+....
+$ snmpwalk -v 3 -u snmpv3user -a SHA-512 -A password1! -x AES -X password1! -l authPriv 192.0.2.62 .1.3.6.1.4.1.789.1.5.8.1.2
 Enterprises.789.1.5.8.1.2.1028 = "vol0"
 Enterprises.789.1.5.8.1.2.1032 = "vol0"
 Enterprises.789.1.5.8.1.2.1038 = "root_vs0"
@@ -239,3 +252,5 @@ Enterprises.789.1.5.8.1.2.1042 = "root_vstrap"
 Enterprises.789.1.5.8.1.2.1064 = "vol1"
 ....
 如link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["指令參考資料ONTAP"^]需詳細 `security login create`資訊，請參閱。
+
+如需有關乙太網路交換器健全狀況監視器（CSHM）的 SNMPv3 更多資訊，包括如何設定乙太網路交換器，請參閱 link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cshm/config-snmpv3.html["設定 SNMPv3 以監控乙太網路交換器的健全狀況"^]。

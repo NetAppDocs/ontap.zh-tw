@@ -29,6 +29,13 @@ NOTE: 在 ONTAP 中使用原生 S3 儲存區時，特別支援這些 S3 動作�
 * `x-amz-date`
 
 
+從 ONTAP 9.20.1 開始，S3 NAS 儲存桶支援下列 Checksum 標頭：
+
+* `x-amz-checksum-algorithm`
+* `x-amz-checksum-crc64nvme`
+* `x-amz-checksum-type`
+
+
 
 
 [[bucket-operations]]
@@ -154,6 +161,13 @@ If-Match
 If-Match
 
 |===
+從 ONTAP 9.20.1 開始，ONTAP S3 支援 S3 NAS 儲存桶的靈活 Checksum。
+
+* 當用戶端在要求中包含 Checksum 標頭時， ONTAP 會驗證、儲存並傳回 Checksum。
+* 僅支援 CRC-64NVME 演算法和 `FULL_OBJECT` Checksum 類型。
+* 靈活的 Checksum 支援僅適用於 S3 NAS 儲存桶。
+
+
 從支援物件中繼資料和標記的ONTAP 支援範圍起、ONTAP 從S9.9開始。
 
 * PutObject 和 CreateMultpartUpload 包含使用的金鑰值配對 `x-amz-meta-<key>.`
@@ -276,7 +290,7 @@ ONTAP S3 支援這些額外的 URI 查詢參數：
 * `response-expires`
 
 
-還有這個附加的請求標頭：
+以及這些額外的請求標頭：
 
 * 範圍
 
@@ -289,7 +303,7 @@ ONTAP S3 支援這些額外的 URI 查詢參數：
  a| 
 取得物件屬性
 
-ONTAP S3 支援此附加標頭：
+ONTAP S3 支援此要求的所有常用參數和標頭，ONTAP S3 也支援此額外標頭：
 
 * `x-amz-object-attributes`
 
@@ -302,7 +316,7 @@ ONTAP S3 支援此附加標頭：
 | GetObjectTagging | 部分9.9.1 ONTAP 
 
 
-| 標題物件 | 部分9.8 ONTAP 
+| HeadObject ONTAP S3 支援此請求的所有常用參數和標頭。 | 部分9.8 ONTAP 
 
 
  a| 
@@ -410,7 +424,7 @@ ONTAP S3 支援此附加標頭：
 | PuttObjectTagging | 部分9.9.1 ONTAP 
 
 
-| 上傳零件 | 部分9.8 ONTAP 
+| UploadPart ONTAP S3 支援此請求的所有常用參數和標頭。 | 部分9.8 ONTAP 
 
 
  a| 
@@ -461,6 +475,25 @@ ONTAP S3 支援以下附加 URI 參數：
 
 [[s3-actions-by-release]]
 == S3 依版本採取的行動
+
+.ONTAP 9.20.1
+從 ONTAP 9.20.1 開始，FlexCache Volume 上的 S3 NAS 儲存桶支援使用 S3 `CopyObject` 和 `UploadPartCopy` API 進行伺服器端物件複本作業。您可以在同一個 FlexCache NAS 儲存桶內複製物件，或是從 FlexGroup Volume 支援的 S3 NAS 儲存桶複製到 FlexCache NAS 儲存桶。不支援從 FlexVol Volume 支援的 S3 NAS 儲存桶複製到 FlexCache NAS 儲存桶、在兩個 FlexCache NAS 儲存桶之間複製，或是從 FlexCache NAS 儲存桶複製到非 FlexCache NAS 儲存桶。
+
+ONTAP 9.20.1 為 S3 NAS 儲存桶新增了使用 CRC-64NVME 演算法的靈活 Checksum 支援。當用戶端在請求中包含 Checksum 標頭時，ONTAP 會驗證、儲存並傳回 Checksum。以下操作支援靈活 Checksum 標頭：
+
+* PuttObject
+* 建立多個部分上傳
+* 上傳零件
+* 完成多個部分上傳
+* CopyObject
+* 上傳PartCopy
+* GetObject
+* 標題物件
+* 清單對象V2.
+* 清單零件
+
+
+僅支援 CRC-64NVME 演算法和 FULL_OBJECT Checksum 類型。靈活 Checksum 支援僅適用於 S3 NAS 儲存桶。
 
 .ONTAP 9.14.1.
 ONTAP 9 。 14.1 新增 S3 物件鎖定支援。

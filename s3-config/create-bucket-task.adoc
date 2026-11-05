@@ -38,7 +38,7 @@ S3 物件保留在 _buckets 中。它們不是嵌套在其他目錄內的目錄�
 *** 或者、您也可以指定是否要使用儲存區進行分層、在這種情況ONTAP 下、VMware會嘗試選擇低成本的媒體、為階層式資料提供最佳效能。
 
 
-** 您可以選取基礎 Aggregate 和 FlexGroup 元件（需要進階權限命令選項）：您可以選擇手動選取必須建立儲存區和包含 FlexGroup 磁碟區的集合體、然後指定每個集合體的組成數量。新增其他庫位時：
+** 您選取底層彙總與 FlexGroup 元件（需要進階權限命令選項）：您可以選擇手動選取必須建立儲存桶與包含之 FlexGroup Volume 的彙總，然後指定每個彙總上的構成要素數量。新增額外的儲存桶時：
 +
 *** 如果您為新的貯體指定集合體和成員、FlexGroup 將會為新的貯體建立新的功能區。
 *** 如果您未為新儲存桶指定 Aggregate 和組成元素，則新儲存桶將新增至現有的 FlexGroup，但前提是 `retention-mode`設定與現有儲存桶的 `retention-mode`設定和 FlexGroup 類型 (`compliance`、 `non-snaplock`、 `enterprise`）相符。如需詳細資訊，請參閱 xref:../flexgroup/index.html[資料區管理FlexGroup]。
@@ -66,6 +66,9 @@ S3 物件保留在 _buckets 中。它們不是嵌套在其他目錄內的目錄�
 . 建立儲存庫：
 +
 `vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> -size [integer{KB|MB|GB|TB|PB}] [-comment text] [additional_options]`
+
++
+從 ONTAP 9.20.1 開始，如果您在建立儲存桶時未指定 `-size`選項，ONTAP 將使用 S3 伺服器上設定的預設儲存桶大小。如果未設定預設值，ONTAP 將使用平台最小儲存桶大小。此行為也適用於透過 S3 API 或 ONTAP REST API 建立而未明確指定大小的儲存桶。
 
 +
 儲存 VM 名稱可以是資料儲存 VM 、也可以是 `Cluster` （系統儲存 VM 名稱）（如果您正在設定本機分層）。

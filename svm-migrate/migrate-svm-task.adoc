@@ -14,18 +14,13 @@ summary: SVM移轉完成後、用戶端會自動切換至目的地叢集、並�
 SVM移轉完成後、用戶端會自動切換至目的地叢集、並從來源叢集移除不必要的SVM。預設會啟用自動轉換和自動來源清除功能。如有必要、您可以停用用戶端自動切換功能、以便在轉換之前暫停移轉、也可以停用自動來源SVM清除功能。
 
 .關於這項工作
-此程序適用於FAS、 AFF和ASA系統。如果您擁有ASA r2 系統（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30、 ASA A20 或ASA C30），請依照下列步驟操作。link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["這些步驟"^]遷移 SVM。ASA r2 系統為僅使用 SAN 的客戶提供簡化的ONTAP體驗。
-
-從 ONTAP 9.19.1 開始，某些 AFF、ASA r2 和 FAS 系統支援直接連接 FC 和 FC-NVMe 組態。直接連接組態不支援 SVM 移轉。
-
-* 您可以使用 `-auto-cutover false` 當自動用戶端轉換通常發生時暫停移轉的選項、然後稍後手動執行轉換。
+* 此程序適用於 FAS、AFF 和 ASA 系統。如果您使用的是 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30）：
 +
-xref:manual-client-cutover-task.adoc[在SVM移轉之後手動切換用戶端]
+** 若要將 SVM 從 ASA 叢集移轉至 ASA r2 叢集，請依照link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["這些步驟"^]
+** 從 ONTAP 9.20.1 開始，若要將 SVM 從 ASA r2 叢集移轉至 ASA 或 AFF 叢集，請遵循 link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm-from-asa-r2.html["這些步驟"^]。
 
-* 您可以使用進階權限 `-auto-source-cleanup false` 此選項可在轉換後停用來源 SVM 的移除、然後在轉換之後手動觸發來源清理。
-+
-xref:manual-source-removal-task.adoc[轉換後手動移除來源SVM]
 
+* 從 ONTAP 9.19.1 開始，某些 AFF、ASA r2 和 FAS 系統支援直接連接 FC 和 FC-NVMe 組態。直接連接組態不支援 SVM 移轉。
 
 
 

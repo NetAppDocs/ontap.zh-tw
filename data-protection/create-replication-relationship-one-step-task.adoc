@@ -11,7 +11,7 @@ summary: 從ONTAP 功能介紹9.3開始、您可以使用SnapMirror Protect命�
 
 
 [role="lead"]
-從ONTAP 9.3 開始，您可以使用 `snapmirror protect`命令透過一個步驟配置資料保護關係。您指定要複製的磁碟區清單、目標叢集上的 SVM、作業計劃和SnapMirror策略。 `snapmirror protect`完成剩下的工作。
+您可以使用  `snapmirror protect` 命令在單一步驟中設定資料保護關係。您指定要複寫的 Volume 清單、目的地叢集上的 SVM、工作排程，以及 SnapMirror 原則。 `snapmirror protect` 會完成其餘工作。
 
 .開始之前
 * 來源與目的地叢集和SVM必須進行對等關係。
@@ -19,6 +19,11 @@ summary: 從ONTAP 功能介紹9.3開始、您可以使用SnapMirror Protect命�
 https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["叢集與SVM對等關係"^]
 
 * 目的地Volume上的語言必須與來源Volume上的語言相同。
+* 從 ONTAP 9.20.1 開始，您可以透過現有的 FC 架構設定後端 SnapMirror 非同步複寫。為此，您的 ONTAP 系統後端必須設定為 FC 複寫，且 FC 架構和叢集間 IP 網路都必須正常運作。複寫資料可以透過 FC 架構傳輸，但叢集間 IP 網路對於叢集通訊和複寫管理功能是必要的。後端 FC 複寫不支援直連 FC 組態。link:configure-backend-fc-replication.html["學習如何設定 ONTAP 系統後端以進行 FC 複寫"]
++
+** 如果您設定 SnapMirror 非同步關係以使用 FC 作為傳輸協定，在 MetroCluster 組態中，用於 MetroCluster 的儲存設備啟動器必須與用於透過 FC 進行複寫的啟動器分隔。不支援在兩者之間共用啟動器儲存設備。
+
+
 
 
 .關於這項工作
@@ -27,22 +32,26 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 。 `snapmirror protect` 然後命令會執行下列步驟：
 
 * 為要複寫之磁碟區清單中的每個磁碟區建立具有適當類型和保留空間量的目的地磁碟區。
-* 設定適合您所指定原則的複寫關係。
-* 初始化關係。
-
-
++
 目的地 Volume 的名稱為格式 `_source_volume_name_dst_`。如果與現有名稱發生衝突、命令會在磁碟區名稱加上一個數字。您可以在命令選項中指定字首和/或字尾。後置字元會取代系統提供的 `dst` 後置字元。
 
-在ONTAP 9.4 及更高版本中，目標磁碟區最多可包含 1019 個快照。在ONTAP 9.3 及更早版本中，目標磁碟區最多可包含 251 個快照。
++
+目的地 Volume 最多可以包含 1019 個快照。
 
+* 設定適合您所指定原則的複寫關係。
+* 初始化關係。
++
 [NOTE]
 ====
 初始化可能會很耗時。 `snapmirror protect` 不需要等到初始化完成後再完成工作。因此、您應該使用 `snapmirror show` 命令、而非 `job show` 判斷初始化何時完成的命令。
 
 ====
-從 ONTAP 9 5 開始、可以使用 `snapmirror protect`命令建立 SnapMirror 同步關係。
+* 從 ONTAP 9.20.1 開始，在建立 SnapMirror 關係以透過 FC 架構進行複寫時，請使用支援的非同步資料保護原則與 `-transport fc`選項。後端複寫預設使用 IP 協定。link:default-protection-policies-concept.html["了解後端 FC 複寫支援哪些預設非同步資料保護原則"]。
++
 
-詳細了解 `snapmirror protect`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["指令參考資料ONTAP"^] 。
+NOTE: 建立 SnapMirror 複寫關係後，若要變更所選的傳輸協定，您必須刪除並重新建立該關係。
+
+
 
 .步驟
 . 只需一個步驟即可建立及初始化複寫關係：
@@ -61,12 +70,12 @@ snapmirror protect -path-list <SVM:volume> -destination-vserver <destination_SVM
 
 ====
 +
-以下範例使用預設值建立及初始化 SnapMirror DR 關係 `MirrorAllSnapshots` 原則：
+以下範例使用預設 `MirrorAllSnapshots`原則和 FC 傳輸協定建立並初始化 SnapMirror DR 關係：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAllSnapshots -schedule replication_daily
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAllSnapshots -schedule replication_daily -transport fc
 ----
 +
 [NOTE]

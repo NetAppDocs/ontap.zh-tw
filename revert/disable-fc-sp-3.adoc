@@ -1,0 +1,35 @@
+---
+permalink: revert/disable-fc-sp-3.html 
+sidebar: sidebar 
+keywords: disable, fc-sp-3, fc, security, revert 
+summary: 如果在您的 ONTAP 系統上為 FC-SP-3 啟用了 FC 或 NVMe/FC 網路介面（LIF），則在回復至 ONTAP 9.19.1 之前必須將其停用。 
+---
+= 在從 ONTAP 9.20.1 回復之前，請停用 FC LIF 上的 FC-SP-3
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，ONTAP 支援在 AFF 和 FAS 系統上使用 Broadcom 安全主機匯流排介面卡（HBA）進行 Fibre Channel 安全傳輸協定 3（FC-SP-3）驗證與加密。如果您的 ONTAP 系統上的 FC 或 NVMe/FC 網路介面（LIF）已啟用 FC-SP-3，則在回復至 ONTAP 9.19.1 之前，必須先將其停用。
+
+.步驟
+. 驗證 LIF 上的 FC-SP-3 組態：
++
+[source, cli]
+----
+network interface show -fields fc-transport-security
+----
+. 如果 *transport-security-state* 欄位的狀態不可用，則無需執行任何行動。如果狀態為 *mandatory* 或 *preferred*，請將其修改為 *disabled*：
++
+[source, cli]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -fc-transport-security disabled
+----
+. 確認先前已啟用的 LIF 上的 FC-SP-3 已停用：
++
+[source, cli]
+----
+network interface show -fields fc-transport-security
+----
+

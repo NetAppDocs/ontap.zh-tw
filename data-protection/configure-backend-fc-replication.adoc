@@ -1,0 +1,223 @@
+---
+permalink: data-protection/configure-backend-fc-replication.html 
+sidebar: sidebar 
+keywords: configure, backend, FC, replication 
+summary: 從 ONTAP 9.20.1 開始，您可以在現有的 Fibre Channel （FC） 架構上設定後端 SnapMirror 非同步複寫與 SnapLock for SnapVault。若要啟用透過 FC 的資料複寫，必須設定後端 FC 複寫。 
+---
+= 設定 ONTAP 系統以透過 FC 進行後端複寫
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+從 ONTAP 9.20.1 開始，您可以在現有的 Fibre Channel（FC）架構上設定後端 SnapMirror 非同步複寫與 SnapLock for SnapVault。若要啟用透過 FC 進行的資料複寫，必須設定後端 FC 複寫。
+
+
+NOTE: 透過 FC 設定後端複寫時，FC 架構和叢集間 IP 網路都必須正常運作。複寫資料可以透過 FC 架構傳輸，但叢集間 IP 網路是叢集通訊和複寫管理功能所必需的。
+
+.關於這項工作
+直接連接的 FC 組態和使用自動架構分區的組態不支援透過 FC 進行後端複寫。
+
+.開始之前
+來源和目的地叢集上的節點必須滿足以下組態要求：
+
+* 至少需要四個儲存設備節點參與複寫關係：來源叢集中的兩個節點和目的地叢集中的兩個節點。
+* 每個節點必須至少設定以下連接埠：
++
+** 2 個專用 FC 啟動器連接埠
+** 2 個用於 FC 前端連線的 FC 目標連接埠
+** 2 個用於 FC 後端連線的 FC 目標連接埠
+
+
+* 連接來源和目的地叢集的交換器架構必須至少有 16 個可用連接埠，並配備專用於後端流量的相符 SFP。深入瞭解 link:../san-config/fc-config-best-practices.html["FC 架構組態最佳實務"]。
+* 為了確保連結穩定性，複寫路徑中的所有 HBA、SFP 和交換器連接埠都應以相同的固定速度運作。
+
+
+.步驟
+. 識別來源和目的地叢集上要用作後端啟動器的 FC 網路介面卡：
++
+[source, cli]
+----
+network fcp adapter show
+----
++
+在以下範例中，ssan-a50-06a-06b 是來源叢集，ssan-a50-07a-07b 是目的地叢集。來源叢集的範例輸出如下：
+
++
+[listing]
+----
+ssan-a50-06a-06b::*>network fcp adapter show
+                  Connection  Port    Admin    Operational
+Node         Adapter  Established Address Status   Status
+------------ -------- ----------- ------- -------- ---------------
+ssan-a50-06a 3a       false       0       up       link not connected
+ssan-a50-06a 3b       false       0       up       link not connected
+ssan-a50-06a 3c       false       0       up       link not connected
+ssan-a50-06a 3d       false       0       up       link not connected
+ssan-a50-06b 3a       false       0       up       link not connected
+ssan-a50-06b 3b       false       0       up       link not connected
+ssan-a50-06b 3c       false       0       up       link not connected
+ssan-a50-06b 3d       false       0       up       link not connected
+----
++
+目的地叢集的範例輸出如下：
+
++
+[listing]
+----
+ssan-a50-07a-07b::*>network fcp adapter show
+ssan-a50-07a 3a       false       0       up       link not connected
+ssan-a50-07a 3b       false       0       up       link not connected
+ssan-a50-07a 3c       false       0       up       link not connected
+ssan-a50-07a 3d       false       0       up       link not connected
+ssan-a50-07b 3a       false       0       up       link not connected
+ssan-a50-07b 3b       false       0       up       link not connected
+ssan-a50-07b 3c       false       0       up       link not connected
+ssan-a50-07b 3d       false       0       up       link not connected
+----
+. 在來源和目的地叢集的複寫關係中，為每個節點設定 2 個用於啟動器模式的連接埠：
++
+.. 使介面卡離線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter> -status-admin down
+----
++
+在以下範例中，連接埠 3c 設為離線。
+
++
+[listing]
+----
+network fcp adapter modify -node ssan-a50-06a -adapter 3c -status-admin down
+----
+.. 設定介面卡為啟動器模式：
++
+[source, cli]
+----
+system hardware unified-connect modify -t initiator <adapter_port>
+----
++
+請勿重新開機節點以套用介面卡修改。設定所有必要的介面卡並將其恢復為線上狀態後，請對每個節點執行儲存設備容錯移轉，以無中斷地套用變更。
+
+.. 將介面卡上線：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter> -status-admin up
+----
+.. 對每個需要設定為啟動器模式的連接埠重複這些步驟。
+.. 確認所有連接埠均已線上並設定為啟動器：
++
+[source, cli]
+----
+network fcp adapter show
+----
+
+
+. 對每個設定為 FC 複寫的 HA 配對執行手冊儲存設備容錯移轉。
++
+儲存設備故障轉移使得介面卡修改得以完成，而無需進行中斷性的節點重新開機。
+
++
+.. 對 HA 配對的第一個節點執行儲存設備容錯移轉：
++
+[source, cli]
+----
+storage failover takeover
+----
+.. 驗證儲存設備故障轉移是否成功：
++
+[source, cli]
+----
+storage failover show-takeover
+----
++
+預設啟用自動歸還功能。節點被接手並完成重新開機後，合作夥伴節點會自動發起歸還作業。
+
+.. 第一個節點自動歸還完成後，對 HA 配對的第二個節點執行儲存設備容錯移轉。
+.. 在每個設定為 FC 複寫的 HA 配對上重複儲存設備容錯移轉步驟。
+
+
+. 確認所有設定用於 FC 複寫的節點上的網路 FC 連接埠均為線上，並設定為啟動器：
++
+[source, cli]
+----
+system hardware unified-connect show
+----
+. 請確認您的就職系統 FC 介面卡已設定為目標：
++
+[source, cli]
+----
+network fcp adapter show
+----
++
+就職系統介面卡預設設定為目標。
+
+. 使用建議的接線圖完成 FC 目標連接埠和啟動器連接埠之間的 FC 接線。
+. 佈線完成後，對每個 HA 配對的 FC 目標和啟動器連接埠進行分區。
++
+每個區域只能有一個啟動器和一個目標。
+
++
+以下是節點 san-a50-06a/6b 和 san-a50-07a/7b 之間所建立的分區範例：
+
++
+[listing]
+----
+zone-6a-7a-1 → Ports san-a50-06a:3c & san-a50-07a:3a
+zone-6a-7a-2 → Ports san-a50-06a:3d & san-a50-07a:3a
+zone-6a-7a-3 → Ports san-a50-06a:3c & san-a50-07a:3b
+zone-6a-7a-4 → Ports san-a50-06a:3d & san-a50-07a:3b
+zone-6b-7a-1 → Ports san-a50-06b:3c & san-a50-07a:3a
+zone-6b-7a-2 → Ports san-a50-06b:3d & san-a50-07a:3a
+zone-6b-7a-3 → Ports san-a50-06b:3c & san-a50-07a:3b
+zone-6b-7a-4 → Ports san-a50-06b:3d & san-a50-07a:3b
+zone-6a-7b-1 → Ports san-a50-06a:3c & san-a50-07b:3a
+zone-6a-7b-2 → Ports san-a50-06a:3d & san-a50-07b:3a
+zone-6a-7b-3 → Ports san-a50-06a:3c & san-a50-07b:3b
+zone-6a-7b-4 → Ports san-a50-06a:3d & san-a50-07b:3b
+zone-6b-7b-1 → Ports san-a50-06b:3c & san-a50-07b:3a
+zone-6b-7b-2 → Ports san-a50-06b:3d & san-a50-07b:3a
+zone-6b-7b-3 → Ports san-a50-06b:3c & san-a50-07b:3b
+zone-6b-7b-4 → Ports san-a50-06b:3d & san-a50-07b:3b
+----
+. 在來源叢集上建立後端 FC 目標網路介面（LIF），然後在目的地叢集上建立後端 FC 目標網路介面：
++
+[source, cli]
+----
+network interface create -vserver <SVM> -lif <fcp_backend_target_lif> -data-protocol fcp -home-node <home_node> -home-port <home_port> -status-admin up
+----
++
+在下列範例中，後端 FC LIF 是在叢集 A 上建立：ssan-a50-06a。
+
++
+[listing]
+----
+network interface create -vserver ssan-a50-06a -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-06a -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-06a -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-06a -home-port 3b -status-admin up
+network interface create -vserver ssan-a50-06b -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-06b -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-06b -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-06b -home-port 3b -status-admin up
+----
++
+在下列範例中，後端 FC LIF 在叢集 B 上建立：ssan-a50-07a
+
++
+[listing]
+----
+network interface create -vserver ssan-a50-07a -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-07a -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-07a -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-07a -home-port 3b -status-admin up
+network interface create -vserver ssan-a50-07b -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-07b -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-07b -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-07b -home-port 3b -status-admin up
+----
+. 確認 LIF 已建立：
++
+[source, cli]
+----
+network interface show -vserver <SVM>
+----
+
+
+.接下來是什麼？
+您已準備好link:create-replication-relationship-task.html["設定 SnapMirror 複寫"]使用 FC 作為後端傳輸協定。

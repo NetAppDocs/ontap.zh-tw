@@ -44,6 +44,13 @@ NOTE: 從 ONTAP 9 8 開始、 ONTAP 提供用戶端 LIF 服務 `data-fpolicy-cli
 
 
 
+* 從 ONTAP 9.20.1 開始，FPolicy 原則支援 S3 事件。若要為 S3 物件事件設定 FPolicy，必須符合下列額外要求：
++
+** 叢集中的所有節點必須執行 ONTAP 9.20.1 或更高版本。混合版本叢集會封鎖 S3 FPolicy 組態，直到所有節點都支援該功能。
+** 僅支援 NAS 儲存桶，不支援原生 S3 儲存桶。
+** 支援 protobuf 通知格式的外部 FPolicy 伺服器。S3 事件不支援 XML 格式。
+
+
 
 
 
@@ -136,12 +143,41 @@ NOTE: 從 ONTAP 9 8 開始、 ONTAP 提供用戶端 LIF 服務 `data-fpolicy-cli
 +
 ** 監控檔案作業的最小類型、並在不中斷使用案例的情況下啟用最大篩選器數量。
 ** 使用篩選器執行 getattr 、讀取、寫入、開啟及關閉作業。SMB 和 NFS 主目錄環境在這些作業中所佔的比例很高。
+** 只有成功的 S3 用戶端驅動操作才會產生通知。內部產生的操作（例如物件過期或快照觸發的復原）不會產生 FPolicy 通知。
+** 支援的 S3 操作包括：
++
+*** 物件建立（PUT、COPY 和 CompleteMultipartUpload）
+*** 物件刪除（DELETE 和多重刪除）
+*** 物件標籤（PUT 標籤和 DELETE 標籤）
++
+
+NOTE: GET 和讀取事件不受監控。
+
+
+
+** S3 批次刪除請求最多可以刪除 1,000 個物件，但 FPolicy 會為每個成功刪除的物件傳送一個通知（SHM 插槽限制為 32 KB）。請據此規劃外部伺服器容量。
+** 使用 FPolicy 原則範圍，可以按名稱包含或排除特定的 NAS 儲存桶。如果設定的儲存桶名稱拼字錯誤或儲存桶已刪除，FPolicy 不會區塊作業，它只是不會為該儲存桶產生通知。
 
 
 * SVM 的 FPolicy 範圍組態：
 +
 將原則的範圍限制在相關的儲存物件上、例如共用、磁碟區和匯出、而非在整個 SVM 中啟用這些物件。NetApp 建議您檢查目錄副檔名。如果是 `is-file-extension-check-on-directories-enabled` 參數設定為 `true`，目錄物件會受到與一般檔案相同的副檔名檢查。
 
+
+
+
+
+[[s3-fpolicy-limitations]]
+=== S3 FPolicy 限制
+
+從 ONTAP 9.20.1 開始，FPolicy 支援 S3 物件監控，但有以下限制：
+
+* S3 FPolicy 僅以非同步、非強制模式運作。S3 事件不支援同步模式、強制原則和原生封鎖（以副檔名為基礎的封鎖）。
+* S3 FPolicy 通知不支援持久化儲存。
+* S3 通知不支援 FPolicy 外部引擎連線上的 SSL/TLS。
+* 特權資料存取和直通讀取不適用於 S3 FPolicy。
+* 不支援保證送達。通知僅盡力發送，如果外部 FPolicy 伺服器中斷連線，或重試後共享記憶體緩衝區（SHM）仍已滿，則通知可能會被捨棄。
+* S3 事件不支援存取被拒絕和操作失敗通知。
 
 
 
@@ -288,9 +324,13 @@ NOTE: 您必須處於診斷模式、才能收集與 FPolicy 相關的統計資�
 
 NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如、如果您想要新增或修改為啟用原則設定的外部引擎中的 IP 位址、請先停用原則。
 
-如果您將 FPolicy 設定為監控 NetApp FlexCache 磁碟區、 NetApp 建議您不要設定 FPolicy 來監控讀取和 getattr 檔案作業。在 ONTAP 中監控這些作業需要擷取 inode 到路徑（ I2P ）資料。由於 I2P 資料無法從 FlexCache 磁碟區擷取、因此必須從原始磁碟區擷取。因此、監控這些作業可免除 FlexCache 所能提供的效能效益。
+如果您設定 FPolicy 來監控 NetApp FlexCache Volume，NetApp 建議您不要設定 FPolicy 來監控讀取和 getattr 檔案作業。在 ONTAP 中監控這些作業需要擷取 inode 到路徑（I2P）資料。由於無法從 FlexCache Volume 擷取 I2P 資料，因此必須從來源 Volume 擷取。因此，監控這些作業會消除 FlexCache 可提供的效能優勢。對於 FlexCache Volume 上的 S3 NAS 儲存桶，對來源 Volume 的內部回寫和繞寫作業不會產生 FPolicy 通知。最佳實務做法是在來源 SVM 和 FlexCache SVM 上設定 FPolicy，以擷取所有 S3 事件。
 
 當同時部署 FPolicy 和隨裝即用的防毒解決方案時、防毒解決方案會先收到通知。FPolicy 處理只會在防毒掃描完成後才會開始。請務必正確設定防毒解決方案的大小、因為慢速防毒掃描程式可能會影響整體效能。
+
+S3 FPolicy 在 MetroCluster 組態中受支援。切換後，如果外部 FPolicy 伺服器已設定且可從遠端（存續）站台連線，則可以從該站台產生 FPolicy 通知。
+
+在節點接管和歸還操作期間，如果關聯的 LIF 遷移到另一個節點，FPolicy 伺服器連線可能會短暫中斷。當合適的 LIF 可用時，連線會自動重新建立。在此期間重試操作的 S3 用戶端將在連線恢復後產生新的 FPolicy 通知。
 
 
 
@@ -306,6 +346,8 @@ NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如�
 
 將所有節點升級至ONTAP 支援FPolicy Passthrough-read的版本後、叢集就能使用Passthrough-read功能；不過、在現有的FPolicy組態上、依預設會停用pass-read。若要在現有的FPolicy組態上使用passThrough讀取、您必須停用FPolicy原則並修改組態、然後重新啟用組態。
 
+所有節點升級至 ONTAP 9.20.1 或更高版本後，即可設定包含 S3 協定和 S3 物件操作（物件建立、物件刪除、物件標記）的 FPolicy 事件。在混合版本叢集中，S3 FPolicy 組態將被封鎖。
+
 
 
 [[reverting]]
@@ -318,6 +360,8 @@ NetApp 建議您先停用 FPolicy 原則、再進行任何組態變更。例如�
 
 
 在還原至不支援持續儲存區的 ONTAP 版本之前、請確定 FPolicy 原則中沒有任何一個具有設定的持續儲存區。如果設定持續儲存區、還原將會失敗。
+
+在回復到不支援 S3 FPolicy 的 ONTAP 版本之前，您必須刪除所有使用 S3 協定設定的 FPolicy 事件。如果 S3 FPolicy 組態仍然存在，則回復將會失敗。
 
 .相關資訊
 * link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html["統計數據顯示"^]

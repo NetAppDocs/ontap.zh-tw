@@ -31,6 +31,10 @@ summary: 從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的�
 
 .防竄改快照支援的功能
 * link:https://docs.netapp.com/us-en/storage-management-cloud-volumes-ontap/reference-worm-snaplock.html["Cloud Volumes ONTAP"^]
+* FlexCache 原始磁碟區
++
+從ONTAP 9.16.1 開始受支援。
+
 * 資料量FlexGroup
 +
 FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快照上。只有在根組成的到期時間已過時、才FlexGroup 允許刪除此功能。
@@ -39,15 +43,23 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 +
 您可以將具有鎖定快照的 FlexVol volume 轉換為 FlexGroup Volume 。轉換後，快照仍會保持鎖定狀態。
 
+* 適用於 NAS 的 SnapMirror active sync
++
+從 ONTAP 9.20.1 開始，您可以在 SVM 層級關係中的 SnapMirror 作用中同步 NAS FlexVol Volume 上建立防篡改快照。
+
 * SnapMirror 非同步
 +
 規範時鐘必須同時在來源和目的地上初始化。
+
+* SnapMirror 原則規則使用 `-schedule` 參數
+* SnapMirror 同步
++
+從 ONTAP 9.19.1 開始、您只能在建立 Snapshot 時指定到期時間。您無法設定或延長現有 Snapshot 的到期時間。
 
 * SVM 資料移動性（用於將 SVM 從來源叢集移轉或重新定位至目的地叢集）
 +
 從 ONTAP 9.14.1 開始支援。
 
-* SnapMirror 原則規則使用 `-schedule` 參數
 * SVM DR
 +
 規範時鐘必須同時在來源和目的地上初始化。
@@ -55,14 +67,6 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 * Volume複製與檔案複製
 +
 您可以從鎖定的快照建立磁碟區複本和檔案複本。
-
-* FlexCache 原始磁碟區
-+
-從ONTAP 9.16.1 開始受支援。
-
-* SnapMirror 同步
-+
-從 ONTAP 9.19.1 開始、您只能在建立 Snapshot 時指定到期時間。您無法設定或延長現有 Snapshot 的到期時間。
 
 
 
@@ -75,7 +79,7 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 防竄改的快照可提供不可刪除的保護。由於 FabricPool 需要刪除資料的能力，因此無法在同一個磁碟區上啟用 FabricPool 和快照鎖定。
 
 * SMtape
-* SnapMirror 主動同步
+* 適用於 SAN 的 SnapMirror active sync
 
 
 

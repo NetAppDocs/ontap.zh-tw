@@ -1,8 +1,8 @@
 ---
 permalink: volumes/cautions-increasing-maximum-directory-size-concept.html 
 sidebar: sidebar 
-keywords: flexvol, maximum, limits, maxdir-size, maxdirsize, caution, caveats, directory, size, directory size, max, allowed, default, volume 
-summary: 預設的最大FlexVol 目錄大小取決於機型、並針對系統記憶體大小進行最佳化。在增加目錄大小上限之前、請先尋求技術支援。 
+keywords: flexvol, flexgroup, maximum, limits, maxdir-size, maxdirsize, directory, size, directory size, max, 25 million files, large directory, directory index, is-dir-index-transfer-enabled 
+summary: 您可以設定 FlexVol Volume 上目錄的最大大小。您應該設定的最大大小取決於 ONTAP 版本和您的特定組態。ONTAP 9.20.1 已增強 ONTAP 目錄大小強制執行功能，以支援更大的目錄大小。 
 ---
 = ONTAP FlexVol 磁碟區的最大目錄大小
 :allow-uri-read: 
@@ -11,8 +11,106 @@ summary: 預設的最大FlexVol 目錄大小取決於機型、並針對系統記
 
 
 [role="lead"]
-您可以使用下列方法增加特定FlexVol volume的預設最大目錄大小： `-maxdir-size`選項 `volume modify`命令，但這樣做可能會影響系統效能。查看link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_is_maxdirsize["NetApp知識庫：什麼是 maxdirsize？"^]。
+您可以設定 FlexVol Volume 上目錄的最大大小。您應該設定的最大大小取決於 ONTAP 版本和您的特定組態。ONTAP 9.20.1 已增強 ONTAP 目錄大小強制執行功能，以支援更大的目錄大小。
 
-如需深入瞭解FlexVol 依賴於機型的最大目錄大小、請造訪 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-如link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["指令參考資料ONTAP"^]需詳細 `volume modify`資訊，請參閱。
+NOTE: 設定最大目錄大小適用於個別的 FlexVol Volume 以及 FlexGroup 中的所有 Volume。
+
+
+
+[[considerations-for-directory-size-limit-processing]]
+== 目錄大小限制處理的注意事項
+
+目錄的大小取決於其中包含的檔案、資料夾和其他項目的數量，以及名稱的長度。隨著總大小的增加，可能會影響效能以及 ONTAP 有效管理目錄的能力。您可以使用 `maxdir-size`命令參數來限制目錄的最大大小。目錄的最大大小只需為特定 Volume 設定一次，並套用於該 Volume 上的每個資料夾。
+
+
+
+[[operational-characteristics]]
+=== 運作特性
+
+ONTAP 目錄處理有幾個與建立和強制執行最大大小相關的特性。
+
+預設最大值:: ONTAP 9.20.1 之前的版本預設最大目錄大小為 320 MB。確切數值取決於機型，且是針對平台上的系統記憶體容量最佳化的。請參閱 https://hwu.netapp.com/["NetApp Hardware Universe"^]以取得特定機型的詳細資料與預設值。
+增加最大目錄大小:: 預設最大值適用於支援一般業務應用程式的大多數工作負載；大多數環境不需要變更此值。如有需要，您可以在 CLI 命令 `volume create`和 `volume modify`上使用 `-maxdir-size`參數來增加允許的目錄大小上限。
+建議上限:: NetApp 通常不建議將目錄擴展到超過 1GB，即使觀察到某些目錄可以安全地超過此大小。在 ONTAP 9.20.1 之前的版本中，過大的目錄大小會帶來效能風險。
+
+
+
+
+[[performance-considerations]]
+=== 效能考量
+
+目錄的大小直接影響尋找效能，尤其對於非常大且作用中的目錄而言更是如此。隨著目錄的成長，ONTAP 會自動建立內部索引來加快名稱尋找速度，使大多數要求無需掃描整個目錄。
+
+然而，在持續高速的檔案建立與刪除下，索引管理程序可能會落後於傳入變更的速率。在某些情況下，這可能會導致出現大型的部分索引目錄。在此情況下，查閱與目錄清單要求可能會發生顯著的效能減低，這種情況會持續到索引程序趕上為止。
+
+
+
+[[enhanced-directory-size-supporting-25-million-files]]
+== 增強的目錄大小支援 2500 萬個檔案
+
+從 ONTAP 9.20.1 開始，您可以安全地增加最大目錄大小值，突破先前 ONTAP 版本中的限制。9.20.1 及更新版本的上限為 4 GB；這可支援約 2500 萬個檔案、資料夾和其他項目。此增強功能旨在支援需要在單一目錄中包含大量檔案的工作負載（例如 AI）。
+
+
+
+[[two-step-configuration-process]]
+=== 兩步驟組態程序
+
+設定 Volume 以安全地支援較大的目錄是一個兩步驟的程序。您可以在建立 Volume 時執行組態，或是透過修改現有 Volume 來執行。步驟如下：
+
+* 啟用此功能。您需要使用 `volume create`或 `volume modify`命令，針對特定 Volume 將參數 `-is-dir-index-transfer-enabled`設定為 `true`（預設值為 `false`）。
+* 增加目錄大小上限。您可以在建立 Volume 或後續修改期間，使用  `-maxdir-size` 參數來設定 Volume 的上限。這與 9.20.1 之前的 ONTAP 系統所使用的參數相同。
+
+
+這兩個設定是獨立的，因此執行組態的順序很靈活。不過，NetApp 建議先啟用增強大小選項 (`-is-dir-index-transfer-enabled`），然後再允許 Volume 目錄成長至設定的最大大小。如果在啟用該功能之前目錄就已增大，則在啟用該選項並完成相關的背景轉換程序之前，目錄將無法完全獲得這些改進的優點。
+
+
+
+[[benefits]]
+=== 效益
+
+擴充的最大目錄大小提供數項改進：
+
+* 增強的目錄索引能夠跟上快速、大量的檔案建立和刪除請求，從而降低大型未索引目錄的風險。
+* 目錄索引資訊會複寫至 SnapMirror 目的地 Volume；即使 SnapMirror 關係中斷，目的地 Volume 仍會保持索引狀態並運作良好。
+* 在背景一致性檢查期間，目錄存取速度更快，進而降低大型目錄對系統健全狀況檢查的影響。
+* 尋找效能在更廣泛的操作範圍內更一致，即使目錄索引不可用，也能提供可靠的備用方案。
+
+
+
+
+[[enhanced-internal-processing]]
+=== 增強的內部處理
+
+啟用增強型目錄最大大小選項後，ONTAP 會啟動背景掃描器，將 Volume 現有的目錄索引資訊轉換為新的靈活格式。此程序會非同步執行，並需要一些時間才能完成，尤其是對於包含許多現有目錄的 Volume。大型現有目錄可能要等到掃描程序完成後，才能完全發揮效能和複寫的優點。
+
+在 Volume 上啟用該選項後，您不應嘗試將其停用。停用它會觸發背景掃描器，將目錄索引資訊轉換回其原始格式；掃描器必須完成，該選項才能完全還原。
+
+
+
+[[restrictions-and-cautions]]
+=== 限制與注意事項
+
+在使用  `-is-dir-index-transfer-enabled` 參數啟用功能之前，請注意下列限制：
+
+* 它與 S3 duality 不相容。S3 duality 可支援的目錄內物件數量有已知的限制。這兩項功能互斥，不應同時使用。
+* 不支援在處於或打算置於 SnapMirror 同步或 SnapMirror 作用中同步 NAS 關係的 Volume 上。
+* 對於準備進行 SVM 移轉的 Volume，不支援此功能。
+* SnapMirror 非同步和 SnapMirror 雲端目的地必須執行 ONTAP 9.17.1 或更新版本；不支援複寫至較早版本。
+* 啟用此功能的 Volume 不支援邏輯目錄複寫 (LDR)。
+* 它不能直接在 SnapMirror 目的地（DP）Volume 上啟用；它的狀態總是跟隨來源 Volume。
+* FlexCache Volume 永遠不會快取來自其來源的目錄索引資訊。此功能的能力開發狀態會從來源 Volume 同步到其快取，但底層索引轉換僅適用於來源。
+
+
+在 Volume 上啟用此功能之前，請務必審查您的資料保護拓撲。這些限制可能會影響現有或未來的計劃，包括 SnapMirror 關係和 SVM 移轉。
+
+
+
+[[related-information]]
+== 相關資訊
+
+* link:../volumes/enable-large-dir-max-support-task.html["啟用 ONTAP 對大型目錄最大大小的支援"]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_is_maxdirsize["NetApp知識庫：什麼是 maxdirsize？"^]
+* https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/How_to_modify_the_maxdir-size_in_ONTAP_9["NetApp 知識庫：如何在 ONTAP 9 中修改 maxdir-size"^]
+* https://hwu.netapp.com/["NetApp Hardware Universe"^]
+
