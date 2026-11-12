@@ -28,6 +28,18 @@ summary: 瞭解 ONTAP 9.x 限制和預設值的變更。
 | 自主勒索軟體防護 (ARP/AI) | 升級至 ONTAP 9.20.1 後，每個 Volume 的預設 ARP/AI 定期快照最大數量從 6 個減少到 2 個，定期快照的預設保留期間從 12 小時減少到 7 小時。除非先前已修改過這些節點層級選項，否則這些變更將會生效。如果在升級前已設定  `arw.snap.max.count` 或  `arw.snap.low.encryption.retain.duration.hours` 選項，則會保留現有的 ARP/AI 快照行為。 | ONTAP 9.20.1 
 
 
+| SnapMirror 主動同步 | SnapMirror 作用中同步將 SAN 和 NAS 組態中每個 HA 配對支援的 Volume 數量從 400 增加到 600。 | ONTAP 9.20.1 
+
+
+| 一致性群組 | 每個一致性群組的最大 Volume 數量已從 80 增加到 256。每個父一致性群組的最大子一致性群組數量已從 5 增加到 64。這些增加不適用於 SnapMirror 作用中同步關係中的 Volume。對於這些 Volume，每個一致性群組的最大 Volume 數量仍為 80，每個父一致性群組的最大子一致性群組數量仍為 5。 | ONTAP 9.20.1 
+
+
+| SAN | 每個 LUN 支援的最大 SCSI-3 持續保留註冊數從 182 增加到 256。 | ONTAP 9.20.1 
+
+
+| FlexCache | 當每個 Volume 使用一個構成要素時，支援的 FlexCache Volume 數量會增加至每個節點 2500 個，以及每個 HA 配對 5000 個。您可以從來源 Volume 建立的 FlexCache Volume 數量增加至 200，每個來源的回寫快取數量增加至 50。 | ONTAP 9.20.1 
+
+
 | 自主勒索軟體防護 (ARP/AI) | 在支援的平台上，所有新磁碟區在 12 小時寬限期後預設自動啟用 ARP/AI。 | ONTAP 9.18.1 
 
 
