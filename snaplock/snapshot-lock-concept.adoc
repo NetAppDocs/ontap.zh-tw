@@ -2,7 +2,7 @@
 permalink: snaplock/snapshot-lock-concept.html 
 sidebar: sidebar 
 keywords: snaplock, snapshot, lock, tamperproof 
-summary: 從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。 
+summary: 您可以鎖定非 SnapLock Volume 上的快照，以提供保護免受勒索軟體攻擊。鎖定快照可確保它們不會被意外或惡意刪除。 
 ---
 = 鎖定ONTAP快照以防止勒索軟體攻擊
 :allow-uri-read: 
@@ -15,14 +15,14 @@ summary: 從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的�
 
 您可以使用 SnapLock Compliance 時鐘功能將快照鎖定一段指定的時間，以便在快照達到到期時間之前無法刪除快照。鎖定快照可防止竄改，防止勒索軟體威脅。如果磁碟區遭到勒索軟體攻擊，您可以使用鎖定的快照來恢復資料。
 
-從 ONTAP 9.14.1 開始，快照鎖定功能可支援 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的長期保留快照。使用與相關的 SnapMirror 原則規則來設定保留期間xref:Modify an existing policy to apply long-term retention[現有原則標籤]，即可啟用快照鎖定。此規則會覆寫在磁碟區上設定的預設保留期間。如果 SnapMirror 標籤沒有相關的保留期間、則會使用磁碟區的預設保留期間。
+從 ONTAP 9.14.1 開始，快照鎖定支援在非 SnapLock 保存庫與鏡像保存庫 SnapMirror 目的地 Volume 上長期保留快照。您可以透過設定與 xref:Modify an existing policy to apply long-term retention[現有原則標籤] 相關聯的 SnapMirror 原則規則的保留期間來啟用快照鎖定。此規則會覆寫在 Volume 上設定的預設保留期間。如果沒有與 SnapMirror 標籤相關聯的保留期間，則會使用 Volume 的預設保留期間。
 
 .防竄改的快照需求與考量
 * 如果您使用的是 ONTAP CLI 、叢集中的所有節點都必須執行 ONTAP 9.12.1 或更新版本。如果您使用的是 System Manager 、則所有節點都必須執行 ONTAP 9.13.1 或更新版本。
 * link:../system-admin/install-license-task.html["SnapLock 授權必須安裝在叢集上"]。本授權包含在link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]中。
 * link:../snaplock/initialize-complianceclock-task.html["叢集上的規範時鐘必須初始化"]。
-* 在磁碟區上啟用快照鎖定功能時，您可以將叢集升級至 ONTAP 9.12.1 之後的 ONTAP 版本；不過，除非所有鎖定的快照都已達到到期日，並已刪除，且快照鎖定功能已停用，否則您無法還原至舊版的 ONTAP 。
-* 快照鎖定時，磁碟區過期時間會設為快照的到期時間。如果鎖定多個快照，則磁碟區過期時間會反映所有快照中最長的過期時間。
+* 如果在 Volume 上啟用了快照鎖定，您可以將叢集升級到 ONTAP 9.12.1 之後的 ONTAP 版本。但是，在所有鎖定的快照達到其過期日期並被刪除且快照鎖定已停用之前，您無法回復到更早版本的 ONTAP。
+* 當快照被鎖定時，Volume 過期時間將設定為該快照的過期時間。如果鎖定了多個快照，Volume 過期時間將反映所有快照中最晚的過期時間。
 * 鎖定快照的保留期間優先於快照保留計數，這表示如果鎖定快照的快照保留期間尚未過期，則保留數量限制將不會生效。
 * 在 SnapMirror 關係中，您可以在鏡射資料保險箱原則規則上設定保留期間，如果目的地磁碟區已啟用快照鎖定功能，則會將保留期間套用至複寫至目的地的快照。保留期間優先於保留計數；例如，即使超過保留計數，仍會保留未超過過期的快照。
 * 您可以重新命名非 SnapLock 磁碟區上的快照。僅當原則為MirrorAllSnapshots時、SnapMirror關係的主要磁碟區上的Snapshot重新命名作業才會反映在次要磁碟區上。對於其他原則類型，重新命名的快照不會在更新期間傳播。
@@ -71,7 +71,7 @@ FlexGroup 磁碟區支援快照鎖定。快照鎖定只會發生在根組成快�
 
 
 .不支援的功能
-防竄改快照目前不支援下列功能：
+防篡改快照不支援以下功能：
 
 * 一致性群組
 * link:../fabricpool/index.html["FabricPool"]
@@ -181,7 +181,7 @@ Do you want to continue: {yes|no}: y
 . 在 * 新增 Snapshot Policy* 視窗中、輸入原則名稱。
 . 選取 image:icon_add.gif["新增圖示"]。
 . 提供快照排程詳細資料，包括排程名稱，要保留的最大快照數，以及 SnapLock 保留期間。
-. 在 * SnapLock 保留期間 * 欄中，輸入保留快照的小時數，天數，月數或年數。例如，保留期為 5 天的快照原則，會從建立快照之日起將快照鎖定 5 天，而且在該期間無法刪除快照。支援下列保留期間範圍：
+. 在 *SnapLock 保留期間* 欄中，輸入保留快照的小時數、天數、月數或年數。例如，保留期間為五天的快照原則會將快照從建立之時起鎖定五天，在此期間無法刪除。支援下列保留期間範圍：
 +
 ** 年數： 0 - 100
 ** 月數： 0 - 1200
@@ -322,19 +322,19 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 在 SnapMirror 關係中，您可以在鏡射資料保險箱原則規則上設定保留期間，如果目的地磁碟區已啟用快照鎖定功能，則會將保留期間套用至複寫至目的地的快照。保留期間優先於保留計數；例如，即使超過保留計數，仍會保留未超過過期的快照。
 
-從 ONTAP 9.14.1 開始，您可以新增規則來設定快照的長期保留，以修改現有的 SnapMirror 原則。此規則用於覆寫 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的預設磁碟區保留期間。
+從 ONTAP 9.14.1 開始，您可以修改現有的 SnapMirror 原則，新增規則以設定快照的長期保留。此規則會覆寫非 SnapLock 保存庫與鏡像保存庫 SnapMirror 目的地 Volume 上的預設 Volume 保留期間。
 
 . 將規則新增至現有的 SnapMirror 原則：
 +
 `snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of snapshots> -retention-period [<integer> days|months|years]`
 
 +
-下列範例建立規則、將 6 個月的保留期間套用至現有的「 LockVault 」原則：
+以下範例建立一條規則，將 6 個月的保留期間套用至名為「snapvault」的現有原則：
 
 +
 [listing]
 ----
-snapmirror policy add-rule -vserver vs1 -policy lockvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
+snapmirror policy add-rule -vserver vs1 -policy snapvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
 ----
 +
 如link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["指令參考資料ONTAP"^]需詳細 `snapmirror policy add-rule`資訊，請參閱。

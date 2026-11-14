@@ -11578,7 +11578,6 @@ SSH-RSA</block>
   <block id="7b0967c8f0444361cfeb30fcece64155" category="list-text">瀏覽至 * 儲存 &gt; 磁碟區 * 、然後選取磁碟區。</block>
   <block id="1529987d7858ddaa2c637e76aabedf3c" category="section-title">修改現有原則以套用長期保留</block>
   <block id="b9e5d0f84af6a58cd2618a9fb2670be0" category="list-text">將規則新增至現有的 SnapMirror 原則：</block>
-  <block id="e3015c83fb1b34722f76c34eba731cd9" category="paragraph">下列範例建立規則、將 6 個月的保留期間套用至現有的「 LockVault 」原則：</block>
   <block id="dd9fe98abae3504fac3d3c16e9c1d984" category="list-text">來源與目的地集合體必須為64位元。</block>
   <block id="902d44ec362accd8809e8825b76a2c7a" category="list-text">來源Volume不能SnapLock 是一個不全的Volume。</block>
   <block id="c3bb4d2a093af5d57504470b0e3780c5" category="inline-link-macro">使用 SnapLock 類型建立 FlexClone Volume</block>
@@ -18289,7 +18288,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="a4a94df107b902603379e41c5bbc1193" category="list-text">FAS8200 、預設 DP Volume max-autossize = 100TB</block>
   <block id="dbdf91e0a065393db37896d4bdde0d53" category="paragraph">如需詳細資訊、請參閱<block ref="bb9c67b5a4c15a85b5e6aa6c9afd0285" category="inline-link-rx"></block>。</block>
   <block id="4ed8d1625ef7a6879b32b6ac645d3cff" category="summary">當您不再需要從目的地提供資料時、可以重新建立來源SVM與目的地SVM之間的原始資料保護關係。此程序與磁碟區複寫程序大致相同、但有一項例外。在重新啟動來源SVM之前、您必須先停止目的地SVM。</block>
-  <block id="453e32180102576e59ec8f3e3f713549" category="paragraph">如果您在處理資料時增加了目的地Volume的大小、則在重新啟動來源Volume之前、您應該手動增加原始來源Volume的最大自動大小、以確保其能夠充分擴充。</block>
   <block id="9609ef04727079fb4d7f77c4f4426147" category="paragraph"><block ref="9609ef04727079fb4d7f77c4f4426147" category="inline-link-macro-rx"></block></block>
   <block id="1a2afde9954edf3d66a5bdd231b3f3c4" category="admonition">快速重新同步並不會保留目的地磁碟區的儲存效率。啟用快速重新同步可能會增加目的地磁碟區所使用的磁碟區空間。</block>
   <block id="df66bd84e871c542c5dad0737fcfd980" category="paragraph">此程序假設原始來源Volume中的基準線不變。如果基準不完整、您必須先建立並初始化您要從中處理資料的磁碟區與原始來源磁碟區之間的關係、然後再執行程序。</block>
@@ -18297,7 +18295,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="914f2f68a0a9e66f41cc3f3bd7946941" category="list-text">從原始來源SVM或原始來源叢集、執行下列命令以刪除反轉的資料保護關係：</block>
   <block id="535e2aff25bd8b0b6c53654bea563961" category="paragraph">以下範例刪除原始目的地 SVM 之間的反向關係、<block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block>和原始來源 SVM 、<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block>：</block>
   <block id="a87d7c48d925b71b122f5d0d4f34d05f" category="list-text">從原始目的地SVM或原始目的地叢集、釋出反轉的資料保護關係：</block>
-  <block id="c45c4db019582765320560f9bdd26045" category="paragraph">下列範例會釋出原始目的地 SVM 、 SVM_backup 與原始來源 SVM 之間的反向關係、<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block></block>
   <block id="39f6a5161928ddec8087e6775cfd8523" category="paragraph">非同步鏡射、鏡射-保存庫、同步、StrictSync</block>
   <block id="ec818b31f7a299184eb233f3139c481e" category="paragraph">all_source_snapshots</block>
   <block id="3f9aba2a69eb3eb37f49fd320e4b8243" category="paragraph">保存庫、鏡射保存庫</block>
@@ -35992,14 +35989,10 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="edb7de5345c0e13b445ca56a1ac41e47" category="open-title">ONTAP Mediator 1.9 及更新版本</block>
   <block id="924f0dc2963f2e4930b13d461565e506" category="open-title">ONTAP Mediator 1.8 及更早版本</block>
   <block id="bb8917b538ccb8a7e1b5863be366fde2" category="list-text">X60132A （ 4p ， 10G/25G 乙太網路控制器）</block>
-  <block id="84621d601f6b7bd1714240b0cfde2213" category="summary">從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。</block>
   <block id="5e8c9d081a4e7ca510072e15483c4571" category="doc">鎖定快照以防止勒索軟體攻擊</block>
   <block id="8b9a79e7cc5f300c141dd7c278939b96" category="paragraph">從 ONTAP 9.12.1 開始，您可以鎖定非 SnapLock 磁碟區上的快照，以防止勒索軟體攻擊。鎖定快照可確保快照不會意外或惡意刪除。</block>
   <block id="b2d747eadc51f2eb67a7db66db8c16c8" category="paragraph">您可以使用 SnapLock Compliance 時鐘功能將快照鎖定一段指定的時間，以便在快照達到到期時間之前無法刪除快照。鎖定快照可防止竄改，防止勒索軟體威脅。如果磁碟區遭到勒索軟體攻擊，您可以使用鎖定的快照來恢復資料。</block>
-  <block id="172b197c353a5fe9dfef508ec34bf1a0" category="paragraph">從 ONTAP 9.14.1 開始，快照鎖定功能可支援 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的長期保留快照。使用與相關的 SnapMirror 原則規則來設定保留期間<block ref="ded6b9b6cfc55c6433ead109aad587ab" category="inline-xref-macro-rx"></block>，即可啟用快照鎖定。此規則會覆寫在磁碟區上設定的預設保留期間。如果 SnapMirror 標籤沒有相關的保留期間、則會使用磁碟區的預設保留期間。</block>
   <block id="658eabfbc09936df441511879ddd9205" category="list-title">防竄改的快照需求與考量</block>
-  <block id="9ba6d91428dee1f51709985481ef8572" category="list-text">在磁碟區上啟用快照鎖定功能時，您可以將叢集升級至 ONTAP 9.12.1 之後的 ONTAP 版本；不過，除非所有鎖定的快照都已達到到期日，並已刪除，且快照鎖定功能已停用，否則您無法還原至舊版的 ONTAP 。</block>
-  <block id="8e8ce627f1ddc06df230f8fc5a53a64e" category="list-text">快照鎖定時，磁碟區過期時間會設為快照的到期時間。如果鎖定多個快照，則磁碟區過期時間會反映所有快照中最長的過期時間。</block>
   <block id="03dd4daa5f7bc7945251ed79dd854dee" category="list-text">鎖定快照的保留期間優先於快照保留計數，這表示如果鎖定快照的快照保留期間尚未過期，則保留數量限制將不會生效。</block>
   <block id="79b2210dd83897a638c325cb5569f52a" category="list-text">在 SnapMirror 關係中，您可以在鏡射資料保險箱原則規則上設定保留期間，如果目的地磁碟區已啟用快照鎖定功能，則會將保留期間套用至複寫至目的地的快照。保留期間優先於保留計數；例如，即使超過保留計數，仍會保留未超過過期的快照。</block>
   <block id="9d496dfbb59d2280a53cf15786eb7a9e" category="list-text">您可以重新命名非 SnapLock 磁碟區上的快照。僅當原則為MirrorAllSnapshots時、SnapMirror關係的主要磁碟區上的Snapshot重新命名作業才會反映在次要磁碟區上。對於其他原則類型，重新命名的快照不會在更新期間傳播。</block>
@@ -36009,7 +36002,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="ece639b3be09d728380c9aec0671d060" category="paragraph">您可以將具有鎖定快照的 FlexVol volume 轉換為 FlexGroup Volume 。轉換後，快照仍會保持鎖定狀態。</block>
   <block id="0c39a77bf4051e469ae6ed0dadf8ad5c" category="paragraph">規範時鐘必須同時在來源和目的地上初始化。</block>
   <block id="b39fec1f8d779120807149756262f595" category="paragraph">您可以從鎖定的快照建立磁碟區複本和檔案複本。</block>
-  <block id="6843d841f73b15905aebb343eb44dca3" category="paragraph">防竄改快照目前不支援下列功能：</block>
   <block id="519637fcf202a3b9dfc537d904577f48" category="section-title">建立磁碟區時啟用快照鎖定</block>
   <block id="e247c4237210d4f15a2a234e91d22033" category="paragraph">從 ONTAP 9.12.1 開始，您可以在建立新磁碟區時，或在 CLI 中使用和<block ref="9f9fc58b577820fbcd41ff15739ed6f0" prefix=" " category="inline-code"></block>命令選項<block ref="4784dd0ffa42c3d1b43b0afd079dfc17" prefix=" " category="inline-code"></block>修改現有磁碟區時，啟用快照鎖定<block ref="a3aabd91f02aa5f85ce99a47d482a668" prefix=" " category="inline-code"></block>。從 ONTAP 9.13.1 開始，您可以使用系統管理員來啟用快照鎖定。</block>
   <block id="71e3692dc4f2b7211b850fd62cb9b685" category="list-text">若要建立新的磁碟區並啟用快照鎖定，請輸入下列命令：</block>
@@ -36021,7 +36013,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="26b4e9ebf24ca7006f0e85d4c9fed4a9" category="paragraph">從 ONTAP 9.12.1 開始，您可以建立快照原則來套用快照保留期間，並將原則套用至磁碟區，以鎖定指定期間的快照。您也可以手動設定保留期間來鎖定快照。從 ONTAP 9.13.1 開始，您可以使用系統管理員建立快照鎖定原則，並將其套用至磁碟區。</block>
   <block id="c3bdc87ed100230b1bd89645be241fda" category="section-title">建立快照鎖定原則</block>
   <block id="7f1664b2cbda5a2895ad33c3d00a8caa" category="list-text">提供快照排程詳細資料，包括排程名稱，要保留的最大快照數，以及 SnapLock 保留期間。</block>
-  <block id="096108732f4478923d4531ac81f4f104" category="list-text">在 * SnapLock 保留期間 * 欄中，輸入保留快照的小時數，天數，月數或年數。例如，保留期為 5 天的快照原則，會從建立快照之日起將快照鎖定 5 天，而且在該期間無法刪除快照。支援下列保留期間範圍：</block>
   <block id="40c1375a0050f61e9da4da7bb4730754" category="list-text">若要建立快照原則，請輸入下列命令：</block>
   <block id="02dd8a84f7ca9362aeb9a9d6b6200c69" category="paragraph">下列命令會建立快照鎖定原則：</block>
   <block id="9657c93c6101640c73aa7011ea86da4f" category="paragraph">如果快照處於作用中保留狀態，則不會取代該快照；也就是說，如果有鎖定的快照尚未過期，則保留計數將不會生效。</block>
@@ -36039,7 +36030,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="139b26d504158be8ac8b634e41c8586e" category="list-text">選取快照，選取<block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選擇 * 修改 SnapLock 過期時間 * 。您可以選取行事曆來選擇保留到期日和時間。</block>
   <block id="fc27cd0394ada76e3ac40dea3c9d6aeb" category="list-text">若要手動將保留期間套用至現有的快照，請輸入下列命令：</block>
   <block id="e6c579a0a2c3c0df75b542a7f4e322e0" category="paragraph">以下範例將保留期間套用至現有的快照：</block>
-  <block id="c58091855169d27fe4d38bcd198f5a08" category="paragraph">從 ONTAP 9.14.1 開始，您可以新增規則來設定快照的長期保留，以修改現有的 SnapMirror 原則。此規則用於覆寫 SnapLock 資料保險箱目的地和非 SnapLock SnapMirror 目的地磁碟區上的預設磁碟區保留期間。</block>
   <block id="22421ba01185b452d160a85301c212d3" category="paragraph"><block ref="54ce562754112bd2c30ed1c955215936" prefix="" category="inline-code"></block></block>
   <block id="caba72de7441e3ac5072123ba7f61d78" category="list-text">* 選項（ a ） * ：選取 * Import （匯入） * 以瀏覽至<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block>檔案並將其匯入。</block>
   <block id="28e6598b0d0084dbc2aaecb8893f570d" category="list-text">* 選項（ b ） * ：複製檔案內容<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block>，並將其貼到 * 憑證 * 欄位。</block>
@@ -38496,7 +38486,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="44e33c8aa80d8adcdbf6f3bfdecbcda8" category="list-text">在第三個目的地叢集上，定義<block ref="f15d884fee5c1c1f6ac0fa41ba0da1ed" prefix=" " category="inline-code"></block>原則的規則：</block>
   <block id="756ef84ce2a8f0fe3ff959c9f1560e6a" category="list-text">啟用之後，<block ref="6a623c8871cfdca9220b553cbf376ae1" prefix=" " category="inline-code"></block>您可以指定是否可以自動清理 FlexCache 磁碟區上的檔案，以及清理時間間隔：</block>
   <block id="cf140b40f437242c3431977ac42bff75" category="paragraph"><block ref="26981efd56500fad281084a7455e9d64" prefix="" category="inline-code"></block></block>
-  <block id="0d9d70ce35ffa8a547f0c910b22ae9be" category="paragraph">如果在貯體上啟用版本設定，則可以使用 S3 用戶端，將物件鎖定保留時間放在物件的特定版本上。鎖定物件的特定版本並不會阻止刪除物件的其他版本。如果您想要啟用物件的版本設定以供稍後恢復、請選取 * 啟用版本管理 * 。如果您啟用貯體上的物件鎖定、預設會啟用版本設定。如需物件版本設定的相關資訊，請參閱<block ref="b50a9a79e638b29595f9a351415e2311" category="inline-link-rx"></block>。</block>
   <block id="19b2e4b9be52e7a8ece485368b3a9586" category="paragraph">從 9.14.1 開始、 S3 儲存區支援物件鎖定。建立貯體時，必須啟用 S3 物件鎖定。無法在先前存在的貯體上啟用物件鎖定。物件鎖定只能用於原生 S3 使用案例。設定為使用 S3 傳輸協定的多重傳輸協定 NAS 磁碟區應使用 SnapLock 將資料提交至 WORM 儲存設備。S3 物件鎖定需要標準 SnapLock 授權。本授權隨附於<block ref="f7dbe68b41c16767df4408fcc8699964" category="inline-link-macro-rx"></block>。</block>
   <block id="9ce298fb67f5d9b5d847fc509f21e671" category="paragraph">當您確認已安裝 SnapLock 授權時、若要保護您的儲存區中的物件、避免遭到刪除或覆寫、請選取 * 啟用物件鎖定 * 。鎖定功能可在所有或特定版本的物件上啟用、而且只有在叢集節點初始化 SnapLock 規範時鐘時才會啟用。請遵循下列步驟：</block>
   <block id="10eec202a4ec02313d7f6f9b5a9b3ae6" category="list-text">在您為該用戶端建立匯出規則之前，用戶端必須在 DNS 中有「 PTR 」記錄。</block>
@@ -38730,7 +38719,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="e255981be7fc6073adfec23ea3b23fd1" category="paragraph">如<block ref="d29358cb651d8164b0e87cbb870ecff7" category="inline-link-macro-rx"></block>需詳細<block ref="7191f5eb2cfca6dcf721ad376b2bef37" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="ad399144628d206575224c00ae51223c" category="paragraph">您可以使用<block ref="730d187801768a4d84de4567732a6c18" prefix=" " category="inline-code"></block>和<block ref="9685140cece962ad95fe159398d7fffd" prefix=" " category="inline-code"></block>命令來刪除 SVM 複寫關係。然後您可以手動刪除不需要的目的地Volume。如需有關本程序中所述命令<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>的詳細資訊，請參閱。</block>
   <block id="d504622ca10484864531f89aed691e22" category="paragraph">如<block ref="0e819e7a9aa735d154700a2863625c15" category="inline-link-macro-rx"></block>需詳細<block ref="ec8bfbd590d8678aad77b0e369355eb7" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
-  <block id="205b5d1f93258748036bd94c1504de2d" category="paragraph">從 ONTAP 9 。 11.1 開始、您可以<block ref="00568fdae21a828533b2e5b1b7949ff7" prefix=" " category="inline-code"></block><block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>在執行 SVM DR 關係的反向重新同步時、使用命令的 CLI  選項、縮短災難恢復排練期間的重新同步時間。快速重新同步可繞過資料倉儲的重建與還原作業、縮短返回正式作業所需的時間。如<block ref="235cbb955a58591179160b7a6cd1ff1d" category="inline-link-macro-rx"></block>需詳細<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="29972ba62df1bdaf5ff5ff4a540e82dc" category="paragraph">如<block ref="a0258d27aa07dba3f7b612d26d0c9f7a" category="inline-link-macro-rx"></block>需詳細<block ref="ea77a400bf6e69bd7111d5c46dfec51c" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="367dfc2d53286622d7bd1e0f5b431fd4" category="paragraph">如<block ref="146c6b792023845f5eebba00f91d76e8" category="inline-link-macro-rx"></block>需詳細<block ref="859f5842129c4a4759882f44afc53f67" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="b608507d9a0dd4081a0931563d86df73" category="paragraph">您可以從快照還原，將磁碟區恢復到較早的時間點。您可以使用 System Manager 或<block ref="8f381ba1024744332b561ba609495012" prefix=" " category="inline-code"></block>命令，從快照還原磁碟區的內容。如<block ref="652ab39b1770adfaf5ce01531369d6d6" category="inline-link-macro-rx"></block>需詳細<block ref="8f381ba1024744332b561ba609495012" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
@@ -44147,7 +44135,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="e525a0c85ae5bc92647b0afa0d512056" category="list-text">重啟SP：</block>
   <block id="396262ee936f3d3e26ff0e60bea6cae0" category="open-title">BMC</block>
   <block id="c3645395a1004c3e93ef44f5099eb9f1" category="list-text">重啟BMC：</block>
-  <block id="652e0cfcaf59ea183f052c8fc7b1ea91" category="admonition">叢集管理員應在重新啟動原始來源 SVM 之前暫停客戶端的寫入操作，以避免資料遺失。</block>
   <block id="fb30db4e4395c9324f563fe3e0159f70" category="list-text">從客戶端還原對原始來源 SVM 的寫入操作。</block>
   <block id="b2e978dd3fa32c9b20e6c8c5b95bb992" category="list-text">不建議在用作本機或遠端FabricPool容量層的儲存桶上使用 S3 快照。</block>
   <block id="13b3c62fdbf9418a02dc296611c02206" category="list-text">KMIP 伺服器必須能夠從每個節點的節點管理 LIF 存取。</block>
@@ -44206,24 +44193,11 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="e3f32015c0c1388e646d8bdf26d24223" category="paragraph">從ONTAP 9.8 開始，您可以使用系統管理員在災難發生後重新啟動來源儲存 VM。</block>
   <block id="21714beb36feda9f7be0b843fccf42f8" category="paragraph">您可以使用系統管理員或ONTAP CLI 執行此任務。</block>
   <block id="009535d68eab225a562400eafd180320" category="open-title">系統管理器ONTAP 9.17.1 及更高版本</block>
-  <block id="6f9ca3bdf0a6b885df1a7eb4a382a37b" category="list-text">在目標叢集上，選擇所需的保護關係：按一下「保護」&gt;「複製」。</block>
-  <block id="f9e3a75773e81904d7c79e747da28537" category="list-text">將滑鼠懸停在來源名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後點選“反向同步”。</block>
   <block id="02814269ba2fc2bcfc83cd047c3426d6" category="paragraph">此關係從 *複製* 表中消失，現在由原始來源叢集管理。</block>
-  <block id="7851c0be02d96c32a64a2e6f5852c0b2" category="list-text">在原始來源叢集上，按一下“保護”&gt;“複製”，然後檢查狀態是否顯示“已鏡像”，以驗證反向重新同步是否完成。</block>
   <block id="a89cfe51feedfe0f2863a25e763e70e4" category="list-text">在原始目標叢集上，導覽至*叢集 &gt; 儲存虛擬機器*。</block>
-  <block id="027e3ca7c6319e595e87d043723d0d82" category="list-text">找到儲存虛擬機，將遊標懸停在儲存虛擬機名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後點擊“停止”。</block>
-  <block id="03b3665d6618dea524ded0a5f29081f2" category="list-text">在「停止儲存虛擬機器」視窗中，按一下「停止」。</block>
-  <block id="8db9900d034597d286acc00917fd2233" category="list-text">在來源叢集上，導覽至“保護”&gt;“複製”，找到要重新啟動的儲存虛擬機，將遊標懸停在儲存虛擬機名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後按一下「啟動目標儲存 VM」。</block>
-  <block id="dc7f8be17c9da708382825faca44cc3f" category="list-text">在“啟動目標儲存 VM”視窗中，選擇“啟動目標儲存 VM 並斷開連接”，然後按一下“啟動”。</block>
-  <block id="e4e009dfaef27ea0f7c7795bc7fad0fd" category="list-text">返回「複製」頁面後，再次將遊標懸停在儲存虛擬機器名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後點選“反向同步”。</block>
   <block id="8652f71026ac455b8f950a83ef3a4372" category="open-title">系統管理器ONTAP 9.16.1 及更早版本</block>
-  <block id="649e260716256b597119f882cc088d9c" category="list-text">在目標叢集上，選擇所需的保護關係：按一下「保護」&gt;「關係」。</block>
   <block id="41d27f8a4617faecc68a449185d0651c" category="paragraph">由於該關係現在由原始來源叢集管理，因此該關係從 *關係* 表中消失。</block>
-  <block id="884045e2208b8ac37716a337abbcf4e0" category="list-text">在原始來源叢集上，按一下“保護 &gt; 關係”，然後檢查狀態是否顯示為“已鏡像”，以驗證反向重新同步是否完成。</block>
   <block id="a0465bb00d28c88d8ecc0dbfd193f766" category="list-text">在原始目標叢集上，導覽至「儲存 &gt; 儲存虛擬機器」。</block>
-  <block id="2ba447381e6bf86f53b67350e45d780d" category="list-text">在來源叢集上，找到儲存虛擬機器（現在是反向關係中的來源 SVM），將遊標停留在 SVM 名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後按一下「啟動目標儲存 VM」。</block>
-  <block id="2367c22bf167d3636e2a565dd63304dc" category="list-text">在“啟動目標儲存 VM”視窗中，選擇“啟動目標儲存 VM 並斷開連接”，然後按一下“啟動”。</block>
-  <block id="78d5d4b5512a2bd3a8ee4dda84e9b808" category="list-text">返回「關係」頁面後，再次將遊標懸停在儲存虛擬機器名稱上，然後按一下 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然後點選“反向同步”。</block>
   <block id="90b0718d4da02df7541cbf2e444ed300" category="list-text">從ONTAP 9.16.1 開始，支援包含單部分物件的元資料。</block>
   <block id="5508dfce6cbfe795c47582bc94a05a39" category="list-text">從ONTAP 9.16.1 開始，支援包含單部分物件的標籤。</block>
   <block id="b45299ccd3b6c2152ca74ce334f5b772" category="paragraph-title">對於快閃記憶體池 / 混合聚合，需要使用 -disktype 參數來變更每個磁碟類型的流程</block>
@@ -49432,4 +49406,35 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="7a2d847520dcdf3655d0bcc5f5257d19" category="cell">SnapMirror 作用中同步將 SAN 和 NAS 組態中每個 HA 配對支援的 Volume 數量從 400 增加到 600。</block>
   <block id="261d8342915863b4035b9b7d3bc5b49d" category="cell">每個 LUN 支援的最大 SCSI-3 持續保留註冊數從 182 增加到 256。</block>
   <block id="f24ce81f056d5acd59788df7f5ab36a1" category="cell">FlexCache</block>
+  <block id="080d1cd419d9c3bc98d0867f751e9d47" category="list-text">如果在從目的地 Volume 提供資料時增加了該 Volume 的大小，請在重新啟動來源 Volume 之前，手動增加原始來源 Volume 的 max-autosize，以確保其能夠充分成長。</block>
+  <block id="155e02981b20d50aa04ce356503acf13" category="admonition">為避免資料遺失，請在重新啟動原始來源之前暫停用戶端應用程式。當目的地 SVM 停止執行時，用戶端應用程式會經歷 I/O 中斷，直到來源 SVM 重新啟動為止。</block>
+  <block id="13cfea8d719c7d468fb6bd593f11d710" category="paragraph">從 ONTAP 9.11.1 開始，在執行 SVM DR 關係的反向重新同步時，您可以透過使用 CLI<block ref="00568fdae21a828533b2e5b1b7949ff7" prefix=" " category="inline-code"></block> 選項搭配<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block> 命令，縮短災難恢復演練期間的重新同步時間。快速重新同步可繞過資料倉儲的重新建置和還原作業，從而縮短恢復至生產環境所需的時間。在<block ref="235cbb955a58591179160b7a6cd1ff1d" category="inline-link-macro-rx"></block>中深入瞭解<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>。</block>
+  <block id="3e2f7cdbd7f097e30e898cfbad633ebc" category="list-text">在目的地叢集上，選擇所需的保護關係：選擇 *保護 &gt; 複寫*。</block>
+  <block id="9fde9d8fda13bccd3985832c17b13696" category="list-text">將游標停留在來源名稱上，選擇 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選擇 *反向重新同步*。</block>
+  <block id="08160ecbcaaeea647538978e6fc91f07" category="list-text">在 *反向重新同步關係* 視窗中，選擇 *反向重新同步*。</block>
+  <block id="85334bbc1bdd6e7776fea55ab7717c73" category="list-text">在原始來源叢集上，選擇 *保護 &gt; 複寫*，並透過檢查狀態是否顯示為 *已鏡像* 來驗證反向重新同步是否完成。</block>
+  <block id="4797137d8eb6a3ff20ce54dc2369a088" category="list-text">找到儲存設備 VM，將游標停留在儲存設備 VM 名稱上，選取 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選取 *停止*。</block>
+  <block id="c9f399e705f9b73028314192a6e0e216" category="list-text">在 *停止儲存設備 VM* 視窗中，選擇 *停止*。</block>
+  <block id="1b487728c2bccc29eaa5591684e9eb82" category="list-text">在來源叢集上，導覽至 *保護 &gt; 複寫*，找到您要重新啟動的儲存 VM，將游標停留在儲存 VM 名稱上，選取 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選取 *啟動目的地儲存 VM*。</block>
+  <block id="88c418e653328e6207a40c42e9da70b4" category="list-text">在 *啟動目的地儲存設備 VM* 視窗中，選擇 *啟動目的地儲存設備 VM 並中斷關係*，然後選擇 *啟動*。</block>
+  <block id="82edf1a0f7722ca9b5468fb349031e67" category="list-text">返回 *複寫* 頁面後，再次將游標停留在儲存設備 VM 名稱上，選取 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選取 *反向重新同步*。</block>
+  <block id="9a1a129eb58cbaeb8c83c3ef751e0adb" category="list-text">在目的地叢集上，選擇所需的保護關係：選擇 *保護 &gt; 關係*。</block>
+  <block id="fd4fb50a2b851302b2da3f441e7ebaa6" category="list-text">在原始來源叢集上，選取 *保護 &gt; 關係*，並檢查狀態是否顯示為 *已鏡像*，以驗證反向重新同步是否完成。</block>
+  <block id="65bd006e8a4661b6e15cd03d8a42c43c" category="list-text">在來源叢集上，找到儲存設備 VM（現在是反向關係的來源 SVM），將游標停留在 SVM 名稱上，選擇 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選擇 *啟動目的地儲存設備 VM*。</block>
+  <block id="475240f1f3e7ff6af4b8a8b4012c646d" category="list-text">在 *啟動目的地儲存設備 VM* 視窗中，選擇 *啟動目的地儲存設備 VM 並中斷關係*，然後選擇 *啟動*。</block>
+  <block id="62007b35651dbd7f472d0cfacaabd4f0" category="list-text">當您返回 *關係* 頁面時，再次將游標停留在儲存設備 VM 名稱上，選取 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然後選取 *反向重新同步*。</block>
+  <block id="72eb830bf05aea20f8febfd8f7b39a13" category="paragraph">以下範例更新了從中提供資料的原始目的地 SVM <block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block> 與原始來源 SVM <block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 之間的關係：</block>
+  <block id="0ec8e360ecfaea7ec407280f9ed7c349" category="paragraph">以下範例會釋放原始目的地 SVM <block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block> 與原始來源 SVM <block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 之間的反向關係。</block>
+  <block id="8c07231cc4602e59b9f8e5c898dd057b" category="paragraph">如果您希望為物件啟用版本控制以便日後恢復，請選擇 *啟用版本控制*。如果您在儲存桶上啟用了物件鎖定，則預設會啟用版本控制。版本控制一旦在儲存桶上啟用，便無法停用。</block>
+  <block id="09d8faabb1a375bf10c7b8884f017e09" category="paragraph">可以透過在 System Manager 中取消勾選 *啟用版本控制* 核取方塊或使用 CLI 來暫停版本控制。</block>
+  <block id="703aac91108306f4f8b07e94f253f17f" category="paragraph">如果儲存桶啟用了版本控制，則可以使用 S3 用戶端為物件特定版本設定物件鎖定保留時間。鎖定物件的特定版本並不會阻止刪除物件的其他版本。</block>
+  <block id="e5fa74207a72a5712d50b354957d1402" category="paragraph">有關物件版本控制的更多資訊，請參閱<block ref="b50a9a79e638b29595f9a351415e2311" category="inline-link-rx"></block>。</block>
+  <block id="de1456ae3513c38788b03d315c043ee6" category="summary">您可以鎖定非 SnapLock Volume 上的快照，以提供保護免受勒索軟體攻擊。鎖定快照可確保它們不會被意外或惡意刪除。</block>
+  <block id="c8f4f455f6bfa865f12f3e17485fe8fb" category="paragraph">從 ONTAP 9.14.1 開始，快照鎖定支援在非 SnapLock 保存庫與鏡像保存庫 SnapMirror 目的地 Volume 上長期保留快照。您可以透過設定與 <block ref="ded6b9b6cfc55c6433ead109aad587ab" category="inline-xref-macro-rx"></block> 相關聯的 SnapMirror 原則規則的保留期間來啟用快照鎖定。此規則會覆寫在 Volume 上設定的預設保留期間。如果沒有與 SnapMirror 標籤相關聯的保留期間，則會使用 Volume 的預設保留期間。</block>
+  <block id="7955029cd8bdaafe410a74f3786726cc" category="list-text">如果在 Volume 上啟用了快照鎖定，您可以將叢集升級到 ONTAP 9.12.1 之後的 ONTAP 版本。但是，在所有鎖定的快照達到其過期日期並被刪除且快照鎖定已停用之前，您無法回復到更早版本的 ONTAP。</block>
+  <block id="6957eca128865d50d9262b567876b088" category="list-text">當快照被鎖定時，Volume 過期時間將設定為該快照的過期時間。如果鎖定了多個快照，Volume 過期時間將反映所有快照中最晚的過期時間。</block>
+  <block id="fb031f26738897f40fd3613a7e718ecd" category="paragraph">防篡改快照不支援以下功能：</block>
+  <block id="e1f70860abd9e5fc15cf85bb06afb9ec" category="list-text">在 *SnapLock 保留期間* 欄中，輸入保留快照的小時數、天數、月數或年數。例如，保留期間為五天的快照原則會將快照從建立之時起鎖定五天，在此期間無法刪除。支援下列保留期間範圍：</block>
+  <block id="81e27204de2e946d06a1948b3f7b1dc0" category="paragraph">從 ONTAP 9.14.1 開始，您可以修改現有的 SnapMirror 原則，新增規則以設定快照的長期保留。此規則會覆寫非 SnapLock 保存庫與鏡像保存庫 SnapMirror 目的地 Volume 上的預設 Volume 保留期間。</block>
+  <block id="3fc3cc854447902027a622be128f1555" category="paragraph">以下範例建立一條規則，將 6 個月的保留期間套用至名為「snapvault」的現有原則：</block>
 </blocks>

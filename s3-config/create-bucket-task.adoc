@@ -159,7 +159,17 @@ NOTE: 您不應該使用S3 root使用者來管理ONTAP 物件儲存設備並分�
 
 如果您打算使用S3物件存放區FabricPool 來進行分層、請考慮選擇*用於分層*（使用低成本媒體、為階層式資料提供最佳效能）、而非效能服務層級。
 
-如果在貯體上啟用版本設定，則可以使用 S3 用戶端，將物件鎖定保留時間放在物件的特定版本上。鎖定物件的特定版本並不會阻止刪除物件的其他版本。如果您想要啟用物件的版本設定以供稍後恢復、請選取 * 啟用版本管理 * 。如果您啟用貯體上的物件鎖定、預設會啟用版本設定。如需物件版本設定的相關資訊，請參閱 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在適用於 Amazon 的 S3 儲存區中使用版本設定"]。
+如果您希望為物件啟用版本控制以便日後恢復，請選擇 *啟用版本控制*。如果您在儲存桶上啟用了物件鎖定，則預設會啟用版本控制。版本控制一旦在儲存桶上啟用，便無法停用。
+
+可以透過在 System Manager 中取消勾選 *啟用版本控制* 核取方塊或使用 CLI 來暫停版本控制。
+
+[listing]
+----
+vserver object-store-server bucket modify -vserver <svm_name> -bucket <bucket_name> -versioning-state suspended
+----
+如果儲存桶啟用了版本控制，則可以使用 S3 用戶端為物件特定版本設定物件鎖定保留時間。鎖定物件的特定版本並不會阻止刪除物件的其他版本。
+
+有關物件版本控制的更多資訊，請參閱 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在適用於 Amazon 的 S3 儲存區中使用版本設定"]。
 
 從 9.14.1 開始、 S3 儲存區支援物件鎖定。建立貯體時，必須啟用 S3 物件鎖定。無法在先前存在的貯體上啟用物件鎖定。物件鎖定只能用於原生 S3 使用案例。設定為使用 S3 傳輸協定的多重傳輸協定 NAS 磁碟區應使用 SnapLock 將資料提交至 WORM 儲存設備。S3 物件鎖定需要標準 SnapLock 授權。本授權隨附於link:../system-admin/manage-licenses-concept.html["ONTAP One"]。
 
