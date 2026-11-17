@@ -2,7 +2,7 @@
 permalink: authentication/install-server-certificate-cluster-svm-ssl-server-task.html 
 sidebar: sidebar 
 keywords: generate, install, ca-signed, server, certificate, csr, signing request, signed 
-summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。 
+summary: 產生憑證簽署要求並安裝 CA 簽署的伺服器憑證，以將 ONTAP 叢集或 SVM 驗證為 SSL 伺服器。 
 ---
 = 在 ONTAP 中產生並安裝 CA 簽署的伺服器憑證
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證
 
 
 [role="lead"]
-在正式作業系統上、最佳做法是安裝CA簽署的數位憑證、以用於將叢集或SVM驗證為SSL伺服器。您可以使用命令來產生憑證簽署要求（ CSR ），並 `security certificate install`使用 `security certificate generate-csr`命令來安裝從憑證授權單位收到的憑證。深入瞭解 `security certificate generate-csr`及 `security certificate install` link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+certificate["指令參考資料ONTAP"^]。
+在正式作業系統上，安裝 CA 簽署的數位憑證是驗證叢集或 SVM 作為 SSL 伺服器的最佳實務做法。您可以使用 `security certificate generate-csr`命令來產生憑證簽署要求 （CSR），並使用 `security certificate install`命令來安裝從憑證授權單位收到的憑證。請在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+certificate["指令參考資料ONTAP"^]中深入瞭解 `security certificate generate-csr`和 `security certificate install`。
 
 
 
@@ -31,7 +31,7 @@ summary: 在正式作業系統上、最佳做法是安裝CA簽署的數位憑證
 security certificate generate-csr -common-name FQDN_or_common_name -size 512|1024|1536|2048 -country country -state state -locality locality -organization organization -unit unit -email-addr email_of_contact -hash-function SHA1|SHA256|MD5
 ----
 +
-下列命令會建立 CSR ，其中包含由雜湊函數產生的 2048 位元私密金鑰 `SHA256`，供自訂一般名稱為的公司部門 `server1.companyname.com`中的群組 `IT`使用 `Software`，位於美國加州森尼維爾。SVM 連絡人管理員的電子郵件地址為 `web@example.com`。系統會在輸出中顯示CSR和私密金鑰。
+下列命令會建立一個 CSR，其中包含由 `SHA256`雜湊功能所產生的 2048 位元私密金鑰。此 CSR 供位於美國加州 Sunnyvale 的某家公司 `IT`部門中的 `Software`群組使用。該公司的自訂一般名稱為 `server1.companyname.com`。SVM 聯絡系統管理員的電子郵件地址為 `web@example.com`。系統會在輸出中顯示 CSR 和私密金鑰。
 
 +
 .建立 CSR 的範例
@@ -57,6 +57,10 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 ====
 . 從CSR輸出複製憑證要求、然後以電子形式（例如電子郵件）將其傳送至信任的協力廠商CA進行簽署。
 +
+
+NOTE: 憑證授權單位必須以 base64 編碼的 PEM 或 PKCS12 格式傳回已簽署的憑證。
+
++
 在處理您的要求之後、CA會將簽署的數位憑證傳送給您。您應該保留一份私密金鑰和CA簽署的數位憑證複本。
 
 
@@ -81,14 +85,14 @@ security certificate install -vserver SVM_name -type certificate_type
 +
 [NOTE]
 ====
-系統會提示您輸入CA根憑證和中繼憑證、這些憑證構成伺服器憑證的憑證鏈結。ONTAP鏈結從發行伺服器憑證的CA憑證開始、範圍最多可達CA的根憑證。任何遺失的中繼憑證都會導致伺服器憑證安裝失敗。
+ONTAP 會提示您輸入構成伺服器憑證鏈的 CA 根目錄憑證和中間憑證。此憑證鏈從核發伺服器憑證的 CA 憑證開始，一直延伸到該 CA 的根目錄憑證。缺少中間憑證會導致伺服器憑證安裝失敗。
 
 ====
 +
 以下命令可在 SVM 上安裝 CA 簽署的伺服器憑證和中繼憑證 `engData2`。
 
 +
-.安裝 CA 簽署的伺服器憑證中繼憑證的範例
+.安裝 CA 簽署的伺服器憑證和中間憑證的範例
 [%collapsible]
 ====
 [listing]
