@@ -7856,7 +7856,6 @@ SSH-RSA</block>
   <block id="c3797ec0867a91c7210314033bdee7d3" category="paragraph">支援所有 _direct_ 升級路徑 <block ref="02817b93d7f2d16d2a2da9afca7c9b6c" category="inline-link-macro-rx"></block>。</block>
   <block id="00779de0d495f49611a888db514c57bd" category="paragraph">例如、如果叢集執行9.3且您想升級至9.7、則會載入ONTAP 9.5和9.7的版次安裝套件、然後啟動andu至9.7。ONTAP 會先自動將叢集升級至 9.5 、然後再升級至 9.7 。您應預期在程序期間會有多個接管/恢復作業及相關的重新開機。</block>
   <block id="dedf8a28f5f519cdbb19cdbe21baaf7d" category="paragraph">在您開始進行任何重大升級之前、最佳做法是先將叢集上執行的 ONTAP 版本升級至最新的修補程式版本。這可確保ONTAP 您目前版本的任何問題都能在升級前解決。</block>
-  <block id="ab65b2fff8e39e07cd5c391a76b10586" category="paragraph">例如、如果您的系統執行ONTAP 的是32個版本的更新版本、而您打算升級至9個版本的版本、您應該先升級至最新版本的9.3修補程式、然後依照從9.3升級至9個版本的升級途徑。</block>
   <block id="e2625d2e63a06f625882b01dfba9355d" category="inline-link">NetApp 支援網站上推薦使用的最低 ONTAP 版本</block>
   <block id="ffa31027a2ea27d11f42c581660dd118" category="paragraph">深入瞭解<block ref="f08e0a016ce47880883ba0d7b5be12fd" category="inline-link-rx"></block>。</block>
   <block id="eccc8325175b53fdef9a1846222d4161" category="section-title">支援的升級途徑</block>
@@ -38757,25 +38756,15 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="20df74dd9059112f4ef8506d8ece8b43" category="inline-link-macro">已有速度</block>
   <block id="94cbe0a1b5f2d1b8d701ffe90240f923" category="paragraph">資料會在磁碟區層級鏡射。主要儲存設備中的來源磁碟區與次要儲存設備中的目的地磁碟區之間的關係稱為 _ 資料保護關係。 _ 磁碟區所在的叢集和從磁碟區提供資料<block ref="4fcb22bea40d5020e5c1306fc10718f1" category="inline-link-macro-rx"></block>的 SVM 必須是。對等關係可讓叢集和 SVM 安全地交換資料。</block>
   <block id="f2248ba92c3e9181ac4a4025a3a9c15f" category="paragraph">下圖說明 SnapMirror 資料保護關係：</block>
-  <block id="bdab6e4420d2594639deec294187ca21" category="summary">請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因為本機層，附加雲端層和磁碟區（磁碟區分層原則）所發生的變更都會對功能造成重大影響。</block>
-  <block id="064bc5dcf6a07ff4107cf22eb0a51dae" category="paragraph">A <block ref="7f1ebb6fb0ad236c93285e2e95f25dcd" category="inline-link-macro-rx"></block> 是 ONTAP 在不中斷營運的情況下，將磁碟區從一個本機層（來源）移至另一個（目的地）的方式。雖然最常見的原因是硬體生命週期管理，叢集擴充和負載平衡，但由於各種原因，可以執行磁碟區移動。</block>
   <block id="970817aace0e2ac5c058aebdc5d2260f" category="section-title">目的地本端層</block>
-  <block id="e275af7bfd30d3c94e9b3cc69404a8d9" category="paragraph">如果 Volume Move 的目的地本端層沒有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會寫入目的地本端層的本端層。</block>
   <block id="83c4e98eb75fbe6e0e33fa86b715bb61" category="inline-link-macro">非作用中資料報告</block>
-  <block id="48f9a59647954f3d3d75ff3ad6a319a3" category="paragraph">在 ONTAP 9.8 之前，將磁碟區移至另一個本機層會重設本機層區塊的閒置期間。例如，使用自動磁碟區分層原則的磁碟區，若本機層上的資料已停用 20 天，但尚未分層，則在磁碟區移動後，資料的溫度將會重設為 0 天。</block>
   <block id="076d157b00500af5ab08efae31d07141" category="section-title">最佳化的 Volume 搬移</block>
   <block id="ff2bde5a8343cc482e0322d25adb2ef5" category="paragraph">部分組態與最佳化的 Volume 移動不相容：</block>
-  <block id="2a2f34180c3e283f6adc7cd9fa111610" category="list-text">在磁碟區移動期間變更分層原則</block>
   <block id="616de5f719c279866668004b401c2601" category="list-text">FlexClone 父磁碟區</block>
   <block id="a08166d0beceb1d7def8a9a134701d5a" category="list-text">MetroCluster （支援 ONTAP 9.8 及更新版本中最佳化的 Volume 搬移）</block>
   <block id="5781475adce88988cf97ad0e0173d075" category="list-text">非同步的 FabricPool 鏡射貯體</block>
-  <block id="1b9fed706aa7d6a1f00ae291b6d66335" category="paragraph">如果 Volume Move 的目的地本端層有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會先寫入目的地本端層的本端層。如果此方法適用於磁碟區的分層原則，則會寫入目的地本機層的雲端層。</block>
-  <block id="8265c048f3a52f77e24a78282fa7f80d" category="paragraph">先將資料寫入本機層，可改善磁碟區移動的效能，並縮短轉換時間。如果在執行磁碟區移動時未指定磁碟區分層原則，則目的地磁碟區會使用來源磁碟區的分層原則。</block>
-  <block id="d44edc28afba4ec4eb0baa4a29d5384f" category="paragraph">如果在執行磁碟區移動時指定不同的分層原則，則會使用指定的分層原則建立目的地磁碟區，而且不會最佳化磁碟區移動。</block>
-  <block id="da92f9dda78e5281f95be5be81ec5de3" category="admonition">在 SVM DR 關係中，來源和目的地磁碟區必須使用相同的分層原則。</block>
   <block id="e954eb646a72e329755cdd586078cf2e" category="list-text">使用<block ref="3f87f7557ca0f649ab7e92a464f34132" prefix=" " category="inline-code"></block>命令將磁碟區從來源本機層移至目的地本機層。</block>
   <block id="0278a1f71f17239ca4f341d56295db9a" category="paragraph-title">移動 Volume 的範例</block>
-  <block id="59d972945896de9f8801219522db7621" category="paragraph">以下範例將名為 SVM 的<block ref="93e9fa0fcb7aba0522283d98215b5d88" prefix=" " category="inline-code"></block>磁碟區移<block ref="1236318b32ff887884462107aee24792" prefix=" " category="inline-code"></block>至<block ref="66e28b10f51869bd35dbf6d03759ef49" prefix=" " category="inline-code"></block>啟用 FabricPool 的本機層。</block>
   <block id="a14c58b082fa45ef38547f28a36e3e01" category="doc">瞭解如何稽核 ONTAP FlexCache Volume</block>
   <block id="59028869486d2aa4a440b60d8cf11a94" category="doc">刪除 ONTAP FlexCache 關聯</block>
   <block id="226f16dc8a5e373584caec601e76a06e" category="doc">在 ONTAP FlexCache 磁碟區上啟用全域檔案鎖定</block>
@@ -39062,8 +39051,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="0d704824e2eb08cd12a84101c131110e" category="doc">瞭解使用 ONTAP SnapMirror 技術的資料保險箱歸檔</block>
   <block id="3273a7d7e7a733002df8f99f991cba51" category="sidebar">瞭解 SnapMirror Volume 複寫</block>
   <block id="80b639092985aa4e4eea3bd7a8f44159" category="sidebar">設定 SnapMirror Volume 複寫</block>
-  <block id="78e1cf5f28d26755dadcc9d795f0157c" category="paragraph">從 ONTAP 9.8 開始，當磁碟區已啟用時<block ref="4b8901d49e979ec3294f6b6c6a486a8b" category="inline-link-macro-rx"></block>， FabricPool 會使用磁碟區的熱圖，立即將冷資料排入佇列，以便在寫入目的地本機層時立即開始分層。</block>
-  <block id="be8589d500f0e921001d96f1a9c4e8f6" category="paragraph">從 ONTAP 9.6 開始，如果 Volume Move 的目的地本端層使用與來源本端層相同的貯體，則儲存在該貯體中的來源 Volume 上的資料不會移回本端層。階層式資料會保持靜止，只有熱資料需要從一個本機層移至另一個層級。這項最佳化的 Volume 搬移可大幅提升網路效率。</block>
   <block id="353801a02ede2cda219b569d27814857" category="paragraph">未最佳化的 Volume 搬移會產生額外的網路和運算流量（讀取 / 取得和寫入 / 放置），增加對 ONTAP 叢集和物件存放區的需求，可能會在分層到公有物件存放區時增加成本。</block>
   <block id="d0e655b146adde2a06ab517f63310ed2" category="list-text">使用不同加密金鑰的來源和目的地本機層</block>
   <block id="2d1d92f2654c23f1127f16bf50985059" category="section-title">Volume 中繼資料</block>
@@ -39968,11 +39955,7 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="e615d081056a6324246cc9785367d8c8" category="inline-link-macro">安裝 ONTAP 調解器</block>
   <block id="a2672e9b873423536ffb51dc72e3ade7" category="paragraph">您可以<block ref="e587061c075abb259d77eb555283ce4c" category="inline-link-macro-rx"></block>在第三個位置監控節點及其 DR 合作夥伴的狀態。ONTAP Mediator 可以在災難發生時實施調解器輔助計劃外切換 (MAUSO)。</block>
   <block id="aa58eb509677af1b939847c67a936f03" category="paragraph"><block ref="aa58eb509677af1b939847c67a936f03" category="inline-link-rx"></block></block>
-  <block id="69130266fa791fe1f4fc8d0e5d8edf79" category="paragraph">例如，300TB 最佳化磁碟區移動意味著即使 300TB 冷資料從一個本地層移動到另一個本地層，也不會觸發對物件儲存的 300TB 讀取和 300TB 寫入。</block>
-  <block id="e8b5538a6bfc5ac5131c512eb7733524" category="paragraph">無論磁碟區移動是否經過最佳化，ONTAP 都會儲存大量有關所有資料（包括本機資料和分層資料）的位置、儲存效率、權限、使用模式等的元資料。元資料始終保留在本地層，不會進行分層。當磁碟區從一個本機層移至另一個層時，也需要將此資訊移至目的地本機層。</block>
   <block id="e02d2ae03de9d493df2b6b2d2813d302" category="section-title">持續時間</block>
-  <block id="a36b89c75501c59aa92756fea927863b" category="paragraph">磁碟區移動仍然需要時間才能完成，並且預期優化卷移動將花費與移動等量非分層資料大約相同的時間。</block>
-  <block id="f24cbbe169ffe6b09c83779179a475a2" category="paragraph">重要的是要理解<block ref="d49fd39f851c023584dd0dc5f7165617" prefix=" " category="inline-code"></block>命令並不代表從雲層移動的資料的吞吐量，而是代表在本地更新的捲資料。</block>
   <block id="36613d1ea1c454faed3af3843d3eb782" category="paragraph">使用系統管理器，您可以建立 FlexGroup 磁碟區。</block>
   <block id="f106d6b8eedd7a8e6483ca635c73be68" category="list-text">導航至“儲存”&gt;“磁碟區”並選擇<block ref="43f48618b8b157dea4d31396a9d4b622" category="inline-image-macro-rx" type="image"></block> 。</block>
   <block id="78dd2514aed1997e282c99624fbf7059" category="list-text">在*新增磁碟區*視窗中，輸入磁碟區名稱和大小，然後選擇*更多選項*。</block>
@@ -43634,8 +43617,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="a48a0937fc12df9714feb4f90708686d" category="cell">9.17.1 或更高版本</block>
   <block id="13b477c27dd96755771d2ecdf914a837" category="cell">9.14.1 或更高版本</block>
   <block id="b69791a38ba725881c6a2fc5ecab63cb" category="cell">9.13.1 或更高版本</block>
-  <block id="7b9b304d8e5b60ec223a3d711f1c4efd" category="paragraph">例如，您可以直接從 9.12.1 升級到 9.13.1，或從 9.13.1 升級到 9.17.1。</block>
-  <block id="1e115964a8a46a221e6cb931cf9272cc" category="paragraph">例如，如果您目前執行的是 9.8 版本，並且想要升級到 9.16.1 版本，則必須完成多階段升級：首先從 9.8 升級到 9.12.1，然後再從 9.12.1 升級到 9.16.1。從早期版本升級可能需要三個或更多階段，其中包含多次中間升級。</block>
   <block id="98b5b702f937abf9757ead0639de7ee1" category="list-text">9.17.1 -&gt; 9.18.1</block>
   <block id="0371f0a846848905a6c124b6e92aeb90" category="list-text">9.16.1 -&gt; 9.18.1</block>
   <block id="dc676c2d56b2a704b90a6cce8a76bd36" category="list-text">9.15.1 -&gt; 9.18.1</block>
@@ -49438,4 +49419,34 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="6ed1d2e0b39b14c5eeb4c12d9bb25105" category="list-text">使用 <block ref="5cd37b9fd1f58e8192a623dd36a207fb" prefix=" " category="inline-code"></block> 命令，建立一個不使用與先前取消鏡像的物件存放區相同儲存桶的替換物件存放區。</block>
   <block id="f8848a80fba9eb9b2d84041624cf6c4e" category="summary">使用 security certificate generate-csr 命令產生憑證簽章請求，然後將其傳送給憑證授權單位以取得簽署的數位憑證。</block>
   <block id="aab0eda397efd966d6db85dcb98a1012" category="paragraph">以下命令為位於美國加州桑尼維爾市的一家公司 IT 部門的軟體群組建立一個 CSR。該 CSR 具有自訂通用名稱 server1.companyname.com 和一個由 SHA256 雜湊功能產生的 2,048 位元私鑰。SVM 聯絡系統管理員的電子郵件地址為 \web@example.com。系統會在輸出中顯示 CSR 和私鑰。</block>
+  <block id="fbd12a2bc6f022534723b7f93f8cbfed" category="paragraph">2026年11月</block>
+  <block id="3020f0cf9e8887140f906c1660d4d1d5" category="summary">將 Volume 無中斷地移至啟用 FabricPool 的本地分層，並了解雲端分層資料、分層原則和最佳化的 Volume 移動如何影響移動。</block>
+  <block id="111d61f244fbf4496e32b88104aa5d01" category="paragraph"><block ref="7f1ebb6fb0ad236c93285e2e95f25dcd" category="inline-link-macro-rx"></block> 無中斷地將 Volume 從一個 ONTAP 本機分層（來源）移至另一個本機分層（目的地），最常用於硬體生命週期管理、叢集擴充或負載平衡。將 Volume 移至啟用 FabricPool 的本機分層時，了解此移動如何影響分層資料和分層原則，有助於避免不必要的網路流量和物件存放區成本。</block>
+  <block id="45403556ddfa9c5cdb2a495085539790" category="paragraph">Volume 遷移對本機分層、附加的雲端分層和 Volume 分層原則所做的變更，可能會對 FabricPool 功能產生重大影響。</block>
+  <block id="560bcdd262531e3ea0ac81df2028f294" category="paragraph">如果 Volume 移動的目的地本地分層沒有附加的雲端分層，則儲存在雲端分層上的來源 Volume 資料將寫入目的地本地分層。</block>
+  <block id="c4d13aaf8f9d1678fc97b1bddb6f9326" category="paragraph">從 ONTAP 9.8 開始，當 Volume 啟用 <block ref="4b8901d49e979ec3294f6b6c6a486a8b" category="inline-link-macro-rx"></block> 後，一旦資料寫入目的地本機分層，FabricPool 就會使用該 Volume 的熱圖將冷資料排入佇列以進行分層。</block>
+  <block id="ac41f0c0d329a58e5eea4d72b02bcb06" category="paragraph">在 ONTAP 9.7 及更早版本中，將 Volume 移至另一個本機分層會重設本機分層上區塊的閒置期間。例如，如果某個 Volume 使用自動 Volume 分層原則，且本機分層上的資料已閒置 20 天但尚未分層，則 Volume 移動會將該資料的溫度重設為 0 天。</block>
+  <block id="b8674bb6eecd0f9f2204684a29145fdf" category="paragraph">從 ONTAP 9.6 開始，如果 Volume 移動的目的地本機分層與來源本機分層使用相同的儲存桶，則儲存在該儲存桶中的來源 Volume 資料不會移動回本機分層。分層資料保持靜止狀態，只有熱資料需要從一個本機分層移動到另一個本機分層。這種最佳化的 Volume 移動方式顯著提高了網路效率。</block>
+  <block id="61dd4bb7ee9fb13cf3b076dd0d295a70" category="paragraph">例如，在 300TB 最佳化的 Volume 移動中，即使 300TB 的冷資料從一個本地分層移動到另一個本地分層，該移動也不會觸發對物件存放區的 300TB 讀取和 300TB 寫入。</block>
+  <block id="263ae8992f503ca606a103b77b08f198" category="list-text">在 Volume 遷移期間變更分層原則</block>
+  <block id="011412e67109c5da33c3c1a075150081" category="list-text">Volume 從支援 QuickAssist 技術（QAT）的平台轉移到不支援的平台</block>
+  <block id="191b8a6d75f8fe3185fba11bd276bcf3" category="inline-link-macro">QAT 如何影響 Volume 搬移</block>
+  <block id="d08d3e2e9f903a2fb1aa836396ef365c" category="paragraph">深入瞭解 <block ref="cddfbbec81c22276e1b01ab5e724ff50" category="inline-link-macro-rx"></block>。</block>
+  <block id="6cd36cc69859465d9b1919ec6204a9e2" category="paragraph">如果 Volume 搬移的目的地本機分層有附加的雲端分層，則儲存在雲端分層上的來源 Volume 資料會先寫入目的地本機分層的本機層。然後，如果 Volume 的分層原則允許，資料會寫入附加至目的地本機分層的雲端分層。</block>
+  <block id="77fcfa4f1c09361063990e82cfe00fa3" category="paragraph">首先將資料寫入本地分層可以提高 Volume 移動的效能並縮短切換時間。如果在移動 Volume 時未指定 Volume 分層原則，目的地 Volume 將使用來源 Volume 的分層原則。</block>
+  <block id="7438b9d16323447d73c6a2eca09896c7" category="paragraph">如果在移動 Volume 時指定了不同的分層原則，目的地 Volume 將使用指定的分層原則建立，且 Volume 移動不會是最佳化的。</block>
+  <block id="b13a94fbb0f58328f2d1fd4856ee82ef" category="paragraph">無論 Volume 移動是否經過最佳化的，ONTAP 都會儲存大量關於所有資料（包括本機和分層資料）的中繼資料，包括其位置、儲存效率、權限和使用模式。中繼資料始終保留在本機分層上，且不進行分層。當 Volume 從一個本機分層移動到另一個本機分層時，這些資訊也需要移動到目的地本機分層。</block>
+  <block id="64cc9b8c49a9e90aa8b19f7b8109e21e" category="paragraph">Volume 遷移仍然需要時間才能完成。預計最佳化的 Volume 遷移所需時間與遷移等量非分層資料所需時間大致相同。</block>
+  <block id="315c295a0bd8dd1d17e09bf517d72637" category="paragraph"><block ref="d49fd39f851c023584dd0dc5f7165617" prefix=" " category="inline-code"></block> 命令報告的處理量代表本機更新的 Volume 資料，而不是從雲端層移動的資料。</block>
+  <block id="24e1c919c266e4d458f66a707485800d" category="admonition">當 Volume 處於 SVM DR 關係時，來源和目的地 Volume 必須使用相同的分層原則。</block>
+  <block id="1bb17a20e1255d265b522a4c171bb711" category="paragraph">以下範例將<block ref="93e9fa0fcb7aba0522283d98215b5d88" prefix=" " category="inline-code"></block> SVM 中名為<block ref="1236318b32ff887884462107aee24792" prefix=" " category="inline-code"></block>的 Volume 移至<block ref="66e28b10f51869bd35dbf6d03759ef49" prefix=" " category="inline-code"></block>，這是一個啟用 FabricPool 的本機層。</block>
+  <block id="83b3dc487b634ec92f3ade8a267a392e" category="admonition">此操作將永久刪除物件存放區 Container 中的所有物件，且無法撤銷。取消鏡像操作完成後，物件刪除程序將在背景繼續進行。在背景刪除程序完成之前，請勿重複使用該 Container 或對其重新規劃。</block>
+  <block id="a4598caa75c14b028e0610d87f14599b" category="paragraph">例如，您可以使用從 9.17.1 到 9.18.1，或從 9.15.1 到 9.19.1 的直接升級途徑。</block>
+  <block id="0512832a2d2979aca79795ff9e488293" category="paragraph">例如，如果您目前執行的是 9.14.1 版本，並且想要升級到 9.19.1 版本，則必須完成多階段升級：先從 9.14.1 升級到 9.18.1，然後再從 9.18.1 升級到 9.19.1。從早期版本升級可能需要三個或更多階段，以及多次中間升級。</block>
+  <block id="e0ca3e678452cdc055355719edf923e3" category="paragraph">例如，如果您的系統正在執行 ONTAP 9.14.1P9，並且您規劃升級到 9.19.1，則應先升級到最新的 9.14.1 修補程式版本，然後按照 9.14.1 到 9.19.1 的升級途徑進行升級。</block>
+  <block id="6f79c410a1e0e23029e9c34a5bf3a854" category="list-text">9.19.1 -&gt; 9.20.1</block>
+  <block id="10a833450b4d18f2abe53dba65184a06" category="list-text">9.18.1 -&gt; 9.20.1</block>
+  <block id="a26e4204ec8290ac2fc79961eb176ec8" category="list-text">9.17.1 -&gt; 9.20.1</block>
+  <block id="9df7bb0d4f4a5c6104b95d6bb9faf265" category="list-text">9.16.1 -&gt; 9.20.1</block>
+  <block id="d3ceda18c9d46516729fefa717497b8d" category="list-text">9.17.1-&gt;9.20.1</block>
 </blocks>

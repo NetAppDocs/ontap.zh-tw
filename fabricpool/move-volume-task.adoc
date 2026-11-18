@@ -2,7 +2,7 @@
 permalink: fabricpool/move-volume-task.html 
 sidebar: sidebar 
 keywords: aggregate, local tier, moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
-summary: 請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因為本機層，附加雲端層和磁碟區（磁碟區分層原則）所發生的變更都會對功能造成重大影響。 
+summary: 將 Volume 無中斷地移至啟用 FabricPool 的本地分層，並了解雲端分層資料、分層原則和最佳化的 Volume 移動如何影響移動。 
 ---
 = 將磁碟區移至啟用 FabricPool 的 ONTAP 本機層
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因�
 
 
 [role="lead"]
-A link:../volumes/move-volume-task.html["Volume搬移"] 是 ONTAP 在不中斷營運的情況下，將磁碟區從一個本機層（來源）移至另一個（目的地）的方式。雖然最常見的原因是硬體生命週期管理，叢集擴充和負載平衡，但由於各種原因，可以執行磁碟區移動。
+link:../volumes/move-volume-task.html["Volume搬移"] 無中斷地將 Volume 從一個 ONTAP 本機分層（來源）移至另一個本機分層（目的地），最常用於硬體生命週期管理、叢集擴充或負載平衡。將 Volume 移至啟用 FabricPool 的本機分層時，了解此移動如何影響分層資料和分層原則，有助於避免不必要的網路流量和物件存放區成本。
 
-請務必瞭解磁碟區移動如何與 FabricPool 搭配運作，因為本機層，附加雲端層和磁碟區（磁碟區分層原則）所發生的變更都會對功能造成重大影響。
+Volume 遷移對本機分層、附加的雲端分層和 Volume 分層原則所做的變更，可能會對 FabricPool 功能產生重大影響。
 
 
 NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 _ 本機層 _ 。無論您的 ONTAP 版本為何， ONTAP CLI 都會使用術語 _Aggregate 。若要深入瞭解本機階層，請參閱link:../disks-aggregates/index.html["磁碟和本機層"]。
@@ -23,20 +23,20 @@ NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 
 [[destination-local-tier]]
 == 目的地本端層
 
-如果 Volume Move 的目的地本端層沒有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會寫入目的地本端層的本端層。
+如果 Volume 移動的目的地本地分層沒有附加的雲端分層，則儲存在雲端分層上的來源 Volume 資料將寫入目的地本地分層。
 
-從 ONTAP 9.8 開始，當磁碟區已啟用時link:determine-data-inactive-reporting-task.html["非作用中資料報告"]， FabricPool 會使用磁碟區的熱圖，立即將冷資料排入佇列，以便在寫入目的地本機層時立即開始分層。
+從 ONTAP 9.8 開始，當 Volume 啟用 link:determine-data-inactive-reporting-task.html["非作用中資料報告"] 後，一旦資料寫入目的地本機分層，FabricPool 就會使用該 Volume 的熱圖將冷資料排入佇列以進行分層。
 
-在 ONTAP 9.8 之前，將磁碟區移至另一個本機層會重設本機層區塊的閒置期間。例如，使用自動磁碟區分層原則的磁碟區，若本機層上的資料已停用 20 天，但尚未分層，則在磁碟區移動後，資料的溫度將會重設為 0 天。
+在 ONTAP 9.7 及更早版本中，將 Volume 移至另一個本機分層會重設本機分層上區塊的閒置期間。例如，如果某個 Volume 使用自動 Volume 分層原則，且本機分層上的資料已閒置 20 天但尚未分層，則 Volume 移動會將該資料的溫度重設為 0 天。
 
 
 
 [[optimized-volume-moves]]
 == 最佳化的 Volume 搬移
 
-從 ONTAP 9.6 開始，如果 Volume Move 的目的地本端層使用與來源本端層相同的貯體，則儲存在該貯體中的來源 Volume 上的資料不會移回本端層。階層式資料會保持靜止，只有熱資料需要從一個本機層移至另一個層級。這項最佳化的 Volume 搬移可大幅提升網路效率。
+從 ONTAP 9.6 開始，如果 Volume 移動的目的地本機分層與來源本機分層使用相同的儲存桶，則儲存在該儲存桶中的來源 Volume 資料不會移動回本機分層。分層資料保持靜止狀態，只有熱資料需要從一個本機分層移動到另一個本機分層。這種最佳化的 Volume 移動方式顯著提高了網路效率。
 
-例如，300TB 最佳化磁碟區移動意味著即使 300TB 冷資料從一個本地層移動到另一個本地層，也不會觸發對物件儲存的 300TB 讀取和 300TB 寫入。
+例如，在 300TB 最佳化的 Volume 移動中，即使 300TB 的冷資料從一個本地分層移動到另一個本地分層，該移動也不會觸發對物件存放區的 300TB 讀取和 300TB 寫入。
 
 未最佳化的 Volume 搬移會產生額外的網路和運算流量（讀取 / 取得和寫入 / 放置），增加對 ONTAP 叢集和物件存放區的需求，可能會在分層到公有物件存放區時增加成本。
 
@@ -44,46 +44,49 @@ NOTE: 在 ONTAP 9.7 之前，系統管理員使用術語 _Aggregate _ 來描述 
 ====
 部分組態與最佳化的 Volume 移動不相容：
 
-* 在磁碟區移動期間變更分層原則
+* 在 Volume 遷移期間變更分層原則
 * 使用不同加密金鑰的來源和目的地本機層
 * FlexClone Volume
 * FlexClone 父磁碟區
 * MetroCluster （支援 ONTAP 9.8 及更新版本中最佳化的 Volume 搬移）
 * 非同步的 FabricPool 鏡射貯體
+* Volume 從支援 QuickAssist 技術（QAT）的平台轉移到不支援的平台
 
+
+深入瞭解 link:https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/How_do_platforms_supporting_QAT_or_zlib_compression_impact_SnapMirror_and_volume_move["QAT 如何影響 Volume 搬移"^]。
 
 ====
-如果 Volume Move 的目的地本端層有附加的雲端層，則儲存在雲端層的來源磁碟區上的資料會先寫入目的地本端層的本端層。如果此方法適用於磁碟區的分層原則，則會寫入目的地本機層的雲端層。
+如果 Volume 搬移的目的地本機分層有附加的雲端分層，則儲存在雲端分層上的來源 Volume 資料會先寫入目的地本機分層的本機層。然後，如果 Volume 的分層原則允許，資料會寫入附加至目的地本機分層的雲端分層。
 
-先將資料寫入本機層，可改善磁碟區移動的效能，並縮短轉換時間。如果在執行磁碟區移動時未指定磁碟區分層原則，則目的地磁碟區會使用來源磁碟區的分層原則。
+首先將資料寫入本地分層可以提高 Volume 移動的效能並縮短切換時間。如果在移動 Volume 時未指定 Volume 分層原則，目的地 Volume 將使用來源 Volume 的分層原則。
 
-如果在執行磁碟區移動時指定不同的分層原則，則會使用指定的分層原則建立目的地磁碟區，而且不會最佳化磁碟區移動。
+如果在移動 Volume 時指定了不同的分層原則，目的地 Volume 將使用指定的分層原則建立，且 Volume 移動不會是最佳化的。
 
 
 
 [[volume-metadata]]
 === Volume 中繼資料
 
-無論磁碟區移動是否經過最佳化，ONTAP 都會儲存大量有關所有資料（包括本機資料和分層資料）的位置、儲存效率、權限、使用模式等的元資料。元資料始終保留在本地層，不會進行分層。當磁碟區從一個本機層移至另一個層時，也需要將此資訊移至目的地本機層。
+無論 Volume 移動是否經過最佳化的，ONTAP 都會儲存大量關於所有資料（包括本機和分層資料）的中繼資料，包括其位置、儲存效率、權限和使用模式。中繼資料始終保留在本機分層上，且不進行分層。當 Volume 從一個本機分層移動到另一個本機分層時，這些資訊也需要移動到目的地本機分層。
 
 
 
 [[duration]]
 === 持續時間
 
-磁碟區移動仍然需要時間才能完成，並且預期優化卷移動將花費與移動等量非分層資料大約相同的時間。
+Volume 遷移仍然需要時間才能完成。預計最佳化的 Volume 遷移所需時間與遷移等量非分層資料所需時間大致相同。
 
-重要的是要理解 `volume move show`命令並不代表從雲層移動的資料的吞吐量，而是代表在本地更新的捲資料。
+ `volume move show` 命令報告的處理量代表本機更新的 Volume 資料，而不是從雲端層移動的資料。
 
 
-NOTE: 在 SVM DR 關係中，來源和目的地磁碟區必須使用相同的分層原則。
+NOTE: 當 Volume 處於 SVM DR 關係時，來源和目的地 Volume 必須使用相同的分層原則。
 
 .步驟
 . 使用 `volume move start`命令將磁碟區從來源本機層移至目的地本機層。
 
 
 .移動 Volume 的範例
-以下範例將名為 SVM 的 `vs1`磁碟區移 `myvol2`至 `dest_FabricPool`啟用 FabricPool 的本機層。
+以下範例將 `vs1` SVM 中名為 `myvol2`的 Volume 移至 `dest_FabricPool`，這是一個啟用 FabricPool 的本機層。
 
 [listing]
 ----
