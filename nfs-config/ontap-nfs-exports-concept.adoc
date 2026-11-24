@@ -1,0 +1,38 @@
+---
+permalink: nfs-config/ontap-nfs-exports-concept.html 
+sidebar: sidebar 
+keywords: ONTAP, NFS exports, export policies, export rules 
+summary: ONTAP 透過指派給 SVM 中的 Volume 或 qtree 的匯出原則和規則來控制 NFS 用戶端存取。 
+---
+= 了解 ONTAP NFS 匯出
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 透過指派給 Volume 或 qtree 的匯出原則來控制 NFS 用戶端的存取。每個原則都包含定義哪些用戶端可以存取資料以及它們所獲得權限的規則。
+
+
+
+[[export-policies-and-rules]]
+== 匯出原則與規則
+
+一個 SVM 可以包含多個匯出原則。每個原則可以包含零個或多個匯出規則，用於指定用戶端符合項目和存取權限。空原則會拒絕所有存取。您可以將一個匯出原則套用到多個 Volume。
+
+
+
+[[apply-export-policies-to-volumes-and-qtrees]]
+== 對 Volume 和 qtree 套用匯出原則
+
+為 Volume 或 qtree 指派匯出原則，以控制 NFS 用戶端對該儲存設備的存取。指派給 Volume 的原則適用於該 Volume 的資料；當需要控制對 qtree 的存取時，可以直接為 qtree 指派原則。
+
+
+
+[[volume-junction-paths]]
+== Volume 交會路徑
+
+Volume 掛載於 SVM 命名空間的交會路徑。NFS 用戶端使用此路徑來存取 Volume 的資料。交會路徑可以與 Volume 名稱不同。
+
+.相關資訊
+link:export-policies-concept.html["了解如何使用匯出策略保護 NFS 訪問"]

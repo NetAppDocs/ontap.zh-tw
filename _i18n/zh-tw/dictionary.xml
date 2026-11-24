@@ -1268,8 +1268,6 @@
   <block id="269ba89aa123249c9974a41985f6f50d" category="paragraph">此選項會將用於傳輸的傾印層級設定為指定的層級值。有效值為<block ref="cfcd208495d565ef66e7dff9f98764da" prefix=" " category="inline-code"></block>、<block ref="c4ca4238a0b923820dcc509a6f75849b" prefix=" " category="inline-code"></block>、至<block ref="45c48cce2e2d7fbdea1afc51c7c6ad26" prefix=" " category="inline-code"></block>、其中<block ref="cfcd208495d565ef66e7dff9f98764da" prefix=" " category="inline-code"></block> 表示完整傳輸和<block ref="c4ca4238a0b923820dcc509a6f75849b" prefix=" " category="inline-code"></block> 至<block ref="45c48cce2e2d7fbdea1afc51c7c6ad26" prefix=" " category="inline-code"></block> 指定遞增傳輸。預設值為<block ref="cfcd208495d565ef66e7dff9f98764da" prefix=" " category="inline-code"></block>。</block>
   <block id="079566ebb51bfd0b7e6b40ab6b09f50b" category="paragraph"><block ref="9b017020b9d48d433ec90c548e6b5c70" prefix="" category="inline-code"></block></block>
   <block id="cdf584bb1dff11693078fbaa171e49f4" category="paragraph">此選項可產生ndmpcopy除錯記錄訊息。ndmpcopy 除錯記錄檔位於中<block ref="c086dc84ac08af61381d709b3eb9ae83" prefix=" " category="inline-code"></block> 根 Volume 。ndmpcopy 除錯記錄檔名稱位於中<block ref="e69c0f77f0c098d90b3ae2bb7be9db1b" prefix=" " category="inline-code"></block> 格式。</block>
-  <block id="5dc9381893a40ede2bf975c5b13c2bfa" category="paragraph"><block ref="5338b151154663bac9980b0f044518f2" prefix="" category="inline-code"></block></block>
-  <block id="3b8a10101a73a62d84ee57e00dc11ad5" category="paragraph">此選項可啟用強制模式。此模式可在中覆寫系統檔案<block ref="182f153bd94803955c2043e6f2581d5d" prefix=" " category="inline-code"></block> 位於 7-Mode 磁碟區根目錄的目錄。</block>
   <block id="f887937cb5b85ec66d23995ebc5632fd" category="paragraph"><block ref="914071b8934b1d6035495f1ed02aa5fd" prefix="" category="inline-code"></block></block>
   <block id="ebfc6aff65cfd3c50a0424106e2f9cd6" category="paragraph">此選項會列印說明訊息。</block>
   <block id="23fbd6b3007c2c5d8d17fd0fbc19f102" category="paragraph"><block ref="b3868ba70a8f4cf55464dd9926381db1" prefix="" category="inline-code"></block></block>
@@ -1360,8 +1358,6 @@
   <block id="b56d5072fc1380be35d3fbe83c0dde49" category="list-text">Windows NT串流</block>
   <block id="743a3b9466067c6ee0a404b3a5d2ace1" category="list-text">LUN必須還原至磁碟區層級或qtree層級、才能保留為LUN。</block>
   <block id="6394d4dc354b3f4c915afa052b9df9dc" category="paragraph">如果將其還原至目錄、則會將其還原為檔案、因為它不包含任何有效的中繼資料。</block>
-  <block id="982d7337e3c4fa105f96fb0310a04e58" category="list-text">7-Mode LUN會還原ONTAP 為位於VMware Volume上的LUN。</block>
-  <block id="0f32fc1a52e8d405d9c92be2cb53edf1" category="list-text">7-Mode Volume可還原ONTAP 為一個不完整的功能。</block>
   <block id="8f2581b18ea32dbd13852f7535633239" category="list-text">還原至目的地Volume的VM對齊檔案、會繼承目的地Volume的VM對齊屬性。</block>
   <block id="23851943aa8d75b28503c0384838636c" category="list-text">還原作業的目的地Volume可能有具有強制或建議事項鎖定的檔案。</block>
   <block id="d59402d3ad8c4ca63ccd0c6e99e88838" category="paragraph">在對此類目的地Volume執行還原作業時、傾印引擎會忽略這些鎖定。</block>
@@ -1884,14 +1880,11 @@
   <block id="4311c0caa3bd5d1eff6f63a1143d0c70" category="list-text">LUN與LUN複製</block>
   <block id="937890d87b169af318d829a57dad399e" category="paragraph">您可以備份整個LUN物件、但無法備份LUN物件內的單一檔案。同樣地、您可以還原整個LUN物件、但不能還原LUN內的單一檔案。</block>
   <block id="c93d8996c09e9b0523f2326386672ab0" category="paragraph">傾印引擎會將LUN複本備份為獨立的LUN。</block>
-  <block id="9e66a5a7ac296adab32cfb29b699c023" category="list-text">VM對齊的檔案</block>
-  <block id="fda1796996d94c05cd2113e0153652c9" category="paragraph">當快照備援LUN複製作業從Data ONTAP 以7-Mode運作的VMware移轉至ONTAP VMware時、它就會變成不一致的LUN。傾印引擎不會備份不一致的LUN。</block>
   <block id="7b3952e889e19b8ce879b63da8efd0bc" category="paragraph">當您將資料還原至磁碟區時、所還原的LUN上的用戶端I/O會受到限制。LUN限制只會在傾印還原作業完成時移除。同樣地、在SnapMirror單一檔案或LUN還原作業期間、用戶端I/O也會受到還原檔案和LUN的限制。只有在單一檔案或LUN還原作業完成時、才會移除此限制。如果在執行傾印還原或SnapMirror單一檔案或LUN還原作業的磁碟區上執行傾印備份、則備份中不會包含具有用戶端I/O限制的檔案或LUN。如果移除用戶端I/O限制、這些檔案或LUN會包含在後續的備份作業中。</block>
   <block id="7acee361d87c06a486c0fc7401796ca3" category="paragraph">當您將SnapVault 某個不支援的次要Volume或Volume SnapMirror目的地備份到磁帶時、只會備份該磁碟區上的資料。不會備份相關的中繼資料。因此、當您嘗試還原磁碟區時、只會還原該磁碟區上的資料。有關Volume SnapMirror關係的資訊無法在備份中取得、因此無法還原。</block>
   <block id="d0219fc03daecc247def36e87d4eae0e" category="paragraph">如果您傾印只有Windows NT權限的檔案、並將其還原至UNIX樣式的qtree或Volume、則該檔案會取得該qtree或Volume的預設UNIX權限。</block>
   <block id="2e1612e105f3f63d2891175b999bb52b" category="paragraph">如果您傾印的檔案只有UNIX權限、並將其還原至NTFS型qtree或Volume、則該檔案會取得該qtree或Volume的預設Windows權限。</block>
   <block id="5c415543cd881d3bad98fdc7e178943d" category="paragraph">其他傾印和還原會保留權限。</block>
-  <block id="bcd8ed848389097040a30cfceafbbd44" category="paragraph">您可以備份 VM 對齊的檔案和<block ref="13580b0e11ed8394988bc1c26658ec93" prefix=" " category="inline-code"></block> 選項。如需VM對齊檔案的詳細資訊、請參閱 <block ref="a15ba1fc5a56db86588fad5680ccb96d" category="inline-link-macro-rx"></block>。</block>
   <block id="caf498731203c38609e94ffc1ae4f05b" category="summary">Cab（叢集感知備份）是NDMP v4傳輸協定延伸。此擴充功能可讓NDMP伺服器在擁有磁碟區的節點上建立資料連線。這也可讓備份應用程式判斷磁碟區和磁帶裝置是否位於叢集中的同一個節點上。</block>
   <block id="1da84faca31382a063512ef3e5fdf872" category="paragraph">若要讓NDMP伺服器識別擁有磁碟區的節點、並在這類節點上建立資料連線、備份應用程式必須支援CAB擴充功能。在建立資料連線之前、駕駛台擴充功能需要備份應用程式通知NDMP伺服器有關要備份或還原的磁碟區。這可讓NDMP伺服器判斷裝載該磁碟區的節點、並適當建立資料連線。</block>
   <block id="9e867f0c8ce598c4428266e15091bf65" category="paragraph">備份應用程式支援的電纜擴充功能、NDMP伺服器可提供有關磁碟區和磁帶裝置的關聯資訊。如果磁碟區和磁帶設備位於叢集中的同一個節點上、備份應用程式可以使用此相似性資訊來執行本機備份、而非三向備份。</block>
@@ -2940,7 +2933,6 @@
   <block id="900eba0c97923d74bd8d9e6190e07264" category="cell">✓</block>
   <block id="9b7de1e2f1b38e20bc5872a4c6fd81c2" category="cell">容量分析</block>
   <block id="2c72caaff60cdf4c9f27182fd94a7ef2" category="cell">非作用中資料資訊</block>
-  <block id="3070cf8e8101d383f4f400c81c77ded3" category="cell">支援Data ONTAP 從VMware 7-Mode轉換的Volume</block>
   <block id="df10985a69a34c7c2af7ec41a811986f" category="cell">能夠在System Manager中自訂非作用中期間</block>
   <block id="eaca7c2c14ec466672ed2039d467e8d2" category="cell">Volume層級活動追蹤</block>
   <block id="413aa6b9e054371e166e0d834b9363b1" category="cell">將活動追蹤資料下載至CSV</block>
@@ -5363,7 +5355,6 @@
   <block id="af6381cde237d5ac406fbb37ca777727" category="cell">Volume條件</block>
   <block id="ac5948fac9817150328d6d7c06cf1abf" category="paragraph">即時跨Volume重複資料刪除技術</block>
   <block id="58cdc92d0dfd16b6a7a6bc976b2efdc5" category="paragraph">即時壓縮</block>
-  <block id="e1353499826e4be3f4e8191fc6326882" category="paragraph">將7-Mode移轉至叢集式VMware ONTAP ONTAP</block>
   <block id="ada84bb9596539ed9c2bc3cc2b157b35" category="paragraph">完整配置的Volume</block>
   <block id="003eb21aa2a591f9e281c0244c748a26" category="paragraph">下列例外情況適用於一或多項內嵌儲存效率功能：</block>
   <block id="30c7d0b612eee89c285f61dbd117f130" category="list-text">只有讀寫磁碟區才能支援預設的內嵌儲存效率功能。</block>
@@ -11470,8 +11461,6 @@ SSH-RSA</block>
   <block id="adc3d9041f1487dff6a23d1c8c0c56cb" category="section-title">多重管理驗證（ MAV ）支援</block>
   <block id="977a916a311854fb0a0a7d4bc82b553b" category="inline-link-macro">MAV</block>
   <block id="415366543fc3cef079fe8b44fc24b80a" category="paragraph">*免責聲明：*如果驗證金鑰遺失、或驗證嘗試失敗次數超過指定限制、導致磁碟機永久鎖定、NetApp無法保證自我加密磁碟機或磁碟區上的SnapLock保護WORM檔案將可擷取。您有責任確保驗證失敗。</block>
-  <block id="9653cf98bd0bafa030e219a7067934ce" category="section-title">7-Mode轉換</block>
-  <block id="9e4e3d7f75d7706b7e71902281d1143c" category="paragraph">您可以使用7-Mode Transition Tool的Copy Based Transition（CBT）功能、將SnapLock 靜止磁碟區從7-Mode移轉至ONTAP VMware。目的地Volume、Compliance或Enterprise的指令檔模式必須符合來源Volume的指令碼模式。SnapLock SnapLock您無法使用無複製轉換（CFT）來移轉SnapLock 版本。</block>
   <block id="5bcccbf29bb5ea92f47d2950d5851b1b" category="doc">資訊API SnapLock</block>
   <block id="2feec9e33b89b782ea93f1972fb37394" category="doc">管理WORM檔案</block>
   <block id="f47f99517209f5215a9c0a429044c704" category="paragraph">您可以使用下列方式管理WORM檔案：</block>
@@ -12490,7 +12479,6 @@ SSH-RSA</block>
   <block id="c3ffc8e078b339d5886703a912ed9b58" category="section-title">支援詳細資料</block>
   <block id="8db918ed0f3814eca3898085fa4c511b" category="cell">資源或功能</block>
   <block id="794cb725c5631ad99b5b7c000307f0df" category="paragraph">SnapMirror</block>
-  <block id="231afe47f3f37d3808096b36c28b4ded" category="paragraph">元素</block>
   <block id="eec89088ee408b80387155272b113256" category="paragraph">網路</block>
   <block id="7e4716fcadce4a1adb7676534312a764" category="paragraph">SVM DR</block>
   <block id="3c8e9155ad3c335597226d2522259967" category="paragraph">初始化可能會很耗時。您可能想要在非尖峰時間執行基準傳輸。</block>
@@ -21092,8 +21080,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="2c1653a98165dd539016c72958ad97d3" category="list-text">對於SVM複寫、目的地磁碟區會自動加密、除非目的地不包含支援Volume加密的節點、在這種情況下、複寫會成功、但目的地磁碟區不會加密。</block>
   <block id="323d45dc50d7fe3e73f1520b8bf9d83b" category="list-text">針對部分組態、每個叢集都會從其設定的金鑰伺服器擷取外部金鑰管理金鑰。MetroCluster組態複寫服務會將OKM金鑰複寫至合作夥伴站台。</block>
   <block id="9c0408c775a2b61052a2e700a89f396f" category="paragraph">法規遵循</block>
-  <block id="dd97a9777d404405f08770a3de458418" category="paragraph">7-Mode轉換</block>
-  <block id="7c869ad819fd8ca9dbe0531e2e26f2a5" category="paragraph">從7-Mode Transition Tool 3.3開始、您可以使用7-Mode Transition Tool CLI、在叢集式系統上執行以複製為基礎的移轉、移轉至啟用NVE的目的地磁碟區。</block>
   <block id="61cc364aae4641e48c5ce61a209a3417" category="summary">您可以使用volume create命令、在新的Volume上啟用加密功能。</block>
   <block id="85d9f9ddfcdba7277ecd282048e75800" category="doc">在新磁碟區上啟用加密</block>
   <block id="66ef7b46b32fd4487a1178efc9bcc256" category="paragraph">您可以使用<block ref="4784dd0ffa42c3d1b43b0afd079dfc17" prefix=" " category="inline-code"></block> 在新磁碟區上啟用加密的命令。</block>
@@ -21261,7 +21247,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="4c7e9324e6ff9ad408ac1ffa1cf2167c" category="list-text">物件存放區已啟用WORM且已啟用物件版本管理。</block>
   <block id="4530021b8ca50b33b34f0e35b0dcd03e" category="list-text">套用至物件存放區的資訊生命週期管理（ILM）原則</block>
   <block id="2539abad2a5c7f5d5f3381a827ba2f9e" category="paragraph">FabricPool 僅支援 StorageGRID 的資訊生命週期管理原則、用於資料複寫和銷毀編碼、以保護雲端層資料免於故障。不過、 FabricPool 不支援進階 ILM 規則、例如根據使用者中繼資料或標記進行篩選。ILM通常包含各種移動和刪除原則。這些原則可能會破壞FabricPool 雲端層的資料。使用物件存放區上設定的ILM原則時、可能會導致資料遺失。FabricPool</block>
-  <block id="5d4b945fa2ec2f6f92db4a1da336caa6" category="list-text">7-Mode資料轉換、使用ONTAP VMware CLI命令或7-Mode轉換工具</block>
   <block id="d7ea29e2e5cd4342225b4ecb16a26a35" category="list-text">RAID SyncMirror 功能、MetroCluster 不包括在一個不支援的組態中</block>
   <block id="d76cec6499d29be11f4d777aec6c771f" category="list-text">使用更新版本時的資料來源SnapLock ONTAP</block>
   <block id="c58286417a337ad3fe216a7969263c6c" category="list-text">使用SMTape備份啟用FabricPool的Aggregate</block>
@@ -22103,61 +22088,14 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="1ae1db5b66e4e49a2a8af0c95e7dcc13" category="paragraph">載入netgroup檔案並建置netgroup。byhost對應可能需要數分鐘的時間。</block>
   <block id="79dfbb5c445d6f31fe9a038c75d6107a" category="paragraph">如果要更新netgroup、您可以編輯該檔案、然後將更新的netgroup檔案載入SVM。</block>
   <block id="56af76508405c5fa7003e5af09f7efd5" category="paragraph">下列命令會從 HTTP URL 將 netgroup 定義載入名為 VS1 的 SVM<block ref="5de9948fcabacc6ae717213ff59f05d1" prefix=" " category="inline-code"></block>：</block>
-  <block id="1ae885278e0d2aa97d611c5894fcd250" category="summary">您可以檢閱範例匯出原則、進一步瞭解匯出原則在ONTAP 功能方面的運作方式。</block>
-  <block id="0fd8b69197930c95d6eb3d5bca9ed5cb" category="section-title">7-Mode匯出的實作範例ONTAP</block>
-  <block id="d35d05b789c7ac57b55a1061a6968ec2" category="paragraph">下列範例顯示的 7-Mode 匯出與中所顯示的相同<block ref="16754f28ba3f274ef20c69face8248a2" prefix=" " category="inline-code"></block> 檔案：</block>
-  <block id="71c6eee162ca1f885d72198b787f3393" category="paragraph">若要將此匯出重新產生為叢集匯出原則、您必須建立具有三個匯出規則的匯出原則、然後將匯出原則指派給Volume vol1。</block>
-  <block id="ab7a485ebe75b6dd7243ad719f23c7de" category="cell">規則</block>
-  <block id="f443d346dd3545d4aed93c1949d1a969" category="paragraph">規則1.</block>
-  <block id="8f949ddc82f28ddd1c26f7929fef6a4a" category="paragraph"><block ref="b26f503cb4c228705236a2c921342289" prefix="" category="inline-code"></block> （用戶端規格）</block>
-  <block id="cadb387dd42997abaf7693ad94dc1368" category="paragraph"><block ref="e38658601630ec577e14936530661871" prefix="" category="inline-code"></block></block>
-  <block id="2c3cdeddaf5e674b83aeb1068d9b5945" category="paragraph"><block ref="2c7936f7b5e3fc00c987ce9dcbeffb61" prefix="" category="inline-code"></block>（出口規則在規則清單中的位置）</block>
-  <block id="2fc042d3545f5ad7df1999c9e5486176" category="paragraph"><block ref="c4ca4238a0b923820dcc509a6f75849b" prefix="" category="inline-code"></block></block>
   <block id="efc0a731a8c204bd02c828eefed6a64c" category="paragraph"><block ref="ecc1164617b0fb52f8f44b689df1dcfd" prefix="" category="inline-code"></block></block>
   <block id="71e598dd105d32592243532b55392c55" category="paragraph"><block ref="2521ef5d58fc027d3121662b7d8f9ac2" prefix="" category="inline-code"></block></block>
-  <block id="f3e3813ea298de8da93550328b083f0f" category="paragraph"><block ref="382858e6823588bb096e3d3913e42570" prefix="" category="inline-code"></block>（允許唯讀存取）</block>
-  <block id="97ad8223e532762f76eacb3d58ae44f6" category="paragraph"><block ref="36bcbb801f5052739af8220c6ea51434" prefix="" category="inline-code"></block> （使用驗證的用戶端）</block>
-  <block id="abfa4fa511efea020dddfa36455d3a03" category="paragraph"><block ref="988a7f734c95a5a71f08315f64524126" prefix="" category="inline-code"></block>（允許讀寫存取）</block>
-  <block id="03bd2b1605178b5340b79397c1fc84e1" category="paragraph"><block ref="172219a4cef118b294af861037351fb5" prefix="" category="inline-code"></block>（允許超級使用者存取）</block>
-  <block id="c77e6814afbc098100ccdb394a72535e" category="paragraph"><block ref="334c4a4c42fdb79d7ebc3e73b517e6f8" prefix="" category="inline-code"></block>（根目錄 _ 分段 _ 至安納）</block>
-  <block id="10189fb4e046e5aba21ae08a2eb852bf" category="paragraph">第2條</block>
   <block id="272744ca44d27abe2551420036f0ffc3" category="paragraph"><block ref="b26f503cb4c228705236a2c921342289" prefix="" category="inline-code"></block></block>
-  <block id="1ee828388ddaf54db3ac68ef636f4199" category="paragraph"><block ref="4520a791100b667244a6c00b45b194d2" prefix="" category="inline-code"></block></block>
   <block id="88c42eb24f307c92abe5f178223fa31b" category="paragraph"><block ref="2c7936f7b5e3fc00c987ce9dcbeffb61" prefix="" category="inline-code"></block></block>
-  <block id="01d5574b77a9ca8dff8f5bed0d361fa0" category="paragraph"><block ref="c81e728d9d4c2f636f067f89cc14862c" prefix="" category="inline-code"></block></block>
   <block id="3596a06992b01554fa56d695b778b156" category="paragraph"><block ref="382858e6823588bb096e3d3913e42570" prefix="" category="inline-code"></block></block>
   <block id="e8fd2dc8d1a49d5b7994877a70350612" category="paragraph"><block ref="988a7f734c95a5a71f08315f64524126" prefix="" category="inline-code"></block></block>
   <block id="78633c3a09dee1fb6064ddf3ca36f294" category="paragraph"><block ref="172219a4cef118b294af861037351fb5" prefix="" category="inline-code"></block></block>
-  <block id="872c8fae68f9bd1ad1271bbfd4120ea2" category="paragraph">第 3 條</block>
-  <block id="77997a1167e4aeb1ba9685a2b7e84857" category="paragraph"><block ref="2707e637a5b30a9650dad5ee0edd8c3b" prefix="" category="inline-code"></block></block>
   <block id="3a1da0c23b54bf69b45e66ba096836d8" category="paragraph"><block ref="eccbc87e4b5ce2fe28308fd9f2a7baf3" prefix="" category="inline-code"></block></block>
-  <block id="93316c3c7d112b8d1bea788ff99da1e6" category="list-text">建立名為exp_vol1的匯出原則：</block>
-  <block id="3f4465696220c3a3e18d884d40aa664d" category="paragraph"><block ref="a0a189ef9ffa410612de24431fb63ccf" prefix="" category="inline-code"></block></block>
-  <block id="c1d428cd4c83df195632967ae97a8fc2" category="list-text">在base命令中建立三個具有下列參數的規則：</block>
-  <block id="635599316bf228f56be6f5e4ac345d60" category="list-text">基本命令：
- +<block ref="07ad2c9decfd2d1fcb8c2fe79d8288f8" prefix=" " category="inline-code"></block></block>
-  <block id="3e33636edf1aef46ecf61840711895e0" category="list-text">規則參數：
- +<block ref="f27bfa36b31b9c4f2d9b10364d7a1096" prefix=" " category="inline-code"></block>
- +
-<block ref="ac5e40458f4801cdef8be9631d8e8e2d" prefix=" " category="inline-code"></block>
- +
-<block ref="eae370deb9896c86a24a46e8522ef93f" prefix=" " category="inline-code"></block></block>
-  <block id="cac2ae6de9f83509583c5f1032b208dd" category="list-text">將原則指派給Volume vol1：</block>
-  <block id="bafcac274d77d9404af5c24c913cccc3" category="paragraph"><block ref="5c7941fb0285b4f5c87d03e04c4d7d2a" prefix="" category="inline-code"></block></block>
-  <block id="5235430d4dda15a88bf3a0e1b3c579ba" category="section-title">7-Mode匯出的整合範例</block>
-  <block id="0f513c4586d7201d54499212c9b48ea2" category="paragraph">以下範例顯示 7-Mode<block ref="16754f28ba3f274ef20c69face8248a2" prefix=" " category="inline-code"></block> 每 10 個 qtree 包含一行的檔案：</block>
-  <block id="5c80457aba9d50409d62c863d1961208" category="paragraph">在 ONTAP 中、每個 qtree 都需要兩個原則之一：一個原則包含規則<block ref="649b4a8e39dc7246bdef26491ee6ba3f" prefix=" " category="inline-code"></block>或具有規則的規則<block ref="5d56558d9edba2aae558c32cc19d9e35" prefix=" " category="inline-code"></block>。</block>
-  <block id="a1d72239bcac2bf7e1c0adb45a8a1d41" category="list-text">建立兩個匯出原則、稱為exp_vol1q1和exp_vol1q2：</block>
-  <block id="9f106d485b265e6df237f7260306f0ed" category="list-text"><block ref="f6c491b50c052cb8784e30c02d24886e" prefix="" category="inline-code"></block></block>
-  <block id="b34c6ef99e6affb706125bbc4fd5763a" category="list-text"><block ref="58a991dc21c705b08a3b7c61677870b8" prefix="" category="inline-code"></block></block>
-  <block id="92642126f64e195119b53080bcc6ff23" category="list-text">為每個原則建立規則：</block>
-  <block id="dec63fa6230abb1a4575f25c02b8f60a" category="list-text"><block ref="533acb3252450989b5873998eb8f91ad" prefix="" category="inline-code"></block></block>
-  <block id="02009c89aaa830e5134bcec733a25c1a" category="list-text"><block ref="c6370b4f6d73863738479bf817997f78" prefix="" category="inline-code"></block></block>
-  <block id="22aafa7641c9ea907ecb756d12da3d2e" category="list-text">將原則套用至qtree：</block>
-  <block id="c992ffa430eacd5ba12e50f1288b0a61" category="list-text"><block ref="d26e70bb955c8f6e69b104d3b53c79ba" prefix="" category="inline-code"></block></block>
-  <block id="aa4c801eb05fc770cfa6116370901085" category="list-text">[接下來的4個qtree ...]</block>
-  <block id="adba7439830987a202d2c1cb02195a3f" category="list-text"><block ref="2a826e9d797630988e5d5c60518346e1" prefix="" category="inline-code"></block></block>
-  <block id="863b6fed85526192152f29e41cdc8abe" category="paragraph">如果您稍後需要為這些主機新增其他qtree、則會使用相同的匯出原則。</block>
   <block id="5bf76140c89450db80303c22a9667ff0" category="summary">您可以使用vserver NFS Kerberos介面啟用命令、在資料LIF上啟用Kerberos。這可讓SVM使用Kerberos安全服務來執行NFS。</block>
   <block id="070a52338af390c85075dfb69373722c" category="paragraph">您可以使用<block ref="592b4e14c966ebbe82136d111dd8e299" prefix=" " category="inline-code"></block> 在資料 LIF 上啟用 Kerberos 的命令。這可讓SVM使用Kerberos安全服務來執行NFS。</block>
   <block id="414f3dd53bbe142fa02c98ef92304f79" category="paragraph">如果您使用Active Directory Kdc、則所使用的任何SPN前15個字元在領域或網域內的SVM之間必須是唯一的。</block>
@@ -22187,30 +22125,6 @@ LUN和NVMe命名空間不支援在同一個磁碟區或SVM上。</block>
   <block id="a5ab6bb5d8ebcfc518f32c19b996dcf0" category="paragraph">+
 如果您打算使用現有的匯出原則、則可以在建立磁碟區時指定。您也可以稍後使用新增匯出原則<block ref="9f9fc58b577820fbcd41ff15739ed6f0" prefix=" " category="inline-code"></block> 命令。</block>
   <block id="ab2f46fbb86e0035b5febb0c429c8e38" category="paragraph">下列命令會在SVM「vs1.example.com」和Aggr1上建立名為「home4」的新磁碟區。目錄<block ref="45cc2d97e55dbd4ade8c15cea4ae46b1" prefix=" " category="inline-code"></block> VS1 SVM 的命名空間已存在、新的 Volume 可從取得<block ref="7f67331a37eb68ce6b6190662127d475" prefix=" " category="inline-code"></block>、成為的主目錄<block ref="45cc2d97e55dbd4ade8c15cea4ae46b1" prefix=" " category="inline-code"></block> 命名空間。磁碟區大小為 750 GB 、其磁碟區保證屬於類型<block ref="210ab9e731c9c36c2c38db15c28a8d1c" prefix=" " category="inline-code"></block> （預設）。</block>
-  <block id="a9149a110701a522b66804b5f6624a30" category="summary">以功能為基礎的匯出ONTAP 是以不同於7-Mode環境的方式定義和使用。</block>
-  <block id="8d7c979e3ddf26e45ba1ad610b7bf5b8" category="cell">差異領域</block>
-  <block id="407d240765867fcde050385db483b5d0" category="cell">7-Mode</block>
-  <block id="249cfa26125860e68805f50e92b36a11" category="paragraph">如何定義匯出</block>
-  <block id="f081088925822b1bbd4e9f76ec5d9fa9" category="paragraph">匯出是在中定義的<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 檔案：</block>
-  <block id="3598a1f13d3ea3c8b7e2211cf5464062" category="paragraph">匯出是透過在SVM中建立匯出原則來定義。SVM可包含多個匯出原則。</block>
-  <block id="671f3260187c544429353d647a23dd49" category="paragraph">匯出範圍</block>
-  <block id="6cb303b76860ce1d17a80b2b9c5a7b8c" category="list-text">匯出會套用至指定的檔案路徑或qtree。</block>
-  <block id="79af29735def5d26c87d5972d291b694" category="list-text">您必須在中建立個別項目<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 針對每個檔案路徑或 qtree 。</block>
-  <block id="cb0bcf3da7ebba2af81a2f0caa161927" category="list-text">只有在中定義匯出時、匯出才會持續進行<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 檔案：</block>
-  <block id="477bb3fc2a29ccf61a2463ad57f49f7b" category="list-text">匯出原則適用於整個Volume、包括Volume中包含的所有檔案路徑和qtree。</block>
-  <block id="f88617fdc9907150e7f899d6eea83485" category="list-text">如果需要、匯出原則可套用至多個Volume。</block>
-  <block id="8cd39c3ebf0c3f5951fce525f0a5bd05" category="list-text">所有匯出原則都會在系統重新啟動時持續執行。</block>
-  <block id="a9d16ee4523e85982a677c2bcfde1ba1" category="paragraph">隔離（指定特定用戶端對相同資源的不同存取）</block>
-  <block id="4c008e771156a24aa1a8e4e02b028465" category="paragraph">若要為特定用戶端提供對單一匯出資源的不同存取權、您必須在中列出每個用戶端及其允許的存取權<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 檔案：</block>
-  <block id="784b11c929a79a94de519df66fe3627e" category="paragraph">匯出原則是由許多個別的匯出規則所組成。每個匯出規則都會定義資源的特定存取權限、並列出擁有這些權限的用戶端。若要為特定用戶端指定不同的存取權限、您必須為每組特定的存取權限建立匯出規則、列出具有這些權限的用戶端、然後將規則新增至匯出原則。</block>
-  <block id="defe146c4a92d2a414f8f91bbe164b37" category="paragraph">名稱別名</block>
-  <block id="d1a4e67f23b84e7024b8ffdce2c323a1" category="paragraph">定義匯出時、您可以選擇讓匯出名稱與檔案路徑名稱不同。您應該使用<block ref="2014025ba0a6ceb3b4b92580fdaa82c3" prefix=" " category="inline-code"></block> 在中定義此類匯出時的參數<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 檔案：</block>
-  <block id="7398491b4370d3857cd27daa7b1b29a6" category="paragraph">您可以選擇讓匯出的Volume名稱不同於實際的Volume名稱。若要這麼做、您必須在SVM命名空間內以自訂的交會路徑名稱來掛載磁碟區。</block>
-  <block id="b90ead554b21f9e9dd7de92cb0c58467" category="admonition">根據預設、磁碟區會以其Volume名稱掛載。若要自訂磁碟區的交會路徑名稱、您需要卸載、重新命名、然後重新掛載。</block>
-  <block id="536f80a3fd614c8ec42bda9844de232a" category="summary">如果您不熟悉ONTAP 執行NFS匯出的功能、可以比較7-Mode和ONTAP Sexport組態工具、以及7-Mode /etc/exports檔案樣本與叢集式原則和規則。</block>
-  <block id="065b39b42bf9194c10b0d63ad1977682" category="doc">此功能與7-Mode匯出有何不同ONTAP</block>
-  <block id="9c30ffabb984f274d5d1e78b242fea2d" category="paragraph">如果您不熟悉 ONTAP 如何實作 NFS 匯出、您可以比較 7-Mode 和 ONTAP 匯出組態工具、以及 7-Mode 範例<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 具有叢集式原則和規則的檔案。</block>
-  <block id="7dfad30596f930868fee0654fd2a24c9" category="paragraph">在 ONTAP 中沒有<block ref="9c8ea389db0c545c0a8c9ca08caecb34" prefix=" " category="inline-code"></block> 檔案與否<block ref="6996e59d61b6d88f4768635c22d89096" prefix=" " category="inline-code"></block> 命令。而是必須定義匯出原則。匯出原則可讓您以與7-Mode相同的方式來控制用戶端存取、但提供額外的功能、例如針對多個磁碟區重複使用相同的匯出原則。</block>
   <block id="0d9a07bb35c28ed93181243726e9b2a0" category="paragraph"><block ref="b3199656f746af190adf0590944d3d2c" prefix="" category="inline-code"></block></block>
   <block id="feae978172c2a23cc04f21e0a97bd052" category="list-text">使用顯示 DNS 網域組態<block ref="2a29db167c3a03336a9b63367df61117" prefix=" " category="inline-code"></block> 命令。</block>
   <block id="81214c0b9890f8292732938125c17323" category="summary">Kerberos需要為SVM根磁碟區及本機使用者和群組設定特定的UNIX權限。</block>
@@ -23180,9 +23094,7 @@ Cisco Nexus 9336C-FX2</block>
   <block id="303741d40e8edce2d454b70f3a85a64f" category="paragraph">下列命令顯示如何建立指派給的 S3 資料 LIF<block ref="2f8a829fdd6f85b8ab4f6a2128eea2b4" prefix=" " category="inline-code"></block> 服務原則：</block>
   <block id="f3f512551dec384f33c956f12f75885d" category="summary">如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用遠端的功能（雲端）分層、則必須設定叢集間的生命體。您可以在與資料網路共用的連接埠上設定叢集間的LIF。如此可減少叢集間網路所需的連接埠數量。</block>
   <block id="3301483c1bfb5a3d7e0425017e23608a" category="doc">建立叢集間的生命體、以進行遠端FabricPool 分層</block>
-  <block id="ee6a5f6bc8e3d8eb120ad5400550fb7d" category="paragraph">本機Fabric集區分層或外部S3應用程式不需要叢集間生命體。</block>
   <block id="79535297ba63fe49ca425eaa96a5e72f" category="list-text">在系統SVM上建立叢集間LIF：</block>
-  <block id="e7c8ed00f8f00ab5b4011270d59cb379" category="paragraph"><block ref="8c923eb1abcd9beb06954697e8897d57" prefix="" category="inline-code"></block></block>
   <block id="dfa2f2da83047191aa74b56f80d99d50" category="summary">使用者和群組對S3資源的存取權是由儲存區和物件存放區伺服器原則所控制。如果您的使用者或群組數量不多、在庫位層級控制存取可能就足夠了、但如果您有許多使用者和群組、則更容易控制物件庫伺服器層級的存取。</block>
   <block id="c5289638d5f28f09d2d3d5b50b84b7fa" category="doc">關於儲存區和物件存放區伺服器原則</block>
   <block id="089aed4b331e77e34de7dc0163e699d8" category="summary">將S3儲存設備提供給用戶端之前、您必須確認網路設定正確、以符合S3資源配置需求。</block>
@@ -30481,16 +30393,7 @@ LUN的實際最大大小可能不恰好為16TB。  將限制捨位至稍低的�
   <block id="55f82e826a0c65784cdc2844bae8becb" category="paragraph">您可以啟用或停用自動縮小。如果您啟用、當ONTAP 磁碟區的空間用量減少預先決定的臨界值時、自動縮小功能可讓流通量自動減少磁碟區的整體大小。如此可觸發磁碟區、自動釋放未使用的可用空間、進而提高儲存效率。</block>
   <block id="0b535d290d90409971701c05e94b466c" category="list-text">磁碟區幾乎已滿。</block>
   <block id="d444db153a6000a9c4d519e20ff25d11" category="list-text">覆寫保留空間已滿。</block>
-  <block id="94fdda03b030522c1ff868371963d5c4" category="summary">在SAN環境中、將7-Mode Volume移轉至ONTAP VMware時、需要中斷服務。您需要關閉主機才能完成轉換。轉換完成後、您必須先更新主機組態、才能開始ONTAP 在VMware中提供資料。</block>
   <block id="357547431c32be12f3196cc5fa113586" category="doc">轉換LUN的功能與限制</block>
-  <block id="2d8a06c5979e84c47a41b22e2f381728" category="paragraph">在SAN環境中、將7-Mode Volume移轉至ONTAP VMware時、需要中斷服務。您需要關閉主機才能完成轉換。轉換完成後、您必須先更新主機組態、才能開始ONTAP 在VMware中提供資料</block>
-  <block id="7c444bb5c607c1e2e2b7e50e52207db5" category="paragraph">您需要排定維護時間、以便關閉主機並完成轉換。</block>
-  <block id="5abfcddf38c270fd73c8cc526a63fd70" category="paragraph">LUN已從Data ONTAP 以7-Mode運作的VMware移轉至ONTAP 支援VMware的功能和限制、會影響LUN的管理方式。</block>
-  <block id="3ed7d27b92f2cb595143be10bd39cfb2" category="paragraph">您可以使用轉換的LUN執行下列作業：</block>
-  <block id="f7b0283bdfcd451ce4786c2a13ba6227" category="list-text">使用檢視 LUN<block ref="b8fdaa53ba08988f3b422c1226f85a2a" prefix=" " category="inline-code"></block> 命令</block>
-  <block id="22a0f2edf0530ce3a7e9ce86ae9bd645" category="list-text">使用檢視從 7-Mode 磁碟區轉換的 LUN 庫存<block ref="34f1c5ee292ac585d2fb756911e22599" prefix=" " category="inline-code"></block> 命令</block>
-  <block id="b4831fa9ca5bb29031341452f7ae0637" category="paragraph">您無法對轉換的LUN執行下列動作：</block>
-  <block id="140a44e7a81487c16050bc9e2f850961" category="inline-link-macro">複本型轉換</block>
   <block id="320182cf012fbd4ce890d17ab967f1c1" category="summary">對於乙太網路光纖通道（FCoE）、CNA乙太網路介面卡部分的巨型框架應設定為9000 MTU。CNA FCoE介面卡部分的巨型框架應設定為1500 MTU以上。只有在啟動器、目標和所有介入交換器支援並設定為使用巨型框架時、才設定巨型框架。</block>
   <block id="09af7498311538e3f23aeb27e2bcb853" category="doc">FCoE巨型框架的建議MTU組態</block>
   <block id="a846fcc72fb0c00df231962c331bc56c" category="summary">從ONTAP 《支援支援支援支援服務的支援服務之初、您可以使用ONTAP 「支援服務」CLI、將現有的LUN移轉至單一NVMe命名空間、而不會遺失任何資料</block>
@@ -34133,13 +34036,11 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="a71f7fbfd87a1b4cf8100a4cfb57ea61" category="sidebar">手動建立和刪除快照</block>
   <block id="838d2ec28a34d426c8b535dca6cc658c" category="paragraph">您應該小心將<block ref="2133fd717402a7966ee88d06f9e0b792" prefix=" " category="inline-code"></block>設定檔限制為包含預期將同時存取的檔案的共用。由於此設定檔會產生更多掃描要求、因此可能會影響效能。</block>
   <block id="e2f3a8e2d9dbebebccfd5c2dd674a96c" category="cell">統一化 SnapMirror 原則、保留 7 年。</block>
-  <block id="89b7f5a8d189f2aac31f88cad0bca87d" category="list-text">將磁碟區從 7-Mode 系統轉換為 FlexGroup 磁碟區</block>
   <block id="5a26d8bce9f9eaa96dbabd0d2140a4bd" category="list-text">變更一或多個網路介面設定。如需詳細資訊、請參閱 <block ref="aea0defaab0fad717881c459f7531116" category="inline-link-macro-rx"></block>。</block>
   <block id="e6ba4c8a897dc7875e6d6d8f49b75f77" category="paragraph"><block ref="e6ba4c8a897dc7875e6d6d8f49b75f77" category="inline-link-macro-rx"></block></block>
   <block id="31eed51357bb3f5d9843ad06cabeb2ad" category="paragraph"><block ref="31eed51357bb3f5d9843ad06cabeb2ad" category="inline-link-macro-rx"></block></block>
   <block id="be99d10153592f37f702e7fa579ca100" category="paragraph"><block ref="be99d10153592f37f702e7fa579ca100" category="inline-link-macro-rx"></block></block>
   <block id="6e135928b99fa90ba16acad76bbb526f" category="paragraph">若要使用 System Manager 設定 NAS 多重傳輸協定存取<block ref="69817c9c6ce0e1f96531cdcd2366001e" category="inline-link-macro-rx"></block>、請參閱。</block>
-  <block id="b62f553f46f531972c44d54ec69f69c9" category="list-text">您無法在從以 7-Mode 運作的 Data ONTAP 進行磁碟區轉換時建立命名空間。</block>
   <block id="316c2a376f389fe224b06e758502582c" category="paragraph">請注意、NIC和資料交換器等中繼網路裝置的MTU大小可以設定為比網路端點更高的MTU大小。如需更多資訊、請參閱 <block ref="c7b897b9bcbb96f8bbd1f7b444ba3e4c" category="inline-link-macro-rx"></block>。</block>
   <block id="89dad40148b1cd9f117ac7457c80c628" category="list-text"><block ref="89dad40148b1cd9f117ac7457c80c628" category="inline-link-macro-rx"></block></block>
   <block id="e0fe46b6696e9f5f544e200b57d16f8c" category="paragraph">從支援NVMe的主機型資料存取、需要取得從功能支援到功能的許可證。ONTAP如果ONTAP NVMe是在更新至ONTAP 版本號9.5之後啟用、系統會給予90天的寬限期以取得授權。如果您有<block ref="a62fc0122806ceec9dd8592aadbd3e06" category="inline-link-macro-rx"></block>、則會隨附 NVMe 授權。您可以使用下列命令來啟用授權：</block>
@@ -36843,13 +36744,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="a716996539d651eae4558db22d50bf01" category="paragraph">請注意，如果您的變更率很高，在極少數情況下，快照自動刪除可能會落後，導致磁碟區空間不足，即使使用上述所有必要的組態設定亦然。</block>
   <block id="1739b0007312b3548921b1c5c20ae889" category="paragraph">此外，您也可以選擇使用 Volume 自動擴充功能來降低自動刪除磁碟區快照的可能性。如果啟用自動擴充功能、則必須監控相關聯Aggregate中的可用空間。如果 Aggregate 已滿，而磁碟區無法成長，則可能會在磁碟區的可用空間耗盡時刪除更多快照。</block>
   <block id="29db3afde517fdb64669d56b19927894" category="list-text">當支援該 LUN 的磁碟區空間不足時，保護資料（ FlexClone LUN 和檔案，快照）就會遭到銷毀。</block>
-  <block id="42a3e73bce92fcb75dd9284311c66f2c" category="list-text">從 7-Mode 快照還原磁碟區</block>
-  <block id="9ccb8f220872e169c085ca5977400e87" category="paragraph">還原磁碟區會轉換快照中擷取的所有 LUN</block>
-  <block id="fde91ca88ad19b61c1ee884627801e35" category="list-text">使用命令從 7-Mode 快照還原單一 LUN<block ref="17055bc24119a044680a5e06b82a4c49" prefix=" " category="inline-code"></block></block>
-  <block id="4ed0bc0bf3054d334d92a611a9202fae" category="list-text">在 7-Mode 快照中建立 LUN 的複本</block>
-  <block id="d7f030923ce0e57a80920b1833bf0869" category="list-text">從 7-Mode 快照中擷取的 LUN 還原一系列區塊</block>
-  <block id="7bc6ad3f010a8db4993d71caf4a004c7" category="list-text">使用 7-Mode 快照建立磁碟區的 FlexClone</block>
-  <block id="fb2ddd06b1ab03e955fe9d9b012bf7fb" category="list-text">存取磁碟區中擷取的快照備份 LUN 複本</block>
   <block id="fcc319d9277742809fa07a8e1b513b04" category="paragraph">無法觸發自動擴充以支援建立快照。如果您嘗試建立快照，但磁碟區空間不足，即使啟用自動擴充功能，快照建立也會失敗。</block>
   <block id="f086e5f59026c6647f7af36c3057b748" category="paragraph">發生下列其中一種情況時， Snapshot 自動刪除會自動刪除快照：</block>
   <block id="5c45b23130700b36034b9788432fc2e5" category="list-text">快照保留空間即將滿。</block>
@@ -39379,8 +39273,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="08dc599faa1fc3036db78674b08f4faf" category="paragraph">如<block ref="ad3728c4e66b2b82c0b5a65aaae20b46" category="inline-link-macro-rx"></block>需詳細<block ref="8e0a640983c944bc113dbb2b7abdace2" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="e5c5921a7f5593dd72ce99731de39edb" category="paragraph">如<block ref="3a4e705d028c9e577516a1d1e9d11c9c" category="inline-link-macro-rx"></block>需詳細<block ref="6538294e44809ac7cddfafcb56bf6122" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
   <block id="a725d731008cfb3a24961b5f58f6a9a7" category="paragraph">如<block ref="96c12bd3033627fdc4467b7c64bead98" category="inline-link-macro-rx"></block>需詳細<block ref="dd5482134b2daeb15de3547342b7d19d" prefix=" " category="inline-code"></block>資訊，請參閱。</block>
-  <block id="b8fdaa53ba08988f3b422c1226f85a2a" category="inline-link-macro">LUN顯示</block>
-  <block id="fd5bdb879fb82939ee7c30877a606a3e" category="list-text"><block ref="fd5bdb879fb82939ee7c30877a606a3e" category="inline-link-macro-rx"></block></block>
   <block id="dd5482134b2daeb15de3547342b7d19d" category="inline-link-macro">LUN對應顯示</block>
   <block id="338f27c077c18de29857a5ad96b9131e" category="list-text"><block ref="338f27c077c18de29857a5ad96b9131e" category="inline-link-macro-rx"></block></block>
   <block id="9dddd5ce1b1375bc497feeb871842d4b" category="inline-link-macro">工作</block>
@@ -40287,8 +40179,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="9ddccfb5d1756ff0fb7260d8bddbc063" category="sidebar">為磁碟區指派 NFS 導出策略</block>
   <block id="aeb6783b33623817a60ae7607c4801ef" category="sidebar">為 qtree 分配 NFS 導出策略</block>
   <block id="8edd92cc13776acd2989b96bc0428dc6" category="sidebar">在哪裡可以找到其他 NFS 信息</block>
-  <block id="aece62a0abb054d73a16882cf0d32e64" category="sidebar">了解 7-模式和 NFS 導出的比較</block>
-  <block id="b8a65cfc5949e69e0f5ac036076057f3" category="sidebar">了解 NFS 導出策略範例</block>
   <block id="9db04f289edc5db196f9e10bac61e89c" category="sidebar">了解 SMB</block>
   <block id="d1d33df0a99e4e948b49051cf0d09abf" category="sidebar">了解如何設定 SMB 繞過遍歷檢查</block>
   <block id="06633a6172d825b0322d44f9a8e761ae" category="sidebar">允許使用者或群組繞過 SMB 目錄遍歷檢查</block>
@@ -40474,7 +40364,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="9c42f0cdc5180afd4be89bdfb4aba707" category="doc">評估 ONTAP NFS 實體儲存需求</block>
   <block id="876465f879b7e0325c33ef582ca4ffb7" category="doc">將 ONTAP NFS 導出策略指派給 qtree</block>
   <block id="9b2bdd9fe3dd4e18b4d51970ba747e1b" category="doc">將 ONTAP NFS 導出策略指派給磁碟區</block>
-  <block id="8e49b36eb20904732f3c54a422a4aa79" category="doc">了解 7-模式和 ONTAP NFS 導出的比較</block>
   <block id="dab6402e33d53e60c6eb4f4252e52abb" category="doc">為 ONTAP NFS SVM 主機名稱解析啟用 DNS</block>
   <block id="5373bde99ddd34d68221f67f9f41d235" category="doc">為 ONTAP SVM 配置 NFS Kerberos 允許的加密類型</block>
   <block id="d7753f59433605f23c1e247e6365aa22" category="doc">了解 ONTAP NFS SVM 的本機 UNIX 使用者和群組</block>
@@ -40495,7 +40384,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="08d8cd62a29b48880ca94484627e64e2" category="doc">建立 ONTAP SVM 以進行 NFS 資料訪問</block>
   <block id="a165f14d9e5bfaeb180bbd03ff43e2d7" category="doc">建立 ONTAP NFS 卷</block>
   <block id="2dd85d3f465aa13b8dd5386b8f3359c5" category="doc">將 LDAP 用戶端配置與 ONTAP NFS SVM 關聯</block>
-  <block id="385269526f6699d13f6c0d89a3d7c994" category="doc">了解 ONTAP NFS 導出策略範例</block>
   <block id="4ead3cbbf0f2c3fe7ff66f0e8bbaf7bf" category="doc">了解如何使用匯出策略保護 ONTAP NFS 訪問</block>
   <block id="f0a4eb1bd7e731da0701b3f86b47e623" category="doc">使用 ONTAP CLI 瞭解 NFS 組態</block>
   <block id="f78a033f65ed63bbac85a6797fccbdad" category="paragraph">如需 ONTAP NFS 通訊協定功能範圍的詳細資訊，請參閱<block ref="8067ac7a398a508933ed87320c6d6316" category="inline-link-macro-rx"></block>。</block>
@@ -43314,8 +43202,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="f095324dafb0589dc1d0c9b29a08083a" category="inline-link-macro">NetApp知識庫：開啟NetApp ONTAP檔案系統分析後延遲過高或波動</block>
   <block id="4a3763eff6d6fa4a7cb4274d8eb75bec" category="paragraph">如果您發現延遲明顯增加，請參閱<block ref="fd0219e821bf690ad95572ee8b455015" category="inline-link-macro-rx"></block>。</block>
   <block id="6898cbf5151cb463bab92e9adc4a561e" category="paragraph">詳細了解<block ref="dfeaa02dcc375ce117463dee2412e1b7" category="inline-link-macro-rx"></block>。</block>
-  <block id="86c24cf22cfed17463c640f23695c3f9" category="inline-link-macro">NetApp知識庫：如何將過渡的FlexVol轉換為FlexGroup</block>
-  <block id="088cacea0b755ceeac5fe239ded8c226" category="paragraph">欲了解更多信息，請參閱<block ref="3397f25e8b507b021ab4e7f756b128b5" category="inline-link-macro-rx"></block>。</block>
   <block id="c19df8f074c2c9cb8188e269ee0773fa" category="inline-link-macro">NetApp知識庫：如果 MAV 管理員不可用，如何停用多管理員驗證</block>
   <block id="b91bd53efb5f805a002a172dabeab9ce" category="admonition">如果您需要在未經 MAV 管理員批准的情況下停用多管理員驗證功能，請聯絡NetApp支援並提及以下內容<block ref="ece07a05ca0959179cd4b82af1d2662c" category="inline-link-macro-rx"></block>。</block>
   <block id="545c396045554d441fd6102ee20e31eb" category="inline-link-macro">NetApp知識庫：如何在叢集模式下設定 DNS 負載平衡</block>
@@ -45675,7 +45561,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="1102d790417e21497a5b26230dedc754" category="list-text">了解更多 <block ref="c59916038b3f30b9d6fa83c14c51da44" category="inline-link-macro-rx"></block>。</block>
   <block id="737db56266aa238322e85325597f4233" category="list-text">了解 <block ref="86686296eda0c6674200ad69cc9cde0e" category="inline-link-macro-rx"></block> 如何限制用於存取 HA 配對所擁有之 LUN 的路徑。</block>
   <block id="793d4bc82d8de5051a103f79fa560a0f" category="paragraph">如果您有 ASA r2 儲存系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30 或 ASA A20），請參閱<block ref="fbfc908ec8199bb5006938ac876f627a" category="inline-link-macro-rx"></block>。</block>
-  <block id="05be83ebd6460742ec4bdb85cd44d4b1" category="list-text"><block ref="05be83ebd6460742ec4bdb85cd44d4b1" category="inline-link-macro-rx"></block></block>
   <block id="147e09377bc0bf4730d497c8b63fc187" category="admonition">這些限制適用於 ASA 系統。如果您擁有 ASA r2 系統（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），請參閱 <block ref="8f5a76f413171aa855dc75fd720fe289" category="inline-link-macro-rx"></block>。</block>
   <block id="5d5b1f5d93571e2eb42fd7a86a55e504" category="inline-link-macro">設定 ONTAP FC 連接埠以直接連接至 FC 和 FC-NVMe 主機</block>
   <block id="285668afb15006be8acb814037ee638e" category="list-text"><block ref="129860930aab2660d98e1efe9faafe33" category="inline-link-macro-rx"></block>。</block>
@@ -48530,7 +48415,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="6423576c75606e359ee292fc58df71ad" category="list-text">在 ONTAP 9.10.1 之前的版本中，FlexVol Volume 所屬 SVM 上的 SVM-DR 被停用。從 ONTAP 9.10.1 開始，您可以<block ref="54481151238b915e30fab83b23cc87e3" category="inline-link-macro-rx"></block>。</block>
   <block id="a6dc27dd0f5d2505fded541963f904ab" category="list-text">FlexVol Volume 不能是 NetApp FlexClone Volume 的父 Volume。被轉換的 Volume 不能是父或 Clone。</block>
   <block id="b66a123bd1b53e6d1a303060b71505d3" category="list-text">此 Volume 不能是 NetApp FlexCache 來源 Volume。</block>
-  <block id="c0fa950104cdf5199e0d39cac7ae9983" category="list-text">您無法轉換使用 7MTT 從 7-Mode 過渡的 FlexVol Volume（ONTAP 9.7）。從 ONTAP 9.8 開始，您可以轉換已過渡的 Volume。</block>
   <block id="c7fb4f8a1af61455e4267976f5b926e4" category="list-text">該 Volume 不得與任何應用程式關聯。這僅適用於 ONTAP 9.7。此限制在 ONTAP 9.8 中已移除。</block>
   <block id="084324a02f31dafba94abab74131c79f" category="list-text">儲存設備效率功能已停用。轉換完成後可以重新啟用這些功能。</block>
   <block id="f073fcca1a8229e3a42910e50ddfccb1" category="list-text">如果 Volume 是 SnapMirror 關係的來源，且目的地尚未轉換，則無法進行轉換。</block>
@@ -49321,7 +49205,6 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="c9d0d17788ec35802251d4084540709b" category="doc">在 ONTAP 中使用虛擬化 SAN 環境的優勢</block>
   <block id="b30ee6f0fa81dddf5718cf5f74fc5726" category="doc">ONTAP 中 X1143A-R6 介面卡支援的連接埠組態</block>
   <block id="65c31cbe6c45616906965d351384a260" category="doc">可用於有效監控 ONTAP LUN 的工具</block>
-  <block id="4353b4890a787351f05ef1ace80df5aa" category="doc">已過渡的 ONTAP LUN 的功能與限制</block>
   <block id="c2d2e2ba553c74684ffbc9d3ec6ad04e" category="doc">疑難排解 ONTAP iSCSI LUN 在主機上無法看見的原因</block>
   <block id="18c429fa18cda88e65deaf9607b6b9bd" category="doc">在 ONTAP 中驗證並新增您的 FC 或 iSCSI 授權</block>
   <block id="298ff30d1e0de7e27551a1d22bc4d408" category="doc">查看 ONTAP FC/UTA 介面卡設定</block>
@@ -49449,4 +49332,20 @@ Microsoft TechNet Library 包含更多關於 Windows 伺服器和用戶端上支
   <block id="a26e4204ec8290ac2fc79961eb176ec8" category="list-text">9.17.1 -&gt; 9.20.1</block>
   <block id="9df7bb0d4f4a5c6104b95d6bb9faf265" category="list-text">9.16.1 -&gt; 9.20.1</block>
   <block id="d3ceda18c9d46516729fefa717497b8d" category="list-text">9.17.1-&gt;9.20.1</block>
+  <block id="e6b096c05b10a782bfd5d1b7ada84bb8" category="paragraph-title">獨佔位元組範圍鎖定：</block>
+  <block id="640e7ec2501cc302d338f8af5aa26fe6" category="paragraph">在繞寫和回寫模式下， ONTAP 支援獨佔位元組範圍鎖定（EBL）。此功能允許用戶端獨佔鎖定檔案中的某個位元組範圍，從而保護該範圍免受其他用戶端的存取，同時允許不同站點的其他用戶端同時讀取或寫入檔案中的其他範圍。這與 XLD 不同。所有 EBL 都會轉送到來源，來源會根據檔案的委派和 EBL 請求來決定是否授予 EBL。</block>
+  <block id="0a150440bf38eafb59586634043afa33" category="summary">ONTAP 透過指派給 SVM 中的 Volume 或 qtree 的匯出原則和規則來控制 NFS 用戶端存取。</block>
+  <block id="c7e5de6c3b0795e617deea00725d7c02" category="doc">了解 ONTAP NFS 匯出</block>
+  <block id="f15d24db8e227721a5fdc71658c30c80" category="paragraph">ONTAP 透過指派給 Volume 或 qtree 的匯出原則來控制 NFS 用戶端的存取。每個原則都包含定義哪些用戶端可以存取資料以及它們所獲得權限的規則。</block>
+  <block id="5d0aca47f75713974a3acc0a289a6e50" category="paragraph">一個 SVM 可以包含多個匯出原則。每個原則可以包含零個或多個匯出規則，用於指定用戶端符合項目和存取權限。空原則會拒絕所有存取。您可以將一個匯出原則套用到多個 Volume。</block>
+  <block id="972412866eafbc1e2377e4cba0cd0679" category="section-title">對 Volume 和 qtree 套用匯出原則</block>
+  <block id="2f1b5f2c7a7229791fd69450eab312dd" category="paragraph">為 Volume 或 qtree 指派匯出原則，以控制 NFS 用戶端對該儲存設備的存取。指派給 Volume 的原則適用於該 Volume 的資料；當需要控制對 qtree 的存取時，可以直接為 qtree 指派原則。</block>
+  <block id="c9103c5c58a2649f1d353570b7c917a4" category="section-title">Volume 交會路徑</block>
+  <block id="97826c5d125844e4298d13c534a39956" category="paragraph">Volume 掛載於 SVM 命名空間的交會路徑。NFS 用戶端使用此路徑來存取 Volume 的資料。交會路徑可以與 Volume 名稱不同。</block>
+  <block id="0b9373609eb690ba4a27ac41ec008d00" category="paragraph"><block ref="0b9373609eb690ba4a27ac41ec008d00" category="inline-link-macro-rx"></block></block>
+  <block id="4ea7cc25100b7bcb79f78595d5791f32" category="summary">在與資料網路共享的連接埠上建立叢集間 LIF，以啟用與 ONTAP S3 的遠端 FabricPool 分層，並減少叢集間連接埠的數量。</block>
+  <block id="e6141d5980cc2cfba4c29f7ae52a09cc" category="list-text">必須將底層實體或邏輯網路連接埠設定為管理<block ref="46c48bec0d282018b9d167eef7711b2c" prefix=" " category="inline-code"></block>狀態。</block>
+  <block id="8687ae861efc345fb88cb244c8ac3af7" category="paragraph">本地 FabricPool 分層或為外部 S3 應用程式提供服務不需要叢集間 LIF。</block>
+  <block id="09c1b0a1d50bd671813081f6837a1070" category="paragraph">管理指派給 ONTAP SMB 伺服器上本機或網域使用者或群組的權限。您可以新增、移除或重設權限，以自訂每個使用者或群組可以執行的操作，並顯示有關權限覆寫的資訊。</block>
+  <block id="84336c547960e27ad3f1ee2111f4ccc0" category="sidebar">了解 NFS 匯出原則</block>
 </blocks>

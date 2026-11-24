@@ -2,7 +2,7 @@
 permalink: s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html 
 sidebar: sidebar 
 keywords: create, intercluster, lifs, remote fabricpool, tiering 
-summary: 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用遠端的功能（雲端）分層、則必須設定叢集間的生命體。您可以在與資料網路共用的連接埠上設定叢集間的LIF。如此可減少叢集間網路所需的連接埠數量。 
+summary: 在與資料網路共享的連接埠上建立叢集間 LIF，以啟用與 ONTAP S3 的遠端 FabricPool 分層，並減少叢集間連接埠的數量。 
 ---
 = 使用 ONTAP S3 建立叢集間的階層式生命體，以進行遠端 FabricPool 分層
 :allow-uri-read: 
@@ -14,12 +14,12 @@ summary: 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用�
 如果FabricPool 您使用ONTAP 支援使用支援的物件S3來啟用遠端的功能（雲端）分層、則必須設定叢集間的生命體。您可以在與資料網路共用的連接埠上設定叢集間的LIF。如此可減少叢集間網路所需的連接埠數量。
 
 .開始之前
-* 底層實體或邏輯網路連接埠必須設定為管理 `up`狀態。
+* 必須將底層實體或邏輯網路連接埠設定為管理 `up`狀態。
 * LIF服務原則必須已經存在。
 
 
 .關於這項工作
-本機Fabric集區分層或外部S3應用程式不需要叢集間生命體。
+本地 FabricPool 分層或為外部 S3 應用程式提供服務不需要叢集間 LIF。
 
 .步驟
 . 列出叢集中的連接埠：
@@ -53,7 +53,7 @@ cluster01-02
 
 . 在系統SVM上建立叢集間LIF：
 +
-`network interface create -vserver Cluster -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 +
 以下範例建立叢集間的生命體 `cluster01_icl01` 和 `cluster01_icl02`：
@@ -62,11 +62,11 @@ cluster01-02
 [listing]
 ----
 
-cluster01::> network interface create -vserver Cluster -lif cluster01_icl01 -service-
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
 policy default-intercluster -home-node cluster01-01 -home-port e0c -address 192.168.1.201
 -netmask 255.255.255.0
 
-cluster01::> network interface create -vserver Cluster -lif cluster01_icl02 -service-
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl02 -service-
 policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.168.1.202
 -netmask 255.255.255.0
 ----
